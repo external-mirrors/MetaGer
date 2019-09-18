@@ -9,12 +9,12 @@
 				</div>
 				<div class="search-input">
 					<input type="search" name="eingabe" value="@if(isset($eingabe)){{$eingabe}}@endif" required=""  @if(\Request::is('/')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" tabindex="0">
-					<button id="search-delete-btn" type="button" tabindex="-1">
+					<button id="search-delete-btn" name="delete-search-input" type="button" tabindex="-1">
 						&#xd7;
 					</button>
 				</div>
 				<div class="search-submit" id="submit-inputgroup">
-					<button type="submit" tabindex="-1">
+					<button type="submit" tabindex="-1" name="submit-query" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
 						<i class="fa fa-search" aria-hidden="true"></i>
 					</button>
 				</div>

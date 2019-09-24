@@ -160,12 +160,12 @@ class MetaGerSearch extends Controller
             foreach ($results as $index => $resultTmp) {
                 if ($resultTmp->new) {
                     if ($metager->getFokus() !== "bilder") {
-                        $view = View::make('layouts.result', ['result' => $resultTmp, 'metager' => $metager]);
+                        $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                         $html = $view->render();
                         $result['newResults'][$index] = $html;
                         $result["imagesearch"] = false;
                     } else {
-                        $view = View::make('layouts.image_result', ['result' => $resultTmp, 'metager' => $metager]);
+                        $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                         $html = $view->render();
                         $result['newResults'][$index] = $html;
                         $result["imagesearch"] = true;

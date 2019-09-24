@@ -40,6 +40,7 @@ return [
     'key.placeholder' => 'Mitglieder-Key eingeben',
     'key.tooltip' => 'Mitglieder-Key eingeben',
     'placeholder' => 'MetaGer: Sicher suchen & finden, Privatsphäre schützen',
+    'searchbutton' => 'MetaGer-Suche',
 
     'tooltips.add-focus' => 'Suche anpassen',
     'tooltips.edit-focus' => 'Aktuellen Fokus bearbeiten',

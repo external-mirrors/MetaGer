@@ -41,6 +41,7 @@ return [
     'key.tooltip' => 'Enter member key',
 
     "placeholder" => "MetaGer: Privacy Protected Search & Find",
+    'searchbutton' => 'MetaGer-Search',
 
     'tooltips.add-focus' => 'Adjust search',
     'tooltips.edit-focus' => 'Change the actual focus',

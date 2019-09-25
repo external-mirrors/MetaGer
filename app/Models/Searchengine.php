@@ -86,7 +86,7 @@ abstract class Searchengine
         }
 
         $this->getString = $this->generateGetString($q);
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+        $this->updateHash();
         $this->resultHash = $metager->getSearchUid();
         $this->canCache = $metager->canCache();
     }
@@ -95,9 +95,7 @@ abstract class Searchengine
 
     # Standardimplementierung der getNext Funktion, damit diese immer verwendet werden kann
     public function getNext(MetaGer $metager, $result)
-    {
-
-    }
+    { }
 
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch(\App\MetaGer $metager)
@@ -200,6 +198,11 @@ abstract class Searchengine
         $this->resultHash = $hash;
     }
 
+    public function updateHash()
+    {
+        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+    }
+
     # Fragt die Ergebnisse von Redis ab und lädt Sie
     public function retrieveResults(MetaGer $metager)
     {
@@ -250,6 +253,8 @@ abstract class Searchengine
         # Append the Query String
         $getString .= "&" . $this->engine->{"query-parameter"} . "=" . $this->urlEncode($query);
 
+        $getString .= $this->getDynamicParamsString();
+
         return $getString;
     }
 
@@ -261,5 +266,22 @@ abstract class Searchengine
         } else {
             return urlencode($string);
         }
+    }
+
+    private function getDynamicParamsString()
+    {
+        $paramString = "";
+
+        $params = $this->getDynamicParams();
+        foreach ($params as $key => $value) {
+            $paramString .= sprintf("&%s=%s", urlencode($key), urlencode($value));
+        }
+
+        return $paramString;
+    }
+
+    protected function getDynamicParams()
+    {
+        return [];
     }
 }

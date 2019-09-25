@@ -14,7 +14,7 @@ class Overture extends Searchengine
         parent::__construct($name, $engine, $metager);
         # We need some Affil-Data for the advertisements
         $this->getString .= $this->getOvertureAffilData($metager->getUrl());
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+        $this->updateHash();
     }
 
     public function loadResults($result)

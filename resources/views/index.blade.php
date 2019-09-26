@@ -4,7 +4,9 @@
 
 @section('content')
 	<h1 id="startpage-logo">
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">MetaGer</a>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+			<img src="/img/metager.svg" alt="MetaGer"></img>
+		</a>
 	</h1>
 	@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	<div id="plugin-btn-div">

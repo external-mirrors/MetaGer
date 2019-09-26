@@ -216,8 +216,7 @@ Route::group(
                     ->with('navbarFocus', 'dienste');
             });
             Route::get('metager', function () {
-                $filePath = storage_path() . "/app/public/MetaGer-release.apk";
-                return response()->download($filePath, "MetaGer-release.apk");
+                return redirect("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false");
             });
             Route::get('maps', function () {
                 $filePath = env('maps_app');

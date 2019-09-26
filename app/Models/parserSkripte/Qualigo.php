@@ -2,9 +2,9 @@
 
 namespace App\Models\parserSkripte;
 
-use App\Models\Searchengine;
+use App\Models\XmlSearchengine;
 
-class Qualigo extends Searchengine
+class Qualigo extends XmlSearchengine
 {
 
     public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
@@ -12,18 +12,9 @@ class Qualigo extends Searchengine
         parent::__construct($name, $engine, $metager);
     }
 
-    public function loadResults($results)
+    protected function loadXmlResults($resultsXml)
     {
-        try {
-            $content = simplexml_load_string($results);
-        } catch (\Exception $e) {
-            abort(500, "$result is not a valid xml string");
-        }
-
-        if (!$content) {
-            return;
-        }
-        $results = $content->xpath('//RL/RANK');
+        $results = $resultsXml->xpath('//RL/RANK');
         foreach ($results as $result) {
             $title       = $result->{"TITLE"}->__toString();
             $link        = $result->{"URL"}->__toString();
@@ -36,10 +27,20 @@ class Qualigo extends Searchengine
                 $link,
                 $anzeigeLink,
                 $descr,
-                $this->engine->{"display-name"},$this->engine->homepage,
+                $this->engine->{"display-name"},
+                $this->engine->homepage,
                 $this->counter
             );
         }
     }
 
+    protected function getDynamicParams()
+    {
+        $params = [];
+
+        $params["ip"] = $this->ip;
+        $params["agent"] = $this->useragent;
+
+        return $params;
+    }
 }

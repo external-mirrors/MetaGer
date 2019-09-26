@@ -216,17 +216,10 @@ Route::group(
                     ->with('navbarFocus', 'dienste');
             });
             Route::get('metager', function () {
-                $filePath = storage_path() . "/app/public/MetaGer-release.apk";
-                return response()->download($filePath, "MetaGer-release.apk");
+                return redirect("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false");
             });
             Route::get('maps', function () {
-                $filePath = env('maps_app');
-                $fileContents = file_get_contents($filePath);
-                return response($fileContents, 200)
-                    ->header('Cache-Control', 'public')
-                    ->header('Content-Type', 'application/vnd.android.package-archive')
-                    ->header('Content-Transfer-Encoding', 'Binary')
-                    ->header("Content-Disposition", "attachment; filename=app-release.apk");
+                return redirect("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false");
             });
 
             Route::get('maps/version', function () {

@@ -9,8 +9,8 @@ git clone "$path" MetaGer_neu
 cd MetaGer_neu
 composer install
 scp -P 63824 metager@metager3.de:~/.env .
-scp -P 63824 metager@metager3.de:~/sumas.json config/
-scp -P 63824 metager@metager3.de:~/sumasEn.json config/
+cp $SUMAS config/sumas.json
+cp $SUMASEN config/sumasEn.json
 scp -P 63824 metager@metager3.de:~/blacklistUrl.txt config/
 scp -P 63824 metager@metager3.de:~/blacklistDomains.txt config/
 scp -P 63824 metager@metager3.de:~/adBlacklistUrl.txt config/

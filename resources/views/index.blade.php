@@ -13,7 +13,7 @@
 		<div id="about-us">
 			<div class="m-row">
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">
-					<i class="fas fa-user-secret"></i>
+					<i class="fas fa-lock"></i>
 					<span>@lang('index.about.1.1')</span>
 					<div class="teaser">@lang('index.about.1.2')</div>
 				</a>
@@ -22,19 +22,19 @@
 				@else
 				<a href="https://suma-ev.de/en/index.html" target="_blank">
 				@endif
-					<i class="fas fa-heart"></i>
+					<i class="fas fa-heart" id="gradient"></i>
 					<span>@lang('index.about.2.1')</span>
 					<div class="teaser">@lang('index.about.2.2')</div>
 				</a>
 			</div>
 			<div class="m-row">
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">
-					<i class="fas fa-money-bill-wave"></i>
+					<i class="fas fa-leaf" id="green-leaf"></i>
 					<span>@lang('index.about.3.1')</span>
 					<div class="teaser">@lang('index.about.3.2')</div>
 				</a>
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "beitritt") }}">
-					<i class="fas fa-user-friends"></i>
+					<i class="fas fa-hands-helping"></i>
 					<span>@lang('index.about.4.1')</span>
 					<div class="teaser">@lang('index.about.4.2')</div>
 				</a>

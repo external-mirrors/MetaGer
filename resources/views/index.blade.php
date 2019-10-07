@@ -13,7 +13,7 @@
 		<div id="about-us">
 			<div class="m-row">
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">
-					<i class="fas fa-lock"></i>
+					<img alt="lock" src="/img/metager-schloss.svg">
 					<span>@lang('index.about.1.1')</span>
 					<div class="teaser">@lang('index.about.1.2')</div>
 				</a>
@@ -22,7 +22,7 @@
 				@else
 				<a href="https://suma-ev.de/en/index.html" target="_blank">
 				@endif
-					<i class="fas fa-heart" id="gradient"></i>
+					<img alt="rainbow" src="/img/rainbow.svg">
 					<span>@lang('index.about.2.1')</span>
 					<div class="teaser">@lang('index.about.2.2')</div>
 				</a>
@@ -34,7 +34,7 @@
 					<div class="teaser">@lang('index.about.3.2')</div>
 				</a>
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "beitritt") }}">
-					<i class="fas fa-hands-helping"></i>
+					<i class="fas fa-heart" id="gradient"></i>
 					<span>@lang('index.about.4.1')</span>
 					<div class="teaser">@lang('index.about.4.2')</div>
 				</a>

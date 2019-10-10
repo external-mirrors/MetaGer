@@ -45,47 +45,63 @@
 
 .startpage #main-content {
     justify-content: center;
-        #about-us {
-            font-size: 1.4em;
-            color: #777;
-            text-align: center;
-            margin-top: 60px;
-            width: 100%;
-            top: 100vh;
-            position: absolute;
-            @media(min-width: 520px){
-                top: inherit;
-                bottom: 100px;
-                position: inherit;
-            }
-            > div {
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
+    #about-us {
+        font-size: 1.4em;
+        color: #777;
+        text-align: center;
+        margin-top: 60px;
+        width: 100%;
+        top: 100vh;
+        left: 0;
+        position: absolute;
+        @media(min-width: 552px){
+            top: inherit;
+            left: inherit;
+            bottom: 100px;
+            position: inherit;
+        }
+        > div {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            @media(min-width: 552px){
                 margin: 24px 0;
-                > a {
-                    &:nth-child(1){
-                        @media(min-width: 520px){
-                            margin-right: 24px;
-                        }
-                    }
-                    @media(max-width: 520px){
-                        &:nth-child(2){
-                            margin-top: 24px;
-                        }
-                    }
-                    display: flex;
-                    flex-direction: column;
-                    cursor: pointer;
-                    color: inherit;
-                    width: 240px;
-                    > div.teaser {
-                        font-size: .7em;
-                    }
-                    &:hover > div.teaser {
-                        visibility: inherit;
-                    }
+            }
+            @media(min-width: 761px){
+                justify-content: space-between;
+                max-width: 600px;
+                margin: 24px auto;
+            }
+            > a {
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+                color: inherit;
+                width: 268px;
+                padding: 0px 8px;
+                min-width: 268;
+                margin: 8px 0;
+                @media(min-width: 552px){
+                    margin: 0;
+                }
+                > div.teaser {
+                    font-size: .7em;
+                    text-align: justify;
+                    hyphens: auto;
+                }
+                &:hover > div.teaser {
+                    visibility: inherit;
                 }
             }
         }
+        #gradient {
+            background-image: linear-gradient( red, yellow);
+            color:transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+        #green-leaf {
+            color: green;
+        }
+    }
 }

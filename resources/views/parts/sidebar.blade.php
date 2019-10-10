@@ -1,7 +1,9 @@
 <input id="sidebarToggle" class="hidden" type="checkbox">
 <div class="sidebar">
   <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
-    <p>MetaGer</p>
+    <span>
+      <img src="/img/metager.svg" alt="MetaGer"></img>
+    </span>
   </a>
   <ul class="sidebar-list">
     <li>

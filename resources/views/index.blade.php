@@ -30,12 +30,12 @@
 				</a>
 			</div>
 			<div class="m-row">
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">
+				<a href="javascript:void(0);">
 					<i class="fas fa-leaf" id="green-leaf"></i>
 					<span>@lang('index.about.3.1')</span>
 					<div class="teaser">@lang('index.about.3.2')</div>
 				</a>
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "beitritt") }}">
+				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">
 					<i class="fas fa-heart" id="gradient"></i>
 					<span>@lang('index.about.4.1')</span>
 					<div class="teaser">@lang('index.about.4.2')</div>

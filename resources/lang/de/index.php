@@ -28,7 +28,7 @@ return [
     'focus-creator.focusname' => 'Suchname: ',
 
     'about.1.1' => "Garantierte Privatsphäre",
-    'about.1.2' => 'Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Wir speichern nicht: Der Quellcode ist frei.',
+    'about.1.2' => 'Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Wir speichern nicht und der Quellcode ist frei.',
     'about.2.1' => 'Vielfältig & Frei',
     'about.2.2' => 'MetaGer schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiniert.',
     'about.3.1' => '100% Ökostrom',

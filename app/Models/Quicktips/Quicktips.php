@@ -11,7 +11,7 @@ class Quicktips
 {
     use DispatchesJobs;
 
-    const QUICKTIP_URL = "http://localhost:63825/1.1/quicktips.xml";
+    private $QUICKTIP_URL = "/1.1/quicktips.xml";
     const QUICKTIP_NAME = "quicktips";
     const CACHE_DURATION = 60;
 
@@ -19,6 +19,11 @@ class Quicktips
 
     public function __construct($search, $locale, $max_time)
     {
+        if (env("APP_ENV") === "production") {
+            $this->QUICKTIP_URL = "https://quicktips.metager.de" . $this->QUICKTIP_URL;
+        } else {
+            $this->QUICKTIP_URL = "https://dev.quicktips.metager.de" . $this->QUICKTIP_URL;
+        }
         $this->startSearch($search, $locale, $max_time);
     }
 

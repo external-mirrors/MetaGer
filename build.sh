@@ -8,7 +8,8 @@ if [ -d MetaGer_neu ]; then rm -rf MetaGer_neu;fi
 git clone "$path" MetaGer_neu
 cd MetaGer_neu
 composer install
-scp -P 63824 metager@metager3.de:~/.env .
+cp $ENVFILE .env
+sed -i -e "s/APP_ENV=production/APP_ENV=$STAGE/g" .env
 cp $SUMAS config/sumas.json
 cp $SUMASEN config/sumasEn.json
 scp -P 63824 metager@metager3.de:~/blacklistUrl.txt config/

@@ -11,6 +11,8 @@ update(144.76.113.134):
     - which sqlite3
   script:
     - sh build.sh
+  variables:
+    STAGE: production
    
 update(metager2):
   tags:
@@ -25,6 +27,8 @@ update(metager2):
     - which sqlite3
   script:
     - sh build.sh
+  variables:
+    STAGE: production
     
 update(metager3.de):
   tags:
@@ -39,3 +43,5 @@ update(metager3.de):
     - which sqlite3
   script:
     - sh build.sh
+  variables:
+    STAGE: development

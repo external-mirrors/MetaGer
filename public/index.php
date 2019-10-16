@@ -15,16 +15,6 @@ if (isset($_SERVER["HTTP_FORWARDED"]) && isset($_SERVER["HTTP_X_FORWARDED_FOR"])
 
 $_SERVER["AGENT"] = $_SERVER["HTTP_USER_AGENT"];
 
-if (isset($_SERVER['HTTP_USER_AGENT'])) {
-    $agentPieces = explode(" ", $_SERVER['HTTP_USER_AGENT']);
-
-    for ($i = 0; $i < count($agentPieces); $i++) {
-        $agentPieces[$i] = preg_replace("/(\d+\.\d+)/s", "0.0", $agentPieces[$i]);
-        $agentPieces[$i] = preg_replace("/([^\/]*)\/\w+/s", "$1/0.0", $agentPieces[$i]);
-    }
-    $_SERVER['HTTP_USER_AGENT'] = implode(" ", $agentPieces);
-}
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader

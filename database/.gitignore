@@ -1,1 +1,2 @@
 *.sqlite
+!useragents.sqlite

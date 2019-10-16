@@ -21,7 +21,8 @@ scp -P 63824 metager@metager3.de:~/UsersSeeder.php database/seeds/
 touch storage/logs/laravel.log
 touch storage/logs/worker.log
 touch database/metager.sqlite
-chmod 777 config/sumas.json config/sumas.json database/metager.sqlite
+touch database/useragents.sqlite
+chmod 777 config/sumas.json config/sumas.json database/metager.sqlite database/useragents.sqlite
 chmod -R 777 storage
 chmod -R 777 bootstrap/cache
 npm install

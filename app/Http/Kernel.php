@@ -60,5 +60,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'referer.check' => \App\Http\Middleware\RefererCheck::class,
         'humanverification' => \App\Http\Middleware\HumanVerification::class,
+        'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
     ];
 }

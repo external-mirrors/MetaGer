@@ -27,8 +27,6 @@ chmod -R 777 storage
 chmod -R 777 bootstrap/cache
 npm install
 npm run production
-php artisan migrate --force
-php artisan db:seed --force
 php artisan requests:gather
 if [ -f ~/MetaGer/artisan ]; then php ~/MetaGer/artisan down;fi
 cd ~/

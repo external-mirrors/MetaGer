@@ -63,6 +63,7 @@ class MetaGer
     protected $adUrlsBlacklisted = [];
     protected $url;
     protected $fullUrl;
+    protected $enabledSearchengines = [];
     protected $languageDetect;
     protected $verificationId;
     protected $verificationCount;

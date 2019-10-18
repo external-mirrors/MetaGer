@@ -63,6 +63,7 @@ class MetaGer
     protected $adUrlsBlacklisted = [];
     protected $url;
     protected $fullUrl;
+    protected $enabledSearchengines = [];
     protected $languageDetect;
     protected $verificationId;
     protected $verificationCount;
@@ -1116,6 +1117,7 @@ class MetaGer
             $tmp = $match[1] . $match[3];
             $this->phrases[] = $match[2];
         }
+
         foreach ($this->phrases as $phrase) {
             $p .= "\"$phrase\", ";
         }
@@ -1215,8 +1217,16 @@ class MetaGer
     private function searchCheckStopwords($request)
     {
         $oldQ = $this->q;
+
+        $tmp = $this->q;
+        // matches '[... ]"test satz"[ ...]'
+        // In order to avoid "finding" stopwords inside of phrase searches only strings outside of quotation marks should be checked
+        while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
+            $tmp = $match[1] . $match[3];
+        }
+
         // matches '[... ]-test[ ...]'
-        $words = preg_split("/\s+/si", $this->q);
+        $words = preg_split("/\s+/si", $tmp);
         $newQ = "";
         foreach ($words as $word) {
             if (strpos($word, "-") === 0 && strlen($word) > 1) {

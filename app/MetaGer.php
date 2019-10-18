@@ -285,8 +285,8 @@ class MetaGer
         $newResults = [];
         foreach ($this->ads as $ad) {
             if (($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
+                in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
+                in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
             ) {
                 continue;
             }
@@ -566,7 +566,7 @@ class MetaGer
             $filter = rtrim($filter, ",");
             $error = trans('metaGer.engines.noSpecialSearch', [
                 'fokus' => trans($this->sumaFile->foki->{$this->fokus}->{"display-name"}),
-                'filter' => $filter
+                'filter' => $filter,
             ]);
             $this->errors[] = $error;
         }
@@ -743,31 +743,31 @@ class MetaGer
     public function sumaIsDisabled($suma)
     {
         return
-            isset($suma['disabled'])
-            && $suma['disabled']->__toString() === "1";
+        isset($suma['disabled'])
+        && $suma['disabled']->__toString() === "1";
     }
 
     public function sumaIsOverture($suma)
     {
         return
-            $suma["name"]->__toString() === "overture"
-            || $suma["name"]->__toString() === "overtureAds";
+        $suma["name"]->__toString() === "overture"
+        || $suma["name"]->__toString() === "overtureAds";
     }
 
     public function sumaIsNotAdsuche($suma)
     {
         return
-            $suma["name"]->__toString() !== "qualigo"
-            && $suma["name"]->__toString() !== "similar_product_ads"
-            && $suma["name"]->__toString() !== "overtureAds";
+        $suma["name"]->__toString() !== "qualigo"
+        && $suma["name"]->__toString() !== "similar_product_ads"
+        && $suma["name"]->__toString() !== "overtureAds";
     }
 
     public function requestIsCached($request)
     {
         return
-            $request->filled('next')
-            && Cache::has($request->input('next'))
-            && unserialize(Cache::get($request->input('next')))['page'] > 1;
+        $request->filled('next')
+        && Cache::has($request->input('next'))
+        && unserialize(Cache::get($request->input('next')))['page'] > 1;
     }
 
     public function getCachedEngines($request)
@@ -863,8 +863,8 @@ class MetaGer
     }
 
     /*
- * Ende Suchmaschinenerstellung und Ergebniserhalt
- */
+     * Ende Suchmaschinenerstellung und Ergebniserhalt
+     */
 
     public function parseFormData(Request $request)
     {
@@ -1093,7 +1093,7 @@ class MetaGer
             if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
-                $this->parameterFilter[$filterName] = $filter;
+            $this->parameterFilter[$filterName] = $filter;
                 $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
@@ -1227,14 +1227,14 @@ class MetaGer
 
         // matches '[... ]-test[ ...]'
         $words = preg_split("/\s+/si", $tmp);
-        $newQ = "";
+        $newQ = $this->q;
         foreach ($words as $word) {
             if (strpos($word, "-") === 0 && strlen($word) > 1) {
                 $this->stopWords[] = substr($word, 1);
-            } else {
-                $newQ .= " " . $word;
+                $newQ = str_ireplace($word, "", $newQ);
             }
         }
+        $newQ = preg_replace("/(\s)\s+/", "$1", $newQ);
         $this->q = trim($newQ);
         # Overwrite Setting if submitted via Parameter
         if ($request->has('stop')) {

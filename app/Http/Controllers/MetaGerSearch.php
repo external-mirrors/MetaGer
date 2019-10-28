@@ -10,8 +10,6 @@ use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 use View;
 
-const TIP_SERVER = 'http://metager3.de:63825/tips.xml';
-
 class MetaGerSearch extends Controller
 {
     public function search(Request $request, MetaGer $metager)
@@ -209,7 +207,13 @@ class MetaGerSearch extends Controller
 
     public function tips(Request $request)
     {
-        $tips_text = file_get_contents(TIP_SERVER);
+        $tipserver = '';
+        if (env('APP_ENV') === "development") {
+            $tipserver = "https://dev.quicktips.metager.de/1.1/tips.xml";
+        } else {
+            $tipserver = "https://quicktips.metager.de/1.1/tips.xml";
+        }
+        $tips_text = file_get_contents($tipserver);
         $tips = [];
         try {
             $tips_xml = simplexml_load_string($tips_text);

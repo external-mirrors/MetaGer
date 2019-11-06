@@ -80,7 +80,7 @@ class MetaGerSearch extends Controller
                 continue;
             }
             if (preg_match("/" . $entry . "/si", $metager->getEingabe())) {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getQ()), $resultpage->render(), 1440);
+                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getQ()), $resultpage->render(), 604800);
             }
         }
         return $resultpage;

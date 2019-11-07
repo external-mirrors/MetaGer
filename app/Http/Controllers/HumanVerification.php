@@ -190,27 +190,13 @@ class HumanVerification extends Controller
 
     public static function couldBeSpammer($ip)
     {
-        if (!env("REMOVE_SPAM_IN_TOR")) {
-            return false;
-        }
-        $serverAddress = empty($_SERVER['SERVER_ADDR']) ? "144.76.88.77" : $_SERVER['SERVER_ADDR'];
-        $queryUrl = "https://tor.metager.org?password=" . urlencode(env("TOR_PASSWORD")) . "&ra=" . urlencode($ip) . "&sa=" . urlencode($serverAddress) . "&sp=443";
-
-        $ch = curl_init($queryUrl);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-        curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
         $possibleSpammer = false;
-        if ($httpcode === 200) {
-            return true;
-        }
 
         # Check for recent Spams
         $eingabe = \Request::input('eingabe');
         if (\preg_match("/^susimail\s+-site:[^\s]+\s-site:/si", $eingabe)) {
+            return true;
+        } else if (\preg_match("/^site:\"linkedin\.com\/in\"\s+/si", $eingabe)) {
             return true;
         }
 

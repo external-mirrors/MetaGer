@@ -30,7 +30,7 @@
 				</a>
 			</div>
 			<div class="m-row">
-				<a href="javascript:void(0);">
+				<a href="https://www.hetzner.de/unternehmen/umweltschutz/" target="_blank">
 					<i class="fas fa-leaf" id="green-leaf"></i>
 					<span>@lang('index.about.3.1')</span>
 					<div class="teaser">@lang('index.about.3.2')</div>

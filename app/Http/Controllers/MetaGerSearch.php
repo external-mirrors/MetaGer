@@ -39,7 +39,7 @@ class MetaGerSearch extends Controller
         $metager->checkSpecialSearches($request);
 
         if (Cache::has('spam.' . $metager->getFokus() . "." . md5($metager->getQ()))) {
-            return response(Cache::get('spam.' . $metager->getFokus() . "." . md5($metager->getQ())));
+            return response(Cache::get('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe())));
         }
 
         # Die Quicktips als Job erstellen
@@ -80,7 +80,7 @@ class MetaGerSearch extends Controller
                 continue;
             }
             if (preg_match("/" . $entry . "/si", $metager->getEingabe())) {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getQ()), $resultpage->render(), 604800);
+                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe()), $resultpage->render(), 604800);
             }
         }
         return $resultpage;

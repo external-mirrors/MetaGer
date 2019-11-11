@@ -196,7 +196,7 @@ class HumanVerification extends Controller
         $eingabe = \Request::input('eingabe');
         if (\preg_match("/^susimail\s+-site:[^\s]+\s-site:/si", $eingabe)) {
             return true;
-        } else if (\preg_match("/^\s*site:\"linkedin\.com\/in\"\s+/si", $eingabe)) {
+        } else if (\preg_match("/^\s*site:\"linkedin\.com[^\"]*\"\s+/si", $eingabe)) {
             return true;
         }
 

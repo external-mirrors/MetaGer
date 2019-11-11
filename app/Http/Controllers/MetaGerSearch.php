@@ -213,6 +213,9 @@ class MetaGerSearch extends Controller
         } else {
             $tipserver = "https://quicktips.metager.de/1.1/tips.xml";
         }
+        if (LaravelLocalization::getCurrentLocale() == "en") {
+            $tipserver .= "?locale=en";
+        }
         $tips_text = file_get_contents($tipserver);
         $tips = [];
         try {

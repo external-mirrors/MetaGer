@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
         if (stripos($host, "metager.org") !== false) {
             \App::setLocale('en');
         }
+        if (stripos($host, "metager.es") !== false) {
+            \App::setLocale('es');
+        }
 
         # Wir loggen im Redis-System für jede Sekunde des Tages, wie viele Worker aktiv am Laufen waren.
         # Dies ist notwendig, damit wir mitbekommen können, ab welchem Zeitpunkt wir zu wenig Worker zur Verfügung haben.

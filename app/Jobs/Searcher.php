@@ -13,6 +13,7 @@ class Searcher implements ShouldQueue
     use InteractsWithQueue, Queueable, SerializesModels;
 
     protected $name, $ch, $pid, $counter, $lastTime, $connectionInfo, $user, $password, $headers;
+    protected $proxyhost, $proxyuser, $proxypassword;
     # Each Searcher will shutdown after a specified time(s) or number of requests
     protected $MAX_REQUESTS = 100;
     # This value should always be below the retry_after value in config/queue.php
@@ -41,6 +42,10 @@ class Searcher implements ShouldQueue
         $this->user = $user;
         $this->password = $password;
         $this->headers = $headers;
+        $this->proxyhost = env("PROXY_HOST", "");
+        $this->proxyport = env("PROXY_PORT", "");
+        $this->proxyuser = env("PROXY_USER", "");
+        $this->proxypassword = env("PROXY_PASSWORD", "");
         // Submit this worker to the Redis System
         Redis::expire($this->name, 5);
     }
@@ -123,7 +128,7 @@ class Searcher implements ShouldQueue
          *   When a search engine needs more time to produce search results than the timeout of the MetaGer process, we won't even bother of spawning
          *   more and more Searchers because they would just block free worker processes from serving the important engines which will give results in time.
          **/
-        if ($this->counter === 3 || getenv("QUEUE_DRIVER") === "sync") {
+        if ($this->counter === 3 || getenv("QUEUE_CONNECTION") === "sync") {
             # If the MetaGer process waits longer for the results than this Fetcher will probably need to fetch
             # Or if this engine is in the array of important engines which we will always try to serve
             Redis::set($this->name, "running");
@@ -205,6 +210,13 @@ class Searcher implements ShouldQueue
             CURLOPT_LOW_SPEED_TIME => 5,
             CURLOPT_TIMEOUT => 10,
         ));
+
+        if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {
+            curl_setopt(CURLOPT_PROXY, $this->proxyhost);
+            curl_setopt(CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
+            curl_setopt(CURLOPT_PROXYPORT, $this->proxyport);
+            curl_setopt(CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
+        }
 
         if ($this->user !== null && $this->password !== null) {
             curl_setopt($ch, CURLOPT_USERPWD, $this->user . ":" . $this->password);

@@ -24,7 +24,6 @@
 			$(".seperator").addClass("hidden");
 		@endif
 	</h1>
-	<h2 class="subheading">{{ trans('plugin-page.head.info') }}</h2>
 	@if ($browser === 'Firefox' || $browser === 'Mozilla')
 		<div class="card-medium">
 			<h3>{!! trans('plugin-page.firefox.plugin') !!}</h3>
@@ -32,8 +31,24 @@
 		<div class="card-heavy">
 			<h3>{!! trans('plugin-page.default-search', ['browser' => $browser]) !!}</h3>
 			<ol>
-				<li>{!! trans('plugin-page.firefox.1') !!}<img src="/img/Firefox.png" width="100%" /></li>
-				<li>{!! trans('plugin-page.firefox.2') !!}<img src="/img/Firefox_Standard.png" width="100%" /></li>
+				<li>{!! trans('plugin-page.firefox.1') !!}
+					@if(LaravelLocalization::getCurrentLocale() == "de")
+					<img src="/img/Firefox.png" width="100%" />
+					@elseif(LaravelLocalization::getCurrentLocale() == "es")
+					<img src="/img/FirefoxEs.png" width="100%" />
+					@else
+					<img src="/img/FirefoxEn.png" width="100%" />
+					@endif
+				</li>
+				<li>{!! trans('plugin-page.firefox.2') !!}
+					@if(LaravelLocalization::getCurrentLocale() == "de")
+					<img src="/img/Firefox_Standard.png" width="100%" />
+					@elseif(LaravelLocalization::getCurrentLocale() == "es")
+					<img src="/img/FirefoxEs_Standard.png" width="100%" />
+					@else
+					<img src="/img/FirefoxEn_Standard.png" width="100%" />
+					@endif
+				</li>
 			</ol>
 		</div>
 		<div class="card-heavy">
@@ -47,8 +62,8 @@
 			<h4>{{ trans('plugin-page.head.8') }}</h4>
 			<ol>
 				<li>{!! trans('plugin-page.firefox-klar.1') !!}</li>
-				<li>{{ trans('plugin-page.firefox-klar.2')}}<img src="/img/FirefoxKlar-Settings.png" width="100%"/></li>
-				<li>{{ trans('plugin-page.firefox-klar.3') }}<img src="/img/FirefoxKlar-addSearchengine.png" width="100%"/></li>
+				<li>{{ trans('plugin-page.firefox-klar.2')}}</li>
+				<li>{{ trans('plugin-page.firefox-klar.3') }}</li>
 				<li>{{ trans('plugin-page.firefox-klar.4') }}</li>
 			</ol>
 		</div>

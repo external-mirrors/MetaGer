@@ -4,7 +4,7 @@ return [
     "headline.1" => "Your Donation for MetaGer to SUMA-EV",
     "headline.2" => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href="https://metager.org/about" rel="noopener" target=_blank>Read more</a> and <a href="https://metager.org/beitritt" target="_blank" rel="noopener">become a member.</a>
 
-    Please help to keep free and open search engines free and open on the Internet.  The digital knowledge of the world must stay free from surveillance and control by governments or companies and must be publicly accessible to everyone. Please click <a href="https://metager.de/en/about" rel="noopener" target=_blank>here</a> for more information about us.',
+    Please help to keep free and open search engines free and open on the Internet.  The digital knowledge of the world must stay free from surveillance and control by governments or companies and must be publicly accessible to everyone. Please click <a href="https://metager.org" rel="noopener" target=_blank>here</a> for more information about us.',
     "bankinfo.1" => "By bank transfer",
     "bankinfo.2" => "SUMA-EV",
     'bankinfo.2.1' => 'DE64 4306 0967 4075 0332 01',

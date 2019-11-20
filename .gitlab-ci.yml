@@ -20,8 +20,23 @@ prepare_secrets:
     - cp $ENVFILE .env
     - cp $SUMAS config/sumas.json
     - cp $SUMASEN config/sumasEn.json
+    - cp $BLACKLISTURL config/blacklistUrl.txt
+    - cp $BLACKLISTDOMAINS config/blacklistDomains.txt
+    - cp $ADBLACKLISTURL config/adBlacklistUrl.txt
+    - cp $ADBLACKLISTDOMAINS config/adBlacklistDomains.txt
+    - cp $SPAM config/spam.txt
+    - cp $USERSSEEDER database/seeds/UsersSeeder.php
   artifacts:
     paths:
       - .env
       - config/sumas.json
       - config/sumasEn.json
+      - config/blacklistUrl.txt
+      - config/blacklistDomains.txt
+      - config/adBlacklistUrl.txt
+      - config/adBlacklistDomains.txt
+      - config/spam.txt
+      - database/seeds/UsersSeeder.php
+  only:
+    - branches
+    - tags

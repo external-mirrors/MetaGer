@@ -13,6 +13,7 @@ variables:
 stages:
   - prepare
 
+# Prepares the secret files that we cannot or don't want to share with public
 prepare_secrets:
   stage: prepare
   image: alpine:latest
@@ -40,3 +41,25 @@ prepare_secrets:
   only:
     - branches
     - tags
+
+prepare_node:
+  stage: prepare
+  image: node:10
+  before_script:
+    - npm install
+  script:
+    - npm run prod
+  artifacts:
+    paths:
+      - node_modules
+      - public/js/
+      - public/css/
+  cache:
+    # Cache per Branch
+    key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - node_modules
+  only:
+    - branches
+    - tags
+

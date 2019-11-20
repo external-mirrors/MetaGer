@@ -1,47 +1,27 @@
-update(144.76.113.134):
-  tags:
-  - 144.76.113.134
-  only:
-    - master@open-source/MetaGer
-  before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
-  script:
-    - sh build.sh
-  variables:
-    STAGE: production
-   
-update(metager2):
-  tags:
-  - metager2
-  only:
-    - master@open-source/MetaGer
-  before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
-  script:
-    - sh build.sh
-  variables:
-    STAGE: production
-    
-update(metager3.de):
-  tags:
-  - metager3
-  only:
-    - development@open-source/MetaGer
-  before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
-  script:
-    - sh build.sh
-  variables:
-    STAGE: development
+variables:
+    DOCKER_HOST: "tcp://docker-dind.gitlab:2375"
+    POSTGRES_ENABLED: "false"
+    CODE_QUALITY_DISABLED: "true"
+    CONTAINER_SCANNING_DISABLED: "true"
+    DAST_DISABLED: "true"
+    DEPENDENCY_SCANNING_DISABLED: "true"
+    LICENSE_MANAGEMENT_DISABLED: "true"
+    PERFORMANCE_DISABLED: "true"
+    SAST_DISABLED: "true"
+    TEST_DISABLED: "true"
+
+stages:
+  - prepare
+
+prepare_secrets:
+  stage: prepare
+  image: alpine:latest
+  script: 
+    - cp $ENVFILE .env
+    - cp $SUMAS config/sumas.json
+    - cp $SUMASEN config/sumasEn.json
+  artifacts:
+    paths:
+      - .env
+      - config/sumas.json
+      - config/sumasEn.json

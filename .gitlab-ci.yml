@@ -51,7 +51,6 @@ prepare_node:
     - npm run prod
   artifacts:
     paths:
-      - node_modules
       - public/js/
       - public/css/
   cache:

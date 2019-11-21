@@ -10,8 +10,12 @@ variables:
     SAST_DISABLED: "true"
     TEST_DISABLED: "true"
 
+include:
+  - template: Jobs/Build.gitlab-ci.yml
+
 stages:
   - prepare
+  - build
 
 # Prepares the secret files that we cannot or don't want to share with public
 prepare_secrets:

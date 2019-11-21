@@ -62,3 +62,15 @@ prepare_node:
     - branches
     - tags
 
+prepare_composer:
+  stage: prepare
+  image: prooph/composer:7.3
+  script:
+    - composer install
+  artifacts:
+    paths:
+      - vendor
+  cache:
+    key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - vendor

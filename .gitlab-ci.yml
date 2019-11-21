@@ -17,6 +17,9 @@ stages:
   - prepare
   - build
 
+build:
+  services:
+
 # Prepares the secret files that we cannot or don't want to share with public
 prepare_secrets:
   stage: prepare

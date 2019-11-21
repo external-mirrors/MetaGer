@@ -12,6 +12,8 @@ class Searcher implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    public $tries = 1;
+
     protected $name, $ch, $pid, $counter, $lastTime, $connectionInfo, $user, $password, $headers;
     protected $proxyhost, $proxyuser, $proxypassword;
     # Each Searcher will shutdown after a specified time(s) or number of requests

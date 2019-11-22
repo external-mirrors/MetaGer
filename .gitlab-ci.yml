@@ -75,6 +75,7 @@ prepare_node:
     paths:
       - public/js/
       - public/css/
+      - public/mix-manifest.json
   cache:
     # Cache per Branch
     key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"

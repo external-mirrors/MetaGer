@@ -48,6 +48,7 @@ prepare_secrets:
     - cp $ADBLACKLISTDOMAINS config/adBlacklistDomains.txt
     - cp $SPAM config/spam.txt
     - cp $USERSSEEDER database/seeds/UsersSeeder.php
+    - cp database/useragents.sqlite.example database/useragents.sqlite
     - sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env
   artifacts:
     paths:

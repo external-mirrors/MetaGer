@@ -61,6 +61,7 @@ prepare_secrets:
       - config/adBlacklistDomains.txt
       - config/spam.txt
       - database/seeds/UsersSeeder.php
+      - database/useragents.sqlite
   only:
     - branches
     - tags

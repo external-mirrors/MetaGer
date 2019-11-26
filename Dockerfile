@@ -2,6 +2,7 @@ FROM nginx
 
 RUN apt -y update && apt -y install php-fpm \
     ca-certificates \
+    cron \
     zip \
     php7.3-common \
     php7.3-curl \
@@ -23,6 +24,9 @@ RUN sed -i 's/listen.owner = www-data/listen.owner = nginx/g' /etc/php/7.3/fpm/p
 # Set correct timezone
 RUN ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
 
+# Add Cronjob for Laravel
+RUN (crontab -l ; echo "* * * * * php /html/artisan schedule:run >> /dev/null 2>&1") | crontab
+
 WORKDIR /html
 EXPOSE 80
 
@@ -30,4 +34,4 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY . /html
 
-CMD /etc/init.d/php7.3-fpm start && /etc/init.d/nginx start && /etc/init.d/redis-server start && php artisan worker:spawner
+CMD /etc/init.d/cron start && /etc/init.d/php7.3-fpm start && /etc/init.d/nginx start && /etc/init.d/redis-server start && php artisan worker:spawner

@@ -7,8 +7,9 @@
     <p>@lang('captcha.2')</p>
     <p>@lang('captcha.3')</p>
     <p>@lang('captcha.4')</p>
-    <form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('verification', ['id' => $id])) }}">
+    <form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('verification', ['id' => $id, 'uid' => $uid])) }}">
         <input type="hidden" name="url" value="{!! $url !!}">
+        <input type="hidden" name="uid" value="{{ $uid }}">
         <input type="hidden" name="id" value="{{ $id }}">
         <p><img src="{{ $image }}" /></p>
         @if(isset($errorMessage))

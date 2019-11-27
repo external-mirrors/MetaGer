@@ -135,13 +135,6 @@ return [
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
-        'redisCache' => [
-            'host' => env('REDIS_CACHE_HOST', 'localhost'),
-            'password' => env('REDIS_CACHE_PASSWORD', env('REDIS_PASSWORD', null)),
-            'port' => env('REDIS_CACHE_PORT', 6379),
-            'database' => 2,
-        ],
-
     ],
 
 ];

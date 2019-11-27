@@ -32,6 +32,10 @@ spec:
     spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+      volumes:
+      - name: mglogs-persistent-storage
+        persistentVolumeClaim:
+          claimName: mglogs
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -92,6 +96,9 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        volumeMounts:
+        - name: mglogs-persistent-storage
+          mountPath: /html/storage/logs/metager
         resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{- end -}}

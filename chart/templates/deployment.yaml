@@ -36,6 +36,9 @@ spec:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
           claimName: mglogs
+      - name: mgcache-persistent-storage
+        persistentVolumeClaim:
+          claimName: mgcache
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -99,6 +102,8 @@ spec:
         volumeMounts:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
+        - name: mgcache-persistent-storage
+          mountPath: /html/storage/framework/cache
         resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{- end -}}

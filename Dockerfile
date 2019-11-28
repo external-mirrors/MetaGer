@@ -39,5 +39,6 @@ CMD /etc/init.d/cron start && \
     /etc/init.d/php7.3-fpm start && \
     /etc/init.d/nginx start && \
     /etc/init.d/redis-server start && \
-    chmod 0777 /html/storage/logs/metager && \
+    chmod -R 0777 /html/storage/logs/metager && \
+    chmod -R 0777 /html/bootstrap/cache && \
     php artisan worker:spawner

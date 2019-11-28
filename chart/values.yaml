@@ -17,9 +17,9 @@ application:
   secretName:
   secretChecksum:
 hpa:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 5
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 20
   targetCPUUtilizationPercentage: 80
 gitlab:
   app:
@@ -72,8 +72,8 @@ resources:
 #    cpu: 100m
 #    memory: 128Mi
   requests:
-#    cpu: 100m
-#    memory: 128Mi
+    cpu: 500m
+    memory: 128Mi
 
 ## Configure PodDisruptionBudget
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

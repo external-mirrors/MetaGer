@@ -331,10 +331,17 @@ class AdminInterface extends Controller
     public function check()
     {
         $q = "";
-        $redis = Redis::connection('redisLogs');
-        if ($redis) {
-            $q = $redis->lrange("logs.search", -1, -1)[0];
-            $q = substr($q, strpos($q, "search=") + 7);
+        $logpath = \App\MetaGer::getMGLogFile();
+
+        if (file_exists($logpath)) {
+            $fp = @fopen($logpath, "r");
+            while (($line = fgets($fp)) !== false) {
+                if (!empty($line)) {
+                    $q = $line;
+                }
+            }
+            fclose($fp);
+            $q = substr($q, strpos($q, "eingabe=") + 8);
         }
         return view('admin.check')
             ->with('title', 'Wer sucht was? - MetaGer')

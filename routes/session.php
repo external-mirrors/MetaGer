@@ -6,6 +6,6 @@ Route::group(
     'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]*/
     ],
     function () {
-        Route::match(['get', 'post'], 'meta/verification/{id}/{url?}', 'HumanVerification@captcha')->name('verification');
+        Route::match(['get', 'post'], 'meta/verification/{id}/{uid}/{url?}', 'HumanVerification@captcha')->name('verification');
     }
 );

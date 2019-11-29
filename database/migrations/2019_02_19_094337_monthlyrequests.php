@@ -16,7 +16,7 @@ class Monthlyrequests extends Migration
         Schema::create('monthlyrequests', function (Blueprint $table) {
             $table->string('name')->unique();
             $table->integer('count');
-            $table->timestamp('updated_at');
+            $table->timestamp('updated_at')->useCurrent();
         });
 
     }

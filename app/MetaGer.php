@@ -1338,10 +1338,19 @@ class MetaGer
         return $this->canCache;
     }
 
+    public static function getMGLogFile()
+    {
+        $logpath = storage_path("logs/metager/");
+        if (!file_exists($logpath)) {
+            mkdir($logpath, 0777, true);
+        }
+        $logpath .= (new \DateTime())->format('Y-m-d') . ".log";
+        return $logpath;
+    }
+
     public function createLogs()
     {
         if ($this->shouldLog) {
-            $redis = Redis::connection('redisLogs');
             try {
                 $logEntry = "";
                 $logEntry .= "[" . date("D M d H:i:s") . "]";
@@ -1364,9 +1373,8 @@ class MetaGer
                 $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
-                # 2 Arten von Logs in einem wird die Anzahl der Abfragen an eine Suchmaschine gespeichert und in der anderen
-                # die Anzahl, wie häufig diese Ergebnisse geliefert hat.
-                $redis->rpush('logs.search', $logEntry);
+                $logpath = \App\MetaGer::getMGLogFile();
+                file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND | LOCK_EX);
             } catch (\Exception $e) {
                 return;
             }

@@ -112,6 +112,13 @@ review:
     variables:
       - $REVIEW_DISABLED
 
+stop_review:
+  except:
+    refs:
+      - master
+      - development
+    variables:
+      - $REVIEW_DISABLED
 
 .development: &development_template
   extends: .auto-deploy

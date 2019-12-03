@@ -2,16 +2,12 @@
 
 namespace App\Models;
 
-use App\Jobs\Searcher;
 use App\MetaGer;
 use Cache;
-use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Redis;
 
 abstract class Searchengine
 {
-    use DispatchesJobs;
-
     public $getString = ""; # Der String für die Get-Anfrage
     public $engine; # Die ursprüngliche Engine XML
     public $totalResults = 0; # How many Results the Searchengine has found
@@ -40,17 +36,17 @@ abstract class Searchengine
     public $counter = 0; # Wird eventuell für Artefakte benötigt
     public $write_time = 0; # Wird eventuell für Artefakte benötigt
     public $connection_time = 0; # Wird eventuell für Artefakte benötigt
+    public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
 
     public function __construct($name, \stdClass $engine, MetaGer $metager)
     {
         $this->engine = $engine;
         $this->name = $name;
 
-        # Cache Standarddauer 60
-        $this->cacheDuration = 60;
         if (isset($engine->{"cache-duration"}) && $engine->{"cache-duration"} !== -1) {
             $this->cacheDuration = $engine->{"cache-duration"};
         }
+        $this->cacheDuration = max($this->cacheDuration, 5);
 
         $this->useragent = $metager->getUserAgent();
         $this->ip = $metager->getIp();
@@ -61,7 +57,12 @@ abstract class Searchengine
             $this->password = $this->engine->{"http-auth-credentials"}->password;
         }
 
-        $this->headers = $this->engine->{"request-header"};
+        if ($this->engine->{"request-header"}) {
+            $this->headers = [];
+            foreach ($this->headers as $key => $value) {
+                $this->headers[$key] = $value;
+            }
+        }
 
         # Suchstring generieren
         $q = $metager->getQ();
@@ -87,7 +88,6 @@ abstract class Searchengine
 
         $this->getString = $this->generateGetString($q);
         $this->updateHash();
-        $this->resultHash = $metager->getSearchUid();
         $this->canCache = $metager->canCache();
     }
 
@@ -95,7 +95,7 @@ abstract class Searchengine
 
     # Standardimplementierung der getNext Funktion, damit diese immer verwendet werden kann
     public function getNext(MetaGer $metager, $result)
-    { }
+    {}
 
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch(\App\MetaGer $metager)
@@ -104,11 +104,6 @@ abstract class Searchengine
             $this->cached = true;
             $this->retrieveResults($metager);
         } else {
-            $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
-            // We will push the confirmation of the submission to the Result Hash
-            $redis->hset($metager->getRedisEngineResult() . $this->name, "status", "waiting");
-            $redis->expire($metager->getRedisEngineResult() . $this->name, env('REDIS_RESULT_CACHE_DURATION'));
-
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
             // <ResultHash>;<URL to fetch>
@@ -126,61 +121,26 @@ abstract class Searchengine
                 $url .= ":" . $this->engine->port;
             }
             $url .= $this->getString;
-            $url = base64_encode($url);
 
-            $mission = $this->resultHash . ";" . $url . ";" . $metager->getTime();
+            $mission = [
+                "resulthash" => $this->hash,
+                "url" => $url,
+                "username" => $this->username,
+                "password" => $this->password,
+                "headers" => $this->headers,
+                "cacheDuration" => $this->cacheDuration,
+            ];
+
+            $mission = json_encode($mission);
+
             // Submit this mission to the corresponding Redis Queue
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
-            Redis::rpush($this->name . ".queue", $mission);
-
+            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
             // The request is not cached and will be submitted to the searchengine
             // We need to check if the number of requests to this engine are limited
             if (!empty($this->engine->{"monthly-requests"})) {
                 Redis::incr("monthlyRequests:" . $this->name);
-            }
-
-            /**
-             * We have Searcher processes running for MetaGer
-             * Each Searcher is dedicated to one specific Searchengine and fetches it's results.
-             * We can have multiple Searchers for each engine, if needed.
-             * At this point we need to decide, whether we need to start a new Searcher process or
-             * if we have enough of them running.
-             * The information for that is provided through the redis system. Each running searcher
-             * gives information how long it has waited to be given the last fetcher job.
-             * The longer this time value is, the less frequent the search engine is used and the less
-             * searcher of that type we need.
-             * But if it's too low, i.e. 100ms, then the searcher is near to it's full workload and needs assistence.
-             **/
-            $needSearcher = false;
-            $searcherData = Redis::hgetall($this->name . ".stats");
-
-            // We now have an array of statistical data from the searchers
-            // Each searcher has one entry in it.
-            // So if it's empty, then we have currently no searcher running and
-            // of course need to spawn a new one.
-            if (sizeof($searcherData) === 0) {
-                $needSearcher = true;
-            } else {
-                // There we go:
-                // There's at least one Fetcher running for this search engine.
-                // Now we have to check if the current count is enough to fetch all the
-                // searches or if it needs help.
-                // Let's hardcode a minimum of 100ms between every search job.
-                // First calculate the median of all Times
-                $median = 0;
-                foreach ($searcherData as $pid => $data) {
-                    $data = explode(";", $data);
-                    $median += floatval($data[1]);
-                }
-                $median /= sizeof($searcherData);
-                if ($median < .1) {
-                    $needSearcher = true;
-                }
-            }
-            if ($needSearcher && Redis::get($this->name) !== "locked") {
-                Redis::set($this->name, "locked");
-                $this->dispatch(new Searcher($this->name, $this->username, $this->password, $this->headers));
             }
         }
     }
@@ -210,18 +170,21 @@ abstract class Searchengine
             return true;
         }
 
-        $body = "";
-        $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
+        $body = null;
 
-        if ($this->canCache && $this->cacheDuration > 0 && Cache::has($this->hash)) {
+        if (Cache::has($this->hash)) {
             $body = Cache::get($this->hash);
-        } elseif ($redis->hexists($metager->getRedisEngineResult() . $this->name, "response")) {
-            $body = $redis->hget($metager->getRedisEngineResult() . $this->name, "response");
-            if ($this->canCache && $this->cacheDuration > 0) {
-                Cache::put($this->hash, $body, $this->cacheDuration);
-            }
         }
-        if ($body !== "" && $body !== "connected" && $body !== "waiting") {
+        /*
+        if ($this->canCache && $this->cacheDuration > 0 && Cache::has($this->hash)) {
+        $body = Cache::get($this->hash);
+        } elseif ($redis->hexists($metager->getRedisEngineResult() . $this->name, "response")) {
+        $body = $redis->hget($metager->getRedisEngineResult() . $this->name, "response");
+        if ($this->canCache && $this->cacheDuration > 0) {
+        Cache::put($this->hash, $body, $this->cacheDuration);
+        }
+        }*/
+        if ($body !== null) {
             $this->loadResults($body);
             $this->getNext($metager, $body);
             $this->loaded = true;

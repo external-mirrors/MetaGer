@@ -41,4 +41,4 @@ CMD /etc/init.d/cron start && \
     /etc/init.d/redis-server start && \
     chmod -R 0777 /html/storage && \
     chmod -R 0777 /html/bootstrap/cache && \
-    php artisan worker:spawner
+    php artisan requests:fetcher

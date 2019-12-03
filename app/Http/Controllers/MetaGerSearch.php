@@ -14,6 +14,7 @@ class MetaGerSearch extends Controller
 {
     public function search(Request $request, MetaGer $metager)
     {
+        $time = microtime(true);
         $spamEntries = [];
         if (file_exists(config_path('spam.txt'))) {
             $spamEntries = file(config_path('spam.txt'));

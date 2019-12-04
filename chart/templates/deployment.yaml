@@ -32,6 +32,8 @@ spec:
     spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+      securityContext:
+        fsGroup: 2000
       volumes:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:

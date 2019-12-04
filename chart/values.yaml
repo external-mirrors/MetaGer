@@ -68,12 +68,12 @@ postgresql:
     #     stack: gitlab (This is an example. The labels should match the labels on the CloudSQLInstanceClass)
 
 resources:
-#  limits:
-#    cpu: 100m
-#    memory: 128Mi
+  limits:
+    cpu: 1
+    memory: 1Gi
   requests:
-    cpu: 500m
-    memory: 128Mi
+    cpu: 1
+    memory: 1Gi
 
 ## Configure PodDisruptionBudget
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/

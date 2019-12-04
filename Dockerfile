@@ -33,12 +33,11 @@ EXPOSE 80
 
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
-COPY . /html
+COPY --chown=root:nginx . /html
+RUN chmod -R g+w storage bootstrap/cache
 
 CMD /etc/init.d/cron start && \
     /etc/init.d/php7.3-fpm start && \
     /etc/init.d/nginx start && \
     /etc/init.d/redis-server start && \
-    chmod -R 0777 /html/storage && \
-    chmod -R 0777 /html/bootstrap/cache && \
-    php artisan worker:spawner
+    su -s /bin/bash -c 'php artisan requests:fetcher' nginx

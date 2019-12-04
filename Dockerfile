@@ -33,11 +33,10 @@ EXPOSE 80
 
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
-COPY . /html
+COPY --chown=1000:nginx . /html
+RUN chmod -R g+w storage bootstrap/cache
 
-CMD chmod -R 0777 /html/storage && \
-    chmod -R 0777 /html/bootstrap/cache && \
-    /etc/init.d/cron start && \
+CMD /etc/init.d/cron start && \
     /etc/init.d/php7.3-fpm start && \
     /etc/init.d/nginx start && \
     /etc/init.d/redis-server start && \

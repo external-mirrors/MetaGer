@@ -34,13 +34,13 @@ spec:
 {{ toYaml .Values.image.secrets | indent 10 }}
       securityContext:
         fsGroup: 2000
-#      volumes:
-#      - name: mglogs-persistent-storage
-#        persistentVolumeClaim:
-#          claimName: mglogs
-#      - name: mgcache-persistent-storage
-#        persistentVolumeClaim:
-#          claimName: mgcache
+      volumes:
+      - name: mglogs-persistent-storage
+        persistentVolumeClaim:
+          claimName: mglogs
+      - name: mgcache-persistent-storage
+        persistentVolumeClaim:
+          claimName: mgcache
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -101,11 +101,11 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-#        volumeMounts:
-#        - name: mglogs-persistent-storage
-#          mountPath: /html/storage/logs/metager
-#        - name: mgcache-persistent-storage
-#          mountPath: /html/storage/framework/cache
+        volumeMounts:
+        - name: mglogs-persistent-storage
+          mountPath: /html/storage/logs/metager
+        - name: mgcache-persistent-storage
+          mountPath: /html/storage/framework/cache
         resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{- end -}}

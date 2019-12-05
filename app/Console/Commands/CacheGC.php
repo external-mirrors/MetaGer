@@ -48,11 +48,11 @@ class CacheGC extends Command
         }
 
         try {
-            $iterator = new \RecursiveDirectoryIterator($cachedir);
-            $iterator->setFlags(\RecursiveDirectoryIterator::SKIP_DOTS);
-            $files = new \RecursiveIteratorIterator($iterator, \RecursiveIteratorIterator::SELF_FIRST);
-            foreach ($files as $file) {
-                $file = realpath($file);
+            foreach (new \DirectoryIterator($cachedir) as $fileInfo) {
+                if ($fileInfo->isDot()) {
+                    continue;
+                }
+                $file = $fileInfo->getPathname();
                 $basename = basename($file);
                 if (!is_dir($file) && $basename !== "cache.gc" && $basename !== ".gitignore") {
                     $fp = fopen($file, 'r');
@@ -80,5 +80,6 @@ class CacheGC extends Command
         } finally {
             unlink($lockfile);
         }
+
     }
 }

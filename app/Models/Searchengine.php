@@ -170,11 +170,11 @@ abstract class Searchengine
             return true;
         }
 
-        $body = null;
+        $body = Redis::get($this->hash);
 
-        if (Cache::has($this->hash)) {
-            $body = Cache::get($this->hash);
-        }
+        /*if (Cache::has($this->hash)) {
+        $body = Cache::get($this->hash);
+        }*/
         /*
         if ($this->canCache && $this->cacheDuration > 0 && Cache::has($this->hash)) {
         $body = Cache::get($this->hash);

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -97,7 +96,12 @@ class WorkerSpawner extends Command
                     } else {
                         $body = \curl_multi_getcontent($info["handle"]);
                     }
-                    Cache::put($resulthash, $body, now()->addMinutes($cacheDuration));
+
+                    Redis::pipeline(function ($pipe) use ($resulthash, $body) {
+                        $pipe->set($resulthash, $body);
+                        $pipe->expire($resulthash, 60);
+                    });
+                    #Cache::put($resulthash, $body, now()->addMinutes($cacheDuration));
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }
                 if (!$active && !$answerRead) {

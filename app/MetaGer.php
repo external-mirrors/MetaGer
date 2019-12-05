@@ -6,6 +6,7 @@ use App;
 use Cache;
 use Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 use Log;
@@ -805,7 +806,7 @@ class MetaGer
         while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
             Log::info(sizeof($enginesToWaitFor) . " " . sizeof($answered) . " " . $enginesToWaitFor[0]->hash);
             foreach ($enginesToWaitFor as $index => $engine) {
-                if (Cache::has($engine->hash)) {
+                if (Redis::get($engine->hash) !== null) {
                     $answered[] = $engine;
                     unset($enginesToWaitFor[$index]);
                     break;

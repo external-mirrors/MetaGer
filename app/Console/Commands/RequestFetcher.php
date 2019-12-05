@@ -2,11 +2,12 @@
 
 namespace App\Console\Commands;
 
+use Artisan;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
 
-class WorkerSpawner extends Command
+class RequestFetcher extends Command
 {
     /**
      * The name and signature of the console command.
@@ -20,7 +21,7 @@ class WorkerSpawner extends Command
      *
      * @var string
      */
-    protected $description = 'This command makes sure that enough worker processes are spawned';
+    protected $description = 'This commands fetches requests to the installed search engines';
 
     protected $shouldRun = true;
     protected $multicurl = null;
@@ -49,10 +50,16 @@ class WorkerSpawner extends Command
      */
     public function handle()
     {
-        pcntl_async_signals(true);
-        pcntl_signal(SIGINT, [$this, "sig_handler"]);
-        pcntl_signal(SIGTERM, [$this, "sig_handler"]);
-        pcntl_signal(SIGHUP, [$this, "sig_handler"]);
+        $pid = \pcntl_fork();
+        if ($pid === 0) {
+            Artisan::call('requests:cacher');
+            exit;
+        } else {
+            pcntl_async_signals(true);
+            pcntl_signal(SIGINT, [$this, "sig_handler"]);
+            pcntl_signal(SIGTERM, [$this, "sig_handler"]);
+            pcntl_signal(SIGHUP, [$this, "sig_handler"]);
+        }
 
         try {
             $blocking = false;
@@ -62,7 +69,7 @@ class WorkerSpawner extends Command
                 if (!$blocking) {
                     $currentJob = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY);
                 } else {
-                    $currentJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 10);
+                    $currentJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
                     if (!empty($currentJob)) {
                         $currentJob = $currentJob[1];
                     }
@@ -97,9 +104,15 @@ class WorkerSpawner extends Command
                         $body = \curl_multi_getcontent($info["handle"]);
                     }
 
-                    Redis::pipeline(function ($pipe) use ($resulthash, $body) {
+                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDuration) {
                         $pipe->set($resulthash, $body);
                         $pipe->expire($resulthash, 60);
+                        $cacherItem = [
+                            'cacheDuration' => $cacheDuration,
+                            'hash' => $resulthash,
+                            'body' => $body,
+                        ];
+                        $pipe->rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, json_encode($cacherItem));
                     });
                     #Cache::put($resulthash, $body, now()->addMinutes($cacheDuration));
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
@@ -111,6 +124,8 @@ class WorkerSpawner extends Command
         } finally {
             curl_multi_close($this->multicurl);
         }
+
+        \pcntl_waitpid($pid, $status, WNOHANG);
     }
 
     private function getCurlHandle($job)

@@ -102,7 +102,7 @@ abstract class Searchengine
     {
         if ($this->canCache && Cache::has($this->hash)) {
             $this->cached = true;
-            $this->retrieveResults($metager);
+            $this->retrieveResults($metager, true);
         } else {
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
@@ -170,20 +170,16 @@ abstract class Searchengine
             return true;
         }
 
-        $body = Redis::get($this->hash);
-
-        /*if (Cache::has($this->hash)) {
-        $body = Cache::get($this->hash);
-        }*/
-        /*
-        if ($this->canCache && $this->cacheDuration > 0 && Cache::has($this->hash)) {
-        $body = Cache::get($this->hash);
-        } elseif ($redis->hexists($metager->getRedisEngineResult() . $this->name, "response")) {
-        $body = $redis->hget($metager->getRedisEngineResult() . $this->name, "response");
-        if ($this->canCache && $this->cacheDuration > 0) {
-        Cache::put($this->hash, $body, $this->cacheDuration);
+        $body = null;
+        if ($this->cached) {
+            $body = Cache::get($this->hash);
+            if ($body === "no-result") {
+                $body = "";
+            }
+        } else {
+            $body = Redis::get($this->hash);
         }
-        }*/
+
         if ($body !== null) {
             $this->loadResults($body);
             $this->getNext($metager, $body);

@@ -804,7 +804,6 @@ class MetaGer
         }
 
         while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            Log::info(sizeof($enginesToWaitFor) . " " . sizeof($answered) . " " . $enginesToWaitFor[0]->hash);
             foreach ($enginesToWaitFor as $index => $engine) {
                 if (Redis::get($engine->hash) !== null) {
                     $answered[] = $engine;

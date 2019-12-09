@@ -50,7 +50,15 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
-        $pid = \pcntl_fork();
+        $pids = [];
+        $pid = null;
+        for ($i = 0; $i < 5; $i++) {
+            $pid = \pcntl_fork();
+            $pids[] = $pid;
+            if ($pid === 0) {
+                break;
+            }
+        }
         if ($pid === 0) {
             Artisan::call('requests:cacher');
             exit;
@@ -124,8 +132,9 @@ class RequestFetcher extends Command
         } finally {
             curl_multi_close($this->multicurl);
         }
-
-        \pcntl_waitpid($pid, $status, WNOHANG);
+        foreach ($pids as $tmppid) {
+            \pcntl_waitpid($tmppid, $status, WNOHANG);
+        }
     }
 
     private function getCurlHandle($job)

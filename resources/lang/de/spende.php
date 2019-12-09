@@ -6,9 +6,9 @@ return [
 
     'bankinfo.1' => 'Spenden mittels einer Überweisung',
     'bankinfo.2' => 'SUMA-EV',
-    'bankinfo.2.1' => 'DE64 4306 0967 4075 0332 01',
-    'bankinfo.2.2' => 'GENODEM1GLS',
-    'bankinfo.2.3' => 'GLS Gemeinschaftsbank, Bochum',
+    'bankinfo.2.1' => 'IBAN: DE64 4306 0967 4075 0332 01',
+    'bankinfo.2.2' => 'BIC: GENODEM1GLS',
+    'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',
     'bankinfo.2.4' => '(Konto-Nr.: 4075 0332 01, BLZ: 43060967)',
     'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 200,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
 

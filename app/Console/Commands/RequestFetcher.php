@@ -97,7 +97,7 @@ class RequestFetcher extends Command
                     $infos = curl_getinfo($info["handle"], CURLINFO_PRIVATE);
                     $infos = explode(";", $infos);
                     $resulthash = $infos[0];
-                    $cacheDuration = intval($infos[1]);
+                    $cacheDurationMinutes = intval($infos[1]);
                     $responseCode = curl_getinfo($info["handle"], CURLINFO_HTTP_CODE);
                     $body = "";
 
@@ -112,17 +112,16 @@ class RequestFetcher extends Command
                         $body = \curl_multi_getcontent($info["handle"]);
                     }
 
-                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDuration) {
+                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
                         $pipe->set($resulthash, $body);
                         $pipe->expire($resulthash, 60);
                         $cacherItem = [
-                            'cacheDuration' => $cacheDuration,
-                            'hash' => $resulthash,
-                            'body' => $body,
+                            'timeSeconds' => $cacheDurationMinutes * 60,
+                            'key' => $resulthash,
+                            'value' => $body,
                         ];
                         $pipe->rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, json_encode($cacherItem));
                     });
-                    #Cache::put($resulthash, $body, now()->addMinutes($cacheDuration));
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }
                 if (!$active && !$answerRead) {

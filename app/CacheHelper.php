@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Redis;
+
 class CacheHelper
 {
 
@@ -12,7 +14,7 @@ class CacheHelper
     public static function put($key, $value, $timeSeconds)
     {
         $cacherItem = [
-            'timeSeconds' => $time,
+            'timeSeconds' => $timeSeconds,
             'key' => $key,
             'value' => $value,
         ];

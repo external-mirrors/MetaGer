@@ -50,11 +50,11 @@ class RequestCacher extends Command
         while ($this->shouldRun) {
             $cacheItem = Redis::blpop(self::CACHER_QUEUE, 1);
             if (!empty($cacheItem)) {
-                $cacheItem = json_decode($cacheItem[1], true);
-                if (empty($cacheItem["body"])) {
-                    $cacheItem["body"] = "no-result";
+                $cacheItem = unserialize(base64_decode($cacheItem[1]));
+                if (empty($cacheItem["value"])) {
+                    $cacheItem["value"] = "no-result";
                 }
-                Cache::put($cacheItem["hash"], $cacheItem["body"], now()->addMinutes($cacheItem["cacheDuration"]));
+                Cache::put($cacheItem["key"], $cacheItem["value"], now()->addSeconds($cacheItem["timeSeconds"]));
             }
         }
     }

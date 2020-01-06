@@ -37,6 +37,7 @@ abstract class Searchengine
     public $write_time = 0; # Wird eventuell für Artefakte benötigt
     public $connection_time = 0; # Wird eventuell für Artefakte benötigt
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
+    public $new = true; # Important for loading results by JS
 
     public function __construct($name, \stdClass $engine, MetaGer $metager)
     {
@@ -183,10 +184,18 @@ abstract class Searchengine
         if ($body !== null) {
             $this->loadResults($body);
             $this->getNext($metager, $body);
+            $this->markNew();
             $this->loaded = true;
             return true;
         } else {
             return false;
+        }
+    }
+
+    protected function markNew()
+    {
+        foreach ($this->results as $result) {
+            $result->new = $this->new;
         }
     }
 
@@ -242,5 +251,10 @@ abstract class Searchengine
     protected function getDynamicParams()
     {
         return [];
+    }
+
+    public function setNew($new)
+    {
+        $this->new = $new;
     }
 }

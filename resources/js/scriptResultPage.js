@@ -59,9 +59,6 @@ function loadMoreResults() {
 
   updateUrl = updateUrl.replace("/meta.ger3", "/loadMore");
 
-  var expectedEngines = -1;
-  var deliveredEngines = -1;
-
   var currentlyLoading = false;
 
   // Regularily check for not yet delivered Results
@@ -70,7 +67,7 @@ function loadMoreResults() {
       currentlyLoading = true;
       $.getJSON(updateUrl, function (data) {
         // Check if we can clear the interval (once every searchengine has answered)
-        if (data.engineDelivered == data.engineCount || data.timeWaiting > 15) {
+        if (!data || data.finished) {
           clearInterval(resultLoader);
         }
         // If there are new results we can add them
@@ -109,13 +106,9 @@ function loadMoreResults() {
               $(".alert.alert-danger").remove();
             }
           }
-          console.log(data);
         }
         currentlyLoading = false;
       });
     }
   }, 1000);
-  //clearInterval(resultLoader);
-  console.log(updateUrl);
-
 }

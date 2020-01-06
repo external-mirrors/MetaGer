@@ -1733,4 +1733,16 @@ class MetaGer
     {
         return $this->redisCurrentResultList;
     }
+
+    public function getEngines()
+    {
+        return $this->engines;
+    }
+    /**
+     * Used by JS result loader to restore MetaGer Object of previous request
+     */
+    public function restoreEngines($engines)
+    {
+        $this->engines = $engines;
+    }
 }

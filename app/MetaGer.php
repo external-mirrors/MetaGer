@@ -14,6 +14,8 @@ use Predis\Connection\ConnectionException;
 
 class MetaGer
 {
+    const FETCHQUEUE_KEY = "fetcher.queue";
+
     # Einstellungen für die Suche
     public $alteredQuery = "";
     public $alterationOverrideQuery = "";
@@ -321,7 +323,7 @@ class MetaGer
                 'page' => $page,
                 'engines' => $this->next,
             ];
-            Cache::put($this->getSearchUid(), serialize($this->next), 60);
+            \App\CacheHelper::put($this->getSearchUid(), serialize($this->next), 60 * 60);
         } else {
             $this->next = [];
         }
@@ -780,13 +782,12 @@ class MetaGer
 
     public function waitForMainResults()
     {
-        $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
         $engines = $this->engines;
         $enginesToWaitFor = [];
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if (!$engine->cached && $engine->name === $mainEngine) {
+                if ($engine->name === $mainEngine) {
                     $enginesToWaitFor[] = $engine;
                 }
             }
@@ -803,41 +804,38 @@ class MetaGer
         }
 
         while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            $newEngine = $redis->blpop($this->redisResultWaitingKey, 1);
-            if ($newEngine === null || sizeof($newEngine) !== 2) {
-                continue;
-            } else {
-                $newEngine = $newEngine[1];
-                foreach ($enginesToWaitFor as $index => $engine) {
-                    if ($engine->name === $newEngine) {
-                        unset($enginesToWaitFor[$index]);
-                        break;
-                    }
+            Log::info(sizeof($enginesToWaitFor) . " " . sizeof($answered) . " " . $enginesToWaitFor[0]->hash);
+            foreach ($enginesToWaitFor as $index => $engine) {
+                if (Redis::get($engine->hash) !== null) {
+                    $answered[] = $engine;
+                    unset($enginesToWaitFor[$index]);
+                    break;
                 }
-                $answered[] = $newEngine;
             }
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
+            } else {
+                usleep(50 * 1000);
             }
         }
 
         # Now we can add an entry to Redis which defines the starting time and how many engines should answer this request
-
-        $pipeline = $redis->pipeline();
-        $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
-        $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
-        $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
-        # Add the cached engines as answered
-        foreach ($engines as $engine) {
-            if ($engine->cached) {
-                $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
-                $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
-            }
-        }
-        foreach ($answered as $engine) {
-            $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
-        }
-        $pipeline->execute();
+        /*
+    $pipeline = $redis->pipeline();
+    $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
+    $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
+    $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
+    # Add the cached engines as answered
+    foreach ($engines as $engine) {
+    if ($engine->cached) {
+    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
+    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
+    }
+    }
+    foreach ($answered as $engine) {
+    $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
+    }
+    $pipeline->execute();*/
     }
 
     public function retrieveResults()

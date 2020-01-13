@@ -50,7 +50,7 @@ class HumanVerification
 
             # Get all Users of this IP
             $users = Cache::get($prefix . "." . $id, []);
-            $users = $this->removeOldUsers($users);
+            $users = $this->removeOldUsers($prefix, $users);
 
             $user = [];
             if (empty($users[$uid])) {
@@ -148,10 +148,10 @@ class HumanVerification
         // Lock must be acquired within 2 seconds
         $userList = Cache::get($prefix . "." . $user["id"], []);
         $userList[$user["uid"]] = $user;
-        Cache::put($prefix . "." . $user["id"], $userList, now()->addWeeks(2));
+        \App\CacheHelper::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);
     }
 
-    public function removeOldUsers($userList)
+    public function removeOldUsers($prefix, $userList)
     {
         $newUserlist = [];
         $now = now();
@@ -168,10 +168,7 @@ class HumanVerification
         }
 
         if ($changed) {
-            // Lock must be acquired within 2 seconds
-            Cache::lock($prefix . "." . $user["id"])->block(2, function () {
-                Cache::put($prefix . "." . $user["id"], $newUserlist, now()->addWeeks(2));
-            });
+            \App\CacheHelper::put($prefix . "." . $user["id"], $newUserlist, 2 * 7 * 24 * 60 * 60);
         }
 
         return $newUserlist;

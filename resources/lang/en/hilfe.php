@@ -45,7 +45,7 @@ return [
     "result.info.more" => '"MORE": you will get more options, the result changes its appearance to:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
     "result.info.2" => 'The new options are:',
     "result.info.saveresult" => '"Save result in TAB" (Only desktop): The result will be stored in a new TAB. It´ s used for collecting results out of several searches. This TAB appears on the right side of your screen. (info: <a href="#searchinsearch"> Search in search</a>)',
-    "result.info.domainnewsearch" => '"start a new search on this domain": search only on this domain.',
+    "result.info.domainnewsearch" => '"Start a new search on this domain": search only on this domain.',
     "result.info.hideresult" => '"Hide": hide results from this domain. You can use this filter directly after your search words (e.g. my search words -site:*.wikipedia.org), filters can be concatenated and the wildcard "*" is allowed. Do one search with a filter and store it as a bookmark. Next time -using the bookmark- you have your settings active immediately.',
 
     "urls.title" => "Exclude URLs",
@@ -92,10 +92,10 @@ return [
     "tor.2" => "MetaGer Tor address: http://b7cxf4dkdsko6ah2.onion/tor/",
 
     "proxy.title" => "MetaGer proxy server",
-    "proxy.1" => "Looking at the MetaGer result page, you will find a link \"open anonymously\" marked by a small lock at the right of every single result. Use this link to hide behind the MetaGer proxy server. The provided protection is limited to the website you reached from our result page. Protection persists while you see https://proxy.suma-ev.de/?url=...in your webbrowser‘s address field.",
+    "proxy.1" => "Click or touch \"open anonymously\" to use the MetaGer proxy server. The provided protection is limited to the website you reached from our result page. Protection persists while you see https://proxy.suma-ev.de/?url=...in your webbrowser‘s address field.",
 
     "maps.title" => "MetaGer maps",
-    "maps.1" => "MetaGer provides a map function: On a result page you see a new focus on the upper right, called \"maps.MetaGer.de\". You receive a map according to your search by click. Use the \"customize\" page for toggling maps function \"show/hide\", you will get a durably embedded small map on the result page, then.",
+    "maps.1" => "MetaGer provides a map function (not on metager.org, please use <a href=\"https://www.metager.de/\" target=\"_blank\" rel=\"noopener\">MetaGer.de</a>) : On a result page you see a new focus on the upper right, called \"Maps\". You receive a map according to your search by click.",
     "maps.2" => "After loading the map shows POIs according to the MetaGer results. You see them in the right column too. Mouseover a POI highlights its counterpart. Click \"Details\" to get further information (Nominatim data base) to this POI.",
     "maps.3" => "The maps are rendered before (except for the last three ones) and fast available. Affect the zoom level by mouse-wheel or the \"+ / -\" buttons in the upper left corner of the map.",
 
@@ -103,7 +103,7 @@ return [
 
     'metager.title' => 'MetaGer - General remarks',
     'metager.explanation.1' => 'MetaGer is primarily a meta search engine (founded in 1996). Besides that MetaGer maintains a number of specialized crawlers and indexers of its own.',
-    'metager.explanation.2' => 'Additionally: meta search engines provide a wider coverage and a better overview, because none of the searchengines knows the whole internet (Read more: <a href="https://en.wikipedia.org/wiki/Metasearch_engine" target="_blank" rel="noopener">Wikipedia</a>. Every result shows its origin in the right top corner. You may try this specific search engine to look for further results. We have grouped all available search services to several search focuses.',
+    'metager.explanation.2' => 'Additionally: meta search engines provide a wider coverage and a better overview, because none of the search engines knows the whole internet (Read more: <a href="https://en.wikipedia.org/wiki/Metasearch_engine" target="_blank" rel="noopener">Wikipedia</a>. Every result shows its origin in the right top corner. You may try this specific search engine to look for further results. We have grouped all available search services to several search focuses.',
 
     'searchengine.title' => 'How does MetaGer query other search engines while preserving user anonymity?',
     'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager3.de/open-source/MetaGer\">(https://gitlab.metager3.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
@@ -119,7 +119,7 @@ return [
     'proposal.title' => 'How can I delete the search suggestions?',
     'proposal.explanation' => 'This is provided by your webbrowser. Try to customize the history settings.',
 
-    'assignment.title' => 'How can one match data to indviduals ?',
+    'assignment.title' => 'How can one match data to individuals ?',
     'assignment.explanation.1' => 'This could be done by cookies. For example a cookie can be set as a part of making an account. You give your data, a cookie is made out of it and is stored on your PC. Next time using the same service it will know you very well. This kind of data is managed by the webbrowser. It is easy to find and erase all cookies from unknown or not confidable origins. You should do this routinely.',
     'assignment.explanation.2' => 'The webbrowser sends a heap of data to a website, like the user agent, exact version numbers, the work invironment, the operating system and so on. Maybe there is a matching of data to individuals possible, too.',
 ];

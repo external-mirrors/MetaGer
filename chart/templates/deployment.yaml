@@ -104,7 +104,6 @@ spec:
         volumeMounts:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
-          readOnly: true
         - name: mgcache-persistent-storage
           mountPath: /html/storage/framework/cache
         resources:

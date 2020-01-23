@@ -37,8 +37,8 @@ return [
     'about.4.2' => 'Unterstützen Sie MetaGer, indem Sie spenden oder Mitglied im gemeinnützigen Trägerverein werden.',
 
     'lang.tooltip' => 'Ergebnissprache wählen',
-    'key.placeholder' => 'Mitglieder-Key eingeben',
-    'key.tooltip' => 'Mitglieder-Key eingeben',
+    'key.placeholder' => 'Schlüssel für werbefreie Suche eingeben',
+    'key.tooltip' => 'Schlüssel für werbefreie Suche eingeben',
     'placeholder' => 'MetaGer: Sicher suchen & finden, Privatsphäre schützen',
     'searchbutton' => 'MetaGer-Suche',
 

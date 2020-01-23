@@ -104,8 +104,10 @@ spec:
         volumeMounts:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
+          readOnly: false
         - name: mgcache-persistent-storage
           mountPath: /html/storage/framework/cache
+          readOnly: false
         resources:
 {{ toYaml .Values.resources | indent 12 }}
 {{- end -}}

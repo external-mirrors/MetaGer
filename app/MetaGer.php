@@ -71,6 +71,7 @@ class MetaGer
     protected $verificationCount;
     protected $searchUid;
     protected $redisResultWaitingKey, $redisResultEngineList, $redisEngineResult, $redisCurrentResultList;
+    public $starttime;
 
     public function __construct($hash = "")
     {
@@ -804,7 +805,6 @@ class MetaGer
         }
 
         while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            Log::info(sizeof($enginesToWaitFor) . " " . sizeof($answered) . " " . $enginesToWaitFor[0]->hash);
             foreach ($enginesToWaitFor as $index => $engine) {
                 if (Redis::get($engine->hash) !== null) {
                     $answered[] = $engine;
@@ -1733,5 +1733,17 @@ class MetaGer
     public function getRedisCurrentResultList()
     {
         return $this->redisCurrentResultList;
+    }
+
+    public function getEngines()
+    {
+        return $this->engines;
+    }
+    /**
+     * Used by JS result loader to restore MetaGer Object of previous request
+     */
+    public function restoreEngines($engines)
+    {
+        $this->engines = $engines;
     }
 }

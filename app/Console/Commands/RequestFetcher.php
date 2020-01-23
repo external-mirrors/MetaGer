@@ -120,7 +120,7 @@ class RequestFetcher extends Command
                             'key' => $resulthash,
                             'value' => $body,
                         ];
-                        $pipe->rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, json_encode($cacherItem));
+                        $pipe->rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, base64_encode(serialize($cacherItem)));
                     });
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }

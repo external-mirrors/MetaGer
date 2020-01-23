@@ -18,7 +18,7 @@ class CacheHelper
             'key' => $key,
             'value' => $value,
         ];
-        Redis::rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, json_encode($cacherItem));
+        Redis::rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, base64_encode(serialize($cacherItem)));
 
     }
 }

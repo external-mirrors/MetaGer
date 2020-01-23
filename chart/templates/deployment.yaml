@@ -41,6 +41,17 @@ spec:
       - name: mgcache-persistent-storage
         persistentVolumeClaim:
           claimName: mgcache
+      initContainers:
+      - name: init-chmod
+        image: busybox:latest
+        command: ['sh', "-c", "chown -R 0:101 /logs /cache && chmod -R g+w /logs /cache"]
+        volumeMounts:
+        - name: mglogs-persistent-storage
+          mountPath: /logs
+          readOnly: false
+        - name: mgcache-persistent-storage
+          mountPath: /cache
+          readOnly: false
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  phpdeps:
+    image: prooph/composer:7.3
+    volumes:
+      - .:/app
+    command: install
+  assets:
+    image: node:10
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run watch"
+  dependencies:
+    image: alpine:latest
+    volumes:
+      - .:/data
+    working_dir: /data
+    command: /data/init.sh
+  web:
+    depends_on:
+      - "dependencies"
+      - "phpdeps"
+      - "assets"
+    restart: on-failure
+    build: .
+    working_dir: /html
+    volumes:
+      - .:/html
+    ports: 
+    - "8080:80"

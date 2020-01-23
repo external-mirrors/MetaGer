@@ -51,7 +51,7 @@ abstract class Searchengine
 
         $this->useragent = $metager->getUserAgent();
         $this->ip = $metager->getIp();
-        $this->startTime = microtime();
+        $this->startTime = microtime(true);
         # check for http Auth
         if (!empty($this->engine->{"http-auth-credentials"}->username) && !empty($this->engine->{"http-auth-credentials"}->password)) {
             $this->username = $this->engine->{"http-auth-credentials"}->username;
@@ -192,7 +192,7 @@ abstract class Searchengine
         }
     }
 
-    protected function markNew()
+    public function markNew()
     {
         foreach ($this->results as $result) {
             $result->new = $this->new;

@@ -71,6 +71,7 @@ class MetaGer
     protected $verificationCount;
     protected $searchUid;
     protected $redisResultWaitingKey, $redisResultEngineList, $redisEngineResult, $redisCurrentResultList;
+    public $starttime;
 
     public function __construct($hash = "")
     {

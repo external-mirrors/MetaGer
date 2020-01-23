@@ -63,7 +63,15 @@ class MetaGerSearch extends Controller
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults();
 
-        \App\CacheHelper::put($metager->getSearchUid(), $metager->getEngines(), 1 * 60);
+        $finished = true;
+        foreach ($metager->getEngines() as $engine) {
+            if ($engine->loaded) {
+                $engine->setNew(false);
+                $engine->markNew();
+            }
+        }
+
+        \App\CacheHelper::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
@@ -112,18 +120,7 @@ class MetaGerSearch extends Controller
             return response()->json(['finished' => true]);
         }
 
-        // Mark all engines that are already loaded
-        $finished = true;
-        foreach ($engines as $engine) {
-            if ($engine->loaded) {
-                $engine->setNew(false);
-            } else {
-                $finished = false;
-                $engine->setNew(true);
-            }
-        }
-
-        $metager = new MetaGer($hash);
+        $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
 
         $metager->parseFormData($request);
         # Nach Spezialsuchen überprüfen:
@@ -156,8 +153,20 @@ class MetaGerSearch extends Controller
             }
         }
 
+        $finished = true;
+        foreach ($engines as $engine) {
+            if (!$engine->loaded) {
+                $finished = false;
+            } else {
+                $engine->setNew(false);
+                $engine->markNew();
+            }
+        }
+
+        $result["finished"] = $finished;
+
         // Update new Engines
-        \App\CacheHelper::put($metager->getSearchUid(), $metager->getEngines(), 1 * 60);
+        \App\CacheHelper::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
         return response()->json($result);
     }
 

@@ -55,7 +55,7 @@ function enableFormResetter() {
 function loadMoreResults() {
   var searchKey = $("meta[name=searchkey]").attr("content");
   var updateUrl = document.location.href;
-  updateUrl += "&loadMore=" + searchKey + "&script=yes";
+  updateUrl += "&loadMore=loader_" + searchKey + "&script=yes";
 
   updateUrl = updateUrl.replace("/meta.ger3", "/loadMore");
 

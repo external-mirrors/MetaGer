@@ -36,7 +36,9 @@ COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY --chown=root:nginx . /html
 RUN chmod -R g+w storage bootstrap/cache
 
-CMD /etc/init.d/cron start && \
+CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
+    chmod -R g+w storage/logs/metager bootstrap/cache && \
+    /etc/init.d/cron start && \
     /etc/init.d/php7.3-fpm start && \
     /etc/init.d/nginx start && \
     /etc/init.d/redis-server start && \

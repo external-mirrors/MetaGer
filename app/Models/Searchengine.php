@@ -70,6 +70,9 @@ abstract class Searchengine
         $filters = $metager->getSumaFile()->filter;
         foreach ($metager->getQueryFilter() as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
+            if (!$filterOptions->sumas->{$this->name}) {
+                continue;
+            }
             $filterOptionsEngine = $filterOptions->sumas->{$this->name};
             $query = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
             $q = $query . " " . $q;

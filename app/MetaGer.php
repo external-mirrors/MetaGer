@@ -660,7 +660,7 @@ class MetaGer
             try {
                 $tmp = new $path($engineName, $engine, $this);
             } catch (\ErrorException $e) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . var_dump($e));
+                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . $e);
                 continue;
             }
 

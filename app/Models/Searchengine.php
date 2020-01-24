@@ -58,10 +58,13 @@ abstract class Searchengine
             $this->password = $this->engine->{"http-auth-credentials"}->password;
         }
 
-        if ($this->engine->{"request-header"}) {
+        if (!empty($this->engine->{"request-header"})) {
             $this->headers = [];
-            foreach ($this->headers as $key => $value) {
+            foreach ($this->engine->{"request-header"} as $key => $value) {
                 $this->headers[$key] = $value;
+            }
+            if (sizeof($this->headers) == 0) {
+                $this->headers = null;
             }
         }
 

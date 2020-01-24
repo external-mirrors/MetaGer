@@ -164,7 +164,7 @@ class RequestFetcher extends Command
             curl_setopt($ch, CURLOPT_USERPWD, $job["username"] . ":" . $job["password"]);
         }
 
-        if (!empty($job["headers"])) {
+        if (!empty($job["headers"]) && sizeof($job["headers"]) > 0) {
             $headers = [];
             foreach ($job["headers"] as $key => $value) {
                 $headers[] = $key . ":" . $value;

@@ -14,23 +14,29 @@ class Qualigo extends XmlSearchengine
 
     protected function loadXmlResults($resultsXml)
     {
-        $results = $resultsXml->xpath('//RL/RANK');
-        foreach ($results as $result) {
-            $title       = $result->{"TITLE"}->__toString();
-            $link        = $result->{"URL"}->__toString();
-            $anzeigeLink = $result->{"ORIGURL"}->__toString();
-            $descr       = $result->{"ABSTRACT"}->__toString();
-            $this->counter++;
-            $this->ads[] = new \App\Models\Result(
-                $this->engine,
-                $title,
-                $link,
-                $anzeigeLink,
-                $descr,
-                $this->engine->{"display-name"},
-                $this->engine->homepage,
-                $this->counter
-            );
+        try {
+            $results = $resultsXml->xpath('//RL/RANK');
+            foreach ($results as $result) {
+                $title = $result->{"TITLE"}->__toString();
+                $link = $result->{"URL"}->__toString();
+                $anzeigeLink = $result->{"ORIGURL"}->__toString();
+                $descr = $result->{"ABSTRACT"}->__toString();
+                $this->counter++;
+                $this->ads[] = new \App\Models\Result(
+                    $this->engine,
+                    $title,
+                    $link,
+                    $anzeigeLink,
+                    $descr,
+                    $this->engine->{"display-name"},
+                    $this->engine->homepage,
+                    $this->counter
+                );
+            }
+        } catch (\Exception $e) {
+            Log::error("A problem occurred parsing results from $this->name:");
+            Log::error($e->getMessage());
+            return;
         }
     }
 

@@ -30,7 +30,7 @@
 		@include('parts.errors')
 		@include('parts.warnings')
 		@yield('results')
-		<div id="backtotop"><a href="#top">Zum Anfang der Seite</a></div>
+		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
 	<div id="additions-container">
 		@include('layouts.keyboardNavBox')

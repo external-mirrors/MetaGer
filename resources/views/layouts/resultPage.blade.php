@@ -47,7 +47,7 @@
 					@include('parts.errors')
 					@include('parts.warnings')
 					@yield('results')
-					<div id="backtotop"><a href="#top">Zum Anfang der Seite</a></div>
+					<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 				</div>
 			</div>
 			@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])

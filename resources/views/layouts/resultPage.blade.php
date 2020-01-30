@@ -43,9 +43,11 @@
 			<link rel="stylesheet" href="/css/noheader.css">
 			<div id="resultpage-container-noheader">
 				<div id="results-container">
+					<span name="top"></span>
 					@include('parts.errors')
 					@include('parts.warnings')
 					@yield('results')
+					<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 				</div>
 			</div>
 			@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])

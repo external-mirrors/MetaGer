@@ -87,8 +87,48 @@ class AdminInterface extends Controller
         return $names;
     }
 
+    private function convertLogs()
+    {
+        $oldLogsPath = \storage_path("logs/metager/old/");
+        $dir = new \DirectoryIterator($oldLogsPath);
+        foreach ($dir as $fileinfo) {
+            if ($fileinfo->isDot()) {
+                continue;
+            }
+            $filename = $oldLogsPath . "/" . $fileinfo->getFilename();
+            $daysAgo = substr($fileinfo->getFilename(), strrpos($fileinfo->getFilename(), ".") + 1);
+            $dateOfFile = Carbon::now()->subDays($daysAgo);
+            $outputFile = \storage_path("logs/metager/" . $dateOfFile->format("Y/m/d") . ".log");
+            if (!file_exists(dirname($outputFile))) {
+                \mkdir(dirname($outputFile), 0777, true);
+            }
+            $fhw = fopen($outputFile, "w");
+            $fhr = fopen($filename, "r");
+            try {
+                $first = true;
+                while (($line = fgets($fhr)) != false) {
+                    $date = trim(substr($line, 0, strpos($line, "]")), "[");
+                    $date = trim(substr($date, strrpos($date, " ")));
+                    $rest = trim(substr($line, strpos($line, "]") + 1));
+                    $outputString = "";
+                    if (!$first) {
+                        $outputString .= PHP_EOL;
+                    }
+                    $outputString .= $date . " " . $rest;
+                    $first = false;
+                    fwrite($fhw, $outputString);
+                }
+            } finally {
+                fclose($fhw);
+                fclose($fhr);
+            }
+        }
+    }
+
     public function count(Request $request)
     {
+        #$this->convertLogs();
+        #return;
         $days = intval($request->input('days', 28));
         $interface = $request->input('interface', 'all');
         if (!is_int($days) || $days <= 0) {
@@ -98,6 +138,7 @@ class AdminInterface extends Controller
 
         $oldLogs = [];
         $rekordTag = 0;
+        $rekordTagSameTime = 0;
         $minCount = 0;
         $rekordTagDate = "";
         $size = 0;
@@ -249,14 +290,14 @@ class AdminInterface extends Controller
             $days = $maxDate->diffInDays(Carbon::now());
         }
 
-        $logToday = "/var/log/metager/mg3.log";
+        $logToday = \App\MetaGer::getMGLogFile();
 
-        $archivePath = "/var/log/metager/archive/";
+        $archivePath = storage_path("logs/metager/");
 
         $today = [
             'logFile' => $logToday,
-            'countPath' => storage_path('logs/count/'),
-            'countFile' => storage_path('logs/count/' . getmypid()),
+            'countPath' => storage_path('logs/metager/count/'),
+            'countFile' => storage_path('logs/metager/count/' . getmypid()),
         ];
         if (\file_exists($today["countFile"])) {
             unlink($today["countFile"]);
@@ -271,10 +312,10 @@ class AdminInterface extends Controller
         $requestedLogs = [];
         for ($i = 1; $i <= $days; $i++) {
             $date = Carbon::now()->subDays($i);
-            $countPath = storage_path('logs/count/' . $date->year . "/" . $date->month . "/");
+            $countPath = storage_path('logs/metager/count/' . $date->format("Y/m") . "/");
             $countFile = $countPath . $date->day . ".json";
             $neededLogs[$i] = [
-                'logFile' => $archivePath . "mg3.log.$i",
+                'logFile' => $archivePath . $date->format("Y/m/d") . ".log",
                 'countPath' => $countPath,
                 'countFile' => $countFile,
             ];

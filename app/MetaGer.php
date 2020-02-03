@@ -1338,11 +1338,11 @@ class MetaGer
 
     public static function getMGLogFile()
     {
-        $logpath = storage_path("logs/metager/");
+        $logpath = storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/");
         if (!file_exists($logpath)) {
             mkdir($logpath, 0777, true);
         }
-        $logpath .= (new \DateTime())->format('Y-m-d') . ".log";
+        $logpath .= date("d") . ".log";
         return $logpath;
     }
 
@@ -1351,19 +1351,7 @@ class MetaGer
         if ($this->shouldLog) {
             try {
                 $logEntry = "";
-                $logEntry .= "[" . date("D M d H:i:s") . "]";
-                /*
-                Someone might wonder now why we are saving the IP-Adress to the log file here:
-                It's because we were targets of heavy Bot attacks which created so many Search-Request to our Servers that
-                not only our servers but the ones from some of our search engines too collapsed.
-                At that point we could'nt prevent the Bot from accessing our server because we would need it's IP-Adress to do so.
-
-                That's why we need to save the IP-Adress to our Log-Files temporarily. The logrotate process that shifts our Log-Files will then
-                automatically remove the IP-Adresses from the Log-File after a few hours.
-                This method gives us just enough time to prevent malicious Software from bringing our servers down and at the same time having not a single
-                IP-Adress older than one day stored on our servers. (Except the ones who got banned in that short period of course) ;-)
-                 */
-                $logEntry .= " ip=" . $this->request->ip();
+                $logEntry .= date("H:s:i");
                 $logEntry .= " ref=" . $this->request->header('Referer');
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();

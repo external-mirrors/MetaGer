@@ -22,6 +22,7 @@ spec:
 {{- end }}
   rules:   
 {{- $dot := . }}
+{{- $values := .Values }}
 {{- range $host := .Values.service.redirectHosts }}
   - host: {{ $host }}
     http:
@@ -29,7 +30,7 @@ spec:
       - path: /
         backend:
           serviceName: {{ template "fullname" $dot }}
-          servicePort: {{ .Values.service.externalPort }}
+          servicePort: {{ $values.service.externalPort }}
 {{- end -}}
 {{- end }}
 {{- end }}

@@ -146,6 +146,7 @@ development:
       - development
     kubernetes: active
   variables:
+    HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
     HELM_UPGRADE_EXTRA_ARGS: --set service.externalPort=80 --set service.internalPort=80 --set service.commonName= --set ingress.annotations.certmanager\.k8s\.io/cluster-issuer=letsencrypt-prod
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:
@@ -158,7 +159,7 @@ development:
       - $INCREMENTAL_ROLLOUT_ENABLED
       - $INCREMENTAL_ROLLOUT_MODE
 
-    
+
 production:
   variables:
     HELM_UPGRADE_EXTRA_ARGS: --set service.externalPort=80 --set service.internalPort=80 --set service.commonName= --set ingress.annotations.certmanager\.k8s\.io/cluster-issuer=letsencrypt-prod

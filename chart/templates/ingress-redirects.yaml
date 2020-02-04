@@ -1,0 +1,34 @@
+{{- if .Values.service.redirectHosts }}
+{{- if .Values.service.enabled -}}
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}-redirects
+  labels:
+    app: {{ template "appname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version| replace "+" "_" }}"
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  annotations:
+    ingress.kubernetes.io/configuration-snippet: "return 301 $scheme://{{ template "hostname" .Values.service.url }}$request_uri;"
+spec:
+{{- if .Values.ingress.tls.enabled }}
+  tls:
+  - hosts:
+{{- range $host := .Values.service.redirectHosts }}
+    - {{ $host }}
+{{- end -}}
+    secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-redirects-tls" (include "fullname" .)) }}
+{{- end }}
+  rules:   
+{{- range $host := .Values.service.additionalHosts }}
+  - host: {{ $host }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "fullname" . }}
+          servicePort: {{ .Values.service.externalPort }}
+{{- end -}}
+{{- end }}
+{{- end }}

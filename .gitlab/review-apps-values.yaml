@@ -1,0 +1,12 @@
+service:
+  externalPort: 80
+  internalPort: 80
+  commonName: ""
+ingress:
+  tls:
+    enabled: false
+  annotations:
+    kubernetes.io/tls-acme: false
+    nginx.ingress.kubernetes.io/ssl-redirect: false
+hpa:
+    enabled: false

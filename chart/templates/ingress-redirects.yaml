@@ -21,13 +21,14 @@ spec:
     secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-redirects-tls" (include "fullname" .)) }}
 {{- end }}
   rules:   
+{{- $dot := . }}
 {{- range $host := .Values.service.redirectHosts }}
   - host: {{ $host }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "fullname" . }}
+          serviceName: {{ template "fullname" $dot }}
           servicePort: {{ .Values.service.externalPort }}
 {{- end -}}
 {{- end }}

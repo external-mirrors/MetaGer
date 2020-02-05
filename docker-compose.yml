@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+  phpdeps:
+    image: prooph/composer:7.3
+    volumes:
+      - .:/app
+    command: install
+  assets:
+    image: node:10
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    command: bash -c "npm install && npm run watch"
+  dependencies:
+    depends_on:
+      - "mgdb"
+    image: php:7.3-cli
+    volumes:
+      - .:/data
+    working_dir: /data
+    command: /data/init.sh
+  mgdb:
+    restart: unless-stopped
+    image: mariadb:latest
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - MYSQL_USER=metager
+      - MYSQL_PASSWORD=metager
+      - MYSQL_DATABASE=metager
+  web:
+    depends_on:
+      - "mgdb"
+      - "dependencies"
+      - "phpdeps"
+      - "assets"
+    restart: unless-stopped
+    build: .
+    working_dir: /html
+    volumes:
+      - .:/html
+    ports: 
+    - "8080:80"

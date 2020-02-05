@@ -1,47 +1,165 @@
-update(144.76.113.134):
-  tags:
-  - 144.76.113.134
+variables:
+    DOCKER_HOST: "tcp://docker-dind.gitlab:2375"
+    POSTGRES_ENABLED: "false"
+    CODE_QUALITY_DISABLED: "true"
+    CONTAINER_SCANNING_DISABLED: "true"
+    DAST_DISABLED: "true"
+    DEPENDENCY_SCANNING_DISABLED: "true"
+    LICENSE_MANAGEMENT_DISABLED: "true"
+    PERFORMANCE_DISABLED: "true"
+    SAST_DISABLED: "true"
+    TEST_DISABLED: "true"
+
+include:
+  - template: Jobs/Build.gitlab-ci.yml
+  - template: Jobs/Deploy.gitlab-ci.yml
+
+stages:
+  - prepare
+  - build
+  - deploy  # dummy stage to follow the template guidelines
+  - review
+  - dast
+  - staging
+  - canary
+  - development
+  - production
+  - incremental rollout 10%
+  - incremental rollout 25%
+  - incremental rollout 50%
+  - incremental rollout 100%
+  - performance
+  - cleanup
+
+
+build:
+  services:
+
+# Prepares the secret files that we cannot or don't want to share with public
+prepare_secrets:
+  stage: prepare
+  image: alpine:latest
+  script: 
+    - cp $ENVFILE .env
+    - cp $SUMAS config/sumas.json
+    - cp $SUMASEN config/sumasEn.json
+    - cp $BLACKLISTURL config/blacklistUrl.txt
+    - cp $BLACKLISTDOMAINS config/blacklistDomains.txt
+    - cp $ADBLACKLISTURL config/adBlacklistUrl.txt
+    - cp $ADBLACKLISTDOMAINS config/adBlacklistDomains.txt
+    - cp $SPAM config/spam.txt
+    - cp $USERSSEEDER database/seeds/UsersSeeder.php
+    - cp database/useragents.sqlite.example database/useragents.sqlite
+    - sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env
+  artifacts:
+    paths:
+      - .env
+      - config/sumas.json
+      - config/sumasEn.json
+      - config/blacklistUrl.txt
+      - config/blacklistDomains.txt
+      - config/adBlacklistUrl.txt
+      - config/adBlacklistDomains.txt
+      - config/spam.txt
+      - database/seeds/UsersSeeder.php
+      - database/useragents.sqlite
   only:
-    - master@open-source/MetaGer
+    - branches
+    - tags
+
+prepare_node:
+  stage: prepare
+  image: node:10
   before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
+    - npm install
   script:
-    - sh build.sh
-  variables:
-    STAGE: production
-   
-update(metager2):
-  tags:
-  - metager2
+    - npm run prod
+  artifacts:
+    paths:
+      - public/js/
+      - public/css/
+      - public/mix-manifest.json
+  cache:
+    # Cache per Branch
+    key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - node_modules
   only:
-    - master@open-source/MetaGer
-  before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
+    - branches
+    - tags
+
+prepare_composer:
+  stage: prepare
+  image: prooph/composer:7.3
   script:
-    - sh build.sh
+    - composer install
+  artifacts:
+    paths:
+      - vendor
+  cache:
+    key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    paths:
+      - vendor
+
+review:
   variables:
-    STAGE: production
-    
-update(metager3.de):
-  tags:
-  - metager3
+    HELM_UPGRADE_VALUES_FILE: .gitlab/review-apps-values.yaml
+    ROLLOUT_RESOURCE_TYPE: deployment
+  except:
+    refs:
+      - master
+      - development
+    variables:
+      - $REVIEW_DISABLED
+
+stop_review:
+  except:
+    refs:
+      - master
+      - development
+    variables:
+      - $REVIEW_DISABLED
+
+.development: &development_template
+  extends: .auto-deploy
+  stage: development
+  script:
+    - auto-deploy check_kube_domain
+    - auto-deploy download_chart
+    - auto-deploy ensure_namespace
+    - auto-deploy initialize_tiller
+    - auto-deploy create_secret
+    - auto-deploy deploy
+    - auto-deploy delete canary
+    - auto-deploy delete rollout
+    - auto-deploy persist_environment_url
+  variables:
+    ADDITIONAL_HOSTS: "www.metager3.de"
+    HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
+    ROLLOUT_RESOURCE_TYPE: deployment
+  environment:
+    name: development
+    url: https://metager3.de
+  artifacts:
+    paths: [environment_url.txt]
+
+development:
+  <<: *development_template
   only:
-    - development@open-source/MetaGer
-  before_script:
-    # Abhängigkeiten überprüfen
-    - which composer
-    - which git
-    - which php
-    - which sqlite3
-  script:
-    - sh build.sh
+    refs:
+      - development
+    kubernetes: active
+  except:
+    variables:
+      - $STAGING_ENABLED
+      - $CANARY_ENABLED
+      - $INCREMENTAL_ROLLOUT_ENABLED
+      - $INCREMENTAL_ROLLOUT_MODE
+
+
+production:
   variables:
-    STAGE: development
+    HELM_UPGRADE_EXTRA_ARGS: --set service.externalPort=80 --set service.internalPort=80 --set service.commonName= --set ingress.annotations.certmanager\.k8s\.io/cluster-issuer=letsencrypt-prod
+    ROLLOUT_RESOURCE_TYPE: deployment
+  environment:
+    url: https://metager.de

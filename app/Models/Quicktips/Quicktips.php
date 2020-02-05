@@ -2,7 +2,7 @@
 
 namespace App\Models\Quicktips;
 
-use App\Jobs\Searcher;
+use Cache;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -30,41 +30,23 @@ class Quicktips
     public function startSearch($search, $locale, $max_time)
     {
         $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
-        # TODO anders weitergeben
         $this->hash = md5($url);
 
-        # TODO cache wieder einbauen (eventuell)
-        if ( /*!Cache::has($hash)*/true) {
-            $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
-
-            $redis->hset("search." . $this->hash . ".results." . self::QUICKTIP_NAME, "status", "waiting");
+        if (!Cache::has($this->hash)) {
 
             // Queue this search
-            $mission = $this->hash . ";" . base64_encode($url) . ";" . $max_time;
-            Redis::rpush(self::QUICKTIP_NAME . ".queue", $mission);
+            $mission = [
+                "resulthash" => $this->hash,
+                "url" => $url,
+                "username" => null,
+                "password" => null,
+                "headers" => [],
+                "cacheDuration" => self::CACHE_DURATION,
+            ];
 
-            // Check the current status of Searchers for QUICKTIP_NAME
-            $needSearcher = false;
-            $searcherData = Redis::hgetall(self::QUICKTIP_NAME . ".stats");
+            $mission = json_encode($mission);
 
-            // Create additional Searchers for QUICKTIP_NAME if necessary
-            if (sizeof($searcherData) === 0) {
-                $needSearcher = true;
-            } else {
-                $median = 0;
-                foreach ($searcherData as $pid => $data) {
-                    $data = explode(";", $data);
-                    $median += floatval($data[1]);
-                }
-                $median /= sizeof($searcherData);
-                if ($median < .1) {
-                    $needSearcher = true;
-                }
-            }
-            if ($needSearcher && Redis::get(self::QUICKTIP_NAME) !== "locked") {
-                Redis::set(self::QUICKTIP_NAME, "locked");
-                $this->dispatch(new Searcher(self::QUICKTIP_NAME));
-            }
+            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
         }
     }
 
@@ -87,13 +69,13 @@ class Quicktips
 
     public function retrieveResults($hash)
     {
-        $body = "";
-        $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
-        $body = $redis->hget('search.' . $hash . ".results." . self::QUICKTIP_NAME, "response");
+        $body = null;
 
-        $redis->del('search.' . $hash . ".results." . self::QUICKTIP_NAME);
-        $redis->del('search.' . $hash . ".ready");
-        if ($body !== "") {
+        if (Cache::has($this->hash)) {
+            $body = Cache::get($this->hash);
+        }
+
+        if ($body !== null) {
             return $body;
         } else {
             return false;

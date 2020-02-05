@@ -3,7 +3,7 @@
 			<div id="settings">
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $metager->getFokus(), "url" => url()->full()])) }}">
 					<i class="fas fa-cogs"></i>
-					@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary">{{ $metager->getSavedSettingCount() }}@endif</span>
+					@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
 					@lang('metaGer.settings')&hellip;
 				</a>
 			</div>

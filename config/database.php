@@ -26,7 +26,7 @@ return [
     |
      */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'sqlite'),
 
     /*
     |--------------------------------------------------------------------------
@@ -69,23 +69,6 @@ return [
             'strict' => true,
             'engine' => null,
         ],
-
-        'spenden' => [
-
-            'driver' => 'mysql',
-            'host' => env('DB_HOST_SPENDEN', 'localhost'),
-            'port' => env('DB_PORT_SPENDEN', '3306'),
-            'database' => env('DB_DATABASE_SPENDEN', 'forge'),
-            'username' => env('DB_USERNAME_SPENDEN', 'forge'),
-            'password' => env('DB_PASSWORD_SPENDEN', ''),
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
-
-        ],
-
         'pgsql' => [
             'driver' => 'pgsql',
             'host' => env('DB_HOST', 'localhost'),
@@ -135,19 +118,6 @@ return [
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
         ],
-        'redisLogs' => [
-            'host' => env('REDIS_LOGS_HOST', 'localhost'),
-            'password' => env('REDIS_LOGS_PASSWORD', env('REDIS_PASSWORD', null)),
-            'port' => env('REDIS_LOGS_PORT', 6379),
-            'database' => 1,
-        ],
-        'redisCache' => [
-            'host' => env('REDIS_CACHE_HOST', 'localhost'),
-            'password' => env('REDIS_CACHE_PASSWORD', env('REDIS_PASSWORD', null)),
-            'port' => env('REDIS_CACHE_PORT', 6379),
-            'database' => 2,
-        ],
-
     ],
 
 ];

@@ -14,6 +14,8 @@ use Predis\Connection\ConnectionException;
 
 class MetaGer
 {
+    const FETCHQUEUE_KEY = "fetcher.queue";
+
     # Einstellungen für die Suche
     public $alteredQuery = "";
     public $alterationOverrideQuery = "";
@@ -69,6 +71,7 @@ class MetaGer
     protected $verificationCount;
     protected $searchUid;
     protected $redisResultWaitingKey, $redisResultEngineList, $redisEngineResult, $redisCurrentResultList;
+    public $starttime;
 
     public function __construct($hash = "")
     {
@@ -321,7 +324,7 @@ class MetaGer
                 'page' => $page,
                 'engines' => $this->next,
             ];
-            Cache::put($this->getSearchUid(), serialize($this->next), 60);
+            \App\CacheHelper::put($this->getSearchUid(), serialize($this->next), 60 * 60);
         } else {
             $this->next = [];
         }
@@ -657,7 +660,7 @@ class MetaGer
             try {
                 $tmp = new $path($engineName, $engine, $this);
             } catch (\ErrorException $e) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . var_dump($e));
+                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . $e);
                 continue;
             }
 
@@ -780,13 +783,12 @@ class MetaGer
 
     public function waitForMainResults()
     {
-        $redis = Redis::connection(env('REDIS_RESULT_CONNECTION'));
         $engines = $this->engines;
         $enginesToWaitFor = [];
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if (!$engine->cached && $engine->name === $mainEngine) {
+                if ($engine->name === $mainEngine) {
                     $enginesToWaitFor[] = $engine;
                 }
             }
@@ -803,41 +805,37 @@ class MetaGer
         }
 
         while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            $newEngine = $redis->blpop($this->redisResultWaitingKey, 1);
-            if ($newEngine === null || sizeof($newEngine) !== 2) {
-                continue;
-            } else {
-                $newEngine = $newEngine[1];
-                foreach ($enginesToWaitFor as $index => $engine) {
-                    if ($engine->name === $newEngine) {
-                        unset($enginesToWaitFor[$index]);
-                        break;
-                    }
+            foreach ($enginesToWaitFor as $index => $engine) {
+                if (Redis::get($engine->hash) !== null) {
+                    $answered[] = $engine;
+                    unset($enginesToWaitFor[$index]);
+                    break;
                 }
-                $answered[] = $newEngine;
             }
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
+            } else {
+                usleep(50 * 1000);
             }
         }
 
         # Now we can add an entry to Redis which defines the starting time and how many engines should answer this request
-
-        $pipeline = $redis->pipeline();
-        $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
-        $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
-        $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
-        # Add the cached engines as answered
-        foreach ($engines as $engine) {
-            if ($engine->cached) {
-                $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
-                $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
-            }
-        }
-        foreach ($answered as $engine) {
-            $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
-        }
-        $pipeline->execute();
+        /*
+    $pipeline = $redis->pipeline();
+    $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
+    $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
+    $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
+    # Add the cached engines as answered
+    foreach ($engines as $engine) {
+    if ($engine->cached) {
+    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
+    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
+    }
+    }
+    foreach ($answered as $engine) {
+    $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
+    }
+    $pipeline->execute();*/
     }
 
     public function retrieveResults()
@@ -1338,25 +1336,22 @@ class MetaGer
         return $this->canCache;
     }
 
+    public static function getMGLogFile()
+    {
+        $logpath = storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/");
+        if (!file_exists($logpath)) {
+            mkdir($logpath, 0777, true);
+        }
+        $logpath .= date("d") . ".log";
+        return $logpath;
+    }
+
     public function createLogs()
     {
         if ($this->shouldLog) {
-            $redis = Redis::connection('redisLogs');
             try {
                 $logEntry = "";
-                $logEntry .= "[" . date("D M d H:i:s") . "]";
-                /*
-                Someone might wonder now why we are saving the IP-Adress to the log file here:
-                It's because we were targets of heavy Bot attacks which created so many Search-Request to our Servers that
-                not only our servers but the ones from some of our search engines too collapsed.
-                At that point we could'nt prevent the Bot from accessing our server because we would need it's IP-Adress to do so.
-
-                That's why we need to save the IP-Adress to our Log-Files temporarily. The logrotate process that shifts our Log-Files will then
-                automatically remove the IP-Adresses from the Log-File after a few hours.
-                This method gives us just enough time to prevent malicious Software from bringing our servers down and at the same time having not a single
-                IP-Adress older than one day stored on our servers. (Except the ones who got banned in that short period of course) ;-)
-                 */
-                $logEntry .= " ip=" . $this->request->ip();
+                $logEntry .= date("H:s:i");
                 $logEntry .= " ref=" . $this->request->header('Referer');
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
@@ -1364,9 +1359,8 @@ class MetaGer
                 $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
-                # 2 Arten von Logs in einem wird die Anzahl der Abfragen an eine Suchmaschine gespeichert und in der anderen
-                # die Anzahl, wie häufig diese Ergebnisse geliefert hat.
-                $redis->rpush('logs.search', $logEntry);
+                $logpath = \App\MetaGer::getMGLogFile();
+                file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND | LOCK_EX);
             } catch (\Exception $e) {
                 return;
             }
@@ -1727,5 +1721,17 @@ class MetaGer
     public function getRedisCurrentResultList()
     {
         return $this->redisCurrentResultList;
+    }
+
+    public function getEngines()
+    {
+        return $this->engines;
+    }
+    /**
+     * Used by JS result loader to restore MetaGer Object of previous request
+     */
+    public function restoreEngines($engines)
+    {
+        $this->engines = $engines;
     }
 }

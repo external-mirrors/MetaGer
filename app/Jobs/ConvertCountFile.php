@@ -39,6 +39,7 @@ class ConvertCountFile implements ShouldQueue
         ];
         $fh = false;
         $fullRound = false;
+        $error = false;
         try {
             $fh = fopen($this->files["logFile"], "r");
             $currentLogTime = Carbon::now()->hour(0)->minute(0)->second(0)->addMinutes(5);
@@ -47,7 +48,7 @@ class ConvertCountFile implements ShouldQueue
                 $logTime = [];
                 $interface = "";
                 // i.e. [Wed Apr 17 00:00:01] ref=https://metager.de/ time=0.51 serv=web interface=de
-                if (preg_match('/\[[a-zA-z]{3}\s[a-zA-Z]{3}\s\d{2}\s(\d{2}:\d{2}:\d{2}).*?\sinterface=(\S+)/', $line, $matches)) {
+                if (preg_match('/(\d{2}:\d{2}:\d{2}).*?\sinterface=(\S+)/', $line, $matches)) {
                     // Create Date Object
                     $logTime = explode(":", $matches[1]);
                     $interface = $matches[2];
@@ -84,18 +85,22 @@ class ConvertCountFile implements ShouldQueue
             if (empty($result["time"][$currentLogTime->format('H:i')])) {
                 $result["time"][$currentLogTime->format('H:i')] = $result["insgesamt"];
             }
+        } catch (\ErrorException $e) {
+            $error = true;
         } finally {
             if ($fh !== false) {
                 fclose($fh);
             }
 
-            $oldUmask = umask(0);
-            // Write the result to a File
-            if (!file_exists($this->files["countPath"])) {
-                mkdir($this->files["countPath"], 0777, true);
+            if (!$error) {
+                $oldUmask = umask(0);
+                // Write the result to a File
+                if (!file_exists($this->files["countPath"])) {
+                    mkdir($this->files["countPath"], 0777, true);
+                }
+                file_put_contents($this->files["countFile"], json_encode($result, JSON_PRETTY_PRINT));
+                umask($oldUmask);
             }
-            file_put_contents($this->files["countFile"], json_encode($result, JSON_PRETTY_PRINT));
-            umask($oldUmask);
 
             Redis::del(md5($this->files["countFile"]));
         }

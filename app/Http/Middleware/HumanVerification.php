@@ -6,7 +6,7 @@ use Captcha;
 use Closure;
 use Cookie;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Cache;
 use URL;
 
 class HumanVerification
@@ -24,7 +24,6 @@ class HumanVerification
         $user = null;
         $update = true;
         $prefix = "humanverification";
-        $redis = Redis::connection('redisCache');
         try {
             $ip = $request->ip();
             $id = "";
@@ -50,56 +49,35 @@ class HumanVerification
             }
 
             # Get all Users of this IP
-            $userList = $redis->smembers($prefix . "." . $id);
-            $pipe = $redis->pipeline();
-
-            foreach ($userList as $userid) {
-                $pipe->hgetall($prefix . "." . $userid);
-            }
-
-            $usersData = $pipe->execute();
+            $users = Cache::get($prefix . "." . $id, []);
+            $users = $this->removeOldUsers($prefix, $users);
 
             $user = [];
-            $users = [];
-            # Lock out everyone in a Bot network
-            # Find out how many requests this IP has made
-            $sum = 0;
-            foreach ($usersData as $index => $userTmp) {
-                if (empty($userTmp)) {
-                    // This is a key that has been expired and should be deleted
-                    $redis->srem($prefix . "." . $id, $userList[$index]);
-                    continue;
-                }
-                $userNew = ['uid' => $userTmp["uid"],
-                    'id' => $userTmp["id"],
-                    'unusedResultPages' => intval($userTmp["unusedResultPages"]),
-                    'whitelist' => filter_var($userTmp["whitelist"], FILTER_VALIDATE_BOOLEAN),
-                    'locked' => filter_var($userTmp["locked"], FILTER_VALIDATE_BOOLEAN),
-                    "lockedKey" => $userTmp["lockedKey"],
-                ];
-
-                if ($uid === $userTmp["uid"]) {
-                    $user = $userNew;
-                } else {
-                    $users[] = $userNew;
-                }
-                if (!$userNew["whitelist"]) {
-                    $sum += intval($userTmp["unusedResultPages"]);
-                }
-
-            }
-
-            # If this user doesn't have an entry we will create one
-            if (empty($user)) {
-                $user =
-                    [
+            if (empty($users[$uid])) {
+                $user = [
                     'uid' => $uid,
                     'id' => $id,
                     'unusedResultPages' => 0,
                     'whitelist' => false,
                     'locked' => false,
                     "lockedKey" => "",
+                    "expiration" => now()->addWeeks(2),
                 ];
+            } else {
+                $user = $users[$uid];
+            }
+            # Lock out everyone in a Bot network
+            # Find out how many requests this IP has made
+            $sum = 0;
+            // Defines if this is the only user using that IP Adress
+            $alone = true;
+            foreach ($users as $uid => $userTmp) {
+                if (!$userTmp["whitelist"]) {
+                    $sum += $userTmp["unusedResultPages"];
+                    if ($userTmp["uid"] != $uid) {
+                        $alone = false;
+                    }
+                }
             }
 
             # A lot of automated requests are from websites that redirect users to our result page.
@@ -116,14 +94,6 @@ class HumanVerification
 
             }
 
-            // Defines if this is the only user using that IP Adress
-            $alone = true;
-            foreach ($users as $userTmp) {
-                if ($userTmp["uid"] != $uid && !$userTmp["whitelist"]) {
-                    $alone = false;
-                }
-
-            }
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
                 $user["locked"] = true;
             }
@@ -136,7 +106,8 @@ class HumanVerification
                 new Response(
                     view('humanverification.captcha')
                         ->with('title', "Bestätigung erforderlich")
-                        ->with('id', $uid)
+                        ->with('uid', $uid)
+                        ->with('id', $id)
                         ->with('url', url()->full())
                         ->with('image', $captcha["img"])
                 );
@@ -156,36 +127,50 @@ class HumanVerification
                 }
 
             }
-        } catch (\Predis\Connection\ConnectionException $e) {
-            $update = false;
         } finally {
             if ($update) {
-
-                // Update the user in the database
-                $pipeline = $redis->pipeline();
-
-                $pipeline->hmset($prefix . "." . $user['uid'], $user);
-                $pipeline->sadd($prefix . "." . $user["id"], $user["uid"]);
-
-                // Expire in two weeks
-                $expireLong = 60 * 60 * 24 * 14;
-                // Expire in 72h
-                $expireShort = 60 * 60 * 72;
-
                 if ($user["whitelist"]) {
-                    $pipeline->expire($prefix . "." . $user['uid'], $expireLong);
+                    $user["expiration"] = now()->addWeeks(2);
                 } else {
-                    $pipeline->expire($prefix . "." . $user['uid'], $expireShort);
+                    $user["expiration"] = now()->addHours(72);
                 }
-
-                $pipeline->expire($prefix . "." . $user["id"], $expireLong);
-
-                $pipeline->execute();
+                $this->setUser($prefix, $user);
             }
         }
 
         $request->request->add(['verification_id' => $user["uid"], 'verification_count' => $user["unusedResultPages"]]);
         return $next($request);
 
+    }
+
+    public function setUser($prefix, $user)
+    {
+        // Lock must be acquired within 2 seconds
+        $userList = Cache::get($prefix . "." . $user["id"], []);
+        $userList[$user["uid"]] = $user;
+        \App\CacheHelper::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);
+    }
+
+    public function removeOldUsers($prefix, $userList)
+    {
+        $newUserlist = [];
+        $now = now();
+
+        $id = "";
+        $changed = false;
+        foreach ($userList as $uid => $user) {
+            $id = $user["id"];
+            if ($now < $user["expiration"]) {
+                $newUserlist[$user["uid"]] = $user;
+            } else {
+                $changed = true;
+            }
+        }
+
+        if ($changed) {
+            \App\CacheHelper::put($prefix . "." . $user["id"], $newUserlist, 2 * 7 * 24 * 60 * 60);
+        }
+
+        return $newUserlist;
     }
 }

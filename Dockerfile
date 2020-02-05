@@ -1,32 +1,44 @@
-FROM debian:buster
+FROM nginx
 
-RUN apt-get update && apt-get install -y \
-    composer \
-    php7.2 \
-    php-mbstring \
-    php7.2-xml\
-    php-zip \
-    php-gd \
-    php-sqlite3 \
-    php-mysql \
-    php-curl \
-    redis-server \
-    sqlite3 \
-    nodejs \
-    libpng-dev \
-    unzip \
-    npm
-RUN npm install gulp -g
+RUN apt -y update && apt -y install php-fpm \
+    ca-certificates \
+    cron \
+    zip \
+    php7.3-common \
+    php7.3-curl \
+    php7.3-mbstring \
+    php7.3-sqlite3 \
+    php7.3-mysql \
+    php7.3-xml \
+    php7.3-zip \
+    php7.3-redis \
+    php7.3-gd \
+    redis-server
 
-COPY . /app
-WORKDIR app
-RUN mv config/sumas.xml.example config/sumas.xml && mv .env.example .env
-RUN composer install --no-plugins --no-scripts
-RUN npm install
-RUN npm run dev
+RUN sed -i 's/listen.owner = www-data/listen.owner = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i 's/listen.group = www-data/listen.group = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i 's/user = www-data/user = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i 's/group = www-data/group = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
+    sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.3/fpm/php.ini && \
+    mkdir /html
 
-RUN php artisan key:generate
+# Set correct timezone
+RUN ln -fs /usr/share/zoneinfo/Europe/Berlin /etc/localtime && dpkg-reconfigure -f noninteractive tzdata
 
-CMD redis-server --daemonize yes && php artisan serve --host=0.0.0.0
+# Add Cronjob for Laravel
+RUN (crontab -l ; echo "* * * * * php /html/artisan schedule:run >> /dev/null 2>&1") | crontab
 
-EXPOSE 8000
+WORKDIR /html
+EXPOSE 80
+
+COPY config/nginx.conf /etc/nginx/nginx.conf
+COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY --chown=root:nginx . /html
+
+CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
+    chmod -R g+w storage/logs/metager bootstrap/cache && \
+    /etc/init.d/cron start && \
+    /etc/init.d/php7.3-fpm start && \
+    /etc/init.d/nginx start && \
+    /etc/init.d/redis-server start && \
+    su -s /bin/bash -c 'php artisan requests:fetcher' nginx

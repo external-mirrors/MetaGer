@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8" />
+  <title>MetaGer - Mehr als eine Suchmaschine</title>
+  <meta name="description"
+    content="Sicher suchen und finden unter Wahrung der Privatsphäre. Das digitale Wissen der Welt muss ohne Bevormundung durch Staaten oder Konzerne frei zugänglich sein und bleiben." />
+  <meta name="keywords"
+    content="Internetsuche, privatsphäre, privacy, Suchmaschine, Datenschutz, Anonproxy, anonym suchen, Bildersuche, Suchmaschine, anonym, MetaGer, metager, metager.de" />
+  <meta name="page-topic" content="Dienstleistung" />
+  <meta name="robots" content="index,follow" />
+  <meta name="revisit-after" content="7 days" />
+  <meta name="audience" content="all" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+  <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+  <link rel="search" type="application/opensearchdescription+xml"
+    title="MetaGer: Sicher suchen &amp; finden, Privatsphäre schützen" href="https://metager.de/plugins/opensearch.xml">
+  <link type="text/css" rel="stylesheet" href="/css/bootstrap.css?id=b803963ec1e03b9de08e" />
+  <link type="text/css" rel="stylesheet" href="/css/themes/metager.css?id=35b998573f409cb5260f" />
+  <link type="text/css" rel="stylesheet" href="/css/utility.css?id=119a7732fcac8ee992c0" />
+  <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
+  <link type="text/css" rel="stylesheet" href="/css/fontawesome.css?id=b9dfacd52a93d4406a21" />
+  <link type="text/css" rel="stylesheet" href="/css/fontawesome-solid.css?id=ef93547e15423c41f724" />
+  <script src="/js/lib.js?id=8794dbf6d3b10d784319"></script>
+  <script src="/js/utility.js?id=7fab2dc6a328a13d19a0"></script>
+</head>
+
+<body>
+  <header>
+  </header>
+  <div class="wrapper startpage">
+    <main id="main-content">
+      <h1 id="startpage-logo">
+        <a href="https://metager.de/">
+          <img src="/img/metager.svg" alt="MetaGer" />
+        </a>
+      </h1>
+      <fieldset>
+        <form id="searchForm" method=GET action="https://metager.de/meta/meta.ger3 " accept-charset="UTF-8">
+          <div class="searchbar startpage-searchbar">
+            <div class="search-input-submit">
+              <div id="search-key">
+                <a id="key-link" class="unauthorized"
+                  href="https://metager.de/meta/key?redirUrl=https%3A%2F%2Fmetager.de"
+                  data-tooltip="Schlüssel für werbefreie Suche eingeben" tabindex="0">
+                  <i class="fa fa-key" aria-hidden="true"></i>
+                </a>
+              </div>
+              <div class="search-input">
+                <input type="search" name="eingabe" value="" required="" autofocus autocomplete="off"
+                  class="form-control" placeholder="MetaGer: Sicher suchen &amp; finden, Privatsphäre schützen"
+                  tabindex="0">
+                <button id="search-delete-btn" name="delete-search-input" type="button" tabindex="-1">
+                  &#xd7;
+                </button>
+              </div>
+              <div class="search-submit" id="submit-inputgroup">
+                <button type="submit" tabindex="-1" name="submit-query" title="MetaGer-Suche"
+                  aria-label="MetaGer-Suche">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+            <div class="search-hidden">
+              <input type="hidden" name="focus" value=web>
+            </div>
+            <div class="search-custom-hidden"></div>
+          </div>
+        </form>
+      </fieldset>
+      <div id="plugin-btn-div">
+        <a id="plugin-btn" href="https://metager.de/plugin" title="MetaGer zu Ihrem Browser hinzufügen"><i
+            class="fa fa-plug" aria-hidden="true"></i> MetaGer-Plugin hinzufügen</a>
+      </div>
+      <div id="about-us">
+        <div class="m-row">
+          <a href="https://metager.de/about">
+            <img alt="lock" src="/img/metager-schloss.svg">
+            <span>Garantierte Privatsphäre</span>
+            <div class="teaser">Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Wir speichern nicht und der
+              Quellcode ist frei.</div>
+          </a>
+          <a href="https://suma-ev.de" target="_blank">
+            <img alt="rainbow" src="/img/rainbow.svg">
+            <span>Vielfältig & Frei</span>
+            <div class="teaser">MetaGer schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiniert.</div>
+          </a>
+        </div>
+        <div class="m-row">
+          <a href="https://www.hetzner.de/unternehmen/umweltschutz/" target="_blank">
+            <i class="fas fa-leaf" id="green-leaf"></i>
+            <span>100% Ökostrom</span>
+            <div class="teaser">Alle unsere Dienste sind mit Strom aus regenerativen Energiequellen betrieben.
+              Nachhaltig und sauber.</div>
+          </a>
+          <a href="https://metager.de/spende">
+            <i class="fas fa-heart" id="gradient"></i>
+            <span>Gemeinnütziger Verein</span>
+            <div class="teaser">Unterstützen Sie MetaGer, indem Sie spenden oder Mitglied im gemeinnützigen Trägerverein
+              werden.</div>
+          </a>
+        </div>
+      </div>
+      <a id="scroll-helper" href="#about-us">
+        <i class="fas fa-angle-double-down"></i>
+      </a>
+    </main>
+  </div>
+  <input id="sidebarToggle" class="hidden" type="checkbox">
+  <div class="sidebar">
+    <a class="sidebar-logo" href="https://metager.de/">
+      <span>
+        <img src="/img/metager.svg" alt="MetaGer"></img>
+      </span>
+    </a>
+    <ul class="sidebar-list">
+      <li>
+        <a href="https://metager.de/" id="navigationSuche">
+          <i class="fa fa-search" aria-hidden="true"></i>
+          <span>Suche</span>
+        </a>
+      </li>
+      <hr>
+      <li>
+        <a href="https://metager.de/datenschutz" id="navigationPrivacy">
+          <i class="fa fa-user-secret" aria-hidden="true"></i>
+          <span>Datenschutz</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://metager.de/hilfe">
+          <i class="fa fa-info" aria-hidden="true"></i>
+          <span>Hilfe</span>
+        </a>
+      </li>
+      <hr>
+      <li>
+        <a href="https://metager.de/spende">
+          <i class="fa fa-donate" aria-hidden="true"></i>
+          <span>Spenden</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://metager.de/beitritt">
+          <i class="fa fa-users" aria-hidden="true"></i>
+          <span>Mitglied werden</span>
+        </a>
+      </li>
+      <hr>
+      <li>
+        <a href="https://metager.de/app">
+          <i class="fa fa-mobile-alt" aria-hidden="true"></i>
+          <span>MetaGer App</span>
+        </a>
+      </li>
+      <li>
+        <a class="inlink" href="https://maps.metager.de" target="_blank">
+          <i class="fa fa-map" aria-hidden="true"></i>
+          <span>Maps.MetaGer.de</span>
+        </a>
+      </li>
+      <hr>
+      <li class="metager-dropdown">
+        <input id="contactToggle" class="sidebarCheckbox" type="checkbox">
+        <label for="contactToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true"
+          id="navigationKontakt" tabindex=0>
+          <i class="fa fa-comments" aria-hidden="true"></i>
+          <span>Kontakt</span>
+          <span class="caret"></span>
+        </label>
+        <ul class="metager-dropdown-content">
+          <li>
+            <a href="https://metager.de/kontakt">Kontakt</a>
+          </li>
+          <li>
+            <a href="https://metager.de/team">Team</a>
+          </li>
+          <li>
+            <a href="https://metager.de/about">Über uns</a>
+          </li>
+          <li>
+            <a href="https://metager.de/impressum">Impressum</a>
+          </li>
+        </ul>
+      </li>
+      <li class="metager-dropdown">
+        <input id="servicesToggle" class="sidebarCheckbox" type="checkbox">
+        <label for="servicesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" tabindex=0>
+          <i class="fa fa-wrench" aria-hidden="true"></i>
+          <span>Dienste</span>
+          <span class="caret"></span>
+        </label>
+        <ul class="metager-dropdown-content">
+          <li>
+            <a href="https://metager.de/plugin">MetaGer Plugin</a>
+          </li>
+          <li>
+            <a href="https://metager.de/widget">Widget</a>
+          </li>
+          <li>
+            <a href="https://metager.de/zitat-suche">Zitatsuche</a>
+          </li>
+          <li>
+            <a href="https://metager.de/asso">Assoziator</a>
+          </li>
+          <li>
+            <a href="https://metager.de/tips">Tips</a>
+          </li>
+          <li>
+            <a class="outlink" href="https://gitlab.metager3.de/open-source/MetaGer">MetaGer Quellcode</a>
+          </li>
+          <li>
+            <a class="outlink" href="https://metager.de/tor">TOR-Hidden-Service</a>
+          </li>
+          <li>
+            <a class="outlink" href="https://shop.spreadshirt.de/metager/" rel="noopener"
+              target="_blank">MetaGer-Fanshop</a>
+          </li>
+          <li>
+            <a class="outlink" href="https://www.wecanhelp.de/430159004">MetaGer-Fördershops</a>
+          </li>
+        </ul>
+      </li>
+      <li class="metager-dropdown">
+        <input id="languagesToggle" class="sidebarCheckbox" type="checkbox">
+        <label for="languagesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true"
+          id="navigationSprache" tabindex=0>
+          <i class="fa fa-globe" aria-hidden="true"></i>
+          <span>Sprache (Deutsch)</span>
+          <span class="caret"></span>
+        </label>
+        <ul class="metager-dropdown-content">
+          <li>
+            <a rel="alternate" hreflang="de" href="https://metager.de/">Deutsch</a>
+          </li>
+          <li>
+            <a rel="alternate" hreflang="en" href="https://metager.de/en">English</a>
+          </li>
+          <li>
+            <a rel="alternate" hreflang="es" href="https://metager.de/es">Español</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <label class="sidebar-opener navigation-element fixed" for="sidebarToggle"></label>
+  <footer class="startPageFooter noprint">
+    <div>
+      <a href="https://metager.de/kontakt">Kontakt</a>
+      <a href="https://metager.de/impressum">Impressum</a>
+      <a href="https://metager.de/datenschutz">Datenschutz</a>
+    </div>
+  </footer>
+</body>
+
+</html>

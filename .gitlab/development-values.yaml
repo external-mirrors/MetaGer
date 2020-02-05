@@ -2,8 +2,6 @@ service:
   externalPort: 80
   internalPort: 80
   commonName: ""
-  redirectHosts:
-    - www.metager3.de
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod

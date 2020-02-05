@@ -2,6 +2,12 @@ service:
   externalPort: 80
   internalPort: 80
   commonName: ""
+  additionalHosts:
+    - www.metager3.de
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($host = "www.metager3.de") {
+          return 301 https://metager3.de$request_uri;
+      }

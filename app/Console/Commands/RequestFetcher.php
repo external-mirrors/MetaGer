@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Artisan;
+use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -51,23 +51,11 @@ class RequestFetcher extends Command
     public function handle()
     {
         $pids = [];
-        $pid = null;
-        for ($i = 0; $i < 5; $i++) {
-            $pid = \pcntl_fork();
-            $pids[] = $pid;
-            if ($pid === 0) {
-                break;
-            }
-        }
-        if ($pid === 0) {
-            Artisan::call('requests:cacher');
-            exit;
-        } else {
-            pcntl_async_signals(true);
-            pcntl_signal(SIGINT, [$this, "sig_handler"]);
-            pcntl_signal(SIGTERM, [$this, "sig_handler"]);
-            pcntl_signal(SIGHUP, [$this, "sig_handler"]);
-        }
+
+        pcntl_async_signals(true);
+        pcntl_signal(SIGINT, [$this, "sig_handler"]);
+        pcntl_signal(SIGTERM, [$this, "sig_handler"]);
+        pcntl_signal(SIGHUP, [$this, "sig_handler"]);
 
         try {
             $blocking = false;
@@ -115,12 +103,7 @@ class RequestFetcher extends Command
                     Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
                         $pipe->set($resulthash, $body);
                         $pipe->expire($resulthash, 60);
-                        $cacherItem = [
-                            'timeSeconds' => $cacheDurationMinutes * 60,
-                            'key' => $resulthash,
-                            'value' => $body,
-                        ];
-                        $pipe->rpush(\App\Console\Commands\RequestCacher::CACHER_QUEUE, base64_encode(serialize($cacherItem)));
+                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
                     });
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }

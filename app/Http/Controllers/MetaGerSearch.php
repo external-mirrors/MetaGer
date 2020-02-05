@@ -71,7 +71,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        \App\CacheHelper::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+        Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
@@ -166,7 +166,7 @@ class MetaGerSearch extends Controller
         $result["finished"] = $finished;
 
         // Update new Engines
-        \App\CacheHelper::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
+        Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
         return response()->json($result);
     }
 

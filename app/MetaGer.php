@@ -324,7 +324,7 @@ class MetaGer
                 'page' => $page,
                 'engines' => $this->next,
             ];
-            \App\CacheHelper::put($this->getSearchUid(), serialize($this->next), 60 * 60);
+            Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
         } else {
             $this->next = [];
         }

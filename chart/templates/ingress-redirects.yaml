@@ -17,7 +17,7 @@ spec:
   - hosts:
 {{- range $host := .Values.service.redirectHosts }}
     - {{ $host }}
-{{- end -}}
+{{- end }}
     secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-redirects-tls" (include "fullname" .)) }}
 {{- end }}
   rules:   

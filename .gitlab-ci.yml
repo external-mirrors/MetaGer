@@ -133,9 +133,12 @@ stop_review:
     - auto-deploy delete canary
     - auto-deploy delete rollout
     - auto-deploy persist_environment_url
+  variables:
+    HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
+    ROLLOUT_RESOURCE_TYPE: deployment
   environment:
     name: development
-    url: https://$CI_PROJECT_PATH_SLUG.$KUBE_INGRESS_BASE_DOMAIN
+    url: https://metager3.de
   artifacts:
     paths: [environment_url.txt]
 
@@ -145,13 +148,6 @@ development:
     refs:
       - development
     kubernetes: active
-  variables:
-    HELM_UPGRADE_EXTRA_ARGS: --set service.commonName= --set service.additionalHosts[0]=www.metager3.de
-    HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
-    ROLLOUT_RESOURCE_TYPE: deployment
-  environment:
-    name: development
-    url: https://metager3.de
   except:
     variables:
       - $STAGING_ENABLED

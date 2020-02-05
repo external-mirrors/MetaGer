@@ -2,11 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use Cache;
 use Captcha;
 use Closure;
 use Cookie;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
 use URL;
 
 class HumanVerification
@@ -148,7 +148,7 @@ class HumanVerification
         // Lock must be acquired within 2 seconds
         $userList = Cache::get($prefix . "." . $user["id"], []);
         $userList[$user["uid"]] = $user;
-        \App\CacheHelper::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);
+        Cache::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);
     }
 
     public function removeOldUsers($prefix, $userList)
@@ -168,7 +168,7 @@ class HumanVerification
         }
 
         if ($changed) {
-            \App\CacheHelper::put($prefix . "." . $user["id"], $newUserlist, 2 * 7 * 24 * 60 * 60);
+            Cache::put($prefix . "." . $user["id"], $newUserlist, 2 * 7 * 24 * 60 * 60);
         }
 
         return $newUserlist;

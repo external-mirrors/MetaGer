@@ -134,7 +134,7 @@ stop_review:
     - auto-deploy delete rollout
     - auto-deploy persist_environment_url
   variables:
-    HELM_UPGRADE_EXTRA_ARGS: --set service.additionalHosts[0]=www.metager3.de
+    HELM_UPGRADE_EXTRA_ARGS: "--set service.additionalHosts[0]=www.metager3.de"
     HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:

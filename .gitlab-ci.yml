@@ -146,6 +146,7 @@ development:
       - development
     kubernetes: active
   variables:
+    HELM_UPGRADE_EXTRA_ARGS: --set service.commonName= --set service.additionalHosts[0]=www.metager3.de
     HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:

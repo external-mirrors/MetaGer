@@ -61,7 +61,7 @@ readinessProbe:
   scheme: "HTTP"
   probeType: "httpGet"
 postgresql:
-  enabled: true
+  enabled: false
   managed: false
   managedClassSelector:
     #   matchLabels:

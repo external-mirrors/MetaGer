@@ -788,19 +788,20 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine) {
+                if ($engine->name === $mainEngine && !$engine->loaded) {
                     $enginesToWaitFor[] = $engine;
                 }
             }
         }
 
         $timeStart = microtime(true);
+
         $answered = [];
         $results = null;
 
         # If there is no main searchengine to wait for or if the only main engine is yahoo-ads we will define a timeout of 1s
         $forceTimeout = null;
-        if (sizeof($enginesToWaitFor) === 0 || (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads")) {
+        if (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads") {
             $forceTimeout = 1;
         }
 
@@ -812,30 +813,13 @@ class MetaGer
                     break;
                 }
             }
+
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
             } else {
                 usleep(50 * 1000);
             }
         }
-
-        # Now we can add an entry to Redis which defines the starting time and how many engines should answer this request
-        /*
-    $pipeline = $redis->pipeline();
-    $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
-    $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
-    $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
-    # Add the cached engines as answered
-    foreach ($engines as $engine) {
-    if ($engine->cached) {
-    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
-    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
-    }
-    }
-    foreach ($answered as $engine) {
-    $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
-    }
-    $pipeline->execute();*/
     }
 
     public function retrieveResults()

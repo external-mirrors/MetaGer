@@ -632,11 +632,11 @@ class MetaGer
         }
     }
 
-    public function startSearch()
+    public function startSearch(&$timings)
     {
         # Wir starten alle Suchen
         foreach ($this->engines as $engine) {
-            $engine->startSearch($this);
+            $engine->startSearch($this, $timings);
         }
     }
 

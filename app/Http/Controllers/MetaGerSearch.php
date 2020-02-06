@@ -63,10 +63,7 @@ class MetaGerSearch extends Controller
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
 
-        $metager->startSearch();
-        if (!empty($timings)) {
-            $timings["startSearch"] = microtime(true) - $time;
-        }
+        $metager->startSearch($timings);
 
         $metager->waitForMainResults();
         if (!empty($timings)) {

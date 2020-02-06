@@ -170,6 +170,7 @@ Route::group(
         Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
             Route::get('/', 'AdminInterface@index');
             Route::match(['get', 'post'], 'count', 'AdminInterface@count');
+            Route::get('timings', 'MetaGerSearch@searchTimings');
             Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
             Route::get('engine/stats.json', 'AdminInterface@engineStats');
             Route::get('check', 'AdminInterface@check');
@@ -181,6 +182,7 @@ Route::group(
         });
 
         Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('humanverification', 'useragentmaster');
+
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.jpg', 'HumanVerification@remove');
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);

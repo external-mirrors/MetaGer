@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use DB;
 use Illuminate\Console\Command;
 
 class CacheGC extends Command
@@ -37,49 +38,6 @@ class CacheGC extends Command
      */
     public function handle()
     {
-        $cachedir = storage_path('framework/cache');
-
-        $lockfile = $cachedir . "/cache.gc";
-
-        if (file_exists($lockfile)) {
-            return;
-        } else {
-            touch($lockfile);
-        }
-
-        try {
-            foreach (new \DirectoryIterator($cachedir) as $fileInfo) {
-                if ($fileInfo->isDot()) {
-                    continue;
-                }
-                $file = $fileInfo->getPathname();
-                $basename = basename($file);
-                if (!is_dir($file) && $basename !== "cache.gc" && $basename !== ".gitignore") {
-                    $fp = fopen($file, 'r');
-                    $delete = false;
-                    try {
-                        $time = intval(fread($fp, 10));
-                        if ($time < time()) {
-                            $delete = true;
-                        }
-                    } finally {
-                        fclose($fp);
-                    }
-                    if ($delete) {
-                        unlink($file);
-                    }
-                } else if (is_dir($file)) {
-                    // Delete Directory if empty
-                    try {
-                        rmdir($file);
-                    } catch (\ErrorException $e) {
-
-                    }
-                }
-            }
-        } finally {
-            unlink($lockfile);
-        }
-
+        DB::delete('delete from cache where cache.expiration < unix_timestamp()');
     }
 }

@@ -473,8 +473,12 @@ class MetaGer
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
 
-    public function createSearchEngines(Request $request)
+    public function createSearchEngines(Request $request, &$timings)
     {
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["start"] = microtime(true) - $timings["starttime"];
+        }
+
         # Wenn es kein Suchwort gibt
         if (!$request->filled("eingabe") || $this->q === "") {
             return;
@@ -495,7 +499,15 @@ class MetaGer
             $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
         }
 
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["created engine array"] = microtime(true) - $timings["starttime"];
+        }
+
         $this->removeAdsFromListIfAdfree($sumas);
+
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["removed ads"] = microtime(true) - $timings["starttime"];
+        }
 
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
@@ -550,6 +562,10 @@ class MetaGer
             }
         }
 
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["filtered invalid engines"] = microtime(true) - $timings["starttime"];
+        }
+
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -574,6 +590,10 @@ class MetaGer
             $this->errors[] = $error;
         }
         $this->setEngines($request);
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
+        }
+
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)

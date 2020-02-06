@@ -61,14 +61,11 @@ class MetaGerSearch extends Controller
 
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
-        $metager->createSearchEngines($request);
-        if (!empty($timings)) {
-            $timings["createSearchEngines"] = microtime(true) - $time;
-        }
+        $metager->createSearchEngines($request, $timings);
 
         $metager->startSearch();
         if (!empty($timings)) {
-            $timings["createSearchEngines"] = microtime(true) - $time;
+            $timings["startSearch"] = microtime(true) - $time;
         }
 
         $metager->waitForMainResults();

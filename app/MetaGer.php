@@ -473,8 +473,12 @@ class MetaGer
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
 
-    public function createSearchEngines(Request $request)
+    public function createSearchEngines(Request $request, &$timings)
     {
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["start"] = microtime(true) - $timings["starttime"];
+        }
+
         # Wenn es kein Suchwort gibt
         if (!$request->filled("eingabe") || $this->q === "") {
             return;
@@ -495,7 +499,15 @@ class MetaGer
             $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
         }
 
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["created engine array"] = microtime(true) - $timings["starttime"];
+        }
+
         $this->removeAdsFromListIfAdfree($sumas);
+
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["removed ads"] = microtime(true) - $timings["starttime"];
+        }
 
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
@@ -550,6 +562,10 @@ class MetaGer
             }
         }
 
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["filtered invalid engines"] = microtime(true) - $timings["starttime"];
+        }
+
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -574,6 +590,10 @@ class MetaGer
             $this->errors[] = $error;
         }
         $this->setEngines($request);
+        if (!empty($timings)) {
+            $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
+        }
+
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)
@@ -612,12 +632,38 @@ class MetaGer
         }
     }
 
-    public function startSearch()
+    public function startSearch(&$timings)
     {
+        if (!empty($timings)) {
+            $timings["startSearch"]["start"] = microtime(true) - $timings["starttime"];
+        }
+
+        # Check all engines for Cached responses
+        if ($this->canCache()) {
+            $keys = [];
+            foreach ($this->engines as $engine) {
+                $keys[] = $engine->hash;
+            }
+            $cacheValues = Cache::many($keys);
+            foreach ($this->engines as $engine) {
+                if ($cacheValues[$engine->hash] !== null) {
+                    $engine->cached = true;
+                    $engine->retrieveResults($this, $cacheValues[$engine->hash]);
+                }
+            }
+        }
+        if (!empty($timings)) {
+            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
+        }
+
         # Wir starten alle Suchen
         foreach ($this->engines as $engine) {
-            $engine->startSearch($this);
+            $engine->startSearch($this, $timings);
         }
+        if (!empty($timings)) {
+            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+        }
+
     }
 
     # Spezielle Suchen und Sumas
@@ -788,19 +834,20 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine) {
+                if ($engine->name === $mainEngine && !$engine->loaded) {
                     $enginesToWaitFor[] = $engine;
                 }
             }
         }
 
         $timeStart = microtime(true);
+
         $answered = [];
         $results = null;
 
         # If there is no main searchengine to wait for or if the only main engine is yahoo-ads we will define a timeout of 1s
         $forceTimeout = null;
-        if (sizeof($enginesToWaitFor) === 0 || (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads")) {
+        if (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads") {
             $forceTimeout = 1;
         }
 
@@ -812,30 +859,13 @@ class MetaGer
                     break;
                 }
             }
+
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
             } else {
                 usleep(50 * 1000);
             }
         }
-
-        # Now we can add an entry to Redis which defines the starting time and how many engines should answer this request
-        /*
-    $pipeline = $redis->pipeline();
-    $pipeline->hset($this->getRedisEngineResult() . "status", "startTime", $timeStart);
-    $pipeline->hset($this->getRedisEngineResult() . "status", "engineCount", sizeof($engines));
-    $pipeline->hset($this->getRedisEngineResult() . "status", "engineDelivered", sizeof($answered));
-    # Add the cached engines as answered
-    foreach ($engines as $engine) {
-    if ($engine->cached) {
-    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineDelivered", 1);
-    $pipeline->hincrby($this->getRedisEngineResult() . "status", "engineAnswered", 1);
-    }
-    }
-    foreach ($answered as $engine) {
-    $pipeline->hset($this->getRedisEngineResult() . $engine, "delivered", "1");
-    }
-    $pipeline->execute();*/
     }
 
     public function retrieveResults()

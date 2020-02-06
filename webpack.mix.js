@@ -22,6 +22,9 @@ mix
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {
     strictMath: true
   })
+  .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
+    strictMath: true
+  })
   .less("resources/less/font-awesome/fontawesome.less", "public/css/fontawesome.css", {
     strictMath: true
   })

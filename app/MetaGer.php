@@ -634,10 +634,36 @@ class MetaGer
 
     public function startSearch(&$timings)
     {
+        if (!empty($timings)) {
+            $timings["startSearch"]["start"] = microtime(true) - $timings["starttime"];
+        }
+
+        # Check all engines for Cached responses
+        if ($this->canCache()) {
+            $keys = [];
+            foreach ($this->engines as $engine) {
+                $keys[] = $engine->hash;
+            }
+            $cacheValues = Cache::many($keys);
+            foreach ($this->engines as $engine) {
+                if ($cacheValues[$engine->hash] !== null) {
+                    $engine->cached = true;
+                    $engine->retrieveResults($this, $cacheValues[$engine->hash]);
+                }
+            }
+        }
+        if (!empty($timings)) {
+            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
+        }
+
         # Wir starten alle Suchen
         foreach ($this->engines as $engine) {
             $engine->startSearch($this, $timings);
         }
+        if (!empty($timings)) {
+            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+        }
+
     }
 
     # Spezielle Suchen und Sumas

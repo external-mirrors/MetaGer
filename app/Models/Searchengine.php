@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\MetaGer;
-use Cache;
 use Illuminate\Support\Facades\Redis;
 
 abstract class Searchengine
@@ -111,17 +110,7 @@ abstract class Searchengine
             $timings["startSearch"][$this->name]["start"] = microtime(true) - $timings["starttime"];
         }
 
-        if ($this->canCache && Cache::has($this->hash)) {
-            if (!empty($timings)) {
-                $timings["startSearch"][$this->name]["checked cache"] = microtime(true) - $timings["starttime"];
-            }
-            $this->cached = true;
-            $this->retrieveResults($metager, true);
-            if (!empty($timings)) {
-                $timings["startSearch"][$this->name]["retrieved results"] = microtime(true) - $timings["starttime"];
-            }
-
-        } else {
+        if (!$this->cached) {
             if (!empty($timings)) {
                 $timings["startSearch"][$this->name]["checked cache"] = microtime(true) - $timings["starttime"];
             }
@@ -193,15 +182,13 @@ abstract class Searchengine
     }
 
     # Fragt die Ergebnisse von Redis ab und lädt Sie
-    public function retrieveResults(MetaGer $metager)
+    public function retrieveResults(MetaGer $metager, $body = null)
     {
         if ($this->loaded) {
             return true;
         }
 
-        $body = null;
         if ($this->cached) {
-            $body = Cache::get($this->hash);
             if ($body === "no-result") {
                 $body = "";
             }

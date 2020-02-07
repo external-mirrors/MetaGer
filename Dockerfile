@@ -41,8 +41,6 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY --chown=root:nginx . /html
 
-RUN ln -s /dev/stdout /html/storage/logs/laravel.log
-
 CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     /etc/init.d/cron start && \

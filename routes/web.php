@@ -175,6 +175,9 @@ Route::group(
             Route::get('engine/stats.json', 'AdminInterface@engineStats');
             Route::get('check', 'AdminInterface@check');
             Route::get('engines', 'AdminInterface@engines');
+            Route::get('ip', function () {
+                dd(Request::ip(), $_SERVER["AGENT"]);
+            });
         });
 
         Route::get('settings', function () {

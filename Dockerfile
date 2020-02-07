@@ -24,6 +24,8 @@ RUN sed -i 's/listen.owner = www-data/listen.owner = nginx/g' /etc/php/7.3/fpm/p
     sed -i 's/user = www-data/user = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
     sed -i 's/group = www-data/group = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.3/fpm/php.ini && \
+    rm /var/log/nginx/access.log && ln -s /dev/null /var/log/nginx/access.log && \
+    rm /var/log/nginx/error.log && ln -s /dev/stdout /var/log/nginx/error.log && \
     mkdir /html
 
 # Set correct timezone
@@ -38,6 +40,8 @@ EXPOSE 80
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
 COPY --chown=root:nginx . /html
+
+RUN ln -s /dev/stdout /html/storage/logs/laravel.log
 
 CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \

@@ -24,6 +24,8 @@ RUN sed -i 's/listen.owner = www-data/listen.owner = nginx/g' /etc/php/7.3/fpm/p
     sed -i 's/user = www-data/user = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
     sed -i 's/group = www-data/group = nginx/g' /etc/php/7.3/fpm/pool.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.3/fpm/php.ini && \
+    rm /var/log/nginx/access.log && ln -s /dev/null /var/log/nginx/access.log && \
+    rm /var/log/nginx/error.log && ln -s /dev/stdout /var/log/nginx/error.log && \
     mkdir /html
 
 # Set correct timezone

@@ -176,7 +176,7 @@ Route::group(
             Route::get('check', 'AdminInterface@check');
             Route::get('engines', 'AdminInterface@engines');
             Route::get('ip', function () {
-                dd(Request::ip());
+                dd(Request::ip(), $_SERVER["AGENT"]);
             });
         });
 

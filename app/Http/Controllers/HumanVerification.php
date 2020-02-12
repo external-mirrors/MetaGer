@@ -92,9 +92,9 @@ class HumanVerification extends Controller
     public static function removeGet(Request $request, $mm, $password, $url)
     {
         $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
-
         # If the user is correct and the password is we will delete any entry in the database
         $requiredPass = md5($mm . Carbon::NOW()->day . $url . env("PROXY_PASSWORD"));
+
         if (HumanVerification::checkId($request, $mm) && $requiredPass === $password) {
             HumanVerification::removeUser($request, $mm);
         }
@@ -126,8 +126,13 @@ class HumanVerification extends Controller
                 $changed = true;
             }
         }
+
         if ($changed) {
-            Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
+            if (sizeof($newUserList) > 0) {
+                Cache::put(HumanVerification::PREFIX . "." . $user["id"], $newUserList, now()->addWeeks(2));
+            } else {
+                Cache::forget(HumanVerification::PREFIX . "." . $user["id"], $newUserList);
+            }
         }
     }
 
@@ -152,11 +157,10 @@ class HumanVerification extends Controller
 
         $sum = 0;
         foreach ($userlist as $uidTmp => $userTmp) {
-            if (!empty($userTmp) && !empty($userTmp["whitelist"]) && !$userTmp["whitelist"]) {
+            if (!empty($userTmp) && gettype($userTmp["whitelist"]) === "boolean" && !$userTmp["whitelist"]) {
                 $sum += intval($userTmp["unusedResultPages"]);
             }
         }
-
         # Check if we have to whitelist the user or if we can simply delete the data
         if ($user["unusedResultPages"] < $sum && !$user["whitelist"]) {
             # Whitelist

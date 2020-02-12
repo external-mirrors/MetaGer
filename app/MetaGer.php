@@ -1381,7 +1381,7 @@ class MetaGer
         if ($this->shouldLog) {
             try {
                 $logEntry = "";
-                $logEntry .= date("H:s:i");
+                $logEntry .= date("H:i:s");
                 $logEntry .= " ref=" . $this->request->header('Referer');
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();

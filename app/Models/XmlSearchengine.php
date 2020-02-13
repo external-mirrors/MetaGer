@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Log;
+
 abstract class XmlSearchengine extends Searchengine
 {
     public function loadresults($results)

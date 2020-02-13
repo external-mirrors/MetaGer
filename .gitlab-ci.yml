@@ -159,7 +159,7 @@ development:
 
 production:
   variables:
-    ADDITIONAL_HOSTS: "www.metager.de,metager.org,www.metager.org,metager.es,www.metager.es"
+    ADDITIONAL_HOSTS: "www.metager.de,metager.org,www.metager.org,metager.es,www.metager.es,klassik.metager.org"
     HELM_UPGRADE_VALUES_FILE: .gitlab/production-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:

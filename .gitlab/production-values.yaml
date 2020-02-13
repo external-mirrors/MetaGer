@@ -18,3 +18,6 @@ ingress:
       if ($host = "www.metager.es") {
           return 301 https://metager.es$request_uri;
       }
+      if ($host = "klassik.metager.org") {
+          return 301 https://metager.de$request_uri;
+      }

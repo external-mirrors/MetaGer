@@ -10,9 +10,9 @@ abstract class XmlSearchengine extends Searchengine
             $resultsXml = simplexml_load_string($results);
             $this->loadXmlResults($resultsXml);
         } catch (\Exception $e) {
-            abort(500, "\n~~~~~~~~\n$results\n~~~~~~~~\nis not a valid xml string");
+            Log::error($e->getMessage());
         }
     }
 
-    protected abstract function loadXmlResults($resultsXml);
+    abstract protected function loadXmlResults($resultsXml);
 }

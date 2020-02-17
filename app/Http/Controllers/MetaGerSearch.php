@@ -20,6 +20,7 @@ class MetaGerSearch extends Controller
         }
         $time = microtime(true);
         $spamEntries = [];
+        $spamEntry = null;
         if (file_exists(config_path('spam.txt'))) {
             $spamEntries = file(config_path('spam.txt'));
         }
@@ -37,6 +38,17 @@ class MetaGerSearch extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
 
+        foreach ($spamEntries as $index => $entry) {
+            $entry = trim($entry);
+            if (empty($entry)) {
+                continue;
+            }
+            if (preg_match("/" . $entry . "/si", $eingabe)) {
+                $spamEntry = $entry;
+                break;
+            }
+        }
+
         # Mit gelieferte Formulardaten parsen und abspeichern:
         $metager->parseFormData($request);
         if (!empty($timings)) {
@@ -49,8 +61,10 @@ class MetaGerSearch extends Controller
             $timings["checkSpecialSearches"] = microtime(true) - $time;
         }
 
-        if (Cache::has('spam.' . $metager->getFokus() . "." . md5($metager->getQ()))) {
-            return response(Cache::get('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe())));
+        if ($spamEntry !== null && Cache::has('spam.' . $metager->getFokus() . "." . md5($spamEntry))) {
+            $responseContent = Cache::get('spam.' . $metager->getFokus() . "." . md5($spamEntry));
+            $responseContent = preg_replace('/(name="eingabe"\s+value=")[^"]+/', "$1$eingabe", $responseContent);
+            return response($responseContent);
         }
 
         # Die Quicktips als Job erstellen
@@ -108,15 +122,10 @@ class MetaGerSearch extends Controller
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
-        foreach ($spamEntries as $index => $entry) {
-            $entry = trim($entry);
-            if (empty($entry)) {
-                continue;
-            }
-            if (preg_match("/" . $entry . "/si", $metager->getEingabe())) {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe()), $resultpage->render(), 604800);
-            }
+        if ($spamEntry !== null) {
+            Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
         }
+
         if (!empty($timings)) {
             $timings["createView"] = microtime(true) - $time;
         }

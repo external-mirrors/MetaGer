@@ -18,7 +18,7 @@ class BASE extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -33,7 +33,7 @@ class BASE extends Searchengine
                             $title = $attribute;
                             break;
                         case 'dclink':
-                            $link        = $attribute;
+                            $link = $attribute;
                             $anzeigeLink = $link;
                             break;
                         case 'dcdescription':
@@ -49,7 +49,7 @@ class BASE extends Searchengine
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->{"display-name"},$this->engine->homepage,
+                        $this->engine->{"display-name"}, $this->engine->homepage,
                         $this->counter
                     );
                 }

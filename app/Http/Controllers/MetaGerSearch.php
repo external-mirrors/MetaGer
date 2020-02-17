@@ -253,7 +253,7 @@ class MetaGerSearch extends Controller
         $tips_text = file_get_contents($tipserver);
         $tips = [];
         try {
-            $tips_xml = simplexml_load_string($tips_text);
+            $tips_xml = \simplexml_load_string($tips_text);
 
             $tips_xml->registerXPathNamespace('mg', 'http://metager.de/tips/');
             $tips_xml = $tips_xml->xpath('mg:tip');

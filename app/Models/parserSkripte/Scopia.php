@@ -23,7 +23,7 @@ class Scopia extends Searchengine
 
         try {
 
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -59,7 +59,7 @@ class Scopia extends Searchengine
         $result = html_entity_decode($result);
         $result = str_replace("&", "&amp;", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
 
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

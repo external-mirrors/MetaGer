@@ -50,9 +50,6 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
-        $pids = [];
-
-        pcntl_async_signals(true);
         pcntl_signal(SIGINT, [$this, "sig_handler"]);
         pcntl_signal(SIGTERM, [$this, "sig_handler"]);
         pcntl_signal(SIGHUP, [$this, "sig_handler"]);
@@ -113,9 +110,6 @@ class RequestFetcher extends Command
             }
         } finally {
             curl_multi_close($this->multicurl);
-        }
-        foreach ($pids as $tmppid) {
-            \pcntl_waitpid($tmppid, $status, WNOHANG);
         }
     }
 

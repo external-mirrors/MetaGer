@@ -18,14 +18,13 @@ class Kelkoo extends Searchengine
         $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
     }
 
-       
     public function loadResults($result)
     {
         $result = preg_replace("/\r\n/si", "", $result);
         # delete namespace, allowing easier xpath access
         $result = str_replace('xmlns="urn:yahoo:prods"', '', $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -40,23 +39,22 @@ class Kelkoo extends Searchengine
             $results = $content->xpath('/ProductSearch/Products/Product/Offer');
 
             foreach ($results as $result) {
-                $result      = simplexml_load_string($result->saveXML());
+                $result = \simplexml_load_string($result->saveXML());
 
-                $title       = $result->Title[0]->__toString();
-                
+                $title = $result->Title[0]->__toString();
+
                 $price = floatval($result->Price[0]->Price[0]);
                 $deliveryPrice = floatval($result->Price[0]->DeliveryCost[0]);
                 $totalPrice = $price + $deliveryPrice;
 
                 $descr = "";
-            
-                if(isset($result->Description[0]))
-                {
+
+                if (isset($result->Description[0])) {
                     $descr = $result->Description[0]->__toString();
                 }
-                $descr      .= "<p>Preis: " . $price . " €</p>";
-                $image       = $result->Images[0]->Image[0]->Url[0]->__toString();
-                $link        = $result->Url[0]->__toString();
+                $descr .= "<p>Preis: " . $price . " €</p>";
+                $image = $result->Images[0]->Image[0]->Url[0]->__toString();
+                $link = $result->Url[0]->__toString();
                 $anzeigeLink = $result->Merchant[0]->Name[0]->__toString();
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
@@ -65,10 +63,10 @@ class Kelkoo extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},$this->engine->homepage,
+                    $this->engine->{"display-name"}, $this->engine->homepage,
                     $this->counter,
                     ['image' => $image,
-                     'price' => $totalPrice * 100]
+                        'price' => $totalPrice * 100]
                 );
             }
         } catch (\Exception $e) {
@@ -84,7 +82,7 @@ class Kelkoo extends Searchengine
         # delete namespace, allowing easier xpath access
         $result = str_replace('xmlns="urn:yahoo:prods"', '', $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -120,22 +118,22 @@ class Kelkoo extends Searchengine
         $next = new Kelkoo($this->name, $this->engine, $metager);
         $next->unsignedGetString .= "&start=" . ($current + 20);
         $next->getString = $next->UrlSigner($next->unsignedGetString);
-        
+
         $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
         $this->next = $next;
     }
 
-
     # kelkoogroup.com/kelkoo-customer-service/kelkoo-developer-network/shopping-services/samples/signing-url-php/
-    public function UrlSigner($path){
-        
+    public function UrlSigner($path)
+    {
+
         $urlPath = $path;
         $partner = $this->engine->{"http-auth-credentials"}->ID;
         $key = $this->engine->{"http-auth-credentials"}->Key;
 
         $URL_sig = "hash";
         $URL_ts = "timestamp";
-        $URL_partner = "aid"; 
+        $URL_partner = "aid";
         $URLreturn = "";
         $URLtmp = "";
         $s = "";
@@ -145,7 +143,7 @@ class Kelkoo extends Searchengine
         $urlPath = str_replace(" ", "+", $urlPath);
         // format URL
         $URLtmp = $urlPath . "&" . $URL_partner . "=" . $partner . "&" . $URL_ts . "=" . $time;
-       
+
         // URL needed to create the token
         $s = $urlPath . "&" . $URL_partner . "=" . $partner . "&" . $URL_ts . "=" . $time . $key;
         $token = "";

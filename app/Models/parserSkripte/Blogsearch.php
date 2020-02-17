@@ -18,17 +18,17 @@ class Blogsearch extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
 
             $results = $content->xpath('//xml/docs/doc');
             foreach ($results as $result) {
-                $title       = $result->{"title"}->__toString();
-                $link        = $result->{"url"}->__toString();
+                $title = $result->{"title"}->__toString();
+                $link = $result->{"url"}->__toString();
                 $anzeigeLink = $link;
-                $descr       = $result->{"content"}->__toString();
+                $descr = $result->{"content"}->__toString();
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -36,7 +36,7 @@ class Blogsearch extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},$this->engine->homepage,
+                    $this->engine->{"display-name"}, $this->engine->homepage,
                     $this->counter
                 );
             }

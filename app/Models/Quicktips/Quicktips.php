@@ -86,7 +86,7 @@ class Quicktips
     {
         $quicktips_raw = preg_replace("/\r\n/si", "", $quicktips_raw);
         try {
-            $content = simplexml_load_string($quicktips_raw);
+            $content = \simplexml_load_string($quicktips_raw);
             if (!$content) {
                 return;
             }

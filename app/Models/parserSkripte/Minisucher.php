@@ -18,7 +18,7 @@ class Minisucher extends Searchengine
     public function loadResults($content)
     {
         try {
-            $content = simplexml_load_string($content);
+            $content = \simplexml_load_string($content);
         } catch (\Exception $e) {
             return;
         }
@@ -35,7 +35,7 @@ class Minisucher extends Searchengine
         foreach ($results as $result) {
             try {
                 $counter++;
-                $result = simplexml_load_string($result->saveXML());
+                $result = \simplexml_load_string($result->saveXML());
 
                 $title = $result->xpath('//doc/arr[@name="title"]/str')[0]->__toString();
                 $link = $result->xpath('//doc/str[@name="url"]')[0]->__toString();

@@ -18,7 +18,7 @@ class Tuhh extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -29,10 +29,10 @@ class Tuhh extends Searchengine
                     break;
                 }
 
-                $title       = $result->{"title"}->__toString();
-                $link        = $result->{"link"}["href"]->__toString();
+                $title = $result->{"title"}->__toString();
+                $link = $result->{"link"}["href"]->__toString();
                 $anzeigeLink = $link;
-                $descr       = strip_tags($result->{"summary"}->__toString());
+                $descr = strip_tags($result->{"summary"}->__toString());
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -40,7 +40,7 @@ class Tuhh extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},$this->engine->homepage,
+                    $this->engine->{"display-name"}, $this->engine->homepage,
                     $this->counter
                 );
                 $count++;

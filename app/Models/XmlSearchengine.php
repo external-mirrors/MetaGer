@@ -9,7 +9,7 @@ abstract class XmlSearchengine extends Searchengine
     public function loadresults($results)
     {
         try {
-            $resultsXml = simplexml_load_string($results);
+            $resultsXml = \simplexml_load_string($results);
             $this->loadXmlResults($resultsXml);
         } catch (\Exception $e) {
             Log::error($e->getMessage());

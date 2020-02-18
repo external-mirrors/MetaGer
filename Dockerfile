@@ -24,6 +24,7 @@ RUN apk add --update \
     php7-json \
     php7-pcntl \
     php7-opcache \
+    php7-fileinfo \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /html

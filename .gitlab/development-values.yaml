@@ -1,6 +1,9 @@
 service:
   externalPort: 80
   internalPort: 80
+hpa:
+  minReplicas: 1
+  maxReplicas: 5
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod

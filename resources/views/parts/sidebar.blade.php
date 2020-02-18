@@ -98,7 +98,7 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" >{{ trans('sidebar.titles.tips') }}</a>
         </li>
         <li>
-          <a class="outlink" href="https://gitlab.metager3.de/open-source/MetaGer" >{{ trans('sidebar.nav24') }}</a>
+          <a class="outlink" href="https://gitlab.metager.de/open-source/MetaGer" >{{ trans('sidebar.nav24') }}</a>
         </li>
         <li>
           <a class="outlink" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>

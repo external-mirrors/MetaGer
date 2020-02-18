@@ -87,9 +87,9 @@ Route::group(
 
         Route::get('beitritt', function () {
             if (LaravelLocalization::getCurrentLocale() === "de") {
-                return response()->file(storage_path('app/public/aufnahmeantrag-de.pdf'));
+                return response()->download(storage_path('app/public/aufnahmeantrag-de.pdf'), "SUMA-EV_Beitrittsformular_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             } else {
-                return response()->file(storage_path('app/public/aufnahmeantrag-en.pdf'));
+                return response()->download(storage_path('app/public/aufnahmeantrag-en.pdf'), "SUMA-EV_Membershipform_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             }
         });
 

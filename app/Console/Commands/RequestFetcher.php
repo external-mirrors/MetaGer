@@ -106,6 +106,8 @@ class RequestFetcher extends Command
                 }
                 if (!$active && !$answerRead) {
                     $blocking = true;
+                } else {
+                    usleep(50 * 1000);
                 }
             }
         } finally {

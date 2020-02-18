@@ -38,6 +38,7 @@ RUN sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/user = www-data/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/group = www-data/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
+    sed -i 's/expose_php = On/expose_php = Off/g' /etc/php7/php.ini && \
     # Opcache configuration
     sed -i 's/;opcache.enable=1/opcache.enable=1/g' /etc/php7/php.ini && \
     sed -i 's/;opcache.memory_consumption=128/opcache.memory_consumption=128/g' /etc/php7/php.ini && \

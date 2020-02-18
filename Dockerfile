@@ -1,4 +1,4 @@
-FROM alpine:3.9.5
+FROM alpine:latest
 
 RUN apk add --update \
     nginx \

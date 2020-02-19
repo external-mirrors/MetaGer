@@ -46,7 +46,7 @@ class Quicktips
 
             $mission = json_encode($mission);
 
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+            Redis::connection('cache')->rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
         }
     }
 

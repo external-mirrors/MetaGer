@@ -56,13 +56,14 @@ class RequestFetcher extends Command
 
         try {
             $blocking = false;
+            $redis = Redis::connection("cache");
             while ($this->shouldRun) {
                 $status = curl_multi_exec($this->multicurl, $active);
                 $currentJob = null;
                 if (!$blocking) {
-                    $currentJob = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY);
+                    $currentJob = $redis->lpop(\App\MetaGer::FETCHQUEUE_KEY);
                 } else {
-                    $currentJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
+                    $currentJob = $redis->blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
                     if (!empty($currentJob)) {
                         $currentJob = $currentJob[1];
                     }
@@ -97,11 +98,8 @@ class RequestFetcher extends Command
                         $body = \curl_multi_getcontent($info["handle"]);
                     }
 
-                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
-                        $pipe->set($resulthash, $body);
-                        $pipe->expire($resulthash, 60);
-                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
-                    });
+                    Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }
                 if (!$active && !$answerRead) {
@@ -110,6 +108,8 @@ class RequestFetcher extends Command
                     usleep(50 * 1000);
                 }
             }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         } finally {
             curl_multi_close($this->multicurl);
         }

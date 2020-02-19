@@ -20,6 +20,7 @@ class MetaGer
     public $alteredQuery = "";
     public $alterationOverrideQuery = "";
     protected $fokus;
+    protected $test;
     protected $eingabe;
     protected $q;
     protected $page;

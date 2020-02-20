@@ -28,20 +28,43 @@ services:
       - MYSQL_USER=metager
       - MYSQL_PASSWORD=metager
       - MYSQL_DATABASE=metager
-  web:
+  redis:
+    restart: on-failure
+    image: redis:6.0-rc1-alpine
+  phpfpm:
     depends_on:
       - "mgdb"
       - "dependencies"
       - "phpdeps"
       - "assets"
+      - "redis"
     restart: on-failure
     build:
       context: .
       dockerfile: Dockerfile.dev
+    image: metager:latest
     working_dir: /html
+    volumes:
+      - .:/html
+  nginx:
+    depends_on:
+      - "phpfpm"
+    restart: on-failure
+    image: metager:latest
+    working_dir: /html
+    command: nginx
     volumes:
       - .:/html
       - ./config/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx-default.conf:/etc/nginx/conf.d/default.conf
     ports: 
     - "8080:80"
+  worker:
+    depends_on:
+      - "phpfpm"
+    restart: on-failure
+    image: metager:latest
+    working_dir: /html
+    volumes:
+      - .:/html
+    command: "su -s /bin/sh -c 'php artisan requests:fetcher' nginx"

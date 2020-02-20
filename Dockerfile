@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.11.3
 
 RUN apk add --update \
     nginx \
@@ -29,7 +29,11 @@ RUN apk add --update \
 
 WORKDIR /html
 
-RUN sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
+RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stdout/g' /etc/php7/php-fpm.conf && \
+    sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php7/php-fpm.conf && \
+    sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/group = nobody/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.start_servers = 2/pm.start_servers = 5/g' /etc/php7/php-fpm.d/www.conf && \
@@ -56,6 +60,7 @@ RUN sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
 
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
+RUN sed -i 's/fastcgi_pass phpfpm:9000;/fastcgi_pass localhost:9000;/g' /etc/nginx/conf.d/default.conf 
 COPY --chown=root:nginx . /html
 
 WORKDIR /html
@@ -64,7 +69,4 @@ EXPOSE 80
 CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     crond -L /dev/stdout && \
-    nginx && \
-    php-fpm7 -D && \
-    redis-server /etc/redis.conf && \
-    su -s /bin/sh -c 'php artisan requests:fetcher' nginx
+    php-fpm7

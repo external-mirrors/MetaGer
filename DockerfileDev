@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM alpine:3.11.3
 
 RUN apk add --update \
     nginx \
@@ -23,12 +23,17 @@ RUN apk add --update \
     php7-gd \
     php7-json \
     php7-pcntl \
+    php7-opcache \
     php7-fileinfo \
     && rm -rf /var/cache/apk/*
 
 WORKDIR /html
 
-RUN sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
+RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stdout/g' /etc/php7/php-fpm.conf && \
+    sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php7/php-fpm.conf && \
+    sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/group = nobody/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.start_servers = 2/pm.start_servers = 5/g' /etc/php7/php-fpm.d/www.conf && \
@@ -38,6 +43,14 @@ RUN sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/group = www-data/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     sed -i 's/expose_php = On/expose_php = Off/g' /etc/php7/php.ini && \
+    # Opcache configuration
+    sed -i 's/;opcache.enable=1/opcache.enable=1/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.memory_consumption=128/opcache.memory_consumption=128/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=8/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.max_accelerated_files=10000/opcache.max_accelerated_files=10000/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.max_wasted_percentage=5/opcache.max_wasted_percentage=5/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=1/g' /etc/php7/php.ini && \
+    sed -i 's/;opcache.revalidate_freq=2/opcache.revalidate_freq=300/g' /etc/php7/php.ini && \
     echo "daemonize yes" >> /etc/redis.conf && \
     ln -s /dev/null /var/log/nginx/access.log && \
     ln -s /dev/stdout /var/log/nginx/error.log && \
@@ -51,7 +64,4 @@ EXPOSE 80
 CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     crond -L /dev/stdout && \
-    nginx && \
-    php-fpm7 -D && \
-    redis-server /etc/redis.conf && \
-    su -s /bin/sh -c 'php artisan requests:fetcher' nginx
+    php-fpm7

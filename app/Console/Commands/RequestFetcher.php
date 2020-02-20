@@ -50,9 +50,16 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
+        $pidFile = "/tmp/fetcher";
         pcntl_signal(SIGINT, [$this, "sig_handler"]);
         pcntl_signal(SIGTERM, [$this, "sig_handler"]);
         pcntl_signal(SIGHUP, [$this, "sig_handler"]);
+
+        touch($pidFile);
+
+        if (!file_exists($pidFile)) {
+            return;
+        }
 
         try {
             $blocking = false;
@@ -108,9 +115,8 @@ class RequestFetcher extends Command
                     usleep(50 * 1000);
                 }
             }
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
         } finally {
+            unlink($pidFile);
             curl_multi_close($this->multicurl);
         }
     }

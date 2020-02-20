@@ -2,6 +2,3 @@ README.md
 CHANGELOG.md
 docker-compose.yml
 Dockerfile
-vendor/*
-node_modules/*
-storage/logs/*

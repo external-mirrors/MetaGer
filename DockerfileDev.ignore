@@ -1,0 +1,5 @@
+README.md
+CHANGELOG.md
+vendor/*
+node_modules/*
+storage/logs/*

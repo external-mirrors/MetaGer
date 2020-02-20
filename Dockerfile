@@ -58,6 +58,10 @@ RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stdout/g' /et
     echo "Europe/Berlin" > /etc/timezone && \
     (crontab -l ; echo "* * * * * php /html/artisan schedule:run >> /dev/null 2>&1") | crontab -
 
+COPY config/nginx.conf /etc/nginx/nginx.conf
+COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
+COPY --chown=root:nginx . /html
+
 WORKDIR /html
 EXPOSE 80
 

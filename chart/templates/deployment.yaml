@@ -75,7 +75,7 @@ spec:
         resources:
 {{ toYaml .Values.resources | indent 12 }}
       # Nginx Container
-      - name: {{ .Chart.Name }}
+      - name: {{ .Chart.Name }}-nginx
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ["nginx"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -118,4 +118,27 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+      # Redis Container
+      - name: {{ .Chart.Name }}-redis
+        image: "redis:6.0-rc1-alpine"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - name: "{{ .Values.service.name }}-redis"
+          containerPort: 6379
+        livenessProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-redis"
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-redis"
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+      # Fetcher Container
+      - name: {{ .Chart.Name }}-fetcher
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        command: ["su"]
+        args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- end -}}

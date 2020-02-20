@@ -39,6 +39,42 @@ spec:
         persistentVolumeClaim:
           claimName: mglogs
       containers:
+      # Main PHP-FPM Container
+      - name: {{ .Chart.Name }}-phpfpm
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.application.secretName }}
+        envFrom:
+        - secretRef:
+            name: {{ .Values.application.secretName }}
+        {{- end }}
+        env:
+        - name: DATABASE_URL
+          value: {{ .Values.application.database_url | quote }}
+        - name: GITLAB_ENVIRONMENT_NAME
+          value: {{ .Values.gitlab.envName }}
+        - name: GITLAB_ENVIRONMENT_URL
+          value: {{ .Values.gitlab.envURL }}
+        ports:
+        - name: "{{ .Values.service.name }}-phpfpm"
+          containerPort: 9000
+        livenessProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-phpfpm"
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-phpfpm"
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        volumeMounts:
+        - name: mglogs-persistent-storage
+          mountPath: /html/storage/logs/metager
+          readOnly: false
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
+      # Nginx Container
       - name: {{ .Chart.Name }}
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -81,10 +117,4 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
-        volumeMounts:
-        - name: mglogs-persistent-storage
-          mountPath: /html/storage/logs/metager
-          readOnly: false
-        resources:
-{{ toYaml .Values.resources | indent 12 }}
 {{- end -}}

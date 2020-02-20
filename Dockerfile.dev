@@ -64,4 +64,4 @@ EXPOSE 80
 CMD chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     crond -L /dev/stdout && \
-    nginx
+    php-fpm7

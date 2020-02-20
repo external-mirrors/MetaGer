@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\MetaGer;
-use Cache;
 use Illuminate\Support\Facades\Redis;
 
 abstract class Searchengine
@@ -148,7 +147,7 @@ abstract class Searchengine
             // Submit this mission to the corresponding Redis Queue
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
-            Redis::connection('cache')->rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
             if (!empty($timings)) {
                 $timings["startSearch"][$this->name]["pushed job"] = microtime(true) - $timings["starttime"];
             }
@@ -194,7 +193,7 @@ abstract class Searchengine
                 $body = "";
             }
         } else {
-            $body = Cache::get($this->hash);
+            $body = Redis::get($this->hash);
         }
 
         if ($body !== null) {

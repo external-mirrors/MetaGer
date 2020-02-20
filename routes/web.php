@@ -21,9 +21,7 @@ Route::group(
         /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
         Route::get('/', 'StartpageController@loadStartPage');
-        Route::get('sand', function () {
-            abort(500, "test");
-        });
+
         Route::get('asso', function () {
             return view('assoziator.asso')
                 ->with('title', trans('titles.asso'))

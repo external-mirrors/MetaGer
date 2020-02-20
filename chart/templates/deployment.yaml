@@ -141,4 +141,18 @@ spec:
         command: ["su"]
         args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/fetcher
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/fetcher
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
 {{- end -}}

@@ -3,6 +3,7 @@
 namespace App\Models\parserSkripte;
 
 use App\Models\XmlSearchengine;
+use Log;
 
 class Qualigo extends XmlSearchengine
 {
@@ -14,6 +15,10 @@ class Qualigo extends XmlSearchengine
 
     protected function loadXmlResults($resultsXml)
     {
+        if(empty($resultsXml) || !$resultsXml){
+            Log::error("A problem occurred parsing results from $this->name:");
+            return;
+        }
         try {
             $results = $resultsXml->xpath('//RL/RANK');
             foreach ($results as $result) {

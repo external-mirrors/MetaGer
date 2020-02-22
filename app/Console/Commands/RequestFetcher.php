@@ -131,11 +131,11 @@ class RequestFetcher extends Command
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1",
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_MAXCONNECTS => 500,
-            CURLOPT_LOW_SPEED_LIMIT => 500,
-            CURLOPT_LOW_SPEED_TIME => 5,
-            CURLOPT_TIMEOUT => 10,
+            CURLOPT_LOW_SPEED_LIMIT => 50000,
+            CURLOPT_LOW_SPEED_TIME => 2,
+            CURLOPT_TIMEOUT => 3,
         ));
 
         if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {

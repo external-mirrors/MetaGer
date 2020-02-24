@@ -32,6 +32,8 @@ WORKDIR /html
 RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /etc/php7/php-fpm.conf && \
     sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php7/php-fpm.conf && \
     sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/;request_terminate_timeout = 0/request_terminate_timeout = 30/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/;request_terminate_timeout_track_finished = no/request_terminate_timeout_track_finished = yes/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;decorate_workers_output = no/decorate_workers_output = no/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \

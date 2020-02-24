@@ -11,8 +11,8 @@
     overflow: hidden;
     overflow-y: auto;
     z-index: 10;
-    background-color: rgb(39, 39, 39);
-    color: white;
+    background-color: @background-color;
+    color: @text-color;
     transition: 0.5s;
     border-left: none;
     .sidebar-logo {
@@ -101,7 +101,7 @@
         text-indent: 12px;
         display: inline-block;
         width: 100%;
-        color: @link-color;
+        color: @text-color;
         &:hover, &:focus {
             color: red;
         }

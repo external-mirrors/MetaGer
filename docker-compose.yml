@@ -41,7 +41,7 @@ services:
     restart: on-failure
     build:
       context: .
-      dockerfile: Dockerfile.dev
+      dockerfile: DockerfileDev
     image: metager:latest
     working_dir: /html
     volumes:

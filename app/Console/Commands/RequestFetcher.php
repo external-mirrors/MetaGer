@@ -50,10 +50,25 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
+
         $pidFile = "/tmp/fetcher";
         pcntl_signal(SIGINT, [$this, "sig_handler"]);
         pcntl_signal(SIGTERM, [$this, "sig_handler"]);
         pcntl_signal(SIGHUP, [$this, "sig_handler"]);
+
+        // Redis might not be available now
+        for ($count = 0; $count < 10; $count++) {
+            try {
+                Redis::connection();
+                break;
+            } catch (\Predis\Connection\ConnectionException $e) {
+                if ($count >= 9) {
+                    // If its not available after 10 seconds we will exit
+                    return;
+                }
+                sleep(1);
+            }
+        }
 
         touch($pidFile);
 

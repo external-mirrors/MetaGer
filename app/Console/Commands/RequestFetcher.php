@@ -63,14 +63,13 @@ class RequestFetcher extends Command
 
         try {
             $blocking = false;
-            $redis = Redis::connection("cache");
             while ($this->shouldRun) {
                 $status = curl_multi_exec($this->multicurl, $active);
                 $currentJob = null;
                 if (!$blocking) {
-                    $currentJob = $redis->lpop(\App\MetaGer::FETCHQUEUE_KEY);
+                    $currentJob = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY);
                 } else {
-                    $currentJob = $redis->blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
+                    $currentJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
                     if (!empty($currentJob)) {
                         $currentJob = $currentJob[1];
                     }
@@ -105,8 +104,11 @@ class RequestFetcher extends Command
                         $body = \curl_multi_getcontent($info["handle"]);
                     }
 
-                    Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
-
+                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
+                        $pipe->set($resulthash, $body);
+                        $pipe->expire($resulthash, 60);
+                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+                    });
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }
                 if (!$active && !$answerRead) {
@@ -131,11 +133,11 @@ class RequestFetcher extends Command
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1",
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_MAXCONNECTS => 500,
-            CURLOPT_LOW_SPEED_LIMIT => 500,
-            CURLOPT_LOW_SPEED_TIME => 5,
-            CURLOPT_TIMEOUT => 10,
+            CURLOPT_LOW_SPEED_LIMIT => 50000,
+            CURLOPT_LOW_SPEED_TIME => 2,
+            CURLOPT_TIMEOUT => 3,
         ));
 
         if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {

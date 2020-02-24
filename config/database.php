@@ -113,6 +113,7 @@ return [
         'cluster' => false,
 
         'default' => [
+            'read_write_timeout' => -1,
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),

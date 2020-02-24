@@ -69,7 +69,7 @@ return [
         ],
 
         'redis' => [
-            'driver' => 'redis',
+            'driver' => env('REDIS_CACHE_DRIVER', 'redis'),
             'connection' => 'cache',
         ],
 

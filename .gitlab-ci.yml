@@ -1,5 +1,6 @@
 variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab:2375"
+    AUTO_DEVOPS_BUILD_IMAGE_EXTRA_ARGS: "--network host"
     POSTGRES_ENABLED: "false"
     CODE_QUALITY_DISABLED: "true"
     CONTAINER_SCANNING_DISABLED: "true"

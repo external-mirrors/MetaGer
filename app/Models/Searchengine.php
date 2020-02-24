@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\MetaGer;
+use Cache;
 use Illuminate\Support\Facades\Redis;
 
 abstract class Searchengine
@@ -197,6 +198,7 @@ abstract class Searchengine
         }
 
         if ($body !== null) {
+            Cache::put($this->hash, $body, $this->cacheDuration * 60);
             $this->loadResults($body);
             $this->getNext($metager, $body);
             $this->markNew();

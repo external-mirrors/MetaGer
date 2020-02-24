@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -122,7 +121,6 @@ class RequestFetcher extends Command
                     Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
                         $pipe->set($resulthash, $body);
                         $pipe->expire($resulthash, 60);
-                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
                     });
                     \curl_multi_remove_handle($this->multicurl, $info["handle"]);
                 }

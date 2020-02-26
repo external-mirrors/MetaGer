@@ -120,7 +120,7 @@ spec:
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
       # Redis Container
       - name: {{ .Chart.Name }}-redis
-        image: "redis:6.0-rc1-alpine"
+        image: "redis:5.0.3-alpine"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: "{{ .Values.service.name }}-redis"

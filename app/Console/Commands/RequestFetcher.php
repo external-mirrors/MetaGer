@@ -101,6 +101,7 @@ class RequestFetcher extends Command
                         Log::info("Reinitializing Multicurl after " . $this->fetchedDocuments . " requests.");
                         $this->oldMultiCurl = $this->multicurl;
                         $this->multicurl = curl_multi_init();
+                        $this->fetchedDocuments = 0;
                     }
                     $blocking = false;
                     $active = true;

@@ -12,11 +12,11 @@
 					<a href="mailto:dominik@suma-ev.de">dominik@suma-ev.de</a></p>
 				</li>
 				<li>
-					<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.2') !!} -
+					<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.7') !!} -
 					<a href="carsten@suma-ev.de">carsten@suma-ev.de</a></p>
 				</li>
 				<li>
-					<p>Branz, Manuela - {!! trans('team.role.3') !!} & {!! trans('team.role.7') !!} -
+					<p>Branz, Manuela - {!! trans('team.role.3') !!} & {!! trans('team.role.2') !!} -
 					<a href="mailto:manuela.branz@suma-ev.de">manuela.branz@suma-ev.de</a></p>
 				</li>
 				<li>

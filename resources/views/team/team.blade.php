@@ -12,7 +12,7 @@
 					<a href="mailto:dominik@suma-ev.de">dominik@suma-ev.de</a></p>
 				</li>
 				<li>
-					<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.7') !!} -
+					<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.2') !!} -
 					<a href="carsten@suma-ev.de">carsten@suma-ev.de</a></p>
 				</li>
 				<li>

@@ -429,7 +429,7 @@ a {
     max-width: @results-width-max;
     #research-bar {
         background-color: @resultpage-background-color;
-        border: 1px solid #ccc;
+        border: 1px solid @border-color;
         border-bottom: 1px solid @metager-orange;
         box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12), 1px 0px 1px 0px rgba(0, 0, 0, 0.24);
         display: flex;
@@ -437,7 +437,7 @@ a {
         padding: 4px;
         .resultpage-searchbar {
             .search-input-submit .search-input input {
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid @border-color;
             }
             @media (max-width: @sidebar-opener-breakpoint) {
                 .search-focus-selector {
@@ -471,7 +471,7 @@ a {
         background-color: @resultpage-background-color;
         overflow-x: auto;
         padding: 8px;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid @border-color;
         @media (max-width: @screen-mobile) {
             .card;
             margin: 0;

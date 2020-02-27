@@ -3,7 +3,7 @@
 return [
     "role.0" => "Director ejecutivo [CEO]",
     "role.1" => "la junta directiva",
-    "role.2" => "La oficina (moderar y protección de menores)",
+    "role.2" => "Moderar y protección de menores",
     "role.3" => "Revistar la prensa",
     "role.4" => " Programador | programadora",
     "role.5" => " Programador | programadora",

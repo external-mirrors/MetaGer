@@ -24,6 +24,9 @@ class RequestFetcher extends Command
 
     protected $shouldRun = true;
     protected $multicurl = null;
+    protected $oldMultiCurl = null;
+    protected $maxFetchedDocuments = 1000;
+    protected $fetchedDocuments = 0;
     protected $proxyhost, $proxyuser, $proxypassword;
 
     /**
@@ -93,37 +96,21 @@ class RequestFetcher extends Command
                     $currentJob = json_decode($currentJob, true);
                     $ch = $this->getCurlHandle($currentJob);
                     curl_multi_add_handle($this->multicurl, $ch);
+                    $this->fetchedDocuments++;
+                    if ($this->fetchedDocuments > $this->maxFetchedDocuments) {
+                        Log::info("Reinitializing Multicurl after " . $this->fetchedDocuments . " requests.");
+                        $this->oldMultiCurl = $this->multicurl;
+                        $this->multicurl = curl_multi_init();
+                    }
                     $blocking = false;
                     $active = true;
                 }
 
-                $answerRead = false;
-                while (($info = curl_multi_info_read($this->multicurl)) !== false) {
-                    $answerRead = true;
-                    $infos = curl_getinfo($info["handle"], CURLINFO_PRIVATE);
-                    $infos = explode(";", $infos);
-                    $resulthash = $infos[0];
-                    $cacheDurationMinutes = intval($infos[1]);
-                    $responseCode = curl_getinfo($info["handle"], CURLINFO_HTTP_CODE);
-                    $body = "";
-
-                    $error = curl_error($info["handle"]);
-                    if (!empty($error)) {
-                        Log::error($error);
-                    }
-
-                    if ($responseCode !== 200) {
-                        Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
-                    } else {
-                        $body = \curl_multi_getcontent($info["handle"]);
-                    }
-
-                    Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
-                        $pipe->set($resulthash, $body);
-                        $pipe->expire($resulthash, 60);
-                    });
-                    \curl_multi_remove_handle($this->multicurl, $info["handle"]);
+                $answerRead = $this->readMultiCurl($this->multicurl);
+                if ($this->oldMultiCurl != null) {
+                    $this->readMultiCurl($this->oldMultiCurl);
                 }
+
                 if (!$active && !$answerRead) {
                     $blocking = true;
                 } else {
@@ -134,6 +121,41 @@ class RequestFetcher extends Command
             unlink($pidFile);
             curl_multi_close($this->multicurl);
         }
+    }
+
+    private function readMultiCurl($mc)
+    {
+        $answerRead = false;
+        while (($info = curl_multi_info_read($mc)) !== false) {
+            try {
+                $answerRead = true;
+                $infos = curl_getinfo($info["handle"], CURLINFO_PRIVATE);
+                $infos = explode(";", $infos);
+                $resulthash = $infos[0];
+                $cacheDurationMinutes = intval($infos[1]);
+                $responseCode = curl_getinfo($info["handle"], CURLINFO_HTTP_CODE);
+                $body = "";
+
+                $error = curl_error($info["handle"]);
+                if (!empty($error)) {
+                    Log::error($error);
+                }
+
+                if ($responseCode !== 200) {
+                    Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
+                } else {
+                    $body = \curl_multi_getcontent($info["handle"]);
+                }
+
+                Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
+                    $pipe->set($resulthash, $body);
+                    $pipe->expire($resulthash, 60);
+                });
+            } finally {
+                \curl_multi_remove_handle($mc, $info["handle"]);
+            }
+        }
+        return $answerRead;
     }
 
     private function getCurlHandle($job)

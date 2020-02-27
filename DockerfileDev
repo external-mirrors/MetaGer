@@ -23,7 +23,6 @@ RUN apk add --update \
     php7-gd \
     php7-json \
     php7-pcntl \
-    php7-opcache \
     php7-fileinfo \
     && rm -rf /var/cache/apk/*
 
@@ -46,14 +45,6 @@ RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /et
     sed -i 's/group = www-data/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     sed -i 's/expose_php = On/expose_php = Off/g' /etc/php7/php.ini && \
-    # Opcache configuration
-    sed -i 's/;opcache.enable=1/opcache.enable=1/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.memory_consumption=128/opcache.memory_consumption=128/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=8/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.max_accelerated_files=10000/opcache.max_accelerated_files=10000/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.max_wasted_percentage=5/opcache.max_wasted_percentage=5/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=1/g' /etc/php7/php.ini && \
-    sed -i 's/;opcache.revalidate_freq=2/opcache.revalidate_freq=300/g' /etc/php7/php.ini && \
     echo "daemonize yes" >> /etc/redis.conf && \
     ln -s /dev/null /var/log/nginx/access.log && \
     ln -s /dev/stdout /var/log/nginx/error.log && \

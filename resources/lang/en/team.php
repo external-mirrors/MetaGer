@@ -3,7 +3,7 @@
 return [
     "role.0" => "CEO",
     "role.1" => "executive",
-    "role.2" => "office supervisor und youth protection commissioner",
+    "role.2" => "youth protection commissioner",
     "role.3" => "press secretary",
     "role.4" => "programmer",
     "role.5" => "programmer",

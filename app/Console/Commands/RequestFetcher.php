@@ -25,7 +25,7 @@ class RequestFetcher extends Command
     protected $shouldRun = true;
     protected $multicurl = null;
     protected $oldMultiCurl = null;
-    protected $maxFetchedDocuments = 1000;
+    protected $maxFetchedDocuments = 10000;
     protected $fetchedDocuments = 0;
     protected $proxyhost, $proxyuser, $proxypassword;
 
@@ -95,7 +95,11 @@ class RequestFetcher extends Command
                 if (!empty($currentJob)) {
                     $currentJob = json_decode($currentJob, true);
                     $ch = $this->getCurlHandle($currentJob);
-                    curl_multi_add_handle($this->multicurl, $ch);
+                    if (curl_multi_add_handle($this->multicurl, $ch) !== 0) {
+                        $this->shouldRun = false;
+                        Log::error("Couldn't add Handle to multicurl");
+                        break;
+                    }
                     $this->fetchedDocuments++;
                     if ($this->fetchedDocuments > $this->maxFetchedDocuments) {
                         Log::info("Reinitializing Multicurl after " . $this->fetchedDocuments . " requests.");
@@ -110,6 +114,14 @@ class RequestFetcher extends Command
                 $answerRead = $this->readMultiCurl($this->multicurl);
                 if ($this->oldMultiCurl != null) {
                     $this->readMultiCurl($this->oldMultiCurl);
+                    $messagesLeft = -1;
+                    if (curl_multi_info_read($this->oldMultiCurl, $messagesLeft) === false) {
+                        if ($messagesLeft = 0) {
+                            Log::debug("Removing finished multicurl handle");
+                            curl_multi_close($this->oldMultiCurl);
+                            $this->oldMultiCurl = null;
+                        }
+                    }
                 }
 
                 if (!$active && !$answerRead) {
@@ -153,6 +165,7 @@ class RequestFetcher extends Command
                     $pipe->expire($resulthash, 60);
                 });
             } finally {
+                curl_close($info["handle"]);
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }
         }

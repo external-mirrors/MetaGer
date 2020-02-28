@@ -185,8 +185,8 @@ class RequestFetcher extends Command
             CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_MAXCONNECTS => 500,
             CURLOPT_LOW_SPEED_LIMIT => 50000,
-            CURLOPT_LOW_SPEED_TIME => 2,
-            CURLOPT_TIMEOUT => 3,
+            CURLOPT_LOW_SPEED_TIME => 5,
+            CURLOPT_TIMEOUT => 7,
         ));
 
         if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {

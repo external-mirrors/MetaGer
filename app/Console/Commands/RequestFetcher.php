@@ -165,7 +165,6 @@ class RequestFetcher extends Command
                     $pipe->expire($resulthash, 60);
                 });
             } finally {
-                curl_close($info["handle"]);
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }
         }

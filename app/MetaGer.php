@@ -1390,7 +1390,7 @@ class MetaGer
                 $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
-                $logEntry = preg_replace("\n+", " ", $logEntry);
+                $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
                 $logpath = \App\MetaGer::getMGLogFile();
                 if (file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND) === false) {

@@ -4,6 +4,10 @@ service:
 hpa:
   minReplicas: 1
   maxReplicas: 5
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+  maxUnavailable: 1
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod

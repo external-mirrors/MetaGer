@@ -16,7 +16,10 @@ if (isset($_SERVER["HTTP_FORWARDED"]) && isset($_SERVER["HTTP_X_FORWARDED_FOR"])
     unset($_SERVER["HTTP_FORWARDED"]);
 }
 
-$_SERVER["AGENT"] = $_SERVER["HTTP_USER_AGENT"];
+$_SERVER["AGENT"] = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1";
+if (!empty($_SERVER["HTTP_USER_AGENT"])) {
+    $_SERVER["AGENT"] = $_SERVER["HTTP_USER_AGENT"];
+}
 
 /*
 |--------------------------------------------------------------------------

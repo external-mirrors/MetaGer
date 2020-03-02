@@ -73,7 +73,9 @@ spec:
           mountPath: /html/storage/logs/metager
           readOnly: false
         resources:
-{{ toYaml .Values.resources | indent 12 }}
+          requests:
+            cpu: 500m
+            memory: 500m
       # Nginx Container
       - name: {{ .Chart.Name }}-nginx
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -118,6 +120,10 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100m
       # Redis Container
       - name: {{ .Chart.Name }}-redis
         image: "redis:5.0.3-alpine"
@@ -135,6 +141,10 @@ spec:
             port: "{{ .Values.service.name }}-redis"
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 1Gi
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -155,4 +165,8 @@ spec:
             - /tmp/fetcher
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        resources:
+          requests:
+            cpu: 500m
+            memory: 100m
 {{- end -}}

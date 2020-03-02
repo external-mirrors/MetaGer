@@ -1397,6 +1397,7 @@ class MetaGer
                     Log::error("Konnte Log Zeile nicht schreiben");
                 }
             } catch (\Exception $e) {
+                Log::error($e->getMessage());
                 return;
             }
         }

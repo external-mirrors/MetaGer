@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
+use Monospice\LaravelRedisSentinel\RedisSentinel;
 
 class AppendLogs extends Command
 {

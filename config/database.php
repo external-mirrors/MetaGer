@@ -121,6 +121,7 @@ return [
         ],
 
         'cache' => [
+            'driver' => env('REDIS_CACHE_DRIVER', 'redis'),
             'host' => env('REDIS_CACHE_HOST', 'localhost'),
             'password' => env('REDIS_CACHE_PASSWORD', null),
             'port' => env('REDIS_CACHE_PORT', 6379),

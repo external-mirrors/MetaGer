@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 use Log;
+use Monospice\LaravelRedisSentinel\RedisSentinel;
 use Predis\Connection\ConnectionException;
 
 class MetaGer
@@ -1392,12 +1393,11 @@ class MetaGer
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
-                Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-
-                /*$logpath = \App\MetaGer::getMGLogFile();
-            if (file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND) === false) {
-            Log::error("Konnte Log Zeile nicht schreiben");
-            }*/
+                if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+                    Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+                    RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return;

@@ -40,7 +40,17 @@ class AppendLogs extends Command
      */
     public function handle()
     {
-        $redis = Redis::connection('cache');
+        $redis = null;
+
+        if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+            $redis = Redis::connection('cache');
+        } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+            $redis = RedisSentinel::connection('cache');
+        }
+        if ($redis === null) {
+            Log::error("No valid Redis Connection specified");
+            return;
+        }
 
         $elements = [];
         $reply = $redis->pipeline(function ($pipe) use ($elements) {

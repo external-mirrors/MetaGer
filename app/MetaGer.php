@@ -1392,10 +1392,12 @@ class MetaGer
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
-                $logpath = \App\MetaGer::getMGLogFile();
-                if (file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND) === false) {
-                    Log::error("Konnte Log Zeile nicht schreiben");
-                }
+                Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+
+                /*$logpath = \App\MetaGer::getMGLogFile();
+            if (file_put_contents($logpath, $logEntry . PHP_EOL, FILE_APPEND) === false) {
+            Log::error("Konnte Log Zeile nicht schreiben");
+            }*/
             } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 return;

@@ -27,6 +27,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('requests:gather')->everyFifteenMinutes();
         $schedule->command('requests:useragents')->everyFiveMinutes();
+        $schedule->command('logs:gather')->everyMinute();
 
         $schedule->call(function () {
             DB::table('monthlyrequests')->truncate();

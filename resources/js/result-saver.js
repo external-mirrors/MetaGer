@@ -16,7 +16,7 @@ $(document).ready(function () {
  * Load all saved results and sort them
  * @param {String} sort The type of sorting function to call for these results
  */
-function Results () {
+function Results() {
   if (!localStorage) return;
   this.prefix = 'result_';
   this.sort = 'chronological';
@@ -29,8 +29,8 @@ function Results () {
  */
 Results.prototype.addResult = function (result) {
   if (this.results.every(function (val) {
-      return val.hash !== result.hash;
-    })) {
+    return val.hash !== result.hash;
+  })) {
     this.results.push(result);
   }
 };
@@ -120,7 +120,7 @@ Results.prototype.updateResultPageInterface = function () {
           <h1>' + t('result-saver.title') + '</h1>\
         </div>\
         ');
-    $('#additions-container').append(tabPanel);
+    $('#additions-container').prepend(tabPanel);
   } else {
     // If there already is a savedFoki element, get it
     $('#savedFoki').html('');
@@ -178,7 +178,7 @@ Results.prototype.addToContainer = function (container) {
       if (html.toLowerCase().indexOf(search.toLowerCase()) === -1) {
         // hide entire result block
         $(value).parent().addClass('hidden');
-      }else {
+      } else {
         // show entire result block
         $(value).parent().removeClass('hidden');
       }
@@ -218,7 +218,7 @@ Results.prototype.addToContainer = function (container) {
  * @param {int} rank The rank of this result
  * @param {int} hash The hash value for this result
  */
-function Result (title, link, hosterName, hosterLink, anzeigeLink, description, anonym, index, hash) {
+function Result(title, link, hosterName, hosterLink, anzeigeLink, description, anonym, index, hash) {
   // Set prefix for localstorage
   this.prefix = 'result_';
 
@@ -313,7 +313,7 @@ Result.prototype.save = function () {
  * Convert a string into base64 format
  * @param {String} str The string to convert
  */
-function b64EncodeUnicode (str) {
+function b64EncodeUnicode(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
     return String.fromCharCode('0x' + p1);
   }));
@@ -323,7 +323,7 @@ function b64EncodeUnicode (str) {
  * Convert a base64 string into normal format
  * @param {String} str The string to convert
  */
-function b64DecodeUnicode (str) {
+function b64DecodeUnicode(str) {
   return decodeURIComponent(Array.prototype.map.call(atob(str), function (c) {
     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
   }).join(''));
@@ -389,7 +389,7 @@ Result.prototype.toHtml = function () {
     </div>');
 
   // Add a click listener to the remover, that removes the result on click
-  $(result).find('.remover').click({caller: this}, function (event) {
+  $(result).find('.remover').click({ caller: this }, function (event) {
     event.data.caller.remove();
   });
 
@@ -400,7 +400,7 @@ Result.prototype.toHtml = function () {
  * Saves the result at the given index
  * @param {int} index The index of the result to save
  */
-function resultSaver (index) {
+function resultSaver(index) {
   // Remember the original result element
   var original = $('.result[data-count=' + index + ']');
 
@@ -428,6 +428,6 @@ function resultSaver (index) {
   // Animate the result transfer to the saved results
   var transferTarget = $('.saved-result[data-count=' + index + ']');
   if (original.length > 0 && transferTarget.length > 0) {
-    $(original).transfer({to: transferTarget, duration: 1000});
+    $(original).transfer({ to: transferTarget, duration: 1000 });
   }
 }

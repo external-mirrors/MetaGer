@@ -67,12 +67,6 @@ class MetaGerSearch extends Controller
             return response($responseContent);
         }
 
-        # Die Quicktips als Job erstellen
-        $quicktips = $metager->createQuicktips();
-        if (!empty($timings)) {
-            $timings["createQuicktips"] = microtime(true) - $time;
-        }
-
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
@@ -87,12 +81,6 @@ class MetaGerSearch extends Controller
         $metager->retrieveResults();
         if (!empty($timings)) {
             $timings["retrieveResults"] = microtime(true) - $time;
-        }
-
-        # Versuchen die Ergebnisse der Quicktips zu laden
-        $quicktipResults = $quicktips->loadResults();
-        if (!empty($timings)) {
-            $timings["loadResults"] = microtime(true) - $time;
         }
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
@@ -121,7 +109,7 @@ class MetaGerSearch extends Controller
         }
 
         # Die Ausgabe erstellen:
-        $resultpage = $metager->createView($quicktipResults);
+        $resultpage = $metager->createView();
         if ($spamEntry !== null) {
             Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
         }
@@ -277,5 +265,13 @@ class MetaGerSearch extends Controller
         return view('tips')
             ->with('title', trans('tips.title'))
             ->with('tips', $tips);
+    }
+
+    public function quicktips($search)
+    {
+        $quicktips = new \App\Models\Quicktips\Quicktips($search);
+        return view('quicktips')
+            ->with('quicktips', $quicktips->getResults())
+            ->with('search', $search);
     }
 }

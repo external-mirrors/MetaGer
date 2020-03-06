@@ -270,6 +270,8 @@ class MetaGerSearch extends Controller
     public function quicktips($search)
     {
         $quicktips = new \App\Models\Quicktips\Quicktips($search);
-        return view('quicktips')->with('quicktips', $quicktips->getResults());
+        return view('quicktips')
+            ->with('quicktips', $quicktips->getResults())
+            ->with('search', $search);
     }
 }

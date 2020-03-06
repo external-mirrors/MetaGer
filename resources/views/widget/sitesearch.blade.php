@@ -28,7 +28,7 @@
 	</div>
 		<h2>{{ trans('sitesearch.generated.5') }} <button id="copyButton" class="btn btn-default" type="button"><i class="fa fa-paperclip" aria-hidden="true"></i> {{ trans('websearch.head.copy') }}</button></h2>
 		<textarea id="codesnippet" readonly style="width:100%;height:500px">
-			<form class="metager-searchform" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}/meta/meta.ger3" method="get" accept-charset="UTF-8">
+			<form class="metager-searchform" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}meta/meta.ger3" method="get" accept-charset="UTF-8">
 				<style type="text/css" scoped>
 					.metager-searchinput {
 						height: 30px;

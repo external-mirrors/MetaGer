@@ -10,6 +10,12 @@
     flex-direction: column;
     margin: 0 8px;
     background-color: inherit;
+    a {
+        text-decoration: none;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
     .quicktip {
         .card-light;
         position: relative;
@@ -49,6 +55,9 @@
                 -ms-user-select: none;
                 user-select: none;
                 text-decoration: none;
+                &:hover {
+                    text-decoration: underline;
+                }
             }
             .quicktip-headline {
                 width: 100%;

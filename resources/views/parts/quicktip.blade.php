@@ -5,7 +5,7 @@
         @if ($quicktip->title != "")
           <h1 class="quicktip-title">
             @if ($quicktip->link != "")
-              <a href="{{ $quicktip->link }}">{{ $quicktip->title }}</a>
+              <a href="{{ $quicktip->link }}" target="_parent">{{ $quicktip->title }}</a>
             @else
               {{ $quicktip->title }}
             @endif
@@ -32,7 +32,7 @@
       <div class="quicktip-detail">
         <h2>
           @if (isset($detail->link))
-            <a href="{{ $detail->link }}">{{ $detail->title }}</a>
+            <a href="{{ $detail->link }}" target="_parent">{{ $detail->title }}</a>
           @else
             {{ $detail->title }}
           @endif
@@ -47,7 +47,7 @@
       @if ($quicktip->title != "")
         <h1 class="quicktip-title">
           @if ($quicktip->link != "")
-            <a href="{{ $quicktip->link }}">{{ $quicktip->title }}</a>
+            <a href="{{ $quicktip->link }}" target="_parent">{{ $quicktip->title }}</a>
           @else
             {{ $quicktip->title }}
           @endif

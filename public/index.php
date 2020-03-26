@@ -9,9 +9,6 @@
 
 # Manchmal passiert es, dass ein Proxy sowohl den HEADER HTTP_FORWARDED, als auch den HEADER "HTTP_X_FORWARDED_FOR" setzt
 # Wir löschen den einen und verwenden Ihn nicht:
-if (!empty($_SERVER["HTTP_X_ORIGINAL_FORWARDED_FOR"])) {
-    $_SERVER["HTTP_X_FORWARDED_FOR"] = $_SERVER["HTTP_X_ORIGINAL_FORWARDED_FOR"];
-}
 if (isset($_SERVER["HTTP_FORWARDED"]) && isset($_SERVER["HTTP_X_FORWARDED_FOR"])) {
     unset($_SERVER["HTTP_FORWARDED"]);
 }

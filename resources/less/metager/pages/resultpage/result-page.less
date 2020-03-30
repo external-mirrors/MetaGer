@@ -1,5 +1,26 @@
 /* Variables */
 
+// Background color
+@resultpage-background-color: @background-color;
+// Margin to the left of the results
+@results-margin-left: 16px;
+// Min and max widths of the 2 resultpage columns
+@results-width-min: 500px;
+@results-width-max: 800px;
+@additions-width-min: 500px;
+@additions-width-max: 500px;
+// Breakpoints for the 2 resultpage columns
+@resultpage-breakpoint-max: (@results-width-max + @additions-width-max + @padding-small-default * 2 + @padding-small-default * 4 + 6);
+@resultpage-breakpoint-min: (@results-width-min + @additions-width-min + @padding-small-default * 4);
+@product-shop-color: green;
+// The point upon which a .screen-large logo is displayed
+@logo-size-breakpoint: (@results-width-min + @padding-small-default * 2);
+// The point upon which the sidebar opener switches place
+@sidebar-opener-breakpoint: (@results-width-max + @padding-small-default * 2 + 60px);
+// Quicktip background color
+@quicktip-background-color: @resultpage-background-color;
+// Color of the Spruch author
+@spruch-author-color: @color-strong-grey;
 /* Styles */
 
 #header-logo {
@@ -245,7 +266,7 @@ a {
         border-radius: 10px;
         padding: 5px;
         margin-left: 10px;
-        background-color: white;
+        background-color: @resultpage-background-color;
         box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12), 1px 0px 1px 0px rgba(0, 0, 0, 0.24);
         &:first-child {
             margin-left: 0px;
@@ -333,7 +354,7 @@ a {
     #research-bar-container {
         grid-area: searchbar;
         padding-top: @padding-small-default;
-        background-color: white;
+        background-color: @resultpage-background-color;
         box-shadow: 0px 1px 3px 2px white, 1px 0px 1px 2px white;
         position: sticky;
     }
@@ -417,8 +438,8 @@ a {
     background-color: @resultpage-background-color;
     max-width: @results-width-max;
     #research-bar {
-        background-color: white;
-        border: 1px solid #ccc;
+        background-color: @resultpage-background-color;
+        border: 1px solid @border-color;
         border-bottom: 1px solid @metager-orange;
         box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12), 1px 0px 1px 0px rgba(0, 0, 0, 0.24);
         display: flex;
@@ -426,7 +447,7 @@ a {
         padding: 4px;
         .resultpage-searchbar {
             .search-input-submit .search-input input {
-                border-bottom: 1px solid #ccc;
+                border-bottom: 1px solid @border-color;
             }
             @media (max-width: @sidebar-opener-breakpoint) {
                 .search-focus-selector {
@@ -457,10 +478,10 @@ a {
         display: flex;
         width: 100%;
         max-width: @results-width-max;
-        background-color: white;
+        background-color: @resultpage-background-color;
         overflow-x: auto;
         padding: 8px;
-        border-bottom: 1px solid #ccc;
+        border-bottom: 1px solid @border-color;
         @media (max-width: @screen-mobile) {
             .card;
             margin: 0;
@@ -468,11 +489,11 @@ a {
         &>div {
             padding-right: 16px;
             &>a {
-                color: black;
+                color: @text-color;
             }
             &.active>a {
-                border-bottom: 1px solid black;
-                color: black;
+                border-bottom: 1px solid @text-color;
+                color: @text-color;
             }
             &:last-child {
                 padding-right: 20px
@@ -493,7 +514,7 @@ a {
 
 #options {
     grid-area: options;
-    background-color: white;
+    background-color: @resultpage-background-color;
     max-width: @results-width-max;
     padding: 0 8px;
     @media(max-width: @screen-mobile){
@@ -592,7 +613,7 @@ a {
     #settings {
         text-align: center;
         a {
-            color: #333;
+            color: @text-color;
             &:hover {
                 color: red;
                 span.badge {

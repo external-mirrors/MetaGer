@@ -1,3 +1,9 @@
+@result-font-large: 18px;
+@result-font-medium: 16px;
+@result-font-url: 14px;
+@result-font-small: 12px;
+@result-description-color: @text-color;
+@result-image-border-color: @color-almost-white;
 .result {
 
     // Remove the margin from the first result because it already has margin from the grid ruleset
@@ -38,7 +44,7 @@
                     &:hover,
                     &:focus,
                     &:visited {
-                        color: black;
+                        color: @text-color;
                         text-decoration: none;
                     }
                 }
@@ -177,7 +183,7 @@
             &:hover,
             &:focus,
             &:visited {
-                color: black;
+                color: @text-color;
                 font-size: .7em;
                 text-decoration: none;
             }
@@ -193,7 +199,7 @@
             &:hover,
             &:focus,
             &:visited {
-                color: black;
+                color: @text-color;
                 font-size: .7em;
                 text-decoration: none;
             }
@@ -253,7 +259,7 @@
     &>.result-options {
         max-width: 100%;
         &>.options {
-            border-top: 1px solid #ccc;
+            border-top: 1px solid @border-color;
             width: 100%;
             text-align: right;
             overflow: hidden;

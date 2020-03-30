@@ -1,5 +1,5 @@
 .sidebar {
-    border-left: 1px solid #ccc;
+    border-left: 1px solid @border-color;
     box-shadow: 0px 1px 1.5px 1px #c0c0c0;
     position: fixed;
     display: block;
@@ -11,7 +11,8 @@
     overflow: hidden;
     overflow-y: auto;
     z-index: 10;
-    background-color: white;
+    background-color: @background-color;
+    color: @text-color;
     transition: 0.5s;
     border-left: none;
     .sidebar-logo {
@@ -35,7 +36,7 @@
         &>li {
             width: 100%;
             &:hover {
-                background-color: @color-almost-white;
+                background-color: @sidebar-list-hover-color;
             }
             &>label,
             &>a {
@@ -54,7 +55,7 @@
                 font-weight: normal;
                 text-decoration: none;
                 text-indent: 12px;
-                color: black;
+                color: @text-color;
                 line-height: 20px;
                 display: inline-block;
                 width: 100%;
@@ -100,7 +101,7 @@
         text-indent: 12px;
         display: inline-block;
         width: 100%;
-        color: black;
+        color: @text-color;
         &:hover, &:focus {
             color: red;
         }
@@ -196,7 +197,7 @@
     line-height: 23px;
     border-radius: 5px;
     color: grey;
-    background-color: white;
+    background-color: @background-color;
     &:after {
         content: "≡";
     }

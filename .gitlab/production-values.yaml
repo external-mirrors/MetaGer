@@ -2,11 +2,16 @@ service:
   externalPort: 80
   internalPort: 80
 hpa:
-  minReplicas: 10
-  maxReplicas: 40
+  minReplicas: 5
+  maxReplicas: 25
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 5
+  maxUnavailable:
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($host = "www.metager.de") {
           return 301 https://metager.de$request_uri;
@@ -16,4 +21,7 @@ ingress:
       }
       if ($host = "www.metager.es") {
           return 301 https://metager.es$request_uri;
+      }
+      if ($host = "klassik.metager.org") {
+          return 301 https://metager.de$request_uri;
       }

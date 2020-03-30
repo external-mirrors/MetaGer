@@ -77,7 +77,7 @@ class AdminInterface extends Controller
     private function getSearchEngineNames()
     {
         $url = config_path() . "/sumas.xml";
-        $xml = simplexml_load_file($url);
+        $xml = \simplexml_load_file($url);
         $sumas = $xml->xpath("suma");
 
         $names = array();

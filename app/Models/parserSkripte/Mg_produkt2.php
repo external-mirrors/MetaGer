@@ -18,7 +18,7 @@ class Mg_produkt2 extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -27,14 +27,14 @@ class Mg_produkt2 extends Searchengine
 
             foreach ($results as $result) {
 
-                $result      = simplexml_load_string($result->saveXML());
-                $title       = $result->xpath('/doc/arr[@name="artikelName"]')[0]->{"str"}->__toString();
-                $link        = $result->xpath('/doc/arr[@name="artikelDeeplink"]')[0]->{"str"}->__toString();
+                $result = \simplexml_load_string($result->saveXML());
+                $title = $result->xpath('/doc/arr[@name="artikelName"]')[0]->{"str"}->__toString();
+                $link = $result->xpath('/doc/arr[@name="artikelDeeplink"]')[0]->{"str"}->__toString();
                 $anzeigeLink = parse_url($link);
                 parse_str($anzeigeLink['query'], $query);
                 $anzeigeLink = $query['diurl'];
-                $descr       = $result->xpath('/doc/arr[@name="artikelBeschreibung"]')[0]->{"str"}->__toString();
-                $image       = $result->xpath('/doc/arr[@name="artikelImageurl"]')[0]->{"str"}->__toString();
+                $descr = $result->xpath('/doc/arr[@name="artikelBeschreibung"]')[0]->{"str"}->__toString();
+                $image = $result->xpath('/doc/arr[@name="artikelImageurl"]')[0]->{"str"}->__toString();
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -42,7 +42,7 @@ class Mg_produkt2 extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},$this->engine->homepage,
+                    $this->engine->{"display-name"}, $this->engine->homepage,
                     $this->counter,
                     ['image' => $image]
                 );

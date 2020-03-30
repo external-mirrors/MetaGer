@@ -87,9 +87,9 @@ Route::group(
 
         Route::get('beitritt', function () {
             if (LaravelLocalization::getCurrentLocale() === "de") {
-                return response()->file(storage_path('app/public/aufnahmeantrag-de.pdf'));
+                return response()->download(storage_path('app/public/aufnahmeantrag-de.pdf'), "SUMA-EV_Beitrittsformular_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             } else {
-                return response()->file(storage_path('app/public/aufnahmeantrag-en.pdf'));
+                return response()->download(storage_path('app/public/aufnahmeantrag-en.pdf'), "SUMA-EV_Membershipform_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             }
         });
 
@@ -170,10 +170,14 @@ Route::group(
         Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
             Route::get('/', 'AdminInterface@index');
             Route::match(['get', 'post'], 'count', 'AdminInterface@count');
+            Route::get('timings', 'MetaGerSearch@searchTimings');
             Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
             Route::get('engine/stats.json', 'AdminInterface@engineStats');
             Route::get('check', 'AdminInterface@check');
             Route::get('engines', 'AdminInterface@engines');
+            Route::get('ip', function () {
+                dd(Request::ip(), $_SERVER["AGENT"]);
+            });
         });
 
         Route::get('settings', function () {
@@ -181,6 +185,7 @@ Route::group(
         });
 
         Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('humanverification', 'useragentmaster');
+
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.jpg', 'HumanVerification@remove');
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
@@ -191,7 +196,7 @@ Route::group(
         Route::get('pluginClose', 'LogController@pluginClose');
         Route::get('pluginInstall', 'LogController@pluginInstall');
 
-        Route::get('qt', 'MetaGerSearch@quicktips');
+        Route::get('qt/{eingabe}', 'MetaGerSearch@quicktips');
         Route::get('tips', 'MetaGerSearch@tips');
         Route::get('/plugins/opensearch.xml', 'StartpageController@loadPlugin');
         Route::get('owi', function () {

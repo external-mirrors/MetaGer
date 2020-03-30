@@ -1,34 +1,34 @@
 <?php
 return [
-    "achtung"               => "Warning! Structure and functionality of our website are subject to constant development and changes. We try to update our help pages as quickly as possible, but can not prevent temporary mistakes.",
-    "title"                 => "MetaGer Help",
+    "achtung" => "Warning! Structure and functionality of our website are subject to constant development and changes. We try to update our help pages as quickly as possible, but can not prevent temporary mistakes.",
+    "title" => "MetaGer Help",
 
-    "title.2"               => 'Use of the search engine',
-    
-    "searchfield.title"     => 'The search field',
-    "searchfield.info"      => 'The search field contains:',
+    "title.2" => 'Use of the search engine',
+
+    "searchfield.title" => 'The search field',
+    "searchfield.info" => 'The search field contains:',
     "searchfield.memberkey" => 'The key symbol (only SUMA-EV members): Members can enter a private key to use the "free-of-advertising" metager search. If you want this too, just become a member: <a href = "https://metager.org/beitritt">Membership form</a>',
-    "searchfield.slot"      => 'The search field: Enter your words here.',
-    "searchfield.search"    => 'The magnifier: Start your search.',
+    "searchfield.slot" => 'The search field: Enter your words here.',
+    "searchfield.search" => 'The magnifier: Start your search.',
 
-    "resultpage.title"      => 'The result page',
-    "resultpage.foci"       => 'There are six different search focuses below the search field (Web, Pictures...). We assigned specific search engines to these focuses.',
-    "resultpage.choice"     => 'Below these you have two links:',
-    "resultpage.filter"     => 'Filter: Toggle filters on / off and apply settings here. Each focus has its own assortment.',
-    "resultpage.settings"   => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page.',
+    "resultpage.title" => 'The result page',
+    "resultpage.foci" => 'There are six different search focuses below the search field (Web, Pictures...). We assigned specific search engines to these focuses.',
+    "resultpage.choice" => 'Below these you have two links:',
+    "resultpage.filter" => 'Filter: Toggle filters on / off and apply settings here. Each focus has its own assortment.',
+    "resultpage.settings" => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page.',
 
-    "stopworte.title"       => "Exclude single words",
-    "stopworte.1"           => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",
-    "stopworte.2"           => "Example: You are looking for a new car, but no BMW. Then your search should be <div class=\"well well-sm\">new car -bmw</div>",
-    "stopworte.3"           => "car new -bmw",
+    "stopworte.title" => "Exclude single words",
+    "stopworte.1" => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",
+    "stopworte.2" => "Example: You are looking for a new car, but no BMW. Then your search should be <div class=\"well well-sm\">new car -bmw</div>",
+    "stopworte.3" => "car new -bmw",
 
-    "mehrwortsuche.title"       => "Searching for more than one word",
-    "mehrwortsuche.1"           => "Without quotation you will get results containing one or some of the words of your search entry. Use quotes for the search for exact phrases, citations....",
-    "mehrwortsuche.2"           => "Example: search for Shakespears <div class=\"well well-sm\">to be or not to be</div> will deliver many results, but the exact phrase will only be found using <div class=\"well well-sm\">\"to be or nor to be\"</div>",
-    "mehrwortsuche.3"           => "Please use quotes to make sure to get your search words in the results list.",
-    "mehrwortsuche.3.example"   => '"round-table" "decision"',
-    "mehrwortsuche.4"           => "Put words or phrases in quotation marks to search for exact combinations.",
-    "mehrwortsuche.4.example"   => '"round-table decision"',
+    "mehrwortsuche.title" => "Searching for more than one word",
+    "mehrwortsuche.1" => "Without quotation you will get results containing one or some of the words of your search entry. Use quotes for the search for exact phrases, citations....",
+    "mehrwortsuche.2" => "Example: search for Shakespears <div class=\"well well-sm\">to be or not to be</div> will deliver many results, but the exact phrase will only be found using <div class=\"well well-sm\">\"to be or nor to be\"</div>",
+    "mehrwortsuche.3" => "Please use quotes to make sure to get your search words in the results list.",
+    "mehrwortsuche.3.example" => '"round-table" "decision"',
+    "mehrwortsuche.4" => "Put words or phrases in quotation marks to search for exact combinations.",
+    "mehrwortsuche.4.example" => '"round-table decision"',
 
     "grossklein.title" => "Upper case vs. lower case",
     "grossklein.1" => "Upper case will not be distinguished from lower case",
@@ -106,7 +106,7 @@ return [
     'metager.explanation.2' => 'Additionally: meta search engines provide a wider coverage and a better overview, because none of the search engines knows the whole internet (Read more: <a href="https://en.wikipedia.org/wiki/Metasearch_engine" target="_blank" rel="noopener">Wikipedia</a>. Every result shows its origin in the right top corner. You may try this specific search engine to look for further results. We have grouped all available search services to several search focuses.',
 
     'searchengine.title' => 'How does MetaGer query other search engines while preserving user anonymity?',
-    'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager3.de/open-source/MetaGer\">(https://gitlab.metager3.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
+    'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager.de/open-source/MetaGer\">(https://gitlab.metager.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
 
     'content.title' => 'Inappropriate Content / youth protection',
     'content.explanation.1' => 'I found results with illegal content.',

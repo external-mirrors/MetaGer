@@ -21,7 +21,7 @@ class Overture extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -84,7 +84,7 @@ class Overture extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }

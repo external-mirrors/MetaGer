@@ -42,7 +42,7 @@ class Assoziator extends Controller
         }
 
         $response = preg_replace("/^<\?.*\?>/s", "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", $response);
-        $content = simplexml_load_string($response);
+        $content = \simplexml_load_string($response);
 
         $words = [];
 

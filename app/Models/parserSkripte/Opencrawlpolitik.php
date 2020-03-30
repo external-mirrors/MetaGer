@@ -18,13 +18,13 @@ class Opencrawlpolitik extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
 
             $results = $content->xpath('//rss/channel/item');
-            $count   = 0;
+            $count = 0;
             foreach ($results as $result) {
                 if ($count > 10) {
                     break;
@@ -38,10 +38,10 @@ class Opencrawlpolitik extends Searchengine
 
                 $additionalInformation = ['date' => $dateVal];
 
-                $title       = $result->{"title"}->__toString();
-                $link        = $result->{"link"}->__toString();
+                $title = $result->{"title"}->__toString();
+                $link = $result->{"link"}->__toString();
                 $anzeigeLink = $link;
-                $descr       = strip_tags(htmlspecialchars_decode($result->{"description"}->__toString()));
+                $descr = strip_tags(htmlspecialchars_decode($result->{"description"}->__toString()));
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -49,7 +49,7 @@ class Opencrawlpolitik extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},$this->engine->homepage,
+                    $this->engine->{"display-name"}, $this->engine->homepage,
                     $this->counter,
                     $additionalInformation
                 );

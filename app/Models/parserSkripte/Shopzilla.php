@@ -18,7 +18,7 @@ class Shopzilla extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }
@@ -66,7 +66,7 @@ class Shopzilla extends Searchengine
     {
         $result = preg_replace("/\r\n/si", "", $result);
         try {
-            $content = simplexml_load_string($result);
+            $content = \simplexml_load_string($result);
             if (!$content) {
                 return;
             }

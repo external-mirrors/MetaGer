@@ -25,6 +25,9 @@ mix
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
     strictMath: true
   })
+  .less("resources/less/metager/pages/resultpage/quicktips.less", "public/css/quicktips.css", {
+    strictMath: true
+  })
   .less("resources/less/font-awesome/fontawesome.less", "public/css/fontawesome.css", {
     strictMath: true
   })
@@ -37,8 +40,8 @@ mix
   .less(
     "resources/less/metager/pages/key.less",
     "public/css/key.css", {
-      strictMath: true
-    }
+    strictMath: true
+  }
   )
   .less("resources/less/utility.less", "public/css/utility.css", {
     strictMath: true

@@ -34,10 +34,13 @@ class UserAgentMaster
         } else if ($agent->isPhone()) {
             $device = "mobile";
         }
-        // Push an entry to a list in Redis
-        // App\Console\Commands\SaveUseragents.php is called regulary to save the list into a sqlite database
-        Redis::rpush('useragents', json_encode(["platform" => $agent->platform(), "browser" => $agent->browser(), "device" => $device, "useragent" => $_SERVER['HTTP_USER_AGENT']]));
-        Redis::expire('useragents', 301);
+
+        if (!empty($_SERVER['HTTP_USER_AGENT'])) {
+            // Push an entry to a list in Redis
+            // App\Console\Commands\SaveUseragents.php is called regulary to save the list into a sqlite database
+            Redis::rpush('useragents', json_encode(["platform" => $agent->platform(), "browser" => $agent->browser(), "device" => $device, "useragent" => $_SERVER['HTTP_USER_AGENT']]));
+            Redis::expire('useragents', 301);
+        }
 
         // Try to retrieve a random User-Agent of the same category from the sqlite database
         $newAgent = \App\UserAgent::where("platform", $agent->platform())

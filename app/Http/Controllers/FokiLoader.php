@@ -15,7 +15,7 @@ class FokiLoader
             $sumaFile = config_path() . "/sumas.xml";
         }
 
-        $xml = simplexml_load_file($sumaFile);
+        $xml = \simplexml_load_file($sumaFile);
         $sumas = $xml->xpath("suma");
 
         $foki = [];

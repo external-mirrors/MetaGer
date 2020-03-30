@@ -36,7 +36,7 @@
 		@include('layouts.keyboardNavBox')
 		@if( $metager->showQuicktips() )
 			<div id="quicktips">
-				@include('quicktips', ['quicktips', $quicktips])
+				<iframe src="{{ $quicktips }}" frameborder="0"></iframe>
 			</div>
 		@endif
 	</div>

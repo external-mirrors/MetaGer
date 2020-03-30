@@ -11,10 +11,16 @@ use View;
 
 class MetaGerSearch extends Controller
 {
-    public function search(Request $request, MetaGer $metager)
+
+    public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        $timings = null;
+        if ($timing) {
+            $timings = ['starttime' => microtime(true)];
+        }
         $time = microtime(true);
         $spamEntries = [];
+        $spamEntry = null;
         if (file_exists(config_path('spam.txt'))) {
             $spamEntries = file(config_path('spam.txt'));
         }
@@ -32,36 +38,62 @@ class MetaGerSearch extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
 
+        foreach ($spamEntries as $index => $entry) {
+            $entry = trim($entry);
+            if (empty($entry)) {
+                continue;
+            }
+            if (preg_match("/" . $entry . "/si", $eingabe)) {
+                $spamEntry = $entry;
+                break;
+            }
+        }
+
         # Mit gelieferte Formulardaten parsen und abspeichern:
         $metager->parseFormData($request);
+        if (!empty($timings)) {
+            $timings["parseFormData"] = microtime(true) - $time;
+        }
 
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
-
-        if (Cache::has('spam.' . $metager->getFokus() . "." . md5($metager->getQ()))) {
-            return response(Cache::get('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe())));
+        if (!empty($timings)) {
+            $timings["checkSpecialSearches"] = microtime(true) - $time;
         }
 
-        # Die Quicktips als Job erstellen
-        $quicktips = $metager->createQuicktips();
+        if ($spamEntry !== null && Cache::has('spam.' . $metager->getFokus() . "." . md5($spamEntry))) {
+            $responseContent = Cache::get('spam.' . $metager->getFokus() . "." . md5($spamEntry));
+            $responseContent = preg_replace('/(name="eingabe"\s+value=")[^"]+/', "$1$eingabe", $responseContent);
+            return response($responseContent);
+        }
 
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
-        $metager->createSearchEngines($request);
+        $metager->createSearchEngines($request, $timings);
 
-        $metager->startSearch();
+        $metager->startSearch($timings);
 
         $metager->waitForMainResults();
+        if (!empty($timings)) {
+            $timings["waitForMainResults"] = microtime(true) - $time;
+        }
 
         $metager->retrieveResults();
+        if (!empty($timings)) {
+            $timings["retrieveResults"] = microtime(true) - $time;
+        }
 
-        # Versuchen die Ergebnisse der Quicktips zu laden
-        $quicktipResults = $quicktips->loadResults();
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $metager->rankAll();
+        if (!empty($timings)) {
+            $timings["rankAll"] = microtime(true) - $time;
+        }
 
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults();
+        if (!empty($timings)) {
+            $timings["prepareResults"] = microtime(true) - $time;
+        }
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -72,19 +104,33 @@ class MetaGerSearch extends Controller
         }
 
         Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+        if (!empty($timings)) {
+            $timings["Filled resultloader Cache"] = microtime(true) - $time;
+        }
 
         # Die Ausgabe erstellen:
-        $resultpage = $metager->createView($quicktipResults);
-        foreach ($spamEntries as $index => $entry) {
-            $entry = trim($entry);
-            if (empty($entry)) {
-                continue;
-            }
-            if (preg_match("/" . $entry . "/si", $metager->getEingabe())) {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($metager->getEingabe()), $resultpage->render(), 604800);
-            }
+        $resultpage = $metager->createView();
+        if ($spamEntry !== null) {
+            Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
         }
+
+        if (!empty($timings)) {
+            $timings["createView"] = microtime(true) - $time;
+        }
+
+        if ($timings) {
+            dd($timings);
+        }
+
         return $resultpage;
+    }
+
+    public function searchTimings(Request $request, MetaGer $metager)
+    {
+        $request->merge([
+            'eingabe' => "Hannover",
+        ]);
+        return $this->search($request, $metager, true);
     }
 
     public function loadMore(Request $request)
@@ -204,7 +250,7 @@ class MetaGerSearch extends Controller
         $tips_text = file_get_contents($tipserver);
         $tips = [];
         try {
-            $tips_xml = simplexml_load_string($tips_text);
+            $tips_xml = \simplexml_load_string($tips_text);
 
             $tips_xml->registerXPathNamespace('mg', 'http://metager.de/tips/');
             $tips_xml = $tips_xml->xpath('mg:tip');
@@ -219,5 +265,13 @@ class MetaGerSearch extends Controller
         return view('tips')
             ->with('title', trans('tips.title'))
             ->with('tips', $tips);
+    }
+
+    public function quicktips($search)
+    {
+        $quicktips = new \App\Models\Quicktips\Quicktips($search);
+        return view('quicktips')
+            ->with('quicktips', $quicktips->getResults())
+            ->with('search', $search);
     }
 }

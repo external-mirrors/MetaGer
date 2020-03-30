@@ -3,51 +3,42 @@
 namespace App\Models\Quicktips;
 
 use Cache;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Support\Facades\Redis;
+use LaravelLocalization;
 use Log;
 
 class Quicktips
 {
-    use DispatchesJobs;
 
     private $quicktipUrl = "/1.1/quicktips.xml";
+    private $results = [];
     const QUICKTIP_NAME = "quicktips";
     const CACHE_DURATION = 60;
 
     private $hash;
 
-    public function __construct($search, $locale, $max_time)
+    public function __construct($search/*, $locale, $max_time*/)
     {
+        $locale = LaravelLocalization::getCurrentLocale();
         if (env("APP_ENV") === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
-        $this->startSearch($search, $locale, $max_time);
+        $this->startSearch($search, $locale);
     }
 
-    public function startSearch($search, $locale, $max_time)
+    public function startSearch($search, $locale)
     {
         $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {
-
-            // Queue this search
-            $mission = [
-                "resulthash" => $this->hash,
-                "url" => $url,
-                "username" => null,
-                "password" => null,
-                "headers" => [],
-                "cacheDuration" => self::CACHE_DURATION,
-            ];
-
-            $mission = json_encode($mission);
-
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+            $results = file_get_contents($url);
+            Cache::put($this->hash, $results, Quicktips::CACHE_DURATION);
+        } else {
+            $results = Cache::get($this->hash);
         }
+        $this->results = $this->loadResults($results);
     }
 
     /**
@@ -56,9 +47,8 @@ class Quicktips
      * 2. Parse the results
      * Returns an empty array if no results are found
      */
-    public function loadResults()
+    public function loadResults($resultsRaw)
     {
-        $resultsRaw = $this->retrieveResults($this->hash);
         if ($resultsRaw) {
             $results = $this->parseResults($resultsRaw);
             return $results;
@@ -86,7 +76,7 @@ class Quicktips
     {
         $quicktips_raw = preg_replace("/\r\n/si", "", $quicktips_raw);
         try {
-            $content = simplexml_load_string($quicktips_raw);
+            $content = \simplexml_load_string($quicktips_raw);
             if (!$content) {
                 return;
             }
@@ -174,5 +164,10 @@ class Quicktips
     public function normalize_search($search)
     {
         return urlencode($search);
+    }
+
+    public function getResults()
+    {
+        return $this->results;
     }
 }

@@ -37,7 +37,7 @@ spec:
       volumes:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
-          claimName: mglogs
+          claimName: mglogsnew
       containers:
       # Main PHP-FPM Container
       - name: {{ .Chart.Name }}-phpfpm

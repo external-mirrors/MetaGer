@@ -271,7 +271,7 @@ class MetaGerSearch extends Controller
     {
         $search = $request->input('search', '');
         if(empty($search)){
-            abort(404)
+            abort(404);
         }
 
         $quicktips = new \App\Models\Quicktips\Quicktips($search);

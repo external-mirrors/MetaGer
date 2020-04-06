@@ -35,10 +35,10 @@ spec:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: kubernetes.io/hostname
+              - key: worker
                 operator: NotIn
                 values:
-                - kubernetestmpworker1
+                - temp
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
       securityContext:

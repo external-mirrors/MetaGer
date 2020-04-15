@@ -243,6 +243,6 @@ Route::group(
             $result = $renderer->render($registry->getMetricFamilySamples());
 
             return response($result, 200)
-                ->header('Content-Type', \RenderTextFormat::MIME_TYPE);
+                ->header('Content-Type', RenderTextFormat::MIME_TYPE);
         });
     });

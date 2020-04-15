@@ -122,9 +122,9 @@ class MetaGerSearch extends Controller
             dd($timings);
         }
 
-        \Prometheus\CollectorRegistry::getDefault()
-            ->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results')
-            ->incBy(sizeof($metager->getResults()));
+        $registry = \Prometheus\CollectorRegistry::getDefault();
+        $gauge = $registry->getOrRegisterGauge('metager', 'result_gauge', 'counts total number of returned results');
+        $gauge->set(sizeof($metager->getResults()));
 
         return $resultpage;
     }
@@ -204,10 +204,6 @@ class MetaGerSearch extends Controller
                 $newResults++;
             }
         }
-
-        \Prometheus\CollectorRegistry::getDefault()
-            ->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results')
-            ->incBy($newResults);
 
         $finished = true;
         foreach ($engines as $engine) {

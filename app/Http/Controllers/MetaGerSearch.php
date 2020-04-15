@@ -123,8 +123,31 @@ class MetaGerSearch extends Controller
         }
 
         $registry = \Prometheus\CollectorRegistry::getDefault();
-        $gauge = $registry->getOrRegisterGauge('metager', 'result_gauge', 'counts total number of returned results');
-        $gauge->set(sizeof($metager->getResults()));
+        $histogram = $registry->getOrRegisterHistogram('metager', 'result_histogram', 'counts total number of returned results', [], [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
+        $resultCount = sizeof($metager->getResults());
+        $observeValue = 0;
+        if($resultCount > 0 && $resultCount <= 10){
+            $observeValue = 10;
+        }else if($resultCount <= 20){
+            $observeValue = 20;
+        }else if($resultCount <= 30){
+            $observeValue = 30;
+        }else if($resultCount <= 40){
+            $observeValue = 40;
+        }else if($resultCount <= 50){
+            $observeValue = 50;
+        }else if($resultCount <= 60){
+            $observeValue = 60;
+        }else if($resultCount <= 70){
+            $observeValue = 70;
+        }else if($resultCount <= 80){
+            $observeValue = 80;
+        }else if($resultCount <= 90){
+            $observeValue = 90;
+        }else if($resultCount > 90){
+            $observeValue = 100;
+        }
+        $histogram->observe($observeValue);
 
         return $resultpage;
     }

@@ -44,6 +44,11 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($request->is('*/meta/meta.ger3*')) {
+            $registry = \Prometheus\CollectorRegistry::getDefault();
+            $histogram = $registry->getOrRegisterHistogram('metager', 'result_histogram', 'counts total number of returned results', [], [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
+            $histogram->observe(0);
+        }
         return parent::render($request, $exception);
     }
 

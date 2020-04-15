@@ -6,8 +6,12 @@ hpa:
   maxReplicas: 25
 podDisruptionBudget:
   enabled: true
-  minAvailable: 5
+  minAvailable: 4
   maxUnavailable:
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: /metrics
+  prometheus.io/port: "80"
 ingress:
   annotations:
     certmanager.k8s.io/cluster-issuer: letsencrypt-prod

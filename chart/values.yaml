@@ -50,13 +50,13 @@ prometheus:
   metrics: false
 livenessProbe:
   path: "/"
-  initialDelaySeconds: 40
+  initialDelaySeconds: 20
   timeoutSeconds: 15
   scheme: "HTTP"
   probeType: "httpGet"
 readinessProbe:
   path: "/"
-  initialDelaySeconds: 30
+  initialDelaySeconds: 15
   timeoutSeconds: 15
   scheme: "HTTP"
   probeType: "httpGet"

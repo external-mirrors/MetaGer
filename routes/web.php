@@ -1,6 +1,7 @@
 <?php
 
 use Jenssegers\Agent\Agent;
+use Prometheus\RenderTextFormat;
 
 /*
 |--------------------------------------------------------------------------
@@ -233,5 +234,15 @@ Route::group(
                 return response($fileContents, 200)
                     ->header('Content-Type', 'text/plain');
             });
+        });
+
+        Route::get('metrics', function() {
+            $registry = \Prometheus\CollectorRegistry::getDefault();
+
+            $renderer = new RenderTextFormat();
+            $result = $renderer->render($registry->getMetricFamilySamples());
+
+            return response($result, 200)
+                ->header('Content-Type', RenderTextFormat::MIME_TYPE);
         });
     });

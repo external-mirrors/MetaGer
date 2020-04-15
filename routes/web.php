@@ -234,4 +234,14 @@ Route::group(
                     ->header('Content-Type', 'text/plain');
             });
         });
+
+        Route::get('metrics', function() {
+            $registry = \Prometheus\CollectorRegistry::getDefault();
+
+            $renderer = new RenderTextFormat();
+            $result = $renderer->render($registry->getMetricFamilySamples());
+
+            return response($result, 200)
+                ->header('Content-Type', RenderTextFormat::MIME_TYPE);
+        });
     });

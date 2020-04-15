@@ -19,7 +19,8 @@
         "mews/captcha": "^2.2",
         "monospice/laravel-redis-sentinel-drivers": "^2.6",
         "predis/predis": "^1.1",
-        "symfony/dom-crawler": "^4.1"
+        "symfony/dom-crawler": "^4.1",
+        "endclothing/prometheus_client_php": "^1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

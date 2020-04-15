@@ -122,6 +122,10 @@ class MetaGerSearch extends Controller
             dd($timings);
         }
 
+        \Prometheus\CollectorRegistry::getDefault()
+            ->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results')
+            ->incBy(sizeof($metager->getResults()));
+
         return $resultpage;
     }
 
@@ -183,6 +187,7 @@ class MetaGerSearch extends Controller
         ];
         $result["nextSearchLink"] = $metager->nextSearchLink();
 
+        $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
             if ($resultTmp->new) {
                 if ($metager->getFokus() !== "bilder") {
@@ -196,8 +201,13 @@ class MetaGerSearch extends Controller
                     $result['newResults'][$index] = $html;
                     $result["imagesearch"] = true;
                 }
+                $newResults++;
             }
         }
+
+        \Prometheus\CollectorRegistry::getDefault()
+            ->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results')
+            ->incBy($newResults)
 
         $finished = true;
         foreach ($engines as $engine) {

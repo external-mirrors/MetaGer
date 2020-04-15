@@ -11,3 +11,7 @@ service:
   commonName: ""
   externalPort: 80
   internalPort: 80
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: /metrics
+  prometheus.io/port: "80"  

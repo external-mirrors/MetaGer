@@ -122,6 +122,10 @@ class MetaGerSearch extends Controller
             dd($timings);
         }
 
+        $registry = \Prometheus\CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
+        $counter->incBy(sizeof($metager->getResults()));
+        
         return $resultpage;
     }
 
@@ -183,6 +187,7 @@ class MetaGerSearch extends Controller
         ];
         $result["nextSearchLink"] = $metager->nextSearchLink();
 
+        $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
             if ($resultTmp->new) {
                 if ($metager->getFokus() !== "bilder") {
@@ -196,6 +201,7 @@ class MetaGerSearch extends Controller
                     $result['newResults'][$index] = $html;
                     $result["imagesearch"] = true;
                 }
+                $newResults++;
             }
         }
 
@@ -211,6 +217,11 @@ class MetaGerSearch extends Controller
 
         $result["finished"] = $finished;
 
+        if($newResults > 0){
+            $registry = \Prometheus\CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
+            $counter->incBy($newResults);
+        }
         // Update new Engines
         Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
         return response()->json($result);

@@ -207,7 +207,7 @@ class MetaGerSearch extends Controller
 
         \Prometheus\CollectorRegistry::getDefault()
             ->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results')
-            ->incBy($newResults)
+            ->incBy($newResults);
 
         $finished = true;
         foreach ($engines as $engine) {

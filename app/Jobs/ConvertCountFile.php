@@ -43,28 +43,37 @@ class ConvertCountFile implements ShouldQueue
         try {
             $fh = fopen($this->files["logFile"], "r");
             $currentLogTime = Carbon::now()->hour(0)->minute(0)->second(0)->addMinutes(5);
-
             while ($fh !== false && ($line = fgets($fh)) !== false) {
                 $logTime = [];
                 $interface = "";
                 // i.e. [Wed Apr 17 00:00:01] ref=https://metager.de/ time=0.51 serv=web interface=de
                 if (preg_match('/(\d{2}:\d{2}:\d{2}).*?\sinterface=(\S+)/', $line, $matches)) {
                     // Create Date Object
-                    $logTime = explode(":", $matches[1]);
+                    $logTime = $matches[1];
                     $interface = $matches[2];
-                } else if (preg_match('/\[[a-zA-z]{3},\s\d{2}\s[a-zA-Z]{3}\s\d{2}\s(\d{2}:\d{2}:\d{2})/', $line, $matches)) {
-                    $logTime = explode(":", $matches[1]);
-                } else if (preg_match('/\[\d{2}\/\d{2}\/\d{4}:(\d{2}:\d{2}:\d{2})/', $line, $matches)) {
-                    $logTime = explode(":", $matches[1]);
                 } else {
                     continue;
                 }
+                $thatTime = \DateTime::createFromFormat('H:i:s', $logTime);
+                $thatTime->sub(new \DateInterval("PT" . ($thatTime->format('i') % 5) . "M"));
 
-                while (!$fullRound && ((intval($logTime[0]) * 60) + intval($logTime[1])) > (($currentLogTime->hour * 60) + $currentLogTime->minute)) {
-                    $result["time"][$currentLogTime->format('H:i')] = $result["insgesamt"];
-                    $currentLogTime->addMinutes(5);
-                    if ($currentLogTime->hour === 0 && $currentLogTime->minute === 0) {
-                        $fullRound = true;
+                if(empty($result["time"][$thatTime->format('H:i')])){
+                    $result["time"][$thatTime->format('H:i')] = [
+                        "insgesamt" => [
+                            "all" => 0,
+                        ],
+                    ];
+                }
+                if(empty($result["time"][$thatTime->format('H:i')]["all"])){
+                    $result["time"][$thatTime->format('H:i')]["all"] = 1;
+                }else{
+                    $result["time"][$thatTime->format('H:i')]["all"]++;
+                }
+                if (!empty($interface)) {
+                    if(empty($result["time"][$thatTime->format('H:i')][$interface])){
+                        $result["time"][$thatTime->format('H:i')][$interface] = 1;
+                    }else{
+                        $result["time"][$thatTime->format('H:i')][$interface]++;
                     }
                 }
                 // Update the total statistics
@@ -80,10 +89,6 @@ class ConvertCountFile implements ShouldQueue
                         $result["insgesamt"][$interface]++;
                     }
                 }
-            }
-
-            if (empty($result["time"][$currentLogTime->format('H:i')])) {
-                $result["time"][$currentLogTime->format('H:i')] = $result["insgesamt"];
             }
         } catch (\ErrorException $e) {
             $error = true;

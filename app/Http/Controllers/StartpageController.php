@@ -83,7 +83,6 @@ class StartpageController extends Controller
         $response = Response::make(
             view('plugin')
                 ->with('link', $link)
-                ->with('hostname', gethostname())
             , "200");
         $response->header('Content-Type', "application/opensearchdescription+xml");
         return $response;

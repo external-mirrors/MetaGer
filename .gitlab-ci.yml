@@ -37,7 +37,7 @@ build:
   services:
 
 # Prepares the secret files that we cannot or don't want to share with public
-prepare_secrets:
+prepare_secrets_master:
   stage: prepare
   image: alpine:latest
   script: 
@@ -69,7 +69,7 @@ prepare_secrets:
     refs:
       - master    
 
-prepare_secrets:
+prepare_secrets_development:
   stage: prepare
   image: alpine:latest
   script: 

@@ -144,11 +144,6 @@ class AdminInterface extends Controller
         $size = 0;
         $count = 0;
 
-        $now = Carbon::now()->subMinutes(Carbon::now()->minute % 5)->format('H:i');
-        if ($now === "00:00") {
-            $now = "00:05";
-        }
-
         foreach ($logs as $key => $stats) {
             if ($key === 0) {
                 // Log for today
@@ -156,7 +151,16 @@ class AdminInterface extends Controller
                 continue;
             }
             $insgesamt = empty($stats->insgesamt->{$interface}) ? 0 : $stats->insgesamt->{$interface};
-            $sameTime = empty($stats->time->{$now}->{$interface}) ? 0 : $stats->time->{$now}->{$interface};
+            $sameTime = 0;
+            $now = Carbon::now();
+            $now->hour = 0;
+            $now->minute = 0;
+            $now->second = 0;
+
+            while($now->lessThanOrEqualTo(Carbon::now())){
+                $sameTime += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
+                $now->addMinutes(5);
+            }
 
             if ($insgesamt > $rekordTag) {
                 $rekordTag = $insgesamt;

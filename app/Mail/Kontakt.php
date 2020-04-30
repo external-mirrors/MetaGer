@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
+use Illuminate\Contracts\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class Kontakt extends Mailable
@@ -18,7 +18,7 @@ class Kontakt extends Mailable
     public function __construct($name, $from, $subject, $message)
     {
         $this->name = $name;
-        $this->reply   = $from;
+        $this->reply = $from;
         $this->subject = $subject;
         $this->message = $message;
     }

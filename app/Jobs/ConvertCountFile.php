@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -42,7 +41,6 @@ class ConvertCountFile implements ShouldQueue
         $error = false;
         try {
             $fh = fopen($this->files["logFile"], "r");
-            $currentLogTime = Carbon::now()->hour(0)->minute(0)->second(0)->addMinutes(5);
             while ($fh !== false && ($line = fgets($fh)) !== false) {
                 $logTime = [];
                 $interface = "";
@@ -57,22 +55,22 @@ class ConvertCountFile implements ShouldQueue
                 $thatTime = \DateTime::createFromFormat('H:i:s', $logTime);
                 $thatTime->sub(new \DateInterval("PT" . ($thatTime->format('i') % 5) . "M"));
 
-                if(empty($result["time"][$thatTime->format('H:i')])){
+                if (empty($result["time"][$thatTime->format('H:i')])) {
                     $result["time"][$thatTime->format('H:i')] = [
                         "insgesamt" => [
                             "all" => 0,
                         ],
                     ];
                 }
-                if(empty($result["time"][$thatTime->format('H:i')]["all"])){
+                if (empty($result["time"][$thatTime->format('H:i')]["all"])) {
                     $result["time"][$thatTime->format('H:i')]["all"] = 1;
-                }else{
+                } else {
                     $result["time"][$thatTime->format('H:i')]["all"]++;
                 }
                 if (!empty($interface)) {
-                    if(empty($result["time"][$thatTime->format('H:i')][$interface])){
+                    if (empty($result["time"][$thatTime->format('H:i')][$interface])) {
                         $result["time"][$thatTime->format('H:i')][$interface] = 1;
-                    }else{
+                    } else {
                         $result["time"][$thatTime->format('H:i')][$interface]++;
                     }
                 }

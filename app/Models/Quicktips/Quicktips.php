@@ -12,7 +12,7 @@ class Quicktips
     private $quicktipUrl = "/1.1/quicktips.xml";
     private $results = [];
     const QUICKTIP_NAME = "quicktips";
-    const CACHE_DURATION = 60;
+    const CACHE_DURATION = 60 * 60;
 
     private $hash;
 

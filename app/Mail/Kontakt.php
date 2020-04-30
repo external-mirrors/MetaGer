@@ -3,7 +3,7 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Mail\Mailable;
+use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class Kontakt extends Mailable

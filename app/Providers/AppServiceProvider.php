@@ -34,6 +34,17 @@ class AppServiceProvider extends ServiceProvider
             \App::setLocale('es');
         }
 
+        \Prometheus\Storage\Redis::setDefaultOptions(
+            [
+                'host' => env("REDIS_HOST", '127.0.0.1'),
+                'port' => intval(env("REDIS_PORT", 6379)),
+                'password' => env("REDIS_PASSWORD", null),
+                'timeout' => 0.1, // in seconds
+                'read_timeout' => '10', // in seconds
+                'persistent_connections' => false
+            ]
+        );
+
         Queue::before(function (JobProcessing $event) {
         });
         Queue::after(function (JobProcessed $event) {

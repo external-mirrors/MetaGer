@@ -33,7 +33,7 @@ class HumanVerification extends Controller
         }
 
         if ($request->getMethod() == 'POST') {
-
+            \App\PrometheusExporter::CaptchaAnswered();
             $lockedKey = $user["lockedKey"];
             $key = $request->input('captcha');
             $key = strtolower($key);
@@ -42,7 +42,7 @@ class HumanVerification extends Controller
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
-
+                \App\PrometheusExporter::CaptchaShown();
                 return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
                     ->with('uid', $user["uid"])
                     ->with('id', $id)
@@ -50,6 +50,7 @@ class HumanVerification extends Controller
                     ->with('image', $captcha["img"])
                     ->with('errorMessage', 'Fehler: Falsche Eingabe!');
             } else {
+                \App\PrometheusExporter::CaptchaCorrect();
                 # If we can unlock the Account of this user we will redirect him to the result page
                 if ($user !== null && $user["locked"]) {
                     # The Captcha was correct. We can remove the key from the user
@@ -67,7 +68,7 @@ class HumanVerification extends Controller
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);
-
+        \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('uid', $user["uid"])
             ->with('id', $id)

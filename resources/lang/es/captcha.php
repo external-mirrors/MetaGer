@@ -6,6 +6,4 @@ return [
     '4' => 'Ingrese los caracteres de la imagen en el cuadro de entrada y confirme con "OK" para llegar a la página de resultados.',
     '5' => 'Entrar en captcha',
     '6' => 'Entrar en día laborable',
-    '7' => 'Si ve este mensaje con más frecuencia o si es un error, puede enviar un mensaje a través de nuestro <a href=":url"> formulario de contacto </a>.',
-    '8' => 'En este caso, por favor dénos el siguiente número de transacción:',
 ];

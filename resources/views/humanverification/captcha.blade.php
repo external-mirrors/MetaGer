@@ -18,6 +18,4 @@
         <p><input type="text" class="form-control" name="captcha" placeholder="@lang('captcha.5')" autofocus></p>
         <p><button type="submit" class="btn btn-success" name="check">OK</button></p>
     </form>
-    <p>@lang('captcha.7', ['url' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), 'kontakt')])</p>
-    <p>@lang('captcha.8') {{ $id }}
 @endsection

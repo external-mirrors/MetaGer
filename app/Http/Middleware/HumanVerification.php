@@ -102,6 +102,7 @@ class HumanVerification
             if ($user["locked"]) {
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
+                \App\PrometheusExporter::CaptchaShown();
                 return
                 new Response(
                     view('humanverification.captcha')

@@ -6,6 +6,4 @@ return [
     '4' => 'Please enter the characters from the picture in the input box and confirm with "OK" to get to the result page.',
     '5' => 'Enter captcha',
     '6' => 'Enter weekday',
-    '7' => 'If you see this message more often, or if it is a mistake, feel free to send a message via our <a href=":url"> contact form </a>.',
-    '8' => 'In this case, please give us the following transaction number:',
 ];

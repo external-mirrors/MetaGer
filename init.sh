@@ -12,6 +12,10 @@ if [ -f "/data/database/useragents.sqlite" ]; then
     rm /data/database/useragents.sqlite
 fi
 
+if [ ! -d "/data/storage/logs/metager" ]; then
+    mkdir -p /data/storage/logs/metager
+fi
+
 touch /data/database/useragents.sqlite
 
 chmod -R go+w storage bootstrap/cache

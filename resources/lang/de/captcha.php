@@ -6,6 +6,4 @@ return [
     '4' => 'Bitte geben Sie deshalb die Zeichen aus dem Bild in die Eingabebox und bestätigen Sie mit "OK" um zur Ergebnisseite zu gelangen.',
     '5' => 'Captcha eingeben',
     '6' => 'Wochentag eingeben',
-    '7' => 'Sollten Sie diese Nachricht häufiger sehen oder handelt es sich dabei um einen Irrtum, schicken Sie uns gerne eine Nachricht über unser <a href=":url">Kontaktformular</a>.',
-    '8' => 'Nennen Sie uns in diesem Fall bitte unbedingt folgende Vorgangsnummer:',
 ];

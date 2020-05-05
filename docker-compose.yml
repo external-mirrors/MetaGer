@@ -14,11 +14,11 @@ services:
   dependencies:
     depends_on:
       - "mgdb"
-    image: php:7.3-cli
+    image: php:7.3-cli-alpine
     volumes:
       - .:/data
     working_dir: /data
-    command: /data/init.sh
+    command: /bin/sh -c "apk add --update dos2unix && dos2unix ./init.sh && ./init.sh && ./init.sh"
   mgdb:
     restart: on-failure
     image: mariadb:latest

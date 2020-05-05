@@ -18,7 +18,7 @@ class Kontakt extends Mailable
     public function __construct($name, $from, $subject, $message)
     {
         $this->name = $name;
-        $this->reply   = $from;
+        $this->reply = $from;
         $this->subject = $subject;
         $this->message = $message;
     }

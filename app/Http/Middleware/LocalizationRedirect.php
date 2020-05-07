@@ -16,13 +16,14 @@ class LocalizationRedirect
      */
     public function handle($request, Closure $next)
     {
-        // We only redirect to the TLDs in the production version
-        if(env("APP_ENV", "") !== "production"){
+        $locale = LaravelLocalization::getCurrentLocale();
+        $host = $request->getHttpHost();
+
+        // We only redirect to the TLDs in the production version and exclude our onion domain
+        if(env("APP_ENV", "") !== "production" || $host === "b7cxf4dkdsko6ah2.onion"){
             return $next($request);
         }
 
-        $locale = LaravelLocalization::getCurrentLocale();
-        $host = $request->getHttpHost();
         if($host !== "metager.de" && $locale == "de"){
             $url = $request->url();
             $url = str_replace($host, "metager.de", $url);

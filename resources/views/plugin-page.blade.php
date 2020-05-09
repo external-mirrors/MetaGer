@@ -16,8 +16,6 @@
 			{{ trans('plugin-page.head.4') }}
 		@elseif ($browser === 'Edge')
 			{{ trans('plugin-page.head.5') }}
-		@elseif ($browser === 'Safari')
-			{{ trans('plugin-page.head.6') }}
 		@elseif ($browser === 'Vivaldi')
 			{{ trans('plugin-page.head.7') }}
 		@else
@@ -149,9 +147,6 @@
 			<h3>{!! trans('plugin-page.default-search') !!}</h3>
 			<ol>
 				<li>{!! trans('plugin-page.safari.1') !!}</li>
-				<li>{!! trans('plugin-page.safari.2') !!}</li>
-				<li>{!! trans('plugin-page.safari.3') !!}</li>
-				<li>{!! trans('plugin-page.safari.4') !!}</li>
 			</ol>
 		</div>
 	@elseif ($browser === 'Vivaldi')

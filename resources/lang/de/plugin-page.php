@@ -69,10 +69,8 @@ return [
     'edge.10' => 'Im Bereich darunter tragen Sie "https://metager.de" in das Feld "Webadresse eingeben" ein und klicken auf das "+" Symbol',
     'edge.11' => 'Entfernen Sie alle Einträge, die beim Start nicht geöffnet werden sollen (z.B. about:start), indem Sie rechts auf das kleine "x" klicken.',
 
-    'safari.1' => 'Installieren Sie das Safari-PlugIn <a href="http://www.opensearchforsafari.com/" target="_blank" rel="noopener">OpenSearchforSafari</a>.',
-    'safari.2' => 'Rufen Sie MetaGer auf und fügen Sie MetaGer mit dem OpenSearch-Knopf(Lupen-Symbol) in der Safari-Men&uuml;leiste hinzu.',
-    'safari.3' => 'L&ouml;schen Sie (nach Bedarf) die anderen Suchmaschinen aus dem OpenSearch-PlugIn, indem Sie das "X" neben diesen betätigen.',
-    'safari.4' => 'Sie können nun über den OpenSearch-Knopf(Lupe) mit MetaGer suchen.',
+    'safari.1' => 'Leider können Sie MetaGer nicht zum Safari hinzufügen, weil alle Plugins, die dem Hinzufügen alternativer Suchmaschinen dienten, nicht mehr akzeptiert werden.',
+   
 
     'vivaldi.1' => 'Klicken Sie in Ihrem Browser oben links auf das rote Vivaldi Logo und wählen Sie zuerst "Werkzeuge", dann im Untermenü "Einstellungen".',
     'vivaldi.2' => 'In dem dann erscheinenden Menu wählen Sie bitte "Suche".',

@@ -51,8 +51,5 @@ return [
     "edge.9" => "En el menú de cascada selecciona \"Definido por el usuario\"",
     "edge.10" => "En la área abajo ponga \"https://metager.de\" en el campo \"Introducir URL\" y haga click en el símbolo \"+\"",
     "edge.11" => "Borra todas las entradas, que no quiere abrir al inicio (p.ej. about:start), haciendo click en el pequeño \"x\" a la derecha.",
-    "safari.1" => "Instala la extensión de Safari <a href=\"http://www.opensearchforsafari.com/\" target=\"_blank\" rel=\"noopener\">OpenSearchforSafari</a>.",
-    "safari.2" => "Busca MetaGer y añade MetaGer con el botón OpenSearch (símbolo de na lupa) en la barra de menú de Safari.",
-    "safari.3" => "Borra (según necesidad) los demás buscadores de la extension OpenSearch, haciendo click en el \"X\" a la par y confirma.",
-    "safari.4" => "Ahora puede buscar con MetaGer usando el botón de OpenSearch (la lupa).",
+    'safari.1" => "No pueden añadir otras motores de busqueda alternativas en Safari. "OpenSearch for Safari" y "Glims" soy terminado.',
 ];

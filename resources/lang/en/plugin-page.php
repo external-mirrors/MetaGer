@@ -67,10 +67,7 @@ return [
     "edge.10" => "Type \"https://metager.org\" in field \"Webaddress\" and click on \"+\"",
     "edge.11" => "Delete all entries which should not be opened at start (for example \"about:start\") by click on \"x\"",
 
-    "safari.1" => "Install the Safari-PlugIn <a href=\"http://www.opensearchforsafari.com/\" target=\"_blank\" rel=\"noopener\">OpenSearchforSafari</a>.",
-    "safari.2" => "Open MetaGer and add MetaGer by the OpenSearch-button within the Safari menu",
-    "safari.3" => "Delete (if you want) other search engines by clicking on \"X\"",
-    "safari.4" => "Now you might search with MetaGer via the OpenSearch-button (magnifying glass symbol)",
+    'safari.1' => 'We are sorry. Safari doesn´t accept neither the "Glims plugin" nor the "OpenSearch for Safari plugin" anymore. At this time there is no way to install alternative search engines for Safari webbrowser.',
 
     "vivaldi.1" => "Click the red logo \"Vivaldi\" at the top left of your web browser. Then select \"Tools / Preferences\"",
     "vivaldi.2" => "Within the new menu choose \"search\"",

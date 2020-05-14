@@ -12,7 +12,6 @@ return [
     'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',
     'bankinfo.2.4' => '(AN: 4075 0332 01, BC: 43060967)',
     "bankinfo.3" => "If you wish to receive a donation receipt,\r\nplease specify your full adress and (if available)\r\nyour E-Mail adress on the money transfer form.",
-    "paypal.1" => "Comfortably with Paypal<br>Via Paypal by credit card too (without PayPal registration),",
     "paypal.2" => "Donate via Paypal - it's fast, safe and free",
     "lastschrift.1" => "Donate by wire transfer",
     "lastschrift.2" => "Enter your account data along with the desired amount. We will debit your bank account accordingly.",

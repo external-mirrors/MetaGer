@@ -12,5 +12,4 @@ return [
     "partnertitle" => "Soutenir MetaGer, sans frais supplémentaires pour vous",
     "plugin" => "Ajouter un plug-in MetaGer",
     "plugin-title" => "Ajouter MetaGer à votre browser",
-    "sponsors.head" => "Partners",
 ];

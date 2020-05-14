@@ -16,6 +16,8 @@
 			{{ trans('plugin-page.head.4') }}
 		@elseif ($browser === 'Edge')
 			{{ trans('plugin-page.head.5') }}
+		@elseif ($browser === 'Safari')
+			{{ trans('plugin-page.head.6') }}
 		@elseif ($browser === 'Vivaldi')
 			{{ trans('plugin-page.head.7') }}
 		@else

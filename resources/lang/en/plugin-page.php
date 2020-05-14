@@ -67,7 +67,7 @@ return [
     "edge.10" => "Type \"https://metager.org\" in field \"Webaddress\" and click on \"+\"",
     "edge.11" => "Delete all entries which should not be opened at start (for example \"about:start\") by click on \"x\"",
 
-    'safari.1' => 'We are sorry. Safari doesn´t accept wether the "Glims plugin" nore the "OpenSearch for Safari plugin" furthermore. At this time there is no way to install alternative search engines for Safari webbrowser.',
+    'safari.1' => 'We are sorry. Safari doesn´t accept neither the "Glims plugin" nor the "OpenSearch for Safari plugin" anymore. At this time there is no way to install alternative search engines for Safari webbrowser.',
 
     "vivaldi.1" => "Click the red logo \"Vivaldi\" at the top left of your web browser. Then select \"Tools / Preferences\"",
     "vivaldi.2" => "Within the new menu choose \"search\"",

@@ -81,6 +81,7 @@ return [
     "filter.freshness.day" => "Letzte 24h",
     "filter.freshness.week" => "Letzte Woche",
     "filter.freshness.month" => "Letzter Monat",
+    "filter.freshness.year" => "Letztes Jahr",
 
     "filter.market" => "Sprache",
     "filter.market.ga" => "Deutsch (Österreich)",

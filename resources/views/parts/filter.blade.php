@@ -44,7 +44,7 @@
 								<i class="fas fa-cogs"></i>
 							</label>
 						</div>
-							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc" />
+							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc" onchange="if(!this.checked){this.form.submit()}"/>
 						@else
 						</div>
 						@endif

@@ -1062,6 +1062,8 @@ class MetaGer
                     }
                 }
             }
+        }else if($this->request->filled("ff") || $this->request->filled("ft")){
+            $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
         }
 
         $this->out = $request->input('out', "html");

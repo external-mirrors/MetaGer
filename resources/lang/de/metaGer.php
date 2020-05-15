@@ -82,6 +82,8 @@ return [
     "filter.freshness.week" => "Letzte Woche",
     "filter.freshness.month" => "Letzter Monat",
     "filter.freshness.year" => "Letztes Jahr",
+    "filter.freshness.custom" => "Benutzerdefiniert",
+    "filter.customdatetitle" => "Benutzerdefiniertes Datum auswählen",
 
     "filter.market" => "Sprache",
     "filter.market.ga" => "Deutsch (Österreich)",

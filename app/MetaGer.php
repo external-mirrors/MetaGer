@@ -717,19 +717,23 @@ class MetaGer
         $availableFilter = [];
 
         foreach ($parameterFilter as $filterName => $filter) {
-            $values = $filter->values;
+            $values = clone $filter->values;
             # Check if any of the enabled search engines provide this filter
             foreach ($this->enabledSearchengines as $engineName => $engine) {
                 if (!empty($filter->sumas->$engineName)) {
                     if (empty($availableFilter[$filterName])) {
                         $availableFilter[$filterName] = $filter;
-                        unset($availableFilter[$filterName]->values);
+                        foreach($availableFilter[$filterName]->values as $key => $value){
+                            if($key !== "nofilter"){
+                                unset($availableFilter[$filterName]->values->{$key});
+                            }
+                        }
                     }
                     if (empty($availableFilter[$filterName]->values)) {
-                        $availableFilter[$filterName]->values = (object) ["" => $values->{""}];
+                        $availableFilter[$filterName]->values = new \stdClass();
                     }
                     foreach ($filter->sumas->{$engineName}->values as $key => $value) {
-                        $availableFilter[$filterName]->values->$key = $values->$key;
+                        $availableFilter[$filterName]->values->{$key} = $values->$key;
                     }
                 }
             }
@@ -745,13 +749,17 @@ class MetaGer
                         }
                         if (empty($availableFilter[$filterName])) {
                             $availableFilter[$filterName] = $filter;
-                            unset($availableFilter[$filterName]->values);
+                            foreach($availableFilter[$filterName]->values as $key => $value){
+                                if($key !== "nofilter"){
+                                    unset($availableFilter[$filterName]->values->{$key});
+                                }
+                            }
                         }
                         if (empty($availableFilter[$filterName]->values)) {
-                            $availableFilter[$filterName]->values = (object) ["" => $values->{""}];
+                            $availableFilter[$filterName]->values = new \stdClass();
                         }
                         foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                            $availableFilter[$filterName]->values->$key = $values->$key;
+                            $availableFilter[$filterName]->values->{$key} = $values->$key;
                         }
                     }
                 }
@@ -1010,6 +1018,51 @@ class MetaGer
 
         // Remove Inputs that are not used
         $this->request = $request->replace($request->except(['verification_id', 'uid', 'verification_count']));
+
+        // Disable freshness filter if custom freshness filter isset
+        if($this->request->filled("ff") && $this->request->filled("f")){
+            $this->request = $this->request->replace($this->request->except(["f"]));
+        }
+        // Remove custom time filter if either of the dates isn't set or is not a date
+        if($this->request->input("fc") === "on"){
+            if(!$this->request->filled("ff") || !$this->request->filled("ft")){
+                $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
+            }else{
+                $ff = $this->request->input("ff");
+                $ft = $this->request->input("ft");
+                if(!preg_match("/^\d{4}-\d{2}-\d{2}$/", $ff) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $ft)){
+                    $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
+                }else{
+                    // Now Check if there is something wrong with the dates
+                    $from = $this->request->input("ff");
+                    $to = $this->request->input("ft");
+                    $changed = false;
+                    $from = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
+                    $to = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
+
+                    if($from > Carbon::now()){
+                        $from = Carbon::now();
+                        $changed = true;
+                    }
+                    if($to > Carbon::now()){
+                        $to = Carbon::now();
+                        $changed = true;
+                    }
+                    if($from > $to){
+                        $tmp = $to;
+                        $to = $from;
+                        $from = $tmp;
+                        $changed = true;
+                    }
+                    if($changed){
+                        $oldParameters = $this->request->all();
+                        $oldParameters["ff"] = $from->format("Y-m-d");
+                        $oldParameters["ft"] = $to->format("Y-m-d");
+                        $this->request = $this->request->replace($oldParameters);
+                    }
+                }
+            }
+        }
 
         $this->out = $request->input('out', "html");
         # Standard output format html

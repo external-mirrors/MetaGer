@@ -98,7 +98,6 @@ abstract class Searchengine
             }
             $this->engine->{"get-parameter"}->{$engineParameterKey} = $engineParameterValue;
         }
-        #dd($this->engine->{"get-parameter"});
 
         $this->getString = $this->generateGetString($q);
         $this->updateHash();

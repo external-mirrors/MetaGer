@@ -604,6 +604,21 @@ a {
                     padding: 3px;
                     border-radius: 5px;
                 }
+                label[for="custom-date"] {
+                    cursor: pointer;
+                    &:hover {
+                        color: red;
+                    }
+                }
+                #bing-from-to {
+                    display: none;
+                }
+                #custom-date:checked + select {
+                    display: none;
+                }
+                #custom-date:checked + select + #bing-from-to {
+                    display: flex;
+                }
             }
             .option-selector:nth-child(1){
                 margin-left: 0;

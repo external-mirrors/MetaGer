@@ -33,18 +33,37 @@
 			<div id="options-box">
 				<div id="options-items">
 				@foreach($metager->getAvailableParameterFilter() as $filterName => $filter)
+					@if(empty($filter->hidden) || $filter->hidden === false)
 					<div class="option-selector">
-					<label for="{{$filterName}}">@lang($filter->name)</label>
-					<select name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm" onchange="this.form.submit()">
+						<div>
+							<label for="{{$filterName}}">
+								@lang($filter->name)
+							</label>
+						@if($filter->{'get-parameter'} === "f")
+							<label for="custom-date" title="@lang('metaGer.filter.customdatetitle')">
+								<i class="fas fa-cogs"></i>
+							</label>
+						</div>
+							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc" />
+						@else
+						</div>
+						@endif
+						<select name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm" onchange="this.form.submit()">
 						@foreach($filter->values as $value => $text)
-						@if($value === "" && Cookie::get($metager->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null)
+						@if($value === "nofilter" && Cookie::get($metager->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null)
 						<option value="off" @if(empty($filter->value) || $filter->value === "off")selected @endif>{{trans($text)}}</option>
+						@elseif($value === "nofilter")
+						<option value="" @if(!empty($filter->value) && $filter->value === $value)selected @endif>{{trans($text)}}</option>
 						@else
 						<option value="{{$value}}" @if(!empty($filter->value) && $filter->value === $value)selected @endif>{{trans($text)}}</option>
 						@endif
 						@endforeach
 					</select>
+					@if(!empty($filter->htmlbelow))
+						@include($filter->htmlbelow)
+					@endif
 					</div>
+					@endif
 				@endforeach
 				</div>
 

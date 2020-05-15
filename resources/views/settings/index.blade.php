@@ -65,6 +65,7 @@
             <input type="hidden" name="url" value="{{ $url }}">
             <div id="filter-options">
                 @foreach($filter as $name => $filterInfo)
+                @if(empty($filterInfo->hidden) || $filterInfo->hidden === false)
                 <div class="form-group">
                     <label for="{{ $filterInfo->{"get-parameter"} }}">@lang($filterInfo->name)</label>
                     <select name="{{ $filterInfo->{"get-parameter"} }}" id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
@@ -76,6 +77,7 @@
                         @endforeach
                     </select>
                 </div>
+                @endif
                 @endforeach
             </div>
             <button type="submit" class="btn btn-default">@lang('settings.save')</button>

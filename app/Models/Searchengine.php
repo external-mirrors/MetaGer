@@ -81,6 +81,7 @@ abstract class Searchengine
             $q = $query . " " . $q;
         }
 
+        $tmpPara = false;
         # Parse enabled Parameter-Filter
         foreach ($metager->getParameterFilter() as $filterName => $filter) {
             $inputParameter = $filter->value;
@@ -88,8 +89,13 @@ abstract class Searchengine
             if (empty($inputParameter) || empty($filter->sumas->{$name}->values->{$inputParameter})) {
                 continue;
             }
+            $tmpPara = true;
             $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
+            if(stripos($engineParameterValue, "dyn-") === 0){
+                $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
+                $engineParameterValue = \App\DynamicEngineParameters::$functionname();
+            }
             $this->engine->{"get-parameter"}->{$engineParameterKey} = $engineParameterValue;
         }
 

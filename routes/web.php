@@ -226,8 +226,8 @@ Route::group(
                     $fh = null;
                     try{
                         $fh = fopen("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false", "r");
-                        while (!feof($handle)) {
-                            echo(fread($handle, 1024));
+                        while (!feof($fh)) {
+                            echo(fread($fh, 1024));
                         }
                     }catch(\Exception $e){
                         abort(404);
@@ -243,8 +243,8 @@ Route::group(
                     $fh = null;
                     try{
                         $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
-                        while (!feof($handle)) {
-                            echo(fread($handle, 1024));
+                        while (!feof($fh)) {
+                            echo(fread($fh, 1024));
                         }
                     }catch(\Exception $e){
                         abort(404);

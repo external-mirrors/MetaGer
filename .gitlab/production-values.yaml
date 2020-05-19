@@ -3,7 +3,7 @@ service:
   internalPort: 80
 hpa:
   minReplicas: 5
-  maxReplicas: 25
+  maxReplicas: 100
 resources:
   limits:
     cpu: 500m

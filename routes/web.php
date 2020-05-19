@@ -222,10 +222,38 @@ Route::group(
                     ->with('navbarFocus', 'dienste');
             });
             Route::get('metager', function () {
-                return redirect("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false");
+                return response()->streamDownload(function () {
+                    $fh = null;
+                    try{
+                        $fh = fopen("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false", "r");
+                        while (!feof($fh)) {
+                            echo(fread($fh, 1024));
+                        }
+                    }catch(\Exception $e){
+                        abort(404);
+                    }finally {
+                        if($fh != null){
+                            fclose($fh);
+                        }
+                    }
+                }, 'MetaGerSearch.apk', ["Content-Type" => "application/vnd.android.package-archive"]);
             });
             Route::get('maps', function () {
-                return redirect("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false");
+                return response()->streamDownload(function () {
+                    $fh = null;
+                    try{
+                        $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
+                        while (!feof($fh)) {
+                            echo(fread($fh, 1024));
+                        }
+                    }catch(\Exception $e){
+                        abort(404);
+                    }finally {
+                        if($fh != null){
+                            fclose($fh);
+                        }
+                    }
+                }, 'MetaGerMaps.apk', ["Content-Type" => "application/vnd.android.package-archive"]);
             });
 
             Route::get('maps/version', function () {

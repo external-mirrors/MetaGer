@@ -22,7 +22,7 @@
 				@if(LaravelLocalization::getCurrentLocale() === "de")
 				<a href="https://suma-ev.de" target="_blank">
 				@else
-				<a href="https://suma-ev.de/en/index.html" target="_blank">
+				<a href="https://suma-ev.de/" target="_blank">
 				@endif
 					<img alt="rainbow" src="/img/rainbow.svg">
 					<span>@lang('index.about.2.1')</span>

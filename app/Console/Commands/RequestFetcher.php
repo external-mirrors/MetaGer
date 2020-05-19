@@ -82,33 +82,39 @@ class RequestFetcher extends Command
             $blocking = false;
             while ($this->shouldRun) {
                 $status = curl_multi_exec($this->multicurl, $active);
-                $currentJob = null;
+                $currentJobs = [];
                 if (!$blocking) {
-                    $currentJob = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY);
+                    $elements = Redis::pipeline(function($redis){
+                        $redis->lrange(\App\MetaGer::FETCHQUEUE_KEY, 0, -1);
+                        $redis->del(\App\MetaGer::FETCHQUEUE_KEY);
+                    });
+                    $currentJobs = $elements[0];
                 } else {
                     $currentJob = Redis::blpop(\App\MetaGer::FETCHQUEUE_KEY, 1);
                     if (!empty($currentJob)) {
-                        $currentJob = $currentJob[1];
+                        $currentJobs[] = $currentJob[1];
                     }
                 }
 
-                if (!empty($currentJob)) {
-                    $currentJob = json_decode($currentJob, true);
-                    $ch = $this->getCurlHandle($currentJob);
-                    if (curl_multi_add_handle($this->multicurl, $ch) !== 0) {
-                        $this->shouldRun = false;
-                        Log::error("Couldn't add Handle to multicurl");
-                        break;
+                if (sizeof($currentJobs) > 0) {
+                    foreach($currentJobs as $currentJob){
+                        $currentJob = json_decode($currentJob, true);
+                        $ch = $this->getCurlHandle($currentJob);
+                        if (curl_multi_add_handle($this->multicurl, $ch) !== 0) {
+                            $this->shouldRun = false;
+                            Log::error("Couldn't add Handle to multicurl");
+                            break;
+                        }
+                        $this->fetchedDocuments++;
+                        if ($this->fetchedDocuments > $this->maxFetchedDocuments) {
+                            Log::info("Reinitializing Multicurl after " . $this->fetchedDocuments . " requests.");
+                            $this->oldMultiCurl = $this->multicurl;
+                            $this->multicurl = curl_multi_init();
+                            $this->fetchedDocuments = 0;
+                        }
+                        $blocking = false;
+                        $active = true;
                     }
-                    $this->fetchedDocuments++;
-                    if ($this->fetchedDocuments > $this->maxFetchedDocuments) {
-                        Log::info("Reinitializing Multicurl after " . $this->fetchedDocuments . " requests.");
-                        $this->oldMultiCurl = $this->multicurl;
-                        $this->multicurl = curl_multi_init();
-                        $this->fetchedDocuments = 0;
-                    }
-                    $blocking = false;
-                    $active = true;
                 }
 
                 $answerRead = $this->readMultiCurl($this->multicurl);

@@ -180,12 +180,12 @@ class RequestFetcher extends Command
     private function getCurlHandle($job)
     {
         $ch = curl_init();
-
+        
         curl_setopt_array($ch, array(
             CURLOPT_URL => $job["url"],
             CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"],
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:40.0) Gecko/20100101 Firefox/40.1",
+            CURLOPT_USERAGENT => $job["useragent"],
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CONNECTTIMEOUT => 2,
             CURLOPT_MAXCONNECTS => 500,

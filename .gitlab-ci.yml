@@ -193,6 +193,7 @@ development:
       - $INCREMENTAL_ROLLOUT_ENABLED
       - $INCREMENTAL_ROLLOUT_MODE
 
+
 production:
   variables:
     ADDITIONAL_HOSTS: "www.metager.de,metager.org,www.metager.org,metager.es,www.metager.es,klassik.metager.org"

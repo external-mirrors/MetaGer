@@ -49,6 +49,8 @@ abstract class Searchengine
         }
         $this->cacheDuration = max($this->cacheDuration, 5);
 
+        // Thanks to our Middleware this is a almost completely random useragent
+        // which matches the correct device type
         $this->useragent = $metager->getUserAgent();
         $this->ip = $metager->getIp();
         $this->startTime = microtime(true);
@@ -143,6 +145,7 @@ abstract class Searchengine
             $mission = [
                 "resulthash" => $this->hash,
                 "url" => $url,
+                "useragent" => $this->useragent,
                 "username" => $this->username,
                 "password" => $this->password,
                 "headers" => $this->headers,

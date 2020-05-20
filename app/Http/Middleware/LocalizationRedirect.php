@@ -19,8 +19,9 @@ class LocalizationRedirect
         $locale = LaravelLocalization::getCurrentLocale();
         $host = $request->getHttpHost();
 
+
         // We only redirect to the TLDs in the production version and exclude our onion domain
-        if(env("APP_ENV", "") !== "production" || $host === "b7cxf4dkdsko6ah2.onion"){
+        if(env("APP_ENV", "") !== "production" || $host === "b7cxf4dkdsko6ah2.onion" || $request->is('metrics')){
             return $next($request);
         }
 

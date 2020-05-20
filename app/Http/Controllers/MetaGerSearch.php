@@ -125,6 +125,8 @@ class MetaGerSearch extends Controller
         $registry = \Prometheus\CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
         $counter->incBy(sizeof($metager->getResults()));
+        $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
+        $counter->inc();
         
         return $resultpage;
     }

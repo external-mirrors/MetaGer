@@ -51,5 +51,5 @@ return [
     "edge.9" => "En el menú de cascada selecciona \"Definido por el usuario\"",
     "edge.10" => "En la área abajo ponga \"https://metager.de\" en el campo \"Introducir URL\" y haga click en el símbolo \"+\"",
     "edge.11" => "Borra todas las entradas, que no quiere abrir al inicio (p.ej. about:start), haciendo click en el pequeño \"x\" a la derecha.",
-    'safari.1" => "No pueden añadir otras motores de busqueda alternativas en Safari. "OpenSearch for Safari" y "Glims" soy terminado.',
+    "safari.1" => "No pueden añadir otras motores de busqueda alternativas en Safari. \"OpenSearch for Safari\" y \"Glims\" soy terminado.',
 ];

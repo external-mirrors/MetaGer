@@ -2,7 +2,6 @@
 
 # This commands will help initialize data for docker-compose setup
 # Its supposed to run in a php docker image
-docker-php-ext-install pdo pdo_mysql
 
 if [ ! -f "/data/.env" ]; then
     cp /data/.env.example /data/.env
@@ -16,10 +15,14 @@ if [ ! -d "/data/storage/logs/metager" ]; then
     mkdir -p /data/storage/logs/metager
 fi
 
-touch /data/database/useragents.sqlite
+cp /data/database/useragents.sqlite.example /data/database/useragents.sqlite
 
 chmod -R go+w storage bootstrap/cache
 
+docker-php-ext-install pdo pdo_mysql
+
 php artisan wait:db
-php artisan migrate
+rm /data/database/useragents.sqlite
+touch /data/database/useragents.sqlite
+php artisan migrate:fresh
 php artisan db:seed

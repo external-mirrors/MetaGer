@@ -244,7 +244,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe]))
+                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe, "quotes" => $this->sprueche]))
                         ->with('resultcount', count($this->results))
                         ->with('focus', $this->fokus);
                     break;
@@ -951,11 +951,13 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        $this->sprueche = $request->input('sprueche', 'on');
-        if ($this->sprueche === "on") {
-            $this->sprueche = true;
-        } else {
-            $this->sprueche = false;
+        if (!App::isLocale("de") || (\Cookie::has('quotes') && \Cookie::get('quotes') === "off")) {
+            $this->sprueche = "off";
+        }else{
+            $this->sprueche = "on";
+        }
+        if($request->filled("quotes") && $request->input('quotes') === "on" || $request->input('quotes') === "off"){
+            $this->sprueche = $request->input('quotes');
         }
 
         $this->newtab = $request->input('newtab', 'on');
@@ -982,9 +984,7 @@ class MetaGer
             }
             $request->replace($newInput);
         }
-        if (App::isLocale("en")) {
-            $this->sprueche = "off";
-        }
+
         if ($this->resultCount <= 0 || $this->resultCount > 200) {
             $this->resultCount = 1000;
         }

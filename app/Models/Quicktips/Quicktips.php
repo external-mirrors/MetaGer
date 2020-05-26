@@ -16,7 +16,7 @@ class Quicktips
 
     private $hash;
 
-    public function __construct($search/*, $locale, $max_time*/)
+    public function __construct($search, $quotes)
     {
         $locale = LaravelLocalization::getCurrentLocale();
         if (env("APP_ENV") === "production") {
@@ -24,12 +24,12 @@ class Quicktips
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
-        $this->startSearch($search, $locale);
+        $this->startSearch($search, $quotes, $locale);
     }
 
-    public function startSearch($search, $locale)
+    public function startSearch($search, $quotes, $locale)
     {
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . $quotes;
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {

@@ -12,7 +12,7 @@ Alternativ können Sie uns natürlich auch per <a href="mailto:support@suma-ev.d
     'form.8' => 'Senden',
 
     'mail.1' => 'Per E-Mail',
-    'mail.2' => 'Sie können uns auch direkt eine E-Mail an die folgende Adresse schicken: <a href="mailto:office@suma-ev.de">office@suma-ev.de</a>',
+    'mail.2' => 'Sie können uns auch direkt eine E-Mail an die folgende Adresse schicken: <a href="mailto::mail">:mail</a>',
     'mail.3' => 'Falls Sie diese verschlüsseln wollen, finden Sie nachfolgend unseren öffentlichen OpenPGP-Schlüssel:',
     'letter.1' => 'Per Brief-Post',
     'letter.2' => 'Wir ziehen es vor, auf digitalem Wege kontaktiert zu werden.

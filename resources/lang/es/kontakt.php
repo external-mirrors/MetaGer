@@ -11,7 +11,7 @@ return [
     "form.8"     => "Encriptar y enviar",
 
     "mail.1"     => "Por email",
-    "mail.2"     => "Nos puede mandar un email directamente a la siguiente direccion: <a href=\"mailto:office@suma-ev.de\">office@suma-ev.de</a>",
+    "mail.2"     => 'Nos puede mandar un email directamente a la siguiente direccion: <a href="mailto::mail">:mail</a>',
     "mail.3"     => "Si la quiere encriptar, puede ver nuestra llave pública de OpenPGP aquí:",
 
     "letter.1"   => "Por carta",

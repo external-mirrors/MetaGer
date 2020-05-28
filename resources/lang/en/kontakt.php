@@ -12,7 +12,7 @@ return [
     'form.8'     => 'Send',
 
     'mail.1'     => 'By Email',
-    'mail.2'     => 'You can also email us directly at: <a href="mailto:office@suma-ev.de">office@suma-ev.de</a>',
+    'mail.2'     => 'You can also email us directly at: <a href="mailto::mail">:mail</a>',
     'mail.3'     => 'If you want to encrypt your email you can use our following public OpenPGP-Key:',
     'letter.1'   => 'By Letter Mail',
     'letter.2'   => 'We prefer digital contact. However, if you consider it neccessary to contact us postally, you can mail us at:',

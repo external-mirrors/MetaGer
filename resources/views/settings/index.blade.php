@@ -91,10 +91,10 @@
         <input type="hidden" name="fokus" value="{{ $fokus }}">
         <input type="hidden" name="url" value="{{ $url }}">
         <div class="form-group">
-            <label for="sprueche">Sprüche</label>
-            <select name="sprueche" id="sprueche" class="form-control">
-                <option value="on" @if(Cookie::get($fokus . "_setting_sprueche") === null)disabled selected @endif>Anzeigen</option>
-                <option value="off" {{ Cookie::get($fokus . "_setting_sprueche") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+            <label for="zitate">Zitate</label>
+            <select name="zitate" id="zitate" class="form-control">
+                <option value="on" @if(Cookie::get($fokus . "_setting_zitate") === null)disabled selected @endif>Anzeigen</option>
+                <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
             </select>
         </div>
         <button type="submit" class="btn btn-default">@lang('settings.save')</button>

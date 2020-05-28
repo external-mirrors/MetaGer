@@ -61,6 +61,12 @@ class MetaGerSearch extends Controller
             $timings["checkSpecialSearches"] = microtime(true) - $time;
         }
 
+        # Search query can be empty after parsing the formdata
+        # we will cancel the search in that case and show an error to the user
+        if(empty($metager->getQ())){
+            return $metager->createView();
+        }
+
         if ($spamEntry !== null && Cache::has('spam.' . $metager->getFokus() . "." . md5($spamEntry))) {
             $responseContent = Cache::get('spam.' . $metager->getFokus() . "." . md5($spamEntry));
             $responseContent = preg_replace('/(name="eingabe"\s+value=")[^"]+/', "$1$eingabe", $responseContent);
@@ -283,11 +289,12 @@ class MetaGerSearch extends Controller
     public function quicktips(Request $request)
     {
         $search = $request->input('search', '');
+        $quotes = $request->input('quotes', 'on');
         if(empty($search)){
             abort(404);
         }
 
-        $quicktips = new \App\Models\Quicktips\Quicktips($search);
+        $quicktips = new \App\Models\Quicktips\Quicktips($search, $quotes);
         return view('quicktips')
             ->with('quicktips', $quicktips->getResults())
             ->with('search', $search);

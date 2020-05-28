@@ -192,6 +192,30 @@ class SettingsController extends Controller
 
     }
 
+    public function enableSetting(Request $request) {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        // Currently only the setting for quotes is supported
+        $quotes = $request->input('zitate', '');
+        if (empty($fokus) || empty($quotes)) {
+            abort(404);
+        }
+
+        if($quotes === "off"){
+            $path = \Request::path();
+            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+            Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
+        }elseif($quotes === "on") {
+            $path = \Request::path();
+            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+            Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
+        }else{
+            abort(404);
+        }
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+    }
+
     public function deleteSettings(Request $request)
     {
         $fokus = $request->input('fokus', '');

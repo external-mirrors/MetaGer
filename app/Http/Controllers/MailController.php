@@ -22,7 +22,6 @@ class MailController extends Controller
      */
     public function contactMail(Request $request)
     {
-
         # Nachricht, die wir an den Nutzer weiterleiten:
         $messageType = ""; # [success|error]
         $returnMessage = '';
@@ -52,15 +51,19 @@ class MailController extends Controller
 
         if (!$request->filled('message') || !$request->filled('subject')) {
             $messageType = "error";
-            $returnMessage = "Tut uns leid, aber leider haben wir mit Ihrer Kontaktanfrage keine Daten erhalten. Die Nachricht wurde nicht versandt.";
+            $returnMessage = trans('kontakt.error.1');
         } else {
             # Wir versenden die Mail des Benutzers an uns:
+            $mailto = "support@metager.org";
+            if(LaravelLocalization::getCurrentLocale() === "de"){
+                $mailto = "support@suma-ev.de";
+            }
             $message = $request->input('message');
             $subject = $request->input('subject');
-            Mail::to("support@suma-ev.de")
+            Mail::to($mailto)
                 ->send(new Kontakt($name, $replyTo, $subject, $message));
 
-            $returnMessage = 'Ihre Nachricht wurde uns erfolgreich zugestellt. Vielen Dank dafür! Wir werden diese schnellstmöglich bearbeiten und uns dann ggf. wieder bei Ihnen melden.';
+            $returnMessage = trans('kontakt.success.1');
             $messageType = "success";
         }
 

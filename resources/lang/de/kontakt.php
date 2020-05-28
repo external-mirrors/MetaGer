@@ -22,4 +22,6 @@ erreichen Sie uns unter der folgenden Adresse:',
 Röselerstr. 3
 30159 Hannover
 Germany',
+    'error.1' => 'Tut uns leid, aber leider haben wir mit Ihrer Kontaktanfrage keine Daten erhalten. Die Nachricht wurde nicht versandt.',
+    'success.1' => 'Ihre Nachricht wurde uns erfolgreich zugestellt. Vielen Dank dafür! Wir werden diese schnellstmöglich bearbeiten und uns dann ggf. wieder bei Ihnen melden.'
 ];

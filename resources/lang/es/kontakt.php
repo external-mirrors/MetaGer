@@ -17,4 +17,6 @@ return [
     "letter.1"   => "Por carta",
     "letter.2"   => "Preferimos que nos contacte por medios digitales. Si lo ve indispensable contactarnos vía correo fisico, nos puede escribir a la siguiente dirección:",
     "letter.3"   => "SUMA-EV Röselerstr. 3 30159 Hannover Germany",
+    'error.1'    => "Lo sentimos, pero desafortunadamente no recibimos ningún dato con su solicitud de contacto. El mensaje no fue enviado.",
+    'success.1'  => "Su mensaje nos fue enviado con éxito. ¡Muchas gracias por esto! Procesaremos esto lo antes posible y luego lo contactaremos nuevamente si es necesario."
 ];

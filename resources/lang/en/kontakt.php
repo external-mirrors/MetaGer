@@ -20,4 +20,6 @@ return [
 Röselerstr. 3
 30159 Hannover
 Germany',
+    'error.1'   => 'We are sorry, but unfortunately we did not receive any data with your contact request. The message was not sent.',
+    'success.1'   => 'Your message was successfully sent to us. Thanks a lot for this! We will process this as soon as possible and then contact you again if necessary.'
 ];

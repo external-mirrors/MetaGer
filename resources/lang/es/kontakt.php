@@ -11,10 +11,12 @@ return [
     "form.8"     => "Encriptar y enviar",
 
     "mail.1"     => "Por email",
-    "mail.2"     => "Nos puede mandar un email directamente a la siguiente direccion: <a href=\"mailto:office@suma-ev.de\">office@suma-ev.de</a>",
+    "mail.2"     => 'Nos puede mandar un email directamente a la siguiente direccion: <a href="mailto::mail">:mail</a>',
     "mail.3"     => "Si la quiere encriptar, puede ver nuestra llave pública de OpenPGP aquí:",
 
     "letter.1"   => "Por carta",
     "letter.2"   => "Preferimos que nos contacte por medios digitales. Si lo ve indispensable contactarnos vía correo fisico, nos puede escribir a la siguiente dirección:",
     "letter.3"   => "SUMA-EV Röselerstr. 3 30159 Hannover Germany",
+    'error.1'    => "Lo sentimos, pero desafortunadamente no recibimos ningún dato con su solicitud de contacto. El mensaje no fue enviado.",
+    'success.1'  => "Su mensaje nos fue enviado con éxito. ¡Muchas gracias por esto! Procesaremos esto lo antes posible y luego lo contactaremos nuevamente si es necesario."
 ];

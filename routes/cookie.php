@@ -18,6 +18,7 @@ Route::group(
                 Route::post('de', 'SettingsController@disableSearchEngine')->name('disableEngine');
                 Route::post('ee', 'SettingsController@enableSearchEngine')->name('enableEngine');
                 Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');
+                Route::post('es', 'SettingsController@enableSetting')->name('enableSetting');
                 Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');
 
                 # Route to show and delete all settings

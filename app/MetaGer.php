@@ -951,15 +951,15 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale("de") || (\Cookie::has('quotes') && \Cookie::get('quotes') === "off")) {
+        if (!App::isLocale("de") || (\Cookie::has($this->getFokus() . '_setting_sprueche') && \Cookie::get($this->getFokus() . '_setting_sprueche') === "off")) {
             $this->sprueche = "off";
         }else{
             $this->sprueche = "on";
         }
-        if($request->filled("quotes") && $request->input('quotes') === "on" || $request->input('quotes') === "off"){
+        if($request->filled("sprueche") && $request->input('sprueche') === "on" || $request->input('sprueche') === "off"){
             $this->sprueche = $request->input('quotes');
         }
-
+        
         $this->newtab = $request->input('newtab', 'on');
         if ($this->newtab === "on") {
             $this->newtab = "_blank";

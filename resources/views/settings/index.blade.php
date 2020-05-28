@@ -84,6 +84,23 @@
         </form>
 
     </div>
+    @if(LaravelLocalization::getCurrentLocale() === "de")
+    <div class="card-light">
+    <h2>Weitere Einstellungen</h2>
+    <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
+        <input type="hidden" name="fokus" value="{{ $fokus }}">
+        <input type="hidden" name="url" value="{{ $url }}">
+        <div class="form-group">
+            <label for="sprueche">Sprüche</label>
+            <select name="sprueche" id="sprueche" class="form-control">
+                <option value="on" @if(Cookie::get($fokus . "_setting_sprueche") === null)disabled selected @endif>Anzeigen</option>
+                <option value="off" {{ Cookie::get($fokus . "_setting_sprueche") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-default">@lang('settings.save')</button>
+    </form>
+    </div>
+    @endif
     <div class="card-light" id="actions">
         @if($settingActive)
         <div id="reset">

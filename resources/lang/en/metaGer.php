@@ -81,6 +81,9 @@ return [
     "filter.freshness.day" => "Last 24h",
     "filter.freshness.week" => "Last week",
     "filter.freshness.month" => "Last month",
+    "filter.freshness.year" => "Last year",
+    "filter.freshness.custom"   => "Customized",
+    "filter.customdatetitle"    =>  "Pick customized date",
 
     "filter.market" => "Language",
     "filter.market.ga" => "German (Austria)",

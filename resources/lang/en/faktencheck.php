@@ -26,7 +26,7 @@ return [
     "list.3.4"    => "Is there a special discussion page on wikipedia?",
     "list.4"      => "Emails",
     "list.4.1"    => "It's very easy to fake Emails or to manipulate accounts. => Fakemails.",
-    "list.4.2"    => "It' not easy to find out the origin and other facts of an email. You may find some hints here: <a href=\"http://cert.uni-stuttgart.de/themen/spam/header.html\" target=\"_blank\" rel=\"noopener\">http://cert.uni-stuttgart.de/themen/spam/header.html</a>",
+    "list.4.2"    => "It' not easy to find out the origin and other facts of an email.",
     "list.4.3"    => "It is very good and safe to use encrypted mails. Hints: <a href=\"https://www.heise.de/ct/artikel/Ausgebootet-289538.html\" target=\"_blank\" rel=\"noopener\">https://www.heise.de/ct/artikel/Ausgebootet-289538.html</a> ",
     "list.5"      => "Pictures an videos",
     "list.5.1"    => "Check out the image background. Landscape, buildings, cars with their registration numbers, persons and clothes. Does this fit together? Does it fit with the text?",

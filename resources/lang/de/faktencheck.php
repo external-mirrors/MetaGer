@@ -25,7 +25,7 @@ return [
 	'list.3.4'		=> 'Gibt es eine Diskussionsseite zu diesem Wikipedia-Eintrag, aus der weitere Rückschlüsse möglich sind?',
 	'list.4'		=> 'EMails',
 	'list.4.1'		=> 'EMails fälschen ist SEHR einfach! => Fakemails.',
-	'list.4.2'		=> 'Stammt die Mail wirklich von dem angegebenen Absender? Header der EMail genau prüfen, und die dort genannten IP-Adressen und Zustellwege untersuchen (nicht einfach).  Hinweise dazu unter: <a href="http://cert.uni-stuttgart.de/themen/spam/header.html" target="_blank" rel="noopener">http://cert.uni-stuttgart.de/themen/spam/header.html</a>',
+	'list.4.2'		=> 'Stammt die Mail wirklich von dem angegebenen Absender? Header der EMail genau prüfen, und die dort genannten IP-Adressen und Zustellwege untersuchen (nicht einfach).',
 	'list.4.3'		=> 'Signierte und am besten auch verschlüsselte EMail nutzen (nicht einfach); Hinweise dazu hier: <a href="https://www.heise.de/ct/artikel/Ausgebootet-289538.html" target="_blank" rel="noopener">https://www.heise.de/ct/artikel/Ausgebootet-289538.html</a>',
 	'list.5'		=> 'Bilder, Videos',
 	'list.5.1'		=> 'Hintergrund genau ansehen. Landschaft, Gebäude, Autos und Kennzeichen, Kleidung, Personen. Ist das stimmig, passt es ggf. mit dem zugehörigen Text zusammen?',

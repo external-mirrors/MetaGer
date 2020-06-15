@@ -42,7 +42,7 @@ prepare_secrets_master:
   image: alpine:latest
   script: 
     - cp $ENVFILE .env
-    - cp $SUMAS config/sumas.json
+    - cp $SUMASTMP config/sumas.json
     - cp $SUMASEN config/sumasEn.json
     - cp $BLACKLISTURL config/blacklistUrl.txt
     - cp $BLACKLISTDOMAINS config/blacklistDomains.txt

@@ -113,7 +113,6 @@ class HumanVerification extends Controller
         }
         $userList[$user["uid"]] = $user;
         Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
-        dd($user);
     }
 
     private static function deleteUser($user)

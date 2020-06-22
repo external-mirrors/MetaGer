@@ -179,6 +179,8 @@ Route::group(
             Route::get('ip', function () {
                 dd(Request::ip(), $_SERVER["AGENT"]);
             });
+            Route::get('bot', 'HumanVerification@botOverview');
+            Route::post('bot', 'HumanVerification@botOverviewChange');
         });
 
         Route::get('settings', function () {

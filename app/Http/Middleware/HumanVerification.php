@@ -66,20 +66,21 @@ class HumanVerification
             } else {
                 $user = $users[$uid];
             }
+
             # Lock out everyone in a Bot network
             # Find out how many requests this IP has made
             $sum = 0;
             // Defines if this is the only user using that IP Adress
             $alone = true;
-            foreach ($users as $uid => $userTmp) {
+            foreach ($users as $uidTmp => $userTmp) {
                 if (!$userTmp["whitelist"]) {
                     $sum += $userTmp["unusedResultPages"];
-                    if ($userTmp["uid"] != $uid) {
+                    if ($userTmp["uid"] !== $uid) {
                         $alone = false;
                     }
                 }
             }
-
+            
             # A lot of automated requests are from websites that redirect users to our result page.
             # We will detect those requests and put a captcha
             $referer = URL::previous();
@@ -97,7 +98,7 @@ class HumanVerification
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
                 $user["locked"] = true;
             }
-
+            
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
                 $captcha = Captcha::create("default", true);

@@ -105,13 +105,15 @@ class HumanVerification extends Controller
     private static function saveUser($user)
     {
         $userList = Cache::get(HumanVerification::PREFIX . "." . $user["id"], []);
-        $userList[$user["uid"]] = $user;
+        
         if ($user["whitelist"]) {
             $user["expiration"] = now()->addWeeks(2);
         } else {
             $user["expiration"] = now()->addHours(72);
         }
+        $userList[$user["uid"]] = $user;
         Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
+        dd($user);
     }
 
     private static function deleteUser($user)

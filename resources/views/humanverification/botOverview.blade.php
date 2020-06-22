@@ -66,5 +66,5 @@
             </tr>
         </tbody>
     </table>
-
+    {{ dd($userList) }}
 @endsection

@@ -229,6 +229,7 @@ class HumanVerification extends Controller
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
             ->with('ip', $ip)
+            ->with('userList', $userList)
             ->with('user', $user);
     }
 

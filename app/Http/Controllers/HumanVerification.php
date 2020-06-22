@@ -208,4 +208,52 @@ class HumanVerification extends Controller
         return $possibleSpammer;
 
     }
+
+    public function botOverview(Request $request){
+        $id = "";
+        $uid = "";
+        $ip = $request->ip();
+        if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
+            $id = hash("sha512", "999.999.999.999");
+            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+        } else {
+            $id = hash("sha512", $ip);
+            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+        }
+
+        $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
+        $user = $userList[$uid];
+
+        return view('humanverification.botOverview')
+            ->with('title', "Bot Overview")
+            ->with('ip', $ip)
+            ->with('user', $user);
+    }
+
+    public function botOverviewChange(Request $request) {
+        $id = "";
+        $uid = "";
+        $ip = $request->ip();
+        if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
+            $id = hash("sha512", "999.999.999.999");
+            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+        } else {
+            $id = hash("sha512", $ip);
+            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+        }
+
+        $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
+        $user = $userList[$uid];
+
+        if($request->filled("locked")){
+            $user["locked"] = boolval($request->input('locked'));
+        }elseif($request->filled("whitelist")) {
+            $user["whitelist"] = boolval($request->input('whitelist'));
+        }elseif($request->filled("unusedResultPages")) {
+            $user["unusedResultPages"] = intval($request->input('unusedResultPages'));
+        }
+
+        HumanVerification::saveUser($user);
+        return redirect('admin/bot');
+    }
 }

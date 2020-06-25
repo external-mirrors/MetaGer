@@ -133,7 +133,8 @@ Route::group(
         Route::get('websearch', function () {
             return view('widget.websearch')
                 ->with('title', trans('titles.websearch'))
-                ->with('navbarFocus', 'dienste');
+                ->with('navbarFocus', 'dienste')
+                ->with('template', view('widget.websearch-template')->render());
         });
 
         Route::get('zitat-suche', 'ZitatController@zitatSuche');
@@ -226,15 +227,15 @@ Route::group(
             Route::get('metager', function () {
                 return response()->streamDownload(function () {
                     $fh = null;
-                    try{
+                    try {
                         $fh = fopen("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false", "r");
                         while (!feof($fh)) {
-                            echo(fread($fh, 1024));
+                            echo (fread($fh, 1024));
                         }
-                    }catch(\Exception $e){
+                    } catch (\Exception $e) {
                         abort(404);
-                    }finally {
-                        if($fh != null){
+                    } finally {
+                        if ($fh != null) {
                             fclose($fh);
                         }
                     }
@@ -243,15 +244,15 @@ Route::group(
             Route::get('maps', function () {
                 return response()->streamDownload(function () {
                     $fh = null;
-                    try{
+                    try {
                         $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
                         while (!feof($fh)) {
-                            echo(fread($fh, 1024));
+                            echo (fread($fh, 1024));
                         }
-                    }catch(\Exception $e){
+                    } catch (\Exception $e) {
                         abort(404);
-                    }finally {
-                        if($fh != null){
+                    } finally {
+                        if ($fh != null) {
                             fclose($fh);
                         }
                     }
@@ -266,7 +267,7 @@ Route::group(
             });
         });
 
-        Route::get('metrics', function() {
+        Route::get('metrics', function () {
             $registry = \Prometheus\CollectorRegistry::getDefault();
 
             $renderer = new RenderTextFormat();

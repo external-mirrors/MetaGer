@@ -228,7 +228,7 @@ Route::group(
                 return response()->streamDownload(function () {
                     $fh = null;
                     try {
-                        $fh = fopen("https://gitlab.metager.de/open-source/app-en/raw/latest/app/release/app-release.apk?inline=false", "r");
+                        $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
                         while (!feof($fh)) {
                             echo (fread($fh, 1024));
                         }

@@ -9,8 +9,8 @@ use Illuminate\Http\Response;
 use LaravelLocalization;
 use Mail;
 use Validator;
-use \IBAN;
-use \IBANCountry;
+use \PHP_IBAN\IBAN;
+use \PHP_IBAN\IBANCountry;
 
 class MailController extends Controller
 {
@@ -55,7 +55,7 @@ class MailController extends Controller
         } else {
             # Wir versenden die Mail des Benutzers an uns:
             $mailto = "support@metager.org";
-            if(LaravelLocalization::getCurrentLocale() === "de"){
+            if (LaravelLocalization::getCurrentLocale() === "de") {
                 $mailto = "support@suma-ev.de";
             }
             $message = $request->input('message');

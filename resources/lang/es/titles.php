@@ -16,5 +16,13 @@ return [
     "faq"	=>	"Formulario de afiliación al SUMA-EV",
     "partnershops"	=>	"Tiendas asociadas - MetaGer",
     "languages"	=>	"Herramienta de traducción  - MetaGer",
-    "languages.edit"	=>	"Editar ficheros de idiomas - MetaGer"
+    "languages.edit"	=>	"Editar ficheros de idiomas - MetaGer",
+    "app"	=>	"Aplicaciones - MetaGer",
+    "faktencheck"	=>	"Verificación de hechos versus noticias falsas",
+    "jugendschutz"	=>	"Protección de menores",
+    "ad-info"	=>	"Publicidad en MetaGer",
+    "asso"	=>	"Asociador - MetaGer",
+    "plugin"	=>	"Plugin - MetaGer",
+    "key"	=>	"Clave de membresía - MetaGer",
+    "allSettings"	=>	"Todas las configuraciones de búsqueda - MetaGer"
 ];

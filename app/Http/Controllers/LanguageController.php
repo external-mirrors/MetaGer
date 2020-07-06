@@ -14,7 +14,7 @@ class LanguageController extends Controller
     public function __construct() 
     {
        $this->languageFilePath = resource_path()."/lang/";
-       $this->languages = array('de','en','fr','es','nd');
+       $this->languages = array('de','en', 'es', 'fr', 'it', 'nd', 'nl');
     }
 
     public function createOverview(Request $request)

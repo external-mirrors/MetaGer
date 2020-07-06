@@ -24,8 +24,8 @@
 					<a href="mailto:phil@suma-ev.de">phil@suma-ev.de</a></p>
 				</li>
 				<li>
-					<p>Givi, Aria - {!! trans('team.role.6') !!} -
-					<a href="mailto:aria@suma-ev.de">aria@suma-ev.de</a></p>
+					<p>Höfer, Kim - {!! trans('team.role.6') !!} -
+					<a href="mailto:kim@suma-ev.de">kim@suma-ev.de</a></p>
 				</li>
 				<li>
 					<p><a href="https://de.wikipedia.org/wiki/Wolfgang_Sander-Beuermann" target="_blank" rel="noopener">Sander-Beuermann, Wolfgang</a>, Dr.-Ing - {!! trans('team.role.8') !!} -

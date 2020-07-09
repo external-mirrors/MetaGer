@@ -68,3 +68,11 @@ services:
     volumes:
       - .:/html
     command: "su -s /bin/sh -c 'php artisan requests:fetcher' nginx"
+  test:
+    depends_on:
+      - "phpfpm"
+    image: php:7.3-cli
+    working_dir: /html
+    volumes:
+      - .:/html
+    command: "./vendor/phpunit/phpunit/phpunit"

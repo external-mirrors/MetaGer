@@ -7,7 +7,7 @@ return [
     'role.3' => 'Pressereferentin',
     'role.4' => 'Programmierer',
     'role.5' => 'Programmierer',
-    'role.6' => 'Programmierer',
+    'role.6' => 'Programmiererin',
     'role.7' => 'Sekretariat',
     'role.8' => 'Founder',
 

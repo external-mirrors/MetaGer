@@ -2,23 +2,27 @@
 
 namespace Tests\Feature;
 
-use Facebook\WebDriver\Remote\RemoteWebDriver;
+use App\Browserstack;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 use Tests\TestCase;
 
 class StaticPagesTest extends TestCase
 {
-    private $caps = array(
-        "browser" => "Firefox",
-        "browser_version" => "67.0 beta",
-        "browserstack.local" => "true",
-        "os" => "Windows",
-        "os_version" => "10",
-        "resolution" => "1920x1080",
-    );
-    private $webdriver;
-    private $mgServer = "http://localhost:8005";
+    private $bs, $webdriver;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->bs = new Browserstack();
+        $this->webdriver = $this->bs->getWebdriver();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->bs->shutdown();
+    }
     /**
      * A basic feature test example.
      *
@@ -26,29 +30,16 @@ class StaticPagesTest extends TestCase
      */
     public function testExample()
     {
-        try {
-            $this->webdriver = RemoteWebDriver::create(
-                getenv("WEBDRIVER_URL"),
-                $this->caps
-            );
-
-            $this->startPageTest();
-            $this->navigationMenuTest();
-        } finally {
-            $this->webdriver->quit();
-        }
+        $this->startPageTest();
+        #$this->navigationMenuTest();
     }
 
     private function startPageTest()
     {
-        $this->webdriver->get($this->mgServer);
+        $this->webdriver->get(env("APP_URL", ""));
 
         # Test for Page Title
         $this->assertEquals($this->webdriver->getTitle(), "MetaGer - Mehr als eine Suchmaschine");
-
-        # Test for Partner Links
-        $elements = $this->webdriver->findElements(WebDriverBy::cssSelector("#s .sr > a"));
-        $this->assertCount(2, $elements);
     }
 
     /**

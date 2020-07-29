@@ -30,9 +30,11 @@ class MailController extends Controller
         $validator = Validator::make(
             [
                 'email' => $request->input('email'),
+                'pcsrf' => $request->input('pcsrf'),
             ],
             [
                 'email' => 'required|email',
+                'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
             ]
         );
 

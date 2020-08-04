@@ -21,3 +21,5 @@ npm-debug.log
 /.project
 
 composer.lock
+local.log
+tests/Browser/console/browserstack.log

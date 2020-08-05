@@ -126,8 +126,6 @@ prepare_node:
     paths:
       - node_modules
   only:
-    - branches
-    - tags
     changes:
       - resources/js/**/*
       - webpack.mix.js

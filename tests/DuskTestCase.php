@@ -3,8 +3,8 @@
 namespace Tests;
 
 use Facebook\WebDriver\Remote\RemoteWebDriver;
-use Galahad\BrowserStack\SupportsBrowserStack;
 use Laravel\Dusk\TestCase as BaseTestCase;
+use \App\Traits\SupportsBrowserStack;
 
 abstract class DuskTestCase extends BaseTestCase
 {
@@ -51,9 +51,6 @@ abstract class DuskTestCase extends BaseTestCase
             "username" => env("WEBDRIVER_USER", ""),
             "key" => env("WEBDRIVER_KEY", ""),
             "capabilities" => $capabilities,
-            "local_config" => [
-                "key" => env("WEBDRIVER_KEY", ""),
-            ],
         ]);
     }
 }

@@ -9,7 +9,7 @@ use Facebook\WebDriver\Remote\RemoteWebDriver;
  */
 trait SupportsBrowserStack
 {
-    protected static $web_driver, $bs_local;
+    protected static $bs_local;
     /**
      * Create the BrowserStack WebDriver instance.
      */
@@ -23,12 +23,10 @@ trait SupportsBrowserStack
             $this->bs_local->start($bs_local_args);
         }
 
-        $this->web_driver = RemoteWebDriver::create(
+        return RemoteWebDriver::create(
             "https://$config[username]:$config[key]@hub-cloud.browserstack.com/wd/hub",
             $config["capabilities"]
         );
-
-        return $this->web_driver;
     }
 
     /**
@@ -38,9 +36,6 @@ trait SupportsBrowserStack
     {
         if (static::$bs_local && static::$bs_local->isRunning()) {
             static::$bs_local->stop();
-        }
-        if (static::$web_driver) {
-            static::$web_driver->quit();
         }
     }
 

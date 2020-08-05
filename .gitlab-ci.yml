@@ -36,9 +36,6 @@ stages:
 
 build:
   services:
-  only:
-    changes:
-      - Dockerfile
 
 # Prepares the secret files that we cannot or don't want to share with public
 prepare_secrets_master:
@@ -126,11 +123,8 @@ prepare_node:
     paths:
       - node_modules
   only:
-    changes:
-      - resources/js/**/*
-      - webpack.mix.js
-      - package.json
-      - package-lock.json
+    - branches
+    - tags
 
 prepare_composer:
   stage: prepare
@@ -144,9 +138,6 @@ prepare_composer:
     key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
     paths:
       - vendor
-  only:
-    changes:
-      - composer.json
 
 review:
   variables:

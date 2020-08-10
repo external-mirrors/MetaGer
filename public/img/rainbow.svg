@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -9,22 +7,42 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="45"
-   height="20"
-   viewBox="0 0 100 50"
+   id="svg841"
    version="1.1"
-   id="svg8"
-   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
-   sodipodi:docname="rainbows.svg">
-  <defs
-     id="defs2" />
+   viewBox="0 0 26.458337 26.458333"
+   height="100"
+   width="100"
+   sodipodi:docname="regenbogen.svg"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
   <sodipodi:namedview
-     id="base"
      pagecolor="#ffffff"
      bordercolor="#666666"
-     borderopacity="1.0" />
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1848"
+     inkscape:window-height="1016"
+     id="namedview9"
+     showgrid="false"
+     inkscape:zoom="9.1218969"
+     inkscape:cx="67.30092"
+     inkscape:cy="61.688054"
+     inkscape:window-x="1992"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1"
+     units="px"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-page="true" />
+  <defs
+     id="defs835" />
   <metadata
-     id="metadata5">
+     id="metadata838">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
@@ -36,44 +54,27 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
+     transform="translate(-32.311191,-90.813991)"
      id="layer1">
-    <circle
-       style="fill:#ce2026;fill-opacity:1;stroke:none"
-       id="path850"
-       cx="50"
-       cy="50"
-       r="40" />
-    <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="path851"
-       cx="50"
-       cy="50"
-       r="32" />
-    <circle
-       style="fill:#ffd600;fill-opacity:1;stroke:none"
-       id="path852"
-       cx="50"
-       cy="50"
-       r="30" />
-    <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="path853"
-       cx="50"
-       cy="50"
-       r="22" />
-    <circle
-       style="fill:#00a888;fill-opacity:1;stroke:none"
-       id="path853"
-       cx="50"
-       cy="50"
-       r="20" />
-    <circle
-       style="fill:#ffffff;fill-opacity:1;stroke:none"
-       id="path854"
-       cx="50"
-       cy="50"
-       r="12" />
+    <g
+       id="g833"
+       transform="matrix(0.24698373,0,0,0.24698373,24.722423,81.456108)">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:none;fill-opacity:1;stroke:#ffd600;stroke-width:12.66499996;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path1386"
+         d="M 55.098688,117.27232 A 29.190001,27.525 0 0 1 84.288689,89.747324 29.190001,27.525 0 0 1 113.47869,117.27232" />
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:none;fill-opacity:1;stroke:#00a888;stroke-width:10.26500034;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path1388"
+         d="m 70.870534,117.27232 a 13.418155,11.283 0 0 1 13.418155,-11.283 13.418155,11.283 0 0 1 13.418154,11.283" />
+      <path
+         sodipodi:nodetypes="cssc"
+         inkscape:connector-curvature="0"
+         style="fill:none;fill-opacity:1;stroke:#ce2026;stroke-width:12.86499977;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="path1390"
+         d="m 38.74369,117.27232 c 2e-6,-22.376072 16.377004,-40.955307 37.882185,-44.571872 2.49128,-0.418963 5.051381,-0.637124 7.662815,-0.637124 25.15381,1e-6 45.545,20.240756 45.545,45.208996" />
+    </g>
   </g>
 </svg>

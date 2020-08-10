@@ -1,0 +1,356 @@
+:root { // the default is for screensizes bigger than 12000px
+    --screen-mobile: 550px;
+    --screen-extrasmall: 760px;
+    --screen-small: 1000px;
+    --screen-medium: 1200px;
+  }
+ 
+.wrapper {
+    min-height: 100vh;
+    margin-bottom: -50px;
+}
+
+#main-content {
+    justify-content: start!important;
+    margin-top: 22vh;
+}
+
+#plugin-btn-div {
+    margin-top: 20px!important;
+}
+
+#plugin-btn > img { // sets the size for the plugin button
+    max-width: 25px;
+    max-height: 25px;
+}
+#center-scroll-link { // centers the scroll-link grid
+    display: flex;
+    justify-content: center;
+}
+#scroll-link { // creates a grid for the story-icons
+    display: grid; 
+    border-width: 1px;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 300px;
+    justify-items: center;
+    grid-template-columns: 25% 25% 25% 25% ;
+     grid-template-rows: 1fr 20px 1fr;
+    grid-template-areas: 
+        "scr-link scr-link scr-link scr-link"
+        ". . . ."
+        "icn-privacy icn-ngo icn-diversity icn-eco";
+
+    text-align: center;
+    width: 90%;
+    margin-left: 0px;
+    margin-right: 0px;
+    align-items: center;
+}
+
+.four-reasons ~ a {
+    grid-row-start: 3;
+}
+
+#scroll-link img, #scroll-link picture { //creates the circle around the story-icons 
+    max-width: 40px;
+    max-height: 40px;
+    grid-row-start: 3;
+    background-image: url("/img/circle.svg");
+    background-position: center;
+    background-size: cover;
+    padding: 7px;
+    margin: -7px;
+}
+a.four-reasons { // sets the '4 reasons to use MetaGer' link
+    grid-area: scr-link;
+    text-decoration: underline;
+    color: black;
+    font-size: 18px;
+}
+
+footer {
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    left: auto;
+    right: auto;
+}
+
+#story-container > section { // creates the grid for the story sections 
+    display: grid;
+    grid-template-columns: 25% 75% ;
+     grid-template-rows: auto;
+    grid-template-areas: 
+        ". ."
+        "story-icon heading"
+        ". paragraph"
+        ". story-links"
+        ". .";
+
+    position: relative;
+    align-items:center;
+    min-height: 70vh;
+}
+
+#story-container > section > h1 { //sets the heading for all sections
+    grid-area: heading;
+    font-size: 80px;
+}
+
+#story-container > section > p { // sets all paragraphs for all sections
+    grid-area: paragraph;
+    font-size: 30px;
+    color: #474747;
+    max-width: 1100px;
+    padding-right: 50px;
+}
+#story-container > section .story-icon { // sets all icons for all sections
+    grid-area: story-icon;
+    padding: 20px;
+}
+
+.story-icon img { // defines the story-icons in the sections
+    height: 150px;
+    max-height: 300px;
+    max-width: 300px;
+    width:100%;
+    
+    object-fit: contain;
+}
+
+// following lines set the background and heading color of each section
+#story-privacy {
+    background-color: #EEEEEE;
+}
+
+#story-ngo {
+    background-color: #ffffff;
+}
+
+#story-ngo > h1 {
+    color:#AD1A00;
+}
+
+#story-diversity {
+    background-color: #edfdff;
+}
+
+#story-diversity > h1 {
+    color:#1e5294;
+}
+
+#story-eco {
+    background-color: rgb(227, 255, 233);
+}
+
+#story-eco > h1 {
+    color:#1a922e;
+}
+#story-container #story-plugin > h1 { // changes the font size for the section 'story-plugin'
+    font-size:60px;
+}
+#story-container #story-plugin { // changes the min-height for the section 'story-plugin'
+    min-height: 60vh;
+}
+
+.story-links {
+    grid-area: story-links;
+    display: flex;
+    padding: 0px;
+    list-style: none;
+    gap: 2em;
+} 
+a.story-button { // sets the story-button for all sections
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 18px;
+}
+// following lines set the Button color for each section
+#story-privacy .story-button {
+    background-color:#535353;
+    color:#ffffff;
+}
+#story-ngo .story-button {
+    background-color:#AD1A00;
+    color:#ffffff;
+}
+#story-diversity .story-button {
+    background-color: #1e4494;
+    color:#ffffff;
+}
+#story-eco .story-button {
+    background-color:#336633;
+    color:#ffffff;
+}
+#story-plugin .story-button {
+    background-color: #535353;
+    color: #ffffff;
+}
+html{
+    scroll-behavior: smooth;
+}
+@media screen and (max-width: 1000px) { // changes the layout for screen sizes between 760-1000px
+    div#story-container h1{
+      font-size: 50px;
+    }
+    div#story-container p{
+        font-size: 25px;
+        padding-left: 15px;
+        padding-right: 10vw;
+      }
+      #story-container > section {
+        grid-template-columns: 150px auto;
+        grid-template-areas: 
+            ". ."
+            "story-icon heading"
+            "paragraph paragraph"
+            "story-links story-links"
+            ". .";
+        min-height: 60vh;
+    }
+
+    .story-icon img {
+        height: 150px;
+        width: 150px;
+    }
+
+    #story-container > section .story-icon {
+        padding: 0px;
+    }
+    .story-links {
+        grid-area: story-links;
+        display: flex;
+        padding: 15px;
+        list-style: none;
+        gap: 1em;
+        font-size: 10px;
+    } 
+    #story-container #story-plugin > h1 {
+        font-size:50px;
+    }
+    #story-container #story-plugin {
+        min-height: 50vh;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width:1200px) { // changes the layout for screen sizes between 1000px and 12000px
+    div#story-container h1{
+      font-size: 65px;
+    }
+    div#story-container p{
+        font-size: 25px;
+        padding-left: 15px;
+        padding-right: 10vw;
+      }
+      .story-links {
+        grid-area: story-links;
+        display: flex;
+        padding: 15px;
+        list-style: none;
+        gap: 1em;
+      }
+      #story-container #story-plugin > h1 {
+        font-size:65px;
+    }
+}
+@media screen and (max-width: 550px) { // changes the layout for screen sizes smaller than 550px
+    div#story-container h1{
+      font-size: 25px;
+    }
+    div#story-container p{
+        font-size: 20px;
+        padding-left: 15px;
+        padding-right: 10vw;
+      }
+      #story-container > section {
+        grid-template-columns: 80px auto;
+        grid-template-areas: 
+            ". ."
+            "story-icon heading"
+            "paragraph paragraph"
+            "story-links story-links"
+            ". .";
+        min-height: 80vh;
+    }
+
+    .story-icon img {
+        height: 80px;
+        width: 80px;
+    }
+
+    #story-container > section .story-icon {
+        padding: 0px;
+    }
+    .story-links {
+        grid-area: story-links;
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+        padding: 15px;
+        list-style: none;
+        gap: 20px;
+        font-size: 5px;
+    } 
+    a.story-button {
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 18px;
+    }
+    #story-container #story-plugin > h1 {
+        font-size:25px;
+    }
+    #story-container #story-plugin {
+        min-height: 70vh;
+    }
+}
+@media screen and ( min-width: 551px) and (max-width: 760px) { // changes the layout for screen sizes between 551px and 760px
+    div#story-container h1{
+      font-size: 40px;
+    }
+    div#story-container p{
+        font-size: 30px;
+        padding-left: 15px;
+        padding-right: 10vw;
+      }
+      #story-container > section {
+        grid-template-columns: 80px auto;
+        grid-template-areas: 
+            ". ."
+            "story-icon heading"
+            "paragraph paragraph"
+            "story-links story-links"
+            ". .";
+        min-height: 80vh;
+    }
+
+    .story-icon img {
+        height: 80px;
+        width: 80px;
+    }
+
+    #story-container > section .story-icon {
+        padding: 0px;
+    }
+    .story-links {
+        grid-area: story-links;
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+        padding: 15px;
+        list-style: none;
+        gap: 20px;
+        font-size: 5px;
+    } 
+    a.story-button {
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 18px;
+    }
+    #story-container #story-plugin > h1 {
+        font-size:35px;
+    }
+    #story-container #story-plugin {
+        min-height: 80vh;
+    }
+}

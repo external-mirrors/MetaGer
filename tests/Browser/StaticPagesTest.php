@@ -10,8 +10,11 @@ use Tests\Browser\Pages\Hilfe;
 use Tests\Browser\Pages\HomePage;
 use Tests\Browser\Pages\Impress;
 use Tests\Browser\Pages\Kontakt;
+use Tests\Browser\Pages\SitesearchWidget;
 use Tests\Browser\Pages\Spende;
 use Tests\Browser\Pages\Team;
+use Tests\Browser\Pages\WebsearchWidget;
+use Tests\Browser\Pages\Widget;
 use Tests\DuskTestCase;
 
 class StaticPagesTest extends DuskTestCase
@@ -126,6 +129,62 @@ class StaticPagesTest extends DuskTestCase
                 ->clickLink("Impressum")
                 ->waitForLocation("/impressum")
                 ->on(new Impress);
+        });
+    }
+
+    public function testPlugin()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("@sidebarToggle")
+                ->click("@sidebarToggle")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("MetaGer Plugin")
+                ->waitForLocation("/plugin")
+                ->on(new Plugin);
+        });
+    }
+
+    public function testWidget()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("@sidebarToggle")
+                ->click("@sidebarToggle")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->on(new Widget);
+        });
+    }
+
+    public function testWebsearchWidget()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("@sidebarToggle")
+                ->click("@sidebarToggle")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->clickLink("Suche im Web")
+                ->waitForLocation("/websearch")
+                ->on(new WebsearchWidget);
+        });
+    }
+
+    public function testSitesearchWidget()
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("@sidebarToggle")
+                ->click("@sidebarToggle")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->clickLink("Suche nur auf einer Domain")
+                ->waitForLocation("/sitesearch/")
+                ->on(new SitesearchWidget);
         });
     }
 }

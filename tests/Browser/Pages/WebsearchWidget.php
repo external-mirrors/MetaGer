@@ -13,7 +13,7 @@ class WebsearchWidget extends Page
      */
     public function url()
     {
-        return '/websearch';
+        return "/websearch/";
     }
 
     /**

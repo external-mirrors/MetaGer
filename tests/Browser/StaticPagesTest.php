@@ -10,6 +10,7 @@ use Tests\Browser\Pages\Hilfe;
 use Tests\Browser\Pages\HomePage;
 use Tests\Browser\Pages\Impress;
 use Tests\Browser\Pages\Kontakt;
+use Tests\Browser\Pages\Plugin;
 use Tests\Browser\Pages\SitesearchWidget;
 use Tests\Browser\Pages\Spende;
 use Tests\Browser\Pages\Team;
@@ -168,7 +169,7 @@ class StaticPagesTest extends DuskTestCase
                 ->clickLink("Widget")
                 ->waitForLocation("/widget")
                 ->clickLink("Suche im Web")
-                ->waitForLocation("/websearch")
+                ->waitForLocation("\/websearch\/")
                 ->on(new WebsearchWidget);
         });
     }

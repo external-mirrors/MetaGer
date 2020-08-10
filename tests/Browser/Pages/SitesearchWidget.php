@@ -47,8 +47,8 @@ class SitesearchWidget extends Page
             ->assertTitle("Sitesearch-Widget - MetaGer")
             ->visit($this->url())
             ->switchLanguage("Español")
-            ->waitForText("Hier finden Sie ein Metager-Widget für Ihre Webseite.")
-            ->assertTitle("Sitesearch-Widget - MetaGer")
+            ->waitForText("Aquí encuentra el Metger-Widget para su sitio web")
+            ->assertTitle("Widget para búsquedas dentro de tu página - MetaGer")
             ->type("site", "https://metager.de")
             ->press("Generar");
         $location = "/es/sitesearch";
@@ -56,8 +56,8 @@ class SitesearchWidget extends Page
             $location = "/sitesearch";
         }
         $browser->waitForLocation($location)
-            ->waitForText("Hier finden Sie ein Metager-Widget für Ihre Webseite.")
-            ->assertTitle("Sitesearch-Widget - MetaGer")
+            ->waitForText("Aquí encuentra el Metger-Widget para su sitio web")
+            ->assertTitle("Widget para búsquedas dentro de tu página - MetaGer")
             ->visit($this->url())
             ->switchLanguage("Deutsch");
     }

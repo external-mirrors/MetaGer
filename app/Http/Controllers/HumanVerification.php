@@ -39,6 +39,7 @@ class HumanVerification extends Controller
             $key = strtolower($key);
 
             if (!$hasher->check($key, $lockedKey)) {
+                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
@@ -65,6 +66,7 @@ class HumanVerification extends Controller
                 }
             }
         }
+        sleep(\random_int(1, 8));
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);
@@ -105,7 +107,7 @@ class HumanVerification extends Controller
     private static function saveUser($user)
     {
         $userList = Cache::get(HumanVerification::PREFIX . "." . $user["id"], []);
-        
+
         if ($user["whitelist"]) {
             $user["expiration"] = now()->addWeeks(2);
         } else {
@@ -204,13 +206,16 @@ class HumanVerification extends Controller
             return true;
         } else if (\preg_match("/^\s*site:\"linkedin\.com[^\"]*\"\s+/si", $eingabe)) {
             return true;
+        } else if (\preg_match("/^\d+.(php|asp)\s+\?.*=.*/si", $eingabe)) {
+            return true;
         }
 
         return $possibleSpammer;
 
     }
 
-    public function botOverview(Request $request){
+    public function botOverview(Request $request)
+    {
         $id = "";
         $uid = "";
         $ip = $request->ip();
@@ -232,7 +237,8 @@ class HumanVerification extends Controller
             ->with('user', $user);
     }
 
-    public function botOverviewChange(Request $request) {
+    public function botOverviewChange(Request $request)
+    {
         $id = "";
         $uid = "";
         $ip = $request->ip();
@@ -247,11 +253,11 @@ class HumanVerification extends Controller
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
         $user = $userList[$uid];
 
-        if($request->filled("locked")){
+        if ($request->filled("locked")) {
             $user["locked"] = boolval($request->input('locked'));
-        }elseif($request->filled("whitelist")) {
+        } elseif ($request->filled("whitelist")) {
             $user["whitelist"] = boolval($request->input('whitelist'));
-        }elseif($request->filled("unusedResultPages")) {
+        } elseif ($request->filled("unusedResultPages")) {
             $user["unusedResultPages"] = intval($request->input('unusedResultPages'));
         }
 

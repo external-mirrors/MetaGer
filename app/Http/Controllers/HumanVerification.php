@@ -39,6 +39,7 @@ class HumanVerification extends Controller
             $key = strtolower($key);
 
             if (!$hasher->check($key, $lockedKey)) {
+                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
@@ -65,6 +66,7 @@ class HumanVerification extends Controller
                 }
             }
         }
+        sleep(\random_int(1, 8));
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);

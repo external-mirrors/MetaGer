@@ -215,5 +215,4 @@ integrationtest:
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - ./vendor/phpunit/phpunit/phpunit
-
+    - php artisan dusk

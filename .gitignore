@@ -21,3 +21,4 @@ npm-debug.log
 /.project
 
 composer.lock
+local.log

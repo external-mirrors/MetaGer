@@ -75,4 +75,4 @@ services:
     working_dir: /html
     volumes:
       - .:/html
-    command: "./vendor/phpunit/phpunit/phpunit"
+    command: "php artisan dusk"

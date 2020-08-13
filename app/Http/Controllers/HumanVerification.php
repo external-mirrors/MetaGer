@@ -7,6 +7,7 @@ use Carbon;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Input;
 
 class HumanVerification extends Controller
@@ -198,20 +199,16 @@ class HumanVerification extends Controller
 
     public static function couldBeSpammer($ip)
     {
-        $possibleSpammer = false;
-
         # Check for recent Spams
         $eingabe = \Request::input('eingabe');
-        if (\preg_match("/^susimail\s+-site:[^\s]+\s-site:/si", $eingabe)) {
-            return true;
-        } else if (\preg_match("/^\s*site:\"linkedin\.com[^\"]*\"\s+/si", $eingabe)) {
-            return true;
-        } else if (\preg_match("/^\d+.(php|asp)\s+\?.*=.*/si", $eingabe)) {
-            return true;
+        $spams = Redis::lrange("spam", 0, -1);
+        foreach ($spams as $spam) {
+            if (\preg_match($spam, $eingabe)) {
+                return true;
+            }
         }
 
-        return $possibleSpammer;
-
+        return false;
     }
 
     public function botOverview(Request $request)

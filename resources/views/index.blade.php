@@ -27,8 +27,8 @@
       <section id="story-privacy">
         <h1>{{ trans('mg-story.privacy.title') }}</h1>
         <ul class="story-links"> 
-       <li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-about-us') }}</a></li>
-       <li><a class="story-button" href="https://metager.de/datenschutz">{{ trans('mg-story.btn-data-protection') }}</a></li>
+       <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+       <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "datenschutz") }}">{{ trans('mg-story.btn-data-protection') }}</a></li>
         </ul>
         <figure class="story-icon">
           <img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
@@ -39,10 +39,10 @@
         <h1>{{ trans('mg-story.ngo.title') }}</h1>
 
        <ul class="story-links">
-        <li><a class="story-button" href="https://suma-ev.de/">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
-        <li><a class="story-button" href="https://metager.de/spende">{{ trans('mg-story.btn-donate') }}</a></li>
-        <li><a class="story-button" href="https://metager.de/beitritt">{{ trans('mg-story.btn-member') }}</a></li>
-        <li><a class="story-button" href="https://suma-ev.de/mitglieder/"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
+        <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
+        <li><a class="story-button" href="https://metager.de/beitritt" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+        <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
         <figure class="story-icon">
         <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
         </figure>
@@ -51,8 +51,8 @@
       <section id="story-diversity">
         <h1>{{ trans('mg-story.diversity.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-about-us') }}</a></li>
-        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer">{{ trans('mg-story.btn-mg-code') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank">{{ trans('mg-story.btn-mg-code') }}</a></li>
         <!--<li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>-->
         </ul>
         <figure class="story-icon">
@@ -64,7 +64,7 @@
       <section id="story-eco">
         <h1>{{ trans('mg-story.eco.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://www.hetzner.de/unternehmen/umweltschutz/">{{ trans('mg-story.btn-more') }}</a></li>
+        <li><a class="story-button" href="https://www.hetzner.de/unternehmen/umweltschutz/" target="_blank">{{ trans('mg-story.btn-more') }}</a></li>
         </ul>
         <figure class="story-icon">
           <img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}">
@@ -74,8 +74,8 @@
       <section id="story-plugin">
         <h1>{{ trans('mg-story.plugin.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://metager.de/plugin">{{ trans('mg-story.plugin.btn-add') }}</a></li>
-        <li><a class="story-button" href="https://metager.de/app">{{ trans('mg-story.plugin.btn-app') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}">{{ trans('mg-story.plugin.btn-add') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app") }}">{{ trans('mg-story.plugin.btn-app') }}</a></li>
         </ul>
         <figure class="story-icon">
           <picture>

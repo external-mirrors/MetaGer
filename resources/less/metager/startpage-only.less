@@ -8,11 +8,18 @@
 .wrapper {
     min-height: 100vh;
     margin-bottom: -50px;
+    padding: 0px;
+}
+
+#search-block {
+    min-height: 100vh;
+    padding-top: 22vh;
 }
 
 #main-content {
     justify-content: start!important;
-    margin-top: 22vh;
+    width: 100%!important;
+    max-width: 100%!important;
 }
 
 #plugin-btn-div {
@@ -26,6 +33,7 @@
 #center-scroll-link { // centers the scroll-link grid
     display: flex;
     justify-content: center;
+    margin-top:15vh;
 }
 #scroll-link { // creates a grid for the story-icons
     display: grid; 
@@ -302,6 +310,9 @@ html{
     }
     #story-container #story-plugin {
         min-height: 70vh;
+    }
+    #center-scroll-link{
+        margin-top:10vh;
     }
 }
 @media screen and ( min-width: 551px) and (max-width: 760px) { // changes the layout for screen sizes between 551px and 760px

@@ -1,0 +1,34 @@
+<?php
+
+return [
+    'four-reasons' => '4 Gründe MetaGer zu nutzen',
+    'privacy.image.alt' => 'Sicherheitsschloss',
+    'privacy.title' => 'Garantierte Privatsphäre',
+    'ngo.title' => 'Gemeinnütziger Verein',
+    'ngo.image.alt' => 'Herz',
+    'diversity.title'=> 'Vielfältig & Frei',
+    'diversity.image.alt' => 'Regenbogen',
+    'eco.title' => '100% Ökostrom',
+    'eco.image.alt'=> 'grünes Blatt',
+    'btn-about-us' => 'Über uns',
+    'btn-data-protection' => 'Unsere Datenschutzerklärung',
+    'privacy.p' => 'Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Mit der Anonym-Öffnen-Funktion bleiben Sie auch beim Weitersurfen geschützt. <br> Wir tracken nicht. Wir speichern nicht.',
+    'btn-SUMA-EV' => 'Der SUMA-EV',
+    'btn-donate'=> 'Spendenformular',
+    'btn-member' => 'Mitgliedsantrag',
+    'btn-member-advantage' => 'Weitere Mitgliedsvorteile',
+    'ngo.p' => 'Metager wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf Metager werbefrei.',
+    'btn-mg-code'=> 'Metager-Quellcode',
+    'btn-mg-algorithm' => 'Unser Algorithmus',
+    'diversity.p' => 'Metager schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und open-source.',
+  
+    'btn-more' => 'Mehr dazu',
+    'eco.p' => 'Wir achten auf die Nachhaltigkeit und den Resourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.',
+    'plugin.title' => 'Jetzt MetaGer installieren',
+    'plugin.btn-add'=> 'MetaGer-Plugin hinzufügen',
+    'plugin.btn-app' => 'MetaGer-App',
+    'plugin.image.alt' => 'Metager-Apps',
+    'plugin.p'=> 'Mit unserem Plugin können Sie MetaGer als Standardsuchmaschine festlegen. Und mit der App nutzen Sie MetaGer ganz bequem auf Ihrem Smartphone.',
+    'btn-about-us' => 'Über uns',
+
+];

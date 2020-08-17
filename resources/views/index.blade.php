@@ -1,101 +1,90 @@
-@extends('layouts.staticPages', ['page' => 'startpage'])
+@extends('layouts.staticPages', ['page' => 'startpage', 'css' => mix('css/themes/startpage-only.css')])
 
 @section('title', $title )
 
 @section('content')
-	<h1 id="startpage-logo">
+	<div id="search-block">
+    <h1 id="startpage-logo">
 		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
 			<img src="/img/metager.svg" alt="MetaGer" />
 		</a>
 	</h1>
 	@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	<div id="plugin-btn-div">
-		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
+    <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
 	</div>
-	<div id="plugin-btn-div">
-    <a id="plugin-btn" href="https://metager.de/plugin" title="MetaGer zu Ihrem Browser hinzufügen"><img src="/img/plug-in.svg" alt="Plus-Zeichen"></i> MetaGer-Plugin hinzufügen</a>
-	</div>
-	<a id="scroll-helper" href="#about-us">
-		<i class="fas fa-angle-double-down"></i>
-	</a>
     <div id="center-scroll-link">
        <div id="scroll-link">
-    <a href="#story-privacy" class="four-reasons">4 Gründe MetaGer zu nutzen</a>
-    <a href="#story-privacy" title="Garantierte Privatsphäre"><img src="/img/lock.svg" alt="Sicherheitsschloss"></a>
-    <a href="#story-ngo" title="Gemeinnütziger Verein"><img src="/img/heart.svg" alt="Herz"></a>
-    <a href="#story-diversity" title="Vielfältig & Frei"><img src="/img/rainbow.svg" alt="Regenbogen"></a>
-    <a href="#story-eco"title="100% Ökostrom"><img src="/img/leaf.svg" alt="grünes Blatt"></a>
+    <a href="#story-privacy" class="four-reasons">{{ trans('mg-story.four-reasons') }}</a>
+    <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"></a>
+    <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"></a>
+    <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"></a>
+    <a href="#story-eco"title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"></a>
   </div>
     </div>
-   	<footer class="startPageFooter noprint">
-  <div>
-    <a href="https://metager.de/kontakt">Kontakt</a>
-    <a href="https://metager.de/impressum">Impressum</a>
-    <a href="https://metager.de/datenschutz">Datenschutz</a>
-  </div>
-  </footer>
+    </div>
     <div id="story-container">
       <section id="story-privacy">
-        <h1>Garantierte Privatsphäre</h1>
+        <h1>{{ trans('mg-story.privacy.title') }}</h1>
         <ul class="story-links"> 
-       <li><a class="story-button" href="https://metager.de/about">Über uns</a></li>
-       <li><a class="story-button" href="https://metager.de/datenschutz">Unsere Datenschutzerklärung</a></li>
+       <li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-about-us') }}</a></li>
+       <li><a class="story-button" href="https://metager.de/datenschutz">{{ trans('mg-story.btn-data-protection') }}</a></li>
         </ul>
         <figure class="story-icon">
-          <img src="/img/lock.svg" alt="Sicherheitsschloss">
+          <img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
         </figure>
-        <p>Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Mit der Anonym-Öffnen-Funktion bleiben Sie auch beim Weitersurfen geschützt. <br> Wir tracken nicht. Wir speichern nicht.</p>
+        <p>{!! trans('mg-story.privacy.p') !!}</p>
       </section>
       <section id="story-ngo">
-        <h1>Gemeinnütziger Verein</h1>
+        <h1>{{ trans('mg-story.ngo.title') }}</h1>
 
        <ul class="story-links">
-        <li><a class="story-button" href="https://suma-ev.de/"> Der SUMA-EV</a></li>
-        <li><a class="story-button" href="https://metager.de/spende">Spendenformular</a></li>
-        <li><a class="story-button" href="https://metager.de/beitritt">Mitgliedsantrag</a></li>
-        <li><a class="story-button" href="https://suma-ev.de/mitglieder/"> Weitere Mitgliedervorteile</a></li>       </ul>
+        <li><a class="story-button" href="https://suma-ev.de/">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
+        <li><a class="story-button" href="https://metager.de/spende">{{ trans('mg-story.btn-donate') }}</a></li>
+        <li><a class="story-button" href="https://metager.de/beitritt">{{ trans('mg-story.btn-member') }}</a></li>
+        <li><a class="story-button" href="https://suma-ev.de/mitglieder/"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
         <figure class="story-icon">
-        <img src="/img/heart.svg" alt="Herz">
+        <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
         </figure>
-        <p>Metager wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf Metager werbefrei.</p>
+        <p>{!!trans('mg-story.ngo.p') !!}</p>
       </section>
       <section id="story-diversity">
-        <h1>Vielfältig &amp; Frei</h1>
+        <h1>{{ trans('mg-story.diversity.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://metager.de/about"> Über uns</a></li>
-        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer"> Metager-Quellcode</a></li>
-        <li><a class="story-button" href="https://metager.de/about"> Unser Algorithmus</a></li>
+        <li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-about-us') }}</a></li>
+        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer">{{ trans('mg-story.btn-mg-code') }}</a></li>
+        <!--<li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>-->
         </ul>
         <figure class="story-icon">
-          <img src="/img/rainbow.svg" alt="Regenbogen">
+          <img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}">
         </figure>
-        <p>Metager schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und open-source.</p>
+        <p>{!! trans('mg-story.diversity.p') !!}</p>
       </section>
   
       <section id="story-eco">
-        <h1>100% Ökostrom</h1>
+        <h1>{{ trans('mg-story.eco.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://www.hetzner.de/unternehmen/umweltschutz/"> Mehr dazu</a></li>
+        <li><a class="story-button" href="https://www.hetzner.de/unternehmen/umweltschutz/">{{ trans('mg-story.btn-more') }}</a></li>
         </ul>
         <figure class="story-icon">
-          <img src="/img/leaf.svg" alt="grünes Blatt">
+          <img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}">
         </figure>
-        <p>Wir achten auf die Nachhaltigkeit und den Resourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.</p>
+        <p>{!! trans('mg-story.eco.p')!!}</p>
       </section>
       <section id="story-plugin">
-        <h1>Jetzt MetaGer installieren</h1>
+        <h1>{{ trans('mg-story.plugin.title') }}</h1>
         <ul class="story-links">
-        <li><a class="story-button" href="https://metager.de/plugin"> MetaGer-Plugin hinzufügen</a></li>
-        <li><a class="story-button" href="https://metager.de/app"> MetaGer-App</a></li>
+        <li><a class="story-button" href="https://metager.de/plugin">{{ trans('mg-story.plugin.btn-add') }}</a></li>
+        <li><a class="story-button" href="https://metager.de/app">{{ trans('mg-story.plugin.btn-app') }}</a></li>
         </ul>
         <figure class="story-icon">
           <picture>
             <source media="(max-width: 760px)" srcset="/img/App.svg">
-                    <img src="/img/story-plugin.svg" alt="Metager-Apps">  
+                    <img src="/img/story-plugin.svg" alt="{{ trans('mg-story.plugin.image.alt') }}">  
           </picture>
 
         </figure>
-        <p>Mit unserem Plugin können Sie MetaGer als Standardsuchmaschine festlegen. Und mit der App nutzen Sie MetaGer ganz bequem auf Ihrem Smartphone.</p>
+        <p>{{ trans('mg-story.plugin.p') }}</p>
       </section>
     </div> 
 @endsection

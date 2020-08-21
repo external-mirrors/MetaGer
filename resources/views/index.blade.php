@@ -1,48 +1,90 @@
-@extends('layouts.staticPages', ['page' => 'startpage'])
+@extends('layouts.staticPages', ['page' => 'startpage', 'css' => mix('css/themes/startpage-only.css')])
 
 @section('title', $title )
 
 @section('content')
-	<h1 id="startpage-logo">
+	<div id="search-block">
+    <h1 id="startpage-logo">
 		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
 			<img src="/img/metager.svg" alt="MetaGer" />
 		</a>
 	</h1>
 	@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	<div id="plugin-btn-div">
-		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
+    <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
 	</div>
-		<div id="about-us">
-			<div class="m-row">
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">
-					<img alt="lock" src="/img/metager-schloss.svg">
-					<span>@lang('index.about.1.1')</span>
-					<div class="teaser">@lang('index.about.1.2')</div>
-				</a>
-				@if(LaravelLocalization::getCurrentLocale() === "de")
-				<a href="https://suma-ev.de" target="_blank">
-				@else
-				<a href="https://suma-ev.de/" target="_blank">
-				@endif
-					<img alt="rainbow" src="/img/rainbow.svg">
-					<span>@lang('index.about.2.1')</span>
-					<div class="teaser">@lang('index.about.2.2')</div>
-				</a>
-			</div>
-			<div class="m-row">
-				<a href="https://www.hetzner.de/unternehmen/umweltschutz/" target="_blank">
-					<i class="fas fa-leaf" id="green-leaf"></i>
-					<span>@lang('index.about.3.1')</span>
-					<div class="teaser">@lang('index.about.3.2')</div>
-				</a>
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">
-					<i class="fas fa-heart" id="gradient"></i>
-					<span>@lang('index.about.4.1')</span>
-					<div class="teaser">@lang('index.about.4.2')</div>
-				</a>
-			</div>
-		</div>
-	<a id="scroll-helper" href="#about-us">
-		<i class="fas fa-angle-double-down"></i>
-	</a>
+    <div id="center-scroll-link">
+       <div id="scroll-link">
+    <a href="#story-privacy" class="four-reasons">{{ trans('mg-story.four-reasons') }}</a>
+    <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"></a>
+    <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"></a>
+    <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"></a>
+    <a href="#story-eco"title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"></a>
+  </div>
+    </div>
+    </div>
+    <div id="story-container">
+      <section id="story-privacy">
+        <h1>{{ trans('mg-story.privacy.title') }}</h1>
+        <ul class="story-links"> 
+       <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+       <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "datenschutz") }}">{{ trans('mg-story.btn-data-protection') }}</a></li>
+        </ul>
+        <figure class="story-icon">
+          <img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
+        </figure>
+        <p>{!! trans('mg-story.privacy.p') !!}</p>
+      </section>
+      <section id="story-ngo">
+        <h1>{{ trans('mg-story.ngo.title') }}</h1>
+
+       <ul class="story-links">
+        <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
+        <li><a class="story-button" href="https://metager.de/beitritt" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+        <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
+        <figure class="story-icon">
+        <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
+        </figure>
+        <p>{!!trans('mg-story.ngo.p') !!}</p>
+      </section>
+      <section id="story-diversity">
+        <h1>{{ trans('mg-story.diversity.title') }}</h1>
+        <ul class="story-links">
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank">{{ trans('mg-story.btn-mg-code') }}</a></li>
+        <!--<li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>-->
+        </ul>
+        <figure class="story-icon">
+          <img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}">
+        </figure>
+        <p>{!! trans('mg-story.diversity.p') !!}</p>
+      </section>
+  
+      <section id="story-eco">
+        <h1>{{ trans('mg-story.eco.title') }}</h1>
+        <ul class="story-links">
+        <li><a class="story-button" href="https://www.hetzner.de/unternehmen/umweltschutz/" target="_blank">{{ trans('mg-story.btn-more') }}</a></li>
+        </ul>
+        <figure class="story-icon">
+          <img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}">
+        </figure>
+        <p>{!! trans('mg-story.eco.p')!!}</p>
+      </section>
+      <section id="story-plugin">
+        <h1>{{ trans('mg-story.plugin.title') }}</h1>
+        <ul class="story-links">
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}">{{ trans('mg-story.plugin.btn-add') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app") }}">{{ trans('mg-story.plugin.btn-app') }}</a></li>
+        </ul>
+        <figure class="story-icon">
+          <picture>
+            <source media="(max-width: 760px)" srcset="/img/App.svg">
+                    <img src="/img/story-plugin.svg" alt="{{ trans('mg-story.plugin.image.alt') }}">  
+          </picture>
+
+        </figure>
+        <p>{{ trans('mg-story.plugin.p') }}</p>
+      </section>
+    </div> 
 @endsection

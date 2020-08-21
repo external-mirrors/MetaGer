@@ -54,6 +54,21 @@
     margin-left: 0px;
     margin-right: 0px;
     align-items: center;
+
+    a{
+        &:nth-child(2){
+            grid-area: icn-privacy;
+        }
+        &:nth-child(3){
+            grid-area: icn-ngo;
+        }
+        &:nth-child(4){
+            grid-area: icn-diversity;
+        }
+        &:nth-child(5){
+            grid-area: icn-eco;
+        }
+    }
 }
 
 .four-reasons ~ a {
@@ -74,6 +89,8 @@ a.four-reasons { // sets the '4 reasons to use MetaGer' link
     grid-area: scr-link;
     color: black;
     font-size: 18px;
+    display: block;
+    width: 100%;
 }
 
 footer {
@@ -133,6 +150,7 @@ footer {
 }
 
 #story-ngo {
+    grid-area: "icn-ngo";
     background-color: #ffffff;
 }
 
@@ -141,6 +159,7 @@ footer {
 }
 
 #story-diversity {
+    grid-area: "icn-diversity";
     background-color: #edfdff;
 }
 
@@ -149,6 +168,7 @@ footer {
 }
 
 #story-eco {
+    grid-area: "icn-eco";
     background-color: rgb(227, 255, 233);
 }
 
@@ -165,9 +185,11 @@ footer {
 .story-links {
     grid-area: story-links;
     display: flex;
+    flex-wrap: wrap;
     padding: 0px;
     list-style: none;
     gap: 2em;
+
 } 
 a.story-button { // sets the story-button for all sections
     padding: 12px;
@@ -263,6 +285,14 @@ html{
     }
 }
 @media screen and (max-width: 550px) { // changes the layout for screen sizes smaller than 550px
+    div#scroll-link {
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-areas: 
+            "scr-link scr-link scr-link scr-link"
+            "icn-privacy icn-privacy icn-ngo icn-ngo"
+            "icn-diversity icn-diversity icn-eco icn-eco";
+        row-gap: 2rem;
+    }
     div#story-container h1{
       font-size: 25px;
     }
@@ -294,7 +324,6 @@ html{
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        flex-direction: column;
         padding: 15px;
         list-style: none;
         gap: 20px;
@@ -347,7 +376,6 @@ html{
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        flex-direction: column;
         padding: 15px;
         list-style: none;
         gap: 20px;

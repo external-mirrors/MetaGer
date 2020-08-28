@@ -29,7 +29,14 @@ class PrometheusExporter
     public static function HumanVerificationSuccessfull()
     {
         $registry = \Prometheus\CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter('metager', 'humanverification', 'counts how often humanverification middleware was successfull', []);
+        $counter = $registry->getOrRegisterCounter('metager', 'humanverification_success', 'counts how often humanverification middleware was successfull', []);
+        $counter->inc();
+    }
+
+    public static function HumanVerificationError()
+    {
+        $registry = \Prometheus\CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter('metager', 'humanverification_error', 'counts how often humanverification middleware had an error', []);
         $counter->inc();
     }
 }

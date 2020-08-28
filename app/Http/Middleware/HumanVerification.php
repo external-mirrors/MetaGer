@@ -128,10 +128,11 @@ class HumanVerification
                 if ($user["unusedResultPages"] === 50 || ($user["unusedResultPages"] > 50 && $user["unusedResultPages"] % 25 === 0)) {
                     $user["locked"] = true;
                 }
-
             }
+            \App\PrometheusExporter::HumanVerificationSuccessfull();
         } catch (\Exception $e) {
             Log::error($e->getMessage());
+            \App\PrometheusExporter::HumanVerificationError();
         } finally {
             if ($update && $user != null) {
                 if ($user["whitelist"]) {
@@ -141,7 +142,6 @@ class HumanVerification
                 }
                 try {
                     $this->setUser($prefix, $user);
-                    \App\PrometheusExporter::HumanVerificationSuccessfull();
                 } catch (\Exception $e) {
                     Log::error($e->getMessage());
                 }

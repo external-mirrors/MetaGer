@@ -286,8 +286,7 @@
     </div>
     <div class="section">
         <h1>Hosting</h1>
-        Die Webseiten unter der Domain „suma-ev.de“ werden bei der Intares GmbH gehostet und administriert. Die übrigen
-        Dienste werden von uns, dem SUMA-EV, administriert und auf angemieteter Hardware bei der Hetzner Online GmbH
+        Unsere Dienste werden von uns, dem SUMA-EV, administriert und auf angemieteter Hardware bei der Hetzner Online GmbH
         betrieben.
     </div>
     <div class="section">

@@ -80,7 +80,7 @@ class HumanVerification
                     }
                 }
             }
-            
+
             # A lot of automated requests are from websites that redirect users to our result page.
             # We will detect those requests and put a captcha
             $referer = URL::previous();
@@ -98,9 +98,10 @@ class HumanVerification
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
                 $user["locked"] = true;
             }
-            
+
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
+                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 \App\PrometheusExporter::CaptchaShown();

@@ -7,6 +7,7 @@ use App\MetaGer;
 use Cache;
 use Illuminate\Http\Request;
 use LaravelLocalization;
+use Log;
 use View;
 
 class MetaGerSearch extends Controller
@@ -63,7 +64,7 @@ class MetaGerSearch extends Controller
 
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
-        if(empty($metager->getQ())){
+        if (empty($metager->getQ())) {
             return $metager->createView();
         }
 
@@ -109,7 +110,11 @@ class MetaGerSearch extends Controller
             }
         }
 
-        Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+        try {
+            Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
         if (!empty($timings)) {
             $timings["Filled resultloader Cache"] = microtime(true) - $time;
         }
@@ -117,7 +122,11 @@ class MetaGerSearch extends Controller
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView();
         if ($spamEntry !== null) {
-            Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
+            try {
+                Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+            }
         }
 
         if (!empty($timings)) {
@@ -133,7 +142,7 @@ class MetaGerSearch extends Controller
         $counter->incBy(sizeof($metager->getResults()));
         $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
         $counter->inc();
-        
+
         return $resultpage;
     }
 
@@ -225,7 +234,7 @@ class MetaGerSearch extends Controller
 
         $result["finished"] = $finished;
 
-        if($newResults > 0){
+        if ($newResults > 0) {
             $registry = \Prometheus\CollectorRegistry::getDefault();
             $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
             $counter->incBy($newResults);
@@ -290,7 +299,7 @@ class MetaGerSearch extends Controller
     {
         $search = $request->input('search', '');
         $quotes = $request->input('quotes', 'on');
-        if(empty($search)){
+        if (empty($search)) {
             abort(404);
         }
 

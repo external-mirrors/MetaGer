@@ -7,6 +7,7 @@ use Captcha;
 use Closure;
 use Cookie;
 use Illuminate\Http\Response;
+use Log;
 use URL;
 
 class HumanVerification
@@ -66,7 +67,6 @@ class HumanVerification
             } else {
                 $user = $users[$uid];
             }
-
             # Lock out everyone in a Bot network
             # Find out how many requests this IP has made
             $sum = 0;
@@ -130,8 +130,10 @@ class HumanVerification
                 }
 
             }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         } finally {
-            if ($update) {
+            if ($update && $user != null) {
                 if ($user["whitelist"]) {
                     $user["expiration"] = now()->addWeeks(2);
                 } else {
@@ -148,7 +150,6 @@ class HumanVerification
 
     public function setUser($prefix, $user)
     {
-        // Lock must be acquired within 2 seconds
         $userList = Cache::get($prefix . "." . $user["id"], []);
         $userList[$user["uid"]] = $user;
         Cache::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);

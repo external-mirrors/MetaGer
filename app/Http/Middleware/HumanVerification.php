@@ -139,7 +139,12 @@ class HumanVerification
                 } else {
                     $user["expiration"] = now()->addHours(72);
                 }
-                $this->setUser($prefix, $user);
+                try {
+                    $this->setUser($prefix, $user);
+                    \App\PrometheusExporter::HumanVerificationSuccessfull();
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
             }
         }
 

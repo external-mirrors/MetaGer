@@ -5,6 +5,7 @@ namespace App\Models;
 use App\MetaGer;
 use Cache;
 use Illuminate\Support\Facades\Redis;
+use Log;
 
 abstract class Searchengine
 {
@@ -94,7 +95,7 @@ abstract class Searchengine
             $tmpPara = true;
             $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
-            if(stripos($engineParameterValue, "dyn-") === 0){
+            if (stripos($engineParameterValue, "dyn-") === 0) {
                 $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
                 $engineParameterValue = \App\DynamicEngineParameters::$functionname();
             }
@@ -207,7 +208,11 @@ abstract class Searchengine
         }
 
         if ($body !== null) {
-            Cache::put($this->hash, $body, $this->cacheDuration * 60);
+            try {
+                Cache::put($this->hash, $body, $this->cacheDuration * 60);
+            } catch (\Exception $e) {
+                Log::error($e->getMessage());
+            }
             $this->loadResults($body);
             $this->getNext($metager, $body);
             $this->markNew();

@@ -34,7 +34,7 @@ class HomePage extends Page
             ->switchLanguage("English")
             ->waitForText("Guaranteed Privacy", 1)
             ->assertTitle('MetaGer: Privacy Protected Search & Find')
-            ->assertSee("Diverse & free")
+            ->assertSee("Diverse & Free")
             ->assertSee("100 % renewable energy")
             ->assertSee("Nonprofit organization")
             ->switchLanguage("Español")

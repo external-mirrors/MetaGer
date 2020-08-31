@@ -143,6 +143,8 @@ integrationtest:
   script:
     # Install Dev Dependencies
     - composer install
+    - cp .env.example .env
+    - php artisan key:generate
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env

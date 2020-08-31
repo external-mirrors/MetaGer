@@ -47,6 +47,21 @@ spec:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
           claimName: mg-logs
+      - name: env-files
+        secret:
+          secretName: metager-env
+      - name: sumas
+        secret:
+          secretName: metager-sumas
+      - name: sumas-en
+        secret:
+          secretName: metager-sumas-en
+      - name: blacklist
+        secret:
+          secretName: metager-blacklist
+      - name: blacklist-ad
+        secret:
+          secretName: metager-ad-blacklist
       containers:
       # Main PHP-FPM Container
       - name: {{ .Chart.Name }}-phpfpm
@@ -81,6 +96,42 @@ spec:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false
+        - name: env-files
+          mountPath: /root/.env
+          subPath: .env
+          readOnly: true
+        - name: env-files
+          mountPath: /html/database/seeds/UsersSeeder.php
+          subPath: UsersSeeder.php
+          readOnly: true
+        - name: env-files
+          mountPath: /html/config/spam.txt
+          subPath: spam.txt
+          readOnly: true
+        - name: sumas
+          mountPath: /html/config/sumas.json
+          subPath: sumas.json
+          readOnly: true
+        - name: sumas-en
+          mountPath: /html/config/sumasEn.json
+          subPath: sumasEn.json
+          readOnly: true
+        - name: blacklist
+          mountPath: /html/config/blacklistUrl.txt
+          subPath: blacklistUrl.txt
+          readOnly: true
+        - name: blacklist
+          mountPath: /html/config/blacklistDomains.txt
+          subPath: blacklistDomains.txt
+          readOnly: true
+        - name: blacklist-ad
+          mountPath: /html/config/adBlacklistUrl.txt
+          subPath: adBlacklistUrl.txt
+          readOnly: true
+        - name: blacklist-ad
+          mountPath: /html/config/adBlacklistDomains.txt
+          subPath: adBlacklistDomains.txt
+          readOnly: true
         resources:
           requests:
             cpu: 500m

@@ -71,7 +71,7 @@ EXPOSE 80
 
 CMD cp /root/.env .env && \
     sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env && \
-    if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; then sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; else sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env fi && \
+    if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; then sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; else sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; fi && \
     cp database/useragents.sqlite.example database/useragents.sqlite && \
     chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \

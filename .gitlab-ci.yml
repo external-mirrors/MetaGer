@@ -145,8 +145,8 @@ integrationtest:
     - composer install
     - cp .env.example .env
     - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
-    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_URL\"" >> .env
-    - echo "WEBDRIVER_URL=\"$WEBDRIVER_USER\"" >> .env
+    - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
+    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
     - php artisan key:generate
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env

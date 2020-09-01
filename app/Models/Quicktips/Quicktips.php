@@ -32,12 +32,23 @@ class Quicktips
         $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . $quotes;
         $this->hash = md5($url);
 
-        if (!Cache::has($this->hash)) {
-            $results = file_get_contents($url);
-            Cache::put($this->hash, $results, Quicktips::CACHE_DURATION);
-        } else {
-            $results = Cache::get($this->hash);
+        $results = null;
+
+        try {
+            if (!Cache::has($this->hash)) {
+                $results = file_get_contents($url);
+                Cache::put($this->hash, $results, Quicktips::CACHE_DURATION);
+            } else {
+                $results = Cache::get($this->hash);
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
+
+        if ($results === null) {
+            $results = file_get_contents($url);
+        }
+
         $this->results = $this->loadResults($results);
     }
 

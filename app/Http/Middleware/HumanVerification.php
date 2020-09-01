@@ -7,6 +7,7 @@ use Captcha;
 use Closure;
 use Cookie;
 use Illuminate\Http\Response;
+use Log;
 use URL;
 
 class HumanVerification
@@ -66,7 +67,6 @@ class HumanVerification
             } else {
                 $user = $users[$uid];
             }
-
             # Lock out everyone in a Bot network
             # Find out how many requests this IP has made
             $sum = 0;
@@ -80,7 +80,7 @@ class HumanVerification
                     }
                 }
             }
-            
+
             # A lot of automated requests are from websites that redirect users to our result page.
             # We will detect those requests and put a captcha
             $referer = URL::previous();
@@ -98,9 +98,10 @@ class HumanVerification
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
                 $user["locked"] = true;
             }
-            
+
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
+                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 \App\PrometheusExporter::CaptchaShown();
@@ -127,16 +128,23 @@ class HumanVerification
                 if ($user["unusedResultPages"] === 50 || ($user["unusedResultPages"] > 50 && $user["unusedResultPages"] % 25 === 0)) {
                     $user["locked"] = true;
                 }
-
             }
+            \App\PrometheusExporter::HumanVerificationSuccessfull();
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            \App\PrometheusExporter::HumanVerificationError();
         } finally {
-            if ($update) {
+            if ($update && $user != null) {
                 if ($user["whitelist"]) {
                     $user["expiration"] = now()->addWeeks(2);
                 } else {
                     $user["expiration"] = now()->addHours(72);
                 }
-                $this->setUser($prefix, $user);
+                try {
+                    $this->setUser($prefix, $user);
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
             }
         }
 
@@ -147,7 +155,6 @@ class HumanVerification
 
     public function setUser($prefix, $user)
     {
-        // Lock must be acquired within 2 seconds
         $userList = Cache::get($prefix . "." . $user["id"], []);
         $userList[$user["uid"]] = $user;
         Cache::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);

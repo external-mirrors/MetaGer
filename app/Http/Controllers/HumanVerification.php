@@ -7,6 +7,7 @@ use Carbon;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Input;
 
 class HumanVerification extends Controller
@@ -39,6 +40,7 @@ class HumanVerification extends Controller
             $key = strtolower($key);
 
             if (!$hasher->check($key, $lockedKey)) {
+                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
@@ -65,6 +67,7 @@ class HumanVerification extends Controller
                 }
             }
         }
+        sleep(\random_int(1, 8));
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);
@@ -105,7 +108,7 @@ class HumanVerification extends Controller
     private static function saveUser($user)
     {
         $userList = Cache::get(HumanVerification::PREFIX . "." . $user["id"], []);
-        
+
         if ($user["whitelist"]) {
             $user["expiration"] = now()->addWeeks(2);
         } else {
@@ -196,21 +199,20 @@ class HumanVerification extends Controller
 
     public static function couldBeSpammer($ip)
     {
-        $possibleSpammer = false;
-
         # Check for recent Spams
         $eingabe = \Request::input('eingabe');
-        if (\preg_match("/^susimail\s+-site:[^\s]+\s-site:/si", $eingabe)) {
-            return true;
-        } else if (\preg_match("/^\s*site:\"linkedin\.com[^\"]*\"\s+/si", $eingabe)) {
-            return true;
+        $spams = Redis::lrange("spam", 0, -1);
+        foreach ($spams as $spam) {
+            if (\preg_match($spam, $eingabe)) {
+                return true;
+            }
         }
 
-        return $possibleSpammer;
-
+        return false;
     }
 
-    public function botOverview(Request $request){
+    public function botOverview(Request $request)
+    {
         $id = "";
         $uid = "";
         $ip = $request->ip();
@@ -232,7 +234,8 @@ class HumanVerification extends Controller
             ->with('user', $user);
     }
 
-    public function botOverviewChange(Request $request) {
+    public function botOverviewChange(Request $request)
+    {
         $id = "";
         $uid = "";
         $ip = $request->ip();
@@ -247,11 +250,11 @@ class HumanVerification extends Controller
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
         $user = $userList[$uid];
 
-        if($request->filled("locked")){
+        if ($request->filled("locked")) {
             $user["locked"] = boolval($request->input('locked'));
-        }elseif($request->filled("whitelist")) {
+        } elseif ($request->filled("whitelist")) {
             $user["whitelist"] = boolval($request->input('whitelist'));
-        }elseif($request->filled("unusedResultPages")) {
+        } elseif ($request->filled("unusedResultPages")) {
             $user["unusedResultPages"] = intval($request->input('unusedResultPages'));
         }
 

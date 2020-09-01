@@ -37,74 +37,6 @@ stages:
 build:
   services:
 
-# Prepares the secret files that we cannot or don't want to share with public
-prepare_secrets_master:
-  stage: prepare
-  image: alpine:latest
-  script: 
-    - cp $ENVFILE .env
-    - cp $SUMAS config/sumas.json
-    - cp $SUMASEN config/sumasEn.json
-    - cp $BLACKLISTURL config/blacklistUrl.txt
-    - cp $BLACKLISTDOMAINS config/blacklistDomains.txt
-    - cp $ADBLACKLISTURL config/adBlacklistUrl.txt
-    - cp $ADBLACKLISTDOMAINS config/adBlacklistDomains.txt
-    - cp $SPAM config/spam.txt
-    - cp $USERSSEEDER database/seeds/UsersSeeder.php
-    - cp database/useragents.sqlite.example database/useragents.sqlite
-    - sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env
-    - sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env
-  artifacts:
-    paths:
-      - .env
-      - config/sumas.json
-      - config/sumasEn.json
-      - config/blacklistUrl.txt
-      - config/blacklistDomains.txt
-      - config/adBlacklistUrl.txt
-      - config/adBlacklistDomains.txt
-      - config/spam.txt
-      - database/seeds/UsersSeeder.php
-      - database/useragents.sqlite
-  only:
-    refs:
-      - master    
-
-prepare_secrets_development:
-  stage: prepare
-  image: alpine:latest
-  script: 
-    - cp $ENVFILE .env
-    - cp $SUMAS config/sumas.json
-    - cp $SUMASEN config/sumasEn.json
-    - cp $BLACKLISTURL config/blacklistUrl.txt
-    - cp $BLACKLISTDOMAINS config/blacklistDomains.txt
-    - cp $ADBLACKLISTURL config/adBlacklistUrl.txt
-    - cp $ADBLACKLISTDOMAINS config/adBlacklistDomains.txt
-    - cp $SPAM config/spam.txt
-    - cp $USERSSEEDER database/seeds/UsersSeeder.php
-    - cp database/useragents.sqlite.example database/useragents.sqlite
-    - sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env
-    - sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env
-  artifacts:
-    paths:
-      - .env
-      - config/sumas.json
-      - config/sumasEn.json
-      - config/blacklistUrl.txt
-      - config/blacklistDomains.txt
-      - config/adBlacklistUrl.txt
-      - config/adBlacklistDomains.txt
-      - config/spam.txt
-      - database/seeds/UsersSeeder.php
-      - database/useragents.sqlite
-  only:
-    - branches
-    - tags
-  except:
-    refs:
-      - master
-
 prepare_node:
   stage: prepare
   image: node:10
@@ -211,9 +143,13 @@ integrationtest:
   script:
     # Install Dev Dependencies
     - composer install
+    - cp .env.example .env
+    - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
+    - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
+    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
+    - php artisan key:generate
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - ./vendor/phpunit/phpunit/phpunit
-
+    - php artisan dusk

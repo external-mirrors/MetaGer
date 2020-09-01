@@ -182,6 +182,13 @@ Route::group(
             });
             Route::get('bot', 'HumanVerification@botOverview');
             Route::post('bot', 'HumanVerification@botOverviewChange');
+            Route::group(['prefix' => 'spam'], function () {
+                Route::get('/', 'AdminSpamController@index');
+                Route::post('/', 'AdminSpamController@ban');
+                Route::get('jsonQueries', 'AdminSpamController@jsonQueries');
+                Route::post('queryregexp', 'AdminSpamController@queryregexp');
+                Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
+            });
         });
 
         Route::get('settings', function () {

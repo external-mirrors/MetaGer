@@ -9,8 +9,8 @@ use Illuminate\Http\Response;
 use LaravelLocalization;
 use Mail;
 use Validator;
-use \PHP_IBAN\IBAN;
-use \PHP_IBAN\IBANCountry;
+use \IBAN;
+use \IBANCountry;
 
 class MailController extends Controller
 {

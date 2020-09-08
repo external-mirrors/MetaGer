@@ -5,6 +5,10 @@ ingress:
   annotations: 
     kubernetes.io/tls-acme: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers: "Content-Security-Policy: \"default-src 'self' data:\"";
+      more_set_headers: "X-Content-Security-Policy: \"default-src 'self' data:\"";
+      more_set_headers: "X-WebKit-CSP: \"default-src 'self' data:\"";
   tls: 
     enabled: false
 service: 

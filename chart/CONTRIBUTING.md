@@ -23,4 +23,31 @@ _This notice should stay as the first item in the CONTRIBUTING.md file._
 We want to create a welcoming environment for everyone who is interested
 in contributing. Please visit our [Code of Conduct
 page](https://about.gitlab.com/contributing/code-of-conduct) to learn
-more about our committment to an open and welcoming environment.
+more about our commitment to an open and welcoming environment.
+
+## Merge request guidelines
+
+Below are some guidelines for merge requests:
+
+- Any new configuration option should be documented in
+  the `Configuration` section in README.md.
+- For any template changes, we encourage a test case be added or
+  updated in the
+  [template tests](https://gitlab.com/gitlab-org/charts/auto-deploy-app/-/blob/master/test/template_test.go).
+
+### Working with the tests
+
+The tests are written in [Go](https://golang.org) (version 1.13 or later,
+with [modules enabled](https://golang.org/cmd/go/#hdr-Module_support)) using
+the [Terratest](https://github.com/gruntwork-io/terratest) library. To work
+on the tests, you need to have [Helm 2](https://v2.helm.sh/docs/) and
+[Go](https://golang.org) installed.
+
+To run the tests, run the following commands from the root of your copy of `auto-deploy-app`:
+
+```shell
+helm init --client-only               # required only once
+helm dependency build .               # required only once
+cd test
+GO111MODULE=auto go test .            # required for every change to the tests or the template
+```

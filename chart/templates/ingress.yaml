@@ -1,4 +1,4 @@
-{{- if .Values.service.enabled -}}
+{{- if and (.Values.service.enabled) (eq .Values.application.track "stable") (or (.Values.ingress.enabled) (not (hasKey .Values.ingress "enabled"))) -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -12,10 +12,15 @@ metadata:
 {{- if .Values.ingress.annotations }}
 {{ toYaml .Values.ingress.annotations | indent 4 }}
 {{- end }}
-{{- if and .Values.ingress.modSecurity .Values.ingress.modSecurity.enabled }}
+{{- with .Values.ingress.modSecurity }}
+{{- if .enabled }}
+    nginx.ingress.kubernetes.io/modsecurity-transaction-id: "$server_name-$request_id"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
-      SecRuleEngine {{ .Values.ingress.modSecurity.secRuleEngine | default "DetectionOnly" | title }}
-
+      SecRuleEngine {{ .secRuleEngine | default "DetectionOnly" | title }}
+{{- range $rule := .secRules }}
+{{ (include "secrule" $rule) | indent 6 }}
+{{- end }}
+{{- end }}
 {{- end }}
 {{- if .Values.prometheus.metrics }}
     nginx.ingress.kubernetes.io/server-snippet: |-
@@ -34,7 +39,7 @@ spec:
     - {{ template "hostname" .Values.service.url }}
 {{- if .Values.service.additionalHosts }}
 {{- range $host := .Values.service.additionalHosts }}
-    - {{ $host }}
+    - {{ template "hostname" $host }}
 {{- end -}}
 {{- end }}
     secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "fullname" .)) }}
@@ -48,10 +53,6 @@ spec:
         backend:
           serviceName: {{ template "fullname" . }}
           servicePort: {{ .Values.service.externalPort }}
-      - path: /wsb
-        backend:
-          serviceName: wsb
-          servicePort: 80
 {{- if .Values.service.commonName }}
   - host: {{ template "hostname" .Values.service.commonName }}
     http:
@@ -59,7 +60,7 @@ spec:
 {{- end -}}
 {{- if .Values.service.additionalHosts }}
 {{- range $host := .Values.service.additionalHosts }}
-  - host: {{ $host }}
+  - host: {{ template "hostname" $host }}
     http:
       <<: *httpRule
 {{- end -}}

@@ -11,3 +11,4 @@ service:
   commonName: ""
   externalPort: 80
   internalPort: 80
+deploymentApiVersion: apps/v1

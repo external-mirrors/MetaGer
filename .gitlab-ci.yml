@@ -75,20 +75,29 @@ review:
   variables:
     HELM_UPGRADE_VALUES_FILE: .gitlab/review-apps-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
-  except:
-    refs:
-      - master
-      - development
-    variables:
-      - $REVIEW_DISABLED
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$REVIEW_DISABLED'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
 
 stop_review:
-  except:
-    refs:
-      - master
-      - development
-    variables:
-      - $REVIEW_DISABLED
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$REVIEW_DISABLED'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+
 
 .development: &development_template
   extends: .auto-deploy

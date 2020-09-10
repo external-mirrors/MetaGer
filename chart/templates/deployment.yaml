@@ -45,7 +45,6 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
       containers:
-        # PHP FPM
       - name: {{ .Chart.Name }}-phpfpm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -56,69 +55,69 @@ spec:
         {{- end }}
         env:
         - name: DATABASE_URL
-            value: {{ .Values.application.database_url | quote }}
+          value: {{ .Values.application.database_url | quote }}
         - name: GITLAB_ENVIRONMENT_NAME
-            value: {{ .Values.gitlab.envName }}
+          value: {{ .Values.gitlab.envName }}
         - name: GITLAB_ENVIRONMENT_URL
-            value: {{ .Values.gitlab.envURL }}
+          value: {{ .Values.gitlab.envURL }}
         ports:
         - name: "{{ .Values.service.name }}-phpfpm"
-            containerPort: 9000
+          containerPort: 9000
         livenessProbe:
-            tcpSocket:
+          tcpSocket:
             port: "{{ .Values.service.name }}-phpfpm"
-            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
         readinessProbe:
-            tcpSocket:
+          tcpSocket:
             port: "{{ .Values.service.name }}-phpfpm"
-            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
-            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         volumeMounts:
         - name: mglogs-persistent-storage
-            mountPath: /html/storage/logs/metager
-            readOnly: false
+          mountPath: /html/storage/logs/metager
+          readOnly: false
         - name: env-files
-            mountPath: /root/.env
-            subPath: .env
-            readOnly: true
+          mountPath: /root/.env
+          subPath: .env
+          readOnly: true
         - name: env-files
-            mountPath: /html/database/seeds/UsersSeeder.php
-            subPath: UsersSeeder.php
-            readOnly: true
+          mountPath: /html/database/seeds/UsersSeeder.php
+          subPath: UsersSeeder.php
+          readOnly: true
         - name: env-files
-            mountPath: /html/config/spam.txt
-            subPath: spam.txt
-            readOnly: true
+          mountPath: /html/config/spam.txt
+          subPath: spam.txt
+          readOnly: true
         - name: sumas
-            mountPath: /html/config/sumas.json
-            subPath: sumas.json
-            readOnly: true
+          mountPath: /html/config/sumas.json
+          subPath: sumas.json
+          readOnly: true
         - name: sumas-en
-            mountPath: /html/config/sumasEn.json
-            subPath: sumasEn.json
-            readOnly: true
+          mountPath: /html/config/sumasEn.json
+          subPath: sumasEn.json
+          readOnly: true
         - name: blacklist
-            mountPath: /html/config/blacklistUrl.txt
-            subPath: blacklistUrl.txt
-            readOnly: true
+          mountPath: /html/config/blacklistUrl.txt
+          subPath: blacklistUrl.txt
+          readOnly: true
         - name: blacklist
-            mountPath: /html/config/blacklistDomains.txt
-            subPath: blacklistDomains.txt
-            readOnly: true
+          mountPath: /html/config/blacklistDomains.txt
+          subPath: blacklistDomains.txt
+          readOnly: true
         - name: blacklist-ad
-            mountPath: /html/config/adBlacklistUrl.txt
-            subPath: adBlacklistUrl.txt
-            readOnly: true
+          mountPath: /html/config/adBlacklistUrl.txt
+          subPath: adBlacklistUrl.txt
+          readOnly: true
         - name: blacklist-ad
-            mountPath: /html/config/adBlacklistDomains.txt
-            subPath: adBlacklistDomains.txt
-            readOnly: true
+          mountPath: /html/config/adBlacklistDomains.txt
+          subPath: adBlacklistDomains.txt
+          readOnly: true
         resources:
-            requests:
+          requests:
             cpu: 500m
             memory: 500m
-        # Nginx Container
+      # Nginx Container
       - name: {{ .Chart.Name }}-nginx
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ["nginx"]

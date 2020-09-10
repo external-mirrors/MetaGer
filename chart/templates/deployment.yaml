@@ -44,6 +44,25 @@ spec:
     spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+      volumes:
+      - name: mglogs-persistent-storage
+        persistentVolumeClaim:
+          claimName: mg-logs
+      - name: env-files
+        secret:
+          secretName: metager-env
+      - name: sumas
+        secret:
+          secretName: metager-sumas
+      - name: sumas-en
+        secret:
+          secretName: metager-sumas-en
+      - name: blacklist
+        secret:
+          secretName: metager-blacklist
+      - name: blacklist-ad
+        secret:
+          secretName: metager-ad-blacklist
       containers:
       - name: {{ .Chart.Name }}-phpfpm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

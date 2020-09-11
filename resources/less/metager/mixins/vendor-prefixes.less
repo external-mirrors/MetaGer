@@ -1,0 +1,56 @@
+// Vendor Prefixes
+//
+// All vendor mixins are deprecated as of v3.2.0 due to the introduction of
+// Autoprefixer in our Gruntfile. They have been removed in v4.
+
+
+// - Box shadow
+// - Box sizing
+// - Placeholder text
+// - Transitions
+// - User select
+
+// Drop shadows
+//
+// Note: Deprecated `.box-shadow()` as of v3.1.0 since all of Bootstrap's
+// supported browsers that have box shadow capabilities now support it.
+
+.box-shadow(@shadow) {
+    -webkit-box-shadow: @shadow; // iOS <4.3 & Android <4.1
+            box-shadow: @shadow;
+  }
+  
+  // Box sizing
+  .box-sizing(@boxmodel) {
+    -webkit-box-sizing: @boxmodel;
+       -moz-box-sizing: @boxmodel;
+            box-sizing: @boxmodel;
+  }
+  
+  
+  // Placeholder text
+  .placeholder(@color: @input-color-placeholder) {
+    // Firefox
+    &::-moz-placeholder {
+      color: @color;
+      opacity: 1; // Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526
+    }
+    &:-ms-input-placeholder { color: @color; } // Internet Explorer 10+
+    &::-webkit-input-placeholder  { color: @color; } // Safari and Chrome
+  }
+  // Transitions
+  
+  .transition(@transition) {
+    -webkit-transition: @transition;
+         -o-transition: @transition;
+            transition: @transition;
+  }
+  // User select
+// For selecting text on the page
+
+.user-select(@select) {
+    -webkit-user-select: @select;
+       -moz-user-select: @select;
+        -ms-user-select: @select; // IE10+
+            user-select: @select;
+  }

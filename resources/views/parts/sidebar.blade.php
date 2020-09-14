@@ -57,7 +57,7 @@
       <label for="contactToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationKontakt" tabindex=0>
         <i class="fa fa-comments" aria-hidden="true"></i>
         <span>{{ trans('sidebar.nav18') }}</span>
-        <img class="caret" src="/img/caret.svg"></img>
+        <span class="caret"></span>
       </label>
       <ul class="metager-dropdown-content">
         <li>
@@ -79,7 +79,7 @@
         <label for="servicesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" tabindex=0>
           <i class="fa fa-wrench" aria-hidden="true"></i>
           <span>{{ trans('sidebar.nav15') }}</span>
-          <img class="caret" src="/img/caret.svg"></img>
+          <span class="caret"></span>
         </label>
       <ul class="metager-dropdown-content">
         <li>
@@ -118,7 +118,7 @@
       <label for="languagesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationSprache" tabindex=0>
         <i class="fa fa-globe" aria-hidden="true"></i>
         <span>{{ trans('sidebar.nav19') }} ({{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }})</span>
-        <img class="caret" src="/img/caret.svg"></img>
+        <span class="caret"></span>
       </label>
       <ul class="metager-dropdown-content">
         @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)

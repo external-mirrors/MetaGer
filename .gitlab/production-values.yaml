@@ -19,9 +19,10 @@ podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics
   prometheus.io/port: "80"
+deploymentApiVersion: apps/v1
 ingress:
   annotations:
-    certmanager.k8s.io/cluster-issuer: letsencrypt-prod
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |
       if ($host = "www.metager.de") {
           return 301 https://metager.de$request_uri;

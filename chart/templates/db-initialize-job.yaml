@@ -24,7 +24,7 @@ spec:
 {{ toYaml .Values.image.secrets | indent 10 }}
       containers:
       - name: {{ .Chart.Name }}
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         command: ["/bin/sh"]
         args: ["-c", "{{ .Values.application.initializeCommand }}"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -36,4 +36,8 @@ spec:
         env:
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
+        - name: GITLAB_ENVIRONMENT_NAME
+          value: {{ .Values.gitlab.envName | quote }}
+        - name: GITLAB_ENVIRONMENT_URL
+          value: {{ .Values.gitlab.envURL | quote }}
 {{- end -}}

@@ -2,7 +2,7 @@ service:
   externalPort: 80
   internalPort: 80
 hpa:
-  minReplicas: 1
+  minReplicas: 2
   maxReplicas: 5
 podDisruptionBudget:
   enabled: true

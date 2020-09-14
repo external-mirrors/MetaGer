@@ -21,7 +21,17 @@ class HumanVerification extends Controller
         if ($url != null) {
             $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
         } else {
-            $url = $request->input('url');
+            $url = $request->input('url', url("/"));
+        }
+
+        $protocol = "http://";
+
+        if ($request->secure()) {
+            $protocol = "https://";
+        }
+
+        if (stripos($url, $protocol . $request->getHttpHost()) !== 0) {
+            $url = url("/");
         }
 
         $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
@@ -40,7 +50,6 @@ class HumanVerification extends Controller
             $key = strtolower($key);
 
             if (!$hasher->check($key, $lockedKey)) {
-                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
@@ -67,7 +76,7 @@ class HumanVerification extends Controller
                 }
             }
         }
-        sleep(\random_int(1, 8));
+
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);
@@ -146,9 +155,9 @@ class HumanVerification extends Controller
         $ip = $request->ip();
         $id = "";
         if (HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
+            $id = hash("sha1", "999.999.999.999");
         } else {
-            $id = hash("sha512", $ip);
+            $id = hash("sha1", $ip);
         }
 
         $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
@@ -185,9 +194,9 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (HumanVerification::couldBeSpammer($ip)) {
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         if ($uid === $id) {
@@ -217,11 +226,11 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", "999.999.999.999");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $id = hash("sha512", $ip);
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", $ip);
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
@@ -240,11 +249,11 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", "999.999.999.999");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $id = hash("sha512", $ip);
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", $ip);
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);

@@ -2,6 +2,7 @@ service:
   externalPort: 80
   internalPort: 80
 hpa:
+  enabled: true
   minReplicas: 5
   maxReplicas: 100
 resources:

@@ -199,6 +199,7 @@ Route::group(
 
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.jpg', 'HumanVerification@remove');
+        Route::get('verify/metager/{id}/{uid}', ['as' => 'captcha', 'uses' => 'HumanVerification@captcha', 'middleware' => 'throttle:12,1']);
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
 

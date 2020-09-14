@@ -7,6 +7,7 @@ RUN apk add --update \
     dcron \
     zip \
     redis \
+    libpng \
     php7 \
     php7-fpm \
     php7-common \

@@ -195,13 +195,14 @@ Route::group(
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         });
 
-        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('humanverification', 'useragentmaster');
+        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('browserverification', 'humanverification', 'useragentmaster');
 
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.jpg', 'HumanVerification@remove');
         Route::get('verify/metager/{id}/{uid}', ['as' => 'captcha', 'uses' => 'HumanVerification@captcha', 'middleware' => 'throttle:12,1']);
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
+        Route::get('index.css', 'HumanVerification@browserVerification');
 
         Route::get('meta/picture', 'Pictureproxy@get');
         Route::get('clickstats', 'LogController@clicklog');

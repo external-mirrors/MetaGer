@@ -19,7 +19,7 @@ class BrowserVerification
     public function handle($request, Closure $next)
     {
         $bvEnabled = config("metager.metager.browserverification_enabled");
-        if (empty($bwEnabled) || !$bvEnabled) {
+        if (empty($bvEnabled) || !$bvEnabled) {
             return $next($request);
         }
 

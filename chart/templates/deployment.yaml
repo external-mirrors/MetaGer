@@ -97,7 +97,7 @@ spec:
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         volumeMounts:
         - name: metager-config
-          mountPath: /html/config
+          mountPath: /html/config/metager
           readOnly: true
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager

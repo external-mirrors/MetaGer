@@ -62,5 +62,6 @@ class Kernel extends HttpKernel
         'referer.check' => \App\Http\Middleware\RefererCheck::class,
         'humanverification' => \App\Http\Middleware\HumanVerification::class,
         'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
+        'browserverification' => \App\Http\Middleware\BrowserVerification::class,
     ];
 }

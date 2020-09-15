@@ -1,7 +1,9 @@
+@if(empty(config("metager.metager.browserverification_enabled")) || !config("metager.metager.browserverification_enabled"))
 <!DOCTYPE html>
 <html lang="{!! trans('staticPages.meta.language') !!}">
 	<head>
 		<meta charset="utf-8">
+@endif
 		<title>{{ $eingabe }} - MetaGer</title>
 		<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 		<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />

@@ -63,6 +63,9 @@ spec:
       - name: blacklist-ad
         secret:
           secretName: metager-ad-blacklist
+      - name: metager-config
+        configMap:
+          name: metager
       containers:
       - name: {{ .Chart.Name }}-phpfpm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -93,6 +96,9 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         volumeMounts:
+        - name: metager-config
+          mountPath: /html/config/metager
+          readOnly: true
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false

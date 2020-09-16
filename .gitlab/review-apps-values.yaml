@@ -5,6 +5,12 @@ ingress:
   annotations: 
     kubernetes.io/tls-acme: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-elem; script-src-attr; style-src 'self' 'unsafe-inline'; style-src-elem; style-src-attr; img-src 'self'; font-src 'self'; connect-src 'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self'; worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self'; base-uri; manifest-src; plugin-types; report-uri; report-to";
+      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "ReferrerPolicy: origin";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
   tls: 
     enabled: false
 service: 

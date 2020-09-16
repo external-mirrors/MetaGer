@@ -3,9 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use GrahamCampbell\Throttle\Facades\Throttle;
 use Illuminate\Support\Facades\Redis;
-use \App\Http\Controllers\HumanVerification;
 
 class BrowserVerification
 {
@@ -23,12 +21,20 @@ class BrowserVerification
             return $next($request);
         }
 
-        // Check if throttled
-        $accept = Throttle::check($request, 8, 1);
-        if (!$accept) {
-            Throttle::hit($request, 8, 1);
-            abort(429);
+        $mgv = $request->input('mgv', "");
+        if (!empty($mgv)) {
+            // Verify that key is a md5 checksum
+            if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
+                abort(404);
+            }
+            $result = boolval(Redis::connection("cache")->blpop($mgv, 5));
+            if ($result === true) {
+                return $next($request);
+            } else {
+                return redirect("/");
+            }
         }
+
         header('Content-type: text/html; charset=utf-8');
         header('X-Accel-Buffering: no');
         ini_set('zlib.output_compression', 'Off');
@@ -42,21 +48,19 @@ class BrowserVerification
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $answer = boolval(Redis::connection("cache")->blpop($key, 5));
+        $answer = boolval(Redis::connection("cache")->blpop($key, 2));
 
         if ($answer === true) {
             return $next($request);
-        } else {
-            $accept = Throttle::attempt($request, 8, 1);
-            if (!$accept) {
-                abort(429);
-            }
-
-            # Lockout
-            $ids = HumanVerification::block($request);
         }
 
-        return redirect()->route('captcha', ["id" => $ids[0], "uid" => $ids[1], "url" => url()->full()]);
+        $params = $request->all();
+        $params["mgv"] = $key;
+        $url = route("resultpage", $params);
+
+        echo (view('layouts.resultpage.unverifiedResultPage')
+                ->with('url', $url)
+                ->render());
 
     }
 }

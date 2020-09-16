@@ -1,9 +1,9 @@
 <fieldset>
-	<form id="searchForm" method={{ $request }} action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/meta.ger3 ") }}" accept-charset="UTF-8">
+	<form id="searchForm" method={{ $request }} @if(!empty($metager) && $metager->isFramed())target="_top" @endif action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/meta.ger3 ") }}" accept-charset="UTF-8">
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(isset($apiAuthorized) && $apiAuthorized)class="authorized" @else class="unauthorized"@endif href="{{ action('KeyController@index', ['redirUrl' => url()->full() ]) }}" data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
+					<a id="key-link" @if(isset($apiAuthorized) && $apiAuthorized)class="authorized" @else class="unauthorized"@endif href="{{ action('KeyController@index', ['redirUrl' => !empty($metager) ? $metager->generateSearchLink($metager->getFokus()) : url()->full() ]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
 						<i class="fa fa-key" aria-hidden="true"></i>
 					</a>
 				</div>

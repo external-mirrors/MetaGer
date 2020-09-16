@@ -195,7 +195,7 @@ Route::group(
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         });
 
-        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('browserverification', 'humanverification', 'useragentmaster');
+        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.jpg', 'HumanVerification@remove');

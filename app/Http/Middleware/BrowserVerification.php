@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use GrahamCampbell\Throttle\Facades\Throttle;
 use Illuminate\Support\Facades\Redis;
 
 class BrowserVerification
@@ -36,12 +35,6 @@ class BrowserVerification
             }
         }
 
-        // Check if throttled
-        $accept = Throttle::check($request, 8, 1);
-        if (!$accept) {
-            Throttle::hit($request, 8, 1);
-            abort(429);
-        }
         header('Content-type: text/html; charset=utf-8');
         header('X-Accel-Buffering: no');
         ini_set('zlib.output_compression', 'Off');
@@ -53,7 +46,7 @@ class BrowserVerification
         $key = md5($request->ip() . microtime(true));
 
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
-        #flush(); // TODO Readd
+        flush();
 
         $answer = boolval(Redis::connection("cache")->blpop($key, 2));
 

@@ -26,7 +26,7 @@ ingress:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |
       more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline'; script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self'; worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self'; base-uri; manifest-src; plugin-types; report-uri; report-to";
-      more_set_headers "X-Frame-Options: DENY";
+      more_set_headers "X-Frame-Options: sameorigin";
       more_set_headers "X-Content-Type-Options: nosniff";
       more_set_headers "ReferrerPolicy: origin";
       more_set_headers "X-XSS-Protection: 1; mode=block";

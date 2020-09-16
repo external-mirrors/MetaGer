@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use GrahamCampbell\Throttle\Facades\Throttle;
 use Illuminate\Support\Facades\Redis;
-use \App\Http\Controllers\HumanVerification;
 
 class BrowserVerification
 {
@@ -21,6 +20,20 @@ class BrowserVerification
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
             return $next($request);
+        }
+
+        $mgv = $request->input('mgv', "");
+        if (!empty($mgv)) {
+            // Verify that key is a md5 checksum
+            if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
+                abort(404);
+            }
+            $result = boolval(Redis::connection("cache")->blpop($mgv, 5));
+            if ($result === true) {
+                return $next($request);
+            } else {
+                return redirect("/");
+            }
         }
 
         // Check if throttled
@@ -40,23 +53,21 @@ class BrowserVerification
         $key = md5($request->ip() . microtime(true));
 
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
-        flush();
+        #flush(); // TODO Readd
 
-        $answer = boolval(Redis::connection("cache")->blpop($key, 5));
+        $answer = boolval(Redis::connection("cache")->blpop($key, 2));
 
         if ($answer === true) {
             return $next($request);
-        } else {
-            $accept = Throttle::attempt($request, 8, 1);
-            if (!$accept) {
-                abort(429);
-            }
-
-            # Lockout
-            $ids = HumanVerification::block($request);
         }
 
-        return redirect()->route('captcha', ["id" => $ids[0], "uid" => $ids[1], "url" => url()->full()]);
+        $params = $request->all();
+        $params["mgv"] = $key;
+        $url = route("resultpage", $params);
+
+        echo (view('layouts.resultpage.unverifiedResultPage')
+                ->with('url', $url)
+                ->render());
 
     }
 }

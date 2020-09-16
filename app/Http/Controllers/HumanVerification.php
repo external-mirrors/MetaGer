@@ -286,7 +286,7 @@ class HumanVerification extends Controller
             $redis->expire($key, 30);
         });
 
-        return response("", 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
     }
 
     public static function block(Request $request)

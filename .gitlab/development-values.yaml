@@ -14,8 +14,8 @@ resources:
     memory: 1Gi
 podDisruptionBudget:
   enabled: true
-  minAvailable: 1
-  maxUnavailable:
+  minAvailable:
+  maxUnavailable: 0
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics

@@ -39,8 +39,8 @@ RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /et
     sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/user = nobody/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/group = nobody/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
-    sed -i 's/pm.max_children = 5/pm.max_children = 100/g' /etc/php7/php-fpm.d/www.conf && \
-    sed -i 's/pm.start_servers = 2/pm.start_servers = 5/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/pm.max_children = 5/pm.max_children = 1024/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/pm.start_servers = 2/pm.start_servers = 50/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.min_spare_servers = 1/pm.min_spare_servers = 5/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/pm.max_spare_servers = 3/pm.max_spare_servers = 25/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/user = www-data/user = nginx/g' /etc/php7/php-fpm.d/www.conf && \

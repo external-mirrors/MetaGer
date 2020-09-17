@@ -3,7 +3,7 @@ service:
   internalPort: 80
 hpa:
   enabled: true
-  minReplicas: 2
+  minReplicas: 1
   maxReplicas: 100
 resources:
   limits:
@@ -14,8 +14,8 @@ resources:
     memory: 1Gi
 podDisruptionBudget:
   enabled: true
-  minAvailable: 4
-  maxUnavailable:
+  minAvailable:
+  maxUnavailable: 0
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics

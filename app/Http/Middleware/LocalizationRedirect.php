@@ -19,27 +19,31 @@ class LocalizationRedirect
         $locale = LaravelLocalization::getCurrentLocale();
         $host = $request->getHttpHost();
 
-
         // We only redirect to the TLDs in the production version and exclude our onion domain
-        if(env("APP_ENV", "") !== "production" || $host === "b7cxf4dkdsko6ah2.onion" || $request->is('metrics')){
+        if (env("APP_ENV", "") !== "production" || $host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is('metrics')) {
             return $next($request);
+        }
+
+        // Redirect from v2 onion to v3 onion
+        if ($host === "b7cxf4dkdsko6ah2.onion") {
+            return redirect("http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion");
         }
 
         $url = url()->full();
         $url = preg_replace("/^http:\/\//", "https://", $url);
-        if($host !== "metager.de" && $locale == "de"){
+        if ($host !== "metager.de" && $locale == "de") {
             $url = str_replace($host, "metager.de", $url);
             $url = preg_replace("/^(https:\/\/[^\/]+)\/de/", "$1", $url);
             return redirect($url);
         }
 
-        if($host !== "metager.es" && $locale == "es"){
+        if ($host !== "metager.es" && $locale == "es") {
             $url = str_replace($host, "metager.es", $url);
             $url = preg_replace("/^(https:\/\/[^\/]+)\/es/", "$1", $url);
             return redirect($url);
         }
 
-        if($host !== "metager.org" && $locale == "en"){
+        if ($host !== "metager.org" && $locale == "en") {
             $url = str_replace($host, "metager.org", $url);
             $url = preg_replace("/^(https:\/\/[^\/]+)\/en/", "$1", $url);
             return redirect($url);

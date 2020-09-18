@@ -899,7 +899,6 @@ class MetaGer
 
     public function parseFormData(Request $request)
     {
-
         # Sichert, dass der request in UTF-8 formatiert ist
         if ($request->input('encoding', 'utf8') !== "utf8") {
             # In früheren Versionen, als es den Encoding Parameter noch nicht gab, wurden die Daten in ISO-8859-1 übertragen
@@ -909,6 +908,8 @@ class MetaGer
             }
             $request->replace($input);
         }
+        $this->headerPrinted = $request->input("headerPrinted", false);
+        $request->request->remove("headerPrinted");
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
@@ -1825,6 +1826,11 @@ class MetaGer
     public function isFramed()
     {
         return $this->framed;
+    }
+
+    public function isHeaderPrinted()
+    {
+        return $this->headerPrinted;
     }
 
     /**

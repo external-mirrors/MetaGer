@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Captcha;
 use Carbon;
+use Cookie;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -21,7 +22,17 @@ class HumanVerification extends Controller
         if ($url != null) {
             $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
         } else {
-            $url = $request->input('url');
+            $url = $request->input('url', url("/"));
+        }
+
+        $protocol = "http://";
+
+        if ($request->secure()) {
+            $protocol = "https://";
+        }
+
+        if (stripos($url, $protocol . $request->getHttpHost()) !== 0) {
+            $url = url("/");
         }
 
         $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
@@ -40,7 +51,6 @@ class HumanVerification extends Controller
             $key = strtolower($key);
 
             if (!$hasher->check($key, $lockedKey)) {
-                sleep(\random_int(1, 8));
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);
@@ -67,7 +77,7 @@ class HumanVerification extends Controller
                 }
             }
         }
-        sleep(\random_int(1, 8));
+
         $captcha = Captcha::create("default", true);
         $user["lockedKey"] = $captcha["key"];
         HumanVerification::saveUser($user);
@@ -146,9 +156,9 @@ class HumanVerification extends Controller
         $ip = $request->ip();
         $id = "";
         if (HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
+            $id = hash("sha1", "999.999.999.999");
         } else {
-            $id = hash("sha512", $ip);
+            $id = hash("sha1", $ip);
         }
 
         $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
@@ -185,9 +195,9 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (HumanVerification::couldBeSpammer($ip)) {
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         if ($uid === $id) {
@@ -217,11 +227,11 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", "999.999.999.999");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $id = hash("sha512", $ip);
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", $ip);
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
@@ -240,11 +250,11 @@ class HumanVerification extends Controller
         $uid = "";
         $ip = $request->ip();
         if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha512", "999.999.999.999");
-            $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", "999.999.999.999");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
         } else {
-            $id = hash("sha512", $ip);
-            $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+            $id = hash("sha1", $ip);
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }
 
         $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
@@ -260,5 +270,85 @@ class HumanVerification extends Controller
 
         HumanVerification::saveUser($user);
         return redirect('admin/bot');
+    }
+
+    public function browserVerification(Request $request)
+    {
+        $key = $request->input("id", "");
+
+        // Verify that key is a md5 checksum
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+            abort(404);
+        }
+
+        Redis::connection("cache")->pipeline(function ($redis) use ($key) {
+            $redis->rpush($key, true);
+            $redis->expire($key, 30);
+        });
+
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+    }
+
+    public static function block(Request $request)
+    {
+        $prefix = "humanverification";
+
+        $ip = $request->ip();
+        $id = "";
+        $uid = "";
+        if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
+            $id = hash("sha1", "999.999.999.999");
+            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+        } else {
+            $id = hash("sha1", $ip);
+            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
+        }
+
+        /**
+         * If the user sends a Password or a key
+         * We will not verificate the user.
+         * If someone that uses a bot finds this out we
+         * might have to change it at some point.
+         */
+        if ($request->filled('password') || $request->filled('key') || Cookie::get('key') !== null || $request->filled('appversion') || !env('BOT_PROTECTION', false)) {
+            $update = false;
+            return $next($request);
+        }
+
+        # Get all Users of this IP
+        $users = Cache::get($prefix . "." . $id, []);
+
+        $user = [];
+        $changed = false;
+        if (empty($users[$uid])) {
+            $user = [
+                'uid' => $uid,
+                'id' => $id,
+                'unusedResultPages' => 0,
+                'whitelist' => false,
+                'locked' => true,
+                "lockedKey" => "",
+                "expiration" => now()->addWeeks(2),
+            ];
+            $changed = true;
+        } else {
+            $user = $users[$uid];
+            if (!$user["locked"]) {
+                $user["locked"] = true;
+                $changed = true;
+            }
+        }
+
+        if ($user["whitelist"]) {
+            $user["expiration"] = now()->addWeeks(2);
+        } else {
+            $user["expiration"] = now()->addHours(72);
+        }
+        if ($changed) {
+            $userList = Cache::get($prefix . "." . $user["id"], []);
+            $userList[$user["uid"]] = $user;
+            Cache::put($prefix . "." . $user["id"], $userList, 2 * 7 * 24 * 60 * 60);
+        }
+        return [$id, $uid];
     }
 }

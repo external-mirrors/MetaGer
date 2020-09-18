@@ -8,18 +8,17 @@
     ],
     "license": "MIT",
     "require": {
-        "laravel/framework": "5.8.*",
         "php": "^7.1.3",
+        "endclothing/prometheus_client_php": "^1.0",
         "fideloper/proxy": "^4.0",
-        "laravel/tinker": "^1.0",
         "globalcitizen/php-iban": "^2.6",
         "jenssegers/agent": "^2.6",
-        "mcamara/laravel-localization": "^1.3",
+        "laravel/framework": "5.8.*",
+        "laravel/tinker": "^1.0",
+        "mcamara/laravel-localization": "dev-master#13f418e481ed06f482e4fca87ec5ff67c2949373",
         "mews/captcha": "^2.2",
-        "monospice/laravel-redis-sentinel-drivers": "^2.6",
         "predis/predis": "^1.1",
-        "symfony/dom-crawler": "^4.1",
-        "endclothing/prometheus_client_php": "^1.0"
+        "symfony/dom-crawler": "^4.1"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

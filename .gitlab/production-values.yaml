@@ -2,7 +2,8 @@ service:
   externalPort: 80
   internalPort: 80
 hpa:
-  minReplicas: 5
+  enabled: true
+  minReplicas: 1
   maxReplicas: 100
 resources:
   limits:
@@ -13,8 +14,8 @@ resources:
     memory: 1Gi
 podDisruptionBudget:
   enabled: true
-  minAvailable: 4
-  maxUnavailable:
+  minAvailable:
+  maxUnavailable: 0
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics
@@ -24,6 +25,14 @@ ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline'; script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self' 'unsafe-inline'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self'; worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self'; base-uri; manifest-src; plugin-types; report-uri; report-to";
+      more_set_headers "X-Frame-Options: sameorigin";
+      more_set_headers "X-Content-Type-Options: nosniff";
+      more_set_headers "ReferrerPolicy: origin";
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+      if ($arg_out = "results-with-style") {
+        more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
+      }
       if ($host = "www.metager.de") {
           return 301 https://metager.de$request_uri;
       }

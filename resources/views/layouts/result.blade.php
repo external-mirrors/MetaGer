@@ -16,8 +16,8 @@
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/partnershops") }}" target="_blank" rel="noopener">
-					<span class="partnershop-info">{!! trans('result.options.4') !!}</span>
+				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/partnershops") }}" target="_blank" class="partnershop-info" rel="noopener">
+					<span>{!! trans('result.options.4') !!}</span>
 				</a>
 			@endif
 		</div>
@@ -49,7 +49,7 @@
 	</div>
 	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle" style="display: none">
 	<div class="result-footer">
-		<a class="result-open" href="{{ $result->link }}" target="_self" rel="noopener">
+		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif rel="noopener">
 			{!! trans('result.options.7') !!}
 		</a>
 		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
@@ -75,19 +75,19 @@
 					</li>
 					@if(strlen($metager->getSite()) === 0)
 						<li>
-							<a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}">
+							<a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
 								<nobr>{!! trans('result.options.1') !!}</nobr>
 							</a>
 						</li>
 					@endif
 					<li>
-						<a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}">
+						<a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
 							<nobr>{!! trans('result.options.2', ['host' => $result->strippedHost]) !!}</nobr>
 						</a>
 					</li>
 					@if( $result->strippedHost !== $result->strippedDomain )
 						<li>
-							<a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}">
+							<a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
 								<nobr>{!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}</nobr>
 							</a>
 						</li>

@@ -3,10 +3,10 @@
 	<div id="research-bar-container">
 		<div id="research-bar">
 			<div id="header-logo">
-				<a class="screen-large" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" tabindex="4">
+				<a class="screen-large" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif tabindex="4">
 					<h1><img src="/img/metager.svg" alt="MetaGer" /></h1>
 				</a>
-				<a class="screen-small" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+				<a class="screen-small" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
 					<h1><img src="/img/metager-schloss-orange.svg" alt="MetaGer" /></h1>
 				</a>
 			</div>

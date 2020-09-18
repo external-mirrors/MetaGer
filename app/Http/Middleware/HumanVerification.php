@@ -3,10 +3,8 @@
 namespace App\Http\Middleware;
 
 use Cache;
-use Captcha;
 use Closure;
 use Cookie;
-use Illuminate\Http\Response;
 use Log;
 use URL;
 
@@ -30,11 +28,11 @@ class HumanVerification
             $id = "";
             $uid = "";
             if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-                $id = hash("sha512", "999.999.999.999");
-                $uid = hash("sha512", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+                $id = hash("sha1", "999.999.999.999");
+                $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
             } else {
-                $id = hash("sha512", $ip);
-                $uid = hash("sha512", $ip . $_SERVER["AGENT"] . "uid");
+                $id = hash("sha1", $ip);
+                $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
             }
             unset($_SERVER["AGENT"]);
 
@@ -101,19 +99,7 @@ class HumanVerification
 
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
-                sleep(\random_int(1, 8));
-                $captcha = Captcha::create("default", true);
-                $user["lockedKey"] = $captcha["key"];
-                \App\PrometheusExporter::CaptchaShown();
-                return
-                new Response(
-                    view('humanverification.captcha')
-                        ->with('title', "Bestätigung erforderlich")
-                        ->with('uid', $uid)
-                        ->with('id', $id)
-                        ->with('url', url()->full())
-                        ->with('image', $captcha["img"])
-                );
+                return redirect()->route('captcha', ["id" => $id, "uid" => $uid, "url" => url()->full()]);
             }
 
             $user["unusedResultPages"]++;

@@ -51,6 +51,8 @@ class BrowserVerification
         $answer = boolval(Redis::connection("cache")->blpop($key, 2));
 
         if ($answer === true) {
+            echo (view('layouts.resultpage.verificationHeader')->render());
+            flush();
             $request->request->add(["headerPrinted" => true]);
             return $next($request);
         }

@@ -1,3 +1,5 @@
+@clippathHeight: 30px;
+
 :root { // the default is for screensizes bigger than 12000px
     --screen-mobile: 550px;
     --screen-extrasmall: 760px;
@@ -115,6 +117,9 @@ footer {
     position: relative;
     align-items:center;
     min-height: 70vh;
+    padding-bottom: @clippathHeight;
+    padding-top: @clippathHeight;
+    margin-top: -@clippathHeight;
 }
 
 #story-container > section > h1 { //sets the heading for all sections
@@ -144,6 +149,10 @@ footer {
     object-fit: contain;
 }
 
+footer {
+    background-color: transparent;
+}
+
 // following lines set the background and heading color of each section
 #story-privacy {
     background-color: #EEEEEE;
@@ -152,6 +161,7 @@ footer {
 #story-ngo {
     grid-area: "icn-ngo";
     background-color: #ffffff;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-ngo > h1 {
@@ -161,6 +171,7 @@ footer {
 #story-diversity {
     grid-area: "icn-diversity";
     background-color: #edfdff;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-diversity > h1 {
@@ -170,6 +181,7 @@ footer {
 #story-eco {
     grid-area: "icn-eco";
     background-color: rgb(227, 255, 233);
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-eco > h1 {
@@ -180,6 +192,8 @@ footer {
 }
 #story-container #story-plugin { 
     min-height: 60vh;
+    background-color: white;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 .story-links {
@@ -230,7 +244,7 @@ html{
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 150px auto;
+        grid-template-columns: 200px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -247,6 +261,7 @@ html{
 
     #story-container > section .story-icon {
         padding: 0px;
+        text-align: center;
     }
     .story-links {
         grid-area: story-links;
@@ -261,6 +276,21 @@ html{
     }
     #story-container #story-plugin {
         min-height: 50vh;
+    }
+
+    #story-ngo {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    #story-diversity {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    #story-eco {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    #story-container #story-plugin {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
     }
 }
 
@@ -389,6 +419,7 @@ html{
     #story-container #story-plugin > h1 {
         font-size:35px;
     }
+
     #story-container #story-plugin {
         min-height: 80vh;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Redis;
+use Jenssegers\Agent\Agent;
 
 class BrowserVerification
 {
@@ -24,6 +25,14 @@ class BrowserVerification
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
             return $next($request);
+        } else {
+            $whitelist = config("metager.metager.browserverification_whitelist");
+            $agent = new Agent();
+            foreach ($whitelist as $browser) {
+                if ($agent->match($browser)) {
+                    return $next($request);
+                }
+            }
         }
 
         $mgv = $request->input('mgv', "");

@@ -1,7 +1,7 @@
 	<div id="options">
 		<div id="toggle-box">
 			<div id="settings">
-				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $metager->getFokus(), "url" => url()->full()])) }}">
+				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())])) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
 					<i class="fas fa-cogs"></i>
 					@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
 					@lang('metaGer.settings')&hellip;
@@ -17,7 +17,7 @@
 				@endif
 				@if($metager->getManualParameterFilterSet())
 				<div id="options-reset">
-					<a href="{{$metager->generateSearchLink($metager->getFokus())}}"><nobr>{{ trans('metaGer.filter.reset') }}</nobr></a>
+					<a href="{{$metager->generateSearchLink($metager->getFokus())}}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif><nobr>{{ trans('metaGer.filter.reset') }}</nobr></a>
 				</div>
 				@endif
 			</div>

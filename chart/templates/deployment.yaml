@@ -1,5 +1,5 @@
 {{- if not .Values.application.initializeCommand -}}
-apiVersion: extensions/v1beta1
+apiVersion: {{ default "extensions/v1beta1" .Values.deploymentApiVersion }}
 kind: Deployment
 metadata:
   name: {{ template "trackableappname" . }}
@@ -14,7 +14,19 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+{{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
+  selector:
+    matchLabels:
+      app: {{ template "appname" . }}
+      track: "{{ .Values.application.track }}"
+      tier: "{{ .Values.application.tier }}"
+      release: {{ .Release.Name }}
+{{- end }}
   replicas: {{ .Values.replicaCount }}
+{{- if .Values.strategyType }}
+  strategy:
+    type: {{ .Values.strategyType | quote }}
+{{- end }}
   template:
     metadata:
       annotations:
@@ -30,19 +42,8 @@ spec:
         tier: "{{ .Values.application.tier }}"
         release: {{ .Release.Name }}
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: worker
-                operator: NotIn
-                values:
-                - temp
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
-      securityContext:
-        fsGroup: 2000
       volumes:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
@@ -62,8 +63,10 @@ spec:
       - name: blacklist-ad
         secret:
           secretName: metager-ad-blacklist
+      - name: metager-config
+        configMap:
+          name: metager
       containers:
-      # Main PHP-FPM Container
       - name: {{ .Chart.Name }}-phpfpm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -93,6 +96,9 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         volumeMounts:
+        - name: metager-config
+          mountPath: /html/config/metager
+          readOnly: true
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false

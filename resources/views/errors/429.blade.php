@@ -1,6 +1,6 @@
 @extends('layouts.subPages')
 
-@section('title', 'Fehler 404 - Seite nicht gefunden')
+@section('title', trans('429.title'))
 
 @section('content')
 	<style>
@@ -9,6 +9,6 @@
 			justify-content: center;
 		}
 	</style>
-	<h1>{{ trans('404.title') }}</h1>
-	<p>{{ trans('404.text') }}</p>
+	<h1>{{ trans('429.title') }}</h1>
+	<p>{{ trans('429.text') }}</p>
 @endsection

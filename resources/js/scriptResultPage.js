@@ -8,9 +8,13 @@ function botProtection() {
   $('.result').find('a').click(function () {
     var link = $(this).attr('href');
     var newtab = false;
+    var top = false;
     if ($(this).attr('target') == '_blank') {
       newtab = true;
+    } else if ($(this).attr('target') == "_top") {
+      top = true;
     }
+
     $.ajax({
       url: '/img/cat.jpg',
       type: 'post',
@@ -20,8 +24,13 @@ function botProtection() {
       timeout: 2000
     })
       .always(function () {
-        if (!newtab)
-          document.location.href = link;
+        if (!newtab) {
+          if (top) {
+            window.top.location.href = link;
+          } else {
+            document.location.href = link;
+          }
+        }
       });
     if (!newtab)
       return false;

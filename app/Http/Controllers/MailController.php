@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use LaravelLocalization;
 use Mail;
+use Log;
 use Validator;
-use \PHP_IBAN\IBAN;
-use \PHP_IBAN\IBANCountry;
+use \IBAN;
+use \IBANCountry;
 
 class MailController extends Controller
 {
@@ -148,6 +149,7 @@ class MailController extends Controller
                 $messageType = "success";
                 $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
             } catch (\Swift_TransportException $e) {
+                Log::error($e->getMessage());
                 $messageType = "error";
                 $messageToUser = 'Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: office@suma-ev.de, damit wir uns darum kümmern können.';
             }

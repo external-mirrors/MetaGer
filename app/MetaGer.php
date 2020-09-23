@@ -723,8 +723,8 @@ class MetaGer
                 if (!empty($filter->sumas->$engineName)) {
                     if (empty($availableFilter[$filterName])) {
                         $availableFilter[$filterName] = $filter;
-                        foreach($availableFilter[$filterName]->values as $key => $value){
-                            if($key !== "nofilter"){
+                        foreach ($availableFilter[$filterName]->values as $key => $value) {
+                            if ($key !== "nofilter") {
                                 unset($availableFilter[$filterName]->values->{$key});
                             }
                         }
@@ -749,8 +749,8 @@ class MetaGer
                         }
                         if (empty($availableFilter[$filterName])) {
                             $availableFilter[$filterName] = $filter;
-                            foreach($availableFilter[$filterName]->values as $key => $value){
-                                if($key !== "nofilter"){
+                            foreach ($availableFilter[$filterName]->values as $key => $value) {
+                                if ($key !== "nofilter") {
                                     unset($availableFilter[$filterName]->values->{$key});
                                 }
                             }
@@ -899,7 +899,6 @@ class MetaGer
 
     public function parseFormData(Request $request)
     {
-
         # Sichert, dass der request in UTF-8 formatiert ist
         if ($request->input('encoding', 'utf8') !== "utf8") {
             # In früheren Versionen, als es den Encoding Parameter noch nicht gab, wurden die Daten in ISO-8859-1 übertragen
@@ -909,6 +908,8 @@ class MetaGer
             }
             $request->replace($input);
         }
+        $this->headerPrinted = $request->input("headerPrinted", false);
+        $request->request->remove("headerPrinted");
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
@@ -928,6 +929,13 @@ class MetaGer
         # Sucheingabe
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
+
+        if ($request->filled("mgv")) {
+            $this->framed = true;
+        } else {
+            $this->framed = false;
+        }
+
         # IP
         $this->ip = $this->anonymizeIp($request->ip());
 
@@ -953,16 +961,18 @@ class MetaGer
         # Sprüche
         if (!App::isLocale("de") || (\Cookie::has($this->getFokus() . '_setting_zitate') && \Cookie::get($this->getFokus() . '_setting_zitate') === "off")) {
             $this->sprueche = "off";
-        }else{
+        } else {
             $this->sprueche = "on";
         }
-        if($request->filled("zitate") && $request->input('zitate') === "on" || $request->input('zitate') === "off"){
+        if ($request->filled("zitate") && $request->input('zitate') === "on" || $request->input('zitate') === "off") {
             $this->sprueche = $request->input('quotes');
         }
-        
+
         $this->newtab = $request->input('newtab', 'on');
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
+        } else if ($this->framed) {
+            $this->newtab = "_top";
         } else {
             $this->newtab = "_self";
         }
@@ -1020,19 +1030,19 @@ class MetaGer
         $this->request = $request->replace($request->except(['verification_id', 'uid', 'verification_count']));
 
         // Disable freshness filter if custom freshness filter isset
-        if($this->request->filled("ff") && $this->request->filled("f")){
+        if ($this->request->filled("ff") && $this->request->filled("f")) {
             $this->request = $this->request->replace($this->request->except(["f"]));
         }
         // Remove custom time filter if either of the dates isn't set or is not a date
-        if($this->request->input("fc") === "on"){
-            if(!$this->request->filled("ff") || !$this->request->filled("ft")){
+        if ($this->request->input("fc") === "on") {
+            if (!$this->request->filled("ff") || !$this->request->filled("ft")) {
                 $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-            }else{
+            } else {
                 $ff = $this->request->input("ff");
                 $ft = $this->request->input("ft");
-                if(!preg_match("/^\d{4}-\d{2}-\d{2}$/", $ff) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $ft)){
+                if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $ff) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $ft)) {
                     $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-                }else{
+                } else {
                     // Now Check if there is something wrong with the dates
                     $from = $this->request->input("ff");
                     $to = $this->request->input("ft");
@@ -1040,21 +1050,21 @@ class MetaGer
                     $from = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
                     $to = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
 
-                    if($from > Carbon::now()){
+                    if ($from > Carbon::now()) {
                         $from = Carbon::now();
                         $changed = true;
                     }
-                    if($to > Carbon::now()){
+                    if ($to > Carbon::now()) {
                         $to = Carbon::now();
                         $changed = true;
                     }
-                    if($from > $to){
+                    if ($from > $to) {
                         $tmp = $to;
                         $to = $from;
                         $from = $tmp;
                         $changed = true;
                     }
-                    if($changed){
+                    if ($changed) {
                         $oldParameters = $this->request->all();
                         $oldParameters["ff"] = $from->format("Y-m-d");
                         $oldParameters["ft"] = $to->format("Y-m-d");
@@ -1062,7 +1072,7 @@ class MetaGer
                     }
                 }
             }
-        }else if($this->request->filled("ff") || $this->request->filled("ft")){
+        } else if ($this->request->filled("ff") || $this->request->filled("ft")) {
             $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
         }
 
@@ -1170,7 +1180,7 @@ class MetaGer
             if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
-                $this->parameterFilter[$filterName] = $filter;
+            $this->parameterFilter[$filterName] = $filter;
                 $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
@@ -1349,7 +1359,7 @@ class MetaGer
     public function nextSearchLink()
     {
         if (isset($this->next) && isset($this->next['engines']) && count($this->next['engines']) > 0) {
-            $requestData = $this->request->except(['page', 'out']);
+            $requestData = $this->request->except(['page', 'out', 'submit-query', 'mgv']);
             if ($this->request->input('out', '') !== "results" && $this->request->input('out', '') !== '') {
                 $requestData["out"] = $this->request->input('out');
             }
@@ -1495,7 +1505,7 @@ class MetaGer
 
     public function generateSearchLink($fokus, $results = true)
     {
-        $except = ['page', 'next', 'out'];
+        $except = ['page', 'next', 'out', 'submit-query', 'mgv'];
         # Remove every Filter
         foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
             $except[] = $filter->{"get-parameter"};
@@ -1509,7 +1519,7 @@ class MetaGer
 
     public function generateEingabeLink($eingabe)
     {
-        $except = ['page', 'next', 'out', 'eingabe'];
+        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv'];
         $requestData = $this->request->except($except);
 
         $requestData['eingabe'] = $eingabe;
@@ -1528,7 +1538,7 @@ class MetaGer
     public function generateSiteSearchLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
         $requestData['eingabe'] .= " site:$host";
         $requestData['focus'] = "web";
         $link = action('MetaGerSearch@search', $requestData);
@@ -1538,7 +1548,7 @@ class MetaGer
     public function generateRemovedHostLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
         $requestData['eingabe'] .= " -site:$host";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;
@@ -1547,7 +1557,7 @@ class MetaGer
     public function generateRemovedDomainLink($domain)
     {
         $domain = urlencode($domain);
-        $requestData = $this->request->except(['page', 'out', 'next']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
         $requestData['eingabe'] .= " -site:*.$domain";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;
@@ -1812,6 +1822,17 @@ class MetaGer
     {
         return $this->engines;
     }
+
+    public function isFramed()
+    {
+        return $this->framed;
+    }
+
+    public function isHeaderPrinted()
+    {
+        return $this->headerPrinted;
+    }
+
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */

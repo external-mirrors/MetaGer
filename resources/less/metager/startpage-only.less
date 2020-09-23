@@ -41,7 +41,7 @@
     display: grid; 
     border-width: 1px;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 8px;
     max-width: 300px;
     justify-items: center;
     grid-template-columns: 25% 25% 25% 25% ;
@@ -125,6 +125,8 @@ footer {
 #story-container > section > h1 { //sets the heading for all sections
     grid-area: heading;
     font-size: 80px;
+    margin: 0;
+    padding: 0 16px;
 }
 
 #story-container > section > p { // sets all paragraphs for all sections
@@ -136,15 +138,15 @@ footer {
 }
 #story-container > section .story-icon { // sets all icons for all sections
     grid-area: story-icon;
-    padding: 20px;
-    text-align: right;
+    padding: 16px;
+    text-align: center;
 }
 
 .story-icon img { // defines the story-icons in the sections
     height: 150px;
     max-height: 300px;
     max-width: 300px;
-    width:100%;
+    width:150px;
     
     object-fit: contain;
 }
@@ -240,11 +242,11 @@ html{
     }
     div#story-container p{
         font-size: 25px;
-        padding-left: 15px;
+        padding-left: 16px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 200px auto;
+        grid-template-columns: 132px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -255,18 +257,17 @@ html{
     }
 
     .story-icon img {
-        height: 150px;
-        width: 150px;
+        height: 100px;
+        width: 100px;
     }
 
     #story-container > section .story-icon {
-        padding: 0px;
-        text-align: center;
+        text-align: left;
     }
     .story-links {
         grid-area: story-links;
         display: flex;
-        padding: 15px;
+        padding: 16px;
         list-style: none;
         gap: 1em;
         font-size: 10px;
@@ -300,13 +301,13 @@ html{
     }
     div#story-container p{
         font-size: 25px;
-        padding-left: 15px;
+        padding-left: 8px;
         padding-right: 10vw;
       }
       .story-links {
         grid-area: story-links;
         display: flex;
-        padding: 15px;
+        padding: 8px;
         list-style: none;
         gap: 1em;
       }
@@ -328,11 +329,11 @@ html{
     }
     div#story-container p{
         font-size: 20px;
-        padding-left: 15px;
+        padding-left: 8px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 80px auto;
+        grid-template-columns: 66px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -342,19 +343,20 @@ html{
         min-height: 80vh;
     }
 
-    .story-icon img {
-        height: 80px;
-        width: 80px;
+    #story-container > section .story-icon {
+        padding: 8px;
     }
 
-    #story-container > section .story-icon {
-        padding: 0px;
+    .story-icon img {
+        height: 50px;
+        width: 50px;
     }
+
     .story-links {
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        padding: 15px;
+        padding: 8px;
         list-style: none;
         gap: 20px;
         font-size: 5px;
@@ -380,11 +382,11 @@ html{
     }
     div#story-container p{
         font-size: 30px;
-        padding-left: 15px;
+        padding-left: 16px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 80px auto;
+        grid-template-columns: 112px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -399,14 +401,11 @@ html{
         width: 80px;
     }
 
-    #story-container > section .story-icon {
-        padding: 0px;
-    }
     .story-links {
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        padding: 15px;
+        padding: 16px;
         list-style: none;
         gap: 20px;
         font-size: 5px;

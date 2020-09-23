@@ -9,11 +9,11 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg841"
    version="1.1"
-   viewBox="0 0 26.458337 26.458333"
-   height="100"
-   width="100"
-   sodipodi:docname="regenbogen.svg"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+   viewBox="0 0 25.675195 12.754608"
+   height="48.206394"
+   width="97.040092"
+   sodipodi:docname="rainbow.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -23,22 +23,27 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1848"
-     inkscape:window-height="1016"
+     inkscape:window-width="1853"
+     inkscape:window-height="1052"
      id="namedview9"
      showgrid="false"
-     inkscape:zoom="9.1218969"
-     inkscape:cx="67.30092"
-     inkscape:cy="61.688054"
-     inkscape:window-x="1992"
-     inkscape:window-y="27"
+     inkscape:zoom="4.5609485"
+     inkscape:cx="13.629792"
+     inkscape:cy="35.445092"
+     inkscape:window-x="1987"
+     inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="layer1"
      units="px"
      inkscape:snap-bbox="true"
      inkscape:bbox-paths="true"
      inkscape:bbox-nodes="true"
-     inkscape:snap-page="true" />
+     inkscape:snap-page="true"
+     inkscape:pagecheckerboard="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <defs
      id="defs835" />
   <metadata
@@ -54,7 +59,7 @@
     </rdf:RDF>
   </metadata>
   <g
-     transform="translate(-32.311191,-90.813991)"
+     transform="translate(-32.702761,-97.665854)"
      id="layer1">
     <g
        id="g833"

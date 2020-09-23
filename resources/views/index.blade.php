@@ -26,7 +26,7 @@
     <div id="story-container">
       <section id="story-privacy">
         <h1>{{ trans('mg-story.privacy.title') }}</h1>
-        <ul class="story-links"> 
+        <ul class="story-links">
        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "datenschutz") }}">{{ trans('mg-story.btn-data-protection') }}</a></li>
         </ul>
@@ -52,7 +52,7 @@
         <h1>{{ trans('mg-story.diversity.title') }}</h1>
         <ul class="story-links">
         <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
-        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank">{{ trans('mg-story.btn-mg-code') }}</a></li>
+        <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank"><nobr>{{ trans('mg-story.btn-mg-code') }}</nobr></a></li>
         <!--<li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>-->
         </ul>
         <figure class="story-icon">
@@ -60,7 +60,7 @@
         </figure>
         <p>{!! trans('mg-story.diversity.p') !!}</p>
       </section>
-  
+
       <section id="story-eco">
         <h1>{{ trans('mg-story.eco.title') }}</h1>
         <ul class="story-links">
@@ -80,11 +80,11 @@
         <figure class="story-icon">
           <picture>
             <source media="(max-width: 760px)" srcset="/img/App.svg">
-                    <img src="/img/story-plugin.svg" alt="{{ trans('mg-story.plugin.image.alt') }}">  
+                    <img src="/img/story-plugin.svg" alt="{{ trans('mg-story.plugin.image.alt') }}">
           </picture>
 
         </figure>
         <p>{{ trans('mg-story.plugin.p') }}</p>
       </section>
-    </div> 
+    </div>
 @endsection

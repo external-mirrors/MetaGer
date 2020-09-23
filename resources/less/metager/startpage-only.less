@@ -77,15 +77,32 @@
     grid-row-start: 3;
 }
 
+#scroll-link > a:not(.four-reasons) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: rgb(220, 233, 234); 
+    &>img {
+        object-fit: contain;
+        max-width: 60%;
+        max-height: 60%;
+    }
+}
+
 #scroll-link img, #scroll-link picture { //creates the circle around the story-icons 
-    max-width: 40px;
-    max-height: 40px;
+    /*width: 40px;
+    height: 40px;
     grid-row-start: 3;
     background-image: url("/img/circle.svg");
     background-position: center;
     background-size: cover;
     padding: 7px;
     margin: -7px;
+    object-fit: contain;*/
 }
 a.four-reasons { // sets the '4 reasons to use MetaGer' link
     grid-area: scr-link;
@@ -205,7 +222,13 @@ footer {
     padding: 0px;
     list-style: none;
     gap: 2em;
-
+    &>li {
+        min-width: 150px;
+        &>a {
+            display: block;
+            text-align: center;
+        }
+    }
 } 
 a.story-button { // sets the story-button for all sections
     padding: 12px;

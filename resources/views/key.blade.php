@@ -11,6 +11,23 @@
         <p>{{ trans('key.p2') }}</p>
         <p>{{ trans('key.p3') }}</p>
         <p>{{ trans('key.p4') }}</p>
+        <p>{{ trans('key.p5') }}</p>
+        <ol>
+            <li>{!! trans('key.li1', ["url" =>
+                    route("startpage", [
+                        "key" =>
+                            empty(Cookie::get('key')) ?
+                                "enter_key_here" :
+                                Cookie::get('key')
+                            ])])!!} als Startseite im Browser ein.</li>
+            <li>@lang('key.li2', ["url" =>
+                    route("resultpage", [
+                        "key" =>
+                            empty(Cookie::get('key')) ?
+                                "enter_key_here" :
+                                Cookie::get('key')
+                        ]) . "&eingabe=%s"])</li>
+        </ol>
     </div>
     <div class="section">
         <div id="form-wrapper">

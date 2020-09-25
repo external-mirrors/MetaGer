@@ -8,7 +8,10 @@
 			<img src="/img/metager.svg" alt="MetaGer" />
 		</a>
 	</h1>
-	@include('parts.searchbar', ['class' => 'startpage-searchbar'])
+  @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+  @if(Request::filled('key'))
+  <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
+  @endif
 	<div id="plugin-btn-div">
 		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
 	</div>

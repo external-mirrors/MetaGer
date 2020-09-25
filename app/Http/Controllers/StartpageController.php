@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App;
-use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;
@@ -80,12 +79,15 @@ class StartpageController extends Controller
     public function loadPlugin(Request $request, $locale = "de")
     {
         $link = action('MetaGerSearch@search', []);
-        $key = Cookie::get('key');
-
+        $link .= "?";
+        $link .= "eingabe={searchTerms}";
+        $key = $request->input('key', '');
+        if (!empty($key)) {
+            $link .= "&key=" . urlencode($key);
+        }
         $response = Response::make(
             view('plugin')
                 ->with('link', $link)
-                ->with('key', $key)
             , "200");
         $response->header('Content-Type', "application/opensearchdescription+xml");
         return $response;

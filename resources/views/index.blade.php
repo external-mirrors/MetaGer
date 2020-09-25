@@ -14,13 +14,14 @@
     <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
 	</div>
     <div id="center-scroll-link">
-       <div id="scroll-link">
-    <a href="#story-privacy" class="four-reasons">{{ trans('mg-story.four-reasons') }}</a>
-    <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"></a>
-    <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"></a>
-    <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"></a>
-    <a href="#story-eco"title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"></a>
-  </div>
+      <div id="plugin" class="">
+      <h2>Ist MetaGer schon Ihre Standardsuchmaschine?</h2>
+      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> @lang("mg-story.privacy.title")</a>
+      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> @lang("mg-story.ngo.title")</a>
+      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> @lang("mg-story.diversity.title")</a>
+      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> @lang("mg-story.eco.title")</a>
+      <a id="story-plugin-link" href="#story-plugin">MetaGer Installieren</a>
+    </div>
     </div>
     </div>
     <div id="story-container">
@@ -87,4 +88,5 @@
         <p>{{ trans('mg-story.plugin.p') }}</p>
       </section>
     </div>
+
 @endsection

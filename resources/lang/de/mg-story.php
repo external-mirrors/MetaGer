@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'four-reasons' => 'Vier Gründe MetaGer zu nutzen',
+    'four-reasons' => 'Warum MetaGer?',
     'privacy.image.alt' => 'Sicherheitsschloss',
     'privacy.title' => 'Garantierte Privatsphäre',
     'ngo.title' => 'Gemeinnütziger Verein',

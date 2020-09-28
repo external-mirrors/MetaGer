@@ -37,9 +37,6 @@ mix
   .less("resources/less/font-awesome/solid.less", "public/css/fontawesome-solid.css", {
     strictMath: true
   })
-  .less("resources/less/bootstrap/bootstrap.less", "public/css/bootstrap.css", {
-    strictMath: true
-  })
   .less(
     "resources/less/metager/pages/key.less",
     "public/css/key.css", {

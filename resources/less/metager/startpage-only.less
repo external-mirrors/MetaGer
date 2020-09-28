@@ -1,3 +1,5 @@
+@clippathHeight: 30px;
+
 :root { // the default is for screensizes bigger than 12000px
     --screen-mobile: 550px;
     --screen-extrasmall: 760px;
@@ -39,7 +41,7 @@
     display: grid; 
     border-width: 1px;
     padding: 10px;
-    border-radius: 15px;
+    border-radius: 8px;
     max-width: 300px;
     justify-items: center;
     grid-template-columns: 25% 25% 25% 25% ;
@@ -75,16 +77,22 @@
     grid-row-start: 3;
 }
 
-#scroll-link img, #scroll-link picture { //creates the circle around the story-icons 
-    max-width: 40px;
-    max-height: 40px;
-    grid-row-start: 3;
-    background-image: url("/img/circle.svg");
-    background-position: center;
-    background-size: cover;
-    padding: 7px;
-    margin: -7px;
+#scroll-link > a:not(.four-reasons) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: rgb(220, 233, 234); 
+    &>img {
+        object-fit: contain;
+        max-width: 60%;
+        max-height: 60%;
+    }
 }
+
 a.four-reasons { // sets the '4 reasons to use MetaGer' link
     grid-area: scr-link;
     color: black;
@@ -115,11 +123,16 @@ footer {
     position: relative;
     align-items:center;
     min-height: 70vh;
+    padding-bottom: @clippathHeight;
+    padding-top: @clippathHeight;
+    margin-top: -@clippathHeight;
 }
 
 #story-container > section > h1 { //sets the heading for all sections
     grid-area: heading;
     font-size: 80px;
+    margin: 0;
+    padding: 0 16px;
 }
 
 #story-container > section > p { // sets all paragraphs for all sections
@@ -131,17 +144,21 @@ footer {
 }
 #story-container > section .story-icon { // sets all icons for all sections
     grid-area: story-icon;
-    padding: 20px;
-    text-align: right;
+    padding: 16px;
+    text-align: center;
 }
 
 .story-icon img { // defines the story-icons in the sections
     height: 150px;
     max-height: 300px;
     max-width: 300px;
-    width:100%;
+    width:150px;
     
     object-fit: contain;
+}
+
+footer {
+    background-color: transparent;
 }
 
 // following lines set the background and heading color of each section
@@ -152,6 +169,7 @@ footer {
 #story-ngo {
     grid-area: "icn-ngo";
     background-color: #ffffff;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-ngo > h1 {
@@ -161,6 +179,7 @@ footer {
 #story-diversity {
     grid-area: "icn-diversity";
     background-color: #edfdff;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-diversity > h1 {
@@ -170,6 +189,7 @@ footer {
 #story-eco {
     grid-area: "icn-eco";
     background-color: rgb(227, 255, 233);
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-eco > h1 {
@@ -180,6 +200,8 @@ footer {
 }
 #story-container #story-plugin { 
     min-height: 60vh;
+    background-color: white;
+    clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 .story-links {
@@ -189,7 +211,13 @@ footer {
     padding: 0px;
     list-style: none;
     gap: 2em;
-
+    &>li {
+        min-width: 150px;
+        &>a {
+            display: block;
+            text-align: center;
+        }
+    }
 } 
 a.story-button { // sets the story-button for all sections
     padding: 12px;
@@ -226,11 +254,11 @@ html{
     }
     div#story-container p{
         font-size: 25px;
-        padding-left: 15px;
+        padding-left: 16px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 150px auto;
+        grid-template-columns: 132px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -241,17 +269,17 @@ html{
     }
 
     .story-icon img {
-        height: 150px;
-        width: 150px;
+        height: 100px;
+        width: 100px;
     }
 
     #story-container > section .story-icon {
-        padding: 0px;
+        text-align: left;
     }
     .story-links {
         grid-area: story-links;
         display: flex;
-        padding: 15px;
+        padding: 16px;
         list-style: none;
         gap: 1em;
         font-size: 10px;
@@ -262,6 +290,21 @@ html{
     #story-container #story-plugin {
         min-height: 50vh;
     }
+
+    #story-ngo {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    #story-diversity {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    #story-eco {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
+    #story-container #story-plugin {
+        clip-path: polygon(0 0, 30% 0, 50% @clippathHeight, 70% 0, 100% 0, 100% 100%, 0 100%);
+    }
 }
 
 @media screen and (min-width: 1000px) and (max-width:1200px) { // changes the layout for screen sizes between 1000px and 12000px
@@ -270,13 +313,13 @@ html{
     }
     div#story-container p{
         font-size: 25px;
-        padding-left: 15px;
+        padding-left: 8px;
         padding-right: 10vw;
       }
       .story-links {
         grid-area: story-links;
         display: flex;
-        padding: 15px;
+        padding: 8px;
         list-style: none;
         gap: 1em;
       }
@@ -298,11 +341,11 @@ html{
     }
     div#story-container p{
         font-size: 20px;
-        padding-left: 15px;
+        padding-left: 8px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 80px auto;
+        grid-template-columns: 66px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -312,19 +355,20 @@ html{
         min-height: 80vh;
     }
 
-    .story-icon img {
-        height: 80px;
-        width: 80px;
+    #story-container > section .story-icon {
+        padding: 8px;
     }
 
-    #story-container > section .story-icon {
-        padding: 0px;
+    .story-icon img {
+        height: 50px;
+        width: 50px;
     }
+
     .story-links {
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        padding: 15px;
+        padding: 8px;
         list-style: none;
         gap: 20px;
         font-size: 5px;
@@ -350,11 +394,11 @@ html{
     }
     div#story-container p{
         font-size: 30px;
-        padding-left: 15px;
+        padding-left: 16px;
         padding-right: 10vw;
       }
       #story-container > section {
-        grid-template-columns: 80px auto;
+        grid-template-columns: 112px auto;
         grid-template-areas: 
             ". ."
             "story-icon heading"
@@ -369,14 +413,11 @@ html{
         width: 80px;
     }
 
-    #story-container > section .story-icon {
-        padding: 0px;
-    }
     .story-links {
         grid-area: story-links;
         display: flex;
         align-items: stretch;
-        padding: 15px;
+        padding: 16px;
         list-style: none;
         gap: 20px;
         font-size: 5px;
@@ -389,6 +430,7 @@ html{
     #story-container #story-plugin > h1 {
         font-size:35px;
     }
+
     #story-container #story-plugin {
         min-height: 80vh;
     }

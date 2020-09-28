@@ -16,6 +16,11 @@ class BrowserVerification
      */
     public function handle($request, Closure $next)
     {
+        ini_set('zlib.output_compression', 'Off');
+        ini_set('output_buffering', 'Off');
+        ini_set('output_handler', '');
+        ob_end_clean();
+
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
             return $next($request);
@@ -37,11 +42,6 @@ class BrowserVerification
 
         header('Content-type: text/html; charset=utf-8');
         header('X-Accel-Buffering: no');
-        ini_set('zlib.output_compression', 'Off');
-        ini_set('output_buffering', 'Off');
-        ini_set('output_handler', '');
-
-        ob_end_clean();
 
         $key = md5($request->ip() . microtime(true));
 
@@ -51,6 +51,9 @@ class BrowserVerification
         $answer = boolval(Redis::connection("cache")->blpop($key, 2));
 
         if ($answer === true) {
+            echo (view('layouts.resultpage.resources')->render());
+            flush();
+            $request->request->add(["headerPrinted" => true]);
             return $next($request);
         }
 

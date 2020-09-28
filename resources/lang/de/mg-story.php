@@ -20,10 +20,10 @@ return [
     'ngo.p' => 'Metager wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf Metager werbefrei.',
     'btn-mg-code' => 'Metager-Quellcode',
     'btn-mg-algorithm' => 'Unser Algorithmus',
-    'diversity.p' => 'Metager schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und Open Source.',
+    'diversity.p' => 'Metager schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiniert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und Open Source.',
 
     'btn-more' => 'Mehr dazu',
-    'eco.p' => 'Wir achten auf die Nachhaltigkeit und den Resourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.',
+    'eco.p' => 'Wir achten auf die Nachhaltigkeit und den Ressourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.',
     'plugin.title' => 'Jetzt MetaGer installieren',
     'plugin.btn-add' => 'MetaGer-Plugin hinzufügen',
     'plugin.btn-app' => 'MetaGer-App',

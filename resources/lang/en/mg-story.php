@@ -12,7 +12,7 @@ return [
     'eco.image.alt' => 'green leaf',
     'btn-about-us' => 'About Us',
     'btn-data-protection' => 'Privacy Policy',
-    'privacy.p' => 'With us you have full control over your data. We don\'t track. We don\'t save. Stay protected with our anonymous proxy.',
+    'privacy.p' => 'By using MetaGer you retain full control over your data. Our anonymizing proxy, keeps you protected even when you continue surfing. We don\'t track.',
     'btn-SUMA-EV' => 'SUMA-EV',
     'btn-donate' => 'Donation Form',
     'btn-member' => 'Member Form',

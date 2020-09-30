@@ -76,10 +76,15 @@ class StartpageController extends Controller
         return loadPage($subpage);
     }
 
-    public function loadPlugin($locale = "de")
+    public function loadPlugin(Request $request, $locale = "de")
     {
         $link = action('MetaGerSearch@search', []);
-
+        $link .= "?";
+        $link .= "eingabe={searchTerms}";
+        $key = $request->input('key', '');
+        if (!empty($key)) {
+            $link .= "&key=" . urlencode($key);
+        }
         $response = Response::make(
             view('plugin')
                 ->with('link', $link)

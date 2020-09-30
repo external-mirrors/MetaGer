@@ -14,7 +14,11 @@
 		<link rel="apple-touch-icon" sizes="144x144" href="/img/apple/touch-icon-144.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="/img/apple/touch-icon-152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/img/apple/touch-icon-180.png">
-		<link rel="search" type="application/opensearchdescription+xml" title="{!! trans('resultPage.opensearch') !!}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+		@if(empty(Cookie::get('key')))
+		<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+		@else
+		<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
+		@endif
 		<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />

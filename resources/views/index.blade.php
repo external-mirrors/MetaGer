@@ -11,6 +11,9 @@
         </a>
       </h1>
       @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+      @if(Request::filled('key'))
+      <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
+      @endif
       <div id="plugin-btn-div">
         <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> <div>{{ trans('index.plugin') }}</div></a>
       </div>
@@ -86,5 +89,4 @@
         <p>{{ trans('mg-story.plugin.p') }}</p>
       </section>
     </div>
-
 @endsection

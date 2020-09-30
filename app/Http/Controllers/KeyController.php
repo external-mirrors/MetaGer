@@ -29,7 +29,7 @@ class KeyController extends Controller
                 $host = $request->header("Host", "");
             }
 
-            Cookie::queue('key', $key, 525600, '/meta/', null, false, false);
+            Cookie::queue('key', $key, 525600, '/', null, false, false);
             return redirect($redirUrl);
         } else {
             return view('key')
@@ -41,7 +41,7 @@ class KeyController extends Controller
     public function removeKey(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
-        Cookie::queue('key', '', 0, '/meta/', null, false, false);
+        Cookie::queue('key', '', 0, '/', null, false, false);
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
         return redirect($url);
     }
@@ -68,7 +68,6 @@ class KeyController extends Controller
             } else {
                 return false;
             }
-
         } catch (\ErrorException $e) {
             return false;
         }

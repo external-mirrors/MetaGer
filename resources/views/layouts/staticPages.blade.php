@@ -21,7 +21,11 @@
 		<link rel="apple-touch-icon" sizes="144x144" href="/img/apple/touch-icon-144.png">
 		<link rel="apple-touch-icon" sizes="152x152" href="/img/apple/touch-icon-152.png">
 		<link rel="apple-touch-icon" sizes="180x180" href="/img/apple/touch-icon-180.png">
+		@if(empty(Cookie::get('key')))
 		<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+		@else
+		<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
+		@endif
 		<link type="text/css" rel="stylesheet alternate" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />

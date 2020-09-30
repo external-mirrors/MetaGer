@@ -150,6 +150,8 @@ class MetaGerSearch extends Controller
             echo ($responsePart);
             flush();
         }
+        $requestTime = microtime(true) - $time;
+        \App\PrometheusExporter::Duration($requestTime, "request_time");
     }
 
     public function searchTimings(Request $request, MetaGer $metager)

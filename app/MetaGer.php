@@ -354,6 +354,7 @@ class MetaGer
 
     public function parseAdgoal($results)
     {
+        $time = microtime(true);
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
@@ -411,6 +412,9 @@ class MetaGer
             }
         } catch (\ErrorException $e) {
             return $results;
+        } finally {
+            $requestTime = microtime(true) - $time;
+            \App\PrometheusExporter::Duration($requestTime, "adgoal");
         }
 
         return $results;

@@ -39,4 +39,11 @@ class PrometheusExporter
         $counter = $registry->getOrRegisterCounter('metager', 'humanverification_error', 'counts how often humanverification middleware had an error', []);
         $counter->inc();
     }
+
+    public static function Duration($duration, $type)
+    {
+        $registry = \Prometheus\CollectorRegistry::getDefault();
+        $gauge = $registry->getOrRegisterGauge('metager', 'request_time', 'How long does Resultpage load', ['type']);
+        $gauge->set($duration, [$type]);
+    }
 }

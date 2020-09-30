@@ -16,11 +16,11 @@
     <div id="center-scroll-link">
       <div id="plugin" class="">
       <h2>Ist MetaGer schon Ihre Standardsuchmaschine?</h2>
-      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> @lang("mg-story.privacy.title")</a>
-      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> @lang("mg-story.ngo.title")</a>
-      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> @lang("mg-story.diversity.title")</a>
-      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> @lang("mg-story.eco.title")</a>
-      <a id="story-plugin-link" href="#story-plugin">MetaGer Installieren</a>
+      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <span>@lang("mg-story.privacy.title")</span></a>
+      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <span>@lang("mg-story.ngo.title")</span></a>
+      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <span>@lang("mg-story.diversity.title")</span></a>
+      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <span>@lang("mg-story.eco.title")</span></a>
+      <!--<a id="story-plugin-link" href="#story-plugin"><i>&#10218;</i> MetaGer Installieren <i>&#10218;<i/></a>-->
     </div>
     </div>
     </div>

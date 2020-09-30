@@ -15,7 +15,7 @@ return [
     'partnertitle' => 'MetaGer unterstützen, ohne Mehrkosten für Sie',
     'mapstitle' => 'Der MetaGer Kartenservice',
 
-    'plugin' => 'MetaGer-Plugin hinzufügen',
+    'plugin' => 'MetaGer installieren',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
 
     'options.head' => 'Filter verwalten',

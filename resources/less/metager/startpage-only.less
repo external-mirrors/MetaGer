@@ -29,13 +29,15 @@ html {
 }
 
 
-#search-block {
+#search-wrapper {
     min-height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    &>#search-block {
+        margin-top: -10%;
+    }
 
-    
 }
 
 #main-content {
@@ -51,15 +53,16 @@ html {
     margin-top: 20px!important;
 }
 
-#plugin-btn > img { // sets the size for the plugin button
-    max-width: 25px;
-    max-height: 25px;
-}
-#center-scroll-link { // centers the scroll-link grid
+#plugin-btn {
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    align-items: center;
+    > img { // sets the size for the plugin button
+        max-width: 15px;
+        max-height: 15px;
+        margin-right: 8px;
+    }
 }
+
 
 #scroll-links { // creates a grid for the story-icons
     min-width: 100%;

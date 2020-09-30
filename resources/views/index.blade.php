@@ -3,17 +3,18 @@
 @section('title', $title )
 
 @section('content')
-  <div id="search-block">
-    <h1 id="startpage-logo">
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
-        <img src="/img/metager.svg" alt="MetaGer" />
-      </a>
-    </h1>
-    @include('parts.searchbar', ['class' => 'startpage-searchbar'])
-    <div id="plugin-btn-div">
-      <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
+  <div id="search-wrapper">
+    <div id="search-block">
+      <h1 id="startpage-logo">
+        <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+          <img src="/img/metager.svg" alt="MetaGer" />
+        </a>
+      </h1>
+      @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+      <div id="plugin-btn-div">
+        <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> <div>{{ trans('index.plugin') }}</div></a>
+      </div>
     </div>
-
   </div>
   <div id="scroll-links">
     <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>

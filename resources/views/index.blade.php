@@ -3,27 +3,24 @@
 @section('title', $title )
 
 @section('content')
-	<div id="search-block">
+  <div id="search-block">
     <h1 id="startpage-logo">
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
-			<img src="/img/metager.svg" alt="MetaGer" />
-		</a>
-	</h1>
-	@include('parts.searchbar', ['class' => 'startpage-searchbar'])
-	<div id="plugin-btn-div">
-    <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
-	</div>
-    <div id="center-scroll-link">
-      <div id="plugin" class="">
-      <h2>Ist MetaGer schon Ihre Standardsuchmaschine?</h2>
-      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <span>@lang("mg-story.privacy.title")</span></a>
-      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <span>@lang("mg-story.ngo.title")</span></a>
-      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <span>@lang("mg-story.diversity.title")</span></a>
-      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <span>@lang("mg-story.eco.title")</span></a>
-      <!--<a id="story-plugin-link" href="#story-plugin"><i>&#10218;</i> MetaGer Installieren <i>&#10218;<i/></a>-->
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+        <img src="/img/metager.svg" alt="MetaGer" />
+      </a>
+    </h1>
+    @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+    <div id="plugin-btn-div">
+      <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="Plus-Zeichen"> {{ trans('index.plugin') }}</a>
     </div>
-    </div>
-    </div>
+
+  </div>
+  <div id="scroll-links">
+    <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
+    <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
+    <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <div>@lang("mg-story.diversity.title")</div></a>
+    <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <div>@lang("mg-story.eco.title")</div></a>
+  </div>
     <div id="story-container">
       <section id="story-privacy">
         <h1>{{ trans('mg-story.privacy.title') }}</h1>

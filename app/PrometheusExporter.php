@@ -43,7 +43,7 @@ class PrometheusExporter
     public static function Duration($duration, $type)
     {
         $registry = \Prometheus\CollectorRegistry::getDefault();
-        $gauge = $registry->getOrRegisterGauge('metager', 'request_time', 'How long does Resultpage load', ['type']);
-        $gauge->set($duration, [$type]);
+        $histogram = $registry->getOrRegisterHistogram('metager', 'request_time', 'Loading Times for different cases', ['type'], [0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3]);
+        $histogram->observe($duration, [$type]);
     }
 }

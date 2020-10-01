@@ -41,8 +41,10 @@ class BrowserVerification
             if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
                 abort(404);
             }
-            $result = boolval(Redis::connection("cache")->blpop($mgv, 5));
-            if ($result === true) {
+            $result = Redis::connection("cache")->blpop($mgv, 5);
+            if ($result !== null) {
+                $result = boolval($result[1]);
+                $request->request->add(["javascript" => $result]);
                 return $next($request);
             } else {
                 return redirect("/");
@@ -57,9 +59,10 @@ class BrowserVerification
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $answer = boolval(Redis::connection("cache")->blpop($key, 2));
-
-        if ($answer === true) {
+        $answer = Redis::connection("cache")->blpop($key, 2);
+        if ($answer !== null) {
+            $answer = boolval($answer[1]);
+            $request->request->add(["javascript" => $answer]);
             echo (view('layouts.resultpage.resources')->render());
             flush();
             $request->request->add(["headerPrinted" => true]);

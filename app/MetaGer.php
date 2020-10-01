@@ -914,6 +914,12 @@ class MetaGer
         }
         $this->headerPrinted = $request->input("headerPrinted", false);
         $request->request->remove("headerPrinted");
+        $this->javascript = $request->input("javascript", false);
+        if ($this->javascript !== true && $this->javascript !== false) {
+            $this->javascript = false;
+        }
+        $request->request->remove("javascript");
+
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:

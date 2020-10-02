@@ -69,10 +69,14 @@ function loadMoreResults() {
   updateUrl = updateUrl.replace("/meta.ger3", "/loadMore");
 
   var currentlyLoading = false;
-
+  var counter = 0;
   // Regularily check for not yet delivered Results
   var resultLoader = window.setInterval(function () {
     if (!currentlyLoading) {
+      counter++;
+      if (count >= 10) {
+        clearInterval(resultLoader);
+      }
       currentlyLoading = true;
       $.getJSON(updateUrl, function (data) {
         // Check if we can clear the interval (once every searchengine has answered)

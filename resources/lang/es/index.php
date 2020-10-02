@@ -11,7 +11,7 @@ return [
     "design" => "Escoger un diseño personalizado",
     "conveyor" => "Comprar en tiendas que apoyan MetaGer ",
     "partnertitle" => "Apoyar MetaGer, sin costos para usted",
-    "plugin" => "Añadir MetaGer-Plugin",
+    "plugin" => "Instalar MetaGer",
     "plugin-title" => "Añadir MetaGer a su navegador",
     'about.1.1' => "Privacidad garantizada",
     'about.1.2' => 'Con nosotros tiene control total sobre sus datos. No rastreamos y nuestro código fuente es gratuito.',

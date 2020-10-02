@@ -1,4 +1,5 @@
-@searchbar-border-color: #a2a2a2;
+@searchbar-border-color: #585858;
+@searchbar-border-color-light: #777777;
 @searchbar-background-color: white;
 .searchbar {
     display: -webkit-box;
@@ -34,6 +35,7 @@
     color: #333;
     .search-input-submit {
         width: 100%;
+        width: calc(100% - 16px);
         max-width: 600px;
         background-color: @searchbar-background-color;
         -webkit-box-flex: 1;
@@ -49,8 +51,8 @@
             justify-content: center;
             align-items: center;
             > a {
-                padding: 5px 16px 0px 16px;
-                color: #777;
+                padding: 0px 16px 0px 16px;
+                color: #585858;
                 &.authorized {
                     color:green;
                 }
@@ -67,13 +69,6 @@
                 -webkit-box-shadow: none;
                 box-shadow: none;
                 background-color: transparent;
-                &:focus {
-                    outline-color: @metager-orange;
-                    -webkit-box-shadow: 0px 0px 2px 2px rgba(255, 128, 0, 1);
-                    box-shadow: 0px 0px 2px 2px rgba(255, 128, 0, 1);
-                    border-color: rgba(255, 128, 0, 1);
-                    border-radius: 4px;
-                }
             }
             #search-delete-btn {
                 position: absolute;
@@ -99,6 +94,7 @@
                 border: 0;
                 background-color: transparent;
                 padding: 0;
+                color: #585858;
             }
         }
     }
@@ -125,11 +121,15 @@
     }
     .search-input-submit {
         border-radius: 5px;
+        margin: 0 8px;
         @media (max-width: @screen-mobile) {
             max-width: initial;
         }
-        >:not(:first-child) {
-            border-left: 1px solid @searchbar-border-color;
+        >#search-key {
+            border-right: 1px solid @searchbar-border-color-light;
+        }
+        >#submit-inputgroup {
+            border-left: 1px solid @searchbar-border-color-light;
         }
     }
     @media (max-width: @screen-mobile) {
@@ -154,6 +154,9 @@
 }
 
 .resultpage-searchbar {
+    #search-key > a {
+        padding: 5px 16px 0px 16px!important;
+    }
     .search-input-submit {
         .search-input input {
             padding-right: 35px; // Makes it so the overlayed delete button does not hide the text belowF

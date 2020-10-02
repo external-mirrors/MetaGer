@@ -37,10 +37,10 @@
 		@if (isset($css))
 			@if(is_array($css))
 				@foreach($css as $el)
-					<link href="/css/{{ $el }}" rel="stylesheet" />
+					<link href="{{ $el }}" rel="stylesheet" />
 				@endforeach
 			@else
-				<link href="/css/{{ $css }}" rel="stylesheet" />
+				<link href="{{ $css }}" rel="stylesheet" />
 			@endif
 		@endif
 	</head>

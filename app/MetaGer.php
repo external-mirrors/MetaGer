@@ -387,7 +387,7 @@ class MetaGer
 
         # Hashwert
         $hash = md5("meta" . $publicKey . $tldList . "GER");
-        Redis::del($hash); # TODO remove
+
         # Query
         $query = $this->q;
 

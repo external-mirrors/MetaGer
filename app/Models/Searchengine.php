@@ -208,10 +208,12 @@ abstract class Searchengine
         }
 
         if ($body !== null) {
-            try {
-                Cache::put($this->hash, $body, $this->cacheDuration * 60);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
+            if (!$this->cached) {
+                try {
+                    Cache::put($this->hash, $body, $this->cacheDuration * 60);
+                } catch (\Exception $e) {
+                    Log::error($e->getMessage());
+                }
             }
             $this->loadResults($body);
             $this->getNext($metager, $body);
@@ -287,5 +289,10 @@ abstract class Searchengine
     public function setNew($new)
     {
         $this->new = $new;
+    }
+
+    public function setCached($cached)
+    {
+        $this->cached = $cached;
     }
 }

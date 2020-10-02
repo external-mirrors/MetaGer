@@ -203,6 +203,9 @@ Route::group(
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
         Route::get('index.css', 'HumanVerification@browserVerification');
+        Route::get('index-js.css', function (\Illuminate\Http\Request $request) {
+            return App::make('\App\Http\Controllers\HumanVerification')->browserVerification($request, true);
+        });
 
         Route::get('meta/picture', 'Pictureproxy@get');
         Route::get('clickstats', 'LogController@clicklog');

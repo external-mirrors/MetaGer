@@ -116,6 +116,17 @@ function loadMoreResults() {
             }
           }
         }
+        if (typeof data.changedResults != "undefined") {
+          for (var key in data.changedResults) {
+            var value = data.changedResults[key];
+            // If there are more results than the given index we will prepend otherwise we will append the result
+            if (!data.imagesearch) {
+              $($(".result:not(.ad)")[key]).replaceWith($(value));
+            } else {
+              $($(".image-container > .image")[key]).replaceWith($(value));
+            }
+          }
+        }
         currentlyLoading = false;
       });
     }

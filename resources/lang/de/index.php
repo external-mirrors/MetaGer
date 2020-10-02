@@ -39,7 +39,7 @@ return [
     'lang.tooltip' => 'Ergebnissprache wählen',
     'key.placeholder' => 'Schlüssel für werbefreie Suche eingeben',
     'key.tooltip' => 'Schlüssel für werbefreie Suche eingeben',
-    'placeholder' => 'MetaGer: Sicher suchen & finden, Privatsphäre schützen',
+    'placeholder' => 'MetaGer: Sicher suchen & finden',
     'searchbutton' => 'MetaGer-Suche',
 
     'tooltips.add-focus' => 'Suche anpassen',

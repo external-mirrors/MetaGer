@@ -111,7 +111,16 @@ class MetaGerSearch extends Controller
         }
 
         try {
-            Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "apiAuthorized" => $metager->isApiAuthorized(),
+                ],
+                "adgoal" => [
+                    "loaded" => $metager->isAdgoalLoaded(),
+                    "adgoalHash" => $metager->getAdgoalHash(),
+                ],
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -190,12 +199,19 @@ class MetaGerSearch extends Controller
             }
         }
 
-        $engines = Cache::get($hash);
-        if ($engines === null) {
+        $cached = Cache::get($hash);
+        if ($cached === null) {
             return response()->json(['finished' => true]);
         }
 
+        $engines = $cached["engines"];
+        $adgoal = $cached["adgoal"];
+        $mg = $cached["metager"];
+
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
+        $metager->setApiAuthorized($mg["apiAuthorized"]);
+        $metager->setAdgoalLoaded($adgoal["loaded"]);
+        $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
         $metager->parseFormData($request);
         # Nach Spezialsuchen überprüfen:
@@ -203,27 +219,37 @@ class MetaGerSearch extends Controller
         $metager->restoreEngines($engines);
 
         $metager->retrieveResults();
+
         $metager->rankAll();
         $metager->prepareResults();
 
         $result = [
             'finished' => true,
             'newResults' => [],
+            'changedResults' => [],
         ];
         $result["nextSearchLink"] = $metager->nextSearchLink();
 
         $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new) {
+            if ($resultTmp->new || $resultTmp->adgoalChanged) {
                 if ($metager->getFokus() !== "bilder") {
                     $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    $result['newResults'][$index] = $html;
+                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                        $result['changedResults'][$index] = $html;
+                    } else {
+                        $result['newResults'][$index] = $html;
+                    }
                     $result["imagesearch"] = false;
                 } else {
                     $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    $result['newResults'][$index] = $html;
+                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                        $result['changedResults'][$index] = $html;
+                    } else {
+                        $result['newResults'][$index] = $html;
+                    }
                     $result["imagesearch"] = true;
                 }
                 $newResults++;
@@ -239,6 +265,9 @@ class MetaGerSearch extends Controller
                 $engine->markNew();
             }
         }
+        if (!$metager->isAdgoalLoaded()) {
+            $finished = false;
+        }
 
         $result["finished"] = $finished;
 
@@ -248,7 +277,16 @@ class MetaGerSearch extends Controller
             $counter->incBy($newResults);
         }
         // Update new Engines
-        Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
+        Cache::put("loader_" . $metager->getSearchUid(), [
+            "metager" => [
+                "apiAuthorized" => $metager->isApiAuthorized(),
+            ],
+            "adgoal" => [
+                "loaded" => $metager->isAdgoalLoaded(),
+                "adgoalHash" => $metager->getAdgoalHash(),
+            ],
+            "engines" => $metager->getEngines(),
+        ], 1 * 60);
         return response()->json($result);
     }
 

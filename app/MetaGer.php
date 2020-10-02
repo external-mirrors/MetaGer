@@ -300,13 +300,25 @@ class MetaGer
         $this->ads = $newResults;
 
         #Adgoal Implementation
-        if (!$this->apiAuthorized) {
-            $this->results = $this->parseAdgoal($this->results);
+        if (empty($this->adgoalLoaded)) {
+            $this->adgoalLoaded = false;
+        }
+        if (!$this->apiAuthorized && !$this->adgoalLoaded) {
+            if (empty($this->adgoalHash)) {
+                $this->adgoalHash = $this->startAdgoal($this->results);
+            }
+            if (!$this->javascript) {
+                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
+            } else {
+                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
+            }
+        } else {
+            $this->adgoalLoaded = true;
         }
 
         # Human Verification
-        $this->results = $this->humanVerification($this->results);
-        $this->ads = $this->humanVerification($this->ads);
+        $this->humanVerification($this->results);
+        $this->humanVerification($this->ads);
 
         $counter = 0;
         $firstRank = 0;
@@ -343,54 +355,98 @@ class MetaGer
             }
             foreach ($engine->results as $result) {
                 if ($result->valid) {
-                    $this->results[] = $result;
+                    $this->results[] = clone $result;
                 }
             }
             foreach ($engine->ads as $ad) {
-                $this->ads[] = $ad;
+                $this->ads[] = clone $ad;
             }
         }
     }
 
-    public function parseAdgoal($results)
+    public function startAdgoal(&$results)
     {
-        $time = microtime(true);
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
             return $results;
         }
         $tldList = "";
-        try {
-            foreach ($results as $result) {
-                if (!$result->new) {
-                    continue;
-                }
-                $link = $result->link;
-                if (strpos($link, "http") !== 0) {
-                    $link = "http://" . $link;
-                }
-                $tldList .= parse_url($link, PHP_URL_HOST) . ",";
-                $result->tld = parse_url($link, PHP_URL_HOST);
+        foreach ($results as $result) {
+            if (!$result->new) {
+                continue;
             }
-            $tldList = rtrim($tldList, ",");
+            $link = $result->link;
+            if (strpos($link, "http") !== 0) {
+                $link = "http://" . $link;
+            }
+            $tldList .= parse_url($link, PHP_URL_HOST) . ",";
+            $result->tld = parse_url($link, PHP_URL_HOST);
+        }
+        $tldList = rtrim($tldList, ",");
 
-            # Hashwert
-            $hash = md5("meta" . $publicKey . $tldList . "GER");
+        # Hashwert
+        $hash = md5("meta" . $publicKey . $tldList . "GER");
+        Redis::del($hash); # TODO remove
+        # Query
+        $query = $this->q;
 
-            # Query
-            $query = $this->q;
+        $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
 
-            $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
-            $answer = json_decode(file_get_contents($link));
+        // Submit fetch job to worker
+        $mission = [
+            "resulthash" => $hash,
+            "url" => $link,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => null,
+            "password" => null,
+            "headers" => null,
+            "cacheDuration" => 60,
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+
+        return $hash;
+    }
+
+    public function parseAdgoal(&$results, $hash, $waitForResult)
+    {
+        # Wait for result
+        $startTime = microtime(true);
+        $answer = null;
+
+        if ($waitForResult) {
+            while (microtime(true) - $startTime < 5) {
+                $answer = Redis::get($hash);
+                if ($answer === null) {
+                    usleep(50 * 1000);
+                } else {
+                    break;
+                }
+            }
+        } else {
+            $answer = Redis::get($hash);
+        }
+        if ($answer === null) {
+            return false;
+        }
+        try {
+            $answer = json_decode($answer);
+            $publicKey = getenv('adgoal_public');
+            $privateKey = getenv('adgoal_private');
 
             # Nun müssen wir nur noch die Links für die Advertiser ändern:
+            foreach ($results as $result) {
+                $link = $result->link;
+                $result->tld = parse_url($link, PHP_URL_HOST);
+            }
+
             foreach ($answer as $el) {
                 $hoster = $el[0];
                 $hash = $el[1];
 
                 foreach ($results as $result) {
-                    if ($result->new && $hoster === $result->tld && !$result->partnershop) {
+                    if ($hoster === $result->tld && !$result->partnershop) {
                         # Hier ist ein Advertiser:
                         # Das Logo hinzufügen:
                         if ($result->image !== "") {
@@ -400,27 +456,29 @@ class MetaGer
                         }
 
                         # Den Link hinzufügen:
-                        $publicKey = $publicKey;
                         $targetUrl = $result->link;
+                        # Query
+                        $query = $this->q;
 
                         $gateHash = md5($targetUrl . $privateKey);
                         $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
                         $result->link = $newLink;
                         $result->partnershop = true;
+                        $result->adgoalChanged = true;
                     }
                 }
             }
         } catch (\ErrorException $e) {
-            return $results;
+            Log::error($e->getMessage());
         } finally {
-            $requestTime = microtime(true) - $time;
+            $requestTime = microtime(true) - $startTime;
             \App\PrometheusExporter::Duration($requestTime, "adgoal");
         }
+        return true;
 
-        return $results;
     }
 
-    public function humanVerification($results)
+    public function humanVerification(&$results)
     {
         # Let's check if we need to implement a redirect for human verification
         if ($this->verificationCount > 10) {
@@ -434,9 +492,6 @@ class MetaGer
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }
-            return $results;
-        } else {
-            return $results;
         }
     }
 
@@ -1833,6 +1888,36 @@ class MetaGer
         return $this->engines;
     }
 
+    public function setAdgoalHash($hash)
+    {
+        $this->adgoalHash = $hash;
+    }
+
+    public function getAdgoalHash()
+    {
+        return $this->adgoalHash;
+    }
+
+    public function isAdgoalLoaded()
+    {
+        return $this->adgoalLoaded;
+    }
+
+    public function setAdgoalLoaded($adgoalLoaded)
+    {
+        $this->adgoalLoaded = $adgoalLoaded;
+    }
+
+    public function isApiAuthorized()
+    {
+        return $this->apiAuthorized;
+    }
+
+    public function setApiAuthorized($authorized)
+    {
+        $this->apiAuthorized = $authorized;
+    }
+
     public function isFramed()
     {
         return $this->framed;
@@ -1849,5 +1934,8 @@ class MetaGer
     public function restoreEngines($engines)
     {
         $this->engines = $engines;
+        foreach ($this->engines as $engine) {
+            $engine->setCached(true);
+        }
     }
 }

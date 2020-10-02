@@ -187,6 +187,7 @@ class MetaGerSearch extends Controller
 
     private function loadMoreJS(Request $request)
     {
+        $request->request->add(["javascript" => true]);
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
 

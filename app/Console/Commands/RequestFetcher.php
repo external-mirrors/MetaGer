@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -84,7 +85,7 @@ class RequestFetcher extends Command
                 $status = curl_multi_exec($this->multicurl, $active);
                 $currentJobs = [];
                 if (!$blocking) {
-                    $elements = Redis::pipeline(function($redis){
+                    $elements = Redis::pipeline(function ($redis) {
                         $redis->lrange(\App\MetaGer::FETCHQUEUE_KEY, 0, -1);
                         $redis->del(\App\MetaGer::FETCHQUEUE_KEY);
                     });
@@ -97,7 +98,7 @@ class RequestFetcher extends Command
                 }
 
                 if (sizeof($currentJobs) > 0) {
-                    foreach($currentJobs as $currentJob){
+                    foreach ($currentJobs as $currentJob) {
                         $currentJob = json_decode($currentJob, true);
                         $ch = $this->getCurlHandle($currentJob);
                         if (curl_multi_add_handle($this->multicurl, $ch) !== 0) {
@@ -170,6 +171,9 @@ class RequestFetcher extends Command
                     $pipe->set($resulthash, $body);
                     $pipe->expire($resulthash, 60);
                 });
+                if ($cacheDurationMinutes > 0) {
+                    Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+                }
             } finally {
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }
@@ -180,7 +184,7 @@ class RequestFetcher extends Command
     private function getCurlHandle($job)
     {
         $ch = curl_init();
-        
+
         curl_setopt_array($ch, array(
             CURLOPT_URL => $job["url"],
             CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"],

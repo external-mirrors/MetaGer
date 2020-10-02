@@ -425,7 +425,7 @@ class MetaGer
                 }
             }
         } else {
-            $answer = Redis::get($hash);
+            $answer = Cache::get($hash);
         }
         if ($answer === null) {
             return false;

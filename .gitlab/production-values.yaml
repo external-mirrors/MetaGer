@@ -3,7 +3,7 @@ service:
   internalPort: 80
 hpa:
   enabled: true
-  minReplicas: 1
+  minReplicas: 3
   maxReplicas: 100
 resources:
   limits:

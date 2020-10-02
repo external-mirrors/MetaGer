@@ -74,7 +74,7 @@ function loadMoreResults() {
   var resultLoader = window.setInterval(function () {
     if (!currentlyLoading) {
       counter++;
-      if (count >= 10) {
+      if (counter >= 10) {
         clearInterval(resultLoader);
       }
       currentlyLoading = true;

@@ -1,4 +1,5 @@
-@searchbar-border-color: #e0e0e0;
+@searchbar-border-color: #585858;
+@searchbar-border-color-light: #777777;
 @searchbar-background-color: white;
 .searchbar {
     display: -webkit-box;
@@ -51,7 +52,7 @@
             align-items: center;
             > a {
                 padding: 0px 16px 0px 16px;
-                color: #a9a9a9;
+                color: #585858;
                 &.authorized {
                     color:green;
                 }
@@ -93,7 +94,7 @@
                 border: 0;
                 background-color: transparent;
                 padding: 0;
-                color: #a9a9a9;
+                color: #585858;
             }
         }
     }
@@ -125,10 +126,10 @@
             max-width: initial;
         }
         >#search-key {
-            border-right: 1px solid @searchbar-border-color;
+            border-right: 1px solid @searchbar-border-color-light;
         }
         >#submit-inputgroup {
-            border-left: 1px solid @searchbar-border-color;
+            border-left: 1px solid @searchbar-border-color-light;
         }
     }
     @media (max-width: @screen-mobile) {

@@ -307,7 +307,7 @@ class MetaGer
             if (empty($this->adgoalHash)) {
                 $this->adgoalHash = $this->startAdgoal($this->results);
             }
-            if (!$this->javascript) {
+            if (!$this->javascript || 1 == 1) {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
             } else {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
@@ -425,7 +425,7 @@ class MetaGer
                 }
             }
         } else {
-            $answer = Cache::get($hash);
+            $answer = Redis::get($hash);
         }
         if ($answer === null) {
             return false;

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -171,9 +170,10 @@ class RequestFetcher extends Command
                     $pipe->set($resulthash, $body);
                     $pipe->expire($resulthash, 60);
                 });
-                if ($cacheDurationMinutes > 0) {
-                    Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
-                }
+                /*
+            if ($cacheDurationMinutes > 0) {
+            Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+            }*/
             } finally {
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }

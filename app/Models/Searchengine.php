@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use App\MetaGer;
-use Cache;
 use Illuminate\Support\Facades\Redis;
-use Log;
 
 abstract class Searchengine
 {
@@ -199,22 +197,14 @@ abstract class Searchengine
             return true;
         }
 
-        if ($this->cached) {
-            if ($body === "no-result") {
-                $body = "";
-            }
-        } else {
+        if (!$this->cached) {
             $body = Redis::get($this->hash);
+        }
+        if ($body === "no-result") {
+            $body = "";
         }
 
         if ($body !== null) {
-            if (!$this->cached) {
-                try {
-                    Cache::put($this->hash, $body, $this->cacheDuration * 60);
-                } catch (\Exception $e) {
-                    Log::error($e->getMessage());
-                }
-            }
             $this->loadResults($body);
             $this->getNext($metager, $body);
             $this->markNew();

@@ -219,6 +219,9 @@ class MetaGerSearch extends Controller
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
 
+        # Checks Cache for engine Results
+        $metager->checkCache();
+
         $metager->retrieveResults();
 
         $metager->rankAll();
@@ -258,10 +261,13 @@ class MetaGerSearch extends Controller
         }
 
         $finished = true;
+        $enginesLoaded = [];
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
+                $enginesLoaded[$engine->name] = false;
                 $finished = false;
             } else {
+                $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
                 $engine->markNew();
             }
@@ -273,6 +279,7 @@ class MetaGerSearch extends Controller
          */
 
         $result["finished"] = $finished;
+        $result["engines"] = $enginesLoaded;
 
         if ($newResults > 0) {
             $registry = \Prometheus\CollectorRegistry::getDefault();

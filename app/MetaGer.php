@@ -307,7 +307,7 @@ class MetaGer
             if (empty($this->adgoalHash)) {
                 $this->adgoalHash = $this->startAdgoal($this->results);
             }
-            if (!$this->javascript || 1 == 1) {
+            if (!$this->javascript) {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
             } else {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
@@ -693,6 +693,24 @@ class MetaGer
         }
 
         # Check all engines for Cached responses
+        $this->checkCache();
+
+        if (!empty($timings)) {
+            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
+        }
+
+        # Wir starten alle Suchen
+        foreach ($this->engines as $engine) {
+            $engine->startSearch($this, $timings);
+        }
+        if (!empty($timings)) {
+            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+        }
+
+    }
+
+    public function checkCache()
+    {
         if ($this->canCache()) {
             $keys = [];
             foreach ($this->engines as $engine) {
@@ -705,17 +723,6 @@ class MetaGer
                     $engine->retrieveResults($this, $cacheValues[$engine->hash]);
                 }
             }
-        }
-        if (!empty($timings)) {
-            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
-        }
-
-        # Wir starten alle Suchen
-        foreach ($this->engines as $engine) {
-            $engine->startSearch($this, $timings);
-        }
-        if (!empty($timings)) {
-            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
         }
 
     }
@@ -1934,8 +1941,5 @@ class MetaGer
     public function restoreEngines($engines)
     {
         $this->engines = $engines;
-        foreach ($this->engines as $engine) {
-            $engine->setCached(true);
-        }
     }
 }

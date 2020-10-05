@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -25,7 +26,7 @@ class RequestFetcher extends Command
     protected $shouldRun = true;
     protected $multicurl = null;
     protected $oldMultiCurl = null;
-    protected $maxFetchedDocuments = 10000;
+    protected $maxFetchedDocuments = 100000;
     protected $fetchedDocuments = 0;
     protected $proxyhost, $proxyuser, $proxypassword;
 
@@ -170,10 +171,14 @@ class RequestFetcher extends Command
                     $pipe->set($resulthash, $body);
                     $pipe->expire($resulthash, 60);
                 });
-                /*
-            if ($cacheDurationMinutes > 0) {
-            Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
-            }*/
+
+                if ($cacheDurationMinutes > 0) {
+                    try {
+                        Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
+                    } catch (\Exception $e) {
+                        Log::error($e->getMessage());
+                    }
+                }
             } finally {
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }

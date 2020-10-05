@@ -23,6 +23,7 @@ return [
     "nav23"	=>	"Afiliarse a SUMA-EV",
     "nav24"	=>	"Codigo fuente MetaGer",
     "nav25"	=>	"MetaGer App",
+    'nav27' => 'MetaGer Maps',
     "nav26"	=>	"Tienda de fans de MetaGer",
     "navigationToggle"	=>	"Mostrar navegación",
     "titles.tips"	=>	"Consejos",

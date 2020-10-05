@@ -272,11 +272,10 @@ class MetaGerSearch extends Controller
                 $engine->markNew();
             }
         }
-        /*
+
         if (!$metager->isAdgoalLoaded()) {
-        $finished = false;
+            $finished = false;
         }
-         */
 
         $result["finished"] = $finished;
         $result["engines"] = $enginesLoaded;

@@ -175,25 +175,35 @@
 		@endif
 	@elseif ($agent->isPhone())
 		@if ($browser === 'Firefox')
-			<div class="card-heavy">
-				<h3>{!! trans('plugin-page.default-search') !!}</h3>
-				<ol>
-					<li>{!! trans('plugin-page.mobileff.1') !!}</li>
-					<li>{{ trans('plugin-page.mobileff.2') }}</li>
-					<li>{{ trans('plugin-page.mobileff.3') }}</li>
-					<li>{{ trans('plugin-page.mobileff.4') }}</li>
-					<li>{{ trans('plugin-page.mobileff.5') }}</li>
-					<code id=search>"https://metager.de/meta/meta.ger3?eingabe=%s"</code>
-				</ol>
-			</div>
+			@if (version_compare($agent->version($agent->browser()), "80.0") < 0))
+				<div class="card-heavy">
+					<h3>{!! trans('plugin-page.default-search') !!}</h3>
+					<ol>
+						<li>{{ trans('plugin-page.mfirefoxlt80.1') }}</li>
+						<li>{{ trans('plugin-page.mfirefoxlt80.2') }}</li>
+					</ol>
+				</div>
+			@else
+				<div class="card-heavy">
+					<h3>{!! trans('plugin-page.default-search') !!}</h3>
+					<ol>
+						<li>{!! trans('plugin-page.mfirefox.1') !!}</li>
+						<li>{{ trans('plugin-page.mfirefox.2') }}</li>
+						<li>{{ trans('plugin-page.mfirefox.3') }}</li>
+						<li>{{ trans('plugin-page.mfirefox.4') }}</li>
+						<li>{{ trans('plugin-page.mfirefox.5') }}</li>
+						<code id=search>"https://metager.de/meta/meta.ger3?eingabe=%s"</code>
+					</ol>
+				</div>
+			@endif
 		@elseif ($browser === 'Chrome')
 			<div class="card-heavy">
 				<h3>{!! trans('plugin-page.default-search') !!}</h3>
 				<ol>
-					<li>{!! trans('plugin-page.mobilechr.1') !!}</li>
-					<li>{{ trans('plugin-page.mobilechr.2') }}</li>
-					<li>{{ trans('plugin-page.mobilechr.3') }}</li>
-					<li>{{ trans('plugin-page.mobilechr.4') }}</li>
+					<li>{!! trans('plugin-page.mchrome.1') !!}</li>
+					<li>{{ trans('plugin-page.mchrome.2') }}</li>
+					<li>{{ trans('plugin-page.mchrome.3') }}</li>
+					<li>{{ trans('plugin-page.mchrome.4') }}</li>
 				</ol>
 			</div>
 		@endif

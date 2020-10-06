@@ -83,15 +83,34 @@ return [
     'vivaldi.9' => 'Klicken Sie in Ihrem Browser oben links auf das rote Vivaldi Logo und wählen Sie zuerst "Werkzeuge", dann im Untermenü "Einstellungen".',
     'vivaldi.10' => 'Tragen Sie im Feld "Startseite" "https://metager.de" ein.',
 
-    'mobileff.1' => 'Tippen Sie in Ihrem Browser unten rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
-    'mobileff.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
-    'mobileff.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Allgemein" den Menüpunkt "Suchen".',
-    'mobileff.4' => 'Tippen Sie auf "+ Suchmaschine hinzufügen".',
-    'mobileff.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein.',
+    'mfirefox.1' => 'Tippen Sie in Ihrem Browser unten rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
+    'mfirefox.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
+    'mfirefox.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Allgemein" den Menüpunkt "Suchen".',
+    'mfirefox.4' => 'Tippen Sie auf "+ Suchmaschine hinzufügen".',
+    'mfirefox.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein.',
 
-    'mobilechr.1' => 'Tippen Sie in Ihrem Browser oben rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
-    'mobilechr.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
-    'mobilechr.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Grundeinstellungen" den Menüpunkt "Suchmaschine".',
-    'mobilechr.4' => 'Tippen Sie in der Kategorie "Kürzlich besucht" auf MetaGer.',
+    'mfirefoxlt80.1' => 'Tippen und halten Sie mit dem Finger auf dem unten stehenden Suchfeld gedrückt.',
+    'mfirefoxlt80.2' => 'Im geöffneten Kontextmenü können Sie \"Suchmaschine hinzufügen\" auswählen',
 
+    'mchrome.1' => 'Tippen Sie in Ihrem Browser oben rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
+    'mchrome.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
+    'mchrome.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Grundeinstellungen" den Menüpunkt "Suchmaschine".',
+    'mchrome.4' => 'Tippen Sie in der Kategorie "Kürzlich besucht" auf MetaGer.',
+
+    'mopera.1' => 'Tippen Sie <a href="/" target="_blank" rel="noopener">hier</a> um MetaGer in einem neuen Tab zu öffnen.',
+    'mopera.2' => 'Im neuen Tab tippen und halten Sie mit dem Finger auf das Sucheingabefeld in der Mitte der Seite.',
+    'mopera.3' => 'Wählen Sie im erscheinenden Menü "Suchmaschine hinzufügen...".',
+    'mopera.4' => 'Tippen Sie im Popup auf "OK".',
+    'mopera.5' => 'Nun können Sie in einem neuen Tab durch das Tippen auf das Logo Ihrer Standardsuchmaschine MetaGer auswählen',
+    'mopera.6' => '(Leider ist es Suchmaschinen nicht mehr möglich im Opera als Standard eingestellt zu werden.)',
+    //TODO: EXTENDING INFO
+
+    'medge.1' => 'Tippen Sie in Ihrem Browser unten in der Mitte auf "<i class="fas fa-ellipsis-h"></i>" um das Browsermenü zu öffnen',
+    'medge.2' => 'Wählen Sie den Menüpunkt Einstellungen auf der linken Seite des erscheinenden Menüs',
+    'medge.3' => 'Scrollen Sie nach unten und tippen in der Kategorie "Erweitert" auf "Suchen"',
+    'medge.4' => 'Wählen Sie in der Kategorie "Kürzlich besucht" MetaGer aus.',
+
+    //UC Browser Mobile, Samsung Internet, Safari Mobile (?)
+    'notavailable.1' => 'Leider bietet der von Ihnen genutzte Browser nicht die Möglichkeit MetaGer als (Standard-)Suchmaschine einzustellen',
+    //TODO: EXTENDING INFO
 ];

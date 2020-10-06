@@ -45,7 +45,7 @@ class StartpageController extends Controller
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('homeIcon')
-            ->with('browser', (new Agent())->browser())
+            ->with('agent', new Agent())
             ->with('navbarFocus', 'suche')
             ->with('focus', $request->input('focus', 'web'))
             ->with('time', $request->input('param_time', '1500'))

@@ -8,7 +8,7 @@
 					</a>
 				</div>
 				<div class="search-input">
-					<input type="search" name="eingabe" value="@if(isset($eingabe)){{$eingabe}}@endif" required=""  @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" tabindex="0">
+					<input type="search" name="eingabe" value="@if(isset($eingabe)){{$eingabe}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" tabindex="0">
 					<button id="search-delete-btn" name="delete-search-input" type="button" tabindex="-1">
 						&#xd7;
 					</button>

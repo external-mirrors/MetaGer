@@ -17,6 +17,10 @@ class BrowserVerification
      */
     public function handle($request, Closure $next)
     {
+        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+            return $next($request);
+        }
+
         ini_set('zlib.output_compression', 'Off');
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');

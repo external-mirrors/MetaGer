@@ -183,6 +183,7 @@
 					<li>{{ trans('plugin-page.mobileff.3') }}</li>
 					<li>{{ trans('plugin-page.mobileff.4') }}</li>
 					<li>{{ trans('plugin-page.mobileff.5') }}</li>
+					<code id=search>"https://metager.de/meta/meta.ger3?eingabe=%s"</code>
 				</ol>
 			</div>
 		@elseif ($browser === 'Chrome')

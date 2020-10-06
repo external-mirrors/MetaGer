@@ -39,7 +39,7 @@
 				@foreach($css as $cssFile)
 		<link href="{{ $cssFile }}" rel="stylesheet" />
 				@endforeach
-			@else
+			@endif
 		@endif
 	</head>
 	<body>

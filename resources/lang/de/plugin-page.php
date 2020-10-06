@@ -87,7 +87,7 @@ return [
     'mobileff.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
     'mobileff.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Allgemein" den Menüpunkt "Suchen".',
     'mobileff.4' => 'Tippen Sie auf "+ Suchmaschine hinzufügen".',
-    'mobileff.5' => 'Wählen Sie nun "Andere" aus. Tragen Sie darunter den Namen (MetaGer) und den Such-String ein (https://metager.de/meta/meta.ger3?eingabe=%s).',
+    'mobileff.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein.',
 
     'mobilechr.1' => 'Tippen Sie in Ihrem Browser oben rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
     'mobilechr.2' => 'Wählen Sie den Menüpunkt Einstellungen.',

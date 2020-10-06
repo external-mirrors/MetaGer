@@ -14,7 +14,6 @@
   @endif
 	<div id="plugin-btn-div">
 		@if($agent->isMobile() && $agent->browser() === "Chrome")
-		<input type="hidden" name="eingabe" value="chrome" />
 		<button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
 		@else
 		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>

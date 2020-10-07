@@ -305,9 +305,11 @@ class MetaGer
         }
         if (!$this->apiAuthorized && !$this->adgoalLoaded) {
             if (empty($this->adgoalHash)) {
-                $js = Redis::connection('cache')->lpop("js" . $this->jskey);
-                if ($js !== null && boolval($js)) {
-                    $this->javascript = true;
+                if (!empty($this->jskey)) {
+                    $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+                    if ($js !== null && boolval($js)) {
+                        $this->javascript = true;
+                    }
                 }
                 $this->adgoalHash = $this->startAdgoal($this->results);
             }

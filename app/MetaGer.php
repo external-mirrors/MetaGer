@@ -305,6 +305,10 @@ class MetaGer
         }
         if (!$this->apiAuthorized && !$this->adgoalLoaded) {
             if (empty($this->adgoalHash)) {
+                $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+                if ($js !== null && boolval($js)) {
+                    $this->javascript = true;
+                }
                 $this->adgoalHash = $this->startAdgoal($this->results);
             }
             if (!$this->javascript) {
@@ -976,11 +980,12 @@ class MetaGer
         }
         $this->headerPrinted = $request->input("headerPrinted", false);
         $request->request->remove("headerPrinted");
-        $this->javascript = $request->input("javascript", false);
-        if ($this->javascript !== true && $this->javascript !== false) {
-            $this->javascript = false;
-        }
-        $request->request->remove("javascript");
+
+        # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
+        # Until then javascript parameter will be false
+        $this->javascript = false;
+        $this->jskey = $request->input('jskey', '');
+        $request->request->remove("jskey");
 
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();

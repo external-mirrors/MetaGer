@@ -272,7 +272,7 @@ class HumanVerification extends Controller
         return redirect('admin/bot');
     }
 
-    public function browserVerification(Request $request, $javascript = false)
+    public function browserVerification(Request $request)
     {
         $key = $request->input("id", "");
 
@@ -281,8 +281,8 @@ class HumanVerification extends Controller
             abort(404);
         }
 
-        Redis::connection("cache")->pipeline(function ($redis) use ($key, $javascript) {
-            $redis->rpush($key, $javascript);
+        Redis::connection("cache")->pipeline(function ($redis) use ($key) {
+            $redis->rpush($key, true);
             $redis->expire($key, 30);
         });
 

@@ -47,8 +47,7 @@ class BrowserVerification
             }
             $result = Redis::connection("cache")->blpop($mgv, 5);
             if ($result !== null) {
-                $result = boolval($result[1]);
-                $request->request->add(["javascript" => $result]);
+                $request->request->add(["headerPrinted" => false, "jskey" => $mgv]);
                 return $next($request);
             } else {
                 return redirect("/");
@@ -65,11 +64,9 @@ class BrowserVerification
 
         $answer = Redis::connection("cache")->blpop($key, 2);
         if ($answer !== null) {
-            $answer = boolval($answer[1]);
-            $request->request->add(["javascript" => $answer]);
             echo (view('layouts.resultpage.resources')->render());
             flush();
-            $request->request->add(["headerPrinted" => true]);
+            $request->request->add(["headerPrinted" => true, "jskey" => $key]);
             return $next($request);
         }
 

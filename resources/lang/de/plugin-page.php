@@ -14,103 +14,10 @@ return [
 
     'default-search' => 'MetaGer als Standardsuchmaschine einrichten',
 
-    'firefox.plugin' => 'Das Plugin für Firefox können Sie <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/?src=search" target="_blank">hier</a> herunterladen.',
-    'firefox.1' => 'Klicken Sie in Ihrem Browser oben rechts in der Adressleiste auf "<i class="fas fa-ellipsis-h"></i>" um das Menü der Seitenaktionen zu öffnen und dann auf "Suchmaschine hinzufügen" (siehe Bild)',
-    'firefox.2' => 'Öffnen Sie die Firefox Einstellungen. Geben Sie hierfür "about:preferences#search" in die Adressleiste ein. Im Bereich "Standardsuchmaschine" wählen Sie MetaGer aus (siehe Bild).',
-    'firefox.3' => 'MetaGer als Startseite im :browser einrichten',
-    'firefox.4' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-bars" aria-hidden="true"></i><span class="sr-only">die drei horizontalen Striche</span> (Menü) und öffnen Sie die "Einstellungen"',
-    'firefox.5' => 'Tragen Sie im Feld "Startseite" "https://metager.de" ein.',
-
-    'firefox-klar.1' => 'Öffnen Sie die Einstellungen Ihres Browsers über das Zahnrad (unter Android <i class="fa fa-ellipsis-v"></i>) rechts neben der Suchleiste',
-    'firefox-klar.2' => 'Klicken Sie unter dem Menüpunkt "Suche" auf "Suchmaschine". Aktuell wird die voreingestellte Suchmaschine angezeigt.',
-    'firefox-klar.3' => 'Klicken Sie auf "Weitere Suchmaschine hinzufügen": Geben Sie "MetaGer" als Namen und "https://metager.de/meta/meta.ger3?eingabe=%s" als Suchstring ein.',
-    'firefox-klar.4' => 'Achten Sie hierbei darauf, dass sich keine Leerzeichen am Ende des Suchstrings "einschleichen", da Firefox Klar die Speicherung der Einstellung sonst verweigert.',
-
-    'chrome.1' => 'Klicken Sie in Ihrem Chrome oben rechts auf <i class="fa fa-ellipsis-v"></i> und im folgenden Menü auf "Einstellungen", um die Einstellungen Ihres Chromes zu öffnen.',
-    'chrome.2' => 'Im Bereich "Suchen" klicken Sie auf Suchmaschinen verwalten...',
-    'chrome.3' => 'In der nun angezeigten Liste, finden Sie den Eintrag "MetaGer". Fahren Sie mit der Maus über den Eintrag und klicken auf "Als Standard festlegen"',
-    'chrome.4' => 'MetaGer als Startseite im :browser einrichten',
-    'chrome.5' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-ellipsis-v"></i> und öffnen Sie die "Einstellungen"',
-    'chrome.6' => 'Im Bereich "Beim Start" wählen Sie "Bestimmte Seite oder Seiten öffnen und klicken anschließend auf "Seiten festlegen"',
-    'chrome.7' => 'Tragen Sie "https://metager.de" als URL bei "Neue Seite hinzufügen ein"',
-    'chrome.8' => 'Hinweis: Alle hier sichtbaren Webseiten werden nun beim Start des Browsers geöffnet. Sie können Einträge entfernen, indem Sie mit der Maus drüber fahren und rechts auf das "x" klicken.',
-
-    'opera.1' => 'Klicken Sie <a href="/" target="_blank" rel="noopener">hier</a> um MetaGer in einem neuen Tab zu öffnen.',
-    'opera.2' => 'Im neuen Tab klicken Sie mit der rechten Maustaste auf das Sucheingabefeld in der Mitte der Seite.',
-    'opera.3' => 'Wählen Sie im Kontextmenü "Suchmaschine erstellen..."',
-    'opera.4' => 'Klicken Sie im Popup auf "erstellen"',
-    'opera.5' => '(Leider ist es Suchmaschinen nicht mehr möglich im Opera als Standard eingestellt zu werden, aber <a href="https://www.mozilla.org/de/firefox/new/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.)',
-    'opera.6' => 'MetaGer als Startseite im :browser einrichten',
-    'opera.7' => 'Klicken Sie im Browser-Menü auf "Bearbeiten"->"Einstellungen"',
-    'opera.8' => 'Im Bereich "Beim Starten" wählen Sie "Eine bestimmte Seite, oder bestimmte Seiten öffnen
-" und anschließend "Seiten festlegen"',
-    'opera.9' => 'Tragen Sie bei "Adresse eingeben" "https://metager.de" ein und bestätigen mit Enter',
-    'opera.10' => 'Klicken Sie auf "OK"',
-
-    'IE.1' => 'Klicken Sie <a href="javascript:window.external.addSearchProvider($(\'link[rel=search]\').attr(\'href\'));">hier</a>, um MetaGer als Suchmaschine hinzuzufügen',
-    'IE.4' => 'Klicken Sie in Ihrem Browser oben rechts auf Extras',
-    'IE.5' => 'Wählen Sie den Menüpunkt "Add-Ons verwalten"',
-    'IE.6' => 'Klicken Sie im Bereich Add-On-Typen auf "Suchanbieter" und danach im rechten Bereich auf "MetaGer"',
-    'IE.7' => 'Wählen Sie unten den Knopf "Als Standard"',
-    'IE.8' => 'MetaGer als Startseite im :browser einrichten',
-    'IE.9' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-cog"></i> und öffnen Sie die "Internetoptionen"',
-    'IE.10' => 'Falls MetaGer die einzige Startseite sein soll, markieren Sie im Textfeld den kompletten Text und ersetzen Ihn durch "https://metager.de"',
-    'IE.11' => 'Klicken Sie auf "OK"',
-
-    'edge.1' => 'Klicken Sie in Ihrem Browser oben rechts auf Extras (',
-    'edge.2' => ') und wählen Sie "Einstellungen"',
-    'edge.3' => 'Scrollen Sie nach unten und klicken auf "Erweiterte Einstellungen anzeigen"',
-    'edge.4' => 'Scrollen Sie erneut nach unten bis zum Punkt "In Adressleiste suchen mit" und klicken Sie auf "Ändern"',
-    'edge.5' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard"',
-    'edge.6' => 'MetaGer als Startseite im :browser einrichten',
-    'edge.7' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-ellipsis-h"></i> und öffnen Sie die "Einstellungen"',
-    'edge.8' => 'Wählen Sie im Bereich "Öffnen mit" den Punkt "Bestimmte Seite(n)" aus',
-    'edge.9' => 'Im Dropdown-Menü darunter wählen Sie "Benutzerdefiniert" aus',
-    'edge.10' => 'Im Bereich darunter tragen Sie "https://metager.de" in das Feld "Webadresse eingeben" ein und klicken auf das "+" Symbol',
-    'edge.11' => 'Entfernen Sie alle Einträge, die beim Start nicht geöffnet werden sollen (z.B. about:start), indem Sie rechts auf das kleine "x" klicken.',
-
-    'safari.1' => 'Leider können Sie MetaGer nicht zum Safari hinzufügen, weil alle Plugins, die dem Hinzufügen alternativer Suchmaschinen dienten, nicht mehr akzeptiert werden.',
-   
-
-    'vivaldi.1' => 'Klicken Sie in Ihrem Browser oben links auf das rote Vivaldi Logo und wählen Sie zuerst "Werkzeuge", dann im Untermenü "Einstellungen".',
-    'vivaldi.2' => 'In dem dann erscheinenden Menu wählen Sie bitte "Suche".',
-    'vivaldi.3' => 'Wählen Sie "Neue Suche hinzufügen".',
-    'vivaldi.4' => 'Tragen Sie im Feld URL "https://metager.de/meta/meta.ger3?eingabe=%s" ein.',
-    'vivaldi.5' => 'Tragen Sie als Beschreibung "MetaGer" und als Kürzel "mg" ein.',
-    'vivaldi.6' => 'Wenn Sie MetaGer als Standardsuchmaschine verwenden möchten, setzen Sie ein Häkchen bei "Als Standard setzen".',
-    'vivaldi.7' => 'Klicken Sie auf "Hinzufügen".',
-    'vivaldi.8' => 'MetaGer als Startseite im :browser einrichten',
-    'vivaldi.9' => 'Klicken Sie in Ihrem Browser oben links auf das rote Vivaldi Logo und wählen Sie zuerst "Werkzeuge", dann im Untermenü "Einstellungen".',
-    'vivaldi.10' => 'Tragen Sie im Feld "Startseite" "https://metager.de" ein.',
-
-    'mfirefox.1' => 'Tippen Sie in Ihrem Browser unten rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
-    'mfirefox.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
-    'mfirefox.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Allgemein" den Menüpunkt "Suchen".',
-    'mfirefox.4' => 'Tippen Sie auf "+ Suchmaschine hinzufügen".',
-    'mfirefox.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein.',
-
-    'mfirefoxlt80.1' => 'Tippen und halten Sie mit dem Finger auf dem unten stehenden Suchfeld gedrückt.',
-    'mfirefoxlt80.2' => 'Im geöffneten Kontextmenü können Sie \"Suchmaschine hinzufügen\" auswählen',
-
-    'mchrome.1' => 'Tippen Sie in Ihrem Browser oben rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',
-    'mchrome.2' => 'Wählen Sie den Menüpunkt Einstellungen.',
-    'mchrome.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Grundeinstellungen" den Menüpunkt "Suchmaschine".',
-    'mchrome.4' => 'Tippen Sie in der Kategorie "Kürzlich besucht" auf MetaGer.',
-
-    'mopera.1' => 'Tippen Sie <a href="/" target="_blank" rel="noopener">hier</a> um MetaGer in einem neuen Tab zu öffnen.',
-    'mopera.2' => 'Im neuen Tab tippen und halten Sie mit dem Finger auf das Sucheingabefeld in der Mitte der Seite.',
-    'mopera.3' => 'Wählen Sie im erscheinenden Menü "Suchmaschine hinzufügen...".',
-    'mopera.4' => 'Tippen Sie im Popup auf "OK".',
-    'mopera.5' => 'Nun können Sie in einem neuen Tab durch das Tippen auf das Logo Ihrer Standardsuchmaschine MetaGer auswählen',
-    'mopera.6' => '(Leider ist es Suchmaschinen nicht mehr möglich im Opera als Standard eingestellt zu werden.)',
-    //TODO: EXTENDING INFO
-
-    'medge.1' => 'Tippen Sie in Ihrem Browser unten in der Mitte auf "<i class="fas fa-ellipsis-h"></i>" um das Browsermenü zu öffnen',
-    'medge.2' => 'Wählen Sie den Menüpunkt Einstellungen auf der linken Seite des erscheinenden Menüs',
-    'medge.3' => 'Scrollen Sie nach unten und tippen in der Kategorie "Erweitert" auf "Suchen"',
-    'medge.4' => 'Wählen Sie in der Kategorie "Kürzlich besucht" MetaGer aus.',
-
-    //UC Browser Mobile, Samsung Internet, Safari Mobile (?)
-    'notavailable.1' => 'Leider bietet der von Ihnen genutzte Browser nicht die Möglichkeit MetaGer als (Standard-)Suchmaschine einzustellen',
-    //TODO: EXTENDING INFO
+    //Unable: Opera Desktop, Safari Desktop, UC Browser Mobile, Samsung Internet Mobile, Safari Mobile
+    'desktop-unable' => 'Leider bietet der von Ihnen genutzte Browser nicht die Möglichkeit MetaGer als (Standard-)Suchmaschine einzustellen, aber <a href="https://www.mozilla.org/de/firefox/new/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.',
+    'mobile-unable' => 'Leider bietet der von Ihnen genutzte Browser nicht die Möglichkeit MetaGer als (Standard-)Suchmaschine einzustellen, aber <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.',
+    
+    'desktop-notlisted' => 'Leider ist uns bisher nicht bekannt, wie die (Standard-)Suchmaschine in dem von Ihnen genutzen Browser einzustellen ist, aber <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.' ,
+    'mobile-notlisted' => 'Leider ist uns bisher nicht bekannt, wie die (Standard-)Suchmaschine in dem von Ihnen genutzen Browser einzustellen ist, aber <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.' ,
 ];

@@ -2,7 +2,7 @@
 
 return [
     'open-modal' => 'MetaGer-Plugin hinzufügen',
-    'open-modal.title' => 'MetaGer zu Ihren Browser hinzufügen',
+    'open-modal.title' => 'MetaGer zu Ihrem Browser hinzufügen',
     'head.1' => 'MetaGer zum Firefox hinzufügen',
     'head.2' => 'MetaGer zum Chrome hinzufügen',
     'head.3' => 'MetaGer zum Opera hinzufügen',
@@ -13,6 +13,7 @@ return [
     'head.8' => 'MetaGer zum Firefox Klar hinzufügen',
 
     'default-search' => 'MetaGer als Standardsuchmaschine einrichten',
+    'default-page' => 'MetaGer als Startseite einrichten',
 
     //Unable: Opera Desktop, Safari Desktop, UC Browser Mobile, Samsung Internet Mobile, Safari Mobile
     'desktop-unable' => 'Leider bietet der von Ihnen genutzte Browser nicht die Möglichkeit MetaGer als (Standard-)Suchmaschine einzustellen, aber <a href="https://www.mozilla.org/de/firefox/new/" target="_blank" rel="noopener">hier</a> können Sie mit Firefox einen Open-Source Browser installieren, der dies unterstützt.',

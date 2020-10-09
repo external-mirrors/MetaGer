@@ -167,8 +167,7 @@ Route::group(
                 ->with('navbarFocus', 'dienste')
                 ->with('agent', new Agent())
                 ->with('browser', (new Agent())->browser())
-                ->with('request', $this->input('request', 'GET'))
-                ->with('css', [mix('/css/plugin.css')]);
+                ->with('request', $this->input('request', 'GET'));
         });
 
         Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {

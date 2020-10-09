@@ -46,9 +46,6 @@ mix
   .less("resources/less/utility.less", "public/css/utility.css", {
     strictMath: true
   })
-  .less("resources/less/metager/pages/plugin.less", "public/css/plugin.css",{
-    strictMath: true
-  })
   // js
   .babel(
     [

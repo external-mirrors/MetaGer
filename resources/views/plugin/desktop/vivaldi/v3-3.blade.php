@@ -1,11 +1,3 @@
-@extends('layouts.subPages')
-
-@section('title', $title )
-
-@section('navbarFocus.tips', 'class="active"')
-
-@section('content')
-
 <div class="card-heavy">
 	<h1 class="page-title">{{ trans('plugin-page.head.7') }}</h1>
 	<h3>{{ trans('plugin-page.default-search') }}</h3>
@@ -23,4 +15,3 @@
 		<li>{{ trans('plugin-desktop/desktop-vivaldi.default-page-v3-3.2') }}</li>
 	</ol>
 </div>
-@endsection

@@ -1,0 +1,8 @@
+<?php
+    return[
+
+        'default-search-v8-8' => 'Öffnen Sie die Einstellungen Ihres Browsers über das Zahnrad (unter Android <i class="fas fa-ellipsis-v"></i>) rechts neben der Suchleiste',
+        'default-search-v8-8' => 'Klicken Sie unter dem Menüpunkt "Suche" auf "Suchmaschine". Aktuell wird die voreingestellte Suchmaschine angezeigt.',
+        'default-search-v8-8' => 'Klicken Sie auf "Weitere Suchmaschine hinzufügen": Geben Sie "MetaGer" als Namen und "https://metager.de/meta/meta.ger3?eingabe=%s" als Suchstring ein.',
+        'default-search-v8-8' => 'Achten Sie hierbei darauf, dass sich keine Leerzeichen am Ende des Suchstrings "einschleichen", da Firefox Klar die Speicherung der Einstellung sonst verweigert.',
+    ];

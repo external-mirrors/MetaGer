@@ -18,5 +18,5 @@
         'default-page-v49.1' => 'Navigate to the top right corner of your browser <i class="fa fa-ellipsis-v"></i> and choose "Settings".',
         'default-page-v49.2' => 'Under "On startup" choose "Open a specific page or set of pages." and click "Set pages".',
         'default-page-v49.3' => 'Enter ":link" as URL and click OK.',
-        'default-page-v49.4' => 'Hint: Every listed page in this window will opened on startup. You can remove entries by moving your mouse over them and click "x"',
+        'default-page-v49.4' => 'Hint: Every listed page in this window will be opened on startup. You can remove entries by moving your mouse over them and click "x"',
     ];

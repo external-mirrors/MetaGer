@@ -13,7 +13,7 @@
 	<ol>
 		<li>{{ trans('plugin-desktop/desktop-opera.default-page-v36.1') }}</li>
 		<li>{{ trans('plugin-desktop/desktop-opera.default-page-v36.2') }}</li>
-		<li>{{ trans('plugin-desktop/desktop-opera.default-page-v36.3') }}</li>
+		<li>{{ trans('plugin-desktop/desktop-opera.default-page-v36.3', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}</li>
 		<li>{!! trans('plugin-desktop/desktop-opera.default-page-v36.3') !!}</li>
 	</ol>
 </div>

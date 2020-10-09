@@ -11,7 +11,7 @@
 	<ol>
 		<li>{!! trans('plugin-desktop/desktop-chrome.default-page-v49.1') !!}</li>
 		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.2') }}</li>
-		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.3') }}</li>
+		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.3', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}</li>
 		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.4') }}</li>
 	</ol>
 </div>

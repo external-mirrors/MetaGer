@@ -56,9 +56,7 @@
 			@endif
 
 		@elseif ($browser === 'Edge')
-			@if (version_compare($agent->version($browser), '85.', '>='))
-				@include('plugin/desktop/edge/v85')
-			@elseif (version_compare($agent->version($browser), '80.', '>='))
+			@if (version_compare($agent->version($browser), '80.', '>='))
 				@include('plugin/desktop/edge/v80')
 			@elseif (version_compare($agent->version($browser), '18.', '>='))
 				@include('plugin/desktop/edge/v18')

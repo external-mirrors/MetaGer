@@ -17,7 +17,7 @@
 			<li>{!! trans('plugin-desktop/mobile-chrome.default-page-v83.1') !!}</li>
 			<li>{{ trans('plugin-desktop/mobile-chrome.default-page-v83.2') }}</li>
 			<li>{{ trans('plugin-desktop/mobile-chrome.default-page-v83.3') }}</li>
-			<li>{{ trans('plugin-desktop/mobile-chrome.default-page-v83.4') }}</li>
+			<li>{{ trans('plugin-desktop/mobile-chrome.default-page-v83.4', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}</li>
 		</ol>
 	</div>
 

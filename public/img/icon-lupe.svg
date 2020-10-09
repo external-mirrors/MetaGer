@@ -5,39 +5,11 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="92.261986"
-   height="89.317871"
-   viewBox="0 0 24.410983 23.632021"
-   version="1.1"
    id="svg1729"
-   sodipodi:docname="icon-lupe.svg"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     id="namedview9"
-     showgrid="false"
-     inkscape:zoom="2.36"
-     inkscape:cx="-129.94886"
-     inkscape:cy="42.786749"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg1729"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+   version="1.1"
+   viewBox="0 0 24.410983 23.632021"
+   height="89.317871"
+   width="92.261986">
   <defs
      id="defs1723" />
   <metadata
@@ -53,18 +25,18 @@
     </rdf:RDF>
   </metadata>
   <circle
-     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.767277;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="path2298"
-     cx="10.750866"
-     cy="6.1155853"
+     transform="rotate(15.366798)"
      r="7.3626533"
-     transform="rotate(15.366798)" />
+     cy="6.1155853"
+     cx="10.750866"
+     id="path2298"
+     style="fill:none;fill-opacity:1;stroke:#000000;stroke-width:2.767277;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
   <rect
-     style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.69334972;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-     id="rect2300"
-     width="2.1384423"
-     height="11.882498"
-     x="-2.0791028"
+     transform="matrix(0.66463899,-0.74716465,0.74301394,0.66927594,0,0)"
      y="19.314386"
-     transform="matrix(0.66463899,-0.74716465,0.74301394,0.66927594,0,0)" />
+     x="-2.0791028"
+     height="11.882498"
+     width="2.1384423"
+     id="rect2300"
+     style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:1.69334972;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
 </svg>

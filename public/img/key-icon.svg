@@ -6,62 +6,22 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="75.959671"
-   height="76.674469"
-   viewBox="0 0 20.097663 20.286787"
-   version="1.1"
    id="svg8"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="key-icon.svg">
+   version="1.1"
+   viewBox="0 0 20.097663 20.286787"
+   height="76.674469"
+   width="75.959671">
   <defs
      id="defs2">
     <linearGradient
-       id="linearGradient873"
-       osb:paint="solid">
+       osb:paint="solid"
+       id="linearGradient873">
       <stop
-         style="stop-color:#ff0000;stop-opacity:1;"
+         id="stop871"
          offset="0"
-         id="stop871" />
+         style="stop-color:#ff0000;stop-opacity:1;" />
     </linearGradient>
   </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="2.6964653"
-     inkscape:cx="-68.405148"
-     inkscape:cy="40.499718"
-     inkscape:document-units="mm"
-     inkscape:current-layer="g951"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     inkscape:snap-global="false"
-     inkscape:snap-center="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     units="px"
-     inkscape:snap-bbox="true"
-     inkscape:snap-bbox-midpoints="false"
-     inkscape:bbox-nodes="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
-    <inkscape:grid
-       type="xygrid"
-       id="grid911"
-       empspacing="14"
-       originx="-2.8857658"
-       originy="-2.8959844" />
-  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -75,18 +35,15 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-2.8857658,-3.2755624)">
+     transform="translate(-2.8857658,-3.2755624)"
+     id="layer1">
     <g
-       id="g951"
-       transform="matrix(0.94051295,0,0,0.94051295,12.688618,13.321448)">
+       transform="matrix(0.94051295,0,0,0.94051295,12.688618,13.321448)"
+       id="g951">
       <path
-         inkscape:connector-curvature="0"
-         id="path937"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.106914;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
          d="m -10.422781,9.3107291 0.0017,-1.526819 h 0.8071317 0.807131 v -0.866408 -0.866408 l 0.86748,-0.0029 0.86748,-0.0029 0.0027,-0.92705 0.0027,-0.927051 3.300666,-3.33163731 3.30066603,-3.33163709 -0.206677,-0.6606678 c -0.52841803,-1.6891468 -0.40958203,-3.3262991 0.346131,-4.7684972 0.307447,-0.5867292 0.411196,-0.7148506 1.071855,-1.3236423 C 1.3232367,-9.7566402 1.5946757,-9.95234 2.0320577,-10.151976 c 1.886963,-0.86127 4.136514,-0.661624 5.938228,0.5270143 2.6979843,1.779932 3.7405353,5.2736631 2.3793253,7.9734396 -0.280303,0.5559412 -0.4329433,0.75765055 -1.0171583,1.34414499 -0.598486,0.600869 -0.770687,0.7304449 -1.331871,1.002592 -1.432939,0.69492081 -3.054378,0.80131781 -4.534475,0.2975476 L 2.9969667,0.83308419 0.08981073,3.7400015 C -1.5091093,5.3388211 -3.7833163,7.5774051 -4.9639763,8.7146351 l -2.146659,2.0676889 -1.61682,0.06775 c -0.889223,0.03729 -1.6348557,0.0497 -1.6569367,0.02762 -0.02208,-0.02208 -0.03939,-0.727216 -0.03845,-1.5669669 z m 6.8271977,-5.1189566 c 4.781013,-4.78101331 4.819948,-4.82192821 4.701163,-4.94071301 -0.11878197,-0.11878264 -0.15969997,-0.0798493 -4.940713,4.70116361 -4.781013,4.781014 -4.819949,4.821929 -4.701164,4.940714 0.118783,0.118783 0.159698,0.07985 4.940714,-4.7011646 z m 10.843356,-7.7379013 c 0.315039,-0.03763 0.698064,-0.3711741 0.733173,-0.6384639 0.04986,-0.3795641 -0.07969,-0.5484144 -1.545386,-2.0141061 -1.465691,-1.4656916 -1.634543,-1.5952477 -2.014106,-1.5453867 -0.267288,0.035112 -0.600832,0.4181376 -0.638464,0.7331738 l -0.03367,0.2819161 1.608267,1.6082677 1.608267,1.608267 z"
-         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.106914;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+         id="path937" />
     </g>
   </g>
 </svg>

@@ -5,49 +5,13 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="97.537514"
-   height="101.45786"
-   viewBox="0 0 25.8068 26.844057"
-   version="1.1"
    id="svg8"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="member-icon.svg">
+   version="1.1"
+   viewBox="0 0 25.8068 26.844057"
+   height="101.45786"
+   width="97.537514">
   <defs
      id="defs2" />
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="3.8161049"
-     inkscape:cx="-38.62034"
-     inkscape:cy="9.2068262"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     inkscape:snap-global="true"
-     units="px"
-     inkscape:window-width="1848"
-     inkscape:window-height="1016"
-     inkscape:window-x="1992"
-     inkscape:window-y="27"
-     inkscape:window-maximized="1"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0">
-    <inkscape:grid
-       type="xygrid"
-       id="grid50"
-       empspacing="4"
-       originx="-6.3633495"
-       originy="-12.094734" />
-  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -61,45 +25,34 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(-6.3633498,12.480454)">
+     transform="translate(-6.3633498,12.480454)"
+     id="layer1">
     <circle
-       style="fill:none;fill-opacity:1;stroke:#040504;stroke-width:2.37030244;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path1041"
-       cx="17.747547"
+       r="6.5327344"
        cy="-4.7625685"
-       r="6.5327344" />
+       cx="17.747547"
+       id="path1041"
+       style="fill:none;fill-opacity:1;stroke:#040504;stroke-width:2.37030244;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <path
-       style="fill:none;fill-opacity:1;stroke:#040504;stroke-width:2.37030244;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path1043"
-       sodipodi:type="arc"
-       sodipodi:cx="18.001652"
-       sodipodi:cy="12.493752"
-       sodipodi:rx="10.453033"
-       sodipodi:ry="10.452374"
-       sodipodi:start="3.0717795"
-       sodipodi:end="5.6548668"
-       sodipodi:arc-type="arc"
        d="M 7.5740814,13.222872 A 10.453033,10.452374 0 0 1 14.426504,2.6717323 10.453033,10.452374 0 0 1 26.458334,6.3500002"
-       sodipodi:open="true" />
+       id="path1043"
+       style="fill:none;fill-opacity:1;stroke:#040504;stroke-width:2.37030244;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <rect
-       ry="0"
-       y="6.9963541"
-       x="27.5902"
-       height="6.9682493"
-       width="1.3936499"
+       style="fill:#000000;fill-opacity:1;stroke:#040504;stroke-width:0.79799998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1053"
-       style="fill:#000000;fill-opacity:1;stroke:#040504;stroke-width:0.79799998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       width="1.3936499"
+       height="6.9682493"
+       x="27.5902"
+       y="6.9963541"
+       ry="0" />
     <rect
-       rx="0"
-       ry="0"
-       y="9.7836542"
-       x="24.8029"
-       height="1.3936501"
-       width="6.9682503"
+       style="fill:#000000;fill-opacity:1;stroke:#040504;stroke-width:0.79799998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect1055"
-       style="fill:#000000;fill-opacity:1;stroke:#040504;stroke-width:0.79799998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+       width="6.9682503"
+       height="1.3936501"
+       x="24.8029"
+       y="9.7836542"
+       ry="0"
+       rx="0" />
   </g>
 </svg>

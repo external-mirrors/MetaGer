@@ -7,12 +7,12 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="119.11248mm"
+   height="72.917885mm"
+   viewBox="0 0 119.11248 72.917885"
    version="1.1"
    id="svg886"
-   inkscape:version="1.0.1 (3bc2e813f5, 2020-09-07)"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
    sodipodi:docname="icon-contact.svg">
   <defs
      id="defs880">
@@ -47,21 +47,27 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.76"
-     inkscape:cx="400"
-     inkscape:cy="560"
+     inkscape:cx="-244.34219"
+     inkscape:cy="1.9610348"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
      showgrid="true"
      inkscape:snap-global="false"
-     inkscape:window-width="1368"
-     inkscape:window-height="850"
-     inkscape:window-x="-6"
-     inkscape:window-y="-6"
-     inkscape:window-maximized="1">
+     inkscape:window-width="1920"
+     inkscape:window-height="1043"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
-       id="grid1462" />
+       id="grid1462"
+       originx="-27.050187"
+       originy="-144.86272" />
   </sodipodi:namedview>
   <metadata
      id="metadata883">
@@ -78,36 +84,39 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-27.050188,-79.219395)">
     <g
        id="g1493-2"
        transform="matrix(-1,0,0,1,172.73174,21.93258)">
       <ellipse
-         style="fill:#000000;stroke:#040504;stroke-width:0.7"
+         style="fill:#000000;stroke:#040504;stroke-width:0.69999999"
          id="path1451-6"
          cx="68.756851"
          cy="105.13705"
          rx="37.424618"
          ry="24.717651" />
       <path
-         style="fill:#000000;stroke:#040504;stroke-width:0.933711"
+         style="fill:#000000;stroke:#040504;stroke-width:0.93371099"
          d="m 27.10516,128.38204 c -0.147797,-0.27965 0.01285,-1.02894 0.357,-1.66507 0.670324,-1.23905 5.305675,-6.42005 7.239767,-8.09199 l 1.172115,-1.01325 1.205305,1.26285 c 0.662922,0.69458 2.577526,2.19334 4.254682,3.33059 l 3.049372,2.06773 -2.104025,0.77414 c -3.890322,1.4314 -11.161497,3.47085 -13.041461,3.65796 -1.519852,0.15125 -1.913651,0.0916 -2.132755,-0.32296 z"
          id="path1489-0"
          inkscape:transform-center-x="1.4358885"
-         inkscape:transform-center-y="-26.036256" />
+         inkscape:transform-center-y="-26.036256"
+         inkscape:connector-curvature="0" />
     </g>
     <ellipse
-       style="fill:#000000;stroke:#ffffff;stroke-width:2.4;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:#000000;stroke:#ffffff;stroke-width:5.4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="path1451"
        cx="68.756851"
        cy="105.13705"
        rx="37.424618"
        ry="24.717651" />
     <path
-       style="fill:#000000;stroke:none;stroke-width:1.14847;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#000000;stroke:none;stroke-width:1.14847004;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="m 27.115097,128.27021 c -0.174514,-0.3581 0.01517,-1.31759 0.421533,-2.13217 0.791494,-1.58665 6.264751,-8.22106 8.548457,-10.36204 l 1.383991,-1.29749 1.423182,1.61711 c 0.782754,0.88943 3.043449,2.80864 5.023775,4.26493 l 3.60059,2.64778 -2.484358,0.99131 c -4.593553,1.83294 -13.179095,4.44452 -15.39889,4.68412 -1.794586,0.19368 -2.25957,0.1173 -2.51828,-0.41355 z"
        id="path1489"
        inkscape:transform-center-x="1.6954459"
-       inkscape:transform-center-y="-33.34019" />
+       inkscape:transform-center-y="-33.34019"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>

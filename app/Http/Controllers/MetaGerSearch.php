@@ -97,10 +97,7 @@ class MetaGerSearch extends Controller
         }
 
         # Ergebnisse der Suchmaschinen kombinieren:
-        $metager->prepareResults();
-        if (!empty($timings)) {
-            $timings["prepareResults"] = microtime(true) - $time;
-        }
+        $metager->prepareResults($timings);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -213,7 +210,7 @@ class MetaGerSearch extends Controller
         $metager->setApiAuthorized($mg["apiAuthorized"]);
         $metager->setAdgoalLoaded($adgoal["loaded"]);
         $metager->setAdgoalHash($adgoal["adgoalHash"]);
-
+        
         $metager->parseFormData($request);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);

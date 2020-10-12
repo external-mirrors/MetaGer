@@ -252,11 +252,14 @@ class MetaGer
         }
     }
 
-    public function prepareResults()
+    public function prepareResults(&$timings = null)
     {
         $engines = $this->engines;
         // combine
         $this->combineResults($engines);
+        if(!empty($timings)){
+            $timings["prepareResults"]["combined results"] = microtime(true) - $timings["starttime"];
+        }
         // misc (WiP)
         if ($this->fokus == "nachrichten") {
             $this->results = array_filter($this->results, function ($v, $k) {
@@ -276,7 +279,9 @@ class MetaGer
                 return ($a->getRank() < $b->getRank()) ? 1 : -1;
             });
         }
-
+        if(!empty($timings)){
+            $timings["prepareResults"]["sorted results"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Results
         $newResults = [];
         foreach ($this->results as $result) {
@@ -285,7 +290,9 @@ class MetaGer
             }
         }
         $this->results = $newResults;
-
+        if(!empty($timings)){
+            $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -298,7 +305,9 @@ class MetaGer
             $newResults[] = $ad;
         }
         $this->ads = $newResults;
-
+        if(!empty($timings)){
+            $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
+        }
         #Adgoal Implementation
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
@@ -312,11 +321,20 @@ class MetaGer
                     }
                 }
                 $this->adgoalHash = $this->startAdgoal($this->results);
+                if(!empty($timings)){
+                    $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
+                }
             }
             if (!$this->javascript) {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
+                if(!empty($timings)){
+                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
+                }
             } else {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
+                if(!empty($timings)){
+                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
+                }
             }
         } else {
             $this->adgoalLoaded = true;
@@ -325,6 +343,9 @@ class MetaGer
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
+        if(!empty($timings)){
+            $timings["prepareResults"]["human verification"] = microtime(true) - $timings["starttime"];
+        }
 
         $counter = 0;
         $firstRank = 0;
@@ -345,6 +366,9 @@ class MetaGer
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
+            if(!empty($timings)){
+                $timings["prepareResults"]["filled cache"] = microtime(true) - $timings["starttime"];
+            }
         } else {
             $this->next = [];
         }
@@ -375,7 +399,7 @@ class MetaGer
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
-            return null;
+            return true;
         }
         $tldList = "";
         foreach ($results as $result) {
@@ -393,7 +417,7 @@ class MetaGer
 
         # Hashwert
         $hash = md5("meta" . $publicKey . $tldList . "GER");
-        
+
         # Query
         $query = $this->q;
 
@@ -421,6 +445,11 @@ class MetaGer
         # Wait for result
         $startTime = microtime(true);
         $answer = null;
+
+        # Hash is true if Adgoal request wasn't started in the first place
+        if($hash === true){
+            return true;
+        }
 
         if ($waitForResult) {
             while (microtime(true) - $startTime < 5) {

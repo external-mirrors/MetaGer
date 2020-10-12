@@ -4,7 +4,7 @@
 			<div class="search-input-submit">
 				<div id="search-key">
 					<a id="key-link" @if(isset($apiAuthorized) && $apiAuthorized)class="authorized" @else class="unauthorized"@endif href="{{ action('KeyController@index', ['redirUrl' => !empty($metager) ? $metager->generateSearchLink($metager->getFokus()) : url()->full() ]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
-						<img src="/img/key-icon.svg"alt="" aria-hidden="true"id="searchbar-img-key">
+						<img @if(isset($apiAuthorized) && $apiAuthorized)src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="" aria-hidden="true" id="searchbar-img-key">
 					</a>
 				</div>
 				<div class="search-input">

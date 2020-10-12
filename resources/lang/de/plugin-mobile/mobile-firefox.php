@@ -2,7 +2,8 @@
     return[
         //Instructions for Firefox Mobile version < 80
         'default-search-vlt80.1' => 'Tippen und halten Sie mit dem Finger auf dem unten stehenden Suchfeld gedrückt.',
-        'default-search-vlt80.2' => 'Im geöffneten Kontextmenü können Sie \"Suchmaschine hinzufügen\" auswählen',
+        'default-search-vlt80.2' => 'Im geöffneten Kontextmenü können Sie "Suchmaschine hinzufügen" auswählen',
+        'default-search-vlt80.3' => 'In den Browsereinstellungen haben Sie nun die Möglichkeit im Bereich "Suchen" MetaGer als Standardsuchmaschine zu wählen.',
 
         //Instructions for Firefox Mobile version >= 80
         'default-search-v80.1' => 'Tippen Sie in Ihrem Browser unten rechts auf "<i class="fas fa-ellipsis-v"></i>" um das Browsermenü zu öffnen.',

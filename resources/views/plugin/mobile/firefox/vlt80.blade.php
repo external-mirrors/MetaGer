@@ -7,6 +7,7 @@
 		<ol>
 			<li>{{ trans('plugin-mobile/mobile-firefox.default-search-vlt80.1') }}</li>
 			<li>{{ trans('plugin-mobile/mobile-firefox.default-search-vlt80.2') }}</li>
+			<li>{{ trans('plugin-mobile/mobile-firefox.default-search-vlt80.3') }}</li>
 		</ol>
 		@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	</div>

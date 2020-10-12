@@ -9,7 +9,9 @@
 			<li>{{ trans('plugin-mobile/mobile-chrome.default-search-v83.2') }}</li>
 			<li>{{ trans('plugin-mobile/mobile-chrome.default-search-v83.3') }}</li>
 			<li>{{ trans('plugin-mobile/mobile-chrome.default-search-v83.4') }}</li>
+			<li><small>{{ trans('plugin-mobile/mobile-chrome.default-search-v83.5') }}</small></li>
 		</ol>
+		@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	</div>
     <div class="card-heavy">
 		<h3>{{ trans('plugin-page.default-page') }}</h3>

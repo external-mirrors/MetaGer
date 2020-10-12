@@ -375,7 +375,7 @@ class MetaGer
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
-            return $results;
+            return null;
         }
         $tldList = "";
         foreach ($results as $result) {
@@ -393,7 +393,7 @@ class MetaGer
 
         # Hashwert
         $hash = md5("meta" . $publicKey . $tldList . "GER");
-
+        
         # Query
         $query = $this->q;
 
@@ -408,6 +408,7 @@ class MetaGer
             "password" => null,
             "headers" => null,
             "cacheDuration" => 60,
+            "name" => "Adgoal",
         ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);

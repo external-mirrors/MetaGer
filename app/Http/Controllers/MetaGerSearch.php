@@ -210,7 +210,7 @@ class MetaGerSearch extends Controller
         $metager->setApiAuthorized($mg["apiAuthorized"]);
         $metager->setAdgoalLoaded($adgoal["loaded"]);
         $metager->setAdgoalHash($adgoal["adgoalHash"]);
-        
+
         $metager->parseFormData($request);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);

@@ -4,7 +4,7 @@
         //Instructions for Firefox version 52-56
         'default-search-v52.1' => 'Klicken Sie oben rechts neben der Adressleiste auf die Lupe mit dem Plussymbol.',
         'default-search-v52.2' => 'Wählen Sie im erscheinenden Menü das MetaGer-Logo mit dem Plussymbol.',
-        'default-search-v52.3' => 'Klicken Sie <a href="about:preferences#search" target="_blank">hier</a> um in die Sucheinstellungen zu gelangen.',
+        'default-search-v52.3' => 'Geben Sie "about:preferences#search" in die Adressleiste ein um in die Sucheinstellungen zu gelangen.',
         'default-search-v52.4' => 'Im Dropdownmenü unter "Standardsuchmaschine" steht Ihnen nun MetaGer zur Verfügung.',
 
         //Instructions for Firefox version 57-60

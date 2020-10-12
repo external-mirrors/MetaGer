@@ -325,6 +325,7 @@ class MetaGer
                     $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
                 }
             }
+        
             if (!$this->javascript) {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
                 if(!empty($timings)){
@@ -1016,6 +1017,10 @@ class MetaGer
         # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
         # Until then javascript parameter will be false
         $this->javascript = false;
+        if($request->filled("javascript") && is_bool($request->input("javascript"))){
+            $this->javascript = boolval($request->input("javascript"));
+            $request->request->remove("javascript");
+        }
         $this->jskey = $request->input('jskey', '');
         $request->request->remove("jskey");
 

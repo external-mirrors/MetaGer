@@ -46,7 +46,7 @@
 			@endif
 
 		@elseif ($browser === 'Opera')
-			@include ('plugin/desktop/opera/v59')
+			@include ('plugin/desktop/opera/v36')
 
 		@elseif ($browser === 'IE')
 			@if (version_compare($agent->version($browser), '11.', '>='))

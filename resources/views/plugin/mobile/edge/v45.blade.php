@@ -8,7 +8,6 @@
 			<li>{!! trans('plugin-desktop/mobile-edge.default-search-v45.1') !!}</li>
 			<li>{{ trans('plugin-desktop/mobile-edge.default-search-v45.2') }}</li>
 			<li>{{ trans('plugin-desktop/mobile-edge.default-search-v45.3') }}</li>
-			<li>{{ trans('plugin-desktop/mobile-edge.default-search-v45.4') }}</li>
 		</ol>
 	</div>
     <div class="card-heavy">

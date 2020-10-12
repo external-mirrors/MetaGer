@@ -16,7 +16,7 @@
 
         //Instructions for Firefox version >= 61
         'plugin' => 'You can download our plugin <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">here</a>.',
-        'default-search-v61.1' => 'Click "<i class="fas fa-ellipsis-h"></i>" on the right side in your address bar and choose "Add Search Engine".',
+        'default-search-v61.1' => 'Alternatively click "<i class="fas fa-ellipsis-h"></i>" on the right side in your address bar and choose "Add Search Engine".',
         'default-search-v61.2' => 'Enter "about:preferences#search" in the address bar. Choose MetaGer from the dropdown menu under "Default Search Engine".',
 
         //Instructions for Firefox version 52-60

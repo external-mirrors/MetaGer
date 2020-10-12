@@ -8,7 +8,7 @@
         'default-search-v15.4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard"',
 
         //Instructions for Edge version 18
-        'default-search-v18.1' => 'Klicken Sie in Ihrem Browser oben rechts auf "<i class="fa fa-cog" aria-hidden="true"></i>" und wählen Sie "Einstellungen".',
+        'default-search-v18.1' => 'Klicken Sie in Ihrem Browser oben rechts auf "<i class="fa fa-ellipsis-h"></i>" und wählen Sie "Einstellungen".',
         'default-search-v18.2' => 'Wählen Sie den Reiter "Erweitert".',
         'default-search-v18.3' => 'Scrollen Sie nach unten bis zum Punkt "In Adressleiste suchen mit" und klicken Sie auf "Ändern".',
         'default-search-v18.4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard".',

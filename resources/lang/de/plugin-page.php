@@ -15,7 +15,9 @@ return [
     'head.9' => 'MetaGer zum UCBrowser hinzufügen',
     'head.10' => 'Metager zum Samsung hinzufügen',
 
-    'browser-download' => 'Firefox runterladen',
+    'browser-download' => 'Firefox herunterladen',
+    'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
+    'firefox-default-search' => 'MetaGer als Standardsuchmaschine ohne Add-on einrichten',
     'default-search' => 'MetaGer als Standardsuchmaschine einrichten',
     'default-page' => 'MetaGer als Startseite einrichten',
 

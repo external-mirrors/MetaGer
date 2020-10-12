@@ -13,7 +13,9 @@ return [
     "head.8" => "Add MetaGer to your Firefox Focus",
 
     'browser-download' => 'Download Firefox',
-    'default-search' => 'Set MetaGer as the default search engine',
+    'firefox-plugin' => 'Set MetaGer as default search engine with add-on',
+    'firefox-default-search' => 'Set MetaGer as default search engine without add-on',
+    'default-search' => 'Set MetaGer as default search engine',
     'default-page' => 'Set MetaGer as start page',
 
     'desktop-unable' => 'The browser you use does not offer to add MetaGer as (default) search engine, but you can download Firefox <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">here</a>, an open-source browser which provides the feature.',

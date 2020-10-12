@@ -10,6 +10,8 @@
             <li>{{ trans('plugin-mobile/mobile-firefox.default-search-v80.3') }}</li>
             <li>{{ trans('plugin-mobile/mobile-firefox.default-search-v80.4') }}</li>
             <li>{!! trans('plugin-mobile/mobile-firefox.default-search-v80.5') !!}</li>
+			<li style="list-style:none;">{{ trans('plugin-mobile/mobile-firefox.search-string') }}</li>
+			<code>{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("resultpage", ["eingabe" => ""])) }}%s</code>
 		</ol>
 	</div>
 

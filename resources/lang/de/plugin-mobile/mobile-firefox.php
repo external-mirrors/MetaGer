@@ -1,5 +1,8 @@
 <?php
     return[
+
+        'search-string' => 'Such-String:',
+
         //Instructions for Firefox Mobile version < 80
         'default-search-vlt80.1' => 'Tippen und halten Sie mit dem Finger auf dem unten stehenden Suchfeld gedrückt.',
         'default-search-vlt80.2' => 'Im geöffneten Kontextmenü können Sie "Suchmaschine hinzufügen" auswählen',

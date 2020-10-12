@@ -9,6 +9,8 @@
 			<li>{{ trans('plugin-mobile/mobile-firefox-klar.default-search-v8-8.2') }}</li>
             <li>{{ trans('plugin-mobile/mobile-firefox-klar.default-search-v8-8.3') }}</li>
             <li>{{ trans('plugin-mobile/mobile-firefox-klar.default-search-v8-8.4') }}</li>
+			<li style="list-style:none;">{{ trans('plugin-mobile/mobile-firefox.search-string') }}</li>
+			<code>{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("resultpage", ["eingabe" => ""])) }}%s</code>
 		</ol>
 	</div>
 

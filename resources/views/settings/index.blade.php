@@ -82,24 +82,54 @@
             </div>
             <button type="submit" class="btn btn-default">@lang('settings.save')</button>
         </form>
+    </div>
 
-    </div>
-    @if(LaravelLocalization::getCurrentLocale() === "de")
     <div class="card-light">
-    <h2>Weitere Einstellungen</h2>
-    <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
-        <input type="hidden" name="fokus" value="{{ $fokus }}">
-        <input type="hidden" name="url" value="{{ $url }}">
-        <div class="form-group">
-            <label for="zitate">Zitate</label>
-            <select name="zitate" id="zitate" class="form-control">
-                <option value="on" @if(Cookie::get($fokus . "_setting_zitate") === null)disabled selected @endif>Anzeigen</option>
-                <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-default">@lang('settings.save')</button>
-    </form>
+        <h2>@lang('settings.header.4')</h2>
+        <p>@lang('settings.text.4')</p>
+        <form id="blacklist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+            <input type="hidden" name="url" value="{{ $url }}">
+            <input type="hidden" name="fokus" value="{{ $fokus }}">
+            <label for="blacklist">@lang('settings.address')</label>
+            <input id="blacklist" name="blacklist" type="text">
+            <button type="submit" class="btn btn-default">@lang('settings.add')</button> <!--input field flex-grow:1;-->
+        </form>
+        @if(!empty(Cookie::get()))
+            <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+                <table>
+                @foreach(Cookie::get() as $key => $value)
+                    @if(stripos($key, 'blpage') !== false)
+                        <tr>
+                            <td>
+                                {{ $value }}
+                            </td>
+                            <td>
+                                <button type="submit" name="cookieKey" value="{{ $key }}">>delete entry<</button>
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+                </table>
+            </form>
+        @endif
     </div>
+
+    @if(LaravelLocalization::getCurrentLocale() === "de")
+        <div class="card-light">
+            <h2>Weitere Einstellungen</h2>
+            <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
+                <input type="hidden" name="fokus" value="{{ $fokus }}">
+                <input type="hidden" name="url" value="{{ $url }}">
+                <div class="form-group">
+                    <label for="zitate">Zitate</label>
+                    <select name="zitate" id="zitate" class="form-control">
+                        <option value="on" @if(Cookie::get($fokus . "_setting_zitate") === null)disabled selected @endif>Anzeigen</option>
+                        <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-default">@lang('settings.save')</button>
+            </form>
+        </div>
     @endif
     <div class="card-light" id="actions">
         @if($settingActive)

@@ -20,6 +20,8 @@ Route::group(
                 Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');
                 Route::post('es', 'SettingsController@enableSetting')->name('enableSetting');
                 Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');
+                Route::post('nb', 'SettingsController@newBlacklist')->name('newBlacklist');
+                Route::post('db', 'SettingsController@deleteBlacklist')->name('deleteBlacklist');
 
                 # Route to show and delete all settings
                 Route::get('all-settings', 'SettingsController@allSettingsIndex')->name('showAllSettings');

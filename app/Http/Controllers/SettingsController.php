@@ -268,4 +268,47 @@ class SettingsController extends Controller
         }
         return redirect($request->input('url', 'https://metager.de'));
     }
+
+    public function newBlacklist(Request $request)
+    {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        $blacklist = $request->input('blacklist');
+        $path = \Request::path();
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+        $cookies = Cookie::get();
+        $cookieCounter = 0;
+        $noduplicate = true;
+
+        if(!empty($cookies)){
+            foreach ($cookies as $key => $value) {
+                if($value==$blacklist){
+                    $noduplicate = false;
+                    break;
+                }
+                if(stripos($key, 'blpage') !== false) {
+                    $cookieCounter++;
+                }
+            }
+        }
+        if($noduplicate){
+            $cookieName= $fokus . '_blpage' . $cookieCounter;
+            Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
+        }
+
+        return redirect($request->input('url', 'https://metager.de'));
+    }
+
+    public function deleteBlacklist(Request $request)
+    {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        $path = \Request::path();
+        $cookieKey = $request->input('cookieKey');
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+
+        Cookie::queue($cookieKey, "", 0, $cookiePath, null, false, false);
+
+        return redirect($request->input('url', 'https://metager.de'));
+    }
 }

@@ -15,6 +15,9 @@ class MetaGerSearch extends Controller
 
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        if ($request->filled("chrome-plugin")) {
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
+        }
         $timings = null;
         if ($timing) {
             $timings = ['starttime' => microtime(true)];

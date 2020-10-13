@@ -138,14 +138,14 @@ class RequestFetcher extends Command
         $answersRead = 0;
         while (($info = curl_multi_info_read($mc, $messagesLeft)) !== false) {
             try {
-                $answerRead++;
+                $answersRead++;
                 $infos = curl_getinfo($info["handle"], CURLINFO_PRIVATE);
                 $infos = explode(";", $infos);
                 $resulthash = $infos[0];
                 $cacheDurationMinutes = intval($infos[1]);
                 $name = $infos[2];
                 $responseCode = curl_getinfo($info["handle"], CURLINFO_HTTP_CODE);
-                $body = "";
+                $body = "no-result";
 
                 $totalTime = curl_getinfo($info["handle"], CURLINFO_TOTAL_TIME);
                 \App\PrometheusExporter::Duration($totalTime, $name);
@@ -156,13 +156,14 @@ class RequestFetcher extends Command
                 }
 
                 if ($responseCode !== 200) {
+                    Log::debug($resulthash);
                     Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
                 } else {
                     $body = \curl_multi_getcontent($info["handle"]);
                 }
 
                 Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
-                    $pipe->set($resulthash, $body);
+                    $pipe->lpush($resulthash, $body);
                     $pipe->expire($resulthash, 60);
                 });
 

@@ -454,7 +454,7 @@ class MetaGer
 
         if ($waitForResult) {
             while (microtime(true) - $startTime < 5) {
-                $answer = Redis::get($hash);
+                $answer = Cache::get($hash);
                 if ($answer === null) {
                     usleep(50 * 1000);
                 } else {
@@ -462,7 +462,7 @@ class MetaGer
                 }
             }
         } else {
-            $answer = Redis::get($hash);
+            $answer = Cache::get($hash);
         }
         if ($answer === null) {
             return false;

@@ -216,6 +216,11 @@ spec:
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ["su"]
         args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
+        volumeMounts:
+        - name: env-files
+          mountPath: /html/.env
+          subPath: .env
+          readOnly: true
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
           exec:

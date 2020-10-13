@@ -109,7 +109,8 @@ abstract class Searchengine
 
     # Standardimplementierung der getNext Funktion, damit diese immer verwendet werden kann
     public function getNext(MetaGer $metager, $result)
-    {}
+    {
+    }
 
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch(\App\MetaGer $metager, &$timings)
@@ -197,10 +198,13 @@ abstract class Searchengine
         if ($this->loaded) {
             return true;
         }
-
-        if (!$this->cached) {
-            $body = Redis::get($this->hash);
+        if (!$this->cached && empty($body)) {
+            $body = Redis::rpoplpush($this->hash, $this->hash);
+            if ($body === false) {
+                return $body;
+            }
         }
+        
         if ($body === "no-result") {
             $body = "";
         }

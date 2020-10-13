@@ -79,11 +79,13 @@ class RequestFetcher extends Command
         try {
             while ($this->shouldRun) {
                 $operationsRunning = true;
-                $status = curl_multi_exec($this->multicurl, $operationsRunning);
-                $messagesLeft = $this->readMultiCurl($this->multicurl);
+                curl_multi_exec($this->multicurl, $operationsRunning);
+                $status = $this->readMultiCurl($this->multicurl);
+                $answersRead = $status[0];
+                $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
                 
-                if ($newJobs === 0) {
+                if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
                 }
             }
@@ -133,9 +135,10 @@ class RequestFetcher extends Command
     private function readMultiCurl($mc)
     {
         $messagesLeft = -1;
+        $answersRead = 0;
         while (($info = curl_multi_info_read($mc, $messagesLeft)) !== false) {
             try {
-                $answerRead = true;
+                $answerRead++;
                 $infos = curl_getinfo($info["handle"], CURLINFO_PRIVATE);
                 $infos = explode(";", $infos);
                 $resulthash = $infos[0];
@@ -174,7 +177,7 @@ class RequestFetcher extends Command
                 \curl_multi_remove_handle($mc, $info["handle"]);
             }
         }
-        return $messagesLeft;
+        return [$answersRead, $messagesLeft];
     }
 
     private function getCurlHandle($job)

@@ -950,10 +950,11 @@ class MetaGer
                 break;
             }
             $answer = Redis::brpop($enginesToWaitFor, 2);
-            Redis::lpush($answer[0], $answer[1]);
             
             if ($answer === null) {
                 continue;
+            } else {
+                Redis::lpush($answer[0], $answer[1]);
             }
             foreach ($engines as $index => $engine) {
                 if ($engine->hash === $answer[0]) {

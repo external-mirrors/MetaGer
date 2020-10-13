@@ -22,6 +22,7 @@ Route::group(
                 Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');
                 Route::post('nb', 'SettingsController@newBlacklist')->name('newBlacklist');
                 Route::post('db', 'SettingsController@deleteBlacklist')->name('deleteBlacklist');
+                Route::post('cb', 'SettingsController@clearBlacklist')->name('clearBlacklist');
 
                 # Route to show and delete all settings
                 Route::get('all-settings', 'SettingsController@allSettingsIndex')->name('showAllSettings');

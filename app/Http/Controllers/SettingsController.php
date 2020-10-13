@@ -311,4 +311,23 @@ class SettingsController extends Controller
 
         return redirect($request->input('url', 'https://metager.de'));
     }
+
+    public function clearBlacklist(Request $request)
+    {
+        //function to clear the whole black list
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        $path = \Request::path();
+        $empty = $request->input('empty');
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+        $cookies = Cookie::get();
+        
+        foreach($cookies as $key => $value){
+            if(stripos($key, 'blpage') !== false) {
+                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            }
+        }
+
+        return redirect($request->input('url', 'https://metager.de'));
+    }
 }

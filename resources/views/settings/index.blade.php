@@ -111,6 +111,9 @@
                 @endforeach
                 </table>
             </form>
+            <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+                <button type="submit" name="clear" value="1">>clear black list<</button>
+            </form>
         @endif
     </div>
 

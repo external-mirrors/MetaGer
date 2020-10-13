@@ -149,6 +149,7 @@ abstract class Searchengine
                 "password" => $this->password,
                 "headers" => $this->headers,
                 "cacheDuration" => $this->cacheDuration,
+                "name" => $this->name
             ];
 
             $mission = json_encode($mission);

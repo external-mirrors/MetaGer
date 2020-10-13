@@ -19,6 +19,10 @@ class HumanVerification
      */
     public function handle($request, Closure $next)
     {
+        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+            return $next($request);
+        }
+
         // The specific user
         $user = null;
         $update = true;

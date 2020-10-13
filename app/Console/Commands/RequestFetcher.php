@@ -153,8 +153,12 @@ class RequestFetcher extends Command
                 $infos = explode(";", $infos);
                 $resulthash = $infos[0];
                 $cacheDurationMinutes = intval($infos[1]);
+                $name = $infos[2];
                 $responseCode = curl_getinfo($info["handle"], CURLINFO_HTTP_CODE);
                 $body = "";
+
+                $totalTime = curl_getinfo($info["handle"],  CURLINFO_TOTAL_TIME);
+                \App\PrometheusExporter::Duration($totalTime, $name);
 
                 $error = curl_error($info["handle"]);
                 if (!empty($error)) {
@@ -192,7 +196,7 @@ class RequestFetcher extends Command
 
         curl_setopt_array($ch, array(
             CURLOPT_URL => $job["url"],
-            CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"],
+            CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => $job["useragent"],
             CURLOPT_FOLLOWLOCATION => true,

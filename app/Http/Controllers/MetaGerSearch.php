@@ -100,10 +100,7 @@ class MetaGerSearch extends Controller
         }
 
         # Ergebnisse der Suchmaschinen kombinieren:
-        $metager->prepareResults();
-        if (!empty($timings)) {
-            $timings["prepareResults"] = microtime(true) - $time;
-        }
+        $metager->prepareResults($timings);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {

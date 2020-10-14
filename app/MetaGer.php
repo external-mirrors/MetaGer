@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Cache;
 use Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -1352,6 +1353,14 @@ class MetaGer
             }
         }
 
+        foreach(Cookie::get() as $key => $value){
+            if(stripos($key, 'blpage') !== false && stripos($value, '*.') === false){
+                $this->hostBlacklist[] = $value;
+            }
+        }
+
+        array_unique($this->hostBlacklist);
+
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
             $hostString = "";
@@ -1386,6 +1395,15 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
+
+        foreach(Cookie::get() as $key => $value){
+            if(stripos($key, 'blpage') !== false && stripos($value, '*.') !== false){
+                $this->domainBlacklist[] = $value;
+            }
+        }
+
+        array_unique($this->domainBlacklist);
+
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
             $domainString = "";

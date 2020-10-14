@@ -12,7 +12,6 @@ use View;
 
 class MetaGerSearch extends Controller
 {
-
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
         if ($request->filled("chrome-plugin")) {
@@ -156,7 +155,7 @@ class MetaGerSearch extends Controller
         // This might speed up page view time for users with slow network
         $responseArray = str_split($resultpage->render(), 1024);
         foreach ($responseArray as $responsePart) {
-            echo ($responsePart);
+            echo($responsePart);
             flush();
         }
         $requestTime = microtime(true) - $time;
@@ -182,7 +181,6 @@ class MetaGerSearch extends Controller
         if ($request->filled('loadMore') && $request->filled('script') && $request->input('script') === "yes") {
             return $this->loadMoreJS($request);
         }
-
     }
 
     private function loadMoreJS(Request $request)
@@ -296,6 +294,10 @@ class MetaGerSearch extends Controller
             ],
             "engines" => $metager->getEngines(),
         ], 1 * 60);
+
+        # JSON encoding will fail if invalid UTF-8 Characters are in this string
+        # mb_convert_encoding will remove thise invalid characters for us
+        $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
         return response()->json($result);
     }
 

@@ -61,6 +61,14 @@ class SettingsController extends Controller
             }
         }
 
+        $cookies = Cookie::get();
+        $blacklist = [];
+        foreach($cookies as $key => $value){
+            if(stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false){
+                $blacklist[$key] = $value;
+            }
+        }
+
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $request->input('fokus', ''))
@@ -69,7 +77,8 @@ class SettingsController extends Controller
             ->with('sumas', $sumas)
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
-            ->with('url', $url);
+            ->with('url', $url)
+            ->with('blacklist', $blacklist);
     }
 
     private function getSumas($fokus)
@@ -306,7 +315,7 @@ class SettingsController extends Controller
                 Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
             }
         }
-        return redirect($request->input('url', 'https://metager.de'));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
 
     public function deleteBlacklist(Request $request)
@@ -319,7 +328,7 @@ class SettingsController extends Controller
 
         Cookie::queue($cookieKey, "", 0, $cookiePath, null, false, false);
 
-        return redirect($request->input('url', 'https://metager.de'));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
 
     public function clearBlacklist(Request $request)
@@ -333,11 +342,11 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         
         foreach($cookies as $key => $value){
-            if(stripos($key, 'blpage') !== false) {
+            if(stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false) {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
         }
 
-        return redirect($request->input('url', 'https://metager.de'));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
 }

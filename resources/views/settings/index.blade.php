@@ -94,20 +94,18 @@
             <input id="blacklist" name="blacklist" type="text" placeholder="example.com">
             <button type="submit" class="btn btn-default">@lang('settings.add')</button>
         </form>
-        @if(!empty(Cookie::get()))
+        @if(!empty($blacklist))
             <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
                 <table>
-                @foreach(Cookie::get() as $key => $value)
-                    @if(stripos($key, 'blpage') !== false)
-                        <tr>
-                            <td>
-                                {{ $value }}
-                            </td>
-                            <td>
-                                <button type="submit" name="cookieKey" value="{{ $key }}"><i class="fas fa-trash-alt"></i></button>
-                            </td>
-                        </tr>
-                    @endif
+                @foreach($blacklist as $key => $value)
+                    <tr>
+                        <td>
+                            {{ $value }}
+                        </td>
+                        <td>
+                            <button type="submit" name="cookieKey" value="{{ $key }}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
                 @endforeach
                 </table>
             </form>

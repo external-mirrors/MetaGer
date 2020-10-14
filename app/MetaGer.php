@@ -1352,14 +1352,13 @@ class MetaGer
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
-
         foreach(Cookie::get() as $key => $value){
-            if(stripos($key, 'blpage') !== false && stripos($value, '*.') === false){
+            if((stripos($key, 'blpage') !== false) && (stripos($key, $this->fokus) !== false) && (stripos($value, '*.') === false)){
                 $this->hostBlacklist[] = $value;
             }
         }
 
-        array_unique($this->hostBlacklist);
+        $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
@@ -1395,14 +1394,13 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
-
         foreach(Cookie::get() as $key => $value){
-            if(stripos($key, 'blpage') !== false && stripos($value, '*.') !== false){
+            if(stripos($key, 'blpage') !== false && stripos($key, $this->fokus) !== false && stripos($value, '*.') !== false){
                 $this->domainBlacklist[] = $value;
             }
         }
 
-        array_unique($this->domainBlacklist);
+        $this->domainBlacklist = array_unique($this->domainBlacklist);
 
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {

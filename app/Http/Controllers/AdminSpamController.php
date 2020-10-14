@@ -44,6 +44,9 @@ class AdminSpamController extends Controller
     public function jsonQueries()
     {
         $queries = $this->getQueries();
+        # JSON encoding will fail if invalid UTF-8 Characters are in this string
+        # mb_convert_encoding will remove thise invalid characters for us
+        $queries = mb_convert_encoding($queries, "UTF-8", "UTF-8");
         return response()->json($queries);
     }
 
@@ -77,8 +80,10 @@ class AdminSpamController extends Controller
             ];
         }
 
+        # JSON encoding will fail if invalid UTF-8 Characters are in this string
+        # mb_convert_encoding will remove thise invalid characters for us
+        $resultData = mb_convert_encoding($resultData, "UTF-8", "UTF-8");
         return response()->json($resultData);
-
     }
 
     private function getQueries()

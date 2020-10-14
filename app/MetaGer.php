@@ -944,6 +944,13 @@ class MetaGer
             }
         }
 
+        # If no main engines are enabled by the user we will wait for all results
+        if (sizeof($enginesToWaitFor) === 0) {
+            foreach ($engines as $engine) {
+                $enginesToWaitFor[] = $engine->hash;
+            }
+        }
+
         $timeStart = microtime(true);
         while (sizeof($enginesToWaitFor) > 0) {
             if ((microtime(true) - $timeStart) >= 2) {

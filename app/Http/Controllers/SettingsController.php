@@ -273,29 +273,39 @@ class SettingsController extends Controller
     {
         $fokus = $request->input('fokus', '');
         $url = $request->input('url', '');
-        $blacklist = $request->input('blacklist');
-        $path = \Request::path();
-        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-        $cookies = Cookie::get();
-        $cookieCounter = 0;
-        $noduplicate = true;
 
-        if(!empty($cookies)){
-            foreach ($cookies as $key => $value) {
-                if($value==$blacklist){
-                    $noduplicate = false;
-                    break;
-                }
-                if(stripos($key, 'blpage') !== false) {
-                    $cookieCounter++;
+        $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
+        $blacklist = preg_filter($regexProtocol, '', $request->input('blacklist'));
+
+        if(stripos($blacklist, '/') !== false){
+            $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
+        }
+
+        $regexUrl = '#^[a-z0-9.]*$#';
+        if(preg_match($regexUrl, $blacklist) == 1){
+
+            $path = \Request::path();
+            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+            $cookies = Cookie::get();
+            $cookieCounter = 0;
+            $noduplicate = true;
+
+            if(!empty($cookies)){
+                foreach ($cookies as $key => $value) {
+                    if($value==$blacklist){
+                        $noduplicate = false;
+                        break;
+                    }
+                    if(stripos($key, 'blpage') !== false) {
+                        $cookieCounter++;
+                    }
                 }
             }
+            if($noduplicate){
+                $cookieName= $fokus . '_blpage' . $cookieCounter;
+                Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
+            }
         }
-        if($noduplicate){
-            $cookieName= $fokus . '_blpage' . $cookieCounter;
-            Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
-        }
-
         return redirect($request->input('url', 'https://metager.de'));
     }
 

@@ -84,15 +84,17 @@
         </form>
     </div>
 
-    <div class="card-light">
+    <div class="card-light" id="blacklist">
         <h2>@lang('settings.header.4')</h2>
         <p>@lang('settings.text.4')</p>
-        <form id="blacklist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+        <form id="newentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
             <input type="hidden" name="url" value="{{ $url }}">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address')</label>
-            <input id="blacklist" name="blacklist" type="text" placeholder="example.com">
-            <button type="submit" class="btn btn-default">@lang('settings.add')</button>
+            <div id="create">
+                <input id="blacklist" name="blacklist" type="text" placeholder="example.com">
+                <button type="submit" class="btn btn-default">@lang('settings.add')</button>
+            </div>
         </form>
         @if(!empty($blacklist))
             <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">

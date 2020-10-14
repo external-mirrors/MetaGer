@@ -92,7 +92,7 @@
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address')</label>
             <input id="blacklist" name="blacklist" type="text">
-            <button type="submit" class="btn btn-default">@lang('settings.add')</button> <!--input field flex-grow:1;-->
+            <button type="submit" class="btn btn-default">@lang('settings.add')</button>
         </form>
         @if(!empty(Cookie::get()))
             <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">

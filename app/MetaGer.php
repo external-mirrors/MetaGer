@@ -1353,7 +1353,7 @@ class MetaGer
             }
         }
         foreach(Cookie::get() as $key => $value){
-            if((stripos($key, 'blpage') !== false) && (stripos($key, $this->fokus) !== false) && (stripos($value, '*.') === false)){
+            if((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)){
                 $this->hostBlacklist[] = $value;
             }
         }
@@ -1395,7 +1395,7 @@ class MetaGer
             }
         }
         foreach(Cookie::get() as $key => $value){
-            if(stripos($key, 'blpage') !== false && stripos($key, $this->fokus) !== false && stripos($value, '*.') !== false){
+            if(stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0){
                 $this->domainBlacklist[] = $value;
             }
         }

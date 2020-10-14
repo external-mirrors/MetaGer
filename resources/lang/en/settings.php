@@ -14,9 +14,15 @@ return [
     "header.3" => "Search Filters",
     "text.3" => "At this point you can set search filters permanently. With the selection of a search filter, only search engines are available that support this filter. Conversely, only search filters are displayed which are supported by the current search engine selection.",
 
+    'header.4' => 'Black list',
+    'text.4' => 'Here you can add pages to exclude when searching. If you want to exclude a whole domain start with "*.".',
+    'address' => 'Address',
+
     "save" => "Save",
     "reset" => "Delete all settings",
     "back" => "Back to the last page",
+    'add' => 'Add',
+    'clear' => 'Clear black list',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",

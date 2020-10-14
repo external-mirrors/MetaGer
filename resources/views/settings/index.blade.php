@@ -91,7 +91,7 @@
             <input type="hidden" name="url" value="{{ $url }}">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address')</label>
-            <input id="blacklist" name="blacklist" type="text">
+            <input id="blacklist" name="blacklist" type="text" placeholder="example.com">
             <button type="submit" class="btn btn-default">@lang('settings.add')</button>
         </form>
         @if(!empty(Cookie::get()))
@@ -104,7 +104,7 @@
                                 {{ $value }}
                             </td>
                             <td>
-                                <button type="submit" name="cookieKey" value="{{ $key }}">>delete entry<</button>
+                                <button type="submit" name="cookieKey" value="{{ $key }}"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         </tr>
                     @endif
@@ -112,7 +112,7 @@
                 </table>
             </form>
             <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-                <button type="submit" name="clear" value="1">>clear black list<</button>
+                <button type="submit" name="clear" value="1">@lang('settings.clear')</button>
             </form>
         @endif
     </div>

@@ -1396,7 +1396,7 @@ class MetaGer
         }
         foreach(Cookie::get() as $key => $value){
             if(stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0){
-                $this->domainBlacklist[] = $value;
+                $this->domainBlacklist[] = str_replace("*.", "", $value);
             }
         }
 

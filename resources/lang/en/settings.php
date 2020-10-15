@@ -15,7 +15,7 @@ return [
     "text.3" => "At this point you can set search filters permanently. With the selection of a search filter, only search engines are available that support this filter. Conversely, only search filters are displayed which are supported by the current search engine selection.",
 
     'header.4' => 'Black list',
-    'text.4' => 'Here you can add pages to exclude when searching. If you want to exclude a whole domain start with "*.".',
+    'text.4' => 'Here you can add domains to exclude when searching. If you want to exclude all subdomains start with "*.".',
     'address' => 'Address',
 
     "save" => "Save",

@@ -290,7 +290,7 @@ class SettingsController extends Controller
             $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
         }
 
-        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]{2,})+$#';
+        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
         if(preg_match($regexUrl, $blacklist) === 1){
 
             $path = \Request::path();
@@ -299,19 +299,23 @@ class SettingsController extends Controller
             $cookieCounter = 0;
             $noduplicate = true;
 
+            ksort($cookies);
+
             if(!empty($cookies)){
                 foreach ($cookies as $key => $value) {
-                    if(stripos($key, $fokus.'_blpage') === 0 && $value == $blacklist){
-                        $noduplicate = false;
-                        break;
-                    }
-                    if(stripos($key, $fokus.'_blpage') === 0) {
-                        $cookieCounter++;
+                    if(stripos($key, $fokus . '_blpage') === 0){
+                        if($value === $blacklist){
+                            $noduplicate = false;
+                            break;
+                        }
+                        if((int)(substr($key,strlen($fokus . '_blpage'))) === $cookieCounter){
+                            $cookieCounter++;
+                        }
                     }
                 }
             }
-            if($noduplicate && !empty($cookie) && strlen($cookie) <= 255){
-                $cookieName= $fokus . '_blpage' . $cookieCounter;
+            if($noduplicate && !empty($blacklist) > 0 && strlen($blacklist) <= 255){
+                $cookieName= $fokus.'_blpage'.$cookieCounter;
                 Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
             }
         }

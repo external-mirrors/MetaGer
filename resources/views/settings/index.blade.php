@@ -11,6 +11,8 @@
     <div class="card-light">
         <h2>@lang('settings.hint.header')</h2>
         <p>@lang('settings.hint.text', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</p>
+        <input id="cookieLink" type="text" value="{{$cookieLink}}" style="width:100%;">
+        <button class="btn btn-default" onclick="var copyText = document.getElementById('cookieLink');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
     </div>
     <div class="card-light">
         <h2>@lang('settings.header.2')</h2>

@@ -61,13 +61,16 @@ class SettingsController extends Controller
             }
         }
 
-        $cookies = Cookie::get();
+        # Reading cookies for black list entries
         $blacklist = [];
         foreach($cookies as $key => $value){
             if(stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false){
                 $blacklist[$key] = $value;
             }
         }
+
+        # Generating link with set cookies
+        $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -78,7 +81,8 @@ class SettingsController extends Controller
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
             ->with('url', $url)
-            ->with('blacklist', $blacklist);
+            ->with('blacklist', $blacklist)
+            ->with('cookieLink', $cookieLink);
     }
 
     private function getSumas($fokus)
@@ -352,5 +356,18 @@ class SettingsController extends Controller
         }
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+    }
+
+    public function loadSettings(Request $request){
+        
+        $path = \Request::path();
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+
+        $cookies = $request->all();
+        foreach($cookies as $key => $value){
+            Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+        }
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
 }

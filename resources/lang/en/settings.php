@@ -23,6 +23,7 @@ return [
     "back" => "Back to the last page",
     'add' => 'Add',
     'clear' => 'Clear black list',
+    'copy' => 'Copy',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
@@ -35,5 +36,6 @@ return [
     'engineDisabled' => "The search engine :engine will not be queried in focus :focus.",
     'inFocus' => "in focus",
     'key' => "Your key to the ad-free search",
+    'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
 ];

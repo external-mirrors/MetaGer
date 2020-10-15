@@ -23,6 +23,7 @@ return [
     'back' => 'Zurück zur letzten Seite',
     'add' => 'Hinzufügen',
     'clear' => 'Blacklist leeren',
+    'copy' => 'Kopieren',
 
     // Translations from the settings overview
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
@@ -35,5 +36,6 @@ return [
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
     'inFocus' => 'im Fokus',
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
+    'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
 ];

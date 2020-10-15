@@ -301,11 +301,11 @@ class SettingsController extends Controller
 
             if(!empty($cookies)){
                 foreach ($cookies as $key => $value) {
-                    if($value==$blacklist){
+                    if(stripos($key, $fokus.'_blpage') === 0 && $value == $blacklist){
                         $noduplicate = false;
                         break;
                     }
-                    if(stripos($key, 'blpage') !== false) {
+                    if(stripos($key, $fokus.'_blpage') === 0) {
                         $cookieCounter++;
                     }
                 }

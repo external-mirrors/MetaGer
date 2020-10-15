@@ -310,7 +310,7 @@ class SettingsController extends Controller
                     }
                 }
             }
-            if($noduplicate){
+            if($noduplicate && strlen($cookie) <= 255){
                 $cookieName= $fokus . '_blpage' . $cookieCounter;
                 Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
             }

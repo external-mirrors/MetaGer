@@ -290,7 +290,7 @@ class SettingsController extends Controller
             $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
         }
 
-        $regexUrl = '#^[a-z0-9]+(\.[a-z0-9]{2,})+$#';
+        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]{2,})+$#';
         if(preg_match($regexUrl, $blacklist) === 1){
 
             $path = \Request::path();

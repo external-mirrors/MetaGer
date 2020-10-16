@@ -1744,10 +1744,24 @@ class MetaGer
     {
         $cookies = \Cookie::get();
         $count = 0;
+        $checkBlacklist = true;
+
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        $foki = array_keys($sumaFile['foki']);
 
         foreach ($cookies as $key => $value) {
             if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_"])) {
                 $count++;
+                continue;
+            }
+            if($checkBlacklist){
+                foreach($foki as $fokus){
+                    if(strpos($key, $fokus . '_blpage') === 0){
+                       $count++;
+                       $checkBlacklist = false;
+                    }
+                }
             }
         }
         return $count;

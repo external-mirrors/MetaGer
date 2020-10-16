@@ -1748,7 +1748,7 @@ class MetaGer
         $foki = array_keys($sumaFile['foki']);
 
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage_"])) {
+            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
                 continue;
             }

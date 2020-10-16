@@ -6,6 +6,7 @@ return [
 
     'hint.header' => 'Hinweis',
     'hint.text' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert. Sie können sich eine Übersicht aller von Ihnen vorgenommenen Einstellungen und Cookies <a href=:link>anzeigen lassen</a>.',
+    'hint.loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen mitzunehmen. Der Link erstellt beim Aufrufen Cookies mit dem entsprechenden Einstellungen.',
 
     'header.2' => 'Verwendete Suchmaschinen',
     'text.2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden. Eingeschaltete Suchmaschinen sind in grün dargestellt. Ausgeschaltete in rot oder grau.',

@@ -351,7 +351,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         
         foreach($cookies as $key => $value){
-            if(stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false) {
+            if(stripos($key, $fokus . '_blpage') === 0) {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
         }

@@ -13,7 +13,7 @@
 				</li>
 				<li>
 					<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.7') !!} -
-					<a href="carsten@suma-ev.de">carsten@suma-ev.de</a></p>
+					<a href="mailto:carsten@suma-ev.de">carsten@suma-ev.de</a></p>
 				</li>
 				<li>
 					<p>Branz, Manuela - {!! trans('team.role.3') !!} & {!! trans('team.role.2') !!} -
@@ -26,6 +26,10 @@
 				<li>
 					<p>Höfer, Kim - {!! trans('team.role.6') !!} -
 					<a href="mailto:kim@suma-ev.de">kim@suma-ev.de</a></p>
+				</li>
+				<li>
+					<p>Aprea, Davide - {!! trans('team.role.9') !!} -
+					<a href="mailto:davide@suma-ev.de">davide@suma-ev.de</a></p>
 				</li>
 				<li>
 					<p><a href="https://de.wikipedia.org/wiki/Wolfgang_Sander-Beuermann" target="_blank" rel="noopener">Sander-Beuermann, Wolfgang</a>, Dr.-Ing - {!! trans('team.role.8') !!} -

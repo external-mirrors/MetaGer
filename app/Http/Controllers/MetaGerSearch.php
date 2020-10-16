@@ -12,9 +12,11 @@ use View;
 
 class MetaGerSearch extends Controller
 {
-
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        if ($request->filled("chrome-plugin")) {
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
+        }
         $timings = null;
         if ($timing) {
             $timings = ['starttime' => microtime(true)];
@@ -97,10 +99,7 @@ class MetaGerSearch extends Controller
         }
 
         # Ergebnisse der Suchmaschinen kombinieren:
-        $metager->prepareResults();
-        if (!empty($timings)) {
-            $timings["prepareResults"] = microtime(true) - $time;
-        }
+        $metager->prepareResults($timings);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -111,7 +110,16 @@ class MetaGerSearch extends Controller
         }
 
         try {
-            Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 60 * 60);
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "apiAuthorized" => $metager->isApiAuthorized(),
+                ],
+                "adgoal" => [
+                    "loaded" => $metager->isAdgoalLoaded(),
+                    "adgoalHash" => $metager->getAdgoalHash(),
+                ],
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
@@ -147,7 +155,7 @@ class MetaGerSearch extends Controller
         // This might speed up page view time for users with slow network
         $responseArray = str_split($resultpage->render(), 1024);
         foreach ($responseArray as $responsePart) {
-            echo ($responsePart);
+            echo($responsePart);
             flush();
         }
         $requestTime = microtime(true) - $time;
@@ -173,11 +181,11 @@ class MetaGerSearch extends Controller
         if ($request->filled('loadMore') && $request->filled('script') && $request->input('script') === "yes") {
             return $this->loadMoreJS($request);
         }
-
     }
 
     private function loadMoreJS(Request $request)
     {
+        $request->request->add(["javascript" => true]);
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
 
@@ -190,40 +198,60 @@ class MetaGerSearch extends Controller
             }
         }
 
-        $engines = Cache::get($hash);
-        if ($engines === null) {
+        $cached = Cache::get($hash);
+        if ($cached === null) {
             return response()->json(['finished' => true]);
         }
 
+        $engines = $cached["engines"];
+        $adgoal = $cached["adgoal"];
+        $mg = $cached["metager"];
+
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
+        $metager->setApiAuthorized($mg["apiAuthorized"]);
+        $metager->setAdgoalLoaded($adgoal["loaded"]);
+        $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
         $metager->parseFormData($request);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
 
+        # Checks Cache for engine Results
+        $metager->checkCache();
+
         $metager->retrieveResults();
+
         $metager->rankAll();
         $metager->prepareResults();
 
         $result = [
             'finished' => true,
             'newResults' => [],
+            'changedResults' => [],
         ];
         $result["nextSearchLink"] = $metager->nextSearchLink();
 
         $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new) {
+            if ($resultTmp->new || $resultTmp->adgoalChanged) {
                 if ($metager->getFokus() !== "bilder") {
                     $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    $result['newResults'][$index] = $html;
+                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                        $result['changedResults'][$index] = $html;
+                    } else {
+                        $result['newResults'][$index] = $html;
+                    }
                     $result["imagesearch"] = false;
                 } else {
                     $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    $result['newResults'][$index] = $html;
+                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                        $result['changedResults'][$index] = $html;
+                    } else {
+                        $result['newResults'][$index] = $html;
+                    }
                     $result["imagesearch"] = true;
                 }
                 $newResults++;
@@ -231,16 +259,24 @@ class MetaGerSearch extends Controller
         }
 
         $finished = true;
+        $enginesLoaded = [];
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
+                $enginesLoaded[$engine->name] = false;
                 $finished = false;
             } else {
+                $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
                 $engine->markNew();
             }
         }
 
+        if (!$metager->isAdgoalLoaded()) {
+            $finished = false;
+        }
+
         $result["finished"] = $finished;
+        $result["engines"] = $enginesLoaded;
 
         if ($newResults > 0) {
             $registry = \Prometheus\CollectorRegistry::getDefault();
@@ -248,7 +284,20 @@ class MetaGerSearch extends Controller
             $counter->incBy($newResults);
         }
         // Update new Engines
-        Cache::put("loader_" . $metager->getSearchUid(), $metager->getEngines(), 1 * 60);
+        Cache::put("loader_" . $metager->getSearchUid(), [
+            "metager" => [
+                "apiAuthorized" => $metager->isApiAuthorized(),
+            ],
+            "adgoal" => [
+                "loaded" => $metager->isAdgoalLoaded(),
+                "adgoalHash" => $metager->getAdgoalHash(),
+            ],
+            "engines" => $metager->getEngines(),
+        ], 1 * 60);
+
+        # JSON encoding will fail if invalid UTF-8 Characters are in this string
+        # mb_convert_encoding will remove thise invalid characters for us
+        $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
         return response()->json($result);
     }
 

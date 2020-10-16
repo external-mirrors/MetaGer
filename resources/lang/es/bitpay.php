@@ -1,5 +1,3 @@
-<?php
-
-return [
-    "amount"	=>	"cantidad"
+<?php return [
+    "amount"	=>	"Cantidad"
 ];

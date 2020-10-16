@@ -56,10 +56,21 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"])) {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0) {
                 $settingActive = true;
             }
         }
+
+        # Reading cookies for black list entries
+        $blacklist = [];
+        foreach($cookies as $key => $value){
+            if(stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false){
+                $blacklist[$key] = $value;
+            }
+        }
+
+        # Generating link with set cookies
+        $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -69,7 +80,9 @@ class SettingsController extends Controller
             ->with('sumas', $sumas)
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
-            ->with('url', $url);
+            ->with('url', $url)
+            ->with('blacklist', $blacklist)
+            ->with('cookieLink', $cookieLink);
     }
 
     private function getSumas($fokus)
@@ -232,6 +245,7 @@ class SettingsController extends Controller
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
         }
+        $this->clearBlacklist($request);
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
@@ -267,5 +281,117 @@ class SettingsController extends Controller
             Cookie::queue($key, "", 0, $cookiePath, null, false, false);
         }
         return redirect($request->input('url', 'https://metager.de'));
+    }
+
+    public function newBlacklist(Request $request)
+    {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+
+        $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
+        $blacklist = preg_filter($regexProtocol, '', $request->input('blacklist'));
+
+        if(stripos($blacklist, '/') !== false){
+            $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
+        }
+
+        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+        if(preg_match($regexUrl, $blacklist) === 1){
+
+            $path = \Request::path();
+            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+            $cookies = Cookie::get();
+            $cookieCounter = 0;
+            $noduplicate = true;
+
+            ksort($cookies);
+
+            if(!empty($cookies)){
+                foreach ($cookies as $key => $value) {
+                    if(stripos($key, $fokus . '_blpage') === 0){
+                        if($value === $blacklist){
+                            $noduplicate = false;
+                            break;
+                        }
+                        if((int)(substr($key,strlen($fokus . '_blpage'))) === $cookieCounter){
+                            $cookieCounter++;
+                        }
+                    }
+                }
+            }
+            if($noduplicate && !empty($blacklist) > 0 && strlen($blacklist) <= 255){
+                $cookieName= $fokus.'_blpage'.$cookieCounter;
+                Cookie::queue($cookieName, $blacklist, 0, $cookiePath, null, false, false);
+            }
+        }
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+    }
+
+    public function deleteBlacklist(Request $request)
+    {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        $path = \Request::path();
+        $cookieKey = $request->input('cookieKey');
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+
+        Cookie::queue($cookieKey, "", 0, $cookiePath, null, false, false);
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+    }
+
+    public function clearBlacklist(Request $request)
+    {
+        //function to clear the whole black list
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+        $path = \Request::path();
+        $empty = $request->input('empty');
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+        $cookies = Cookie::get();
+        
+        foreach($cookies as $key => $value){
+            if(stripos($key, $fokus . '_blpage') === 0) {
+                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            }
+        }
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+    }
+
+    public function loadSettings(Request $request)
+    {
+        
+        $path = \Request::path();
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        
+        $foki = array_keys($sumaFile['foki']);
+        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+
+
+        $cookies = $request->all();
+        foreach($cookies as $key => $value){
+            $blpage = false;
+            foreach($foki as $fokus){
+                if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    $blpage = true;
+                }
+            }
+            if($blpage){
+                continue;
+            }
+            foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
+                if($key === $suma && $value === $filter){
+                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                }
+
+            }
+        }
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
 }

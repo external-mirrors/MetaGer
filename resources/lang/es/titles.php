@@ -1,6 +1,4 @@
-<?php
-
-return [
+<?php return [
     "index"	=>	"MetaGer: Buscar & encontrar seguro, proteger la privacidad",
     "impressum"	=>	"Aviso legal - MetaGer",
     "about"	=>	"Sobre nosotros - MetaGer",
@@ -18,11 +16,11 @@ return [
     "languages"	=>	"Herramienta de traducción  - MetaGer",
     "languages.edit"	=>	"Editar ficheros de idiomas - MetaGer",
     "app"	=>	"Aplicaciones - MetaGer",
-    "faktencheck"	=>	"Verificación de hechos versus noticias falsas",
+    "faktencheck"	=>	"Revisión de hechos contra Fake-News",
     "jugendschutz"	=>	"Protección de menores",
-    "ad-info"	=>	"Publicidad en MetaGer",
+    "ad-info"	=>	"Publicidad - MetaGer",
     "asso"	=>	"Asociador - MetaGer",
     "plugin"	=>	"Plugin - MetaGer",
-    "key"	=>	"Clave de membresía - MetaGer",
-    "allSettings"	=>	"Todas las configuraciones de búsqueda - MetaGer"
+    "key"	=>	"Llave para afiliadas/os",
+    "allSettings"	=>	"Configuraciones para buscar - MetaGer"
 ];

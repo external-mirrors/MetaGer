@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
+use Cache;
 
 class BrowserVerification
 {
@@ -17,6 +18,10 @@ class BrowserVerification
      */
     public function handle($request, Closure $next)
     {
+        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+            return $next($request);
+        }
+
         ini_set('zlib.output_compression', 'Off');
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');
@@ -41,8 +46,9 @@ class BrowserVerification
             if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
                 abort(404);
             }
-            $result = boolval(Redis::connection("cache")->blpop($mgv, 5));
-            if ($result === true) {
+            $result = Redis::connection("cache")->blpop($mgv, 5);
+            if ($result !== null) {
+                $request->request->add(["headerPrinted" => false, "jskey" => $mgv]);
                 return $next($request);
             } else {
                 return redirect("/");
@@ -54,15 +60,14 @@ class BrowserVerification
 
         $key = md5($request->ip() . microtime(true));
 
-        echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
+        echo(view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $answer = boolval(Redis::connection("cache")->blpop($key, 2));
-
-        if ($answer === true) {
-            echo (view('layouts.resultpage.resources')->render());
+        $answer = Redis::connection("cache")->blpop($key, 2);
+        if ($answer !== null) {
+            echo(view('layouts.resultpage.resources')->render());
             flush();
-            $request->request->add(["headerPrinted" => true]);
+            $request->request->add(["headerPrinted" => true, "jskey" => $key]);
             return $next($request);
         }
 
@@ -70,9 +75,8 @@ class BrowserVerification
         $params["mgv"] = $key;
         $url = route("resultpage", $params);
 
-        echo (view('layouts.resultpage.unverifiedResultPage')
+        echo(view('layouts.resultpage.unverifiedResultPage')
                 ->with('url', $url)
                 ->render());
-
     }
 }

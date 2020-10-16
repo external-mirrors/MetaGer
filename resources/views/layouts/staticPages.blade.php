@@ -36,11 +36,9 @@
 		<script src="{{ mix('js/utility.js') }}"></script>
 		@if (isset($css))
 			@if(is_array($css))
-				@foreach($css as $el)
-					<link href="{{ $el }}" rel="stylesheet" />
+				@foreach($css as $cssFile)
+		<link href="{{ $cssFile }}" rel="stylesheet" />
 				@endforeach
-			@else
-				<link href="{{ $css }}" rel="stylesheet" />
 			@endif
 		@endif
 	</head>

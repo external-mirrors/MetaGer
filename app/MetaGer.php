@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Cache;
 use Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -72,7 +73,10 @@ class MetaGer
     protected $verificationId;
     protected $verificationCount;
     protected $searchUid;
-    protected $redisResultWaitingKey, $redisResultEngineList, $redisEngineResult, $redisCurrentResultList;
+    protected $redisResultWaitingKey;
+    protected $redisResultEngineList;
+    protected $redisEngineResult;
+    protected $redisCurrentResultList;
     public $starttime;
 
     public function __construct($hash = "")
@@ -252,11 +256,14 @@ class MetaGer
         }
     }
 
-    public function prepareResults()
+    public function prepareResults(&$timings = null)
     {
         $engines = $this->engines;
         // combine
         $this->combineResults($engines);
+        if (!empty($timings)) {
+            $timings["prepareResults"]["combined results"] = microtime(true) - $timings["starttime"];
+        }
         // misc (WiP)
         if ($this->fokus == "nachrichten") {
             $this->results = array_filter($this->results, function ($v, $k) {
@@ -276,7 +283,9 @@ class MetaGer
                 return ($a->getRank() < $b->getRank()) ? 1 : -1;
             });
         }
-
+        if (!empty($timings)) {
+            $timings["prepareResults"]["sorted results"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Results
         $newResults = [];
         foreach ($this->results as $result) {
@@ -285,7 +294,9 @@ class MetaGer
             }
         }
         $this->results = $newResults;
-
+        if (!empty($timings)) {
+            $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -298,15 +309,48 @@ class MetaGer
             $newResults[] = $ad;
         }
         $this->ads = $newResults;
-
+        if (!empty($timings)) {
+            $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
+        }
         #Adgoal Implementation
-        if (!$this->apiAuthorized) {
-            $this->results = $this->parseAdgoal($this->results);
+        if (empty($this->adgoalLoaded)) {
+            $this->adgoalLoaded = false;
+        }
+        if (!$this->apiAuthorized && !$this->adgoalLoaded) {
+            if (empty($this->adgoalHash)) {
+                if (!empty($this->jskey)) {
+                    $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+                    if ($js !== null && boolval($js)) {
+                        $this->javascript = true;
+                    }
+                }
+                $this->adgoalHash = $this->startAdgoal($this->results);
+                if (!empty($timings)) {
+                    $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
+                }
+            }
+        
+            if (!$this->javascript) {
+                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
+                if (!empty($timings)) {
+                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
+                }
+            } else {
+                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
+                if (!empty($timings)) {
+                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
+                }
+            }
+        } else {
+            $this->adgoalLoaded = true;
         }
 
         # Human Verification
-        $this->results = $this->humanVerification($this->results);
-        $this->ads = $this->humanVerification($this->ads);
+        $this->humanVerification($this->results);
+        $this->humanVerification($this->ads);
+        if (!empty($timings)) {
+            $timings["prepareResults"]["human verification"] = microtime(true) - $timings["starttime"];
+        }
 
         $counter = 0;
         $firstRank = 0;
@@ -327,6 +371,9 @@ class MetaGer
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
+            if (!empty($timings)) {
+                $timings["prepareResults"]["filled cache"] = microtime(true) - $timings["starttime"];
+            }
         } else {
             $this->next = [];
         }
@@ -343,54 +390,104 @@ class MetaGer
             }
             foreach ($engine->results as $result) {
                 if ($result->valid) {
-                    $this->results[] = $result;
+                    $this->results[] = clone $result;
                 }
             }
             foreach ($engine->ads as $ad) {
-                $this->ads[] = $ad;
+                $this->ads[] = clone $ad;
             }
         }
     }
 
-    public function parseAdgoal($results)
+    public function startAdgoal(&$results)
     {
-        $time = microtime(true);
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
-            return $results;
+            return true;
         }
         $tldList = "";
-        try {
-            foreach ($results as $result) {
-                if (!$result->new) {
-                    continue;
-                }
-                $link = $result->link;
-                if (strpos($link, "http") !== 0) {
-                    $link = "http://" . $link;
-                }
-                $tldList .= parse_url($link, PHP_URL_HOST) . ",";
-                $result->tld = parse_url($link, PHP_URL_HOST);
+        foreach ($results as $result) {
+            if (!$result->new) {
+                continue;
             }
-            $tldList = rtrim($tldList, ",");
+            $link = $result->link;
+            if (strpos($link, "http") !== 0) {
+                $link = "http://" . $link;
+            }
+            $tldList .= parse_url($link, PHP_URL_HOST) . ",";
+            $result->tld = parse_url($link, PHP_URL_HOST);
+        }
+        $tldList = rtrim($tldList, ",");
 
-            # Hashwert
-            $hash = md5("meta" . $publicKey . $tldList . "GER");
+        # Hashwert
+        $hash = md5("meta" . $publicKey . $tldList . "GER");
 
-            # Query
-            $query = $this->q;
+        # Query
+        $query = $this->q;
 
-            $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
-            $answer = json_decode(file_get_contents($link));
+        $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
+
+        // Submit fetch job to worker
+        $mission = [
+            "resulthash" => $hash,
+            "url" => $link,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => null,
+            "password" => null,
+            "headers" => null,
+            "cacheDuration" => 60,
+            "name" => "Adgoal",
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+
+        return $hash;
+    }
+
+    public function parseAdgoal(&$results, $hash, $waitForResult)
+    {
+        # Wait for result
+        $startTime = microtime(true);
+        $answer = null;
+
+        # Hash is true if Adgoal request wasn't started in the first place
+        if ($hash === true) {
+            return true;
+        }
+
+        if ($waitForResult) {
+            while (microtime(true) - $startTime < 5) {
+                $answer = Cache::get($hash);
+                if ($answer === null) {
+                    usleep(50 * 1000);
+                } else {
+                    break;
+                }
+            }
+        } else {
+            $answer = Cache::get($hash);
+        }
+        if ($answer === null) {
+            return false;
+        }
+        try {
+            $answer = json_decode($answer);
+            $publicKey = getenv('adgoal_public');
+            $privateKey = getenv('adgoal_private');
 
             # Nun müssen wir nur noch die Links für die Advertiser ändern:
+            foreach ($results as $result) {
+                $link = $result->link;
+                $result->tld = parse_url($link, PHP_URL_HOST);
+            }
+
             foreach ($answer as $el) {
                 $hoster = $el[0];
                 $hash = $el[1];
 
                 foreach ($results as $result) {
-                    if ($result->new && $hoster === $result->tld && !$result->partnershop) {
+                    if ($hoster === $result->tld && !$result->partnershop) {
                         # Hier ist ein Advertiser:
                         # Das Logo hinzufügen:
                         if ($result->image !== "") {
@@ -400,27 +497,28 @@ class MetaGer
                         }
 
                         # Den Link hinzufügen:
-                        $publicKey = $publicKey;
                         $targetUrl = $result->link;
+                        # Query
+                        $query = $this->q;
 
                         $gateHash = md5($targetUrl . $privateKey);
                         $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
                         $result->link = $newLink;
                         $result->partnershop = true;
+                        $result->adgoalChanged = true;
                     }
                 }
             }
         } catch (\ErrorException $e) {
-            return $results;
+            Log::error($e->getMessage());
         } finally {
-            $requestTime = microtime(true) - $time;
+            $requestTime = microtime(true) - $startTime;
             \App\PrometheusExporter::Duration($requestTime, "adgoal");
         }
-
-        return $results;
+        return true;
     }
 
-    public function humanVerification($results)
+    public function humanVerification(&$results)
     {
         # Let's check if we need to implement a redirect for human verification
         if ($this->verificationCount > 10) {
@@ -434,9 +532,6 @@ class MetaGer
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }
-            return $results;
-        } else {
-            return $results;
         }
     }
 
@@ -592,7 +687,6 @@ class MetaGer
         if (!empty($timings)) {
             $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
         }
-
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)
@@ -638,6 +732,23 @@ class MetaGer
         }
 
         # Check all engines for Cached responses
+        $this->checkCache();
+
+        if (!empty($timings)) {
+            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
+        }
+
+        # Wir starten alle Suchen
+        foreach ($this->engines as $engine) {
+            $engine->startSearch($this, $timings);
+        }
+        if (!empty($timings)) {
+            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+        }
+    }
+
+    public function checkCache()
+    {
         if ($this->canCache()) {
             $keys = [];
             foreach ($this->engines as $engine) {
@@ -651,18 +762,6 @@ class MetaGer
                 }
             }
         }
-        if (!empty($timings)) {
-            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
-        }
-
-        # Wir starten alle Suchen
-        foreach ($this->engines as $engine) {
-            $engine->startSearch($this, $timings);
-        }
-        if (!empty($timings)) {
-            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
-        }
-
     }
 
     # Spezielle Suchen und Sumas
@@ -686,7 +785,6 @@ class MetaGer
     {
         $engines = [];
         foreach ($enabledSearchengines as $engineName => $engine) {
-
             if (!isset($engine->{"parser-class"})) {
                 die(var_dump($engine));
             }
@@ -774,7 +872,7 @@ class MetaGer
         foreach ($availableFilter as $filterName => $filter) {
             if (\Request::filled($filter->{"get-parameter"})) {
                 $filter->value = \Request::input($filter->{"get-parameter"});
-            } else if (\Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
+            } elseif (\Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
             }
         }
@@ -842,35 +940,40 @@ class MetaGer
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
                 if ($engine->name === $mainEngine && !$engine->loaded) {
-                    $enginesToWaitFor[] = $engine;
+                    $enginesToWaitFor[] = $engine->hash;
                 }
+            }
+        }
+
+        # If no main engines are enabled by the user we will wait for all results
+        if (sizeof($enginesToWaitFor) === 0) {
+            foreach ($engines as $engine) {
+                $enginesToWaitFor[] = $engine->hash;
             }
         }
 
         $timeStart = microtime(true);
-
-        $answered = [];
-        $results = null;
-
-        # If there is no main searchengine to wait for or if the only main engine is yahoo-ads we will define a timeout of 1s
-        $forceTimeout = null;
-        if (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads") {
-            $forceTimeout = 1;
-        }
-
-        while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            foreach ($enginesToWaitFor as $index => $engine) {
-                if (Redis::get($engine->hash) !== null) {
-                    $answered[] = $engine;
-                    unset($enginesToWaitFor[$index]);
-                    break;
-                }
-            }
-
+        while (sizeof($enginesToWaitFor) > 0) {
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
+            }
+            $answer = Redis::brpop($enginesToWaitFor, 2);
+            
+            if ($answer === null) {
+                continue;
             } else {
-                usleep(50 * 1000);
+                Redis::lpush($answer[0], $answer[1]);
+            }
+            foreach ($engines as $index => $engine) {
+                if ($engine->hash === $answer[0]) {
+                    $engine->retrieveResults($this, $answer[1]);
+                    foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
+                        if ($engineToWaitFor === $answer[0]) {
+                            unset($enginesToWaitFor[$waitIndex]);
+                            break 2;
+                        }
+                    }
+                }
             }
         }
     }
@@ -914,6 +1017,17 @@ class MetaGer
         }
         $this->headerPrinted = $request->input("headerPrinted", false);
         $request->request->remove("headerPrinted");
+
+        # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
+        # Until then javascript parameter will be false
+        $this->javascript = false;
+        if ($request->filled("javascript") && is_bool($request->input("javascript"))) {
+            $this->javascript = boolval($request->input("javascript"));
+            $request->request->remove("javascript");
+        }
+        $this->jskey = $request->input('jskey', '');
+        $request->request->remove("jskey");
+
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
@@ -975,7 +1089,7 @@ class MetaGer
         $this->newtab = $request->input('newtab', 'on');
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
-        } else if ($this->framed) {
+        } elseif ($this->framed) {
             $this->newtab = "_top";
         } else {
             $this->newtab = "_self";
@@ -1076,7 +1190,7 @@ class MetaGer
                     }
                 }
             }
-        } else if ($this->request->filled("ff") || $this->request->filled("ft")) {
+        } elseif ($this->request->filled("ff") || $this->request->filled("ft")) {
             $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
         }
 
@@ -1157,7 +1271,7 @@ class MetaGer
         foreach ($this->sumaFile->filter->{"query-filter"} as $filterName => $filter) {
             if (!empty($filter->{"optional-parameter"}) && $request->filled($filter->{"optional-parameter"})) {
                 $this->queryFilter[$filterName] = $request->input($filter->{"optional-parameter"});
-            } else if (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
+            } elseif (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
                 switch ($filter->match) {
                     case "last":
                         $this->queryFilter[$filterName] = $matches[$filter->save][sizeof($matches[$filter->save]) - 1];
@@ -1184,7 +1298,7 @@ class MetaGer
             if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
-            $this->parameterFilter[$filterName] = $filter;
+                $this->parameterFilter[$filterName] = $filter;
                 $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
@@ -1237,10 +1351,17 @@ class MetaGer
                         $this->hostBlacklist[] = $blacklistElement;
                     }
                 }
-            } else if (strpos($blacklistString, "*") !== 0) {
+            } elseif (strpos($blacklistString, "*") !== 0) {
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if ((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)) {
+                $this->hostBlacklist[] = $value;
+            }
+        }
+
+        $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
@@ -1272,10 +1393,18 @@ class MetaGer
                         $this->domainBlacklist[] = substr($blacklistElement, strpos($blacklistElement, "*.") + 2);
                     }
                 }
-            } else if (strpos($blacklistString, "*.") === 0) {
+            } elseif (strpos($blacklistString, "*.") === 0) {
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if (stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0) {
+                $this->domainBlacklist[] = str_replace("*.", "", $value);
+            }
+        }
+
+        $this->domainBlacklist = array_unique($this->domainBlacklist);
+
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
             $domainString = "";
@@ -1619,9 +1748,14 @@ class MetaGer
         $cookies = \Cookie::get();
         $count = 0;
 
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        $foki = array_keys($sumaFile['foki']);
+
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_"])) {
+            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
+                continue;
             }
         }
         return $count;
@@ -1825,6 +1959,36 @@ class MetaGer
     public function getEngines()
     {
         return $this->engines;
+    }
+
+    public function setAdgoalHash($hash)
+    {
+        $this->adgoalHash = $hash;
+    }
+
+    public function getAdgoalHash()
+    {
+        return $this->adgoalHash;
+    }
+
+    public function isAdgoalLoaded()
+    {
+        return $this->adgoalLoaded;
+    }
+
+    public function setAdgoalLoaded($adgoalLoaded)
+    {
+        $this->adgoalLoaded = $adgoalLoaded;
+    }
+
+    public function isApiAuthorized()
+    {
+        return $this->apiAuthorized;
+    }
+
+    public function setApiAuthorized($authorized)
+    {
+        $this->apiAuthorized = $authorized;
     }
 
     public function isFramed()

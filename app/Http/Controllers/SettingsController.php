@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"])) {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0) {
                 $settingActive = true;
             }
         }
@@ -245,6 +245,7 @@ class SettingsController extends Controller
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
         }
+        $this->clearBlacklist($request);
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
@@ -358,7 +359,8 @@ class SettingsController extends Controller
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
 
-    public function loadSettings(Request $request){
+    public function loadSettings(Request $request)
+    {
         
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);

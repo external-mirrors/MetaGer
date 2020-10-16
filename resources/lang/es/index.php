@@ -10,7 +10,7 @@
     "conveyor" => "Comprar en tiendas que apoyan MetaGer ",
     "partnertitle" => "Apoyar MetaGer, sin costos para usted",
     "mapstitle" => "MetaGer - Servicio de tarjeta",
-    "plugin" => "Añadir MetaGer-Plugin",
+    "plugin" => "Instalar MetaGer",
     "plugin-title" => "Añadir MetaGer a su navegador",
     "options.head" => "Administrar filtros",
     "focus-creator.head" => "Adaptar búsqueda",

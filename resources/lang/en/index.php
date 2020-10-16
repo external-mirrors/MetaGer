@@ -15,7 +15,7 @@ return [
     "partnertitle" => "Support MetaGer without any costs to you",
     "mapstitle" => "MetaGer Maps Service",
 
-    "plugin" => "Add MetaGer-Plugin",
+    "plugin" => "Install MetaGer",
     "plugin-title" => "Add MetaGer to your browser",
 
     'options.head' => 'Customize filters',

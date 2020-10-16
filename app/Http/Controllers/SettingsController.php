@@ -363,9 +363,31 @@ class SettingsController extends Controller
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        
+        $foki = array_keys($sumaFile['foki']);
+        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+
+
         $cookies = $request->all();
         foreach($cookies as $key => $value){
-            Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+            $blpage = false;
+            foreach($foki as $fokus){
+                if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    $blpage = true;
+                }
+            }
+            if($blpage){
+                continue;
+            }
+            foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
+                if($key === $suma && $value === $filter){
+                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                }
+
+            }
         }
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));

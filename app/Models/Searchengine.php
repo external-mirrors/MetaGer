@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use App\MetaGer;
-use Cache;
 use Illuminate\Support\Facades\Redis;
-use Log;
 
 abstract class Searchengine
 {
@@ -111,7 +109,8 @@ abstract class Searchengine
 
     # Standardimplementierung der getNext Funktion, damit diese immer verwendet werden kann
     public function getNext(MetaGer $metager, $result)
-    {}
+    {
+    }
 
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch(\App\MetaGer $metager, &$timings)
@@ -151,6 +150,7 @@ abstract class Searchengine
                 "password" => $this->password,
                 "headers" => $this->headers,
                 "cacheDuration" => $this->cacheDuration,
+                "name" => $this->name
             ];
 
             $mission = json_encode($mission);
@@ -198,21 +198,18 @@ abstract class Searchengine
         if ($this->loaded) {
             return true;
         }
-
-        if ($this->cached) {
-            if ($body === "no-result") {
-                $body = "";
+        if (!$this->cached && empty($body)) {
+            $body = Redis::rpoplpush($this->hash, $this->hash);
+            if ($body === false) {
+                return $body;
             }
-        } else {
-            $body = Redis::get($this->hash);
+        }
+        
+        if ($body === "no-result") {
+            $body = "";
         }
 
         if ($body !== null) {
-            try {
-                Cache::put($this->hash, $body, $this->cacheDuration * 60);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }
             $this->loadResults($body);
             $this->getNext($metager, $body);
             $this->markNew();
@@ -287,5 +284,10 @@ abstract class Searchengine
     public function setNew($new)
     {
         $this->new = $new;
+    }
+
+    public function setCached($cached)
+    {
+        $this->cached = $cached;
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
 
@@ -165,6 +166,7 @@ Route::group(
             return view('plugin-page')
                 ->with('title', trans('titles.plugin'))
                 ->with('navbarFocus', 'dienste')
+                ->with('agent', new Agent())
                 ->with('browser', (new Agent())->browser())
                 ->with('request', $this->input('request', 'GET'));
         });
@@ -203,6 +205,21 @@ Route::group(
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
         Route::get('index.css', 'HumanVerification@browserVerification');
+        Route::get('index.js', function () {
+            $key = Request::input("id", "");
+
+            // Verify that key is a md5 checksum
+            if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+                abort(404);
+            }
+
+            Redis::connection("cache")->pipeline(function ($redis) use ($key) {
+                $redis->rpush("js" . $key, true);
+                $redis->expire($key, 30);
+            });
+
+            return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+        });
 
         Route::get('meta/picture', 'Pictureproxy@get');
         Route::get('clickstats', 'LogController@clicklog');

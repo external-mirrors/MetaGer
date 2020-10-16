@@ -69,10 +69,14 @@ function loadMoreResults() {
   updateUrl = updateUrl.replace("/meta.ger3", "/loadMore");
 
   var currentlyLoading = false;
-
+  var counter = 0;
   // Regularily check for not yet delivered Results
   var resultLoader = window.setInterval(function () {
     if (!currentlyLoading) {
+      counter++;
+      if (counter >= 10) {
+        clearInterval(resultLoader);
+      }
       currentlyLoading = true;
       $.getJSON(updateUrl, function (data) {
         // Check if we can clear the interval (once every searchengine has answered)
@@ -113,6 +117,17 @@ function loadMoreResults() {
             $(".no-results-error").remove();
             if ($(".alert.alert-danger > ul").children().length == 0) {
               $(".alert.alert-danger").remove();
+            }
+          }
+        }
+        if (typeof data.changedResults != "undefined") {
+          for (var key in data.changedResults) {
+            var value = data.changedResults[key];
+            // If there are more results than the given index we will prepend otherwise we will append the result
+            if (!data.imagesearch) {
+              $($(".result:not(.ad)")[key]).replaceWith($(value));
+            } else {
+              $($(".image-container > .image")[key]).replaceWith($(value));
             }
           }
         }

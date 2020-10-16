@@ -15,9 +15,8 @@
         "jenssegers/agent": "^2.6",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
-        "mcamara/laravel-localization": "dev-master#13f418e481ed06f482e4fca87ec5ff67c2949373",
+        "mcamara/laravel-localization": "1.6.*",
         "mews/captcha": "^2.2",
-        "predis/predis": "^1.1",
         "symfony/dom-crawler": "^4.1"
     },
     "require-dev": {

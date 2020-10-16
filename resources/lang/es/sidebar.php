@@ -1,6 +1,4 @@
-<?php
-
-return [
+<?php return [
     "nav1"	=>	"Búsqueda",
     "nav2"	=>	"Donaciones",
     "nav3"	=>	"Protección de datos",
@@ -23,9 +21,10 @@ return [
     "nav23"	=>	"Afiliarse a SUMA-EV",
     "nav24"	=>	"Codigo fuente MetaGer",
     "nav25"	=>	"MetaGer App",
+    "nav26"	=>	"Tienda para fanáticos",
+    "nav26"	=>	"Tienda para fanáticos",
     'nav27' => 'MetaGer Maps',
-    "nav26"	=>	"Tienda de fans de MetaGer",
     "navigationToggle"	=>	"Mostrar navegación",
-    "titles.tips"	=>	"Consejos",
-    "plugin"	=>	"Complemento MetaGer"
+    "titles.tips"	=>	"Sugerencias",
+    "plugin"	=>	"MetaGer Plugin"
 ];

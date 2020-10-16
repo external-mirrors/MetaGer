@@ -1,4 +1,4 @@
-@extends('layouts.staticPages', ['page' => 'startpage', 'css' => mix('css/themes/startpage-only.css')])
+@extends('layouts.staticPages', ['page' => 'startpage', 'css' => [mix('css/themes/startpage-only.css')]])
 
 @section('title', $title )
 

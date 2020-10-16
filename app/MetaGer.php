@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Cache;
 use Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -1354,6 +1355,13 @@ class MetaGer
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if ((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)) {
+                $this->hostBlacklist[] = $value;
+            }
+        }
+
+        $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
@@ -1389,6 +1397,14 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if (stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0) {
+                $this->domainBlacklist[] = str_replace("*.", "", $value);
+            }
+        }
+
+        $this->domainBlacklist = array_unique($this->domainBlacklist);
+
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
             $domainString = "";
@@ -1732,9 +1748,14 @@ class MetaGer
         $cookies = \Cookie::get();
         $count = 0;
 
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        $foki = array_keys($sumaFile['foki']);
+
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_"])) {
+            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
+                continue;
             }
         }
         return $count;

@@ -75,19 +75,20 @@ html {
     top: 0;
     z-index: 10;
 
+
     &>:nth-child(1) {
-        background-color: #EEEEEE;
+        background-color: @story-privacy-background;
     }
     &>:nth-child(2) {
-        background-color: #ffffff;
+        background-color: @story-ngo-background;
         color: #AD1A00
     }
     &>:nth-child(3) {
-        background-color: #edfdff;
+        background-color: @story-diversity-background;
         color: #0C4690;
     }
     &>:nth-child(4) {
-        background-color: #e3ffe9;
+        background-color: @story-eco-background;
         color: #0c621A;
     }
 
@@ -192,12 +193,12 @@ footer {
 // following lines set the background and heading color of each section
 #story-privacy {
     margin-bottom: 0;
-    background-color: #EEEEEE;
+    background-color: @story-privacy-background;
 }
 
 #story-ngo {
     grid-area: "icn-ngo";
-    background-color: #ffffff;
+    background-color: @story-ngo-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
@@ -207,7 +208,7 @@ footer {
 
 #story-diversity {
     grid-area: "icn-diversity";
-    background-color: #edfdff;
+    background-color: @story-diversity-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
@@ -217,7 +218,7 @@ footer {
 
 #story-eco {
     grid-area: "icn-eco";
-    background-color: #e3ffe9;
+    background-color: @story-eco-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 

@@ -72,6 +72,18 @@ class SettingsController extends Controller
         # Generating link with set cookies
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
 
+        # Checking if dark mode active
+        $darkmode = 0;
+        foreach($cookies as $key => $value){
+            if($key === 'dark_mode'){
+                if($value === 1)
+                    $darkmode = 1;
+                elseif($value === 2){
+                    $darkmode = 2;
+                }
+            }
+        }
+
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $request->input('fokus', ''))
@@ -82,7 +94,8 @@ class SettingsController extends Controller
             ->with('settingActive', $settingActive)
             ->with('url', $url)
             ->with('blacklist', $blacklist)
-            ->with('cookieLink', $cookieLink);
+            ->with('cookieLink', $cookieLink)
+            ->with('darkmode', $darkmode);
     }
 
     private function getSumas($fokus)
@@ -394,4 +407,34 @@ class SettingsController extends Controller
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
+
+    public function darkmode(Request $request)
+    {
+        $fokus = $request->input('fokus', '');
+        $url = $request->input('url', '');
+
+        $path = \Request::path();
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+
+        $cookies = Cookie::get();
+        $setCookie = true;
+        
+        $darkmode = "0";
+
+        if(!empty($cookies)){
+            foreach($cookies as $key => $value){
+                if($key === 'dark_mode'){
+                    if($value === "0" || $value == "1"){
+                        $darkmode = "2";
+                    }elseif($value === "2"){
+                        $darkmode = "1";
+                    }
+                    Cookie::queue('dark_mode', $darkmode, 0, $cookiePath, null, false, false);
+                    $setCookie = false;
+                }
+            }
+        }else{
+            Cookie::queue('dark_mode', "2", 0, $cookiePath, null, false, false);
+        }
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;
@@ -42,6 +43,15 @@ class StartpageController extends Controller
             $lang = 'all';
         }
 
+        $darkmode = 0;
+
+        $cookies = Cookie::get();
+        foreach($cookies as $key => $value){
+            if($key === 'dark_mode' && $value === 1){
+                $darkmode = 1;
+            }
+        }
+
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('homeIcon')
@@ -52,7 +62,8 @@ class StartpageController extends Controller
             ->with('request', $request->input('request', 'GET'))
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
-            ->with('pluginmodal', $request->input('plugin-modal', 'off'));
+            ->with('pluginmodal', $request->input('plugin-modal', 'off'))
+            ->with('darkmode', $darkmode);
     }
 
     public function loadPage($subpage)

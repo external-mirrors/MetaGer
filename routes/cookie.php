@@ -29,6 +29,7 @@ Route::group(
                 Route::post('all-settings/removeOne', 'SettingsController@removeOneSetting')->name('removeOneSetting');
                 Route::post('all-settings/removeAll', 'SettingsController@removeAllSettings')->name('removeAllSettings');
                 Route::get('load-settings', 'SettingsController@loadSettings')->name('loadSettings');
+                Route::post('darkmode', 'SettingsController@darkmode')->name('darkmode');
             });
     }
 );

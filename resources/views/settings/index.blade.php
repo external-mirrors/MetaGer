@@ -122,9 +122,10 @@
         @endif
     </div>
 
-    @if(LaravelLocalization::getCurrentLocale() === "de")
+    
         <div class="card-light">
             <h2>Weitere Einstellungen</h2>
+            @if(LaravelLocalization::getCurrentLocale() === "de")
             <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
                 <input type="hidden" name="fokus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
@@ -137,8 +138,11 @@
                 </div>
                 <button type="submit" class="btn btn-default">@lang('settings.save')</button>
             </form>
+            @endif
+            <form id="darkmode" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('darkmode', ["fokus" => $fokus, "url" => $url])) }}" method="post" class="form">
+            <button type="submit" class="btn btn-default">@lang('settings.darkmode')</button>
+            </form>
         </div>
-    @endif
     <div class="card-light" id="actions">
         @if($settingActive)
         <div id="reset">

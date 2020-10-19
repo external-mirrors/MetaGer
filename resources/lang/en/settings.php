@@ -25,6 +25,7 @@ return [
     'add' => 'Add',
     'clear' => 'Clear black list',
     'copy' => 'Copy',
+    'darkmode' => 'Toggle dark mode',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",

@@ -22,8 +22,13 @@
 		<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
-		<link type="text/css" rel="stylesheet alternate" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+
+		@if($darkmode === "2")
+		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+		@else
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
+		@endif
+
 @endif
 		<title>{{ $eingabe }} - MetaGer</title>
 		<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />

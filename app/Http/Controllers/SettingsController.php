@@ -72,18 +72,6 @@ class SettingsController extends Controller
         # Generating link with set cookies
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
 
-        # Checking if dark mode active
-        $darkmode = 0;
-        foreach($cookies as $key => $value){
-            if($key === 'dark_mode'){
-                if($value === 1)
-                    $darkmode = 1;
-                elseif($value === 2){
-                    $darkmode = 2;
-                }
-            }
-        }
-
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $request->input('fokus', ''))
@@ -95,7 +83,7 @@ class SettingsController extends Controller
             ->with('url', $url)
             ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
-            ->with('darkmode', $darkmode);
+            ->with('darkmode', Cookie::get('dark_mode'));
     }
 
     private function getSumas($fokus)
@@ -414,7 +402,7 @@ class SettingsController extends Controller
         $url = $request->input('url', '');
 
         $path = \Request::path();
-        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+        $cookiePath = "/";
 
         $cookies = Cookie::get();
         $setCookie = true;

@@ -26,8 +26,13 @@
 		@else
 		<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
 		@endif
-		<link type="text/css" rel="stylesheet alternate" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
+
+		@if($darkmode === "2")
+			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+		@else
+			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
+		@endif
+
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
 		<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />

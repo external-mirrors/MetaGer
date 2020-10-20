@@ -43,15 +43,6 @@ class StartpageController extends Controller
             $lang = 'all';
         }
 
-        $darkmode = 0;
-
-        $cookies = Cookie::get();
-        foreach($cookies as $key => $value){
-            if($key === 'dark_mode' && $value === 1){
-                $darkmode = 1;
-            }
-        }
-
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('homeIcon')
@@ -63,7 +54,7 @@ class StartpageController extends Controller
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
             ->with('pluginmodal', $request->input('plugin-modal', 'off'))
-            ->with('darkmode', $darkmode);
+            ->with('darkmode', Cookie::get('dark_mode'));
     }
 
     public function loadPage($subpage)

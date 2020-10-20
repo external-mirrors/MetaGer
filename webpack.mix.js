@@ -22,7 +22,7 @@ mix
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {
     strictMath: true
   })
-  .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-dark.css", {
+  .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-light.css", {
     strictMath: true
   })
   .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css", {

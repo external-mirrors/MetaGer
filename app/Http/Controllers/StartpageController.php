@@ -43,10 +43,9 @@ class StartpageController extends Controller
             $lang = 'all';
         }
 
+        $css = mix('css/themes/startpage-only-light.css');
         if(Cookie::get('dark_mode') === "2")
             $css = mix('css/themes/startpage-only-dark.css');
-        else
-            $css = mix('css/themes/startpage-only-light.css');
 
         return view('index')
             ->with('title', trans('titles.index'))

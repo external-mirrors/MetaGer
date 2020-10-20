@@ -23,7 +23,7 @@
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 
-		@if($darkmode === "2")
+		@if(Cookie::get('dark_mode') === "2")
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
 		@else
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>

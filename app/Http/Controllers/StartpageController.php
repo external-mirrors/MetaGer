@@ -53,8 +53,7 @@ class StartpageController extends Controller
             ->with('request', $request->input('request', 'GET'))
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
-            ->with('pluginmodal', $request->input('plugin-modal', 'off'))
-            ->with('darkmode', Cookie::get('dark_mode'));
+            ->with('pluginmodal', $request->input('plugin-modal', 'off'));
     }
 
     public function loadPage($subpage)

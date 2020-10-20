@@ -32,24 +32,25 @@ class Quicktips
         $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
         $this->hash = md5($url);
 
+        if (!Cache::has($this->hash)) {
+            if (!Redis::exists($this->hash)) {
 
-        if (!Redis::exists($this->hash)) {
+                // Queue this search
+                $mission = [
+                    "resulthash" => $this->hash,
+                    "url" => $url,
+                    "useragent" => "",
+                    "username" => null,
+                    "password" => null,
+                    "headers" => [],
+                    "cacheDuration" => self::CACHE_DURATION,
+                    "name" => "Quicktips",
+                ];
 
-            // Queue this search
-            $mission = [
-                "resulthash" => $this->hash,
-                "url" => $url,
-                "useragent" => "",
-                "username" => null,
-                "password" => null,
-                "headers" => [],
-                "cacheDuration" => self::CACHE_DURATION,
-                "name" => "Quicktips",
-            ];
+                $mission = json_encode($mission);
 
-            $mission = json_encode($mission);
-
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+                Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+            }
         }
     }
 
@@ -75,6 +76,10 @@ class Quicktips
         $body = null;
 
         $startTime = microtime(true);
+
+        if ($cache::has($this->hash)) {
+            return Cache::get($this->hash, false);
+        }
 
         while (microtime(true) - $startTime < 0.5) {
             $body = Redis::rpoplpush($this->hash, $this->hash);

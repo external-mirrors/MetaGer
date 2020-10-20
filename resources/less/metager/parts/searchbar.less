@@ -1,6 +1,5 @@
 @searchbar-border-color: #585858;
 @searchbar-border-color-light: #777777;
-@searchbar-background-color: white;
 .searchbar {
     display: -webkit-box;
     display: -moz-box;
@@ -69,6 +68,7 @@
                 -webkit-box-shadow: none;
                 box-shadow: none;
                 background-color: transparent;
+                color:@text-color;
             }
             #search-delete-btn {
                 position: absolute;
@@ -78,12 +78,14 @@
                 height: calc(100% - 4px);
                 margin: 2px 2px 2px 0;
                 border: none;
-                background-color: white;
+                background-color: transparent;
                 font-size: 1.8em;
                 font-weight: normal;
                 display: none;
+                filter: invert(@icon-color);
                 &:hover {
                     color: red;
+                    filter: invert(0);
                 }
             }
         }
@@ -95,6 +97,7 @@
                 background-color: transparent;
                 padding: 0;
                 color: #585858;
+                filter: invert(@icon-color);
             }
         }
     }

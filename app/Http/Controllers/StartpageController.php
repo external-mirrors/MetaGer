@@ -43,6 +43,11 @@ class StartpageController extends Controller
             $lang = 'all';
         }
 
+        if(Cookie::get('dark_mode') === "2")
+            $css = mix('css/themes/startpage-only-dark.css');
+        else
+            $css = mix('css/themes/startpage-only-light.css');
+
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('homeIcon')
@@ -53,7 +58,8 @@ class StartpageController extends Controller
             ->with('request', $request->input('request', 'GET'))
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
-            ->with('pluginmodal', $request->input('plugin-modal', 'off'));
+            ->with('pluginmodal', $request->input('plugin-modal', 'off'))
+            ->with('css', [$css]);
     }
 
     public function loadPage($subpage)

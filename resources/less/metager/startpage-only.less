@@ -171,7 +171,7 @@ footer {
 #story-container > section > p { // sets all paragraphs for all sections
     grid-area: paragraph;
     font-size: 30px;
-    color: #474747;
+    color: @story-font-color;
     max-width: 1100px;
     padding-right: 50px;
 }
@@ -194,6 +194,9 @@ footer {
 #story-privacy {
     margin-bottom: 0;
     background-color: @story-privacy-background;
+    .story-icon{
+        filter: invert(@icon-color);
+    }
 }
 
 #story-ngo {
@@ -203,7 +206,7 @@ footer {
 }
 
 #story-ngo > h1 {
-    color:#AD1A00;
+    color:@story-ngo-color;
 }
 
 #story-diversity {
@@ -213,7 +216,7 @@ footer {
 }
 
 #story-diversity > h1 {
-    color: #0c4690;
+    color: @story-diversity-color;
 }
 
 #story-eco {
@@ -223,14 +226,14 @@ footer {
 }
 
 #story-eco > h1 {
-    color:#0c621a;
+    color: @story-eco-color;
 }
 #story-container #story-plugin > h1 { 
     font-size:60px;
 }
 #story-container #story-plugin { 
     min-height: 60vh;
-    background-color: white;
+    background-color: @story-plugin-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 

@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0) {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode') {
                 $settingActive = true;
             }
         }
@@ -244,6 +244,10 @@ class SettingsController extends Controller
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
+            if($key === 'dark_mode'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
+
         }
         $this->clearBlacklist($request);
 
@@ -266,8 +270,11 @@ class SettingsController extends Controller
         $key = $request->input('key', '');
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-        Cookie::queue($key, "", 0, $cookiePath, null, false, false);
-
+        if($key === 'dark_mode'){
+            Cookie::queue($key, "", 0, '/', null, false, false);
+        }else{
+            Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+        }
         return redirect($request->input('url', 'https://metager.de'));
 
     }
@@ -278,7 +285,11 @@ class SettingsController extends Controller
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
         foreach (Cookie::get() as $key => $value) {
-            Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            if($key === 'dark_mode'){
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            }else{
+                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            }
         }
         return redirect($request->input('url', 'https://metager.de'));
     }

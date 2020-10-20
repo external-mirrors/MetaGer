@@ -40,4 +40,5 @@ return [
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
+    'dm' => 'Dunkler Modus',
 ];

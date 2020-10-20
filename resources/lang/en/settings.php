@@ -40,4 +40,5 @@ return [
     'key' => "Your key to the ad-free search",
     'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
+    'dm' => 'Dark mode',
 ];

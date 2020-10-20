@@ -34,6 +34,8 @@
                         @lang('settings.key')
                         @elseif(strpos($key, "_blpage"))
                         @lang('settings.blentry')
+                        @elseif($key === 'dark_mode')
+                        @lang('settings.dm')
                         @endif
                         </td>
                         <td>

@@ -82,8 +82,7 @@ class SettingsController extends Controller
             ->with('settingActive', $settingActive)
             ->with('url', $url)
             ->with('blacklist', $blacklist)
-            ->with('cookieLink', $cookieLink)
-            ->with('darkmode', Cookie::get('dark_mode'));
+            ->with('cookieLink', $cookieLink);
     }
 
     private function getSumas($fokus)

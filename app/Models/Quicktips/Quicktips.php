@@ -33,7 +33,7 @@ class Quicktips
         $this->hash = md5($url);
 
 
-        if (!Cache::has($this->hash)) {
+        if (!Redis::exists($this->hash)) {
 
             // Queue this search
             $mission = [
@@ -73,7 +73,18 @@ class Quicktips
     public function retrieveResults($hash)
     {
         $body = null;
-        $body = Redis::brpoplpush($this->hash, $this->hash,1);
+
+        $startTime = microtime(true);
+
+        while (microtime(true) - $startTime < 0.5) {
+            $body = Redis::rpoplpush($this->hash, $this->hash);
+            if ($body === false || $body === null) {
+                usleep(50 * 1000);
+            } else {
+                break;
+            }
+        }
+
         if ($body === false) {
             return false;
         }

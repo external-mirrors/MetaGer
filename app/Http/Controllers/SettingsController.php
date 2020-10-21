@@ -395,6 +395,9 @@ class SettingsController extends Controller
             if($blpage){
                 continue;
             }
+            if($key === 'dark_mode'){
+                Cookie::queue($key, $value, 0, '/', null, false, false);
+            }
             foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
                 if($key === $suma && $value === $filter){
                     Cookie::queue($key, $value, 0, $cookiePath, null, false, false);

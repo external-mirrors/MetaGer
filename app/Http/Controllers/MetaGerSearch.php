@@ -76,9 +76,20 @@ class MetaGerSearch extends Controller
             return response($responseContent);
         }
 
+        $quicktips = $metager->createQuicktips();
+        if (!empty($timings)) {
+            $timings["createQuicktips"] = microtime(true) - $time;
+        }
+
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
+
+        # Versuchen die Ergebnisse der Quicktips zu laden
+        $quicktipResults = $quicktips->loadResults();
+        if (!empty($timings)) {
+            $timings["loadResults"] = microtime(true) - $time;
+        }
 
         $metager->startSearch($timings);
 
@@ -128,7 +139,7 @@ class MetaGerSearch extends Controller
         }
 
         # Die Ausgabe erstellen:
-        $resultpage = $metager->createView();
+        $resultpage = $metager->createView($quicktipResults);
         if ($spamEntry !== null) {
             try {
                 Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);

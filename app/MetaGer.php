@@ -135,7 +135,7 @@ class MetaGer
     }
 
     # Erstellt aus den gesammelten Ergebnissen den View
-    public function createView()
+    public function createView($quicktipResults = [])
     {
         # Hiermit werden die evtl. ausgewählten SuMas extrahiert, damit die Input-Boxen richtig gesetzt werden können
         $focusPages = [];
@@ -175,7 +175,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('focus', $this->fokus)
                         ->with('resultcount', count($this->results));
             }
@@ -248,7 +248,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe, "quotes" => $this->sprueche]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
                         ->with('focus', $this->fokus);
                     break;
@@ -1212,6 +1212,15 @@ class MetaGer
             $this->shouldLog = true;
         }
     }
+
+     public function createQuicktips()
+    {
+        # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
+        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime());
+        return $quicktips;
+    }
+
+
 
     private function anonymizeIp($ip)
     {

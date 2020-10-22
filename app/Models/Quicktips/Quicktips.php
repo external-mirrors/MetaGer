@@ -77,7 +77,7 @@ class Quicktips
 
         $startTime = microtime(true);
 
-        if ($cache::has($this->hash)) {
+        if (Cache::has($this->hash)) {
             return Cache::get($this->hash, false);
         }
 

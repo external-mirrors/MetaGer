@@ -19,6 +19,10 @@
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 	@if(Cookie::get('dark_mode') === "2")
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+	@elseif(Cookie::get('dark_mode') === "1")
+		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer Light"/>
 	@else
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
+		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme: dark)" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+		<link type="text/css" rel="stylesheet" media="not (prefers-color-scheme: dark)" href="{{ mix('css/themes/metager.css') }}" title="MetaGer Light"/>
 	@endif
+	

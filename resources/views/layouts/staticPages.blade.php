@@ -33,18 +33,18 @@
 				<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
 			@endif
 		@elseif(Cookie::get('dark_mode') === "1")
-			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer Light"/>
+			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" title="MetaGer"/>
 			@if(isset($page) && $page === 'startpage')
 				<link type="text/css" rel="stylesheet" media="not (prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-light.css') }}"/>
 			@endif
 		@else
-			<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" title="MetaGer Dark"/>
+			<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}"/>
 			@if(isset($page) && $page === 'startpage')
 				<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
 			@endif
-			<link type="text/css" rel="stylesheet" media="not (prefers-color-scheme:dark)" href="{{ mix('css/themes/metager.css') }}" title="MetaGer Light"/>
+			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
 			@if(isset($page) && $page === 'startpage')
-				<link type="text/css" rel="stylesheet" media="not (prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-light.css') }}"/>
+				<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}"/>
 			@endif
 		@endif
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />

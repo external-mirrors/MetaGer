@@ -125,10 +125,18 @@
     
         <div class="card-light">
             <h2>Weitere Einstellungen</h2>
-            @if(LaravelLocalization::getCurrentLocale() === "de")
             <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
                 <input type="hidden" name="fokus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
+                <div class="form-group">
+                    <label for="dm">@lang('settings.darkmode')</label>
+                    <select name="dm" id="dm" class="form-control">
+                        <option value="system" {{ !Cookie::has('dark_mode') ? "disabled selected" : "" }}>@lang('settings.system')</option>
+                        <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
+                        <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
+                    </select>
+                </div>
+                @if(LaravelLocalization::getCurrentLocale() === "de")
                 <div class="form-group">
                     <label for="zitate">Zitate</label>
                     <select name="zitate" id="zitate" class="form-control">
@@ -136,11 +144,8 @@
                         <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
                     </select>
                 </div>
+                @endif
                 <button type="submit" class="btn btn-default">@lang('settings.save')</button>
-            </form>
-            @endif
-            <form id="darkmode" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('darkmode', ["fokus" => $fokus, "url" => $url])) }}" method="post" class="form">
-            <button type="submit" class="btn btn-default">@lang('settings.darkmode')</button>
             </form>
         </div>
     <div class="card-light" id="actions">

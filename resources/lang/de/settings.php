@@ -25,7 +25,11 @@ return [
     'add' => 'Hinzufügen',
     'clear' => 'Blacklist leeren',
     'copy' => 'Kopieren',
+
     'darkmode' => 'Dunklen Modus umschalten',
+    'system' => 'Systemstandard',
+    'dark' => 'Dunkel',
+    'light' => 'Hell',
 
     // Translations from the settings overview
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',

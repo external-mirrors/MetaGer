@@ -209,22 +209,31 @@ class SettingsController extends Controller
         $fokus = $request->input('fokus', '');
         $url = $request->input('url', '');
         // Currently only the setting for quotes is supported
+
         $quotes = $request->input('zitate', '');
-        if (empty($fokus) || empty($quotes)) {
-            abort(404);
+        if(!empty($quotes)){
+            if($quotes === "off"){
+                $path = \Request::path();
+                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+                Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
+            }elseif($quotes === "on") {
+                $path = \Request::path();
+                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+                Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
+            }
         }
 
-        if($quotes === "off"){
-            $path = \Request::path();
-            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
-        }elseif($quotes === "on") {
-            $path = \Request::path();
-            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
-        }else{
-            abort(404);
+        $darkmode = $request->input('dm');
+        if(!empty($darkmode)){
+            if($darkmode === "off"){
+                Cookie::queue('dark_mode', '1', 0, '/', null, false, false);
+            }elseif($darkmode === "on") {
+                Cookie::queue('dark_mode', '2', 0, '/', null, false, false);
+            }elseif($darkmode === "system"){
+                Cookie::queue('dark_mode', '', 0, '/', null, false, false);
+            }
         }
+
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
@@ -408,34 +417,4 @@ class SettingsController extends Controller
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
-
-    public function darkmode(Request $request)
-    {
-        $fokus = $request->input('fokus', '');
-        $url = $request->input('url', '');
-
-        $path = \Request::path();
-        $cookiePath = "/";
-
-        $cookies = Cookie::get();
-        $setCookie = true;
-        
-        $darkmode = "0";
-
-        if(!empty($cookies)){
-            foreach($cookies as $key => $value){
-                if($key === 'dark_mode'){
-                    if($value === "0" || $value == "1"){
-                        $darkmode = "2";
-                    }elseif($value === "2"){
-                        $darkmode = "1";
-                    }
-                    Cookie::queue('dark_mode', $darkmode, 0, $cookiePath, null, false, false);
-                    $setCookie = false;
-                }
-            }
-        }else{
-            Cookie::queue('dark_mode', "2", 0, $cookiePath, null, false, false);
-        }
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));    }
 }

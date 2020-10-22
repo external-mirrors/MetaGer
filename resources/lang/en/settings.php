@@ -25,7 +25,11 @@ return [
     'add' => 'Add',
     'clear' => 'Clear black list',
     'copy' => 'Copy',
+
     'darkmode' => 'Toggle dark mode',
+    'system' => 'System Default',
+    'dark' => 'Dark',
+    'light' => 'Light',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",

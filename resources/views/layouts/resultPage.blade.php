@@ -30,6 +30,7 @@
 		@else
 		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}"/>
 		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:light)" href="{{ mix('css/themes/metager.css') }}"/>
+		<!--[if IE]><link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"><![endif]-->
 		@endif
 
 @endif

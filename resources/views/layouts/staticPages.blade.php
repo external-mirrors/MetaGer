@@ -46,6 +46,8 @@
 			@if(isset($page) && $page === 'startpage')
 				<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:light)" href="{{ mix('css/themes/startpage-only-light.css') }}"/>
 			@endif
+			<!--[if IE]><link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"><![endif]-->
+			<!--[if IE]><link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}"><![endif]-->
 		@endif
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
 		<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">

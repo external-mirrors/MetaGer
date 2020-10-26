@@ -2,7 +2,7 @@
     "foki.web" => "Web",
     "foki.bilder" => "Imágenes",
     "foki.nachrichten" => "Informativos/Política",
-    "foki.wissenschaft" => "Ciencia",
+    "foki.science" => "Ciencia",
     "foki.produkte" => "Productos",
     "foki.angepasst" => "ajustado",
     "foki.maps" => "Maps.metager.de",

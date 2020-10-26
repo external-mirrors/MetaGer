@@ -27,6 +27,7 @@ return [
     'copy' => 'Kopieren',
 
     'darkmode' => 'Dunklen Modus umschalten',
+    'darkmode-hint' => 'Die Einstellung für den dunklen Modus betrifft alle Fokusse und Unterseiten übergreifend!',
     'system' => 'Systemstandard',
     'dark' => 'Dunkel',
     'light' => 'Hell',

@@ -135,6 +135,7 @@
                         <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
                         <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
                     </select>
+                    <small>@lang('settings.darkmode-hint')</small>
                 </div>
                 @if(LaravelLocalization::getCurrentLocale() === "de")
                 <div class="form-group">

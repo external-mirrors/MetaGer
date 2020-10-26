@@ -123,19 +123,19 @@
       </label>
       <ul class="metager-dropdown-content">
           <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web") }}" >{{ trans('index.foki.web') }}</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.web') }}</a>
           </li>
           <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=bilder") }}" >{{ trans('index.foki.bilder') }}</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=bilder&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.bilder') }}</a>
           </li>
           <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte") }}" >{{ trans('index.foki.produkte') }}</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.produkte') }}</a>
           </li>
           <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten") }}" >{{ trans('index.foki.nachrichten') }}</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.nachrichten') }}</a>
           </li>
           <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science") }}" >{{ trans('index.foki.science') }}</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
           </li>
         </ul>
     </li>

@@ -1,4 +1,4 @@
-@extends('layouts.staticPages', ['page' => 'startpage', 'css' => [mix('css/themes/startpage-only.css')]])
+@extends('layouts.staticPages', ['page' => 'startpage'])
 
 @section('title', $title )
 
@@ -16,9 +16,9 @@
       @endif
 	    <div id="plugin-btn-div">
 		@if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-		<button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
+		<button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><img src="public/img" alt="+"> {{ trans('index.plugin') }}</a>
 		@else
-		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><i class="fa fa-plug" aria-hidden="true"></i> {{ trans('index.plugin') }}</a>
+		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
 		@endif
 	</div>
     </div>

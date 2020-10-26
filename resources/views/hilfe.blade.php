@@ -6,8 +6,10 @@
 	<div class="alert alert-warning" role="alert">{!! trans('hilfe.achtung') !!}</div>
 	<h1 class="page-title">{!! trans('hilfe.title') !!}</h1>
 
-	<section>
+	<section id="startpage">
 		<h2>{!! trans('hilfe.title.2') !!}</h2>
+		<h3>{!! trans('hilfe.startpage.title') !!}</h3>
+		<p>{!! trans('hilfe.startpage.info') !!}</p>
 		<h3>{!! trans('hilfe.searchfield.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.searchfield.info') !!}</p>
@@ -30,7 +32,7 @@
 			</ul>
 		</div>
 	</section>
-	<section>
+	<section id="results">
 		<h3>{!! trans('hilfe.result.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.result.info.1') !!}</p>
@@ -58,7 +60,7 @@
 			</ul>
 		</div>
 	</section>
-	<section>
+	<section id="severalwords">
 		<h3>{!! trans('hilfe.mehrwortsuche.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.mehrwortsuche.1') !!}</p>
@@ -72,7 +74,7 @@
 		</div>
 	</section>
 
-	<section>
+	<section id="capitalizationrules">
 		<h3>{!! trans('hilfe.grossklein.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.grossklein.1') !!}</p>
@@ -108,7 +110,7 @@
 	</section>
 	<h2 id="dienste">{!! trans('hilfe.dienste') !!}</h2>
 	<h3><i class="fa fa-angle-double-right"></i> {!! trans('hilfe.dienste.kostenlos') !!}</h3>
-	<section>
+	<section id="app">
 		<div id="mg-app" style="margin-top: -100px"></div>
 		<div style="margin-top: 100px"></div>
 		<h3>{!! trans('hilfe.app.title') !!}</h3>
@@ -116,13 +118,13 @@
 			<p>{!! trans('hilfe.app.1') !!}</p>
 		</div>
 	</section>
-	<section>
+	<section id="plugin">
 		<h3>{!! trans('hilfe.plugin.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.plugin.1') !!}</p>
 		</div>
 	</section>
-	<section>
+	<section id="asso">
 		<h3>{!! trans('hilfe.suchwortassoziator.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.suchwortassoziator.1') !!}</p>
@@ -130,49 +132,49 @@
 			<p>{!! trans('hilfe.suchwortassoziator.3') !!}</p>
 		</div>
 	</section>
-	<section>
+	<section id="widget">
 		<h3>{!! trans('hilfe.widget.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.widget.1') !!}</p>
 		</div>
 	</section>
 	<h2>{!! trans('hilfe.datenschutz.title') !!}</h2>
-	<section>
+	<section id="factcheck">
 		<h3>{!! trans('hilfe.datenschutz.faktencheck.heading') !!}</h3>
 		<div>
 			<p>@lang('hilfe.datenschutz.faktencheck.body.1')</p>
 			<p>@lang('hilfe.datenschutz.faktencheck.body.2')</p>
 		</div>
 	</section>
-	<section>
+	<section id="tracking">
 		<h3>{!! trans('hilfe.datenschutz.1') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.datenschutz.2') !!}</p>
 			<p>{!! trans('hilfe.datenschutz.3') !!}</p>
 		</div>
 	</section>
-	<section>
+	<section id="torhidden">
 		<h3>{!! trans('hilfe.tor.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.tor.1') !!}</p>
 			<p>{!! trans('hilfe.tor.2') !!}</p>
 		</div>
 	</section>
-	<section>
+	<section id="proxy">
 		<h3>{!! trans('hilfe.proxy.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.proxy.1') !!}</p>
 		</div>
 	</section>
 
-	<section>
+	<section id="maps">
 		<h3>{!! trans('hilfe.maps.title') !!}</h3>
 		<div>
 			<p>{!! trans('hilfe.maps.1') !!}</p>
 			<p>{!! trans('hilfe.maps.2') !!}</p>
 			<p>{!! trans('hilfe.maps.3') !!}</p>
 		</div>
-	</section>
+	</section id="faq">
 	<h2>{!! trans('hilfe.faq.title') !!}</h2>
 	<section>
 		<h3>{!! trans('hilfe.metager.title') !!}</h3>

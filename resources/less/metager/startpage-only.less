@@ -75,20 +75,21 @@ html {
     top: 0;
     z-index: 10;
 
+
     &>:nth-child(1) {
-        background-color: #EEEEEE;
+        background-color: @story-privacy-background;
     }
     &>:nth-child(2) {
-        background-color: #ffffff;
-        color: #AD1A00
+        background-color: @story-ngo-background;
+        color: @story-ngo-color;
     }
     &>:nth-child(3) {
-        background-color: #edfdff;
-        color: #0C4690;
+        background-color: @story-diversity-background;
+        color: @story-diversity-color;
     }
     &>:nth-child(4) {
-        background-color: #e3ffe9;
-        color: #0c621A;
+        background-color: @story-eco-background;
+        color: @story-eco-color;
     }
 
     &>a {
@@ -170,7 +171,7 @@ footer {
 #story-container > section > p { // sets all paragraphs for all sections
     grid-area: paragraph;
     font-size: 30px;
-    color: #474747;
+    color: @story-font-color;
     max-width: 1100px;
     padding-right: 50px;
 }
@@ -192,44 +193,47 @@ footer {
 // following lines set the background and heading color of each section
 #story-privacy {
     margin-bottom: 0;
-    background-color: #EEEEEE;
+    background-color: @story-privacy-background;
+    .story-icon{
+        filter: invert(@icon-color);
+    }
 }
 
 #story-ngo {
     grid-area: "icn-ngo";
-    background-color: #ffffff;
+    background-color: @story-ngo-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-ngo > h1 {
-    color:#AD1A00;
+    color:@story-ngo-color;
 }
 
 #story-diversity {
     grid-area: "icn-diversity";
-    background-color: #edfdff;
+    background-color: @story-diversity-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-diversity > h1 {
-    color: #0c4690;
+    color: @story-diversity-color;
 }
 
 #story-eco {
     grid-area: "icn-eco";
-    background-color: #e3ffe9;
+    background-color: @story-eco-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 
 #story-eco > h1 {
-    color:#0c621a;
+    color: @story-eco-color;
 }
 #story-container #story-plugin > h1 { 
     font-size:60px;
 }
 #story-container #story-plugin { 
     min-height: 60vh;
-    background-color: white;
+    background-color: @story-plugin-background;
     clip-path: polygon(0 0, 40% 0, 50% @clippathHeight, 60% 0, 100% 0, 100% 100%, 0 100%);
 }
 

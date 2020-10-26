@@ -5,6 +5,9 @@ return [
 
     "title.2" => 'Use of the search engine',
 
+    "startpage.title" => 'The start page',
+    "startpage.info" => 'The start page contains the search field and a menu button in the upper right corner. There is a link below the search field which let you add MetaGer to your web browser. At last, at the bottom of the page there is some information about MetaGer and its supporting association, the SUMA-EV.',
+
     "searchfield.title" => 'The search field',
     "searchfield.info" => 'The search field contains:',
     "searchfield.memberkey" => 'The key symbol (only SUMA-EV members): Members can enter a private key to use the "free-of-advertising" metager search. If you want this too, just become a member: <a href = "https://metager.org/beitritt">Membership form</a>',
@@ -12,10 +15,13 @@ return [
     "searchfield.search" => 'The magnifier: Start your search.',
 
     "resultpage.title" => 'The result page',
-    "resultpage.foci" => 'There are six different search focuses below the search field (Web, Pictures...). We assigned specific search engines to these focuses.',
+    "resultpage.foci" => 'There are three (six for the german branch) different search focuses below the search field (Web, Pictures and Shopping). We assigned specific search engines to these focuses.',
     "resultpage.choice" => 'Below these you have two links:',
     "resultpage.filter" => 'Filter: Toggle filters on / off and apply settings here. Each focus has its own assortment.',
-    "resultpage.settings" => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page.',
+    "resultpage.settings" => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page. The section "hints" offers a link to the cookie list and also a box with a link which is useful to copy and save as a bookmark. Using the bookmark you will have all settings working immediately. Further the section "Black List" let you exclude your entries from being used for searching. At last you may hide / unhide the citations here. There is also a menu entry to access the settings page.',
+
+
+
 
     "stopworte.title" => "Exclude single words",
     "stopworte.1" => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",
@@ -39,14 +45,14 @@ return [
 
     "result.title" => 'Results',
     "result.info.1" => 'All results will look like this:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-01.png"></div></p>',
-    "result.info.open" => '"OPEN": Click the headline, the link below (URL) or the "OPEN" button to open the result. This will be in the same or a new TAB due to your browser settings.',
-    "result.info.newtab" => '"OPEN IN NEW TAB" will open the result in a new TAB in any case.',
+    "result.info.open" => '"OPEN": Click the headline, the link below (URL) or the "OPEN" button to open the result in the same TAB.',
+    "result.info.newtab" => '"OPEN IN NEW TAB" will open the result in a new TAB.',
     "result.info.anonym" => '"OPEN ANONYMOUSLY": the page will be opened under the proxy protection. There is some information about the proxy further down here.',
     "result.info.more" => '"MORE": you will get more options, the result changes its appearance to:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
     "result.info.2" => 'The new options are:',
     "result.info.saveresult" => '"Save result in TAB" (Only desktop): The result will be stored in a new TAB. It´ s used for collecting results out of several searches. This TAB appears on the right side of your screen. (info: <a href="#searchinsearch"> Search in search</a>)',
     "result.info.domainnewsearch" => '"Start a new search on this domain": search only on this domain.',
-    "result.info.hideresult" => '"Hide": hide results from this domain. You can use this filter directly after your search words (e.g. my search words -site:*.wikipedia.org), filters can be concatenated and the wildcard "*" is allowed. Do one search with a filter and store it as a bookmark. Next time -using the bookmark- you have your settings active immediately.',
+    "result.info.hideresult" => '"Hide": hide results from this domain. You can use this filter directly after your search words (e.g. my search words -site:*.wikipedia.org), filters can be concatenated and the wildcard "*" is allowed. See also "Settings"',
 
     "urls.title" => "Exclude URLs",
     "urls.explanation" => "Use \"-url:\" to exclude search results containing specified words.",
@@ -69,7 +75,7 @@ return [
     "plugin.title" => "Browser-Plugin",
     "plugin.1" => "There is a MetaGer Plugin for most of the common web browsers. The plugin provides easy search from the web browsers search field. Find out more: <a href=\"/en/plugin\" rel=\"noopener\">MetaGer Plugin</a>.",
 
-    "suchwortassoziator.title" => "Finding connotations to searchwords",
+    "suchwortassoziator.title" => "MetaGer-Web-Associator",
     "suchwortassoziator.1" => 'Ask the <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) to find connotations in a subject area. The service doesn&apos;t append upon any language because it uses webdocuments as a source. Therefore, you find any connotations to your used language and vice-versa.',
     "suchwortassoziator.2" => "Example: you want to know more about \"tick bites\" and its dangers but you forgot the technical terms around this issue. The \"Assoziator\" presents \"Borreliose\" and \"fsme\" among others.",
     "suchwortassoziator.3" => "Please let us know if something unsuitable appears. Please use our <a href=\"/en/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>.",

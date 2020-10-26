@@ -115,6 +115,31 @@
       </ul>
     </li>
     <li class="metager-dropdown">
+      <input id="settingsToggle" class="sidebarCheckbox" type="checkbox">
+      <label for="settingsToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationEinstellung" tabindex=0>
+      <img src="/img/icon-settings.svg"alt="" aria-hidden="true" id="sidebar-img-language"> 
+        <span>{{ trans('sidebar.nav28') }}</span>
+        <span class="caret"></span>
+      </label>
+      <ul class="metager-dropdown-content">
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.web') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=bilder&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.bilder') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.produkte') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.nachrichten') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
+          </li>
+        </ul>
+    </li>
+    <li class="metager-dropdown">
       <input id="languagesToggle" class="sidebarCheckbox" type="checkbox">
       <label for="languagesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationSprache" tabindex=0>
       <img src="/img/icon-language.svg"alt="" aria-hidden="true" id="sidebar-img-language"> 

@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0) {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode') {
                 $settingActive = true;
             }
         }
@@ -209,22 +209,31 @@ class SettingsController extends Controller
         $fokus = $request->input('fokus', '');
         $url = $request->input('url', '');
         // Currently only the setting for quotes is supported
+
         $quotes = $request->input('zitate', '');
-        if (empty($fokus) || empty($quotes)) {
-            abort(404);
+        if(!empty($quotes)){
+            if($quotes === "off"){
+                $path = \Request::path();
+                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+                Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
+            }elseif($quotes === "on") {
+                $path = \Request::path();
+                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+                Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
+            }
         }
 
-        if($quotes === "off"){
-            $path = \Request::path();
-            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
-        }elseif($quotes === "on") {
-            $path = \Request::path();
-            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
-        }else{
-            abort(404);
+        $darkmode = $request->input('dm');
+        if(!empty($darkmode)){
+            if($darkmode === "off"){
+                Cookie::queue('dark_mode', '1', 0, '/', null, false, false);
+            }elseif($darkmode === "on") {
+                Cookie::queue('dark_mode', '2', 0, '/', null, false, false);
+            }elseif($darkmode === "system"){
+                Cookie::queue('dark_mode', '', 0, '/', null, false, false);
+            }
         }
+
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
@@ -244,6 +253,10 @@ class SettingsController extends Controller
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
+            if($key === 'dark_mode'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
+
         }
         $this->clearBlacklist($request);
 
@@ -266,8 +279,11 @@ class SettingsController extends Controller
         $key = $request->input('key', '');
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-        Cookie::queue($key, "", 0, $cookiePath, null, false, false);
-
+        if($key === 'dark_mode'){
+            Cookie::queue($key, "", 0, '/', null, false, false);
+        }else{
+            Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+        }
         return redirect($request->input('url', 'https://metager.de'));
 
     }
@@ -278,7 +294,11 @@ class SettingsController extends Controller
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
         foreach (Cookie::get() as $key => $value) {
-            Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            if($key === 'dark_mode'){
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            }else{
+                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            }
         }
         return redirect($request->input('url', 'https://metager.de'));
     }
@@ -383,6 +403,9 @@ class SettingsController extends Controller
             }
             if($blpage){
                 continue;
+            }
+            if($key === 'dark_mode'){
+                Cookie::queue($key, $value, 0, '/', null, false, false);
             }
             foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
                 if($key === $suma && $value === $filter){

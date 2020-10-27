@@ -939,7 +939,7 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine && !$engine->loaded) {
+                if ($engine->name === $mainEngine) {
                     $enginesToWaitFor[] = $engine->hash;
                 }
             }
@@ -950,6 +950,17 @@ class MetaGer
             foreach ($engines as $engine) {
                 $enginesToWaitFor[] = $engine->hash;
             }
+        } else {
+            $newEnginesToWaitFor = [];
+            // Don't wait for engines that are already loaded in Cache
+            foreach ($enginesToWaitFor as $engineToWaitFor) {
+                foreach ($engines as $engine) {
+                    if ($engine->hash === $engineToWaitFor && !$engine->loaded) {
+                        $newEnginesToWaitFor[] = $engineToWaitFor;
+                    }
+                }
+            }
+            $enginesToWaitFor = $newEnginesToWaitFor;
         }
 
         $timeStart = microtime(true);
@@ -1213,7 +1224,7 @@ class MetaGer
         }
     }
 
-     public function createQuicktips()
+    public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
         $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime());

@@ -85,13 +85,13 @@ class MetaGerSearch extends Controller
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
 
+        $metager->startSearch($timings);
+
         # Versuchen die Ergebnisse der Quicktips zu laden
         $quicktipResults = $quicktips->loadResults();
         if (!empty($timings)) {
-            $timings["loadResults"] = microtime(true) - $time;
+            $timings["Loaded Quicktip Results"] = microtime(true) - $time;
         }
-
-        $metager->startSearch($timings);
 
         $metager->waitForMainResults();
         if (!empty($timings)) {

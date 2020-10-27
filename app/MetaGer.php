@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Cache;
 use Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -134,7 +135,7 @@ class MetaGer
     }
 
     # Erstellt aus den gesammelten Ergebnissen den View
-    public function createView()
+    public function createView($quicktipResults = [])
     {
         # Hiermit werden die evtl. ausgewählten SuMas extrahiert, damit die Input-Boxen richtig gesetzt werden können
         $focusPages = [];
@@ -174,7 +175,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('focus', $this->fokus)
                         ->with('resultcount', count($this->results));
             }
@@ -247,7 +248,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe, "quotes" => $this->sprueche]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
                         ->with('focus', $this->fokus);
                     break;
@@ -938,10 +939,28 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine && !$engine->loaded) {
+                if ($engine->name === $mainEngine) {
                     $enginesToWaitFor[] = $engine->hash;
                 }
             }
+        }
+
+        # If no main engines are enabled by the user we will wait for all results
+        if (sizeof($enginesToWaitFor) === 0) {
+            foreach ($engines as $engine) {
+                $enginesToWaitFor[] = $engine->hash;
+            }
+        } else {
+            $newEnginesToWaitFor = [];
+            // Don't wait for engines that are already loaded in Cache
+            foreach ($enginesToWaitFor as $engineToWaitFor) {
+                foreach ($engines as $engine) {
+                    if ($engine->hash === $engineToWaitFor && !$engine->loaded) {
+                        $newEnginesToWaitFor[] = $engineToWaitFor;
+                    }
+                }
+            }
+            $enginesToWaitFor = $newEnginesToWaitFor;
         }
 
         $timeStart = microtime(true);
@@ -1205,6 +1224,15 @@ class MetaGer
         }
     }
 
+    public function createQuicktips()
+    {
+        # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
+        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime());
+        return $quicktips;
+    }
+
+
+
     private function anonymizeIp($ip)
     {
         if (str_contains($ip, ":")) {
@@ -1347,6 +1375,13 @@ class MetaGer
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if ((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)) {
+                $this->hostBlacklist[] = $value;
+            }
+        }
+
+        $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
@@ -1382,6 +1417,14 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if (stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0) {
+                $this->domainBlacklist[] = str_replace("*.", "", $value);
+            }
+        }
+
+        $this->domainBlacklist = array_unique($this->domainBlacklist);
+
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
             $domainString = "";
@@ -1725,9 +1768,14 @@ class MetaGer
         $cookies = \Cookie::get();
         $count = 0;
 
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        $foki = array_keys($sumaFile['foki']);
+
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_"])) {
+            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
+                continue;
             }
         }
         return $count;

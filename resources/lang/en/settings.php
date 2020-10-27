@@ -6,6 +6,7 @@ return [
 
     "hint.header" => "Note",
     "hint.text" => "To save your search settings, we use non-personally identifiable cookies. These are saved in clear text in your browser. You can see an <a href=\":link\">overview</a> of all the settings and cookies you have made.",
+    'hint.loadSettings' => 'Here is a link you can use as startpage or bookmark to keep your current settings. The URL sets your settings as cookies.',
 
     "header.2" => "Used Search Engines",
     "text.2" => "Below are all the search engines available for this focus. With a click on the name they can be switched on / off. Used search engines are shown in green. Not used ones in red or gray.",
@@ -14,9 +15,16 @@ return [
     "header.3" => "Search Filters",
     "text.3" => "At this point you can set search filters permanently. With the selection of a search filter, only search engines are available that support this filter. Conversely, only search filters are displayed which are supported by the current search engine selection.",
 
+    'header.4' => 'Black list',
+    'text.4' => 'Here you can add domains to exclude when searching. If you want to exclude all subdomains start with "*.".',
+    'address' => 'Address',
+
     "save" => "Save",
     "reset" => "Delete all settings",
     "back" => "Back to the last page",
+    'add' => 'Add',
+    'clear' => 'Clear black list',
+    'copy' => 'Copy',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
@@ -29,5 +37,6 @@ return [
     'engineDisabled' => "The search engine :engine will not be queried in focus :focus.",
     'inFocus' => "in focus",
     'key' => "Your key to the ad-free search",
+    'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
 ];

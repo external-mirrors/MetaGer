@@ -85,7 +85,7 @@
 
 	@elseif ($agent->isPhone())
 		@if ($browser === 'Firefox')
-			@if (version_compare($agent->version($agent->browser()), "80.0") <= 0))
+			@if (version_compare($agent->version($agent->browser()), '80.') >= 0))
 				@include ('plugin/mobile/firefox/v80')
 				@include ('plugin/mobile/firefox-klar/v8-8')
 			@else

@@ -3,53 +3,57 @@
 namespace App\Models\Quicktips;
 
 use Cache;
-use LaravelLocalization;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Support\Facades\Redis;
 use Log;
 
 class Quicktips
 {
+    use DispatchesJobs;
 
     private $quicktipUrl = "/1.1/quicktips.xml";
-    private $results = [];
     const QUICKTIP_NAME = "quicktips";
-    const CACHE_DURATION = 60 * 60;
+    const CACHE_DURATION = 60;
 
     private $hash;
+    private $startTime;
 
-    public function __construct($search, $quotes)
+    public function __construct($search, $locale, $max_time)
     {
-        $locale = LaravelLocalization::getCurrentLocale();
         if (env("APP_ENV") === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
-        $this->startSearch($search, $quotes, $locale);
+        $this->startTime = microtime(true);
+        $this->startSearch($search, $locale, $max_time);
     }
 
-    public function startSearch($search, $quotes, $locale)
+    public function startSearch($search, $locale, $max_time)
     {
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . $quotes;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
         $this->hash = md5($url);
 
-        $results = null;
+        if (!Cache::has($this->hash)) {
+            if (!Redis::exists($this->hash)) {
 
-        try {
-            if (!Cache::has($this->hash)) {
-                $results = file_get_contents($url);
-                Cache::put($this->hash, $results, Quicktips::CACHE_DURATION);
-            } else {
-                $results = Cache::get($this->hash);
+                // Queue this search
+                $mission = [
+                    "resulthash" => $this->hash,
+                    "url" => $url,
+                    "useragent" => "",
+                    "username" => null,
+                    "password" => null,
+                    "headers" => [],
+                    "cacheDuration" => self::CACHE_DURATION,
+                    "name" => "Quicktips",
+                ];
+
+                $mission = json_encode($mission);
+
+                Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
             }
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
         }
-
-        if ($results === null) {
-            $results = file_get_contents($url);
-        }
-
-        $this->results = $this->loadResults($results);
     }
 
     /**
@@ -58,8 +62,9 @@ class Quicktips
      * 2. Parse the results
      * Returns an empty array if no results are found
      */
-    public function loadResults($resultsRaw)
+    public function loadResults()
     {
+        $resultsRaw = $this->retrieveResults($this->hash);
         if ($resultsRaw) {
             $results = $this->parseResults($resultsRaw);
             return $results;
@@ -73,7 +78,24 @@ class Quicktips
         $body = null;
 
         if (Cache::has($this->hash)) {
-            $body = Cache::get($this->hash);
+            return Cache::get($this->hash, false);
+        }
+
+        do {
+            $body = Redis::rpoplpush($this->hash, $this->hash);
+            if ($body === false || $body === null) {
+                usleep(50 * 1000);
+            } else {
+                break;
+            }
+        } while (microtime(true) - $this->startTime < 0.5);
+
+        if ($body === false) {
+            return false;
+        }
+
+        if ($body === "no-result") {
+            return false;
         }
 
         if ($body !== null) {
@@ -175,10 +197,5 @@ class Quicktips
     public function normalize_search($search)
     {
         return urlencode($search);
-    }
-
-    public function getResults()
-    {
-        return $this->results;
     }
 }

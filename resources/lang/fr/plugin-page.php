@@ -7,7 +7,8 @@ return [
     "head.4"    => "Ajouter MetaGer à Internet Explorer",
     "head.5"    => "Ajouter MetaGer à Microsoft Edge",
     "head.6"    => "Ajouter MetaGer à Vivaldi",
-    "opera.10"  => "Cliquer sur \"ok\"",
-    "IE.11"     => "Cliquer sur \"ok\"",
-    "vivaldi.7" => "Cliquer sur \"ajouter\"",
+    "head.7"    => "Ajouter MetaGer à Vivaldi",
+    "head.8"    => "Ajouter MetaGer à Firefox Klar",
+    "head.9"    => "Ajouter MetaGer à UCBrowser",
+    "head.10"    => "Ajouter MetaGer à Samsung Internet",
 ];

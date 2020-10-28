@@ -25,7 +25,7 @@ class Plugin extends Page
     public function assert(Browser $browser)
     {
         $browser->assertPathIs($this->url())
-            ->waitForText("MetaGer zum Firefox hinzufügen")
+            ->waitForText("MetaGer zu Firefox hinzufügen")
             ->assertTitle("Plugin - MetaGer")
             ->switchLanguage("English")
             ->waitForText("Add MetaGer to your Firefox")

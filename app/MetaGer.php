@@ -5,6 +5,7 @@ namespace App;
 use App;
 use Cache;
 use Carbon;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -72,7 +73,10 @@ class MetaGer
     protected $verificationId;
     protected $verificationCount;
     protected $searchUid;
-    protected $redisResultWaitingKey, $redisResultEngineList, $redisEngineResult, $redisCurrentResultList;
+    protected $redisResultWaitingKey;
+    protected $redisResultEngineList;
+    protected $redisEngineResult;
+    protected $redisCurrentResultList;
     public $starttime;
 
     public function __construct($hash = "")
@@ -131,7 +135,7 @@ class MetaGer
     }
 
     # Erstellt aus den gesammelten Ergebnissen den View
-    public function createView()
+    public function createView($quicktipResults = [])
     {
         # Hiermit werden die evtl. ausgewählten SuMas extrahiert, damit die Input-Boxen richtig gesetzt werden können
         $focusPages = [];
@@ -171,7 +175,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('focus', $this->fokus)
                         ->with('resultcount', count($this->results));
             }
@@ -244,7 +248,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', action('MetaGerSearch@quicktips', ["search" => $this->eingabe, "quotes" => $this->sprueche]))
+                        ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
                         ->with('focus', $this->fokus);
                     break;
@@ -257,7 +261,7 @@ class MetaGer
         $engines = $this->engines;
         // combine
         $this->combineResults($engines);
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["combined results"] = microtime(true) - $timings["starttime"];
         }
         // misc (WiP)
@@ -279,7 +283,7 @@ class MetaGer
                 return ($a->getRank() < $b->getRank()) ? 1 : -1;
             });
         }
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["sorted results"] = microtime(true) - $timings["starttime"];
         }
         # Validate Results
@@ -290,7 +294,7 @@ class MetaGer
             }
         }
         $this->results = $newResults;
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
         
@@ -310,7 +314,7 @@ class MetaGer
             $newResults[] = $ad;
         }
         $this->ads = $newResults;
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
         }
         #Adgoal Implementation
@@ -326,19 +330,19 @@ class MetaGer
                     }
                 }
                 $this->adgoalHash = $this->startAdgoal($this->results);
-                if(!empty($timings)){
+                if (!empty($timings)) {
                     $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
                 }
             }
         
             if (!$this->javascript) {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
-                if(!empty($timings)){
+                if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
             } else {
                 $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
-                if(!empty($timings)){
+                if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
             }
@@ -349,7 +353,7 @@ class MetaGer
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["human verification"] = microtime(true) - $timings["starttime"];
         }
 
@@ -372,7 +376,7 @@ class MetaGer
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
-            if(!empty($timings)){
+            if (!empty($timings)) {
                 $timings["prepareResults"]["filled cache"] = microtime(true) - $timings["starttime"];
             }
         } else {
@@ -486,13 +490,13 @@ class MetaGer
         $answer = null;
 
         # Hash is true if Adgoal request wasn't started in the first place
-        if($hash === true){
+        if ($hash === true) {
             return true;
         }
 
         if ($waitForResult) {
             while (microtime(true) - $startTime < 5) {
-                $answer = Redis::get($hash);
+                $answer = Cache::get($hash);
                 if ($answer === null) {
                     usleep(50 * 1000);
                 } else {
@@ -500,7 +504,7 @@ class MetaGer
                 }
             }
         } else {
-            $answer = Redis::get($hash);
+            $answer = Cache::get($hash);
         }
         if ($answer === null) {
             return false;
@@ -550,7 +554,6 @@ class MetaGer
             \App\PrometheusExporter::Duration($requestTime, "adgoal");
         }
         return true;
-
     }
 
     public function humanVerification(&$results)
@@ -722,7 +725,6 @@ class MetaGer
         if (!empty($timings)) {
             $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
         }
-
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)
@@ -781,7 +783,6 @@ class MetaGer
         if (!empty($timings)) {
             $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
         }
-
     }
 
     public function checkCache()
@@ -799,7 +800,6 @@ class MetaGer
                 }
             }
         }
-
     }
 
     # Spezielle Suchen und Sumas
@@ -823,7 +823,6 @@ class MetaGer
     {
         $engines = [];
         foreach ($enabledSearchengines as $engineName => $engine) {
-
             if (!isset($engine->{"parser-class"})) {
                 die(var_dump($engine));
             }
@@ -911,7 +910,7 @@ class MetaGer
         foreach ($availableFilter as $filterName => $filter) {
             if (\Request::filled($filter->{"get-parameter"})) {
                 $filter->value = \Request::input($filter->{"get-parameter"});
-            } else if (\Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
+            } elseif (\Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
             }
         }
@@ -978,36 +977,52 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine && !$engine->loaded) {
-                    $enginesToWaitFor[] = $engine;
+                if ($engine->name === $mainEngine) {
+                    $enginesToWaitFor[] = $engine->hash;
                 }
             }
+        }
+
+        # If no main engines are enabled by the user we will wait for all results
+        if (sizeof($enginesToWaitFor) === 0) {
+            foreach ($engines as $engine) {
+                $enginesToWaitFor[] = $engine->hash;
+            }
+        } else {
+            $newEnginesToWaitFor = [];
+            // Don't wait for engines that are already loaded in Cache
+            foreach ($enginesToWaitFor as $engineToWaitFor) {
+                foreach ($engines as $engine) {
+                    if ($engine->hash === $engineToWaitFor && !$engine->loaded) {
+                        $newEnginesToWaitFor[] = $engineToWaitFor;
+                    }
+                }
+            }
+            $enginesToWaitFor = $newEnginesToWaitFor;
         }
 
         $timeStart = microtime(true);
-
-        $answered = [];
-        $results = null;
-
-        # If there is no main searchengine to wait for or if the only main engine is yahoo-ads we will define a timeout of 1s
-        $forceTimeout = null;
-        if (sizeof($enginesToWaitFor) === 1 && $enginesToWaitFor[0]->name === "yahoo-ads") {
-            $forceTimeout = 1;
-        }
-
-        while (sizeof($enginesToWaitFor) > 0 || ($forceTimeout !== null && (microtime(true) - $timeStart) < $forceTimeout)) {
-            foreach ($enginesToWaitFor as $index => $engine) {
-                if (Redis::get($engine->hash) !== null) {
-                    $answered[] = $engine;
-                    unset($enginesToWaitFor[$index]);
-                    break;
-                }
-            }
-
+        while (sizeof($enginesToWaitFor) > 0) {
             if ((microtime(true) - $timeStart) >= 2) {
                 break;
+            }
+            $answer = Redis::brpop($enginesToWaitFor, 2);
+            
+            if ($answer === null) {
+                continue;
             } else {
-                usleep(50 * 1000);
+                Redis::lpush($answer[0], $answer[1]);
+            }
+            foreach ($engines as $index => $engine) {
+                if ($engine->hash === $answer[0]) {
+                    $engine->retrieveResults($this, $answer[1]);
+                    foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
+                        if ($engineToWaitFor === $answer[0]) {
+                            unset($enginesToWaitFor[$waitIndex]);
+                            break 2;
+                        }
+                    }
+                }
             }
         }
     }
@@ -1055,7 +1070,7 @@ class MetaGer
         # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
         # Until then javascript parameter will be false
         $this->javascript = false;
-        if($request->filled("javascript") && is_bool($request->input("javascript"))){
+        if ($request->filled("javascript") && is_bool($request->input("javascript"))) {
             $this->javascript = boolval($request->input("javascript"));
             $request->request->remove("javascript");
         }
@@ -1123,7 +1138,7 @@ class MetaGer
         $this->newtab = $request->input('newtab', 'on');
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
-        } else if ($this->framed) {
+        } elseif ($this->framed) {
             $this->newtab = "_top";
         } else {
             $this->newtab = "_self";
@@ -1224,7 +1239,7 @@ class MetaGer
                     }
                 }
             }
-        } else if ($this->request->filled("ff") || $this->request->filled("ft")) {
+        } elseif ($this->request->filled("ff") || $this->request->filled("ft")) {
             $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
         }
 
@@ -1246,6 +1261,15 @@ class MetaGer
             $this->shouldLog = true;
         }
     }
+
+    public function createQuicktips()
+    {
+        # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
+        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime());
+        return $quicktips;
+    }
+
+
 
     private function anonymizeIp($ip)
     {
@@ -1305,7 +1329,7 @@ class MetaGer
         foreach ($this->sumaFile->filter->{"query-filter"} as $filterName => $filter) {
             if (!empty($filter->{"optional-parameter"}) && $request->filled($filter->{"optional-parameter"})) {
                 $this->queryFilter[$filterName] = $request->input($filter->{"optional-parameter"});
-            } else if (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
+            } elseif (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
                 switch ($filter->match) {
                     case "last":
                         $this->queryFilter[$filterName] = $matches[$filter->save][sizeof($matches[$filter->save]) - 1];
@@ -1332,7 +1356,7 @@ class MetaGer
             if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
-            $this->parameterFilter[$filterName] = $filter;
+                $this->parameterFilter[$filterName] = $filter;
                 $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
@@ -1385,10 +1409,17 @@ class MetaGer
                         $this->hostBlacklist[] = $blacklistElement;
                     }
                 }
-            } else if (strpos($blacklistString, "*") !== 0) {
+            } elseif (strpos($blacklistString, "*") !== 0) {
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if ((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)) {
+                $this->hostBlacklist[] = $value;
+            }
+        }
+
+        $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
@@ -1420,10 +1451,18 @@ class MetaGer
                         $this->domainBlacklist[] = substr($blacklistElement, strpos($blacklistElement, "*.") + 2);
                     }
                 }
-            } else if (strpos($blacklistString, "*.") === 0) {
+            } elseif (strpos($blacklistString, "*.") === 0) {
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
+        foreach (Cookie::get() as $key => $value) {
+            if (stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0) {
+                $this->domainBlacklist[] = str_replace("*.", "", $value);
+            }
+        }
+
+        $this->domainBlacklist = array_unique($this->domainBlacklist);
+
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
             $domainString = "";
@@ -1767,9 +1806,14 @@ class MetaGer
         $cookies = \Cookie::get();
         $count = 0;
 
+        $sumaFile = MetaGer::getLanguageFile();
+        $sumaFile = json_decode(file_get_contents($sumaFile), true);
+        $foki = array_keys($sumaFile['foki']);
+
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_"])) {
+            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
+                continue;
             }
         }
         return $count;

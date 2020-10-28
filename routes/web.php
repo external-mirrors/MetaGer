@@ -166,6 +166,7 @@ Route::group(
             return view('plugin-page')
                 ->with('title', trans('titles.plugin'))
                 ->with('navbarFocus', 'dienste')
+                ->with('agent', new Agent())
                 ->with('browser', (new Agent())->browser())
                 ->with('request', $this->input('request', 'GET'));
         });

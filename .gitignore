@@ -23,4 +23,5 @@ npm-debug.log
 composer.lock
 package-lock.json
 local.log
+
 browserstack.err

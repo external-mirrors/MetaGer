@@ -31,7 +31,7 @@ class App extends Page
             ->waitForText("This App brings the full Metager power to your smartphone.")
             ->assertTitle("Apps - MetaGer")
             ->switchLanguage("Español")
-            ->waitForText("Diese App bringt die volle Power unserer Suchmaschine auf ihr Smartphone.")
+            ->waitForText("Con esta aplicación, obtiene toda la potencia de nuestro motor de búsqueda en su smartphone.")
             ->assertTitle("Aplicaciones - MetaGer")
             ->switchLanguage("Deutsch");
 

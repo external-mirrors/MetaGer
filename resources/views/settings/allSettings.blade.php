@@ -32,6 +32,8 @@
                             @endforeach
                         @elseif($key === "key")
                         @lang('settings.key')
+                        @elseif(strpos($key, "_blpage"))
+                        @lang('settings.blentry')
                         @endif
                         </td>
                         <td>

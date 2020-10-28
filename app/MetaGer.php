@@ -421,8 +421,6 @@ class MetaGer
             if(isset($arr[$link])){
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
-                array_splice($this->results, $i);
-                $i--;
             }else{
                 $arr[$link] = &$this->results[$i];
             }

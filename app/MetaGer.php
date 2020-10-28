@@ -293,6 +293,7 @@ class MetaGer
         if(!empty($timings)){
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
+        $this->duplicationCheck();
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -391,6 +392,39 @@ class MetaGer
             }
             foreach ($engine->ads as $ad) {
                 $this->ads[] = clone $ad;
+            }
+        }
+    }
+
+    public function duplicationCheck()
+    {
+        $arr = [];
+        for($i = 0; $i < count($this->results); $i++) {
+
+            $link = $this->results[$i]->link;
+
+            if (strpos($link, "http://") === 0) {
+                $link = substr($link, 7);
+            }
+    
+            if (strpos($link, "https://") === 0) {
+                $link = substr($link, 8);
+            }
+    
+            if (strpos($link, "www.") === 0) {
+                $link = substr($link, 4);
+            }
+    
+            $link = trim($link, "/");
+            $hash = md5($link);
+
+            if(isset($arr[$link])){
+                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
+                $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+                array_splice($this->results, $i);
+                $i--;
+            }else{
+                $arr[$link] = &$this->results[$i];
             }
         }
     }

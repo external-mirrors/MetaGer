@@ -13,8 +13,8 @@ class Result
     public $anzeigeLink; # Der tatsächlich angezeigte Link (rein optisch)
     public $descr; # Die eventuell gekürzte Beschreibung des Suchergebnisses
     public $longDescr; # Die ungekürzte Beschreibung des Suchergebnisses
-    public $gefVon; # Die Suchmaschine von der dieses Ergebnis stammt
-    public $gefVonLink;
+    public $gefVon = []; # Die Suchmaschine von der dieses Ergebnis stammt
+    public $gefVonLink = [];
     public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
     public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
@@ -49,8 +49,8 @@ class Result
             $this->descr = substr($this->descr, 0, strpos($this->descr, "\n"));
             $this->descr .= "&#8230;"; // Ellipsis character
         }
-        $this->gefVon = trim($gefVon);
-        $this->gefVonLink = trim($gefVonLink);
+        $this->gefVon[] = trim($gefVon);
+        $this->gefVonLink[] = trim($gefVonLink);
         $this->proxyLink = $this->generateProxyLink($this->link);
         $this->sourceRank = $sourceRank;
         if ($this->sourceRank <= 0 || $this->sourceRank > 20) {
@@ -115,7 +115,7 @@ class Result
         }
 
         # Runter Ranken von Yandex Ergebnissen mit zu viel kyrillischen Texten
-        if (stripos($this->gefVon, "yandex") !== false) {
+        if (stripos($this->gefVon[0], "yandex") !== false) {
             $rank -= $this->calcYandexBoost($eingabe);
         }
 
@@ -279,7 +279,7 @@ class Result
 
         /* Der Dublettenfilter, der sicher stellt,
          *  dass wir nach Möglichkeit keinen Link doppelt in der Ergebnisliste haben.
-         */
+        
         $dublettenLink = $this->strippedLink;
         if (!empty($this->provider->{"dubletten-include-parameter"}) && sizeof($this->provider->{"dubletten-include-parameter"}) > 0) {
             $dublettenLink .= "?";
@@ -300,12 +300,13 @@ class Result
             }
         }
 
-        if ($metager->addLink($dublettenLink)) {
+        if ($metager->addLink($this)) {
             $metager->addHostCount($this->strippedHost);
             return true;
         } else {
             return false;
-        }
+        }*/
+        return true;
     }
 
     public function isBlackListed(\App\MetaGer $metager)

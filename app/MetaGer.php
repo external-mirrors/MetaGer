@@ -293,7 +293,11 @@ class MetaGer
         if(!empty($timings)){
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
+        
         $this->duplicationCheck();
+        if(!empty($timings)){
+            $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {

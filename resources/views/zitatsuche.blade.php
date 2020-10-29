@@ -7,13 +7,7 @@
 	<div class="card-light">
 		<p>{{ trans('zitatsuche.subtitle') }}</p>
 		<form id="searchForm" class="form-inline" accept-charset="UTF-8">
-			<div class="form-group">
-				<label class="sr-only" for="q">{{ trans('zitatsuche.search-label') }}</label>
-				<div class="input-group">
-					<input type="text" class="form-control" id="q" name="q" placeholder="Suchworte" value="{{ $q }}">
-					<div class="input-group-addon"><button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button></div>
-				</div>
-			</div>
+					<input type="text" class="form-control search-input-mini" id="q" name="q" placeholder="Suchworte" value="{{ $q }}"><button type="submit" class="search-btn-mini"><i class="fa fa-search" aria-hidden="true"></i></button>
 		</form>
 		@if($q !== "")
 			<hr />

@@ -24,6 +24,8 @@ return [
     'nav24' => 'MetaGer Quellcode',
     'nav25' => 'MetaGer App',
     'nav26' => 'MetaGer-Fanshop',
+    'nav27' => 'MetaGer Maps',
+    'nav28' => 'Einstellungen',
     'navigationToggle' => 'Navigation anzeigen',
     'titles.tips' => 'Tips',
     'plugin' => 'MetaGer Plugin',

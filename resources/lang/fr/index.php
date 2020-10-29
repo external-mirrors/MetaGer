@@ -4,7 +4,7 @@ return [
     "foki.web" => "Web",
     "foki.bilder" => "Images",
     "foki.nachrichten" => "News/Politique",
-    "foki.wissenschaft" => "Sciènces",
+    "foki.science" => "Sciènces",
     "foki.produkte" => "Produits",
     "foki.angepasst" => "ajusté(e)",
     "foki.maps" => "Maps.metager.de",

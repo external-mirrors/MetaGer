@@ -3,7 +3,15 @@
 @section('title', $title )
 
 @section('content')
-<link type="text/css" rel="stylesheet" href="{{ mix('/css/key.css') }}" />
+
+<link type="text/css" rel="stylesheet" href="{{ mix('css/key.css') }}"/>
+@if(Cookie::get('dark_mode') === "2")
+	<link type="text/css" rel="stylesheet" href="{{ mix('css/key-dark.css') }}"/>
+@elseif(Cookie::get('dark_mode') === "1")
+	<link type="text/css" rel="stylesheet" href="{{ mix('css/key.css') }}"/>
+@else
+    <link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/key-dark.css') }}"/>
+@endif
 <div id="key-site">
     <div class="section">
         <h1>{{ trans('key.h1')}}</h1>

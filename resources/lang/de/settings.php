@@ -26,6 +26,12 @@ return [
     'clear' => 'Blacklist leeren',
     'copy' => 'Kopieren',
 
+    'darkmode' => 'Dunklen Modus umschalten',
+    'darkmode-hint' => 'Die Einstellung für den dunklen Modus betrifft alle Fokusse und Unterseiten übergreifend!',
+    'system' => 'Systemstandard',
+    'dark' => 'Dunkel',
+    'light' => 'Hell',
+
     // Translations from the settings overview
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
     'allSettings.header' => 'Auf :root gesetzte Einstellungen',
@@ -39,4 +45,5 @@ return [
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
+    'dm' => 'Dunkler Modus',
 ];

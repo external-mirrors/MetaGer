@@ -26,6 +26,12 @@ return [
     'clear' => 'Clear black list',
     'copy' => 'Copy',
 
+    'darkmode' => 'Toggle dark mode',
+    'darkmode-hint' => 'The setting for dark mode affects all foci and sub-pages!',
+    'system' => 'System Default',
+    'dark' => 'Dark',
+    'light' => 'Light',
+
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
     'allSettings.header' => "Settings on :root",
@@ -39,4 +45,5 @@ return [
     'key' => "Your key to the ad-free search",
     'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
+    'dm' => 'Dark mode',
 ];

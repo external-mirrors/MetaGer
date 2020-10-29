@@ -19,6 +19,7 @@
 		<h2>{{ trans('sitesearch.generated.1') }}</h2>
 		{!! $template !!}
 	</div>
+	<div class="card-medium">
 		<h2>{{ trans('sitesearch.generated.5') }} <button id="copyButton" class="btn btn-default" type="button"><i class="fa fa-paperclip" aria-hidden="true"></i> {{ trans('websearch.head.copy') }}</button></h2>
 		<textarea id="codesnippet" readonly style="width:100%;height:500px">
 			{!! $template !!}

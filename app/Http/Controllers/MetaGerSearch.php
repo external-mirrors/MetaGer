@@ -245,11 +245,11 @@ class MetaGerSearch extends Controller
 
         $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new || $resultTmp->adgoalChanged) {
+            if ($resultTmp->new || $resultTmp->changed) {
                 if ($metager->getFokus() !== "bilder") {
                     $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                    if (!$resultTmp->new && $resultTmp->changed) {
                         $result['changedResults'][$index] = $html;
                     } else {
                         $result['newResults'][$index] = $html;
@@ -258,7 +258,7 @@ class MetaGerSearch extends Controller
                 } else {
                     $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                    if (!$resultTmp->new && $resultTmp->changed) {
                         $result['changedResults'][$index] = $html;
                     } else {
                         $result['newResults'][$index] = $html;

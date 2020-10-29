@@ -431,6 +431,9 @@ class MetaGer
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
                 array_splice($this->results, $i, 1);
                 $i--;
+                if($arr[$link]->new === true || $this->results[$i]->new === true){
+                    $arr[$link]->changed = true;
+                }
             }else{
                 $arr[$link] = &$this->results[$i];
             }
@@ -543,7 +546,7 @@ class MetaGer
                         $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
                         $result->link = $newLink;
                         $result->partnershop = true;
-                        $result->adgoalChanged = true;
+                        $result->changed = true;
                     }
                 }
             }

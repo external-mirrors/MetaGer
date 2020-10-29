@@ -31,7 +31,7 @@ class Result
     public $strippedLinkAnzeige; # Der Link in Form "foo.bar.de/test"
     public $rank; # Das Ranking für das Ergebnis
     public $new = true;
-    public $adgoalChanged = false;
+    public $changed = false;
 
     # Erstellt ein neues Ergebnis
     public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])

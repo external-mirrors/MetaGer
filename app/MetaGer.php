@@ -206,18 +206,7 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                case 'rich':
-                    return view('resultpages.metager3rich')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('fokus', $this->fokus);
-                    break;
+                /* WIP
                 case 'rss20':
                     return view('resultpages.metager3resultsrss20')
                         ->with('results', $viewResults)
@@ -230,10 +219,7 @@ class MetaGer
                 case 'api':
                     return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => $this->apiAuthorized])->header('Content-Type', 'application/xml');
                     break;
-                case 'atom10':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => true])
-                        ->header('Content-Type', 'application/xml');
-                    break;
+                */
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
                     return sizeof($viewResults) . ";" . round((microtime(true) - $this->starttime), 2);
@@ -1207,7 +1193,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "rss20" && $this->out !== "atom10" && $this->out !== "rich" && $this->out !== "api") {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" /*WIP && $this->out !== "rss20" && $this->out !== "api"*/) {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll

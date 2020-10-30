@@ -30,13 +30,18 @@
     #lastschrift:checked ~ .sepa-debit-details {
         display: block;
     }
-
-
     .bank-transfer {
         display: none;
     }
-    #Ueberweisung:checked ~ .bank-transfer {
+
+    #ueberweisung:checked ~ .bank-transfer {
         display: block;
+    }
+    .paypal-method {
+        display:none;
+    }
+    #paypal:checked ~ .paypal-method {
+        display:block;
     }
     input[type=radio] {
         margin: 0px;
@@ -76,6 +81,7 @@
         height:45px;
         font-weight: normal;
         text-align: center;
+        line-height: 40px;
         border: 2px solid #a6a6a6;
         width: 150px;
         border-radius: 6px;
@@ -84,6 +90,7 @@
         margin-top: 5px;
         height:45px;
         font-weight: normal;
+        line-height: 40px;
         text-align: center;
         border: 2px solid #a6a6a6;
         width: 150px;

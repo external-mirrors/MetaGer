@@ -4,7 +4,7 @@
         <h1 class="result-title">{{ $result->titel }}</h1>
         <h2 class="result-display-link"><a href="{{ $result->link }}">{{ $result->anzeigeLink }}</a></h2>
         <p class="result-description">{{ $result->descr }}</p>
-        <p class="result-source">Werbung von {!! $result->gefVon !!}</p>
+        <p class="result-source">Werbung von {!! $result->gefVon[0] !!}</p>
                 @if( isset($result->logo) )
                 <img class="result-thumbnail" src="{{ $metager->getImageProxyLink($result->logo) }}" alt="" />
                 @endif

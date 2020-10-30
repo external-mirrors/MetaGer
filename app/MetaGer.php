@@ -297,6 +297,11 @@ class MetaGer
         if (!empty($timings)) {
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
+        
+        $this->duplicationCheck();
+        if(!empty($timings)){
+            $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -395,6 +400,42 @@ class MetaGer
             }
             foreach ($engine->ads as $ad) {
                 $this->ads[] = clone $ad;
+            }
+        }
+    }
+
+    public function duplicationCheck()
+    {
+        $arr = [];
+        for($i = 0; $i < count($this->results); $i++) {
+
+            $link = $this->results[$i]->link;
+
+            if (strpos($link, "http://") === 0) {
+                $link = substr($link, 7);
+            }
+    
+            if (strpos($link, "https://") === 0) {
+                $link = substr($link, 8);
+            }
+    
+            if (strpos($link, "www.") === 0) {
+                $link = substr($link, 4);
+            }
+    
+            $link = trim($link, "/");
+            $hash = md5($link);
+
+            if(isset($arr[$link])){
+                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
+                $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+                array_splice($this->results, $i, 1);
+                $i--;
+                if($arr[$link]->new === true || $this->results[$i]->new === true){
+                    $arr[$link]->changed = true;
+                }
+            }else{
+                $arr[$link] = &$this->results[$i];
             }
         }
     }
@@ -505,7 +546,7 @@ class MetaGer
                         $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
                         $result->link = $newLink;
                         $result->partnershop = true;
-                        $result->adgoalChanged = true;
+                        $result->changed = true;
                     }
                 }
             }

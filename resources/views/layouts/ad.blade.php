@@ -8,7 +8,7 @@
 						{{ $ad->titel }}
 					</a>
 				</h2>
-				<a class="ad-label" href="{{ $ad->gefVonLink }}" target="_blank" rel="noopener">{!! $ad->gefVon !!}</a>
+				<a class="ad-label" href="{{ $ad->gefVonLink[0] }}" target="_blank" rel="noopener">{!! $ad->gefVon[0] !!}</a>
 			</div>
 			<div class="result-subheadline">
 				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" tabindex="-1">

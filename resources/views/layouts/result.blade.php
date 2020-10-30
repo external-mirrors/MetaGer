@@ -9,7 +9,11 @@
 					{!! $result->titel !!}
 				</a>
 			</h2>
-			<a class="result-hoster" href="{{ $result->gefVonLink }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon }} </a>
+			@if(sizeof($result->gefVon)===1)
+				<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
+			@else
+				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster"> {{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }} </span>
+			@endif
 		</div>
 		<div class="result-subheadline">
 			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" tabindex="-1">

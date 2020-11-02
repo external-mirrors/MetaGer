@@ -27,7 +27,13 @@
 				<li>{!! trans('hilfe.resultpage.choice') !!}</li>
 				<ul class="dotlist">
 					<li>{!! trans('hilfe.resultpage.filter') !!}</li>
-					<li>{!! trans('hilfe.resultpage.settings') !!}</li>
+					<li id="difset">{!! trans('hilfe.resultpage.settings.0') !!}</li>
+					<ol>
+						<li>{!! trans('hilfe.resultpage.settings.1') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.2') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.3') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.4') !!}</li>
+					</ol>
 				</ul>
 			</ul>
 		</div>

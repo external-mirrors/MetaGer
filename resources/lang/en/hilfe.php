@@ -18,8 +18,8 @@ return [
     "resultpage.choice"     => 'Below these you have two links:',
     "resultpage.filter"     => 'Filter: Toggle filters on / off and apply settings here. Each focus has its own assortment.',
     "resultpage.settings.0" => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page. There is also a menu entry to access the settings page.',
-    "resultpage.settings.1" => 'The section "hints" offers a link to the cookie list and also a box with a link which is useful to copy and save as a bookmark. Using the bookmark you will have all settings working immediately.',
-    "resultpage.settings.2" => 'Arrange your personal blacklist here. Settings made here will be concatenetad to the link in the section "Hint".',
+    "resultpage.settings.1" => 'The section "Note" offers a link to the cookie list and also a box with a link which is useful to copy and save as a bookmark. Using the bookmark you will have all settings working immediately.',
+    "resultpage.settings.2" => 'Arrange your personal blacklist here. Settings made here will be concatenetad to the link in the section "Note".',
     "resultpage.settings.3" => 'Switch citations on/off.',
     "resultpage.settings.4" => 'Enter the MetaGer Dark Mode here.',
 

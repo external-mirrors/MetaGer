@@ -1,5 +1,5 @@
 <?php
 
 return [
-    'description' => 'MetaGer: Sicher suchen & finden, Privatsphäre schützen',
+    'description' => 'MetaGer: Sicher suchen & finden',
 ];

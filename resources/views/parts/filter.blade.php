@@ -2,7 +2,7 @@
 		<div id="toggle-box">
 			<div id="settings">
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())])) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
-					<i class="fas fa-cogs"></i>
+				<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
 					@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
 					@lang('metaGer.settings')&hellip;
 				</a>
@@ -11,7 +11,7 @@
 				@if(sizeof($metager->getAvailableParameterFilter()) > 0)
 				<div class="option-toggle">
 					<label class="navigation-element" for="options-toggle" tabindex="0">
-						<i class="fas fa-filter"></i> Filter&hellip;
+					<img src="/img/icon-filter.svg"alt="" aria-hidden="true"id="result-img-filter"> Filter&hellip;
 					</label>
 				</div>
 				@endif
@@ -41,7 +41,7 @@
 							</label>
 						@if($filter->{'get-parameter'} === "f")
 							<label for="custom-date" title="@lang('metaGer.filter.customdatetitle')">
-								<i class="fas fa-cogs"></i>
+							<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
 							</label>
 						</div>
 							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc" onchange="if(!this.checked){this.form.submit()}"/>

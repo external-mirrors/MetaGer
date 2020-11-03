@@ -1,0 +1,33 @@
+<?php
+
+return [
+    'four-reasons' => 'Four reasons to use MetaGer',
+    'privacy.image.alt' => 'lock',
+    'privacy.title' => 'Guaranteed Privacy',
+    'ngo.title' => 'Run by a Nonprofit Organization',
+    'ngo.image.alt' => 'Heart',
+    'diversity.title' => 'Diverse & Free',
+    'diversity.image.alt' => 'Rainbow',
+    'eco.title' => '100% Renewable Energy',
+    'eco.image.alt' => 'green leaf',
+    'btn-about-us' => 'About Us',
+    'btn-data-protection' => 'Privacy Policy',
+    'privacy.p' => 'By using MetaGer you retain full control over your data. Our anonymizing proxy keeps you protected even when you continue surfing. We don\'t track.',
+    'btn-SUMA-EV' => 'SUMA-EV',
+    'btn-donate' => 'Donation Form',
+    'btn-member' => 'Member Form',
+    'btn-member-advantage' => 'Membership',
+    'ngo.p' => 'MetaGer is developed and run by our nonprofit organization, SUMA-EV–Association for Free Access to Knowledge. Strengthen us by becoming a member or by donating to SUMA-EV. Members search ad free!',
+    'btn-mg-code' => 'Metager Source Code',
+    'btn-mg-algorithm' => 'Our Algorithm',
+    'diversity.p' => 'MetaGer protects against censorship by combining the results of multiple search engines. Our algorithms are transparent and available for everyone to read. Our source code is free.',
+    'btn-more' => 'More',
+    'eco.p' => 'Sustainability and efficient use of resources are important to us. All of our services are run using renewable energy. From the server to the coffee machine.',
+    'plugin.title' => 'Install MetaGer Now',
+    'plugin.btn-add' => 'Add MetaGer Plugin',
+    'plugin.btn-app' => 'MetaGer App',
+    'plugin.image.alt' => 'Metager Apps',
+    'plugin.p' => 'Use our plugin to install MetaGer as your search engine. You can comfortably use the MetaGer app on your smartphone.',
+    'btn-about-us' => 'About Us',
+
+];

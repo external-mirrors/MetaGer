@@ -1,4 +1,5 @@
---- 
+postgresql:
+    enabled: false
 hpa: 
   enabled: false
 ingress: 

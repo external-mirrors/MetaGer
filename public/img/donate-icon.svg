@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   id="svg8"
+   version="1.1"
+   viewBox="0 0 26.931657 23.457593"
+   height="88.658615"
+   width="101.78894">
+  <defs
+     id="defs2" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-0.86418077,1.501482)"
+     id="layer1">
+    <g
+       transform="matrix(0.13425142,0,0,0.13425142,2.2567137,-12.05452)"
+       id="g958">
+      <path
+         d="m 189.62341,133.14516 c 0,16.79431 -11.26763,29.24453 -20.43523,40.23335 -6.8875,8.25575 -20.27354,13.84626 -33.0215,13.84626 -29.54228,0 -53.525315,-24.53733 -53.525315,-54.07961 -2e-6,-29.54228 23.948745,-53.491026 53.491025,-53.491023 29.54228,0 53.49102,23.948743 53.49102,53.491023 z"
+         style="fill:#000000;fill-opacity:1;stroke:#030601;stroke-width:1.22028005"
+         id="path27-1" />
+      <path
+         d="m 14.967093,-237.43729 h 95.249897 v 95.2499 l -92.756184,-3.04787 z"
+         transform="rotate(135)"
+         style="fill:#000000;fill-opacity:1;stroke:#030601;stroke-width:10.61600018;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect52" />
+      <path
+         d="m -9.762435,132.70769 c 0,16.79431 13.3493218,31.68134 22.516922,42.67016 6.8875,8.25576 17.677548,10.638 30.425508,10.638 29.542282,0 54.039622,-23.76588 54.039622,-53.30816 0,-29.54228 -23.94875,-53.491025 -53.491032,-53.491022 -29.54228,0 -53.49102,23.948742 -53.49102,53.491022 z"
+         style="fill:#000000;fill-opacity:1;stroke:#030601;stroke-width:1.22028005"
+         id="path27-1-5" />
+    </g>
+  </g>
+</svg>

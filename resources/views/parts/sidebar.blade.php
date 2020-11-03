@@ -122,6 +122,17 @@
         <span class="caret"></span>
       </label>
       <ul class="metager-dropdown-content">
+        @if(LaravelLocalization::getCurrentLocale() == "en")
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.web') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=bilder&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.bilder') }}</a>
+          </li>
+          <li>
+            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.produkte') }}</a>
+          </li>
+        @else
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.web') }}</a>
           </li>
@@ -137,7 +148,8 @@
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
           </li>
-        </ul>
+        @endif
+      </ul>
     </li>
     <li class="metager-dropdown">
       <input id="languagesToggle" class="sidebarCheckbox" type="checkbox">

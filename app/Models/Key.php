@@ -4,19 +4,28 @@ namespace App\Models;
 
 class Key{
     public $key;
-    public $status;
+    public $status; # valid key = true, invalid key = false, unchecked key = null
 
 
-    public function __construct($key, $status){
+    public function __construct($key, $status = null){
         $this->key = $key;
-        $this->status = updateStatus();
+        $this->status = $status;
     }
 
-    public function getStatus(){
-        return $this->status;
+    # always returns true or false
+    public function getStatus() {
+        if($this->status === null) {
+            updateStatus();
+        }
+        if($this->status === null || $this->status === false) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
-    public function updateStatus(){
+    
+    public function updateStatus() {
         
         try {
             $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
@@ -33,7 +42,7 @@ class Key{
         }
     }
 
-    public function requestPermission(){
+    public function requestPermission() {
 
         $opts = array(
             'http' => array(

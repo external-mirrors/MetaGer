@@ -15,7 +15,7 @@ class Key{
     # always returns true or false
     public function getStatus() {
         if($this->status === null) {
-            updateStatus();
+            $this->updateStatus();
         }
         if($this->status === null || $this->status === false) {
             return false;
@@ -60,7 +60,7 @@ class Key{
             if ($result->{'api-access'} == true) {
                 return true;
             } else {
-                $this->status = false;
+                $this->status = false; 
                 return false;
             }
         } catch (\ErrorException $e) {

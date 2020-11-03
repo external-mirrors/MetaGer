@@ -131,10 +131,10 @@
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.produkte') }}</a>
           </li>
-        @if(LaravelLocalization::getCurrentLocale() !== "en")
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.nachrichten') }}</a>
           </li>
+        @if(LaravelLocalization::getCurrentLocale() !== "en")
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
           </li>

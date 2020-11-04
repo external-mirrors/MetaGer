@@ -12,9 +12,11 @@ use View;
 
 class MetaGerSearch extends Controller
 {
-
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        if ($request->filled("chrome-plugin")) {
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
+        }
         $timings = null;
         if ($timing) {
             $timings = ['starttime' => microtime(true)];
@@ -74,9 +76,20 @@ class MetaGerSearch extends Controller
             return response($responseContent);
         }
 
+        $quicktips = $metager->createQuicktips();
+        if (!empty($timings)) {
+            $timings["createQuicktips"] = microtime(true) - $time;
+        }
+
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
+
+        # Versuchen die Ergebnisse der Quicktips zu laden
+        $quicktipResults = $quicktips->loadResults();
+        if (!empty($timings)) {
+            $timings["loadResults"] = microtime(true) - $time;
+        }
 
         $metager->startSearch($timings);
 
@@ -97,10 +110,7 @@ class MetaGerSearch extends Controller
         }
 
         # Ergebnisse der Suchmaschinen kombinieren:
-        $metager->prepareResults();
-        if (!empty($timings)) {
-            $timings["prepareResults"] = microtime(true) - $time;
-        }
+        $metager->prepareResults($timings);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -129,7 +139,7 @@ class MetaGerSearch extends Controller
         }
 
         # Die Ausgabe erstellen:
-        $resultpage = $metager->createView();
+        $resultpage = $metager->createView($quicktipResults);
         if ($spamEntry !== null) {
             try {
                 Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
@@ -156,7 +166,7 @@ class MetaGerSearch extends Controller
         // This might speed up page view time for users with slow network
         $responseArray = str_split($resultpage->render(), 1024);
         foreach ($responseArray as $responsePart) {
-            echo ($responsePart);
+            echo($responsePart);
             flush();
         }
         $requestTime = microtime(true) - $time;
@@ -182,7 +192,6 @@ class MetaGerSearch extends Controller
         if ($request->filled('loadMore') && $request->filled('script') && $request->input('script') === "yes") {
             return $this->loadMoreJS($request);
         }
-
     }
 
     private function loadMoreJS(Request $request)
@@ -296,6 +305,10 @@ class MetaGerSearch extends Controller
             ],
             "engines" => $metager->getEngines(),
         ], 1 * 60);
+
+        # JSON encoding will fail if invalid UTF-8 Characters are in this string
+        # mb_convert_encoding will remove thise invalid characters for us
+        $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
         return response()->json($result);
     }
 

@@ -34,11 +34,11 @@
 	</div>
 	<div id="additions-container">
 		@include('layouts.keyboardNavBox')
+		<div id="quicktips">
 		@if( $metager->showQuicktips() )
-			<div id="quicktips">
-				<iframe src="{{ $quicktips }}" frameborder="0"></iframe>
-			</div>
+			@include('quicktips', ['quicktips', $quicktips])
 		@endif
+		</div>
 	</div>
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 </div>

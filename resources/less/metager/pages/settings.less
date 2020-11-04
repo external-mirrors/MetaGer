@@ -48,4 +48,49 @@
     #no-settings {
         text-align: center;
     }
+
+    #newentry{
+        #create{
+            display:flex;
+            align-items:left;
+            margin-bottom:10px;
+            #blacklist{
+                flex-grow:1;
+                width:100%;
+            }
+            button{
+                width:200px;
+            }
+        }
+    }
+    #deleteentry{
+        table{
+            border:1px solid lightgray;
+            flex-grow:1;
+            width:100%;
+        }
+        tr:nth-child(odd){
+            background-color:rgb(240, 240, 240);
+        }
+        tr:nth-child(even){
+            background-color:rgb(255, 215, 200);
+        }
+        td{
+            padding:10px 0px;
+        }
+        td:first-child{
+            padding-left:5px;
+        }
+        td:last-child{
+            width:20px;
+        }
+    }
+    #cookieLink{
+        display:flex;
+        align-items:left;
+        #loadSettings{
+            flex-grow:1;
+            width:100%;
+        }
+    }
 }

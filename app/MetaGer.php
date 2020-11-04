@@ -1105,10 +1105,6 @@ class MetaGer
             $this->framed = false;
         }
 
-        if ($request->input("out", "") === "results-with-style") {
-            $_COOKIE["dark_mode"] = "1";
-        }
-
         # IP
         $this->ip = $this->anonymizeIp($request->ip());
 

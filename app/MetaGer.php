@@ -195,6 +195,7 @@ class MetaGer
                     break;
                 case 'results-with-style':
                     return view('resultpages.resultpage')
+                        ->with()
                         ->with('results', $viewResults)
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
@@ -299,7 +300,7 @@ class MetaGer
         }
         
         $this->duplicationCheck();
-        if(!empty($timings)){
+        if (!empty($timings)) {
             $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
         }
         # Validate Advertisements
@@ -407,8 +408,7 @@ class MetaGer
     public function duplicationCheck()
     {
         $arr = [];
-        for($i = 0; $i < count($this->results); $i++) {
-
+        for ($i = 0; $i < count($this->results); $i++) {
             $link = $this->results[$i]->link;
 
             if (strpos($link, "http://") === 0) {
@@ -426,15 +426,15 @@ class MetaGer
             $link = trim($link, "/");
             $hash = md5($link);
 
-            if(isset($arr[$link])){
+            if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
                 array_splice($this->results, $i, 1);
                 $i--;
-                if($arr[$link]->new === true || $this->results[$i]->new === true){
+                if ($arr[$link]->new === true || $this->results[$i]->new === true) {
                     $arr[$link]->changed = true;
                 }
-            }else{
+            } else {
                 $arr[$link] = &$this->results[$i];
             }
         }
@@ -1100,10 +1100,14 @@ class MetaGer
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
 
-        if ($request->filled("mgv")) {
+        if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
             $this->framed = true;
         } else {
             $this->framed = false;
+        }
+
+        if ($request->input("out", "") === "results-with-style") {
+            $_COOKIE["dark_mode"] = "";
         }
 
         # IP

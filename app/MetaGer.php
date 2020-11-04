@@ -195,7 +195,6 @@ class MetaGer
                     break;
                 case 'results-with-style':
                     return view('resultpages.resultpage')
-                        ->with()
                         ->with('results', $viewResults)
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
@@ -1107,7 +1106,7 @@ class MetaGer
         }
 
         if ($request->input("out", "") === "results-with-style") {
-            $_COOKIE["dark_mode"] = "";
+            $_COOKIE["dark_mode"] = "1";
         }
 
         # IP

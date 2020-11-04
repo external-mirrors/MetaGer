@@ -4,7 +4,7 @@ namespace App\Models;
 
 class Key{
     public $key;
-    public $status; # valid key = true, invalid key = false, unchecked key = null
+    public $status; # valid key = true, invalid key = false, unidentified key = null
 
 
     public function __construct($key, $status = null){

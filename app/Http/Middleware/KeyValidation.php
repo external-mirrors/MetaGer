@@ -15,17 +15,19 @@ class KeyValidation
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, Key $key)
     {   
-        if(isset($request->key)){
-            $pKey = new Key($request->key);
+        if(isset($key) && $key->getStatus()) {
+            return $next($request);
+        } elseif(isset($key) && !$key->getStatus()) {
+            if($request->filled('key')){
+                return redirect($request->except('key'));
+            } else {
+                Cookie::queue('key', '', 0, '/', null, false, false);
+                return redirect($request);
+            }
+        } else {
+            return redirect($request);
         }
-        
-        if(Cookie::get('key')){
-            $cKey = new Key($request->key);
-        }
-
-        if($pKey->getStatus() || $cKey->getStatus())
-        return $next($request);
     }
 }

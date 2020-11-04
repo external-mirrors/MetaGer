@@ -22,6 +22,12 @@ mix
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {
     strictMath: true
   })
+  .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-light.css", {
+    strictMath: true
+  })
+  .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css", {
+    strictMath: true
+  })
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
     strictMath: true
   })
@@ -31,15 +37,12 @@ mix
   .less("resources/less/font-awesome/solid.less", "public/css/fontawesome-solid.css", {
     strictMath: true
   })
-  .less("resources/less/bootstrap/bootstrap.less", "public/css/bootstrap.css", {
+  .less("resources/less/metager/pages/key.less", "public/css/key.css", {
     strictMath: true
   })
-  .less(
-    "resources/less/metager/pages/key.less",
-    "public/css/key.css", {
+  .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css", {
     strictMath: true
-  }
-  )
+  })
   .less("resources/less/utility.less", "public/css/utility.css", {
     strictMath: true
   })

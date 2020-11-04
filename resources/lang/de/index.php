@@ -4,7 +4,7 @@ return [
     'foki.web' => 'Web',
     'foki.bilder' => 'Bilder',
     'foki.nachrichten' => 'News/Politik',
-    'foki.wissenschaft' => 'Wissenschaft',
+    'foki.science' => 'Wissenschaft',
     'foki.produkte' => 'Produkte',
     'foki.angepasst' => 'Angepasst',
     'foki.maps' => 'Maps.metager.de',
@@ -15,7 +15,7 @@ return [
     'partnertitle' => 'MetaGer unterstützen, ohne Mehrkosten für Sie',
     'mapstitle' => 'Der MetaGer Kartenservice',
 
-    'plugin' => 'MetaGer-Plugin hinzufügen',
+    'plugin' => 'MetaGer installieren',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
 
     'options.head' => 'Filter verwalten',
@@ -39,7 +39,7 @@ return [
     'lang.tooltip' => 'Ergebnissprache wählen',
     'key.placeholder' => 'Schlüssel für werbefreie Suche eingeben',
     'key.tooltip' => 'Schlüssel für werbefreie Suche eingeben',
-    'placeholder' => 'MetaGer: Sicher suchen & finden, Privatsphäre schützen',
+    'placeholder' => 'MetaGer: Sicher suchen & finden',
     'searchbutton' => 'MetaGer-Suche',
 
     'tooltips.add-focus' => 'Suche anpassen',

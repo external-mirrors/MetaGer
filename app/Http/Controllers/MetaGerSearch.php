@@ -85,13 +85,13 @@ class MetaGerSearch extends Controller
         # auf Ergebnisse warten und die Ergebnisse laden
         $metager->createSearchEngines($request, $timings);
 
+        $metager->startSearch($timings);
+
         # Versuchen die Ergebnisse der Quicktips zu laden
         $quicktipResults = $quicktips->loadResults();
         if (!empty($timings)) {
-            $timings["loadResults"] = microtime(true) - $time;
+            $timings["Loaded Quicktip Results"] = microtime(true) - $time;
         }
-
-        $metager->startSearch($timings);
 
         $metager->waitForMainResults();
         if (!empty($timings)) {
@@ -245,11 +245,11 @@ class MetaGerSearch extends Controller
 
         $newResults = 0;
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new || $resultTmp->adgoalChanged) {
+            if ($resultTmp->new || $resultTmp->changed) {
                 if ($metager->getFokus() !== "bilder") {
                     $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                    if (!$resultTmp->new && $resultTmp->changed) {
                         $result['changedResults'][$index] = $html;
                     } else {
                         $result['newResults'][$index] = $html;
@@ -258,7 +258,7 @@ class MetaGerSearch extends Controller
                 } else {
                     $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
                     $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->adgoalChanged) {
+                    if (!$resultTmp->new && $resultTmp->changed) {
                         $result['changedResults'][$index] = $html;
                     } else {
                         $result['newResults'][$index] = $html;

@@ -297,6 +297,11 @@ class MetaGer
         if (!empty($timings)) {
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
+        
+        $this->duplicationCheck();
+        if (!empty($timings)) {
+            $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
+        }
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -395,6 +400,41 @@ class MetaGer
             }
             foreach ($engine->ads as $ad) {
                 $this->ads[] = clone $ad;
+            }
+        }
+    }
+
+    public function duplicationCheck()
+    {
+        $arr = [];
+        for ($i = 0; $i < count($this->results); $i++) {
+            $link = $this->results[$i]->link;
+
+            if (strpos($link, "http://") === 0) {
+                $link = substr($link, 7);
+            }
+    
+            if (strpos($link, "https://") === 0) {
+                $link = substr($link, 8);
+            }
+    
+            if (strpos($link, "www.") === 0) {
+                $link = substr($link, 4);
+            }
+    
+            $link = trim($link, "/");
+            $hash = md5($link);
+
+            if (isset($arr[$link])) {
+                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
+                $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+                array_splice($this->results, $i, 1);
+                $i--;
+                if ($arr[$link]->new === true || $this->results[$i]->new === true) {
+                    $arr[$link]->changed = true;
+                }
+            } else {
+                $arr[$link] = &$this->results[$i];
             }
         }
     }
@@ -505,7 +545,7 @@ class MetaGer
                         $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
                         $result->link = $newLink;
                         $result->partnershop = true;
-                        $result->adgoalChanged = true;
+                        $result->changed = true;
                     }
                 }
             }
@@ -939,7 +979,7 @@ class MetaGer
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine && !$engine->loaded) {
+                if ($engine->name === $mainEngine) {
                     $enginesToWaitFor[] = $engine->hash;
                 }
             }
@@ -950,6 +990,17 @@ class MetaGer
             foreach ($engines as $engine) {
                 $enginesToWaitFor[] = $engine->hash;
             }
+        } else {
+            $newEnginesToWaitFor = [];
+            // Don't wait for engines that are already loaded in Cache
+            foreach ($enginesToWaitFor as $engineToWaitFor) {
+                foreach ($engines as $engine) {
+                    if ($engine->hash === $engineToWaitFor && !$engine->loaded) {
+                        $newEnginesToWaitFor[] = $engineToWaitFor;
+                    }
+                }
+            }
+            $enginesToWaitFor = $newEnginesToWaitFor;
         }
 
         $timeStart = microtime(true);
@@ -1048,7 +1099,7 @@ class MetaGer
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
 
-        if ($request->filled("mgv")) {
+        if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
             $this->framed = true;
         } else {
             $this->framed = false;
@@ -1213,10 +1264,10 @@ class MetaGer
         }
     }
 
-     public function createQuicktips()
+    public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime());
+        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
         return $quicktips;
     }
 

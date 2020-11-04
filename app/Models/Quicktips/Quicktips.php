@@ -16,20 +16,24 @@ class Quicktips
     const CACHE_DURATION = 60;
 
     private $hash;
+    private $startTime;
+    private $quotes;
 
-    public function __construct($search, $locale, $max_time)
+    public function __construct($search, $locale, $max_time, $quotes = "on")
     {
         if (env("APP_ENV") === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
+        $this->quotes = $quotes;
+        $this->startTime = microtime(true);
         $this->startSearch($search, $locale, $max_time);
     }
 
     public function startSearch($search, $locale, $max_time)
     {
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale  . "&quotes=" . $this->quotes;
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {
@@ -75,20 +79,18 @@ class Quicktips
     {
         $body = null;
 
-        $startTime = microtime(true);
-
         if (Cache::has($this->hash)) {
             return Cache::get($this->hash, false);
         }
 
-        while (microtime(true) - $startTime < 0.5) {
+        do {
             $body = Redis::rpoplpush($this->hash, $this->hash);
             if ($body === false || $body === null) {
                 usleep(50 * 1000);
             } else {
                 break;
             }
-        }
+        } while (microtime(true) - $this->startTime < 0.5);
 
         if ($body === false) {
             return false;

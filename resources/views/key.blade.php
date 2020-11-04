@@ -3,7 +3,15 @@
 @section('title', $title )
 
 @section('content')
-<link type="text/css" rel="stylesheet" href="{{ mix('/css/key.css') }}" />
+
+<link type="text/css" rel="stylesheet" href="{{ mix('css/key.css') }}"/>
+@if(Cookie::get('dark_mode') === "2")
+	<link type="text/css" rel="stylesheet" href="{{ mix('css/key-dark.css') }}"/>
+@elseif(Cookie::get('dark_mode') === "1")
+	<link type="text/css" rel="stylesheet" href="{{ mix('css/key.css') }}"/>
+@else
+    <link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/key-dark.css') }}"/>
+@endif
 <div id="key-site">
     <div class="section">
         <h1>{{ trans('key.h1')}}</h1>
@@ -39,7 +47,7 @@
             @if(Cookie::get('key') !== NULL)
             <form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@removeKey', ['redirUrl' => url()->full()])) }}">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
-                <button type="submit" class="btn btn-error">@lang('key.removeKey')</button>
+                <button type="submit" class="btn btn-default">@lang('key.removeKey')</button>
             </form>
             @endif
         </div>

@@ -5,14 +5,18 @@
 				@if( isset($result->price) && $result->price != 0)
 					<span class="result-price">{!! $result->price_text !!}</span>
 				@endif
-				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+				<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
 					{!! $result->titel !!}
 				</a>
 			</h2>
-			<a class="result-hoster" href="{{ $result->gefVonLink }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon }} </a>
+			@if(sizeof($result->gefVon)===1)
+				<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
+			@else
+				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster"> {{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }} </span>
+			@endif
 		</div>
 		<div class="result-subheadline">
-			<a class="result-link" href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" title="{{ $result->anzeigeLink }}" rel="noopener" tabindex="-1">
+			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" @if($metager->isFramed())target="_top"@endif tabindex="-1">
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
@@ -25,14 +29,14 @@
 	<div class="result-body {{ (!empty($result->logo) || !empty($result->image) ? "with-image" : "")}}">
 		@if( isset($result->logo) )
 			<div class="result-logo">
-				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+				<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
 					<img src="{{ $metager->getImageProxyLink($result->logo) }}" alt="" />
 				</a>
 			</div>
 		@endif
 		@if( $result->image !== "" )
 			<div class="result-image">
-				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+				<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
 					<img src="{{ $metager->getImageProxyLink($result->image) }}" alt="" />
 				</a>
 			</div>

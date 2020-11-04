@@ -22,6 +22,8 @@
     "nav24"	=>	"Codigo fuente MetaGer",
     "nav25"	=>	"MetaGer App",
     "nav26"	=>	"Tienda para fanáticos",
+    "nav26"	=>	"Tienda para fanáticos",
+    'nav27' => 'MetaGer Maps',
     "navigationToggle"	=>	"Mostrar navegación",
     "titles.tips"	=>	"Sugerencias",
     "plugin"	=>	"MetaGer Plugin"

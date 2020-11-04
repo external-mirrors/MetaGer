@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;

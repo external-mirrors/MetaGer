@@ -23,7 +23,7 @@
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}"/>
 	@elseif(Cookie::get('dark_mode') === "1")
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
-	@else
+	@elseif(Request::input('out', '') !== "results-with-style" )
 		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}"/>
 	@endif
 	

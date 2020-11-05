@@ -17,21 +17,23 @@ class Quicktips
 
     private $hash;
     private $startTime;
+    private $quotes;
 
-    public function __construct($search, $locale, $max_time)
+    public function __construct($search, $locale, $max_time, $quotes = "on")
     {
         if (env("APP_ENV") === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
+        $this->quotes = $quotes;
         $this->startTime = microtime(true);
         $this->startSearch($search, $locale, $max_time);
     }
 
     public function startSearch($search, $locale, $max_time)
     {
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale  . "&quotes=" . $this->quotes;
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {

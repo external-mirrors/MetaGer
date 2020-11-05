@@ -117,7 +117,7 @@
                 </table>
             </form>
             <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-                <button type="submit" name="clear" value="1">@lang('settings.clear')</button>
+                <button class="btn btn-default" type="submit" name="clear" value="1">@lang('settings.clear')</button>
             </form>
         @endif
     </div>

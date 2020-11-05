@@ -179,10 +179,24 @@ class AdminInterface extends Controller
             }
         }
 
+        $sameTimes = [];
+        $sum = 0;
+        foreach ($oldLogs as $index => $oldLog) {
+            if ($index % 7 === 0) {
+                $sameTimes[] = $oldLog["sameTime"];
+                $sum += $oldLog["sameTime"];
+            }
+        }
+        $averageIncrease = 0;
+        if (sizeof($sameTimes) > 0) {
+            $averageIncrease = $sum / sizeof($sameTimes);
+        }
+
         if ($request->input('out', 'web') === "web") {
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
                 ->with('today', number_format(floatval($logToday), 0, ",", "."))
+                ->with('averageIncrease', $averageIncrease)
                 ->with('oldLogs', $oldLogs)
                 ->with('minCount', $minCount)
                 ->with('rekordCount', number_format(floatval($rekordTag), 0, ",", "."))

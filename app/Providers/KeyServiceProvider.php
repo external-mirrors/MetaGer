@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Request;
 use Cookie;
+use App\Models\Key;
 
 class KeyServiceProvider extends ServiceProvider
 {
@@ -16,11 +17,11 @@ class KeyServiceProvider extends ServiceProvider
     public function register()
     {
         $key = "";
-        if(Cookie::get('key')) {
+        if(Cookie::has('key')) {
             $key = Cookie::get('key');
         }
-        if(isset($request->key)) {
-            $key = $request->key;
+        if(Request::filled('key')) {
+            $key = Request::input('key');
         }
         $this->app->singleton(Key::class, function ($app) use ($key) {
             return new Key($key);

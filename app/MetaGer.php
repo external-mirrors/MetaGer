@@ -206,14 +206,13 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                /* WIP
+                
                 case 'api':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => $this->apiAuthorized])->header('Content-Type', 'application/xml');
+                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'atom10':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => true])
-                        ->header('Content-Type', 'application/xml');
-                    break;*/
+                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
+                    break;
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
                     return sizeof($viewResults) . ";" . round((microtime(true) - $this->starttime), 2);
@@ -1204,7 +1203,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" /*WIP && $this->out !== "atom10" && $this->out !== "api"*/) {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api") {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll

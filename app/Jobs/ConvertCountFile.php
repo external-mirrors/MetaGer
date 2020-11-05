@@ -95,15 +95,13 @@ class ConvertCountFile implements ShouldQueue
                 fclose($fh);
             }
 
-            if (!$error) {
-                $oldUmask = umask(0);
-                // Write the result to a File
-                if (!file_exists($this->files["countPath"])) {
-                    mkdir($this->files["countPath"], 0777, true);
-                }
-                file_put_contents($this->files["countFile"], json_encode($result, JSON_PRETTY_PRINT));
-                umask($oldUmask);
+            $oldUmask = umask(0);
+            // Write the result to a File
+            if (!file_exists($this->files["countPath"])) {
+                mkdir($this->files["countPath"], 0777, true);
             }
+            file_put_contents($this->files["countFile"], json_encode($result, JSON_PRETTY_PRINT));
+            umask($oldUmask);
 
             Redis::del(md5($this->files["countFile"]));
         }

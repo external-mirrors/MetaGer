@@ -3,9 +3,9 @@
 return [
     "role.0" => "CEO",
     "role.1" => "executive",
+    "role.1.1" => "executive",
     "role.2" => "youth protection commissioner",
     "role.3" => "press secretary",
-    "role.4" => "programmer",
     "role.5" => "programmer",
     "role.6" => "programmer",
     "role.7" => "secretary",

@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode') {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key') {
                 $settingActive = true;
             }
         }
@@ -234,6 +234,14 @@ class SettingsController extends Controller
             }
         }
 
+        $newTab = $request->input('nt');
+        if(!empty($newTab)){
+            if($newTab === "off") {
+                Cookie::queue('new_tab', '', 0, '/', null, false, false);
+            }elseif($newTab === "on") {
+                Cookie::queue('new_tab', 'on', 0, '/', null, false, false);
+            }
+        }
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
     }
@@ -256,7 +264,12 @@ class SettingsController extends Controller
             if($key === 'dark_mode'){
                 Cookie::queue($key, "", 0, '/', null, false, false);
             }
-
+            if($key === 'new_tab'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
+            if($key === 'key'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
         }
         $this->clearBlacklist($request);
 
@@ -281,6 +294,10 @@ class SettingsController extends Controller
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
         if($key === 'dark_mode'){
             Cookie::queue($key, "", 0, '/', null, false, false);
+        } elseif($key === 'new_tab') {
+                Cookie::queue($key, "", 0, '/', null, false, false);
+        } elseif($key === 'key') {
+            Cookie::queue($key, "", 0, '/', null, false, false);
         }else{
             Cookie::queue($key, "", 0, $cookiePath, null, false, false);
         }
@@ -296,7 +313,9 @@ class SettingsController extends Controller
         foreach (Cookie::get() as $key => $value) {
             if($key === 'dark_mode'){
                 Cookie::queue($key, "", 0, '/', null, false, false);    
-            }else{
+            } elseif($key === 'new_tab') {
+                    Cookie::queue($key, "", 0, '/', null, false, false);    
+            } else {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
         }
@@ -406,6 +425,9 @@ class SettingsController extends Controller
             }
             if($key === 'dark_mode'){
                 Cookie::queue($key, $value, 0, '/', null, false, false);
+            }
+            if($key === 'new_tab' && $key === 'on') {
+                Cookie::queue($key, 'on', 0, '/', null, false, false);
             }
             foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
                 if($key === $suma && $value === $filter){

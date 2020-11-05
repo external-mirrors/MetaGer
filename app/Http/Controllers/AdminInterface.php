@@ -31,7 +31,6 @@ class AdminInterface extends Controller
                             if (strstr($key, "_time")) {
                                 $stati[$name]["fetcher"][$pid]["connection"][$key] = $val;
                             }
-
                         }
                         $stati[$name]["fetcher"][$pid]["poptime"] = $value[1];
                     }
@@ -157,7 +156,7 @@ class AdminInterface extends Controller
             $now->minute = 0;
             $now->second = 0;
 
-            while($now->lessThanOrEqualTo(Carbon::now())){
+            while ($now->lessThanOrEqualTo(Carbon::now())) {
                 $sameTime += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
                 $now->addMinutes(5);
             }
@@ -178,7 +177,6 @@ class AdminInterface extends Controller
             if ($size > 0) {
                 $oldLogs[$key]['median'] = number_format(floatval(round($count / $size)), 0, ",", ".");
             }
-
         }
 
         if ($request->input('out', 'web') === "web") {
@@ -190,7 +188,9 @@ class AdminInterface extends Controller
                 ->with('rekordCount', number_format(floatval($rekordTag), 0, ",", "."))
                 ->with('rekordTagSameTime', number_format(floatval($rekordTagSameTime), 0, ",", "."))
                 ->with('rekordDate', $rekordTagDate)
-                ->with('days', $days);
+                ->with('days', $days)
+                ->with('css', [mix('/css/count/style.css')])
+                ->with('darkcss', [mix('/css/count/dark.css')]);
         } else {
             $result = "";
             foreach ($oldLogs as $key => $value) {
@@ -203,9 +203,7 @@ class AdminInterface extends Controller
             return response($result, 200)
                 ->header('Content-Type', 'text/csv')
                 ->header('Content-Disposition', 'attachment; filename="count.csv"');
-
         }
-
     }
 
     public function countGraphToday()
@@ -235,7 +233,6 @@ class AdminInterface extends Controller
         return response()
             ->view('admin.countGraphToday', ["data" => $result], 200)
             ->header('Content-Type', "image/svg+xml");
-
     }
 
     public function engineStats()

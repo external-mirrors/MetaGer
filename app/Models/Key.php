@@ -28,7 +28,7 @@ class Key{
     public function updateStatus() {
         
         try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
+            $link = "https://key.metager3.de/" . urlencode($this->key) . "/request-permission/api-access";
             $result = json_decode(file_get_contents($link));
             if ($result->{'api-access'} == true) {
                 $this->status = true;

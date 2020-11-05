@@ -44,6 +44,9 @@ class Key{
 
     public function requestPermission() {
 
+        $postdata = http_build_query(array(
+            'dummy' => 0,
+        ));
         $opts = array(
             'http' => array(
                 'method' => 'POST',

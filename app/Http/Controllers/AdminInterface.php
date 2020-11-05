@@ -183,10 +183,14 @@ class AdminInterface extends Controller
         $sum = 0;
         foreach ($oldLogs as $index => $oldLog) {
             if ($index % 7 === 0) {
-                $sameTimes[] = $oldLog["sameTime"];
-                $sum += $oldLog["sameTime"];
+                $sameTime = $oldLog["sameTime"];
+                $sameTime = str_replace(".", "", $sameTime);
+                $sameTime = \intval($sameTime);
+                $sameTimes[] = ($logToday - $sameTime);
+                $sum += ($logToday - $sameTime);
             }
         }
+        
         $averageIncrease = 0;
         if (sizeof($sameTimes) > 0) {
             $averageIncrease = $sum / sizeof($sameTimes);

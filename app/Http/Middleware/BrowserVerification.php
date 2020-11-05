@@ -18,7 +18,7 @@ class BrowserVerification
      */
     public function handle($request, Closure $next)
     {
-        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
             return $next($request);
         }
 

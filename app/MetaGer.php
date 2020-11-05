@@ -558,30 +558,7 @@ class MetaGer
 
     public function authorize($key)
     {
-        $postdata = http_build_query(array(
-            'dummy' => rand(),
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $postdata,
-            ),
-        );
-
-        $context = stream_context_create($opts);
-
-        try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
-            $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'api-access'} == true) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\ErrorException $e) {
-            return false;
-        }
+        return app('App\Models\Key')->requestPermission();
     }
 
     /*

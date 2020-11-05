@@ -14,7 +14,7 @@ class Key{
 
     # always returns true or false
     public function getStatus() {
-        if($this->status === null) {
+        if($this->key !== '' && $this->status === null) {
             $this->updateStatus();
         }
         if($this->status === null || $this->status === false) {

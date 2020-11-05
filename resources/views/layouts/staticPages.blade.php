@@ -33,8 +33,10 @@
 		@endif
 		@if(Cookie::get('dark_mode') === "2")
 			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}"/>
-			@if(isset($page) && $page === 'startpage')
-				<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
+			@if(!empty($darkcss) && is_array($darkcss))
+			@foreach($darkcss as $css)
+			<link rel="stylesheet" type="text/css" href="{{ $css }}" />
+			@endforeach
 			@endif
 		@elseif(Cookie::get('dark_mode') === "1")
 			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
@@ -43,8 +45,10 @@
 			@endif
 		@else
 			<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}"/>
-			@if(isset($page) && $page === 'startpage')
-				<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
+			@if(!empty($darkcss) && is_array($darkcss))
+			@foreach($darkcss as $css)
+			<link rel="stylesheet" type="text/css" media="(prefers-color-scheme:dark)" href="{{ $css }}" />
+			@endforeach
 			@endif
 		@endif
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />

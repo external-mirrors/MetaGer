@@ -19,22 +19,22 @@ deploymentApiVersion: apps/v1
 resources:
   requests:
   limits:
-resources-phpfpm: 
+resourcesPhpfpm: 
   requests:
     cpu: 500m
     memory: 500M
   limits:
-resources-nginx: 
+resourcesNginx: 
   requests:
     cpu: 100m
     memory: 100M
   limits:
-resources-redis: 
+resourcesRedis: 
   requests:
     cpu: 100m
     memory: 1Gi
   limits:
-resources-fetcher: 
+resourcesFetcher: 
   requests:
     cpu: 500m
     memory: 100M

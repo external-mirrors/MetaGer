@@ -139,9 +139,7 @@ spec:
           subPath: adBlacklistDomains.txt
           readOnly: true
         resources:
-          requests:
-            cpu: 500m
-            memory: 500m
+{{ toYaml .Values.resources-phpfpm | indent 10 }}
       # Nginx Container
       - name: {{ .Chart.Name }}-nginx
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -187,9 +185,7 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
-          requests:
-            cpu: 100m
-            memory: 100m
+{{ toYaml .Values.resources-nginx | indent 10 }}
       # Redis Container
       - name: {{ .Chart.Name }}-redis
         image: "redis:5.0.3-alpine"
@@ -208,9 +204,7 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
-          requests:
-            cpu: 100m
-            memory: 1Gi
+{{ toYaml .Values.resources-redis | indent 10 }}
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -237,7 +231,5 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
-          requests:
-            cpu: 500m
-            memory: 100m
+{{ toYaml .Values.resources-fetcher | indent 10 }}
 {{- end -}}

@@ -426,7 +426,7 @@ class SettingsController extends Controller
             if($key === 'dark_mode'){
                 Cookie::queue($key, $value, 0, '/', null, false, false);
             }
-            if($key === 'new_tab' && $key === 'on') {
+            if($key === 'new_tab' && $value === 'on') {
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
             }
             foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){

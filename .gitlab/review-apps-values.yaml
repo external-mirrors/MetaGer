@@ -25,15 +25,15 @@ service:
   externalPort: 80
   internalPort: 80
 deploymentApiVersion: apps/v1
-resources-phpfpm: 
+resourcesPhpfpm: 
   requests:
   limits:
-resources-nginx: 
+resourcesNginx: 
   requests:
   limits:
-resources-redis: 
+resourcesRedis: 
   requests:
   limits:
-resources-fetcher: 
+resourcesFetcher: 
   requests:
   limits:

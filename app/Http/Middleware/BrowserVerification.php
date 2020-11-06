@@ -21,6 +21,8 @@ class BrowserVerification
 
         if(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
             header('Content-type: application/xml; charset=utf-8');
+        } elseif(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
+            abort(403);
         } else {
             header('Content-type: text/html; charset=utf-8');
         }

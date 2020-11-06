@@ -32,6 +32,10 @@ return [
     'dark' => 'Dark',
     'light' => 'Light',
 
+    'newTab' => 'Open results in new tabs',
+    'off' => 'off',
+    'on' => 'on',
+
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
     'allSettings.header' => "Settings on :root",
@@ -45,5 +49,4 @@ return [
     'key' => "Your key to the ad-free search",
     'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
-    'dm' => 'Dark mode',
 ];

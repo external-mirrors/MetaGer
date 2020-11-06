@@ -1093,7 +1093,7 @@ class MetaGer
             $this->sprueche = $request->input('quotes');
         }
 
-        $this->newtab = $request->input('newtab', 'on');
+        $this->newtab = $request->input('new_tab', \Cookie::get('new_tab'));
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
         } elseif ($this->framed) {

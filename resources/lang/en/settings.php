@@ -25,9 +25,9 @@ return [
     'add' => 'Add',
     'clear' => 'Clear black list',
     'copy' => 'Copy',
+    'hint' => 'This setting affects all foci and sub-pages!',
 
     'darkmode' => 'Toggle dark mode',
-    'darkmode-hint' => 'The setting for dark mode affects all foci and sub-pages!',
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',

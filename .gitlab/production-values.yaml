@@ -7,13 +7,6 @@ hpa:
   enabled: true
   minReplicas: 3
   maxReplicas: 100
-resources:
-  limits:
-    cpu: 500m
-    memory: 1Gi
-  requests:
-    cpu: 500m
-    memory: 1Gi
 podDisruptionBudget:
   enabled: true
   minAvailable:
@@ -23,6 +16,29 @@ podAnnotations:
   prometheus.io/path: /metrics
   prometheus.io/port: "80"
 deploymentApiVersion: apps/v1
+resources:
+  requests:
+  limits:
+resourcesPhpfpm: 
+  requests:
+    cpu: 500m
+    memory: 500M
+  limits:
+resourcesNginx: 
+  requests:
+    cpu: 100m
+    memory: 100M
+  limits:
+resourcesRedis: 
+  requests:
+    cpu: 100m
+    memory: 1Gi
+  limits:
+resourcesFetcher: 
+  requests:
+    cpu: 500m
+    memory: 100M
+  limits:
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod

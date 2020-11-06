@@ -223,7 +223,7 @@ class MetaGerSearch extends Controller
         $metager->setAdgoalLoaded($adgoal["loaded"]);
         $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
-        $metager->parseFormData($request);
+        $metager->parseFormData($request, false);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);

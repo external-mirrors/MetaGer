@@ -206,33 +206,12 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                case 'rich':
-                    return view('resultpages.metager3rich')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('fokus', $this->fokus);
-                    break;
-                case 'rss20':
-                    return view('resultpages.metager3resultsrss20')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('resultcount', sizeof($viewResults))
-                        ->with('fokus', $this->fokus);
-                    break;
+                
                 case 'api':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => $this->apiAuthorized])->header('Content-Type', 'application/xml');
+                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'atom10':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => true])
-                        ->header('Content-Type', 'application/xml');
+                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
@@ -577,30 +556,7 @@ class MetaGer
 
     public function authorize($key)
     {
-        $postdata = http_build_query(array(
-            'dummy' => rand(),
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $postdata,
-            ),
-        );
-
-        $context = stream_context_create($opts);
-
-        try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
-            $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'api-access'} == true) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\ErrorException $e) {
-            return false;
-        }
+        return app('App\Models\Key')->requestPermission();
     }
 
     /*
@@ -1055,7 +1011,7 @@ class MetaGer
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */
 
-    public function parseFormData(Request $request)
+    public function parseFormData(Request $request, $auth = true)
     {
         # Sichert, dass der request in UTF-8 formatiert ist
         if ($request->input('encoding', 'utf8') !== "utf8") {
@@ -1191,7 +1147,7 @@ class MetaGer
                 $this->apiKey = "";
             }
         }
-        if ($this->apiKey) {
+        if ($this->apiKey && $auth) {
             $this->apiAuthorized = $this->authorize($this->apiKey);
         }
 
@@ -1247,7 +1203,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "rss20" && $this->out !== "atom10" && $this->out !== "rich" && $this->out !== "api") {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api") {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll

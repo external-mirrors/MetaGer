@@ -9,7 +9,7 @@
         'default-search-v11.1' => 'Click <a href="javascript:window.external.addSearchProvider($(\'link[rel=search]\').attr(\'href\'));">here</a>, to add MetaGer as search engine.',
         'default-search-v11.2' => 'Navigate to the top right corner and click "<i class="fa fa-cog" aria-hidden="true"></i>".',
         'default-search-v11.3' => 'Choose "Manage Add-Ons".',
-        'default-search-v11.4' => 'On the left choose "Search Providers" and click MetaGer on the right.',
+        'default-search-v11.4' => 'On the left choose "Search Providers" and click "MetaGer" on the right.',
         'default-search-v11.5' => 'Click "Set as default" on the bottom right corner of the window',
 
         'default-page-v9.1' => 'Click <a href="/" target="_blank" rel="noopener">here</a> to open MetaGer in a new tab.',

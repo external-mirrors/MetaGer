@@ -28,13 +28,20 @@
 		@endif
 
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
+		@if (isset($css) && is_array($css))
+		@foreach($css as $cssFile)
+		<link href="{{ $cssFile }}" rel="stylesheet" />
+		@endforeach
+		@endif
 		@if(isset($page) && $page === 'startpage')
 			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}"/>
 		@endif
 		@if(Cookie::get('dark_mode') === "2")
 			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}"/>
-			@if(isset($page) && $page === 'startpage')
-				<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
+			@if(!empty($darkcss) && is_array($darkcss))
+			@foreach($darkcss as $cssFile)
+			<link rel="stylesheet" type="text/css" href="{{ $cssFile }}" />
+			@endforeach
 			@endif
 		@elseif(Cookie::get('dark_mode') === "1")
 			<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
@@ -43,8 +50,10 @@
 			@endif
 		@else
 			<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}"/>
-			@if(isset($page) && $page === 'startpage')
-				<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/startpage-only-dark.css') }}"/>
+			@if(!empty($darkcss) && is_array($darkcss))
+			@foreach($darkcss as $cssFile)
+			<link rel="stylesheet" type="text/css" media="(prefers-color-scheme:dark)" href="{{ $cssFile }}" />
+			@endforeach
 			@endif
 		@endif
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
@@ -53,13 +62,6 @@
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 		<script src="{{ mix('js/lib.js') }}"></script>
 		<script src="{{ mix('js/utility.js') }}"></script>
-		@if (isset($css))
-			@if(is_array($css))
-				@foreach($css as $cssFile)
-		<link href="{{ $cssFile }}" rel="stylesheet" />
-				@endforeach
-			@endif
-		@endif
 	</head>
 	<body>
 		@if(Request::getHttpHost() === "metager3.de")

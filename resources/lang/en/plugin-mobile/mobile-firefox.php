@@ -13,5 +13,5 @@
         'default-search-v80.2' => 'Choose Settings.',
         'default-search-v80.3' => 'Under "General" pick "Search".',
         'default-search-v80.4' => 'Tap "+ Add search engine".',
-        'default-search-v80.5' => 'Choose "Other", enter MetaGer as name and the search string to use. Finally tap "<i class="fas fa-check"></i>" in the top right corner to save.',
+        'default-search-v80.5' => 'Choose "Other", enter "MetaGer" as name and the search string to use. Finally tap "<i class="fas fa-check"></i>" in the top right corner to save.',
     ];

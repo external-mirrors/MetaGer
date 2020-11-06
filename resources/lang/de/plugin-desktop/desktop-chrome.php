@@ -4,12 +4,12 @@
         //Instructions for Chrome version 49-52
         'default-search-v49.1' => 'Klicken Sie in Ihrem Chrome oben rechts auf <i class="fas fa-bars"></i> und im folgenden Menü auf "Einstellungen", um die Einstellungen Ihres Chromes zu öffnen.',
         'default-search-v49.2' => 'Im Bereich "Suche" klicken Sie auf "Suchmaschinen verwalten...".',
-        'default-search-v49.3' => 'In der unteren Hälfte des erscheinenden Menüs fahren Sie mit der den MetaGer-Eintrag. Auf der rechten Seite des Eintrags klicken sie auf die erscheinende blaue "Als Standard"-Schaltfläche',
+        'default-search-v49.3' => 'In der unteren Hälfte des erscheinenden Menüs fahren Sie mit der Maus über den MetaGer-Eintrag. Auf der rechten Seite des Eintrags klicken sie auf die erscheinende blaue "Als Standard"-Schaltfläche',
 
         //Instructions for Chrome version 53-58
         'default-search-v53.1' => 'Klicken Sie in Ihrem Chrome oben rechts auf <i class="fa fa-ellipsis-v"></i> und im folgenden Menü auf "Einstellungen", um die Einstellungen Ihres Chromes zu öffnen.',
         'default-search-v53.2' => 'Im Bereich "Suche" klicken Sie auf "Suchmaschinen verwalten...".',
-        'default-search-v53.3' => 'In der unteren Hälfte des erscheinenden Menüs fahren Sie mit der den MetaGer-Eintrag. Auf der rechten Seite des Eintrags klicken sie auf die erscheinende blaue "Als Standard"-Schaltfläche',
+        'default-search-v53.3' => 'In der unteren Hälfte des erscheinenden Menüs fahren Sie mit der Maus über den MetaGer-Eintrag. Auf der rechten Seite des Eintrags klicken sie auf die erscheinende blaue "Als Standard"-Schaltfläche',
 
         //Instructions for Chrome version >=59
         'default-search-v59.1' => 'Klicken Sie in Ihrem Chrome oben rechts auf <i class="fa fa-ellipsis-v"></i> und im folgenden Menü auf "Einstellungen", um die Einstellungen Ihres Chromes zu öffnen.',

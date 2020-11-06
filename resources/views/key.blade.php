@@ -47,7 +47,7 @@
             @if(Cookie::get('key') !== NULL)
             <form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@removeKey', ['redirUrl' => url()->full()])) }}">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
-                <button type="submit" class="btn btn-error">@lang('key.removeKey')</button>
+                <button type="submit" class="btn btn-default">@lang('key.removeKey')</button>
             </form>
             @endif
         </div>

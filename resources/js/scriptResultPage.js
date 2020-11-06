@@ -30,11 +30,9 @@ function botProtection() {
           } else {
             document.location.href = link;
           }
-        } else {
-          window.open(link, '_blank');
         }
       });
-    return false;
+    return newtab;
   });
 }
 

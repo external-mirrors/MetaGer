@@ -1011,7 +1011,7 @@ class MetaGer
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */
 
-    public function parseFormData(Request $request)
+    public function parseFormData(Request $request, $auth = true)
     {
         # Sichert, dass der request in UTF-8 formatiert ist
         if ($request->input('encoding', 'utf8') !== "utf8") {
@@ -1147,7 +1147,7 @@ class MetaGer
                 $this->apiKey = "";
             }
         }
-        if ($this->apiKey) {
+        if ($this->apiKey && $auth) {
             $this->apiAuthorized = $this->authorize($this->apiKey);
         }
 

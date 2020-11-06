@@ -58,7 +58,7 @@ class Key{
         $context = stream_context_create($opts);
 
         try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
+            $link = "https://key.metager3.de/" . urlencode($this->key) . "/request-permission/api-access";
             $result = json_decode(file_get_contents($link, false, $context));
             if ($result->{'api-access'} == true) {
                 return true;

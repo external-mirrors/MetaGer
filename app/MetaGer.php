@@ -1146,7 +1146,7 @@ class MetaGer
             $this->newtab = "_self";
         }
         if ($request->filled("key") && $request->input('key') === getenv("mainz_key")) {
-            $this->newtab = "_blank";
+            $this->newtab = "_top";
         }
         # Theme
         $this->theme = preg_replace("/[^[:alnum:][:space:]]/u", '', $request->input('theme', 'default'));

@@ -1137,7 +1137,7 @@ class MetaGer
             $this->sprueche = $request->input('quotes');
         }
 
-        $this->newtab = $request->input('newtab', \Cookie::get('newtab'));
+        $this->newtab = $request->input('new_tab', \Cookie::get('new_tab'));
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
         } elseif ($this->framed) {
@@ -1146,7 +1146,7 @@ class MetaGer
             $this->newtab = "_self";
         }
         if ($request->filled("key") && $request->input('key') === getenv("mainz_key")) {
-            $this->newtab = "_top";
+            $this->newtab = "_blank";
         }
         # Theme
         $this->theme = preg_replace("/[^[:alnum:][:space:]]/u", '', $request->input('theme', 'default'));

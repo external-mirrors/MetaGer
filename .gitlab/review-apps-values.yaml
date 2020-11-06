@@ -3,6 +3,8 @@ postgresql:
 hpa: 
   enabled: false
 resources:
+  requests:
+  limits:
 ingress: 
   annotations: 
     kubernetes.io/tls-acme: "false"

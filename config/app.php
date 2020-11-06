@@ -179,6 +179,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
         App\Providers\MetaGerProvider::class,
+        App\Providers\KeyServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Fideloper\Proxy\TrustedProxyServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,

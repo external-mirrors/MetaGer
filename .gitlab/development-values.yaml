@@ -7,13 +7,26 @@ hpa:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
-resources:
-  limits:
-    cpu: 500m
-    memory: 1Gi
+resourcesPhpfpm: 
   requests:
     cpu: 500m
+    memory: 500M
+  limits:
+resourcesNginx: 
+  requests:
+    cpu: 100m
+    memory: 100M
+  limits:
+resourcesRedis: 
+  requests:
+    cpu: 100m
     memory: 1Gi
+  limits:
+resourcesFetcher: 
+  requests:
+    cpu: 500m
+    memory: 100M
+  limits:
 podDisruptionBudget:
   enabled: true
   minAvailable:

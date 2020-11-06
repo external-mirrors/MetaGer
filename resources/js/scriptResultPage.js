@@ -5,11 +5,11 @@ $(document).ready(function () {
 });
 
 function botProtection() {
-  $('.result').find('a').click(function () {
+  $('.result').find('a').click(function (e) {
     var link = $(this).attr('href');
     var newtab = false;
     var top = false;
-    if ($(this).attr('target') == '_blank') {
+    if ($(this).attr('target') == '_blank' || e.ctrlKey) {
       newtab = true;
     } else if ($(this).attr('target') == "_top") {
       top = true;
@@ -32,10 +32,7 @@ function botProtection() {
           }
         }
       });
-    if (!newtab)
-      return false;
-    else
-      return true;
+    return newtab;
   });
 }
 

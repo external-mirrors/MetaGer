@@ -18,7 +18,17 @@ class BrowserVerification
      */
     public function handle($request, Closure $next)
     {
-        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+
+        if(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
+            header('Content-type: application/xml; charset=utf-8');
+        } elseif(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
+            abort(403);
+        } else {
+            header('Content-type: text/html; charset=utf-8');
+        }
+        header('X-Accel-Buffering: no');
+
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
             return $next($request);
         }
 
@@ -54,9 +64,6 @@ class BrowserVerification
                 return redirect("/");
             }
         }
-
-        header('Content-type: text/html; charset=utf-8');
-        header('X-Accel-Buffering: no');
 
         $key = md5($request->ip() . microtime(true));
 

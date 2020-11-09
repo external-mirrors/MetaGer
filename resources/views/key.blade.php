@@ -21,20 +21,21 @@
         <p>{{ trans('key.p4') }}</p>
         <p>{{ trans('key.p5') }}</p>
         <ol>
-            <li>{!! trans('key.li1', ["url" =>
-                    route("startpage", [
-                        "key" =>
-                            empty(Cookie::get('key')) ?
-                                "enter_key_here" :
-                                Cookie::get('key')
-                            ])])!!} als Startseite im Browser ein.</li>
-            <li>@lang('key.li2', ["url" =>
-                    route("resultpage", [
-                        "key" =>
-                            empty(Cookie::get('key')) ?
-                                "enter_key_here" :
-                                Cookie::get('key')
-                        ]) . "&eingabe=%s"])</li>
+            <li>
+                @lang ('key.li1')
+                <div class="copyLink">
+                    <input id="loadSettings" class="loadSettings" type="text" value="{{route('loadSettings', ["key" => empty(Cookie::get('key')) ? "enter_key_here" : Cookie::get('key')])}}">
+                    <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
+                </div>
+            </li>
+            </br>
+            <li>
+                @lang('key.li2')
+                <div class="copyLink">
+                    <input id="searchString" class="loadSettings" type="text" value="{{route("resultpage", ["key" => empty(Cookie::get('key')) ? "enter_key_here" : Cookie::get('key')]) . "&eingabe=%s"}}">
+                    <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('searchString');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
+                </div>
+            </li>
         </ol>
     </div>
     <div class="section">

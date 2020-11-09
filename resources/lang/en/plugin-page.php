@@ -17,7 +17,6 @@ return [
 
     'search-engine.1' => 'What is a default search engine?',
     'search-engine.2' => 'With MetaGer as default searchengine you can instruct your browser to automatically use MetaGer when search queries are entered i.e. into the adress bar.',
-    'search-engine.3' => 'This allows you to search certain terms or things without the need to visit the search engine\'s site first.',
 
     'browser-download' => 'Download Firefox',
     'firefox-plugin' => 'Set MetaGer as default search engine with add-on',

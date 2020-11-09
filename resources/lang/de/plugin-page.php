@@ -16,7 +16,7 @@ return [
     'head.10' => 'Metager zu Samsung Internet hinzufügen',
 
     'search-engine.1' => 'Was macht eine Standardsuchmaschine?',
-    'search-engine.2' => 'Die eingestellte Standardsuchmaschine greift Adresseingaben ab, die vom Browser nicht direkt als Webseite erkannt werden können.',
+    'search-engine.2' => 'Mit MetaGer als Standardsuchmaschine können Sie Ihren Browser anweisen Suchen, welche z.B. über die Adressleiste durchgeführt werden, automatisch von MetaGer beantworten zu lassen.',
     'search-engine.3' => 'Somit lassen sich gezielt Suchen ausführen, ohne vorher eine Seite ansteuern zu müssen.',
 
     'browser-download' => 'Firefox herunterladen',

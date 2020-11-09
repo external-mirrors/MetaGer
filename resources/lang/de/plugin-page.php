@@ -15,6 +15,10 @@ return [
     'head.9' => 'MetaGer zu UCBrowser hinzufügen',
     'head.10' => 'Metager zu Samsung Internet hinzufügen',
 
+    'search-engine.1' => 'Was macht eine Standardsuchmaschine?',
+    'search-engine.2' => 'Die eingestellte Standardsuchmaschine greift Adresseingaben ab, die vom Browser nicht direkt als Webseite erkannt werden können.',
+    'search-engine.3' => 'Somit lassen sich gezielt Suchen ausführen, ohne vorher eine Seite ansteuern zu müssen.',
+
     'browser-download' => 'Firefox herunterladen',
     'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
     'firefox-default-search' => 'MetaGer als Standardsuchmaschine ohne Add-on einrichten',

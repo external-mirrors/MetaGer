@@ -16,7 +16,7 @@ return [
     'head.10' => 'Add MetaGer to your Samsung Internet',
 
     'search-engine.1' => 'What is a default search engine?',
-    'search-engine.2' => 'Your default search engine uses adressbar entries, if the browser cannot identify them as websites.',
+    'search-engine.2' => 'With MetaGer as default searchengine you can instruct your browser to automatically use MetaGer when search queries are entered i.e. into the adress bar.',
     'search-engine.3' => 'This allows you to search certain terms or things without the need to visit the search engine\'s site first.',
 
     'browser-download' => 'Download Firefox',

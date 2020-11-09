@@ -17,7 +17,6 @@ return [
 
     'search-engine.1' => 'Was macht eine Standardsuchmaschine?',
     'search-engine.2' => 'Mit MetaGer als Standardsuchmaschine können Sie Ihren Browser anweisen Suchen, welche z.B. über die Adressleiste durchgeführt werden, automatisch von MetaGer beantworten zu lassen.',
-    'search-engine.3' => 'Somit lassen sich gezielt Suchen ausführen, ohne vorher eine Seite ansteuern zu müssen.',
 
     'browser-download' => 'Firefox herunterladen',
     'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',

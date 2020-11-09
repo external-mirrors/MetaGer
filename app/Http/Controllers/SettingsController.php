@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Cookie;
 use LaravelLocalization;
 use \App\MetaGer;
+use \App\Models\Key;
 use \Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -422,6 +423,12 @@ class SettingsController extends Controller
             }
             if($blpage){
                 continue;
+            }
+            if($key === 'key') {
+                $memberKey = new Key($value);
+                if($memberKey->getStatus()){
+                    Cookie::queue($key, $value, 0, '/', null, false, false);
+                }
             }
             if($key === 'dark_mode'){
                 Cookie::queue($key, $value, 0, '/', null, false, false);

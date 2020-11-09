@@ -28,7 +28,7 @@
 	<div class="card-heavy">
 		<h3>{{ trans('plugin-page.search-engine.1') }}</h3>
 		<ul>
-			<p>{{ trans('plugin-page.search-engine.2') }} </br> {{ trans('plugin-page.search-engine.3') }}</p>
+			<p>{{ trans('plugin-page.search-engine.2') }}</p>
 		</ul>
 	</div>
 	@if ($agent->isDesktop())

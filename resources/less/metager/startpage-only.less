@@ -75,6 +75,9 @@ html {
     top: 0;
     z-index: 10;
 
+    @media(max-height: 150px){
+        display:none;
+    }
 
     &>:nth-child(1) {
         background-color: @story-privacy-background;

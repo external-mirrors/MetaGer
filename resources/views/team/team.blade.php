@@ -16,7 +16,7 @@
 					<a href="mailto:carsten@suma-ev.de">carsten@suma-ev.de</a></p>
 				</li>
 				<li>
-					<p>Branz, Manuela - {!! trans('team.role.3') !!} & {!! trans('team.role.2') !!} -
+					<p>Branz, Manuela - {!! trans('team.role.1.1') !!} & {!! trans('team.role.3') !!} -
 					<a href="mailto:manuela.branz@suma-ev.de">manuela.branz@suma-ev.de</a></p>
 				</li>
 				<li>
@@ -35,6 +35,13 @@
 					<p><a href="https://de.wikipedia.org/wiki/Wolfgang_Sander-Beuermann" target="_blank" rel="noopener">Sander-Beuermann, Wolfgang</a>, Dr.-Ing - {!! trans('team.role.8') !!} -
 					<a href="mailto:wsb@suma-ev.de">wsb@suma-ev.de</a>
 				</li>
+				<li>
+					<p>{!! trans('team.role.2') !!}: Branz, Manuela
+					<a href="mailto:manuela.branz@suma-ev.de">manuela.branz@suma-ev.de</a></p>
+				</li>
+
+
+
 			</ul>
 		</div>
 		<div class="card-heavy">

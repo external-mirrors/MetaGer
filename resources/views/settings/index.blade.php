@@ -12,7 +12,7 @@
         <h2>@lang('settings.hint.header')</h2>
         <p>@lang('settings.hint.text', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</p>
         <p>@lang('settings.hint.loadSettings')</p>
-        <div id="copyLink">
+        <div class="copyLink">
             <input id="loadSettings" class="loadSettings" type="text" value="{{$cookieLink}}">
             <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
         </div>

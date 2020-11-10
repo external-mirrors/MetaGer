@@ -405,23 +405,71 @@ class SettingsController extends Controller
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
-        $sumaFile = MetaGer::getLanguageFile();
-        $sumaFile = json_decode(file_get_contents($sumaFile), true);
-        
-        $foki = array_keys($sumaFile['foki']);
+        $langFile = MetaGer::getLanguageFile();
+        $langFile = json_decode(file_get_contents($langFile));
+
         $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
 
+        $settings = $request->all();
+        foreach($settings as $key => $value) {
+            if($key === 'key') {
+                $memberKey = new Key($value);
+                if($memberKey->getStatus()){
+                    Cookie::queue($key, $value, 0, '/', null, false, false);
+                }
+            }
+            elseif($key === 'dark_mode'){
+                Cookie::queue($key, $value, 0, '/', null, false, false);
+            }
+            elseif($key === 'new_tab' && $value === 'on') {
+                Cookie::queue($key, 'on', 0, '/', null, false, false);
+            }else{
+                foreach($langFile->foki as $fokus => $fokusInfo) {
+                    if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                        Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    } elseif(strpos($key, $fokus . '_setting_s') === 0) {
+                        foreach($langFile->filter->{'parameter-filter'}->safesearch->values as $safesearch => $sInfo){
+                            if($value === $safesearch) {
+                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                            }
+                        }
+                    }elseif(strpos($key, $fokus . '_setting_f') === 0) {
+                        foreach($langFile->filter->{'parameter-filter'}->freshness->values as $freshness => $fInfo){
+                            if($value === $freshness) {
+                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                            }
+                        }
+                    }elseif(strpos($key, $fokus . '_setting_m') === 0) {
+                        foreach($langFile->filter->{'parameter-filter'}->language->values as $language => $lInfo){
+                            if($value === $language) {
+                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                            }
+                        }
+                    }else{
+                        $sumalist = array_keys($this->getSumas($fokus));
+                        foreach($sumalist as $suma) {
+                            if(strpos($key, $fokus . '_engine_' . $suma) === 0) {
+                                Cookie::queue($key, 'off', 0, $cookiePath, null, false, false);
+                            }
+                        }
+                    }
 
-        $cookies = $request->all();
+                }
+            }
+        }
+        
+        
+        
+        /* this works for certain cookies
         foreach($cookies as $key => $value){
-            $blpage = false;
+            $found = false;
             foreach($foki as $fokus){
                 if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
                     Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    $blpage = true;
+                    $found = true;
                 }
             }
-            if($blpage){
+            if($found){
                 continue;
             }
             if($key === 'key') {
@@ -430,19 +478,18 @@ class SettingsController extends Controller
                     Cookie::queue($key, $value, 0, '/', null, false, false);
                 }
             }
-            if($key === 'dark_mode'){
+            elseif($key === 'dark_mode'){
                 Cookie::queue($key, $value, 0, '/', null, false, false);
             }
-            if($key === 'new_tab' && $value === 'on') {
+            elseif($key === 'new_tab' && $value === 'on') {
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
             }
             foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
                 if($key === $suma && $value === $filter){
                     Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
                 }
-
             }
-        }
+        }*/
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }

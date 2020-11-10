@@ -24,7 +24,7 @@
             <li>
                 @lang ('key.li1')
                 <div class="copyLink">
-                    <input id="loadSettings" class="loadSettings" type="text" value="{{route('loadSettings', ["key" => $cookie])}}">
+                    <input id="loadSettings" class="loadSettings" type="text" value="{{$cookieLink}}">
                     <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
                 </div>
             </li>
@@ -42,7 +42,7 @@
         <div id="form-wrapper">
             <form method="post">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
-                <input type="text" name="key" value="{{$cookie === 'enter_key_here' ? '' : $cookie}}" placeholder="@lang('key.placeholder1')" autofocus>
+                <input type="text" name="keyToSet" value="{{$cookie === 'enter_key_here' ? '' : $cookie}}" placeholder="@lang('key.placeholder1')" autofocus>
                 <button type="submit" class="btn btn-success">OK</button>
             </form>
             @if($cookie !== 'enter_key_here')

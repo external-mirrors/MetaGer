@@ -208,10 +208,10 @@ class MetaGer
                     break;
                 
                 case 'api':
-                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
+                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'atom10':
-                    return view('resultpages.metager3resultsatom10',['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
+                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
@@ -425,7 +425,7 @@ class MetaGer
         if ($publicKey === false) {
             return true;
         }
-        $tldList = "";
+        $linkList = "";
         foreach ($results as $result) {
             if (!$result->new) {
                 continue;
@@ -434,18 +434,27 @@ class MetaGer
             if (strpos($link, "http") !== 0) {
                 $link = "http://" . $link;
             }
-            $tldList .= parse_url($link, PHP_URL_HOST) . ",";
+            $linkList .= $link . ",";
             $result->tld = parse_url($link, PHP_URL_HOST);
         }
-        $tldList = rtrim($tldList, ",");
+
+        $linkList = rtrim($linkList, ",");
 
         # Hashwert
-        $hash = md5("meta" . $publicKey . $tldList . "GER");
+        $hash = md5($linkList . $privateKey);
 
         # Query
         $query = $this->q;
 
-        $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
+        $link = "https://xf.gdprvalidate.de/v4/check";
+
+        $postfields = [
+            "key" => $publicKey,
+            "panel" => "ZMkW9eSKJS",
+            "member" => "338b9Bnm",
+            "signature" => $hash,
+            "links" => $linkList
+        ];
 
         // Submit fetch job to worker
         $mission = [
@@ -454,9 +463,15 @@ class MetaGer
             "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
             "username" => null,
             "password" => null,
-            "headers" => null,
+            "headers" => [
+                "Content-Type" => "application/x-www-form-urlencoded"
+            ],
             "cacheDuration" => 60,
             "name" => "Adgoal",
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => \http_build_query($postfields)
+            ]
         ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
@@ -474,7 +489,7 @@ class MetaGer
         if ($hash === true) {
             return true;
         }
-
+        
         if ($waitForResult) {
             while (microtime(true) - $startTime < 5) {
                 $answer = Cache::get($hash);
@@ -490,10 +505,9 @@ class MetaGer
         if ($answer === null) {
             return false;
         }
+        
         try {
-            $answer = json_decode($answer);
-            $publicKey = getenv('adgoal_public');
-            $privateKey = getenv('adgoal_private');
+            $answer = json_decode($answer, true);
 
             # Nun müssen wir nur noch die Links für die Advertiser ändern:
             foreach ($results as $result) {
@@ -501,28 +515,22 @@ class MetaGer
                 $result->tld = parse_url($link, PHP_URL_HOST);
             }
 
-            foreach ($answer as $el) {
-                $hoster = $el[0];
-                $hash = $el[1];
+            foreach ($answer as $partnershop) {
+                $targetUrl = parse_url($partnershop["click_url"], PHP_URL_QUERY);
+                parse_str($targetUrl, $params);
+                $targetUrl = $params["url"];
 
                 foreach ($results as $result) {
-                    if ($hoster === $result->tld && !$result->partnershop) {
-                        # Hier ist ein Advertiser:
-                        # Das Logo hinzufügen:
+                    if ($result->link === $targetUrl && !$result->partnershop) {
+                        # Ein Advertiser gefunden
                         if ($result->image !== "") {
-                            $result->logo = "https://img.smartredirect.de/logos_v2/60x30/" . urlencode($hash) . ".gif";
+                            $result->logo = $partnershop["logo"];
                         } else {
-                            $result->image = "https://img.smartredirect.de/logos_v2/120x60/" . urlencode($hash) . ".gif";
+                            $result->image = $partnershop["logo"];
                         }
 
                         # Den Link hinzufügen:
-                        $targetUrl = $result->link;
-                        # Query
-                        $query = $this->q;
-
-                        $gateHash = md5($targetUrl . $privateKey);
-                        $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
-                        $result->link = $newLink;
+                        $result->link = $partnershop["click_url"];
                         $result->partnershop = true;
                         $result->changed = true;
                     }

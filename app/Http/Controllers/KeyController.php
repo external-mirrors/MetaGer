@@ -48,8 +48,9 @@ class KeyController extends Controller
                 $key = $cookie;
             }elseif(!empty($key)){
                 $key = $request->input('key');
+                Cookie::queue('key', $key, 0, '/', null, false, false);
             }
-            
+
             return view('key')
             ->with('title', trans('titles.key'))
             ->with('cookie', $key);

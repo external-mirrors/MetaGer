@@ -24,7 +24,7 @@
             <li>
                 @lang ('key.li1')
                 <div class="copyLink">
-                    <input id="loadSettings" class="loadSettings" type="text" value="{{route('loadSettings', ["key" => empty(Cookie::get('key')) ? "enter_key_here" : Cookie::get('key')])}}">
+                    <input id="loadSettings" class="loadSettings" type="text" value="{{route('loadSettings', ["key" => $cookie])}}">
                     <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
                 </div>
             </li>
@@ -32,7 +32,7 @@
             <li>
                 @lang('key.li2')
                 <div class="copyLink">
-                    <input id="searchString" class="loadSettings" type="text" value="{{route("resultpage", ["key" => empty(Cookie::get('key')) ? "enter_key_here" : Cookie::get('key')]) . "&eingabe=%s"}}">
+                    <input id="searchString" class="loadSettings" type="text" value="{{route("resultpage", ["key" => $cookie]) . "&eingabe=%s"}}">
                     <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('searchString');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
                 </div>
             </li>
@@ -42,10 +42,10 @@
         <div id="form-wrapper">
             <form method="post">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
-                <input type="text" name="key" value="{{Cookie::get('key')}}" placeholder="@lang('key.placeholder1')" autofocus>
+                <input type="text" name="key" value="{{$cookie === 'enter_key_here' ? '' : $cookie}}" placeholder="@lang('key.placeholder1')" autofocus>
                 <button type="submit" class="btn btn-success">OK</button>
             </form>
-            @if(Cookie::get('key') !== NULL)
+            @if($cookie !== 'enter_key_here')
             <form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@removeKey', ['redirUrl' => url()->full()])) }}">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
                 <button type="submit" class="btn btn-default">@lang('key.removeKey')</button>

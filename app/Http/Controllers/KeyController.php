@@ -12,9 +12,20 @@ class KeyController extends Controller
     {
         $redirUrl = $request->input('redirUrl', "");
 
-        return view('key')
-            ->with('title', trans('titles.key'));
+        $cookie = Cookie::get('key');
+        $key = $request->input('key', '');
 
+        if(empty($key) && empty($cookie)){
+            $key = 'enter_key_here';
+        }elseif(empty($key) && !empty($cookie)){
+            $key = $cookie;
+        }elseif(!empty($key)){
+            $key = $request->input('key');
+        }
+
+        return view('key')
+            ->with('title', trans('titles.key'))
+            ->with('cookie', $key);
     }
 
     public function setKey(Request $request)
@@ -29,12 +40,24 @@ class KeyController extends Controller
                 $host = $request->header("Host", "");
             }
 
-            Cookie::queue('key', $key, 525600, '/', null, false, false);
-            return redirect($redirUrl);
+            $cookie = Cookie::get('key');
+
+            if(empty($key) && empty($cookie)){
+                $key = 'enter_key_here';
+            }elseif(empty($key) && !empty($cookie)){
+                $key = $cookie;
+            }elseif(!empty($key)){
+                $key = $request->input('key');
+            }
+            
+            return view('key')
+            ->with('title', trans('titles.key'))
+            ->with('cookie', $key);
         } else {
             return view('key')
                 ->with('title', trans('titles.key'))
-                ->with('keyValid', false);
+                ->with('keyValid', false)
+                ->with('cookie', 'enter_key_here');
         }
     }
 

@@ -423,23 +423,25 @@ class SettingsController extends Controller
             }
             elseif($key === 'new_tab' && $value === 'on') {
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
-            }else{
+            } else {
                 foreach($langFile->foki as $fokus => $fokusInfo) {
-                    if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                    if($key === $fokus.'_setting_zitate' && $value === 'off'){
                         Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    } elseif(strpos($key, $fokus . '_setting_s') === 0) {
+                    } elseif(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                        Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    } elseif($key === $fokus . '_setting_s') {
                         foreach($langFile->filter->{'parameter-filter'}->safesearch->values as $safesearch => $sInfo){
                             if($value === $safesearch) {
                                 Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
                             }
                         }
-                    }elseif(strpos($key, $fokus . '_setting_f') === 0) {
+                    }elseif($key === $fokus . '_setting_f') {
                         foreach($langFile->filter->{'parameter-filter'}->freshness->values as $freshness => $fInfo){
                             if($value === $freshness) {
                                 Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
                             }
                         }
-                    }elseif(strpos($key, $fokus . '_setting_m') === 0) {
+                    }elseif($key === $fokus . '_setting_m') {
                         foreach($langFile->filter->{'parameter-filter'}->language->values as $language => $lInfo){
                             if($value === $language) {
                                 Cookie::queue($key, $value, 0, $cookiePath, null, false, false);

@@ -457,40 +457,6 @@ class SettingsController extends Controller
                 }
             }
         }
-        
-        
-        
-        /* this works for certain cookies
-        foreach($cookies as $key => $value){
-            $found = false;
-            foreach($foki as $fokus){
-                if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
-                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    $found = true;
-                }
-            }
-            if($found){
-                continue;
-            }
-            if($key === 'key') {
-                $memberKey = new Key($value);
-                if($memberKey->getStatus()){
-                    Cookie::queue($key, $value, 0, '/', null, false, false);
-                }
-            }
-            elseif($key === 'dark_mode'){
-                Cookie::queue($key, $value, 0, '/', null, false, false);
-            }
-            elseif($key === 'new_tab' && $value === 'on') {
-                Cookie::queue($key, 'on', 0, '/', null, false, false);
-            }
-            foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
-                if($key === $suma && $value === $filter){
-                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                }
-            }
-        }*/
-
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
 }

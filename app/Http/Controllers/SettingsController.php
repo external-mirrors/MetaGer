@@ -425,29 +425,17 @@ class SettingsController extends Controller
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
             } else {
                 foreach($langFile->foki as $fokus => $fokusInfo) {
-                    if($key === $fokus.'_setting_zitate' && $value === 'off'){
+                    if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
                         Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    } elseif(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
-                        Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    } elseif($key === $fokus . '_setting_s') {
-                        foreach($langFile->filter->{'parameter-filter'}->safesearch->values as $safesearch => $sInfo){
-                            if($value === $safesearch) {
-                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    } elseif(strpos($key, $fokus.'_setting_') === 0) {
+                        foreach($langFile->filter->{'parameter-filter'} as $parameter) {
+                            foreach($parameter->values as $p => $v) {
+                                if($key === $fokus.'_setting_' . $parameter->{'get-parameter'} && $value === $p){
+                                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                                }
                             }
                         }
-                    }elseif($key === $fokus . '_setting_f') {
-                        foreach($langFile->filter->{'parameter-filter'}->freshness->values as $freshness => $fInfo){
-                            if($value === $freshness) {
-                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                            }
-                        }
-                    }elseif($key === $fokus . '_setting_m') {
-                        foreach($langFile->filter->{'parameter-filter'}->language->values as $language => $lInfo){
-                            if($value === $language) {
-                                Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                            }
-                        }
-                    }else{
+                    } else {
                         $sumalist = array_keys($this->getSumas($fokus));
                         foreach($sumalist as $suma) {
                             if(strpos($key, $fokus . '_engine_' . $suma) === 0) {

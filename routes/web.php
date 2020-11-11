@@ -191,7 +191,7 @@ Route::group(
                 Route::post('queryregexp', 'AdminSpamController@queryregexp');
                 Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
             });
-            Route::get('service-desk', 'ServiceDesk@webhook');
+            Route::post('service-desk', 'ServiceDesk@webhook');
         });
 
         Route::get('settings', function () {

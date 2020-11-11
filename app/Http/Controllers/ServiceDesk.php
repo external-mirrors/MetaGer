@@ -13,80 +13,34 @@ class ServiceDesk extends Controller
 
     public function webhook(Request $request)
     {
-        $token = $request->header("X-Gitlab-Token HTTP");
+        // Validate Token match
+        $token = $request->header("X-Gitlab-Token");
         if ($token !== env("gitlab_webhook_token", "")) {
             Log::info("Webhook Action not taken. Token mismatch: " . $token);
             return;
         }
         $this->accessToken = env("gitlab_access_token", "");
-        $issues = [];
 
-        $getParameter = [
-            "confidential" => "true",
-            "author_username" => "support-bot",
-            "state" => "closed"
-        ];
-        // Gather all relevant issues
-        // Issue:
-        // - closed
-        // - from support-bot
-        // - confidential
-        // - updated after it was closed
-        $currentUrl = $this->apiUrl . "/2/issues?" . http_build_query($getParameter);
-        while (true) {
-            if ($currentUrl === null) {
-                break;
+        $event = json_decode($request->getContent(), true);
+
+        if ($event["user"]["username"] === "support-bot" && $event["issue"]["author_id"] === 301 && $event["issue"]["state"] === "closed") {
+            $closedAt = new Carbon($event["issue"]["closed_at"]);
+            $createdAt = new Carbon($event["object_attributes"]["created_at"]);
+            if ($createdAt->isAfter($closedAt)) {
+                // Reopen the issues
+                $getParameter = [
+                    "state_event" => "reopen"
+                ];
+                $url = $this->apiUrl . "/2/issues/" . $event["issue"]["iid"] . "?" . http_build_query($getParameter);
+
+                $response = file_get_contents($url, false, stream_context_create([
+                    "http" => [
+                        "method" => "PUT",
+                        "header" => "Authorization: Bearer " . $this->accessToken . "\r\n"
+                        ]
+                ]));
+                Log::info("reopened issue " . $event["issue"]["iid"]);
             }
-            $response = file_get_contents($currentUrl, false, stream_context_create([
-                "http" => [
-                    "header" => "Authorization: Bearer " . $this->accessToken . "\r\n"
-                    ]
-            ]));
-
-            $currentUrl = null;
-            $response = \json_decode($response, true);
-            if ($response === null) {
-                break;
-            }
-
-            foreach ($response as $issue) {
-                $updatedAt = new Carbon($issue["updated_at"]);
-                $closedAt = new Carbon($issue["closed_at"]);
-                if ($updatedAt->isAfter($closedAt)) {
-                    $issues[] = $issue;
-                }
-            }
-
-            // Check if there is a next page
-            foreach ($http_response_header as $header) {
-                if (stripos($header, "Link") === 0) {
-                    if (preg_match("/<([^>]+)>; rel=\"next\"/", $header, $matches) && !empty($matches[1])) {
-                        $currentUrl = $matches[1];
-                        break;
-                    }
-                    $matches = null;
-                }
-            }
-        }
-
-        if (sizeof($issues) === 0) {
-            Log::info("Webhook: No closed and updated issues found");
-        }
-
-        foreach ($issues as $issue) {
-            // Reopen the issues
-            $getParameter = [
-                "state_event" => "reopen"
-            ];
-            $url = $this->apiUrl . "/2/issues/" . $issue["iid"] . "?" . http_build_query($getParameter);
-
-            $response = file_get_contents($url, false, stream_context_create([
-                "http" => [
-                    "method" => "PUT",
-                    "header" => "Authorization: Bearer " . $this->accessToken . "\r\n"
-                    ]
-            ]));
-            Log::info("reopened issue " . $issue["iid"]);
         }
 
         return response("");

@@ -125,6 +125,7 @@
     
         <div class="card-light">
             <h2>Weitere Einstellungen</h2>
+            <p>@lang('settings.hint')</p>
             <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
                 <input type="hidden" name="fokus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
@@ -135,7 +136,6 @@
                         <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
                         <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
                     </select>
-                    <small>@lang('settings.hint')</small>
                 </div>
                 <div class="form-group">
                     <label for="nt">@lang('settings.newTab')</label>
@@ -143,7 +143,6 @@
                         <option value="off" {{ !Cookie::has('new_tab') ? "disabled selected" : "" }}>@lang('settings.off')</option>
                         <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
                     </select>
-                    <small>@lang('settings.hint')</small>
                 </div>
                 @if(LaravelLocalization::getCurrentLocale() === "de")
                 <div class="form-group">

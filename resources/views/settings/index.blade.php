@@ -149,8 +149,8 @@
                 <div class="form-group">
                     <label for="zitate">Zitate</label>
                     <select name="zitate" id="zitate" class="form-control">
-                        <option value="on" @if(Cookie::get($fokus . "_setting_zitate") === null)disabled selected @endif>Anzeigen</option>
-                        <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+                        <option value="on" @if(Cookie::get("zitate") === null)disabled selected @endif>Anzeigen</option>
+                        <option value="off" {{ Cookie::get("zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
                     </select>
                 </div>
                 @endif

@@ -57,7 +57,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key') {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate') {
                 $settingActive = true;
             }
         }
@@ -212,16 +212,12 @@ class SettingsController extends Controller
         // Currently only the setting for quotes is supported
 
         $quotes = $request->input('zitate', '');
-        if(!empty($quotes)){
-            if($quotes === "off"){
-                $path = \Request::path();
-                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
-            }elseif($quotes === "on") {
-                $path = \Request::path();
-                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
-            }
+        if(!empty($quotes)) {
+        	if($quotes === "off") {
+        		Cookie::queue('zitate', 'off', 0, '/', null, false, false);
+        	}elseif($quotes === "on") {
+        		Cookie::queue('zitate', '', 0, '/', null, false, false);
+        	}
         }
 
         $darkmode = $request->input('dm');
@@ -271,6 +267,9 @@ class SettingsController extends Controller
             if($key === 'key'){
                 Cookie::queue($key, "", 0, '/', null, false, false);
             }
+            if($key === 'zitate'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
         }
         $this->clearBlacklist($request);
 
@@ -299,7 +298,9 @@ class SettingsController extends Controller
                 Cookie::queue($key, "", 0, '/', null, false, false);
         } elseif($key === 'key') {
             Cookie::queue($key, "", 0, '/', null, false, false);
-        }else{
+        } elseif($key === 'zitate') {
+            Cookie::queue($key, "", 0, '/', null, false, false);
+        } else{
             Cookie::queue($key, "", 0, $cookiePath, null, false, false);
         }
         return redirect($request->input('url', 'https://metager.de'));
@@ -315,7 +316,11 @@ class SettingsController extends Controller
             if($key === 'dark_mode'){
                 Cookie::queue($key, "", 0, '/', null, false, false);    
             } elseif($key === 'new_tab') {
-                    Cookie::queue($key, "", 0, '/', null, false, false);    
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            } elseif($key === 'key') {
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            } elseif($key === 'zitate') {
+                Cookie::queue($key, "", 0, '/', null, false, false);    
             } else {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
@@ -423,6 +428,8 @@ class SettingsController extends Controller
             }
             elseif($key === 'new_tab' && $value === 'on') {
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
+            }elseif($key === 'zitate' && $value === 'off'){
+                Cookie::queue($key, 'off', 0, '/', null, false, false);
             } else {
                 foreach($langFile->foki as $fokus => $fokusInfo) {
                     if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){

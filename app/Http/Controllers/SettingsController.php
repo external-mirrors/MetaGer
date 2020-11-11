@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Cookie;
 use LaravelLocalization;
 use \App\MetaGer;
+use \App\Models\Key;
 use \Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -56,7 +57,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key') {
+            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate') {
                 $settingActive = true;
             }
         }
@@ -211,16 +212,12 @@ class SettingsController extends Controller
         // Currently only the setting for quotes is supported
 
         $quotes = $request->input('zitate', '');
-        if(!empty($quotes)){
-            if($quotes === "off"){
-                $path = \Request::path();
-                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($fokus . "_setting_zitate", "off", 0, $cookiePath, null, false, false);
-            }elseif($quotes === "on") {
-                $path = \Request::path();
-                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($fokus . "_setting_zitate", "", 0, $cookiePath, null, false, false);
-            }
+        if(!empty($quotes)) {
+        	if($quotes === "off") {
+        		Cookie::queue('zitate', 'off', 0, '/', null, false, false);
+        	}elseif($quotes === "on") {
+        		Cookie::queue('zitate', '', 0, '/', null, false, false);
+        	}
         }
 
         $darkmode = $request->input('dm');
@@ -270,6 +267,9 @@ class SettingsController extends Controller
             if($key === 'key'){
                 Cookie::queue($key, "", 0, '/', null, false, false);
             }
+            if($key === 'zitate'){
+                Cookie::queue($key, "", 0, '/', null, false, false);
+            }
         }
         $this->clearBlacklist($request);
 
@@ -298,7 +298,9 @@ class SettingsController extends Controller
                 Cookie::queue($key, "", 0, '/', null, false, false);
         } elseif($key === 'key') {
             Cookie::queue($key, "", 0, '/', null, false, false);
-        }else{
+        } elseif($key === 'zitate') {
+            Cookie::queue($key, "", 0, '/', null, false, false);
+        } else{
             Cookie::queue($key, "", 0, $cookiePath, null, false, false);
         }
         return redirect($request->input('url', 'https://metager.de'));
@@ -314,7 +316,11 @@ class SettingsController extends Controller
             if($key === 'dark_mode'){
                 Cookie::queue($key, "", 0, '/', null, false, false);    
             } elseif($key === 'new_tab') {
-                    Cookie::queue($key, "", 0, '/', null, false, false);    
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            } elseif($key === 'key') {
+                Cookie::queue($key, "", 0, '/', null, false, false);    
+            } elseif($key === 'zitate') {
+                Cookie::queue($key, "", 0, '/', null, false, false);    
             } else {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
             }
@@ -404,39 +410,50 @@ class SettingsController extends Controller
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
-        $sumaFile = MetaGer::getLanguageFile();
-        $sumaFile = json_decode(file_get_contents($sumaFile), true);
-        
-        $foki = array_keys($sumaFile['foki']);
+        $langFile = MetaGer::getLanguageFile();
+        $langFile = json_decode(file_get_contents($langFile));
+
         $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
 
-
-        $cookies = $request->all();
-        foreach($cookies as $key => $value){
-            $blpage = false;
-            foreach($foki as $fokus){
-                if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
-                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                    $blpage = true;
+        $settings = $request->all();
+        foreach($settings as $key => $value) {
+            if($key === 'key') {
+                $memberKey = new Key($value);
+                if($memberKey->getStatus()){
+                    Cookie::queue($key, $value, 0, '/', null, false, false);
                 }
             }
-            if($blpage){
-                continue;
-            }
-            if($key === 'dark_mode'){
+            elseif($key === 'dark_mode' && ($value === '1' || $value === '2')){
                 Cookie::queue($key, $value, 0, '/', null, false, false);
             }
-            if($key === 'new_tab' && $value === 'on') {
+            elseif($key === 'new_tab' && $value === 'on') {
                 Cookie::queue($key, 'on', 0, '/', null, false, false);
-            }
-            foreach($sumaFile['filter']['parameter-filter'] as $suma => $filter){
-                if($key === $suma && $value === $filter){
-                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
-                }
+            }elseif($key === 'zitate' && $value === 'off'){
+                Cookie::queue($key, 'off', 0, '/', null, false, false);
+            } else {
+                foreach($langFile->foki as $fokus => $fokusInfo) {
+                    if(strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1){
+                        Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                    } elseif(strpos($key, $fokus.'_setting_') === 0) {
+                        foreach($langFile->filter->{'parameter-filter'} as $parameter) {
+                            foreach($parameter->values as $p => $v) {
+                                if($key === $fokus.'_setting_' . $parameter->{'get-parameter'} && $value === $p){
+                                    Cookie::queue($key, $value, 0, $cookiePath, null, false, false);
+                                }
+                            }
+                        }
+                    } else {
+                        $sumalist = array_keys($this->getSumas($fokus));
+                        foreach($sumalist as $suma) {
+                            if(strpos($key, $fokus . '_engine_' . $suma) === 0) {
+                                Cookie::queue($key, 'off', 0, $cookiePath, null, false, false);
+                            }
+                        }
+                    }
 
+                }
             }
         }
-
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
     }
 }

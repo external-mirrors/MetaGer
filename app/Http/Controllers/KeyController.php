@@ -5,36 +5,58 @@ namespace App\Http\Controllers;
 use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
+use \App\Models\Key;
 
 class KeyController extends Controller
 {
     public function index(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
+        $cookie = Cookie::get('key');
+        $key = $request->input('keyToSet', '');
 
+        if(empty($key) && empty($cookie)){
+            $key = 'enter_key_here';
+        }elseif(empty($key) && !empty($cookie)){
+            $key = $cookie;
+        }elseif(!empty($key)){
+            $key = $request->input('key');
+        }
+
+        $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
         return view('key')
-            ->with('title', trans('titles.key'));
-
+            ->with('title', trans('titles.key'))
+            ->with('cookie', $key)
+            ->with('cookieLink', $cookieLink);
     }
 
     public function setKey(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
-        $key = $request->input('key', '');
+        $keyToSet = $request->input('keyToSet');
+        $key = new Key ($request->input('keyToSet', ''));
 
-        if (app('App\Models\Key')->getStatus()) {
+        if ($key->getStatus()) {
             # Valid Key
             $host = $request->header("X_Forwarded_Host", "");
             if (empty($host)) {
                 $host = $request->header("Host", "");
             }
-
-            Cookie::queue('key', $key, 525600, '/', null, false, false);
-            return redirect($redirUrl);
-        } else {
+            Cookie::queue('key', $keyToSet, 0, '/', null, false, false);
+            $settings = Cookie::get();
+            $settings['key'] = $keyToSet;
+            $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $settings));
             return view('key')
                 ->with('title', trans('titles.key'))
-                ->with('keyValid', false);
+                ->with('cookie', $keyToSet)
+                ->with('cookieLink', $cookieLink);
+        } else {
+            $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
+            return view('key')
+                ->with('title', trans('titles.key'))
+                ->with('keyValid', false)
+                ->with('cookie', 'enter_key_here')
+                ->with('cookieLink', $cookieLink);
         }
     }
 

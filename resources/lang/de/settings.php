@@ -25,7 +25,7 @@ return [
     'add' => 'Hinzufügen',
     'clear' => 'Blacklist leeren',
     'copy' => 'Kopieren',
-    'hint' => 'Diese Einstellung betrifft alle Fokusse und Unterseiten übergreifend!',
+    'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
 
     'darkmode' => 'Dunklen Modus umschalten',
     'system' => 'Systemstandard',

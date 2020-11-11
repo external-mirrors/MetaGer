@@ -1092,12 +1092,12 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale("de") || (\Cookie::has($this->getFokus() . '_setting_zitate') && \Cookie::get($this->getFokus() . '_setting_zitate') === "off")) {
-            $this->sprueche = "off";
+        if (!App::isLocale('de') || (\Cookie::has('zitate') && \Cookie::get('zitate') === 'off')) {
+            $this->sprueche = 'off';
         } else {
-            $this->sprueche = "on";
+            $this->sprueche = 'on';
         }
-        if ($request->filled("zitate") && $request->input('zitate') === "on" || $request->input('zitate') === "off") {
+        if ($request->filled('zitate') && $request->input('zitate') === 'on' || $request->input('zitate') === 'off') {
             $this->sprueche = $request->input('quotes');
         }
 

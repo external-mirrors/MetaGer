@@ -20,7 +20,7 @@ class Bing extends Searchengine
             $acceptLanguage = $metager->request->headers->all()['accept-language'][0];
             foreach($langFile->filter->{'parameter-filter'}->language->sumas->bing->values as $key => $value){
                 if(strpos($acceptLanguage, $value) === 0)
-                $this->engine->{"get-parameter"}->mkt =  $acceptLanguage;
+                $this->engine->{"get-parameter"}->mkt =  $value;
             }
         }
     }

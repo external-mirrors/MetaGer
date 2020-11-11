@@ -13,5 +13,7 @@
         'default-search-v80.2' => 'Wählen Sie den Menüpunkt "Einstellungen".',
         'default-search-v80.3' => 'In dem dann erscheinenden Menü wählen Sie in der Kategorie "Allgemein" den Menüpunkt "Suchen".',
         'default-search-v80.4' => 'Tippen Sie auf "+ Suchmaschine hinzufügen".',
-        'default-search-v80.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein. Bestätigen Sie mit "<i class="fas fa-check"></i>" in der rechten oberen Ecke.',
+        'default-search-v80.5' => 'Wählen Sie "Andere" aus und tragen darunter den Namen (MetaGer) und den Such-String ein.',
+        'default-search-v80.6' => 'Bestätigen Sie mit "<i class="fas fa-check"></i>" in der rechten oberen Ecke.',
+        'default-search-v80.7' => 'Tippen Sie in der dann erscheinenden Liste auf MetaGer.',
     ];

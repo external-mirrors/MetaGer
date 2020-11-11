@@ -423,7 +423,7 @@ class SettingsController extends Controller
                     Cookie::queue($key, $value, 0, '/', null, false, false);
                 }
             }
-            elseif($key === 'dark_mode'){
+            elseif($key === 'dark_mode' && ($value === '1' || $value === '2')){
                 Cookie::queue($key, $value, 0, '/', null, false, false);
             }
             elseif($key === 'new_tab' && $value === 'on') {

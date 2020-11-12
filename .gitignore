@@ -6,7 +6,6 @@ Homestead.json
 Homestead.yaml
 .env
 .orig
-.vscode
 langfiles.zip
 npm-debug.log
 # The Files created by Webpack in the build process

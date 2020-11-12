@@ -7,7 +7,7 @@ return [
     'p3' => 'If you look at the cookie there is "key = xxxx" in there. We do not use it for tracking purposes. It is also never stored or logged by us in any way.',
     'p4' => 'Important: In order to use this function, you must have allowed cookies in your browser. The setting will remain saved as long as your browser saves cookies.',
     'p5' => 'In order to be able to save the key beyond that, you have the following options:',
-    'li1' => 'Set up <code>:url</code> as the start page in your browser.',
+    'li1' => 'Set the following URL as start page/bookmark in your browser:',
     'li2' => 'If you are using MetaGer as the default search engine, you can delete the entry after entering the key and add it again. If you have to enter a "search string" in your browser, you can use <code>:url</code>.',
     'placeholder1' => 'Enter key ...',
     'removeKey' => 'Remove current key',

@@ -25,6 +25,12 @@
 			{{ trans('plugin-page.head.0') }}
 		@endif
 	</h1>
+	<div class="card-heavy">
+		<h3>{{ trans('plugin-page.search-engine.1') }}</h3>
+		<ul>
+			<p>{{ trans('plugin-page.search-engine.2') }}</p>
+		</ul>
+	</div>
 	@if ($agent->isDesktop())
 		@if ($browser === 'Firefox' || $browser === 'Mozilla')
 			@if (version_compare($agent->version($browser), '61.', '>='))

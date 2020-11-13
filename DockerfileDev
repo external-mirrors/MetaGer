@@ -32,7 +32,7 @@ WORKDIR /html
 RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /etc/php7/php-fpm.conf && \
     sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php7/php-fpm.conf && \
     sed -i 's/listen = 127.0.0.1:9000/listen = 9000/g' /etc/php7/php-fpm.d/www.conf && \
-    sed -i 's/;request_terminate_timeout = 0/request_terminate_timeout = 30/g' /etc/php7/php-fpm.d/www.conf && \
+    sed -i 's/;request_terminate_timeout = 0/request_terminate_timeout = 900/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;request_terminate_timeout_track_finished = no/request_terminate_timeout_track_finished = yes/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;decorate_workers_output = no/decorate_workers_output = no/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php7/php-fpm.d/www.conf && \
@@ -46,10 +46,11 @@ RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /et
     sed -i 's/group = www-data/group = nginx/g' /etc/php7/php-fpm.d/www.conf && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php7/php.ini && \
     sed -i 's/expose_php = On/expose_php = Off/g' /etc/php7/php.ini && \
-    echo "zend_extension=/usr/lib/php7/modules/xdebug.so" >> /etc/php7/php.ini && \
-    echo "[XDebug]" >> /etc/php7/php.ini && \
-    echo "xdebug.remote_enable = 1" >> /etc/php7/php.ini && \
-    echo "xdebug.remote_autostart = 1" >> /etc/php7/php.ini && \
+    sed -i 's/;zend_extension=xdebug.so/zend_extension=xdebug.so/g' /etc/php7/conf.d/xdebug.ini && \
+    echo "xdebug.remote_enable = 1" >> /etc/php7/conf.d/xdebug.ini && \
+    echo "xdebug.remote_autostart = 1" >> /etc/php7/conf.d/xdebug.ini && \
+    echo "xdebug.remote_connect_back = 1" >> /etc/php7/conf.d/xdebug.ini && \
+    echo "xdebug.idekey=VSCODE" >> /etc/php7/conf.d/xdebug.ini && \
     echo "daemonize yes" >> /etc/redis.conf && \
     ln -s /dev/null /var/log/nginx/access.log && \
     ln -s /dev/stdout /var/log/nginx/error.log && \

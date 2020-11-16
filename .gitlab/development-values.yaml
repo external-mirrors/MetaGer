@@ -27,6 +27,10 @@ resourcesFetcher:
     cpu: 500m
     memory: 100M
   limits:
+resources:
+  requests:
+    cpu: 500m
+    memory: 500M
 podDisruptionBudget:
   enabled: true
   minAvailable:

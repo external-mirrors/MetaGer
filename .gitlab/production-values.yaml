@@ -39,6 +39,10 @@ resourcesFetcher:
     cpu: 500m
     memory: 100M
   limits:
+resources:
+  requests:
+    cpu: 500m
+    memory: 500M
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod

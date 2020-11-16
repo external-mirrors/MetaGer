@@ -219,7 +219,7 @@ Route::group(
                 $redis->expire($key, 30);
             });
 
-            return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+            return response("", 200)->header("Content-Type", "application/js");
         });
 
         Route::get('meta/picture', 'Pictureproxy@get');

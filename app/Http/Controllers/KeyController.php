@@ -15,11 +15,11 @@ class KeyController extends Controller
         $cookie = Cookie::get('key');
         $key = $request->input('keyToSet', '');
 
-        if(empty($key) && empty($cookie)){
+        if (empty($key) && empty($cookie)) {
             $key = 'enter_key_here';
-        }elseif(empty($key) && !empty($cookie)){
+        } elseif (empty($key) && !empty($cookie)) {
             $key = $cookie;
-        }elseif(!empty($key)){
+        } elseif (!empty($key)) {
             $key = $request->input('key');
         }
 
@@ -34,7 +34,7 @@ class KeyController extends Controller
     {
         $redirUrl = $request->input('redirUrl', "");
         $keyToSet = $request->input('keyToSet');
-        $key = new Key ($request->input('keyToSet', ''));
+        $key = new Key($request->input('keyToSet', ''));
 
         if ($key->getStatus()) {
             # Valid Key
@@ -42,7 +42,7 @@ class KeyController extends Controller
             if (empty($host)) {
                 $host = $request->header("Host", "");
             }
-            Cookie::queue('key', $keyToSet, 0, '/', null, false, false);
+            Cookie::queue('key', $keyToSet, 525600, '/', null, false, false);
             $settings = Cookie::get();
             $settings['key'] = $keyToSet;
             $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $settings));
@@ -63,7 +63,7 @@ class KeyController extends Controller
     public function removeKey(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
-        Cookie::queue('key', '', 0, '/', null, false, false);
+        Cookie::queue(Cookie::forget('key'));
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
         return redirect($url);
     }

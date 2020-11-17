@@ -76,3 +76,14 @@ services:
     volumes:
       - .:/html
     command: "php artisan dusk"
+  dummy-phpfpm:
+    restart: on-failure
+    image: registry.metager.de/open-source/dummy-engine/master
+    working_dir: /html
+  dummy-nginx:
+    depends_on:
+      - "dummy-phpfpm"
+    restart: on-failure
+    image: registry.metager.de/open-source/dummy-engine/master
+    working_dir: /html
+    command: nginx

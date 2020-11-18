@@ -46,7 +46,7 @@ prepare_node:
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
   before_script:
     - npm install -g npm-cache
-    - npm-cache install npm --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache"
+    - npm-cache install --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache" npm
   script:
     - npm run prod
   artifacts:

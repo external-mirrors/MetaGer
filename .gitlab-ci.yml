@@ -42,6 +42,8 @@ build:
 prepare_node:
   stage: prepare
   image: node:10
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
   before_script:
     - npm install
   script:
@@ -53,9 +55,9 @@ prepare_node:
       - public/mix-manifest.json
   cache:
     # Cache per Branch
-    key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    key: "metager-${CI_JOB_NAME}"
     paths:
-      - node_modules
+      - .npm
   only:
     - branches
     - tags

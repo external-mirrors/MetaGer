@@ -63,6 +63,8 @@ prepare_node:
 prepare_composer:
   stage: prepare
   image: registry.metager.de/open-source/composer/master
+  before_script:
+    - ln -s $(pwd)/.composer $HOME/.composer
   script:
     - composer install --no-dev
   artifacts:
@@ -71,8 +73,7 @@ prepare_composer:
   cache:
     key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
     paths:
-      - vendor
-      - /root/.composer
+      - .composer
 
 review:
   variables:

@@ -86,4 +86,4 @@ services:
     restart: on-failure
     image: registry.metager.de/open-source/dummy-engine/master
     working_dir: /html
-    command: nginx
+    command: sh -c "sed -i 's/fastcgi_pass localhost:9000;/fastcgi_pass dummy-phpfpm:9000;/g' /etc/nginx/conf.d/default.conf && nginx"

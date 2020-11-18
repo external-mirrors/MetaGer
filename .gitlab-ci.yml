@@ -45,7 +45,8 @@ prepare_node:
   variables:
     npm_config_cache: "$CI_PROJECT_DIR/.npm"
   before_script:
-    - npm install
+    - npm install -g npm-cache
+    - npm-cache install npm --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache"
   script:
     - npm run prod
   artifacts:
@@ -58,6 +59,7 @@ prepare_node:
     key: "metager-${CI_JOB_NAME}"
     paths:
       - .npm
+      - .npm-package-cache
   only:
     - branches
     - tags

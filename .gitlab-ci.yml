@@ -42,8 +42,11 @@ build:
 prepare_node:
   stage: prepare
   image: node:10
+  variables:
+    npm_config_cache: "$CI_PROJECT_DIR/.npm"
   before_script:
-    - npm install
+    - npm install -g npm-cache
+    - npm-cache install --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache" npm
   script:
     - npm run prod
   artifacts:
@@ -53,25 +56,28 @@ prepare_node:
       - public/mix-manifest.json
   cache:
     # Cache per Branch
-    key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    key: "metager-${CI_JOB_NAME}"
     paths:
-      - node_modules
+      - .npm
+      - .npm-package-cache
   only:
     - branches
     - tags
 
 prepare_composer:
   stage: prepare
-  image: prooph/composer:7.3
+  image: registry.metager.de/open-source/composer/master
+  variables:
+    COMPOSER_HOME: "$CI_PROJECT_DIR/.composer"
   script:
     - composer install --no-dev
   artifacts:
     paths:
       - vendor
   cache:
-    key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+    key: "metager-${CI_JOB_NAME}"
     paths:
-      - vendor
+      - .composer
 
 review:
   variables:

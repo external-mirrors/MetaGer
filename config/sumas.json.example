@@ -1,0 +1,38 @@
+{
+    "sumas": {
+        "dummy": {
+            "host": "dummy-nginx",
+            "path": "\/",
+            "port": 80,
+            "query-parameter": "q",
+            "input-encoding": "utf8",
+            "output-encoding": "utf8",
+            "parser-class": "Dummy",
+            "get-parameter": {
+                "count": "20"
+            },
+            "request-header": {},
+            "display-name": "dummy",
+            "engine-boost": 1,
+            "cache-duration": -1,
+            "disabled": false,
+            "filter-opt-in": false,
+            "homepage": "https:\/\/gitlab.metager.de\/open-source\/dummy-engine"
+        }
+    },
+    "foki": {
+        "web": {
+            "display-name": "index.foki.web",
+            "sumas": [
+                "dummy"
+            ],
+            "main": [
+                "dummy"
+            ]
+        }
+    },
+    "filter": {
+        "query-filter": {},
+        "parameter-filter": {}
+    }
+}

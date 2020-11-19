@@ -17,6 +17,36 @@ class Dummy extends Searchengine
 
     public function loadResults($result)
     {
-        return;
+        try {
+            $content = json_decode($result);
+            if (!$content) {
+                return;
+            }
+
+            foreach ($content as $result) {
+                try {
+                    $title = $result->titel;
+                    $link = $result->link;
+                    $anzeigeLink = $link;
+                    $descr = $result->descr;
+                    $this->counter++;
+                    $this->results[] = new \App\Models\Result(
+                        $this->engine,
+                        $title,
+                        $link,
+                        $anzeigeLink,
+                        $descr,
+                        $this->engine->{"display-name"},$this->engine->homepage,
+                        $this->counter
+                    );
+                } catch (\ErrorException $e) {
+
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error("A problem occurred parsing results from $this->name:");
+            Log::error($e->getMessage());
+            return;
+        }
     }
 }

@@ -133,5 +133,10 @@ return [
 
     "filter.rabate" => "Min. Rabatt",
 
+    "filter.count" => "Anzahl",
+    "filter.skip" => "Überspringen",
+    "filter.min" => "Minimum Sleep (in s)",
+    "filter.max" => "Maximum Sleep (in s)",
+
     "settings" => "Einstellungen",
 ];

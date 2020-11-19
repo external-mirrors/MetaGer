@@ -8,11 +8,11 @@ if [ ! -f "/data/.env" ]; then
 fi
 
 if [ ! -f "/config/sumas.json" ]; then
-    cp /config/sumas.json /config/sumas.json
+    cp /config/sumas.json.example /config/sumas.json
 fi
 
 if [ ! -f "/config/sumasEn.json" ]; then
-    cp /config/sumasEn.json /config/sumas.json
+    cp /config/sumas.json.example /config/sumasEn.json
 fi
 
 if [ -f "/data/database/useragents.sqlite" ]; then

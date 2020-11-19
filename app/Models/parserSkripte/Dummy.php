@@ -25,7 +25,7 @@ class Dummy extends Searchengine
 
             foreach ($content as $result) {
                 try {
-                    $title = $result->titel;
+                    $title = $result->title;
                     $link = $result->link;
                     $anzeigeLink = $link;
                     $descr = $result->descr;

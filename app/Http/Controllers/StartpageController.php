@@ -53,7 +53,8 @@ class StartpageController extends Controller
             ->with('request', $request->input('request', 'GET'))
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
-            ->with('pluginmodal', $request->input('plugin-modal', 'off'));
+            ->with('pluginmodal', $request->input('plugin-modal', 'off'))
+            ->with('darkcss', [mix('css/themes/startpage-only-dark.css')]);
     }
 
     public function loadPage($subpage)
@@ -88,8 +89,9 @@ class StartpageController extends Controller
         }
         $response = Response::make(
             view('plugin')
-                ->with('link', $link)
-            , "200");
+                ->with('link', $link),
+            "200"
+        );
         $response->header('Content-Type', "application/opensearchdescription+xml");
         return $response;
     }

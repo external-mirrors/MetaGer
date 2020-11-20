@@ -88,15 +88,26 @@
 		@if( isset($today) )
 			<tr>
 				<td>{{ Carbon::now()->format('D, d.m.Y') }}</td>
-				<td>{{ $today }}</td>
+				<td>{{ $today }} 
+					@if(isset($averageIncrease))
+					<span
+					@if($averageIncrease < 0)
+					style="color: red"
+					@else
+					style="color: green"
+					@endif
+					>
+					@if($averageIncrease < 0)-@else+@endif{{number_format(floatval($averageIncrease), 0, ",", ".")}}
+					</span>
+					@endif</td>
 				<td>???</td>
 				<td>???</td>
 			</tr>
 		@endif
 		@foreach($oldLogs as $key => $value)
-			<tr>
+			<tr @if(Carbon::now()->dayOfWeek === Carbon::now()->subDays($key)->dayOfWeek)style="font-weight: bold;"@endif>
 				<td>{{ Carbon::now()->subDays($key)->format('D, d.m.Y') }}</td>
-				<td>{{ $value['sameTime'] }}</td>
+				<td @if(Carbon::now()->dayOfWeek === Carbon::now()->subDays($key)->dayOfWeek)style="color: #e34b4b;"@endif>{{ $value['sameTime'] }}</td>
 				<td>{{ $value['insgesamt'] }}</td>
 				<td>{{ $value['median'] }}</td>
 			</tr>

@@ -40,7 +40,9 @@ class Dummy extends Searchengine
                         $this->counter
                     );
                 } catch (\ErrorException $e) {
-
+                    Log::error("A problem occurred parsing results from $this->name:");
+                    Log::error($e->getMessage());
+                    return;
                 }
             }
         } catch (\Exception $e) {
@@ -48,5 +50,43 @@ class Dummy extends Searchengine
             Log::error($e->getMessage());
             return;
         }
+    }
+    public function getNext(\App\MetaGer $metager, $result)
+    {
+        try {
+            $results = json_decode($result);
+
+            $newEngine = unserialize(serialize($this->engine));
+
+            $perPage = 0;
+            if(isset($newEngine->{"get-parameter"}->count)){
+                $perPage = $newEngine->{"get-parameter"}->count;
+            } else {
+                $perPage = 10;
+            }
+
+            $offset = 0;
+            if(empty($newEngine->{"get-parameter"}->skip)){
+                $offset = $perPage;
+            } else {
+                $offset = $newEngine->{"get-parameter"}->skip + $perPage;
+            }
+
+            if (PHP_INT_MAX - $perPage < ($offset + $perPage)) {
+                return;
+            } else {
+                $newEngine->{"get-parameter"}->skip = $offset;
+            }
+
+            
+            $next = new Dummy($this->name, $newEngine, $metager);
+            $this->next = $next;
+
+        } catch (\Exception $e) {
+            Log::error("A problem occurred parsing results from $this->name:");
+            Log::error($e->getMessage());
+            return;
+        }
+
     }
 }

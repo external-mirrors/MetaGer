@@ -24,7 +24,6 @@ class Dummy extends Searchengine
             }
 
             foreach ($content as $result) {
-                try {
                     $title = $result->title;
                     $link = $result->link;
                     $anzeigeLink = $link;
@@ -39,11 +38,6 @@ class Dummy extends Searchengine
                         $this->engine->{"display-name"},$this->engine->homepage,
                         $this->counter
                     );
-                } catch (\ErrorException $e) {
-                    Log::error("A problem occurred parsing results from $this->name:");
-                    Log::error($e->getMessage());
-                    return;
-                }
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -78,7 +72,6 @@ class Dummy extends Searchengine
                 $newEngine->{"get-parameter"}->skip = $offset;
             }
 
-            
             $next = new Dummy($this->name, $newEngine, $metager);
             $this->next = $next;
 

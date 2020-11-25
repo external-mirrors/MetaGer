@@ -675,6 +675,11 @@ class MetaGer
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
+        # Setting dummy engine as active if it exists (suma file created from example)
+        if ($this->getFokus() === "web" && isset($this->sumaFile->sumas->{"dummy"})) {
+            $this->enabledSearchengines["dummy"] = $this->sumaFile->sumas->{"dummy"};
+        }
+
         if (sizeof($this->enabledSearchengines) === 0) {
             $filter = "";
             foreach ($this->queryFilter as $queryFilter => $filterPhrase) {
@@ -757,6 +762,10 @@ class MetaGer
             $keys = [];
             foreach ($this->engines as $engine) {
                 $keys[] = $engine->hash;
+            }
+            # Noch searchengines enabled
+            if (empty($keys)) {
+                return;
             }
             $cacheValues = Cache::many($keys);
             foreach ($this->engines as $engine) {

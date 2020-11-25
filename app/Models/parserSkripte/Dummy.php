@@ -69,7 +69,7 @@ class Dummy extends Searchengine
             if (PHP_INT_MAX - $perPage < ($offset + $perPage)) {
                 return;
             } else {
-                $newEngine->{"get-parameter"}->skip = $offset;
+                $newEngine->{"get-parameter"}->skip = strval($offset);
             }
 
             $next = new Dummy($this->name, $newEngine, $metager);

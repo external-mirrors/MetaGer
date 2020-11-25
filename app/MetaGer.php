@@ -676,7 +676,7 @@ class MetaGer
         }
 
         # Setting dummy engine as active if it exists (suma file created from example)
-        if($this->getFokus() === "web" && isset($this->sumaFile->sumas->{"dummy"})){
+        if ($this->getFokus() === "web" && isset($this->sumaFile->sumas->{"dummy"})) {
             $this->enabledSearchengines["dummy"] = $this->sumaFile->sumas->{"dummy"};
         }
 
@@ -762,6 +762,10 @@ class MetaGer
             $keys = [];
             foreach ($this->engines as $engine) {
                 $keys[] = $engine->hash;
+            }
+            # Noch searchengines enabled
+            if (empty($keys)) {
+                return;
             }
             $cacheValues = Cache::many($keys);
             foreach ($this->engines as $engine) {

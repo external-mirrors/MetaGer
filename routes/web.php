@@ -107,6 +107,12 @@ Route::group(
                 ->with('navbarFocus', 'datenschutz');
         });
 
+        Route::get('transparency',function() { 
+            return view('transparency')
+                 ->with('title', trans('titles.transparency'))
+                 ->with('navbarFocus', 'kontakt');
+    });
+
         Route::get('hilfe', function () {
             return view('hilfe')
                 ->with('title', trans('titles.hilfe'))

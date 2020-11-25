@@ -21,7 +21,8 @@
 				<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
 				<a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
 				<a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
-				<p>{!! trans('spende.paypal.1') !!}</p>
+				
+				<p><br>{!! trans('spende.paypal.1') !!}</p>
 					<div class="center-wrapper">
 						@if (LaravelLocalization::getCurrentLocale() == "de")
 						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
@@ -51,15 +52,16 @@
 				<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
 				<a class="payment-label payment-label-selected" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
 				<a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
-				
-				<p>{!! trans('spende.bankinfo.1') !!}</p>
-				<p>{!! trans('spende.bankinfo.2') !!}</p>
-				<p>{!! trans('spende.bankinfo.2.1') !!}</p>
-				<p>{!! trans('spende.bankinfo.2.2') !!}</p>
-				<p>{!! trans('spende.bankinfo.2.3') !!}</p>
-				<p>{!! trans('spende.bankinfo.2.4') !!}</p> <br>
-				<p>{!! trans('spende.bankinfo.3') !!}</p>
-				</div>
+				<p>
+				<br>{!! trans('spende.bankinfo.1') !!} <br>
+				<br>{!! trans('spende.bankinfo.2') !!}
+				<br>{!! trans('spende.bankinfo.2.1') !!}
+				<br>{!! trans('spende.bankinfo.2.2') !!}
+				<br>{!! trans('spende.bankinfo.2.3') !!}
+				<br>{!! trans('spende.bankinfo.2.4') !!}<br>
+				<br>{!! trans('spende.bankinfo.3') !!}
+				</p>
+					</div>
 			@else
 				<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>

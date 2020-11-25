@@ -6,7 +6,7 @@ return [
 
     'headline.3' => 'Welchen Beitragen möchten Sie spenden?',
     'headline.4' => 'Wie regelmäßig möchten Sie spenden?',
-    'headline.5' => 'Wie wollen Sie spenden?',
+    'headline.5' => 'Wie möchten Sie spenden?',
 
 
     'wunschbetrag' => 'Wunschbetrag',

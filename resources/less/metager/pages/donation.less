@@ -23,26 +23,6 @@
         margin: 0;
     }
 
-    .sepa-debit-details {
-        display: none;
-    }
-
-    #lastschrift:checked ~ .sepa-debit-details {
-        display: block;
-    }
-    .bank-transfer {
-        display: none;
-    }
-
-    #ueberweisung:checked ~ .bank-transfer {
-        display: block;
-    }
-    .paypal-method {
-        display:none;
-    }
-    #paypal:checked ~ .paypal-method {
-        display:block;
-    }
     input[type=radio] {
         margin: 0px;
         margin-left: 2px;
@@ -73,9 +53,7 @@
     .amount-radio {
         display:none;
     }
-    .payment-radio {
-        display:none;
-    }
+ 
     .frequency-label {
         margin-top: 5px;
         height:45px;
@@ -86,7 +64,9 @@
         width: 150px;
         border-radius: 6px;
     }
-    .payment-label {   
+    .payment-label { 
+        display: inline-block;
+        color: @text-color;  
         margin-top: 5px;
         height:45px;
         font-weight: normal;
@@ -120,64 +100,10 @@
         display: none;
         width: 164px;
     }
-    #amount-custom:checked + label{
-        border: 4px solid #f47216;
-    }
     #amount-custom:checked + label + input{
         display: initial;
     }
-    #amount-5euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-10euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-15euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-20euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-25euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-50euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-100euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-200euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-250euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #amount-300euro:checked + label {
-        border: 4px solid #f47216;
-    }
-    #once:checked + label{
-        border: 4px solid #f47216;
-    }
-    #monthly:checked + label{
-        border: 4px solid #f47216;
-    }
-    #quarterly:checked + label{
-        border: 4px solid #f47216;
-    }
-    #six-monthly:checked + label{
-        border: 4px solid #f47216;
-    }
-    #annual:checked + label{
-        border: 4px solid #f47216;
-    }
-    #lastschrift:checked + label{
-        border: 4px solid #f47216;
-    }
-    #ueberweisung:checked + label{
-        border: 4px solid #f47216;
-    }
-    #paypal:checked + label{
+    input[type=radio]:checked + label, .payment-label-selected {
         border: 4px solid #f47216;
     }
 }

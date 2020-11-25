@@ -5,7 +5,7 @@ return [
     'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href="/about" rel="noopener" target=_blank>Mehr erfahren</a> und <a href="/beitritt" target="_blank" rel="noopener">Mitglied werden.</a>.',
 
     'headline.3' => 'Welchen Beitragen möchten Sie spenden?',
-    'headline.4' => 'Wie regelmäßig wollen Sie spenden?',
+    'headline.4' => 'Wie regelmäßig möchten Sie spenden?',
     'headline.5' => 'Wie wollen Sie spenden?',
 
 
@@ -22,7 +22,7 @@ return [
     'paypal' => 'Paypal',
 
 
-    'bankinfo.1' => 'Spenden mittels einer Überweisung',
+    'bankinfo.1' => 'Um für den SUMA-EV unseren Trägerverein zu spenden, brauchen Sie nur eine Überweisung auf folgendes Konto zu tätigen:',
     'bankinfo.2' => 'SUMA-EV',
     'bankinfo.2.1' => 'IBAN: DE64 4306 0967 4075 0332 01',
     'bankinfo.2.2' => 'BIC: GENODEM1GLS',

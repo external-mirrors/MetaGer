@@ -48,7 +48,7 @@ return [
     'submit' => 'Spenden',
 
     'member.1' => 'Oder doch lieber Mitglied werden?',
-    'member.2' => 'Es kostet nicht mehr und bietet viele Vorteile.',
+    'member.2' => 'Es kostet nicht mehr und bietet viele Vorteile:',
     'member.3' => 'Werbefreie Nutzung von MetaGer',
     'member.4' => 'Förderung der Suchmaschine MetaGer',
     'member.5' => 'Mitgliedsbeitrag steuerlich absetzbar',

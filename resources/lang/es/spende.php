@@ -1,6 +1,24 @@
 <?php return [
     "headline.1"	=>	"Su donación para SUME-EV y MetaGer",
     "headline.2"	=>	"Ayuda usted, que en el internet los buscadores libres quedan libre. El conocimiento digital del mundo tiene que ser accesible sin tutela de estados o empresas.",
+    
+    "headline.3"	=>
+    "headline.4"	=>
+    "headline.5"	=>
+
+
+    "wunschbetrag"	=>
+
+    'frequency.1' => 'Einmalig',
+    'frequency.2' => 'Monatlich',
+    'frequency.3' => 'Vierteljährlich',
+    'frequency.4' => 'Halbjährlich',
+    'frequency.5' => 'Jährlich',
+
+    'head.lastschrift' => 'Lastschrift',
+    'ueberweisung' => 'Überweisung',
+    'paypal' => 'Paypal',
+    
     "bankinfo.1"	=>	"Con una transferencia bancaria",
     "bankinfo.2"	=>	"SUMA-EV",
     "bankinfo.2.1"	=>	"IBAN: DE64 4306 0967 4075 0332 01",
@@ -8,6 +26,7 @@
     "bankinfo.2.3"	=>	"Banco: GLS Gemeinschaftsbank, Bochum",
     "bankinfo.2.4"	=>	"(NDC: 4075 0332 01, Código: 43060967)",
     "bankinfo.3"	=>	"En caso que quiere un recibo de donación, por favor ponga su correo electrónico y su dirección completa en el formulario de transferencia.",
+   
     "lastschrift.1"	=>	"Donaciones con procedimiento de nota de cargo:",
     "lastschrift.2"	=>	"Simplemente llena el formulario con sus datos bancarios y el monto deseado. Nosotros entonces cargamos su cuenta acuerdo a los datos proporcionados.",
     "lastschrift.3"	=>	"Por favor ponga su nombre:",
@@ -22,17 +41,28 @@
     "lastschrift.8.message.placeholder"	=>	"Mensaje",
     "lastschrift.9"	=>	"Donación",
     "lastschrift.10"	=>	"Sus datos serán transmitidos por una conexión encryptada y no pueden ser leído por terceros. El monto que usted nos indica, sera cargado a su cuenta. SUME-EV usa sus datos exclusivamente para la contabilidad de las donaciones. Sus datos no serán transmitidos a nadie. Donaciones al SUMA-EV son deducibles de los impuestos, ya que el SUME-EV es aprobado por el Finanzamt Hannover Nord como asociación sin fines de lucro, y esta registrado en el registro del Amtsgericht Hannover con el numero VR200033. Un recibo de donaciones arriba de 200,- Euro será mandado automáticamente. Para donaciones hasta 200,- EURO basta el extracto de cuenta para deducirlo de los impuestos.",
+    
+    'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
+    
+    'submit' => 'Spenden',
+
+    'member.1' => 'Oder doch lieber Mitglied werden?',
+    'member.2' => 'Es kostet nicht mehr und bietet viele Vorteile:',
+    'member.3' => 'Werbefreie Nutzung von MetaGer',
+    'member.4' => 'Förderung der Suchmaschine MetaGer',
+    'member.5' => 'Mitgliedsbeitrag steuerlich absetzbar',
+    'member.6' => 'Mitbestimmungsrechte im Verein',
+    'member.7' => 'Antragsformular',
+
     "drucken"	=>	"Imprimir",
     "danke.title"	=>	"¡Muchas gracias!! Hemos recibido su informacion de donación para MetaGer al SUME-EV.",
     "danke.nachricht"	=>	"En caso que nos ha enviado datos de contacto, pronto va recibir un mensaje personalizado.",
     "danke.kontrolle"	=>	"Hemos recibido el siguiente mensaje:",
+  
     "telefonnummer"	=>	"Teléfono",
     "iban"	=>	"IBAN/ No. de cuenta",
     "bic"	=>	"BIC o código de identificación bancaria:",
     "betrag"	=>	"Cantidad",
     "danke.message"	=>	"Su mensaje",
-    "paypal.title"	=>	"Donar con Paypal",
-    "paypal.subtitle"	=>	"Allí con tarjeta de crédito sin registro",
-    "paypal.2"	=>	"Donar con Paypal - rapido, seguro y gratis!",
-    "bitpay.title"	=>	"Donar con Bitpay"
+    
 ];

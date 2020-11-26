@@ -1023,6 +1023,69 @@ class MetaGer
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */
 
+    public function insertDummyFormData(){
+
+        $this->headerPrinted = false;
+        $this->javascript = false;
+        $this->jskey = '';
+        $this->url = 'https://metager.de/meta/meta.ger3';
+        $this->fullUrl = 'https://metager.de/meta/meta.ger3?eingabe=test';
+        $this->fokus = 'web';
+        $this->sumaFile = config_path() . "/stress.json";
+
+        if (!file_exists($this->sumaFile)) {
+            die(trans('metaGer.formdata.cantLoad'));
+        } else {
+            $this->sumaFile = json_decode(file_get_contents($this->sumaFile));
+        }
+
+        $this->eingabe = 'test';
+        $this->q = $this->eingabe;
+        $this->framed = false;
+        $this->ip = '127.0.0.1';
+        $this->useragent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0';
+
+        if (isset($_SERVER['HTTP_LANGUAGE'])) {
+            $this->language = $_SERVER['HTTP_LANGUAGE'];
+        } else {
+            $this->language = "";
+        }
+
+        $this->page = 1;
+        $this->lang = "all";
+        $this->agent = new Agent();
+        $this->mobile = $this->agent->isMobile();
+        $this->sprueche = 'off';
+        $this->newtab = 'off';
+
+        $this->theme = 'default';
+        $this->resultCount = '20';
+
+        if ($this->resultCount <= 0 || $this->resultCount > 200) {
+            $this->resultCount = 1000;
+        }
+
+        $this->quicktips = false;
+        $this->queryFilter = [];
+        $this->verificationId = null;
+        $this->verificationCount = 0;
+        $this->apiKey = "";
+        $this->out = "html";
+        $this->canCache = false;
+        $this->shouldLog = false;
+
+        $this->fokus = 'web';
+
+        $sumaNames = $this->sumaFile->foki->{$this->fokus}->sumas;
+
+        $sumas = [];
+        foreach ($sumaNames as $sumaName) {
+            $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
+        }
+
+        $this->actuallyCreateSearchEngines($this->enabledSearchengines);
+    }
+
     public function parseFormData(Request $request, $auth = true)
     {
         # Sichert, dass der request in UTF-8 formatiert ist

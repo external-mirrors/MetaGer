@@ -192,6 +192,7 @@ Route::group(
                 Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
             });
             Route::post('service-desk', 'ServiceDesk@webhook');
+            Route::get('stress', 'Stresstest@index');
         });
 
         Route::get('settings', function () {

@@ -121,7 +121,7 @@
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="bic">{!! trans('spende.lastschrift.7') !!}</label>
-					<input type="text" required="required" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
+					<input type="text" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="msg">{!! trans('spende.lastschrift.8.message')!!}</label>

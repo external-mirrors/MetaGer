@@ -87,7 +87,7 @@
 						<input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required"><label for="amount-300euro" class="amount-label">300€</label> <br>
 						</div>
 						<div class="custom-amount-container"> 
-						<input type="radio" name="amount" id="amount-custom" required="required"><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" min="0" step=".01" placeholder="Betrag in €" value="">
+						<input type="radio" name="amount" id="amount-custom" value="custom" required="required"><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="Betrag in €" value="">
 						</div>
 					
 					<br> 

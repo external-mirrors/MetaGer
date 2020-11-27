@@ -92,8 +92,14 @@ class MailController extends Controller
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
         $frequency = $request->input('frequency', '');
-        $betrag = $request->input('Betrag', '');
+        $betrag = $request->input('amount', '');
         $nachricht = $request->input('Nachricht', '');
+
+        # Allow custom amounts
+        if ($betrag == "custom") {
+            $betrag = $request->input('custom-amount', '');
+            $data['betrag'] = $betrag;
+        }
 
         # Der enthaltene String wird dem Benutzer nach der Spende ausgegeben
         $messageToUser = "";

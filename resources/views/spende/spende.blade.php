@@ -86,8 +86,8 @@
 						<input type="radio" value="250" class="amount-radio" name="amount" id="amount-250euro" required="required"><label for="amount-250euro" class="amount-label">250€</label>
 						<input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required"><label for="amount-300euro" class="amount-label">300€</label> <br>
 						</div>
-						<div>
-						<input type="radio" name="amount" id="amount-custom" required="required"><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" step=".01" placeholder="Betrag in €" value="">
+						<div class="custom-amount-container"> 
+						<input type="radio" name="amount" id="amount-custom" required="required"><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" min="0" step=".01" placeholder="Betrag in €" value="">
 						</div>
 					
 					<br> 
@@ -109,7 +109,7 @@
 					<input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
 					<div class="form-group donation-form-group">
 					<label for="Name">*{!! trans('spende.lastschrift.3') !!}</label>
-					<input type="text" class="form-control" id="Name" name="Name" placeholder="{!! trans('spende.lastschrift.3.placeholder') !!}" @if(isset($data['name'])) value="{{$data['name']}}" @endif />
+					<input type="text" required="required" class="form-control" id="Name" name="Name" placeholder="{!! trans('spende.lastschrift.3.placeholder') !!}" @if(isset($data['name'])) value="{{$data['name']}}" @endif />
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="email">{!! trans('spende.lastschrift.4') !!}</label>
@@ -117,20 +117,18 @@
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="iban">*{!! trans('spende.lastschrift.6') !!}</label>
-					<input type="text" class="form-control" id="iban" name="iban" placeholder="IBAN" @if(isset($data['iban'])) value="{{$data['iban']}}" @endif>
+					<input type="text" required="required" class="form-control" id="iban" name="iban" placeholder="IBAN" @if(isset($data['iban'])) value="{{$data['iban']}}" @endif>
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="bic">{!! trans('spende.lastschrift.7') !!}</label>
-					<input type="text" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
+					<input type="text" required="required" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
 					</div>
 					<div class="form-group donation-form-group">
 					<label for="msg">{!! trans('spende.lastschrift.8.message')!!}</label>
 					<p>{!! trans('spende.bankinfo.3')!!}</p>
 					<textarea class="form-control" id="msg" name="Nachricht" placeholder="{!! trans('spende.lastschrift.8.message.placeholder') !!}">@if(isset($data['nachricht'])){{$data['nachricht']}}@endif</textarea>
 					</div>
-					<div class="section">
-					<input type="submit" value="{!! trans('spende.submit') !!}">
-				</div>
+					<input  id="donate-button" type="submit" value="{!! trans('spende.submit') !!}">
 				</div>	
 				@endif
 				</form>
@@ -148,7 +146,7 @@
 					<li>{!! trans('spende.member.5') !!}</li>
 					<li>{!! trans('spende.member.6') !!}</li>
 					</ul>
-					<a href="">{!! trans('spende.member.7') !!}</a>
+					<a class="btn btn-default" href="">{!! trans('spende.member.7') !!}</a>
 				</div>	
 		</div>
 	

@@ -12,7 +12,7 @@
 		</div>
 		<div class="two-col">
 
-			<form class="col-left" action="/" method="get">
+			<form class="col-left" method="post">
 			@if (app('request')->input('method') == "paypal")
 			<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>

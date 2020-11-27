@@ -2,12 +2,12 @@
     "headline.1"	=>	"Su donación para SUME-EV y MetaGer",
     "headline.2"	=>	"Ayuda usted, que en el internet los buscadores libres quedan libre. El conocimiento digital del mundo tiene que ser accesible sin tutela de estados o empresas.",
     
-    "headline.3"	=>
-    "headline.4"	=>
-    "headline.5"	=>
+    "headline.3"	=> " ",
+    "headline.4"	=> " ",
+    "headline.5"	=> " ",
 
 
-    "wunschbetrag"	=>
+    "wunschbetrag"	=> " ",
 
     'frequency.1' => 'Einmalig',
     'frequency.2' => 'Monatlich',

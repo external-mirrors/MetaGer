@@ -146,7 +146,7 @@
 					<li>{!! trans('spende.member.5') !!}</li>
 					<li>{!! trans('spende.member.6') !!}</li>
 					</ul>
-					<a class="btn btn-default" href="">{!! trans('spende.member.7') !!}</a>
+					<a class="btn btn-default" href="https://metager.de/beitritt">{!! trans('spende.member.7') !!}</a>
 				</div>	
 		</div>
 	

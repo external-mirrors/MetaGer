@@ -33,6 +33,10 @@
 						<td>{{ $data['betrag'] }} €</td>
 					</tr>
 					<tr>
+						<td>{{ trans('spende.frequency') }}</td>
+						<td>{{ $data['frequency'] }} €</td>
+					</tr>
+					<tr>
 						<td>{{ trans('spende.danke.message') }}</td>
 						<td>{{ $data['nachricht'] }}</td>
 					</tr>

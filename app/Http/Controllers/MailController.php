@@ -83,13 +83,15 @@ class MailController extends Controller
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
-            'betrag' => $request->input('Betrag', ''),
+            'betrag' => $request->input('amount', ''),
+            'betrag' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
         $name = $request->input('Name', '');
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
+        $frequency = $request->input('frequency', '');
         $betrag = $request->input('Betrag', '');
         $nachricht = $request->input('Nachricht', '');
 
@@ -140,6 +142,7 @@ class MailController extends Controller
             }
 
             $message .= "\r\nBetrag: " . $betrag;
+            $message .= "\r\nHäufigkeit: " . $frequency;
             $message .= "\r\nNachricht: " . $nachricht;
 
             try {

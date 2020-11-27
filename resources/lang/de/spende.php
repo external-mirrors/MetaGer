@@ -11,6 +11,8 @@ return [
 
     'wunschbetrag' => 'Wunschbetrag',
 
+    'frequency' => 'Häufigkeit',
+
     'frequency.1' => 'Einmalig',
     'frequency.2' => 'Monatlich',
     'frequency.3' => 'Vierteljährlich',

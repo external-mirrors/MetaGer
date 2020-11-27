@@ -13,6 +13,9 @@ return [
 
     'wunschbetrag' => 'Custom amount',
 
+
+    'frequency' => 'Frequency',
+
     'frequency.1' => 'Once',
     'frequency.2' => 'Monthly',
     'frequency.3' => 'Quarterly',

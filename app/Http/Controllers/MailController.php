@@ -84,7 +84,7 @@ class MailController extends Controller
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
             'betrag' => $request->input('amount', ''),
-            'betrag' => $request->input('frequency', ''),
+            'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
         $name = $request->input('Name', '');

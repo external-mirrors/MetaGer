@@ -93,16 +93,16 @@
 					<br> 
 					<h3>{!! trans('spende.headline.4') !!}</h3>
 
-						<input type="radio" class="frequency-radio" name="frequency" id="once" required="required"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>
+						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>
 
-						<input type="radio" class="frequency-radio" name="frequency" id="monthly" required="required"><label class="frequency-label" for="monthly">{!! trans('spende.frequency.2') !!}</label> 
+						<input type="radio" class="frequency-radio" name="frequency" id="monthly" value="monthly" required="required"><label class="frequency-label" for="monthly">{!! trans('spende.frequency.2') !!}</label> 
 
 
-						<input type="radio" class="frequency-radio" name="frequency" id="quarterly" required="required"><label class="frequency-label" for="quarterly">{!! trans('spende.frequency.3') !!}</label> <br>
+						<input type="radio" class="frequency-radio" name="frequency" id="quarterly" value="quarterly" required="required"><label class="frequency-label" for="quarterly">{!! trans('spende.frequency.3') !!}</label> <br>
 
-						<input type="radio" class="frequency-radio" name="frequency" id="six-monthly" required="required"><label class="frequency-label" for="six-monthly">{!! trans('spende.frequency.4') !!}</label> 
+						<input type="radio" class="frequency-radio" name="frequency" id="six-monthly" value="six-monthly" required="required"><label class="frequency-label" for="six-monthly">{!! trans('spende.frequency.4') !!}</label> 
 
-						<input type="radio" class="frequency-radio" name="frequency" id="annual" required="required"><label class="frequency-label" for="annual">{!! trans('spende.frequency.5') !!}</label> <br>
+						<input type="radio" class="frequency-radio" name="frequency" id="annual" value="annual" required="required"><label class="frequency-label" for="annual">{!! trans('spende.frequency.5') !!}</label> <br>
 
 					<br>
 					<p>{!! trans('spende.lastschrift.2') !!}</p>

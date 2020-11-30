@@ -9,8 +9,8 @@ hpa:
   maxReplicas: 100
 podDisruptionBudget:
   enabled: true
-  minAvailable:
-  maxUnavailable: 0
+  minAvailable: 3
+  maxUnavailable:
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics

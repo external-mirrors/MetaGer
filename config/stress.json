@@ -1,7 +1,7 @@
 {
     "sumas": {
         "dummy": {
-            "host": "http://production-auto-deploy.dummy-engine-87.svc.cluster.local",
+            "host": "production-auto-deploy.dummy-engine-87.svc.cluster.local",
             "path": "\/",
             "port": 80,
             "query-parameter": "q",

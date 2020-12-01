@@ -193,6 +193,7 @@ Route::group(
             });
             Route::post('service-desk', 'ServiceDesk@webhook');
             Route::get('stress', 'Stresstest@index');
+            Route::get('stress/search', 'Stresstest@search');
         });
 
         Route::get('settings', function () {

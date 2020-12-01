@@ -23,6 +23,7 @@ class Stresstest extends MetaGerSearch
             return redirect("admin/stress/search?eingabe=test");
         }
         $metager->setDummy(true);
+        $metager->setAdgoalHash(true);
         parent::search($request, $metager, $timing);
     }
 }

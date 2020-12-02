@@ -194,6 +194,7 @@ Route::group(
             Route::post('service-desk', 'ServiceDesk@webhook');
             Route::get('stress', 'Stresstest@index');
             Route::get('stress/search', 'Stresstest@search');
+            Route::get('stress/search/verify', 'Stresstest@search')->middleware('browserverification', 'humanverification');
         });
 
         Route::get('settings', function () {

@@ -20,7 +20,7 @@ class Stresstest extends MetaGerSearch
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
         if(empty($request->input('eingabe'))) {
-            return redirect("admin/stress/search?eingabe=test");
+            return redirect("?eingabe=test" . rand(), 301);
         }
         $metager->setDummy(true);
         $metager->setAdgoalHash(true);

@@ -14,7 +14,7 @@ class Stresstest extends MetaGerSearch
 {
     public function index(Metager $metager)
     {
-        return redirect("admin/stress/search?eingabe=test");
+        return redirect("admin/stress/search?eingabe=test" . rand(), 301);
     }
 
     public function search(Request $request, MetaGer $metager, $timing = false)

@@ -12,7 +12,7 @@
             "request-header": {},
             "display-name": "dummy",
             "engine-boost": 1,
-            "cache-duration": -1,
+            "cache-duration": 0,
             "disabled": false,
             "filter-opt-in": false,
             "homepage": "https:\/\/gitlab.metager.de\/open-source\/dummy-engine"

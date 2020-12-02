@@ -12,7 +12,7 @@ use View;
 
 class MetaGerSearch extends Controller
 {
-    public function search(Request $request, MetaGer $metager, $timing = false, $nocache = false)
+    public function search(Request $request, MetaGer $metager, $timing = false)
     {
         if ($request->filled("chrome-plugin")) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
@@ -123,21 +123,19 @@ class MetaGerSearch extends Controller
                 $engine->markNew();
             }
         }
-        if($nocache){
-            try {
-                Cache::put("loader_" . $metager->getSearchUid(), [
-                    "metager" => [
-                        "apiAuthorized" => $metager->isApiAuthorized(),
-                    ],
-                    "adgoal" => [
-                        "loaded" => $metager->isAdgoalLoaded(),
-                        "adgoalHash" => $metager->getAdgoalHash(),
-                    ],
-                    "engines" => $metager->getEngines(),
-                ], 60 * 60);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }
+        try {
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "apiAuthorized" => $metager->isApiAuthorized(),
+                ],
+                "adgoal" => [
+                    "loaded" => $metager->isAdgoalLoaded(),
+                    "adgoalHash" => $metager->getAdgoalHash(),
+                ],
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
         }
         if (!empty($timings)) {
             $timings["Filled resultloader Cache"] = microtime(true) - $time;

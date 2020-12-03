@@ -142,11 +142,19 @@ class AdminInterface extends Controller
         $rekordTagDate = "";
         $size = 0;
         $count = 0;
+        $logToday = 0;
 
         foreach ($logs as $key => $stats) {
             if ($key === 0) {
                 // Log for today
-                $logToday = empty($stats->insgesamt->{$interface}) ? 0 : $stats->insgesamt->{$interface};
+                $now = Carbon::now();
+                $now->hour = 0;
+                $now->minute = 0;
+                $now->second = 0;
+                while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
+                    $logToday += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
+                    $now->addMinutes(5);
+                }
                 continue;
             }
             $insgesamt = empty($stats->insgesamt->{$interface}) ? 0 : $stats->insgesamt->{$interface};
@@ -156,7 +164,7 @@ class AdminInterface extends Controller
             $now->minute = 0;
             $now->second = 0;
 
-            while ($now->lessThanOrEqualTo(Carbon::now())) {
+            while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
                 $sameTime += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
                 $now->addMinutes(5);
             }
@@ -190,7 +198,7 @@ class AdminInterface extends Controller
                 $sum += ($logToday - $sameTime);
             }
         }
-        
+
         $averageIncrease = 0;
         if (sizeof($sameTimes) > 0) {
             $averageIncrease = $sum / sizeof($sameTimes);

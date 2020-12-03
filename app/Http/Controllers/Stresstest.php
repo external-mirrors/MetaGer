@@ -14,7 +14,7 @@ class Stresstest extends MetaGerSearch
 {
     public function index(Request $request, MetaGer $metager, $timing = false)
     {
-        $request->merge(["eingabe" => rand()]);
+        $request->merge(["eingabe" => "test" . rand()]);
         $metager->setDummy(true);
         $metager->setAdgoalHash(true);
         parent::search($request, $metager, $timing);

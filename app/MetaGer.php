@@ -78,6 +78,7 @@ class MetaGer
     protected $redisEngineResult;
     protected $redisCurrentResultList;
     public $starttime;
+    protected $dummy = false;
 
     public function __construct($hash = "")
     {
@@ -300,7 +301,7 @@ class MetaGer
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
-        if (!$this->apiAuthorized && !$this->adgoalLoaded) {
+        if (!$this->apiAuthorized && !$this->adgoalLoaded && !$this->dummy) {
             if (empty($this->adgoalHash)) {
                 if (!empty($this->jskey)) {
                     $js = Redis::connection('cache')->lpop("js" . $this->jskey);
@@ -671,7 +672,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off") {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -757,6 +758,10 @@ class MetaGer
             $keys = [];
             foreach ($this->engines as $engine) {
                 $keys[] = $engine->hash;
+            }
+            # Noch searchengines enabled
+            if (empty($keys)) {
+                return;
             }
             $cacheValues = Cache::many($keys);
             foreach ($this->engines as $engine) {
@@ -1050,9 +1055,9 @@ class MetaGer
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
         if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . "/sumasEn.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
         } else {
-            $this->sumaFile = config_path() . "/sumas.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
         }
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
@@ -1231,8 +1236,12 @@ class MetaGer
     public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
-        return $quicktips;
+        if(!$this->dummy) {
+            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
+            return $quicktips;
+        }else {
+            return null;
+        }
     }
 
 
@@ -2031,5 +2040,10 @@ class MetaGer
     public function restoreEngines($engines)
     {
         $this->engines = $engines;
+    }
+
+    public function setDummy($dummy)
+    {
+        $this->dummy = $dummy;
     }
 }

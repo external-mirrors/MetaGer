@@ -12,16 +12,9 @@ use View;
 
 class Stresstest extends MetaGerSearch
 {
-    public function index(Metager $metager)
+    public function index(Request $request, MetaGer $metager, $timing = false)
     {
-        return redirect("admin/stress/search?eingabe=test" . rand(), 301);
-    }
-
-    public function search(Request $request, MetaGer $metager, $timing = false)
-    {
-        if(empty($request->input('eingabe'))) {
-            return redirect("?eingabe=test" . rand(), 301);
-        }
+        $request->merge(["eingabe" => rand()]);
         $metager->setDummy(true);
         $metager->setAdgoalHash(true);
         parent::search($request, $metager, $timing);

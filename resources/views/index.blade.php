@@ -47,7 +47,7 @@
        <ul class="story-links">
         <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
         <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
-        <li><a class="story-button" href="https://metager.de/beitritt" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
         <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
         <figure class="story-icon">
         <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">

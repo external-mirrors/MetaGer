@@ -12,8 +12,8 @@
 		</div>
 		<div class="two-col">
 
-			<form class="col-left" method="post">
 			@if (app('request')->input('method') == "paypal")
+			<form class="col-left" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 			<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
 				
@@ -25,27 +25,24 @@
 				<p><br>{!! trans('spende.paypal.1') !!}</p>
 					<div class="center-wrapper">
 						@if (LaravelLocalization::getCurrentLocale() == "de")
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 							<input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
 							<input type="hidden" name="cmd" value="_s-xclick" />
 							<input type="hidden" name="hosted_button_id" value="5JPHYQT88JSRQ" />
 							<input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 							<img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/de_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
-						</form>
 						@else
-						<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 							<input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
 							<input type="hidden" name="cmd" value="_s-xclick" />
 							<input type="hidden" name="hosted_button_id" value="LXWAVD6P3ZSWG" />
 							<input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 							<img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/en_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
-						</form>
 						@endif
 					</div>
 
 				</div>
 				
 			@elseif ((app('request')->input('method') == "bank-transfer"))
+			<form class="col-left" method="post">
 				<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
 
@@ -63,6 +60,7 @@
 				</p>
 					</div>
 			@else
+			<form class="col-left" method="post">
 				<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
 

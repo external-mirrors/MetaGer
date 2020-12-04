@@ -71,7 +71,7 @@
 					
 					<h3>{!! trans('spende.headline.3') !!}</h3>
 						<div class="amount-row">
-						<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required"> <label for="amount-5euro" class="amount-label">5€</label> 
+						<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required"checked="checked"> <label for="amount-5euro" class="amount-label">5€</label> 
 						<input type="radio" value="10" class="amount-radio" name="amount" id="amount-10euro" required="required"><label for="amount-10euro" class="amount-label">10€</label>
 						<input type="radio" value="15" class="amount-radio" name="amount" id="amount-15euro" required="required"><label for="amount-15euro" class="amount-label">15€</label>
 						<input type="radio" value="20" class="amount-radio" name="amount" id="amount-20euro" required="required"><label for="amount-20euro" class="amount-label">20€</label>
@@ -91,7 +91,7 @@
 					<br> 
 					<h3>{!! trans('spende.headline.4') !!}</h3>
 
-						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>
+						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required" checked="checked"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>
 
 						<input type="radio" class="frequency-radio" name="frequency" id="monthly" value="monthly" required="required"><label class="frequency-label" for="monthly">{!! trans('spende.frequency.2') !!}</label> 
 

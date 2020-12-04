@@ -436,7 +436,6 @@ class MetaGer
                 $link = "http://" . $link;
             }
             $linkList .= $link . ",";
-            $result->tld = parse_url($link, PHP_URL_HOST);
         }
 
         $linkList = rtrim($linkList, ",");
@@ -449,12 +448,20 @@ class MetaGer
 
         $link = "https://xf.gdprvalidate.de/v4/check";
 
+        # Which country to use
+        # Will be de for metager.de and en for metager.org
+        $country = "de";
+        if (LaravelLocalization::getCurrentLocale() === "en") {
+            $country = "en";
+        }
+
         $postfields = [
             "key" => $publicKey,
             "panel" => "ZMkW9eSKJS",
             "member" => "338b9Bnm",
             "signature" => $hash,
-            "links" => $linkList
+            "links" => $linkList,
+            "country" => $country,
         ];
 
         // Submit fetch job to worker
@@ -510,16 +517,8 @@ class MetaGer
         try {
             $answer = json_decode($answer, true);
 
-            # Nun müssen wir nur noch die Links für die Advertiser ändern:
-            foreach ($results as $result) {
-                $link = $result->link;
-                $result->tld = parse_url($link, PHP_URL_HOST);
-            }
-
             foreach ($answer as $partnershop) {
-                $targetUrl = parse_url($partnershop["click_url"], PHP_URL_QUERY);
-                parse_str($targetUrl, $params);
-                $targetUrl = $params["url"];
+                $targetUrl = $partnershop["url"];
 
                 foreach ($results as $result) {
                     if ($result->link === $targetUrl && !$result->partnershop) {
@@ -1236,10 +1235,10 @@ class MetaGer
     public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        if(!$this->dummy) {
+        if (!$this->dummy) {
             $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
             return $quicktips;
-        }else {
+        } else {
             return null;
         }
     }

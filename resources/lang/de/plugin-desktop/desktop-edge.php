@@ -14,7 +14,7 @@
         'default-search-v18.4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard".',
 
         //Instructions for Edge version >= 80
-        'default-search-v80.1' => 'Geben Sie "edge://settings/searchEngines" in der Adressleiste ein, um in die Suchmaschineneinstellungen zu gelangen.',
+        'default-search-v80.1' => 'Öffnen Sie einen neuen Tab und geben Sie "edge://settings/searchEngines" in der Adressleiste ein, um in die Suchmaschineneinstellungen zu gelangen.',
         'default-search-v80.2' => 'Klicken Sie neben dem Eintrag von MetaGer auf "<i class="fa fa-ellipsis-h"></i>" und wählen Sie "Als Standard".',
 
         'default-page-v15.1' => 'Klicken Sie oben rechts im Browser auf "<i class="fa fa-ellipsis-h"></i>" und öffnen Sie die "Einstellungen".',

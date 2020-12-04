@@ -25,12 +25,16 @@ return [
     'add' => 'Add',
     'clear' => 'Clear black list',
     'copy' => 'Copy',
+    'hint' => 'These settings affect all foci and sub-pages!',
 
     'darkmode' => 'Toggle dark mode',
-    'darkmode-hint' => 'The setting for dark mode affects all foci and sub-pages!',
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',
+
+    'newTab' => 'Open results in new tabs',
+    'off' => 'off',
+    'on' => 'on',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
@@ -45,5 +49,4 @@ return [
     'key' => "Your key to the ad-free search",
     'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
-    'dm' => 'Dark mode',
 ];

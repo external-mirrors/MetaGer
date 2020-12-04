@@ -41,12 +41,12 @@ class HumanVerification
             unset($_SERVER["AGENT"]);
 
             /**
-             * If the user sends a Password or a key
+             * If the user sends a valid key or an appversion
              * We will not verificate the user.
              * If someone that uses a bot finds this out we
              * might have to change it at some point.
              */
-            if ($request->filled('password') || $request->filled('key') || Cookie::get('key') !== null || $request->filled('appversion') || !env('BOT_PROTECTION', false)) {
+            if ($request->filled('appversion') || !env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
                 $update = false;
                 return $next($request);
             }

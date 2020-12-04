@@ -198,6 +198,10 @@ class RequestFetcher extends Command
             CURLOPT_TIMEOUT => 7,
         ));
 
+        if (!empty($job["curlopts"])) {
+            curl_setopt_array($ch, $job["curlopts"]);
+        }
+
         if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {
             curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
             curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);

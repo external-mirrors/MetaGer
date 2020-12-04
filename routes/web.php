@@ -191,6 +191,9 @@ Route::group(
                 Route::post('queryregexp', 'AdminSpamController@queryregexp');
                 Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
             });
+            Route::post('service-desk', 'ServiceDesk@webhook');
+            Route::get('stress', 'Stresstest@index');
+            Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
         });
 
         Route::get('settings', function () {
@@ -218,7 +221,7 @@ Route::group(
                 $redis->expire($key, 30);
             });
 
-            return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+            return response("", 200)->header("Content-Type", "application/js");
         });
 
         Route::get('meta/picture', 'Pictureproxy@get');
@@ -256,7 +259,7 @@ Route::group(
                     try {
                         $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
                         while (!feof($fh)) {
-                            echo (fread($fh, 1024));
+                            echo(fread($fh, 1024));
                         }
                     } catch (\Exception $e) {
                         abort(404);
@@ -273,7 +276,7 @@ Route::group(
                     try {
                         $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
                         while (!feof($fh)) {
-                            echo (fread($fh, 1024));
+                            echo(fread($fh, 1024));
                         }
                     } catch (\Exception $e) {
                         abort(404);
@@ -302,4 +305,5 @@ Route::group(
             return response($result, 200)
                 ->header('Content-Type', RenderTextFormat::MIME_TYPE);
         });
-    });
+    }
+);

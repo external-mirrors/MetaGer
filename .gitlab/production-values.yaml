@@ -9,8 +9,8 @@ hpa:
   maxReplicas: 100
 podDisruptionBudget:
   enabled: true
-  minAvailable:
-  maxUnavailable: 0
+  minAvailable: 3
+  maxUnavailable:
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/path: /metrics
@@ -39,6 +39,10 @@ resourcesFetcher:
     cpu: 500m
     memory: 100M
   limits:
+resources:
+  requests:
+    cpu: 500m
+    memory: 500M
 ingress:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod

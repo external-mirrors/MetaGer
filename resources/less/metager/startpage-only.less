@@ -75,6 +75,9 @@ html {
     top: 0;
     z-index: 10;
 
+    @media(max-height: 150px){
+        display:none;
+    }
 
     &>:nth-child(1) {
         background-color: @story-privacy-background;
@@ -155,9 +158,11 @@ footer {
     align-items:center;
     min-height: 70vh;
     &:not(:nth-child(1)){
-        padding-bottom: @clippathHeight;
-        padding-top: @clippathHeight;
-        margin-top: -@clippathHeight;
+        @supports(clip-path: polygon(0 0, 30% 0, 50% 30px, 70% 0, 100% 0, 100% 100%, 0 100%)) or (-webkit-clip-path: polygon(0 0, 40% 0, 50% 30px, 60% 0, 100% 0, 100% 100%, 0 100%)){
+            padding-bottom: @clippathHeight;
+            padding-top: @clippathHeight;
+            margin-top: -@clippathHeight;
+        }
     }
 }
 

@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'humanverification' => \App\Http\Middleware\HumanVerification::class,
         'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
         'browserverification' => \App\Http\Middleware\BrowserVerification::class,
+        'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
     ];
 }

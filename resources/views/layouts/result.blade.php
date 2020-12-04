@@ -5,7 +5,7 @@
 				@if( isset($result->price) && $result->price != 0)
 					<span class="result-price">{!! $result->price_text !!}</span>
 				@endif
-				<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
+				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
 					{!! $result->titel !!}
 				</a>
 			</h2>
@@ -16,7 +16,7 @@
 			@endif
 		</div>
 		<div class="result-subheadline">
-			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" @if($metager->isFramed())target="_top"@endif tabindex="-1">
+			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" target="{{ $metager->getNewtab() }}" tabindex="-1">
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
@@ -59,7 +59,7 @@
 		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
 			{!! trans('result.options.6') !!}
 		</a>
-		<a class="result-open-proxy" onmouseover="$(this).popover('show');" onmouseout="$(this).popover('hide');" data-toggle="popover" data-placement="auto right" data-container="body" data-content="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">
 			{!! trans('result.options.5') !!}
 		</a>
 		<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>

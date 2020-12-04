@@ -133,5 +133,10 @@ return [
 
     "filter.rabate" => "Min. Rabate",
 
+    "filter.count" => "Count",
+    "filter.skip" => "Skip",
+    "filter.min" => "Minimum sleep (in s)",
+    "filter.max" => "Maximum sleep (in s)",
+
     "settings" => "Settings",
 ];

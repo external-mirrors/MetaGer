@@ -5,72 +5,66 @@ namespace App\Http\Controllers;
 use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
+use \App\Models\Key;
 
 class KeyController extends Controller
 {
     public function index(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
+        $cookie = Cookie::get('key');
+        $key = $request->input('keyToSet', '');
 
+        if (empty($key) && empty($cookie)) {
+            $key = 'enter_key_here';
+        } elseif (empty($key) && !empty($cookie)) {
+            $key = $cookie;
+        } elseif (!empty($key)) {
+            $key = $request->input('key');
+        }
+
+        $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
         return view('key')
-            ->with('title', trans('titles.key'));
-
+            ->with('title', trans('titles.key'))
+            ->with('cookie', $key)
+            ->with('cookieLink', $cookieLink);
     }
 
     public function setKey(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
-        $key = $request->input('key', '');
+        $keyToSet = $request->input('keyToSet');
+        $key = new Key($request->input('keyToSet', ''));
 
-        if ($this->authorizeKey($key)) {
+        if ($key->getStatus()) {
             # Valid Key
             $host = $request->header("X_Forwarded_Host", "");
             if (empty($host)) {
                 $host = $request->header("Host", "");
             }
-
-            Cookie::queue('key', $key, 525600, '/', null, false, false);
-            return redirect($redirUrl);
-        } else {
+            Cookie::queue('key', $keyToSet, 525600, '/', null, false, false);
+            $settings = Cookie::get();
+            $settings['key'] = $keyToSet;
+            $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $settings));
             return view('key')
                 ->with('title', trans('titles.key'))
-                ->with('keyValid', false);
+                ->with('cookie', $keyToSet)
+                ->with('cookieLink', $cookieLink);
+        } else {
+            $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
+            return view('key')
+                ->with('title', trans('titles.key'))
+                ->with('keyValid', false)
+                ->with('cookie', 'enter_key_here')
+                ->with('cookieLink', $cookieLink);
         }
     }
 
     public function removeKey(Request $request)
     {
         $redirUrl = $request->input('redirUrl', "");
-        Cookie::queue('key', '', 0, '/', null, false, false);
+        Cookie::queue(Cookie::forget('key'));
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
         return redirect($url);
-    }
-
-    private function authorizeKey($key)
-    {
-        $postdata = http_build_query(array(
-            'dummy' => rand(),
-        ));
-        $opts = array('http' => array(
-            'method' => 'POST',
-            'header' => 'Content-type: application/x-www-form-urlencoded',
-            'content' => $postdata,
-        ),
-        );
-
-        $context = stream_context_create($opts);
-
-        try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
-            $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'api-access'} == true) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\ErrorException $e) {
-            return false;
-        }
-
     }
 }

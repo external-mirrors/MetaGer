@@ -43,15 +43,16 @@
       </section>
       <section id="story-ngo">
         <h1>{{ trans('mg-story.ngo.title') }}</h1>
-       <ul class="story-links">
-        <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
-        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
-        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
-        <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>       </ul>
         <figure class="story-icon">
           <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
         </figure>
         <p>{!!trans('mg-story.ngo.p') !!}</p>
+        <ul class="story-links">
+          <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
+          <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
+          <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+          <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>
+        </ul>
       </section>
       <section id="story-diversity">
         <h1>{{ trans('mg-story.diversity.title') }}</h1>

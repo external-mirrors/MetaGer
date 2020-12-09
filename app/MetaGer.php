@@ -309,19 +309,19 @@ class MetaGer
                         $this->javascript = true;
                     }
                 }
-                $this->adgoalHash = $this->startAdgoal($this->results);
+                $this->adgoalHash = \App\Models\Adgoal::startAdgoal($this->results);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
                 }
             }
         
             if (!$this->javascript) {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
+                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, true);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
             } else {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
+                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, false);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
@@ -419,131 +419,7 @@ class MetaGer
         }
     }
 
-    public function startAdgoal(&$results)
-    {
-        $publicKey = getenv('adgoal_public');
-        $privateKey = getenv('adgoal_private');
-        if ($publicKey === false) {
-            return true;
-        }
-        $linkList = "";
-        foreach ($results as $result) {
-            if (!$result->new) {
-                continue;
-            }
-            $link = $result->link;
-            if (strpos($link, "http") !== 0) {
-                $link = "http://" . $link;
-            }
-            $linkList .= $link . ",";
-        }
-
-        $linkList = rtrim($linkList, ",");
-
-        # Hashwert
-        $hash = md5($linkList . $privateKey);
-
-        # Query
-        $query = $this->q;
-
-        $link = "https://xf.gdprvalidate.de/v4/check";
-
-        # Which country to use
-        # Will be de for metager.de and en for metager.org
-        $country = "de";
-        if (LaravelLocalization::getCurrentLocale() === "en") {
-            $country = "en";
-        }
-
-        $postfields = [
-            "key" => $publicKey,
-            "panel" => "ZMkW9eSKJS",
-            "member" => "338b9Bnm",
-            "signature" => $hash,
-            "links" => $linkList,
-            "country" => $country,
-        ];
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => $hash,
-            "url" => $link,
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => null,
-            "password" => null,
-            "headers" => [
-                "Content-Type" => "application/x-www-form-urlencoded"
-            ],
-            "cacheDuration" => 60,
-            "name" => "Adgoal",
-            "curlopts" => [
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => \http_build_query($postfields)
-            ]
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
-        return $hash;
-    }
-
-    public function parseAdgoal(&$results, $hash, $waitForResult)
-    {
-        # Wait for result
-        $startTime = microtime(true);
-        $answer = null;
-
-        # Hash is true if Adgoal request wasn't started in the first place
-        if ($hash === true) {
-            return true;
-        }
-        
-        if ($waitForResult) {
-            while (microtime(true) - $startTime < 5) {
-                $answer = Cache::get($hash);
-                if ($answer === null) {
-                    usleep(50 * 1000);
-                } else {
-                    break;
-                }
-            }
-        } else {
-            $answer = Cache::get($hash);
-        }
-        if ($answer === null) {
-            return false;
-        }
-        
-        try {
-            $answer = json_decode($answer, true);
-
-            foreach ($answer as $partnershop) {
-                $targetUrl = $partnershop["url"];
-
-                foreach ($results as $result) {
-                    if ($result->link === $targetUrl && !$result->partnershop) {
-                        # Ein Advertiser gefunden
-                        if ($result->image !== "") {
-                            $result->logo = $partnershop["logo"];
-                        } else {
-                            $result->image = $partnershop["logo"];
-                        }
-
-                        # Den Link hinzufügen:
-                        $result->link = $partnershop["click_url"];
-                        $result->partnershop = true;
-                        $result->changed = true;
-                    }
-                }
-            }
-        } catch (\ErrorException $e) {
-            Log::error($e->getMessage());
-        } finally {
-            $requestTime = microtime(true) - $startTime;
-            \App\PrometheusExporter::Duration($requestTime, "adgoal");
-        }
-        return true;
-    }
+    
 
     public function humanVerification(&$results)
     {

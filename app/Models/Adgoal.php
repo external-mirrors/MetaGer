@@ -55,19 +55,19 @@ class Adgoal
             $country = "us";
         }
         $preferredLanguage = Request::getPreferredLanguage();
-        
-        if (str_contains($preferredLanguage, "_")) {
-            $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "_")+1);
-        } elseif (str_contains($preferredLanguage, "-")) {
-            $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "-")+1);
-        }
+        if (!empty($preferredLanguage)) {
+            if (str_contains($preferredLanguage, "_")) {
+                $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "_")+1);
+            } elseif (str_contains($preferredLanguage, "-")) {
+                $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "-")+1);
+            }
 
-        $preferredLanguage = strtolower($preferredLanguage);
+            $preferredLanguage = strtolower($preferredLanguage);
 
-        if (in_array($country, self::COUNTRIES)) {
-            $country = $preferredLanguage;
+            if (in_array($preferredLanguage, self::COUNTRIES)) {
+                $country = $preferredLanguage;
+            }
         }
-        
     
         $postfields = [
                 "key" => $publicKey,

@@ -83,15 +83,23 @@ class MailController extends Controller
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
-            'betrag' => $request->input('Betrag', ''),
+            'betrag' => $request->input('amount', ''),
+            'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
         $name = $request->input('Name', '');
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
-        $betrag = $request->input('Betrag', '');
+        $frequency = $request->input('frequency', '');
+        $betrag = $request->input('amount', '');
         $nachricht = $request->input('Nachricht', '');
+
+        # Allow custom amounts
+        if ($betrag == "custom") {
+            $betrag = $request->input('custom-amount', '');
+            $data['betrag'] = $betrag;
+        }
 
         # Der enthaltene String wird dem Benutzer nach der Spende ausgegeben
         $messageToUser = "";
@@ -140,6 +148,7 @@ class MailController extends Controller
             }
 
             $message .= "\r\nBetrag: " . $betrag;
+            $message .= "\r\nHäufigkeit: " . $frequency;
             $message .= "\r\nNachricht: " . $nachricht;
 
             try {

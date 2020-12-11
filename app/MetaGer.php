@@ -78,6 +78,7 @@ class MetaGer
     protected $redisEngineResult;
     protected $redisCurrentResultList;
     public $starttime;
+    protected $dummy = false;
 
     public function __construct($hash = "")
     {
@@ -300,7 +301,7 @@ class MetaGer
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
-        if (!$this->apiAuthorized && !$this->adgoalLoaded) {
+        if (!$this->apiAuthorized && !$this->adgoalLoaded && !$this->dummy) {
             if (empty($this->adgoalHash)) {
                 if (!empty($this->jskey)) {
                     $js = Redis::connection('cache')->lpop("js" . $this->jskey);
@@ -308,19 +309,19 @@ class MetaGer
                         $this->javascript = true;
                     }
                 }
-                $this->adgoalHash = $this->startAdgoal($this->results);
+                $this->adgoalHash = \App\Models\Adgoal::startAdgoal($this->results);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
                 }
             }
         
             if (!$this->javascript) {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
+                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, true);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
             } else {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
+                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, false);
                 if (!empty($timings)) {
                     $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
                 }
@@ -418,132 +419,7 @@ class MetaGer
         }
     }
 
-    public function startAdgoal(&$results)
-    {
-        $publicKey = getenv('adgoal_public');
-        $privateKey = getenv('adgoal_private');
-        if ($publicKey === false) {
-            return true;
-        }
-        $linkList = "";
-        foreach ($results as $result) {
-            if (!$result->new) {
-                continue;
-            }
-            $link = $result->link;
-            if (strpos($link, "http") !== 0) {
-                $link = "http://" . $link;
-            }
-            $linkList .= $link . ",";
-            $result->tld = parse_url($link, PHP_URL_HOST);
-        }
-
-        $linkList = rtrim($linkList, ",");
-
-        # Hashwert
-        $hash = md5($linkList . $privateKey);
-
-        # Query
-        $query = $this->q;
-
-        $link = "https://xf.gdprvalidate.de/v4/check";
-
-        $postfields = [
-            "key" => $publicKey,
-            "panel" => "ZMkW9eSKJS",
-            "member" => "338b9Bnm",
-            "signature" => $hash,
-            "links" => $linkList
-        ];
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => $hash,
-            "url" => $link,
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => null,
-            "password" => null,
-            "headers" => [
-                "Content-Type" => "application/x-www-form-urlencoded"
-            ],
-            "cacheDuration" => 60,
-            "name" => "Adgoal",
-            "curlopts" => [
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => \http_build_query($postfields)
-            ]
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
-        return $hash;
-    }
-
-    public function parseAdgoal(&$results, $hash, $waitForResult)
-    {
-        # Wait for result
-        $startTime = microtime(true);
-        $answer = null;
-
-        # Hash is true if Adgoal request wasn't started in the first place
-        if ($hash === true) {
-            return true;
-        }
-        
-        if ($waitForResult) {
-            while (microtime(true) - $startTime < 5) {
-                $answer = Cache::get($hash);
-                if ($answer === null) {
-                    usleep(50 * 1000);
-                } else {
-                    break;
-                }
-            }
-        } else {
-            $answer = Cache::get($hash);
-        }
-        if ($answer === null) {
-            return false;
-        }
-        
-        try {
-            $answer = json_decode($answer, true);
-
-            # Nun müssen wir nur noch die Links für die Advertiser ändern:
-            foreach ($results as $result) {
-                $link = $result->link;
-                $result->tld = parse_url($link, PHP_URL_HOST);
-            }
-
-            foreach ($answer as $partnershop) {
-                $targetUrl = parse_url($partnershop["click_url"], PHP_URL_QUERY);
-                parse_str($targetUrl, $params);
-                $targetUrl = $params["url"];
-
-                foreach ($results as $result) {
-                    if ($result->link === $targetUrl && !$result->partnershop) {
-                        # Ein Advertiser gefunden
-                        if ($result->image !== "") {
-                            $result->logo = $partnershop["logo"];
-                        } else {
-                            $result->image = $partnershop["logo"];
-                        }
-
-                        # Den Link hinzufügen:
-                        $result->link = $partnershop["click_url"];
-                        $result->partnershop = true;
-                        $result->changed = true;
-                    }
-                }
-            }
-        } catch (\ErrorException $e) {
-            Log::error($e->getMessage());
-        } finally {
-            $requestTime = microtime(true) - $startTime;
-            \App\PrometheusExporter::Duration($requestTime, "adgoal");
-        }
-        return true;
-    }
+    
 
     public function humanVerification(&$results)
     {
@@ -671,7 +547,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off") {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -757,6 +633,10 @@ class MetaGer
             $keys = [];
             foreach ($this->engines as $engine) {
                 $keys[] = $engine->hash;
+            }
+            # Noch searchengines enabled
+            if (empty($keys)) {
+                return;
             }
             $cacheValues = Cache::many($keys);
             foreach ($this->engines as $engine) {
@@ -1050,9 +930,9 @@ class MetaGer
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
         if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . "/sumasEn.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
         } else {
-            $this->sumaFile = config_path() . "/sumas.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
         }
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
@@ -1231,8 +1111,12 @@ class MetaGer
     public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
-        return $quicktips;
+        if (!$this->dummy) {
+            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
+            return $quicktips;
+        } else {
+            return null;
+        }
     }
 
 
@@ -2031,5 +1915,10 @@ class MetaGer
     public function restoreEngines($engines)
     {
         $this->engines = $engines;
+    }
+
+    public function setDummy($dummy)
+    {
+        $this->dummy = $dummy;
     }
 }

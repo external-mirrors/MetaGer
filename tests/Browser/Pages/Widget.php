@@ -31,7 +31,7 @@ class Widget extends Page
             ->waitForText("MetaGer for usage on your website. Please choose the scope of your widget:")
             ->assertTitle("MetaGer Widget")
             ->switchLanguage("Español")
-            ->waitForText("MetaGer: un motor de búsqueda for suyo sitio web. Selecciona por favor:")
+            ->waitForText("MetaGer para la integración en su sitio web. Para hacer esto, seleccione dónde buscar:")
             ->assertTitle("MetaGer Widget")
             ->switchLanguage("Deutsch");
 

@@ -6,7 +6,7 @@ return [
     'form.1'     => 'Secure Contact Form',
     'form.2'     => 'Via this form you can contact us by e-mail.',
     'form.name' =>  'Forename, Surname',
-    'form.5'     => 'Your e-mail-adress (optional)',
+    'form.5'     => 'Your e-mail-adress',
     'form.6'     => 'Your message',
     'form.7'    => 'Subject',
     'form.8'     => 'Send',

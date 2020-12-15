@@ -33,7 +33,7 @@ return [
     'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 200,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
 
     'lastschrift.1' => 'Spenden mittels elektronischem Lastschriftverfahren:',
-    'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten sowie den gewünschten Betrag ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
+    'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
     'lastschrift.3' => 'Bitte geben Sie den Namen des Kontoinhabers ein:',
     'lastschrift.3.placeholder' => 'Name',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',

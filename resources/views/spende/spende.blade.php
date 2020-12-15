@@ -13,9 +13,9 @@
             'beitrittlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/beitritt')
             ])</p>
     </div>
-    <div class="two-col">
+    <div id="content-container">
         @if (app('request')->input('method') == "paypal")
-        <form class="col-left" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <form class="form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">
@@ -42,7 +42,7 @@
             </div>
         </form>
         @elseif ((app('request')->input('method') == "bank-transfer"))
-        <div class="section">
+        <div class="section form">
             <h3>{!! trans('spende.headline.5') !!}</h3>
             <div id="payment-methods">
                 <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
@@ -60,7 +60,7 @@
             </p>
         </div>
         @else
-        <form class="col-left" method="post">
+        <form method="post" class="form">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">
@@ -120,22 +120,20 @@
             </div>	
         </form>
         @endif
-        <div class="col-right"> 
-            <div class="section">
-                <p>{!! trans('spende.lastschrift.10') !!}</p> 
-            </div>
-            <div class="section">
-                <h3>{!! trans('spende.member.1') !!}</h3>
-                <p>{!! trans('spende.member.2') !!}</p>
-                <ul>
-                    <li>{!! trans('spende.member.3') !!}</li>
-                    <li>{!! trans('spende.member.4') !!}</li>
-                    <li>{!! trans('spende.member.5') !!}</li>
-                    <li>{!! trans('spende.member.6') !!}</li>
-                </ul>
-                <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}">{!! trans('spende.member.7') !!}</a>
-            </div>	
+        <div class="section">
+            <p>{!! trans('spende.lastschrift.10') !!}</p> 
         </div>
+        <div class="section member">
+            <h3>{!! trans('spende.member.1') !!}</h3>
+            <p>{!! trans('spende.member.2') !!}</p>
+            <ul>
+                <li>{!! trans('spende.member.3') !!}</li>
+                <li>{!! trans('spende.member.4') !!}</li>
+                <li>{!! trans('spende.member.5') !!}</li>
+                <li>{!! trans('spende.member.6') !!}</li>
+            </ul>
+            <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}">{!! trans('spende.member.7') !!}</a>
+        </div>	
     </div>
 </div>
 @endsection

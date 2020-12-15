@@ -83,15 +83,32 @@ class MailController extends Controller
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
-            'betrag' => $request->input('Betrag', ''),
+            'betrag' => $request->input('amount', ''),
+            'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
         $name = $request->input('Name', '');
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
-        $betrag = $request->input('Betrag', '');
+        $frequency = $request->input('frequency', '');
+        $betrag = $request->input('amount', '');
         $nachricht = $request->input('Nachricht', '');
+
+        # Allow custom amounts
+        if ($betrag == "custom" && $request->filled('custom-amount')) {
+            $betrag = $request->input('custom-amount', '');
+            $data['betrag'] = $betrag;
+        }
+
+        # Check for valid frequency
+        $validFrequencies = [
+            "once",
+            "monthly",
+            "quarterly",
+            "six-monthly",
+            "annual",
+        ];
 
         # Der enthaltene String wird dem Benutzer nach der Spende ausgegeben
         $messageToUser = "";
@@ -112,13 +129,16 @@ class MailController extends Controller
         }
 
         if (!$iban->Verify()) {
-            $messageToUser = "Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet";
+            $messageToUser = trans('spende.error.iban');
             $messageType = "error";
-        } else if (!$isSEPA && $bic === '') {
-            $messageToUser = "Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.";
+        } elseif (!$isSEPA && $bic === '') {
+            $messageToUser = trans('spende.error.bic');
             $messageType = "error";
-        } else if (!$validBetrag) {
-            $messageToUser = "Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.\n";
+        } elseif (!$validBetrag) {
+            $messageToUser = trans('spende.error.amount');
+            $messageType = "error";
+        } elseif (!in_array($frequency, $validFrequencies)) {
+            $messageToUser = trans('spende.error.frequency');
             $messageType = "error";
         } else {
 
@@ -140,6 +160,7 @@ class MailController extends Controller
             }
 
             $message .= "\r\nBetrag: " . $betrag;
+            $message .= "\r\nHäufigkeit: " . trans('spende.frequency.' . $frequency);
             $message .= "\r\nNachricht: " . $nachricht;
 
             try {
@@ -165,7 +186,6 @@ class MailController extends Controller
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }
-
     }
 
     #Ueberprueft ob ein bereits vorhandener Eintrag bearbeitet worden ist
@@ -194,7 +214,6 @@ class MailController extends Controller
         $emailAddress = "";
         $editedKeys = "";
         foreach ($request->all() as $key => $value) {
-
             if ($key === "filename" || $value === "") {
                 continue;
             }
@@ -207,8 +226,7 @@ class MailController extends Controller
                 $new++;
                 $key = substr($key, strpos($key, "_new_") + 5);
                 $editedKeys = $editedKeys . "\n" . $key;
-
-            } else if ($this->isEdited($key, $value, $filename)) {
+            } elseif ($this->isEdited($key, $value, $filename)) {
                 $new++;
                 $editedKeys = $editedKeys . "\n" . $key;
             }
@@ -269,5 +287,4 @@ class MailController extends Controller
 
         return redirect(url('languages/edit', ['from' => $from, 'to' => $to, 'exclude' => $ex, 'email' => $emailAddress]));
     }
-
 }

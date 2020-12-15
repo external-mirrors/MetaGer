@@ -73,6 +73,7 @@ Route::group(
         Route::get('spende', function () {
             return view('spende.spende')
                 ->with('title', trans('titles.spende'))
+                ->with('js', [mix('/js/donation.js')])
                 ->with('navbarFocus', 'foerdern');
         });
         Route::get('spende/danke/{data}', ['as' => 'danke', function ($data) {

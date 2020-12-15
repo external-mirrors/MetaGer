@@ -62,6 +62,11 @@
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 		<script src="{{ mix('js/lib.js') }}"></script>
 		<script src="{{ mix('js/utility.js') }}"></script>
+		@if(!empty($js) && is_array($js))
+		@foreach($js as $jsFile)
+		<script src="{{$jsFile}}" async></script>
+		@endforeach
+		@endif
 	</head>
 	<body>
 		@if(Request::getHttpHost() === "metager3.de")

@@ -78,7 +78,7 @@ mix
     "public/js/scriptResultPage.js"
   )
   .babel("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .babel("resources/js/bitpay.js", "public/js/bitpay.js")
+  .babel("resources/js/donation.js", "public/js/donation.js")
   // utility
   .babel(
     ["resources/js/utility.js", "resources/js/translations.js"],

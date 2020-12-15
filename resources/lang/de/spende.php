@@ -10,7 +10,7 @@ return [
 
 
     'wunschbetrag' => 'Wunschbetrag',
-
+    'wunschbetrag.placeholder' => 'Betrag in €',
     'frequency' => 'Häufigkeit',
 
     'frequency.1' => 'Einmalig',

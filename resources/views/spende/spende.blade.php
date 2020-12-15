@@ -20,10 +20,11 @@
 			<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
 				
-
-				<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
-				<a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-				<a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+				<div id="payment-methods">
+					<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
+					<a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
+					<a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+				</div>
 				
 				<p><br>{!! trans('spende.paypal.1') !!}</p>
 					<div class="center-wrapper">
@@ -48,10 +49,11 @@
 			<form class="col-left" method="post">
 				<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
-
-				<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
-				<a class="payment-label payment-label-selected" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-				<a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+				<div id="payment-methods">
+					<a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
+					<a class="payment-label payment-label-selected" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
+					<a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+				</div>
 				<p>
 				<br>{!! trans('spende.bankinfo.1') !!} <br>
 				<br>{!! trans('spende.bankinfo.2') !!}
@@ -67,31 +69,28 @@
 				<div class="section">
 				<h3>{!! trans('spende.headline.5') !!}</h3>
 
-				<a class="payment-label payment-label-selected" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
-
-					<a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-					<a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
-					
+				<div id="payment-methods">
+					<a class="payment-label payment-label-selected" href="?method=debit"><nobr>{!! trans('spende.head.lastschrift') !!}</nobr></a>
+					<a class="payment-label" href="?method=bank-transfer"><nobr>{!! trans('spende.ueberweisung') !!}</nobr></a>
+					<a class="payment-label" href="?method=paypal"><nobr>{!! trans('spende.paypal') !!}</nobr></a>
+				</div>
 					<h3>{!! trans('spende.headline.3') !!}</h3>
 						<div class="amount-row">
-						<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required" checked="checked"> <label for="amount-5euro" class="amount-label">5€</label> 
-						<input type="radio" value="10" class="amount-radio" name="amount" id="amount-10euro" required="required"><label for="amount-10euro" class="amount-label">10€</label>
-						<input type="radio" value="15" class="amount-radio" name="amount" id="amount-15euro" required="required"><label for="amount-15euro" class="amount-label">15€</label>
-						<input type="radio" value="20" class="amount-radio" name="amount" id="amount-20euro" required="required"><label for="amount-20euro" class="amount-label">20€</label>
-						<input type="radio" value="25" class="amount-radio" name="amount" id="amount-25euro" required="required"><label for="amount-25euro" class="amount-label">25€</label> <br>
-						</div>
-						<div class="amount-row">
-						<input type="radio" value="50" class="amount-radio" name="amount" id="amount-50euro" required="required"><label for="amount-50euro" class="amount-label">50€</label>
-						<input type="radio" value="100" class="amount-radio" name="amount" id="amount-100euro" required="required"><label for="amount-100euro" class="amount-label">100€</label>
-						<input type="radio" value="200" class="amount-radio" name="amount" id="amount-200euro" required="required"><label for="amount-200euro" class="amount-label">200€</label>
-						<input type="radio" value="250" class="amount-radio" name="amount" id="amount-250euro" required="required"><label for="amount-250euro" class="amount-label">250€</label>
-						<input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required"><label for="amount-300euro" class="amount-label">300€</label> <br>
+							<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required" @if(empty($data) || $data["betrag"] === "5")checked="checked"@endif> <label for="amount-5euro" class="amount-label">5€</label> 
+							<input type="radio" value="10" class="amount-radio" name="amount" id="amount-10euro" required="required" @if(!empty($data) && $data["betrag"] === "10")checked="checked"@endif><label for="amount-10euro" class="amount-label">10€</label>
+							<input type="radio" value="15" class="amount-radio" name="amount" id="amount-15euro" required="required" @if(!empty($data) && $data["betrag"] === "15")checked="checked"@endif><label for="amount-15euro" class="amount-label">15€</label>
+							<input type="radio" value="20" class="amount-radio" name="amount" id="amount-20euro" required="required" @if(!empty($data) && $data["betrag"] === "20")checked="checked"@endif><label for="amount-20euro" class="amount-label">20€</label>
+							<input type="radio" value="25" class="amount-radio" name="amount" id="amount-25euro" required="required" @if(!empty($data) && $data["betrag"] === "15")checked="checked"@endif><label for="amount-25euro" class="amount-label">25€</label>
+							<input type="radio" value="50" class="amount-radio" name="amount" id="amount-50euro" required="required" @if(!empty($data) && $data["betrag"] === "50")checked="checked"@endif><label for="amount-50euro" class="amount-label">50€</label>
+							<input type="radio" value="100" class="amount-radio" name="amount" id="amount-100euro" required="required" @if(!empty($data) && $data["betrag"] === "100")checked="checked"@endif><label for="amount-100euro" class="amount-label">100€</label>
+							<input type="radio" value="200" class="amount-radio" name="amount" id="amount-200euro" required="required" @if(!empty($data) && $data["betrag"] === "200")checked="checked"@endif><label for="amount-200euro" class="amount-label">200€</label>
+							<input type="radio" value="250" class="amount-radio" name="amount" id="amount-250euro" required="required" @if(!empty($data) && $data["betrag"] === "250")checked="checked"@endif><label for="amount-250euro" class="amount-label">250€</label>
+ 							<input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required" @if(!empty($data) && $data["betrag"] === "300")checked="checked"@endif><label for="amount-300euro" class="amount-label">300€</label>
 						</div>
 						<div class="custom-amount-container"> 
-						<input type="radio" name="amount" id="amount-custom" value="custom" required="required"><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="Betrag in €" value="">
+							<input type="radio" name="amount" id="amount-custom" value="custom" required="required" @if(!empty($data) && $data["betrag"] === "custom")checked="checked"@endif><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="@lang('spende.wunschbetrag.placeholder')" value="">
 						</div>
 					
-					<br> 
 					<h3>{!! trans('spende.headline.4') !!}</h3>
 
 						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required" checked="checked"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>

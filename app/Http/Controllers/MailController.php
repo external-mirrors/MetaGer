@@ -96,7 +96,7 @@ class MailController extends Controller
         $nachricht = $request->input('Nachricht', '');
 
         # Allow custom amounts
-        if ($betrag == "custom") {
+        if ($betrag == "custom" && $request->filled('custom-amount')) {
             $betrag = $request->input('custom-amount', '');
             $data['betrag'] = $betrag;
         }
@@ -122,10 +122,10 @@ class MailController extends Controller
         if (!$iban->Verify()) {
             $messageToUser = "Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet";
             $messageType = "error";
-        } else if (!$isSEPA && $bic === '') {
+        } elseif (!$isSEPA && $bic === '') {
             $messageToUser = "Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.";
             $messageType = "error";
-        } else if (!$validBetrag) {
+        } elseif (!$validBetrag) {
             $messageToUser = "Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.\n";
             $messageType = "error";
         } else {
@@ -174,7 +174,6 @@ class MailController extends Controller
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }
-
     }
 
     #Ueberprueft ob ein bereits vorhandener Eintrag bearbeitet worden ist
@@ -203,7 +202,6 @@ class MailController extends Controller
         $emailAddress = "";
         $editedKeys = "";
         foreach ($request->all() as $key => $value) {
-
             if ($key === "filename" || $value === "") {
                 continue;
             }
@@ -216,8 +214,7 @@ class MailController extends Controller
                 $new++;
                 $key = substr($key, strpos($key, "_new_") + 5);
                 $editedKeys = $editedKeys . "\n" . $key;
-
-            } else if ($this->isEdited($key, $value, $filename)) {
+            } elseif ($this->isEdited($key, $value, $filename)) {
                 $new++;
                 $editedKeys = $editedKeys . "\n" . $key;
             }
@@ -278,5 +275,4 @@ class MailController extends Controller
 
         return redirect(url('languages/edit', ['from' => $from, 'to' => $to, 'exclude' => $ex, 'email' => $emailAddress]));
     }
-
 }

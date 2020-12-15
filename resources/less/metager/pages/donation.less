@@ -35,15 +35,14 @@
         font-weight:bold;
     }
     .amount-label {
-        display: inline-block;
-        vertical-align: middle;
-        text-align: center;
-        margin-bottom: 4px;
-        margin-top: 4px;
-        margin-right: 5px;
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         font-size: 18px;
         font-weight: normal;
-        width:4em;
+        width: 4em;
+        margin-bottom: 0;
         border: 2px solid #a6a6a6;
         border-radius: 5px;
         cursor: pointer;
@@ -68,40 +67,54 @@
         border-radius: 6px;
         cursor: pointer;
     }
-    .payment-label { 
-        display: inline-block;
-        vertical-align: middle;
-        display: inline-block;
-        color: @text-color;  
-        margin-top: 5px;
-        height:45px;
-        font-weight: normal;
-        line-height: 40px;
-        text-align: center;
-        border: 2px solid #a6a6a6;
-        width: 150px;
-        border-radius: 6px;
+    #payment-methods {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        .payment-label { 
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: @text-color;  
+            height:45px;
+            font-weight: normal;
+            line-height: 40px;
+            text-align: center;
+            border: 2px solid #a6a6a6;
+            width: 150px;
+            border-radius: 6px;
+            &.payment-label-selected {
+                border: 2px solid #f47216;
+                font-weight: bold;
+            }
+        }
     }
     .amount-row {
         display: flex;
         justify-content: inherit;
-        margin-bottom: 8px;
-        height: 40px;        
+        flex-wrap: wrap; 
+        gap: 4px;    
+        input:checked + label {
+            font-weight: bold;
+        }
       }
 
     .custom-amount-container {
         display: flex;
+        flex-wrap:wrap;
+        margin-top: 4px;
+        gap: 4px;
+        input:checked +  label {
+            font-weight: bold;
+        }
     }
     .amount-custom {
-        flex-grow: 0;
-        text-align: center;
+        display: flex;
+        justify-content: center;
         align-items: center;
-        line-height: 25px;
-        margin-right: 4px;
-        padding-right: 8px;
-        padding-left: 4px;
-        height: 30px;
-        //width: 8em;
+        flex-grow: 1;
+        padding: 4px 8px;
         font-weight: normal;
         border: 2px solid #a6a6a6;
         border-radius: 5px;
@@ -114,6 +127,7 @@
         display: none;
         height: 30px;
         width: 164px;
+        flex-grow: 1;
     }
     #amount-custom:checked + label + input{
         display: initial;
@@ -122,8 +136,8 @@
         line-height: 21px;
     }
 
-    input[type=radio]:checked + label, .payment-label-selected {
-        border: 4px solid #f47216;
+    input[type=radio]:checked + label {
+        border: 2px solid #f47216;
     }
 
     #donate-button {

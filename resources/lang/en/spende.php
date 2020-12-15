@@ -10,7 +10,7 @@ return [
 
 
     'wunschbetrag' => 'Custom amount',
-
+    'wunschbetrag.placeholder' => 'Amount in €',
 
     'frequency' => 'Frequency',
 

@@ -7,7 +7,7 @@ return [
     'headline.3' => 'How much would you like to donate?',
     'headline.4' => 'How frequent do you want to donate?',
     'headline.5' => 'Choose a payment method',
-
+    'headline.6' => 'Bank Account Informations',
 
     'wunschbetrag' => 'Custom amount',
     'wunschbetrag.placeholder' => 'Amount in €',

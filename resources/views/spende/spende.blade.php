@@ -99,6 +99,7 @@
 						<input type="radio" class="frequency-radio" name="frequency" id="six-monthly" value="six-monthly" required="required" @if(!empty($data) && $data["frequency"] === "six-monthly")checked="checked"@endif><label class="frequency-label" for="six-monthly"><nobr>{!! trans('spende.frequency.4') !!}</nobr></label> 
 						<input type="radio" class="frequency-radio" name="frequency" id="annual" value="annual" required="required" @if(!empty($data) && $data["frequency"] === "annual")checked="checked"@endif><label class="frequency-label" for="annual"><nobr>{!! trans('spende.frequency.5') !!}</nobr></label>
 					</div>
+					<h3>{!! trans('spende.headline.6') !!}</h3>
 					<p>{!! trans('spende.lastschrift.2') !!}</p>
 					<input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
 					<div class="form-group donation-form-group">

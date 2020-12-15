@@ -7,7 +7,7 @@ return [
     'headline.3' => 'Welchen Betrag möchten Sie spenden?',
     'headline.4' => 'Wie regelmäßig möchten Sie spenden?',
     'headline.5' => 'Wie möchten Sie spenden?',
-
+    'headline.6' => 'Kontodaten',
 
     'wunschbetrag' => 'Wunschbetrag',
     'wunschbetrag.placeholder' => 'Betrag in €',

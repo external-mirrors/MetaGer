@@ -2,7 +2,7 @@
 
 return [
     "headline.1" => "Your Donation for MetaGer to SUMA-EV",
-    "headline.2" => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href="https://metager.org/about" rel="noopener" target=_blank>Read more</a> and <a href="https://metager.org/beitritt" target="_blank" rel="noopener">become a member.</a>',
+    "headline.2" => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a> and <a href=":beitrittlink" target="_blank" rel="noopener">become a member.</a>',
    
     'headline.3' => 'How much would you like to donate?',
     'headline.4' => 'How frequent do you want to donate?',
@@ -22,7 +22,7 @@ return [
 
     'head.lastschrift' => 'Sepa direct debit',
     'ueberweisung' => 'Bank transfer',
-    'paypal' => 'Paypal',
+    'paypal' => 'Paypal / Credit Card',
 
     "bankinfo.1" => "By bank transfer",
     "bankinfo.2" => "SUMA-EV",

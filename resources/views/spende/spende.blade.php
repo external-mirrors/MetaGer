@@ -7,8 +7,11 @@
 @section('content')
 	<div id="donation">
 		<div class="section">
-			<h1>{!! trans('spende.headline.1') !!}</h1>
-			<p>{!! trans('spende.headline.2') !!}</p>
+			<h1>@lang('spende.headline.1')</h1>
+			<p>@lang('spende.headline.2', [
+				'aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about'),
+				'beitrittlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/beitritt')
+				])</p>
 		</div>
 		<div class="two-col">
 
@@ -71,7 +74,7 @@
 					
 					<h3>{!! trans('spende.headline.3') !!}</h3>
 						<div class="amount-row">
-						<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required"checked="checked"> <label for="amount-5euro" class="amount-label">5€</label> 
+						<input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required" checked="checked"> <label for="amount-5euro" class="amount-label">5€</label> 
 						<input type="radio" value="10" class="amount-radio" name="amount" id="amount-10euro" required="required"><label for="amount-10euro" class="amount-label">10€</label>
 						<input type="radio" value="15" class="amount-radio" name="amount" id="amount-15euro" required="required"><label for="amount-15euro" class="amount-label">15€</label>
 						<input type="radio" value="20" class="amount-radio" name="amount" id="amount-20euro" required="required"><label for="amount-20euro" class="amount-label">20€</label>

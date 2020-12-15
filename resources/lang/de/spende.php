@@ -2,7 +2,7 @@
 
 return [
     'headline.1' => 'Ihre Spende für SUMA-EV und MetaGer',
-    'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href="/about" rel="noopener" target=_blank>Mehr erfahren</a> und <a href="/beitritt" target="_blank" rel="noopener">Mitglied werden.</a>.',
+    'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a> und <a href=":beitrittlink" target="_blank" rel="noopener">Mitglied werden.</a>.',
 
     'headline.3' => 'Welchen Betrag möchten Sie spenden?',
     'headline.4' => 'Wie regelmäßig möchten Sie spenden?',
@@ -21,7 +21,7 @@ return [
 
     'head.lastschrift' => 'Lastschrift',
     'ueberweisung' => 'Überweisung',
-    'paypal' => 'Paypal',
+    'paypal' => 'Paypal / Kreditkarte',
 
 
     'bankinfo.1' => 'Um für den SUMA-EV unseren Trägerverein zu spenden, brauchen Sie nur eine Überweisung auf folgendes Konto zu tätigen:',

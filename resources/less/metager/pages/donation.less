@@ -9,16 +9,9 @@
     }
     .section {
         .card-light;
-        margin: 8px 0;
+        margin: 0;
     }
 
-    .col-left .section{
-        margin: 8px;
-        margin-left: 0;
-        @media(max-width: @screen-small){
-            margin-right: 0;
-        }
-    }
     #direct-payment > p {
         margin: 0;
     }
@@ -144,6 +137,28 @@
     }
     #amount-custom:checked + label{
         line-height: 21px;
+    }
+
+    #content-container {
+        margin-top: 8px;
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        grid-template-rows: auto auto 1fr;
+        grid-template-areas: "form ." "form ." "form .";
+        gap: 8px 8px;
+        @media(max-width: 860px){
+            grid-template-rows: 1fr auto;
+            grid-template-areas: "form form" ". .";
+        }
+        @media(max-width: 740px){
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr auto auto;
+            grid-template-areas: "form " "." ".";
+        }
+
+        .form {
+            grid-area: form;
+        }
     }
 }
       

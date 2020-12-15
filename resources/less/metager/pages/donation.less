@@ -53,19 +53,27 @@
     .amount-radio {
         display:none;
     }
- 
-    .frequency-label {
-        display: inline-block;
-        vertical-align: middle;
-        margin-top: 5px;
-        height:45px;
-        font-weight: normal;
-        text-align: center;
-        line-height: 40px;
-        border: 2px solid #a6a6a6;
-        width: 150px;
-        border-radius: 6px;
-        cursor: pointer;
+    #frequency {
+        display: flex;
+        flex-wrap:wrap;
+        gap: 4px;
+        .frequency-label {
+            flex-grow: 1;
+            display: inline-block;
+            vertical-align: middle;
+            height:45px;
+            margin-bottom: 0;
+            font-weight: normal;
+            text-align: center;
+            line-height: 40px;
+            border: 2px solid #a6a6a6;
+            width: 150px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        input:checked + .frequency-label {
+            border: 2px solid #f47216;
+       }
     }
     #payment-methods {
         display: flex;
@@ -134,10 +142,6 @@
     }
     #amount-custom:checked + label{
         line-height: 21px;
-    }
-
-    input[type=radio]:checked + label {
-        border: 2px solid #f47216;
     }
 
     #donate-button {

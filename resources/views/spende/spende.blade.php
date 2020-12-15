@@ -92,19 +92,13 @@
 						</div>
 					
 					<h3>{!! trans('spende.headline.4') !!}</h3>
-
-						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required" checked="checked"><label class="frequency-label" for="once">{!! trans('spende.frequency.1') !!}</label> <br>
-
-						<input type="radio" class="frequency-radio" name="frequency" id="monthly" value="monthly" required="required"><label class="frequency-label" for="monthly">{!! trans('spende.frequency.2') !!}</label> 
-
-
-						<input type="radio" class="frequency-radio" name="frequency" id="quarterly" value="quarterly" required="required"><label class="frequency-label" for="quarterly">{!! trans('spende.frequency.3') !!}</label> <br>
-
-						<input type="radio" class="frequency-radio" name="frequency" id="six-monthly" value="six-monthly" required="required"><label class="frequency-label" for="six-monthly">{!! trans('spende.frequency.4') !!}</label> 
-
-						<input type="radio" class="frequency-radio" name="frequency" id="annual" value="annual" required="required"><label class="frequency-label" for="annual">{!! trans('spende.frequency.5') !!}</label> <br>
-
-					<br>
+					<div id="frequency">
+						<input type="radio" class="frequency-radio" name="frequency" id="once" value="once" required="required" @if(empty($data) || $data["frequency"] === "once")checked="checked"@endif><label class="frequency-label" for="once"><nobr>{!! trans('spende.frequency.1') !!}</nobr></label>
+						<input type="radio" class="frequency-radio" name="frequency" id="monthly" value="monthly" required="required" @if(!empty($data) && $data["frequency"] === "monthly")checked="checked"@endif><label class="frequency-label" for="monthly"><nobr>{!! trans('spende.frequency.2') !!}</nobr></label> 
+						<input type="radio" class="frequency-radio" name="frequency" id="quarterly" value="quarterly" required="required" @if(!empty($data) && $data["frequency"] === "quarterly")checked="checked"@endif><label class="frequency-label" for="quarterly"><nobr>{!! trans('spende.frequency.3') !!}</nobr></label>
+						<input type="radio" class="frequency-radio" name="frequency" id="six-monthly" value="six-monthly" required="required" @if(!empty($data) && $data["frequency"] === "six-monthly")checked="checked"@endif><label class="frequency-label" for="six-monthly"><nobr>{!! trans('spende.frequency.4') !!}</nobr></label> 
+						<input type="radio" class="frequency-radio" name="frequency" id="annual" value="annual" required="required" @if(!empty($data) && $data["frequency"] === "annual")checked="checked"@endif><label class="frequency-label" for="annual"><nobr>{!! trans('spende.frequency.5') !!}</nobr></label>
+					</div>
 					<p>{!! trans('spende.lastschrift.2') !!}</p>
 					<input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
 					<div class="form-group donation-form-group">

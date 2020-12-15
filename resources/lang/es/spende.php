@@ -11,7 +11,7 @@
     "bankinfo.3"	=>	"En caso que quiere un recibo de donación, por favor ponga su correo electrónico y su dirección completa en el formulario de transferencia.",
    
     "lastschrift.1"	=>	"Donaciones con procedimiento de nota de cargo:",
-    "lastschrift.2"	=>	"Simplemente llena el formulario con sus datos bancarios y el monto deseado. Nosotros entonces cargamos su cuenta acuerdo a los datos proporcionados.",
+    "lastschrift.2"	=>	"Simplemente llena el formulario con sus datos bancarios. Nosotros entonces cargamos su cuenta acuerdo a los datos proporcionados.",
     "lastschrift.3"	=>	"Por favor ponga su nombre:",
     "lastschrift.3.placeholder"	=>	"Nombre",
     "lastschrift.4"	=>	"Su correo electrónico:",

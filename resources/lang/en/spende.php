@@ -67,8 +67,8 @@ return [
     "danke.nachricht" => "If you submitted your contact data we will notify you personally soon.",
     "danke.kontrolle" => "The following message has reached us:",
     "telefonnummer" => "phone number",
-    "iban" => "IBAN/account number",
-    "bic" => "BIC/bank code",
+    "iban" => "IBAN",
+    "bic" => "BIC",
     'betrag' => 'Amount',
     "danke.message" => "Your message",
 

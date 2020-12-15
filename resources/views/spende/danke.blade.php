@@ -34,7 +34,7 @@
 					</tr>
 					<tr>
 						<td>{{ trans('spende.frequency') }}</td>
-						<td>{{ $data['frequency'] }} </td>
+						<td>{{ trans('spende.frequency.' . $data['frequency'] }} </td>
 					</tr>
 					<tr>
 						<td>{{ trans('spende.danke.message') }}</td>

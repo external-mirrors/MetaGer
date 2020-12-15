@@ -14,11 +14,11 @@ return [
 
     'frequency' => 'Frequency',
 
-    'frequency.1' => 'Once',
-    'frequency.2' => 'Monthly',
-    'frequency.3' => 'Quarterly',
-    'frequency.4' => 'Semi-annual',
-    'frequency.5' => 'Annual',
+    'frequency.once' => 'Once',
+    'frequency.monthly' => 'Monthly',
+    'frequency.quarterly' => 'Quarterly',
+    'frequency.six-monthly' => 'Six-Monthly',
+    'frequency.annual' => 'Annual',
 
     'head.lastschrift' => 'Sepa direct debit',
     'ueberweisung' => 'Bank transfer',
@@ -34,13 +34,13 @@ return [
    
    
     "lastschrift.1" => "Donate by Sepa direct debit",
-    "lastschrift.2" => "Enter your account data along with the desired amount. We will debit your bank account accordingly.",
+    "lastschrift.2" => "Enter your account data along with the desired amount. We will debit your bank account accordingly. This method is only available for SEPA area.",
     "lastschrift.3" => "Please enter your name:",
     "lastschrift.3.placeholder" => "Name",
     "lastschrift.4" => "Your E-Mail adress:",
     "lastschrift.5" => "Your phone number to verify your donation by callback:",
-    "lastschrift.6" => "Your IBAN or bank account number:",
-    "lastschrift.7" => "Your BIC or bank code:",
+    "lastschrift.6" => "Your IBAN:",
+    "lastschrift.7" => "Your BIC:",
     "lastschrift.8.value" => "Here you can tell us, what amount you want to donate:",
     "lastschrift.8.message" => "Here you can informally add a message to your donation:",
     "lastschrift.8.message.placeholder" => "message",
@@ -71,4 +71,9 @@ return [
     "bic" => "BIC/bank code",
     'betrag' => 'Amount',
     "danke.message" => "Your message",
+
+    'error.iban' => 'The IBAN entered does not seem to be correct. Message was not sent.',
+    'error.bic' => 'The IBAN entered does not belong to a country in the SEPA area. For a direct debit we need a BIC from you.',
+    'error.amount' => 'The donation amount entered is invalid. Please correct your entry and try again.',
+    'error.frequency' => 'The frequency you entered for your donation is invalid.',
 ];

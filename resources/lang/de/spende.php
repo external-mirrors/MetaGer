@@ -13,11 +13,11 @@ return [
     'wunschbetrag.placeholder' => 'Betrag in €',
     'frequency' => 'Häufigkeit',
 
-    'frequency.1' => 'Einmalig',
-    'frequency.2' => 'Monatlich',
-    'frequency.3' => 'Vierteljährlich',
-    'frequency.4' => 'Halbjährlich',
-    'frequency.5' => 'Jährlich',
+    'frequency.once' => 'Einmalig',
+    'frequency.monthly' => 'Monatlich',
+    'frequency.quarterly' => 'Vierteljährlich',
+    'frequency.six-monthly' => 'Halbjährlich',
+    'frequency.annual' => 'Jährlich',
 
     'head.lastschrift' => 'Lastschrift',
     'ueberweisung' => 'Überweisung',
@@ -70,4 +70,8 @@ return [
     'betrag' => 'Betrag',
     'danke.message' => 'Ihre Nachricht',
 
+    'error.iban' => 'Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet.',
+    'error.bic' => 'Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.',
+    'error.amount' => 'Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.',
+    'error.frequency' => 'Die eingegebene Häufigkeit für Ihre Spende ist ungültig.',
 ];

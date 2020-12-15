@@ -101,6 +101,15 @@ class MailController extends Controller
             $data['betrag'] = $betrag;
         }
 
+        # Check for valid frequency
+        $validFrequencies = [
+            "once",
+            "monthly",
+            "quarterly",
+            "six-monthly",
+            "annual",
+        ];
+
         # Der enthaltene String wird dem Benutzer nach der Spende ausgegeben
         $messageToUser = "";
         $messageType = ""; # [success|error]
@@ -120,13 +129,16 @@ class MailController extends Controller
         }
 
         if (!$iban->Verify()) {
-            $messageToUser = "Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet";
+            $messageToUser = trans('spende.error.iban');
             $messageType = "error";
         } elseif (!$isSEPA && $bic === '') {
-            $messageToUser = "Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.";
+            $messageToUser = trans('spende.error.bic');
             $messageType = "error";
         } elseif (!$validBetrag) {
-            $messageToUser = "Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.\n";
+            $messageToUser = trans('spende.error.amount');
+            $messageType = "error";
+        } elseif (!in_array($frequency, $validFrequencies)) {
+            $messageToUser = trans('spende.error.frequency');
             $messageType = "error";
         } else {
 
@@ -148,7 +160,7 @@ class MailController extends Controller
             }
 
             $message .= "\r\nBetrag: " . $betrag;
-            $message .= "\r\nHäufigkeit: " . $frequency;
+            $message .= "\r\nHäufigkeit: " . trans('spende.frequency.' . $frequency);
             $message .= "\r\nNachricht: " . $nachricht;
 
             try {

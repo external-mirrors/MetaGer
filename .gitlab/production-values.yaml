@@ -44,6 +44,23 @@ resources:
     cpu: 500m
     memory: 500M
 ingress:
+  tls:
+    enabled: true
+    custom:
+      tls:
+      - hosts:
+        - metager.de
+        - www.metager.de
+        secretName: metager-de-tls
+      - hosts:
+        - metager.org
+        - www.metager.org
+        - klassik.metager.org
+        secretName: metager-org-tls
+      - hosts:
+        - metager.es
+        - www.metager.es
+        secretName: production-auto-deploy-tls
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |

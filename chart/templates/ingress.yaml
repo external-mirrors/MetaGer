@@ -31,10 +31,10 @@ metadata:
 {{- end }}
 spec:
 {{- if .Values.ingress.tls.enabled }}
+  tls:
 {{- if .Values.ingress.tls.custom }}
 {{ toYaml .Values.ingress.tls.custom | indent 2 }}
 {{- else }}
-  tls:
   - hosts:
 {{- if .Values.service.commonName }}
     - {{ template "hostname" .Values.service.commonName }}

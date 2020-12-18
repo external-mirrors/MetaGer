@@ -44,16 +44,14 @@ ingress:
   tls:
     enabled: true
     custom:
-    - hosts:
-{{- if .Values.service.commonName }}
-      - {{ template "hostname" .Values.service.commonName }}
-{{- end }}
-      - test.metager.de
-      secretName: metager-de-tls
-    - hosts:
-      - metager3.de
-      - www.metager3.de
-      secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "fullname" .)) }}
+      tls:
+      - hosts:
+        - test.metager.de
+        secretName: metager-de-tls
+      - hosts:
+        - metager3.de
+        - www.metager3.de
+        secretName: development-auto-deploy-tls
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |

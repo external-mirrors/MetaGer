@@ -31,6 +31,9 @@ metadata:
 {{- end }}
 spec:
 {{- if .Values.ingress.tls.enabled }}
+{{- if .Values.ingress.tls.custom }}
+{{ toYaml .Values.ingress.tls.custom | indent 2 }}
+{{- else }}
   tls:
   - hosts:
 {{- if .Values.service.commonName }}
@@ -43,6 +46,7 @@ spec:
 {{- end -}}
 {{- end }}
     secretName: {{ .Values.ingress.tls.secretName | default (printf "%s-tls" (include "fullname" .)) }}
+{{- end }}
 {{- end }}
   rules:
   - host: {{ template "hostname" .Values.service.url }}

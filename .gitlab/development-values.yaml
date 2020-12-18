@@ -41,17 +41,6 @@ podAnnotations:
   prometheus.io/port: "80"
 deploymentApiVersion: apps/v1
 ingress:
-  tls:
-    enabled: true
-    custom:
-      tls:
-      - hosts:
-        - test.metager.de
-        secretName: metager-de-tls
-      - hosts:
-        - metager3.de
-        - www.metager3.de
-        secretName: development-auto-deploy-tls
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: |

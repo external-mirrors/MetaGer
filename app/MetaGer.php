@@ -858,6 +858,7 @@ class MetaGer
                 continue;
             } else {
                 Redis::lpush($answer[0], $answer[1]);
+                Redis::expire($answer[0], 60);
             }
             foreach ($engines as $index => $engine) {
                 if ($engine->hash === $answer[0]) {

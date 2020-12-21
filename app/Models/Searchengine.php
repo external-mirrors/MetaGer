@@ -200,6 +200,7 @@ abstract class Searchengine
         }
         if (!$this->cached && empty($body)) {
             $body = Redis::rpoplpush($this->hash, $this->hash);
+            Redis::expire($this->hash, 60);
             if ($body === false) {
                 return $body;
             }

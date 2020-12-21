@@ -66,6 +66,9 @@ spec:
       - name: metager-config
         configMap:
           name: metager
+      - name: redis-config
+        configMap:
+          name: redis-container-config
       containers:
       - name: {{ .Chart.Name }}-phpfpm
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -190,6 +193,12 @@ spec:
       - name: {{ .Chart.Name }}-redis
         image: "redis:5.0.3-alpine"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+        volumeMounts:
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/redis.conf
+          subPath: redis.conf
+          readOnly: true
         ports:
         - name: "{{ .Values.service.name }}-redis"
           containerPort: 6379

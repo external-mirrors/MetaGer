@@ -85,6 +85,7 @@ class Quicktips
 
         do {
             $body = Redis::rpoplpush($this->hash, $this->hash);
+            Redis::expire($this->hash, 60);
             if ($body === false || $body === null) {
                 usleep(50 * 1000);
             } else {

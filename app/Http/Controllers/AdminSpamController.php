@@ -19,7 +19,8 @@ class AdminSpamController extends Controller
             ->with('title', "Spam Konfiguration - MetaGer")
             ->with('queries', $queries)
             ->with('bans', $currentBans)
-            ->with('loadedBans', $loadedBans);
+            ->with('loadedBans', $loadedBans)
+            ->with('darkcss', [mix('/css/spam.css')]);
     }
 
     public function ban(Request $request)

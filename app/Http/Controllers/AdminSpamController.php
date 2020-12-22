@@ -123,8 +123,6 @@ class AdminSpamController extends Controller
             }
         }
 
-        file_put_contents($file, json_encode($bans));
-
         return $bans;
     }
 

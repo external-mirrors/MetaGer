@@ -28,6 +28,9 @@ mix
   .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css", {
     strictMath: true
   })
+  .less("resources/less/metager/pages/spam.less", "public/css/spam.css", {
+    strictMath: true
+  })
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
     strictMath: true
   })

@@ -19,7 +19,8 @@ class AdminSpamController extends Controller
             ->with('title', "Spam Konfiguration - MetaGer")
             ->with('queries', $queries)
             ->with('bans', $currentBans)
-            ->with('loadedBans', $loadedBans);
+            ->with('loadedBans', $loadedBans)
+            ->with('darkcss', [mix('/css/spam.css')]);
     }
 
     public function ban(Request $request)
@@ -111,17 +112,16 @@ class AdminSpamController extends Controller
 
         if (file_exists($file)) {
             $tmpBans = json_decode(file_get_contents($file), true);
-
-            foreach ($tmpBans as $ban) {
-                #dd($ban["banned-until"]);
-                $bannedUntil = Carbon::createFromFormat('Y-m-d H:i:s', $ban["banned-until"]);
-                if ($bannedUntil->isAfter(Carbon::now())) {
-                    $bans[] = $ban;
+            if(!empty($tmpBans) && is_array($tmpBans)){
+                foreach ($tmpBans as $ban) {
+                    #dd($ban["banned-until"]);
+                    $bannedUntil = Carbon::createFromFormat('Y-m-d H:i:s', $ban["banned-until"]);
+                    if ($bannedUntil->isAfter(Carbon::now())) {
+                        $bans[] = $ban;
+                    }
                 }
             }
         }
-
-        file_put_contents($file, json_encode($bans));
 
         return $bans;
     }

@@ -77,4 +77,5 @@ CMD cp /root/.env .env && \
     chown -R root:nginx storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     crond -L /dev/stdout && \
+    php artisan spam:load && \
     php-fpm7

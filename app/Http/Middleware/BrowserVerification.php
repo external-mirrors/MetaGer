@@ -19,6 +19,19 @@ class BrowserVerification
     public function handle($request, Closure $next)
     {
 
+        $bvEnabled = config("metager.metager.browserverification_enabled");
+        if (empty($bvEnabled) || !$bvEnabled) {
+            return $next($request);
+        } else {
+            $whitelist = config("metager.metager.browserverification_whitelist");
+            $agent = new Agent();
+            foreach ($whitelist as $browser) {
+                if ($agent->match($browser)) {
+                    return $next($request);
+                }
+            }
+        }
+
         if(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
             header('Content-type: application/xml; charset=utf-8');
         } elseif(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
@@ -36,19 +49,6 @@ class BrowserVerification
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');
         ob_end_clean();
-
-        $bvEnabled = config("metager.metager.browserverification_enabled");
-        if (empty($bvEnabled) || !$bvEnabled) {
-            return $next($request);
-        } else {
-            $whitelist = config("metager.metager.browserverification_whitelist");
-            $agent = new Agent();
-            foreach ($whitelist as $browser) {
-                if ($agent->match($browser)) {
-                    return $next($request);
-                }
-            }
-        }
 
         $mgv = $request->input('mgv', "");
         if (!empty($mgv)) {

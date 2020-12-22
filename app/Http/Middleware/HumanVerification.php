@@ -46,7 +46,7 @@ class HumanVerification
              * If someone that uses a bot finds this out we
              * might have to change it at some point.
              */
-            if ($request->filled('appversion') || !env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
+            if (!env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
                 $update = false;
                 return $next($request);
             }
@@ -103,6 +103,7 @@ class HumanVerification
 
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
+                \App\Http\Controllers\HumanVerification::logCaptcha($request);
                 return redirect()->route('captcha', ["id" => $id, "uid" => $uid, "url" => url()->full()]);
             }
 

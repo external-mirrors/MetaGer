@@ -89,7 +89,7 @@ class BrowserVerification
                 ->render());
     }
 
-    public static logBrowserverification() {
+    public static function logBrowserverification() {
         $fail2banEnabled = config("metager.metager.fail2ban_enabled");
         if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
             return;

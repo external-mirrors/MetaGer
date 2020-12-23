@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
+use Illuminate\Http\Request;
 use Cache;
 
 class BrowserVerification
@@ -89,7 +90,7 @@ class BrowserVerification
                 ->render());
     }
 
-    public static function logBrowserverification() {
+    public static function logBrowserverification(Request $request) {
         $fail2banEnabled = config("metager.metager.fail2ban_enabled");
         if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
             return;

@@ -3,16 +3,8 @@
 @section('title', $title )
 
 @section('content')
-<style>
-.card-heavy {
-	border-color: #f47216;
-	border-width: 2px;
-	border-radius: 7px;
-	margin-bottom: 30px!important;
-}
-{{ trans('about.head.4') }}
-</style>
-	<div id="about">
+
+	<div>
 		<h1 class="page-title">{{ trans('transparency.head.1') }}</h1>
 		<div class="card-heavy">
 			<h2>{{ trans('transparency.head.2') }}</h2>
@@ -20,7 +12,11 @@
 		</div>
 		<div class="card-heavy">
 			<h2>{{ trans('transparency.head.3') }}</h2>
-			<img src="/img/transparency-metaindex.svg" id="transparency-metaindex-img">
+			<picture>
+            <source media="(prefers-color-scheme:dark)" srcset="/img/transparency-meatindex-dark-mode.svg">
+					<img src="/img/transparency-metaindex.svg" id="transparency-metaindex-img">	
+          </picture>
+			
 			<p>{{ trans('transparency.text.2.1') }}</p>
 			<p>{{ trans('transparency.text.2.2') }}</p>
 		</div>

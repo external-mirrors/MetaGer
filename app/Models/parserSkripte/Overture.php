@@ -35,10 +35,10 @@ class Overture extends Searchengine
             $this->totalResults = $resultCount;
             $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
             foreach ($results as $result) {
-                $title = $result["title"];
+                $title = html_entity_decode($result["title"]);
                 $link = $result->{"ClickUrl"}->__toString();
                 $anzeigeLink = $result["siteHost"];
-                $descr = $result["description"];
+                $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -56,10 +56,10 @@ class Overture extends Searchengine
             # Nun noch die Werbeergebnisse:
             $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
             foreach ($ads as $ad) {
-                $title = $ad["title"];
+                $title = html_entity_decode($ad["title"]);
                 $link = $ad->{"ClickUrl"}->__toString();
                 $anzeigeLink = $ad["siteHost"];
-                $descr = $ad["description"];
+                $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
                     $this->engine,

@@ -33,6 +33,8 @@ class Result
     public $new = true;
     public $changed = false;
 
+    const DESCRIPTION_LENGTH = 150;
+
     # Erstellt ein neues Ergebnis
     public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
     {
@@ -44,10 +46,10 @@ class Result
         $this->descr = strip_tags(trim($descr), '<p>');
         $this->descr = preg_replace("/\n+/si", " ", $this->descr);
         $this->longDescr = $this->descr;
-        if (strlen($this->descr) > 150) {
-            $this->descr = wordwrap($this->descr, 150);
+        if (strlen($this->descr) > self::DESCRIPTION_LENGTH) {
+            $this->descr = wordwrap($this->descr, self::DESCRIPTION_LENGTH);
             $this->descr = substr($this->descr, 0, strpos($this->descr, "\n"));
-            $this->descr .= "&#8230;"; // Ellipsis character
+            $this->descr .= "…"; // Ellipsis character
         }
         $this->gefVon[] = trim($gefVon);
         $this->gefVonLink[] = trim($gefVonLink);

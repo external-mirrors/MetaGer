@@ -1358,7 +1358,7 @@ class MetaGer
         $words = preg_split("/\s+/si", $tmp);
         $newQ = $this->q;
         foreach ($words as $word) {
-            if (strpos($word, "-") === 0 && strlen($word) > 1) {
+            if(preg_match("/^-[a-zA-Z0-9]/", $word)){
                 $this->stopWords[] = substr($word, 1);
                 $newQ = str_ireplace($word, "", $newQ);
             }

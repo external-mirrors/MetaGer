@@ -27,10 +27,10 @@ class OvertureAds extends Searchengine
 
             $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
             foreach ($ads as $ad) {
-                $title = $ad["title"];
+                $title = html_entity_decode($ad["title"]);
                 $link = $ad->{"ClickUrl"}->__toString();
                 $anzeigeLink = $ad["siteHost"];
-                $descr = $ad["description"];
+                $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
                     $this->engine,

@@ -47,7 +47,7 @@
 			</div>
 		@else
 			<div class="result-description">
-				{!! $result->descr !!}
+				{{ $result->descr }}
 			</div>
 		@endif
 	</div>

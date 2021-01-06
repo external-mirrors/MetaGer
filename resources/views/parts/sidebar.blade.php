@@ -92,6 +92,9 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" >{{ trans('sidebar.nav22') }}</a>
         </li>
         <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" >{{ trans('sidebar.nav29') }}</a>
+        </li>
+        <li>
           <a href="{{ action('Assoziator@asso') }}" >{{ trans('sidebar.nav11') }}</a>
         </li>
         <li>

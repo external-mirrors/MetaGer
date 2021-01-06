@@ -26,6 +26,7 @@ return [
     'nav26' => 'MetaGer-Fanshop',
     'nav27' => 'MetaGer Maps',
     'nav28' => 'Settings',
+    'nav29' => 'Transparency statement',
     "navigationToggle" => "show navigation",
     'titles.tips' => 'Tips',
     'plugin' => 'MetaGer Plugin',

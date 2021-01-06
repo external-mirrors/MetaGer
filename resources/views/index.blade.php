@@ -63,7 +63,7 @@
         <ul class="story-links">
         <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
         <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank"><nobr>{{ trans('mg-story.btn-mg-code') }}</nobr></a></li>
-        <!--<li><a class="story-button" href="https://metager.de/about">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>-->
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency") }}">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>
         </ul>
       </section>
 

@@ -130,10 +130,21 @@ class Adgoal
             
         try {
             $answer = json_decode($answer, true);
-    
+
             foreach ($answer as $partnershop) {
                 $targetUrl = $partnershop["url"];
     
+                $tld = $partnershop["tld"];
+                $targetHost = parse_url($targetUrl, PHP_URL_HOST);
+
+                /*
+                    Adgoal sometimes returns affiliate Links for every URL
+                    That's why we check if the corresponding TLD matches the orginial URL
+                */
+                if($targetHost !== false && stripos($targetHost, $tld) === false){
+                    continue;
+                }
+
                 foreach ($results as $result) {
                     if ($result->link === $targetUrl && !$result->partnershop) {
                         # Ein Advertiser gefunden

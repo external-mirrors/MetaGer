@@ -26,4 +26,5 @@ return [
     'key' => 'Mitgliederschlüssel - MetaGer',
     'settings' => 'Sucheinstellungen (:fokus)',
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
+    'transparency' => 'Transparenzerklärung - MetaGer',
 ];

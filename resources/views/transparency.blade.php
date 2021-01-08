@@ -12,10 +12,7 @@
 		</div>
 		<div class="card-heavy">
 			<h2>{{ trans('transparency.head.3') }}</h2>
-			<picture>
-            <source media="(prefers-color-scheme:dark)" srcset="/img/transparency-metaindex-dark-mode.svg">
 					<img src="/img/transparency-metaindex.svg" id="transparency-metaindex-img">	
-          </picture>
 			
 			<p>{{ trans('transparency.text.2.1') }}</p>
 			<p>{{ trans('transparency.text.2.2') }}</p>

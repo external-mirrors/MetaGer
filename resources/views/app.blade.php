@@ -9,6 +9,11 @@
 		<h2>{{ trans('app.head.2') }}</h2>
 		<p>{{ trans('app.metager.1') }}</p>
 		<p>{{ trans('app.metager.2') }}</p>
+		@if(in_array(LaravelLocalization::getCurrentLocale(), ["en", "es", "de"]))
+		<p><a href="https://f-droid.org/{{ LaravelLocalization::getCurrentLocale() }}/packages/de.metager.metagerapp.fdroid/">{{ trans('app.metager.fdroid') }}</a></p>
+		@else
+		<p><a href="https://f-droid.org/en/packages/de.metager.metagerapp.fdroid/">{{ trans('app.metager.fdroid') }}</a></p>
+		@endif
 		<p><a href="https://play.google.com/store/apps/details?id=de.metager.metagerapp">{{ trans('app.metager.playstore') }}</a></p>
 		<p><a href="{!! url('app/metager') !!}">{{ trans('app.metager.manuell') }}</a></p>
 	</div>

@@ -7,6 +7,7 @@ return [
     "metager.1"	=>	"Con esta aplicación, obtiene toda la potencia de nuestro motor de búsqueda en su smartphone.\r\nBusque en Internet con solo deslizar un dedo mientras que mantiene su privacidad.",
     "metager.2"	=>	"Puede instalar la aplicación para nuestra búsqueda a través de Google Playstore o instalarla manualmente desde nuestro servidor en su smartphone, protegida de datos.",
     "metager.playstore"	=>	"Google Playstore",
+    'metager.fdroid'    => 'F-Droid Store'
     "metager.manuell"	=>	"Instalación manual",
     "head.3"	=>	"Aplicación Maps MetaGer",
     "maps.playstore"	=>	"Google Playstore",

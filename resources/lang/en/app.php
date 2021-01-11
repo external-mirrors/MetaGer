@@ -7,6 +7,7 @@ return [
     "metager.1"	        =>	"This App brings the full Metager power to your smartphone. Search the web with one touch while preserving your privacy.",
     "metager.2"	        =>	"There are two ways to get our App: install via the Google Playstore or (better for your privacy) get it directly from our server.",
     "metager.playstore"	=>	"Google Playstore",
+    'metager.fdroid'    => 'F-Droid Store'
     "metager.manuell"	=>	"Manual Installation",
     "head.3"	        =>	"MetaGer Maps App",
     "maps.playstore"	=>	"Google Playstore",

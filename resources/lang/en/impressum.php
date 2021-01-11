@@ -11,7 +11,7 @@ Röselerstr. 3
 D-30159 Hannover
 Deutschland/Germany',
     'info.3' => 'Contact:
-Tel.: ++49-(0)511-34000070
+Tel.: +49-(0)511-34000070
 EMail: <a href="mailto:office@suma-ev.de">office@suma-ev.de</a><a href="/kontakt/"> - Public-PGP-Key</a>
 <a href="/kontakt/">encrypted contact form</a>',
     'info.4' => 'Board: Dominik Hebeler, Carsten Riel',

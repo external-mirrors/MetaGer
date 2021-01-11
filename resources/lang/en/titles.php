@@ -25,4 +25,6 @@ return [
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Ad-Free-Key - MetaGer',
     'allSettings'   =>  'All Settings - MetaGer',
+    'transparency' => 'Transparency statement - MetaGer',
+
 ];

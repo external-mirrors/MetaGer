@@ -16,7 +16,6 @@ class AppendLogs extends Command
      */
     protected $signature = 'logs:gather';
     const LOGKEY = "metager.logs";
-    const LOGKEYTAZ = "metager.tazlogs";
 
     /**
      * The console command description.
@@ -43,7 +42,6 @@ class AppendLogs extends Command
     public function handle()
     {
         $this->handleMGLogs();
-        $this->handleTazLogs();
     }
 
     private function handleMGLogs()
@@ -75,46 +73,5 @@ class AppendLogs extends Command
         } else {
             Log::info("Added " . sizeof($elements) . " lines to todays log!");
         }
-    }
-
-    private function handleTazLogs()
-    {
-        $redis = null;
-        
-        if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
-            $redis = Redis::connection('cache');
-        } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
-            $redis = RedisSentinel::connection('cache');
-        }
-        if ($redis === null) {
-            Log::error("No valid Redis Connection specified");
-            return;
-        }
-
-        $elements = [];
-        $reply = $redis->pipeline(function ($pipe) use ($elements) {
-            $pipe->lrange(\App\Console\Commands\AppendLogs::LOGKEYTAZ, 0, -1);
-            $pipe->del(\App\Console\Commands\AppendLogs::LOGKEYTAZ);
-        });
-        $elements = $reply[0];
-        if (!is_array($elements) || sizeof($elements) <= 0) {
-            return;
-        }
-        if (file_put_contents(\App\Console\Commands\AppendLogs::getTazLogFile(), implode(PHP_EOL, $elements) . PHP_EOL, FILE_APPEND) === false) {
-            Log::error("Konnte Log Zeile(n) nicht schreiben");
-            $redis->lpush(\App\Console\Commands\AppendLogs::LOGKEYTAZ, array_reverse($elements));
-        } else {
-            Log::info("Added " . sizeof($elements) . " lines to todays TAZ log!");
-        }
-    }
-
-    public static function getTazLogFile()
-    {
-        $logpath = storage_path("logs/metager/taz/" . date("Y") . "/" . date("m") . "/");
-        if (!file_exists($logpath)) {
-            mkdir($logpath, 0777, true);
-        }
-        $logpath .= date("d") . ".log";
-        return $logpath;
     }
 }

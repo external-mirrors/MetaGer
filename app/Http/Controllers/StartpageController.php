@@ -44,21 +44,6 @@ class StartpageController extends Controller
             $lang = 'all';
         }
 
-        /**
-         * Logging Requests from Taz advertisement
-         */
-        if ($request->filled("key") && $request->input("key", "") === "taz") {
-            $logEntry = date("H:i:s");
-            $referer = request()->headers->get('referer');
-            $logEntry .= " ref=$referer";
-
-            if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
-                Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEYTAZ, $logEntry);
-            } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
-                RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEYTAZ, $logEntry);
-            }
-        }
-
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('homeIcon')

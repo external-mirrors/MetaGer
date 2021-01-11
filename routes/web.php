@@ -61,7 +61,7 @@ Route::group(
                 ->with('title', trans('titles.kontakt'))
                 ->with('navbarFocus', 'kontakt')
                 ->with('url', $url);
-        });
+        })->name("contact");
 
         Route::post('kontakt', 'MailController@contactMail');
 
@@ -107,11 +107,11 @@ Route::group(
                 ->with('navbarFocus', 'datenschutz');
         });
 
-        Route::get('transparency',function() { 
+        Route::get('transparency', function () {
             return view('transparency')
                  ->with('title', trans('titles.transparency'))
                  ->with('navbarFocus', 'kontakt');
-    });
+        });
 
         Route::get('hilfe', function () {
             return view('hilfe')

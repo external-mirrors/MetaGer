@@ -33,7 +33,7 @@ class HumanVerification
             $uid = "";
             if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
                 $id = hash("sha1", "999.999.999.999");
-                $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+                $uid = hash("sha1", "999.999.999.999uid");
             } else {
                 $id = hash("sha1", $ip);
                 $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");

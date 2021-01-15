@@ -9,7 +9,7 @@ function botProtection() {
     var link = $(this).attr('href');
     var newtab = false;
     var top = false;
-    if ($(this).attr('target') == '_blank' || e.ctrlKey) {
+    if ($(this).attr('target') == '_blank' || e.ctrlKey || e.metaKey) {
       newtab = true;
     } else if ($(this).attr('target') == "_top") {
       top = true;

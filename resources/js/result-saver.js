@@ -408,7 +408,8 @@ function resultSaver(index) {
   var title = $('.result[data-count=' + index + '] .result-title a').html().trim();
   var link = $('.result[data-count=' + index + '] .result-title a').attr('href').trim();
   var hosterName = $('.result[data-count=' + index + '] .result-hoster').html().trim();
-  var hosterLink = $('.result[data-count=' + index + '] .result-hoster').attr('href').trim();
+  var hosterLink = $('.result[data-count=' + index + '] .result-hoster').attr('href');
+      hosterLink = hosterLink?hosterLink.trim():"#";
   var anzeigeLink = $('.result[data-count=' + index + '] .result-link').html().trim();
   var description = $('.result[data-count=' + index + '] .result-description').html().trim();
   var anonym = $('.result[data-count=' + index + '] .result-open-proxy').attr('href').trim();

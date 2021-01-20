@@ -365,8 +365,6 @@ class Result
         }
 
         $parts = parse_url($link);
-        $host = null;
-        $path = null;
 
         $proxyUrl = "https://proxy.metager.de/";
 

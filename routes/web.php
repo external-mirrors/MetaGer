@@ -14,6 +14,17 @@ use Prometheus\RenderTextFormat;
 | to using a Closure or controller method. Build something great!
 |
  */
+
+Route::get("robots.txt", function(Request $request){
+    $responseData = "";
+    if(App::environment("production")){
+        $responseData = view("robots.production");
+    }else{
+        $responseData = view("robots.development");
+    }
+    return response($responseData, 200, ["Content-Type" => "text/plain"]);
+});
+
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(), /*,

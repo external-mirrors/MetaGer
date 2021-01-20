@@ -360,17 +360,37 @@ class Result
     # Erstellt aus einem Link einen Proxy-Link für unseren Proxy-Service
     public function generateProxyLink($link)
     {
-        if (!$link) {
+        if (!$link || empty($link)) {
             return "";
         }
 
-        # Link to our new Proxy software:
-        $pw = md5(env('PROXY_PASSWORD') . $link);
+        $parts = parse_url($link);
+        $host = null;
+        $path = null;
 
-        $proxyUrl = base64_encode(str_rot13($link));
-        $proxyUrl = urlencode(str_replace("/", "<<SLASH>>", $proxyUrl));
+        $proxyUrl = "https://proxy.metager.de/";
 
-        return "https://proxy.metager.de/" . $pw . "/" . $proxyUrl;
+        if(!empty($parts["host"])){
+            $proxyUrl .= $parts["host"];
+            if(!empty($parts["path"])){
+                $proxyUrl .= "/" . trim($parts["path"], "/");
+            }
+        }
+
+        // We need to generate the correct password for the Proxy URLs
+        // It's an hmac sha256 hash of the url having the proxy password as secret
+        $password = hash_hmac("sha256", $link, env("PROXY_PASSWORD", "unsecure_password"));
+
+        $urlParameters = [
+            "url" => $link,
+            "password" => $password,
+        ];
+
+        $params = http_build_query($urlParameters, "", "&", PHP_QUERY_RFC3986);
+
+        $proxyUrl .= "?" . $params;
+
+        return $proxyUrl;
     }
 
     /* Liest aus einer URL alle Informationen aus

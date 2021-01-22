@@ -408,10 +408,20 @@ class MetaGer
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+
+                // The duplicate might already be an adgoal partnershop
+                if($this->results[$i]->partnershop){
+                    # Den Link hinzufügen:
+                    $arr[$link]->logo = $this->results[$i]->logo;
+                    $arr[$link]->image = $this->results[$i]->image;
+                    $arr[$link]->link = $this->results[$i]->link;
+                    $arr[$link]->partnershop = $this->results[$i]->partnershop;
+                }
+
                 array_splice($this->results, $i, 1);
                 $i--;
                 if ($arr[$link]->new === true || $this->results[$i]->new === true) {
-                    $arr[$link]->changed = true;
+                    $arr[$link]->changed = true; 
                 }
             } else {
                 $arr[$link] = &$this->results[$i];

@@ -212,6 +212,9 @@ Route::group(
             Route::post('service-desk', 'ServiceDesk@webhook');
             Route::get('stress', 'Stresstest@index');
             Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
+            Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
+            Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
+            Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
         });
 
         Route::get('settings', function () {

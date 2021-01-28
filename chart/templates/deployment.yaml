@@ -113,10 +113,6 @@ spec:
           mountPath: /html/database/seeds/UsersSeeder.php
           subPath: UsersSeeder.php
           readOnly: true
-        - name: env-files
-          mountPath: /html/config/spam.txt
-          subPath: spam.txt
-          readOnly: true
         - name: sumas
           mountPath: /html/config/sumas.json
           subPath: sumas.json

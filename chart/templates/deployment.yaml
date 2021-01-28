@@ -45,24 +45,12 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
       volumes:
+      - name: secrets
+        secret:
+          secretName: {{ .Values.application.secretName }}
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
           claimName: mg-logs
-      - name: env-files
-        secret:
-          secretName: metager-env
-      - name: sumas
-        secret:
-          secretName: metager-sumas
-      - name: sumas-en
-        secret:
-          secretName: metager-sumas-en
-      - name: blacklist
-        secret:
-          secretName: metager-blacklist
-      - name: blacklist-ad
-        secret:
-          secretName: metager-ad-blacklist
       - name: metager-config
         configMap:
           name: metager
@@ -105,41 +93,37 @@ spec:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false
-        - name: env-files
+        - name: secrets
           mountPath: /root/.env
-          subPath: .env
+          subPath: env
           readOnly: true
-        - name: env-files
+        - name: secrets
           mountPath: /html/database/seeds/UsersSeeder.php
-          subPath: UsersSeeder.php
+          subPath: userseeder
           readOnly: true
-        - name: env-files
-          mountPath: /html/config/spam.txt
-          subPath: spam.txt
-          readOnly: true
-        - name: sumas
+        - name: secrets
           mountPath: /html/config/sumas.json
-          subPath: sumas.json
+          subPath: sumas
           readOnly: true
-        - name: sumas-en
+        - name: secrets
           mountPath: /html/config/sumasEn.json
-          subPath: sumasEn.json
+          subPath: sumasen
           readOnly: true
-        - name: blacklist
+        - name: secrets
           mountPath: /html/config/blacklistUrl.txt
-          subPath: blacklistUrl.txt
+          subPath: blacklisturl
           readOnly: true
-        - name: blacklist
+        - name: secrets
           mountPath: /html/config/blacklistDomains.txt
-          subPath: blacklistDomains.txt
+          subPath: blacklistdomains
           readOnly: true
-        - name: blacklist-ad
+        - name: secrets
           mountPath: /html/config/adBlacklistUrl.txt
-          subPath: adBlacklistUrl.txt
+          subPath: adblacklisturl
           readOnly: true
-        - name: blacklist-ad
+        - name: secrets
           mountPath: /html/config/adBlacklistDomains.txt
-          subPath: adBlacklistDomains.txt
+          subPath: adblacklistdomains
           readOnly: true
         resources:
 {{ toYaml .Values.resourcesPhpfpm | indent 12 }}
@@ -220,9 +204,9 @@ spec:
         command: ["su"]
         args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
         volumeMounts:
-        - name: env-files
+        - name: secrets
           mountPath: /html/.env
-          subPath: .env
+          subPath: env
           readOnly: true
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:

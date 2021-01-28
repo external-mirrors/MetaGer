@@ -22,11 +22,6 @@ class MetaGerSearch extends Controller
             $timings = ['starttime' => microtime(true)];
         }
         $time = microtime(true);
-        $spamEntries = [];
-        $spamEntry = null;
-        if (file_exists(config_path('spam.txt'))) {
-            $spamEntries = file(config_path('spam.txt'));
-        }
 
         $focus = $request->input("focus", "web");
 
@@ -39,17 +34,6 @@ class MetaGerSearch extends Controller
         $eingabe = $request->input('eingabe', '');
         if (empty(trim($eingabe))) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
-        }
-
-        foreach ($spamEntries as $index => $entry) {
-            $entry = trim($entry);
-            if (empty($entry)) {
-                continue;
-            }
-            if (preg_match("/" . $entry . "/si", $eingabe)) {
-                $spamEntry = $entry;
-                break;
-            }
         }
 
         # Mit gelieferte Formulardaten parsen und abspeichern:
@@ -68,12 +52,6 @@ class MetaGerSearch extends Controller
         # we will cancel the search in that case and show an error to the user
         if (empty($metager->getQ())) {
             return $metager->createView();
-        }
-
-        if ($spamEntry !== null && Cache::has('spam.' . $metager->getFokus() . "." . md5($spamEntry))) {
-            $responseContent = Cache::get('spam.' . $metager->getFokus() . "." . md5($spamEntry));
-            $responseContent = preg_replace('/(name="eingabe"\s+value=")[^"]+/', "$1$eingabe", $responseContent);
-            return response($responseContent);
         }
 
         $quicktips = $metager->createQuicktips();
@@ -143,13 +121,6 @@ class MetaGerSearch extends Controller
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
-        if ($spamEntry !== null) {
-            try {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }
-        }
 
         if (!empty($timings)) {
             $timings["createView"] = microtime(true) - $time;

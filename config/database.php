@@ -111,8 +111,16 @@ return [
     'redis' => [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
-        'cluster' => false,
+        'cluster' => true,
+        
+        'options' => [
+            'cluster' => 'redis',
+            'password' => env('REDIS_CACHE_PASSWORD', null),
+            'timeout' => 5,
+            'read_timeout' => 2,
+        ],
 
+        
         'default' => [
             'read_write_timeout' => -1,
             'host' => env('REDIS_HOST', 'localhost'),
@@ -121,13 +129,24 @@ return [
             'database' => 0,
         ],
 
-        'cache' => [
-            'driver' => env('REDIS_CACHE_DRIVER', 'redis'),
-            'host' => env('REDIS_CACHE_HOST', 'localhost'),
-            'password' => env('REDIS_CACHE_PASSWORD', null),
-            'port' => env('REDIS_CACHE_PORT', 6379),
-            'database' => 0,
-        ],
+        'clusters' => [
+            'cache' => [
+                [
+                    'host' => env('REDIS_CACHE_HOST', 'localhost'),
+                    'password' => env('REDIS_CACHE_PASSWORD', null),
+                    'port' => env('REDIS_CACHE_PORT', 6379),
+                    'database' => 0,
+                    'timeout' => 5,
+                    'read_timeout' => 2,
+                ]
+            ],
+            'options' => [
+                'cluster' => 'redis',
+                'password' => env('REDIS_CACHE_PASSWORD', null),
+                'timeout' => 5,
+                'read_timeout' => 2,
+            ],
+        ]
     ],
 
 ];

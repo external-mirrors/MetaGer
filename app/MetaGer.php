@@ -90,17 +90,17 @@ class MetaGer
             $this->domainsBlacklisted = explode("\n", $tmp);
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
             $this->urlsBlacklisted = explode("\n", $tmp);
-        } else {
-            Log::warning("Achtung: Eine, oder mehrere Blacklist Dateien, konnten nicht geöffnet werden");
         }
+        
         # Versuchen Blacklists einzulesen
-        if (file_exists(config_path() . "/adBlacklistDomains.txt") && file_exists(config_path() . "/adBlacklistUrl.txt")) {
+        if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
             $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
             $this->adDomainsBlacklisted = explode("\n", $tmp);
+        }
+
+        if(file_exists(config_path() . "/adBlacklistUrl.txt")){
             $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
             $this->adUrlsBlacklisted = explode("\n", $tmp);
-        } else {
-            Log::warning("Achtung: Eine, oder mehrere Blacklist Dateien, konnten nicht geöffnet werden");
         }
 
         # Parser Skripte einhängen

@@ -34,7 +34,7 @@ class Key
     
     public function updateStatus()
     {
-        $authKey = base64_encode(getenv("KEY_USER") . ':' . getenv("KEY_PASSWORD"));
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
 
         $opts = array(
             'http' => array(

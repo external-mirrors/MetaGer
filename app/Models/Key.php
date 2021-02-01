@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Log;
-
 class Key
 {
     public $key;

@@ -73,8 +73,10 @@ class Key
         $opts = array(
             'http' => array(
                 'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded\r\n' . 
-                            'Authorization: Basic ' . $authKey . '\r\n',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
                 'content' => $postdata,
             ),
         );

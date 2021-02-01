@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Log;
+
 class Key
 {
     public $key;
@@ -89,6 +91,7 @@ class Key
                 return false;
             }
         } catch (\ErrorException $e) {
+            Log::debug($e);
             return false;
         }
     }

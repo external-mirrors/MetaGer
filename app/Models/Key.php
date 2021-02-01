@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Redis;
+use Request;
+
 class Key
 {
     public $key;
@@ -23,6 +26,29 @@ class Key
     {
         if ($this->key !== '' && $this->status === null) {
             $this->updateStatus();
+            if(empty($this->status)){
+                // The user provided an invalid key which we will log to fail2ban
+                $fail2banEnabled = config("metager.metager.fail2ban_enabled");
+                if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
+                    return false;
+                }
+
+                // Submit fetch job to worker
+                $mission = [
+                        "resulthash" => "captcha",
+                        "url" => env("fail2banurl") . "/mgkeytry/",
+                        "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                        "username" => env("fail2banuser"),
+                        "password" => env("fail2banpassword"),
+                        "headers" => [
+                            "ip" => Request::ip()
+                        ],
+                        "cacheDuration" => 0,
+                        "name" => "Captcha",
+                    ];
+                $mission = json_encode($mission);
+                Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+            }
         }
         if ($this->status === null || $this->status === false) {
             return false;

@@ -6,15 +6,16 @@ class Key
 {
     public $key;
     public $status; # valid key = true, invalid key = false, unidentified key = null
-    private $keyserver = "https://key.metager.de/";
+    //private $keyserver = "https://key.metager.de/";
+    private $keyserver = "https://dev.key.metager.de/";
 
     public function __construct($key, $status = null)
     {
         $this->key = $key;
         $this->status = $status;
-        if (getenv("APP_ENV") !== "production") {
+        /*if (getenv("APP_ENV") !== "production") {
             $this->keyserver = "https://dev.key.metager.de/";
-        }
+        }*/
     }
 
     # always returns true or false
@@ -33,10 +34,23 @@ class Key
     
     public function updateStatus()
     {
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+
+        $opts = array(
+            'http' => array(
+                'method' => 'GET',
+                'header' => 'Authorization: Basic ' . $authKey ,
+            ),
+        );
+        $context = stream_context_create($opts);
+
         try {
-            $link = $this->keyserver . urlencode($this->key) . "/request-permission/api-access";
-            $result = json_decode(file_get_contents($link));
-            if ($result->{'api-access'} == true) {
+            $link = $this->keyserver . "v2/key/". urlencode($this->key);
+            $result = json_decode(file_get_contents($link, false, $context));
+            if ($result->{'apiAccess'} == 'unlimited') {
+                $this->status = true;
+                return true;
+            } else if ($result->{'apiAccess'} == 'normal' && $result->{'adFreeSearches'} > 0){
                 $this->status = true;
                 return true;
             } else {
@@ -50,13 +64,17 @@ class Key
 
     public function requestPermission()
     {
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
         $postdata = http_build_query(array(
             'dummy' => 0,
         ));
         $opts = array(
             'http' => array(
                 'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
                 'content' => $postdata,
             ),
         );
@@ -64,9 +82,9 @@ class Key
         $context = stream_context_create($opts);
 
         try {
-            $link = $this->keyserver . urlencode($this->key) . "/request-permission/api-access";
+            $link = $this->keyserver . "v2/key/". urlencode($this->key) . "/request-permission";
             $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'api-access'} == true) {
+            if ($result->{'apiAccess'} == true) {
                 return true;
             } else {
                 $this->status = false;

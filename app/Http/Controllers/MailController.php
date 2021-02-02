@@ -28,14 +28,15 @@ class MailController extends Controller
         $returnMessage = '';
 
         # Wir benötigen 3 Felder von dem Benutzer wenn diese nicht übermittelt wurden, oder nicht korrekt sind geben wir einen Error zurück
+        $input_data = $request->all();
+        $maxFileSize = 5 * 1024 * 1024;
         $validator = Validator::make(
-            [
-                'email' => $request->input('email'),
-                'pcsrf' => $request->input('pcsrf'),
-            ],
+            $input_data,
             [
                 'email' => 'required|email',
                 'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
+                'attachments' => ['max:5'],
+                'attachments.*' => ['max:' . $maxFileSize],
             ]
         );
 
@@ -63,8 +64,9 @@ class MailController extends Controller
             }
             $message = $request->input('message');
             $subject = $request->input('subject');
+            $files = $request->file("attachments");
             Mail::to($mailto)
-                ->send(new Kontakt($name, $replyTo, $subject, $message));
+                ->send(new Kontakt($name, $replyTo, $subject, $message, $files));
 
             $returnMessage = trans('kontakt.success.1');
             $messageType = "success";
@@ -74,6 +76,8 @@ class MailController extends Controller
             ->with('title', 'Kontakt')
             ->with('js', ['lib.js'])
             ->with($messageType, $returnMessage);
+
+        
     }
 
     public function donation(Request $request)

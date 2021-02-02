@@ -10,6 +10,7 @@ Alternativ können Sie uns natürlich auch per <a href="mailto:support@suma-ev.d
     'form.6' => 'Ihre Nachricht',
     'form.7' => 'Betreff',
     'form.8' => 'Senden',
+    'form.9' => 'Bis zu 5 Anhänge hinzufügen (Dateigröße < 5 MB)',
     'letter.1' => 'Per Brief-Post',
     'letter.2' => 'Wir ziehen es vor, auf digitalem Wege kontaktiert zu werden.
 Wenn Sie jedoch eine postalische Kontaktaufnahme als unbedingt nötig erachten,

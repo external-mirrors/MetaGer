@@ -60,9 +60,11 @@ return [
 
     'drucken' => 'Drucken',
 
-    'danke.title' => 'Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung für MetaGer an SUMA-EV erhalten.',
+    'danke.title' => 'Herzlichen Dank! Wir haben Ihre Spendenbenachrichtigung für MetaGer an SUMA-EV erhalten.',
     'danke.nachricht' => 'Falls Sie Kontaktdaten angegeben haben, erhalten Sie demnächst auch eine persönliche Nachricht.',
     'danke.kontrolle' => 'Folgende Nachricht hat uns erreicht:',
+
+    'danke.schluessel' => 'Als kleines Dankeschön bieten wir unseren Spendern einen Schlüssel für werbefreie Suchen. <br> Dieser lässt sich eingeben indem man auf das Schlüsselsymbol in der Suchleiste geht. <br> Ihr Schlüssel lautet: ',
 
     'telefonnummer' => 'Telefonnummer',
     'iban' => 'IBAN/Kontonummer',

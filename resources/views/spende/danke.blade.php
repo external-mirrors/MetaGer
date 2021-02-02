@@ -43,6 +43,9 @@
 				</table>
 			</div>
 			<button type="button" class="btn btn-primary noprint" onclick="window.print();">{{ trans('spende.drucken') }}</button>
+			<div class="card-light">
+				<p style="text-align: center; width:100%;">{!! trans('spende.danke.schluessel') . ' ' . $data['key'] !!}</p>
+			</div>
 		</div>
 		<div class="col-lg-6 col-md-12 col-sm-12 others noprint" id="right">
 			<h2>{{ trans('about.about.1') }}</h2>

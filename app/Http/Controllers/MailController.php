@@ -145,6 +145,9 @@ class MailController extends Controller
             # The value has to have a maximum of 2 decimal digits
             $betrag = round($betrag, 2, PHP_ROUND_HALF_DOWN);
 
+            # Generating personalised key for donor
+            $key = app('App\Models\Key')->generateKey($betrag);
+
             # Folgende Felder werden vom Spendenformular als Input übergeben:
             # Name
             # Telefon
@@ -162,6 +165,10 @@ class MailController extends Controller
             $message .= "\r\nBetrag: " . $betrag;
             $message .= "\r\nHäufigkeit: " . trans('spende.frequency.' . $frequency);
             $message .= "\r\nNachricht: " . $nachricht;
+
+            if($key){
+                $message .= "\r\nSchlüssel:" . $key;
+            }
 
             try {
                 Mail::to("spenden@suma-ev.de")
@@ -183,6 +190,7 @@ class MailController extends Controller
                 ->with('data', $data);
         } else {
             $data['iban'] = $iban->HumanFormat();
+            $data['key'] = $key;
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }

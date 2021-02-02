@@ -35,18 +35,7 @@
 					<button title="" data-original-title="" class="btn btn-default encrypt-btn" type="submit">{!! trans('kontakt.form.8') !!}</button>
 				</div>
 			</form>
-		</div>
-		<div class="card-heavy">
-			<h2>{!! trans('kontakt.mail.1') !!}</h2>
-			@if(LaravelLocalization::getCurrentLocale() === "de")
-			<p>{!! trans('kontakt.mail.2', ["mail" => "support@suma-ev.de"]) !!}</p>
-			<p>{!! trans('kontakt.mail.3') !!}</p>
-			<textarea id="pubkey" style="width:50%" rows="8" readonly>@include('kontakt/pgp')</textarea>
-			@else
-			<p>{!! trans('kontakt.mail.2', ["mail" => "support@metager.org"]) !!}</p>
-			@endif
-			
-		</div>
+		</div> 
 		<div class="card-heavy">
 			<h2>{!! trans('kontakt.letter.1') !!}</h2>
 			<p>{!! trans('kontakt.letter.2') !!}</p>

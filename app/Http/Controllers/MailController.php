@@ -59,7 +59,7 @@ class MailController extends Controller
             # Wir versenden die Mail des Benutzers an uns:
             $mailto = "support@metager.org";
             if (LaravelLocalization::getCurrentLocale() === "de") {
-                $mailto = "support@suma-ev.de";
+                $mailto = "support+46521@metager.de";
             }
             $message = $request->input('message');
             $subject = $request->input('subject');

@@ -34,8 +34,12 @@ return [
 
     'lastschrift.1' => 'Spenden mittels elektronischem Lastschriftverfahren:',
     'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
-    'lastschrift.3' => 'Bitte geben Sie den Namen des Kontoinhabers ein:',
-    'lastschrift.3.placeholder' => 'Name',
+    'lastschrift.3f' => 'Bitte geben Sie den Vornamen des Kontoinhabers ein:',
+    'lastschrift.3f.placeholder' => 'Vorname',
+    'lastschrift.3l' => 'Bitte geben Sie den Nachnamen des Kontoinhabers ein:',
+    'lastschrift.3l.placeholder' => 'Nachname',
+    'lastschrift.3c' => 'Bitte geben Sie den Firmenkontonamen ein:',
+    'lastschrift.3c.placeholder' => 'Firma',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',
     'lastschrift.5' => 'Ihre Telefonnummer, um Ihre Spende ggf. durch einen Rückruf zu verifizieren:',
     'lastschrift.6' => 'Ihre IBAN:',
@@ -43,6 +47,9 @@ return [
     'lastschrift.8.message' => 'Hier können Sie uns ggf. noch eine Mitteilung dazu senden:',
     'lastschrift.8.message.placeholder' => 'Weitere Angaben',
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
+    'lastschrift.private' => 'Privatperson',
+    'lastschrift.company' => 'Firma',
+    
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
 

@@ -65,7 +65,10 @@ class MailController extends Controller
             }
             $message = $request->input('message');
             $subject = $request->input('subject');
-            $files = $request->file("attachments");
+            $files = [];
+            if($request->has("attachments") && is_array($request->file("attachments"))){
+                $files = $request->file("attachments");
+            }
 
             Mail::to($mailto)
                 ->send(new Kontakt($name, $replyTo, $subject, $message, $files));

@@ -29,14 +29,15 @@ class MailController extends Controller
 
         # Wir benötigen 3 Felder von dem Benutzer wenn diese nicht übermittelt wurden, oder nicht korrekt sind geben wir einen Error zurück
         $input_data = $request->all();
-        $maxFileSize = 5 * 1024 * 1024;
+
+        $maxFileSize = 5 * 1024;
         $validator = Validator::make(
             $input_data,
             [
                 'email' => 'required|email',
                 'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
                 'attachments' => ['max:5'],
-                'attachments.*' => ['max:' . $maxFileSize],
+                'attachments.*' => ['file', 'max:' . $maxFileSize],
             ]
         );
 
@@ -65,6 +66,7 @@ class MailController extends Controller
             $message = $request->input('message');
             $subject = $request->input('subject');
             $files = $request->file("attachments");
+
             Mail::to($mailto)
                 ->send(new Kontakt($name, $replyTo, $subject, $message, $files));
 

@@ -12,7 +12,7 @@
         Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint.
         <br />Unsere Kontaktdaten finden Sie in unserem <a
             href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">Impressum</a>.
-        Per E-Mail sind wir unter der Adresse <a href="mailto:office@suma-ev.de">office@suma-ev.de</a> zu erreichen.
+        Per E-Mail sind wir über unser <a href="/kontakt">verschlüsselted Kontaktformular</a> zu erreichen.
     </div>
     <div class="section">
         <h1>Grundsätze</h1>
@@ -353,7 +353,7 @@
                 hin eine Löschung, Änderung u.s.w. durchgeführt haben.
             </article>
         </ol>
-        Zur Wahrnehmung dieser Rechte genügt es, uns eine <b>E-Mail an office@suma-ev.de</b> zu schreiben. Sollten Sie
+        Zur Wahrnehmung dieser Rechte genügt es, uns eine <b>E-Mail mit unserem <a href="/kontakt">verschlüsseltem Kontaktformular</a></b> zu schreiben. Sollten Sie
         die Briefform bevorzugen, senden Sie uns Post an unsere Büroadresse:
         <br />
         <br />SUMA-EV
@@ -364,5 +364,5 @@
         <h1>Änderungen an dieser Erklärung</h1>
         Wie unsere Angebote ist auch diese Datenschutzerklärung einem ständigen Wandel unterworfen. Sie sollten sie
         daher regelmäßig erneut lesen.
-        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2018-05-24
+        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2021-02-03
     </div>

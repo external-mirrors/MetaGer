@@ -15,12 +15,13 @@ class Kontakt extends Mailable
      *
      * @return void
      */
-    public function __construct($name, $from, $subject, $message)
+    public function __construct($name, $from, $subject, $message, $attachments)
     {
         $this->name = $name;
         $this->reply = $from;
         $this->subject = $subject;
         $this->message = $message;
+        $this->attachedFiles = $attachments;
     }
 
     /**
@@ -30,9 +31,14 @@ class Kontakt extends Mailable
      */
     public function build()
     {
-        return $this->from($this->reply, $this->name)
+        $mail = $this->from($this->reply, $this->name)
             ->subject($this->subject)
             ->text('kontakt.mail')
             ->with('messageText', $this->message);
+
+        foreach($this->attachedFiles as $attachment){
+            $mail->attachData(file_get_contents($attachment->getRealPath()), $attachment->getClientOriginalName());  
+        }
+        return $mail;
     }
 }

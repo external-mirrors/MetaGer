@@ -28,14 +28,16 @@ class MailController extends Controller
         $returnMessage = '';
 
         # Wir benötigen 3 Felder von dem Benutzer wenn diese nicht übermittelt wurden, oder nicht korrekt sind geben wir einen Error zurück
+        $input_data = $request->all();
+
+        $maxFileSize = 5 * 1024;
         $validator = Validator::make(
-            [
-                'email' => $request->input('email'),
-                'pcsrf' => $request->input('pcsrf'),
-            ],
+            $input_data,
             [
                 'email' => 'required|email',
                 'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
+                'attachments' => ['max:5'],
+                'attachments.*' => ['file', 'max:' . $maxFileSize],
             ]
         );
 
@@ -59,12 +61,17 @@ class MailController extends Controller
             # Wir versenden die Mail des Benutzers an uns:
             $mailto = "support@metager.org";
             if (LaravelLocalization::getCurrentLocale() === "de") {
-                $mailto = "support@suma-ev.de";
+                $mailto = "support+46521@metager.de";
             }
             $message = $request->input('message');
             $subject = $request->input('subject');
+            $files = [];
+            if($request->has("attachments") && is_array($request->file("attachments"))){
+                $files = $request->file("attachments");
+            }
+
             Mail::to($mailto)
-                ->send(new Kontakt($name, $replyTo, $subject, $message));
+                ->send(new Kontakt($name, $replyTo, $subject, $message, $files));
 
             $returnMessage = trans('kontakt.success.1');
             $messageType = "success";
@@ -74,6 +81,8 @@ class MailController extends Controller
             ->with('title', 'Kontakt')
             ->with('js', ['lib.js'])
             ->with($messageType, $returnMessage);
+
+        
     }
 
     public function donation(Request $request)
@@ -172,7 +181,7 @@ class MailController extends Controller
             } catch (\Swift_TransportException $e) {
                 Log::error($e->getMessage());
                 $messageType = "error";
-                $messageToUser = 'Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: office@suma-ev.de, damit wir uns darum kümmern können.';
+                $messageToUser = 'Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.';
             }
         }
 

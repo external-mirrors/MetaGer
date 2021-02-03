@@ -118,7 +118,7 @@ return [
 
     'selist.title' => 'Ich möchte MetaGer zur Suchmaschinenliste meines Browsers hinzufügen.',
     'selist.explanation.1' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',
-    'selist.explanation.2' => 'Manche Browser erwarten die Eingabe einer URL; diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" ohne Gänsefüßchen eintragen. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="mailto:office@suma-ev.de" target="_blank" rel="noopener">office@suma-ev.de</a>',
+    'selist.explanation.2' => 'Manche Browser erwarten die Eingabe einer URL; diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" ohne Gänsefüßchen eintragen. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>',
 
     'proposal.title' => 'Wie kann ich die Anzeige meiner vorherigen Suchen löschen?',
     'proposal.explanation' => 'Die Suchvorschläge liefert Ihnen Ihr Webbrowser, sie müssen die Suchvorschläge also auch in ihrem Browser ausschalten. Meist geht das über die Chronik, immer ein wenig anders, aber abschalten können Sie das in jedem Browser.',

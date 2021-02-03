@@ -4,7 +4,7 @@ return [
     "headline.1" => "Contacto",
 
     "form.1"     => "Formulario de contacto seguro",
-    "form.2"     => "Con este formulario nos puede contactar encryptado. Por supuesto como vía alterna nos puede  mandar un <a href=\"mailto:office@suma-ev.de\">email</a>.",
+    "form.2"     => "Con este formulario nos puede contactar encryptado.",
     "form.5"     => "Su dirección de correo electrónico (opcional)",
     "form.6"     => "Su mensaje",
     'form.7'     => '<strong>Su mensaje será encryptada antes de mandarla <a href="http://openpgpjs.org/.">OpenPGP.js</a> para esto necesitamos Javascript.</strong> Sino tiene activado Javascript su mensaje será enviada sin encryptación.',

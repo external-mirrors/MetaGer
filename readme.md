@@ -36,7 +36,7 @@ Es steht dir jedoch frei, ein Ticket zu eröffnen.
 ## Sicherheitslücken
 
 Falls du eine Sicherheitslücke findest oder dir etwas unsicher vorkommt,
-zögere bitte nicht ein [Ticket zu schreiben](https://gitlab.metager.de/open-source/MetaGer/issues) oder eine Mail an [office@suma-ev.de](mailto:office@suma-ev.de) zu senden.
+zögere bitte nicht eine [Nachricht zu schreiben](https://metager.de/kontakt).
 
 ## Lizenzen
 

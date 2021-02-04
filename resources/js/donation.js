@@ -1,7 +1,10 @@
-$(document).ready(function () {
-    $(".amount-custom").click(function () {
-        setTimeout(function () {
-            $("#custom-amount").focus();
-        }, 100)
+document.addEventListener("DOMContentLoaded", (event) => {
+    document.querySelectorAll(".amount-custom").forEach(element => {
+        element.onclick = (e) => {
+            setTimeout(() => {
+                document.querySelector("#custom-amount").focus();
+            }, 100)
+            console.log("test");
+        }
     });
 });

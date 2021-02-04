@@ -58,9 +58,6 @@ mix
   // js
   .babel(
     [
-      "resources/js/lib/jquery.js",
-      "resources/js/lib/jquery-ui.min.js",
-      "resources/js/lib/bootstrap.js",
       "resources/js/lib/md5.js"
     ],
     "public/js/lib.js"

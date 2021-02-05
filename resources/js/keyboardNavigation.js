@@ -2,27 +2,27 @@
  * Flag ctrlInfo is used for initial display of the navigation box
  */
 var ctrlInfo = false;
-
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", (event) => {
     // Add entry point for tabbing to the first result
-    $('.result, .ad').first().attr("id", "results-entry");
+    document.querySelectorAll('.result, .ad')[0].setAttribute("id", "results-entry");
     // Initially focus the searchbar
 });
 
 /**
  * Simulate a click on enter keypress when focused on labels
  */
-$('label').on('keydown', function (e) {
-    if (e.keyCode == '13') {
-        $(this).click();
-        $('a', this)
+document.querySelectorAll('label').forEach((element) => {
+    element.onkeydown = (e) => {
+        if (e.keyCode == '13') {
+            e.srcElement.click();
+        }
     }
 });
 
 /**
  * Handles tab keypress and escape keypress
  */
-$(document).on('keydown', function (e) {
+document.onkeydown = (e) => {
     e = e || window.event;
     // On first tab keypress there is special behaviour and the ctrlInfo flag is set
     if (!ctrlInfo && e.keyCode == '9') {
@@ -32,14 +32,15 @@ $(document).on('keydown', function (e) {
     } else if (e.keyCode == '27') {
         escKeyPressed();
     }
-});
+};
+
 
 /**
  * Shows the navigation box and focuses the first <a> tag 
  */
 function focusNavBox() {
-    $('#keyboard-nav-info').show();
-    $('#keyboard-nav-info a').first().focus();
+    document.querySelector("#keyboard-nav-info").style.display = "inherit";
+    document.querySelectorAll("#keyboard-nav-info a")[0].focus();
 }
 
 /**
@@ -47,34 +48,36 @@ function focusNavBox() {
  */
 function escKeyPressed() {
     focusNavBox();
-    $('input[type="checkbox"]').removeAttr('checked');
+    document.querySelectorAll('input[type="checkbox"]').forEach((element) => {
+        element.checked = false;
+    });
 }
 
 /**
  * Focuses the first <a> tag of the first result 
  */
 function focusResults() {
-    $('#results-entry .result-title a').focus();
+    document.querySelector('#results-entry .result-title a').focus();
 }
 
 /**
  * Focuses the first <a> tag of the focus options
  */
 function focusFoki() {
-    $('#foki a').first().focus();
+    document.querySelector("#foki a").focus();
 }
 
 /**
  * Focuses the search settings
  */
 function focusSettings() {
-    $('#settings a').focus();
+    document.querySelector('#settings a').focus();
 }
 
 /**
  * Focuses the first <tag> of the sidebar
  */
 function focusNavigation() {
-    $('#sidebarToggle').prop('checked', true);
-    $('.sidebar-list a').first().focus();
+    document.querySelector("#sidebarToggle").checked = true;
+    document.querySelector(".sidebar-list a").focus();
 }

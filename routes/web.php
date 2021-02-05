@@ -224,7 +224,7 @@ Route::group(
         Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
-        Route::post('img/cat.jpg', 'HumanVerification@remove');
+        Route::post('img/cat.png', 'HumanVerification@remove');
         Route::get('verify/metager/{id}/{uid}', ['as' => 'captcha', 'uses' => 'HumanVerification@captcha']);
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
@@ -242,7 +242,7 @@ Route::group(
                 $redis->expire($key, 30);
             });
 
-            return response("", 200)->header("Content-Type", "application/js");
+            return response("", 200)->header("Content-Type", "application/javascript");
         });
 
         Route::get('meta/picture', 'Pictureproxy@get');

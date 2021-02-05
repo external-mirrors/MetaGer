@@ -1,19 +1,22 @@
-function copyCode () {
-  $('#codesnippet').select();
+function copyCode() {
+  document.querySelector("#codesnippet").select();
   try {
     var successful = document.execCommand('copy');
     if (successful) {
-      $('#copyButton').removeClass('btn-default');
-      $('#copyButton').addClass('btn-success');
+      document.querySelector("#copyButton").classList.remove("btn-default");
+      document.querySelector("#copyButton").classList.add("btn-success");
     } else {
-      $('#copyButton').removeClass('btn-default');
-      $('#copyButton').addClass('btn-danger');
+      document.querySelector("#copyButton").classList.remove("btn-default");
+      document.querySelector("#copyButton").classList.add("btn-danger");
     }
   } catch (err) {
-    $('#copyButton').removeClass('btn-default');
-    $('#copyButton').addClass('btn-danger');
+    document.querySelector("#copyButton").classList.remove("btn-default");
+    document.querySelector("#copyButton").classList.add("btn-danger");
   }
 }
 window.onload = function () {
-  $('#copyButton').bind('click', copyCode);
+  let copyButton = document.querySelector("#copyButton");
+  if (copyButton != null) {
+    copyButton.onclick = copyCode;
+  }
 };

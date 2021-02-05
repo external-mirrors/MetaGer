@@ -2,11 +2,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
   if(document.readyState == 'complete'){
     initialize();
   }else{
-    document.onreadystatechange = e => {
+    document.addEventListener("readystatechange", e => {
       if (document.readyState == 'complete') {
         initialize();
       }
-    };
+    });
   }
 });
 

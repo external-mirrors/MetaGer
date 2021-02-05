@@ -39,7 +39,6 @@ function botProtection() {
         body: "mm=" + document.querySelector('meta[name="mm"]').content
       })
         .then(response => {
-          console.log(newtab);
           if (!newtab) {
             if (top) {
               window.top.location.href = link;
@@ -98,7 +97,6 @@ function loadMoreResults() {
       fetch(updateUrl)
         .then(response => response.json())
         .then(data => {
-          console.log(data);
           // Check if we can clear the interval (once every searchengine has answered)
           if (!data || data.finished) {
             clearInterval(resultLoader);

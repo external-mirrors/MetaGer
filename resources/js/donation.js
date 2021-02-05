@@ -3,8 +3,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         element.onclick = (e) => {
             setTimeout(() => {
                 document.querySelector("#custom-amount").focus();
-            }, 100)
-            console.log("test");
+            }, 100);
         }
     });
 });

@@ -74,7 +74,6 @@ Results.prototype.sortResults = function () {
       break;
     case 'alphabetical': // by hostname
       this.results.sort(function (a, b) {
-        console.log(a.hosterName, b.hosterName);
         if (b.hosterName > a.hosterName) return -1;
         if (b.hosterName < a.hosterName) return 1;
         return 0;

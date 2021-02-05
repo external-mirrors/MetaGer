@@ -8,7 +8,7 @@ Route::group(
     function () {
         Route::get('meta/key', "KeyController@index");
         Route::post('meta/key', 'KeyController@setKey');
-        Route::post('meta/key/remove', 'KeyController@removeKey');
+        Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
 
         Route::group([
             'prefix' => 'meta/settings',

@@ -21,7 +21,7 @@ let link, newtab, top;
 
 function botProtection() {
   document.querySelectorAll(".result a").forEach((element) => {
-    element.addEventListener("click", e => {
+    element.onclick = e => {
       link = element.href;
       newtab = false;
       top = false;
@@ -48,7 +48,7 @@ function botProtection() {
           }
         });
       return newtab;
-    });
+    };
   });
 }
 

@@ -1,4 +1,4 @@
-$(document).ready(function () {
-  $('.js-only').removeClass('js-only');
-  $('.no-js').addClass('hide');
+document.addEventListener("DOMContentLoaded", (event) => {
+  document.querySelectorAll(".js-only").forEach(el => el.classList.remove("js-only"));
+  document.querySelectorAll(".no-js").forEach(el => el.classList.add("hide"));
 });

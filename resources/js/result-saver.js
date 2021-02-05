@@ -64,6 +64,7 @@ Results.prototype.sortResults = function () {
       break;
     case 'alphabetical': // by hostname
       this.results.sort(function (a, b) {
+        console.log(a.hosterName, b.hosterName);
         if (b.hosterName > a.hosterName) return -1;
         if (b.hosterName < a.hosterName) return 1;
         return 0;
@@ -135,7 +136,7 @@ Results.prototype.updateResultPageInterface = function () {
     var tabPanel = document.querySelector("#savedFoki");
     tabPanel.innerHTML = "";
   }
-  console.log(tabPanel);
+
   // Add the full savedFoki element to the tabPanel
   this.addToContainer(tabPanel);
 };
@@ -148,72 +149,33 @@ Results.prototype.updateResultPageInterface = function () {
 Results.prototype.addToContainer = function (container) {
   // Create the saver-options element, which is a bar containing 
   // options for filtering, sorting and deleting all results
-  var saveroptions = document.createElement("div");
-  saveroptions.id = "saver-options";
+  var template = document.createElement("div");
 
-  var saveroptionsfilter = document.createElement("div");
-  saveroptionsfilter.classList.add("saver-option", "saver-option-filter");
-
-  var filterInput = document.createElement("input");
-  filterInput.style.fontFamily = "'Font Awesome 5 Free', sans-serif";
-  filterInput.classList.add("form-control");
-  filterInput.type = "text";
-  filterInput.placeholder = "&#xf0b0 " + t('result-saver.filter');
-
-  saveroptionsfilter.append(filterInput);
-  saveroptions.append(saveroptionsfilter);
-
-  var saveroptionssort = document.createElement("div");
-  saveroptionssort.classList.add("saver-option", "saver-option-sort");
-
-  var saveroptionsortselect = document.createElement("select");
-  saveroptionsortselect.classList.add("form-control");
-  saveroptionsortselect.style.fontFamily = "'Font Awesome 5 Free', sans-serif";
-
-  var option1 = document.createElement("option");
-  option1.value = "chronological";
-  option1.fontFamily = "'Font Awesome 5 Free', sans-serif";
-  option1.innerHTML = '&#xf017 ' + t('result-saver.sort.chronological');
-
-  var option2 = document.createElement("option");
-  option1.value = "rank";
-  option1.fontFamily = "'Font Awesome 5 Free', sans-serif";
-  option1.innerHTML = '&#xf162 ' + t('result-saver.sort.ranking');
-
-  var option3 = document.createElement("option");
-  option1.value = "alphabetical";
-  option1.fontFamily = "'Font Awesome 5 Free', sans-serif";
-  option1.innerHTML = '&#xf15d ' + t('result-saver.sort.alphabetical')
-
-  saveroptionsortselect.append(option1, option2, option3);
-  saveroptionssort.append(saveroptionsortselect)
-  saveroptions.append(saveroptionssort);
-
-  var saveroptionsdelete = document.createElement("div");
-  saveroptionsdelete.classList.add("saver-option", "saver-option-delete");
-
-  var saveroptionsdeletebutton = document.createElement("button");
-  saveroptionsdeletebutton.classList.add("btn", "btn-danger", "btn-md");
-  saveroptionsdeletebutton.id = "saver-options-delete-btn";
-
-  var saveroptionsdeletebuttoni = document.createElement("i");
-  saveroptionsdeletebuttoni.classList.add("fa", "fa-trash-o");
-  saveroptionsdeletebuttoni.setAttribute("aria-hidden", "true");
-  saveroptionsdeletebuttoni.innerHTML = t('result-saver.deleteAll');
-
-  saveroptionsdeletebutton.append(saveroptionsdeletebuttoni);
-  saveroptionsdelete.append(saveroptionsdeletebutton);
-  saveroptions.append(saveroptionsdelete);
-
-  var options = saveroptions;
+  template.innerHTML = '<div id="saver-options">\
+    <div class="saver-option saver-option-filter">\
+      <input style="font-family: \'Font Awesome 5 Free\', sans-serif;" class="form-control" type="text" placeholder="&#xf0b0 ' + t('result-saver.filter') + '">\
+    </div>\
+    <div class="saver-option saver-option-sort">\
+      <select class="form-control" style="font-family: \'Font Awesome 5 Free\', sans-serif;">\
+        <option value="chronological" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf017 ' + t('result-saver.sort.chronological') + '</option>\
+        <option value="rank" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf162 ' + t('result-saver.sort.ranking') + '</option>\
+        <option value="alphabetical" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf15d ' + t('result-saver.sort.alphabetical') + '</option>\
+      </select>\
+    </div>\
+    <div class="saver-option saver-option-delete">\
+      <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
+        <i class="fa fa-trash-o" aria-hidden="true"></i>\
+        ' + t('result-saver.deleteAll') + '\
+      </button>\
+    </div>\
+  </div>';
+  var options = template.firstChild;
 
   // Set the initial value for the sorting select, based on this.sort
   options.querySelector("select").value = this.sort;
 
   // Add the saver-options element to the given container
   container.append(options);
-
-  console.log(options.querySelectorAll("input"));
 
   /* ~~~ Filter ~~~ */
   // When the user is done typing into the filter input field,
@@ -250,13 +212,15 @@ Results.prototype.addToContainer = function (container) {
   // When the delete button is clicked,
   // Delete all results and update their appearance
   options.querySelectorAll('#saver-options-delete-btn').forEach(element => {
-    results.deleteAllResults();
-    results.updateResultPageInterface();
+    element.onclick = (e) => {
+      results.deleteAllResults();
+      results.updateResultPageInterface();
+    }
   });
 
   // Append all results available
   this.results.forEach(result => {
-    container.append(result);
+    container.append(result.toHtml());
   });
 };
 
@@ -324,7 +288,7 @@ Result.prototype.load = function () {
   this.anonym = result.anonym;
   this.description = result.description;
   this.added = result.added;
-  this.index = -result.index;
+  this.index = result.index;
   this.rank = result.rank;
 
   return true;
@@ -403,9 +367,8 @@ Result.prototype.remove = function () {
  */
 Result.prototype.toHtml = function () {
   // Create the saved-result element
-  var template = document.createElement("template");
-  template.innerHTML = '\
-  <div class="saved-result result" data-count="' + this.index + '">\
+  var template = document.createElement("div");
+  template.innerHTML = '<div class="saved-result result" data-count="' + this.index + '">\
     <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
       <i class="fa fa-trash"></i>\
     </div>\
@@ -434,7 +397,7 @@ Result.prototype.toHtml = function () {
         <a class="result-open" href="' + this.link + '" target="_blank" rel="noopener">\
           ' + t('result-saver.save.newtab') + '\
         </a>\
-        <a class="result-open-proxy" onmouseover="$(this).popover(\'show\');" onmouseout="$(this).popover(\'hide\');" data-toggle="popover" data-placement="auto right" data-container="body" data-content="Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt." href="' + this.anonym + '" target="_blank" rel="noopener" data-original-title="" title="">\
+        <a class="result-open-proxy" href="' + this.anonym + '" target="_blank" rel="noopener" title="Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt.">\
           ' + t('result-saver.save.anonymous') + '\
         </a>\
       </div>\
@@ -465,7 +428,7 @@ function resultSaver(index) {
   // Read the necessary data from the result html
   var title = document.querySelector('.result[data-count="' + index + '"] .result-title a').innerHTML.trim();
   var link = document.querySelector('.result[data-count="' + index + '"] .result-title a').href.trim();
-  var hosterName = document.querySelector('.result[data-count="' + index + '"] .result-hoster').innerHTML.trim();
+  var hosterName = document.querySelector('.result[data-count="' + index + '"] .result-subheadline > a').title.trim();
   var hosterLink = document.querySelector('.result[data-count="' + index + '"] .result-hoster').href;
   hosterLink = hosterLink ? hosterLink.trim() : "#";
   var anzeigeLink = document.querySelector('.result[data-count="' + index + '"] .result-link').innerHTML.trim();

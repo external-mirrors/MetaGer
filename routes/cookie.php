@@ -6,7 +6,7 @@ Route::group(
     'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]*/
     ],
     function () {
-        Route::get('meta/key', "KeyController@index");
+        Route::get('meta/key', "KeyController@index")->middleware('removekey');
         Route::post('meta/key', 'KeyController@setKey');
         Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
 

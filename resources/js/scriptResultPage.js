@@ -158,7 +158,7 @@ function loadMoreResults() {
               document.querySelectorAll(".no-results-error").forEach(element => {
                 element.remove();
               });
-              if (document.querySelector(".alert.alert-danger > ul").children().length == 0) {
+              if (document.querySelector(".alert.alert-danger > ul") != null && document.querySelector(".alert.alert-danger > ul").children().length == 0) {
                 document.querySelectorAll(".alert.alert-danger").forEach(element => {
                   element.remove();
                 });

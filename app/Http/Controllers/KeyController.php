@@ -62,9 +62,16 @@ class KeyController extends Controller
 
     public function removeKey(Request $request)
     {
+        $instantRedir = $request->input("ir", "");
         $redirUrl = $request->input('redirUrl', "");
-        Cookie::queue(Cookie::forget('key'));
+        Cookie::queue("key", "", 0, '/', null, false, false);
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
-        return redirect($url);
+
+        $host = $request->getHttpHost();
+        if(!empty($instantRedir) && in_array($host, ["metager.de", "metager.es", "metager.org", "metager3.de", "localhost:8080"])){
+            return redirect($instantRedir);
+        }else{
+            return redirect($url);
+        }
     }
 }

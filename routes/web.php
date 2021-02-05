@@ -242,7 +242,7 @@ Route::group(
                 $redis->expire($key, 30);
             });
 
-            return response("", 200)->header("Content-Type", "application/js");
+            return response("", 200)->header("Content-Type", "application/javascript");
         });
 
         Route::get('meta/picture', 'Pictureproxy@get');

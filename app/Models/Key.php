@@ -9,16 +9,15 @@ class Key
 {
     public $key;
     public $status; # valid key = true, invalid key = false, unidentified key = null
-    //private $keyserver = "https://key.metager.de/";
-    private $keyserver = "https://dev.key.metager.de/";
+    private $keyserver = "https://key.metager.de/";
 
     public function __construct($key, $status = null)
     {
         $this->key = $key;
         $this->status = $status;
-        /*if (getenv("APP_ENV") !== "production") {
+        if (getenv("APP_ENV") !== "production") {
             $this->keyserver = "https://dev.key.metager.de/";
-        }*/
+        }
     }
 
     # always returns true or false

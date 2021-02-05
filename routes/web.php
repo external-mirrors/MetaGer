@@ -33,7 +33,7 @@ Route::group(
     function () {
         /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
-        Route::get('/', 'StartpageController@loadStartPage')->name("startpage");
+        Route::get('/', 'StartpageController@loadStartPage')->name("startpage")->middleware("removekey");
 
         Route::get('asso', function () {
             return view('assoziator.asso')
@@ -221,7 +221,7 @@ Route::group(
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         });
 
-        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+        Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
         Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
         Route::post('img/cat.png', 'HumanVerification@remove');

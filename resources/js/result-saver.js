@@ -8,16 +8,26 @@ if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype
   */
 results = new Results();
 
-document.onreadystatechange = () => {
-  if (document.readyState === 'complete') {
-    // Add all saved results
-    results.loadAllResults();
-    // Sort all results
-    results.sortResults();
-    // Update the visualization
-    results.updateResultPageInterface();
+document.addEventListener("DOMContentLoaded", (event) => {
+  if(document.readyState == 'complete'){
+    initResultSaver();
+  }else{
+    document.onreadystatechange = e => {
+      if (document.readyState === 'complete') {
+        initResultSaver();
+      }
+    };
   }
-};
+});
+
+function initResultSaver() {
+  // Add all saved results
+  results.loadAllResults();
+  // Sort all results
+  results.sortResults();
+  // Update the visualization
+  results.updateResultPageInterface();
+}
 
 /**
  * Load all saved results and sort them

@@ -1,10 +1,21 @@
-document.onreadystatechange = () => {
-  if (document.readyState === 'complete') {
-    botProtection();
-    enableFormResetter();
-    loadMoreResults();
+document.addEventListener("DOMContentLoaded", (event) => {
+  if(document.readyState == 'complete'){
+    initialize();
+  }else{
+    document.onreadystatechange = e => {
+      if (document.readyState == 'complete') {
+        initialize();
+      }
+    };
   }
-};
+});
+
+function initialize(){
+  botProtection();
+  enableFormResetter();
+  loadMoreResults();
+}
+
 
 let link, newtab, top;
 
@@ -100,15 +111,16 @@ function loadMoreResults() {
               if (!data.imagesearch) {
                 var results = document.querySelectorAll(".result:not(.ad)");
                 var replacement = document.createElement("div");
-                replacement.innerHTML = value;
+                replacement.innerHTML = value.trim();
                 results[key].parentNode.replaceChild(replacement.firstChild, results[key]);
               } else {
                 var results = document.querySelectorAll(".image-container > .image");
                 var replacement = document.createElement("div");
-                replacement.innerHTML = value;
+                replacement.innerHTML = value.trim();
                 results[key].parentNode.replaceChild(replacement.firstChild, results[key]);
               }
             }
+            botProtection();
           }
 
           // If there are new results we can add them
@@ -121,7 +133,7 @@ function loadMoreResults() {
                 var resultContainer = document.querySelector("#results");
                 var results = document.querySelectorAll(".result:not(.ad)");
                 var replacement = document.createElement("div");
-                replacement.innerHTML = value;
+                replacement.innerHTML = value.trim();
                 if (key == 0) {
                   resultContainer.insertBefore(replacement.firstChild, results[0]);
                 } else if (typeof results[key] != "undefined") {
@@ -133,7 +145,7 @@ function loadMoreResults() {
                 var resultContainer = document.querySelector("#results");
                 var results = document.querySelectorAll(".image-container > .image");
                 var replacement = document.createElement("div");
-                replacement.innerHTML = value;
+                replacement.innerHTML = value.trim();
                 if (key == 0) {
                   resultContainer.insertBefore(replacement.firstChild, results[0]);
                 } else if (typeof results[key] != "undefined") {
@@ -143,6 +155,7 @@ function loadMoreResults() {
                 }
               }
             }
+            botProtection();
             if (document.querySelectorAll(".no-results-error").length > 0 && (document.querySelectorAll(".image-container > .image").length > 0) || document.querySelectorAll(".result:not(.ad)").length > 0) {
               document.querySelectorAll(".no-results-error").forEach(element => {
                 element.remove();

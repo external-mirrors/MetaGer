@@ -377,7 +377,7 @@ class Result
 
         // We need to generate the correct password for the Proxy URLs
         // It's an hmac sha256 hash of the url having the proxy password as secret
-        $password = hash_hmac("sha256", $link, env("PROXY_PASSWORD", "unsecure_password"));
+        $password = hash_hmac("sha256", rtrim($link, "/"), env("PROXY_PASSWORD", "unsecure_password"));
 
         $urlParameters = [
             "url" => $link,

@@ -371,7 +371,7 @@ class Result
         if(!empty($parts["host"])){
             $proxyUrl .= $parts["host"];
             if(!empty($parts["path"])){
-                $proxyUrl .= "/" . trim($parts["path"], "/");
+                $proxyUrl .= "/" . rawurlencode(trim($parts["path"]), "/");
             }
         }
 

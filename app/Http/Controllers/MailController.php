@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\Kontakt;
 use App\Mail\Sprachdatei;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Http\Response;
 use LaravelLocalization;
 use Mail;
@@ -58,31 +59,83 @@ class MailController extends Controller
             $messageType = "error";
             $returnMessage = trans('kontakt.error.1');
         } else {
-            # Wir versenden die Mail des Benutzers an uns:
-            $mailto = "support@metager.org";
-            if (LaravelLocalization::getCurrentLocale() === "de") {
-                $mailto = "support+46521@metager.de";
-            }
             $message = $request->input('message');
             $subject = $request->input('subject');
-            $files = [];
+
+            # Wir versenden die Mail des Benutzers an uns:
+            $postdata = [
+                "alert" => true,
+                "autorespond" => true,
+                "source" => "API",
+                "name" => $name,
+                "email" => $replyTo,
+                "subject" => $subject,
+                "ip" => $request->ip(),
+                "deptId" => 5,
+                "message" => "data:text/plain, $message",
+                "attachments" => [
+                     //["file.txt" => "data:text/plain;charset=utf-8,content"]
+                 ]
+            ];
+
             if($request->has("attachments") && is_array($request->file("attachments"))){
-                $files = $request->file("attachments");
+                foreach($request->file("attachments") as $attachment){
+                    $postdata["attachments"][] = [
+                        $attachment->getClientOriginalName() => "data:" . $attachment->getMimeType() . ";base64," . base64_encode(file_get_contents($attachment->getRealPath()))
+                    ];
+                }
+            }  
+
+            if (LaravelLocalization::getCurrentLocale() === "de") {
+                $postdata["deptId"] = 1;
             }
 
-            Mail::to($mailto)
-                ->send(new Kontakt($name, $replyTo, $subject, $message, $files));
+            $postdata = json_encode($postdata);
 
-            $returnMessage = trans('kontakt.success.1');
-            $messageType = "success";
+            $resulthash = md5($subject . $message);
+
+            $mission = [
+                "resulthash" => $resulthash,
+                "url" => env("TICKET_URL", "https://metager.de"),
+                "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                "username" => null,
+                "password" => null,
+                "headers" => [
+                    "X-API-Key" => env("TICKET_APIKEY", ""),
+                    "Content-Type" => "application/json",
+                    "Content-Length" => strlen($postdata)
+                ],
+                "cacheDuration" => 0,
+                "name" => "Ticket",
+                "curlopts" => [
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => $postdata,
+                    CURLOPT_LOW_SPEED_TIME => 20,
+                    CURLOPT_CONNECTTIMEOUT => 10,
+                    CURLOPT_TIMEOUT => 20
+                ]
+            ];
+            $mission = json_encode($mission);
+            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+
+            // Fetch the result
+            $answer = Redis::blpop($resulthash, 20);
+            
+            // Fehlerfall
+            if(empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")){
+                $messageType = "error";
+                $returnMessage = trans('kontakt.error.2', ["email" => env("MAIL_USERNAME", "support+46521@metager.de")]);
+            }else{
+                $returnMessage = trans('kontakt.success.1', ["email" => $replyTo]);
+                $messageType = "success";
+            }
         }
 
         return view('kontakt.kontakt')
             ->with('title', 'Kontakt')
             ->with('js', ['lib.js'])
             ->with($messageType, $returnMessage);
-
-        
+    
     }
 
     public function donation(Request $request)

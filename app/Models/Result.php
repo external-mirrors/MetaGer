@@ -269,6 +269,11 @@ class Result
             }
         }
 
+        // Possibly remove description
+        if($this->isDescriptionBlackListed($metager)){
+            $this->descr = "";
+        }
+
         /*
         # Phrasensuche:
         $text = strtolower($this->titel) . " " . strtolower($this->descr);
@@ -322,6 +327,11 @@ class Result
             return false;
         }
 
+    }
+
+    public function isDescriptionBlackListed(\App\MetaGer $metager)
+    {
+        return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl()) || in_array($this->strippedLinkAnzeige, $metager->getBlacklistDescriptionUrl());
     }
 
     /* Liest aus einem Link den Host.

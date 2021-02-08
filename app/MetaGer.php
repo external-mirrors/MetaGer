@@ -66,6 +66,7 @@ class MetaGer
     protected $adDomainsBlacklisted = [];
     protected $urlsBlacklisted = [];
     protected $adUrlsBlacklisted = [];
+    protected $blacklistDescriptionUrl = [];
     protected $url;
     protected $fullUrl;
     protected $enabledSearchengines = [];
@@ -101,6 +102,11 @@ class MetaGer
         if(file_exists(config_path() . "/adBlacklistUrl.txt")){
             $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
             $this->adUrlsBlacklisted = explode("\n", $tmp);
+        }
+
+        if(file_exists(config_path() . "/blacklistDescriptionUrl.txt")){
+            $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
+            $this->blacklistDescriptionUrl = explode("\n", $tmp);
         }
 
         # Parser Skripte einhängen
@@ -1829,6 +1835,11 @@ class MetaGer
     public function getDomainBlacklist()
     {
         return $this->domainsBlacklisted;
+    }
+
+    public function getBlacklistDescriptionUrl()
+    {
+        return $this->blacklistDescriptionUrl;
     }
 
     public function getUrlBlacklist()

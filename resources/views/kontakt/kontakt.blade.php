@@ -17,19 +17,19 @@
                 {{ csrf_field() }}
                 <input type="hidden" name="pcsrf" value="{{ base64_encode(\time()) }}">
                 <div class="form-group kontakt-form-group">
-                    <input class="form-control" name="name" placeholder="{!!trans('kontakt.form.name')!!}" type="text" required @if(isset($formerrors) && Request::has('name'))value="{{Request::input('name')}}"@endif>
+                    <input class="form-control" name="name" placeholder="{!!trans('kontakt.form.name')!!}" type="text" required @if((isset($formerrors) || !empty($error)) && Request::has('name'))value="{{Request::input('name')}}"@endif>
                 </div>
                 <div class="form-group kontakt-form-group">
-                    <input class="form-control" name="email" placeholder="{!! trans('kontakt.form.5') !!}" type="email" required @if(isset($formerrors) && Request::has('email'))value="{{Request::input('email')}}"@endif>
+                    <input class="form-control" name="email" placeholder="{!! trans('kontakt.form.5') !!}" type="email" required @if((isset($formerrors) || !empty($error)) && Request::has('email'))value="{{Request::input('email')}}"@endif>
                 </div>
                 <div class="form-group kontakt-form-group">
-                    <input class="form-control" name="subject" placeholder="{!! trans('kontakt.form.7') !!}" type="text" required @if(isset($formerrors) && Request::has('subject'))value="{{Request::input('subject')}}"@endif>
+                    <input class="form-control" name="subject" placeholder="{!! trans('kontakt.form.7') !!}" type="text" required @if((isset($formerrors) || !empty($error)) && Request::has('subject'))value="{{Request::input('subject')}}"@endif>
                 </div>
                 <div class="form-group kontakt-form-group">
                     @if(isset($url) && $url !== "")
                     <label for="message">Wenn MetaGer bestimmte Webseiten nicht angezeigt hat, von denen Sie wissen, dass es sie gibt: Bitte nennen Sie deren Adresse/n (http:// ...???...). Wir werden das detailliert untersuchen.</label>
                     @endif
-                    <textarea class="form-control" id="message" name="message" placeholder="{!! trans('kontakt.form.6') !!}" required>@if(isset($formerrors) && Request::has('message')){{Request::input('message')}}@endif</textarea>
+                    <textarea class="form-control" id="message" name="message" placeholder="{!! trans('kontakt.form.6') !!}" required>@if((isset($formerrors) || !empty($error)) && Request::has('message')){{Request::input('message')}}@endif</textarea>
                 </div>
                 <div class="form-group kontakt-form-group">
                     <label for="attachments">@lang("kontakt.form.9")</label>

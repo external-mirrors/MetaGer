@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\Kontakt;
 use App\Mail\Sprachdatei;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -72,10 +71,8 @@ class MailController extends Controller
                 "subject" => $subject,
                 "ip" => $request->ip(),
                 "deptId" => 5,
-                "message" => "data:text/plain, $message",
-                "attachments" => [
-                     //["file.txt" => "data:text/plain;charset=utf-8,content"]
-                 ]
+                "message" => "data:text/plain;charset=utf-8, $message",
+                "attachments" => []
             ];
 
             if($request->has("attachments") && is_array($request->file("attachments"))){
@@ -226,11 +223,65 @@ class MailController extends Controller
             $message .= "\r\nNachricht: " . $nachricht;
 
             try {
-                Mail::to("spenden@suma-ev.de")
-                    ->send(new \App\Mail\Spende($email, $message, $name));
+                $postdata = [
+                    "alert" => true,
+                    "autorespond" => true,
+                    "source" => "API",
+                    "name" => $name,
+                    "email" => $email,
+                    "subject" => "MetaGer - Spende",
+                    "ip" => $request->ip(),
+                    "deptId" => 4,
+                    "message" => "data:text/plain;charset=utf-8, $message",
+                ];
 
-                $messageType = "success";
-                $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
+                if (LaravelLocalization::getCurrentLocale() === "de") {
+                    $postdata["deptId"] = 4;
+                }
+
+                if($email === "anonymous@suma-ev.de"){
+                    $postdata["autorespond"] = false;
+                }
+
+                $postdata = json_encode($postdata);
+    
+                $resulthash = md5($message);
+    
+                $mission = [
+                    "resulthash" => $resulthash,
+                    "url" => env("TICKET_URL", "https://metager.de"),
+                    "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                    "username" => null,
+                    "password" => null,
+                    "headers" => [
+                        "X-API-Key" => env("TICKET_APIKEY", ""),
+                        "Content-Type" => "application/json",
+                        "Content-Length" => strlen($postdata)
+                    ],
+                    "cacheDuration" => 0,
+                    "name" => "Ticket",
+                    "curlopts" => [
+                        CURLOPT_POST => true,
+                        CURLOPT_POSTFIELDS => $postdata,
+                        CURLOPT_LOW_SPEED_TIME => 20,
+                        CURLOPT_CONNECTTIMEOUT => 10,
+                        CURLOPT_TIMEOUT => 20
+                    ]
+                ];
+                $mission = json_encode($mission);
+                Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+    
+                // Fetch the result
+                $answer = Redis::blpop($resulthash, 20);
+                
+                // Fehlerfall
+                if(empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")){
+                    $messageType = "error";
+                    $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
+                }else{
+                    $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
+                    $messageType = "success";
+                }
             } catch (\Swift_TransportException $e) {
                 Log::error($e->getMessage());
                 $messageType = "error";

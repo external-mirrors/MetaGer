@@ -122,6 +122,10 @@ spec:
           subPath: adblacklisturl
           readOnly: true
         - name: secrets
+          mountPath: /html/config/blacklistDescriptionUrl.txt
+          subPath: blacklistDescriptionUrl
+          readOnly: true
+        - name: secrets
           mountPath: /html/config/adBlacklistDomains.txt
           subPath: adblacklistdomains
           readOnly: true

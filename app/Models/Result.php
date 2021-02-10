@@ -269,6 +269,11 @@ class Result
             }
         }
 
+        // Possibly remove description
+        if($this->isDescriptionBlackListed($metager)){
+            $this->descr = "";
+        }
+
         /*
         # Phrasensuche:
         $text = strtolower($this->titel) . " " . strtolower($this->descr);
@@ -324,6 +329,11 @@ class Result
 
     }
 
+    public function isDescriptionBlackListed(\App\MetaGer $metager)
+    {
+        return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl()) || in_array($this->strippedLinkAnzeige, $metager->getBlacklistDescriptionUrl());
+    }
+
     /* Liest aus einem Link den Host.
      *  Dieser wird dabei in die Form:
      *  "http://www.foo.bar.de/test?ja=1" -> "foo.bar.de"
@@ -371,13 +381,13 @@ class Result
         if(!empty($parts["host"])){
             $proxyUrl .= $parts["host"];
             if(!empty($parts["path"])){
-                $proxyUrl .= "/" . trim($parts["path"], "/");
+                $proxyUrl .= "/" . rawurlencode(trim($parts["path"], "/"));
             }
         }
 
         // We need to generate the correct password for the Proxy URLs
         // It's an hmac sha256 hash of the url having the proxy password as secret
-        $password = hash_hmac("sha256", $link, env("PROXY_PASSWORD", "unsecure_password"));
+        $password = hash_hmac("sha256", rtrim($link, "/"), env("PROXY_PASSWORD", "unsecure_password"));
 
         $urlParameters = [
             "url" => $link,

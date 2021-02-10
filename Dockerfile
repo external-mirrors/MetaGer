@@ -55,6 +55,8 @@ RUN sed -i 's/;error_log = log\/php7\/error.log/error_log = \/dev\/stderr/g' /et
     sed -i 's/;opcache.max_wasted_percentage=5/opcache.max_wasted_percentage=5/g' /etc/php7/php.ini && \
     sed -i 's/;opcache.validate_timestamps=1/opcache.validate_timestamps=1/g' /etc/php7/php.ini && \
     sed -i 's/;opcache.revalidate_freq=2/opcache.revalidate_freq=300/g' /etc/php7/php.ini && \
+    sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 30M/g' /etc/php7/php.ini && \
+    sed -i 's/post_max_size = 8M/post_max_size = 30M/g' /etc/php7/php.ini && \
     echo "daemonize yes" >> /etc/redis.conf && \
     ln -s /dev/null /var/log/nginx/access.log && \
     ln -s /dev/stdout /var/log/nginx/error.log && \

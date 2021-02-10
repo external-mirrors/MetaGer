@@ -3,7 +3,7 @@
 return [
     "results.failed"	=>	"Lo sentimos. No encontrado resultados adecuados.",
     "settings.noneSelected"	=>	"¡Guarda! No habéis seleccionado un motor de busqueda.",
-    "engines.noParser"	=>	"Falta: Preguntar :engine. Por favor notificáis MetaGer:  <a href=\"mailto:office@suma-ev.de?subject=Fehlender Parser: :engine\">office@suma-ev.de</a>",
+    "engines.noParser"	=>	"Falta: Preguntar :engine. Por favor notificáis MetaGer:  <a href=\"/es/kontakt\">Formulario encriptado</a>",
     "formdata.noSearch"	=>	"¡Guarda! No insertado palabras para buscar.",
     "formdata.hostBlacklist"	=>	"No recibís resultados del host \":host\"",
     "formdata.domainBlacklist"	=>	"No recibís resultados del dominio: \":domain\"",

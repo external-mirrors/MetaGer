@@ -22,8 +22,8 @@ var translations = {
     'result-saver.save.this': 'ÖFFNEN',
     'result-saver.save.newtab': 'IN NEUEM TAB',
     'result-saver.save.anonymous': 'ANONYM ÖFFNEN',
-    'close-dropdowns' : 'Alle zuklappen',
-    'open-dropdowns'  : 'Alle aufklappen'
+    'close-dropdowns': 'Alle zuklappen',
+    'open-dropdowns': 'Alle aufklappen'
   },
 
   'en': {
@@ -42,20 +42,20 @@ var translations = {
     'result-saver.save.this': 'OPEN',
     'result-saver.save.newtab': 'IN NEW TAB',
     'result-saver.save.anonymous': 'OPEN ANONYMOUSLY',
-    'close-dropdowns' : 'Collapse all',
-    'open-dropdowns'  : 'Expand all'
+    'close-dropdowns': 'Collapse all',
+    'open-dropdowns': 'Expand all'
   },
 
   'es': {
     'select-engine': 'Por favor, seleccione al menos un motor de búsqueda.',
     'select-valid-name': 'Por favor, introduzca un nombre válido constituido por letras y números.',
     'confirm-overwrite-name': 'Nombre ya ha sido elegido.\n¿Substituirlo?',
-  // 'saved-settings': '',
-  // 'generated-plugin': ''
-  // 'result-saver.sort.chronological': 'Chronologisch',
-  // 'result-saver.sort.ranking': 'MetaGer-Ranking',
-  // 'result-saver.sort.alphabetical': 'Alphabetisch (Hostname)',
-  // 'result-saver.delete': 'Ergebnis aus dem Speicher löschen',
+    // 'saved-settings': '',
+    // 'generated-plugin': ''
+    // 'result-saver.sort.chronological': 'Chronologisch',
+    // 'result-saver.sort.ranking': 'MetaGer-Ranking',
+    // 'result-saver.sort.alphabetical': 'Alphabetisch (Hostname)',
+    // 'result-saver.delete': 'Ergebnis aus dem Speicher löschen',
   }
 };
 
@@ -65,9 +65,9 @@ var translations = {
  * @param {string} key Zu übersetzender Schlüssel
  * @param {string} lang Zu verwendende Sprache
  */
-function t (key, lang) {
+function t(key, lang) {
   if (arguments.length == 1) {
-    var lang = $('html').attr('lang');
+    var lang = document.querySelector("html").getAttribute("lang");
     return t(key, lang);
   } else if (arguments.length == 2 && translations[lang] && translations[lang][key]) {
     return translations[lang][key];

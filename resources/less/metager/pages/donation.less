@@ -162,5 +162,16 @@
             grid-area: form;
         }
     }
+    #input-picker{
+        label {
+            min-width: 7em;
+        }
+        .show-on-input-checked {
+            display: none;
+        }
+        input:checked  + label + .show-on-input-checked {
+            display: inline-block;
+        }
+    }
 }
       

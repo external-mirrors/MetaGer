@@ -78,8 +78,20 @@ class MailController extends Controller
 
     public function donation(Request $request)
     {
+        $name = '';
+        if($request->input('person') === 'private') {
+            $firstname = $request->input('firstname');
+            $lastname = $request->input('lastname');
+            if($firstname !== '' || $lastname !== '') {
+                $name = $firstname . ' ' . $lastname;
+            }
+        } elseif($request->input('person') === 'company') {
+            $company = $request->input('companyname');
+            $name = $company;
+        }
+
         $data = [
-            'name' => $request->input('Name', ''),
+            'name' => $name,
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
@@ -87,7 +99,7 @@ class MailController extends Controller
             'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
-        $name = $request->input('Name', '');
+    
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
@@ -127,8 +139,10 @@ class MailController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email = "anonymous@suma-ev.de";
         }
-
-        if (!$iban->Verify()) {
+        if($name === ''){
+            $messageToUser = trans('spende.error.name');
+            $messageType = "error";
+        } elseif (!$iban->Verify()) {
             $messageToUser = trans('spende.error.iban');
             $messageType = "error";
         } elseif (!$isSEPA && $bic === '') {

@@ -40,6 +40,7 @@ return [
     'lastschrift.3l.placeholder' => 'Nachname',
     'lastschrift.3c' => 'Bitte geben Sie den Firmenkontonamen ein:',
     'lastschrift.3c.placeholder' => 'Firma',
+    'lastschrift.3.placeholder' => 'Name',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',
     'lastschrift.5' => 'Ihre Telefonnummer, um Ihre Spende ggf. durch einen Rückruf zu verifizieren:',
     'lastschrift.6' => 'Ihre IBAN:',
@@ -47,8 +48,8 @@ return [
     'lastschrift.8.message' => 'Hier können Sie uns ggf. noch eine Mitteilung dazu senden:',
     'lastschrift.8.message.placeholder' => 'Weitere Angaben',
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
-    'lastschrift.private' => 'Privatperson',
-    'lastschrift.company' => 'Firma',
+    'lastschrift.private' => '*Privatperson',
+    'lastschrift.company' => '*Firma',
     
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
@@ -79,6 +80,7 @@ return [
     'betrag' => 'Betrag',
     'danke.message' => 'Ihre Nachricht',
 
+    'error.name' => 'Es scheint, als hätten sie keinen Namen angegeben. Bitte versuchen Sie es erneut.',
     'error.iban' => 'Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet.',
     'error.bic' => 'Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.',
     'error.amount' => 'Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.',

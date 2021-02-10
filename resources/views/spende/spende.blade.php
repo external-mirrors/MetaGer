@@ -97,16 +97,14 @@
                 <input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
                 <div id="input-picker" class="form-group donation-form-group">
                     <input type="radio" id="private" name="person" value="private" checked><label for="private">{{trans('spende.lastschrift.private')}}</label>
-                    <input type="radio" id="company" name="person" value="company"><label for="company">{{trans('spende.lastschrift.company')}}</label><br>
-                    <div id=input-private>
-                        <label for="firstname">*{!! trans('spende.lastschrift.3f') !!}</label>
-                        <input type="text" required="required" class="form-control" id="firstname" name="firstname" placeholder="{!! trans('spende.lastschrift.3f.placeholder') !!}" @if(isset($data['firstname'])) value="{{$data['firstname']}}" @endif />
-                        <label for="lastname">*{!! trans('spende.lastschrift.3l') !!}</label>
-                        <input type="text" required="required" class="form-control" id="lastname" name="lastname" placeholder="{!! trans('spende.lastschrift.3l.placeholder') !!}" @if(isset($data['lastname'])) value="{{$data['lastname']}}" @endif />
+                    <div id="input-private" class="show-on-input-checked form-inline">
+                        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="{!! trans('spende.lastschrift.3f.placeholder') !!}" @if(isset($data['firstname'])) value="{{$data['firstname']}}" @endif />
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="{!! trans('spende.lastschrift.3l.placeholder') !!}" @if(isset($data['lastname'])) value="{{$data['lastname']}}" @endif />
                     </div>
-                    <div id=input-company>
-                        <label for="company">*{!! trans('spende.lastschrift.3c') !!}</label>
-                        <input type="text" required="required" class="form-control" id="company" name="company" placeholder="{!! trans('spende.lastschrift.3c.placeholder') !!}" @if(isset($data['company'])) value="{{$data['company']}}" @endif />
+                    <br>
+                    <input type="radio" id="company" name="person" value="company"><label for="company">{{trans('spende.lastschrift.company')}}</label>
+                    <div id="input-company" class="show-on-input-checked form-inline">
+                        <input type="text" class="form-control" id="companyname" name="companyname" placeholder="{!! trans('spende.lastschrift.3c.placeholder') !!}" @if(isset($data['company'])) value="{{$data['company']}}" @endif />
                     </div>
                 </div>
                 <div class="form-group donation-form-group">

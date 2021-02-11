@@ -221,13 +221,17 @@ class MailController extends Controller
             # Generating personalised key for donor
             $key = app('App\Models\Key')->generateKey($betrag);
 
-            # Folgende Felder werden vom Spendenformular als Input übergeben:
-            # Name
-            # Telefon
+            # a complete set of data from the form consists of:
+            # -- if person == private --
+            # firstname
+            # lastname
+            # -- if person == company --
+            # companyname
+            # --
             # email
-            # Kontonummer ( IBAN )
-            # Bankleitzahl ( BIC )
-            # Nachricht
+            # iban
+            # bic
+            # message
 
             $message = "\r\nName: " . $name;
             $message .= "\r\nIBAN: " . $iban->HumanFormat();
@@ -245,26 +249,28 @@ class MailController extends Controller
 
             try {
                 $postdata = [
-                    "alert" => true,
-                    "autorespond" => true,
-                    "source" => "API",
-                    "name" => $name,
+                    "entity" => "Contribution",
+                    "action" => "mgcreate",
+                    "api_key" => env("TICKET_API_KEY", ''),
+                    "key" => env("TICKET_SITE_KEY", ''),
+                    "json" => 1,
+                    "iban" => $iban,
+                    "amount" => $betrag,
+                    "frequency" => $frequency,
+                    "first_name" => $firstname,
+                    "last_name" => $lastname,
                     "email" => $email,
-                    "subject" => "MetaGer - Spende",
-                    "ip" => $request->ip(),
-                    "deptId" => 4,
-                    "message" => "data:text/plain;charset=utf-8, $message",
+                    "mgkey" => $key,
                 ];
 
-                if (LaravelLocalization::getCurrentLocale() === "de") {
-                    $postdata["deptId"] = 4;
+                if($request->input('person') === 'private') {
+                    $postdata['first_name'] = $firstname;
+                    $postdata['last_name'] = $lastname;
+                } elseif($request->input('person') === 'company') {
+                    $postdata['company'] = $company;
                 }
 
-                if($email === "anonymous@suma-ev.de"){
-                    $postdata["autorespond"] = false;
-                }
-
-                $postdata = json_encode($postdata);
+                $postdata = http_build_query($postdata);
     
                 $resulthash = md5($message);
     
@@ -275,9 +281,7 @@ class MailController extends Controller
                     "username" => null,
                     "password" => null,
                     "headers" => [
-                        "X-API-Key" => env("TICKET_APIKEY", ""),
-                        "Content-Type" => "application/json",
-                        "Content-Length" => strlen($postdata)
+                        "Content-Type" => "application/x-www-form-urlencoded",
                     ],
                     "cacheDuration" => 0,
                     "name" => "Ticket",

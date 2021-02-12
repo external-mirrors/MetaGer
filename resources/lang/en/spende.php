@@ -35,7 +35,6 @@ return [
    
     "lastschrift.1" => "Donate by Sepa direct debit",
     "lastschrift.2" => "Enter your account data. We will debit your bank account accordingly. This method is only available for SEPA area. Required fields are marked with \"*\"",
-    "lastschrift.3" => "Please enter your name:",
     "lastschrift.3f.placeholder" => "First Name",
     "lastschrift.3l.placeholder" => "Last Name",
     "lastschrift.3c.placeholder" => "Business Name",

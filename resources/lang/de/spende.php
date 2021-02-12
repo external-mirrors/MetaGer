@@ -40,7 +40,6 @@ return [
     'lastschrift.3l.placeholder' => 'Nachname',
     'lastschrift.3c' => 'Bitte geben Sie den Firmenkontonamen ein:',
     'lastschrift.3c.placeholder' => 'Firma',
-    'lastschrift.3.placeholder' => 'Name',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',
     'lastschrift.5' => 'Ihre Telefonnummer, um Ihre Spende ggf. durch einen Rückruf zu verifizieren:',
     'lastschrift.6' => 'Ihre IBAN:',

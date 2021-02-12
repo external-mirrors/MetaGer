@@ -30,7 +30,7 @@ return [
     'bankinfo.2.2' => 'BIC: GENODEM1GLS',
     'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',
     'bankinfo.2.4' => '(Konto-Nr.: 4075 0332 01, BLZ: 43060967)',
-    'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 200,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
+    'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 300,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
 
     'lastschrift.1' => 'Spenden mittels elektronischem Lastschriftverfahren:',
     'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
@@ -48,8 +48,8 @@ return [
     'lastschrift.8.message' => 'Hier können Sie uns ggf. noch eine Mitteilung dazu senden:',
     'lastschrift.8.message.placeholder' => 'Weitere Angaben',
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
-    'lastschrift.private' => '*Privatperson',
-    'lastschrift.company' => '*Firma',
+    'lastschrift.private' => '*Privatperson:',
+    'lastschrift.company' => '*Firma:',
     
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',

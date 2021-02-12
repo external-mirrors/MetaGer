@@ -149,6 +149,8 @@ class MailController extends Controller
             $name = $company;
         }
 
+        $name = trim($name);
+
         $data = [
             'name' => $name,
             'iban' => $request->input('iban', ''),
@@ -231,6 +233,8 @@ class MailController extends Controller
             # email
             # iban
             # bic
+            # amount
+            # frequency
             # message
 
             $message = "\r\nName: " . $name;
@@ -254,20 +258,20 @@ class MailController extends Controller
                     "api_key" => env("TICKET_API_KEY", ''),
                     "key" => env("TICKET_SITE_KEY", ''),
                     "json" => 1,
-                    "iban" => $iban,
+                    "iban" => $iban->MachineFormat(),
+                    "bic" => $bic,
                     "amount" => $betrag,
                     "frequency" => $frequency,
-                    "first_name" => $firstname,
-                    "last_name" => $lastname,
                     "email" => $email,
                     "mgkey" => $key,
+                    "message" => $nachricht
                 ];
 
                 if($request->input('person') === 'private') {
                     $postdata['first_name'] = $firstname;
                     $postdata['last_name'] = $lastname;
                 } elseif($request->input('person') === 'company') {
-                    $postdata['company'] = $company;
+                    $postdata['business_name'] = $company;
                 }
 
                 $postdata = http_build_query($postdata);

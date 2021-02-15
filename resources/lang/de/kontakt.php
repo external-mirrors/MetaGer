@@ -16,9 +16,9 @@ return [
                    Wenn Sie jedoch eine postalische Kontaktaufnahme als unbedingt nötig erachten,
                    erreichen Sie uns unter der folgenden Adresse:',
     'letter.3' => 'SUMA-EV
-                   Röselerstr. 3
-                   30159 Hannover
-                   Germany',
+Röselerstr. 3
+30159 Hannover
+Germany',
 
     'error.1' => 'Tut uns leid, aber leider haben wir mit Ihrer Kontaktanfrage keine Daten erhalten. Die Nachricht wurde nicht versandt.',
     "error.2" => 'Beim Versand Ihrer Nachricht ist ein Fehler aufgetreten. Sie können uns direkt unter folgender E-Mail Adresse kontaktieren: :email',

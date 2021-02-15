@@ -60,7 +60,7 @@
             </p>
         </div>
         @else
-        <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true; document.getElementById('donate-button').value={!! trans('spende.submitted') !!};">
+        <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true;">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">

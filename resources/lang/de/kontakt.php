@@ -10,7 +10,6 @@ return [
     'form.7' => 'Betreff',
     'form.8' => 'Senden',
     'form.9' => 'Bis zu 5 Anhänge hinzufügen (Dateigröße < 5 MB)',
-    'form.10' => 'wird gesendet…',
 
     'letter.1' => 'Per Brief-Post',
     'letter.2' => 'Wir ziehen es vor, auf digitalem Wege kontaktiert zu werden.

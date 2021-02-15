@@ -48,6 +48,7 @@ return [
 
 
     'submit' => 'Spenden',
+    'submitted' => 'wird gesendet…',
 
     'member.1' => 'Oder doch lieber Mitglied werden?',
     'member.2' => 'Es kostet nicht mehr und bietet viele Vorteile:',

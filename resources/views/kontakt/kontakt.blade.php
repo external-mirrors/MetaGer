@@ -13,7 +13,7 @@
                 <div class="alert alert-danger" role="alert">{{$errormessage}}</div>
                 @endforeach
             @endif
-            <form class="contact" name="contact" method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt") }}" enctype="multipart/form-data">
+            <form class="contact" name="contact" method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt") }}" enctype="multipart/form-data" onsubmit="document.getElementById('submit').disabled=true;">
                 {{ csrf_field() }}
                 <input type="hidden" name="pcsrf" value="{{ base64_encode(\time()) }}">
                 <div class="form-group kontakt-form-group">
@@ -36,7 +36,7 @@
                     <input type="file" multiple="multiple" name="attachments[]" id="">
                 </div>
                 <div class="form-group kontakt-form-group">
-                    <button title="" data-original-title="" class="btn btn-default encrypt-btn" type="submit">{!! trans('kontakt.form.8') !!}</button>
+                    <button id="submit" title="" data-original-title="" class="btn btn-default encrypt-btn" type="submit">{!! trans('kontakt.form.8') !!}</button>
                 </div>
             </form>
         </div> 

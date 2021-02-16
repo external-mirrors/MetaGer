@@ -60,7 +60,7 @@
             </p>
         </div>
         @else
-        <form method="post" class="form">
+        <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true;">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">
@@ -124,7 +124,7 @@
                     <p>{!! trans('spende.bankinfo.3')!!}</p>
                     <textarea class="form-control" id="msg" name="Nachricht" placeholder="{!! trans('spende.lastschrift.8.message.placeholder') !!}">@if(isset($data['nachricht'])){{$data['nachricht']}}@endif</textarea>
                 </div>
-                <input  class="btn btn-default" id="donate-button" type="submit" value="{!! trans('spende.submit') !!}">
+                <input class="btn btn-default" id="donate-button" type="submit" value="{!! trans('spende.submit') !!}">
             </div>	
         </form>
         @endif

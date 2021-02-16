@@ -5,57 +5,64 @@
 @section('navbarFocus.donate', 'class="dropdown active"')
 
 @section('content')
-	<h1>{{ trans('spende.danke.title') }}</h1>
-	<div class="col">
-		<div id="left" class="col-lg-6 col-md-12 col-sm-12 others">
-			<p style="width:100%;" class="text-muted">{{ trans('spende.danke.nachricht') }}</p>
-			<h2>{{ trans('spende.danke.kontrolle') }}</h2>
-			<div>
-				<table class="table table-condensed">
-					<tr>
-						<td>{{ trans('spende.lastschrift.3.placeholder')}}</td>
-						<td>{{ $data['name'] }}</td>
-					</tr>
-					<tr>
-						<td>Email</td>
-						<td>{{ $data['email'] }}</td>
-					</tr>
-					<tr>
-						<td>{{ trans('spende.iban') }}</td>
-						<td>{{ $data['iban'] }}</td>
-					</tr>
-					<tr>
-						<td>{{ trans('spende.bic') }}</td>
-						<td>{{ $data['bic'] }}</td>
-					</tr>
-					<tr>
-						<td>{{ trans('spende.betrag') }}</td>
-						<td>{{ $data['betrag'] }} €</td>
-					</tr>
-					<tr>
-						<td>{{ trans('spende.frequency') }}</td>
-						<td>{{ trans('spende.frequency.' . $data['frequency']) }} </td>
-					</tr>
-					<tr>
-						<td>{{ trans('spende.danke.message') }}</td>
-						<td>{{ $data['nachricht'] }}</td>
-					</tr>
-				</table>
-			</div>
-			<button type="button" class="btn btn-primary noprint" onclick="window.print();">{{ trans('spende.drucken') }}</button>
-			@if($data['key'] !== false)
-			<div class="card-light">
-				<p style="text-align: center; width:100%;">{!! trans('spende.danke.schluessel') . ' ' . $data['key'] !!}</p>
-			</div>
-			@endif
-		</div>
-		<div class="col-lg-6 col-md-12 col-sm-12 others noprint" id="right">
-			<h2>{{ trans('about.about.1') }}</h2>
-			<p>{!! trans('about.about.2') !!}</p>
-			<p>{!! trans('about.about.3') !!}</p>
-			<p>{!! trans('about.about.4') !!}</p>
-			<p>{!! trans('about.about.5') !!}</p>
-		</div>
-		<div class="clearfix"></div>
+	<div id="donation-data" class="card-heavy">
+		<h2>{{ trans('spende.danke.title') }}</h2>
+				<p style="width:100%;" class="text-muted">{{ trans('spende.danke.nachricht') }}</p>
+				<h3>{{ trans('spende.danke.kontrolle') }}</h3>
+				<div>
+					@if($data["person"] === "private")
+					<div class="data-element">
+						<label for="firstname" style="margin-right: 16px;">{{ trans('spende.lastschrift.3f.placeholder')}}</label>
+						<input type="text" name="firstname" id="firstname" value="{{ $data['firstname'] }}" readonly>
+					</div>
+					<div class="data-element">
+						<label for="lastname" style="margin-right: 16px;">{{ trans('spende.lastschrift.3l.placeholder')}}</label>
+						<input type="text" name="lastname" id="lastname" value="{{ $data['lastname'] }}" readonly>
+					</div>
+					@else
+					<div class="data-element">
+						<label for="company" style="margin-right: 16px;">{{ trans('spende.lastschrift.3c.placeholder')}}</label>
+						<input type="text" name="company" id="company" value="{{ $data['company'] }}" readonly>
+					</div>
+					@endif
+					@if(!empty($data['email']))
+					<div class="data-element">
+						<label for="email" style="margin-right: 16px;">Email</label>
+						<input type="text" name="email" id="email" value="{{ $data['email'] }}" readonly>
+					</div>
+					@endif
+					<div class="data-element">
+						<label for="iban" style="margin-right: 16px;">{{ trans('spende.iban') }}</label>
+						<input type="text" name="iban" id="iban" value="{{ $data['iban'] }}" readonly>
+					</div>
+					@if(!empty($data["bic"]))
+					<div class="data-element">
+						<label for="bic" style="margin-right: 16px;">{{ trans('spende.bic') }}</label>
+						<input type="text" name="bic" id="bic" value="{{ $data['bic'] }}" readonly>
+					</div>
+					@endif
+					<div class="data-element">
+						<label for="betrag" style="margin-right: 16px;">{{ trans('spende.betrag') }}</label>
+						<input type="text" name="betrag" id="betrag" value="{{ $data['betrag'] }} €" readonly>
+					</div>
+					<div class="data-element">
+						<label for="frequency" style="margin-right: 16px;">{{ trans('spende.frequency') }}</label>
+						<input type="text" name="frequency" id="frequency" value="{{ trans('spende.frequency.' . $data['frequency']) }}" readonly>
+					</div>
+					<div class="data-element">
+						<label for="nachricht" style="margin-right: 16px;">{{ trans('spende.danke.message') }}</label>
+						<textarea name="nachricht" id="nachricht" readonly>{{ $data['nachricht'] }}</textarea>
+					</div>
+				</div>
+				<button type="button" style="margin-top: 16px; margin-bottom: 16px;" class="btn btn-primary noprint js-only" onclick="window.print();">{{ trans('spende.drucken') }}</button>
+				@if($data['key'] !== false)
+				<div class="card-light">
+					<p style="text-align: center; width:100%;">{!! trans('spende.danke.schluessel') !!}</p>
+					<div class="copyLink">
+						<input id="key" class="loadSettings" type="text" style="text-align: center;" value="{{ $data['key'] }}">
+						<button class="btn btn-default js-only" onclick="var copyText = document.getElementById('key');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">Kopieren</button>
+					</div>
+				</div>
+				@endif
 	</div>
 @endsection

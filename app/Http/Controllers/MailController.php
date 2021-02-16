@@ -137,22 +137,22 @@ class MailController extends Controller
 
     public function donation(Request $request)
     {
-        $name = '';
-        if($request->input('person') === 'private') {
+        $firstname = "";
+        $lastname = "";
+        $company = "";
+        $private = $request->input('person', '') === 'private' ? true : false;
+        if($request->input('person', '') === 'private') {
             $firstname = $request->input('firstname');
             $lastname = $request->input('lastname');
-            if($firstname !== '' || $lastname !== '') {
-                $name = $firstname . ' ' . $lastname;
-            }
-        } elseif($request->input('person') === 'company') {
+        } elseif($request->input('person', '') === 'company') {
             $company = $request->input('companyname');
-            $name = $company;
         }
 
-        $name = trim($name);
-
         $data = [
-            'name' => $name,
+            'person' => $request->input('person', ''),
+            'firstname' => $request->input('firstname', ''),
+            'lastname' => $request->input('lastname', ''),
+            'company' => $company,
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
@@ -189,7 +189,6 @@ class MailController extends Controller
 
         # Check the IBAN
         $iban = new IBAN($iban);
-        $bic = $request->input('Bankleitzahl', '');
         $country = new IBANCountry($iban->Country());
         $isSEPA = filter_var($country->IsSEPA(), FILTER_VALIDATE_BOOLEAN);
 
@@ -200,7 +199,7 @@ class MailController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email = "anonymous@suma-ev.de";
         }
-        if($name === ''){
+        if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
             $messageToUser = trans('spende.error.name');
             $messageType = "error";
         } elseif (!$iban->Verify()) {
@@ -222,34 +221,6 @@ class MailController extends Controller
 
             # Generating personalised key for donor
             $key = app('App\Models\Key')->generateKey($betrag);
-
-            # a complete set of data from the form consists of:
-            # -- if person == private --
-            # firstname
-            # lastname
-            # -- if person == company --
-            # companyname
-            # --
-            # email
-            # iban
-            # bic
-            # amount
-            # frequency
-            # message
-
-            $message = "\r\nName: " . $name;
-            $message .= "\r\nIBAN: " . $iban->HumanFormat();
-            if ($bic !== "") {
-                $message .= "\r\nBIC: " . $bic;
-            }
-
-            $message .= "\r\nBetrag: " . $betrag;
-            $message .= "\r\nHäufigkeit: " . trans('spende.frequency.' . $frequency);
-            $message .= "\r\nNachricht: " . $nachricht;
-
-            if($key){
-                $message .= "\r\nSchlüssel:" . $key;
-            }
 
             try {
                 $postdata = [
@@ -276,7 +247,7 @@ class MailController extends Controller
 
                 $postdata = http_build_query($postdata);
     
-                $resulthash = md5($message);
+                $resulthash = md5(json_encode($postdata));
     
                 $mission = [
                     "resulthash" => $resulthash,

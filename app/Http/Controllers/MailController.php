@@ -226,8 +226,8 @@ class MailController extends Controller
                 $postdata = [
                     "entity" => "Contribution",
                     "action" => "mgcreate",
-                    "api_key" => env("TICKET_API_KEY", ''),
-                    "key" => env("TICKET_SITE_KEY", ''),
+                    "api_key" => env("CIVICRM_API_KEY", ''),
+                    "key" => env("CIVICRM_SITE_KEY", ''),
                     "json" => 1,
                     "iban" => $iban->MachineFormat(),
                     "bic" => $bic,
@@ -251,7 +251,7 @@ class MailController extends Controller
     
                 $mission = [
                     "resulthash" => $resulthash,
-                    "url" => env("TICKET_URL", "https://metager.de"),
+                    "url" => env("CIVICRM_URL", "https://metager.de"),
                     "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
                     "username" => null,
                     "password" => null,

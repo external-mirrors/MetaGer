@@ -10,6 +10,7 @@ return [
     'form.6'     => 'Your message',
     'form.7'    => 'Subject',
     'form.8'     => 'Send',
+    'form.9'    => 'Up to 5 attachments (filesize < 5 MB)',
     'letter.1'   => 'By Letter Mail',
     'letter.2'   => 'We prefer digital contact. However, if you consider it neccessary to contact us postally, you can mail us at:',
     'letter.3'   => 'SUMA-EV

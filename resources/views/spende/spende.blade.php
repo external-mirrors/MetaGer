@@ -60,7 +60,7 @@
             </p>
         </div>
         @else
-        <form method="post" class="form">
+        <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true;">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">
@@ -95,9 +95,17 @@
                 <h3>{!! trans('spende.headline.6') !!}</h3>
                 <p>{!! trans('spende.lastschrift.2') !!}</p>
                 <input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
-                <div class="form-group donation-form-group">
-                    <label for="Name">*{!! trans('spende.lastschrift.3') !!}</label>
-                    <input type="text" required="required" class="form-control" id="Name" name="Name" placeholder="{!! trans('spende.lastschrift.3.placeholder') !!}" @if(isset($data['name'])) value="{{$data['name']}}" @endif />
+                <div id="input-picker" class="form-group donation-form-group">
+                    <input type="radio" required="required" id="private" name="person" value="private" @if(empty($data) || $data["person"] === "private")checked="checked"@endif><label for="private">{{trans('spende.lastschrift.private')}}</label>
+                    <div id="input-private" class="show-on-input-checked form-inline">
+                        <input type="text" class="form-control" id="firstname" name="firstname" placeholder="{!! trans('spende.lastschrift.3f.placeholder') !!}" @if(isset($data['firstname'])) value="{{$data['firstname']}}" @endif />
+                        <input type="text" class="form-control" id="lastname" name="lastname" placeholder="{!! trans('spende.lastschrift.3l.placeholder') !!}" @if(isset($data['lastname'])) value="{{$data['lastname']}}" @endif />
+                    </div>
+                    <br>
+                    <input type="radio" id="company" name="person" value="company" @if(!empty($data) && $data["person"] === "company")checked="checked"@endif><label for="company">{{trans('spende.lastschrift.company')}}</label>
+                    <div id="input-company" class="show-on-input-checked form-inline">
+                        <input type="text" class="form-control" id="companyname" name="companyname" placeholder="{!! trans('spende.lastschrift.3c.placeholder') !!}" @if(isset($data['company'])) value="{{$data['company']}}" @endif />
+                    </div>
                 </div>
                 <div class="form-group donation-form-group">
                     <label for="email">{!! trans('spende.lastschrift.4') !!}</label>
@@ -116,7 +124,7 @@
                     <p>{!! trans('spende.bankinfo.3')!!}</p>
                     <textarea class="form-control" id="msg" name="Nachricht" placeholder="{!! trans('spende.lastschrift.8.message.placeholder') !!}">@if(isset($data['nachricht'])){{$data['nachricht']}}@endif</textarea>
                 </div>
-                <input  class="btn btn-default" id="donate-button" type="submit" value="{!! trans('spende.submit') !!}">
+                <input class="btn btn-default" id="donate-button" type="submit" value="{!! trans('spende.submit') !!}">
             </div>	
         </form>
         @endif

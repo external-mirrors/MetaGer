@@ -137,8 +137,22 @@ class MailController extends Controller
 
     public function donation(Request $request)
     {
+        $firstname = "";
+        $lastname = "";
+        $company = "";
+        $private = $request->input('person', '') === 'private' ? true : false;
+        if($request->input('person', '') === 'private') {
+            $firstname = $request->input('firstname');
+            $lastname = $request->input('lastname');
+        } elseif($request->input('person', '') === 'company') {
+            $company = $request->input('companyname');
+        }
+
         $data = [
-            'name' => $request->input('Name', ''),
+            'person' => $request->input('person', ''),
+            'firstname' => $request->input('firstname', ''),
+            'lastname' => $request->input('lastname', ''),
+            'company' => $company,
             'iban' => $request->input('iban', ''),
             'bic' => $request->input('bic', ''),
             'email' => $request->input('email', ''),
@@ -146,7 +160,7 @@ class MailController extends Controller
             'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
-        $name = $request->input('Name', '');
+    
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
@@ -175,7 +189,6 @@ class MailController extends Controller
 
         # Check the IBAN
         $iban = new IBAN($iban);
-        $bic = $request->input('Bankleitzahl', '');
         $country = new IBANCountry($iban->Country());
         $isSEPA = filter_var($country->IsSEPA(), FILTER_VALIDATE_BOOLEAN);
 
@@ -186,8 +199,10 @@ class MailController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email = "anonymous@suma-ev.de";
         }
-
-        if (!$iban->Verify()) {
+        if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
+            $messageToUser = trans('spende.error.name');
+            $messageType = "error";
+        } elseif (!$iban->Verify()) {
             $messageToUser = trans('spende.error.iban');
             $messageType = "error";
         } elseif (!$isSEPA && $bic === '') {
@@ -204,59 +219,44 @@ class MailController extends Controller
             # The value has to have a maximum of 2 decimal digits
             $betrag = round($betrag, 2, PHP_ROUND_HALF_DOWN);
 
-            # Folgende Felder werden vom Spendenformular als Input übergeben:
-            # Name
-            # Telefon
-            # email
-            # Kontonummer ( IBAN )
-            # Bankleitzahl ( BIC )
-            # Nachricht
-
-            $message = "\r\nName: " . $name;
-            $message .= "\r\nIBAN: " . $iban->HumanFormat();
-            if ($bic !== "") {
-                $message .= "\r\nBIC: " . $bic;
-            }
-
-            $message .= "\r\nBetrag: " . $betrag;
-            $message .= "\r\nHäufigkeit: " . trans('spende.frequency.' . $frequency);
-            $message .= "\r\nNachricht: " . $nachricht;
+            # Generating personalised key for donor
+            $key = app('App\Models\Key')->generateKey($betrag);
 
             try {
                 $postdata = [
-                    "alert" => true,
-                    "autorespond" => true,
-                    "source" => "API",
-                    "name" => $name,
+                    "entity" => "Contribution",
+                    "action" => "mgcreate",
+                    "api_key" => env("CIVICRM_API_KEY", ''),
+                    "key" => env("CIVICRM_SITE_KEY", ''),
+                    "json" => 1,
+                    "iban" => $iban->MachineFormat(),
+                    "bic" => $bic,
+                    "amount" => $betrag,
+                    "frequency" => $frequency,
                     "email" => $email,
-                    "subject" => "MetaGer - Spende",
-                    "ip" => $request->ip(),
-                    "deptId" => 4,
-                    "message" => "data:text/plain;charset=utf-8, $message",
+                    "mgkey" => $key,
+                    "message" => $nachricht
                 ];
 
-                if (LaravelLocalization::getCurrentLocale() === "de") {
-                    $postdata["deptId"] = 4;
+                if($request->input('person') === 'private') {
+                    $postdata['first_name'] = $firstname;
+                    $postdata['last_name'] = $lastname;
+                } elseif($request->input('person') === 'company') {
+                    $postdata['business_name'] = $company;
                 }
 
-                if($email === "anonymous@suma-ev.de"){
-                    $postdata["autorespond"] = false;
-                }
-
-                $postdata = json_encode($postdata);
+                $postdata = http_build_query($postdata);
     
-                $resulthash = md5($message);
+                $resulthash = md5(json_encode($postdata));
     
                 $mission = [
                     "resulthash" => $resulthash,
-                    "url" => env("TICKET_URL", "https://metager.de"),
+                    "url" => env("CIVICRM_URL", "https://metager.de"),
                     "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
                     "username" => null,
                     "password" => null,
                     "headers" => [
-                        "X-API-Key" => env("TICKET_APIKEY", ""),
-                        "Content-Type" => "application/json",
-                        "Content-Length" => strlen($postdata)
+                        "Content-Type" => "application/x-www-form-urlencoded",
                     ],
                     "cacheDuration" => 0,
                     "name" => "Ticket",
@@ -296,6 +296,7 @@ class MailController extends Controller
                 ->with('data', $data);
         } else {
             $data['iban'] = $iban->HumanFormat();
+            $data['key'] = $key;
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }

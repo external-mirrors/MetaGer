@@ -56,7 +56,6 @@ class Key
         }
     }
 
-    
     public function updateStatus()
     {
         $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
@@ -115,6 +114,37 @@ class Key
                 $this->status = false;
                 return false;
             }
+        } catch (\ErrorException $e) {
+            return false;
+        }
+    }
+    public function generateKey($payment)
+    {
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $postdata = http_build_query(array(
+            'payment' => $payment,
+            'apiAccess' => 'normal',
+            'notes' => 'Fuer ' . $payment . '€ aufgeladen am '. date("d.m.Y"),
+            'expiresAfterDays' => 365
+        ));
+        $opts = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
+                'content' => $postdata,
+                'timeout' => 5
+            ),
+        );
+
+        $context = stream_context_create($opts);
+
+        try {
+            $link = $this->keyserver . "v2/key/";
+            $result = json_decode(file_get_contents($link, false, $context));
+            return $result->{'mgKey'};
         } catch (\ErrorException $e) {
             return false;
         }

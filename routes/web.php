@@ -91,6 +91,7 @@ Route::group(
             return view('spende.danke')
                 ->with('title', trans('titles.spende'))
                 ->with('navbarFocus', 'foerdern')
+                ->with('css', [mix('/css/spende/danke.css')])
                 ->with('data', unserialize(base64_decode($data)));
         }]);
         Route::get('partnershops', function () {

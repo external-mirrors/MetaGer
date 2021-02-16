@@ -55,6 +55,9 @@ mix
   .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css", {
     strictMath: true
   })
+  .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css", {
+    strictMath: true
+  })
   // js
   .babel(
     [

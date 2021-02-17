@@ -17,7 +17,7 @@ class BrowserVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $isAsso = false)
     {
 
         $bvEnabled = config("metager.metager.browserverification_enabled");
@@ -42,8 +42,11 @@ class BrowserVerification
         }
         header('X-Accel-Buffering: no');
 
-        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
-            return $next($request);
+        //use parameter for middleware to skip this when using associator
+        if(!$isAsso){
+            if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
+                return $next($request);
+            }
         }
 
         ini_set('zlib.output_compression', 'Off');

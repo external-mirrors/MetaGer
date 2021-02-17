@@ -68,6 +68,7 @@
         }
         input:checked + .frequency-label {
             border: 2px solid #f47216;
+            font-weight: bold;
         }
     }
     #payment-methods {
@@ -160,6 +161,17 @@
 
         .form {
             grid-area: form;
+        }
+    }
+    #input-picker{
+        label {
+            min-width: 8em;
+        }
+        .show-on-input-checked {
+            display: none;
+        }
+        input:checked  + label + .show-on-input-checked {
+            display: inline-block;
         }
     }
 }

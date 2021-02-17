@@ -30,12 +30,16 @@ return [
     'bankinfo.2.2' => 'BIC: GENODEM1GLS',
     'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',
     'bankinfo.2.4' => '(Konto-Nr.: 4075 0332 01, BLZ: 43060967)',
-    'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 200,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
+    'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 300,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
 
     'lastschrift.1' => 'Spenden mittels elektronischem Lastschriftverfahren:',
     'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
-    'lastschrift.3' => 'Bitte geben Sie den Namen des Kontoinhabers ein:',
-    'lastschrift.3.placeholder' => 'Name',
+    'lastschrift.3f' => 'Bitte geben Sie den Vornamen des Kontoinhabers ein:',
+    'lastschrift.3f.placeholder' => 'Vorname',
+    'lastschrift.3l' => 'Bitte geben Sie den Nachnamen des Kontoinhabers ein:',
+    'lastschrift.3l.placeholder' => 'Nachname',
+    'lastschrift.3c' => 'Bitte geben Sie den Firmenkontonamen ein:',
+    'lastschrift.3c.placeholder' => 'Firma',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',
     'lastschrift.5' => 'Ihre Telefonnummer, um Ihre Spende ggf. durch einen Rückruf zu verifizieren:',
     'lastschrift.6' => 'Ihre IBAN:',
@@ -43,6 +47,9 @@ return [
     'lastschrift.8.message' => 'Hier können Sie uns ggf. noch eine Mitteilung dazu senden:',
     'lastschrift.8.message.placeholder' => 'Weitere Angaben',
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
+    'lastschrift.private' => '*Privatperson:',
+    'lastschrift.company' => '*Firma:',
+    
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
 
@@ -60,16 +67,19 @@ return [
 
     'drucken' => 'Drucken',
 
-    'danke.title' => 'Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung für MetaGer an SUMA-EV erhalten.',
+    'danke.title' => 'Herzlichen Dank! Wir haben Ihre Spendenbenachrichtigung erhalten.',
     'danke.nachricht' => 'Falls Sie Kontaktdaten angegeben haben, erhalten Sie demnächst auch eine persönliche Nachricht.',
     'danke.kontrolle' => 'Folgende Nachricht hat uns erreicht:',
 
+    'danke.schluessel' => 'Als kleines Dankeschön bieten wir unseren Spendern einen Schlüssel für werbefreie Suchen. <br> Dieser lässt sich eingeben indem man auf das Schlüsselsymbol neben der Suchleiste klickt. <br> Ihr Schlüssel lautet: ',
+
     'telefonnummer' => 'Telefonnummer',
-    'iban' => 'IBAN/Kontonummer',
-    'bic' => 'BIC/Bankleitzahl',
+    'iban' => 'IBAN',
+    'bic' => 'BIC',
     'betrag' => 'Betrag',
     'danke.message' => 'Ihre Nachricht',
 
+    'error.name' => 'Es scheint, als hätten sie keinen Namen angegeben. Bitte versuchen Sie es erneut.',
     'error.iban' => 'Die eingegebene IBAN scheint nicht Korrekt zu sein. Nachricht wurde nicht gesendet.',
     'error.bic' => 'Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.',
     'error.amount' => 'Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.',

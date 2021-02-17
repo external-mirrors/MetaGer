@@ -40,7 +40,7 @@ Route::group(
                 ->with('title', trans('titles.asso'))
                 ->with('navbarFocus', 'dienste');
         });
-        Route::post('asso', 'Assoziator@asso');
+        Route::post('asso', 'Assoziator@asso')->middleware('browserverification:true', 'humanverification:true');
 
         Route::get('impressum', function () {
             return view('impressum')

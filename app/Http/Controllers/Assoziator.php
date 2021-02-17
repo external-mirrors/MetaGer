@@ -14,13 +14,13 @@ class Assoziator extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/asso'));
         }
 
-        $url = "https://metager.de/meta/meta.ger3?eingabe=" . urlencode($eingabe) . "&out=atom10&key=test";
+        $url = "https://metager.de/meta/meta.ger3?eingabe=" . urlencode($eingabe) . "&out=atom10&key=" . env('ASSO_KEY', 'test');
 
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => $_SERVER["AGENT"],
+            CURLOPT_USERAGENT => $_SERVER["HTTP_USER_AGENT"],
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_MAXCONNECTS => 500,

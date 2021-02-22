@@ -43,14 +43,16 @@ class SaveUseragents extends Command
         $agent = null;
         $now = Carbon::now('utc')->toDateTimeString();
 
-        while (($agent = Redis::lpop("useragents")) !== null) {
+        while (!empty(($agent = Redis::lpop("useragents")))) {
             $newEntry = json_decode($agent, true);
             $newEntry["created_at"] = $now;
             $newEntry["updated_at"] = $now;
             $agents[] = $newEntry;
         }
-
-        \App\UserAgent::insert($agents);
+        
+        if (!empty($agents)) {
+            \App\UserAgent::insert($agents);
+        }
 
         // Delete old entries (older than 24h)
         $expiration = Carbon::now('utc')->subDays(1);

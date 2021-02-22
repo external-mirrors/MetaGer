@@ -64,7 +64,7 @@ RUN mkdir -p /run/php && \
 COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/conf.d/default.conf
 RUN sed -i 's/fastcgi_pass phpfpm:9000;/fastcgi_pass localhost:9000;/g' /etc/nginx/conf.d/default.conf 
-COPY --chown=root:nginx . /html
+COPY --chown=root:www-data . /html
 
 WORKDIR /html
 EXPOSE 80

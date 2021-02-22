@@ -8,7 +8,7 @@
             "name": "PHP - Listen for XDebug",
             "type": "php",
             "request": "launch",
-            "port": 9000,
+            "port": 9003,
             "pathMappings": {
                 "/html": "${workspaceRoot}"
             }
@@ -17,7 +17,7 @@
             "name": "PHP - Launch currently open script",
             "type": "php",
             "request": "launch",
-            "port": 9000,
+            "port": 9003,
             "program": "${file}",
             "cwd": "${fileDirname}",
             "pathMappings": {

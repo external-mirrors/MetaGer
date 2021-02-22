@@ -73,12 +73,6 @@ class StartpageController extends Controller
         return view($subpage, ['title' => 'Datenschutz Richtlinien']);
     }
 
-    public function loadLocalPage($locale = "de", $subpage = "datenschutz")
-    {
-        \App::setLocale($locale);
-        return loadPage($subpage);
-    }
-
     public function loadPlugin(Request $request, $locale = "de")
     {
         $link = action('MetaGerSearch@search', []);

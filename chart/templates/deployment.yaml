@@ -179,7 +179,7 @@ spec:
 {{ toYaml .Values.resourcesNginx | indent 12 }}
       # Redis Container
       - name: {{ .Chart.Name }}-redis
-        image: "redis:5.0.3-alpine"
+        image: "redis:6"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
         volumeMounts:
@@ -206,7 +206,7 @@ spec:
       - name: {{ .Chart.Name }}-fetcher
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         command: ["su"]
-        args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
+        args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "www-data"]
         volumeMounts:
         - name: secrets
           mountPath: /html/.env

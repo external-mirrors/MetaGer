@@ -435,7 +435,9 @@ class MetaGer
         }
     }
 
-    
+    public function parseAdmitad(\App\Models\Admitad &$admitad){
+        $admitad->parseAffiliates($this->results);
+    }
 
     public function humanVerification(&$results)
     {
@@ -1718,6 +1720,9 @@ class MetaGer
         $this->results = $results;
     }
 
+    /**
+     * @return \App\Models\Result[]
+     */
     public function getResults()
     {
         return $this->results;
@@ -1929,6 +1934,10 @@ class MetaGer
     public function isHeaderPrinted()
     {
         return $this->headerPrinted;
+    }
+
+    public function isDummy(){
+        return $this->dummy;
     }
 
     /**

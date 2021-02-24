@@ -93,6 +93,10 @@ class MetaGerSearch extends Controller
 
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults($timings);
+        $admitad = null;
+        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+            $admitad = new \App\Models\Admitad($metager);
+        }
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -106,6 +110,7 @@ class MetaGerSearch extends Controller
                 "metager" => [
                     "apiAuthorized" => $metager->isApiAuthorized(),
                 ],
+                "admitad" => $admitad,
                 "adgoal" => [
                     "loaded" => $metager->isAdgoalLoaded(),
                     "adgoalHash" => $metager->getAdgoalHash(),
@@ -190,6 +195,7 @@ class MetaGerSearch extends Controller
 
         $engines = $cached["engines"];
         $adgoal = $cached["adgoal"];
+        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
@@ -209,6 +215,7 @@ class MetaGerSearch extends Controller
 
         $metager->rankAll();
         $metager->prepareResults();
+        $metager->parseAdmitad($admitad);
 
         $result = [
             'finished' => true,

@@ -9,6 +9,7 @@ class Result
 {
     public $provider; # Die Engine von der das Suchergebnis kommt
     public $titel; # Der Groß Angezeigte Name für das Suchergebnis
+    public $originalLink;
     public $link; # Der Link auf die Ergebnisseite
     public $anzeigeLink; # Der tatsächlich angezeigte Link (rein optisch)
     public $descr; # Die eventuell gekürzte Beschreibung des Suchergebnisses
@@ -41,6 +42,7 @@ class Result
         $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
+        $this->originalLink = trim($link);
         $this->anzeigeLink = trim($anzeigeLink);
         $this->anzeigeLink = preg_replace("/(http[s]{0,1}:\/\/){0,1}(www\.){0,1}/si", "", $this->anzeigeLink);
         $this->descr = $this->sanitizeText(strip_tags(trim($descr), '<p>'));

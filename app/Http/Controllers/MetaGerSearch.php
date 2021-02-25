@@ -94,14 +94,20 @@ class MetaGerSearch extends Controller
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults($timings);
         $admitad = [];
+        $adgoal = [];
         if(!$metager->isApiAuthorized() && !$metager->isDummy()){
             $newAdmitad = new \App\Models\Admitad($metager);
             if(!empty($newAdmitad->hash)){
                 $admitad[] = $newAdmitad;
             }
+            $newAdgoal = new \App\Models\Adgoal($metager);
+            if(!empty($newAdgoal->hash)){
+                $adgoal[] = $newAdgoal;
+            }
         }
 
-        $metager->parseAdmitad($admitad);
+        $metager->parseAffiliates($admitad);
+        $metager->parseAffiliates($adgoal);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -116,10 +122,7 @@ class MetaGerSearch extends Controller
                     "apiAuthorized" => $metager->isApiAuthorized(),
                 ],
                 "admitad" => $admitad,
-                "adgoal" => [
-                    "loaded" => $metager->isAdgoalLoaded(),
-                    "adgoalHash" => $metager->getAdgoalHash(),
-                ],
+                "adgoal" => $adgoal,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
@@ -205,8 +208,6 @@ class MetaGerSearch extends Controller
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
         $metager->setApiAuthorized($mg["apiAuthorized"]);
-        $metager->setAdgoalLoaded($adgoal["loaded"]);
-        $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
         $metager->parseFormData($request, false);
         $metager->setJsEnabled(true);
@@ -227,9 +228,14 @@ class MetaGerSearch extends Controller
             if(!empty($newAdmitad->hash)){
                 $admitad[] = $newAdmitad;
             }
+            $newAdgoal = new \App\Models\Adgoal($metager);
+            if(!empty($newAdgoal->hash)){
+                $adgoal[] = $newAdgoal;
+            }
         }
 
-        $admitadFinished = $metager->parseAdmitad($admitad);
+        $admitadFinished = $metager->parseAffiliates($admitad);
+        $adgoalFinished = $metager->parseAffiliates($adgoal);
 
         $result = [
             'finished' => true,
@@ -277,7 +283,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if (!$metager->isAdgoalLoaded() || !$admitadFinished) {
+        if (!$adgoalFinished || !$admitadFinished) {
             $finished = false;
         }
 
@@ -295,10 +301,7 @@ class MetaGerSearch extends Controller
                 "apiAuthorized" => $metager->isApiAuthorized(),
             ],
             "admitad" => $admitad,
-            "adgoal" => [
-                "loaded" => $metager->isAdgoalLoaded(),
-                "adgoalHash" => $metager->getAdgoalHash(),
-            ],
+            "adgoal" => $adgoal,
             "engines" => $metager->getEngines(),
         ], 1 * 60);
 

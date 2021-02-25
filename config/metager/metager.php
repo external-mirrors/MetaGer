@@ -6,4 +6,5 @@ return [
         "w3m\/",
     ],
     "fail2ban_enabled" => true,
+    "affiliate_preference" => "adgoal",
 ];

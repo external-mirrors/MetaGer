@@ -308,33 +308,12 @@ class MetaGer
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
-        if (!$this->apiAuthorized && !$this->adgoalLoaded && !$this->dummy) {
-            if (empty($this->adgoalHash)) {
-                if (!empty($this->jskey)) {
-                    $js = Redis::connection('cache')->lpop("js" . $this->jskey);
-                    if ($js !== null && boolval($js)) {
-                        $this->javascript = true;
-                    }
-                }
-                $this->adgoalHash = \App\Models\Adgoal::startAdgoal($this->results);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
-                }
+
+        if (!empty($this->jskey)) {
+            $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+            if ($js !== null && boolval($js)) {
+                $this->javascript = true;
             }
-        
-            if (!$this->javascript) {
-                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, true);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            } else {
-                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, false);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            }
-        } else {
-            $this->adgoalLoaded = true;
         }
 
         # Human Verification
@@ -441,16 +420,16 @@ class MetaGer
      * @param Boolean $wait Wait for Results?
      * @return Boolean whether or not all Admitad Objects are finished
      */
-    public function parseAdmitad(&$admitads){
+    public function parseAffiliates(&$affiliates){
         $wait = false;
         $finished = true;
         if(!$this->javascript){
             $wait = true;
         }
-        foreach ($admitads as $admitad) {
-            $admitad->fetchAffiliates($wait);
-            $admitad->parseAffiliates($this->results);
-            if(!$admitad->finished){
+        foreach ($affiliates as $affiliate) {
+            $affiliate->fetchAffiliates($wait);
+            $affiliate->parseAffiliates($this->results);
+            if(!$affiliate->finished){
                 $finished = false;
             }
         }
@@ -1912,26 +1891,6 @@ class MetaGer
     public function getEngines()
     {
         return $this->engines;
-    }
-
-    public function setAdgoalHash($hash)
-    {
-        $this->adgoalHash = $hash;
-    }
-
-    public function getAdgoalHash()
-    {
-        return $this->adgoalHash;
-    }
-
-    public function isAdgoalLoaded()
-    {
-        return $this->adgoalLoaded;
-    }
-
-    public function setAdgoalLoaded($adgoalLoaded)
-    {
-        $this->adgoalLoaded = $adgoalLoaded;
     }
 
     public function isApiAuthorized()

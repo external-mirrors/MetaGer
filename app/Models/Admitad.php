@@ -16,7 +16,7 @@ class Admitad
 
     public $hash;
     public $finished = false; // Is true when the Request was sent to and read from Admitad App
-    private $affiliates = [];
+    private $affiliates = null;
 
     /**
      * Creates a new Admitad object which will start a request for affiliate links
@@ -81,7 +81,7 @@ class Admitad
      * @param Boolean $wait Whether or not to wait for a response
      */
     public function fetchAffiliates($wait = false) {
-        if($this->finished){
+        if($this->affiliates !== null){
             return;
         }
 
@@ -103,7 +103,7 @@ class Admitad
         
         // If the fetcher had an Error
         if($answer === "no-result"){
-            $this->finished = true;
+            $this->affiliates = [];
             return;
         }
 
@@ -112,7 +112,6 @@ class Admitad
         }
 
         $this->affiliates = $answer["result"];
-        $this->finished = true;
     }
 
     /**
@@ -121,6 +120,9 @@ class Admitad
      * @param \App\Models\Result[] $results
      */
     public function parseAffiliates(&$results){
+        if($this->finished || $this->affiliates === null){
+            return;
+        }
         foreach($this->affiliates as $linkResult){
             $originalUrl = $linkResult["originalUrl"];
             $redirUrl = $linkResult["redirUrl"];
@@ -132,7 +134,7 @@ class Admitad
             }
 
             foreach ($results as $result) {
-                if ($result->originalLink === $originalUrl) {
+                if ($result->originalLink === $originalUrl && (config("metager.metager.affiliate_preference", "adgoal") === "admitad" || !$result->partnershop)) {
                     # Ein Advertiser gefunden
                     if ($result->image !== "" && !$result->partnershop) {
                         $result->logo = $image;
@@ -147,5 +149,6 @@ class Admitad
                 }
             }
         }
+        $this->finished = true;
     }
 }

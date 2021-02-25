@@ -24,7 +24,6 @@ class Stresstest extends MetaGerSearch
 
         # deactivates adgoal
         $metager->setDummy(true);
-        $metager->setAdgoalHash(true);
 
         parent::search($request, $metager, $timing);
     }

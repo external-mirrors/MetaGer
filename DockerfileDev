@@ -30,7 +30,7 @@ RUN apt update \
     php7.4-redis \
     php7.4-gd \
     php7.4-json \
-    php7.4-opcache
+    php7.4-xdebug
 
 WORKDIR /html
 
@@ -49,9 +49,9 @@ RUN mkdir -p /run/php && \
     sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php/7.4/fpm/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 30M/g' /etc/php/7.4/fpm/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 30M/g' /etc/php/7.4/fpm/php.ini && \
-    echo "xdebug.remote_enable = 1" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
-    echo "xdebug.remote_autostart = 1" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
-    echo "xdebug.remote_connect_back = 1" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
+    echo "xdebug.mode = debug" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
+    echo "xdebug.start_with_request = yes" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
+    echo "xdebug.discover_client_host = true" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
     echo "xdebug.idekey=VSCODE" >> /etc/php/7.4/fpm/conf.d/20-xdebug.ini && \
     cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
     echo "Europe/Berlin" > /etc/timezone && \

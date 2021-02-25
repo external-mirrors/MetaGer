@@ -93,10 +93,15 @@ class MetaGerSearch extends Controller
 
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults($timings);
-        $admitad = null;
+        $admitad = [];
         if(!$metager->isApiAuthorized() && !$metager->isDummy()){
-            $admitad = new \App\Models\Admitad($metager);
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if(!empty($newAdmitad->hash)){
+                $admitad[] = $newAdmitad;
+            }
         }
+
+        $metager->parseAdmitad($admitad);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -204,6 +209,7 @@ class MetaGerSearch extends Controller
         $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
         $metager->parseFormData($request, false);
+        $metager->setJsEnabled(true);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
@@ -215,7 +221,15 @@ class MetaGerSearch extends Controller
 
         $metager->rankAll();
         $metager->prepareResults();
-        $metager->parseAdmitad($admitad);
+
+        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if(!empty($newAdmitad->hash)){
+                $admitad[] = $newAdmitad;
+            }
+        }
+
+        $admitadFinished = $metager->parseAdmitad($admitad);
 
         $result = [
             'finished' => true,
@@ -263,7 +277,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if (!$metager->isAdgoalLoaded()) {
+        if (!$metager->isAdgoalLoaded() || !$admitadFinished) {
             $finished = false;
         }
 
@@ -280,6 +294,7 @@ class MetaGerSearch extends Controller
             "metager" => [
                 "apiAuthorized" => $metager->isApiAuthorized(),
             ],
+            "admitad" => $admitad,
             "adgoal" => [
                 "loaded" => $metager->isAdgoalLoaded(),
                 "adgoalHash" => $metager->getAdgoalHash(),

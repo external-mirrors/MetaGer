@@ -48,6 +48,7 @@ class MetaGer
     protected $availableFoki = [];
     protected $startCount = 0;
     protected $canCache = false;
+    protected $javascript = false;
     # Daten über die Abfrage$
     protected $ip;
     protected $useragent;
@@ -435,8 +436,25 @@ class MetaGer
         }
     }
 
-    public function parseAdmitad(\App\Models\Admitad &$admitad){
-        $admitad->parseAffiliates($this->results);
+    /**
+     * @param \App\Models\Admitad[] $admitads
+     * @param Boolean $wait Wait for Results?
+     * @return Boolean whether or not all Admitad Objects are finished
+     */
+    public function parseAdmitad(&$admitads){
+        $wait = false;
+        $finished = true;
+        if(!$this->javascript){
+            $wait = true;
+        }
+        foreach ($admitads as $admitad) {
+            $admitad->fetchAffiliates($wait);
+            $admitad->parseAffiliates($this->results);
+            if(!$admitad->finished){
+                $finished = false;
+            }
+        }
+        return $finished;
     }
 
     public function humanVerification(&$results)
@@ -1940,6 +1958,13 @@ class MetaGer
         return $this->dummy;
     }
 
+    public function jsEnabled() {
+        return $this->javascript;
+    }
+    
+    public function setJsEnabled(bool $bool){
+        $this->javascript = $bool;
+    }
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */

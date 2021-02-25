@@ -14,7 +14,9 @@ class Admitad
         "en"
     ];
 
-    private $hash;
+    public $hash;
+    public $finished = false; // Is true when the Request was sent to and read from Admitad App
+    private $affiliates = [];
 
     /**
      * Creates a new Admitad object which will start a request for affiliate links
@@ -29,7 +31,13 @@ class Admitad
         // Generate a list of URLs
         $resultLinks = [];
         foreach($results as $result){
-            $resultLinks[] = $result->originalLink;
+            if ($result->new) {
+                $resultLinks[] = $result->originalLink;
+            }
+        }
+
+        if(empty($resultLinks)){
+            return;
         }
 
         $lang = LaravelLocalization::getCurrentLocale();
@@ -69,19 +77,51 @@ class Admitad
     }
 
     /**
-     * Parses the response from Admitad server and converts all Affiliate Links.
-     * 
-     * @param \App\Models\Result[] $results
+     * Fetches the Admitad Response from Redis
+     * @param Boolean $wait Whether or not to wait for a response
      */
-    public function parseAffiliates(&$results){
-        $answer = Cache::get($this->hash);
+    public function fetchAffiliates($wait = false) {
+        if($this->finished){
+            return;
+        }
+
+        $answer = null;
+        $startTime = microtime(true);
+        if($wait){
+            while (microtime(true) - $startTime < 5) {
+                $answer = Cache::get($this->hash);
+                if ($answer === null) {
+                    usleep(50 * 1000);
+                } else {
+                    break;
+                }
+            }
+        }else{
+            $answer = Cache::get($this->hash);
+        }
         $answer = json_decode($answer, true);
+        
+        // If the fetcher had an Error
+        if($answer === "no-result"){
+            $this->finished = true;
+            return;
+        }
 
         if(empty($answer) || !isset($answer["error"]) || $answer["error"] || !is_array($answer["result"])){
             return;
         }
 
-        foreach($answer["result"] as $linkResult){
+        $this->affiliates = $answer["result"];
+        $this->finished = true;
+    }
+
+    /**
+     * Converts all Affiliate Links.
+     * 
+     * @param \App\Models\Result[] $results
+     */
+    public function parseAffiliates(&$results){
+        foreach($this->affiliates as $linkResult){
             $originalUrl = $linkResult["originalUrl"];
             $redirUrl = $linkResult["redirUrl"];
             $image = $linkResult["image"];
@@ -94,7 +134,7 @@ class Admitad
             foreach ($results as $result) {
                 if ($result->originalLink === $originalUrl) {
                     # Ein Advertiser gefunden
-                    if ($result->image !== "") {
+                    if ($result->image !== "" && !$result->partnershop) {
                         $result->logo = $image;
                     } else {
                         $result->image = $image;
@@ -107,7 +147,5 @@ class Admitad
                 }
             }
         }
-
-        Log::info("tzewst");
     }
 }

@@ -283,7 +283,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if (!$adgoalFinished || !$admitadFinished) {
+        if (!$adgoalFinished /*|| !$admitadFinished*/) {
             $finished = false;
         }
 

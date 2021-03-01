@@ -144,7 +144,7 @@ class Adgoal
             return;
         }
 
-        if(empty($answer) || !is_array($answer)){
+        if(empty($answer) && !is_array($answer)){
             return;
         }
 

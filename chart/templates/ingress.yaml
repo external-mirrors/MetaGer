@@ -57,6 +57,10 @@ spec:
         backend:
           serviceName: {{ template "fullname" . }}
           servicePort: {{ .Values.service.externalPort }}
+      - path: /wsb
+        backend:
+          serviceName: wsb
+          servicePort: 80
 {{- if .Values.service.commonName }}
   - host: {{ template "hostname" .Values.service.commonName }}
     http:

@@ -14,7 +14,14 @@ class Assoziator extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/asso'));
         }
 
-        $url = "https://metager.de/meta/meta.ger3?eingabe=" . urlencode($eingabe) . "&out=atom10&key=" . env('ASSO_KEY', 'test');
+        $params = [
+            "eingabe" => $eingabe,
+            "out" => "atom10",
+            "key" => env("ASSO_KEY", "test"),
+        ];
+
+
+        $url = "https://metager.de/meta/meta.ger3?" . http_build_query($params, "", "&", PHP_QUERY_RFC3986);
 
         $ch = curl_init();
 
@@ -115,8 +122,9 @@ class Assoziator extends Controller
             ->with('navbarFocus', 'dienste')
             ->with('words', $words)
             ->with('keywords', $eingabe)
-            ->with('wordCount', $wordCount);
+            ->with('wordCount', $wordCount)
+            ->with('css', [mix('css/asso/style.css')])
+            ->with('darkcss', [mix('css/asso/dark.css')]);;
 
-        die(var_dump($words));
     }
 }

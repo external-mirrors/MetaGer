@@ -55,6 +55,12 @@ mix
   .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css", {
     strictMath: true
   })
+  .less("resources/less/metager/pages/asso/style-dark.less", "public/css/asso/dark.css", {
+    strictMath: true
+  })
+  .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css", {
+    strictMath: true
+  })
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css", {
     strictMath: true
   })

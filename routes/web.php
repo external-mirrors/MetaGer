@@ -38,7 +38,9 @@ Route::group(
         Route::get('asso', function () {
             return view('assoziator.asso')
                 ->with('title', trans('titles.asso'))
-                ->with('navbarFocus', 'dienste');
+                ->with('navbarFocus', 'dienste')
+                ->with('css', [mix('css/asso/style.css')])
+                ->with('darkcss', [mix('css/asso/dark.css')]);
         });
         Route::post('asso', 'Assoziator@asso')->middleware('browserverification:true', 'humanverification:true');
 

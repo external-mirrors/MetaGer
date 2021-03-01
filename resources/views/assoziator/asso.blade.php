@@ -3,25 +3,6 @@
 @section('title', $title )
 
 @section('content')
-	<style>
-		form div.input-group-addon button {
-			padding: 9px;
-		}
-
-		.reasso {
-			color: rgb(0, 102, 204);
-		}
-		.reasso:hover {
-			color: red;
-		}
-
-		td.association {
-			display: flex;
-		}
-		.asso-search-link {
-			margin-right: 10px;
-		}
-	</style>
 	<h1 class="page-title">{{ trans('asso.head.1') }}</h1>
 	<div class="card-heavy">
 		<p>{{ trans('asso.1.1') }} <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/datenschutz') }}" target="_blank">{{ trans('asso.1.2') }}</a>{{ trans('asso.1.3') }}.</p>

@@ -51,6 +51,7 @@
                 }
             }
             .result-hoster {
+                cursor: pointer;
                 font-size: .9em;
                 margin-left: 20px;
                 color: #808080;
@@ -63,6 +64,10 @@
                     padding: 8px;
                     display: none;
                     a {
+                        color: @link-color;
+                        &:hover {
+                            color: @a-hover-color;
+                        }
                         margin-left: 4px;
                     }
                 }      

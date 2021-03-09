@@ -121,15 +121,26 @@ class Key
             return false;
         }
     }
-    public function generateKey($payment)
+    public function generateKey($payment = null, $adFreeSearches = null, $key = null, $notes = "")
     {
         $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
-        $postdata = http_build_query(array(
-            'payment' => $payment,
+        $postdata = array(
             'apiAccess' => 'normal',
-            'notes' => 'Fuer ' . $payment . '€ aufgeladen am '. date("d.m.Y"),
-            'expiresAfterDays' => 365
-        ));
+            'expiresAfterDays' => 365,
+            'notes' => $notes
+        );
+        if(!empty($key)){
+            $postdata["key"] = $key;
+        }
+    
+        if(!empty($payment)){
+            $postdata["payment"] = $payment;
+        }else if(!empty($adFreeSearches)){
+            $postdata["adFreeSearches"] = $adFreeSearches;
+        }else{
+            return false;
+        }
+        $postdata = http_build_query($postdata, "", "&", PHP_QUERY_RFC3986);
         $opts = array(
             'http' => array(
                 'method' => 'POST',
@@ -153,6 +164,34 @@ class Key
         }
     }
 
+    public function reduce($count){
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $postdata = http_build_query(array(
+            'adFreeSearches' => $count,
+        ));
+        $opts = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
+                'content' => $postdata,
+                'timeout' => 5
+            ),
+        );
+
+        $context = stream_context_create($opts);
+
+        try {
+            $link = $this->keyserver . "v2/key/" . $this->key . "/reduce-searches";
+            $result = json_decode(file_get_contents($link, false, $context));
+            return $result;
+        } catch (\ErrorException $e) {
+            return false;
+        }
+    }
+
     /**
      * Tells if this key is liable to change to a custom key
      * Currently only members are allowed to do so and only every 2 days
@@ -161,7 +200,7 @@ class Key
      * @return boolean
      */
     public function canChange(){
-        if(empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes)){
+        if(empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes) || $this->keyinfo->adFreeSearches < \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES){
             return false;
         }
         if(!empty($this->keyinfo->KeyChangedAt)){
@@ -174,5 +213,39 @@ class Key
             }
         }
         return true;
+    }
+
+    public function checkForChange($newkey = "", $hash){
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $postdata = http_build_query(array(
+            'hash' => $hash,
+            'key' => $newkey,
+        ));
+        $opts = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
+                'content' => $postdata,
+                'timeout' => 5
+            ),
+        );
+
+        $context = stream_context_create($opts);
+
+        try {
+            $link = $this->keyserver . "v2/key/can-change";
+            $result = json_decode(file_get_contents($link, false, $context));
+
+            if(!empty($result) && $result->status === "success" && empty($result->results)){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (\ErrorException $e) {
+            return false;
+        }
     }
 }

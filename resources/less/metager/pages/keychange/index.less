@@ -1,0 +1,16 @@
+#steps {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    counter-reset: steps;
+    > div {
+        counter-increment: steps;
+        padding: 8px;
+        &::before {
+            content: counter(steps)". ";
+        }
+        &.active {
+            background-color: #2879025c;
+        }
+    }
+}

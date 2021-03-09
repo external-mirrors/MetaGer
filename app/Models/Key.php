@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Redis;
 use Request;
+use \Carbon\Carbon;
 
 class Key
 {
     public $key;
     public $status; # valid key = true, invalid key = false, unidentified key = null
     private $keyserver = "https://key.metager.de/";
+    private $keyinfo;
 
     public function __construct($key, $status = null)
     {
@@ -71,6 +73,7 @@ class Key
         try {
             $link = $this->keyserver . "v2/key/". urlencode($this->key);
             $result = json_decode(file_get_contents($link, false, $context));
+            $this->keyinfo = $result;
             if ($result->{'apiAccess'} == 'unlimited') {
                 $this->status = true;
                 return true;
@@ -148,5 +151,28 @@ class Key
         } catch (\ErrorException $e) {
             return false;
         }
+    }
+
+    /**
+     * Tells if this key is liable to change to a custom key
+     * Currently only members are allowed to do so and only every 2 days
+     * Also only the original member key is allowed to be changed
+     * 
+     * @return boolean
+     */
+    public function canChange(){
+        if(empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes)){
+            return false;
+        }
+        if(!empty($this->keyinfo->KeyChangedAt)){
+            // "2021-03-09T09:19:44.000Z"
+            $keyChangedAt = Carbon::createFromTimeString($this->keyinfo->KeyChangedAt, 'Europe/London');
+            if($keyChangedAt->diffInSeconds(Carbon::now()) > (2 * 24 * 60 * 60)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return true;
     }
 }

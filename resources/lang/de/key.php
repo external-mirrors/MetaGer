@@ -13,4 +13,7 @@ return [
     'removeKey' => 'aktuellen Schlüssel entfernen',
     'invalidKey' => 'Der eingegebene Schlüssel ist ungültig',
     'backLink' => 'Zurück zur letzten Seite',
+    'custom.h3' => 'Wunsch-Schlüssel',
+    'custom.p1' => 'Mitglieder des SUMA-EV haben die Möglichkeit, sich einen eigenen Schlüssel auszusuchen.',
+    'custom.a1' => 'Wunsch-Schlüssel erstellen'
 ];

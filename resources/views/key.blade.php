@@ -38,6 +38,13 @@
             </li>
         </ol>
     </div>
+    @if(app('App\Models\Key')->canChange())
+    <div class="section">
+        <h3>@lang('key.custom.h3')</h3>
+        <p>@lang('key.custom.p1')</p>
+        <a href="#">@lang('key.custom.a1')</a>
+    </div>
+    @endif
     <div class="section">
         <div id="form-wrapper">
             <form method="post">

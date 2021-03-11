@@ -17,7 +17,7 @@ class RemoveKey
     public function handle($request, Closure $next)
     {
         // Check if a wrong Key Cookie is set and if so remove it
-        if(Cookie::has("key") && !app('App\Models\Key')->getStatus()){
+        if(Cookie::has("key") && app('App\Models\Key')->getStatus() === null){
             return redirect(route("removeCookie", ["ir" => url()->full()]));
         }
         return $next($request);

@@ -14,34 +14,23 @@ class KeyController extends Controller
     // How many Ad Free searches should a user get max when he creates a new key
     const KEYCHANGE_ADFREE_SEARCHES = 150;
 
-    public function index(Request $request)
+    public function index(\App\Models\Key $key, Request $request)
     {
-        $redirUrl = $request->input('redirUrl', "");
-        $cookie = Cookie::get('key');
-        $key = $request->input('keyToSet', '');
-
-        if (empty($key) && empty($cookie)) {
-            $key = 'enter_key_here';
-        } elseif (empty($key) && !empty($cookie)) {
-            $key = $cookie;
-        } elseif (!empty($key)) {
-            $key = $request->input('key');
-        }
-
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
         return view('key')
             ->with('title', trans('titles.key'))
-            ->with('cookie', $key)
+            ->with('keystatus', $key->getStatus())
+            ->with('cookie', $key->key)
             ->with('cookieLink', $cookieLink);
     }
 
     public function setKey(Request $request)
     {
-        $redirUrl = $request->input('redirUrl', "");
         $keyToSet = $request->input('keyToSet');
         $key = new Key($request->input('keyToSet', ''));
 
-        if ($key->getStatus()) {
+        $status = $key->getStatus();
+        if ($status !== null) {
             # Valid Key
             $host = $request->header("X_Forwarded_Host", "");
             if (empty($host)) {

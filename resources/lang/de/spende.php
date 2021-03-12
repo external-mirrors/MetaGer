@@ -32,6 +32,8 @@ return [
     'bankinfo.2.4' => '(Konto-Nr.: 4075 0332 01, BLZ: 43060967)',
     'bankinfo.3' => 'Falls Sie eine Spendenbescheinigung wünschen, teilen Sie uns bitte Ihre vollständige Adresse mit. Bei Spenden bis 300,-€ genügt der Kontoauszug für die Absetzbarkeit beim Finanzamt.',
 
+    'lastschrift.info' => 'Wenn Sie per Lastschrift spenden möchten, tragen Sie in das nachfolgende Formular bitte die Informationen zur Spendenhöhe und Ihre Kontoinformationen ein. Wir buchen dann bequem innerhalb der nächsten 2 Wochen vom angegebenen Konto ab.',
+    'lastschrift.info2' => 'Sofern unter Regelmäßigkeit nicht anders von Ihnen angegeben, findet eine Abbuchung stets nur einmalig statt.',
     'lastschrift.1' => 'Spenden mittels elektronischem Lastschriftverfahren:',
     'lastschrift.2' => 'Tragen Sie hier Ihre Kontodaten ein. Wir buchen dann entsprechend von Ihrem Konto ab. Notwendige Felder sind mit einem "*" gekennzeichnet.',
     'lastschrift.3f' => 'Bitte geben Sie den Vornamen des Kontoinhabers ein:',
@@ -39,7 +41,7 @@ return [
     'lastschrift.3l' => 'Bitte geben Sie den Nachnamen des Kontoinhabers ein:',
     'lastschrift.3l.placeholder' => 'Nachname',
     'lastschrift.3c' => 'Bitte geben Sie den Firmenkontonamen ein:',
-    'lastschrift.3c.placeholder' => 'Firma',
+    'lastschrift.3c.placeholder' => 'Firmenname',
     'lastschrift.4' => 'Ihre E-Mail Adresse:',
     'lastschrift.5' => 'Ihre Telefonnummer, um Ihre Spende ggf. durch einen Rückruf zu verifizieren:',
     'lastschrift.6' => 'Ihre IBAN:',
@@ -47,14 +49,14 @@ return [
     'lastschrift.8.message' => 'Hier können Sie uns ggf. noch eine Mitteilung dazu senden:',
     'lastschrift.8.message.placeholder' => 'Weitere Angaben',
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
-    'lastschrift.private' => '*Privatperson:',
-    'lastschrift.company' => '*Firma:',
+    'lastschrift.private' => 'Privatperson:',
+    'lastschrift.company' => 'Firma:',
     
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
 
 
-    'submit' => 'Spenden',
+    'submit' => 'Abschicken',
 
     'member.1' => 'Oder doch lieber Mitglied werden?',
     'member.2' => 'Es kostet nicht mehr und bietet viele Vorteile:',

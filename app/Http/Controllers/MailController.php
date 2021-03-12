@@ -197,7 +197,7 @@ class MailController extends Controller
 
         # Validate Email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $email = "anonymous@suma-ev.de";
+            $email = "";
         }
         if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
             $messageToUser = trans('spende.error.name');

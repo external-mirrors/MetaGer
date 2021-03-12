@@ -110,7 +110,7 @@
                             {{ $value }}
                         </td>
                         <td>
-                            <button type="submit" name="cookieKey" value="{{ $key }}"><i class="fas fa-trash-alt"></i></button>
+                        <img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
                         </td>
                     </tr>
                 @endforeach

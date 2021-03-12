@@ -27,7 +27,7 @@
 		<p>{{ trans('asso.1.1') }} <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/datenschutz') }}" target="_blank">{{ trans('asso.1.2') }}</a>{{ trans('asso.1.3') }}.</p>
 
 		<form method="post" class="form-inline">
-				<input type="text" class="form-control search-input-mini" placeholder="{{ trans('asso.search.placeholder') }}" @if(isset($keywords)) value="{{$keywords}}" @endif name="q" required autofocus/><button type="submit" class="search-btn-mini"><i class="fa fa-search" aria-hidden="true"></i></button>
+				<input type="text" class="form-control search-input-mini" placeholder="{{ trans('asso.search.placeholder') }}" @if(isset($keywords)) value="{{$keywords}}" @endif name="q" required autofocus/><button type="submit" class="search-btn-mini"><img id="asso-search-icon" class= "mg-icon" src="/img/icon-lupe.svg" alt="{{ trans('icon-lupe.alt') }}"></button>
 		</form>
 	</div>
 	@if(isset($words))

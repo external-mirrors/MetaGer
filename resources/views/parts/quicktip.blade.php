@@ -21,7 +21,7 @@
             @endif
           </a>
         @endif
-        <i class="quicktip-extender fa fa-chevron-down"></i>
+        <img class= "mg-icon mg-icon-rot180" src="/img/chevron-down.svg" alt="{{ trans('chevron-down.alt') }}">
       </div>
       <p class="quicktip-description">{!! $quicktip->descr !!}</p>
       @if ($quicktip->author != "")

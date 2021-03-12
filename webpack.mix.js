@@ -58,6 +58,9 @@ mix
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css", {
     strictMath: true
   })
+  .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css", {
+    strictMath: true
+  })
   // js
   .babel(
     [

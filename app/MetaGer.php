@@ -1502,7 +1502,6 @@ class MetaGer
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
                 $logEntry .= " sprachfilter=" . $this->lang;
-                $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);

@@ -220,7 +220,7 @@ class MailController extends Controller
             $betrag = round($betrag, 2, PHP_ROUND_HALF_DOWN);
 
             # Generating personalised key for donor
-            $key = app('App\Models\Key')->generateKey($betrag);
+            $key = app('App\Models\Key')->generateKey($betrag, null, null, 'Für ' . $betrag . '€ aufgeladen am '. date("d.m.Y"));
 
             try {
                 $postdata = [

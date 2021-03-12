@@ -24,11 +24,8 @@ return [
     "bankinfo.2.2"	=>	"BIC: GENODEM1GLS",
     "bankinfo.2.3"	=>	"Banco: GLS Gemeinschaftsbank, Bochum",
     "bankinfo.2.4"	=>	"(NDC: 4075 0332 01, Código: 43060967)",
-    "bankinfo.3"	=>	"En caso que desea recibir un recibo de donación, indíquenos su dirección completa. Para donaciones de hasta 200,00 €, es suficiente el extracto de cuenta donde figura la donación para solicitar la deducción de impuestos.",
     "lastschrift.1"	=>	"Donaciones mediante domiciliación bancaria electrónica:",
     "lastschrift.2"	=>	"Ingrese los detalles de su cuenta aquí. Luego, debitaremos su cuenta según sus indicaciones. Los campos que están marcados con \"*\" son obligatorios.",
-    "lastschrift.3"	=>	"Por favor introduzca el nombre del titular de la cuenta:",
-    "lastschrift.3.placeholder"	=>	"Nombre",
     "lastschrift.4"	=>	"Su correo electrónico:",
     "lastschrift.5"	=>	"Su número de teléfono, para que podamos verificar su donación con una llamada telefónica si es necesario:",
     "lastschrift.6"	=>	"Su IBAN:",
@@ -58,7 +55,4 @@ return [
     "error.bic"	=>	"El IBAN introducido no pertenece a ningún país del área SEPA. Necesitamos su BIC para una domiciliación bancaria.",
     "error.amount"	=>	"El monto de la donación ingresado no es válido. Corrija su entrada y vuelva a intentarlo.",
     "error.frequency"	=>	"La frecuencia ingresada para su donación no es válida.",
-    "lastschrift.8.value"	=>	"Aquí puede entrar su donación:",
-    "lastschrift.8.value.placeholder"	=>	"Monto de donación",
-    "lastschrift.9"	=>	"Donación"
 ];

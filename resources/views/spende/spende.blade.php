@@ -68,6 +68,8 @@
                     <a class="payment-label" href="?method=bank-transfer"><nobr>{!! trans('spende.ueberweisung') !!}</nobr></a>
                     <a class="payment-label" href="?method=paypal"><nobr>{!! trans('spende.paypal') !!}</nobr></a>
                 </div>
+                <p id="lastschrift-info">@lang('spende.lastschrift.info')</p>
+                <p>@lang('spende.lastschrift.info2')</p>
                 <h3>{!! trans('spende.headline.3') !!}</h3>
                 <div class="amount-row">
                     <input type="radio" value="5" class="amount-radio" name="amount" id="amount-5euro" required="required" @if(empty($data) || $data["betrag"] === "5")checked="checked"@endif> <label for="amount-5euro" class="amount-label">5€</label> 
@@ -96,6 +98,8 @@
                 <p>{!! trans('spende.lastschrift.2') !!}</p>
                 <input type="hidden" name="dt" value="{{ md5(date('Y') . date('m') . date('d')) }}">
                 <div id="input-picker" class="form-group donation-form-group">
+                    <label>*Kontoinhaber</label>
+                    <br>
                     <input type="radio" required="required" id="private" name="person" value="private" @if(empty($data) || $data["person"] === "private")checked="checked"@endif><label for="private">{{trans('spende.lastschrift.private')}}</label>
                     <div id="input-private" class="show-on-input-checked form-inline">
                         <input type="text" class="form-control" id="firstname" name="firstname" placeholder="{!! trans('spende.lastschrift.3f.placeholder') !!}" @if(isset($data['firstname'])) value="{{$data['firstname']}}" @endif />

@@ -16,5 +16,6 @@ return [
     'backLink' => 'Zurück zur letzten Seite',
     'custom.h3' => 'Wunsch-Schlüssel',
     'custom.p1' => 'Mitglieder des SUMA-EV haben die Möglichkeit, sich einen eigenen Schlüssel auszusuchen.',
+    'custom.p2' => 'Der nächste Wechsel Ihres Schlüssels ist in :nextchange möglich.',
     'custom.a1' => 'Wunsch Schlüssel einrichten'
 ];

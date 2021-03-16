@@ -16,5 +16,6 @@ return [
     "backLink"	=>	"Back to the last page",
     "custom.h3"	=>	"Favorite Key",
     "custom.p1"	=>	"Members of the SUMA-EV have the opportunity to choose their own key.",
+    'custom.p2' => 'The next change of your key is possible in :nextchange.',
     "custom.a1"	=>	"Set up the favorite key"
 ];

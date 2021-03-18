@@ -46,7 +46,7 @@
         <p>@lang('key.custom.p1')</p>
         @if(app('App\Models\Key')->canChange())
         <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyOne')) }}">@lang('key.custom.a1')</a>
-        @elseif(!empty($changedAt))
+        @elseif(!empty($changedAt) && app('App\Models\Key')->keyinfo->adFreeSearches >= \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES)
         <p>@lang('key.custom.p2', [
             'nextchange' => trim(str_replace(" später", "", $changedAt->addSeconds(\App\Models\Key::CHANGE_EVERY)->longRelativeDiffForHumans(Carbon::now("Europe/London"), 2)))
         ])</p>

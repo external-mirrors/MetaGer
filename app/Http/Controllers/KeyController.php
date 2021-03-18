@@ -18,9 +18,10 @@ class KeyController extends Controller
     {
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
         $key->canChange();
-        $changedAt = $key->keyinfo->KeyChangedAt;
-        if(!empty($changedAt)){
-            $changedAt = new Carbon($changedAt);
+        $changedAt = null;
+        if (!empty($key) && !empty($key->keyinfo) && !empty($key->keyinfo->KeyChangedAt)) {
+            $changedAt = $key->keyinfo->KeyChangedAt;
+            $changedAt = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $changedAt, "Europe/London");
         }
         return view('key')
             ->with('title', trans('titles.key'))

@@ -17,10 +17,17 @@ class KeyController extends Controller
     public function index(\App\Models\Key $key, Request $request)
     {
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));
+        $key->canChange();
+        $changedAt = null;
+        if (!empty($key) && !empty($key->keyinfo) && !empty($key->keyinfo->KeyChangedAt)) {
+            $changedAt = $key->keyinfo->KeyChangedAt;
+            $changedAt = Carbon::createFromFormat('Y-m-d\TH:i:s.u\Z', $changedAt, "Europe/London");
+        }
         return view('key')
             ->with('title', trans('titles.key'))
             ->with('keystatus', $key->getStatus())
             ->with('cookie', $key->key)
+            ->with('changedAt', $changedAt)
             ->with('cookieLink', $cookieLink);
     }
 

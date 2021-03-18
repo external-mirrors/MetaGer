@@ -11,7 +11,8 @@ class Key
     public $key;
     public $status; # Null If Key invalid | false if valid but has no adFreeSearches | true if valid and has adFreeSearches
     private $keyserver = "https://key.metager.de/";
-    private $keyinfo;
+    public $keyinfo;
+    const CHANGE_EVERY = 1 * 24 * 60 * 60;
 
     public function __construct($key, $status = null)
     {
@@ -200,7 +201,7 @@ class Key
         if(!empty($this->keyinfo->KeyChangedAt)){
             // "2021-03-09T09:19:44.000Z"
             $keyChangedAt = Carbon::createFromTimeString($this->keyinfo->KeyChangedAt, 'Europe/London');
-            if($keyChangedAt->diffInSeconds(Carbon::now()) > (2 * 24 * 60 * 60)){
+            if($keyChangedAt->diffInSeconds(Carbon::now()) > self::CHANGE_EVERY){
                 return true;
             }else{
                 return false;

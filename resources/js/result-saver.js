@@ -162,13 +162,13 @@ Results.prototype.addToContainer = function (container) {
 
   template.innerHTML = '<div id="saver-options">\
     <div class="saver-option saver-option-filter">\
-      <input style="font-family: \'Font Awesome 5 Free\', sans-serif;" class="form-control" type="text" placeholder="&#xf0b0 ' + t('result-saver.filter') + '">\
+      <input style="font-family:, sans-serif;" class="form-control" type="text" placeholder="' + t('result-saver.filter') + '">\
     </div>\
     <div class="saver-option saver-option-sort">\
-      <select class="form-control" style="font-family: \'Font Awesome 5 Free\', sans-serif;">\
-        <option value="chronological" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf017 ' + t('result-saver.sort.chronological') + '</option>\
-        <option value="rank" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf162 ' + t('result-saver.sort.ranking') + '</option>\
-        <option value="alphabetical" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf15d ' + t('result-saver.sort.alphabetical') + '</option>\
+      <select class="form-control", sans-serif;">\
+        <option value="chronological" , sans-serif;">🕓 ' + t('result-saver.sort.chronological') + '</option>\
+        <option value="rank" style="font-family: , sans-serif;">🔢 ' + t('result-saver.sort.ranking') + '</option>\
+        <option value="alphabetical" , sans-serif;">🔠 ' + t('result-saver.sort.alphabetical') + '</option>\
       </select>\
     </div>\
     <div class="saver-option saver-option-delete">\

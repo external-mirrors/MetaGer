@@ -20,7 +20,7 @@
 		{!! $template !!}
 	</div>
 	<div class="card-medium">
-		<h2>{{ trans('sitesearch.generated.5') }} <button id="copyButton" class="btn btn-default js-only" type="button"><i class="fa fa-paperclip" aria-hidden="true"></i> {{ trans('websearch.head.copy') }}</button></h2>
+		<h2>{{ trans('sitesearch.generated.5') }} <button id="copyButton" class="btn btn-default js-only" type="button"><img class= "mg-icon widget-mg-icon " src="/img/icon-paperclip.svg"> {{ trans('websearch.head.copy') }}</button></h2>
 		<textarea id="codesnippet" readonly style="width:100%;height:500px">
 			{!! $template !!}
 		</textarea>

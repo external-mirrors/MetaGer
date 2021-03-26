@@ -173,7 +173,7 @@ Results.prototype.addToContainer = function (container) {
     </div>\
     <div class="saver-option saver-option-delete">\
       <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
-        <i class="fa fa-trash-o" aria-hidden="true"></i>\
+      <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
         ' + t('result-saver.deleteAll') + '\
       </button>\
     </div>\
@@ -379,7 +379,7 @@ Result.prototype.toHtml = function () {
   var template = document.createElement("div");
   template.innerHTML = '<div class="saved-result result" data-count="' + this.index + '">\
     <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
-      <i class="fa fa-trash"></i>\
+    <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
     </div>\
     <div class="saved-result-content">\
       <div class="result-header">\

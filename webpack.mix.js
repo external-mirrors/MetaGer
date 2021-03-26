@@ -34,10 +34,6 @@ mix
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
     strictMath: true
   })
-  .less("resources/less/font-awesome/fontawesome.less", "public/css/fontawesome.css", {
-    strictMath: true
-  })
-  .less("resources/less/font-awesome/solid.less", "public/css/fontawesome-solid.css", {
     strictMath: true
   })
   .less("resources/less/metager/pages/key.less", "public/css/key.css", {

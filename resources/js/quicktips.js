@@ -86,7 +86,7 @@ function createQuicktips (quicktips, sprueche) {
       } else {
         headlineElem.text(quicktip.title);
       }
-      headlineElem.append('<i class="quicktip-extender fa fa-chevron-circle-down" aria-hidden="true"></i>');
+      headlineElem.append('<img class= " quicktip-extender mg-icon" src="/img/chevron-down.svg">');
       summaryElem
         .append(headlineElem)
         .append('<p>' + quicktip.summary + '</p>');

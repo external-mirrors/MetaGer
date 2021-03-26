@@ -12,11 +12,7 @@ let mix = require("laravel-mix");
  */
 
 mix
-  /*
-  @import "./font-awesome/fontawesome.less";
-  @import "./font-awesome/solid.less";
-  @import "./bootstrap/bootstrap.less";
-  */
+ 
   // css
   .styles(["resources/css/noheader.css"], "public/css/noheader.css")
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {

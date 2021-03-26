@@ -48,7 +48,7 @@
 					<tr>
 						<td>{{ $i }}</td>
 						<td class="association">
-							<a class="asso-search-link" href="{{ action('MetaGerSearch@search', ['eingabe' => $key]) }}" title="{{ trans('asso.searchasso.title') }}"><i class="fa fa-search" aria-hidden="true"></i></a>
+							<a class="asso-search-link" href="{{ action('MetaGerSearch@search', ['eingabe' => $key]) }}" title="{{ trans('asso.searchasso.title') }}"><img class= "mg-icon" src="/img/icon-lupe.svg" alt="{{ trans('icon-lupe.alt') }}"></a>
 							<form method="POST">
 								<button name="q" value="{{ $key }}" class="reasso" type="submit" title="{{ trans('asso.reasso.title') }}">{{ $key }}</button>
 							</form>

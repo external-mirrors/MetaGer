@@ -214,7 +214,15 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                
+                case 'rss20':
+                    return view('resultpages.metager3resultsrss20')
+                        ->with('results', $viewResults)
+                        ->with('eingabe', $this->eingabe)
+                        ->with('apiAuthorized', $this->apiAuthorized)
+                        ->with('metager', $this)
+                        ->with('resultcount', sizeof($viewResults))
+                        ->with('fokus', $this->fokus);
+                    break;
                 case 'api':
                     return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
@@ -1107,7 +1115,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api") {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api" && $this->out !== "rss20") {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll

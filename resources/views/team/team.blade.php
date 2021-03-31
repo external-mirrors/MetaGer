@@ -23,9 +23,6 @@
 					<p>Höfer, Kim - {!! trans('team.role.6') !!}
 				</li>
 				<li>
-					<p>Aprea, Davide - {!! trans('team.role.9') !!}
-				</li>
-				<li>
 					<p><a href="https://de.wikipedia.org/wiki/Wolfgang_Sander-Beuermann" target="_blank" rel="noopener">Sander-Beuermann, Wolfgang</a>, Dr.-Ing - {!! trans('team.role.8') !!}
 				</li>
 				<li>

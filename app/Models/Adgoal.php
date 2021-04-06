@@ -166,6 +166,12 @@ class Adgoal
             $targetUrl = $partnershop["url"];
 
             $tld = $partnershop["tld"];
+
+            // Sometimes TLD is null
+            if(empty($tld)){
+                continue;
+            }
+
             $targetHost = parse_url($targetUrl, PHP_URL_HOST);
 
             /*

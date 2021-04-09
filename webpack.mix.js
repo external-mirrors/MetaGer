@@ -30,8 +30,6 @@ mix
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
     strictMath: true
   })
-    strictMath: true
-  })
   .less("resources/less/metager/pages/key.less", "public/css/key.css", {
     strictMath: true
   })

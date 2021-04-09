@@ -161,7 +161,7 @@ Results.prototype.addToContainer = function (container) {
   var template = document.createElement("div");
 
   template.innerHTML = '<div id="saver-options">\
-    <div class="saver-option saver-option-filter">\
+    <div class="saver-option">\
       <input style="font-family:, sans-serif;" class="form-control" type="text" placeholder="' + t('result-saver.filter') + '">\
     </div>\
     <div class="saver-option saver-option-sort">\
@@ -173,7 +173,7 @@ Results.prototype.addToContainer = function (container) {
     </div>\
     <div class="saver-option saver-option-delete">\
       <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
-      <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
+      <img class= \"mg-icon mg-icon-inverted result-saver-icon\" src=\"/img/trashcan.svg\">\
         ' + t('result-saver.deleteAll') + '\
       </button>\
     </div>\

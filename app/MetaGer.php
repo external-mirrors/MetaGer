@@ -48,6 +48,7 @@ class MetaGer
     protected $availableFoki = [];
     protected $startCount = 0;
     protected $canCache = false;
+    protected $javascript = false;
     # Daten über die Abfrage$
     protected $ip;
     protected $useragent;
@@ -213,7 +214,15 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                
+                case 'rss20':
+                    return view('resultpages.metager3resultsrss20')
+                        ->with('results', $viewResults)
+                        ->with('eingabe', $this->eingabe)
+                        ->with('apiAuthorized', $this->apiAuthorized)
+                        ->with('metager', $this)
+                        ->with('resultcount', sizeof($viewResults))
+                        ->with('fokus', $this->fokus);
+                    break;
                 case 'api':
                     return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
@@ -307,33 +316,12 @@ class MetaGer
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
-        if (!$this->apiAuthorized && !$this->adgoalLoaded && !$this->dummy) {
-            if (empty($this->adgoalHash)) {
-                if (!empty($this->jskey)) {
-                    $js = Redis::connection('cache')->lpop("js" . $this->jskey);
-                    if ($js !== null && boolval($js)) {
-                        $this->javascript = true;
-                    }
-                }
-                $this->adgoalHash = \App\Models\Adgoal::startAdgoal($this->results);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
-                }
+
+        if (!empty($this->jskey)) {
+            $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+            if ($js !== null && boolval($js)) {
+                $this->javascript = true;
             }
-        
-            if (!$this->javascript) {
-                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, true);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            } else {
-                $this->adgoalLoaded = \App\Models\Adgoal::parseAdgoal($this->results, $this->adgoalHash, false);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            }
-        } else {
-            $this->adgoalLoaded = true;
         }
 
         # Human Verification
@@ -435,7 +423,26 @@ class MetaGer
         }
     }
 
-    
+    /**
+     * @param \App\Models\Admitad[] $admitads
+     * @param Boolean $wait Wait for Results?
+     * @return Boolean whether or not all Admitad Objects are finished
+     */
+    public function parseAffiliates(&$affiliates){
+        $wait = false;
+        $finished = true;
+        if(!$this->javascript){
+            $wait = true;
+        }
+        foreach ($affiliates as $affiliate) {
+            $affiliate->fetchAffiliates($wait);
+            $affiliate->parseAffiliates($this->results);
+            if(!$affiliate->finished){
+                $finished = false;
+            }
+        }
+        return $finished;
+    }
 
     public function humanVerification(&$results)
     {
@@ -1108,7 +1115,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api") {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api" && $this->out !== "rss20") {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll
@@ -1503,7 +1510,6 @@ class MetaGer
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
                 $logEntry .= " sprachfilter=" . $this->lang;
-                $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
@@ -1718,6 +1724,9 @@ class MetaGer
         $this->results = $results;
     }
 
+    /**
+     * @return \App\Models\Result[]
+     */
     public function getResults()
     {
         return $this->results;
@@ -1891,26 +1900,6 @@ class MetaGer
         return $this->engines;
     }
 
-    public function setAdgoalHash($hash)
-    {
-        $this->adgoalHash = $hash;
-    }
-
-    public function getAdgoalHash()
-    {
-        return $this->adgoalHash;
-    }
-
-    public function isAdgoalLoaded()
-    {
-        return $this->adgoalLoaded;
-    }
-
-    public function setAdgoalLoaded($adgoalLoaded)
-    {
-        $this->adgoalLoaded = $adgoalLoaded;
-    }
-
     public function isApiAuthorized()
     {
         return $this->apiAuthorized;
@@ -1931,6 +1920,17 @@ class MetaGer
         return $this->headerPrinted;
     }
 
+    public function isDummy(){
+        return $this->dummy;
+    }
+
+    public function jsEnabled() {
+        return $this->javascript;
+    }
+    
+    public function setJsEnabled(bool $bool){
+        $this->javascript = $bool;
+    }
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */

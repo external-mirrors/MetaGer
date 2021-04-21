@@ -22,7 +22,7 @@
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
         "browserstack/browserstack-local": "^1.1",
-        "filp/whoops": "^2.0",
+        "filp/whoops": "^2.9",
         "fzaninotto/faker": "^1.4",
         "laravel/dusk": "^5.0",
         "mockery/mockery": "^1.0",

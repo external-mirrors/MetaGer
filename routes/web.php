@@ -88,7 +88,7 @@ Route::group(
                 ->with('title', trans('titles.spende'))
                 ->with('js', [mix('/js/donation.js')])
                 ->with('navbarFocus', 'foerdern');
-        });
+        })->name("spende");
         Route::get('spende/danke/{data}', ['as' => 'danke', function ($data) {
             return view('spende.danke')
                 ->with('title', trans('titles.spende'))
@@ -108,7 +108,7 @@ Route::group(
             } else {
                 return response()->download(storage_path('app/public/aufnahmeantrag-en.pdf'), "SUMA-EV_Membershipform_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             }
-        });
+        })->name("beitritt");
 
         Route::get('bform1.htm', function () {
             return redirect('beitritt');

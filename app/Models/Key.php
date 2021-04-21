@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\Redis;
 use Request;
+use \Carbon\Carbon;
 
 class Key
 {
     public $key;
-    public $status; # valid key = true, invalid key = false, unidentified key = null
+    public $status; # Null If Key invalid | false if valid but has no adFreeSearches | true if valid and has adFreeSearches
     private $keyserver = "https://key.metager.de/";
+    public $keyinfo;
+    const CHANGE_EVERY = 1 * 24 * 60 * 60;
 
     public function __construct($key, $status = null)
     {
@@ -25,35 +28,29 @@ class Key
     {
         if ($this->key !== '' && $this->status === null) {
             $this->updateStatus();
-            if(empty($this->status)){
+            if($this->status === null){
                 // The user provided an invalid key which we will log to fail2ban
                 $fail2banEnabled = config("metager.metager.fail2ban_enabled");
-                if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
-                    return false;
+                if (!empty($fail2banEnabled) && $fail2banEnabled && !empty(env("fail2banurl", false)) && !empty(env("fail2banuser")) && !empty(env("fail2banpassword"))) {
+                    // Submit fetch job to worker
+                    $mission = [
+                            "resulthash" => "captcha",
+                            "url" => env("fail2banurl") . "/mgkeytry/",
+                            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                            "username" => env("fail2banuser"),
+                            "password" => env("fail2banpassword"),
+                            "headers" => [
+                                "ip" => Request::ip()
+                            ],
+                            "cacheDuration" => 0,
+                            "name" => "Captcha",
+                        ];
+                    $mission = json_encode($mission);
+                    Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
                 }
-
-                // Submit fetch job to worker
-                $mission = [
-                        "resulthash" => "captcha",
-                        "url" => env("fail2banurl") . "/mgkeytry/",
-                        "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                        "username" => env("fail2banuser"),
-                        "password" => env("fail2banpassword"),
-                        "headers" => [
-                            "ip" => Request::ip()
-                        ],
-                        "cacheDuration" => 0,
-                        "name" => "Captcha",
-                    ];
-                $mission = json_encode($mission);
-                Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
             }
         }
-        if ($this->status === null || $this->status === false) {
-            return false;
-        } else {
-            return true;
-        }
+        return $this->status;
     }
 
     public function updateStatus()
@@ -71,14 +68,15 @@ class Key
         try {
             $link = $this->keyserver . "v2/key/". urlencode($this->key);
             $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'apiAccess'} == 'unlimited') {
-                $this->status = true;
+            if(!empty($result)){
+                $this->keyinfo = $result;
+                if($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited"){
+                    $this->status = true;
+                }else{
+                    $this->status = false;
+                }
                 return true;
-            } else if ($result->{'apiAccess'} == 'normal' && $result->{'adFreeSearches'} > 0){
-                $this->status = true;
-                return true;
-            } else {
-                $this->status = false;
+            }else{
                 return false;
             }
         } catch (\ErrorException $e) {
@@ -118,15 +116,26 @@ class Key
             return false;
         }
     }
-    public function generateKey($payment)
+    public function generateKey($payment = null, $adFreeSearches = null, $key = null, $notes = "")
     {
         $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
-        $postdata = http_build_query(array(
-            'payment' => $payment,
+        $postdata = array(
             'apiAccess' => 'normal',
-            'notes' => 'Fuer ' . $payment . '€ aufgeladen am '. date("d.m.Y"),
-            'expiresAfterDays' => 365
-        ));
+            'expiresAfterDays' => 365,
+            'notes' => $notes
+        );
+        if(!empty($key)){
+            $postdata["key"] = $key;
+        }
+    
+        if(!empty($payment)){
+            $postdata["payment"] = $payment;
+        }else if(!empty($adFreeSearches)){
+            $postdata["adFreeSearches"] = $adFreeSearches;
+        }else{
+            return false;
+        }
+        $postdata = http_build_query($postdata, "", "&", PHP_QUERY_RFC3986);
         $opts = array(
             'http' => array(
                 'method' => 'POST',
@@ -145,6 +154,91 @@ class Key
             $link = $this->keyserver . "v2/key/";
             $result = json_decode(file_get_contents($link, false, $context));
             return $result->{'mgKey'};
+        } catch (\ErrorException $e) {
+            return false;
+        }
+    }
+
+    public function reduce($count){
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $postdata = http_build_query(array(
+            'adFreeSearches' => $count,
+        ));
+        $opts = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
+                'content' => $postdata,
+                'timeout' => 5
+            ),
+        );
+
+        $context = stream_context_create($opts);
+
+        try {
+            $link = $this->keyserver . "v2/key/" . $this->key . "/reduce-searches";
+            $result = json_decode(file_get_contents($link, false, $context));
+            return $result;
+        } catch (\ErrorException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Tells if this key is liable to change to a custom key
+     * Currently only members are allowed to do so and only every 2 days
+     * Also only the original member key is allowed to be changed
+     * 
+     * @return boolean
+     */
+    public function canChange(){
+        if(empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes) || $this->keyinfo->adFreeSearches < \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES){
+            return false;
+        }
+        if(!empty($this->keyinfo->KeyChangedAt)){
+            // "2021-03-09T09:19:44.000Z"
+            $keyChangedAt = Carbon::createFromTimeString($this->keyinfo->KeyChangedAt, 'Europe/London');
+            if($keyChangedAt->diffInSeconds(Carbon::now()) > self::CHANGE_EVERY){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function checkForChange($newkey = "", $hash){
+        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $postdata = http_build_query(array(
+            'hash' => $hash,
+            'key' => $newkey,
+        ));
+        $opts = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => [
+                    'Content-type: application/x-www-form-urlencoded',
+                    'Authorization: Basic ' . $authKey
+                ],
+                'content' => $postdata,
+                'timeout' => 5
+            ),
+        );
+
+        $context = stream_context_create($opts);
+
+        try {
+            $link = $this->keyserver . "v2/key/can-change";
+            $result = json_decode(file_get_contents($link, false, $context));
+
+            if(!empty($result) && $result->status === "success" && empty($result->results)){
+                return true;
+            }else{
+                return false;
+            }
         } catch (\ErrorException $e) {
             return false;
         }

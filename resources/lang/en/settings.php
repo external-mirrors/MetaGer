@@ -36,7 +36,7 @@ return [
     'off' => 'off',
     'on' => 'on',
 
-    'more' => 'Weitere Einstellungen',
+    'more' => 'More Settings',
 
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",

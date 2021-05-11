@@ -124,7 +124,7 @@
 
     
         <div class="card-light">
-            <h2>Weitere Einstellungen</h2>
+            <h2>@lang('settings.more')</h2>
             <p>@lang('settings.hint')</p>
             <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
                 <input type="hidden" name="fokus" value="{{ $fokus }}">

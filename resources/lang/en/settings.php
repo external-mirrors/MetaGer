@@ -36,6 +36,8 @@ return [
     'off' => 'off',
     'on' => 'on',
 
+    'more' => 'Weitere Einstellungen',
+
     // Translations from the settings overview
     'noSettings' => "Currently no settings are set!",
     'allSettings.header' => "Settings on :root",

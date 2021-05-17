@@ -17,7 +17,7 @@ class BrowserVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $isAsso = false)
+    public function handle($request, Closure $next, $route = "resultpage")
     {
 
         $bvEnabled = config("metager.metager.browserverification_enabled");
@@ -43,10 +43,8 @@ class BrowserVerification
         header('X-Accel-Buffering: no');
 
         //use parameter for middleware to skip this when using associator
-        if(!$isAsso){
-            if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
-                return $next($request);
-            }
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
+            return $next($request);
         }
 
         ini_set('zlib.output_compression', 'Off');
@@ -86,7 +84,7 @@ class BrowserVerification
 
         $params = $request->all();
         $params["mgv"] = $key;
-        $url = route("resultpage", $params);
+        $url = route($route, $params);
 
         echo(view('layouts.resultpage.unverifiedResultPage')
                 ->with('url', $url)

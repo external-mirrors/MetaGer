@@ -42,7 +42,7 @@ Route::group(
                 ->with('css', [mix('css/asso/style.css')])
                 ->with('darkcss', [mix('css/asso/dark.css')]);
         });
-        Route::post('asso', 'Assoziator@asso')->middleware('browserverification:true', 'humanverification:true');
+        Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification:true')->name("assoresults");
 
         Route::get('impressum', function () {
             return view('impressum')

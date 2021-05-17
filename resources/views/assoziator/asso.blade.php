@@ -38,10 +38,9 @@
                                         href="{{ action('MetaGerSearch@search', ['eingabe' => $key]) }}"
                                         title="{{ trans('asso.searchasso.title') }}"><i class="fa fa-search"
                                             aria-hidden="true"></i></a>
-                                    <form method="POST">
-                                        <button name="q" value="{{ $key }}" class="reasso" type="submit"
-                                            title="{{ trans('asso.reasso.title') }}">{{ $key }}</button>
-                                    </form>
+                                    <a name="q" value="{{ $key }}" class="reasso"
+                                        href="{{ route('assoresults', ['q' => $key]) }}"
+                                        title="{{ trans('asso.reasso.title') }}">{{ $key }}</a>
                                 </td>
                                 <td>{{ round(($value / $wordCount) * 100, 2) }}%</td>
                                 @php $i++; @endphp

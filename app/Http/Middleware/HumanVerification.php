@@ -17,7 +17,7 @@ class HumanVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $isAsso = false)
+    public function handle($request, Closure $next)
     {
         if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
             return $next($request);
@@ -48,11 +48,9 @@ class HumanVerification
              */
 
             //use parameter for middleware to skip this when using associator
-            if(!$isAsso){
-                if (!env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
-                    $update = false;
-                    return $next($request);
-                }
+            if (!env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
+                $update = false;
+                return $next($request);
             }
 
             # Get all Users of this IP

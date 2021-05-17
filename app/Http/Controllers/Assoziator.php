@@ -21,7 +21,12 @@ class Assoziator extends Controller
         ];
 
 
-        $url = "https://metager.de/meta/meta.ger3?" . http_build_query($params, "", "&", PHP_QUERY_RFC3986);
+        $url = route("resultpage", $params);
+
+        # Special Case for local development as the port forwarding does not work within docker
+        if(env("APP_ENV", "") === "local" && stripos($url, "http://localhost:8080") === 0){
+            $url = str_replace("http://localhost:8080", "http://nginx", $url);
+        }
 
         $ch = curl_init();
 
@@ -41,6 +46,11 @@ class Assoziator extends Controller
         ));
 
         $response = curl_exec($ch);
+
+        if(curl_errno($ch)){
+            abort(500, curl_error($ch));
+        }
+
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 

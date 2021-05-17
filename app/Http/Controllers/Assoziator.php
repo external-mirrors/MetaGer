@@ -14,13 +14,25 @@ class Assoziator extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/asso'));
         }
 
-        $url = "https://metager.de/meta/meta.ger3?eingabe=" . urlencode($eingabe) . "&out=atom10&key=test";
+        $params = [
+            "eingabe" => $eingabe,
+            "out" => "atom10",
+            "key" => env("ASSO_KEY", "test"),
+        ];
+
+
+        $url = route("resultpage", $params);
+
+        # Special Case for local development as the port forwarding does not work within docker
+        if(env("APP_ENV", "") === "local" && stripos($url, "http://localhost:8080") === 0){
+            $url = str_replace("http://localhost:8080", "http://nginx", $url);
+        }
 
         $ch = curl_init();
 
         curl_setopt_array($ch, array(
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => $_SERVER["AGENT"],
+            CURLOPT_USERAGENT => $_SERVER["HTTP_USER_AGENT"],
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_MAXCONNECTS => 500,
@@ -34,6 +46,11 @@ class Assoziator extends Controller
         ));
 
         $response = curl_exec($ch);
+
+        if(curl_errno($ch)){
+            abort(500, curl_error($ch));
+        }
+
         $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
@@ -115,8 +132,9 @@ class Assoziator extends Controller
             ->with('navbarFocus', 'dienste')
             ->with('words', $words)
             ->with('keywords', $eingabe)
-            ->with('wordCount', $wordCount);
+            ->with('wordCount', $wordCount)
+            ->with('css', [mix('css/asso/style.css')])
+            ->with('darkcss', [mix('css/asso/dark.css')]);;
 
-        die(var_dump($words));
     }
 }

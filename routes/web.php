@@ -38,9 +38,11 @@ Route::group(
         Route::get('asso', function () {
             return view('assoziator.asso')
                 ->with('title', trans('titles.asso'))
-                ->with('navbarFocus', 'dienste');
+                ->with('navbarFocus', 'dienste')
+                ->with('css', [mix('css/asso/style.css')])
+                ->with('darkcss', [mix('css/asso/dark.css')]);
         });
-        Route::post('asso', 'Assoziator@asso');
+        Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 
         Route::get('impressum', function () {
             return view('impressum')

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
  *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
  */
@@ -424,7 +425,7 @@ class Result
      */
     public function getUrlElements($url)
     {
-        if (!starts_with($url, "http")) {
+        if (stripos($url, "http") !== 0) {
             $url = "http://" . $url;
         }
 

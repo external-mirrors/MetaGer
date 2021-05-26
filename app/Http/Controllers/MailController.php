@@ -10,8 +10,8 @@ use LaravelLocalization;
 use Mail;
 use Log;
 use Validator;
-use \IBAN;
-use \IBANCountry;
+use \PHP_IBAN\IBAN;
+use \PHP_IBAN\IBANCountry;
 
 class MailController extends Controller
 {

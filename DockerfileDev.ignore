@@ -3,3 +3,4 @@ CHANGELOG.md
 vendor/*
 node_modules/*
 storage/logs/*
+helpers/*

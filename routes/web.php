@@ -201,8 +201,8 @@ Route::group(
             Route::get('engine/stats.json', 'AdminInterface@engineStats');
             Route::get('check', 'AdminInterface@check');
             Route::get('engines', 'AdminInterface@engines');
-            Route::get('ip', function () {
-                dd(Request::ip(), $_SERVER["AGENT"]);
+            Route::get('ip', function (Request $request) {
+                dd($request->ip(), $_SERVER["AGENT"]);
             });
             Route::get('bot', 'HumanVerification@botOverview');
             Route::post('bot', 'HumanVerification@botOverviewChange');
@@ -233,8 +233,8 @@ Route::group(
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
         Route::get('index.css', 'HumanVerification@browserVerification');
-        Route::get('index.js', function () {
-            $key = Request::input("id", "");
+        Route::get('index.js', function (Request $request) {
+            $key = $request->input("id", "");
 
             // Verify that key is a md5 checksum
             if (!preg_match("/^[a-f0-9]{32}$/", $key)) {

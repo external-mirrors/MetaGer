@@ -119,7 +119,7 @@ class LanguageController extends Controller
 
                 foreach ($languages as $lang => $value) {
                     if ($lang !== $to) {
-                        $langs = array_add($langs, $lang, $lang);
+                        $langs[$lang] = $lang;
                     }
                 }
                 if (!isset($languages[$to])) {

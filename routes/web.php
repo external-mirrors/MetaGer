@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -320,7 +321,27 @@ Route::group(
             });
         });
 
-        Route::get('metrics', function () {
+        Route::get('metrics', function (Request $request) {
+            // Only allow access to metrics from within our network
+            $ip = $request->ip();
+            $allowedNetworks = [
+                "10.",
+                "172.",
+                "192.",
+                "127.0.0.1",
+            ];
+
+            $allowed = false;
+            foreach($allowedNetworks as $part){
+                if(stripos($ip, $part) === 0){
+                    $allowed = true;
+                }
+            }
+
+            if(!$allowed){
+                abort(401);
+            }
+            
             $registry = \Prometheus\CollectorRegistry::getDefault();
 
             $renderer = new RenderTextFormat();

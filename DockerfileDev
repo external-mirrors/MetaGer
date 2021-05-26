@@ -60,7 +60,14 @@ RUN mkdir -p /run/php && \
 WORKDIR /html
 EXPOSE 80
 
+COPY ./helpers/installComposer.sh /usr/bin/installComposer
+
+RUN chmod +x /usr/bin/installComposer && \
+    /usr/bin/installComposer && \
+    rm /usr/bin/installComposer
+
 CMD chown -R root:www-data storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     cron -L /dev/stdout && \
+    composer install && \
     php-fpm7.4

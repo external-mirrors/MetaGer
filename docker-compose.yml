@@ -1,10 +1,5 @@
 version: '3.7'
 services:
-  phpdeps:
-    image: prooph/composer:7.3
-    volumes:
-      - .:/app
-    command: install
   assets:
     image: node:10
     volumes:
@@ -35,7 +30,6 @@ services:
     depends_on:
       - "mgdb"
       - "dependencies"
-      - "phpdeps"
       - "assets"
       - "redis"
     restart: on-failure

@@ -66,6 +66,12 @@ COPY config/nginx-default.conf /etc/nginx/sites-available/default
 RUN sed -i 's/fastcgi_pass phpfpm:9000;/fastcgi_pass localhost:9000;/g' /etc/nginx/sites-available/default 
 COPY --chown=root:www-data . /html
 
+COPY ./helpers/installComposer.sh /usr/bin/installComposer
+RUN chmod +x /usr/bin/installComposer && \
+    /usr/bin/installComposer && \
+    rm /usr/bin/installComposer && \
+    composer install --no-dev
+
 WORKDIR /html
 EXPOSE 80
 

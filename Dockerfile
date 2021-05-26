@@ -66,6 +66,11 @@ COPY config/nginx-default.conf /etc/nginx/sites-available/default
 RUN sed -i 's/fastcgi_pass phpfpm:9000;/fastcgi_pass localhost:9000;/g' /etc/nginx/sites-available/default 
 COPY --chown=root:www-data . /html
 
+COPY ./helpers/installComposer.sh /usr/bin/installComposer
+RUN chmod +x /usr/bin/installComposer && \
+    /usr/bin/installComposer && \
+    rm /usr/bin/installComposer
+
 WORKDIR /html
 EXPOSE 80
 
@@ -76,5 +81,6 @@ CMD cp /root/.env .env && \
     chown -R root:www-data storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     cron -L /dev/stdout && \
+    composer install --now-dev && \
     php artisan spam:load && \
     php-fpm7.4

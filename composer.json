@@ -11,14 +11,14 @@
         "php": "^7.3|^8.0",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
+        "globalcitizen/php-iban": "^4.0.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "endclothing/prometheus_client_php": "^1.0",
-        "globalcitizen/php-iban": "^4.0.0",
-        "jenssegers/agent": "^2.6",
         "mcamara/laravel-localization": "1.6.*",
         "mews/captcha": "^3.2.6",
+        "promphp/prometheus_client_php": "^2.2",
         "symfony/dom-crawler": "^5.2"
     },
     "require-dev": {

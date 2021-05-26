@@ -69,7 +69,8 @@ COPY --chown=root:www-data . /html
 COPY ./helpers/installComposer.sh /usr/bin/installComposer
 RUN chmod +x /usr/bin/installComposer && \
     /usr/bin/installComposer && \
-    rm /usr/bin/installComposer
+    rm /usr/bin/installComposer && \
+    composer install --no-dev
 
 WORKDIR /html
 EXPOSE 80
@@ -81,6 +82,5 @@ CMD cp /root/.env .env && \
     chown -R root:www-data storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     cron -L /dev/stdout && \
-    composer install --no-dev && \
     php artisan spam:load && \
     php-fpm7.4

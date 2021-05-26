@@ -81,6 +81,6 @@ CMD cp /root/.env .env && \
     chown -R root:www-data storage/logs/metager bootstrap/cache && \
     chmod -R g+w storage/logs/metager bootstrap/cache && \
     cron -L /dev/stdout && \
-    composer install --now-dev && \
+    composer install --no-dev && \
     php artisan spam:load && \
     php-fpm7.4

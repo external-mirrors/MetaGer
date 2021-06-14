@@ -30,6 +30,6 @@ return [
     'nav30' => 'Suchmaschinen',
     'nav31' => 'Weitere Infos',
     'navigationToggle' => 'Navigation anzeigen',
-    'titles.tips' => 'Tips',
+    'titles.tips' => 'Tipps',
     'plugin' => 'MetaGer Plugin',
 ];

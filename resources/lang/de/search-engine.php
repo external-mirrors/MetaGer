@@ -14,12 +14,65 @@ return [
 
 
 
-    'text.1' => 'leer',
-    'text.2.2' => 'leer',
-    'text.3' => 'leer',
-    'text.4' => 'leer',
-    'text.5' => 'leer',
-    
+    'text.1' => 'MetaGer ist eine Metasuchmaschine (PLATZHALTER).',
+   
+    'text.2.1' => 'Name: Yahoo!',
+    'text.2.2' => 'Verwendeter Index: Microsoft Bing',
+    'text.2.3' => 'Entstanden: 2. März 1995',
+    'text.2.4' => 'Hauptsitz: New York City, Vereinigte Staaten',
+    'text.2.5' => 'Betreiber (Geschäftsform): Altaba Inc. (ehemals Yahoo Inc.)',
+    'text.2.6' => 'Geschätzte Seiten im Index: vermutlich 8-14 Millarden',
+    'text.2.7' => 'Verwendete MetaGer-Version: deutsche Suche',
+
+    'text.3.1' => 'Name: Bing',
+    'text.3.2' => 'Verwendeter Index: Microsoft Bing',
+    'text.3.3' => 'Entstanden: 3. Juni 2009',
+    'text.3.4' => 'Hauptsitz: Remond, Washington, Vereinigte Staaten',
+    'text.3.5' => 'Betreiber (Geschäftsform): Microsoft Inc',
+    'text.3.6' => 'Geschätzte Seiten im Index: vermutlich 8-14-Millarden',
+    'text.3.7' => 'Verwendete MetaGer-Version: englische Suche, deutsche Suche (Nur für Mitglieder)',
+   
+    'text.4.1' => 'Name: Scopia',
+    'text.4.2' => 'Entstanden: vor circa 5 Jahren ',
+    'text.4.3' => 'Hauptsitz: Newark, New Jersey, Vereinigte Staaten',
+    'text.4.4' => 'Betreiber (Geschäftsform): Scopia Technologies ASPEN LLC',
+    'text.4.5' => 'Verwendete MetaGer-Version: deutsche Suche, englische Suche',
+   
+    'text.5.1' => 'Name: Netluchs',
+    'text.5.2' => 'Entstanden: 2005',
+    'text.5.3' => 'Hauptsitz: Hamburg, Deutschland',
+    'text.5.4' => 'Betreiber (Geschäftsform): Michael Nebel (Privatperson)',
+    'text.5.5' => 'Geschätzte Seiten im Index: 6 Millionen (Stand: 2005)',
+    'text.5.6' => 'Verwendete MetaGer-Version: deutsche Suche',
+   
+    'text.6.1' => 'Name: Yandex',
+    'text.6.2' => 'Entstanden: 1997',
+    'text.6.3' => 'Hauptsitz: Mäntsälä, Finnland (Europa)',
+    'text.6.4' => 'Betreiber (Geschäftsform): Yandex OY (Aktiengesellschaft)',
+    'text.6.5' => 'Verwendete MetaGer-Version: deutsche Suche',   
+
+
+    'text.7.1' => 'Name: Die ZEIT',
+    'text.7.2' => 'Entstanden: 6. September 2009',
+    'text.7.3' => 'Hauptsitz: Hamburg, Deutschland',
+    'text.7.4' => 'Betreiber (Geschäftsform): Zeit Online GmbH',
+    'text.7.5' => 'Verwendete MetaGer-Version: deutsche Version',
+   
+
+    'text.8.1' => 'Name: OneNewspage (Deutschland)',
+    'text.8.2' => 'Entstanden: 2008',
+    'text.8.3' => 'Hauptsitz: Wales, England',
+    'text.8.4' => 'Betreiber (Geschäftsform): One News Page Ltd.',
+    'text.8.5' => 'Verwendete MetaGer-Version: deutsche Suche (Deutschland), englische Suche',
+   
+
+    'text.9.1' => 'Name: OneNewspage Video (Deutschland)',
+    'text.9.2' => 'Entstanden: 2008',
+    'text.9.3' => 'Hauptsitz: Wales, England',
+    'text.9.4' => 'Betreiber (Geschäftsform): One News Page Ltd.',
+    'text.9.5' => 'Verwendete MetaGer-Version: deutsche Suche (Deutschland), englische Suche',
+   
+
 
 
 

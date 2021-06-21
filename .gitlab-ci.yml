@@ -64,21 +64,6 @@ prepare_node:
     - branches
     - tags
 
-prepare_composer:
-  stage: prepare
-  image: registry.metager.de/open-source/composer/master
-  variables:
-    COMPOSER_HOME: "$CI_PROJECT_DIR/.composer"
-  script:
-    - composer install --no-dev
-  artifacts:
-    paths:
-      - vendor
-  cache:
-    key: "metager-${CI_JOB_NAME}"
-    paths:
-      - .composer
-
 review:
   variables:
     HELM_UPGRADE_VALUES_FILE: .gitlab/review-apps-values.yaml
@@ -143,16 +128,19 @@ stop_review:
 
 development:
   <<: *development_template
-  only:
-    refs:
-      - development
-    kubernetes: active
-  except:
-    variables:
-      - $STAGING_ENABLED
-      - $CANARY_ENABLED
-      - $INCREMENTAL_ROLLOUT_ENABLED
-      - $INCREMENTAL_ROLLOUT_MODE
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$STAGING_ENABLED'
+      when: never
+    - if: '$CANARY_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_MODE'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
 
 
 production:
@@ -162,6 +150,19 @@ production:
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:
     url: https://metager.de
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$STAGING_ENABLED'
+      when: never
+    - if: '$CANARY_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_MODE'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
 
 integrationtest:
   stage: integrationtest

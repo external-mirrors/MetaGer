@@ -12,7 +12,15 @@
 			@if(sizeof($result->gefVon)===1)
 				<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
 			@else
-				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster"> {{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }} </span>
+				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster" tabindex="0">
+					{{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }}
+					<ul class="card-heavy">
+						@foreach($result->gefVon as $index => $gefVon)
+						<li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[$index] }} </a></li>
+						@endforeach
+					</ul>
+				</span>
+				
 			@endif
 		</div>
 		<div class="result-subheadline">

@@ -10,8 +10,8 @@ use LaravelLocalization;
 use Mail;
 use Log;
 use Validator;
-use \IBAN;
-use \IBANCountry;
+use \PHP_IBAN\IBAN;
+use \PHP_IBAN\IBANCountry;
 
 class MailController extends Controller
 {
@@ -197,7 +197,7 @@ class MailController extends Controller
 
         # Validate Email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $email = "anonymous@suma-ev.de";
+            $email = "";
         }
         if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
             $messageToUser = trans('spende.error.name');
@@ -220,7 +220,7 @@ class MailController extends Controller
             $betrag = round($betrag, 2, PHP_ROUND_HALF_DOWN);
 
             # Generating personalised key for donor
-            $key = app('App\Models\Key')->generateKey($betrag);
+            $key = app('App\Models\Key')->generateKey($betrag, null, null, 'Für ' . $betrag . '€ aufgeladen am '. date("d.m.Y"));
 
             try {
                 $postdata = [

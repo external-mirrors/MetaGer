@@ -22,29 +22,47 @@ class Adgoal
         "lk","sh","kn","lc","pm","vc","sd","sr","za","kr","sz","sy","tj","tw","tz","th","tg","to","tt","td","cz","tn",
         "tm","tc","tv","tr","us","ug","ua","xx","hu","uy","uz","vu","va","ve","ae","vn","wf","cx","by","eh","ww","zr","cf","cy",];
 
-    public static function startAdgoal(&$results)
+
+    public $hash;
+    public $finished = false; // Is true when the Request was sent to and read from Admitad App
+    private $affiliates = null;
+    private $startTime;
+
+    /**
+     * Creates a new Adgoal object which will start a request for affiliate links
+     * based on a result List from MetaGer.
+     * It will parse the Links of the results and query any affiliate shops.
+     * 
+     * @param \App\MetaGer $metager
+     */
+    public function __construct(&$metager)
     {
+        $this->startTime = microtime(true);
         $publicKey = getenv('adgoal_public');
         $privateKey = getenv('adgoal_private');
         if ($publicKey === false) {
             return true;
         }
+        $results = $metager->getResults();
         $linkList = "";
         foreach ($results as $result) {
             if (!$result->new) {
                 continue;
             }
-            $link = $result->link;
+            $link = $result->originalLink;
             if (strpos($link, "http") !== 0) {
                 $link = "http://" . $link;
             }
             $linkList .= $link . ",";
         }
+        if(empty($linkList)){
+            return;
+        }
     
         $linkList = rtrim($linkList, ",");
     
         # Hashwert
-        $hash = md5($linkList . $privateKey);
+        $this->hash = md5($linkList . $privateKey);
     
         $link = "https://xf.gdprvalidate.de/v4/check";
     
@@ -73,14 +91,14 @@ class Adgoal
                 "key" => $publicKey,
                 "panel" => "ZMkW9eSKJS",
                 "member" => "338b9Bnm",
-                "signature" => $hash,
+                "signature" => $this->hash,
                 "links" => $linkList,
                 "country" => $country,
             ];
     
         // Submit fetch job to worker
         $mission = [
-                "resulthash" => $hash,
+                "resulthash" => $this->hash,
                 "url" => $link,
                 "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
                 "username" => null,
@@ -97,76 +115,92 @@ class Adgoal
             ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-    
-        return $hash;
     }
-    
-    public static function parseAdgoal(&$results, $hash, $waitForResult)
-    {
-        # Wait for result
-        $startTime = microtime(true);
-        $answer = null;
-    
-        # Hash is true if Adgoal request wasn't started in the first place
-        if ($hash === true) {
-            return true;
+
+    public function fetchAffiliates($wait = false){
+        if($this->affiliates !== null){
+            return;
         }
-            
-        if ($waitForResult) {
+
+        $answer = null;
+        $startTime = microtime(true);
+        if($wait){
             while (microtime(true) - $startTime < 5) {
-                $answer = Cache::get($hash);
+                $answer = Cache::get($this->hash);
                 if ($answer === null) {
                     usleep(50 * 1000);
                 } else {
                     break;
                 }
             }
-        } else {
-            $answer = Cache::get($hash);
+        }else{
+            $answer = Cache::get($this->hash);
         }
-        if ($answer === null) {
-            return false;
+        $answer = json_decode($answer, true);
+        
+        // If the fetcher had an Error
+        if($answer === "no-result"){
+            $this->affiliates = [];
+            return;
+        }
+
+        if(empty($answer) && !is_array($answer)){
+            return;
+        }
+
+        $this->affiliates = $answer;
+    }
+    
+    /**
+     * Converts all Affiliate Links.
+     * 
+     * @param \App\Models\Result[] $results
+     */
+    public function parseAffiliates(&$results)
+    {
+        if($this->finished || $this->affiliates === null){
+            return;
         }
             
-        try {
-            $answer = json_decode($answer, true);
+        foreach ($this->affiliates as $partnershop) {
+            $targetUrl = $partnershop["url"];
 
-            foreach ($answer as $partnershop) {
-                $targetUrl = $partnershop["url"];
-    
-                $tld = $partnershop["tld"];
-                $targetHost = parse_url($targetUrl, PHP_URL_HOST);
+            $tld = $partnershop["tld"];
 
-                /*
-                    Adgoal sometimes returns affiliate Links for every URL
-                    That's why we check if the corresponding TLD matches the orginial URL
-                */
-                if($targetHost !== false && stripos($targetHost, $tld) === false){
-                    continue;
-                }
+            // Sometimes TLD is null
+            if(empty($tld)){
+                continue;
+            }
 
-                foreach ($results as $result) {
-                    if ($result->link === $targetUrl && !$result->partnershop) {
-                        # Ein Advertiser gefunden
-                        if ($result->image !== "") {
-                            $result->logo = $partnershop["logo"];
-                        } else {
-                            $result->image = $partnershop["logo"];
-                        }
-    
-                        # Den Link hinzufügen:
-                        $result->link = $partnershop["click_url"];
-                        $result->partnershop = true;
-                        $result->changed = true;
+            $targetHost = parse_url($targetUrl, PHP_URL_HOST);
+
+            /*
+                Adgoal sometimes returns affiliate Links for every URL
+                That's why we check if the corresponding TLD matches the orginial URL
+            */
+            if($targetHost !== false && stripos($targetHost, $tld) === false){
+                continue;
+            }
+            $preference = config("metager.metager.affiliate_preference", "adgoal");
+            foreach ($results as $result) {
+                if ($result->originalLink === $targetUrl && (config("metager.metager.affiliate_preference", "adgoal") === "adgoal" || !$result->partnershop)) {
+                    # Ein Advertiser gefunden
+                    if ($result->image !== "" && !$result->partnershop) {
+                        $result->logo = $partnershop["logo"];
+                    } else {
+                        $result->image = $partnershop["logo"];
                     }
+
+                    # Den Link hinzufügen:
+                    $result->link = $partnershop["click_url"];
+                    $result->partnershop = true;
+                    $result->changed = true;
                 }
             }
-        } catch (\ErrorException $e) {
-            Log::error($e->getMessage());
-        } finally {
-            $requestTime = microtime(true) - $startTime;
-            \App\PrometheusExporter::Duration($requestTime, "adgoal");
         }
-        return true;
+    
+        $requestTime = microtime(true) - $this->startTime;
+        \App\PrometheusExporter::Duration($requestTime, "adgoal");
+        $this->finished = true;
     }
 }

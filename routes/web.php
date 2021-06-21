@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,9 +39,11 @@ Route::group(
         Route::get('asso', function () {
             return view('assoziator.asso')
                 ->with('title', trans('titles.asso'))
-                ->with('navbarFocus', 'dienste');
+                ->with('navbarFocus', 'dienste')
+                ->with('css', [mix('css/asso/style.css')])
+                ->with('darkcss', [mix('css/asso/dark.css')]);
         });
-        Route::post('asso', 'Assoziator@asso');
+        Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 
         Route::get('impressum', function () {
             return view('impressum')
@@ -86,7 +89,7 @@ Route::group(
                 ->with('title', trans('titles.spende'))
                 ->with('js', [mix('/js/donation.js')])
                 ->with('navbarFocus', 'foerdern');
-        });
+        })->name("spende");
         Route::get('spende/danke/{data}', ['as' => 'danke', function ($data) {
             return view('spende.danke')
                 ->with('title', trans('titles.spende'))
@@ -106,7 +109,7 @@ Route::group(
             } else {
                 return response()->download(storage_path('app/public/aufnahmeantrag-en.pdf'), "SUMA-EV_Membershipform_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
             }
-        });
+        })->name("beitritt");
 
         Route::get('bform1.htm', function () {
             return redirect('beitritt');
@@ -198,8 +201,8 @@ Route::group(
             Route::get('engine/stats.json', 'AdminInterface@engineStats');
             Route::get('check', 'AdminInterface@check');
             Route::get('engines', 'AdminInterface@engines');
-            Route::get('ip', function () {
-                dd(Request::ip(), $_SERVER["AGENT"]);
+            Route::get('ip', function (Request $request) {
+                dd($request->ip(), $_SERVER["AGENT"]);
             });
             Route::get('bot', 'HumanVerification@botOverview');
             Route::post('bot', 'HumanVerification@botOverviewChange');
@@ -230,8 +233,8 @@ Route::group(
         Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
         Route::post('img/dog.jpg', 'HumanVerification@whitelist');
         Route::get('index.css', 'HumanVerification@browserVerification');
-        Route::get('index.js', function () {
-            $key = Request::input("id", "");
+        Route::get('index.js', function (Request $request) {
+            $key = $request->input("id", "");
 
             // Verify that key is a md5 checksum
             if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
@@ -318,7 +321,27 @@ Route::group(
             });
         });
 
-        Route::get('metrics', function () {
+        Route::get('metrics', function (Request $request) {
+            // Only allow access to metrics from within our network
+            $ip = $request->ip();
+            $allowedNetworks = [
+                "10.",
+                "172.",
+                "192.",
+                "127.0.0.1",
+            ];
+
+            $allowed = false;
+            foreach($allowedNetworks as $part){
+                if(stripos($ip, $part) === 0){
+                    $allowed = true;
+                }
+            }
+
+            if(!$allowed){
+                abort(401);
+            }
+            
             $registry = \Prometheus\CollectorRegistry::getDefault();
 
             $renderer = new RenderTextFormat();

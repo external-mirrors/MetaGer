@@ -47,10 +47,11 @@ class HumanVerification extends Controller
         if ($request->getMethod() == 'POST') {
             \App\PrometheusExporter::CaptchaAnswered();
             $lockedKey = $user["lockedKey"];
-            $key = $request->input('captcha');
-            $key = strtolower($key);
 
-            if (!$hasher->check($key, $lockedKey)) {
+            $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
+            $validator = validator()->make(request()->all(), $rules);
+
+            if($validator->fails()) {
                 $captcha = Captcha::create("default", true);
                 $user["lockedKey"] = $captcha["key"];
                 HumanVerification::saveUser($user);

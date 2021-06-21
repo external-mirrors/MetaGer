@@ -56,7 +56,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"]) || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate') {
+            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate') {
                 $settingActive = true;
             }
         }
@@ -250,7 +250,7 @@ class SettingsController extends Controller
 
         $cookies = Cookie::get();
         foreach ($cookies as $key => $value) {
-            if (\starts_with($key, [$fokus . "_engine_", $fokus . "_setting_"])) {
+            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);

@@ -14,7 +14,7 @@ return [
 
 
 
-    'text.1' => 'MetaGer ist eine Metasuchmaschine (PLATZHALTER).',
+    'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>.',
    
     'text.2.1' => 'Name: Yahoo!',
     'text.2.2' => 'Verwendeter Index: Microsoft Bing',

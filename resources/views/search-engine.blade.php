@@ -9,7 +9,7 @@
 
 		<div class="card-heavy">
 			<h2>{{ trans('search-engine.head.2') }}</h2>
-			<p>{{ trans('search-engine.text.1') }}</p>
+			<p>{!! trans('search-engine.text.1',["transparenz" => "https://metager.de/transparency"]) !!}</p>
 		</div>
 		<div class="enginecontainer">
 		<div class="card-heavy" >

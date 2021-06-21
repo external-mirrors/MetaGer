@@ -20,7 +20,7 @@ return [
     'text.2.2' => 'Verwendeter Index: Microsoft Bing',
     'text.2.3' => 'Entstanden: 2. März 1995',
     'text.2.4' => 'Hauptsitz: New York City, Vereinigte Staaten',
-    'text.2.5' => 'Betreiber (Geschäftsform): Altaba Inc. (ehemals Yahoo Inc.)',
+    'text.2.5' => 'Betreiber: Altaba Inc. (ehemals Yahoo Inc.)',
     'text.2.6' => 'Geschätzte Seiten im Index: vermutlich 8-14 Millarden',
     'text.2.7' => 'Verwendete MetaGer-Version: deutsche Suche',
 
@@ -56,7 +56,7 @@ return [
     'text.7.2' => 'Entstanden: 6. September 2009',
     'text.7.3' => 'Hauptsitz: Hamburg, Deutschland',
     'text.7.4' => 'Betreiber (Geschäftsform): Zeit Online GmbH',
-    'text.7.5' => 'Verwendete MetaGer-Version: deutsche Version',
+    'text.7.5' => 'Verwendete MetaGer-Version: deutsche Suche',
    
 
     'text.8.1' => 'Name: OneNewspage (Deutschland)',

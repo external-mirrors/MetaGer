@@ -42,7 +42,6 @@ podAnnotations:
 deploymentApiVersion: apps/v1
 ingress:
   annotations:
-    kubernetes.io/ingress.class: nginx-ingress
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/client-body-buffer-size: "30m"
     nginx.ingress.kubernetes.io/proxy-body-size: "30m"

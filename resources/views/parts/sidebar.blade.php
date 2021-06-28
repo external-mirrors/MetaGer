@@ -28,7 +28,7 @@
     <li class="metager-dropdown">
       <input id="infoToggle" class="sidebarCheckbox" type="checkbox">
       <label for="infoToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationInfo" tabindex=0>
-      <img src="/img/icon-contact.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
+      <img src="/img/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
         <span>{{ trans('sidebar.nav31') }}</span>
         <span class="caret"></span>
       </label>

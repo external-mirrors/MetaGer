@@ -46,7 +46,7 @@ return [
     'text.4.4' => 'Scopia Technologies ASPEN LLC',
     'text.4.5' => 'deutsche Suche, englische Suche',
    
-    'text.5.1' => 'Name: Netluchs',
+    'text.5.1' => 'Netluchs',
     'text.5.2' => '2005',
     'text.5.3' => 'Hamburg, Deutschland',
     'text.5.4' => 'Michael Nebel (Privatperson)',

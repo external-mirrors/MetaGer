@@ -17,7 +17,7 @@
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.1') }}</span>{{ trans('search-engine.text.2.1.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.2') }}</span>{{ trans('search-engine.text.2.2.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.3') }}</span>{{ trans('search-engine.text.2.3.1') }}</p>
-			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.4.1') }}</span>{{ trans('search-engine.text.2.4') }}</p>
+			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.4') }}</span>{{ trans('search-engine.text.2.4.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.5') }}</span>{{ trans('search-engine.text.2.5.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.6') }}</span>{{ trans('search-engine.text.2.6.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.7') }}</span>{{ trans('search-engine.text.2.7.1') }}</p>
@@ -25,7 +25,7 @@
 
 		</div>
 		<div class="card-heavy">
-		<h2>{{ trans('search-engine.head.3') }}</h2>		
+		<h2>{{ trans('search-engine.head.4') }}</h2>		
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.1') }}</span>{{ trans('search-engine.text.3.1') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.2') }}</span>{{ trans('search-engine.text.3.2') }}</p>
 			<p><span class="search-engine-dt">{{ trans('search-engine.text.2.3') }}</span>{{ trans('search-engine.text.3.3') }}</p>
@@ -82,7 +82,7 @@
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.1')}}</span>{{ trans('search-engine.text.9.1')}}</p>
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.3') }}</span>{{ trans('search-engine.text.9.2') }}</p>
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.4') }}</span>{{ trans('search-engine.text.9.3') }}</p>
-		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.5') }}</span>{ trans('search-engine.text.9.4') }}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.5') }}</span>{{ trans('search-engine.text.9.4') }}</p>
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.7') }}</span>{{ trans('search-engine.text.9.5') }}</p>
 		</div>
 		</div>	

@@ -2,7 +2,7 @@
 
 return [
     'head.1' => 'Über unsere Suchmaschinen',
-    'head.2' => 'MetaGer nutzt mehrere Suchmaschinen',
+    'head.2' => 'MetaGer nutzt mehrere Indexe',
     'head.3' => 'Yahoo!',
     'head.4' => 'Bing',
     'head.5' => 'Scopia',
@@ -14,7 +14,7 @@ return [
 
 
 
-    'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>.',
+    'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>. Deshalb nutzen wir die Indexe verschiedener anderer Suchmaschinen. Für jeder dieser Suchmaschinen haben wir einen kurzen Steckbrief mit den wichtigsten Eckdaten erstellt. Da wir diese Übersicht nicht ständig aktualisieren, sind alle Angaben ohne Gewähr.',
    
     'text.2.1' => 'Name: ',
     'text.2.1.1' => 'Yahoo!',
@@ -35,8 +35,8 @@ return [
     'text.3.1' => 'Bing',
     'text.3.2' => 'Microsoft Bing',
     'text.3.3' => '3. Juni 2009',
-    'text.3.4' => 'Remond, Washington, Vereinigte Staaten',
-    'text.3.5' => 'Microsoft Inc',
+    'text.3.4' => 'Redmond, Washington, Vereinigte Staaten',
+    'text.3.5' => 'Microsoft Inc.',
     'text.3.6' => 'vermutlich 8-14-Millarden',
     'text.3.7' => 'englische Suche, deutsche Suche (Nur für Mitglieder)',
    

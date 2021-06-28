@@ -2,7 +2,7 @@
 
 return [
     'head.1' => 'About our search engines',
-    'head.2' => 'MetaGer uses multiple search engines',
+    'head.2' => 'MetaGer uses multiple search indexes',
     'head.3' => 'Yahoo!',
     'head.4' => 'Bing',
     'head.5' => 'Scopia',
@@ -12,13 +12,13 @@ return [
     'head.9' => 'OneNewspage',
     'head.10' => 'OneNewspage (Video)',
 
-    'text.1' => 'MetaGer is a <a href=":transparenz">metasearch engine</a>.',
+    'text.1' => 'MetaGer is a <a href=":transparenz">metasearch engine</a>. Therefore, we use the indexes of various other search engines. For each of these search engines, we have created a short profile with the key information. Since we do not constantly update this overview, all information is without guarantee.',
    
     'text.2.1' => 'Name: ',
     'text.2.1.1' => 'Yahoo!',
     'text.2.2' => 'Used index: ',
     'text.2.2.1' => 'Microsoft Bing',
-    'text.2.3' => 'founded: ',
+    'text.2.3' => 'Founded: ',
     'text.2.3.1' => '2. March 1995',
     'text.2.4' => 'Headquarters: ',
     'text.2.4.1' => 'New York City, United States',
@@ -32,8 +32,8 @@ return [
     'text.3.1' => 'Bing',
     'text.3.2' => 'Microsoft Bing',
     'text.3.3' => '3. June 2009',
-    'text.3.4' => 'Remond, Washington, United States',
-    'text.3.5' => 'Microsoft Inc',
+    'text.3.4' => 'Redmond, Washington, United States',
+    'text.3.5' => 'Microsoft Inc.',
     'text.3.6' => 'around 8-14 billion',
     'text.3.7' => 'English search, German search (members only)',
    

@@ -27,4 +27,5 @@ return [
     "keychange"	=>	"Change membership key",
     "allSettings"	=>	"All Settings - MetaGer",
     "transparency"	=>	"Transparency statement - MetaGer"
+    "search-engine" => 'Search engines - MetaGer'
 ];

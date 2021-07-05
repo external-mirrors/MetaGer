@@ -38,7 +38,7 @@ return [
     'text.3.7' => 'English search, German search (members only)',
    
     'text.4.1' => 'Scopia',
-    'text.4.2' => 'around 5 years ago ',
+    'text.4.2' => 'Around 2016 ',
     'text.4.3' => 'Newark, New Jersey, United States',
     'text.4.4' => 'Scopia Technologies ASPEN LLC',
     'text.4.5' => 'German search, English search',

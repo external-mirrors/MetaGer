@@ -14,7 +14,7 @@ return [
 
 
 
-    'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>. Deshalb nutzen wir die Indexe verschiedener anderer Suchmaschinen. Für jeder dieser Suchmaschinen haben wir einen kurzen Steckbrief mit den wichtigsten Eckdaten erstellt. Da wir diese Übersicht nicht ständig aktualisieren, sind alle Angaben ohne Gewähr.',
+    'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>. Deshalb nutzen wir die Indexe verschiedener anderer Suchmaschinen. Für jede dieser Suchmaschinen haben wir einen kurzen Steckbrief mit den wichtigsten Eckdaten erstellt. Da wir diese Übersicht nicht ständig aktualisieren, sind alle Angaben ohne Gewähr.',
    
     'text.2.1' => 'Name: ',
     'text.2.1.1' => 'Yahoo!',
@@ -41,7 +41,7 @@ return [
     'text.3.7' => 'englische Suche, deutsche Suche (Nur für Mitglieder)',
    
     'text.4.1' => 'Scopia',
-    'text.4.2' => 'vor circa 5 Jahren ',
+    'text.4.2' => 'Circa 2016 ',
     'text.4.3' => 'Newark, New Jersey, Vereinigte Staaten',
     'text.4.4' => 'Scopia Technologies ASPEN LLC',
     'text.4.5' => 'deutsche Suche, englische Suche',

@@ -53,7 +53,7 @@ return [
     'text.6.1' => 'Yandex',
     'text.6.2' => '1997',
     'text.6.3' => 'Mäntsälä, Finland (Europe)',
-    'text.6.4' => 'Yandex OY (Cooperation)',
+    'text.6.4' => 'Yandex OY (Corporation)',
     'text.6.5' => 'German search',   
 
 

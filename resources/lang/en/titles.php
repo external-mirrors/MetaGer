@@ -26,6 +26,6 @@ return [
     "key"	=>	"Ad-Free-Key - MetaGer",
     "keychange"	=>	"Change membership key",
     "allSettings"	=>	"All Settings - MetaGer",
-    "transparency"	=>	"Transparency statement - MetaGer"
+    "transparency"	=>	"Transparency statement - MetaGer",
     "search-engine" => 'Search engines - MetaGer'
 ];

@@ -16,15 +16,15 @@
 
         //Instructions for Firefox version >= 61
         'plugin' => 'You can download our plugin <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">here</a>.',
-        'default-search-v61.1' => 'Alternatively click "<i class="fas fa-ellipsis-h"></i>" on the right side in your address bar and choose "Add Search Engine".',
+        'default-search-v61.1' => 'Alternatively click "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" on the right side in your address bar and choose "Add Search Engine".',
         'default-search-v61.2' => 'Enter "about:preferences#search" in the address bar. Choose MetaGer from the dropdown menu under "Default Search Engine".',
 
         //Instructions for Firefox version 52-60
-        'default-page-v52.1' => 'Navigate to the top right corner, click "<i class="fa fa-bars"></i>" and choose "Options".',
+        'default-page-v52.1' => 'Navigate to the top right corner, click "<img class= "mg-icon" src="/img/menu.svg">" and choose "Options".',
         'default-page-v52.2' => 'Under "Home page" enter ":link" .',
 
         //Instructions for Firefox version >= 61
-        'default-page-v61.1' => 'Navigate to the top right corner, click "<i class="fa fa-bars"></i>" and choose "Options".',
+        'default-page-v61.1' => 'Navigate to the top right corner, click "<img class= "mg-icon" src="/img/menu.svg">" and choose "Options".',
         'default-page-v61.2' => 'Choose "Home" on the left side.',
         'default-page-v61.3' => 'Under "New Windows and Tabs" click on the dropdown menu next to "Homepage and new windows" and choose "Custom URLs...".',
         'default-page-v61.4' => 'In the new text field enter ":link" .',

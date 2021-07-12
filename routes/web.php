@@ -57,7 +57,7 @@ Route::group(
         Route::get('about', function () {
             return view('about')
                 ->with('title', trans('titles.about'))
-                ->with('navbarFocus', 'kontakt');
+                ->with('navbarFocus', 'info');
         });
         Route::get('team', function () {
             return view('team.team')
@@ -126,7 +126,13 @@ Route::group(
         Route::get('transparency', function () {
             return view('transparency')
                  ->with('title', trans('titles.transparency'))
-                 ->with('navbarFocus', 'kontakt');
+                 ->with('navbarFocus', 'info');
+        });
+
+        Route::get('search-engine', function () {
+            return view('search-engine')
+                 ->with('title', trans('titles.search-engine'))
+                 ->with('navbarFocus', 'info');
         });
 
         Route::get('hilfe', function () {

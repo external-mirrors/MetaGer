@@ -27,6 +27,8 @@ return [
     'nav27' => 'MetaGer Maps',
     'nav28' => 'Settings',
     'nav29' => 'Transparency statement',
+    'nav30' => 'Search engines',
+    'nav31' => 'More information',
     "navigationToggle" => "show navigation",
     'titles.tips' => 'Tips',
     'plugin' => 'MetaGer Plugin',

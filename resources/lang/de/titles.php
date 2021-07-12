@@ -28,4 +28,5 @@ return [
     'settings' => 'Sucheinstellungen (:fokus)',
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
+    'search-engine' => 'Suchmaschinen - MetaGer',
 ];

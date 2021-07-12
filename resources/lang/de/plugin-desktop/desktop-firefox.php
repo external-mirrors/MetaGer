@@ -16,15 +16,15 @@
 
         //Instructions for Firefox version >= 61
         'plugin' => 'Das Plugin für Firefox können Sie <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/?src=search" target="_blank">hier</a> herunterladen.',
-        'default-search-v61.1' => 'Alternativ klicken Sie in Ihrem Browser oben rechts in der Adressleiste auf "<i class="fas fa-ellipsis-h"></i>" um das Menü der Seitenaktionen zu öffnen und dann auf "Suchmaschine hinzufügen"',
+        'default-search-v61.1' => 'Alternativ klicken Sie in Ihrem Browser oben rechts in der Adressleiste auf <img class= "mg-icon" src="/img/ellipsis-horizontal.svg"> um das Menü der Seitenaktionen zu öffnen und dann auf "Suchmaschine hinzufügen"',
         'default-search-v61.2' => 'Geben Sie "about:preferences#search" in der Adressleiste ein, um in die Sucheinstellungen zu gelangen. Im Bereich "Standardsuchmaschine" wählen Sie MetaGer aus.',
 
         //Instructions for Firefox version 52-60
-        'default-page-v52.1' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-bars" aria-hidden="true"></i><span class="sr-only">die drei horizontalen Striche</span> und öffnen Sie die "Einstellungen".',
+        'default-page-v52.1' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
         'default-page-v52.2' => 'Tragen Sie im Feld "Startseite" ":link" ein.',
 
         //Instructions for Firefox version >= 61
-        'default-page-v61.1' => 'Klicken Sie oben rechts im Browser auf <i class="fa fa-bars" aria-hidden="true"></i><span class="sr-only">die drei horizontalen Striche</span> und öffnen Sie die "Einstellungen".',
+        'default-page-v61.1' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
         'default-page-v61.2' => 'Wählen Sie auf der linken Seite die Kategorie "Startseite". ',
         'default-page-v61.3' => 'Unter "Neue Fenster und Tabs" klicken Sie auf das Dropdownmenü neben "Startseite und neue Fenster" und wählen "Benutzerdefinierte Adresse".',
         'default-page-v61.4' => 'Tragen Sie in das erscheinende Textfeld ":link" ein.',

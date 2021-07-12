@@ -115,7 +115,7 @@
 		</div>
 	</section>
 	<h2 id="dienste">{!! trans('hilfe.dienste') !!}</h2>
-	<h3><i class="fa fa-angle-double-right"></i> {!! trans('hilfe.dienste.kostenlos') !!}</h3>
+	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('hilfe.dienste.kostenlos') !!}</h3>
 	<section id="app">
 		<div id="mg-app" style="margin-top: -100px"></div>
 		<div style="margin-top: 100px"></div>

@@ -45,7 +45,7 @@
                                 <input type="hidden" name="key" value="{{ $key }}">
                                 <input type="hidden" name="url" value="{{ url()->full() }}">
                                 <button type="submit" title="@lang('settings.removeCookie')">
-                                    <i class="fas fa-trash-alt"></i>
+                                <img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
                                 </button>
                             </form>
                         </td>

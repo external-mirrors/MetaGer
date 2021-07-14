@@ -11,6 +11,7 @@ return [
     'head.8' => 'Die ZEIT',
     'head.9' => 'OneNewspage (Deutschland)',
     'head.10' => 'OneNewspage Video (Deutschland)',
+    'head.11' => 'YaCy',
 
 
 
@@ -74,14 +75,19 @@ return [
     'text.8.5' => 'deutsche Suche (Deutschland), englische Suche',
    
 
-    'text.9.1' => 'Name: OneNewspage Video (Deutschland)',
+    'text.9.1' => 'OneNewspage Video (Deutschland)',
     'text.9.2' => '2008',
     'text.9.3' => 'Wales, England',
     'text.9.4' => 'One News Page Ltd.',
     'text.9.5' => 'deutsche Suche (Deutschland), englische Suche',
    
 
-
+    'text.10.1' => 'YaCy',
+    'text.10.2' => '2004',
+    'text.10.3' => 'Frankfurt am Main, Deutschland',
+    'text.10.4' => 'Dipl. Inf. Michael Christen',
+    'text.10.5' => '1,7 Milliarden',
+    'text.10.6' => 'deutsche Suche',
 
 
 ];

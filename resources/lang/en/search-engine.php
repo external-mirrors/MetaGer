@@ -78,7 +78,12 @@ return [
     'text.9.5' => 'German search (Deutschland), English search',
    
 
-
+    'text.10.1' => 'YaCy',
+    'text.10.2' => '2004',
+    'text.10.3' => 'Frankfurt, Germany',
+    'text.10.4' => 'Dipl. Inf. Michael Christen',
+    'text.10.5' => '1,7 billion',
+    'text.10.6' => 'german search',
 
 
 ];

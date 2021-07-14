@@ -85,6 +85,15 @@
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.5') }}</span>{{ trans('search-engine.text.9.4') }}</p>
 		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.7') }}</span>{{ trans('search-engine.text.9.5') }}</p>
 		</div>
+		<div class="card-heavy">
+		<h2>{{ trans('search-engine.head.11') }}</h2>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.1')}}</span>{{ trans('search-engine.text.10.1')}}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.3') }}</span>{{ trans('search-engine.text.10.2') }}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.4') }}</span>{{ trans('search-engine.text.10.3') }}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.5') }}</span>{{ trans('search-engine.text.10.4') }}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.6') }}</span>{{ trans('search-engine.text.10.5') }}</p>
+		<p><span class="search-engine-dt">{{ trans('search-engine.text.2.7') }}</span>{{ trans('search-engine.text.10.6') }}</p>
+		</div>
 		</div>	
 	</div>
 @endsection

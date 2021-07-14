@@ -62,10 +62,9 @@ class Yacy extends Searchengine
             }
 
             if($resultCount > 0){
-                $next = clone $this;
-                $next->engine->{"get-parameter"}["startRecord"] = $this->engine->{"get-parameter"}["startRecord"] + 10;
-                $next->getString = $this->generateGetString($metager->getQ());
-                $next->updateHash();
+                $engine = clone $this->engine;
+                $engine->{"get-parameter"}->startRecord += 10;
+                $next = new Yacy($this->name, $engine, $metager);
                 $this->next = $next;
             }
         } catch (\Exception $e) {

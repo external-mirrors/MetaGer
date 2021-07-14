@@ -39,8 +39,33 @@ class Yacy extends Searchengine
                         $this->engine->{"display-name"}, $this->engine->homepage,
                         $this->counter
                     );
-                }
+                } 
 
+            }
+        } catch (\Exception $e) {
+            Log::error("A problem occurred parsing results from $this->name:");
+            Log::error($e->getMessage());
+            return;
+        }
+    }
+
+    public function getNext(\App\MetaGer $metager, $result)
+    {
+        try{
+            $resultCount = 0;
+            $content = json_decode($result, true);
+            $content = $content["channels"];
+
+            foreach ($content as $channel) {
+                $items = $channel["items"];
+                $resultCount += sizeof($items);
+            }
+
+            if($resultCount > 0){
+                $engine = clone $this->engine;
+                $engine->{"get-parameter"}->startRecord += 10;
+                $next = new Yacy($this->name, $engine, $metager);
+                $this->next = $next;
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

@@ -62,9 +62,10 @@ class Yacy extends Searchengine
             }
 
             if($resultCount > 0){
-                $next = new Yacy($this->name, $this->engine, $metager);
-                $next->getString .= "&startRecord=" . (($metager->getPage() + 1) * 10);
-                $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+                $next = clone $this;
+                $next->engine->{"get-parameter"}["startRecord"] = $this->engine->{"get-parameter"}["startRecord"] + 10;
+                $next->getString = $this->generateGetString($metager->getQ());
+                $next->updateHash();
                 $this->next = $next;
             }
         } catch (\Exception $e) {

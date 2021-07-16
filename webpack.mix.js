@@ -12,11 +12,7 @@ let mix = require("laravel-mix");
  */
 
 mix
-  /*
-  @import "./font-awesome/fontawesome.less";
-  @import "./font-awesome/solid.less";
-  @import "./bootstrap/bootstrap.less";
-  */
+ 
   // css
   .styles(["resources/css/noheader.css"], "public/css/noheader.css")
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {
@@ -32,12 +28,6 @@ mix
     strictMath: true
   })
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/font-awesome/fontawesome.less", "public/css/fontawesome.css", {
-    strictMath: true
-  })
-  .less("resources/less/font-awesome/solid.less", "public/css/fontawesome-solid.css", {
     strictMath: true
   })
   .less("resources/less/metager/pages/key.less", "public/css/key.css", {

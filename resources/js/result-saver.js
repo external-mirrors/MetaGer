@@ -161,19 +161,19 @@ Results.prototype.addToContainer = function (container) {
   var template = document.createElement("div");
 
   template.innerHTML = '<div id="saver-options">\
-    <div class="saver-option saver-option-filter">\
-      <input style="font-family: \'Font Awesome 5 Free\', sans-serif;" class="form-control" type="text" placeholder="&#xf0b0 ' + t('result-saver.filter') + '">\
+    <div class="saver-option">\
+      <input style="font-family:, sans-serif;" class="form-control" type="text" placeholder="' + t('result-saver.filter') + '">\
     </div>\
     <div class="saver-option saver-option-sort">\
-      <select class="form-control" style="font-family: \'Font Awesome 5 Free\', sans-serif;">\
-        <option value="chronological" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf017 ' + t('result-saver.sort.chronological') + '</option>\
-        <option value="rank" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf162 ' + t('result-saver.sort.ranking') + '</option>\
-        <option value="alphabetical" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf15d ' + t('result-saver.sort.alphabetical') + '</option>\
+      <select class="form-control", sans-serif;">\
+        <option value="chronological" , sans-serif;">🕓 ' + t('result-saver.sort.chronological') + '</option>\
+        <option value="rank" style="font-family: , sans-serif;">🔢 ' + t('result-saver.sort.ranking') + '</option>\
+        <option value="alphabetical" , sans-serif;">🔠 ' + t('result-saver.sort.alphabetical') + '</option>\
       </select>\
     </div>\
     <div class="saver-option saver-option-delete">\
       <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
-        <i class="fa fa-trash-o" aria-hidden="true"></i>\
+      <img class= \"mg-icon mg-icon-inverted result-saver-icon\" src=\"/img/trashcan.svg\">\
         ' + t('result-saver.deleteAll') + '\
       </button>\
     </div>\
@@ -379,7 +379,7 @@ Result.prototype.toHtml = function () {
   var template = document.createElement("div");
   template.innerHTML = '<div class="saved-result result" data-count="' + this.index + '">\
     <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
-      <i class="fa fa-trash"></i>\
+    <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
     </div>\
     <div class="saved-result-content">\
       <div class="result-header">\

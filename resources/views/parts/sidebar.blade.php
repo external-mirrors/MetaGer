@@ -25,6 +25,32 @@
         <span>{{ trans('sidebar.nav20') }}</span>
       </a>
     </li>
+    <li class="metager-dropdown">
+      <input id="infoToggle" class="sidebarCheckbox" type="checkbox">
+      <label for="infoToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationInfo" tabindex=0>
+      <img src="/img/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
+        <span>{{ trans('sidebar.nav31') }}</span>
+        <span class="caret"></span>
+      </label>
+      <ul class="metager-dropdown-content">
+      <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" >{{ trans('sidebar.nav29') }}</a>
+        </li>
+        <li>
+          <a href="https://gitlab.metager.de/open-source/MetaGer" >{{ trans('sidebar.nav24') }}</a>
+        </li>
+        <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/search-engine/") }}" >{{ trans('sidebar.nav30') }}</a>
+        </li>
+        <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/about/") }}" >{{ trans('sidebar.nav7') }}</a>
+        </li>
+        <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" >{{ trans('sidebar.titles.tips') }}</a>
+        </li>
+
+      </ul>
+    </li>
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" >
@@ -67,9 +93,6 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/team/") }}" >{{ trans('sidebar.nav6') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/about/") }}" >{{ trans('sidebar.nav7') }}</a>
-        </li>
-        <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/impressum/") }}" >{{ trans('sidebar.nav8') }}</a>
         </li>
       </ul>
@@ -92,16 +115,7 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" >{{ trans('sidebar.nav22') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" >{{ trans('sidebar.nav29') }}</a>
-        </li>
-        <li>
           <a href="{{ action('Assoziator@asso') }}" >{{ trans('sidebar.nav11') }}</a>
-        </li>
-        <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" >{{ trans('sidebar.titles.tips') }}</a>
-        </li>
-        <li>
-          <a href="https://gitlab.metager.de/open-source/MetaGer" >{{ trans('sidebar.nav24') }}</a>
         </li>
         <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>

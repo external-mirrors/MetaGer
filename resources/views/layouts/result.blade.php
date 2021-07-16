@@ -82,7 +82,7 @@
 				<ul class="option-list list-unstyled small">
 					<li class="js-only">
 						<a href="javascript:resultSaver('{{ $result->hash }}');" class="saver">
-							<nobr><i class="fa fa-floppy-o"></i> {!! trans('result.options.savetab') !!}</nobr>
+							<nobr><img  class= "mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}</nobr>
 						</a>
 					</li>
 					@if(strlen($metager->getSite()) === 0)

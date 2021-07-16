@@ -58,8 +58,6 @@
 		@endif
 		<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
 		<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 		<script src="{{ mix('js/lib.js') }}"></script>
 		<script src="{{ mix('js/utility.js') }}"></script>
 		@if(!empty($js) && is_array($js))

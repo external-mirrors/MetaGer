@@ -3,30 +3,37 @@
 @section('title', $title )
 
 @section('content')
+<div>
+	<h1>{{ trans('about.head.1') }}</h1>
+</div>
 <div class="timeline-container">
 	<div>
 		<h2>{{ trans('about.timeline.1') }}</h2>
 		<p>{{ trans('about.timeline.1.1') }}</p>
 	</div>
+
 	<div>
 		<h2>{{ trans('about.timeline.2') }}</h2>
 		<p>{{ trans('about.timeline.2.1') }}</p>
 
-	</div>
-	<div>
-		<h2>{{ trans('about.timeline.3') }}</h2>
-		<p>{!! trans('about.timeline.3.1') !!}</p>
-	</div>
+	</div>	
 	<div class="timeline-item-alternate">
-		<h2>{{ trans('about.timeline.4') }}</h2>
-		<p>{{ trans('about.timeline.4.1') }}</p>
+		<h2>{{ trans('about.timeline.3') }}</h2>
+		<p>{{ trans('about.timeline.3.1') }}</p>
 		<picture>
-			<img src="/img/startpage_2015.png" alt="MetaGer 2015" style="width:auto;">
+			<img src="/img/startpage_1997.png" alt="MetaGer 1997" style="width:auto;">
 		  </picture> 
 	</div>
 	<div>
+		<h2>{{ trans('about.timeline.4') }}</h2>
+		<p>{!! trans('about.timeline.4.1') !!}</p>
+	</div>
+	<div class="timeline-item-alternate">
 		<h2>{{ trans('about.timeline.5') }}</h2>
 		<p>{{ trans('about.timeline.5.1') }}</p>
+		<picture>
+			<img src="/img/startpage_2006.png" alt="MetaGer 2006" style="width:auto;">
+		  </picture> 
 	</div>
 	<div>
 		<h2>{{ trans('about.timeline.6') }}</h2>
@@ -40,17 +47,24 @@
 		<h2>{{ trans('about.timeline.8') }}</h2>
 		<p>{{ trans('about.timeline.8.1') }}</p>
 	</div>
-	<div>
+	<div class="timeline-item-alternate">
 		<h2>{{ trans('about.timeline.9') }}</h2>
 		<p>{{ trans('about.timeline.9.1') }}</p>
+		<picture>
+			<img src="/img/startpage_2015.png" alt="MetaGer 2015" style="width:auto;">
+		  </picture> 
 	</div>
+
 	<div>
 		<h2>{{ trans('about.timeline.10') }}</h2>
 		<p>{{ trans('about.timeline.10.1') }}</p>
 	</div>
-	<div>
+	<div class="timeline-item-alternate">
 		<h2>{{ trans('about.timeline.11') }}</h2>
 		<p>{{ trans('about.timeline.11.1') }}</p>
+		<picture>
+			<img src="/img/startpage_2016.png" alt="MetaGer 2016" style="width:auto;">
+		  </picture> 
 	</div>
 	<div>
 		<h2>{{ trans('about.timeline.12') }}</h2>
@@ -67,7 +81,22 @@
 	<div>
 		<h2>{{ trans('about.timeline.15') }}</h2>
 		<p>{{ trans('about.timeline.15.1') }}</p>
+	</div> 
+	<div class="timeline-item-alternate">
+		<h2>{{ trans('about.timeline.16') }}</h2>
+		<p>{{ trans('about.timeline.16.1') }}</p>
+		<picture>
+			<img src="/img/startpage_2019.png" alt="MetaGer 2019" style="width:auto;">
+		  </picture> 
 	</div>
+	<div>
+		<h2>{{ trans('about.timeline.17') }}</h2>
+		<p>{!! trans('about.timeline.17.1') !!}</p>
+		<picture>
+			<img src="/img/startpage_2020.png" alt="MetaGer 2020" style="width:auto;">
+		  </picture> 
+	</div>
+
 
 
 </div>

@@ -15,7 +15,7 @@ return [
     'timeline.2.1' => 'MetaGer entsteht als Forschungsprojekt der Universität Hannover und des regionalen Rechenzentrums Niedersachsen.',
    
     'timeline.3' => '1997-2006: MetaGer Startseite',
-    'timeline.3.1' => 'So sieht MetaGer aus, als es erstmals ans Netz geht. MetaGer stellt damals ein innovativen neuen Dienst zur Verfügung.',
+    'timeline.3.1' => 'So sieht MetaGer aus, als es erstmals ans Netz geht. Mit MetaGer wird somit ein innovativer neuer Dienst zur Verfügung gestellt.',
    
     'timeline.4' => '01.10.2012: Wechsel der Trägerschaft zum SUMA-EV',
     'timeline.4.1' => 'MetaGer wird in den gemeinnützigen Verein <i>SUMA-EV – Verein für freien Wissenszugang</i> überführt. Die Kooperation mit der Universität Hannover wird fortgeführt.',
@@ -35,7 +35,7 @@ return [
     'timeline.9' => '2015-2016: MetaGer Startseite',
     'timeline.9.1' => 'Als Teil umfangreicherer Modernisierungen wird eine neue vereinfachte Startseite angeboten.',
 
-    'timeline.10' => 'März 2016: Suchergebnisse unter 1,3 Sekunden',
+    'timeline.10' => 'März 2016: Suchergebnisse in unter 1,3 Sekunden',
     'timeline.10.1' =>'Durch umfangreiche Modernisierungen im Kern von MetaGer sinkt die durchschnittliche Antwortzeit der Suchmaschine auf unter 1,3 Sekunden. Im Laufe der nächsten Jahre sinkt diese weiter auf fast die Hälfte.',
 
     'timeline.11' => '2016-2019: MetaGer Startseite',
@@ -51,13 +51,13 @@ return [
     'timeline.14.1' => 'Durch umfangreiche Feinabstimmungen und eigene Ergebnisquellen wird die englische MetaGer-Version stark verbessert.',
 
     'timeline.15' => 'September 2017: Überarbeitung der Quicktips',
-    'timeline.15.1' => 'Die Quicktips, die Hinweise über normale Suchergebnisse hinaus anbieten, werden im Funktionsumfang erweitert und in ein eigenes Projekt ausgegliedert. Statt über den Ergebnissen befinden sich sich jetzt in einer Seitenleiste.',
+    'timeline.15.1' => 'Die Quicktips, die Hinweise über normale Suchergebnisse hinaus anbieten, werden im Funktionsumfang erweitert und in ein eigenes Projekt ausgegliedert. Statt über den Ergebnissen befinden sich diese jetzt in einer Seitenleiste.',
 
     'timeline.16' => '2019-2020: MetaGer Startseite',
     'timeline.16.1' => 'Auf der neuen Startseite werden erstmals vier charakeristische Merkmale von MetaGer herausgearbeitet und beworben.',
 
     'timeline.17' => '26.10.2020: Aktuelle Startseite und Dark Mode',
-    'timeline.17.1' => 'Im Rahmen einer umfangreichen Überarbeitung der Startseite werden die vier Alleinstellungsmerkmale von MetaGer wieder aufgegriffen und in einer erweiterten Darstellung präsentiert. Um die zentrale Funktion der Websuche nicht zu überladen, sind die Bescheibungen durch Scrollen zu erreichen. <br> Ein weiteres Feature der neuen Überarbeitung ist der seitenweite Dark Mode. Dadurch kann MetaGer auf allen Seiten in einem dunklen Design genutzt werden.',
+    'timeline.17.1' => 'Im Rahmen einer umfangreichen Überarbeitung der Startseite werden die vier Alleinstellungsmerkmale von MetaGer wieder aufgegriffen und in einer erweiterten Darstellung präsentiert. Um die zentrale Funktion der Websuche nicht zu überladen, sind die Beschreibungen durch Scrollen zu erreichen. <br> Ein weiteres Feature der neuen Überarbeitung ist der seitenweite Dark Mode. Dadurch kann MetaGer auf allen Seiten in einem dunklen Design genutzt werden.',
 
     'timeline.18' => 'Heute',
     'timeline.18.1' => 'Auch heute entwickelt sich MetaGer stetig weiter.'

@@ -8,11 +8,7 @@
 </div>
 <div class="card-heavy">
 	<h1>{{ trans('about.head.3') }}</h1>
-	<p>{!! trans('about.text.1') !!}</p>
-</div>
-<div class="card-heavy">
-	<h1>{{ trans('about.head.4') }}</h1>
-	<p>{{ trans('about.text.2') }}</p>
+	<p>{!! trans('about.text.1', ["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
 </div>
 <div class="card-heavy">
 	<h1>{{ trans('about.head.2') }}</h1>
@@ -107,6 +103,10 @@
 			<img src="/img/startpage_2020.png" alt="MetaGer 2020">
 		  </picture> 
 	</div>
+	<div>
+		<h2>{{ trans('about.timeline.18') }}</h2>
+		<p>{{ trans('about.timeline.18.1') }}</p>
+	</div> 
 	</div>
 </div>
 

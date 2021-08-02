@@ -23,7 +23,7 @@ return [
     'timeline.5' => '2006-2015: Einführung neuer Designs',
     'timeline.5.1' => 'Die ursprüngliche Startseite von MetaGer macht in den folgenden Jahren viele kleine Veränderungen durch.',
     
-    'timeline.6' => '29.08.2013 Start englischer Version',
+    'timeline.6' => '29.08.2013: Start englischer Version',
     'timeline.6.1' => 'Erstmals wird auch die Oberfläche von MetaGer in englischer Sprache angeboten.',
 
     'timeline.7' => 'Dezember  2013: Tor-Service',

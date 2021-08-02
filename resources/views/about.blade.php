@@ -27,7 +27,7 @@
 		<h2>{{ trans('about.timeline.3') }}</h2>
 		<p>{{ trans('about.timeline.3.1') }}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/1997.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_1997.avif" type="image/avif">
 			<img src="/img/startpage_1997.png" alt="MetaGer 1997" style="width:auto;">
 		  </picture> 
 	</div>
@@ -39,7 +39,7 @@
 		<h2>{{ trans('about.timeline.5') }}</h2>
 		<p>{{ trans('about.timeline.5.1') }}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/2006.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_2006.avif" type="image/avif">
 			<img src="/img/startpage_2006.png" alt="MetaGer 2006" style="width:auto;">
 		  </picture> 
 	</div>
@@ -59,7 +59,7 @@
 		<h2>{{ trans('about.timeline.9') }}</h2>
 		<p>{{ trans('about.timeline.9.1') }}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/2015.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_2015.avif" type="image/avif">
 			<img src="/img/startpage_2015.png" alt="MetaGer 2015" style="width:auto;">
 		  </picture> 
 	</div>
@@ -72,7 +72,7 @@
 		<h2>{{ trans('about.timeline.11') }}</h2>
 		<p>{{ trans('about.timeline.11.1') }}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/2016.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_2016.avif" type="image/avif">
 			<img src="/img/startpage_2016.png" alt="MetaGer 2016" style="width:auto;">
 		  </picture> 
 	</div>
@@ -96,7 +96,7 @@
 		<h2>{{ trans('about.timeline.16') }}</h2>
 		<p>{{ trans('about.timeline.16.1') }}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/2019.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_2019.avif" type="image/avif">
 			<img src="/img/startpage_2019.png" alt="MetaGer 2019">
 		  </picture> 
 	</div>
@@ -104,7 +104,7 @@
 		<h2>{{ trans('about.timeline.17') }}</h2>
 		<p>{!! trans('about.timeline.17.1') !!}</p>
 		<picture>
-			<source media="(max-width:465px)" srcset="/img/2020.avif" type="image/avif">
+			<source media="(max-width:465px)" srcset="/img/startpage_2020.avif" type="image/avif">
 			<img src="/img/startpage_2020.png" alt="MetaGer 2020">
 		  </picture> 
 	</div>

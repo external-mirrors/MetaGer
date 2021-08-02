@@ -17,7 +17,7 @@ return [
     'timeline.3' => '1997-2006: MetaGer Startpage',
     'timeline.3.1' => 'This is what MetaGer looks like when it first goes online. MetaGer provides an innovative new service at that time.',
    
-    'timeline.4' => '1.10.2012: Change of sponsorship to SUMA-EV ',
+    'timeline.4' => '01.10.2012: Change of sponsorship to SUMA-EV ',
     'timeline.4.1' => 'MetaGer is transferred to the non-profit association SUMA-EV - Association for Free Access to Knowledge. The cooperation with the University of Hannover will be continued.',
    
     'timeline.5' => '2006-2015: Introduction of new designs',

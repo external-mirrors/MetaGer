@@ -17,7 +17,7 @@ return [
     'timeline.3' => '1997-2006: MetaGer Startseite',
     'timeline.3.1' => 'So sieht MetaGer aus, als es erstmals ans Netz geht. MetaGer stellt damals ein innovativen neuen Dienst zur Verfügung.',
    
-    'timeline.4' => '1.10.2012: Wechsel der Trägerschaft zum SUMA-EV',
+    'timeline.4' => '01.10.2012: Wechsel der Trägerschaft zum SUMA-EV',
     'timeline.4.1' => 'MetaGer wird in den gemeinnützigen Verein <i>SUMA-EV – Verein für freien Wissenszugang</i> überführt. Die Kooperation mit der Universität Hannover wird fortgeführt.',
    
     'timeline.5' => '2006-2015: Einführung neuer Designs',

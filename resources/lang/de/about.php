@@ -2,6 +2,12 @@
 
 return [
     'head.1' => 'Über uns',
+    'head.2' => 'Chronik',
+    'head.3' => 'Wofür wir stehen',
+    'head.4' => 'Vorteile bei der Nutzung von MetaGer',
+
+    'text.1'=>'<h3><img class= "mg-icon" src="/img/lock.svg"> Garantierte Privatsphäre:</h3>Uns ist Privatsphäre und Datenschutz wichtig. Daher tracken und speichern wir keine Personenbezogenen Daten und bieten mehrere Services zum Schutz Ihrer Privatsphäre an. <h3><img class= "mg-icon" src="/img/heart.svg"> Gemeinnütziger Verein:</h3> MetaGer ist ein Projekt des gemeinnützigen Vereins SUMA-EV, Verein für freien Wissenszugang. Der SUMA-EV setzt sich vor allem für die Förderung von digitaler Kompetenz ein. <h3> <img class= "mg-icon" src="/img/rainbow.svg"> Vielfältig und Frei: </h3> Durch die Veröffentlichung unseres Quellcodes zeigen wir, dass uns freier Wissenszugang wichtig ist. Unser Quellcode ist frei und Open Source. Zusätzlich schützen wir gegen Zensur durch vielfältige Ergebnisse. <h3> <img class= "mg-icon" src="/img/leaf.svg"> 100% Ökostrom: </h3> Nachhaltigkeit und Resourcenverbrauch ist auch für uns ein großes Thema. Daher achten wir auf den Verbrauch unserer Dienste. ',
+    'text.2'=>'Open source, Anonym öffnen funktion, tor service, Metasuchmaschine also mehrere ergebnisse vielfältig, speichern keine personenbezogenen daten, auschließlich nachhaltige energie',
 
     'timeline.1' => 'März 1996: Cebit Hannover',
     'timeline.1.1' => 'Die Idee von MetaGer entsteht während der Computermesse CeBIT beim Mittagessen auf einer Papierserviette. Die Arbeit am ersten Prototypen beginnt noch am gleichen Abend.',

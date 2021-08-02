@@ -3,9 +3,19 @@
 @section('title', $title )
 
 @section('content')
-<div>
+<div class="static-page-header">
 	<h1>{{ trans('about.head.1') }}</h1>
 </div>
+<div class="card-heavy">
+	<h1>{{ trans('about.head.3') }}</h1>
+	<p>{!! trans('about.text.1') !!}</p>
+</div>
+<div class="card-heavy">
+	<h1>{{ trans('about.head.4') }}</h1>
+	<p>{{ trans('about.text.2') }}</p>
+</div>
+<div class="card-heavy">
+	<h1>{{ trans('about.head.2') }}</h1>
 <div class="timeline-container">
 	<div>
 		<h2>{{ trans('about.timeline.1') }}</h2>
@@ -86,18 +96,18 @@
 		<h2>{{ trans('about.timeline.16') }}</h2>
 		<p>{{ trans('about.timeline.16.1') }}</p>
 		<picture>
-			<img src="/img/startpage_2019.png" alt="MetaGer 2019" style="width:auto;">
+			<source media="(max-width:465px)" srcset="/img/2019.avif" type="image/avif">
+			<img src="/img/startpage_2019.png" alt="MetaGer 2019">
 		  </picture> 
 	</div>
-	<div>
+	<div class="timeline-item-alternate">
 		<h2>{{ trans('about.timeline.17') }}</h2>
 		<p>{!! trans('about.timeline.17.1') !!}</p>
 		<picture>
-			<img src="/img/startpage_2020.png" alt="MetaGer 2020" style="width:auto;">
+			<img src="/img/startpage_2020.png" alt="MetaGer 2020">
 		  </picture> 
 	</div>
-
-
-
+	</div>
 </div>
+
 @endsection

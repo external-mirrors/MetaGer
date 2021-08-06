@@ -397,7 +397,6 @@ class MetaGer
             }
     
             $link = trim($link, "/");
-            $hash = md5($link);
 
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];

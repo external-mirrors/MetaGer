@@ -5,11 +5,11 @@ return [
     'head.2' => 'Chronik',
     'head.3' => 'Wofür wir stehen',
 
-    'text.1'=>'<h3> <img id="about-lock" src="/img/lock.svg"> Garantierte Privatsphäre</h3>Uns sind Datenschutz und Privatsphäre wichtig. Daher tracken und speichern wir keine personenbezogenen Daten und bieten mehrere Dienste zum Schutz Ihrer Privatsphäre an, zum Beispiel unseren anonymisierenden Proxy („Anonym öffnen“-Funktion). <h3><img id= "about-heart" src="/img/heart.svg"> Gemeinnütziger Verein</h3> MetaGer ist ein Projekt des gemeinnützigen Vereins <a href="https://suma-ev.de">SUMA-EV, Verein für freien Wissenszugang</a>. Der SUMA-EV setzt sich vor allem für die Förderung von Medienkompetenz ein. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Vielfältig und Frei </h3> MetaGer bringt vielfältige Ergebnisse, da es eine Metasuchmaschine ist. Was das genau bedeutet, haben wir in unserer <a href=":transparenz">Transparenzerklärung</a> erklärt. Durch die Veröffentlichung unseres Quellcodes zeigen wir, dass uns freier Wissenszugang wichtig ist. Unser Quellcode ist frei und Open Source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Ökostrom </h3> Nachhaltigkeit und Resourcenverbrauch ist auch für uns ein großes Thema. Daher achten wir auf den Energieverbrauch unserer Dienste und verwenden nur Strom aus erneuerbaren Energiequellen.',
+    'text.1'=>'<h3> <img id="about-lock" src="/img/lock.svg"> Garantierte Privatsphäre</h3>Uns sind Datenschutz und Privatsphäre wichtig. Daher tracken und speichern wir keine personenbezogenen Daten und bieten mehrere Dienste zum Schutz Ihrer Privatsphäre an, zum Beispiel unseren anonymisierenden Proxy („Anonym öffnen“-Funktion). <h3><img id= "about-heart" src="/img/heart.svg"> Gemeinnütziger Verein</h3> MetaGer ist ein Projekt des gemeinnützigen Vereins <a href="https://suma-ev.de">SUMA-EV, Verein für freien Wissenszugang</a>. Der SUMA-EV setzt sich vor allem für die Förderung von Medienkompetenz ein. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Vielfältig und Frei </h3> MetaGer bringt vielfältige Ergebnisse, da es eine Metasuchmaschine ist. Was das genau bedeutet, haben wir in unserer <a href=":transparenz">Transparenzerklärung</a> erklärt. Durch die Veröffentlichung unseres Quellcodes zeigen wir, dass uns freier Wissenszugang wichtig ist. Unser Quellcode ist frei und Open Source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Ökostrom </h3> Nachhaltigkeit und Ressourcenverbrauch ist auch für uns ein großes Thema. Daher achten wir auf den Energieverbrauch unserer Dienste und verwenden nur Strom aus erneuerbaren Energiequellen.',
    
 
     'timeline.1' => 'März 1996: Cebit Hannover',
-    'timeline.1.1' => 'Die Idee von MetaGer entsteht während der Computermesse CeBIT beim Mittagessen auf einer Papierserviette. Die Arbeit am ersten Prototypen beginnt noch am gleichen Abend.',
+    'timeline.1.1' => 'Die Idee zu MetaGer entsteht während der Computermesse CeBIT beim Mittagessen auf einer Papierserviette. Die Arbeit am ersten Prototypen beginnt noch am gleichen Abend.',
    
     'timeline.2' => 'Ende 1996: Inbetriebnahme von MetaGer',
     'timeline.2.1' => 'MetaGer entsteht als Forschungsprojekt der Universität Hannover und des regionalen Rechenzentrums Niedersachsen.',
@@ -23,7 +23,7 @@ return [
     'timeline.5' => '2006-2015: Einführung neuer Designs',
     'timeline.5.1' => 'Die ursprüngliche Startseite von MetaGer macht in den folgenden Jahren viele kleine Veränderungen durch.',
     
-    'timeline.6' => '29.08.2013: Start englischer Version',
+    'timeline.6' => '29.08.2013: Start der englischen Version',
     'timeline.6.1' => 'Erstmals wird auch die Oberfläche von MetaGer in englischer Sprache angeboten.',
 
     'timeline.7' => 'Dezember  2013: Tor-Service',

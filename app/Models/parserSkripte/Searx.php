@@ -23,7 +23,7 @@ class Searx extends Searchengine
                 return;
             }
 
-            $results = $content->results;
+            $results = $content->results->results;
             foreach ($results as $result) {
                 try {
                     $title       = $result->title;

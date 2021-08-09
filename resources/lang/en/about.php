@@ -37,13 +37,13 @@ return [
     'timeline.9.1' => 'As part of more extensive modernizations, a new simplified home page is introduced.',
 
     'timeline.10' => 'March 2016: Search Results under 1.3 Seconds',
-    'timeline.10.1' =>'Optimizations at MetaGer\'s Core reduce reduces the average response time of the search engine to less than 1.3 seconds. Over the next few years, this drops further to almost half.',
+    'timeline.10.1' =>'Optimizations at MetaGer\'s core reduce the average response time of the search engine to less than 1.3 seconds. Over the next few years, this drops further to almost half.',
 
     'timeline.11' => '2016-2019: MetaGer Startpage',
     'timeline.11.1' => 'Other small adjustments gradually solidify orange as the MetaGer color.  ',
 
     'timeline.12' => '16.08.2016: Publication of the Source Code',
-    'timeline.12.1' => 'MetaGer is released as open source under the free GNU AGPL license.',
+    'timeline.12.1' => 'MetaGer is released as Open Source under the free GNU AGPL license.',
 
     'timeline.13' => 'December 2016: Launch of MetaGer Maps',
     'timeline.13.1' => 'Maps.MetaGer.de is launched as a privacy-friendly map service. The maps are based on data from the OpenStreetMap project, but have their own display and route planner.',

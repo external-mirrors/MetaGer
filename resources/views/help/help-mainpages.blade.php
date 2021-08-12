@@ -27,6 +27,22 @@
 				        	<li>{!! trans('help/help-mainpages.resultpage.filter') !!}</li>
 				        	<li id="difset">{!! trans('help/help-mainpages.resultpage.settings') !!}</li>
             </div>
+		<h3>{!! trans('help/help-mainpages.result.title') !!}</h3>
+			<div>
+				<p>{!! trans('help/help-mainpages.result.info.1') !!}</p>
+				<ul class = "dotlist">
+					<li>{!! trans('help/help-mainpages.result.info.open') !!}</li>
+					<li>{!! trans('help/help-mainpages.result.info.newtab') !!}</li>
+					<li>{!! trans('help/help-mainpages.result.info.anonym') !!}</li>
+					<li>{!! trans('help/help-mainpages.result.info.more') !!}</li>
+				</ul>
+				<p>{!! trans('help/help-mainpages.result.info.2') !!}</p>
+				<ul class = "dotlist">
+					<li>{!! trans('help/help-mainpages.result.info.saveresult') !!}</li>
+					<li>{!! trans('help/help-mainpages.result.info.domainnewsearch') !!}</li>
+					<li>{!! trans('help/help-mainpages.result.info.hideresult') !!}</li>
+				</ul>
+			</div>
         <h3>{!! trans('help/help-mainpages.settings.title') !!}</h3>
             <ul>
                 <li>{!! trans('help/help-mainpages.settings.1') !!}</li>

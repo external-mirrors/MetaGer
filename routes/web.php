@@ -153,12 +153,6 @@ Route::group(
                 ->with('navbarFocus', 'hilfe');
         });
 
-        Route::get('hilfe/ergebnisse', function () {
-            return view('help/help-results')
-                ->with('title', trans('titles.help-results'))
-                ->with('navbarFocus', 'hilfe');
-        });
-
         Route::get('hilfe/funktionen', function () {
             return view('help/help-functions')
                 ->with('title', trans('titles.help-functions'))

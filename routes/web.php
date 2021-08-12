@@ -137,7 +137,7 @@ Route::group(
 
         Route::get('hilfe', function () {
             return view('help/help')
-                ->with('title', trans('titles.hilfe'))
+                ->with('title', trans('titles.help'))
                 ->with('navbarFocus', 'hilfe');
         });
 
@@ -149,7 +149,13 @@ Route::group(
 
         Route::get('hilfe/hauptseiten', function () {
             return view('help/help-mainpages')
-                ->with('title', trans('titles.hilfe-hauptseiten'))
+                ->with('title', trans('titles.help-mainpages'))
+                ->with('navbarFocus', 'hilfe');
+        });
+
+        Route::get('hilfe/ergebnisse', function () {
+            return view('help/help-results')
+                ->with('title', trans('titles.help-results'))
                 ->with('navbarFocus', 'hilfe');
         });
 

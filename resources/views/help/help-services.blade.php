@@ -33,3 +33,4 @@
 			<p>{!! trans('help/help-services.widget.1') !!}</p>
 		</div>
 	</section>
+@endsection

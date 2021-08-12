@@ -3,6 +3,7 @@
 @section('title', $title )
 
 @section('content')
+<h1 class="page-title">{!! trans('help/help-results.title') !!}</h1>
 <section id="results">
 		<h3>{!! trans('help/help-results.result.title') !!}</h3>
 		<div>

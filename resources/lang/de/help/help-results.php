@@ -1,7 +1,8 @@
 <?php
 
 return [
-"result.title" => 'Ergebnisse',
+    'title' => 'MetaGer - Hilfe',
+    "result.title" => 'Ergebnisse',
     "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"></div></p>',
     "result.info.open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben TAB zu öffnen.',
     "result.info.newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen TAB.',

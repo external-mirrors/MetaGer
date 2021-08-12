@@ -22,9 +22,7 @@ return [
     "resultpage.settings.2" => '<strong>Verwendete Suchmaschinen</strong> <br> Hier können Sie Ihre verwendeten Suchmaschinen einsehen und gegebenfalls anpassen. Durch einen Klick auf den entsprechenden Namen kann diese entsprechend ein- oder ausgeschaltet werden.',
     "resultpage.settings.3" => '<strong>Suchfilter</strong> <br> Durch Suchfilter können Sie Ihre Suche dauerhaft filtern.',
     "resultpage.settings.4" => '<strong>Blacklist</strong> <br> Hier können Sie sich eine persönliche Blacklist zusammenzustellen. Sie können damit also nicht nur Suchmaschinen, sonden auch spezielle Domains ausfiltern und damit eigene Sucheinstellungen produzieren. Mit einem Klick auf "Hinzufügen" werden diese Einstellungen an den Link im Abschnitt "Hinweis" angehängt.',
-    
     "resultpage.settings.5" => '<strong>Dunklen Modus umschalten</strong> <br>Schalten Sie hier ganz einfach in den Dark Mode um.',
-
     "resultpage.settings.6" => '<strong>Ergebnisse in neuem Tab öffnen</strong> <br> Hier können Sie die Funktion, Ergebnisse im neuen Tab zu öffnen, dauerhaft einschalten.',
     "resultpage.settings.7" => '<strong>Zitate</strong> <br> Sie können hier die Anzeige der Zitate an- und ausschalten.',
 

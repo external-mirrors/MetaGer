@@ -6,7 +6,7 @@
 	<div class="alert alert-warning" role="alert">{!! trans('hilfe.achtung') !!}</div>
 	<h1 class="page-title">{!! trans('hilfe.title') !!}</h1>
 
-	<section id="startpage">
+	<section >
 		<h2>{!! trans('hilfe.title.2') !!}</h2>
 		<h3>{!! trans('hilfe.startpage.title') !!}</h3>
 		<p>{!! trans('hilfe.startpage.info') !!}</p>
@@ -27,7 +27,7 @@
 				<li>{!! trans('hilfe.resultpage.choice') !!}</li>
 				<ul class="dotlist">
 					<li>{!! trans('hilfe.resultpage.filter') !!}</li>
-					<li id="difset">{!! trans('hilfe.resultpage.settings.0') !!}</li>
+					<li id="difset">{!! trans('hilfe.resultpage.settings') !!}</li>
 					<ol>
 						<li>{!! trans('hilfe.resultpage.settings.1') !!}</li>
 						<li>{!! trans('hilfe.resultpage.settings.2') !!}</li>

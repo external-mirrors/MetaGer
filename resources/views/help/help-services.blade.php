@@ -1,0 +1,35 @@
+@extends('layouts.subPages', ['page' => 'hilfe'])
+
+@section('title', $title )
+
+@section('content')
+<h2 id="dienste">{!! trans('help/help-services.dienste') !!}</h2>
+	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/help-services.dienste.kostenlos') !!}</h3>
+	<section id="app">
+		<div id="mg-app" style="margin-top: -100px"></div>
+		<div style="margin-top: 100px"></div>
+		<h3>{!! trans('help/help-services.app.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-services.app.1') !!}</p>
+		</div>
+	</section>
+	<section id="plugin">
+		<h3>{!! trans('help/help-services.plugin.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-services.plugin.1') !!}</p>
+		</div>
+	</section>
+	<section id="asso">
+		<h3>{!! trans('help/help-services.suchwortassoziator.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-services.suchwortassoziator.1') !!}</p>
+			<p>{!! trans('help/help-services.suchwortassoziator.2') !!}</p>
+			<p>{!! trans('help/help-services.suchwortassoziator.3') !!}</p>
+		</div>
+	</section>
+	<section id="widget">
+		<h3>{!! trans('help/help-services.widget.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-services.widget.1') !!}</p>
+		</div>
+	</section>

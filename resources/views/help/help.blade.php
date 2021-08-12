@@ -33,6 +33,11 @@
 						<li>{!! trans('hilfe.resultpage.settings.2') !!}</li>
 						<li>{!! trans('hilfe.resultpage.settings.3') !!}</li>
 						<li>{!! trans('hilfe.resultpage.settings.4') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.5') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.6') !!}</li>
+						<li>{!! trans('hilfe.resultpage.settings.7') !!}</li>
+
+
 					</ol>
 				</ul>
 			</ul>

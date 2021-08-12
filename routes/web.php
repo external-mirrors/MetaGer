@@ -136,16 +136,41 @@ Route::group(
         });
 
         Route::get('hilfe', function () {
-            return view('hilfe')
+            return view('help/help')
                 ->with('title', trans('titles.hilfe'))
                 ->with('navbarFocus', 'hilfe');
         });
 
         Route::get('hilfe/faktencheck', function () {
-            return view('faktencheck')
+            return view('help/faktencheck')
                 ->with('title', trans('titles.faktencheck'))
                 ->with('navbarFocus', 'hilfe');
         });
+
+        Route::get('hilfe/hauptseiten', function () {
+            return view('help/help-mainpages')
+                ->with('title', trans('titles.hilfe-hauptseiten'))
+                ->with('navbarFocus', 'hilfe');
+        });
+
+        Route::get('hilfe/funktionen', function () {
+            return view('help/help-functions')
+                ->with('title', trans('titles.help-functions'))
+                ->with('navbarFocus', 'hilfe');
+        });
+
+        Route::get('hilfe/dienste', function () {
+            return view('help/help-services')
+                ->with('title', trans('titles.help-services'))
+                ->with('navbarFocus', 'hilfe');
+        });
+
+        Route::get('hilfe/datensicherheit', function () {
+            return view('help/help-privacy-protection')
+                ->with('title', trans('titles.help-privacy-protection'))
+                ->with('navbarFocus', 'hilfe');
+        });
+
 
         Route::get('faq', function () {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/hilfe'));

@@ -5,7 +5,7 @@
 @section('content')
 <h1 class="page-title">{!! trans('help/help-functions.title') !!}</h1>
 <section>
-		<h3>{!! trans('help/help-functions.stopworte.title') !!}</h3>
+		<h3 id="stopwordsearch">{!! trans('help/help-functions.stopworte.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-functions.stopworte.1') !!}</p>
 			<ul class="dotlist">

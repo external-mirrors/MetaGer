@@ -7,9 +7,9 @@
 
 	<section id="startpage">
 		<h2>{!! trans('help/help-mainpages.title.2') !!}</h2>
-		<h3>{!! trans('help/help-mainpages.startpage.title') !!}</h3>
+		<h3 id="startseite">{!! trans('help/help-mainpages.startpage.title') !!}</h3>
 		<p>{!! trans('help/help-mainpages.startpage.info') !!}</p>
-		<h3>{!! trans('help/help-mainpages.searchfield.title') !!}</h3>
+		<h3 id="suchfeld">{!! trans('help/help-mainpages.searchfield.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-mainpages.searchfield.info') !!}</p>
 			<ul class="dotlist">
@@ -18,7 +18,7 @@
 				<li>{!! trans('help/help-mainpages.searchfield.search') !!}</li>
 			</ul>
 		</div>
-        <h3>{!! trans('help/help-mainpages.resultpage.title') !!}</h3>
+        <h3 id="ergebnis">{!! trans('help/help-mainpages.resultpage.title') !!}</h3>
 		    <div>
 			    <ul class="dotlist">
 				    <li>{!! trans('help/help-mainpages.resultpage.foci') !!}</li>
@@ -43,7 +43,7 @@
 					<li>{!! trans('help/help-mainpages.result.info.hideresult') !!}</li>
 				</ul>
 			</div>
-        <h3>{!! trans('help/help-mainpages.settings.title') !!}</h3>
+        <h3 id="einstellungen">{!! trans('help/help-mainpages.settings.title') !!}</h3>
             <ul>
                 <li>{!! trans('help/help-mainpages.settings.1') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.2') !!}</li>

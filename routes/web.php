@@ -219,7 +219,6 @@ Route::group(
                 Route::post('queryregexp', 'AdminSpamController@queryregexp');
                 Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
             });
-            Route::post('service-desk', 'ServiceDesk@webhook');
             Route::get('stress', 'Stresstest@index');
             Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
             Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
@@ -320,7 +319,7 @@ Route::group(
             });
 
             Route::get('maps/version', function () {
-                $filePath = env('maps_version');
+                $filePath = config("metager.metager.maps.version");
                 $fileContents = file_get_contents($filePath);
                 return response($fileContents, 200)
                     ->header('Content-Type', 'text/plain');

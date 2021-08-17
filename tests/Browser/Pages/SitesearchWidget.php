@@ -39,7 +39,7 @@ class SitesearchWidget extends Page
             ->type("site", "https://metager.de")
             ->press("Generate");
         $location = "/en/sitesearch";
-        if (env("APP_ENV", "") === "production") {
+        if (\App::environment() === "production") {
             $location = "/sitesearch";
         }
         $browser->waitForLocation($location)
@@ -52,7 +52,7 @@ class SitesearchWidget extends Page
             ->type("site", "https://metager.de")
             ->press("Generar");
         $location = "/es/sitesearch";
-        if (env("APP_ENV", "") === "production") {
+        if (\App::environment() === "production") {
             $location = "/sitesearch";
         }
         $browser->waitForLocation($location)

@@ -38,10 +38,10 @@ class RequestFetcher extends Command
     {
         parent::__construct();
         $this->multicurl = curl_multi_init();
-        $this->proxyhost = env("PROXY_HOST", "");
-        $this->proxyport = env("PROXY_PORT", "");
-        $this->proxyuser = env("PROXY_USER", "");
-        $this->proxypassword = env("PROXY_PASSWORD", "");
+        $this->proxyhost = config("metager.metager.fetcher.proxy.host");
+        $this->proxyport = config("metager.metager.fetcher.proxy.port");
+        $this->proxyuser = config("metager.metager.fetcher.proxy.user");
+        $this->proxypassword = config("metager.metager.fetcher.proxy.password");
     }
 
     /**

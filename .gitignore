@@ -23,3 +23,5 @@ package-lock.json
 local.log
 
 browserstack.err
+.npm
+.composer

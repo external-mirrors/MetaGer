@@ -36,9 +36,9 @@ class AppServiceProvider extends ServiceProvider
 
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
-                'host' => env("REDIS_HOST", '127.0.0.1'),
-                'port' => intval(env("REDIS_PORT", 6379)),
-                'password' => env("REDIS_PASSWORD", null),
+                'host' => config("database.redis.default.host"),
+                'port' => intval(config("database.redis.default.port")),
+                'password' => config("database.redis.default.password"),
                 'timeout' => 0.1, // in seconds
                 'read_timeout' => '10', // in seconds
                 'persistent_connections' => false

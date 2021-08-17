@@ -48,9 +48,9 @@ class AppendLogs extends Command
     {
         $redis = null;
         
-        if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+        if (config("database.redis.cache.driver", "redis") === "redis") {
             $redis = Redis::connection('cache');
-        } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+        } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
             $redis = RedisSentinel::connection('cache');
         }
         if ($redis === null) {

@@ -36,7 +36,7 @@ class StaticPagesTest extends TestCase
 
     private function startPageTest()
     {
-        $this->webdriver->get(env("APP_URL", ""));
+        $this->webdriver->get(config("app.url"));
 
         # Test for Page Title
         $this->assertEquals($this->webdriver->getTitle(), "MetaGer - Mehr als eine Suchmaschine");

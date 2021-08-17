@@ -53,7 +53,7 @@ class Admitad
         $this->hash = md5($requestData);
 
         $url = "https://direct.metager.de/check";
-        $token = env("ADMITAD_TOKEN", "");
+        $token = config("metager.metager.admitad.token");
 
         // Submit fetch job to worker
         $mission = [

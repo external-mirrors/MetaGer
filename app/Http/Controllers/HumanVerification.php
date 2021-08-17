@@ -92,18 +92,18 @@ class HumanVerification extends Controller
     }
 
     public static function logCaptcha(Request $request){
-        $fail2banEnabled = config("metager.metager.fail2ban_enabled");
-        if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
+        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
+        if(empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")){
             return;
         }
 
         // Submit fetch job to worker
         $mission = [
                 "resulthash" => "captcha",
-                "url" => env("fail2banurl") . "/captcha/",
+                "url" => config("metager.metager.fail2ban.url") . "/captcha/",
                 "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                "username" => env("fail2banuser"),
-                "password" => env("fail2banpassword"),
+                "username" => config("metager.metager.fail2ban.user"),
+                "password" => config("metager.metager.fail2ban.password"),
                 "headers" => [
                     "ip" => $request->ip()
                 ],
@@ -132,7 +132,7 @@ class HumanVerification extends Controller
     {
         $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
         # If the user is correct and the password is we will delete any entry in the database
-        $requiredPass = md5($mm . Carbon::NOW()->day . $url . env("PROXY_PASSWORD"));
+        $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 
         if (HumanVerification::checkId($request, $mm) && $requiredPass === $password) {
             HumanVerification::removeUser($request, $mm);
@@ -335,7 +335,7 @@ class HumanVerification extends Controller
          * If someone that uses a bot finds this out we
          * might have to change it at some point.
          */
-        if ($request->filled('password') || $request->filled('key') || Cookie::get('key') !== null || $request->filled('appversion') || !env('BOT_PROTECTION', false)) {
+        if ($request->filled('password') || $request->filled('key') || Cookie::get('key') !== null || $request->filled('appversion') || !config('metager.metager.botprotection.enabled')) {
             $update = false;
             return $next($request);
         }

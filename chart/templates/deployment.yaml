@@ -66,6 +66,10 @@ spec:
       - name: redis-config
         configMap:
           name: redis-container-config
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
       - name: {{ .Chart.Name }}-phpfpm
         image: {{ template "imagename" . }}

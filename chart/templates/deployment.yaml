@@ -124,7 +124,7 @@ spec:
           mountPath: /html/storage/logs/metager
           readOnly: false
         - name: secrets
-          mountPath: /root/.env
+          mountPath: /home/metager/.env
           subPath: env
           readOnly: true
         - name: secrets

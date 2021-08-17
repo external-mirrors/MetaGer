@@ -115,11 +115,12 @@ RUN chmod +x /entrypoint.sh
 
 COPY --chown=1000:1000 . /html
 
-USER 1000:1000
 # Install packages
 RUN --mount=type=secret,id=auto-devops-build-secrets . /run/secrets/auto-devops-build-secrets && \
     chmod +x ./helpers/installPackages.sh && \
     /bin/sh -c ./helpers/installPackages.sh
+
+USER 1000:1000
 
 #CMD cp /root/.env .env && \
 #    sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env && \

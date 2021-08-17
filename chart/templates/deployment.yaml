@@ -259,8 +259,8 @@ spec:
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
         image: {{ template "imagename" . }}
-        command: ["su"]
-        args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "www-data"]
+        command: ["/bin/sh"]
+        args: ["-c", "php artisan requests:fetcher"]
         volumeMounts:
         - name: secrets
           mountPath: /html/.env

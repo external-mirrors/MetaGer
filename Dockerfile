@@ -79,11 +79,11 @@ RUN sed -i 's/pid = \/run\/php\/php7.4-fpm.pid/;pid = \/run\/php\/php7.4-fpm.pid
 # (crontab -l ; echo "* * * * * php /html/artisan schedule:run >> /dev/null 2>&1") | crontab - # TODO: Fix crontab
 
 # Using image as non-root
-RUN groupadd -g 1000 metager-proxy && \
-    useradd -b /home/metager-proxy -g 1000 -u 1000 -M -s /bin/bash metager-proxy
+RUN groupadd -g 1000 metager && \
+    useradd -b /home/metager -g 1000 -u 1000 -M -s /bin/bash metager
 RUN chown -R 1000:1000 /var/lib/nginx /var/log/nginx
-RUN mkdir -p /home/metager-proxy &&\
-    chown 1000:1000 /home/metager-proxy
+RUN mkdir -p /home/metager &&\
+    chown 1000:1000 /home/metager
 RUN touch /run/nginx.pid && \
     chown 1000:1000 /run/nginx.pid
 USER 1000:1000

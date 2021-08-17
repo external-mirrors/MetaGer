@@ -39,6 +39,14 @@ services:
       - ./config/nginx-default-dev.conf:/etc/nginx/sites-available/default
     ports: 
     - "8080:8080"
+  scheduler:
+    depends_on:
+      - "nodejs"
+    restart: always
+    image: metager/development:latest
+    command: /bin/sh -c "/html/helpers/scheduler.sh"
+    volumes:
+      - .:/html
   worker:
     depends_on:
       - "nodejs"

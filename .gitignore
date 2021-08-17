@@ -19,7 +19,6 @@ npm-debug.log
 /.buildpath
 /.project
 
-package-lock.json
 local.log
 
 browserstack.err

@@ -6,6 +6,13 @@ then
   php artisan key:generate
 fi
 
+if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; 
+then 
+    sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; 
+else 
+    sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; 
+fi
+
 if [ ! -f "/html/config/sumas.json" ]; then
     cp /html/config/sumas.json.example /html/config/sumas.json
 fi

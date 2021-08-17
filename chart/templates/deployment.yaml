@@ -1,5 +1,5 @@
 {{- if not .Values.application.initializeCommand -}}
-apiVersion: {{ default "extensions/v1beta1" .Values.deploymentApiVersion }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "trackableappname" . }}
@@ -7,21 +7,16 @@ metadata:
     {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
     {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
   labels:
-    app: {{ template "appname" . }}
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "sharedlabels" . | indent 4 }}
 spec:
-{{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
   selector:
     matchLabels:
       app: {{ template "appname" . }}
       track: "{{ .Values.application.track }}"
       tier: "{{ .Values.application.tier }}"
       release: {{ .Release.Name }}
-{{- end }}
   replicas: {{ .Values.replicaCount }}
 {{- if .Values.strategyType }}
   strategy:
@@ -37,13 +32,27 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 8 }}
 {{- end }}
       labels:
-        app: {{ template "appname" . }}
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
-        release: {{ .Release.Name }}
+{{ include "sharedlabels" . | indent 8 }}
     spec:
+{{- if or (.Values.serviceAccount.name) (.Values.serviceAccountName) }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default .Values.serviceAccountName | quote }}
+{{- end }}
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
       volumes:
       - name: secrets
         secret:
@@ -59,7 +68,7 @@ spec:
           name: redis-container-config
       containers:
       - name: {{ .Chart.Name }}-phpfpm
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.application.secretName }}
         envFrom:
@@ -67,12 +76,33 @@ spec:
             name: {{ .Values.application.secretName }}
         {{- end }}
         env:
+{{- if .Values.postgresql.managed }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: password
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: privateIP
+{{- end }}
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
         - name: GITLAB_ENVIRONMENT_NAME
-          value: {{ .Values.gitlab.envName }}
+          value: {{ .Values.gitlab.envName | quote }}
         - name: GITLAB_ENVIRONMENT_URL
-          value: {{ .Values.gitlab.envURL }}
+          value: {{ .Values.gitlab.envURL | quote }}
+{{- if .Values.lifecycle }}
+        lifecycle:
+{{ toYaml .Values.lifecycle | indent 10 }}
+{{- end }}
         ports:
         - name: "{{ .Values.service.name }}-phpfpm"
           containerPort: 9000
@@ -131,9 +161,8 @@ spec:
           readOnly: true
         resources:
 {{ toYaml .Values.resourcesPhpfpm | indent 12 }}
-      # Nginx Container
       - name: {{ .Chart.Name }}-nginx
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         command: ["nginx"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.application.secretName }}
@@ -142,12 +171,33 @@ spec:
             name: {{ .Values.application.secretName }}
         {{- end }}
         env:
+{{- if .Values.postgresql.managed }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: password
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: privateIP
+{{- end }}
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
         - name: GITLAB_ENVIRONMENT_NAME
-          value: {{ .Values.gitlab.envName }}
+          value: {{ .Values.gitlab.envName | quote }}
         - name: GITLAB_ENVIRONMENT_URL
-          value: {{ .Values.gitlab.envURL }}
+          value: {{ .Values.gitlab.envURL | quote }}
+{{- if .Values.lifecycle }}
+        lifecycle:
+{{ toYaml .Values.lifecycle | indent 10 }}
+{{- end }}
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}
@@ -204,7 +254,7 @@ spec:
 {{ toYaml .Values.resourcesRedis | indent 12 }}
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         command: ["su"]
         args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "www-data"]
         volumeMounts:

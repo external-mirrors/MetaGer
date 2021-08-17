@@ -10,13 +10,19 @@ variables:
     PERFORMANCE_DISABLED: "true"
     SAST_DISABLED: "true"
     TEST_DISABLED: "true"
+    AUTO_DEVOPS_BUILD_IMAGE_FORWARDED_CI_VARIABLES: "AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,S3_HOST,S3_BUCKETNAME"
+    MIGRATE_HELM_2TO3: "true" # TODO: remove after migration to helm3
+    AUTO_DEVOPS_FORCE_DEPLOY_V2: "1" # TODO: remove after migration to helm3
 
 include:
   - template: Jobs/Build.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml
+  - remote: https://gitlab.com/gitlab-org/gitlab/-/raw/master/lib/gitlab/ci/templates/Jobs/Helm-2to3.gitlab-ci.yml # TODO: remove after migration to helm3
+
+.auto-deploy:
+  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
 
 stages:
-  - prepare
   - build
   - deploy  # dummy stage to follow the template guidelines
   - review
@@ -33,36 +39,8 @@ stages:
   - integrationtest
   - cleanup
 
-.auto-deploy:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.6"
-
 build:
   services:
-
-prepare_node:
-  stage: prepare
-  image: node:10
-  variables:
-    npm_config_cache: "$CI_PROJECT_DIR/.npm"
-  before_script:
-    - npm install -g npm-cache
-    - npm-cache install --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache" npm
-  script:
-    - npm run prod
-  artifacts:
-    paths:
-      - public/js/
-      - public/css/
-      - public/mix-manifest.json
-  cache:
-    # Cache per Branch
-    key: "metager-${CI_JOB_NAME}"
-    paths:
-      - .npm
-      - .npm-package-cache
-  only:
-    - branches
-    - tags
 
 review:
   variables:

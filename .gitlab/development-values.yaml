@@ -2,7 +2,7 @@ postgresql:
   enabled: false
 service:
   externalPort: 80
-  internalPort: 80
+  internalPort: 8080
 hpa:
   enabled: true
   minReplicas: 1

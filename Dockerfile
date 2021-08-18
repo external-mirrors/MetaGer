@@ -121,5 +121,7 @@ RUN --mount=type=secret,id=auto-devops-build-secrets . /run/secrets/auto-devops-
 
 USER 1000:1000
 
+CMD /html/helpers/entrypointProduction.sh
+
 #CMD cp /root/.env .env && \
 #    cron -L /dev/stdout && \

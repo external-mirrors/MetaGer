@@ -142,7 +142,6 @@ production:
 
 integrationtest:
   stage: integrationtest
-  environment: integrationtest
   image: 
     name: registry.metager.de/open-source/metager/1140-fix-ci-pipelines #$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]

@@ -141,6 +141,8 @@ production:
 
 integrationtest:
   stage: integrationtest
+  environment:
+    name: integrationtest
   image: 
     name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]

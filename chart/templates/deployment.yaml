@@ -277,4 +277,31 @@ spec:
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.resourcesFetcher | indent 12 }}
+      # Scheduler Container
+      - name: {{ .Chart.Name }}-scheduler
+        image: {{ template "imagename" . }}
+        command: ["/bin/sh"]
+        args: ["-c", "/html/helpers/scheduler.sh"]
+        volumeMounts:
+        - name: secrets
+          mountPath: /html/.env
+          subPath: env
+          readOnly: true
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/fetcher
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/fetcher
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        resources:
+{{ toYaml .Values.resourcesScheduler | indent 12 }}
 {{- end -}}

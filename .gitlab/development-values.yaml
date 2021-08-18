@@ -27,6 +27,11 @@ resourcesFetcher:
     cpu: 500m
     memory: 100M
   limits:
+resourcesScheduler: 
+  requests:
+    cpu: 100m
+    memory: 100M
+  limits:
 resources:
   requests:
     cpu: 500m

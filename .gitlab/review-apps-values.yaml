@@ -40,3 +40,6 @@ resourcesRedis:
 resourcesFetcher: 
   requests:
   limits:
+resourcesScheduler: 
+  requests:
+  limits:

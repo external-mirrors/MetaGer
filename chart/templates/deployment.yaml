@@ -122,6 +122,10 @@ spec:
           mountPath: /html/storage/logs/metager
           readOnly: false
         - name: secrets
+          mountPath: /home/metager/.env
+          subPath: env
+          readOnly: true
+        - name: secrets
           mountPath: /html/database/seeds/UsersSeeder.php
           subPath: userseeder
           readOnly: true

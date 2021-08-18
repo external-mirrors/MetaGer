@@ -36,5 +36,3 @@ if [ ! -d "/html/storage/logs/metager" ]; then
 fi
 
 php artisan optimize
-
-php-fpm7.4 -F -R

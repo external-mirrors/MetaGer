@@ -26,7 +26,6 @@ services:
     image: metager/development:latest
     volumes:
       - .:/html
-      - ./helpers/entrypointDev.sh:/entrypoint.sh
   nginx:
     depends_on:
       - "nodejs"

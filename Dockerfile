@@ -33,7 +33,8 @@ RUN apt update \
     php7.4-redis \
     php7.4-gd \
     php7.4-json \
-    php7.4-opcache
+    php7.4-opcache \
+    php7.4-xdebug
 
 # Install Composer
 COPY ./helpers/installComposer.sh /usr/bin/installComposer
@@ -88,7 +89,7 @@ RUN touch /run/nginx.pid && \
 USER 1000:1000
 WORKDIR /html
 
-CMD /entrypoint.sh
+CMD /html/helpers/entrypointDev.sh
 
 FROM development AS production
 
@@ -109,11 +110,9 @@ COPY config/nginx.conf /etc/nginx/nginx.conf
 COPY config/nginx-default.conf /etc/nginx/sites-available/default
 RUN sed -i 's/fastcgi_pass phpfpm:9000;/fastcgi_pass localhost:9000;/g' /etc/nginx/sites-available/default 
 
-# Install Entrypoint
-COPY ./helpers/entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
 COPY --chown=1000:1000 . /html
+
+RUN chmod +x /html/helpers/*.sh
 
 # Install packages
 RUN --mount=type=secret,id=auto-devops-build-secrets . /run/secrets/auto-devops-build-secrets && \
@@ -123,11 +122,4 @@ RUN --mount=type=secret,id=auto-devops-build-secrets . /run/secrets/auto-devops-
 USER 1000:1000
 
 #CMD cp /root/.env .env && \
-#    sed -i 's/^REDIS_PASSWORD=.*/REDIS_PASSWORD=null/g' .env && \
-#    if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; then sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; else sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; fi && \
-#    cp database/useragents.sqlite.example database/useragents.sqlite && \
-#    chown -R root:www-data storage/logs/metager bootstrap/cache && \
-#    chmod -R g+w storage/logs/metager bootstrap/cache && \
 #    cron -L /dev/stdout && \
-#    php artisan spam:load && \
-#    php-fpm7.4

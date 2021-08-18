@@ -26,6 +26,8 @@ services:
     image: metager/development:latest
     volumes:
       - .:/html
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
   nginx:
     depends_on:
       - "nodejs"
@@ -38,14 +40,18 @@ services:
       - ./config/nginx-default-dev.conf:/etc/nginx/sites-available/default
     ports: 
     - "8080:8080"
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
   scheduler:
     depends_on:
       - "nodejs"
     restart: always
     image: metager/development:latest
-    command: /bin/sh -c "/html/helpers/scheduler.sh"
+    command: /bin/sh -c "php artisan schedule:work"
     volumes:
       - .:/html
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-scheduler"
   worker:
     depends_on:
       - "nodejs"
@@ -54,6 +60,8 @@ services:
     volumes:
       - .:/html
     command: "php artisan requests:fetcher"
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-worker"
 #  dummy-phpfpm:
 #    restart: on-failure
 #    image: registry.metager.de/open-source/dummy-engine/master
@@ -74,6 +82,11 @@ services:
       - MYSQL_USER=metager
       - MYSQL_PASSWORD=metager
       - MYSQL_DATABASE=metager
+    healthcheck:
+     test: ["CMD", "mysqladmin", "ping", "--silent"]
   redis:
     restart: on-failure
+    user: "redis:redis"
     image: redis:6
+    healthcheck:
+      test: "redis-cli ping"

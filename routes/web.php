@@ -356,5 +356,11 @@ Route::group(
             return response($result, 200)
                 ->header('Content-Type', RenderTextFormat::MIME_TYPE);
         });
+
+        Route::group(['prefix' => 'health-check'], function () {
+            Route::get('liveness', 'HealthcheckController@liveness');
+            Route::get('liveness-scheduler', 'HealthcheckController@livenessScheduler');
+            Route::get('liveness-worker', 'HealthcheckController@livenessWorker');
+        });
     }
 );

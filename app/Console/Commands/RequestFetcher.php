@@ -6,9 +6,13 @@ use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
+use Carbon;
 
 class RequestFetcher extends Command
 {
+    const HEALTHCHECK_KEY = "fetcher_healthcheck";
+    const HEALTHCHECK_FORMAT = "Y-m-d H:i:s";
+
     /**
      * The name and signature of the console command.
      *
@@ -51,7 +55,6 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
-        $pidFile = "/tmp/fetcher";
         pcntl_signal(SIGINT, [$this, "sig_handler"]);
         pcntl_signal(SIGTERM, [$this, "sig_handler"]);
         pcntl_signal(SIGHUP, [$this, "sig_handler"]);
@@ -70,14 +73,9 @@ class RequestFetcher extends Command
             }
         }
 
-        touch($pidFile);
-
-        if (!file_exists($pidFile)) {
-            return;
-        }
-
         try {
             while ($this->shouldRun) {
+                Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 $operationsRunning = true;
                 curl_multi_exec($this->multicurl, $operationsRunning);
                 $status = $this->readMultiCurl($this->multicurl);
@@ -90,7 +88,6 @@ class RequestFetcher extends Command
                 }
             }
         } finally {
-            unlink($pidFile);
             curl_multi_close($this->multicurl);
         }
     }

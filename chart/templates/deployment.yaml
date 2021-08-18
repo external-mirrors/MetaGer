@@ -262,17 +262,15 @@ spec:
           readOnly: true
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
-          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
         readinessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
@@ -289,17 +287,17 @@ spec:
           readOnly: true
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:

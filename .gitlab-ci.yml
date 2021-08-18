@@ -20,7 +20,6 @@ include:
   image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
 
 stages:
-  - integrationtest
   - build
   - deploy  # dummy stage to follow the template guidelines
   - review
@@ -34,7 +33,7 @@ stages:
   - incremental rollout 50%
   - incremental rollout 100%
   - performance
-#  - integrationtest
+  - integrationtest
   - cleanup
 
 build:
@@ -143,7 +142,7 @@ production:
 integrationtest:
   stage: integrationtest
   image: 
-    name: registry.metager.de/open-source/metager/1140-fix-ci-pipelines #$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies
@@ -156,8 +155,6 @@ integrationtest:
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - cat .env
-    - tail -f /dev/null
     - php artisan dusk
   except:
     refs: 

@@ -142,7 +142,7 @@ production:
 integrationtest:
   stage: integrationtest
   image: 
-    name: ${CI_APPLICATION_REPOSITORY:-$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG}:${CI_APPLICATION_TAG:-$CI_COMMIT_SHA}
+    name: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies

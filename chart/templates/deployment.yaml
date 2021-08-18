@@ -60,9 +60,6 @@ spec:
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
           claimName: mg-logs
-      - name: metager-config
-        configMap:
-          name: metager
       - name: redis-config
         configMap:
           name: redis-container-config
@@ -121,9 +118,6 @@ spec:
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         volumeMounts:
-        - name: metager-config
-          mountPath: /html/config/metager
-          readOnly: true
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false

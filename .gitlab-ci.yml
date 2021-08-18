@@ -153,13 +153,12 @@ integrationtest:
     - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
     - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
     - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
-    - cat .env
-    - tail -f /dev/null
-    - php artisan key:generate
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
+    - cat .env
+    - tail -f /dev/null
     - php artisan dusk
   except:
     refs: 

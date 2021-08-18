@@ -149,7 +149,8 @@ integrationtest:
   script:
     # Install Dev Dependencies
     - cp $K8S_SECRET_env .env
-    - echo $"\nWEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
+    - echo "" >> .env
+    - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
     - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
     - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
     - cat .env

@@ -142,12 +142,12 @@ production:
 integrationtest:
   stage: integrationtest
   image: 
-    name: prooph/composer:7.3
+    name: ${CI_APPLICATION_REPOSITORY:-$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG}:${CI_APPLICATION_TAG:-$CI_COMMIT_SHA}
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies
-    - composer install
-    - cp .env.example .env
+    - echo $K8S_SECRET_env > .env
+    - tail -f /dev/null
     - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
     - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
     - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env

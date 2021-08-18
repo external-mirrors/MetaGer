@@ -250,6 +250,10 @@ spec:
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.resourcesRedis | indent 12 }}
+        securityContext:
+          runAsUser: 100
+          runAsGroup: 101
+          allowPrivilegeEscalation: false
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
         image: {{ template "imagename" . }}

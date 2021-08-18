@@ -251,8 +251,8 @@ spec:
         resources:
 {{ toYaml .Values.resourcesRedis | indent 12 }}
         securityContext:
-          runAsUser: 100
-          runAsGroup: 101
+          runAsUser: 999
+          runAsGroup: 999
           allowPrivilegeEscalation: false
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher

@@ -155,6 +155,14 @@ integrationtest:
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
+    - mc alias set --path=on --api S3v4 packages $S3_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+    - if mc cp packages/$S3_BUCKETNAME/packages.tar /tmp/; then tar -xf /tmp/packages.tar; fi
+    - export COMPOSER_HOME=.composer
+    - composer install
+    - tar -cf /tmp/packages.tar .npm .composer
+    - mc cp /tmp/packages.tar packages/$S3_BUCKETNAME/
+    - rm /tmp/packages.tar
+    - rm -rf .npm .composer
     - php artisan dusk
   except:
     refs: 

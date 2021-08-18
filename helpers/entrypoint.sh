@@ -1,9 +1,9 @@
 #!/bin/sh
 
 # Production version will have the .env file mounted at /home/metager/.env
-if [ -f /home/metager/.env ];
+if [ -f $env ];
 then
-  cp /home/metager/.env .env
+  cp $env .env
 fi
 
 if [ ! -f .env ];

@@ -20,6 +20,7 @@ include:
   image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
 
 stages:
+  - integrationtest
   - build
   - deploy  # dummy stage to follow the template guidelines
   - review
@@ -33,7 +34,7 @@ stages:
   - incremental rollout 50%
   - incremental rollout 100%
   - performance
-  - integrationtest
+#  - integrationtest
   - cleanup
 
 build:
@@ -141,10 +142,9 @@ production:
 
 integrationtest:
   stage: integrationtest
-  environment:
-    name: integrationtest
+  environment: integrationtest
   image: 
-    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
+    name: registry.metager.de/open-source/metager/1140-fix-ci-pipelines #$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies

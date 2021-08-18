@@ -43,6 +43,7 @@ Route::group(
                 ->with('css', [mix('css/asso/style.css')])
                 ->with('darkcss', [mix('css/asso/dark.css')]);
         });
+
         Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 
         Route::get('impressum', function () {
@@ -90,13 +91,14 @@ Route::group(
                 ->with('js', [mix('/js/donation.js')])
                 ->with('navbarFocus', 'foerdern');
         })->name("spende");
-        Route::get('spende/danke/{data}', ['as' => 'danke', function ($data) {
+        
+        Route::get('spende/danke/{data}', function ($data) {
             return view('spende.danke')
                 ->with('title', trans('titles.spende'))
                 ->with('navbarFocus', 'foerdern')
                 ->with('css', [mix('/css/spende/danke.css')])
                 ->with('data', unserialize(base64_decode($data)));
-        }]);
+        })->name("danke");
         Route::get('partnershops', function () {
             return view('spende.partnershops')
                 ->with('title', trans('titles.partnershops'))
@@ -190,13 +192,12 @@ Route::group(
             return $response;
         });
 
-        Route::get('plugin', function () {
+        Route::get('plugin', function (Request $request) {
             return view('plugin-page')
                 ->with('title', trans('titles.plugin'))
                 ->with('navbarFocus', 'dienste')
                 ->with('agent', new Agent())
-                ->with('browser', (new Agent())->browser())
-                ->with('request', $this->input('request', 'GET'));
+                ->with('browser', (new Agent())->browser());
         });
 
         Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {

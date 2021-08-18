@@ -279,7 +279,7 @@ spec:
       - name: {{ .Chart.Name }}-scheduler
         image: {{ template "imagename" . }}
         command: ["/bin/sh"]
-        args: ["-c", "/html/helpers/scheduler.sh"]
+        args: ["-c", "php artisan schedule:work"]
         volumeMounts:
         - name: secrets
           mountPath: /html/.env

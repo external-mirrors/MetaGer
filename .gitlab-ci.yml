@@ -148,7 +148,7 @@ integrationtest:
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies
-    - echo $K8S_SECRET_env > .env
+    - cp $K8S_SECRET_env .env
     - cat .env
     - tail -f /dev/null
     - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env

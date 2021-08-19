@@ -27,7 +27,7 @@ return [
     "result.info.2" => 'Die neuen Optionen sind:',
     "result.info.saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="#searchinsearch"> Suche in der Suche</a>)',
     "result.info.domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
-    "result.info.hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#difset"> "Einstellungen"</a> für eine dauerhafte Lösung.',
+    "result.info.hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',
 
     
     "settings.title" => 'Einstellungen',

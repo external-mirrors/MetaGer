@@ -6,14 +6,14 @@
 
 <h2>{!! trans('help/help.tableofcontents.1') !!}</h2>
 <div class="help-topic-row">
-	<a href="/hilfe/hauptseiten#startseite" class="help-topic">
+	<a href="/hilfe/hauptseiten" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.1') !!}</p>
 	</a>
 	<a href="/hilfe/hauptseiten#suchfeld" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.2') !!}</p>
 	</a>
 	<a href="/hilfe/hauptseiten#ergebnis" class="help-topic">
-		<p">{!! trans('help/help.tableofcontents.1.3') !!}</p>
+		<p>{!! trans('help/help.tableofcontents.1.3') !!}</p>
 	</a>
 	<a href="/hilfe/hauptseiten#einstellungen" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.4') !!}</p>
@@ -22,7 +22,7 @@
 
 <h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
 <div class="help-topic-row">
-	<a href="/hilfe/funktionen#stopwordsearch" class="help-topic">
+	<a href="/hilfe/funktionen" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
 	</a>
 	<a href="/hilfe/funktionen#severalwords" class="help-topic">
@@ -44,7 +44,7 @@
 
 <h2>{!! trans('help/help.tableofcontents.3') !!}</h2>
 	<div class="help-topic-row">
-		<a href="/hilfe/datensicherheit#factcheck" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.1') !!}<br></p>
+		<a href="/hilfe/datensicherheit" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.1') !!}<br></p>
 		</a>
 		<a href="/hilfe/datensicherheit#tracking" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.2') !!}</p>
 		</a>
@@ -57,7 +57,7 @@
 <h2>{!! trans('help/help.tableofcontents.4') !!}</h2>
 
 	<div class="help-topic-row">
-		<a href="/hilfe/dienste#app" class="help-topic">
+		<a href="/hilfe/dienste" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.1') !!}<br></p>
 		</a>
 		<a href="/hilfe/dienste#plugin" class="help-topic">

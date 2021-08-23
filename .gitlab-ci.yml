@@ -148,9 +148,9 @@ integrationtest:
     # Install Dev Dependencies
     - cp .env.example .env
     - echo "" >> .env
-    - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
-    - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
-    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
+    - echo "BROWSERSTACK_USERNAME=\"$BROWSERSTACK_USERNAME\"" >> .env
+    - echo "BROWSERSTACK_ACCESS_KEY=\"$BROWSERSTACK_ACCESS_KEY\"" >> .env
+    - echo "BROWSERSTACK_LOCAL_TUNNEL=\"$BROWSERSTACK_LOCAL_TUNNEL\"" >> .env
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env

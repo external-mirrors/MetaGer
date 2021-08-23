@@ -197,9 +197,9 @@ Route::get('plugin', function (Request $request) {
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
     Route::get('/', 'AdminInterface@index');
-    Route::match(['get', 'post'], 'count', 'AdminInterface@count');
+    #Route::match(['get', 'post'], 'count', 'AdminInterface@count');
     Route::get('timings', 'MetaGerSearch@searchTimings');
-    Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
+    #Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
     Route::get('engine/stats.json', 'AdminInterface@engineStats');
     Route::get('check', 'AdminInterface@check');
     Route::get('engines', 'AdminInterface@engines');

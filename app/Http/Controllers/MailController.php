@@ -93,12 +93,12 @@ class MailController extends Controller
 
             $mission = [
                 "resulthash" => $resulthash,
-                "url" => env("TICKET_URL", "https://metager.de"),
+                "url" => config("metager.metager.ticketsystem.url"),
                 "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
                 "username" => null,
                 "password" => null,
                 "headers" => [
-                    "X-API-Key" => env("TICKET_APIKEY", ""),
+                    "X-API-Key" => config("metager.metager.ticketsystem.apikey"),
                     "Content-Type" => "application/json",
                     "Content-Length" => strlen($postdata)
                 ],
@@ -121,7 +121,7 @@ class MailController extends Controller
             // Fehlerfall
             if(empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")){
                 $messageType = "error";
-                $returnMessage = trans('kontakt.error.2', ["email" => env("MAIL_USERNAME", "support+46521@metager.de")]);
+                $returnMessage = trans('kontakt.error.2', ["email" => config("mail.mailers.smtp.username")]);
             }else{
                 $returnMessage = trans('kontakt.success.1', ["email" => $replyTo]);
                 $messageType = "success";
@@ -226,8 +226,8 @@ class MailController extends Controller
                 $postdata = [
                     "entity" => "Contribution",
                     "action" => "mgcreate",
-                    "api_key" => env("CIVICRM_API_KEY", ''),
-                    "key" => env("CIVICRM_SITE_KEY", ''),
+                    "api_key" => config("metager.metager.civicrm.apikey"),
+                    "key" => config("metager.metager.civicrm.sitekey"),
                     "json" => 1,
                     "iban" => $iban->MachineFormat(),
                     "bic" => $bic,
@@ -251,7 +251,7 @@ class MailController extends Controller
     
                 $mission = [
                     "resulthash" => $resulthash,
-                    "url" => env("CIVICRM_URL", "https://metager.de"),
+                    "url" => config("metager.metager.civicrm.url"),
                     "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
                     "username" => null,
                     "password" => null,

@@ -2,7 +2,7 @@ postgresql:
   enabled: false
 service:
   externalPort: 80
-  internalPort: 80
+  internalPort: 8080
 hpa:
   enabled: true
   minReplicas: 3
@@ -37,6 +37,11 @@ resourcesRedis:
 resourcesFetcher: 
   requests:
     cpu: 500m
+    memory: 100M
+  limits:
+resourcesScheduler: 
+  requests:
+    cpu: 100m
     memory: 100M
   limits:
 resources:

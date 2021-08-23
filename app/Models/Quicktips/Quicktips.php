@@ -21,7 +21,7 @@ class Quicktips
 
     public function __construct($search, $locale, $max_time, $quotes = "on")
     {
-        if (env("APP_ENV") === "production") {
+        if (\App::environment() === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;

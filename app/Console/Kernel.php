@@ -25,9 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('heartbeat')->everyMinute();
         $schedule->command('requests:gather')->everyFifteenMinutes();
         $schedule->command('requests:useragents')->everyFiveMinutes();
-        $schedule->command('logs:gather')->everyMinute();
+        #$schedule->command('logs:gather')->everyMinute();
         $schedule->command('spam:load')->everyMinute();
         $schedule->call(function () {
             DB::table('monthlyrequests')->truncate();

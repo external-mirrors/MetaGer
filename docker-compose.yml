@@ -1,19 +1,78 @@
 version: '3.7'
 services:
-  assets:
-    image: node:10
+  nodejs:
+    image: metager/development:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
     volumes:
-      - .:/usr/src/app
-    working_dir: /usr/src/app
-    command: bash -c "npm install && npm run watch"
-  dependencies:
+      - .:/html
+    command: bash -c "npm i --cache .npm --prefer-offline && npm run watch"
+  composer:
+    image: metager/development:latest
     depends_on:
-      - "mgdb"
-    image: php:7.3-cli
+      - "nodejs"
+    environment:
+      - COMPOSER_HOME=/html/.composer
     volumes:
-      - .:/data
-    working_dir: /data
-    command: /bin/sh -c "/data/init.sh"
+      - .:/html
+    command: composer install
+  phpfpm:
+    depends_on:
+      - "nodejs"
+    restart: always
+    image: metager/development:latest
+    volumes:
+      - .:/html
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
+  nginx:
+    depends_on:
+      - "nodejs"
+    restart: always
+    image: metager/development:latest
+    command: nginx
+    volumes:
+      - .:/html
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./config/nginx-default-dev.conf:/etc/nginx/sites-available/default
+    ports: 
+    - "8080:8080"
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
+  scheduler:
+    depends_on:
+      - "nodejs"
+    restart: always
+    image: metager/development:latest
+    command: /bin/sh -c "php artisan schedule:work"
+    volumes:
+      - .:/html
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-scheduler"
+  worker:
+    depends_on:
+      - "nodejs"
+    restart: always
+    image: metager/development:latest
+    volumes:
+      - .:/html
+    command: "php artisan requests:fetcher"
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-worker"
+#  dummy-phpfpm:
+#    restart: on-failure
+#    image: registry.metager.de/open-source/dummy-engine/master
+#    working_dir: /html
+#  dummy-nginx:
+#    depends_on:
+#      - "dummy-phpfpm"
+#    restart: on-failure
+#    image: registry.metager.de/open-source/dummy-engine/master
+#    working_dir: /html
+#    command: sh -c "sed -i 's/fastcgi_pass localhost:9000;/fastcgi_pass dummy-phpfpm:9000;/g' /etc/nginx/conf.d/default.conf && nginx"
   mgdb:
     restart: on-failure
     image: mariadb:latest
@@ -23,61 +82,11 @@ services:
       - MYSQL_USER=metager
       - MYSQL_PASSWORD=metager
       - MYSQL_DATABASE=metager
+    healthcheck:
+     test: ["CMD", "mysqladmin", "ping", "--silent"]
   redis:
     restart: on-failure
+    user: "redis:redis"
     image: redis:6
-  phpfpm:
-    depends_on:
-      - "mgdb"
-      - "dependencies"
-      - "assets"
-      - "redis"
-    restart: on-failure
-    build:
-      context: .
-      dockerfile: DockerfileDev
-    image: metager:latest
-    working_dir: /html
-    volumes:
-      - .:/html
-  nginx:
-    depends_on:
-      - "phpfpm"
-    restart: on-failure
-    image: metager:latest
-    working_dir: /html
-    command: nginx
-    volumes:
-      - .:/html
-      - ./config/nginx.conf:/etc/nginx/nginx.conf
-      - ./config/nginx-default-dev.conf:/etc/nginx/sites-available/default
-    ports: 
-    - "8080:80"
-  worker:
-    depends_on:
-      - "phpfpm"
-    restart: on-failure
-    image: metager:latest
-    working_dir: /html
-    volumes:
-      - .:/html
-    command: "su -s /bin/sh -c 'php artisan requests:fetcher' www-data"
-  test:
-    depends_on:
-      - "phpfpm"
-    image: php:7.3-cli
-    working_dir: /html
-    volumes:
-      - .:/html
-    command: "php artisan dusk"
-  dummy-phpfpm:
-    restart: on-failure
-    image: registry.metager.de/open-source/dummy-engine/master
-    working_dir: /html
-  dummy-nginx:
-    depends_on:
-      - "dummy-phpfpm"
-    restart: on-failure
-    image: registry.metager.de/open-source/dummy-engine/master
-    working_dir: /html
-    command: sh -c "sed -i 's/fastcgi_pass localhost:9000;/fastcgi_pass dummy-phpfpm:9000;/g' /etc/nginx/conf.d/default.conf && nginx"
+    healthcheck:
+      test: "redis-cli ping"

@@ -10,13 +10,16 @@ variables:
     PERFORMANCE_DISABLED: "true"
     SAST_DISABLED: "true"
     TEST_DISABLED: "true"
+    AUTO_DEVOPS_BUILD_IMAGE_FORWARDED_CI_VARIABLES: "AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,S3_HOST,S3_BUCKETNAME"
 
 include:
   - template: Jobs/Build.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml
 
+.auto-deploy:
+  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
+
 stages:
-  - prepare
   - build
   - deploy  # dummy stage to follow the template guidelines
   - review
@@ -33,36 +36,8 @@ stages:
   - integrationtest
   - cleanup
 
-.auto-deploy:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.6"
-
 build:
   services:
-
-prepare_node:
-  stage: prepare
-  image: node:10
-  variables:
-    npm_config_cache: "$CI_PROJECT_DIR/.npm"
-  before_script:
-    - npm install -g npm-cache
-    - npm-cache install --cacheDirectory "$CI_PROJECT_DIR/.npm-package-cache" npm
-  script:
-    - npm run prod
-  artifacts:
-    paths:
-      - public/js/
-      - public/css/
-      - public/mix-manifest.json
-  cache:
-    # Cache per Branch
-    key: "metager-${CI_JOB_NAME}"
-    paths:
-      - .npm
-      - .npm-package-cache
-  only:
-    - branches
-    - tags
 
 review:
   variables:
@@ -167,18 +142,28 @@ production:
 integrationtest:
   stage: integrationtest
   image: 
-    name: prooph/composer:7.3
+    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies
-    - composer install
     - cp .env.example .env
-    - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
-    - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
-    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
-    - php artisan key:generate
+    - echo "" >> .env
+    - echo "BROWSERSTACK_USERNAME=\"$BROWSERSTACK_USERNAME\"" >> .env
+    - echo "BROWSERSTACK_ACCESS_KEY=\"$BROWSERSTACK_ACCESS_KEY\"" >> .env
+    - echo "BROWSERSTACK_LOCAL_TUNNEL=\"$BROWSERSTACK_LOCAL_TUNNEL\"" >> .env
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - php artisan dusk
+    - mc alias set --path=on --api S3v4 packages $S3_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+    - if mc cp packages/$S3_BUCKETNAME/packages.tar /tmp/; then tar -xf /tmp/packages.tar; fi
+    - export COMPOSER_HOME=.composer
+    - composer install
+    - tar -cf /tmp/packages.tar .npm .composer
+    - mc cp /tmp/packages.tar packages/$S3_BUCKETNAME/
+    - rm /tmp/packages.tar
+    - rm -rf .npm .composer
+    - php artisan test --parallel --processes=5
+  except:
+    refs: 
+      - master

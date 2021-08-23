@@ -12,51 +12,23 @@ let mix = require("laravel-mix");
  */
 
 mix
- 
+
   // css
   .styles(["resources/css/noheader.css"], "public/css/noheader.css")
-  .less("resources/less/metager/metager.less", "public/css/themes/metager.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-light.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/spam.less", "public/css/spam.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/key.less", "public/css/key.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/utility.less", "public/css/utility.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/count/style-dark.less", "public/css/count/dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/asso/style-dark.less", "public/css/asso/dark.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css", {
-    strictMath: true
-  })
-  .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css", {
-    strictMath: true
-  })
+  .less("resources/less/metager/metager.less", "public/css/themes/metager.css")
+  .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-light.css")
+  .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css")
+  .less("resources/less/metager/pages/spam.less", "public/css/spam.css")
+  .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css")
+  .less("resources/less/metager/pages/key.less", "public/css/key.css")
+  .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
+  .less("resources/less/utility.less", "public/css/utility.css")
+  .less("resources/less/metager/pages/count/style-dark.less", "public/css/count/dark.css")
+  .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css")
+  .less("resources/less/metager/pages/asso/style-dark.less", "public/css/asso/dark.css")
+  .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css")
+  .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
+  .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css")
   // js
   .babel(
     [

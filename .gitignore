@@ -19,7 +19,9 @@ npm-debug.log
 /.buildpath
 /.project
 
-package-lock.json
 local.log
 
 browserstack.err
+.npm
+.composer
+.phpunit.result.cache

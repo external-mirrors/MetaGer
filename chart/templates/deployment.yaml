@@ -270,6 +270,8 @@ spec:
             path: "/health-check/liveness-worker"
             scheme: "HTTP"
             port: 8080
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         readinessProbe:
           httpGet:
             path: "/health-check/liveness-worker"

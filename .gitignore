@@ -24,3 +24,4 @@ local.log
 browserstack.err
 .npm
 .composer
+.phpunit.result.cache

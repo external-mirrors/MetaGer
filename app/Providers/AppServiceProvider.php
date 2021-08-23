@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Queue\Events\JobProcessed;
 use Illuminate\Queue\Events\JobProcessing;
 use Illuminate\Support\ServiceProvider;
+use \Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Queue;
 use Request;
 
@@ -28,10 +29,11 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if (stripos($host, "metager.org") !== false) {
-            \App::setLocale('en');
-        }
-        if (stripos($host, "metager.es") !== false) {
-            \App::setLocale('es');
+            LaravelLocalization::setLocale('en');
+        }else if (stripos($host, "metager.es") !== false) {
+            LaravelLocalization::setLocale('es');
+        }else{
+            LaravelLocalization::setLocale();
         }
 
         \Prometheus\Storage\Redis::setDefaultOptions(

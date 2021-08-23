@@ -163,7 +163,7 @@ integrationtest:
     - mc cp /tmp/packages.tar packages/$S3_BUCKETNAME/
     - rm /tmp/packages.tar
     - rm -rf .npm .composer
-    - php artisan dusk
+    - php artisan test --parallel --processes=5
   except:
     refs: 
       - master

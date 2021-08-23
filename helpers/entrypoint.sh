@@ -12,11 +12,14 @@ then
   php artisan key:generate
 fi
 
-if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; 
-then 
-    sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; 
-else 
-    sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; 
+if [ ! -z $GITLAB_ENVIRONMENT_NAME ];
+then
+    if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; 
+    then 
+        sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; 
+    else 
+        sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; 
+    fi
 fi
 
 if [ ! -f "/html/config/sumas.json" ]; then
@@ -36,3 +39,4 @@ if [ ! -d "/html/storage/logs/metager" ]; then
 fi
 
 php artisan optimize
+php artisan route:trans:cache

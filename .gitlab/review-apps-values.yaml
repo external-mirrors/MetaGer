@@ -2,6 +2,10 @@ postgresql:
     enabled: false
 hpa: 
   enabled: false
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resources:
   requests:
   limits:
@@ -26,7 +30,7 @@ ingress:
 service: 
   commonName: ""
   externalPort: 80
-  internalPort: 80
+  internalPort: 8080
 deploymentApiVersion: apps/v1
 resourcesPhpfpm: 
   requests:
@@ -38,5 +42,8 @@ resourcesRedis:
   requests:
   limits:
 resourcesFetcher: 
+  requests:
+  limits:
+resourcesScheduler: 
   requests:
   limits:

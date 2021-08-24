@@ -98,7 +98,7 @@ class KeyController extends Controller
         $format = "Y-m-d H:i:s";
         $data = [
             "validUntil" => $validUntil->format($format),
-            "password" => hash_hmac("sha256", $validUntil->format($format), env("APP_KEY", "WEAK_KEY")),
+            "password" => hash_hmac("sha256", $validUntil->format($format), config("app.key")),
         ];
         $targetUrl = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyTwo', $data));
         $redirUrl = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeCookie', [
@@ -129,7 +129,7 @@ class KeyController extends Controller
         }
         if($valid){
             // Check if hash matches
-            $expectedHash = hash_hmac("sha256", $validUntil->format($format), env("APP_KEY", "WEAK_KEY"));
+            $expectedHash = hash_hmac("sha256", $validUntil->format($format), config("app.key"));
             if(!hash_equals($expectedHash, $password)){
                 $valid = false;
             }
@@ -174,7 +174,7 @@ class KeyController extends Controller
         }
         if($valid){
             // Check if hash matches
-            $expectedHash = hash_hmac("sha256", $validUntil->format($format), env("APP_KEY", "WEAK_KEY"));
+            $expectedHash = hash_hmac("sha256", $validUntil->format($format), config("app.key"));
             if(!hash_equals($expectedHash, $password)){
                 $valid = false;
             }
@@ -189,7 +189,7 @@ class KeyController extends Controller
         if($validator->fails()) {
             $data = [
                 "validUntil" => $validUntil->format($format),
-                "password" => hash_hmac("sha256", $validUntil->format($format), env("APP_KEY", "WEAK_KEY")),
+                "password" => hash_hmac("sha256", $validUntil->format($format), config("app.key")),
                 "newkey" => $request->input('newkey', ''),
             ];
             $targetUrl = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyTwo', $data));
@@ -215,7 +215,7 @@ class KeyController extends Controller
         }
         $data = [
             "validUntil" => $validUntil->format($format),
-            "password" => hash_hmac("sha256", $validUntil->format($format), env("APP_KEY", "WEAK_KEY")),
+            "password" => hash_hmac("sha256", $validUntil->format($format), config("app.key")),
         ];
         $targetUrl = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyTwo', $data));
         return redirect($targetUrl);

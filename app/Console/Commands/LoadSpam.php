@@ -40,12 +40,12 @@ class LoadSpam extends Command
     public function handle()
     {
         // Redis might not be available now
-        for ($count = 0; $count < 10; $count++) {
+        for ($count = 0; $count < 60; $count++) {
             try {
                 Redis::connection();
                 break;
-            } catch (\Predis\Connection\ConnectionException $e) {
-                if ($count >= 9) {
+            } catch (\Exception $e) {
+                if ($count >= 59) {
                     // If its not available after 10 seconds we will exit
                     return;
                 }

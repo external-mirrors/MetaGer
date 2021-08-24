@@ -6,7 +6,6 @@ Homestead.json
 Homestead.yaml
 .env
 .orig
-.vscode
 langfiles.zip
 npm-debug.log
 # The Files created by Webpack in the build process
@@ -20,8 +19,9 @@ npm-debug.log
 /.buildpath
 /.project
 
-composer.lock
-package-lock.json
 local.log
 
 browserstack.err
+.npm
+.composer
+.phpunit.result.cache

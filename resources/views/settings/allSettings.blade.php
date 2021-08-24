@@ -20,7 +20,7 @@
                 <tbody>
                     @foreach(Cookie::get() as $key => $value)
                     <tr>
-                        <td>{{ $key . "=" . $value }}</td>
+                        <td>{{ $key . " = " . $value }}</td>
                         <td>
                         @if(strpos($key, "_engine_") !== FALSE)
                         @lang('settings.engineDisabled', ["engine" => $sumaFile->sumas->{substr($key, strrpos($key, "_")+1)}->{"display-name"}, "focus" => trans('index.foki.' . substr($key, 0, strpos($key, "_")))])
@@ -31,11 +31,13 @@
                                 @endif
                             @endforeach
                         @elseif($key === "key")
-                        @lang('settings.key')
+                            @lang('settings.key')
                         @elseif(strpos($key, "_blpage"))
-                        @lang('settings.blentry')
+                            @lang('settings.blentry')
                         @elseif($key === 'dark_mode')
-                        @lang('settings.dm')
+                            @lang('settings.darkmode')
+                        @elseif($key === 'new_tab')
+                            @lang('settings.newTab')
                         @endif
                         </td>
                         <td>
@@ -43,7 +45,7 @@
                                 <input type="hidden" name="key" value="{{ $key }}">
                                 <input type="hidden" name="url" value="{{ url()->full() }}">
                                 <button type="submit" title="@lang('settings.removeCookie')">
-                                    <i class="fas fa-trash-alt"></i>
+                                <img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
                                 </button>
                             </form>
                         </td>

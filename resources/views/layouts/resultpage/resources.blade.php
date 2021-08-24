@@ -15,8 +15,6 @@
 	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
 	@endif
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome.css') }}" />
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/fontawesome-solid.css') }}" />
 
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}"/>
 	@if(Cookie::get('dark_mode') === "2")

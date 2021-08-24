@@ -1,0 +1,115 @@
+{
+    "sumas": {
+        "dummy": {
+            "host": "production-auto-deploy.dummy-engine-87.svc.cluster.local",
+            "path": "\/",
+            "port": 80,
+            "query-parameter": "q",
+            "input-encoding": "utf8",
+            "output-encoding": "utf8",
+            "parser-class": "Dummy",
+            "get-parameter": {},
+            "request-header": {},
+            "display-name": "dummy",
+            "engine-boost": 1,
+            "cache-duration": 0,
+            "disabled": false,
+            "filter-opt-in": false,
+            "homepage": "https:\/\/gitlab.metager.de\/open-source\/dummy-engine"
+        }
+    },
+    "foki": {
+        "web": {
+            "display-name": "index.foki.web",
+            "sumas": [
+                "dummy"
+            ],
+            "main": [
+                "dummy"
+            ]
+        }
+    },
+    "filter": {
+        "query-filter": {},
+        "parameter-filter": {
+            "count": {
+                "name": "metaGer.filter.count",
+                "desc": "",
+                "get-parameter": "count",
+                "values": {
+                    "10": "10",
+                    "20": "20",
+                    "30": "30",
+                    "40": "40",
+                    "50": "50",
+                    "100": "100"
+                },
+                "sumas": {
+                    "dummy": {
+                        "get-parameter": "count",
+                        "values": {
+                            "10": "10",
+                            "20": "20",
+                            "30": "30",
+                            "40": "40",
+                            "50": "50",
+                            "100": "100"
+                        }
+                    }
+                }
+            },
+            "min": {
+                "name": "metaGer.filter.min",
+                "desc": "",
+                "get-parameter": "min",
+                "values": {
+                    "nofilter" : "0",
+                    "2": "2",
+                    "4": "4",
+                    "6": "6",
+                    "8": "8",
+                    "10": "10"
+                },
+                "sumas": {
+                    "dummy": {
+                        "get-parameter": "min",
+                        "values": {
+                            "nofilter" : "0",
+                            "2": "2000",
+                            "4": "4000",
+                            "6": "6000",
+                            "8": "8000",
+                            "10": "10000"
+                        }
+                    }
+                }
+            },
+            "max": {
+                "name": "metaGer.filter.max",
+                "desc": "",
+                "get-parameter": "max",
+                "values": {
+                    "nofilter" : "0",
+                    "2": "2",
+                    "4": "4",
+                    "6": "6",
+                    "8": "8",
+                    "10": "10"
+                },
+                "sumas": {
+                    "dummy": {
+                        "get-parameter": "max",
+                        "values": {
+                            "nofilter" : "0",
+                            "2": "2000",
+                            "4": "4000",
+                            "6": "6000",
+                            "8": "8000",
+                            "10": "10000"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

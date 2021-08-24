@@ -6,9 +6,13 @@ use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
 use Log;
+use Carbon;
 
 class RequestFetcher extends Command
 {
+    const HEALTHCHECK_KEY = "fetcher_healthcheck";
+    const HEALTHCHECK_FORMAT = "Y-m-d H:i:s";
+
     /**
      * The name and signature of the console command.
      *
@@ -38,10 +42,10 @@ class RequestFetcher extends Command
     {
         parent::__construct();
         $this->multicurl = curl_multi_init();
-        $this->proxyhost = env("PROXY_HOST", "");
-        $this->proxyport = env("PROXY_PORT", "");
-        $this->proxyuser = env("PROXY_USER", "");
-        $this->proxypassword = env("PROXY_PASSWORD", "");
+        $this->proxyhost = config("metager.metager.fetcher.proxy.host");
+        $this->proxyport = config("metager.metager.fetcher.proxy.port");
+        $this->proxyuser = config("metager.metager.fetcher.proxy.user");
+        $this->proxypassword = config("metager.metager.fetcher.proxy.password");
     }
 
     /**
@@ -51,7 +55,6 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
-        $pidFile = "/tmp/fetcher";
         pcntl_signal(SIGINT, [$this, "sig_handler"]);
         pcntl_signal(SIGTERM, [$this, "sig_handler"]);
         pcntl_signal(SIGHUP, [$this, "sig_handler"]);
@@ -70,14 +73,9 @@ class RequestFetcher extends Command
             }
         }
 
-        touch($pidFile);
-
-        if (!file_exists($pidFile)) {
-            return;
-        }
-
         try {
             while ($this->shouldRun) {
+                Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 $operationsRunning = true;
                 curl_multi_exec($this->multicurl, $operationsRunning);
                 $status = $this->readMultiCurl($this->multicurl);
@@ -90,7 +88,6 @@ class RequestFetcher extends Command
                 }
             }
         } finally {
-            unlink($pidFile);
             curl_multi_close($this->multicurl);
         }
     }
@@ -155,7 +152,7 @@ class RequestFetcher extends Command
                     Log::error($error);
                 }
 
-                if ($responseCode !== 200) {
+                if ($responseCode !== 200 && $responseCode !== 201) {
                     Log::debug($resulthash);
                     Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
                 } else {
@@ -198,9 +195,15 @@ class RequestFetcher extends Command
             CURLOPT_TIMEOUT => 7,
         ));
 
-        if (!empty($this->proxyhost) && !empty($this->proxyport) && !empty($this->proxyuser) && !empty($this->proxypassword)) {
+        if (!empty($job["curlopts"])) {
+            curl_setopt_array($ch, $job["curlopts"]);
+        }
+
+        if (!empty($this->proxyhost) && !empty($this->proxyport)) {
             curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
-            curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
+            if(!empty($this->proxyuser) && !empty($this->proxypassword)){
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
+            }
             curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyport);
             curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
         }

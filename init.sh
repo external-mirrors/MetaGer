@@ -7,6 +7,14 @@ if [ ! -f "/data/.env" ]; then
     cp /data/.env.example /data/.env
 fi
 
+if [ ! -f "/data/config/sumas.json" ]; then
+    cp /data/config/sumas.json.example /data/config/sumas.json
+fi
+
+if [ ! -f "/data/config/sumasEn.json" ]; then
+    cp /data/config/sumas.json.example /data/config/sumasEn.json
+fi
+
 if [ -f "/data/database/useragents.sqlite" ]; then
     rm /data/database/useragents.sqlite
 fi

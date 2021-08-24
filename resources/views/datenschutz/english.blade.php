@@ -11,7 +11,7 @@
         also the author of this statement. By "we" in this statement usually SUMA-EV is meant.
         <br />Our contact details can be found in our <a
             href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
-            notice</a>. We can be reached by e-mail at <a href="mailto:office@suma-ev.de">office@suma-ev.de</a>.
+            notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">encrypted form</a>.
     </div>
     <div class="section">
         <h1>Principles</h1>
@@ -332,7 +332,7 @@
                 modification, etc. at your request.
             </article>
         </ol>
-        To exercise these rights, it is sufficient to send us an e-mail to office@suma-ev.de. If you prefer the letter
+        To exercise these rights, it is sufficient to send us an e-mail via our <a href="/en/kontakt">encrypted contact form</a>. If you prefer the letter
         form, please send us postal mail to our office address:
         <br />
         <br />SUMA-EV
@@ -343,5 +343,5 @@
         <h1>Changes to this statement</h1>
         Like our offers, this privacy policy is subject to constant change. You should therefore read it again
         regularly.
-        <br />This version of our Privacy Policy is dated 2018-05-24.
+        <br />This version of our Privacy Policy is dated 2021-02-03.
     </div>

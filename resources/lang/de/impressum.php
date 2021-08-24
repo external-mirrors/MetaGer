@@ -12,10 +12,9 @@ Röselerstr. 3
 D-30159 Hannover
 Deutschland/Germany',
     'info.3' => 'Kontakt:
-Tel.: ++49-(0)511-34000070
-EMail: <a href="mailto:office@suma-ev.de">office@suma-ev.de</a><a href="/kontakt/"> - Public-PGP-Key</a>
-<a href="/kontakt/">Verschlüsselndes Kontaktformular</a>',
-    'info.4' => 'Vorstand: Dominik Hebeler, Carsten Riel',
+Tel.: +4951134000070
+EMail: <a href="/kontakt">Verschlüsseltes Kontaktformular</a>',
+    'info.4' => 'Vorstand: Dominik Hebeler, Carsten Riel, Manuela Branz',
     'info.6' => 'Jugendschutzbeauftragte: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
     'info.8' => '"SUMA-EV - Verein für freien Wissenszugang" ist ein gemeinnütziger
 Verein, eingetragen in das Vereinsregister beim Amtsgericht Hannover

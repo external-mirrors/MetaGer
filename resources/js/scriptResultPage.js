@@ -1,68 +1,84 @@
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", (event) => {
+  if(document.readyState == 'complete'){
+    initialize();
+  }else{
+    document.addEventListener("readystatechange", e => {
+      if (document.readyState == 'complete') {
+        initialize();
+      }
+    });
+  }
+});
+
+function initialize(){
   botProtection();
   enableFormResetter();
   loadMoreResults();
-});
+}
+
+
+let link, newtab, top;
 
 function botProtection() {
-  $('.result').find('a').click(function () {
-    var link = $(this).attr('href');
-    var newtab = false;
-    var top = false;
-    if ($(this).attr('target') == '_blank') {
-      newtab = true;
-    } else if ($(this).attr('target') == "_top") {
-      top = true;
-    }
+  document.querySelectorAll(".result a").forEach((element) => {
+    element.onclick = e => {
+      link = element.href;
+      newtab = false;
+      top = false;
+      if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
+        newtab = true;
+      } else if (element.target == "_top") {
+        top = true;
+      }
 
-    $.ajax({
-      url: '/img/cat.jpg',
-      type: 'post',
-      data: {
-        mm: $('meta[name=mm]').attr('content')
-      },
-      timeout: 2000
-    })
-      .always(function () {
-        if (!newtab) {
-          if (top) {
-            window.top.location.href = link;
-          } else {
-            document.location.href = link;
+      fetch("/img/cat.png", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: "mm=" + document.querySelector('meta[name="mm"]').content
+      })
+        .then(response => {
+          if (!newtab) {
+            if (top) {
+              window.top.location.href = link;
+            } else {
+              document.location.href = link;
+            }
           }
-        }
-      });
-    if (!newtab)
-      return false;
-    else
-      return true;
+        });
+      return newtab;
+    };
   });
 }
 
 function enableFormResetter() {
-  var deleteButton = $("#search-delete-btn");
+  var deleteButton = document.querySelector("#search-delete-btn");
   var timeout = null;
-  $(deleteButton).click(function () {
+
+  deleteButton.onclick = (e) => {
     if (timeout != null) {
       clearTimeout(timeout);
       timeout = null;
     }
-    $("input[name=eingabe]").val("");
-    $("input[name=eingabe]").focus();
+    document.querySelector("input[name=\"eingabe\"]").value = "";
+    document.querySelector("input[name=\"eingabe\"]").focus();
+  };
+
+  document.querySelector("input[name=\"eingabe\"]").addEventListener("focusin", (e) => {
+    deleteButton.style.display = "initial";
   });
-  $("input[name=eingabe]").focusin(function () {
-    $(deleteButton).css("display", "initial");
-  });
-  $("input[name=eingabe]").focusout(function () {
+
+  document.querySelector("input[name=\"eingabe\"]").addEventListener("focusout", (e) => {
     timeout = window.setTimeout(function () {
-      $(deleteButton).css("display", "none");
+      deleteButton.style.display = "none";
       timeout = null;
     }, 500);
   });
 }
 
 function loadMoreResults() {
-  var searchKey = $("meta[name=searchkey]").attr("content");
+  var searchKey = document.querySelector("meta[name=searchkey]").content
   var updateUrl = document.location.href;
   updateUrl += "&loadMore=loader_" + searchKey + "&script=yes";
 
@@ -78,61 +94,80 @@ function loadMoreResults() {
         clearInterval(resultLoader);
       }
       currentlyLoading = true;
-      $.getJSON(updateUrl, function (data) {
-        // Check if we can clear the interval (once every searchengine has answered)
-        if (!data || data.finished) {
-          clearInterval(resultLoader);
-        }
-        // If there are new results we can add them
-        if (typeof data.newResults != "undefined") {
-          for (var key in data.newResults) {
-            var value = data.newResults[key];
+      fetch(updateUrl)
+        .then(response => response.json())
+        .then(data => {
+          // Check if we can clear the interval (once every searchengine has answered)
+          if (!data || data.finished) {
+            clearInterval(resultLoader);
+          }
 
-            // If there are more results than the given index we will prepend otherwise we will append the result
-            if (!data.imagesearch) {
-              var results = $(".result:not(.ad)");
-              if (key == 0) {
-                if ($(".result.ad").length > 0) {
-                  $(value).insertAfter($($(".result.ad")[$(".result.ad").length - 1]));
-                } else {
-                  $("#results").prepend(value);
+          if (typeof data.changedResults != "undefined") {
+            for (var key in data.changedResults) {
+              var value = data.changedResults[key];
+              // If there are more results than the given index we will prepend otherwise we will append the result
+              if (!data.imagesearch) {
+                var results = document.querySelectorAll(".result:not(.ad)");
+                var replacement = document.createElement("div");
+                replacement.innerHTML = value.trim();
+                results[key].parentNode.replaceChild(replacement.firstChild, results[key]);
+              } else {
+                var results = document.querySelectorAll(".image-container > .image");
+                var replacement = document.createElement("div");
+                replacement.innerHTML = value.trim();
+                results[key].parentNode.replaceChild(replacement.firstChild, results[key]);
+              }
+            }
+            botProtection();
+          }
+
+          // If there are new results we can add them
+          if (typeof data.newResults != "undefined") {
+            for (var key in data.newResults) {
+              var value = data.newResults[key];
+
+              // If there are more results than the given index we will prepend otherwise we will append the result
+              if (!data.imagesearch) {
+                var resultContainer = document.querySelector("#results");
+                var results = document.querySelectorAll(".result:not(.ad)");
+                var replacement = document.createElement("div");
+                replacement.innerHTML = value.trim();
+                if (key == 0) {
+                  resultContainer.insertBefore(replacement.firstChild, results[0]);
+                } else if (typeof results[key] != "undefined") {
+                  resultContainer.insertBefore(replacement.firstChild, results[key]);
+                } else if (typeof results[key - 1] != "undefined") {
+                  resultContainer.append(replacement.firstChild);
                 }
-              } else if (typeof results[key] != "undefined") {
-                $(value).insertBefore($(results[key]));
-              } else if (typeof results[key - 1] != "undefined") {
-                $(value).insertAfter($(results[key - 1]));
+              } else {
+                var resultContainer = document.querySelector("#results");
+                var results = document.querySelectorAll(".image-container > .image");
+                var replacement = document.createElement("div");
+                replacement.innerHTML = value.trim();
+                if (key == 0) {
+                  resultContainer.insertBefore(replacement.firstChild, results[0]);
+                } else if (typeof results[key] != "undefined") {
+                  resultContainer.insertBefore(replacement.firstChild, results[key]);
+                } else if (typeof results[key - 1] != "undefined") {
+                  resultContainer.append(replacement.firstChild);
+                }
               }
-            } else {
-              var results = $(".image-container > .image");
-              if (key == 0) {
-                $(".image-container").prepend(value);
-              } else if (typeof results[key] != "undefined") {
-                $(value).insertBefore($(results[key]));
-              } else if (typeof results[key - 1] != "undefined") {
-                $(value).insertAfter($(results[key - 1]));
+            }
+            botProtection();
+            if (document.querySelectorAll(".no-results-error").length > 0 && (document.querySelectorAll(".image-container > .image").length > 0) || document.querySelectorAll(".result:not(.ad)").length > 0) {
+              document.querySelectorAll(".no-results-error").forEach(element => {
+                element.remove();
+              });
+              if (document.querySelector(".alert.alert-danger > ul") != null && document.querySelector(".alert.alert-danger > ul").children().length == 0) {
+                document.querySelectorAll(".alert.alert-danger").forEach(element => {
+                  element.remove();
+                });
               }
             }
           }
-          if ($(".no-results-error").length > 0 && ($(".image-container > .image").length > 0) || $(".result:not(.ad)").length > 0) {
-            $(".no-results-error").remove();
-            if ($(".alert.alert-danger > ul").children().length == 0) {
-              $(".alert.alert-danger").remove();
-            }
-          }
-        }
-        if (typeof data.changedResults != "undefined") {
-          for (var key in data.changedResults) {
-            var value = data.changedResults[key];
-            // If there are more results than the given index we will prepend otherwise we will append the result
-            if (!data.imagesearch) {
-              $($(".result:not(.ad)")[key]).replaceWith($(value));
-            } else {
-              $($(".image-container > .image")[key]).replaceWith($(value));
-            }
-          }
-        }
-        currentlyLoading = false;
-      });
+
+          currentlyLoading = false;
+        });
     }
   }, 1000);
 }

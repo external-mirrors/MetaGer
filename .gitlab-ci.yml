@@ -10,13 +10,16 @@ variables:
     PERFORMANCE_DISABLED: "true"
     SAST_DISABLED: "true"
     TEST_DISABLED: "true"
+    AUTO_DEVOPS_BUILD_IMAGE_FORWARDED_CI_VARIABLES: "AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,S3_HOST,S3_BUCKETNAME"
 
 include:
   - template: Jobs/Build.gitlab-ci.yml
   - template: Jobs/Deploy.gitlab-ci.yml
 
+.auto-deploy:
+  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
+
 stages:
-  - prepare
   - build
   - deploy  # dummy stage to follow the template guidelines
   - review
@@ -33,45 +36,8 @@ stages:
   - integrationtest
   - cleanup
 
-.auto-deploy:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v1.0.6"
-
 build:
   services:
-
-prepare_node:
-  stage: prepare
-  image: node:10
-  before_script:
-    - npm install
-  script:
-    - npm run prod
-  artifacts:
-    paths:
-      - public/js/
-      - public/css/
-      - public/mix-manifest.json
-  cache:
-    # Cache per Branch
-    key: "node-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
-    paths:
-      - node_modules
-  only:
-    - branches
-    - tags
-
-prepare_composer:
-  stage: prepare
-  image: prooph/composer:7.3
-  script:
-    - composer install --no-dev
-  artifacts:
-    paths:
-      - vendor
-  cache:
-    key: "composer-$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
-    paths:
-      - vendor
 
 review:
   variables:
@@ -126,7 +92,7 @@ stop_review:
     - auto-deploy delete rollout
     - auto-deploy persist_environment_url
   variables:
-    ADDITIONAL_HOSTS: "www.metager3.de"
+    ADDITIONAL_HOSTS: "www.metager3.de,test.metager.de"
     HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:
@@ -137,16 +103,19 @@ stop_review:
 
 development:
   <<: *development_template
-  only:
-    refs:
-      - development
-    kubernetes: active
-  except:
-    variables:
-      - $STAGING_ENABLED
-      - $CANARY_ENABLED
-      - $INCREMENTAL_ROLLOUT_ENABLED
-      - $INCREMENTAL_ROLLOUT_MODE
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$STAGING_ENABLED'
+      when: never
+    - if: '$CANARY_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_MODE'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+
 
 
 production:
@@ -156,22 +125,45 @@ production:
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:
     url: https://metager.de
+  rules:
+    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
+      when: never
+    - if: '$STAGING_ENABLED'
+      when: never
+    - if: '$CANARY_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
+      when: never
+    - if: '$INCREMENTAL_ROLLOUT_MODE'
+      when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
 
 integrationtest:
   stage: integrationtest
   image: 
-    name: prooph/composer:7.3
+    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
     entrypoint: ["/bin/sh"]
   script:
     # Install Dev Dependencies
-    - composer install
     - cp .env.example .env
-    - echo "WEBDRIVER_USER=\"$WEBDRIVER_KEY\"" >> .env
-    - echo "WEBDRIVER_URL=\"$WEBDRIVER_URL\"" >> .env
-    - echo "WEBDRIVER_KEY=\"$WEBDRIVER_USER\"" >> .env
-    - php artisan key:generate
+    - echo "" >> .env
+    - echo "BROWSERSTACK_USERNAME=\"$BROWSERSTACK_USERNAME\"" >> .env
+    - echo "BROWSERSTACK_ACCESS_KEY=\"$BROWSERSTACK_ACCESS_KEY\"" >> .env
+    - echo "BROWSERSTACK_LOCAL_TUNNEL=\"$BROWSERSTACK_LOCAL_TUNNEL\"" >> .env
     - URL=$(cat environment_url.txt | tr -d '\n')
     - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
     - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
     - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - php artisan dusk
+    - mc alias set --path=on --api S3v4 packages $S3_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
+    - if mc cp packages/$S3_BUCKETNAME/packages.tar /tmp/; then tar -xf /tmp/packages.tar; fi
+    - export COMPOSER_HOME=.composer
+    - composer install
+    - tar -cf /tmp/packages.tar .npm .composer
+    - mc cp /tmp/packages.tar packages/$S3_BUCKETNAME/
+    - rm /tmp/packages.tar
+    - rm -rf .npm .composer
+    - php artisan test --parallel --processes=5
+  except:
+    refs: 
+      - master

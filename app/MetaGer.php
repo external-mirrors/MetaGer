@@ -48,6 +48,7 @@ class MetaGer
     protected $availableFoki = [];
     protected $startCount = 0;
     protected $canCache = false;
+    protected $javascript = false;
     # Daten über die Abfrage$
     protected $ip;
     protected $useragent;
@@ -66,6 +67,7 @@ class MetaGer
     protected $adDomainsBlacklisted = [];
     protected $urlsBlacklisted = [];
     protected $adUrlsBlacklisted = [];
+    protected $blacklistDescriptionUrl = [];
     protected $url;
     protected $fullUrl;
     protected $enabledSearchengines = [];
@@ -78,6 +80,7 @@ class MetaGer
     protected $redisEngineResult;
     protected $redisCurrentResultList;
     public $starttime;
+    protected $dummy = false;
 
     public function __construct($hash = "")
     {
@@ -89,17 +92,22 @@ class MetaGer
             $this->domainsBlacklisted = explode("\n", $tmp);
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
             $this->urlsBlacklisted = explode("\n", $tmp);
-        } else {
-            Log::warning("Achtung: Eine, oder mehrere Blacklist Dateien, konnten nicht geöffnet werden");
         }
+        
         # Versuchen Blacklists einzulesen
-        if (file_exists(config_path() . "/adBlacklistDomains.txt") && file_exists(config_path() . "/adBlacklistUrl.txt")) {
+        if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
             $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
             $this->adDomainsBlacklisted = explode("\n", $tmp);
+        }
+
+        if(file_exists(config_path() . "/adBlacklistUrl.txt")){
             $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
             $this->adUrlsBlacklisted = explode("\n", $tmp);
-        } else {
-            Log::warning("Achtung: Eine, oder mehrere Blacklist Dateien, konnten nicht geöffnet werden");
+        }
+
+        if(file_exists(config_path() . "/blacklistDescriptionUrl.txt")){
+            $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
+            $this->blacklistDescriptionUrl = explode("\n", $tmp);
         }
 
         # Parser Skripte einhängen
@@ -141,7 +149,7 @@ class MetaGer
         $focusPages = [];
 
         foreach ($this->request->all() as $key => $value) {
-            if (starts_with($key, 'engine_') && $value === 'on') {
+            if (stripos($key, 'engine_') === 0 && $value === 'on') {
                 $focusPages[] = $key;
             }
         }
@@ -206,18 +214,6 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', $this->fokus);
                     break;
-                case 'rich':
-                    return view('resultpages.metager3rich')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('fokus', $this->fokus);
-                    break;
                 case 'rss20':
                     return view('resultpages.metager3resultsrss20')
                         ->with('results', $viewResults)
@@ -228,11 +224,10 @@ class MetaGer
                         ->with('fokus', $this->fokus);
                     break;
                 case 'api':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => $this->apiAuthorized])->header('Content-Type', 'application/xml');
+                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'atom10':
-                    return response()->view('resultpages.metager3resultsatom10', ['results' => $viewResults, 'eingabe' => $this->eingabe, 'metager' => $this, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'apiAuthorized' => true])
-                        ->header('Content-Type', 'application/xml');
+                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
                     break;
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
@@ -321,33 +316,12 @@ class MetaGer
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
-        if (!$this->apiAuthorized && !$this->adgoalLoaded) {
-            if (empty($this->adgoalHash)) {
-                if (!empty($this->jskey)) {
-                    $js = Redis::connection('cache')->lpop("js" . $this->jskey);
-                    if ($js !== null && boolval($js)) {
-                        $this->javascript = true;
-                    }
-                }
-                $this->adgoalHash = $this->startAdgoal($this->results);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["started adgoal"] = microtime(true) - $timings["starttime"];
-                }
+
+        if (!empty($this->jskey)) {
+            $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+            if ($js !== null && boolval($js)) {
+                $this->javascript = true;
             }
-        
-            if (!$this->javascript) {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, true);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            } else {
-                $this->adgoalLoaded = $this->parseAdgoal($this->results, $this->adgoalHash, false);
-                if (!empty($timings)) {
-                    $timings["prepareResults"]["parsed adgoal"] = microtime(true) - $timings["starttime"];
-                }
-            }
-        } else {
-            $this->adgoalLoaded = true;
         }
 
         # Human Verification
@@ -423,15 +397,24 @@ class MetaGer
             }
     
             $link = trim($link, "/");
-            $hash = md5($link);
 
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+
+                // The duplicate might already be an adgoal partnershop
+                if($this->results[$i]->partnershop){
+                    # Den Link hinzufügen:
+                    $arr[$link]->logo = $this->results[$i]->logo;
+                    $arr[$link]->image = $this->results[$i]->image;
+                    $arr[$link]->link = $this->results[$i]->link;
+                    $arr[$link]->partnershop = $this->results[$i]->partnershop;
+                }
+
                 array_splice($this->results, $i, 1);
                 $i--;
                 if ($arr[$link]->new === true || $this->results[$i]->new === true) {
-                    $arr[$link]->changed = true;
+                    $arr[$link]->changed = true; 
                 }
             } else {
                 $arr[$link] = &$this->results[$i];
@@ -439,123 +422,25 @@ class MetaGer
         }
     }
 
-    public function startAdgoal(&$results)
-    {
-        $publicKey = getenv('adgoal_public');
-        $privateKey = getenv('adgoal_private');
-        if ($publicKey === false) {
-            return true;
+    /**
+     * @param \App\Models\Admitad[] $admitads
+     * @param Boolean $wait Wait for Results?
+     * @return Boolean whether or not all Admitad Objects are finished
+     */
+    public function parseAffiliates(&$affiliates){
+        $wait = false;
+        $finished = true;
+        if(!$this->javascript){
+            $wait = true;
         }
-        $tldList = "";
-        foreach ($results as $result) {
-            if (!$result->new) {
-                continue;
+        foreach ($affiliates as $affiliate) {
+            $affiliate->fetchAffiliates($wait);
+            $affiliate->parseAffiliates($this->results);
+            if(!$affiliate->finished){
+                $finished = false;
             }
-            $link = $result->link;
-            if (strpos($link, "http") !== 0) {
-                $link = "http://" . $link;
-            }
-            $tldList .= parse_url($link, PHP_URL_HOST) . ",";
-            $result->tld = parse_url($link, PHP_URL_HOST);
         }
-        $tldList = rtrim($tldList, ",");
-
-        # Hashwert
-        $hash = md5("meta" . $publicKey . $tldList . "GER");
-
-        # Query
-        $query = $this->q;
-
-        $link = "https://api.smartredirect.de/api_v2/CheckForAffiliateUniversalsearchMetager.php?p=" . urlencode($publicKey) . "&k=" . urlencode($hash) . "&tld=" . urlencode($tldList) . "&q=" . urlencode($query);
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => $hash,
-            "url" => $link,
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => null,
-            "password" => null,
-            "headers" => null,
-            "cacheDuration" => 60,
-            "name" => "Adgoal",
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
-        return $hash;
-    }
-
-    public function parseAdgoal(&$results, $hash, $waitForResult)
-    {
-        # Wait for result
-        $startTime = microtime(true);
-        $answer = null;
-
-        # Hash is true if Adgoal request wasn't started in the first place
-        if ($hash === true) {
-            return true;
-        }
-
-        if ($waitForResult) {
-            while (microtime(true) - $startTime < 5) {
-                $answer = Cache::get($hash);
-                if ($answer === null) {
-                    usleep(50 * 1000);
-                } else {
-                    break;
-                }
-            }
-        } else {
-            $answer = Cache::get($hash);
-        }
-        if ($answer === null) {
-            return false;
-        }
-        try {
-            $answer = json_decode($answer);
-            $publicKey = getenv('adgoal_public');
-            $privateKey = getenv('adgoal_private');
-
-            # Nun müssen wir nur noch die Links für die Advertiser ändern:
-            foreach ($results as $result) {
-                $link = $result->link;
-                $result->tld = parse_url($link, PHP_URL_HOST);
-            }
-
-            foreach ($answer as $el) {
-                $hoster = $el[0];
-                $hash = $el[1];
-
-                foreach ($results as $result) {
-                    if ($hoster === $result->tld && !$result->partnershop) {
-                        # Hier ist ein Advertiser:
-                        # Das Logo hinzufügen:
-                        if ($result->image !== "") {
-                            $result->logo = "https://img.smartredirect.de/logos_v2/60x30/" . urlencode($hash) . ".gif";
-                        } else {
-                            $result->image = "https://img.smartredirect.de/logos_v2/120x60/" . urlencode($hash) . ".gif";
-                        }
-
-                        # Den Link hinzufügen:
-                        $targetUrl = $result->link;
-                        # Query
-                        $query = $this->q;
-
-                        $gateHash = md5($targetUrl . $privateKey);
-                        $newLink = "https://api.smartredirect.de/api_v2/ClickGate.php?p=" . urlencode($publicKey) . "&k=" . urlencode($gateHash) . "&url=" . urlencode($targetUrl) . "&q=" . urlencode($query);
-                        $result->link = $newLink;
-                        $result->partnershop = true;
-                        $result->changed = true;
-                    }
-                }
-            }
-        } catch (\ErrorException $e) {
-            Log::error($e->getMessage());
-        } finally {
-            $requestTime = microtime(true) - $startTime;
-            \App\PrometheusExporter::Duration($requestTime, "adgoal");
-        }
-        return true;
+        return $finished;
     }
 
     public function humanVerification(&$results)
@@ -565,9 +450,9 @@ class MetaGer
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $pw = md5($this->verificationId . $day . $link . env("PROXY_PASSWORD"));
+                $pw = md5($this->verificationId . $day . $link . config("metager.metager.proxy.password"));
                 $url = route('humanverification', ['mm' => $this->verificationId, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
-                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . env("PROXY_PASSWORD"));
+                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . config("metager.metager.proxy.password"));
                 $proxyUrl = route('humanverification', ['mm' => $this->verificationId, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
@@ -577,30 +462,7 @@ class MetaGer
 
     public function authorize($key)
     {
-        $postdata = http_build_query(array(
-            'dummy' => rand(),
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'content' => $postdata,
-            ),
-        );
-
-        $context = stream_context_create($opts);
-
-        try {
-            $link = "https://key.metager3.de/" . urlencode($key) . "/request-permission/api-access";
-            $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'api-access'} == true) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (\ErrorException $e) {
-            return false;
-        }
+        return app('App\Models\Key')->requestPermission();
     }
 
     /*
@@ -707,7 +569,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off") {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -793,6 +655,10 @@ class MetaGer
             $keys = [];
             foreach ($this->engines as $engine) {
                 $keys[] = $engine->hash;
+            }
+            # Noch searchengines enabled
+            if (empty($keys)) {
+                return;
             }
             $cacheValues = Cache::many($keys);
             foreach ($this->engines as $engine) {
@@ -1014,6 +880,7 @@ class MetaGer
                 continue;
             } else {
                 Redis::lpush($answer[0], $answer[1]);
+                Redis::expire($answer[0], 60);
             }
             foreach ($engines as $index => $engine) {
                 if ($engine->hash === $answer[0]) {
@@ -1055,7 +922,7 @@ class MetaGer
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */
 
-    public function parseFormData(Request $request)
+    public function parseFormData(Request $request, $auth = true)
     {
         # Sichert, dass der request in UTF-8 formatiert ist
         if ($request->input('encoding', 'utf8') !== "utf8") {
@@ -1086,9 +953,9 @@ class MetaGer
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
         if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . "/sumasEn.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
         } else {
-            $this->sumaFile = config_path() . "/sumas.json";
+            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
         }
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
@@ -1128,16 +995,16 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale("de") || (\Cookie::has($this->getFokus() . '_setting_zitate') && \Cookie::get($this->getFokus() . '_setting_zitate') === "off")) {
-            $this->sprueche = "off";
+        if (!App::isLocale('de') || (\Cookie::has('zitate') && \Cookie::get('zitate') === 'off')) {
+            $this->sprueche = 'off';
         } else {
-            $this->sprueche = "on";
+            $this->sprueche = 'on';
         }
-        if ($request->filled("zitate") && $request->input('zitate') === "on" || $request->input('zitate') === "off") {
+        if ($request->filled('zitate') && $request->input('zitate') === 'on' || $request->input('zitate') === 'off') {
             $this->sprueche = $request->input('quotes');
         }
 
-        $this->newtab = $request->input('newtab', 'on');
+        $this->newtab = $request->input('new_tab', \Cookie::get('new_tab'));
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
         } elseif ($this->framed) {
@@ -1145,7 +1012,7 @@ class MetaGer
         } else {
             $this->newtab = "_self";
         }
-        if ($request->filled("key") && $request->input('key') === getenv("mainz_key")) {
+        if ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz")) {
             $this->newtab = "_blank";
         }
         # Theme
@@ -1191,7 +1058,7 @@ class MetaGer
                 $this->apiKey = "";
             }
         }
-        if ($this->apiKey) {
+        if ($this->apiKey && $auth) {
             $this->apiAuthorized = $this->authorize($this->apiKey);
         }
 
@@ -1247,7 +1114,7 @@ class MetaGer
 
         $this->out = $request->input('out', "html");
         # Standard output format html
-        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "rss20" && $this->out !== "atom10" && $this->out !== "rich" && $this->out !== "api") {
+        if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api" && $this->out !== "rss20") {
             $this->out = "html";
         }
         # Wir schalten den Cache aus, wenn die Ergebniszahl überprüft werden soll
@@ -1267,8 +1134,12 @@ class MetaGer
     public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
-        return $quicktips;
+        if (!$this->dummy) {
+            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
+            return $quicktips;
+        } else {
+            return null;
+        }
     }
 
 
@@ -1509,7 +1380,7 @@ class MetaGer
         $words = preg_split("/\s+/si", $tmp);
         $newQ = $this->q;
         foreach ($words as $word) {
-            if (strpos($word, "-") === 0 && strlen($word) > 1) {
+            if(preg_match("/^-[a-zA-Z0-9]/", $word)){
                 $this->stopWords[] = substr($word, 1);
                 $newQ = str_ireplace($word, "", $newQ);
             }
@@ -1638,14 +1509,13 @@ class MetaGer
                 $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
                 $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
                 $logEntry .= " sprachfilter=" . $this->lang;
-                $logEntry .= " key=" . $this->apiKey;
                 $logEntry .= " eingabe=" . $this->eingabe;
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
-                if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+                if (config("database.redis.cache.driver", "redis") === "redis") {
                     Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+                } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
                     RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 }
             } catch (\Exception $e) {
@@ -1813,7 +1683,7 @@ class MetaGer
         $foki = array_keys($sumaFile['foki']);
 
         foreach ($cookies as $key => $value) {
-            if (starts_with($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
+            if (in_array($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
                 $count++;
                 continue;
             }
@@ -1853,6 +1723,9 @@ class MetaGer
         $this->results = $results;
     }
 
+    /**
+     * @return \App\Models\Result[]
+     */
     public function getResults()
     {
         return $this->results;
@@ -1972,6 +1845,11 @@ class MetaGer
         return $this->domainsBlacklisted;
     }
 
+    public function getBlacklistDescriptionUrl()
+    {
+        return $this->blacklistDescriptionUrl;
+    }
+
     public function getUrlBlacklist()
     {
         return $this->urlsBlacklisted;
@@ -2021,26 +1899,6 @@ class MetaGer
         return $this->engines;
     }
 
-    public function setAdgoalHash($hash)
-    {
-        $this->adgoalHash = $hash;
-    }
-
-    public function getAdgoalHash()
-    {
-        return $this->adgoalHash;
-    }
-
-    public function isAdgoalLoaded()
-    {
-        return $this->adgoalLoaded;
-    }
-
-    public function setAdgoalLoaded($adgoalLoaded)
-    {
-        $this->adgoalLoaded = $adgoalLoaded;
-    }
-
     public function isApiAuthorized()
     {
         return $this->apiAuthorized;
@@ -2061,11 +1919,27 @@ class MetaGer
         return $this->headerPrinted;
     }
 
+    public function isDummy(){
+        return $this->dummy;
+    }
+
+    public function jsEnabled() {
+        return $this->javascript;
+    }
+    
+    public function setJsEnabled(bool $bool){
+        $this->javascript = $bool;
+    }
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */
     public function restoreEngines($engines)
     {
         $this->engines = $engines;
+    }
+
+    public function setDummy($dummy)
+    {
+        $this->dummy = $dummy;
     }
 }

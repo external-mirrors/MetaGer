@@ -25,12 +25,18 @@ return [
     'add' => 'Hinzufügen',
     'clear' => 'Blacklist leeren',
     'copy' => 'Kopieren',
+    'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
 
     'darkmode' => 'Dunklen Modus umschalten',
-    'darkmode-hint' => 'Die Einstellung für den dunklen Modus betrifft alle Fokusse und Unterseiten übergreifend!',
     'system' => 'Systemstandard',
     'dark' => 'Dunkel',
     'light' => 'Hell',
+
+    'newTab' => 'Ergebnisse in neuem Tab öffnen',
+    'off' => 'Aus',
+    'on' => 'An',
+
+    'more' => 'Weitere Einstellungen',
 
     // Translations from the settings overview
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
@@ -45,5 +51,4 @@ return [
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
-    'dm' => 'Dunkler Modus',
 ];

@@ -5,18 +5,26 @@
 				@if( isset($result->price) && $result->price != 0)
 					<span class="result-price">{!! $result->price_text !!}</span>
 				@endif
-				<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
+				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
 					{!! $result->titel !!}
 				</a>
 			</h2>
 			@if(sizeof($result->gefVon)===1)
 				<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
 			@else
-				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster"> {{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }} </span>
+				<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster" tabindex="0">
+					{{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }}
+					<ul class="card-heavy">
+						@foreach($result->gefVon as $index => $gefVon)
+						<li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[$index] }} </a></li>
+						@endforeach
+					</ul>
+				</span>
+				
 			@endif
 		</div>
 		<div class="result-subheadline">
-			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" @if($metager->isFramed())target="_top"@endif tabindex="-1">
+			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" target="{{ $metager->getNewtab() }}" tabindex="-1">
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
@@ -47,7 +55,7 @@
 			</div>
 		@else
 			<div class="result-description">
-				{!! $result->descr !!}
+				{{ $result->descr }}
 			</div>
 		@endif
 	</div>
@@ -59,7 +67,7 @@
 		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
 			{!! trans('result.options.6') !!}
 		</a>
-		<a class="result-open-proxy" onmouseover="$(this).popover('show');" onmouseout="$(this).popover('hide');" data-toggle="popover" data-placement="auto right" data-container="body" data-content="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">
 			{!! trans('result.options.5') !!}
 		</a>
 		<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
@@ -74,7 +82,7 @@
 				<ul class="option-list list-unstyled small">
 					<li class="js-only">
 						<a href="javascript:resultSaver('{{ $result->hash }}');" class="saver">
-							<nobr><i class="fa fa-floppy-o"></i> {!! trans('result.options.savetab') !!}</nobr>
+							<nobr><img  class= "mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}</nobr>
 						</a>
 					</li>
 					@if(strlen($metager->getSite()) === 0)

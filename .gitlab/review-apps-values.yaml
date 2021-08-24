@@ -2,6 +2,10 @@ postgresql:
     enabled: false
 hpa: 
   enabled: false
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resources:
   requests:
   limits:
@@ -9,12 +13,15 @@ ingress:
   annotations: 
     kubernetes.io/tls-acme: "false"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "30m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "30m"
     nginx.ingress.kubernetes.io/configuration-snippet: |
-      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline'; script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self'; worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self'; base-uri; manifest-src; plugin-types; report-uri; report-to";
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline'; script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self'; worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; base-uri; manifest-src; plugin-types; report-uri; report-to";
       more_set_headers "X-Frame-Options: sameorigin";
       more_set_headers "X-Content-Type-Options: nosniff";
       more_set_headers "ReferrerPolicy: origin";
       more_set_headers "X-XSS-Protection: 1; mode=block";
+      more_set_headers "Permissions-Policy: interest-cohort=()";
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
       }
@@ -23,7 +30,7 @@ ingress:
 service: 
   commonName: ""
   externalPort: 80
-  internalPort: 80
+  internalPort: 8080
 deploymentApiVersion: apps/v1
 resourcesPhpfpm: 
   requests:
@@ -35,5 +42,8 @@ resourcesRedis:
   requests:
   limits:
 resourcesFetcher: 
+  requests:
+  limits:
+resourcesScheduler: 
   requests:
   limits:

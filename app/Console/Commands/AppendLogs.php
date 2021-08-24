@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
-use Log;
 use Monospice\LaravelRedisSentinel\RedisSentinel;
 
 class AppendLogs extends Command
@@ -15,7 +14,7 @@ class AppendLogs extends Command
      * @var string
      */
     protected $signature = 'logs:gather';
-    const LOGKEY = "metager.logs";
+    const LOGKEY = "metager.logs.2021";
 
     /**
      * The console command description.
@@ -41,15 +40,20 @@ class AppendLogs extends Command
      */
     public function handle()
     {
-        $redis = null;
+        $this->handleMGLogs();
+    }
 
-        if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+    private function handleMGLogs()
+    {
+        $redis = null;
+        
+        if (config("database.redis.cache.driver", "redis") === "redis") {
             $redis = Redis::connection('cache');
-        } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+        } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
             $redis = RedisSentinel::connection('cache');
         }
         if ($redis === null) {
-            Log::error("No valid Redis Connection specified");
+            $this->error("No valid Redis Connection specified");
             return;
         }
 
@@ -63,10 +67,10 @@ class AppendLogs extends Command
             return;
         }
         if (file_put_contents(\App\MetaGer::getMGLogFile(), implode(PHP_EOL, $elements) . PHP_EOL, FILE_APPEND) === false) {
-            Log::error("Konnte Log Zeile(n) nicht schreiben");
-            $redis->lpush(array_reverse($elements));
+            $this->error("Konnte Log Zeile(n) nicht schreiben");
+            $redis->lpush(\App\Console\Commands\AppendLogs::LOGKEY, array_reverse($elements));
         } else {
-            Log::info("Added " . sizeof($elements) . " lines to todays log!");
+            $this->info("Added " . sizeof($elements) . " lines to todays log!");
         }
     }
 }

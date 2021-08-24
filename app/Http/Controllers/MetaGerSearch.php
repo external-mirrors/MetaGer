@@ -22,11 +22,6 @@ class MetaGerSearch extends Controller
             $timings = ['starttime' => microtime(true)];
         }
         $time = microtime(true);
-        $spamEntries = [];
-        $spamEntry = null;
-        if (file_exists(config_path('spam.txt'))) {
-            $spamEntries = file(config_path('spam.txt'));
-        }
 
         $focus = $request->input("focus", "web");
 
@@ -39,17 +34,6 @@ class MetaGerSearch extends Controller
         $eingabe = $request->input('eingabe', '');
         if (empty(trim($eingabe))) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
-        }
-
-        foreach ($spamEntries as $index => $entry) {
-            $entry = trim($entry);
-            if (empty($entry)) {
-                continue;
-            }
-            if (preg_match("/" . $entry . "/si", $eingabe)) {
-                $spamEntry = $entry;
-                break;
-            }
         }
 
         # Mit gelieferte Formulardaten parsen und abspeichern:
@@ -70,12 +54,6 @@ class MetaGerSearch extends Controller
             return $metager->createView();
         }
 
-        if ($spamEntry !== null && Cache::has('spam.' . $metager->getFokus() . "." . md5($spamEntry))) {
-            $responseContent = Cache::get('spam.' . $metager->getFokus() . "." . md5($spamEntry));
-            $responseContent = preg_replace('/(name="eingabe"\s+value=")[^"]+/', "$1$eingabe", $responseContent);
-            return response($responseContent);
-        }
-
         $quicktips = $metager->createQuicktips();
         if (!empty($timings)) {
             $timings["createQuicktips"] = microtime(true) - $time;
@@ -88,9 +66,13 @@ class MetaGerSearch extends Controller
         $metager->startSearch($timings);
 
         # Versuchen die Ergebnisse der Quicktips zu laden
-        $quicktipResults = $quicktips->loadResults();
-        if (!empty($timings)) {
-            $timings["Loaded Quicktip Results"] = microtime(true) - $time;
+        if($quicktips !== null) {
+            $quicktipResults = $quicktips->loadResults();
+            if (!empty($timings)) {
+                $timings["Loaded Quicktip Results"] = microtime(true) - $time;
+            }
+        } else {
+            $quicktipResults = [];
         }
 
         $metager->waitForMainResults();
@@ -111,6 +93,21 @@ class MetaGerSearch extends Controller
 
         # Ergebnisse der Suchmaschinen kombinieren:
         $metager->prepareResults($timings);
+        $admitad = [];
+        $adgoal = [];
+        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if(!empty($newAdmitad->hash)){
+                $admitad[] = $newAdmitad;
+            }
+            $newAdgoal = new \App\Models\Adgoal($metager);
+            if(!empty($newAdgoal->hash)){
+                $adgoal[] = $newAdgoal;
+            }
+        }
+
+        $metager->parseAffiliates($admitad);
+        $metager->parseAffiliates($adgoal);
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -119,16 +116,13 @@ class MetaGerSearch extends Controller
                 $engine->markNew();
             }
         }
-
         try {
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
                     "apiAuthorized" => $metager->isApiAuthorized(),
                 ],
-                "adgoal" => [
-                    "loaded" => $metager->isAdgoalLoaded(),
-                    "adgoalHash" => $metager->getAdgoalHash(),
-                ],
+                "admitad" => $admitad,
+                "adgoal" => $adgoal,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
@@ -140,13 +134,6 @@ class MetaGerSearch extends Controller
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
-        if ($spamEntry !== null) {
-            try {
-                Cache::put('spam.' . $metager->getFokus() . "." . md5($spamEntry), $resultpage->render(), 604800);
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-            }
-        }
 
         if (!empty($timings)) {
             $timings["createView"] = microtime(true) - $time;
@@ -216,14 +203,14 @@ class MetaGerSearch extends Controller
 
         $engines = $cached["engines"];
         $adgoal = $cached["adgoal"];
+        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
         $metager->setApiAuthorized($mg["apiAuthorized"]);
-        $metager->setAdgoalLoaded($adgoal["loaded"]);
-        $metager->setAdgoalHash($adgoal["adgoalHash"]);
 
-        $metager->parseFormData($request);
+        $metager->parseFormData($request, false);
+        $metager->setJsEnabled(true);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
@@ -235,6 +222,20 @@ class MetaGerSearch extends Controller
 
         $metager->rankAll();
         $metager->prepareResults();
+
+        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if(!empty($newAdmitad->hash)){
+                $admitad[] = $newAdmitad;
+            }
+            $newAdgoal = new \App\Models\Adgoal($metager);
+            if(!empty($newAdgoal->hash)){
+                $adgoal[] = $newAdgoal;
+            }
+        }
+
+        $admitadFinished = $metager->parseAffiliates($admitad);
+        $adgoalFinished = $metager->parseAffiliates($adgoal);
 
         $result = [
             'finished' => true,
@@ -282,7 +283,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if (!$metager->isAdgoalLoaded()) {
+        if (!$adgoalFinished || !$admitadFinished) {
             $finished = false;
         }
 
@@ -299,10 +300,8 @@ class MetaGerSearch extends Controller
             "metager" => [
                 "apiAuthorized" => $metager->isApiAuthorized(),
             ],
-            "adgoal" => [
-                "loaded" => $metager->isAdgoalLoaded(),
-                "adgoalHash" => $metager->getAdgoalHash(),
-            ],
+            "admitad" => $admitad,
+            "adgoal" => $adgoal,
             "engines" => $metager->getEngines(),
         ], 1 * 60);
 
@@ -335,7 +334,7 @@ class MetaGerSearch extends Controller
     public function tips(Request $request)
     {
         $tipserver = '';
-        if (env('APP_ENV') === "development") {
+        if (\App::environment() === "development") {
             $tipserver = "https://dev.quicktips.metager.de/1.1/tips.xml";
         } else {
             $tipserver = "https://quicktips.metager.de/1.1/tips.xml";

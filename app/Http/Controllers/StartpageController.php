@@ -7,6 +7,7 @@ use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use LaravelLocalization;
+use Illuminate\Support\Facades\Redis;
 use Response;
 
 class StartpageController extends Controller
@@ -72,12 +73,6 @@ class StartpageController extends Controller
         return view($subpage, ['title' => 'Datenschutz Richtlinien']);
     }
 
-    public function loadLocalPage($locale = "de", $subpage = "datenschutz")
-    {
-        \App::setLocale($locale);
-        return loadPage($subpage);
-    }
-
     public function loadPlugin(Request $request, $locale = "de")
     {
         $link = action('MetaGerSearch@search', []);
@@ -101,7 +96,7 @@ class StartpageController extends Controller
         $link = "";
         $password = "";
         if ($request->filled('eingabe')) {
-            $password = getenv('berlin');
+            $password = config("metager.metager.keys.berlin");
             $password = md5($request->input('eingabe') . " -host:userpage.fu-berlin.de" . $password);
             $link = "/meta/meta.ger3?eingabe=" . $request->input('eingabe') . " -host:userpage.fu-berlin.de&focus=web&password=" . $password . "&encoding=utf8&lang=all&site=fu-berlin.de&quicktips=off&out=results-with-style";
         }

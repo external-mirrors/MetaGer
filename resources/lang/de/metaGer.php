@@ -6,7 +6,7 @@ return [
 
     'settings.noneSelected' => 'Achtung: Sie haben in ihren Einstellungen keine Suchmaschine ausgewählt.',
 
-    'engines.noParser' => 'Beim Abfragen von :engine ist ein Fehler aufgetreten. Bitte benachrichtigen Sie uns unter: office@suma-ev.de',
+    'engines.noParser' => 'Beim Abfragen von :engine ist ein Fehler aufgetreten. Bitte benachrichtigen Sie uns über unser <a href="/kontakt" target="_blank">Kontaktformular</a>',
     'engines.noSpecialSearch' => 'Für eine Ihrer Filteroptionen gab es keine Suchmaschine im aktuellen Fokus (:fokus), welche diese unterstützen würde. Sie haben folgende(n) Filter aktiv: ":filter".',
 
     'formdata.cantLoad' => 'Suma-File konnte nicht gefunden werden',
@@ -132,6 +132,11 @@ return [
     "filter.sort.totalpricedescending" => "Gesamtpreis (absteigend)",
 
     "filter.rabate" => "Min. Rabatt",
+
+    "filter.count" => "Anzahl",
+    "filter.skip" => "Überspringen",
+    "filter.min" => "Minimum Sleep (in s)",
+    "filter.max" => "Maximum Sleep (in s)",
 
     "settings" => "Einstellungen",
 ];

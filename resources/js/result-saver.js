@@ -1,16 +1,33 @@
+if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
+  // Yes, there's really no need for `Object.defineProperty` here
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
 /**
  * All results are stored in the global object 'results'
- */
+  */
 results = new Results();
 
-$(document).ready(function () {
+document.addEventListener("DOMContentLoaded", (event) => {
+  if(document.readyState == 'complete'){
+    initResultSaver();
+  }else{
+    document.addEventListener("readystatechange", e => {
+      if (document.readyState === 'complete') {
+        initResultSaver();
+      }
+    });
+  }
+});
+
+function initResultSaver() {
   // Add all saved results
   results.loadAllResults();
   // Sort all results
   results.sortResults();
   // Update the visualization
   results.updateResultPageInterface();
-});
+}
 
 /**
  * Load all saved results and sort them
@@ -99,7 +116,7 @@ Results.prototype.deleteAllResults = function () {
     }
   }
   // Remove all keys saved in the keys array from localstorage
-  $.each(keys, function (index, value) {
+  keys.forEach(value => {
     localStorage.removeItem(value);
   });
 };
@@ -110,22 +127,25 @@ Results.prototype.deleteAllResults = function () {
 Results.prototype.updateResultPageInterface = function () {
   if (this.results.length === 0) {
     // If there are no saved-results left, remove the savedFoki element
-    $('#savedFoki').remove();
+    document.querySelectorAll('#savedFoki').forEach(element => {
+      element.remove();
+    });
     return;
   }
-  if ($('#savedFoki').length === 0) {
+  if (document.querySelector('#savedFoki') == null || document.querySelector('#savedFoki').length === 0) {
     // If there is no savedFoki element yet, create it
-    var tabPanel = $('\
-        <div id="savedFoki">\
-          <h1>' + t('result-saver.title') + '</h1>\
-        </div>\
-        ');
-    $('#additions-container').prepend(tabPanel);
+    var template = document.createElement("div");
+    template.innerHTML = '<div id="savedFoki">\
+      <h1>' + t('result-saver.title') + '</h1>\
+    </div>';
+    var tabPanel = template.firstChild;
+    document.querySelector('#additions-container').prepend(tabPanel);
   } else {
     // If there already is a savedFoki element, get it
-    $('#savedFoki').html('');
-    var tabPanel = $('#savedFoki');
+    var tabPanel = document.querySelector("#savedFoki");
+    tabPanel.innerHTML = "";
   }
+
   // Add the full savedFoki element to the tabPanel
   this.addToContainer(tabPanel);
 };
@@ -138,49 +158,50 @@ Results.prototype.updateResultPageInterface = function () {
 Results.prototype.addToContainer = function (container) {
   // Create the saver-options element, which is a bar containing 
   // options for filtering, sorting and deleting all results
-  var options = $('\
-    <div id="saver-options">\
-      <div class="saver-option saver-option-filter">\
-        <input style="font-family: \'Font Awesome 5 Free\', sans-serif;" class="form-control" type="text" placeholder="&#xf0b0 ' + t('result-saver.filter') + '">\
-      </div>\
-      <div class="saver-option saver-option-sort">\
-        <select class="form-control" style="font-family: \'Font Awesome 5 Free\', sans-serif;">\
-          <option value="chronological" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf017 ' + t('result-saver.sort.chronological') + '</option>\
-          <option value="rank" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf162 ' + t('result-saver.sort.ranking') + '</option>\
-          <option value="alphabetical" style="font-family: \'Font Awesome 5 Free\', sans-serif;">&#xf15d ' + t('result-saver.sort.alphabetical') + '</option>\
-        </select>\
-      </div>\
-      <div class="saver-option saver-option-delete">\
-        <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
-          <i class="fa fa-trash-o" aria-hidden="true"></i>\
-          ' + t('result-saver.deleteAll') + '\
-        </button>\
-      </div>\
+  var template = document.createElement("div");
+
+  template.innerHTML = '<div id="saver-options">\
+    <div class="saver-option">\
+      <input style="font-family:, sans-serif;" class="form-control" type="text" placeholder="' + t('result-saver.filter') + '">\
     </div>\
-  ');
+    <div class="saver-option saver-option-sort">\
+      <select class="form-control", sans-serif;">\
+        <option value="chronological" , sans-serif;">🕓 ' + t('result-saver.sort.chronological') + '</option>\
+        <option value="rank" style="font-family: , sans-serif;">🔢 ' + t('result-saver.sort.ranking') + '</option>\
+        <option value="alphabetical" , sans-serif;">🔠 ' + t('result-saver.sort.alphabetical') + '</option>\
+      </select>\
+    </div>\
+    <div class="saver-option saver-option-delete">\
+      <button class="btn btn-danger btn-md" id="saver-options-delete-btn">\
+      <img class= \"mg-icon mg-icon-inverted result-saver-icon\" src=\"/img/trashcan.svg\">\
+        ' + t('result-saver.deleteAll') + '\
+      </button>\
+    </div>\
+  </div>';
+  var options = template.firstChild;
 
   // Set the initial value for the sorting select, based on this.sort
-  $(options).find('select').val(this.sort);
+  options.querySelector("select").value = this.sort;
 
   // Add the saver-options element to the given container
-  $(container).append(options);
+  container.append(options);
 
   /* ~~~ Filter ~~~ */
   // When the user is done typing into the filter input field,
   // Filter all results, only showing ones that contain the filer
-  $(options).find('input').keyup(function () {
+  options.querySelectorAll("input").forEach(element => {
     // Get the entered filter
-    var search = $(this).val();
+    var search = element.value;
     // Hide all results that do not contain the entered filter
-    $('#savedFoki .saved-result-content').each(function (index, value) {
+    document.querySelectorAll('#savedFoki .saved-result-content').forEach(value => {
       // check for filter in all of the elements html-content
-      var html = $(this).html();
+      var html = value.innerHTML;
       if (html.toLowerCase().indexOf(search.toLowerCase()) === -1) {
         // hide entire result block
-        $(value).parent().addClass('hidden');
+        value.parentNode.classList.add('hidden');
       } else {
         // show entire result block
-        $(value).parent().removeClass('hidden');
+        value.parentNode.classList.remove("hidden");
       }
     });
   });
@@ -188,23 +209,27 @@ Results.prototype.addToContainer = function (container) {
   /* ~~~ Sort ~~~ */
   // When the sorting select value is changed, 
   // Sort all results with the selected sorting function and update their appearance
-  $(options).find('select').change(function () {
-    var sort = $(this).val();
-    results.sort = sort;
-    results.sortResults(sort).updateResultPageInterface();
+  options.querySelectorAll("select").forEach(element => {
+    element.onchange = (e) => {
+      var sort = element.value;
+      results.sort = sort;
+      results.sortResults(sort).updateResultPageInterface();
+    };
   });
 
   /* ~~~ Delete ~~~ */
   // When the delete button is clicked,
   // Delete all results and update their appearance
-  $(options).find('#saver-options-delete-btn').click(function (event) {
-    results.deleteAllResults();
-    results.updateResultPageInterface();
+  options.querySelectorAll('#saver-options-delete-btn').forEach(element => {
+    element.onclick = (e) => {
+      results.deleteAllResults();
+      results.updateResultPageInterface();
+    }
   });
 
   // Append all results available
-  $.each(this.results, function (index, result) {
-    $(container).append(result.toHtml());
+  this.results.forEach(result => {
+    container.append(result.toHtml());
   });
 };
 
@@ -272,7 +297,7 @@ Result.prototype.load = function () {
   this.anonym = result.anonym;
   this.description = result.description;
   this.added = result.added;
-  this.index = -result.index;
+  this.index = result.index;
   this.rank = result.rank;
 
   return true;
@@ -351,46 +376,51 @@ Result.prototype.remove = function () {
  */
 Result.prototype.toHtml = function () {
   // Create the saved-result element
-  var result = $('\
-    <div class="saved-result result" data-count="' + this.index + '">\
-      <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
-        <i class="fa fa-trash"></i>\
-      </div>\
-      <div class="saved-result-content">\
-        <div class="result-header">\
-          <div class="result-headline">\
-            <h2 class="result-title">\
-              <a href="' + this.link + '" target="_blank" data-count="1" rel="noopener">\
-                ' + this.title + '\
-              </a>\
-            </h2>\
-            <a class="result-hoster" href="' + this.hosterLink + '" target="_blank" data-count="1" rel="noopener">\
-              ' + this.hosterName + '\
+  var template = document.createElement("div");
+  template.innerHTML = '<div class="saved-result result" data-count="' + this.index + '">\
+    <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
+    <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
+    </div>\
+    <div class="saved-result-content">\
+      <div class="result-header">\
+        <div class="result-headline">\
+          <h2 class="result-title">\
+            <a href="' + this.link + '" target="_blank" data-count="1" rel="noopener">\
+              ' + this.title + '\
             </a>\
-          </div>\
-          <a class="result-link" href="' + this.link + '" target="_blank" rel="noopener">\
-            ' + this.anzeigeLink + '\
-          </a>\
-        <div class="result-body">\
-          <div class="description">' + this.description + '</div>\
-        </div>\
-        <div class="result-footer">\
-          <a class="result-open" href="' + this.link + '" target="_self" rel="noopener">\
-            ' + t('result-saver.save.this') + '\
-          </a>\
-          <a class="result-open" href="' + this.link + '" target="_blank" rel="noopener">\
-            ' + t('result-saver.save.newtab') + '\
-          </a>\
-          <a class="result-open-proxy" onmouseover="$(this).popover(\'show\');" onmouseout="$(this).popover(\'hide\');" data-toggle="popover" data-placement="auto right" data-container="body" data-content="Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt." href="' + this.anonym + '" target="_blank" rel="noopener" data-original-title="" title="">\
-            ' + t('result-saver.save.anonymous') + '\
+          </h2>\
+          <a class="result-hoster" href="' + this.hosterLink + '" target="_blank" data-count="1" rel="noopener">\
+            ' + this.hosterName + '\
           </a>\
         </div>\
+        <a class="result-link" href="' + this.link + '" target="_blank" rel="noopener">\
+          ' + this.anzeigeLink + '\
+        </a>\
+      <div class="result-body">\
+        <div class="description">' + this.description + '</div>\
       </div>\
-    </div>');
+      <div class="result-footer">\
+        <a class="result-open" href="' + this.link + '" target="_self" rel="noopener">\
+          ' + t('result-saver.save.this') + '\
+        </a>\
+        <a class="result-open" href="' + this.link + '" target="_blank" rel="noopener">\
+          ' + t('result-saver.save.newtab') + '\
+        </a>\
+        <a class="result-open-proxy" href="' + this.anonym + '" target="_blank" rel="noopener" title="Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt.">\
+          ' + t('result-saver.save.anonymous') + '\
+        </a>\
+      </div>\
+    </div>\
+  </div>';
+
+  var result = template.firstChild;
 
   // Add a click listener to the remover, that removes the result on click
-  $(result).find('.remover').click({ caller: this }, function (event) {
-    event.data.caller.remove();
+  var caller = this;
+  result.querySelectorAll(".remover").forEach(element => {
+    element.onclick = (e) => {
+      caller.remove();
+    };
   });
 
   return result;
@@ -402,16 +432,17 @@ Result.prototype.toHtml = function () {
  */
 function resultSaver(index) {
   // Remember the original result element
-  var original = $('.result[data-count=' + index + ']');
+  var original = document.querySelector('.result[data-count="' + index + '"]');
 
   // Read the necessary data from the result html
-  var title = $('.result[data-count=' + index + '] .result-title a').html().trim();
-  var link = $('.result[data-count=' + index + '] .result-title a').attr('href').trim();
-  var hosterName = $('.result[data-count=' + index + '] .result-hoster').html().trim();
-  var hosterLink = $('.result[data-count=' + index + '] .result-hoster').attr('href').trim();
-  var anzeigeLink = $('.result[data-count=' + index + '] .result-link').html().trim();
-  var description = $('.result[data-count=' + index + '] .result-description').html().trim();
-  var anonym = $('.result[data-count=' + index + '] .result-open-proxy').attr('href').trim();
+  var title = document.querySelector('.result[data-count="' + index + '"] .result-title a').innerHTML.trim();
+  var link = document.querySelector('.result[data-count="' + index + '"] .result-title a').href.trim();
+  var hosterName = document.querySelector('.result[data-count="' + index + '"] .result-subheadline > a').title.trim();
+  var hosterLink = document.querySelector('.result[data-count="' + index + '"] .result-hoster').href;
+  hosterLink = hosterLink ? hosterLink.trim() : "#";
+  var anzeigeLink = document.querySelector('.result[data-count="' + index + '"] .result-link').innerHTML.trim();
+  var description = document.querySelector('.result[data-count="' + index + '"] .result-description').innerHTML.trim();
+  var anonym = document.querySelector('.result[data-count="' + index + '"] .result-open-proxy').href.trim();
 
   // Create the result object
   var result = new Result(title, link, hosterName, hosterLink, anzeigeLink, description, anonym, index, null);
@@ -426,8 +457,8 @@ function resultSaver(index) {
   results.updateResultPageInterface();
 
   // Animate the result transfer to the saved results
-  var transferTarget = $('.saved-result[data-count=' + index + ']');
-  if (original.length > 0 && transferTarget.length > 0) {
-    $(original).transfer({ to: transferTarget, duration: 1000 });
-  }
+  // var transferTarget = $('.saved-result[data-count=' + index + ']');
+  // if (original.length > 0 && transferTarget.length > 0) {
+  //   $(original).transfer({ to: transferTarget, duration: 1000 });
+  // }
 }

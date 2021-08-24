@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
+use Illuminate\Http\Request;
 use Cache;
 
 class BrowserVerification
@@ -16,16 +17,8 @@ class BrowserVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $route = "resultpage")
     {
-        if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
-            return $next($request);
-        }
-
-        ini_set('zlib.output_compression', 'Off');
-        ini_set('output_buffering', 'Off');
-        ini_set('output_handler', '');
-        ob_end_clean();
 
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
@@ -40,6 +33,25 @@ class BrowserVerification
             }
         }
 
+        if(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
+            header('Content-type: application/xml; charset=utf-8');
+        } elseif(($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
+            abort(403);
+        } else {
+            header('Content-type: text/html; charset=utf-8');
+        }
+        header('X-Accel-Buffering: no');
+
+        //use parameter for middleware to skip this when using associator
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
+            return $next($request);
+        }
+
+        ini_set('zlib.output_compression', 'Off');
+        ini_set('output_buffering', 'Off');
+        ini_set('output_handler', '');
+        ob_end_clean();
+
         $mgv = $request->input('mgv', "");
         if (!empty($mgv)) {
             // Verify that key is a md5 checksum
@@ -51,12 +63,11 @@ class BrowserVerification
                 $request->request->add(["headerPrinted" => false, "jskey" => $mgv]);
                 return $next($request);
             } else {
-                return redirect("/");
+                # We are serving that request but log it for fail2ban
+                self::logBrowserverification($request);
+                return $next($request);
             }
         }
-
-        header('Content-type: text/html; charset=utf-8');
-        header('X-Accel-Buffering: no');
 
         $key = md5($request->ip() . microtime(true));
 
@@ -73,10 +84,33 @@ class BrowserVerification
 
         $params = $request->all();
         $params["mgv"] = $key;
-        $url = route("resultpage", $params);
+        $url = route($route, $params);
 
         echo(view('layouts.resultpage.unverifiedResultPage')
                 ->with('url', $url)
                 ->render());
+    }
+
+    public static function logBrowserverification(Request $request) {
+        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
+        if(empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")){
+            return;
+        }
+
+        // Submit fetch job to worker
+        $mission = [
+                "resulthash" => "captcha",
+                "url" => config("metager.metager.fail2ban.url") . "/browserverification/",
+                "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                "username" => config("metager.metager.fail2ban.user"),
+                "password" => config("metager.metager.fail2ban.password"),
+                "headers" => [
+                    "ip" => $request->ip()
+                ],
+                "cacheDuration" => 0,
+                "name" => "Captcha",
+            ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
 }

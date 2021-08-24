@@ -24,6 +24,9 @@ return [
     'asso' => 'Assoziator - MetaGer',
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Mitgliederschlüssel - MetaGer',
+    'keychange' => 'Mitgliederschlüssel wechseln',
     'settings' => 'Sucheinstellungen (:fokus)',
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
+    'transparency' => 'Transparenzerklärung - MetaGer',
+    'search-engine' => 'Suchmaschinen - MetaGer',
 ];

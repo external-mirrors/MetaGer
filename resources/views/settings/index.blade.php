@@ -12,8 +12,8 @@
         <h2>@lang('settings.hint.header')</h2>
         <p>@lang('settings.hint.text', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</p>
         <p>@lang('settings.hint.loadSettings')</p>
-        <div id="cookieLink">
-            <input id="loadSettings" type="text" value="{{$cookieLink}}">
+        <div class="copyLink">
+            <input id="loadSettings" class="loadSettings" type="text" value="{{$cookieLink}}">
             <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
         </div>
     </div>
@@ -110,7 +110,7 @@
                             {{ $value }}
                         </td>
                         <td>
-                            <button type="submit" name="cookieKey" value="{{ $key }}"><i class="fas fa-trash-alt"></i></button>
+                        <button type="submit" name="cookieKey" value="{{ $key }}"><img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}"></button>
                         </td>
                     </tr>
                 @endforeach
@@ -124,7 +124,8 @@
 
     
         <div class="card-light">
-            <h2>Weitere Einstellungen</h2>
+            <h2>@lang('settings.more')</h2>
+            <p>@lang('settings.hint')</p>
             <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
                 <input type="hidden" name="fokus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
@@ -135,18 +136,24 @@
                         <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
                         <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
                     </select>
-                    <small>@lang('settings.darkmode-hint')</small>
+                </div>
+                <div class="form-group">
+                    <label for="nt">@lang('settings.newTab')</label>
+                    <select name="nt" id="nt" class="form-control">
+                        <option value="off" {{ !Cookie::has('new_tab') ? "disabled selected" : "" }}>@lang('settings.off')</option>
+                        <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
+                    </select>
                 </div>
                 @if(LaravelLocalization::getCurrentLocale() === "de")
                 <div class="form-group">
                     <label for="zitate">Zitate</label>
                     <select name="zitate" id="zitate" class="form-control">
-                        <option value="on" @if(Cookie::get($fokus . "_setting_zitate") === null)disabled selected @endif>Anzeigen</option>
-                        <option value="off" {{ Cookie::get($fokus . "_setting_zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+                        <option value="on" @if(Cookie::get("zitate") === null)disabled selected @endif>Anzeigen</option>
+                        <option value="off" {{ Cookie::get("zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
                     </select>
                 </div>
                 @endif
-                <button type="submit" class="btn btn-default">@lang('settings.save')</button>
+                <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
             </form>
         </div>
     <div class="card-light" id="actions">

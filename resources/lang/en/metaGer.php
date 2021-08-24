@@ -6,7 +6,7 @@ return [
 
     'settings.noneSelected' => 'Attention: you did not choose any search engine.',
 
-    'engines.noParser' => 'There is an error: Requesting \":engine\" failed. Please report to:  <a href=\"mailto:office@suma-ev.de?subject=Fehlender Parser: :engine\">office@suma-ev.de</a>',
+    'engines.noParser' => 'There is an error: Requesting \":engine\" failed. Please report to our <a href=\"/en/kontakt\">contact form</a>',
     'engines.noSpecialSearch' => 'There was no search engine supporting one of your filter options. Filters currently active: ":filter".',
 
     'formdata.cantLoad' => 'Could not find suma-file',
@@ -132,6 +132,11 @@ return [
     "filter.sort.totalpricedescending" => "Total Price (descending)",
 
     "filter.rabate" => "Min. Rabate",
+
+    "filter.count" => "Count",
+    "filter.skip" => "Skip",
+    "filter.min" => "Minimum sleep (in s)",
+    "filter.max" => "Maximum sleep (in s)",
 
     "settings" => "Settings",
 ];

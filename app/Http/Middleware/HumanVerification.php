@@ -33,7 +33,7 @@ class HumanVerification
             $uid = "";
             if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
                 $id = hash("sha1", "999.999.999.999");
-                $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
+                $uid = hash("sha1", "999.999.999.999uid");
             } else {
                 $id = hash("sha1", $ip);
                 $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
@@ -41,12 +41,14 @@ class HumanVerification
             unset($_SERVER["AGENT"]);
 
             /**
-             * If the user sends a Password or a key
+             * If the user sends a valid key or an appversion
              * We will not verificate the user.
              * If someone that uses a bot finds this out we
              * might have to change it at some point.
              */
-            if ($request->filled('password') || $request->filled('key') || Cookie::get('key') !== null || $request->filled('appversion') || !env('BOT_PROTECTION', false)) {
+
+            //use parameter for middleware to skip this when using associator
+            if (!config("metager.metager.botprotection.enabled") || app('App\Models\Key')->getStatus()) {
                 $update = false;
                 return $next($request);
             }
@@ -103,6 +105,7 @@ class HumanVerification
 
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
+                \App\Http\Controllers\HumanVerification::logCaptcha($request);
                 return redirect()->route('captcha', ["id" => $id, "uid" => $uid, "url" => url()->full()]);
             }
 

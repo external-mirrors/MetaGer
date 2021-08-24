@@ -26,7 +26,10 @@ return [
     'nav26' => 'MetaGer-Fanshop',
     'nav27' => 'MetaGer Maps',
     'nav28' => 'Einstellungen',
+    'nav29' => 'Transparenzerklärung',
+    'nav30' => 'Suchmaschinen',
+    'nav31' => 'Weitere Infos',
     'navigationToggle' => 'Navigation anzeigen',
-    'titles.tips' => 'Tips',
+    'titles.tips' => 'Tipps',
     'plugin' => 'MetaGer Plugin',
 ];

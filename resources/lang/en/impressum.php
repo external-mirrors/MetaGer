@@ -11,10 +11,9 @@ Röselerstr. 3
 D-30159 Hannover
 Deutschland/Germany',
     'info.3' => 'Contact:
-Tel.: ++49-(0)511-34000070
-EMail: <a href="mailto:office@suma-ev.de">office@suma-ev.de</a><a href="/kontakt/"> - Public-PGP-Key</a>
-<a href="/kontakt/">encrypted contact form</a>',
-    'info.4' => 'Board: Dominik Hebeler, Carsten Riel',
+Tel.: +4951134000070
+EMail: <a href="/en/kontakt">Encrypted contact form</a>',
+    'info.4' => 'Board: Dominik Hebeler, Carsten Riel, Manuela Branz',
     'info.6' => 'Youth Protection Commissioner: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
     'info.8' => '"SUMA-EV - Verein für freien Wissenszugang" is a charitable association, registered in the register of associations at the Amtsgericht Hannover
 under VR200033.

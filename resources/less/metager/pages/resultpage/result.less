@@ -51,10 +51,29 @@
                 }
             }
             .result-hoster {
+                cursor: pointer;
                 font-size: .9em;
                 margin-left: 20px;
                 color: #808080;
                 white-space: nowrap;
+                >ul {
+                    list-style-type: none;
+                    padding-left: 20px;
+                    position: absolute;
+                    width: fit-content;
+                    padding: 8px;
+                    display: none;
+                    a {
+                        color: @link-color;
+                        &:hover {
+                            color: @a-hover-color;
+                        }
+                        margin-left: 4px;
+                    }
+                }      
+                &:focus > ul {
+                    display: block;
+                }    
             }
         }
         .result-subheadline {
@@ -189,11 +208,7 @@
                 text-decoration: none;
             }
         }
-        @media (max-width: @screen-mobile) {
-            .result-open-newtab {
-                display: none;
-            }
-        }
+
         .result-open-proxy {
             &,
             &:active,
@@ -299,4 +314,7 @@
     filter: invert(1) brightness(0.4);
     height:16px;
     margin-right: 4px;
+}
+.result-icon-floppy {
+    filter: invert(48%) sepia(60%) saturate(5000%) hue-rotate(188deg);
 }

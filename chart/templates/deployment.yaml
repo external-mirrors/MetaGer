@@ -1,5 +1,5 @@
 {{- if not .Values.application.initializeCommand -}}
-apiVersion: {{ default "extensions/v1beta1" .Values.deploymentApiVersion }}
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "trackableappname" . }}
@@ -7,21 +7,16 @@ metadata:
     {{ if .Values.gitlab.app }}app.gitlab.com/app: {{ .Values.gitlab.app | quote }}{{ end }}
     {{ if .Values.gitlab.env }}app.gitlab.com/env: {{ .Values.gitlab.env | quote }}{{ end }}
   labels:
-    app: {{ template "appname" . }}
     track: "{{ .Values.application.track }}"
     tier: "{{ .Values.application.tier }}"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "sharedlabels" . | indent 4 }}
 spec:
-{{- if or .Values.enableSelector (eq (default "extensions/v1beta1" .Values.deploymentApiVersion) "apps/v1") }}
   selector:
     matchLabels:
       app: {{ template "appname" . }}
       track: "{{ .Values.application.track }}"
       tier: "{{ .Values.application.tier }}"
       release: {{ .Release.Name }}
-{{- end }}
   replicas: {{ .Values.replicaCount }}
 {{- if .Values.strategyType }}
   strategy:
@@ -37,38 +32,44 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 8 }}
 {{- end }}
       labels:
-        app: {{ template "appname" . }}
         track: "{{ .Values.application.track }}"
         tier: "{{ .Values.application.tier }}"
-        release: {{ .Release.Name }}
+{{ include "sharedlabels" . | indent 8 }}
     spec:
+{{- if or (.Values.serviceAccount.name) (.Values.serviceAccountName) }}
+      serviceAccountName: {{ .Values.serviceAccount.name | default .Values.serviceAccountName | quote }}
+{{- end }}
       imagePullSecrets:
 {{ toYaml .Values.image.secrets | indent 10 }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
       volumes:
+      - name: secrets
+        secret:
+          secretName: {{ .Values.application.secretName }}
       - name: mglogs-persistent-storage
         persistentVolumeClaim:
           claimName: mg-logs
-      - name: env-files
-        secret:
-          secretName: metager-env
-      - name: sumas
-        secret:
-          secretName: metager-sumas
-      - name: sumas-en
-        secret:
-          secretName: metager-sumas-en
-      - name: blacklist
-        secret:
-          secretName: metager-blacklist
-      - name: blacklist-ad
-        secret:
-          secretName: metager-ad-blacklist
-      - name: metager-config
+      - name: redis-config
         configMap:
-          name: metager
+          name: redis-container-config
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
       containers:
       - name: {{ .Chart.Name }}-phpfpm
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.application.secretName }}
         envFrom:
@@ -76,12 +77,33 @@ spec:
             name: {{ .Values.application.secretName }}
         {{- end }}
         env:
+{{- if .Values.postgresql.managed }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: password
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: privateIP
+{{- end }}
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
         - name: GITLAB_ENVIRONMENT_NAME
-          value: {{ .Values.gitlab.envName }}
+          value: {{ .Values.gitlab.envName | quote }}
         - name: GITLAB_ENVIRONMENT_URL
-          value: {{ .Values.gitlab.envURL }}
+          value: {{ .Values.gitlab.envURL | quote }}
+{{- if .Values.lifecycle }}
+        lifecycle:
+{{ toYaml .Values.lifecycle | indent 10 }}
+{{- end }}
         ports:
         - name: "{{ .Values.service.name }}-phpfpm"
           containerPort: 9000
@@ -95,54 +117,55 @@ spec:
             port: "{{ .Values.service.name }}-phpfpm"
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-phpfpm"
+          failureThreshold: 60
+          periodSeconds: 1
         volumeMounts:
-        - name: metager-config
-          mountPath: /html/config/metager
-          readOnly: true
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
           readOnly: false
-        - name: env-files
-          mountPath: /root/.env
-          subPath: .env
+        - name: secrets
+          mountPath: /home/metager/.env
+          subPath: env
           readOnly: true
-        - name: env-files
+        - name: secrets
           mountPath: /html/database/seeds/UsersSeeder.php
-          subPath: UsersSeeder.php
+          subPath: userseeder
           readOnly: true
-        - name: env-files
-          mountPath: /html/config/spam.txt
-          subPath: spam.txt
-          readOnly: true
-        - name: sumas
+        - name: secrets
           mountPath: /html/config/sumas.json
-          subPath: sumas.json
+          subPath: sumas
           readOnly: true
-        - name: sumas-en
+        - name: secrets
           mountPath: /html/config/sumasEn.json
-          subPath: sumasEn.json
+          subPath: sumasen
           readOnly: true
-        - name: blacklist
+        - name: secrets
           mountPath: /html/config/blacklistUrl.txt
-          subPath: blacklistUrl.txt
+          subPath: blacklisturl
           readOnly: true
-        - name: blacklist
+        - name: secrets
           mountPath: /html/config/blacklistDomains.txt
-          subPath: blacklistDomains.txt
+          subPath: blacklistdomains
           readOnly: true
-        - name: blacklist-ad
+        - name: secrets
           mountPath: /html/config/adBlacklistUrl.txt
-          subPath: adBlacklistUrl.txt
+          subPath: adblacklisturl
           readOnly: true
-        - name: blacklist-ad
+        - name: secrets
+          mountPath: /html/config/blacklistDescriptionUrl.txt
+          subPath: blacklistDescriptionUrl
+          readOnly: true
+        - name: secrets
           mountPath: /html/config/adBlacklistDomains.txt
-          subPath: adBlacklistDomains.txt
+          subPath: adblacklistdomains
           readOnly: true
         resources:
 {{ toYaml .Values.resourcesPhpfpm | indent 12 }}
-      # Nginx Container
       - name: {{ .Chart.Name }}-nginx
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        image: {{ template "imagename" . }}
         command: ["nginx"]
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- if .Values.application.secretName }}
@@ -151,12 +174,33 @@ spec:
             name: {{ .Values.application.secretName }}
         {{- end }}
         env:
+{{- if .Values.postgresql.managed }}
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: password
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: app-postgres
+              key: privateIP
+{{- end }}
         - name: DATABASE_URL
           value: {{ .Values.application.database_url | quote }}
         - name: GITLAB_ENVIRONMENT_NAME
-          value: {{ .Values.gitlab.envName }}
+          value: {{ .Values.gitlab.envName | quote }}
         - name: GITLAB_ENVIRONMENT_URL
-          value: {{ .Values.gitlab.envURL }}
+          value: {{ .Values.gitlab.envURL | quote }}
+{{- if .Values.lifecycle }}
+        lifecycle:
+{{ toYaml .Values.lifecycle | indent 10 }}
+{{- end }}
         ports:
         - name: "{{ .Values.service.name }}"
           containerPort: {{ .Values.service.internalPort }}
@@ -184,52 +228,150 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+{{- if eq .Values.readinessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            scheme: {{ .Values.readinessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- end }}
+          failureThreshold: 60
+          periodSeconds: 1
         resources:
 {{ toYaml .Values.resourcesNginx | indent 12 }}
       # Redis Container
       - name: {{ .Chart.Name }}-redis
-        image: "redis:5.0.3-alpine"
+        image: "redis:6"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+        volumeMounts:
+        - name: redis-config
+          mountPath: /usr/local/etc/redis/redis.conf
+          subPath: redis.conf
+          readOnly: true
         ports:
         - name: "{{ .Values.service.name }}-redis"
           containerPort: 6379
         livenessProbe:
           tcpSocket:
             port: "{{ .Values.service.name }}-redis"
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          initialDelaySeconds: 15
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
         readinessProbe:
           tcpSocket:
             port: "{{ .Values.service.name }}-redis"
-          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          initialDelaySeconds: 5
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.resourcesRedis | indent 12 }}
+        securityContext:
+          runAsUser: 999
+          runAsGroup: 999
+          allowPrivilegeEscalation: false
       # Fetcher Container
       - name: {{ .Chart.Name }}-fetcher
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        command: ["su"]
-        args: ["-s", "/bin/sh", "-c", "php artisan requests:fetcher", "nginx"]
+        image: {{ template "imagename" . }}
+        command: ["/bin/sh"]
+        args: ["-c", "php artisan requests:fetcher"]
         volumeMounts:
-        - name: env-files
+        - name: secrets
           mountPath: /html/.env
-          subPath: .env
+          subPath: env
           readOnly: true
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         livenessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
           initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
         readinessProbe:
-          exec:
-            command:
-            - cat
-            - /tmp/fetcher
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 1
         resources:
 {{ toYaml .Values.resourcesFetcher | indent 12 }}
+      # Scheduler Container
+      - name: {{ .Chart.Name }}-scheduler
+        image: {{ template "imagename" . }}
+        command: ["/bin/sh"]
+        args: ["-c", "php artisan schedule:work"]
+        volumeMounts:
+        - name: secrets
+          mountPath: /html/.env
+          subPath: env
+          readOnly: true
+        - name: mglogs-persistent-storage
+          mountPath: /html/storage/logs/metager
+          readOnly: false
+        - name: secrets
+          mountPath: /html/database/seeds/UsersSeeder.php
+          subPath: userseeder
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/sumas.json
+          subPath: sumas
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/sumasEn.json
+          subPath: sumasen
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/blacklistUrl.txt
+          subPath: blacklisturl
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/blacklistDomains.txt
+          subPath: blacklistdomains
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/adBlacklistUrl.txt
+          subPath: adblacklisturl
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/blacklistDescriptionUrl.txt
+          subPath: blacklistDescriptionUrl
+          readOnly: true
+        - name: secrets
+          mountPath: /html/config/adBlacklistDomains.txt
+          subPath: adblacklistdomains
+          readOnly: true
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        livenessProbe:
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        readinessProbe:
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 1
+        resources:
+{{ toYaml .Values.resourcesScheduler | indent 12 }}
 {{- end -}}

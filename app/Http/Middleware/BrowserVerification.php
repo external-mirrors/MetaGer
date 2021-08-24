@@ -92,18 +92,18 @@ class BrowserVerification
     }
 
     public static function logBrowserverification(Request $request) {
-        $fail2banEnabled = config("metager.metager.fail2ban_enabled");
-        if(empty($fail2banEnabled) || !$fail2banEnabled || !env("fail2banurl", false) || !env("fail2banuser") || !env("fail2banpassword")){
+        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
+        if(empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")){
             return;
         }
 
         // Submit fetch job to worker
         $mission = [
                 "resulthash" => "captcha",
-                "url" => env("fail2banurl") . "/browserverification/",
+                "url" => config("metager.metager.fail2ban.url") . "/browserverification/",
                 "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                "username" => env("fail2banuser"),
-                "password" => env("fail2banpassword"),
+                "username" => config("metager.metager.fail2ban.user"),
+                "password" => config("metager.metager.fail2ban.password"),
                 "headers" => [
                     "ip" => $request->ip()
                 ],

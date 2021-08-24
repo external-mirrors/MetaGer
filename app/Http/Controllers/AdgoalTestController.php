@@ -60,7 +60,7 @@ class AdgoalTestController extends Controller
             return redirect('admin/adgoal');
         }
 
-        $url = route('resultpage', ["eingabe" => $eingabe, "out" => "api", "key" => env("mainz_key")]);
+        $url = route('resultpage', ["eingabe" => $eingabe, "out" => "api", "key" => config("metager.metager.keys.uni_mainz")]);
         $hash = md5($url);
 
         $mission = [

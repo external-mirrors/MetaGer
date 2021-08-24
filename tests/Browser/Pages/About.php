@@ -25,13 +25,13 @@ class About extends Page
     public function assert(Browser $browser)
     {
         $browser->assertPathIs($this->url())
-            ->waitForText("Was MetaGer auszeichnet")
+            ->waitForText("Wofür wir stehen")
             ->assertTitle("Über Uns - MetaGer")
             ->switchLanguage("English")
-            ->waitForText("MetaGer - Characteristic qualities")
+            ->waitForText("What We Stand For")
             ->assertTitle("About Us - MetaGer")
             ->switchLanguage("Español")
-            ->waitForText("Was MetaGer auszeichnet")
+            ->waitForText("Wofür wir stehen")
             ->assertTitle("Sobre nosotros - MetaGer")
             ->switchLanguage("Deutsch");
 

@@ -48,7 +48,7 @@ class HumanVerification
              */
 
             //use parameter for middleware to skip this when using associator
-            if (!env('BOT_PROTECTION', false) || app('App\Models\Key')->getStatus()) {
+            if (!config("metager.metager.botprotection.enabled") || app('App\Models\Key')->getStatus()) {
                 $update = false;
                 return $next($request);
             }

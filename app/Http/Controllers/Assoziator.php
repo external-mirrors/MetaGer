@@ -17,14 +17,14 @@ class Assoziator extends Controller
         $params = [
             "eingabe" => $eingabe,
             "out" => "atom10",
-            "key" => env("ASSO_KEY", "test"),
+            "key" => config("metager.metager.keys.assoziator"),
         ];
 
 
         $url = route("resultpage", $params);
 
         # Special Case for local development as the port forwarding does not work within docker
-        if(env("APP_ENV", "") === "local" && stripos($url, "http://localhost:8080") === 0){
+        if(\App::environment() === "local" && stripos($url, "http://localhost:8080") === 0){
             $url = str_replace("http://localhost:8080", "http://nginx", $url);
         }
 

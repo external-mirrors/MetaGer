@@ -7,6 +7,10 @@ hpa:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resourcesPhpfpm: 
   requests:
     cpu: 500m

@@ -2,6 +2,10 @@ postgresql:
     enabled: false
 hpa: 
   enabled: false
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resources:
   requests:
   limits:

@@ -16,6 +16,10 @@ podAnnotations:
   prometheus.io/path: /metrics
   prometheus.io/port: "80"
 deploymentApiVersion: apps/v1
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resources:
   requests:
   limits:

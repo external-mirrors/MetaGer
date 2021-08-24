@@ -117,6 +117,11 @@ spec:
             port: "{{ .Values.service.name }}-phpfpm"
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          tcpSocket:
+            port: "{{ .Values.service.name }}-phpfpm"
+          failureThreshold: 60
+          periodSeconds: 1
         volumeMounts:
         - name: mglogs-persistent-storage
           mountPath: /html/storage/logs/metager
@@ -223,6 +228,18 @@ spec:
 {{- end }}
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+{{- if eq .Values.readinessProbe.probeType "httpGet" }}
+          httpGet:
+            path: {{ .Values.readinessProbe.path }}
+            scheme: {{ .Values.readinessProbe.scheme }}
+            port: {{ .Values.service.internalPort }}
+{{- else if eq .Values.readinessProbe.probeType "tcpSocket" }}
+          tcpSocket:
+            port: {{ .Values.service.internalPort }}
+{{- end }}
+          failureThreshold: 60
+          periodSeconds: 1
         resources:
 {{ toYaml .Values.resourcesNginx | indent 12 }}
       # Redis Container
@@ -241,12 +258,12 @@ spec:
         livenessProbe:
           tcpSocket:
             port: "{{ .Values.service.name }}-redis"
-          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          initialDelaySeconds: 15
           timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
         readinessProbe:
           tcpSocket:
             port: "{{ .Values.service.name }}-redis"
-          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          initialDelaySeconds: 5
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
         resources:
 {{ toYaml .Values.resourcesRedis | indent 12 }}
@@ -279,6 +296,13 @@ spec:
             port: 8080
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          httpGet:
+            path: "/health-check/liveness-worker"
+            scheme: "HTTP"
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 1
         resources:
 {{ toYaml .Values.resourcesFetcher | indent 12 }}
       # Scheduler Container
@@ -306,6 +330,13 @@ spec:
             port: 8080
           initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
           timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        startupProbe:
+          httpGet:
+            path: "/health-check/liveness-scheduler"
+            scheme: "HTTP"
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 1
         resources:
 {{ toYaml .Values.resourcesScheduler | indent 12 }}
 {{- end -}}

@@ -29,10 +29,13 @@ class AppServiceProvider extends ServiceProvider
         }
 
         if (stripos($host, "metager.org") !== false) {
+            \App::setLocale('en');
             LaravelLocalization::setLocale('en');
         }else if (stripos($host, "metager.es") !== false) {
+            \App::setLocale('es');
             LaravelLocalization::setLocale('es');
         }else{
+            \App::setLocale('de');
             LaravelLocalization::setLocale();
         }
 

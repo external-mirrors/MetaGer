@@ -9,7 +9,7 @@ return [
    
 
     'timeline.1' => 'März 1996: Cebit Hannover',
-    'timeline.1.1' => 'Die Idee zu MetaGer kam dem deutschen Ingenieur Dr. Wolfgang Sander-Beuermann während der Computermesse CeBIT beim Mittagessen auf einer Papierserviette. Die Arbeit am ersten Prototypen beginnt noch am gleichen Abend.',
+    'timeline.1.1' => 'Die Idee zu MetaGer kommt dem deutschen Ingenieur Dr. Wolfgang Sander-Beuermann während der Computermesse CeBIT beim Mittagessen auf einer Papierserviette. Die Arbeit am ersten Prototypen beginnt noch am gleichen Abend.',
    
     'timeline.2' => 'Ende 1996: Inbetriebnahme von MetaGer',
     'timeline.2.1' => 'MetaGer entsteht als Forschungsprojekt der Universität Hannover und des regionalen Rechenzentrums Niedersachsen.',

@@ -34,5 +34,10 @@ return [
 
     "searchinsearch.title" => "Suche in der Suche",
     "searchinsearch.1" => 'Auf die Funktion der Suche in der Suche kann mit Hilfe des "MEHR"-Knopfes rechts unten im Ergebniskasten zugegriffen werden. Beim Klick auf diesen öffnet sich ein Menü, in dem "Ergebnis speichern" an erster Stelle steht. Mit dieser Option wird das jeweilige Ergebnis in einem separaten Speicher abgelegt. Der Inhalt dieses Speichers wird rechts neben den Ergebnissen unter den Quicktips angezeigt (Auf zu kleinen Bildschirmen werden gespeicherte Ergebnisse aus Platzmangel nicht angezeigt). Dort können Sie die gespeicherten Ergebnisse nach Schlüsselworten filtern oder umsortieren lassen. Mehr Infos zum Thema "Suche in der Suche" gibt es im <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA-Blog</a>.',
+    
 
+    'selist.title' => 'MetaGer zur Suchmaschinenliste des Browsers hinzufügen',
+    'selist.explanation.1' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',
+    'selist.explanation.2' => 'Manche Browser erwarten die Eingabe einer URL; diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" ohne Gänsefüßchen eintragen. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>',
+    
 ];

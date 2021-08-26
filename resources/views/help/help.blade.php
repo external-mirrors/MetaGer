@@ -40,6 +40,9 @@
 	<a href="/hilfe/funktionen#searchinsearch" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.6') !!}<br></p>
 	</a>
+	<a href="/hilfe/funktionen#selist" class="help-topic">
+		<p>{!! trans('help/help.tableofcontents.2.7') !!}<br></p>
+	</a>
 </div>
 
 <h2>{!! trans('help/help.tableofcontents.3') !!}</h2>
@@ -51,6 +54,8 @@
 		<a href="/hilfe/datensicherheit#torhidden" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.3') !!}<br></p>
 		</a>
 		<a href="/hilfe/datensicherheit#proxy" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.4') !!}<br></p>
+		</a>
+		<a href="/hilfe/datensicherheit#content" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.5') !!}<br></p>
 		</a>
 	</div>
 		

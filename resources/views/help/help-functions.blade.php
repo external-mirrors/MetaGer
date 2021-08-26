@@ -62,5 +62,13 @@
 			<p>{!! trans('help/help-functions.searchinsearch.1') !!}</p>
 		</div>
 	</section>
+	<section id="selist">
+		<h3>{!! trans('help/help-functions.selist.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-functions.selist.explanation.1') !!}</p>
+			<p>{!! trans('help/help-functions.selist.explanation.2') !!}</p>
+
+		</div>
+	</section>
 
 @endsection

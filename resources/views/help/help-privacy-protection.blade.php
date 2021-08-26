@@ -40,4 +40,12 @@
 			<p>{!! trans('help/help-privacy-protection.maps.3') !!}</p>
 		</div>
 	</section>
+
+	<section id="content">
+		<h3>{!! trans('help/help-privacy-protection.content.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-privacy-protection.content.explanation.1') !!}</p>
+			<p>{!! trans('help/help-privacy-protection.content.explanation.2') !!}</p>
+		</div>
+	</section>
     @endsection

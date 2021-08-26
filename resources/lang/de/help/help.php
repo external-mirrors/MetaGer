@@ -19,6 +19,8 @@ return [
     'tableofcontents.2.4' => 'URLs ausschließen',
     'tableofcontents.2.5' => '!bangs',
     'tableofcontents.2.6' => 'Suche in der Suche',
+    'tableofcontents.2.7' => 'MetaGer hinzufügen',
+
 
 
     'tableofcontents.4' => 'Weitere Dienste um die Suche herum',
@@ -34,6 +36,9 @@ return [
     'tableofcontents.3.2' => 'Tracking-Cookies, Session-IDs und IP-Adressen',
     'tableofcontents.3.3' => 'Tor-Hidden-Service',
     'tableofcontents.3.4' => 'Anonymisierender MetaGer Proxyserver',
+    'tableofcontents.3.5' => 'Fragwürdige Inhalte / Jugendschutz',
+
+
 
 
 

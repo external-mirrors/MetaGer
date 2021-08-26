@@ -79,12 +79,12 @@ spec:
           servicePort: {{ .Values.service.externalPort }}
           {{- end }}
       - path: /wsb
-          pathType: Prefix
-          backend:
-            service:
-              name: wsb
-              port:
-                number: 80
+        pathType: Prefix
+        backend:
+          service:
+            name: wsb
+            port:
+              number: 80
 {{- if .Values.service.commonName }}
   - host: {{ template "hostname" .Values.service.commonName }}
     http:

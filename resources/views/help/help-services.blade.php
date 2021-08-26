@@ -33,4 +33,11 @@
 			<p>{!! trans('help/help-services.widget.1') !!}</p>
 		</div>
 	</section>
+	<section id="maps">
+		<h3>{!! trans('help/help-services.maps.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-services.maps.1') !!}</p>
+			<p>{!! trans('help/help-services.maps.2') !!}</p>
+			<p>{!! trans('help/help-services.maps.3') !!}</p>
+		</div>
 @endsection

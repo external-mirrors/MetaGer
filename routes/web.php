@@ -80,20 +80,28 @@ Route::get('tor', function () {
         ->with('title', 'tor hidden service - MetaGer')
         ->with('navbarFocus', 'dienste');
 });
-Route::get('spende', function () {
-    return view('spende.spende')
-        ->with('title', trans('titles.spende'))
-        ->with('js', [mix('/js/donation.js')])
-        ->with('navbarFocus', 'foerdern');
-})->name("spende");
 
-Route::get('spende/danke/{data}', function ($data) {
-    return view('spende.danke')
-        ->with('title', trans('titles.spende'))
-        ->with('navbarFocus', 'foerdern')
-        ->with('css', [mix('/css/spende/danke.css')])
-        ->with('data', unserialize(base64_decode($data)));
-})->name("danke");
+Route::group(['prefix' => 'spende'], function(){
+    Route::get('/', function () {
+        return view('spende.spende')
+            ->with('title', trans('titles.spende'))
+            ->with('js', [mix('/js/donation.js')])
+            ->with('navbarFocus', 'foerdern');
+    })->name("spende");
+
+    Route::post('/', 'MailController@donation');
+
+    Route::get('paypal', 'MailController@donationPayPalCallback')->name('paypal-callback');
+
+    Route::get('danke/{data?}', function ($data) {
+        return view('spende.danke')
+            ->with('title', trans('titles.spende'))
+            ->with('navbarFocus', 'foerdern')
+            ->with('css', [mix('/css/spende/danke.css')])
+            ->with('data', unserialize(base64_decode($data)));
+    })->name("danke");
+});
+
 Route::get('partnershops', function () {
     return view('spende.partnershops')
         ->with('title', trans('titles.partnershops'))
@@ -112,7 +120,7 @@ Route::get('bform1.htm', function () {
     return redirect('beitritt');
 });
 
-Route::post('spende', 'MailController@donation');
+
 
 Route::get('datenschutz', function () {
     return view('datenschutz/datenschutz')

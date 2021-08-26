@@ -55,6 +55,9 @@ return [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),
     ],
+    "paypal" => [
+        'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
+    ],
     "maps" => [
         "version" => env("maps_version"),
     ],

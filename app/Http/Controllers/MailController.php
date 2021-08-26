@@ -302,6 +302,75 @@ class MailController extends Controller
         }
     }
 
+    public function donationPayPalCallback(Request $request){
+        $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+        # PayPal Transaction ID
+        $tx = $request->input("tx", "");
+
+        $postdata = [
+            "cmd" => "_notify-synch",
+            "tx" => $tx,
+            "at" => config("metager.metager.paypal.pdt_token"),
+            "submit" => "PDT",
+        ];
+        $postdata = http_build_query($postdata);
+
+        $resulthash = md5($tx);
+    
+        $mission = [
+            "resulthash" => $resulthash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => null,
+            "password" => null,
+            "headers" => [
+                "Content-Type" => "application/x-www-form-urlencoded",
+            ],
+            "cacheDuration" => 0,
+            "name" => "Ticket",
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $postdata,
+                CURLOPT_LOW_SPEED_TIME => 20,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 20
+            ]
+        ];
+
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+
+        // Fetch the result
+        // Verify at PayPal that the transaction was indeed SUCCESSFULL
+        $answer = Redis::blpop($resulthash, 20);
+
+        if(sizeof($answer) !== 2){
+            return ''; # TODO Redirect on failure
+        }else{
+            $answer = $answer[1];
+            $answer = explode("\n", $answer);
+        }
+
+        if($answer[0] !== "SUCCESS"){
+            return ''; #TODO Redirect on failure
+        }
+
+        # Transaction was successfull. Let's parse the details
+        array_splice($answer, 0, 1);
+        $answertmp = $answer;
+        $answer = [];
+        foreach($answertmp as $index => $element){
+            if(preg_match("/^([^=]+)=(.*)$/", $element, $matches) === 1){
+                $key = $matches[1];
+                $value = urldecode($matches[2]);
+                $answer[$key] = $value;
+            }            
+        }
+
+
+        dd($answer);
+    }
+
     #Ueberprueft ob ein bereits vorhandener Eintrag bearbeitet worden ist
     public static function isEdited($k, $v, $filename)
     {

@@ -334,7 +334,7 @@ class MetaGerSearch extends Controller
     public function tips(Request $request)
     {
         $tipserver = '';
-        if (env('APP_ENV') === "development") {
+        if (\App::environment() === "development") {
             $tipserver = "https://dev.quicktips.metager.de/1.1/tips.xml";
         } else {
             $tipserver = "https://quicktips.metager.de/1.1/tips.xml";

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 class RouteServiceProvider extends ServiceProvider
 {
+    use \Mcamara\LaravelLocalization\Traits\LoadsTranslatedCachedRoutes;
     /**
      * This namespace is applied to your controller routes.
      *
@@ -57,6 +58,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'web',
+            'prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/web.php');
@@ -92,6 +94,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'enableCookies',
+            'prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/cookie.php');
@@ -109,6 +112,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'session',
+            'prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/session.php');

@@ -18,7 +18,7 @@ class Key
     {
         $this->key = $key;
         $this->status = $status;
-        if (getenv("APP_ENV") !== "production") {
+        if (\App::environment() !== "production") {
             $this->keyserver = "https://dev.key.metager.de/";
         }
     }
@@ -30,15 +30,15 @@ class Key
             $this->updateStatus();
             if($this->status === null){
                 // The user provided an invalid key which we will log to fail2ban
-                $fail2banEnabled = config("metager.metager.fail2ban_enabled");
-                if (!empty($fail2banEnabled) && $fail2banEnabled && !empty(env("fail2banurl", false)) && !empty(env("fail2banuser")) && !empty(env("fail2banpassword"))) {
+                $fail2banEnabled = config("metager.metager.fail2ban.enabled");
+                if (!empty($fail2banEnabled) && $fail2banEnabled && !config("metager.metager.fail2ban.url") && !config("metager.metager.fail2ban.user") && !config("metager.metager.fail2ban.password")) {
                     // Submit fetch job to worker
                     $mission = [
                             "resulthash" => "captcha",
-                            "url" => env("fail2banurl") . "/mgkeytry/",
+                            "url" => config("metager.metager.fail2ban.url") . "/mgkeytry/",
                             "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                            "username" => env("fail2banuser"),
-                            "password" => env("fail2banpassword"),
+                            "username" => config("metager.metager.fail2ban.user"),
+                            "password" => config("metager.metager.fail2ban.password"),
                             "headers" => [
                                 "ip" => Request::ip()
                             ],
@@ -55,7 +55,7 @@ class Key
 
     public function updateStatus()
     {
-        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
 
         $opts = array(
             'http' => array(
@@ -86,7 +86,7 @@ class Key
 
     public function requestPermission()
     {
-        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = http_build_query(array(
             'dummy' => 0,
         ));
@@ -118,7 +118,7 @@ class Key
     }
     public function generateKey($payment = null, $adFreeSearches = null, $key = null, $notes = "")
     {
-        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = array(
             'apiAccess' => 'normal',
             'expiresAfterDays' => 365,
@@ -160,7 +160,7 @@ class Key
     }
 
     public function reduce($count){
-        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = http_build_query(array(
             'adFreeSearches' => $count,
         ));
@@ -211,7 +211,7 @@ class Key
     }
 
     public function checkForChange($newkey = "", $hash){
-        $authKey = base64_encode(env("KEY_USER", "test") . ':' . env("KEY_PASSWORD", "test"));
+        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = http_build_query(array(
             'hash' => $hash,
             'key' => $newkey,

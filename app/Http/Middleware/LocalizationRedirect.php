@@ -20,7 +20,7 @@ class LocalizationRedirect
         $host = $request->getHttpHost();
 
         // We only redirect to the TLDs in the production version and exclude our onion domain
-        if (env("APP_ENV", "") !== "production" || $host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is('metrics')) {
+        if (\App::environment() !== "production" || $host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is('metrics')) {
             return $next($request);
         }
 

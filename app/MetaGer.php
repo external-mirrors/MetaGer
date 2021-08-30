@@ -450,9 +450,9 @@ class MetaGer
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $pw = md5($this->verificationId . $day . $link . env("PROXY_PASSWORD"));
+                $pw = md5($this->verificationId . $day . $link . config("metager.metager.proxy.password"));
                 $url = route('humanverification', ['mm' => $this->verificationId, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
-                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . env("PROXY_PASSWORD"));
+                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . config("metager.metager.proxy.password"));
                 $proxyUrl = route('humanverification', ['mm' => $this->verificationId, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
@@ -1012,7 +1012,7 @@ class MetaGer
         } else {
             $this->newtab = "_self";
         }
-        if ($request->filled("key") && $request->input('key') === getenv("mainz_key")) {
+        if ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz")) {
             $this->newtab = "_blank";
         }
         # Theme
@@ -1513,9 +1513,9 @@ class MetaGer
 
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
-                if (env("REDIS_CACHE_DRIVER", "redis") === "redis") {
+                if (config("database.redis.cache.driver", "redis") === "redis") {
                     Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                } elseif (env("REDIS_CACHE_DRIVER", "redis") === "redis-sentinel") {
+                } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
                     RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 }
             } catch (\Exception $e) {

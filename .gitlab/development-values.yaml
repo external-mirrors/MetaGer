@@ -2,11 +2,15 @@ postgresql:
   enabled: false
 service:
   externalPort: 80
-  internalPort: 80
+  internalPort: 8080
 hpa:
   enabled: true
   minReplicas: 1
   maxReplicas: 5
+livenessProbe:
+  initialDelaySeconds: 0
+readinessProbe:
+  initialDelaySeconds: 0
 resourcesPhpfpm: 
   requests:
     cpu: 500m
@@ -25,6 +29,11 @@ resourcesRedis:
 resourcesFetcher: 
   requests:
     cpu: 500m
+    memory: 100M
+  limits:
+resourcesScheduler: 
+  requests:
+    cpu: 100m
     memory: 100M
   limits:
 resources:

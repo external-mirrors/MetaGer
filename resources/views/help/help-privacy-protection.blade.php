@@ -32,15 +32,6 @@
 		</div>
 	</section>
 
-	<section id="maps">
-		<h3>{!! trans('help/help-privacy-protection.maps.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/help-privacy-protection.maps.1') !!}</p>
-			<p>{!! trans('help/help-privacy-protection.maps.2') !!}</p>
-			<p>{!! trans('help/help-privacy-protection.maps.3') !!}</p>
-		</div>
-	</section>
-
 	<section id="content">
 		<h3>{!! trans('help/help-privacy-protection.content.title') !!}</h3>
 		<div>

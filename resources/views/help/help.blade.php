@@ -6,75 +6,75 @@
 <h1>{!! trans('help/help.title') !!}</h1>
 <h2>{!! trans('help/help.tableofcontents.1') !!}</h2>
 <div class="help-topic-row">
-	<a href="/hilfe/hauptseiten" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.1') !!}</p>
 	</a>
-	<a href="/hilfe/hauptseiten#suchfeld" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#suchfeld") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.2') !!}</p>
 	</a>
-	<a href="/hilfe/hauptseiten#ergebnis" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#ergebnis") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.3') !!}</p>
 	</a>
-	<a href="/hilfe/hauptseiten#einstellungen" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#einstellungen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.4') !!}</p>
 	</a>
 </div>
 
 <h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
 <div class="help-topic-row">
-	<a href="/hilfe/funktionen" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
 	</a>
-	<a href="/hilfe/funktionen#severalwords" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#severalwords") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.2') !!}</p>
 	</a>
-	<a href="/hilfe/funktionen#capitalizationrules" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#capitalizationrules") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.3') !!}<br></p>
 	</a>
-	<a href="/hilfe/funktionen#urls" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.4') !!}</p>
 	</a>
-	<a href="/hilfe/funktionen#bangs" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#bangs") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.5') !!}<br></p>
 	</a>
-	<a href="/hilfe/funktionen#searchinsearch" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#searchinsearch") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.6') !!}<br></p>
 	</a>
-	<a href="/hilfe/funktionen#selist" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#selist") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.7') !!}<br></p>
 	</a>
 </div>
 
 <h2>{!! trans('help/help.tableofcontents.3') !!}</h2>
 	<div class="help-topic-row">
-		<a href="/hilfe/datensicherheit" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.1') !!}<br></p>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.1') !!}<br></p>
 		</a>
-		<a href="/hilfe/datensicherheit#tracking" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.2') !!}</p>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#tracking") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.2') !!}</p>
 		</a>
-		<a href="/hilfe/datensicherheit#torhidden" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.3') !!}<br></p>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#torhidden") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.3') !!}<br></p>
 		</a>
-		<a href="/hilfe/datensicherheit#proxy" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.4') !!}<br></p>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#proxy") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.4') !!}<br></p>
 		</a>
-		<a href="/hilfe/datensicherheit#content" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.5') !!}<br></p>
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#content") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.5') !!}<br></p>
 		</a>
 	</div>
 		
 <h2>{!! trans('help/help.tableofcontents.4') !!}</h2>
 
 	<div class="help-topic-row">
-		<a href="/hilfe/dienste" class="help-topic">
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.1') !!}<br></p>
 		</a>
-		<a href="/hilfe/dienste#plugin" class="help-topic">
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#plugin") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.2') !!}<br></p>
 		</a>
-		<a href="/hilfe/dienste#asso" class="help-topic">
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#asso") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.3') !!}<br></p>
 		</a>
-		<a href="/hilfe/dienste#widget" class="help-topic">
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#widget") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.4') !!}<br></p>
 		</a>		
-		<a href="/hilfe/dienste#maps" class="help-topic">
+		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#map") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.5') !!}<br></p>
 		</a>
 		

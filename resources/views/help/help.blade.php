@@ -3,7 +3,7 @@
 @section('title', $title )
 
 @section('content')
-
+<h1>{!! trans('help/help.title') !!}</h1>
 <h2>{!! trans('help/help.tableofcontents.1') !!}</h2>
 <div class="help-topic-row">
 	<a href="/hilfe/hauptseiten" class="help-topic">

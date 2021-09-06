@@ -192,6 +192,7 @@ Route::get('plugin', function (Request $request) {
         ->with('title', trans('titles.plugin'))
         ->with('navbarFocus', 'dienste')
         ->with('agent', new Agent())
+        ->with('request', $request->input('request', 'GET'))
         ->with('browser', (new Agent())->browser());
 });
 

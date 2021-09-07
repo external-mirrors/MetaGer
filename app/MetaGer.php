@@ -318,7 +318,7 @@ class MetaGer
         }
 
         if (!empty($this->jskey)) {
-            $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $this->jskey);
             if ($js !== null && boolval($js)) {
                 $this->javascript = true;
             }
@@ -1514,9 +1514,9 @@ class MetaGer
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
                 if (config("database.redis.cache.driver", "redis") === "redis") {
-                    Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                    Redis::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-                    RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                    RedisSentinel::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());

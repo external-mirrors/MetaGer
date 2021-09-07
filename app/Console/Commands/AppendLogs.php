@@ -48,9 +48,9 @@ class AppendLogs extends Command
         $redis = null;
         
         if (config("database.redis.cache.driver", "redis") === "redis") {
-            $redis = Redis::connection('cache');
+            $redis = Redis::connection(config('cache.stores.redis.connection'));
         } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-            $redis = RedisSentinel::connection('cache');
+            $redis = RedisSentinel::connection(config('cache.stores.redis.connection'));
         }
         if ($redis === null) {
             $this->error("No valid Redis Connection specified");

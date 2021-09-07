@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
-use Monospice\LaravelRedisSentinel\RedisSentinel;
 
 class AppendLogs extends Command
 {
@@ -47,22 +46,17 @@ class AppendLogs extends Command
     {
         $redis = null;
         
-        if (config("database.redis.cache.driver", "redis") === "redis") {
-            $redis = Redis::connection(config('cache.stores.redis.connection'));
-        } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-            $redis = RedisSentinel::connection(config('cache.stores.redis.connection'));
-        }
+        $redis = Redis::connection(config('cache.stores.redis.connection'));
+
         if ($redis === null) {
             $this->error("No valid Redis Connection specified");
             return;
         }
 
         $elements = [];
-        $reply = $redis->pipeline(function ($pipe) use ($elements) {
-            $pipe->lrange(\App\Console\Commands\AppendLogs::LOGKEY, 0, -1);
-            $pipe->del(\App\Console\Commands\AppendLogs::LOGKEY);
-        });
-        $elements = $reply[0];
+        $elementCount = $redis->llen(\App\Console\Commands\AppendLogs::LOGKEY);
+        $elements = $redis->lpop(\App\Console\Commands\AppendLogs::LOGKEY, $elementCount);
+
         if (!is_array($elements) || sizeof($elements) <= 0) {
             return;
         }

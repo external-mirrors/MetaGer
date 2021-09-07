@@ -652,19 +652,10 @@ class MetaGer
     public function checkCache()
     {
         if ($this->canCache()) {
-            $keys = [];
             foreach ($this->engines as $engine) {
-                $keys[] = $engine->hash;
-            }
-            # Noch searchengines enabled
-            if (empty($keys)) {
-                return;
-            }
-            $cacheValues = Cache::many($keys);
-            foreach ($this->engines as $engine) {
-                if ($cacheValues[$engine->hash] !== null) {
+                if(Cache::has($engine->hash)){
                     $engine->cached = true;
-                    $engine->retrieveResults($this, $cacheValues[$engine->hash]);
+                    $engine->retrieveResults($this, Cache::get($engine->hash));
                 }
             }
         }

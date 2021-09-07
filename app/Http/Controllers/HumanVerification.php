@@ -306,7 +306,7 @@ class HumanVerification extends Controller
             abort(404);
         }
 
-        Redis::connection("cache")->pipeline(function ($redis) use ($key) {
+        Redis::connection(config('cache.stores.redis.connection'))->pipeline(function ($redis) use ($key) {
             $redis->rpush($key, true);
             $redis->expire($key, 30);
         });

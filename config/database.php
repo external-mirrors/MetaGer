@@ -114,6 +114,9 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
+            'parameters' => [
+                'password' => env('REDIS_CACHE_PASSWORD', null),
+            ],
         ],
 
         'default' => [

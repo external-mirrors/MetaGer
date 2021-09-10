@@ -42,14 +42,13 @@ class FillCache extends Command
         $lastStatus = microtime(true);
         while (true) {
             $key = $this->getRandomString(rand(50, 100));
-            $value = $this->getRandomString(rand(1024, 1024*1000));
+            $value = $this->getRandomString(rand(1024*100, 1024*10000));
             Cache::put($key, $value);
             $writtenBytes += mb_strlen(Cache::get($key));
             if(microtime(true) - $lastStatus > 1){
                 echo "Stored " . $this->formatBytes($writtenBytes) . "." . PHP_EOL;
                 $lastStatus = microtime(true);
             }
-            usleep(5 * 1000);
         }
         return 0;
     }

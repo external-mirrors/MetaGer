@@ -3,6 +3,8 @@
 @section('title', $title )
 
 @section('content')
+<h1 class="page-title">{!! trans('help/help-privacy-protection.title') !!}</h1>
+
 <h2>{!! trans('help/help-privacy-protection.datenschutz.title') !!}</h2>
 	<section id="factcheck">
 		<h3>{!! trans('help/help-privacy-protection.datenschutz.faktencheck.heading') !!}</h3>

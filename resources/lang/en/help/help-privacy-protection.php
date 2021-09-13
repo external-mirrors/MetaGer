@@ -1,6 +1,6 @@
 <?php
 return [
-    "title"                 => "MetaGer Help",
+    "title"                 => "MetaGer - Help",
 
     "datenschutz.title" => "Privacy",
     "datenschutz.faktencheck.heading" => "Fact-Check versus fake news:",

@@ -1,6 +1,8 @@
 <?php
 
 return [
+    "title"                 => 'MetaGer - Hilfe',
+
     "datenschutz.title" => "Anonymität und Datensicherheit",
     "datenschutz.faktencheck.heading" => "Fakten-Prüfung contra Fake-News:",
     "datenschutz.faktencheck.body.1" => '<a href="http://www.password-online.de/?wysija-page=1&controller=email&action=view&email_id=280" target="_blanK" rel="noopener">Ausführliche Anleitung und Beschreibung</a> von <a href="http://www.ude.de/" target="_blanK" rel="noopener">Albrecht Ude</a>',

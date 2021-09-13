@@ -3,6 +3,8 @@
 @section('title', $title )
 
 @section('content')
+<h1 class="page-title">{!! trans('help/help-services.title') !!}</h1>
+
 <h2 id="dienste">{!! trans('help/help-services.dienste') !!}</h2>
 	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/help-services.dienste.kostenlos') !!}</h3>
 	<section id="app">

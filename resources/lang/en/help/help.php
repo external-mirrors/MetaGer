@@ -1,10 +1,10 @@
 <?php
 return [
     "achtung"               => "Warning! Structure and functionality of our website are subject to constant development and changes. We try to update our help pages as quickly as possible, but can not prevent temporary mistakes.",
-    "title"                 => "MetaGer Help",
+    "title"                 => "MetaGer - Help",
 
    
-    "dienste.kostenlos" => "All our services are cost free. You do not pay with your data.",
+   
 
   
    

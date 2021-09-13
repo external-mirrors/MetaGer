@@ -1,8 +1,9 @@
 <?php
 return [
-    "title"                 => "MetaGer Help",
+    "title"                 => "MetaGer - Help",
 
-    "dienste" => "Tools-free of charge",
+    "dienste" => "Services",
+    "dienste.kostenlos" => "All our services are cost free. You do not pay with your data.",
 
     "app.title" => "Android-App",
     "app.1" => "You can use MetaGer within an app, too. To do so just download the <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> on your Android smartphone.",

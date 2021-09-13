@@ -1,6 +1,6 @@
 <?php
 return [
-    "title"                 => "MetaGer Help",
+    "title"                 => "MetaGer - Help",
 
 "title.2"               => 'Use of the search engine',
 

@@ -318,7 +318,7 @@ class MetaGer
         }
 
         if (!empty($this->jskey)) {
-            $js = Redis::connection('cache')->lpop("js" . $this->jskey);
+            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $this->jskey);
             if ($js !== null && boolval($js)) {
                 $this->javascript = true;
             }
@@ -652,19 +652,10 @@ class MetaGer
     public function checkCache()
     {
         if ($this->canCache()) {
-            $keys = [];
             foreach ($this->engines as $engine) {
-                $keys[] = $engine->hash;
-            }
-            # Noch searchengines enabled
-            if (empty($keys)) {
-                return;
-            }
-            $cacheValues = Cache::many($keys);
-            foreach ($this->engines as $engine) {
-                if ($cacheValues[$engine->hash] !== null) {
+                if(Cache::has($engine->hash)){
                     $engine->cached = true;
-                    $engine->retrieveResults($this, $cacheValues[$engine->hash]);
+                    $engine->retrieveResults($this, Cache::get($engine->hash));
                 }
             }
         }
@@ -1514,9 +1505,9 @@ class MetaGer
                 $logEntry = preg_replace("/\n+/", " ", $logEntry);
 
                 if (config("database.redis.cache.driver", "redis") === "redis") {
-                    Redis::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                    Redis::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-                    RedisSentinel::connection('cache')->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
+                    RedisSentinel::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
                 }
             } catch (\Exception $e) {
                 Log::error($e->getMessage());

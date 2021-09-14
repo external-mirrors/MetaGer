@@ -243,10 +243,8 @@ Route::get('index.js', function (Request $request) {
         abort(404);
     }
 
-    Redis::connection("cache")->pipeline(function ($redis) use ($key) {
-        $redis->rpush("js" . $key, true);
-        $redis->expire($key, 30);
-    });
+    Redis::connection(config('cache.stores.redis.connection'))->rpush("js" . $key, true);
+    Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
 
     return response("", 200)->header("Content-Type", "application/javascript");
 });

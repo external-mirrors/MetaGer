@@ -16,5 +16,9 @@ return [
 
     "proxy.title" => "MetaGer proxy server",
     "proxy.1" => "Click or touch \"open anonymously\" to use the MetaGer proxy server. The provided protection is limited to the website you reached from our result page. Protection persists while you see https://proxy.suma-ev.de/?url=...in your webbrowser‘s address field.",
+    
+    'content.title' => 'Inappropriate Content / youth protection',
+    'content.explanation.1' => 'I found results with illegal content.',
+    'content.explanation.2' => 'If some content (presented by MetaGer) seems to be illegal, please email us to <a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a>.',
 
 ];

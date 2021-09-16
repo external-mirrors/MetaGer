@@ -36,5 +36,9 @@ return [
     "searchinsearch.title" => "Search in search",
     "searchinsearch.1" => "The result will be stored in a new TAB appearing at the right side of the screen. It is called \"Saved results\". You can store here single results from several searches. The TAB persists. Entering this TAB you get your personal result list with tools to filter and sort the results. Click another TAB to go back for further searches. You won´t have this if the screen is too small. More info (only german so far): <a href=\"http://blog.suma-ev.de/node/225\" target=\"_blank\" rel=\"noopener\"> SUMA blog</a>.",
 
+    'selist.title' => 'I want to add metager.de to the search engines list of my browser.',
+    'selist.explanation.1' => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
+    'selist.explanation.2' => 'Some browser need an URL. Please use "https://metager.de/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
+
 
 ];

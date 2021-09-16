@@ -58,7 +58,7 @@ class BrowserVerification
             if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
                 abort(404);
             }
-            $result = Redis::connection("cache")->blpop($mgv, 5);
+            $result = Redis::connection(config('cache.stores.redis.connection'))->blpop($mgv, 5); 
             if ($result !== null) {
                 $request->request->add(["headerPrinted" => false, "jskey" => $mgv]);
                 return $next($request);
@@ -74,7 +74,7 @@ class BrowserVerification
         echo(view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $answer = Redis::connection("cache")->blpop($key, 2);
+        $answer = Redis::connection(config('cache.stores.redis.connection'))->blpop($key, 2);
         if ($answer !== null) {
             echo(view('layouts.resultpage.resources')->render());
             flush();

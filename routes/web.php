@@ -215,6 +215,7 @@ Route::get('plugin', function (Request $request) {
         ->with('title', trans('titles.plugin'))
         ->with('navbarFocus', 'dienste')
         ->with('agent', new Agent())
+        ->with('request', $request->input('request', 'GET'))
         ->with('browser', (new Agent())->browser());
 });
 
@@ -265,10 +266,8 @@ Route::get('index.js', function (Request $request) {
         abort(404);
     }
 
-    Redis::connection("cache")->pipeline(function ($redis) use ($key) {
-        $redis->rpush("js" . $key, true);
-        $redis->expire($key, 30);
-    });
+    Redis::connection(config('cache.stores.redis.connection'))->rpush("js" . $key, true);
+    Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
 
     return response("", 200)->header("Content-Type", "application/javascript");
 });

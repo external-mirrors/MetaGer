@@ -4,7 +4,43 @@ return [
     "title"                 => "MetaGer - Help",
 
    
-   
+    'tableofcontents.title' => '',
+    'tableofcontents.1' => 'Use of the search engine',
+    'tableofcontents.1.1' => 'The start page',
+    'tableofcontents.1.2' => 'The search field',
+    'tableofcontents.1.3' => 'The result page',
+    'tableofcontents.1.4' => 'Settings',
+
+
+    'tableofcontents.2' => 'Useful functions and hints',
+    'tableofcontents.2.1' => 'Exclude single words',
+    'tableofcontents.2.2' => 'Searching for more than one word',
+    'tableofcontents.2.3' => 'Upper cas vs. lower case',
+    'tableofcontents.2.4' => 'Exclude URLS',
+    'tableofcontents.2.5' => '!bangs',
+    'tableofcontents.2.6' => 'Search in search',
+    'tableofcontents.2.7' => 'Add MetaGer',
+
+
+
+    'tableofcontents.4' => 'Services',
+    'tableofcontents.4.1' => 'Android-App',
+    'tableofcontents.4.2' => 'Browser-Plugin',
+    'tableofcontents.4.3' => 'MetaGer-Web-Associator',
+    'tableofcontents.4.4' => 'MetaGer widget',
+    'tableofcontents.4.5' => 'MetaGer maps',
+
+
+    'tableofcontents.3' => 'Privacy',
+    'tableofcontents.3.1' => 'Fact-Check versus fake news',
+    'tableofcontents.3.2' => 'Tracking-Cookies, Session-IDs, IP adresses',
+    'tableofcontents.3.3' => 'Tor Hidden Service',
+    'tableofcontents.3.4' => 'MetaGer proxy server',
+    'tableofcontents.3.5' => 'inappropriate Content/ youth protection',
+
+
+
+
 
   
    
@@ -17,14 +53,8 @@ return [
     'searchengine.title' => 'How does MetaGer query other search engines while preserving user anonymity?',
     'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager.de/open-source/MetaGer\">(https://gitlab.metager.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
 
-    'content.title' => 'Inappropriate Content / youth protection',
-    'content.explanation.1' => 'I found results with illegal content.',
-    'content.explanation.2' => 'If some content (presented by MetaGer) seems to be illegal, please email us to <a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a>.',
-
-    'selist.title' => 'I want to add metager.de to the search engines list of my browser.',
-    'selist.explanation.1' => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
-    'selist.explanation.2' => 'Some browser need an URL. Please use "https://metager.de/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
-
+  
+   
     'proposal.title' => 'How can I delete the search suggestions?',
     'proposal.explanation' => 'This is provided by your webbrowser. Try to customize the history settings.',
 

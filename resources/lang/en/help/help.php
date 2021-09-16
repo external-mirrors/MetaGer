@@ -46,15 +46,9 @@ return [
    
     'faq.title' => 'FAQ',
 
-    'metager.title' => 'MetaGer - General remarks',
-    'metager.explanation.1' => 'MetaGer is primarily a meta search engine (founded in 1996). Besides that MetaGer maintains a number of specialized crawlers and indexers of its own.',
-    'metager.explanation.2' => 'Additionally: meta search engines provide a wider coverage and a better overview, because none of the search engines knows the whole internet (Read more: <a href="https://en.wikipedia.org/wiki/Metasearch_engine" target="_blank" rel="noopener">Wikipedia</a>. Every result shows its origin in the right top corner. You may try this specific search engine to look for further results. We have grouped all available search services to several search focuses.',
-
     'searchengine.title' => 'How does MetaGer query other search engines while preserving user anonymity?',
     'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager.de/open-source/MetaGer\">(https://gitlab.metager.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
 
-  
-   
     'proposal.title' => 'How can I delete the search suggestions?',
     'proposal.explanation' => 'This is provided by your webbrowser. Try to customize the history settings.',
 

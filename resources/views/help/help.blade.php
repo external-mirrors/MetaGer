@@ -82,24 +82,10 @@
 
 
 <h2>{!! trans('help/help.faq.title') !!}</h2>
-	<section>
-		<h3>{!! trans('help/help.metager.title') !!}</h3>
-		<p>{!! trans('help/help.metager.explanation.1') !!}</p>
-		<p>{!! trans('help/help.metager.explanation.2') !!}</p>
-	</section>
+
 	<section>
 		<h3>{!! trans('help/help.searchengine.title') !!}</h3>
 		<p>{!! trans('help/help.searchengine.explanation') !!}</p>
-	</section>
-	<section>
-		<h3>{!! trans('help/help.content.title') !!}</h3>
-		<p>{!! trans('help/help.content.explanation.1') !!}</p>
-		<p>{!! trans('help/help.content.explanation.2') !!}</p>
-	</section>
-	<section>
-		<h3>{!! trans('help/help.selist.title') !!}</h3>
-		<p>{!! trans('help/help.selist.explanation.1') !!}</p>
-		<p>{!! trans('help/help.selist.explanation.2') !!}</p>
 	</section>
 	<section>
 		<h3>{!! trans('help/help.proposal.title') !!}</h3>

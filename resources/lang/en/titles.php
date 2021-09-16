@@ -8,7 +8,7 @@ return [
     "kontakt"	=>	"Contact - MetaGer",
     "spende"	=>	"Donation - MetaGer",
     "datenschutz"	=>	"Privacy - MetaGer",
-    "hilfe"	=>	"Help - MetaGer",
+    "help"	=>	"Help - MetaGer",
     "widget"	=>	"MetaGer Widget",
     "settings"	=>	"Settings",
     "websearch"	=>	"Websearch-Widget - MetaGer",

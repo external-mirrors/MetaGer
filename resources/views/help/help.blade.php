@@ -6,16 +6,16 @@
 <h1>{!! trans('help/help.title') !!}</h1>
 <h2>{!! trans('help/help.tableofcontents.1') !!}</h2>
 <div class="help-topic-row">
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten") }}" class="help-topic">
+	<a id=help-topic-mainpage href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.1') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#suchfeld") }}" class="help-topic">
+	<a id=help-topic-searchfield href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#suchfeld") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.2') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#ergebnis") }}" class="help-topic">
+	<a id=help-topic-result href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#ergebnis") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.3') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#einstellungen") }}" class="help-topic">
+	<a id=help-topic-settings href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#einstellungen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.1.4') !!}</p>
 	</a>
 </div>

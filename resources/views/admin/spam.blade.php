@@ -148,7 +148,7 @@
                     newElement.classList.add("query");
                     newElement.classList.add("card");
                     newElement.innerHTML = el;
-                    document.getElementById("queries").appendCHild(newElement);
+                    document.getElementById("queries").appendChild(newElement);
                 });
                 lastUpdate = Date.now();
                 checkRegexp();
@@ -158,14 +158,16 @@
 
 
     function checkRegexp() {
-        var val = $("#regexp").val();
+        var val = document.getElementById("regexp").value;
         var queries = [];
 
 
-        $("#queries > .query").each(function(index, el){
-            queries.push($(el).html());
+        document.querySelectorAll("#queries > .query").forEach((el, index) => {
+            queries.push(el.innerHTML);
         });
-        queries.push($("#check-against").val());
+        
+
+        queries.push(document.getElementById("check-against").value)
 
         var url = "{{ url('admin/spam/queryregexp') }}";
         var options = {
@@ -182,17 +184,18 @@
         fetch(url, options)
             .then(response => response.json())
             .then(data => {
-                $("#queries > .query").each(function(index, el){
+                document.querySelectorAll("#queries > .query").forEach((el, index) => {
                     if(data[index]["matches"]){
-                        $(el).addClass("matches");
+                        el.classList.add("matches");
                     }else{
-                        $(el).removeClass("matches");
+                        elclassList.remove("matches");
                     }
                 });
+                
                 if(data[data.length-1]["matches"]){
-                    $("#check-against").addClass("matches");
+                    document.getElementById("check-against").classList.add("matches");
                 }else{
-                    $("#check-against").removeClass("matches");
+                    document.getElementById("check-against").classList.remove("matches");
                 }
             });
     }

@@ -22,7 +22,8 @@
     }
 
     .matches {
-        background-color: #c9f4c9;
+        background-color: #c9f4c9!important;
+        color: #3c3c3c !important;
     }
     #block-requests {
         margin-bottom: 16px;
@@ -104,47 +105,51 @@
     var updating = true;
     var buttonText = "Aktualisierung stoppen";
     var interval = setInterval(updateQueries, 1000);
-    $("#regexp").on("input", checkRegexp);
-    $("#check-against").on("input", checkRegexp);
-    $(document).ready(function(){
+    document.getElementById("regexp").oninput = checkRegexp;
+    document.getElementById("check-against").oninput = checkRegexp;
+    window.addEventListener('load', function(){
         checkRegexp();
     });
 
 
-    $("#head > button").click(function() {
+    document.querySelector("#head > button").addEventListener('click', function() {
         if(!updating) {
-            $("#head > button").removeClass("btn-danger");
-            $("#head > button").addClass("btn-success");
+            document.querySelector("#head > button").classList.remove("btn-danger");
+            document.querySelector("#head > button").classList.add("btn-success");
             buttonText = "Aktualisierung stoppen";
             interval = setInterval(updateQueries, 1000);
         }
         var updateAt = lastUpdate + 60000;
         var updateIn = Math.round((updateAt - Date.now()) / 1000);
-        $("#head > button").html(buttonText + " (" + updateIn + ")");
+        document.querySelector("#head > button").innerHTML = buttonText + " (" + updateIn + ")";
         updating = !updating;
-    });
+    })
 
     function updateQueries() {
         var updateAt = lastUpdate + 60000;
         var updateIn = Math.round((updateAt - Date.now()) / 1000);
 
         if(!updating){
-            $("#head > button").removeClass("btn-success");
-            $("#head > button").addClass("btn-danger");
+            document.querySelector("#head > button").classList.remove("btn-success");
+            document.querySelector("#head > button").classList.add("btn-danger");
             buttonText = "Aktualisierung starten";
             clearInterval(interval);
         }
 
-        $("#head > button").html(buttonText + " (" + updateIn + ")");
+        document.querySelector("#head > button").innerHTML = buttonText + " (" + updateIn + ")";
         if(updateAt > Date.now()){
             return;
         }
         fetch("{{ url('admin/spam/jsonQueries') }}")
             .then(response => response.json())
             .then(data => {
-                $("#queries").html("");
-                $(data).each(function(index, el){
-                    $("#queries").append("<div class=\"query card\">" + el + "</div>");
+                document.getElementById("queries").innerHTML = "";
+                data.forEach((el, index) => {
+                    newElement = document.createElement("div");
+                    newElement.classList.add("query");
+                    newElement.classList.add("card");
+                    newElement.innerHTML = el;
+                    document.getElementById("queries").appendChild(newElement);
                 });
                 lastUpdate = Date.now();
                 checkRegexp();
@@ -154,14 +159,16 @@
 
 
     function checkRegexp() {
-        var val = $("#regexp").val();
+        var val = document.getElementById("regexp").value;
         var queries = [];
 
 
-        $("#queries > .query").each(function(index, el){
-            queries.push($(el).html());
+        document.querySelectorAll("#queries > .query").forEach((el, index) => {
+            queries.push(el.innerHTML);
         });
-        queries.push($("#check-against").val());
+        
+
+        queries.push(document.getElementById("check-against").value)
 
         var url = "{{ url('admin/spam/queryregexp') }}";
         var options = {
@@ -178,17 +185,18 @@
         fetch(url, options)
             .then(response => response.json())
             .then(data => {
-                $("#queries > .query").each(function(index, el){
+                document.querySelectorAll("#queries > .query").forEach((el, index) => {
                     if(data[index]["matches"]){
-                        $(el).addClass("matches");
+                        el.classList.add("matches");
                     }else{
-                        $(el).removeClass("matches");
+                        el.classList.remove("matches");
                     }
                 });
+                
                 if(data[data.length-1]["matches"]){
-                    $("#check-against").addClass("matches");
+                    document.getElementById("check-against").classList.add("matches");
                 }else{
-                    $("#check-against").removeClass("matches");
+                    document.getElementById("check-against").classList.remove("matches");
                 }
             });
     }

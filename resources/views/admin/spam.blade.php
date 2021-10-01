@@ -114,14 +114,14 @@
 
     document.querySelector("#head > button").addEventListener('click', function() {
         if(!updating) {
-            $("#head > button").removeClass("btn-danger");
-            $("#head > button").addClass("btn-success");
+            document.querySelector("#head > button").classList.remove("btn-danger");
+            document.querySelector("#head > button").classList.add("btn-success");
             buttonText = "Aktualisierung stoppen";
             interval = setInterval(updateQueries, 1000);
         }
         var updateAt = lastUpdate + 60000;
         var updateIn = Math.round((updateAt - Date.now()) / 1000);
-        $("#head > button").html(buttonText + " (" + updateIn + ")");
+        document.querySelector("#head > button").innerHTML = buttonText + " (" + updateIn + ")";
         updating = !updating;
     })
 

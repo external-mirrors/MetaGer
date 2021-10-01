@@ -143,7 +143,7 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById("queries").innerHTML = "";
-                data.forEach((index, el) => {
+                data.forEach((el, index) => {
                     newElement = document.createElement("div");
                     newElement.classList.add("query");
                     newElement.classList.add("card");

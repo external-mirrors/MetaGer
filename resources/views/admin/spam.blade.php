@@ -104,14 +104,14 @@
     var updating = true;
     var buttonText = "Aktualisierung stoppen";
     var interval = setInterval(updateQueries, 1000);
-    $("#regexp").on("input", checkRegexp);
-    $("#check-against").on("input", checkRegexp);
-    $(document).ready(function(){
+    document.getElementById("regexp").oninput = checkRegexp;
+    document.getElementById("check-against").oninput = checkRegexp;
+    window.addEventListener('load', function(){
         checkRegexp();
     });
 
 
-    $("#head > button").click(function() {
+    document.querySelector("#head > button").addEventListener('click', function() {
         if(!updating) {
             $("#head > button").removeClass("btn-danger");
             $("#head > button").addClass("btn-success");
@@ -122,29 +122,33 @@
         var updateIn = Math.round((updateAt - Date.now()) / 1000);
         $("#head > button").html(buttonText + " (" + updateIn + ")");
         updating = !updating;
-    });
+    })
 
     function updateQueries() {
         var updateAt = lastUpdate + 60000;
         var updateIn = Math.round((updateAt - Date.now()) / 1000);
 
         if(!updating){
-            $("#head > button").removeClass("btn-success");
-            $("#head > button").addClass("btn-danger");
+            document.querySelector("#head > button").classList.remove("btn-success");
+            document.querySelector("#head > button").classList.add("btn-danger");
             buttonText = "Aktualisierung starten";
             clearInterval(interval);
         }
 
-        $("#head > button").html(buttonText + " (" + updateIn + ")");
+        document.querySelector("#head > button").innerHTML = buttonText + " (" + updateIn + ")";
         if(updateAt > Date.now()){
             return;
         }
         fetch("{{ url('admin/spam/jsonQueries') }}")
             .then(response => response.json())
             .then(data => {
-                $("#queries").html("");
-                $(data).each(function(index, el){
-                    $("#queries").append("<div class=\"query card\">" + el + "</div>");
+                document.getElementById("queries").innerHTML = "";
+                data.forEach((index, el) => {
+                    newElement = document.createElement("div");
+                    newElement.classList.add("query");
+                    newElement.classList.add("card");
+                    newElement.innerHTML = el;
+                    document.getElementById("queries").appendCHild(newElement);
                 });
                 lastUpdate = Date.now();
                 checkRegexp();

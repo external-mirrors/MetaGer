@@ -22,7 +22,8 @@
     }
 
     .matches {
-        background-color: #c9f4c9;
+        background-color: #c9f4c9!important;
+        color: #3c3c3c !important;
     }
     #block-requests {
         margin-bottom: 16px;

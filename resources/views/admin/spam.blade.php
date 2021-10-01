@@ -188,7 +188,7 @@
                     if(data[index]["matches"]){
                         el.classList.add("matches");
                     }else{
-                        elclassList.remove("matches");
+                        el.classList.remove("matches");
                     }
                 });
                 

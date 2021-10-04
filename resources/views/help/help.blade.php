@@ -22,13 +22,13 @@
 
 <h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
 <div class="help-topic-row">
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
+	<a id=help-topic-stopwords href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#severalwords") }}" class="help-topic">
+	<a id=help-topic-severalwords href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#severalwords") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.2') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#capitalizationrules") }}" class="help-topic">
+	<a id=help-topic-capitalization href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#capitalizationrules") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.3') !!}<br></p>
 	</a>
 	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">

@@ -11,9 +11,9 @@ return [
     'tableofcontents.1.4' => 'Settings',
 
     'tableofcontents.2' => 'Useful functions and hints',
-    'tableofcontents.2.1' => 'Exclude single words',
-    'tableofcontents.2.2' => 'Searching for more than one word',
-    'tableofcontents.2.3' => 'Upper cas vs. lower case',
+    'tableofcontents.2.1' => 'Stopwords',
+    'tableofcontents.2.2' => 'Several words',
+    'tableofcontents.2.3' => 'Upper-/lower case',
     'tableofcontents.2.4' => 'Exclude URLS',
     'tableofcontents.2.5' => '!bangs',
     'tableofcontents.2.6' => 'Search in search',

@@ -221,6 +221,12 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
+
+    Route::group(['prefix' => 'affiliates'], function() {
+        Route::get('/', 'AdgoalController@adminIndex');
+        Route::get('/json/blacklist', 'AdgoalController@blacklistJson');
+        Route::get('/json/whitelist', 'AdgoalController@whitelistJson');
+    });
 });
 
 Route::get('settings', function () {

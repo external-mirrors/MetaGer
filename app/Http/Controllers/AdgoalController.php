@@ -110,4 +110,53 @@ class AdgoalController extends Controller
     public static function generatePassword($affillink, $link){
         return hash_hmac("sha256", $affillink . $link, config('metager.metager.adgoal.private_key'));
     }
+
+
+    /**
+     * Routes for the Admin Interface
+     */
+    public function adminIndex(Request $request){
+        return view('admin.affiliates.index')
+            ->with('title', "Affilliates Overview - MetaGer")
+            ->with('css', [
+                mix('/css/admin/affilliates/index.css')
+            ])
+            ->with('darkcss', [
+                mix('/css/admin/affilliates/index-dark.css')
+            ])
+            ->with('js', [
+                mix('/js/admin/affilliates.js')
+            ]);
+    }
+
+    public function blacklistJson(Request $request){
+        $request->validate([
+            "blacklist" => 'boolean'
+        ]);
+
+        $count = 5; # How Many results to return
+        $skip = 0; # How many results to skip
+        $blacklist = $request->input('blacklist', true);
+
+        $total = DB::select("select count(*) as total_rows from affiliate_blacklist");
+        $total = intval($total[0]->{"total_rows"});
+        $blacklistItems = DB::select('select * from affiliate_blacklist where blacklist = ? order by created_at desc limit ? offset ?', [$blacklist, $count, $skip]);
+        
+        $result = [
+            "count" => $count,
+            "skip" => $skip,
+            "total" => $total,
+            "results" => $blacklistItems
+        ];
+
+        return response()->json($result);
+    }
+
+    public function whitelistJson(Request $request){
+        $input = $request->all();
+        $input["blacklist"] = true;
+        $request->replace($input);
+        return $this->blacklistJson($request);
+    }
+
 }

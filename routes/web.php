@@ -351,6 +351,10 @@ Route::get('metrics', function (Request $request) {
         ->header('Content-Type', RenderTextFormat::MIME_TYPE);
 });
 
+Route::group(['prefix' => 'partner'], function() {
+    Route::get('r', 'AdgoalController@forward')->name('adgoal-redirect');
+});
+
 Route::group(['prefix' => 'health-check'], function () {
     Route::get('liveness', 'HealthcheckController@liveness');
     Route::get('liveness-scheduler', 'HealthcheckController@livenessScheduler');

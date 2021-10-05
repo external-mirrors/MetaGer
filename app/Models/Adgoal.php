@@ -192,7 +192,10 @@ class Adgoal
                     }
 
                     # Den Link hinzufügen:
-                    $result->link = $partnershop["click_url"];
+                    # Redirect the user over our tracker
+                    # see \App\Http\Controllers\AdgoalController 
+                    # for more information
+                    $result->link = \App\Http\Controllers\AdgoalController::generateRedirectUrl($partnershop["click_url"], $targetUrl);
                     $result->partnershop = true;
                     $result->changed = true;
                 }

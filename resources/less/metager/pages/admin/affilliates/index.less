@@ -9,21 +9,108 @@
         padding: 24px;
     }
 
-    .blacklist-items {
+    .blacklist-items,
+    .whitelist-items {
         list-style-type: none;
         margin: 0;
         padding: 0;
+
+        &>li {
+            display: flex;
+            column-gap: 8px;
+            font-size: 1.3rem;
+        }
     }
 }
 
 #affilliate-clicks {
     padding: 24px;
 
+    .heading {
+        margin-bottom: 16px;
+        display: flex;
+        column-gap: 16px;
+    }
+
     &>input {
         margin-bottom: 16px;
         padding: 8px;
         font-size: 1.1rem;
         border-radius: .3rem;
+    }
+
+    &>.host-list {
+        display: flex;
+        flex-direction: column;
+        row-gap: 16px;
+
+        &>details.host {
+            &[open] summary~* {
+                animation: sweep .9s ease-in-out;
+
+                @keyframes sweep {
+                    0% {
+                        opacity: 0;
+                        margin-left: -10px
+                    }
+
+                    100% {
+                        opacity: 1;
+                        margin-left: 0px
+                    }
+                }
+            }
+
+            &>summary.host-information {
+                font-size: 1.5rem;
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap-reverse;
+                column-gap: 16px;
+
+                &>.clicks {
+                    font-size: .8rem;
+                    border: 1px solid;
+                    border-radius: .3rem;
+                    padding: 2px 16px;
+                    background-color: #507b5d;
+                    border-color: transparent;
+                }
+            }
+
+            &>div.clicks {
+                margin-top: 16px;
+                display: flex;
+                flex-direction: column;
+                row-gap: 16px;
+
+                .click {
+                    display: flex;
+                    column-gap: 16px;
+                    align-items: center;
+
+                    a {
+                        padding: 4px 8px;
+                        border: 1px solid;
+                        border-radius: 5%;
+                    }
+                }
+            }
+        }
+    }
+
+    .pagination {
+        display: none;
+        column-gap: 16px;
+        align-items: center;
+        margin-top: 16px;
+
+        a {
+            border: 1px solid;
+            padding: 4px 8px;
+            border-radius: 8%;
+            color: white;
+        }
     }
 }
 
@@ -50,4 +137,8 @@
     to {
         background-position: 100% 0, 70px 125px, 20px 120px, 70px 75px, 20px 70px, 70px 25px, 20px 20px;
     }
+}
+
+#host-template {
+    display: none;
 }

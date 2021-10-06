@@ -13,12 +13,28 @@
     <div class="card whitelist">
         <h3><a href="#">Whitelist (?)</a></h3>
         <div class="skeleton"></div>
-        <ul class="blacklist-items">
+        <ul class="whitelist-items">
         </ul>
     </div>
 </div>
 <div id="affilliate-clicks" class="card">
-    <input type="text" name="filter" id="filter" placeholder="Filter Results">
+    <input type="text" name="filter" class="filter" placeholder="Filter Results">
+    <div class="heading">
+        <div class="host-count">
+            ? Hosts
+        </div>
+        <div class="click-count">
+            ? Clicks
+        </div>
+    </div>
     <div class="skeleton"></div>
+    <div class="host-list">
+
+    </div>
+    <div class="pagination">
+        <a href="#" class="backward">&lt; Last Page</a>
+        <div class="current-page">?/?</div>
+        <a href="#" class="forward">Next Page &gt;</a>
+    </div>
 </div>
 @endsection

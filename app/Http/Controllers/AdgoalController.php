@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use LaravelLocalization;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Before we redirect users to the affiliate shops we will track the clicks ourself.
@@ -29,7 +30,8 @@ class AdgoalController extends Controller
      * After that we will store the necessary information (link and affiliate link) into our database.
      * After that we will redirect the user to the affiliate shop
      */
-    public function forward(Request $request){
+    public function forward(Request $request)
+    {
         // $link = "https://metager.de";
         // $affillink = "https://test.de";
         // $password = self::generatePassword($affillink, $link);
@@ -44,10 +46,10 @@ class AdgoalController extends Controller
             'affillink' => ['required', 'url', 'active_url'],
             'link' => ['required', 'url', 'active_url'],
             # Validation of redirect request so that one cannot generate random redirect URLs pointing to our domains
-            'password' => function($attribute, $value, $fail) use($request) {
+            'password' => function ($attribute, $value, $fail) use ($request) {
                 // Check if hmac matches
                 $correctPassword = self::generatePassword($request->input('affillink'), $request->input('link'));
-                if(!hash_equals($correctPassword, $value)){
+                if (!hash_equals($correctPassword, $value)) {
                     $fail('The given password is incorrect!');
                 }
             }
@@ -63,10 +65,11 @@ class AdgoalController extends Controller
      * at search time.
      * A Cronjob will pick the data up and store it into Mariadb later (see self::storePartnerCall)
      */
-    private function storePartnerCallFast($affillink, $link) {
+    private function storePartnerCallFast($affillink, $link)
+    {
         # Generate Data to store
         $host = parse_url($link, PHP_URL_HOST);
-        if(empty($host)){
+        if (empty($host)) {
             return;
         }
         $storeObject = [
@@ -81,14 +84,17 @@ class AdgoalController extends Controller
         $redis->rpush($this::REDIS_STORAGE_KEY, json_encode($storeObject));
     }
 
-    public static function storePartnerCalls() {
+    public static function storePartnerCalls()
+    {
         $redis = Redis::connection(config('cache.stores.redis.connection'));
-        DB::transaction(function() use($redis){
-            while(!empty($data = $redis->lpop(self::REDIS_STORAGE_KEY))){
+        DB::transaction(function () use ($redis) {
+            while (!empty($data = $redis->lpop(self::REDIS_STORAGE_KEY))) {
                 $data = json_decode($data, true);
                 # Insert data into mariadb table
-                DB::insert('insert into affiliate_clicks (hostname, affillink, link) values (?, ?, ?)', 
-                    [$data["host"], $data["affillink"], $data["link"]]);
+                DB::insert(
+                    'insert into affiliate_clicks (hostname, affillink, link) values (?, ?, ?)',
+                    [$data["host"], $data["affillink"], $data["link"]]
+                );
             }
         });
     }
@@ -96,10 +102,11 @@ class AdgoalController extends Controller
     /**
      * Generates a Redirect URL for our partnershops
      */
-    public static function generateRedirectUrl($affillink, $link){
+    public static function generateRedirectUrl($affillink, $link)
+    {
         $password = self::generatePassword($affillink, $link);
         return LaravelLocalization::getLocalizedURL(
-            LaravelLocalization::getCurrentLocale(), 
+            LaravelLocalization::getCurrentLocale(),
             route('adgoal-redirect', ["link" => $link, "affillink" => $affillink, "password" => $password])
         );
     }
@@ -107,7 +114,8 @@ class AdgoalController extends Controller
     /**
      * Generates hmac password to validate redirect URLs
      */
-    public static function generatePassword($affillink, $link){
+    public static function generatePassword($affillink, $link)
+    {
         return hash_hmac("sha256", $affillink . $link, config('metager.metager.adgoal.private_key'));
     }
 
@@ -115,7 +123,8 @@ class AdgoalController extends Controller
     /**
      * Routes for the Admin Interface
      */
-    public function adminIndex(Request $request){
+    public function adminIndex(Request $request)
+    {
         return view('admin.affiliates.index')
             ->with('title', "Affilliates Overview - MetaGer")
             ->with('css', [
@@ -129,19 +138,24 @@ class AdgoalController extends Controller
             ]);
     }
 
-    public function blacklistJson(Request $request){
-        $request->validate([
+    public function blacklistJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             "blacklist" => 'boolean'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json("Invalid Request Data", 422);
+        }
 
         $count = 5; # How Many results to return
         $skip = 0; # How many results to skip
         $blacklist = $request->input('blacklist', true);
 
-        $total = DB::select("select count(*) as total_rows from affiliate_blacklist");
+        $total = DB::select("select count(*) as total_rows from affiliate_blacklist where blacklist = ?", [$blacklist]);
         $total = intval($total[0]->{"total_rows"});
         $blacklistItems = DB::select('select * from affiliate_blacklist where blacklist = ? order by created_at desc limit ? offset ?', [$blacklist, $count, $skip]);
-        
+
         $result = [
             "count" => $count,
             "skip" => $skip,
@@ -152,11 +166,267 @@ class AdgoalController extends Controller
         return response()->json($result);
     }
 
-    public function whitelistJson(Request $request){
+    public function addblacklistJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "hostname" => [
+                "required",
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that this is indeed a hostname which is resolvable
+                    if (!filter_var(gethostbyname($request->input("hostname")), FILTER_VALIDATE_IP)) {
+                        $fail("The selected entry is not a valid hostname");
+                    }
+                },
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that entry does not already exist in database
+                    $entry = DB::select("select * from metager.affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
+                    if (sizeof($entry) !== 0) {
+                        $fail("The selected entry does already exist in database");
+                    }
+                }
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "message" => "Invalid Request Data"
+            ], 422);
+        }
+
+        $hostname = $validator->validated()["hostname"];
+
+        $rowsInserted = DB::insert("insert into metager.affiliate_blacklist (hostname, blacklist) values (?, 1)", [$hostname]);
+        if ($rowsInserted === TRUE) {
+            return response()->json([
+                "message" => "Entry added."
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Error inserting entry."
+            ], 422);
+        }
+    }
+
+    public function deleteblacklistJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "id" => ["required", "integer", "min:1", function ($attribute, $value, $fail) use ($request) {
+                $entry = DB::select("select * from metager.affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), true]);
+                if (sizeof($entry) !== 1) {
+                    $fail("The selected entry does not exist in database");
+                }
+            }],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json("Invalid Request Data", 422);
+        }
+
+        $id = intval($validator->validated()["id"]);
+        $rowsDeleted = DB::delete("delete from metager.affiliate_blacklist where id = ?", [$id]);
+        if ($rowsDeleted > 0) {
+            return response()->json([
+                "message" => "$rowsDeleted entries deleted."
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Error deleting entry."
+            ], 422);
+        }
+    }
+
+    public function whitelistJson(Request $request)
+    {
         $input = $request->all();
-        $input["blacklist"] = true;
+        $input["blacklist"] = false;
         $request->replace($input);
         return $this->blacklistJson($request);
     }
 
+    public function addwhitelistJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "hostname" => [
+                "required",
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that this is indeed a hostname which is resolvable
+                    if (!filter_var(gethostbyname($request->input("hostname")), FILTER_VALIDATE_IP)) {
+                        $fail("The selected entry is not a valid hostname");
+                    }
+                },
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that entry does not already exist in database
+                    $entry = DB::select("select * from metager.affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
+                    if (sizeof($entry) !== 0) {
+                        $fail("The selected entry does already exist in database");
+                    }
+                }
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "message" => "Invalid Request Data"
+            ], 422);
+        }
+
+        $hostname = $validator->validated()["hostname"];
+
+        $rowsInserted = DB::insert("insert into metager.affiliate_blacklist (hostname, blacklist) values (?, 0)", [$hostname]);
+        if ($rowsInserted === TRUE) {
+            return response()->json([
+                "message" => "Entry added."
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Error inserting entry."
+            ], 422);
+        }
+    }
+
+    public function deletewhitelistJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "id" => ["required", "integer", "min:1", function ($attribute, $value, $fail) use ($request) {
+                $entry = DB::select("select * from metager.affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), false]);
+                if (sizeof($entry) !== 1) {
+                    $fail("The selected entry does not exist in database");
+                }
+            }],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json("Invalid Request Data", 422);
+        }
+
+        $id = intval($validator->validated()["id"]);
+        $rowsDeleted = DB::delete("delete from metager.affiliate_blacklist where id = ?", [$id]);
+        if ($rowsDeleted > 0) {
+            return response()->json([
+                "message" => "$rowsDeleted entries deleted."
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Error deleting entry."
+            ], 422);
+        }
+    }
+
+    public function hostsJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "count" => ["integer", "min:1", "max:50"],
+            "skip" => ["integer", "min:0"],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json("Invalid Request Data", 422);
+        }
+
+        $count = intval($request->input("count", 10));
+        $skip = intval($request->input("skip", 0));
+
+        $filter = $request->input("filter", "");
+
+        $hostCount = DB::table("metager.affiliate_clicks", "c")
+            ->select(DB::raw("count(distinct c.hostname) as total_hosts"))
+            ->leftJoin("metager.affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            })
+            ->where("c.hostname", 'like', "%$filter%")
+            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->get();
+        $hostCount = $hostCount[0]->{"total_hosts"};
+
+        $clickCount = DB::table("metager.affiliate_clicks", "c")
+            ->select(DB::raw("count(*) as click_count"))
+            ->leftJoin("metager.affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            })
+            ->where("c.hostname", 'like', "%$filter%")
+            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->get();
+        $clickCount = $clickCount[0]->{"click_count"};
+
+        $hosts = DB::table("metager.affiliate_clicks", "c")
+            ->select("c.hostname", DB::raw('count(c.hostname) as clicks'))
+            ->leftJoin("metager.affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            })
+            ->where("c.hostname", 'like', "%$filter%")
+            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->groupBy("c.hostname")
+            ->orderByDesc("clicks")
+            ->limit($count)
+            ->offset($skip)
+            ->get();
+
+        $result = [
+            "count" => $count,
+            "skip" => $skip,
+            "total_hosts" => $hostCount,
+            "total_clicks" => $clickCount,
+            "hosts" => $hosts
+        ];
+
+        return response()->json($result);
+    }
+
+    public function hostClicksJson(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "count" => ["integer", "min:1", "max:50"],
+            "skip" => ["integer", "min:0"],
+            "hostname" => [
+                "required",
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that this is indeed a hostname which is resolvable
+                    if (!filter_var(gethostbyname($request->input("hostname")), FILTER_VALIDATE_IP)) {
+                        $fail("The selected entry is not a valid hostname");
+                    }
+                },
+                function ($attribute, $value, $fail) use ($request) {
+                    # Validate that entry does not already exist in database
+                    $entry = DB::table("affiliate_clicks", "c")
+                        ->where("hostname", "=", $request->input("hostname"))
+                        ->limit(1)
+                        ->get();
+                    if (sizeof($entry) !== 1) {
+                        $fail("The selected entry does not exist in database");
+                    }
+                }
+            ],
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "message" => "Invalid Request Data"
+            ], 422);
+        }
+
+        $count = intval($request->input("count", 10));
+        $skip = intval($request->input("skip", 0));
+
+        $total = DB::table("affiliate_clicks", "c")
+            ->select(DB::raw("count(*) as count"))
+            ->where("hostname", "=", $request->input("hostname"))
+            ->get();
+        $total = $total[0]->count;
+
+        // Query Data
+        $clicks = DB::table("affiliate_clicks", "c")
+            ->where("hostname", "=", $request->input("hostname"))
+            ->orderByDesc("c.created_at")
+            ->limit($count)
+            ->offset($skip)
+            ->get();
+
+        $result = [
+            "count" => $count,
+            "skip" => $skip,
+            "total" => $total,
+            "results" => $clicks
+        ];
+        return response()->json($result);
+    }
 }

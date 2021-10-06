@@ -23,6 +23,7 @@ class AdgoalController extends Controller
     # Data will be stored for 24 hours
     const STORAGE_DURATION_HOURS = 24;
     const REDIS_STORAGE_KEY = "affiliate_click";
+    const REDIS_BLACKLIST_KEY = "affiliate_blacklist";
 
     /**
      * This function is called when a user clicks on a affiliate link. It will first validate that the URL

@@ -1,0 +1,58 @@
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
+
+class LoadAffiliateBlacklist extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'load:affiliate-blacklist';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Loads the Affiliate Blacklist from DB into Redis';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return int
+     */
+    public function handle()
+    {
+        $blacklistItems = DB::table("affiliate_blacklist", "b")
+            ->select("hostname")
+            ->where("blacklist", true)
+            ->get();
+
+        Redis::pipeline(function ($redis) use ($blacklistItems) {
+            $redisKey = \App\Http\Controllers\AdgoalController::REDIS_BLACKLIST_KEY;
+            $redis->del($redisKey);
+            foreach ($blacklistItems as $item) {
+                $hostname = $item->hostname;
+                $redis->hset(\App\Http\Controllers\AdgoalController::REDIS_BLACKLIST_KEY, $hostname, true);
+            }
+        });
+
+        return 0;
+    }
+}

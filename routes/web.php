@@ -193,7 +193,10 @@ Route::get('plugin', function (Request $request) {
         ->with('navbarFocus', 'dienste')
         ->with('agent', new Agent())
         ->with('request', $request->input('request', 'GET'))
-        ->with('browser', (new Agent())->browser());
+        ->with('browser', (new Agent())->browser())
+        ->with('css', [
+            mix('/css/plugin-page.css'),
+        ]);
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {

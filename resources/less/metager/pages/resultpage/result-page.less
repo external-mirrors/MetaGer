@@ -30,6 +30,7 @@
 
     h1 {
         .logo;
+        border: 0;
         margin: 0px;
         font-size: 1.5em;
         display: inline-block;
@@ -213,59 +214,33 @@ a {
 
 /* Hier der Style für die Bilder */
 
-#fit-width .masonry {
-    margin: 0 auto;
-}
-
-.image-item {
-    width: 150px;
-    text-align: center;
-    margin-bottom: 10px;
-    margin: 5px;
-
-    .img {
-        box-shadow: 0px 0px 10px 2px fade(@color-black, 30%);
-    }
-}
-
 .image-container {
-    display: flex;
-    flex-flow: row wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
 
-    >div.image {
-        flex: auto;
-        margin: 8px;
-        text-align: center;
+    >.image {
+        &.height-2 {
+            grid-row: span 2;
+        }
 
-        >a>div {
-            display: inline-block;
-            background-color: white;
-            text-align: center;
-            .card;
-            padding: 4px;
+        &.height-3 {
+            grid-row: span 3;
+        }
 
-            >img {
-                max-width: 150px;
-            }
-
-            @media(max-width: 370px) {
-                >img {
-                    max-width: 100%;
-                }
-            }
+        >a {
+            display: block;
 
             >div {
-                font-size: .9em;
-                color: #777;
-                margin-top: 4px;
+                >img {
+                    width: 100%;
+                }
             }
-        }
-
-        >a>div:hover {
-            box-shadow: 0 19px 38px rgba(0, 0, 0, 0.30), 0 15px 12px rgba(0, 0, 0, 0.22);
         }
     }
 }
+
+
 
 /* Placeholder für ladende Tabs */
 

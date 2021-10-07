@@ -1,4 +1,5 @@
 <div>
+    <h1 class="page-title">Data protection</h1>
     <div class="section">
         <h1>Data protection at MetaGer/SUMA-EV</h1>
         For maximum transparency, we list the information we collect from you and how we use it. The protection of your
@@ -9,8 +10,7 @@
         <h1>Person responsible and contact person</h1>
         MetaGer and related services are operated by <a href="https://suma-ev.de/impressum.html">SUMA-EV</a>, which is
         also the author of this statement. By "we" in this statement usually SUMA-EV is meant.
-        <br />Our contact details can be found in our <a
-            href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
+        <br />Our contact details can be found in our <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
             notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">encrypted form</a>.
     </div>
     <div class="section">
@@ -25,26 +25,26 @@
         <ol>
             <li class="kontext-list">
                 <article class="kontext">
-                    <h2>Using the web search engine MetaGer</h2>
+                    <h1>Using the web search engine MetaGer</h1>
                     When using our web search engine MetaGer via their web form or through their OpenSearch interface,
                     the following data is generated:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3 id="ip-address">Internet protocol address</h3>
+                                <h2 id="ip-address">Internet protocol address</h2>
                                 The Internet protocol address (hereafter referred to as IP) is necessary to use web
                                 services such as MetaGer. This IP, in combination with a date similar to a telephone
                                 number, uniquely identifies Internet access and its owner.
                                 <br />In general, the first three (out of four) blocks of an IP are not personal. When
                                 rear blocks of the IP are truncated, the truncated address identifies the approximate
                                 geographic area around the Internet connection.
-                                <h4>Examples (full IP address)</h4>
+                                <h3>Examples (full IP address)</h3>
                                 <samp>154.67.88.47</samp><br />
                                 <samp>82.159.53.49</samp>
-                                <h4>Examples (only the first two blocks)</h4>
+                                <h3>Examples (only the first two blocks)</h3>
                                 <samp>154.67.0.0</samp><br />
                                 <samp>82.159.0.0</samp>
-                                <h3>What does MetaGer/SUMA-EV do with it?</h3>
+                                <h2>What does MetaGer/SUMA-EV do with it?</h2>
                                 <ol>
                                     <li>To protect our service from congestion, we need to limit the number of search
                                         queries per Internet connection. For this purpose alone, we store the full IP
@@ -58,7 +58,7 @@
                                         the so-called user agent to our advertising partners
                                     </li>
                                 </ol>
-                                <h3>Which rights do I have as a user?</h3>
+                                <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
                                 rights in particular:
                                 <a href="#ihrerechte">View rights</a>
@@ -66,15 +66,15 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3 id="search-request">Entered search query</h3>
+                                <h2 id="search-request">Entered search query</h2>
                                 Entered search terms are mandatory for a web search. As a rule, personal data cannot be
                                 obtained from them; partly because they have no fixed structure.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Water consumption when showering</samp><br />
                                 <samp>Lyrics from the song There was a bird on a tree</samp><br />
                                 <samp>Grakvaloth</samp><br />
                                 <samp>WHO abbreviation</samp>
-                                <h4>What does MetaGer/SUMA-EV do with it?</h4>
+                                <h3>What does MetaGer/SUMA-EV do with it?</h3>
                                 <ol>
                                     <li>As an integral part of the Metasearch, the search query will be transmitted to
                                         our partners to get search results for display on the results page. The results,
@@ -85,15 +85,15 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3 id="user-agent">User Agent Name</h3>
+                                <h2 id="user-agent">User Agent Name</h2>
                                 When a website is opened, your browser automatically sends an identifier, usually with
                                 data about the browser and operating system used. This browser identifier (the so-called
                                 user agent) can be used by web pages, for example, to recognize mobile devices and
                                 present them with a customized output.
-                                <h4>Example</h4>
+                                <h3>Example</h3>
                                 <samp>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101
                                     Firefox/59.0</samp>
-                                <h4>What does MetaGer/SUMA-EV do with it?</h4>
+                                <h3>What does MetaGer/SUMA-EV do with it?</h3>
                                 <ol>
                                     <li>In addition to donations and membership fees, we must finance our operation
                                         through non-personalized advertising on the results page. To receive this
@@ -106,15 +106,15 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>User preferences</h3>
+                                <h2>User preferences</h2>
                                 In addition to form data and user agent, the browser often transmits additional data.
                                 These include language selection, search settings, accept header, do-not-track header
                                 and more.
-                                <h4>Examples</h4>
+                                <h3>Examples</h3>
                                 <samp>interface=de sprachfilter=all fokus=web</samp><br />
                                 <samp>interface=de sprachfilter=de fokus=nachrichten</samp><br />
                                 <samp>interface=en sprachfilter=en fokus=web</samp>
-                                <h4>What does MetaGer / SUMA-EV do with it?</h4>
+                                <h3>What does MetaGer / SUMA-EV do with it?</h3>
                                 <ol>
                                     <li>We use this data (e.g., language settings) to answer the query.</li>
                                     <li>We store some of these data non-personally for statistical purposes.</li>
@@ -124,25 +124,25 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2 id="contact">Use of the contact form</h2>
+                    <h1 id="contact">Use of the contact form</h1>
                     When using the MetaGer contact form, we collect the following information that we store for
                     reference purposes up to 2 months after your request has been completed:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Contact data</h3>
+                                <h2>Contact data</h2>
                                 This includes the name you provided (first and last name) and your e-mail address. We
                                 only use this data to answer you and under no circumstances pass it on to third parties.
-                                <h4>Examples</h4>
+                                <h3>Examples</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Message</h3>
+                                <h2>Message</h2>
                                 The message entered here will be transmitted to us and used to process your request.
-                                <h4>Examples</h4>
+                                <h3>Examples</h3>
                                 <samp>Feedback to MetaGer</samp><br />
                                 <samp>MetaGer as a browser plug-in</samp><br />
                             </article>
@@ -150,30 +150,30 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2 id="donation">Use of the donation form</h2>
+                    <h1 id="donation">Use of the donation form</h1>
                     The following data submitted in the donation form will be stored for processing for 2 months:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Contact data</h3>
+                                <h2>Contact data</h2>
                                 This includes the name you provided (first and last name) and your e-mail address. We
                                 use this data exclusively for any queries and under no circumstances pass them on to
                                 third parties.
-                                <h4>Examples</h4>
+                                <h3>Examples</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Payment data</h3>
+                                <h2>Payment data</h2>
                                 The payment data will be used exclusively to process the donation and under no
                                 circumstances will be passed on to third parties.
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Message (optional)</h3>
+                                <h2>Message (optional)</h2>
                                 The message entered here will be transmitted to us and considered when processing your
                                 donation.
                             </article>
@@ -181,7 +181,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Simple Website useage</h2>
+                    <h1>Simple Website useage</h1>
                     When visiting websites of the domain "suma-ev.de", the following data are collected and stored for
                     up to one week:
                     <ul>
@@ -203,17 +203,17 @@
 
                 </article>
                 <article class="kontext">
-                    <h2>Registration for the SUMA-EV newsletter</h2>
+                    <h1>Registration for the SUMA-EV newsletter</h1>
                     To keep you up to date on our activities, we offer an e-mail newsletter. We store the following data
                     until you cancel:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Contact data</h3>
+                                <h2>Contact data</h2>
                                 This includes the name you provided (first and last name) and your e-mail address. We
                                 use this data exclusively for sending the newsletter and under no circumstances pass it
                                 on to third parties.
-                                <h4>Examples</h4>
+                                <h3>Examples</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
@@ -221,7 +221,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Use of Maps.MetaGer.de</h2>
+                    <h1>Use of Maps.MetaGer.de</h1>
                     When using the MetaGer map service, the following data is generated:
                     <ol>
                         <br />
@@ -232,7 +232,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Use of the anonymizing proxy</h2>
+                    <h1>Use of the anonymizing proxy</h1>
                     When using the anonymizing proxy, the following data is generated:
                     <ol>
                         <br />
@@ -241,23 +241,23 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Using the citation search</h2>
+                    <h1>Using the citation search</h1>
                     The entered search term is used to search for results in the citation database. In contrast to the
                     <a href="#search-request">web search</a> with MetaGer, it is not necessary to pass the search term
                     on to third parties, as the citation database is located on our server. Other data will not be
                     stored or shared.
                 </article>
                 <article class="kontext">
-                    <h2>Use of the associator</h2>
+                    <h1>Use of the associator</h1>
                     The associator uses the search term to determine and display the terms associated therewith. Other
                     data will not be stored or shared.
                 </article>
                 <article class="kontext">
-                    <h2>Use of the MetaGer app</h2>
+                    <h1>Use of the MetaGer app</h1>
                     Use of the MetaGer app is the same as using MetaGer via a web browser.
                 </article>
                 <article class="kontext">
-                    <h2>Use of the MetaGer plugin</h2>
+                    <h1>Use of the MetaGer plugin</h1>
                     When using the MetaGer plugin, the following data is generated:
                     <ol>
                         <br />

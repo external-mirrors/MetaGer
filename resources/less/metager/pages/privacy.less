@@ -1,24 +1,35 @@
 .privacy {
-    ol, ul {
+
+    ol,
+    ul {
         list-style-type: none;
         padding-left: 0;
     }
+
+    main>div {
+        display: flex;
+        flex-direction: column;
+        row-gap: .6rem;
+    }
+
     .section {
-        margin: 8px 0;
-        .card-light;
-        @media(max-width: @screen-medium){
-            .card-medium;
+        .card;
+
+        @media(max-width: @screen-medium) {
+            .card;
         }
-        @media(max-width: @screen-small){
-            .card-heavy;
+
+        @media(max-width: @screen-small) {
+            .card;
         }
+
         .kontext {
-            border-bottom: 1px solid @border-color;
-            border-top: 1px solid @border-color;
             padding: 8px 0;
+
             .datum-list {
                 margin-top: 8px;
-                > li {
+
+                >li {
                     padding: 8px 0;
                 }
             }

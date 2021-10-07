@@ -492,8 +492,12 @@ a {
         padding: 4px;
 
         .resultpage-searchbar {
-            .search-input-submit .search-input input {
-                border-bottom: 1px solid @border-color;
+            .search-input-submit {
+                background-color: @background-color;
+
+                .search-input input {
+                    border-bottom: 1px solid @border-color;
+                }
             }
 
             @media (max-width: @sidebar-opener-breakpoint) {
@@ -504,7 +508,6 @@ a {
 
                 .search-input-submit {
                     border-radius: 5px;
-                    background-color: @background-color
                 }
 
                 >* {

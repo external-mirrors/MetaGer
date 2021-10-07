@@ -3,12 +3,12 @@
 @section('title', $title )
 
 @section('content')
-<div class="card-heavy" id="steps">
+<div class="card" id="steps">
     <div class="step-one">Entfernen des aktuellen Schlüssels</div>
     <div class="step-two">Generieren des neuen Schlüssels</div>
     <div class="step-three active">Speichern des neuen Schlüssels</div>
 </div>
-<div class="card-heavy">
+<div class="card">
     <h1>@lang('keychange.h1')</h1>
     <p>@lang('keychange.p7')</p>
     <p>@lang('keychange.p8')</p>

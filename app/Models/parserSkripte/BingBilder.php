@@ -47,7 +47,6 @@ class BingBilder extends Searchengine
                 );
             }
         } catch (\Exception $e) {
-            throw $e;
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;

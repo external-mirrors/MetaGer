@@ -2,7 +2,7 @@
 
 return [
     'head.1'            => 'MetaGer Apps',
-    'disclaimer.1'      => 'Aktuell können wir unsere Apps nur für Android Geräte zur Verfügung stellen. Apple macht es uns leider zu schwer. Wir bitten hierfür um Verständnis.',
+    'disclaimer.1'      => 'Aktuell können wir unsere Apps nur für Android Geräte zur Verfügung stellen.',
     'head.2'            => 'MetaGer App',
     'metager.1'         => 'Diese App bringt die volle Power unserer Suchmaschine auf ihr Smartphone. Durchsuchen Sie das Internet unter Wahrung ihrer Privatsphäre mit nur einem Fingerwisch.',
     'metager.2'         => 'Sie können die App für unsere Suche entweder über F-Droid oder den Google Playstore installieren, oder sie datengeschützt manuell von unserem Server auf ihrem Smartphone installieren.',

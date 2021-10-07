@@ -25,13 +25,13 @@ class Spende extends Page
     public function assert(Browser $browser)
     {
         $browser->assertPathIs($this->url())
-            ->waitForText("Ihre Spende für SUMA-EV und MetaGer")
+            ->waitForText("Ihre Spende")
             ->assertTitle("Spenden - MetaGer")
             ->switchLanguage("English")
-            ->waitForText("Your Donation for MetaGer to SUMA-EV")
+            ->waitForText("Your Donation")
             ->assertTitle("Donation - MetaGer")
             ->switchLanguage("Español")
-            ->waitForText("Su donación para SUME-EV y MetaGer")
+            ->waitForText("Su donación")
             ->assertTitle("Donaciones - MetaGer")
             ->switchLanguage("Deutsch");
     }

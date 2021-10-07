@@ -1,9 +1,9 @@
 <?php
 
 return [
-    "headline.1" => "Your Donation for MetaGer to SUMA-EV",
+    "headline.1" => "Your Donation",
     "headline.2" => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a> and <a href=":beitrittlink" target="_blank" rel="noopener">become a member.</a>',
-   
+
     'headline.3' => 'How much would you like to donate?',
     'headline.4' => 'How frequent do you want to donate?',
     'headline.5' => 'Choose a payment method',
@@ -31,7 +31,7 @@ return [
     'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',
     'bankinfo.2.4' => '(AN: 4075 0332 01, BC: 43060967)',
     "bankinfo.3" => "If you wish to receive a donation receipt,\r\nplease specify your full adress and (if available)\r\nyour E-Mail adress on the money transfer form.",
-   
+
     "lastschrift.info" => "If you would like to donate by direct debit, please enter the information about the amount of the donation and your account information in the form below. We will then conveniently debit the specified account within the next 2 weeks.",
     "lastschrift.info2" => "Unless otherwise specified by you under Regularity, a charge will only be made once.",
     "lastschrift.1" => "Donate by Sepa direct debit",
@@ -51,7 +51,7 @@ return [
     "lastschrift.10" => "Your information is transmitted encrypted and is not read by a third party. SUMA-EV only uses your information for accounting; Your information is not passed on. Donations to the SUMA-EV are tax-deductible, because the association is recognized as charitable by the Finanzamt Hannover Nord (revenue board), listed in the register of associations, Amtsgericht Hannover under VR200033. A certificate for single donations above 300,-EUR is sent automatically (post address is required!). For donations below 300,-EUR an account current is enough for tax-deduction.",
     "lastschrift.private" => "*As a Person:",
     "lastschrift.company" => "*As a Business:",
-   
+
     'paypal.1' => 'You will be redirected where you can finalize your donation.',
 
 

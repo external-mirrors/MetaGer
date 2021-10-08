@@ -50,8 +50,11 @@ podAnnotations:
   prometheus.io/port: "80"
 deploymentApiVersion: apps/v1
 ingress:
+  tls:
+    enabled: true
+    acme: false
+    secretName: "metager-tls"
   annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/client-body-buffer-size: "30m"
     nginx.ingress.kubernetes.io/proxy-body-size: "30m"
     nginx.ingress.kubernetes.io/configuration-snippet: |
@@ -63,7 +66,4 @@ ingress:
       more_set_headers "Permissions-Policy: interest-cohort=()";
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
-      }
-      if ($host = "www.metager3.de") {
-          return 301 https://metager3.de$request_uri;
       }

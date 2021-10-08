@@ -9,6 +9,7 @@ use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Redis;
 use Response;
+use Cache;
 
 class StartpageController extends Controller
 {

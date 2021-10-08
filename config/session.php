@@ -70,8 +70,8 @@ return [
     |
      */
 
-    'connection' => "cache",
-
+    'connection' => env('REDIS_SESSION_CONNECTION', 'cache'),
+ 
     /*
     |--------------------------------------------------------------------------
     | Session Database Table

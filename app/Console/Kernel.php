@@ -13,9 +13,7 @@ class Kernel extends ConsoleKernel
      *
      * @var array
      */
-    protected $commands = [
-
-    ];
+    protected $commands = [];
 
     /**
      * Define the application's command schedule.
@@ -30,6 +28,9 @@ class Kernel extends ConsoleKernel
         $schedule->command('requests:useragents')->everyFiveMinutes();
         $schedule->command('logs:gather')->everyMinute();
         $schedule->command('spam:load')->everyMinute();
+        $schedule->command('load:affiliate-blacklist')->everyMinute();
+        $schedule->command('affilliates:store')->everyMinute()
+            ->onOneServer();
         $schedule->call(function () {
             DB::table('monthlyrequests')->truncate();
             DB::disconnect('mysql');

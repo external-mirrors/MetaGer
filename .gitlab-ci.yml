@@ -92,7 +92,6 @@ stop_review:
     - auto-deploy delete rollout
     - auto-deploy persist_environment_url
   variables:
-    ADDITIONAL_HOSTS: "www.metager3.de,test.metager.de"
     HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:
@@ -120,7 +119,7 @@ development:
 
 production:
   variables:
-    ADDITIONAL_HOSTS: "www.metager.de,metager.org,www.metager.org,metager.es,www.metager.es,klassik.metager.org"
+    ADDITIONAL_HOSTS: "metager.org,metager.es"
     HELM_UPGRADE_VALUES_FILE: .gitlab/production-values.yaml
     ROLLOUT_RESOURCE_TYPE: deployment
   environment:

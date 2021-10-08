@@ -4,12 +4,12 @@
 
 @section('content')
 <div id="settings">
-    <div class="card-light">
-        <h2>@lang('settings.header.1') ({{ $fokusName }})</h2>
+    <h1 class="page-title">@lang('settings.header.1') ({{ $fokusName }})</h1>
+    <div class="card">
         <p>@lang('settings.text.1', ["fokusName" => $fokusName])</p>
     </div>
-    <div class="card-light">
-        <h2>@lang('settings.hint.header')</h2>
+    <div class="card">
+        <h1>@lang('settings.hint.header')</h1>
         <p>@lang('settings.hint.text', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</p>
         <p>@lang('settings.hint.loadSettings')</p>
         <div class="copyLink">
@@ -17,35 +17,35 @@
             <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
         </div>
     </div>
-    <div class="card-light">
-        <h2>@lang('settings.header.2')</h2>
+    <div class="card">
+        <h1>@lang('settings.header.2')</h1>
         <p>@lang('settings.text.2')</p>
         <p></p>
         <div class="sumas enabled-engines">
             @foreach($sumas as $suma => $sumaInfo)
             @if(! $sumaInfo["filtered"] && $sumaInfo["enabled"])
-                <div class="suma">
-                    <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post">
-                        <input type="hidden" name="suma" value="{{ $suma }}">
-                        <input type="hidden" name="fokus" value="{{ $fokus }}">
-                        <input type="hidden" name="url" value="{{ $url }}">
-                        <button type="submit">{{ $sumaInfo["display-name"] }}</button>
-                    </form>
-                </div>
+            <div class="suma">
+                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post">
+                    <input type="hidden" name="suma" value="{{ $suma }}">
+                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="url" value="{{ $url }}">
+                    <button type="submit">{{ $sumaInfo["display-name"] }}</button>
+                </form>
+            </div>
             @endif
             @endforeach
         </div>
         <div class="sumas disabled-engines">
             @foreach($sumas as $suma => $sumaInfo)
             @if( !$sumaInfo["filtered"] && !$sumaInfo["enabled"])
-                <div class="suma">
-                    <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post">
-                        <input type="hidden" name="suma" value="{{ $suma }}">
-                        <input type="hidden" name="fokus" value="{{ $fokus }}">
-                        <input type="hidden" name="url" value="{{ $url }}">
-                        <button type="submit">{{ $sumaInfo["display-name"] }}</button>
-                    </form>
-                </div>
+            <div class="suma">
+                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post">
+                    <input type="hidden" name="suma" value="{{ $suma }}">
+                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="url" value="{{ $url }}">
+                    <button type="submit">{{ $sumaInfo["display-name"] }}</button>
+                </form>
+            </div>
             @endif
             @endforeach
         </div>
@@ -54,16 +54,16 @@
         <div class="sumas filtered-engines">
             @foreach($sumas as $suma => $sumaInfo)
             @if($sumaInfo["filtered"])
-                <div class="suma">
-                    {{ $sumaInfo["display-name"] }}
-                </div>
+            <div class="suma">
+                {{ $sumaInfo["display-name"] }}
+            </div>
             @endif
             @endforeach
         </div>
         @endif
     </div>
-    <div class="card-light">
-        <h2>@lang('settings.header.3')</h2>
+    <div class="card">
+        <h1>@lang('settings.header.3')</h1>
         <p>@lang('settings.text.3')</p>
         <form id="filter-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableFilter')) }}" method="post" class="form">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
@@ -89,8 +89,8 @@
         </form>
     </div>
 
-    <div class="card-light" id="blacklist">
-        <h2>@lang('settings.header.4')</h2>
+    <div class="card" id="blacklist">
+        <h1>@lang('settings.header.4')</h1>
         <p>@lang('settings.text.4')</p>
         <form id="newentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
             <input type="hidden" name="url" value="{{ $url }}">
@@ -102,61 +102,61 @@
             </div>
         </form>
         @if(!empty($blacklist))
-            <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-                <table>
+        <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+            <table>
                 @foreach($blacklist as $key => $value)
-                    <tr>
-                        <td>
-                            {{ $value }}
-                        </td>
-                        <td>
-                        <button type="submit" name="cookieKey" value="{{ $key }}"><img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}"></button>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        {{ $value }}
+                    </td>
+                    <td>
+                        <button type="submit" name="cookieKey" value="{{ $key }}"><img class="mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}"></button>
+                    </td>
+                </tr>
                 @endforeach
-                </table>
-            </form>
-            <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-                <button class="btn btn-default" type="submit" name="clear" value="1">@lang('settings.clear')</button>
-            </form>
+            </table>
+        </form>
+        <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+            <button class="btn btn-default" type="submit" name="clear" value="1">@lang('settings.clear')</button>
+        </form>
         @endif
     </div>
 
-    
-        <div class="card-light">
-            <h2>@lang('settings.more')</h2>
-            <p>@lang('settings.hint')</p>
-            <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
-                <input type="hidden" name="fokus" value="{{ $fokus }}">
-                <input type="hidden" name="url" value="{{ $url }}">
-                <div class="form-group">
-                    <label for="dm">@lang('settings.darkmode')</label>
-                    <select name="dm" id="dm" class="form-control">
-                        <option value="system" {{ !Cookie::has('dark_mode') ? "disabled selected" : "" }}>@lang('settings.system')</option>
-                        <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
-                        <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="nt">@lang('settings.newTab')</label>
-                    <select name="nt" id="nt" class="form-control">
-                        <option value="off" {{ !Cookie::has('new_tab') ? "disabled selected" : "" }}>@lang('settings.off')</option>
-                        <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
-                    </select>
-                </div>
-                @if(LaravelLocalization::getCurrentLocale() === "de")
-                <div class="form-group">
-                    <label for="zitate">Zitate</label>
-                    <select name="zitate" id="zitate" class="form-control">
-                        <option value="on" @if(Cookie::get("zitate") === null)disabled selected @endif>Anzeigen</option>
-                        <option value="off" {{ Cookie::get("zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
-                    </select>
-                </div>
-                @endif
-                <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
-            </form>
-        </div>
-    <div class="card-light" id="actions">
+
+    <div class="card">
+        <h1>@lang('settings.more')</h1>
+        <p>@lang('settings.hint')</p>
+        <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
+            <input type="hidden" name="fokus" value="{{ $fokus }}">
+            <input type="hidden" name="url" value="{{ $url }}">
+            <div class="form-group">
+                <label for="dm">@lang('settings.darkmode')</label>
+                <select name="dm" id="dm" class="form-control">
+                    <option value="system" {{ !Cookie::has('dark_mode') ? "disabled selected" : "" }}>@lang('settings.system')</option>
+                    <option value="off" {{ Cookie::get('dark_mode') === "1" ? "disabled selected" : "" }}>@lang('settings.light')</option>
+                    <option value="on" {{ Cookie::get('dark_mode') === "2" ? "disabled selected" : "" }}>@lang('settings.dark')</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nt">@lang('settings.newTab')</label>
+                <select name="nt" id="nt" class="form-control">
+                    <option value="off" {{ !Cookie::has('new_tab') ? "disabled selected" : "" }}>@lang('settings.off')</option>
+                    <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
+                </select>
+            </div>
+            @if(LaravelLocalization::getCurrentLocale() === "de")
+            <div class="form-group">
+                <label for="zitate">Zitate</label>
+                <select name="zitate" id="zitate" class="form-control">
+                    <option value="on" @if(Cookie::get("zitate")===null)disabled selected @endif>Anzeigen</option>
+                    <option value="off" {{ Cookie::get("zitate") === "off" ? "disabled selected" : "" }}>Nicht Anzeigen</option>
+                </select>
+            </div>
+            @endif
+            <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
+        </form>
+    </div>
+    <div class="card" id="actions">
         @if($settingActive)
         <div id="reset">
             <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteSettings', ["fokus" => $fokus, "url" => $url])) }}" method="post">

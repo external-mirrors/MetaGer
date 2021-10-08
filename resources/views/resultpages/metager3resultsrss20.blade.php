@@ -1,4 +1,4 @@
-<?xmlversion = "1.0"encoding = "UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
  <rss version="2.0"
       xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
       xmlns:mg="http://metager.de/opensearch/"

@@ -70,7 +70,7 @@ return [
 
         'redis' => [
             'driver' => env('REDIS_CACHE_DRIVER', 'redis'),
-            'connection' => 'cache',
+            'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
         ],
 
     ],
@@ -86,6 +86,6 @@ return [
     |
      */
 
-    'prefix' => 'laravel',
+    'prefix' => 'metager',
 
 ];

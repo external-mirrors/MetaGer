@@ -17,11 +17,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
  */
 
-Route::get("robots.txt", function(Request $request){
+Route::get("robots.txt", function (Request $request) {
     $responseData = "";
-    if(App::environment("production")){
+    if (App::environment("production")) {
         $responseData = view("robots.production");
-    }else{
+    } else {
         $responseData = view("robots.development");
     }
     return response($responseData, 200, ["Content-Type" => "text/plain"]);
@@ -130,14 +130,14 @@ Route::get('datenschutz', function () {
 
 Route::get('transparency', function () {
     return view('transparency')
-         ->with('title', trans('titles.transparency'))
-         ->with('navbarFocus', 'info');
+        ->with('title', trans('titles.transparency'))
+        ->with('navbarFocus', 'info');
 });
 
 Route::get('search-engine', function () {
     return view('search-engine')
-         ->with('title', trans('titles.search-engine'))
-         ->with('navbarFocus', 'info');
+        ->with('title', trans('titles.search-engine'))
+        ->with('navbarFocus', 'info');
 });
 
 Route::get('hilfe', function () {
@@ -200,7 +200,11 @@ Route::get('plugin', function (Request $request) {
         ->with('title', trans('titles.plugin'))
         ->with('navbarFocus', 'dienste')
         ->with('agent', new Agent())
-        ->with('browser', (new Agent())->browser());
+        ->with('request', $request->input('request', 'GET'))
+        ->with('browser', (new Agent())->browser())
+        ->with('css', [
+            mix('/css/plugin-page.css'),
+        ]);
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
@@ -228,6 +232,18 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
+
+    Route::group(['prefix' => 'affiliates'], function () {
+        Route::get('/', 'AdgoalController@adminIndex');
+        Route::get('/json/blacklist', 'AdgoalController@blacklistJson');
+        Route::put('/json/blacklist', 'AdgoalController@addblacklistJson');
+        Route::delete('/json/blacklist', 'AdgoalController@deleteblacklistJson');
+        Route::get('/json/whitelist', 'AdgoalController@whitelistJson');
+        Route::put('/json/whitelist', 'AdgoalController@addwhitelistJson');
+        Route::delete('/json/whitelist', 'AdgoalController@deletewhitelistJson');
+        Route::get('/json/hosts', 'AdgoalController@hostsJson');
+        Route::get('/json/hosts/clicks', 'AdgoalController@hostClicksJson');
+    });
 });
 
 Route::get('settings', function () {
@@ -250,10 +266,8 @@ Route::get('index.js', function (Request $request) {
         abort(404);
     }
 
-    Redis::connection("cache")->pipeline(function ($redis) use ($key) {
-        $redis->rpush("js" . $key, true);
-        $redis->expire($key, 30);
-    });
+    Redis::connection(config('cache.stores.redis.connection'))->rpush("js" . $key, true);
+    Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
 
     return response("", 200)->header("Content-Type", "application/javascript");
 });
@@ -293,7 +307,7 @@ Route::group(['prefix' => 'app'], function () {
             try {
                 $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
                 while (!feof($fh)) {
-                    echo(fread($fh, 1024));
+                    echo (fread($fh, 1024));
                 }
             } catch (\Exception $e) {
                 abort(404);
@@ -310,7 +324,7 @@ Route::group(['prefix' => 'app'], function () {
             try {
                 $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
                 while (!feof($fh)) {
-                    echo(fread($fh, 1024));
+                    echo (fread($fh, 1024));
                 }
             } catch (\Exception $e) {
                 abort(404);
@@ -341,16 +355,16 @@ Route::get('metrics', function (Request $request) {
     ];
 
     $allowed = false;
-    foreach($allowedNetworks as $part){
-        if(stripos($ip, $part) === 0){
+    foreach ($allowedNetworks as $part) {
+        if (stripos($ip, $part) === 0) {
             $allowed = true;
         }
     }
 
-    if(!$allowed){
+    if (!$allowed) {
         abort(401);
     }
-    
+
     $registry = \Prometheus\CollectorRegistry::getDefault();
 
     $renderer = new RenderTextFormat();
@@ -358,6 +372,10 @@ Route::get('metrics', function (Request $request) {
 
     return response($result, 200)
         ->header('Content-Type', RenderTextFormat::MIME_TYPE);
+});
+
+Route::group(['prefix' => 'partner'], function () {
+    Route::get('r', 'AdgoalController@forward')->name('adgoal-redirect');
 });
 
 Route::group(['prefix' => 'health-check'], function () {

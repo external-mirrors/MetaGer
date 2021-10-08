@@ -75,13 +75,13 @@ class MailController extends Controller
                 "attachments" => []
             ];
 
-            if($request->has("attachments") && is_array($request->file("attachments"))){
-                foreach($request->file("attachments") as $attachment){
+            if ($request->has("attachments") && is_array($request->file("attachments"))) {
+                foreach ($request->file("attachments") as $attachment) {
                     $postdata["attachments"][] = [
                         $attachment->getClientOriginalName() => "data:" . $attachment->getMimeType() . ";base64," . base64_encode(file_get_contents($attachment->getRealPath()))
                     ];
                 }
-            }  
+            }
 
             if (LaravelLocalization::getCurrentLocale() === "de") {
                 $postdata["deptId"] = 1;
@@ -117,12 +117,12 @@ class MailController extends Controller
 
             // Fetch the result
             $answer = Redis::blpop($resulthash, 20);
-            
+
             // Fehlerfall
-            if(empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")){
+            if (empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")) {
                 $messageType = "error";
                 $returnMessage = trans('kontakt.error.2', ["email" => config("mail.mailers.smtp.username")]);
-            }else{
+            } else {
                 $returnMessage = trans('kontakt.success.1', ["email" => $replyTo]);
                 $messageType = "success";
             }
@@ -132,7 +132,6 @@ class MailController extends Controller
             ->with('title', 'Kontakt')
             ->with('js', ['lib.js'])
             ->with($messageType, $returnMessage);
-    
     }
 
     public function donation(Request $request)
@@ -141,10 +140,10 @@ class MailController extends Controller
         $lastname = "";
         $company = "";
         $private = $request->input('person', '') === 'private' ? true : false;
-        if($request->input('person', '') === 'private') {
+        if ($request->input('person', '') === 'private') {
             $firstname = $request->input('firstname');
             $lastname = $request->input('lastname');
-        } elseif($request->input('person', '') === 'company') {
+        } elseif ($request->input('person', '') === 'company') {
             $company = $request->input('companyname');
         }
 
@@ -160,7 +159,7 @@ class MailController extends Controller
             'frequency' => $request->input('frequency', ''),
             'nachricht' => $request->input('Nachricht', ''),
         ];
-    
+
         $iban = $request->input('iban', '');
         $bic = $request->input('bic', '');
         $email = $request->input('email', '');
@@ -199,7 +198,7 @@ class MailController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email = "";
         }
-        if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
+        if (($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))) {
             $messageToUser = trans('spende.error.name');
             $messageType = "error";
         } elseif (!$iban->Verify()) {
@@ -218,10 +217,6 @@ class MailController extends Controller
 
             # The value has to have a maximum of 2 decimal digits
             $betrag = round($betrag, 2, PHP_ROUND_HALF_DOWN);
-
-            # Generating personalised key for donor
-            $key = app('App\Models\Key')->generateKey($betrag, null, null, 'Für ' . $betrag . '€ aufgeladen am '. date("d.m.Y"));
-
             try {
                 $postdata = [
                     "entity" => "Contribution",
@@ -234,21 +229,19 @@ class MailController extends Controller
                     "amount" => $betrag,
                     "frequency" => $frequency,
                     "email" => $email,
-                    "mgkey" => $key,
                     "message" => $nachricht
                 ];
 
-                if($request->input('person') === 'private') {
+                if ($request->input('person') === 'private') {
                     $postdata['first_name'] = $firstname;
                     $postdata['last_name'] = $lastname;
-                } elseif($request->input('person') === 'company') {
+                } elseif ($request->input('person') === 'company') {
                     $postdata['business_name'] = $company;
                 }
 
                 $postdata = http_build_query($postdata);
-    
+
                 $resulthash = md5(json_encode($postdata));
-    
                 $mission = [
                     "resulthash" => $resulthash,
                     "url" => config("metager.metager.civicrm.url"),
@@ -270,15 +263,22 @@ class MailController extends Controller
                 ];
                 $mission = json_encode($mission);
                 Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-    
+
                 // Fetch the result
                 $answer = Redis::blpop($resulthash, 20);
-                
+                $key = "";
+
                 // Fehlerfall
-                if(empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")){
+                if (empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")) {
                     $messageType = "error";
                     $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
-                }else{
+                }
+                $answer = json_decode($answer[1], true);
+                if ($answer["is_error"] !== 0 || $answer["count"] !== 1) {
+                    $messageType = "error";
+                    $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
+                } else {
+                    $key = $answer["values"][0]["MGKey.MGKey"];
                     $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
                     $messageType = "success";
                 }
@@ -302,7 +302,8 @@ class MailController extends Controller
         }
     }
 
-    public function donationPayPalCallback(Request $request){
+    public function donationPayPalCallback(Request $request)
+    {
         $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
         # PayPal Transaction ID
         $tx = $request->input("tx", "");
@@ -316,7 +317,7 @@ class MailController extends Controller
         $postdata = http_build_query($postdata);
 
         $resulthash = md5($tx);
-    
+
         $mission = [
             "resulthash" => $resulthash,
             "url" => $url,
@@ -344,14 +345,14 @@ class MailController extends Controller
         // Verify at PayPal that the transaction was indeed SUCCESSFULL
         $answer = Redis::blpop($resulthash, 20);
 
-        if(sizeof($answer) !== 2){
+        if (sizeof($answer) !== 2) {
             return ''; # TODO Redirect on failure
-        }else{
+        } else {
             $answer = $answer[1];
             $answer = explode("\n", $answer);
         }
 
-        if($answer[0] !== "SUCCESS"){
+        if ($answer[0] !== "SUCCESS") {
             return ''; #TODO Redirect on failure
         }
 
@@ -359,16 +360,97 @@ class MailController extends Controller
         array_splice($answer, 0, 1);
         $answertmp = $answer;
         $answer = [];
-        foreach($answertmp as $index => $element){
-            if(preg_match("/^([^=]+)=(.*)$/", $element, $matches) === 1){
+        foreach ($answertmp as $index => $element) {
+            if (preg_match("/^([^=]+)=(.*)$/", $element, $matches) === 1) {
                 $key = $matches[1];
                 $value = urldecode($matches[2]);
                 $answer[$key] = $value;
-            }            
+            }
         }
 
+        $data = [
+            "person" => "private",
+            "firstname" => !empty($answer["first_name"]) ? $answer["first_name"] : "",
+            "lastname" => !empty($answer["last_name"]) ? $answer["last_name"] : "",
+            "company" => "",
+            "iban" => "",
+            "bic" => "",
+            "email" => !empty($answer["payer_email"]) ? $answer["payer_email"] : "",
+            "betrag" => !empty($answer["mc_gross"]) && !empty($answer["mc_fee"]) ? floatval($answer["mc_gross"]) - floatval($answer["mc_fee"]) : 0,
+            "nachricht" => !empty($answer["memo"]) ? $answer["memo"] : "",
+        ];
 
-        dd($answer);
+        // Generate a key
+        $postdata = [
+            "entity" => "Contribution",
+            "action" => "mgcreate",
+            "api_key" => config("metager.metager.civicrm.apikey"),
+            "key" => config("metager.metager.civicrm.sitekey"),
+            "json" => 1,
+            "amount" => $data["betrag"],
+            "frequency" => "once",
+            "email" => $data["email"],
+            "message" => $data["nachricht"],
+            'first_name' => $data["firstname"],
+            'last_name' => $data["lastname"]
+        ];
+
+        $postdata = http_build_query($postdata);
+
+        $resulthash = md5(json_encode($postdata));
+        $mission = [
+            "resulthash" => $resulthash,
+            "url" => config("metager.metager.civicrm.url"),
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => null,
+            "password" => null,
+            "headers" => [
+                "Content-Type" => "application/x-www-form-urlencoded",
+            ],
+            "cacheDuration" => 0,
+            "name" => "Ticket",
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $postdata,
+                CURLOPT_LOW_SPEED_TIME => 20,
+                CURLOPT_CONNECTTIMEOUT => 10,
+                CURLOPT_TIMEOUT => 20
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+
+        // Fetch the result
+        $answer = Redis::blpop($resulthash, 20);
+        $key = "";
+
+        $messageToUser = "";
+        $messageType = ""; # [success|error]
+
+        // Fehlerfall
+        if (empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")) {
+            $messageType = "error";
+            $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
+        }
+        $answer = json_decode($answer[1], true);
+        if ($answer["is_error"] !== 0 || $answer["count"] !== 1) {
+            $messageType = "error";
+            $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
+        } else {
+            $key = $answer["values"][0]["MGKey.MGKey"];
+            $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spende erhalten.";
+            $messageType = "success";
+        }
+
+        if ($messageType === "error") {
+            return view('spende.spende')
+                ->with('title', 'Kontakt')
+                ->with($messageType, $messageToUser);
+        } else {
+            $data['key'] = $key;
+            $data = base64_encode(serialize($data));
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
+        }
     }
 
     #Ueberprueft ob ein bereits vorhandener Eintrag bearbeitet worden ist

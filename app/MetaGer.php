@@ -93,19 +93,19 @@ class MetaGer
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
             $this->urlsBlacklisted = explode("\n", $tmp);
         }
-        
+
         # Versuchen Blacklists einzulesen
         if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
             $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
             $this->adDomainsBlacklisted = explode("\n", $tmp);
         }
 
-        if(file_exists(config_path() . "/adBlacklistUrl.txt")){
+        if (file_exists(config_path() . "/adBlacklistUrl.txt")) {
             $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
             $this->adUrlsBlacklisted = explode("\n", $tmp);
         }
 
-        if(file_exists(config_path() . "/blacklistDescriptionUrl.txt")){
+        if (file_exists(config_path() . "/blacklistDescriptionUrl.txt")) {
             $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
             $this->blacklistDescriptionUrl = explode("\n", $tmp);
         }
@@ -172,6 +172,7 @@ class MetaGer
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
+                        ->with('imagesearch', true)
                         ->with('browser', (new Agent())->browser());
                 default:
                     return view('resultpages.resultpage_images')
@@ -185,6 +186,7 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('quicktips', $quicktipResults)
                         ->with('focus', $this->fokus)
+                        ->with('imagesearch', true)
                         ->with('resultcount', count($this->results));
             }
         } else {
@@ -292,7 +294,7 @@ class MetaGer
         if (!empty($timings)) {
             $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
         }
-        
+
         $this->duplicationCheck();
         if (!empty($timings)) {
             $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
@@ -301,8 +303,8 @@ class MetaGer
         $newResults = [];
         foreach ($this->ads as $ad) {
             if (($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
-                in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
+                    in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
+                    in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
             ) {
                 continue;
             }
@@ -387,15 +389,15 @@ class MetaGer
             if (strpos($link, "http://") === 0) {
                 $link = substr($link, 7);
             }
-    
+
             if (strpos($link, "https://") === 0) {
                 $link = substr($link, 8);
             }
-    
+
             if (strpos($link, "www.") === 0) {
                 $link = substr($link, 4);
             }
-    
+
             $link = trim($link, "/");
 
             if (isset($arr[$link])) {
@@ -403,7 +405,7 @@ class MetaGer
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
 
                 // The duplicate might already be an adgoal partnershop
-                if($this->results[$i]->partnershop){
+                if ($this->results[$i]->partnershop) {
                     # Den Link hinzufügen:
                     $arr[$link]->logo = $this->results[$i]->logo;
                     $arr[$link]->image = $this->results[$i]->image;
@@ -414,7 +416,7 @@ class MetaGer
                 array_splice($this->results, $i, 1);
                 $i--;
                 if ($arr[$link]->new === true || $this->results[$i]->new === true) {
-                    $arr[$link]->changed = true; 
+                    $arr[$link]->changed = true;
                 }
             } else {
                 $arr[$link] = &$this->results[$i];
@@ -427,16 +429,17 @@ class MetaGer
      * @param Boolean $wait Wait for Results?
      * @return Boolean whether or not all Admitad Objects are finished
      */
-    public function parseAffiliates(&$affiliates){
+    public function parseAffiliates(&$affiliates)
+    {
         $wait = false;
         $finished = true;
-        if(!$this->javascript){
+        if (!$this->javascript) {
             $wait = true;
         }
         foreach ($affiliates as $affiliate) {
             $affiliate->fetchAffiliates($wait);
             $affiliate->parseAffiliates($this->results);
-            if(!$affiliate->finished){
+            if (!$affiliate->finished) {
                 $finished = false;
             }
         }
@@ -653,7 +656,7 @@ class MetaGer
     {
         if ($this->canCache()) {
             foreach ($this->engines as $engine) {
-                if(Cache::has($engine->hash)){
+                if (Cache::has($engine->hash)) {
                     $engine->cached = true;
                     $engine->retrieveResults($this, Cache::get($engine->hash));
                 }
@@ -794,31 +797,31 @@ class MetaGer
     public function sumaIsDisabled($suma)
     {
         return
-        isset($suma['disabled'])
-        && $suma['disabled']->__toString() === "1";
+            isset($suma['disabled'])
+            && $suma['disabled']->__toString() === "1";
     }
 
     public function sumaIsOverture($suma)
     {
         return
-        $suma["name"]->__toString() === "overture"
-        || $suma["name"]->__toString() === "overtureAds";
+            $suma["name"]->__toString() === "overture"
+            || $suma["name"]->__toString() === "overtureAds";
     }
 
     public function sumaIsNotAdsuche($suma)
     {
         return
-        $suma["name"]->__toString() !== "qualigo"
-        && $suma["name"]->__toString() !== "similar_product_ads"
-        && $suma["name"]->__toString() !== "overtureAds";
+            $suma["name"]->__toString() !== "qualigo"
+            && $suma["name"]->__toString() !== "similar_product_ads"
+            && $suma["name"]->__toString() !== "overtureAds";
     }
 
     public function requestIsCached($request)
     {
         return
-        $request->filled('next')
-        && Cache::has($request->input('next'))
-        && unserialize(Cache::get($request->input('next')))['page'] > 1;
+            $request->filled('next')
+            && Cache::has($request->input('next'))
+            && unserialize(Cache::get($request->input('next')))['page'] > 1;
     }
 
     public function getCachedEngines($request)
@@ -866,7 +869,7 @@ class MetaGer
                 break;
             }
             $answer = Redis::brpop($enginesToWaitFor, 2);
-            
+
             if ($answer === null) {
                 continue;
             } else {
@@ -1125,7 +1128,7 @@ class MetaGer
     public function createQuicktips()
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
-        if (!$this->dummy) {
+        if (!$this->dummy && $this->getFokus() !== "bilder") {
             $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
             return $quicktips;
         } else {
@@ -1278,7 +1281,7 @@ class MetaGer
             }
         }
         foreach (Cookie::get() as $key => $value) {
-            if ((stripos($key, $this->fokus.'_blpage') === 0) && (stripos($value, '*.') === false)) {
+            if ((stripos($key, $this->fokus . '_blpage') === 0) && (stripos($value, '*.') === false)) {
                 $this->hostBlacklist[] = $value;
             }
         }
@@ -1320,7 +1323,7 @@ class MetaGer
             }
         }
         foreach (Cookie::get() as $key => $value) {
-            if (stripos($key, $this->fokus.'_blpage') === 0 && stripos($value, '*.') === 0) {
+            if (stripos($key, $this->fokus . '_blpage') === 0 && stripos($value, '*.') === 0) {
                 $this->domainBlacklist[] = str_replace("*.", "", $value);
             }
         }
@@ -1371,7 +1374,7 @@ class MetaGer
         $words = preg_split("/\s+/si", $tmp);
         $newQ = $this->q;
         foreach ($words as $word) {
-            if(preg_match("/^-[a-zA-Z0-9]/", $word)){
+            if (preg_match("/^-[a-zA-Z0-9]/", $word)) {
                 $this->stopWords[] = substr($word, 1);
                 $newQ = str_ireplace($word, "", $newQ);
             }
@@ -1910,15 +1913,18 @@ class MetaGer
         return $this->headerPrinted;
     }
 
-    public function isDummy(){
+    public function isDummy()
+    {
         return $this->dummy;
     }
 
-    public function jsEnabled() {
+    public function jsEnabled()
+    {
         return $this->javascript;
     }
-    
-    public function setJsEnabled(bool $bool){
+
+    public function setJsEnabled(bool $bool)
+    {
         $this->javascript = $bool;
     }
     /**

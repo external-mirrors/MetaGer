@@ -80,28 +80,10 @@ class BingBilder extends Searchengine
     {
         $url = $result->image;
 
-        // all images get cropped to a width of 400 px
-        // We will calculate the height after cropping
-        // All Images in a row get 250px 
-        // If the height after cropping is a multiple of that plus the gap between rows
-        // we will allow the image to span up to three rows
-        $newWidth = 400;
-        $newHeight = 250;
-        $heightMultiplier = 1; // Can be 1..3 in the end
-        $gapPixels = 8;
-
-        $width = $result->imageDimensions["width"];
-        $height = $result->imageDimensions["height"];
-
-        $heightAfterCrop = $height * (400 / $width);
-        $heightMultiplier = max(1, min(3, floor($heightAfterCrop / 250)));
-
-        $newHeight = $newHeight * $heightMultiplier + (($heightMultiplier - 1) * $gapPixels);
+        $newHeight = 150;
 
         $requestDataBing = [
-            "w" => $newWidth,
             "h" => $newHeight,
-            "c" => 7, // Smart Cropping
         ];
 
         $requestDataBing = http_build_query($requestDataBing, "", "&", PHP_QUERY_RFC3986);
@@ -110,9 +92,6 @@ class BingBilder extends Searchengine
         $requestData = [];
         $requestData["url"] = $url;
         $link = action('Pictureproxy@get', $requestData);
-        return [
-            "link" => $link,
-            "height-multiplier" => $heightMultiplier
-        ];
+        return $link;
     }
 }

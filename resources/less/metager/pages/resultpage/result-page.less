@@ -214,27 +214,59 @@ a {
 
 /* Hier der Style für die Bilder */
 
-.image-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 16px;
+.imagesearch {
+    #resultpage-container {
+        grid-template-areas:
+            "whitespace searchbar"
+            "whitespace foki"
+            "whitespace options"
+            "results results"
+            "footer footer";
+        grid-template-columns: minmax(0, 150px) minmax(800px, 1770px);
 
-    >.image {
-        &.height-2 {
-            grid-row: span 2;
+        @media(max-width: 800px) {
+            grid-template-columns: 0 1fr 0;
+            grid-template-areas:
+                "searchbar searchbar searchbar"
+                "foki foki foki"
+                "options options options"
+                "results results results"
+                "footer footer footer";
         }
 
-        &.height-3 {
-            grid-row: span 3;
+        margin: 0;
+        gap: 0;
+
+        #additions-container {
+            display: none;
         }
 
-        >a {
-            display: block;
+        #options {
+            margin: 8px 0;
+        }
 
-            >div {
-                >img {
-                    width: 100%;
+        #results-container {
+            max-width: initial;
+            padding: 8px;
+
+            .image-container {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+                flex-wrap: wrap;
+
+                >.image {
+                    flex-grow: 1;
+
+                    >a {
+                        display: block;
+
+                        >div {
+                            >img {
+                                width: 100%;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -583,20 +615,7 @@ a {
         align-items: center;
         margin-left: -8px;
 
-        @media(max-width: 350px) {
-            flex-direction: row-reverse;
-            flex-wrap: wrap-reverse;
-            justify-content: space-around;
 
-            >div {
-                margin-top: 8px;
-                margin-bottom: 8px;
-            }
-
-            #filter-toggle {
-                flex-direction: column;
-            }
-        }
 
         >div {
             margin-left: 8px;

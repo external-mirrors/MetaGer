@@ -86,4 +86,5 @@ return [
     'error.bic' => 'Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.',
     'error.amount' => 'Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.',
     'error.frequency' => 'Die eingegebene Häufigkeit für Ihre Spende ist ungültig.',
+    'error.robot' => 'Die Eingabe war nicht korrekt',
 ];

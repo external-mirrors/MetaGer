@@ -137,6 +137,16 @@ class MailController extends Controller
 
     public function donation(Request $request)
     {
+        # Wir benötigen 3 Felder von dem Benutzer wenn diese nicht übermittelt wurden, oder nicht korrekt sind geben wir einen Error zurück
+        $input_data = $request->all();
+
+        $validator = Validator::make(
+            $input_data,
+            [
+                'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
+            ]
+        );
+
         $firstname = "";
         $lastname = "";
         $company = "";
@@ -199,7 +209,11 @@ class MailController extends Controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $email = "";
         }
-        if(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
+
+        if ($validator->fails()) {
+            $messageToUser = trans('spende.error.robot');
+            $messageType = "error";
+        } elseif(($private && (empty($firstname) || empty($lastname))) || (!$private && empty($company))){
             $messageToUser = trans('spende.error.name');
             $messageType = "error";
         } elseif (!$iban->Verify()) {

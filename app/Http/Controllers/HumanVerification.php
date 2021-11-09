@@ -16,6 +16,7 @@ class HumanVerification extends Controller
     const PREFIX = "humanverification";
     const EXPIRELONG = 60 * 60 * 24 * 14;
     const EXPIRESHORT = 60 * 60 * 72;
+    const TOKEN_PREFIX = "humanverificationtoken.";
 
     public static function captcha(Request $request, Hasher $hasher, $id, $uid, $url = null)
     {
@@ -46,30 +47,49 @@ class HumanVerification extends Controller
 
         if ($request->getMethod() == 'POST') {
             \App\PrometheusExporter::CaptchaAnswered();
-            $lockedKey = $user["lockedKey"];
+            $lockedKey = $request->input("c", "");
 
             $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
             $validator = validator()->make(request()->all(), $rules);
 
-            if($validator->fails()) {
+            if (empty($lockedKey) || $validator->fails()) {
                 $captcha = Captcha::create("default", true);
-                $user["lockedKey"] = $captcha["key"];
-                HumanVerification::saveUser($user);
                 \App\PrometheusExporter::CaptchaShown();
                 return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
                     ->with('uid', $user["uid"])
                     ->with('id', $id)
                     ->with('url', $url)
+                    ->with('correct', $captcha["key"])
                     ->with('image', $captcha["img"])
                     ->with('errorMessage', 'Fehler: Falsche Eingabe!');
             } else {
                 \App\PrometheusExporter::CaptchaCorrect();
+                # Generate a token that makes the user skip Humanverification
+                # There are some special cases where a user that entered a correct Captcha
+                # might see a captcha again on his next request
+                $token = md5(microtime(true));
+                Cache::put(self::TOKEN_PREFIX . $token, 5, 3600);
+                $url_parts = parse_url($url);
+                // If URL doesn't have a query string.
+                if (isset($url_parts['query'])) { // Avoid 'Undefined index: query'
+                    parse_str($url_parts['query'], $params);
+                } else {
+                    $params = array();
+                }
+
+                $params['token'] = $token;     // Overwrite if exists
+
+                // Note that this will url_encode all values
+                $url_parts['query'] = http_build_query($params);
+
+                // If not
+                $url = $url_parts['scheme'] . '://' . $url_parts['host'] . (!empty($url_parts["port"]) ? ":" . $url_parts["port"] : "") . $url_parts['path'] . '?' . $url_parts['query'];
+
                 # If we can unlock the Account of this user we will redirect him to the result page
                 if ($user !== null && $user["locked"]) {
                     # The Captcha was correct. We can remove the key from the user
                     # Additionally we will whitelist him so he is not counted towards botnetwork
                     $user["locked"] = false;
-                    $user["lockedKey"] = "";
                     $user["whitelist"] = true;
                     HumanVerification::saveUser($user);
                     return redirect($url);
@@ -80,39 +100,37 @@ class HumanVerification extends Controller
         }
 
         $captcha = Captcha::create("default", true);
-        $user["lockedKey"] = $captcha["key"];
-        HumanVerification::saveUser($user);
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('uid', $user["uid"])
             ->with('id', $id)
             ->with('url', $url)
+            ->with('correct', $captcha["key"])
             ->with('image', $captcha["img"]);
-
     }
 
-    public static function logCaptcha(Request $request){
+    public static function logCaptcha(Request $request)
+    {
         $fail2banEnabled = config("metager.metager.fail2ban.enabled");
-        if(empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")){
+        if (empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")) {
             return;
         }
 
         // Submit fetch job to worker
         $mission = [
-                "resulthash" => "captcha",
-                "url" => config("metager.metager.fail2ban.url") . "/captcha/",
-                "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                "username" => config("metager.metager.fail2ban.user"),
-                "password" => config("metager.metager.fail2ban.password"),
-                "headers" => [
-                    "ip" => $request->ip()
-                ],
-                "cacheDuration" => 0,
-                "name" => "Captcha",
-            ];
+            "resulthash" => "captcha",
+            "url" => config("metager.metager.fail2ban.url") . "/captcha/",
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.fail2ban.user"),
+            "password" => config("metager.metager.fail2ban.password"),
+            "headers" => [
+                "ip" => $request->ip()
+            ],
+            "cacheDuration" => 0,
+            "name" => "Captcha",
+        ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
     }
 
     public static function remove(Request $request)
@@ -237,13 +255,13 @@ class HumanVerification extends Controller
         # Check for recent Spams
         $eingabe = \Request::input('eingabe');
         $spams = Redis::lrange("spam", 0, -1);
-        foreach ($spams as $spam) {
+        foreach ($spams as $index => $spam) {
             if (\preg_match($spam, $eingabe)) {
-                return true;
+                return "999.999.999.999" . $index;
             }
         }
 
-        return false;
+        return null;
     }
 
     public function botOverview(Request $request)

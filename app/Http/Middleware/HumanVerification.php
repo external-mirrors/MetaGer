@@ -35,7 +35,7 @@ class HumanVerification
             $spamID = \App\Http\Controllers\HumanVerification::couldBeSpammer($ip);
             if (!empty($spamID)) {
                 $id = hash("sha1", $spamID);
-                $uid = hash("sha1", $spamID . "uid");
+                $uid = hash("sha1", $spamID . $ip . $_SERVER["AGENT"] . "uid");
             } else {
                 $id = hash("sha1", $ip);
                 $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");

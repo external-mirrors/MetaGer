@@ -14,19 +14,22 @@
 					</button>
 				</div>
 				<div class="search-submit" id="submit-inputgroup">
-					<button type="submit" tabindex="-1" name="submit-query" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
-						<img src="/img/icon-lupe.svg"alt="" aria-hidden="true"id="searchbar-img-lupe">
+					<button type="submit" tabindex="-1" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
+						<img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
 					</button>
 				</div>
 			</div>
 			<div class="search-hidden">
+				@if(Request::filled("token"))
+				<input type="hidden" name="token" value={{ Request::input("token") }}>
+				@endif
 				@if (isset($option_values))
-					@foreach($option_values as $option => $value)
-						<input type="hidden" name={{ $option }} value={{ $value }}>
-					@endforeach
+				@foreach($option_values as $option => $value)
+				<input type="hidden" name={{ $option }} value={{ $value }}>
+				@endforeach
 				@endif
 				@if (isset($focus) && !empty($focus))
-					<input type="hidden" name="focus" value={{ $focus }}>
+				<input type="hidden" name="focus" value={{ $focus }}>
 				@endif
 			</div>
 			<div class="search-custom-hidden"></div>

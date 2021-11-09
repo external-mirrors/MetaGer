@@ -23,6 +23,27 @@ class HumanVerification
             return $next($request);
         }
 
+        // Check for a valid Skip Token
+        if ($request->filled("token")) {
+            $prefix = \App\Http\Controllers\HumanVerification::TOKEN_PREFIX;
+            $token = $prefix . $request->input("token");
+
+            if (Cache::has($token)) {
+                $value = Cache::get($token);
+
+                if (!empty($value) && intval($value) > 0) {
+                    Cache::decrement($token);
+                    return $next($request);
+                } else {
+                    // Token is not valid. Remove it
+                    Cache::forget($token);
+                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                }
+            } else {
+                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+            }
+        }
+
         // The specific user
         $user = null;
         $update = true;

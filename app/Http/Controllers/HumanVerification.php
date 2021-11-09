@@ -46,20 +46,19 @@ class HumanVerification extends Controller
 
         if ($request->getMethod() == 'POST') {
             \App\PrometheusExporter::CaptchaAnswered();
-            $lockedKey = $user["lockedKey"];
+            $lockedKey = $request->input("c", "");
 
             $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
             $validator = validator()->make(request()->all(), $rules);
 
-            if($validator->fails()) {
+            if (empty($lockedKey) || $validator->fails()) {
                 $captcha = Captcha::create("default", true);
-                $user["lockedKey"] = $captcha["key"];
-                HumanVerification::saveUser($user);
                 \App\PrometheusExporter::CaptchaShown();
                 return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
                     ->with('uid', $user["uid"])
                     ->with('id', $id)
                     ->with('url', $url)
+                    ->with('correct', $captcha["key"])
                     ->with('image', $captcha["img"])
                     ->with('errorMessage', 'Fehler: Falsche Eingabe!');
             } else {
@@ -69,7 +68,6 @@ class HumanVerification extends Controller
                     # The Captcha was correct. We can remove the key from the user
                     # Additionally we will whitelist him so he is not counted towards botnetwork
                     $user["locked"] = false;
-                    $user["lockedKey"] = "";
                     $user["whitelist"] = true;
                     HumanVerification::saveUser($user);
                     return redirect($url);
@@ -80,39 +78,37 @@ class HumanVerification extends Controller
         }
 
         $captcha = Captcha::create("default", true);
-        $user["lockedKey"] = $captcha["key"];
-        HumanVerification::saveUser($user);
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('uid', $user["uid"])
             ->with('id', $id)
             ->with('url', $url)
+            ->with('correct', $captcha["key"])
             ->with('image', $captcha["img"]);
-
     }
 
-    public static function logCaptcha(Request $request){
+    public static function logCaptcha(Request $request)
+    {
         $fail2banEnabled = config("metager.metager.fail2ban.enabled");
-        if(empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")){
+        if (empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")) {
             return;
         }
 
         // Submit fetch job to worker
         $mission = [
-                "resulthash" => "captcha",
-                "url" => config("metager.metager.fail2ban.url") . "/captcha/",
-                "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                "username" => config("metager.metager.fail2ban.user"),
-                "password" => config("metager.metager.fail2ban.password"),
-                "headers" => [
-                    "ip" => $request->ip()
-                ],
-                "cacheDuration" => 0,
-                "name" => "Captcha",
-            ];
+            "resulthash" => "captcha",
+            "url" => config("metager.metager.fail2ban.url") . "/captcha/",
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.fail2ban.user"),
+            "password" => config("metager.metager.fail2ban.password"),
+            "headers" => [
+                "ip" => $request->ip()
+            ],
+            "cacheDuration" => 0,
+            "name" => "Captcha",
+        ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
     }
 
     public static function remove(Request $request)

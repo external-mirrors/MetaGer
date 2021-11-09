@@ -233,13 +233,13 @@ class HumanVerification extends Controller
         # Check for recent Spams
         $eingabe = \Request::input('eingabe');
         $spams = Redis::lrange("spam", 0, -1);
-        foreach ($spams as $spam) {
+        foreach ($spams as $index => $spam) {
             if (\preg_match($spam, $eingabe)) {
-                return true;
+                return "999.999.999.999" . $index;
             }
         }
 
-        return false;
+        return null;
     }
 
     public function botOverview(Request $request)

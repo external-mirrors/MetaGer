@@ -31,9 +31,11 @@ class HumanVerification
             $ip = $request->ip();
             $id = "";
             $uid = "";
-            if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-                $id = hash("sha1", "999.999.999.999");
-                $uid = hash("sha1", "999.999.999.999uid");
+
+            $spamID = \App\Http\Controllers\HumanVerification::couldBeSpammer($ip);
+            if (!empty($spamID)) {
+                $id = hash("sha1", $spamID);
+                $uid = hash("sha1", $spamID . "uid");
             } else {
                 $id = hash("sha1", $ip);
                 $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
@@ -96,7 +98,6 @@ class HumanVerification
                 if (preg_match("/http[s]{0,1}:\/\/metager\.de\/meta\/meta.ger3\?.*?eingabe=([\w\d]+\.){1,2}[\w\d]+/si", $referer) === 1) {
                     $refererLock = true;
                 }
-
             }
 
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
@@ -143,7 +144,6 @@ class HumanVerification
 
         $request->request->add(['verification_id' => $user["uid"], 'verification_count' => $user["unusedResultPages"]]);
         return $next($request);
-
     }
 
     public function setUser($prefix, $user)

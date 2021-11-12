@@ -1094,6 +1094,19 @@ class MetaGer
                         $from = $tmp;
                         $changed = true;
                     }
+
+                    # Bing only allows a maximum of 1 year in the past
+                    # Verify the parameters
+                    $yearAgo = Carbon::now()->subYear();
+                    if ($from < $yearAgo) {
+                        $from = clone $yearAgo;
+                        $changed = true;
+                    }
+                    if ($to < $yearAgo) {
+                        $to = clone $yearAgo;
+                        $changed = true;
+                    }
+
                     if ($changed) {
                         $oldParameters = $this->request->all();
                         $oldParameters["ff"] = $from->format("Y-m-d");

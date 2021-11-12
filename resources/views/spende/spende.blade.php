@@ -89,6 +89,7 @@
         </div>
         @else
         <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true;">
+            <input type="hidden" name="pcsrf" value="{{ base64_encode(\time()) }}">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">
@@ -114,7 +115,6 @@
                     <input type="radio" value="50" class="amount-radio" name="amount" id="amount-50euro" required="required" @if(!empty($data) && $data["betrag"]==="50" )checked="checked" @endif><label for="amount-50euro" class="amount-label">50€</label>
                     <input type="radio" value="100" class="amount-radio" name="amount" id="amount-100euro" required="required" @if(!empty($data) && $data["betrag"]==="100" )checked="checked" @endif><label for="amount-100euro" class="amount-label">100€</label>
                     <input type="radio" value="200" class="amount-radio" name="amount" id="amount-200euro" required="required" @if(!empty($data) && $data["betrag"]==="200" )checked="checked" @endif><label for="amount-200euro" class="amount-label">200€</label>
-                    <input type="radio" value="250" class="amount-radio" name="amount" id="amount-250euro" required="required" @if(!empty($data) && $data["betrag"]==="250" )checked="checked" @endif><label for="amount-250euro" class="amount-label">250€</label>
                     <input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required" @if(!empty($data) && $data["betrag"]==="300" )checked="checked" @endif><label for="amount-300euro" class="amount-label">300€</label>
                 </div>
                 <div class="custom-amount-container">

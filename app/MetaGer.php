@@ -310,6 +310,7 @@ class MetaGer
             }
             $newResults[] = $ad;
         }
+
         $this->ads = $newResults;
         if (!empty($timings)) {
             $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
@@ -444,6 +445,29 @@ class MetaGer
             }
         }
         return $finished;
+    }
+
+
+    public function addDonationAdvertisement()
+    {
+        // ToDo: Translate Strings
+        $donationAd = new \App\Models\Result(
+            "MetaGer",
+            __("metaGer.ads.own.title"),
+            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
+            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
+            __("metaGer.ads.own.description"),
+            "MetaGer",
+            "https://metager.de",
+            1
+        );
+        $adCount = sizeof($this->ads);
+        // Put Donation Advertisement to random position
+        $position = random_int(1, max($adCount, 1)) - 1;
+
+        $this->ads = array_slice($this->ads, 0, $position) +
+            [$donationAd] +
+            array_slice($this->ads, $position, $adCount - 1);
     }
 
     public function humanVerification(&$results)

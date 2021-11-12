@@ -16,33 +16,6 @@
     </div>
     <div id="content-container">
         @if (app('request')->input('method') == "paypal")
-        <form class="form" action="https://www.sandbox.paypal.com/donate" method="post" target="_top">
-            <div class="section">
-                <h3>{!! trans('spende.headline.5') !!}</h3>
-                <div id="payment-methods">
-                    <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
-                    <a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-                    <a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
-                </div>
-                <p><br>{!! trans('spende.paypal.1') !!}</p>
-                <div class="center-wrapper">
-                    @if (LaravelLocalization::getCurrentLocale() == "de")
-                        <input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="Z3Z7SRD4U2L3N" />
-                        <input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                        <img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/de_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
-                    @else
-                        <input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
-                        <input type="hidden" name="cmd" value="_s-xclick" />
-                        <input type="hidden" name="hosted_button_id" value="Z3Z7SRD4U2L3N" />
-                        <input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                        <img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/en_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
-                    @endif
-                </div>
-            </div>
-        </form>
-        <!--
         <form class="form" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
@@ -68,7 +41,7 @@
                     @endif
                 </div>
             </div>
-        </form>-->
+        </form>
         @elseif ((app('request')->input('method') == "bank-transfer"))
         <div class="section form">
             <h3>{!! trans('spende.headline.5') !!}</h3>

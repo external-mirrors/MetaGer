@@ -406,7 +406,8 @@ class MailController extends Controller
             "email" => $data["email"],
             "message" => $data["nachricht"],
             'first_name' => $data["firstname"],
-            'last_name' => $data["lastname"]
+            'last_name' => $data["lastname"],
+            'transaction_id' => $answer["txn_id"]
         ];
 
         $postdata = http_build_query($postdata);

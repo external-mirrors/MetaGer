@@ -1,4 +1,3 @@
-
 @import "./variables.less";
 
 // Default Background Color
@@ -14,19 +13,21 @@
 @card-background-color: @color-strong-grey;
 // Default Borde Color 
 @border-color: #727272;
+// Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
+@invert-state: invert(100%);
 
 // Story coloring
 @story-privacy-background: @color-strong-grey;
 @story-privacy-color: @color-almost-white;
-@story-ngo-background:#200000;
-@story-ngo-color:#ffaaaa;
-@story-diversity-background:#000020;
-@story-diversity-color:#aaaaff;
-@story-eco-background:#002000;
-@story-eco-color:#aaffaa;
+@story-ngo-background: #200000;
+@story-ngo-color: #ffaaaa;
+@story-diversity-background: #000020;
+@story-diversity-color: #aaaaff;
+@story-eco-background: #002000;
+@story-eco-color: #aaffaa;
 @story-plugin-background: @color-almost-black;
 @story-font-color: @color-almost-white;
-@icon-color:0.9;
+@icon-color: 0.9;
 
 @searchbar-background-color: @color-almost-black;
 
@@ -34,4 +35,4 @@
 @input-text: @color-almost-white;
 
 @blacklist-entries-odd: @color-almost-black;
-@blacklist-entries-even:rgb(30, 15, 0);
+@blacklist-entries-even: rgb(30, 15, 0);

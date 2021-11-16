@@ -31,10 +31,12 @@
 			<input type="text" name="email" id="email" value="{{ $data['email'] }}" readonly>
 		</div>
 		@endif
+		@if(!empty($data['iban']))
 		<div class="data-element">
 			<label for="iban" style="margin-right: 16px;">{{ trans('spende.iban') }}</label>
 			<input type="text" name="iban" id="iban" value="{{ $data['iban'] }}" readonly>
 		</div>
+		@endif
 		@if(!empty($data["bic"]))
 		<div class="data-element">
 			<label for="bic" style="margin-right: 16px;">{{ trans('spende.bic') }}</label>
@@ -45,10 +47,12 @@
 			<label for="betrag" style="margin-right: 16px;">{{ trans('spende.betrag') }}</label>
 			<input type="text" name="betrag" id="betrag" value="{{ $data['betrag'] }} €" readonly>
 		</div>
+		@if(!empty($data['frequency']))
 		<div class="data-element">
 			<label for="frequency" style="margin-right: 16px;">{{ trans('spende.frequency') }}</label>
 			<input type="text" name="frequency" id="frequency" value="{{ trans('spende.frequency.' . $data['frequency']) }}" readonly>
 		</div>
+		@endif
 		<div class="data-element">
 			<label for="nachricht" style="margin-right: 16px;">{{ trans('spende.danke.message') }}</label>
 			<textarea name="nachricht" id="nachricht" readonly>{{ $data['nachricht'] }}</textarea>

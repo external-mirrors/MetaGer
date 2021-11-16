@@ -139,4 +139,7 @@ return [
     "filter.max" => "Maximum Sleep (in s)",
 
     "settings" => "Einstellungen",
+
+    "ads.own.title" => "Jetzt MetaGer unterstützen",
+    "ads.own.description" => "Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV.",
 ];

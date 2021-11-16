@@ -448,9 +448,27 @@ class MetaGer
     }
 
 
+    /**
+     * Modifies the already filled array of advertisements and
+     * includes an advertisement for our donation page.
+     * 
+     * It will do so everytime when there are other advertisments to mix it in
+     * and only in a percentage of cases when there are no other advertisements.
+     * 
+     * The Position at which our advertisement is placed is random within the other
+     * advertisements. In some cases it will be the first ad and in other cases in some
+     * other place.
+     */
     public function addDonationAdvertisement()
     {
-        // ToDo: Translate Strings
+        /**
+         * If there are no other advertisements we will only display our advertisements 
+         * every so often. ~33% in this case
+         */
+        if (sizeof($this->ads) === 0 && rand(1, 100) > 33) {
+            return;
+        }
+
         $donationAd = new \App\Models\Result(
             "MetaGer",
             __("metaGer.ads.own.title"),
@@ -463,11 +481,9 @@ class MetaGer
         );
         $adCount = sizeof($this->ads);
         // Put Donation Advertisement to random position
-        $position = random_int(1, max($adCount, 1)) - 1;
+        $position = random_int(0, $adCount);
 
-        $this->ads = array_slice($this->ads, 0, $position) +
-            [$donationAd] +
-            array_slice($this->ads, $position, $adCount - 1);
+        array_splice($this->ads, $position, 0, [$donationAd]);
     }
 
     public function humanVerification(&$results)

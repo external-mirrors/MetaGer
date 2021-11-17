@@ -318,7 +318,7 @@ class MailController extends Controller
 
     public function donationPayPalCallback(Request $request)
     {
-        $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+        $url = "https://www.paypal.com/cgi-bin/webscr";
         # PayPal Transaction ID
         $tx = $request->input("tx", "");
 

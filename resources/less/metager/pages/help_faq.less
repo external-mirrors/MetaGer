@@ -58,8 +58,9 @@
         border: solid #5b5b5b8f 2px;
         border-radius: 5px;
         position: relative;
-        color:black;
+        color: @text-color;
         flex-shrink: 0;
+        background-color: @card-background-color;
 } 
 
 .help-topic > p {
@@ -109,4 +110,25 @@ background-position: 35% 20%;
     background-size: 50px;
     background-repeat: no-repeat;
     background-position: top 30% right 20%;
+}
+#help-topic-url {
+    background-image: url("/img/url-icon-help.svg");
+    background-size: 45px;
+    background-repeat: no-repeat;
+    background-position: 35% 20%;
+    
+}
+ #help-topic-bangs {
+    background-image: url("/img/bangs-icon-help.svg");
+    background-size: 20px;
+    background-repeat: no-repeat;
+    background-position: 55% 35%;
+        
+}
+#help-topic-searchinsearch {
+    background-image: url("/img/searchinsearch-icon-help.svg");
+    background-size: 55px;
+    background-repeat: no-repeat;
+    background-position: 35% 15%;
+        
 }

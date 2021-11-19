@@ -31,13 +31,13 @@
 	<a id=help-topic-capitalization href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#capitalizationrules") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.3') !!}<br></p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">
+	<a id=help-topic-url href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.4') !!}</p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#bangs") }}" class="help-topic">
+	<a id=help-topic-bangs href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#bangs") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.5') !!}<br></p>
 	</a>
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#searchinsearch") }}" class="help-topic">
+	<a id=help-topic-searchinsearch href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#searchinsearch") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.6') !!}<br></p>
 	</a>
 	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#selist") }}" class="help-topic">

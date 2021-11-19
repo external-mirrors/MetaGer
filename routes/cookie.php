@@ -1,51 +1,46 @@
 <?php
 
+
+Route::get('meta/key', "KeyController@index")->middleware('removekey')->name('keyindex');
+Route::post('meta/key', 'KeyController@setKey');
+Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
+
+Route::group([
+    'prefix' => 'meta/key/change'
+], function () {
+    // Routes to change the key for members
+    Route::get('remove-current', 'KeyController@changeKeyIndex')->middleware('removekey')->name('changeKeyOne');
+    Route::post('remove-current', 'KeyController@removeCurrent')->middleware('removekey');
+
+    Route::get('generate-new', 'KeyController@generateNew')->name('changeKeyTwo');
+    Route::post('generate-new', 'KeyController@generateNewPost');
+
+    Route::get('save-new', function () {
+        return view('keychangethree', ["title" => trans('titles.keychange'), "css" => [mix('css/keychange/index.css')]]);
+    })->name('changeKeyThree');
+});
+
+
+
 Route::group(
     [
-        'prefix' => LaravelLocalization::setLocale(), /*,
-    'middleware' => [ 'localeSessionRedirect', 'localizationRedirect' ]*/
+        'prefix' => 'meta/settings',
     ],
     function () {
-        Route::get('meta/key', "KeyController@index")->middleware('removekey')->name('keyindex');
-        Route::post('meta/key', 'KeyController@setKey');
-        Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
+        Route::get('/', 'SettingsController@index')->name('settings');
+        Route::post('de', 'SettingsController@disableSearchEngine')->name('disableEngine');
+        Route::post('ee', 'SettingsController@enableSearchEngine')->name('enableEngine');
+        Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');
+        Route::post('es', 'SettingsController@enableSetting')->name('enableSetting');
+        Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');
+        Route::post('nb', 'SettingsController@newBlacklist')->name('newBlacklist');
+        Route::post('db', 'SettingsController@deleteBlacklist')->name('deleteBlacklist');
+        Route::post('cb', 'SettingsController@clearBlacklist')->name('clearBlacklist');
 
-        Route::group([
-            'prefix' => 'meta/key/change'
-        ], function() {
-            // Routes to change the key for members
-            Route::get('remove-current', 'KeyController@changeKeyIndex')->middleware('removekey')->name('changeKeyOne');
-            Route::post('remove-current', 'KeyController@removeCurrent')->middleware('removekey');
-
-            Route::get('generate-new', 'KeyController@generateNew')->name('changeKeyTwo');
-            Route::post('generate-new', 'KeyController@generateNewPost');
-
-            Route::get('save-new', function(){
-                return view('keychangethree', ["title" => trans('titles.keychange'), "css" => [mix('css/keychange/index.css')]]);
-            })->name('changeKeyThree');
-        });
-        
-
-
-        Route::group([
-            'prefix' => 'meta/settings',
-        ],
-            function () {
-                Route::get('/', 'SettingsController@index')->name('settings');
-                Route::post('de', 'SettingsController@disableSearchEngine')->name('disableEngine');
-                Route::post('ee', 'SettingsController@enableSearchEngine')->name('enableEngine');
-                Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');
-                Route::post('es', 'SettingsController@enableSetting')->name('enableSetting');
-                Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');
-                Route::post('nb', 'SettingsController@newBlacklist')->name('newBlacklist');
-                Route::post('db', 'SettingsController@deleteBlacklist')->name('deleteBlacklist');
-                Route::post('cb', 'SettingsController@clearBlacklist')->name('clearBlacklist');
-
-                # Route to show and delete all settings
-                Route::get('all-settings', 'SettingsController@allSettingsIndex')->name('showAllSettings');
-                Route::post('all-settings/removeOne', 'SettingsController@removeOneSetting')->name('removeOneSetting');
-                Route::post('all-settings/removeAll', 'SettingsController@removeAllSettings')->name('removeAllSettings');
-                Route::get('load-settings', 'SettingsController@loadSettings')->name('loadSettings');
-            });
+        # Route to show and delete all settings
+        Route::get('all-settings', 'SettingsController@allSettingsIndex')->name('showAllSettings');
+        Route::post('all-settings/removeOne', 'SettingsController@removeOneSetting')->name('removeOneSetting');
+        Route::post('all-settings/removeAll', 'SettingsController@removeAllSettings')->name('removeAllSettings');
+        Route::get('load-settings', 'SettingsController@loadSettings')->name('loadSettings');
     }
 );

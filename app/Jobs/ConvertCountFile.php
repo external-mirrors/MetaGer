@@ -45,33 +45,37 @@ class ConvertCountFile implements ShouldQueue
                 $logTime = [];
                 $interface = "";
                 // i.e. [Wed Apr 17 00:00:01] ref=https://metager.de/ time=0.51 serv=web interface=de
-                if (preg_match('/(\d{2}:\d{2}:\d{2}).*?\sinterface=(\S+)/', $line, $matches)) {
+                if (preg_match('/(\d{2}):(\d{2}):\d{2}.*?\sinterface=(\S+)/', $line, $matches)) {
                     // Create Date Object
                     $logTime = $matches[1];
-                    $interface = $matches[2];
+                    $minutes = intval($matches[2]);
+                    $minutes = $minutes - ($minutes % 5);
+                    if($minutes < 10){
+                        $minutes = "0" . $minutes;
+                    }
+                    $logTime .= ":" . $minutes;
+                    $interface = $matches[3];
                 } else {
                     continue;
                 }
-                $thatTime = \DateTime::createFromFormat('H:i:s', $logTime);
-                $thatTime->sub(new \DateInterval("PT" . ($thatTime->format('i') % 5) . "M"));
 
-                if (empty($result["time"][$thatTime->format('H:i')])) {
-                    $result["time"][$thatTime->format('H:i')] = [
+                if (empty($result["time"][$logTime])) {
+                    $result["time"][$logTime] = [
                         "insgesamt" => [
                             "all" => 0,
                         ],
                     ];
                 }
-                if (empty($result["time"][$thatTime->format('H:i')]["all"])) {
-                    $result["time"][$thatTime->format('H:i')]["all"] = 1;
+                if (empty($result["time"][$logTime]["all"])) {
+                    $result["time"][$logTime]["all"] = 1;
                 } else {
-                    $result["time"][$thatTime->format('H:i')]["all"]++;
+                    $result["time"][$logTime]["all"]++;
                 }
                 if (!empty($interface)) {
-                    if (empty($result["time"][$thatTime->format('H:i')][$interface])) {
-                        $result["time"][$thatTime->format('H:i')][$interface] = 1;
+                    if (empty($result["time"][$logTime][$interface])) {
+                        $result["time"][$logTime][$interface] = 1;
                     } else {
-                        $result["time"][$thatTime->format('H:i')][$interface]++;
+                        $result["time"][$logTime][$interface]++;
                     }
                 }
                 // Update the total statistics

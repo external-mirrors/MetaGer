@@ -35,12 +35,6 @@ mix
   // js
   .babel(
     [
-      "resources/js/lib/md5.js"
-    ],
-    "public/js/lib.js"
-  )
-  .babel(
-    [
       "resources/js/scriptSettings.js"
     ],
     "public/js/scriptSettings.js"

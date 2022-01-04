@@ -130,7 +130,6 @@ class MailController extends Controller
 
         return view('kontakt.kontakt')
             ->with('title', 'Kontakt')
-            ->with('js', ['lib.js'])
             ->with($messageType, $returnMessage);
     }
 

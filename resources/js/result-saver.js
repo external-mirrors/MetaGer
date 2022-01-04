@@ -5,13 +5,13 @@ if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype
 
 /**
  * All results are stored in the global object 'results'
-  */
+ */
 results = new Results();
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  if(document.readyState == 'complete'){
+  if (document.readyState == 'complete') {
     initResultSaver();
-  }else{
+  } else {
     document.addEventListener("readystatechange", e => {
       if (document.readyState === 'complete') {
         initResultSaver();
@@ -46,8 +46,8 @@ function Results() {
  */
 Results.prototype.addResult = function (result) {
   if (this.results.every(function (val) {
-    return val.hash !== result.hash;
-  })) {
+      return val.hash !== result.hash;
+    })) {
     this.results.push(result);
   }
 };
@@ -74,8 +74,8 @@ Results.prototype.sortResults = function () {
       break;
     case 'alphabetical': // by hostname
       this.results.sort(function (a, b) {
-        if (b.hosterName > a.hosterName) return -1;
-        if (b.hosterName < a.hosterName) return 1;
+        if (b.hosterNames > a.hosterNames) return -1;
+        if (b.hosterNames < a.hosterNames) return 1;
         return 0;
       });
       break;
@@ -179,7 +179,6 @@ Results.prototype.addToContainer = function (container) {
     </div>\
   </div>';
   var options = template.firstChild;
-
   // Set the initial value for the sorting select, based on this.sort
   options.querySelector("select").value = this.sort;
 
@@ -189,20 +188,26 @@ Results.prototype.addToContainer = function (container) {
   /* ~~~ Filter ~~~ */
   // When the user is done typing into the filter input field,
   // Filter all results, only showing ones that contain the filer
-  options.querySelectorAll("input").forEach(element => {
-    // Get the entered filter
-    var search = element.value;
-    // Hide all results that do not contain the entered filter
-    document.querySelectorAll('#savedFoki .saved-result-content').forEach(value => {
-      // check for filter in all of the elements html-content
-      var html = value.innerHTML;
-      if (html.toLowerCase().indexOf(search.toLowerCase()) === -1) {
-        // hide entire result block
-        value.parentNode.classList.add('hidden');
-      } else {
-        // show entire result block
-        value.parentNode.classList.remove("hidden");
-      }
+  options.querySelectorAll("input").forEach((element, index) => {
+    element.addEventListener('keyup', e => {
+      // Get the entered filter
+      var search = e.target.value;
+      // Hide all results that do not contain the entered filter
+      document.querySelectorAll('#savedFoki .saved-result-content').forEach((value, index) => {
+        // check for filter in all of the elements html-content
+        var html = value.querySelector(".result-title > a").innerHTML + " ";
+        html += value.querySelector(".result-hoster").title.replace(",", "") + " ";
+        html += value.querySelector(".result-link").href + " ";
+        html += value.querySelector(".result-body > .description").innerHTML + " ";
+
+        if (html.toLowerCase().indexOf(search.toLowerCase()) === -1) {
+          // hide entire result block
+          value.parentNode.style.display = 'none';
+        } else {
+          // show entire result block
+          value.parentNode.style.display = 'flex';
+        }
+      });
     });
   });
 
@@ -243,13 +248,22 @@ Results.prototype.addToContainer = function (container) {
  * @param {int} rank The rank of this result
  * @param {int} hash The hash value for this result
  */
-function Result(title, link, hosterName, hosterLink, anzeigeLink, description, anonym, index, hash) {
+function Result(title, link, hosterNames, hosterLinks, anzeigeLink, description, anonym, index, hash) {
   // Set prefix for localstorage
   this.prefix = 'result_';
 
   if (hash === null || hash === undefined) {
-    // Calculate the hash value of this result
-    hash = MD5(title + link + hosterName + hosterLink + anzeigeLink + description + anonym);
+    // Calculate a hash value of this result
+    var string = title + link + hosterNames + hosterLinks + anzeigeLink + description + anonym;
+    var hash = 0;
+
+    if (string.length == 0) return hash;
+
+    for (i = 0; i < string.length; i++) {
+      char = string.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
   }
 
   this.hash = hash;
@@ -259,8 +273,8 @@ function Result(title, link, hosterName, hosterLink, anzeigeLink, description, a
     // Save all important data
     this.title = title;
     this.link = link;
-    this.hosterName = hosterName;
-    this.hosterLink = hosterLink;
+    this.hosterNames = hosterNames;
+    this.hosterLinks = hosterLinks;
     this.anzeigeLink = anzeigeLink;
     this.description = description;
     this.anonym = anonym;
@@ -292,8 +306,8 @@ Result.prototype.load = function () {
   this.title = result.title;
   this.link = result.link;
   this.anzeigeLink = result.anzeigeLink;
-  this.hosterName = result.hosterName;
-  this.hosterLink = result.hosterLink;
+  this.hosterNames = result.hosterNames;
+  this.hosterLinks = result.hosterLinks;
   this.anonym = result.anonym;
   this.description = result.description;
   this.added = result.added;
@@ -314,8 +328,8 @@ Result.prototype.save = function () {
     title: this.title,
     link: this.link,
     anzeigeLink: this.anzeigeLink,
-    hosterName: this.hosterName,
-    hosterLink: this.hosterLink,
+    hosterNames: this.hosterNames,
+    hosterLinks: this.hosterLinks,
     anonym: this.anonym,
     description: this.description,
     added: this.added,
@@ -377,6 +391,25 @@ Result.prototype.remove = function () {
 Result.prototype.toHtml = function () {
   // Create the saved-result element
   var template = document.createElement("div");
+  var hosterTemplate = "";
+  if (this.hosterNames.length === 1) {
+    hosterTemplate = '<a class="result-hoster" href="' + this.hosterLinks[0] + '" target="_blank" rel="noopener" title="' + this.hosterNames.join(", ") + '" data-links="' + this.hosterLinks.join(", ") + '" tabindex="-1"> \
+      von ' + this.hosterNames[0] + '\
+      </a >';
+  } else {
+    hosterTemplate = '\
+    <span title="' + this.hosterNames.join(", ") + '" class="result-hoster" tabindex="0">\
+    von ' + this.hosterNames.length + ' Anbietern \
+    <ul class="card">\
+      ';
+    for (var i = 0; i < this.hosterNames.length; i++) {
+      hosterTemplate += '<li><a class="result-hoster" href="' + this.hosterLinks[i] + '" target="_self" rel="noopener" tabindex="-1">von ' + this.hosterNames[i] + ' </a></li>';
+    }
+
+    hosterTemplate += '\
+    </ul> \
+    </span>';
+  }
   template.innerHTML = '<div class="saved-result result" data-count="' + this.index + '">\
     <div class="saved-result-remover remover" title="' + t('result-saver.delete') + '">\
     <img class= \"mg-icon result-saver-icon\" src=\"/img/trashcan.svg\">\
@@ -389,9 +422,7 @@ Result.prototype.toHtml = function () {
               ' + this.title + '\
             </a>\
           </h2>\
-          <a class="result-hoster" href="' + this.hosterLink + '" target="_blank" data-count="1" rel="noopener">\
-            ' + this.hosterName + '\
-          </a>\
+          ' + hosterTemplate + '\
         </div>\
         <a class="result-link" href="' + this.link + '" target="_blank" rel="noopener">\
           ' + this.anzeigeLink + '\
@@ -437,15 +468,13 @@ function resultSaver(index) {
   // Read the necessary data from the result html
   var title = document.querySelector('.result[data-count="' + index + '"] .result-title a').innerHTML.trim();
   var link = document.querySelector('.result[data-count="' + index + '"] .result-title a').href.trim();
-  var hosterName = document.querySelector('.result[data-count="' + index + '"] .result-subheadline > a').title.trim();
-  var hosterLink = document.querySelector('.result[data-count="' + index + '"] .result-hoster').href;
-  hosterLink = hosterLink ? hosterLink.trim() : "#";
+  var hosterNames = document.querySelector('.result[data-count="' + index + '"] .result-hoster').title.replace(" ", "").split(",");
+  var hosterLinks = document.querySelector('.result[data-count="' + index + '"] .result-hoster').getAttribute("data-links").replace(" ", "").split(",");
   var anzeigeLink = document.querySelector('.result[data-count="' + index + '"] .result-link').innerHTML.trim();
   var description = document.querySelector('.result[data-count="' + index + '"] .result-description').innerHTML.trim();
   var anonym = document.querySelector('.result[data-count="' + index + '"] .result-open-proxy').href.trim();
-
   // Create the result object
-  var result = new Result(title, link, hosterName, hosterLink, anzeigeLink, description, anonym, index, null);
+  var result = new Result(title, link, hosterNames, hosterLinks, anzeigeLink, description, anonym, index, null);
 
   // Add new result to results
   results.addResult(result);

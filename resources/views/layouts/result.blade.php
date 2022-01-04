@@ -10,9 +10,9 @@
 				</a>
 			</h2>
 			@if(sizeof($result->gefVon)===1)
-			<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
+			<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" title="{{ implode(', ', $result->gefVon) }}" data-links="{{ implode(', ', $result->gefVonLink) }}" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
 			@else
-			<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster" tabindex="0">
+			<span title="{{ (implode(', ', $result->gefVon)) }}" data-links="{{ implode(', ', $result->gefVonLink) }}" class="result-hoster" tabindex="0">
 				{{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }}
 				<ul class="card">
 					@foreach($result->gefVon as $index => $gefVon)

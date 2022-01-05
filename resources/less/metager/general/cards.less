@@ -1,23 +1,23 @@
-.card,
-.card-medium {
-    border: 1px solid @border-color;
-    background-color: @card-background-color;
-    box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12), 1px 0px 1px 0px rgba(0, 0, 0, 0.24);
-    padding: 8px;
-    margin: 4px;
-    overflow: auto;
-}
-
-.card-heavy {
-    .card;
-    box-shadow: 0px 4px 5px 0px rgba(0, 0, 0, 0.12), 4px 0px 5px 0px rgba(0, 0, 0, 0.24);
-    margin: 8px;
-    overflow: auto;
-}
-
-.card-light {
-    .card;
+.card {
     box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.24);
-    margin: 4px;
+    border: 1px solid @border-color;
     overflow: auto;
+    padding: .5rem;
+
+    margin-top: 4px;
+    margin-bottom: 4px;
+
+    @media(min-width: (@screen-mobile+1)) {
+        box-shadow: none;
+        background-color: inherit;
+        border: 0;
+    }
+
+    @media(min-width: @screen-small) {
+        padding: 1rem;
+    }
+}
+
+.result-hoster>.card {
+    background-color: @background-color;
 }

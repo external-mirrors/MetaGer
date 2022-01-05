@@ -4,8 +4,8 @@
 
 @section('content')
 <div id="settings">
-    <div class="card-light">
-        <h2>@lang('settings.allSettings.header', ["root" => Request::root()])</h2>
+    <h1 class="page-title">@lang('settings.allSettings.header', ["root" => Request::root()])</h1>
+    <div class="card">
         <p>@lang('settings.allSettings.text')</p>
         @if(sizeof(Cookie::get()) > 0)
         <div class="table-responsive">
@@ -22,30 +22,30 @@
                     <tr>
                         <td>{{ $key . " = " . $value }}</td>
                         <td>
-                        @if(strpos($key, "_engine_") !== FALSE)
-                        @lang('settings.engineDisabled', ["engine" => $sumaFile->sumas->{substr($key, strrpos($key, "_")+1)}->{"display-name"}, "focus" => trans('index.foki.' . substr($key, 0, strpos($key, "_")))])
-                        @elseif(strpos($key, "_setting_") !== FALSE)
+                            @if(strpos($key, "_engine_") !== FALSE)
+                            @lang('settings.engineDisabled', ["engine" => $sumaFile->sumas->{substr($key, strrpos($key, "_")+1)}->{"display-name"}, "focus" => trans('index.foki.' . substr($key, 0, strpos($key, "_")))])
+                            @elseif(strpos($key, "_setting_") !== FALSE)
                             @foreach($sumaFile->filter->{"parameter-filter"} as $filterName => $filter)
-                                @if($filter->{"get-parameter"} === substr($key, strrpos($key, "_")+1))
-                                @lang($filter->name)=@lang($filter->values->$value) @lang('settings.inFocus') @lang('index.foki.' . substr($key, 0, strpos($key, "_")))
-                                @endif
+                            @if($filter->{"get-parameter"} === substr($key, strrpos($key, "_")+1))
+                            @lang($filter->name)=@lang($filter->values->$value) @lang('settings.inFocus') @lang('index.foki.' . substr($key, 0, strpos($key, "_")))
+                            @endif
                             @endforeach
-                        @elseif($key === "key")
+                            @elseif($key === "key")
                             @lang('settings.key')
-                        @elseif(strpos($key, "_blpage"))
+                            @elseif(strpos($key, "_blpage"))
                             @lang('settings.blentry')
-                        @elseif($key === 'dark_mode')
+                            @elseif($key === 'dark_mode')
                             @lang('settings.darkmode')
-                        @elseif($key === 'new_tab')
+                            @elseif($key === 'new_tab')
                             @lang('settings.newTab')
-                        @endif
+                            @endif
                         </td>
                         <td>
                             <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeOneSetting')) }}" method="post">
                                 <input type="hidden" name="key" value="{{ $key }}">
                                 <input type="hidden" name="url" value="{{ url()->full() }}">
                                 <button type="submit" title="@lang('settings.removeCookie')">
-                                <img class= "mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
+                                    <img class="mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
                                 </button>
                             </form>
                         </td>
@@ -58,14 +58,14 @@
             @endif
         </div>
         <div id="actions">
-                <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
-                @if(sizeof(Cookie::get()) > 0)
-                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeAllSettings'))}}" method="post">
-                    <input type="hidden" name="url" value="{{ url()->full() }}">
-                    <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
-                </form>
-                @endif
-            </div>
+            <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
+            @if(sizeof(Cookie::get()) > 0)
+            <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeAllSettings'))}}" method="post">
+                <input type="hidden" name="url" value="{{ url()->full() }}">
+                <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
+            </form>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

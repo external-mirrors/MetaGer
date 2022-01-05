@@ -82,7 +82,7 @@ class RequestFetcher extends Command
                 $answersRead = $status[0];
                 $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
-                
+
                 if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
                 }
@@ -188,11 +188,11 @@ class RequestFetcher extends Command
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => $job["useragent"],
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 2,
+            CURLOPT_CONNECTTIMEOUT => 8,
             CURLOPT_MAXCONNECTS => 500,
             CURLOPT_LOW_SPEED_LIMIT => 50000,
-            CURLOPT_LOW_SPEED_TIME => 5,
-            CURLOPT_TIMEOUT => 7,
+            CURLOPT_LOW_SPEED_TIME => 10,
+            CURLOPT_TIMEOUT => 10,
         ));
 
         if (!empty($job["curlopts"])) {
@@ -201,7 +201,7 @@ class RequestFetcher extends Command
 
         if (!empty($this->proxyhost) && !empty($this->proxyport)) {
             curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
-            if(!empty($this->proxyuser) && !empty($this->proxypassword)){
+            if (!empty($this->proxyuser) && !empty($this->proxypassword)) {
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
             }
             curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyport);
@@ -228,6 +228,6 @@ class RequestFetcher extends Command
     public function sig_handler($sig)
     {
         $this->shouldRun = false;
-        echo("Terminating Process\n");
+        echo ("Terminating Process\n");
     }
 }

@@ -34,13 +34,18 @@ class BingBilder extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"}, $this->engine->homepage,
+                    $this->engine->{"display-name"},
+                    $this->engine->homepage,
                     $this->counter,
-                    ['image' => $image]
+                    [
+                        'image' => $image,
+                        'imagedimensions' => [
+                            "width" => $result->width,
+                            "height" => $result->height
+                        ]
+                    ]
                 );
-
             }
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
@@ -64,12 +69,29 @@ class BingBilder extends Searchengine
             $newEngine->{"get-parameter"}->offset = $nextOffset;
             $next = new BingBilder($this->name, $newEngine, $metager);
             $this->next = $next;
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
+    }
 
+    public static function generateThumbnailUrl(\App\Models\Result $result)
+    {
+        $url = $result->image;
+
+        $newHeight = 150;
+
+        $requestDataBing = [
+            "h" => $newHeight,
+        ];
+
+        $requestDataBing = http_build_query($requestDataBing, "", "&", PHP_QUERY_RFC3986);
+        $url .= "&" . $requestDataBing;
+
+        $requestData = [];
+        $requestData["url"] = $url;
+        $link = action('Pictureproxy@get', $requestData);
+        return $link;
     }
 }

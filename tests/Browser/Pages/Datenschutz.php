@@ -25,13 +25,13 @@ class Datenschutz extends Page
     public function assert(Browser $browser)
     {
         $browser->assertPathIs($this->url())
-            ->waitForText("Datenschutz bei MetaGer/SUMA-EV")
+            ->waitForText("Datenschutzerklärung")
             ->assertTitle("Datenschutz und Privatsphäre - MetaGer")
             ->switchLanguage("English")
-            ->waitForText("Data protection at MetaGer/SUMA-EV")
+            ->waitForText("Data protection")
             ->assertTitle("Privacy - MetaGer")
             ->switchLanguage("Español")
-            ->waitForText("Data protection at MetaGer/SUMA-EV")
+            ->waitForText("Data protection")
             ->assertTitle("Protección de datos y privacidad - MetaGer")
             ->switchLanguage("Deutsch");
     }

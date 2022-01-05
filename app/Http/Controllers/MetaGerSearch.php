@@ -66,7 +66,7 @@ class MetaGerSearch extends Controller
         $metager->startSearch($timings);
 
         # Versuchen die Ergebnisse der Quicktips zu laden
-        if($quicktips !== null) {
+        if ($quicktips !== null) {
             $quicktipResults = $quicktips->loadResults();
             if (!empty($timings)) {
                 $timings["Loaded Quicktip Results"] = microtime(true) - $time;
@@ -95,19 +95,24 @@ class MetaGerSearch extends Controller
         $metager->prepareResults($timings);
         $admitad = [];
         $adgoal = [];
-        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $newAdmitad = new \App\Models\Admitad($metager);
-            if(!empty($newAdmitad->hash)){
+            if (!empty($newAdmitad->hash)) {
                 $admitad[] = $newAdmitad;
             }
             $newAdgoal = new \App\Models\Adgoal($metager);
-            if(!empty($newAdgoal->hash)){
+            if (!empty($newAdgoal->hash)) {
                 $adgoal[] = $newAdgoal;
             }
         }
 
         $metager->parseAffiliates($admitad);
         $metager->parseAffiliates($adgoal);
+
+        // Add Advertisement for Donations
+        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+            $metager->addDonationAdvertisement();
+        }
 
         $finished = true;
         foreach ($metager->getEngines() as $engine) {
@@ -153,7 +158,7 @@ class MetaGerSearch extends Controller
         // This might speed up page view time for users with slow network
         $responseArray = str_split($resultpage->render(), 1024);
         foreach ($responseArray as $responsePart) {
-            echo($responsePart);
+            echo ($responsePart);
             flush();
         }
         $requestTime = microtime(true) - $time;
@@ -223,13 +228,13 @@ class MetaGerSearch extends Controller
         $metager->rankAll();
         $metager->prepareResults();
 
-        if(!$metager->isApiAuthorized() && !$metager->isDummy()){
+        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $newAdmitad = new \App\Models\Admitad($metager);
-            if(!empty($newAdmitad->hash)){
+            if (!empty($newAdmitad->hash)) {
                 $admitad[] = $newAdmitad;
             }
             $newAdgoal = new \App\Models\Adgoal($metager);
-            if(!empty($newAdgoal->hash)){
+            if (!empty($newAdgoal->hash)) {
                 $adgoal[] = $newAdgoal;
             }
         }

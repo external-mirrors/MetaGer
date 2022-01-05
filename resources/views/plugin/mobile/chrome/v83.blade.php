@@ -2,8 +2,8 @@
 
 <div role="dialog">
 	<h1 class="page-title">{{ trans('plugin-page.head.2') }}</h1>
-    <div class="card-heavy">
-	    <h3>{!! trans('plugin-page.default-search') !!}</h3>
+	<div class="card">
+		<h1>{!! trans('plugin-page.default-search') !!}</h1>
 		<ol>
 			<li>{!! trans('plugin-mobile/mobile-chrome.default-search-v83.1') !!}</li>
 			<li>{{ trans('plugin-mobile/mobile-chrome.default-search-v83.2') }}</li>
@@ -13,8 +13,8 @@
 		</ol>
 		@include('parts.searchbar', ['class' => 'startpage-searchbar'])
 	</div>
-    <div class="card-heavy">
-		<h3>{{ trans('plugin-page.default-page') }}</h3>
+	<div class="card">
+		<h1>{{ trans('plugin-page.default-page') }}</h1>
 		<ol>
 			<li>{!! trans('plugin-mobile/mobile-chrome.default-page-v83.1') !!}</li>
 			<li>{{ trans('plugin-mobile/mobile-chrome.default-page-v83.2') }}</li>
@@ -23,4 +23,4 @@
 		</ol>
 	</div>
 
-@endsection
+	@endsection

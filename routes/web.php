@@ -17,11 +17,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 |
  */
 
-Route::get("robots.txt", function(Request $request){
+Route::get("robots.txt", function (Request $request) {
     $responseData = "";
-    if(App::environment("production")){
+    if (App::environment("production")) {
         $responseData = view("robots.production");
-    }else{
+    } else {
         $responseData = view("robots.development");
     }
     return response($responseData, 200, ["Content-Type" => "text/plain"]);
@@ -80,20 +80,28 @@ Route::get('tor', function () {
         ->with('title', 'tor hidden service - MetaGer')
         ->with('navbarFocus', 'dienste');
 });
-Route::get('spende', function () {
-    return view('spende.spende')
-        ->with('title', trans('titles.spende'))
-        ->with('js', [mix('/js/donation.js')])
-        ->with('navbarFocus', 'foerdern');
-})->name("spende");
 
-Route::get('spende/danke/{data}', function ($data) {
-    return view('spende.danke')
-        ->with('title', trans('titles.spende'))
-        ->with('navbarFocus', 'foerdern')
-        ->with('css', [mix('/css/spende/danke.css')])
-        ->with('data', unserialize(base64_decode($data)));
-})->name("danke");
+Route::group(['prefix' => 'spende'], function(){
+    Route::get('/', function () {
+        return view('spende.spende')
+            ->with('title', trans('titles.spende'))
+            ->with('js', [mix('/js/donation.js')])
+            ->with('navbarFocus', 'foerdern');
+    })->name("spende");
+
+    Route::post('/', 'MailController@donation');
+
+    Route::get('paypal', 'MailController@donationPayPalCallback')->name('paypal-callback');
+
+    Route::get('danke/{data?}', function ($data) {
+        return view('spende.danke')
+            ->with('title', trans('titles.spende'))
+            ->with('navbarFocus', 'foerdern')
+            ->with('css', [mix('/css/spende/danke.css')])
+            ->with('data', unserialize(base64_decode($data)));
+    })->name("danke");
+});
+
 Route::get('partnershops', function () {
     return view('spende.partnershops')
         ->with('title', trans('titles.partnershops'))
@@ -112,7 +120,7 @@ Route::get('bform1.htm', function () {
     return redirect('beitritt');
 });
 
-Route::post('spende', 'MailController@donation');
+
 
 Route::get('datenschutz', function () {
     return view('datenschutz/datenschutz')
@@ -122,14 +130,14 @@ Route::get('datenschutz', function () {
 
 Route::get('transparency', function () {
     return view('transparency')
-         ->with('title', trans('titles.transparency'))
-         ->with('navbarFocus', 'info');
+        ->with('title', trans('titles.transparency'))
+        ->with('navbarFocus', 'info');
 });
 
 Route::get('search-engine', function () {
     return view('search-engine')
-         ->with('title', trans('titles.search-engine'))
-         ->with('navbarFocus', 'info');
+        ->with('title', trans('titles.search-engine'))
+        ->with('navbarFocus', 'info');
 });
 Route::get('hilfe', function () {
     return view('help/help')
@@ -216,7 +224,10 @@ Route::get('plugin', function (Request $request) {
         ->with('navbarFocus', 'dienste')
         ->with('agent', new Agent())
         ->with('request', $request->input('request', 'GET'))
-        ->with('browser', (new Agent())->browser());
+        ->with('browser', (new Agent())->browser())
+        ->with('css', [
+            mix('/css/plugin-page.css'),
+        ]);
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
@@ -244,6 +255,18 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
+
+    Route::group(['prefix' => 'affiliates'], function () {
+        Route::get('/', 'AdgoalController@adminIndex');
+        Route::get('/json/blacklist', 'AdgoalController@blacklistJson');
+        Route::put('/json/blacklist', 'AdgoalController@addblacklistJson');
+        Route::delete('/json/blacklist', 'AdgoalController@deleteblacklistJson');
+        Route::get('/json/whitelist', 'AdgoalController@whitelistJson');
+        Route::put('/json/whitelist', 'AdgoalController@addwhitelistJson');
+        Route::delete('/json/whitelist', 'AdgoalController@deletewhitelistJson');
+        Route::get('/json/hosts', 'AdgoalController@hostsJson');
+        Route::get('/json/hosts/clicks', 'AdgoalController@hostClicksJson');
+    });
 });
 
 Route::get('settings', function () {
@@ -307,7 +330,7 @@ Route::group(['prefix' => 'app'], function () {
             try {
                 $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
                 while (!feof($fh)) {
-                    echo(fread($fh, 1024));
+                    echo (fread($fh, 1024));
                 }
             } catch (\Exception $e) {
                 abort(404);
@@ -324,7 +347,7 @@ Route::group(['prefix' => 'app'], function () {
             try {
                 $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
                 while (!feof($fh)) {
-                    echo(fread($fh, 1024));
+                    echo (fread($fh, 1024));
                 }
             } catch (\Exception $e) {
                 abort(404);
@@ -355,16 +378,16 @@ Route::get('metrics', function (Request $request) {
     ];
 
     $allowed = false;
-    foreach($allowedNetworks as $part){
-        if(stripos($ip, $part) === 0){
+    foreach ($allowedNetworks as $part) {
+        if (stripos($ip, $part) === 0) {
             $allowed = true;
         }
     }
 
-    if(!$allowed){
+    if (!$allowed) {
         abort(401);
     }
-    
+
     $registry = \Prometheus\CollectorRegistry::getDefault();
 
     $renderer = new RenderTextFormat();
@@ -372,6 +395,10 @@ Route::get('metrics', function (Request $request) {
 
     return response($result, 200)
         ->header('Content-Type', RenderTextFormat::MIME_TYPE);
+});
+
+Route::group(['prefix' => 'partner'], function () {
+    Route::get('r', 'AdgoalController@forward')->name('adgoal-redirect');
 });
 
 Route::group(['prefix' => 'health-check'], function () {

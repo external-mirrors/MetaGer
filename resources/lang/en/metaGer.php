@@ -139,4 +139,7 @@ return [
     "filter.max" => "Maximum sleep (in s)",
 
     "settings" => "Settings",
+
+    "ads.own.title" => "Support MetaGer",
+    "ads.own.description" => "With your donation you support the maintenance and further development of the independent search engine metager.de and the work of the non-profit association SUMA-EV.",
 ];

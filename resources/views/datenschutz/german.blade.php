@@ -1,6 +1,6 @@
 <div>
+    <h1 class="page-title">Datenschutzerklärung</h1>
     <div class="section">
-        <h1>Datenschutz bei MetaGer/SUMA-EV</h1>
         Für maximale Transparenz listen wir auf, welche Daten wir von Ihnen erheben und wie wir sie verwenden.
         Der Schutz Ihrer Daten ist uns wichtig und Ihnen sollte er das auch sein.
         <br /><strong>Lesen Sie diese Erklärung bitte gründlich; es ist in Ihrem Interesse.</strong>
@@ -10,8 +10,7 @@
         MetaGer und verwandte Dienste werden betrieben vom <a href="https://suma-ev.de/impressum.html">SUMA-EV</a>, der
         auch Verfasser dieser Erklärung ist.
         Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint.
-        <br />Unsere Kontaktdaten finden Sie in unserem <a
-            href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">Impressum</a>.
+        <br />Unsere Kontaktdaten finden Sie in unserem <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">Impressum</a>.
         Per E-Mail sind wir über unser <a href="/kontakt">verschlüsselted Kontaktformular</a> zu erreichen.
     </div>
     <div class="section">
@@ -26,13 +25,13 @@
         <ol>
             <li class="kontext-list">
                 <article class="kontext">
-                    <h2>Benutzung der Websuchmaschine MetaGer</h2>
+                    <h1>Benutzung der Websuchmaschine MetaGer</h1>
                     Bei der Nutzung unserer Websuchmaschine MetaGer über deren Web-Formular oder durch deren
                     OpenSearch-Schnittstelle fallen folgende Daten an:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3 id="ip-address">Internet-Protokoll-Adresse</h3>
+                                <h2 id="ip-address">Internet-Protokoll-Adresse</h2>
                                 Die Internet-Protokoll-Adresse (nachfolgend kurz IP) wird zwingend benötigt, um
                                 Webdienste wie MetaGer zu nutzen. Diese IP identifiziert in Kombination mit einem Datum
                                 – ähnlich einer Telefonnummer – einen Internetzugang sowie dessen Inhaber eindeutig.
@@ -40,13 +39,13 @@
                                 personenbezogen.
                                 Werden hintere Blöcke der IP gekürzt, identifiziert die gekürzte Adresse den ungefähren
                                 geografischen Bereich um den Internet-Anschluss.
-                                <h4>Beispiele (vollständige IP-Adresse)</h4>
+                                <h3>Beispiele (vollständige IP-Adresse)</h3>
                                 <samp>154.67.88.47</samp><br />
                                 <samp>82.159.53.49</samp>
-                                <h4>Beispiele (nur die ersten zwei Blöcke)</h4>
+                                <h3>Beispiele (nur die ersten zwei Blöcke)</h3>
                                 <samp>154.67.0.0</samp><br />
                                 <samp>82.159.0.0</samp>
-                                <h4>Was macht MetaGer/SUMA-EV damit?</h4>
+                                <h3>Was macht MetaGer/SUMA-EV damit?</h3>
                                 <ol>
                                     <li>Um unseren Dienst vor Überlastung zu schützen, müssen wir die Anzahl der
                                         Suchanfragen pro Internetanschluss begrenzen.
@@ -63,7 +62,7 @@
                                         Teilen vom sog. <a href="#user-agent">User-Agent</a> an unsere Werbepartner.
                                     </li>
                                 </ol>
-                                <h4>Welche Rechte habe ich als Nutzer?</h4>
+                                <h3>Welche Rechte habe ich als Nutzer?</h3>
                                 Da die vollständige Form der Internet-Protokoll-Adresse personenbezogen ist, haben Sie
                                 insbesondere die folgenden Rechte:
                                 <a href="#ihrerechte">Rechte ansehen</a>
@@ -71,16 +70,16 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3 id="search-request">Eingegebene Suchanfrage</h3>
+                                <h2 id="search-request">Eingegebene Suchanfrage</h2>
                                 Eingegebene Suchbegriffe sind zwingend notwendig für eine Websuche.
                                 Aus ihnen können in der Regel keine personenbezogenen Daten gewonnen werden; unter
                                 anderem, weil sie keine feste Struktur aufweisen.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Wasserverbrauch duschen</samp><br />
                                 <samp>Liedtext Auf einem Baum ein Kuckuck</samp><br />
                                 <samp>Grakvaloth</samp><br />
                                 <samp>WHO Abkürzung</samp>
-                                <h4>Was macht MetaGer/SUMA-EV damit?</h4>
+                                <h3>Was macht MetaGer/SUMA-EV damit?</h3>
                                 <ol>
                                     <li>Als integraler Bestandteil der Metasuche wird die Suchanfrage an unsere Partner
                                         übertragen, um Suchergebnisse zur Anzeige auf der Ergebisseite zu erhalten. Die
@@ -92,15 +91,15 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3 id="user-agent">User-Agent-Bezeichner</h3>
+                                <h2 id="user-agent">User-Agent-Bezeichner</h2>
                                 Beim Aufruf einer Webseite sendet ihr Browser automatisch eine Kennung, in der Regel mit
                                 Daten über den verwendeten Browser und das verwendete Betriebssystem.
                                 Diese Browser-Kennung (der sog. User-Agent) kann von Webseiten zum Beispiel verwendet
                                 werden, um Mobilgeräte zu erkennen und diesen eine angepasste Ausgabe zu präsentieren.
-                                <h4>Beispiel</h4>
+                                <h3>Beispiel</h3>
                                 <samp>Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:59.0) Gecko/20100101
                                     Firefox/59.0</samp>
-                                <h4>Was macht MetaGer/SUMA-EV damit?</h4>
+                                <h3>Was macht MetaGer/SUMA-EV damit?</h3>
                                 <ol>
                                     <li>Neben Spenden und Mitgliedsbeiträgen müssen wir unseren Betrieb durch
                                         nicht-personalisierte Werbung auf der Ergebnisseite finanzieren. Um diese
@@ -113,15 +112,15 @@
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Nutzerpräferenzen</h3>
+                                <h2>Nutzerpräferenzen</h2>
                                 Neben Formulardaten und User-Agent werden vom Browser oft weitere Daten übertragen.
                                 Dazu gehören Sprachauswahl, Sucheinstellungen, Accept-Header, Do-Not-Track-Header und
                                 weitere.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>interface=de sprachfilter=all fokus=web</samp><br />
                                 <samp>interface=de sprachfilter=de fokus=nachrichten</samp><br />
                                 <samp>interface=en sprachfilter=en fokus=web</samp>
-                                <h4>Was macht MetaGer/SUMA-EV damit?</h4>
+                                <h3>Was macht MetaGer/SUMA-EV damit?</h3>
                                 <ol>
                                     <li>Wir verwenden diese Daten (z.B. Spracheinstellungen), um die jeweilige
                                         Suchanfrage zu beantworten.</li>
@@ -133,28 +132,28 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2 id="contact">Nutzung des Kontaktformulars</h2>
+                    <h1 id="contact">Nutzung des Kontaktformulars</h1>
                     Bei der Nutzung des MetaGer-Kontaktformulars fallen folgende Daten an, die wir zu Referenzzwecken
                     bis 2 Monate nach Abschluss Ihres Anliegens speichern:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Kontaktdaten</h3>
+                                <h2>Kontaktdaten</h2>
                                 Hierunter fällt der von Ihnen angegebene Name (Vor- und Nachname), sowie Ihre E-Mail
                                 Adresse.
                                 Diese Daten nutzen wir ausschließlich, um Ihnen zu antworten und geben Sie unter keinen
                                 Umständen weiter an Dritte.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Nachricht</h3>
+                                <h2>Nachricht</h2>
                                 Die hier eingegebene Nachricht wird an uns übertragen und zur Bearbeitung Ihres
                                 Anliegens genutzt.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Feedback zu MetaGer</samp><br />
                                 <samp>MetaGer als Browser-PlugIn</samp><br />
                             </article>
@@ -162,31 +161,31 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2 id="donation">Nutzung des Spendenformulars</h2>
+                    <h1 id="donation">Nutzung des Spendenformulars</h1>
                     Die folgenden, im Spendenformular übermittelten, Daten werden 2 Monate zur Bearbeitung gespeichert:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Kontaktdaten</h3>
+                                <h2>Kontaktdaten</h2>
                                 Hierunter fällt der von Ihnen angegebene Name (Vor- und Nachname), sowie Ihre E-Mail
                                 Adresse.
                                 Diese Daten nutzen wir ausschließlich für eventuelle Rückfragen und geben Sie unter
                                 keinen Umständen weiter an Dritte.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Zahlungsdaten</h3>
+                                <h2>Zahlungsdaten</h2>
                                 Die Zahlungsdaten werden ausschließlich zur Abwicklung der Spende genutzt und unter
                                 keinen Umständen an Dritte weitergegeben.
                             </article>
                         </li>
                         <li>
                             <article class="datum">
-                                <h3>Nachricht (optional)</h3>
+                                <h2>Nachricht (optional)</h2>
                                 Die hier eingegebene Nachricht wird an uns übertragen und bei der Bearbeitung Ihrer
                                 Spende berücksichtigt.
                             </article>
@@ -194,7 +193,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Einfache Nutzung des Webangebotes</h2>
+                    <h1>Einfache Nutzung des Webangebotes</h1>
                     Beim Besuch von Webseiten der Domain „suma-ev.de“ werden folgende Daten erhoben und bis zu einer
                     Woche gespeichert:
                     <ul>
@@ -216,18 +215,18 @@
 
                 </article>
                 <article class="kontext">
-                    <h2>Anmeldung für den SUMA-EV-Newsletter</h2>
+                    <h1>Anmeldung für den SUMA-EV-Newsletter</h1>
                     Um Sie über unsere Tätigkeiten auf dem Laufenden zu halten, bieten wir einen E-Mail-Newsletter an.
                     Wir speichern dafür bis zu Ihrer Abmeldung folgende Daten:
                     <ol class="datum-list">
                         <li>
                             <article class="datum">
-                                <h3>Kontaktdaten</h3>
+                                <h2>Kontaktdaten</h2>
                                 Hierunter fällt der von Ihnen angegebene Name (Vor- und Nachname), sowie Ihre E-Mail
                                 Adresse.
                                 Diese Daten nutzen wir ausschließlich für den Versand des Newsletters und geben Sie
                                 unter keinen Umständen weiter an Dritte.
-                                <h4>Beispiele</h4>
+                                <h3>Beispiele</h3>
                                 <samp>Max Mustermann, mail@example.com</samp><br />
                                 <samp>Erika Musterfrau, erika_m@domain.de</samp><br />
                             </article>
@@ -235,7 +234,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung von Maps.MetaGer.de</h2>
+                    <h1>Nutzung von Maps.MetaGer.de</h1>
                     Bei der Nutzung des MetaGer-Kartendienstes fallen folgende Daten an:
                     <ol>
                         <br />
@@ -246,7 +245,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung des anonymisierenden Proxy</h2>
+                    <h1>Nutzung des anonymisierenden Proxy</h1>
                     Bei der Nutzung des anonymisierenden Proxy fallen folgende Daten an:
                     <ol>
                         <br />
@@ -255,25 +254,25 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung der Zitat-Suche</h2>
+                    <h1>Nutzung der Zitat-Suche</h1>
                     Der eingegebene Suchbegriff wird genutzt, um in der Zitat-Datenbank nach Ergebnissen zu suchen.
                     Im Gegensatz zur <a href="#search-request">Websuche</a> mit MetaGer, ist die Weitergabe des
                     Suchbegriffes an Dritte nicht erforderlich, da sich die Zitat-Datenbank auf unserem Server befindet.
                     Andere Daten werden nicht gespeichert oder weitergegeben.
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung des Assoziators</h2>
+                    <h1>Nutzung des Assoziators</h1>
                     Der Assoziator nutzt den Suchbegriff, um die damit assoziierten Begriffe zu bestimmen und
                     anzuzeigen.
                     Andere Daten werden nicht gespeichert oder weitergegeben.
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung der MetaGer-App</h2>
+                    <h1>Nutzung der MetaGer-App</h1>
                     Die Nutzung der MetaGer-App ist gleichzubehandeln mit der Verwendung von MetaGer über einen
                     Webbrowser.
                 </article>
                 <article class="kontext">
-                    <h2>Nutzung des MetaGer-Plugin</h2>
+                    <h1>Nutzung des MetaGer-Plugin</h1>
                     Bei der Nutzung des MetaGer-Plugin fallen folgende Daten an:
                     <ol>
                         <br />
@@ -331,8 +330,7 @@
             <li><b>Recht auf Beschwerde:</b></li>
             <article class="kontext">
                 Gemäß Artikel 13 Absatz 2 Buchstabe d) DSGVO können Sie sich bei der Datenschutzbeauftragten des Landes
-                Niedersachsen über uns beschweren. Im Netz: <a
-                    href="https://www.lfd.niedersachsen.de/startseite/">Datenschutzbeauftragte</a>
+                Niedersachsen über uns beschweren. Im Netz: <a href="https://www.lfd.niedersachsen.de/startseite/">Datenschutzbeauftragte</a>
             </article>
             <li><b>Recht auf Widerspruch gegen die Verarbeitung:</b></li>
             <article class="kontext">

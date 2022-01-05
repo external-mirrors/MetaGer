@@ -6,6 +6,7 @@ namespace App\Models;
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
  *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
  */
+
 class Result
 {
     public $provider; # Die Engine von der das Suchergebnis kommt
@@ -20,7 +21,7 @@ class Result
     public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
     public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
-
+    public $imageDimensions; # Ein Array in welchem wenn verfügbar Breite/Höhe des Bildes gespeichert sind ["width" => ..., "height" => ...]
     public $proxyLink; # Der Link für die Seite über unseren Proxy-Service
     public $engineBoost = 1; # Der Boost für den Provider des Suchergebnisses
     public $valid = true; # Ob das Ergebnis noch gültig ist (bool)
@@ -78,6 +79,7 @@ class Result
         $this->rank = 0;
         $this->partnershop = isset($additionalInformation["partnershop"]) ? $additionalInformation["partnershop"] : false;
         $this->image = isset($additionalInformation["image"]) ? $additionalInformation["image"] : "";
+        $this->imageDimensions = isset($additionalInformation["imagedimensions"]) ? $additionalInformation["imagedimensions"] : [];
         $this->price = isset($additionalInformation["price"]) ? $additionalInformation["price"] : 0;
         $this->price_text = $this->price_to_text($this->price);
         $this->additionalInformation = $additionalInformation;
@@ -186,7 +188,8 @@ class Result
             $tmpEingabe = preg_replace($regex, "", $tmpEingabe);
         }
         foreach (str_split($tmpEingabe) as $char) {
-            if (!$char
+            if (
+                !$char
                 || !$tmpEingabe
                 || strlen($tmpEingabe) === 0
                 || strlen($char) === 0
@@ -246,8 +249,10 @@ class Result
     public function isValid(\App\MetaGer $metager)
     {
         # Perönliche Host und Domain Blacklist
-        if (in_array(strtolower($this->strippedHost), $metager->getUserHostBlacklist())
-            || in_array(strtolower($this->strippedDomain), $metager->getUserDomainBlacklist())) {
+        if (
+            in_array(strtolower($this->strippedHost), $metager->getUserHostBlacklist())
+            || in_array(strtolower($this->strippedDomain), $metager->getUserDomainBlacklist())
+        ) {
             return false;
         }
 
@@ -256,7 +261,6 @@ class Result
             if (strpos(strtolower($this->link), $word)) {
                 return false;
             }
-
         }
 
         # Allgemeine URL und Domain Blacklist
@@ -273,7 +277,7 @@ class Result
         }
 
         // Possibly remove description
-        if($this->isDescriptionBlackListed($metager)){
+        if ($this->isDescriptionBlackListed($metager)) {
             $this->descr = "";
         }
 
@@ -322,14 +326,14 @@ class Result
     public function isBlackListed(\App\MetaGer $metager)
     {
         if (($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
-            in_array($this->strippedLink, $metager->getUrlBlacklist()))) ||
+                in_array($this->strippedLink, $metager->getUrlBlacklist()))) ||
             ($this->strippedHostAnzeige !== "" && (in_array($this->strippedHostAnzeige, $metager->getDomainBlacklist()) ||
-                in_array($this->strippedLinkAnzeige, $metager->getUrlBlacklist())))) {
+                in_array($this->strippedLinkAnzeige, $metager->getUrlBlacklist())))
+        ) {
             return true;
         } else {
             return false;
         }
-
     }
 
     public function isDescriptionBlackListed(\App\MetaGer $metager)
@@ -381,9 +385,9 @@ class Result
 
         $proxyUrl = "https://proxy.metager.de/";
 
-        if(!empty($parts["host"])){
+        if (!empty($parts["host"])) {
             $proxyUrl .= $parts["host"];
-            if(!empty($parts["path"])){
+            if (!empty($parts["path"])) {
                 $proxyUrl .= "/" . rawurlencode(trim($parts["path"], "/"));
             }
         }
@@ -490,7 +494,8 @@ class Result
      * 
      * @return Sanitized version of the text
      */
-    private function sanitizeText($text){
+    private function sanitizeText($text)
+    {
         $target = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '?', '.', ',', '"', "'"];
         $specialList = [
             'serifBold' => ['𝐚', '𝐛', '𝐜', '𝐝', '𝐞', '𝐟', '𝐠', '𝐡', '𝐢', '𝐣', '𝐤', '𝐥', '𝐦', '𝐧', '𝐨', '𝐩', '𝐪', '𝐫', '𝐬', '𝐭', '𝐮', '𝐯', '𝐰', '𝐱', '𝐲', '𝐳', '𝐀', '𝐁', '𝐂', '𝐃', '𝐄', '𝐅', '𝐆', '𝐇', '𝐈', '𝐉', '𝐊', '𝐋', '𝐌', '𝐍', '𝐎', '𝐏', '𝐐', '𝐑', '𝐒', '𝐓', '𝐔', '𝐕', '𝐖', '𝐗', '𝐘', '𝐙', '𝟎', '𝟏', '𝟐', '𝟑', '𝟒', '𝟓', '𝟔', '𝟕', '𝟖', '𝟗', '❗', '❓', '.', ',', '"', "'"],

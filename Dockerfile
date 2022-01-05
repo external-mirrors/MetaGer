@@ -59,7 +59,7 @@ RUN sed -i 's/pid = \/run\/php\/php7.4-fpm.pid/;pid = \/run\/php\/php7.4-fpm.pid
     sed -i 's/error_log = \/var\/log\/php7.4-fpm.log/error_log = \/dev\/stderr/g' /etc/php/7.4/fpm/php-fpm.conf && \
     sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php/7.4/fpm/php-fpm.conf && \
     sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/g' /etc/php/7.4/fpm/pool.d/www.conf && \
-    sed -i 's/;request_terminate_timeout = 0/request_terminate_timeout = 30/g' /etc/php/7.4/fpm/pool.d/www.conf && \
+    sed -i 's/;request_terminate_timeout = 0/request_terminate_timeout = 0/g' /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i 's/;request_terminate_timeout_track_finished = no/request_terminate_timeout_track_finished = yes/g' /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i 's/;decorate_workers_output = no/decorate_workers_output = no/g' /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php/7.4/fpm/pool.d/www.conf && \
@@ -99,6 +99,7 @@ USER 0:0
 RUN apt purge -y php7.4-xdebug
 RUN sed -i 's/expose_php = On/expose_php = Off/g' /etc/php/7.4/fpm/php.ini && \
     sed -i 's/;opcache.enable=1/opcache.enable=1/g' /etc/php/7.4/fpm/php.ini && \
+    sed -i 's/request_terminate_timeout = 0/request_terminate_timeout = 30/g' /etc/php/7.4/fpm/pool.d/www.conf && \
     sed -i 's/;opcache.memory_consumption=128/opcache.memory_consumption=128/g' /etc/php/7.4/fpm/php.ini && \
     sed -i 's/;opcache.interned_strings_buffer=8/opcache.interned_strings_buffer=8/g' /etc/php/7.4/fpm/php.ini && \
     sed -i 's/;opcache.max_accelerated_files=10000/opcache.max_accelerated_files=10000/g' /etc/php/7.4/fpm/php.ini && \

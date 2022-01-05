@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'headline.1' => 'Ihre Spende für SUMA-EV und MetaGer',
+    'headline.1' => 'Ihre Spende',
     'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a> und <a href=":beitrittlink" target="_blank" rel="noopener">Mitglied werden.</a>.',
 
     'headline.3' => 'Welchen Betrag möchten Sie spenden?',
@@ -51,7 +51,7 @@ return [
     'lastschrift.10' => 'Ihre Daten werden über eine verschlüsselte Verbindung zu uns übertragen und können von Dritten nicht mitgelesen werden. SUMA-EV verwendet Ihre Daten ausschlie&szlig;lich für die Spendenabrechnung; Ihre Daten werden nicht weitergegeben. Spenden an den SUMA-EV sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
     'lastschrift.private' => 'Privatperson:',
     'lastschrift.company' => 'Firma:',
-    
+
 
     'paypal.1' => 'Mit einem Klick auf Spenden werden Sie zu Paypal weitergeleitet.',
 
@@ -86,4 +86,5 @@ return [
     'error.bic' => 'Die eingegebene IBAN gehört nicht zu einem Land aus dem SEPA Raum. Für einen Bankeinzug benötigen wir eine BIC von Ihnen.',
     'error.amount' => 'Der eingegebene Spendenbetrag ist ungültig. Bitte korrigieren Sie Ihre Eingabe und versuchen es erneut.',
     'error.frequency' => 'Die eingegebene Häufigkeit für Ihre Spende ist ungültig.',
+    'error.robot' => 'Die Eingabe war nicht korrekt',
 ];

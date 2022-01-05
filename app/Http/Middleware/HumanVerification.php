@@ -23,6 +23,27 @@ class HumanVerification
             return $next($request);
         }
 
+        // Check for a valid Skip Token
+        if ($request->filled("token")) {
+            $prefix = \App\Http\Controllers\HumanVerification::TOKEN_PREFIX;
+            $token = $prefix . $request->input("token");
+
+            if (Cache::has($token)) {
+                $value = Cache::get($token);
+
+                if (!empty($value) && intval($value) > 0) {
+                    Cache::decrement($token);
+                    return $next($request);
+                } else {
+                    // Token is not valid. Remove it
+                    Cache::forget($token);
+                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                }
+            } else {
+                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+            }
+        }
+
         // The specific user
         $user = null;
         $update = true;
@@ -31,9 +52,11 @@ class HumanVerification
             $ip = $request->ip();
             $id = "";
             $uid = "";
-            if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-                $id = hash("sha1", "999.999.999.999");
-                $uid = hash("sha1", "999.999.999.999uid");
+
+            $spamID = \App\Http\Controllers\HumanVerification::couldBeSpammer($ip);
+            if (!empty($spamID)) {
+                $id = hash("sha1", $spamID);
+                $uid = hash("sha1", $spamID . $ip . $_SERVER["AGENT"] . "uid");
             } else {
                 $id = hash("sha1", $ip);
                 $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
@@ -96,7 +119,6 @@ class HumanVerification
                 if (preg_match("/http[s]{0,1}:\/\/metager\.de\/meta\/meta.ger3\?.*?eingabe=([\w\d]+\.){1,2}[\w\d]+/si", $referer) === 1) {
                     $refererLock = true;
                 }
-
             }
 
             if ((!$alone && $sum >= 50 && !$user["whitelist"]) || $refererLock) {
@@ -143,7 +165,6 @@ class HumanVerification
 
         $request->request->add(['verification_id' => $user["uid"], 'verification_count' => $user["unusedResultPages"]]);
         return $next($request);
-
     }
 
     public function setUser($prefix, $user)

@@ -1,18 +1,18 @@
-<div class="card-heavy">
-    <h3>{!! trans('plugin-page.firefox-plugin') !!}</h3>
-	<ol>
-		<li style="list-style:none;">{!! trans('plugin-desktop/desktop-firefox.plugin') !!}</li>
-	</ol>
+<div class="card">
+	<h1>{!! trans('plugin-page.firefox-plugin') !!}</h1>
+	<p>
+		{!! trans('plugin-desktop/desktop-firefox.plugin') !!}
+	</p>
 </div>
-<div class="card-heavy">
-    <h3>{!! trans('plugin-page.firefox-default-search') !!}</h3>
+<div class="card">
+	<h1>{!! trans('plugin-page.firefox-default-search') !!}</h1>
 	<ol>
 		<li>{!! trans('plugin-desktop/desktop-firefox.default-search-v61.1') !!}</li>
 		<li>{!! trans('plugin-desktop/desktop-firefox.default-search-v61.2') !!}</li>
 	</ol>
 </div>
-<div class="card-heavy">
-	<h3>{{ trans('plugin-page.default-page') }}</h3>
+<div class="card">
+	<h1>{{ trans('plugin-page.default-page') }}</h1>
 	<ol>
 		<li>{!! trans('plugin-desktop/desktop-firefox.default-page-v61.1') !!}</li>
 		<li>{{ trans('plugin-desktop/desktop-firefox.default-page-v61.2') }}</li>

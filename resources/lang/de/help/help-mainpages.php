@@ -8,7 +8,7 @@ return [
     "searchfield.title"     => 'Das Suchfeld',
     "searchfield.info"      => 'Das Suchfeld besteht aus mehreren Teilen:',
     "searchfield.memberkey" => 'dem Schlüsselsymbol: Hier können Mitglieder des SUMA-EV oder Spender Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Sie wollen das auch? Werden Sie Mitglied über unser <a href = "/beitritt/">Beitrittsformular</a> oder <a href = "/spende/">spenden</a> Sie an den SUMA-EV.',
-    "searchfield.slot"      => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein.',
+    "searchfield.slot"      => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',
     "searchfield.search"    => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
 
 

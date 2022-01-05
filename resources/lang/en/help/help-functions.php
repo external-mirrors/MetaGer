@@ -15,14 +15,6 @@ return [
     "mehrwortsuche.4" => "Put words or phrases in quotation marks to search for exact combinations.",
     "mehrwortsuche.4.example" => '"round-table decision"',
 
-    "grossklein.title" => "Upper case vs. lower case",
-    "grossklein.1" => "Upper case will not be distinguished from lower case",
-    "grossklein.2" => "Example: Searching for",
-    "grossklein.2.example" => "capitalization",
-    "grossklein.3" => "should give the same results as",
-    "grossklein.3.example" => "CAPITALIZATION",
-
-
     "urls.title" => "Exclude URLs",
     "urls.explanation" => "Use \"-url:\" to exclude search results containing specified words.",
     "urls.example.1" => "Example: You don' t want the word \"dog\" in the results:",

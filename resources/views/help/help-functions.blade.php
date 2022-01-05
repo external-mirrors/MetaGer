@@ -28,18 +28,6 @@
 		</div>
 	</section>
 
-	<section id="capitalizationrules">
-		<h3>{!! trans('help/help-functions.grossklein.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/help-functions.grossklein.1') !!}</p>
-			<ul class="dotlist">
-				<li>{!! trans('help/help-functions.grossklein.2') !!}</li>
-				<li class="nodot"><div class="search-example">{!! trans('help/help-functions.grossklein.2.example') !!}</div></li>
-				<li class="nodot">{!! trans('help/help-functions.grossklein.3') !!}</li>
-				<li class="nodot"><div class="search-example">{!! trans('help/help-functions.grossklein.3.example') !!}</div></li>
-			</ul>
-		</div>
-	</section>
 	<section id="urls">
 		<h3>{!! trans('help/help-functions.urls.title') !!}</h3>
 		<div>

@@ -15,12 +15,6 @@ return [
     "mehrwortsuche.4" => "Mit einer Phrasensuche können Sie statt nach einzelnen Wörtern auch nach Wortkombinationen suchen. Setzen Sie dazu einfach diejenigen Wörter, die gemeinsam vorkommen sollen, in Anführungszeichen.",
     "mehrwortsuche.4.example" => '"der runde tisch"',
 
-    "grossklein.title" => "Groß-/ Kleinschreibung",
-    "grossklein.1" => "Groß- und Kleinschreibung wird bei der Suche nicht unterschieden, es handelt sich um eine rein inhaltliche Suche.",
-    "grossklein.2" => "Beispiel: Die Suche nach",
-    "grossklein.2.example" => "suchmaschine",
-    "grossklein.3" => "sollte die gleichen Ergebnisse liefern wie",
-    "grossklein.3.example" => "SUCHMASCHINE",
 
     'urls.title' => 'URLs ausschließen',
     'urls.explanation' => 'Sie können Suchergebnisse ausschließen, deren Ergebnislinks bestimmte Worte enthalten, indem Sie in ihrer Suche "-url:" verwenden.',

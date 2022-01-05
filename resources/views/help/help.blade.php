@@ -28,9 +28,6 @@
 	<a id=help-topic-severalwords href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#severalwords") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.2') !!}</p>
 	</a>
-	<a id=help-topic-capitalization href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#capitalizationrules") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.3') !!}<br></p>
-	</a>
 	<a id=help-topic-url href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.4') !!}</p>
 	</a>

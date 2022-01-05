@@ -1,7 +1,7 @@
 <?php
 return [
     "title"                 => "MetaGer - Help",
-
+    "suchfunktion.title" => "Search functions",
     "stopworte.title" => "Exclude single words",
     "stopworte.1" => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",
     "stopworte.2" => "Example: You are looking for a new car, but no BMW. Then your search should be <div class=\"well well-sm\">new car -bmw</div>",

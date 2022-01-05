@@ -11,13 +11,10 @@ return [
     'tableofcontents.1.4' => 'Settings',
 
     'tableofcontents.2' => 'Useful functions and hints',
-    'tableofcontents.2.1' => 'Stopwords',
-    'tableofcontents.2.2' => 'Several words',
-    'tableofcontents.2.3' => 'Upper-/lower case',
-    'tableofcontents.2.4' => 'Exclude URLS',
-    'tableofcontents.2.5' => '!bangs',
-    'tableofcontents.2.6' => 'Search in search',
-    'tableofcontents.2.7' => 'Add MetaGer',
+    'tableofcontents.2.1' => 'Search functions',
+    'tableofcontents.2.2' => '!bangs',
+    'tableofcontents.2.3' => 'Search in search',
+    'tableofcontents.2.4' => 'Add MetaGer',
 
     'tableofcontents.4' => 'Services',
     'tableofcontents.4.1' => 'Android-App',

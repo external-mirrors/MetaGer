@@ -2,6 +2,7 @@
 
 return [
     'title' => 'MetaGer - Hilfe',
+    "suchfunktion.title" => "Suchfunktionen",
     "stopworte.title" => 'Stoppworte',
     "stopworte.1" => "Wenn Sie unter den MetaGer-Suchergebnissen solche ausschließen wollen, in denen bestimmte Worte (Ausschlussworte / Stoppworte) vorkommen, dann erreichen Sie das, indem Sie diese Worte mit einem Minus versehen.",
     "stopworte.2" => "Beispiel: Sie suchen ein neues Auto, aber auf keinen Fall einen BMW. Ihre Eingabe lautet also:",

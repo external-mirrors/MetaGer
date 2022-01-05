@@ -5,6 +5,7 @@
 @section('content')
 <h1 class="page-title">{!! trans('help/help-functions.title') !!}</h1>
 <section>
+		<h2 id="searchfunctions">{!! trans('help/help-functions.suchfunktion.title') !!}</h2>
 		<h3 id="stopwordsearch">{!! trans('help/help-functions.stopworte.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-functions.stopworte.1') !!}</p>
@@ -13,9 +14,7 @@
 				<li class="nodot"><div class="search-example">{!! trans('help/help-functions.stopworte.3') !!}</div></li>
 			</ul>
 		</div>
-	</section>
-	<section id="severalwords">
-		<h3>{!! trans('help/help-functions.mehrwortsuche.title') !!}</h3>
+		<h3 id="severalwords">{!! trans('help/help-functions.mehrwortsuche.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-functions.mehrwortsuche.1') !!}</p>
 			<p>{!! trans('help/help-functions.mehrwortsuche.2') !!}</p>
@@ -26,10 +25,8 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.4.example') !!}</div></li>
 			</ul>
 		</div>
-	</section>
 
-	<section id="urls">
-		<h3>{!! trans('help/help-functions.urls.title') !!}</h3>
+		<h3 id="urls">{!! trans('help/help-functions.urls.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-functions.urls.explanation') !!}</p>
 			<ul class="dotlist">

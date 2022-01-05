@@ -13,13 +13,10 @@ return [
 
 
     'tableofcontents.2' => 'Nützliche Funktionen und Hinweise',
-    'tableofcontents.2.1' => 'Stoppwortsuche',
-    'tableofcontents.2.2' => 'Mehrwortsuche',
-    'tableofcontents.2.3' => 'Groß-/ Kleinschreibung',
-    'tableofcontents.2.4' => 'URLs ausschließen',
-    'tableofcontents.2.5' => '!bangs',
-    'tableofcontents.2.6' => 'Suche in der Suche',
-    'tableofcontents.2.7' => 'MetaGer hinzufügen',
+    'tableofcontents.2.1' => 'Suchfunktionen',
+    'tableofcontents.2.2' => '!bangs',
+    'tableofcontents.2.3' => 'Suche in der Suche',
+    'tableofcontents.2.4' => 'MetaGer hinzufügen',
 
 
 

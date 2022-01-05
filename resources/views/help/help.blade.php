@@ -22,23 +22,17 @@
 
 <h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
 <div class="help-topic-row">
-	<a id=help-topic-stopwords href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
+	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
 	</a>
-	<a id=help-topic-severalwords href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#severalwords") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.2') !!}</p>
-	</a>
-	<a id=help-topic-url href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#urls") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.4') !!}</p>
-	</a>
 	<a id=help-topic-bangs href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#bangs") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.5') !!}<br></p>
+		<p>{!! trans('help/help.tableofcontents.2.2') !!}<br></p>
 	</a>
 	<a id=help-topic-searchinsearch href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#searchinsearch") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.6') !!}<br></p>
+		<p>{!! trans('help/help.tableofcontents.2.3') !!}<br></p>
 	</a>
 	<a id=help-topic-addmetager href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#selist") }}" class="help-topic">
-		<p>{!! trans('help/help.tableofcontents.2.7') !!}<br></p>
+		<p>{!! trans('help/help.tableofcontents.2.4') !!}<br></p>
 	</a>
 </div>
 

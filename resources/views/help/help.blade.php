@@ -53,17 +53,17 @@
 <h2>{!! trans('help/help.tableofcontents.4') !!}</h2>
 
 	<div class="help-topic-row">
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste") }}" class="help-topic">
+		<a id=help-topic-app href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.1') !!}<br></p>
 		</a>
 		</a>
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#asso") }}" class="help-topic">
+		<a id=help-topic-asso href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#asso") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.3') !!}<br></p>
 		</a>
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#widget") }}" class="help-topic">
+		<a id=help-topic-widget href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#widget") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.4') !!}<br></p>
 		</a>		
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#map") }}" class="help-topic">
+		<a id=help-topic-maps href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#map") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.5') !!}<br></p>
 		</a>
 		

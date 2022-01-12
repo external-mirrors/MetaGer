@@ -3,9 +3,6 @@ return [
     "title"                 => "MetaGer - Help",
 
     "datenschutz.title" => "Privacy",
-    "datenschutz.faktencheck.heading" => "Fact-Check versus fake news:",
-    "datenschutz.faktencheck.body.1" => "<a href=\"http://www.password-online.de/?wysija-page=1&controller=email&action=view&email_id=280\" target=\"_blanK\" rel=\"noopener\">Ausführliche Anleitung und Beschreibung</a> von <a href=\"http://www.ude.de/\" target=\"_blanK\" rel=\"noopener\">Albrecht Ude</a>",
-    "datenschutz.faktencheck.body.2" => "<a href=\"en/hilfe/faktencheck\">Checklist</a>",
     "datenschutz.1" => "Tracking-Cookies, Session-IDs, IP addresses",
     "datenschutz.2" => "We don&apos;t store or work with any personal information (For the purpose of securing our servers against Hacking- and Bot-Attacks, we need to store these information for a short period of time. It will be automatically deleted afterwards). We provide further privacy security services. For more details see below:",
     "datenschutz.3" => "Click / touch the burger menu to use the tools.",

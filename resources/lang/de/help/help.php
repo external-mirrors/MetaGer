@@ -28,7 +28,6 @@ return [
 
 
     'tableofcontents.3' => 'Funktionen zur Anonymität und Datensicherheit',
-    'tableofcontents.3.1' => 'Fakten-Prüfung contra Fake-News',
     'tableofcontents.3.2' => 'Cookies & Co.',
     'tableofcontents.3.3' => 'Tor-Hidden-Service',
     'tableofcontents.3.4' => 'MetaGer-Proxy',

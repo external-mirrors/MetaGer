@@ -18,13 +18,11 @@ return [
 
     'tableofcontents.4' => 'Services',
     'tableofcontents.4.1' => 'Android-App',
-    'tableofcontents.4.2' => 'Browser-Plugin',
     'tableofcontents.4.3' => 'MetaGer-Web-Associator',
     'tableofcontents.4.4' => 'MetaGer widget',
-    'tableofcontents.4.5' => 'MetaGer maps',
+    'tableofcontents.4.5' => 'MetaGer Maps',
 
     'tableofcontents.3' => 'Privacy',
-    'tableofcontents.3.1' => 'Fact-Check versus fake news',
     'tableofcontents.3.2' => 'Tracking-Cookies, Session-IDs, IP adresses',
     'tableofcontents.3.3' => 'Tor Hidden Service',
     'tableofcontents.3.4' => 'MetaGer proxy server',

@@ -4,9 +4,6 @@ return [
     "title"                 => 'MetaGer - Hilfe',
 
     "datenschutz.title" => "Anonymität und Datensicherheit",
-    "datenschutz.faktencheck.heading" => "Fakten-Prüfung contra Fake-News:",
-    "datenschutz.faktencheck.body.1" => '<a href="http://www.password-online.de/?wysija-page=1&controller=email&action=view&email_id=280" target="_blanK" rel="noopener">Ausführliche Anleitung und Beschreibung</a> von <a href="http://www.ude.de/" target="_blanK" rel="noopener">Albrecht Ude</a>',
-    "datenschutz.faktencheck.body.2" => '<a href="/hilfe/faktencheck">Fakten-Checkliste</a>',
 
     "datenschutz.1" => 'Tracking-Cookies, Session-IDs und IP-Adressen',
     "datenschutz.2" => 'Nichts von alldem wird hier bei MetaGer verwendet, gespeichert, aufgehoben oder sonst irgendwie verarbeitet (Ausnahme: Kurzfristige Speicherung gegen Hacking- und Bot-Attacken). Weil wir diese Thematik für extrem wichtig halten, haben wir auch Möglichkeiten geschaffen, die Ihnen helfen können, hier ein Höchstmaß an Sicherheit zu erreichen: den MetaGer-TOR-Hidden-Service und unseren anonymisierenden Proxyserver.',

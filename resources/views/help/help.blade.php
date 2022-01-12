@@ -56,8 +56,6 @@
 		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.1') !!}<br></p>
 		</a>
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#plugin") }}" class="help-topic">
-			<p>{!! trans('help/help.tableofcontents.4.2') !!}<br></p>
 		</a>
 		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste#asso") }}" class="help-topic">
 			<p>{!! trans('help/help.tableofcontents.4.3') !!}<br></p>

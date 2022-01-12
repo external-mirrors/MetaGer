@@ -22,7 +22,6 @@ return [
 
     'tableofcontents.4' => 'Weitere Dienste um die Suche herum',
     'tableofcontents.4.1' => 'Android-App',
-    'tableofcontents.4.2' => 'Browser-Plugin',
     'tableofcontents.4.3' => 'Suchwortassoziator',
     'tableofcontents.4.4' => 'MetaGer Widget',
     'tableofcontents.4.5' => 'MetaGer Maps',
@@ -30,9 +29,9 @@ return [
 
     'tableofcontents.3' => 'Funktionen zur Anonymität und Datensicherheit',
     'tableofcontents.3.1' => 'Fakten-Prüfung contra Fake-News',
-    'tableofcontents.3.2' => 'Tracking-Cookies, Session-IDs und IP-Adressen',
+    'tableofcontents.3.2' => 'Cookies & Co.',
     'tableofcontents.3.3' => 'Tor-Hidden-Service',
-    'tableofcontents.3.4' => 'Anonymisierender MetaGer Proxyserver',
+    'tableofcontents.3.4' => 'MetaGer-Proxy',
     'tableofcontents.3.5' => 'Fragwürdige Inhalte / Jugendschutz',
 
 

@@ -22,7 +22,7 @@
 
 <h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
 <div class="help-topic-row">
-	<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
+	<a id=help-topic-searchfunctions href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
 	</a>
 	<a id=help-topic-bangs href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen#bangs") }}" class="help-topic">

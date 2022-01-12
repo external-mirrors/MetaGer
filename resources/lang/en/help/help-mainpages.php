@@ -12,6 +12,8 @@ return [
 "searchfield.memberkey" => 'The key symbol: Here members of SUMA-EV or donors can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "https://metager.org/beitritt">Membership form</a> or <a href = "https://metager.org/spende/">donate</a> to SUMA-EV.',
 "searchfield.slot"      => 'The search field: Enter your words here. Upper case will not be distinguished from lower case.',
 "searchfield.search"    => 'The magnifier: Start your search.',
+"searchfield.morefunctions" => 'More information on other functions are available under "<a href = "/hilfe/funktionen">search functions</a>"',
+
 "resultpage.title"      => 'The result page',
 "resultpage.foci"       => 'There are three (six for the german branch) different search focuses below the search field (Web, Pictures and Shopping). We assigned specific search engines to these focuses.',
 "resultpage.choice"     => 'Below these you have two links:',

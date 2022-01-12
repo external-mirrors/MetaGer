@@ -16,6 +16,7 @@
 				<li>{!! trans('help/help-mainpages.searchfield.memberkey') !!}</li>
 				<li>{!! trans('help/help-mainpages.searchfield.slot') !!}</li>
 				<li>{!! trans('help/help-mainpages.searchfield.search') !!}</li>
+				<li>{!! trans('help/help-mainpages.searchfield.morefunctions') !!}</li>
 			</ul>
 		</div>
         <h3 id="ergebnis">{!! trans('help/help-mainpages.resultpage.title') !!}</h3>

@@ -59,11 +59,12 @@ class Scopia extends Searchengine
 
     private function containsPornContent($text) {
         // Returns true if pornographic content is detected
-        // We noticed scopia often serving pornographic results for non-pornographic queries. After much deliberation we decided to filter pornographic from scopia. Those will have to be supplied by other search engines.
+        // We noticed scopia often serving pornographic results for non-pornographic queries. After much deliberation we decided to filter pornographic results from scopia. Those will have to be supplied by other search engines.
 
         $words = [
             "fisting" => 60,
             "live cam" => 60,
+            "telefonsex" => 60,
             "fick" => 60,
             "anal" => 60,
             "dildo" => 60,
@@ -84,6 +85,7 @@ class Scopia extends Searchengine
             "sex" => 40,
             "nackt" => 40,
             "amateur" => 30,
+            "webcam" => 30,
             "schlampe" => 30,
             "eroti" => 30,
             "dick" => 30,

@@ -36,22 +36,82 @@ class Scopia extends Searchengine
                 $anzeigeLink = $link;
                 $descr = $result->description->__toString();
                 $this->counter++;
-                $this->results[] = new \App\Models\Result(
-                    $this->engine,
-                    $title,
-                    $link,
-                    $anzeigeLink,
-                    $descr,
-                    $this->engine->{"display-name"},
-                    $this->engine->homepage,
-                    $this->counter
-                );
+                if(! $this->containsPornContent($title.$descr)) { //see note at filtering method
+                    $this->results[] = new \App\Models\Result(
+                        $this->engine,
+                        $title,
+                        $link,
+                        $anzeigeLink,
+                        $descr,
+                        $this->engine->{"display-name"},
+                        $this->engine->homepage,
+                        $this->counter
+                    );
+                }
+                
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
+    }
+
+    private function containsPornContent($text) {
+        // Returns true if pornographic content is detected
+        // We noticed scopia often serving pornographic results for non-pornographic queries. After much deliberation we decided to filter pornographic from scopia. Those will have to be supplied by other search engines.
+
+        $words = [
+            "fisting" => 60,
+            "live cam" => 60,
+            "fick" => 60,
+            "anal" => 60,
+            "dildo" => 60,
+            "masturbat" => 60,
+            "gangbang" => 60,
+            "fotze" => 60,
+            "porn" => 50,
+            "anus" => 50,
+            "penetration" => 50,
+            "cuckold" => 50,
+            "orgasmus" => 50,
+            "milf" => 50,
+            "dilf" => 50,
+            "voyeur" => 40,
+            "fuck" => 40,
+            "nude" => 40,
+            "muschi" => 40,
+            "sex" => 40,
+            "nackt" => 40,
+            "amateur" => 30,
+            "schlampe" => 30,
+            "eroti" => 30,
+            "dick" => 30,
+            "teen" => 30,
+            "hardcore" => 30,
+            "fetisch" => 30,
+            "pussy" => 30,
+            "pussies" => 30,
+            "cheat" => 20,
+            "gratis" => 20,
+            "geil" => 20,
+            "video" => 10,
+            "girl" => 10,
+            "boy" => 10,
+            "weib" => 10,
+            "titt" => 10,
+            "bikini" => 10,
+            "hot " => 10,
+            "pics" => 10,
+            "free" => 10,
+        ];
+        $acc = 0;
+        foreach($words as $word => $score) {
+            if (stristr($text,$word)) {
+                $acc += $score;
+            }
+        }
+        return $acc >= 100;
     }
 
     public function getNext(\App\MetaGer $metager, $result)

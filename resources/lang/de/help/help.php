@@ -31,7 +31,7 @@ return [
     'tableofcontents.3.2' => 'Cookies & Co.',
     'tableofcontents.3.3' => 'Tor-Hidden-Service',
     'tableofcontents.3.4' => 'MetaGer-Proxy',
-    'tableofcontents.3.5' => 'Fragwürdige Inhalte / Jugendschutz',
+    'tableofcontents.3.5' => 'Jugendschutz',
 
 
 

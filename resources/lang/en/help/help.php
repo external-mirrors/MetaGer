@@ -23,10 +23,10 @@ return [
     'tableofcontents.4.5' => 'MetaGer Maps',
 
     'tableofcontents.3' => 'Privacy',
-    'tableofcontents.3.2' => 'Tracking-Cookies, Session-IDs, IP adresses',
+    'tableofcontents.3.2' => 'Tracking & Cookies',
     'tableofcontents.3.3' => 'Tor Hidden Service',
     'tableofcontents.3.4' => 'MetaGer proxy server',
-    'tableofcontents.3.5' => 'inappropriate Content/ youth protection',
+    'tableofcontents.3.5' => 'Youth protection',
 
     'faq.title' => 'FAQ',
 

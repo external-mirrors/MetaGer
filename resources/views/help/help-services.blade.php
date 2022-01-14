@@ -15,12 +15,7 @@
 			<p>{!! trans('help/help-services.app.1') !!}</p>
 		</div>
 	</section>
-	<section id="plugin">
-		<h3>{!! trans('help/help-services.plugin.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/help-services.plugin.1') !!}</p>
-		</div>
-	</section>
+
 	<section id="asso">
 		<h3>{!! trans('help/help-services.suchwortassoziator.title') !!}</h3>
 		<div>

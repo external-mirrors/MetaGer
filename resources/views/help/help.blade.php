@@ -40,7 +40,7 @@
 	<div class="help-topic-row">
 		<a id=help-topic-tracking href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#tracking") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.2') !!}</p>
 		</a>
-		<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#torhidden") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.3') !!}<br></p>
+		<a id=help-topic-tor href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#torhidden") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.3') !!}<br></p>
 		</a>
 		<a id= help-topic-proxy href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#proxy") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.4') !!}<br></p>
 		</a>

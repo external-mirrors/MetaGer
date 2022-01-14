@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="181.06396mm"
-   height="48.772305mm"
-   viewBox="0 0 181.06396 48.772306"
-   version="1.1"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
    id="svg1652"
-   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
-   sodipodi:docname="result-icon-help (Kopie).svg">
+   version="1.1"
+   viewBox="0 0 185.20834 47.625017"
+   height="47.625015mm"
+   width="185.20834mm">
   <metadata
      id="metadata29">
     <rdf:RDF>
@@ -24,134 +19,96 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
-  <sodipodi:namedview
-     id="namedview1654"
-     pagecolor="#ffffff"
-     bordercolor="#999999"
-     borderopacity="1"
-     inkscape:pageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="0"
-     inkscape:document-units="mm"
-     showgrid="true"
-     showguides="false"
-     inkscape:snap-global="true"
-     inkscape:snap-bbox="true"
-     inkscape:snap-bbox-midpoints="false"
-     inkscape:bbox-paths="false"
-     inkscape:bbox-nodes="false"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0"
-     inkscape:zoom="1.1009789"
-     inkscape:cx="71.031796"
-     inkscape:cy="-35.887072"
-     inkscape:window-width="1920"
-     inkscape:window-height="1043"
-     inkscape:window-x="0"
-     inkscape:window-y="0"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="layer1">
-    <inkscape:grid
-       type="xygrid"
-       id="grid1684"
-       originx="0.57364498"
-       originy="-158.17634" />
-  </sodipodi:namedview>
   <defs
      id="defs1649">
+    <linearGradient
+       id="linearGradient835">
+      <stop
+         id="stop831"
+         offset="0"
+         style="stop-color:#000000;stop-opacity:1;" />
+      <stop
+         id="stop833"
+         offset="1"
+         style="stop-color:#000000;stop-opacity:0;" />
+    </linearGradient>
     <rect
-       x="0"
-       y="500"
-       width="680"
+       id="rect53428"
        height="60"
-       id="rect53428" />
-    <rect
-       x="0"
+       width="680"
        y="500"
+       x="0" />
+    <rect
+       id="rect38342"
+       height="60"
        width="400"
-       height="60"
-       id="rect38342" />
-    <rect
-       x="0"
        y="500"
-       width="680"
+       x="0" />
+    <rect
+       id="rect53428-3"
        height="60"
-       id="rect53428-3" />
+       width="680"
+       y="500"
+       x="0" />
+    <linearGradient
+       gradientUnits="userSpaceOnUse"
+       y2="128.68524"
+       x2="42.395428"
+       y1="128.68524"
+       x1="0.97160118"
+       id="linearGradient837"
+       xlink:href="#linearGradient835" />
   </defs>
   <g
-     inkscape:label="Ebene 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0.57364502,-99.968011)">
+     transform="translate(5.2916665,-100.54166)"
+     id="layer1">
     <rect
-       style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:4.365;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0"
-       id="rect22"
-       width="185.20833"
-       height="52.916664"
-       x="-2.6458333"
-       y="97.895821" />
-    <rect
-       style="fill:none;stroke:#000000;stroke-width:1.14728999"
-       id="rect1686"
-       width="179.91667"
+       ry="7.937499"
+       y="100.54164"
+       x="-5.291667"
        height="47.625015"
-       x="-2e-08"
-       y="100.54166" />
+       width="185.20834"
+       id="rect1686"
+       style="fill:#969696;fill-opacity:1;stroke:none;stroke-width:1.16403961" />
     <text
-       xml:space="preserve"
+       id="text13070"
+       y="117.28403"
+       x="0.76927918"
        style="font-style:normal;font-weight:normal;font-size:7.76110983px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458299"
-       x="1.7305449"
-       y="112.4777"
-       id="text13070"><tspan
-         sodipodi:role="line"
-         id="tspan13068"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:7.76110983px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';stroke-width:0.26458299"
-         x="1.7305449"
-         y="112.4777">MetaGer - Mehr als eine Suchmaschine</tspan></text>
+       xml:space="preserve"><tspan
+         y="117.28403"
+         x="0.76927918"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.87777805px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';stroke-width:0.26458299"
+         id="tspan13068">MetaGer - Mehr als eine Suchmaschine</tspan></text>
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22090399"
-       x="3.0528426"
-       y="123.42444"
-       id="text17430"><tspan
-         sodipodi:role="line"
-         id="tspan17428"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#0066cc;fill-opacity:1;stroke:none;stroke-width:0.22090399;stroke-opacity:1"
-         x="3.0528426"
-         y="123.42444">metager.de</tspan></text>
+       id="text17430"
+       y="130.87425"
+       x="0.40936163"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.22090399;stroke-opacity:1;"
+       xml:space="preserve"><tspan
+         y="130.87425"
+         x="0.40936163"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.46666622px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';fill:#0066cc;fill-opacity:1;stroke:none;stroke-width:0.22090399;stroke-opacity:1;"
+         id="tspan17428">metager.de</tspan></text>
     <text
-       xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:11.22920036px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.280729"
-       x="-97.070999"
-       y="83.065468"
+       transform="scale(0.53998771,1.851894)"
        id="text20096"
-       transform="scale(0.53998771,1.851894)"><tspan
-         sodipodi:role="line"
-         id="tspan20094"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';stroke-width:0.280729"
+       y="83.065468"
+       x="-97.070999"
+       style="font-style:normal;font-weight:normal;font-size:11.22920036px;line-height:1.25;font-family:sans-serif;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.280729"
+       xml:space="preserve"><tspan
+         y="93.000679"
          x="-97.070999"
-         y="93.000679" /></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans';stroke-width:0.280729"
+         id="tspan20094" /></text>
     <text
-       xml:space="preserve"
-       transform="scale(0.26458333)"
+       style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect38342);fill:#000000;fill-opacity:1;stroke:none"
        id="text38340"
-       style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect38342);fill:#000000;fill-opacity:1;stroke:none" />
-    <text
-       xml:space="preserve"
-       transform="matrix(0.261529,0,0,0.26458333,2.2946874,0.33817128)"
-       id="text53426"
-       style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect53428);fill:#000000;fill-opacity:1;stroke:none"><tspan
-         x="0"
-         y="514.15625"
-         id="tspan82115">MetaGer-Quellcode: Unser Algorithmus: 100% Ökostrom. Wir achten auf die </tspan><tspan
-         x="0"
-         y="534.15625"
-         id="tspan82117">Nachhaltigkeit und den Ressourcengebrauch unserer Dienste. Wir verwenden nur...</tspan></text>
+       transform="scale(0.26458333)"
+       xml:space="preserve" />
   </g>
 </svg>

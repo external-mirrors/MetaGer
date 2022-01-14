@@ -66,22 +66,4 @@
 		</a>
 		
 	</div>
-
-
-<h2>{!! trans('help/help.faq.title') !!}</h2>
-
-	<section>
-		<h3>{!! trans('help/help.searchengine.title') !!}</h3>
-		<p>{!! trans('help/help.searchengine.explanation') !!}</p>
-	</section>
-	<section>
-		<h3>{!! trans('help/help.proposal.title') !!}</h3>
-		<p>{!! trans('help/help.proposal.explanation') !!}</p>
-	</section>
-	<section>
-		<h3>{!! trans('help/help.assignment.title') !!}</h3>
-		<p>{!! trans('help/help.assignment.explanation.1') !!}</p>
-		<p>{!! trans('help/help.assignment.explanation.2') !!}</p>
-	</section>
-
 @endsection

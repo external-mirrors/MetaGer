@@ -27,16 +27,4 @@ return [
     'tableofcontents.3.3' => 'Tor Hidden Service',
     'tableofcontents.3.4' => 'MetaGer proxy server',
     'tableofcontents.3.5' => 'Youth protection',
-
-    'faq.title' => 'FAQ',
-
-    'searchengine.title' => 'How does MetaGer query other search engines while preserving user anonymity?',
-    'searchengine.explanation' => 'Since MetaGer is a meta-search engine, every search request you send to us will be stripped of information which could lead to your identification before being sent to e.g. Yahoo. Yahoo will send their response to us which we will then forward to you. This is how we handle every search request sent to us, no matter which one of the offered search engines you use. By doing this we commit ourselves to guarantee your privacy and do not save any personal data. It is possible to verify this, since the source code of MetaGer has been released under a free license <a href=\"https://gitlab.metager.de/open-source/MetaGer\">(https://gitlab.metager.de/open-source/MetaGer)</a>. If you have your own website you could try and find out how our <a href=":widget-link" target="_blank">MetaGer-Widget</a> works. You are also free to create links to our search engine.',
-
-    'proposal.title' => 'How can I delete the search suggestions?',
-    'proposal.explanation' => 'This is provided by your webbrowser. Try to customize the history settings.',
-
-    'assignment.title' => 'How can one match data to individuals ?',
-    'assignment.explanation.1' => 'This could be done by cookies. For example a cookie can be set as a part of making an account. You give your data, a cookie is made out of it and is stored on your PC. Next time using the same service it will know you very well. This kind of data is managed by the webbrowser. It is easy to find and erase all cookies from unknown or not confidable origins. You should do this routinely.',
-    'assignment.explanation.2' => 'The webbrowser sends a heap of data to a website, like the user agent, exact version numbers, the work invironment, the operating system and so on. Maybe there is a matching of data to individuals possible, too.',
-];
+ ];

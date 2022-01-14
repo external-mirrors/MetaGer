@@ -10,7 +10,7 @@
 	@php ($startX = 20)
 	@php ($startY = $height-20)
 	@php ($maxCount = intval(str_replace(".", "", $rekordCount)))
-	@php ($minCount = $minCount)
+	@php ($minCount = 0)
 	@php ($scaleFromTo = $maxCount - $minCount)
 	@php ($yPerSearch = ($startY - $padding - $paddingArrow) / floatval($scaleFromTo))
 	@php ($entryCount = min(sizeof($oldLogs), 30))
@@ -50,7 +50,6 @@
 			@endfor
 		</svg>
 	</div>
-	<p>{{ exec("uptime") }}</p>
 	@if( isset($rekordDate) && isset($rekordTagSameTime) && isset($rekordCount) )
 		<p>Rekord am {{ $rekordDate }} zur gleichen Zeit <span class="text-info">{{ $rekordTagSameTime }}</span> - insgesamt <span class="text-danger">{{ $rekordCount }}</span></p>
 	@endif
@@ -97,7 +96,7 @@
 					style="color: green"
 					@endif
 					>
-					@if($averageIncrease < 0)-@else+@endif{{number_format(floatval($averageIncrease), 0, ",", ".")}}
+					@if($averageIncrease >= 0)+@endif{{number_format(floatval($averageIncrease), 0, ",", ".")}}
 					</span>
 					@endif</td>
 				<td>???</td>

@@ -2,6 +2,7 @@
 
 return [
     "title"                 => 'MetaGer - Hilfe',
+    "backarrow"             => ' Zurück',
     "title.2"               => 'Die Benutzung der Hauptseiten',
     "startpage.title"       => 'Die Startseite',
     "startpage.info"        => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld einen Link, mit dem Sie MetaGer zu Ihrem Browser hinzufügen können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',

@@ -1,6 +1,7 @@
 <?php
 return [
     "title"                 => "MetaGer - Help",
+    "backarrow"             => ' back',
 
 "title.2"               => 'Use of the search engine',
 

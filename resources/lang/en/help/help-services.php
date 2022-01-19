@@ -1,6 +1,7 @@
 <?php
 return [
     "title"                 => "MetaGer - Help",
+    "backarrow"             => ' back',
 
     "dienste" => "Services",
     "dienste.kostenlos" => "All our services are cost free. You do not pay with your data.",

@@ -1,6 +1,8 @@
 <?php
 return [
     "title"                 => "MetaGer - Help",
+    "backarrow"             => ' back',
+
     "suchfunktion.title" => "Search functions",
     "stopworte.title" => "Exclude single words",
     "stopworte.1" => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",

@@ -2,7 +2,7 @@
 
 return [
     "title"                 => 'MetaGer - Hilfe',
-
+    "backarrow"             => ' Zurück',
 "dienste" => "Weitere Dienste um die Suche herum",
     "dienste.kostenlos" => "Selbstverständlich sind all unsere Dienste kostenlos",
 

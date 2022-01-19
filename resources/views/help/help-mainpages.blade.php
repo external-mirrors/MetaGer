@@ -6,7 +6,9 @@
 	<h1 class="page-title">{!! trans('help/help-mainpages.title') !!}</h1>
 
 	<section id="startpage">
+		<a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-mainpages.backarrow') !!}</a>
 		<h2>{!! trans('help/help-mainpages.title.2') !!}</h2>
+
 		<h3 id="startseite">{!! trans('help/help-mainpages.startpage.title') !!}</h3>
 		<p>{!! trans('help/help-mainpages.startpage.info') !!}</p>
 		<h3 id="suchfeld">{!! trans('help/help-mainpages.searchfield.title') !!}</h3>

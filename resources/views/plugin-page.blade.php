@@ -31,7 +31,9 @@
 	</div>
 	@if ($agent->isDesktop())
 	@if ($browser === 'Firefox' || $browser === 'Mozilla')
-	@if (version_compare($agent->version($browser), '61.', '>='))
+	@if (version_compare($agent->version($browser), '89.', '>='))
+	@include ('plugin/desktop/firefox/v89')
+	@elseif (version_compare($agent->version($browser), '61.', '>='))
 	@include ('plugin/desktop/firefox/v61')
 	@elseif (version_compare($agent->version($browser), '57.', '>='))
 	@include ('plugin/desktop/firefox/v57')

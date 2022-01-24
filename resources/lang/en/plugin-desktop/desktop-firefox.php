@@ -28,4 +28,10 @@
         'default-page-v61.2' => 'Choose "Home" on the left side.',
         'default-page-v61.3' => 'Under "New Windows and Tabs" click on the dropdown menu next to "Homepage and new windows" and choose "Custom URLs...".',
         'default-page-v61.4' => 'In the new text field enter ":link" .',
+
+        //Instructions for Firefox version >= 89
+        'default-search-v89.1' => 'Alternatively, right-click in the address bar at the top of your browser and then click Add "MetaGer: privacy protected search & find". MetaGer is now installed as an available search engine.',
+        'default-search-v89.2' => 'Click on the top right of the browser on <img class= "mg-icon" src="/img/menu.svg"> and open the "Settings".',
+        'default-search-v89.3' => 'Under "Search" click on the drop-down menu at "Default Search Engine" and select "MetaGer (en)".',
+
     ];

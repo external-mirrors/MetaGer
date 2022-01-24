@@ -28,4 +28,11 @@
         'default-page-v61.2' => 'Wählen Sie auf der linken Seite die Kategorie "Startseite". ',
         'default-page-v61.3' => 'Unter "Neue Fenster und Tabs" klicken Sie auf das Dropdownmenü neben "Startseite und neue Fenster" und wählen "Benutzerdefinierte Adresse".',
         'default-page-v61.4' => 'Tragen Sie in das erscheinende Textfeld ":link" ein.',
+
+        //Instructions for Firefox version >= 89
+        'default-search-v89.1' => 'Alternativ klicken Sie in Ihrem Browser mit der rechten Maustaste oben in die Adressleiste und dann auf "MetaGer: sicher suchen & finden" hinzufügen. MetaGer ist nun als verfügbare Suchmaschine installiert.',
+        'default-search-v89.2' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
+        'default-search-v89.3' => 'Unter "Suche" klicken Sie auf das Dropdownmenü bei "Standardsuchmaschine" und wählen "MetaGer (de)".',
+
+
     ];

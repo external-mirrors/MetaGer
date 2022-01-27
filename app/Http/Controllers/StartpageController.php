@@ -22,6 +22,18 @@ class StartpageController extends Controller
 
     public function loadStartPage(Request $request)
     {
+        /**
+         * Some Browsers generate example urls for adding search engines that look like
+         * https://google.de?q=%s
+         * 
+         * To make this url work for metager we redirect if the parameter q is filled
+         * https://metager.de?q=%s
+         */
+        if ($request->filled("q")) {
+            $eingabe = $request->input("q");
+            return redirect(route("resultpage", ["eingabe" => $eingabe]));
+        }
+
         $focusPages = [];
         $theme = "default";
 

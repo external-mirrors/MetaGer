@@ -144,7 +144,11 @@ Route::get('hilfe', function () {
         ->with('title', trans('titles.help'))
         ->with('navbarFocus', 'hilfe');
 });
-
+Route::get('hilfe/easy-language', function () {
+    return view('help/easy-language/help')
+        ->with('title', trans('titles.help'))
+        ->with('navbarFocus', 'hilfe');
+});
 Route::get('hilfe/faktencheck', function () {
     return view('help/faktencheck')
         ->with('title', trans('titles.faktencheck'))
@@ -156,9 +160,20 @@ Route::get('hilfe/hauptseiten', function () {
         ->with('title', trans('titles.help-mainpages'))
         ->with('navbarFocus', 'hilfe');
 });
+Route::get('hilfe/easy-language/hauptseiten', function () {
+    return view('help/easy-language/help-mainpages')
+        ->with('title', trans('titles.help-mainpages'))
+        ->with('navbarFocus', 'hilfe');
+});
 
 Route::get('hilfe/funktionen', function () {
     return view('help/help-functions')
+        ->with('title', trans('titles.help-functions'))
+        ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/easy-language/funktionen', function () {
+    return view('help/easy-language/help-functions')
         ->with('title', trans('titles.help-functions'))
         ->with('navbarFocus', 'hilfe');
 });
@@ -169,12 +184,23 @@ Route::get('hilfe/dienste', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
+Route::get('hilfe/easy-language/dienste', function () {
+    return view('help/easy-language/help-services')
+        ->with('title', trans('titles.help-services'))
+        ->with('navbarFocus', 'hilfe');
+});
+
 Route::get('hilfe/datensicherheit', function () {
     return view('help/help-privacy-protection')
         ->with('title', trans('titles.help-privacy-protection'))
         ->with('navbarFocus', 'hilfe');
 });
 
+Route::get('hilfe/easy-language/datensicherheit', function () {
+    return view('help/easy-language/help-privacy-protection')
+        ->with('title', trans('titles.help-privacy-protection'))
+        ->with('navbarFocus', 'hilfe');
+});
 Route::get('faq', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/hilfe'));
 });

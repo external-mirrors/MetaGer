@@ -11,6 +11,10 @@
 
 		<h3 id="startseite">{!! trans('help/easy-language/help-mainpages.startpage.title') !!}</h3>
 		<p>{!! trans('help/easy-language/help-mainpages.startpage.info') !!}</p>
+		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.2') !!}</p>
+		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.3') !!}</p>
+
+
 		<h3 id="suchfeld">{!! trans('help/easy-language/help-mainpages.searchfield.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.info') !!}</p>

@@ -1,17 +1,19 @@
 <?php
 
 return [
-    "title"                 => 'MetaGer - Hilfe',
+    "title"                 => 'MetaGer - Hilfe in leichter Sprache',
     "backarrow"             => ' Zurück',
     "title.2"               => 'Die Benutzung der Hauptseiten',
-    "startpage.title"       => 'Die Startseite',
-    "startpage.info"        => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld einen Link, mit dem Sie MetaGer zu Ihrem Browser hinzufügen können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',
-    "searchfield.title"     => 'Das Suchfeld',
-    "searchfield.info"      => 'Das Suchfeld besteht aus mehreren Teilen:',
-    "searchfield.memberkey" => 'dem Schlüsselsymbol: Hier können Mitglieder des SUMA-EV oder Spender Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Sie wollen das auch? Werden Sie Mitglied über unser <a href = "/beitritt/">Beitrittsformular</a> oder <a href = "/spende/">spenden</a> Sie an den SUMA-EV.',
-    "searchfield.slot"      => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',
-    "searchfield.search"    => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
-    "searchfield.morefunctions" => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>"',
+    "startpage.title"       => 'Die Start-Seite',
+    "startpage.info"        => 'Die Start-Seite hat viele Funktionen. <br>Oben rechts auf der Seite ist ein Knopf. <br> So sieht der Knopf aus. <br> Man kann auf diesen Knopf drücken. <br> Dann sieht man ein Menü. <br> In diesem Menü kann man viele verschiedene Sachen auswählen. ',
+    "startpage.info.2"      => 'In der Mitte der Start-Seite ist das Suchfeld. <br> Unter dem Suchfeld steht "MetaGer installieren. <br> Man kann darauf klicken. <br> Dann kann man MetaGer als Standard-Such-Maschine einstellen.',
+    "startpage.info.3"      => 'Unten auf der Start-Seite sind bunte Felder. <br> Man kann auf diese Felder klicken. <br> Dann kann man mehr über MetaGer erfahren.',
+    "searchfield.title"     => 'Das Such-Feld',
+    "searchfield.info"      => 'Das Such-Feld hat 3 Teile: ',
+    "searchfield.memberkey" => 'Das linke Feld: <br> Das linke Feld zeigt einen Schlüssel.<br> So sieht das linke Feld aus. <br> Wenn du Mitglied in sunerem Verin bit, kannst du dieses Feld nutzen. <br> Als Mitglied bei uns hast du Vorteile. <br> Du kannst bei uns suchen, ohne Werbung zu sehen. <br> Willst du das auch? <br> Dann kannst du bei uns Mitglied werden oder spenden. <br> Wenn du Mitglied bist oder gespendet hast, bekommst du ein Passwort. <br> Das Passwort nennt man Schüssel. <br> Dieses kann man in dem linken Feld eintragen. <br> Dann kann man ohne Werbung suchen.',
+    "searchfield.slot"      => 'Das mittlere Feld: <br> In das mittlere Feld schreibt man das was man suchen will. <br> Das mittlere Feld sieht so aus.<br> Es ist egal, ob du deine Wörter GROß oder klein schreibst.',
+    "searchfield.search"    => 'Das rechte Feld: <br> Das rechte Feld zeigt eine Lupe. <br> Wenn du auf das Feld drückst, startest du die Suche. <br> Du kannst auch auf deiner Tastatur den Knopf ENTER drücken.',
+    "searchfield.morefunctions" => 'Du möchtest noch mehr über die Suche wissen? <br> Dann schau bei "<a href = "/hilfe/funktionen">Suchfunktionen</a>" nach.',
 
     "resultpage.title"      => 'Die Ergebnisseite',
     "resultpage.foci"       => 'Unter dem Suchfeld sind 6 verschiedene Suchfokusse (drei im englischsprachigen Bereich) (Web, Bilder…...) abgebildet, bei denen intern auch spezifische Suchmaschinen zugeordnet sind.',

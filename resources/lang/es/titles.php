@@ -6,7 +6,7 @@
     "kontakt"	=>	"Contacto - MetaGer",
     "spende"	=>	"Donaciones - MetaGer",
     "datenschutz"	=>	"Protección de datos y privacidad - MetaGer",
-    "hilfe"	=>	"Ayuda - MetaGer",
+    "help"	=>	"Ayuda - MetaGer",
     "widget"	=>	"MetaGer Widget",
     "settings"	=>	"Preferencias",
     "websearch"	=>	"Widget para buscar la web - MetaGer",

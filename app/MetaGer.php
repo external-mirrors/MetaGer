@@ -465,7 +465,7 @@ class MetaGer
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
          */
-        if (sizeof($this->ads) === 0 && rand(1, 100) > 33) {
+        if (/*sizeof($this->ads) === 0 &&*/ rand(1, 100) >= 5) {
             return;
         }
 

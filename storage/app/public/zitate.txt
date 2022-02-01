@@ -88,7 +88,6 @@
 "Nichts macht den Menschen argwöhnischer, als wenig zu wissen." Francis Bacon 
 "Für eines Mannes Handeln ist das eigene Ich ein dürftiger Ausgangspunkt." Francis Bacon 
 "Unsere Träume können wir erst dann verwirklichen, wenn wir uns entschließen, einmal daraus zu erwachen." Josephine Baker 
-"Ein Mann ist nicht komplett, wenn er nicht sieben Frauen hat: Eine für's Herz, eine für den Verstand, eine zur Repräsentation, eine für die Wäsche, eine für Allotria, eine, der er überdrüssig ist und eine, der er hinterherrennt, ohne sie je zu bekommen." Honoré de Balzac
 "Es ist ebenso absurd zu behaupten, ein Mann könne nicht ständig dieselbe Frau lieben, wie zu behaupten, ein Geiger brauche mehrere Geigen, um ein Musikstück zu spielen." Honoré de Balzac 
 "Freundschaft ist ein Zustand, der besteht, wenn jeder Freund glaubt, dem anderen gegenüber eine leichte Überlegenheit zu haben." Honoré de Balzac 
 "Die Liebe ist der einzige Weg, auf dem selbst die Dummen zu einer gewissen Größe gelangen." Honoré de Balzac 
@@ -112,7 +111,6 @@
 "Das Leben ist ein Hospital, in dem jeder sein Bett wechseln möchte." Charles Baudelaire 
 "Bei genauem Hinsehen zeigt sich, dass Arbeit weniger geisttötend ist als Amusement." Charles Baudelaire 
 "Vollkommene Aufrichtigkeit ist der Weg zur Originalität." Charles Baudelaire 
-"Ein bisschen Naivität steht einer Frau gut, auch wenn sie bloß vorgetäuscht ist." Vicky Baum 
 "Es ist eine Krankheit der Menschen, dass sie ihr eigenes Feld vernachlässigen um in den Feldern der anderen nach Unkraut zu suchen." Vicky Baum 
 "Moralisten sind Menschen, die sich dort kratzen, wo es andere juckt." Samuel Beckett 
 "Nichts ist komischer als das Unglück natürlich anderer." Samuel Beckett  
@@ -135,7 +133,6 @@
 "Ein Langweiler ist ein Mensch, der redet, wenn du wünschst, dass er zuhört." Ambrose Bierce 
 "Gehirn: ein Organ, mit dem wir denken, dass wir denken." Ambrose Bierce 
 "Ein Zyniker ist ein Schuft, dessen mangelhafte Wahrnehmung Dinge sieht, wie sie sind, statt wie sie sein sollten." Ambrose Bierce 
-"Die Maus ist ein Tier, dessen Pfad mit in Ohnmacht fallenden Frauen übersät ist." Ambrose Bierce 
 "Zukunft: jene Zeit, in der unsere Geschäfte gut gehen, unsere Freunde treu sind und unser Glück gesichert ist." Ambrose Bierce 
 "Alle sind Irre; aber wer seinen Wahn zu analysieren versteht, wird Philosoph genannt." Ambrose Bierce 
 "Rüstung: die Kleidung eines Mannes, dessen Schneider ein Schmied ist." Ambrose Bierce 
@@ -192,7 +189,6 @@
 "Ein Mann von Geist wird nicht allein nie etwas Dummes sagen, er wird auch nie etwas Dummes hören." Ludwig Börne 
 "Man kann eine Idee durch eine andere verdrängen, nur die der Freiheit nicht." Ludwig Börne 
 "Minister fallen wie Butterbrote: gewöhnlich auf die gute Seite." Ludwig Börne 
-"Das Schmollen der Weiber ist nichts als ein Guerillakrieg, den sie gegen die konzentrierte Macht der Männer führen, ein Krieg, in dem sie immer siegen." Ludwig Börne 
 "Die einzige Art zu betrügen, die noch Erfolg hat, ist - offenherzig zu sein." Ludwig Börne 
 "Man ist nur Herr, sich den ersten Becher zu versagen, nicht den zweiten." Ludwig Börne 
 "Die Fassung der Edelsteine erhöht ihren Preis, nicht ihren Wert." Ludwig Börne 
@@ -410,7 +406,6 @@
 "Es gibt keine schöpferische Tätigkeit ohne Ungehorsam." Jean Cocteau 
 "Die Menschheit besteht aus einigen wenigen Vorläufern, sehr vielen Mitläufern und einer unübersehbaren Zahl von Nachläufern." Jean Cocteau 
 "Gesunder Menschenverstand in ungewöhnlichem Maße ist das, was die Welt Weisheit nennt." Samuel Taylor Coleridge 
-"Die glücklichste Ehe, die ich mir persönlich vorstellen kann, wäre die Verbindung zwischen einem tauben Mann und einer blinden Frau." Samuel Taylor Coleridge 
 "Nur die Weisen sind im Besitz von Ideen. Die meisten Menschen sind von Ideen besessen." Samuel Taylor Coleridge 
 "Kein Geist ist in Ordnung, dem der Sinn für Humor fehlt." Samuel Taylor Coleridge 
 "Was uns zu einem Mann hinzieht, bindet uns selten an ihn." Joan Collins 
@@ -747,7 +742,6 @@
 "Geist ist die Voraussetzung der Langeweile." Max Frisch 
 "Die beste und sicherste Tarnung ist immer noch die blanke und nackte Wahrheit. Die glaubt niemand!" Max Frisch 
 "Erfolg verändert den Menschen nicht. Er entlarvt ihn." Max Frisch 
-"Jeder Mann hat etwas Höheres als das Weib, wenn er wieder nüchtern ist." Max Frisch 
 "Krise ist ein produktiver Zustand. Man muss ihr nur den Beigeschmack der Katastrophe nehmen." Max Frisch 
 "Man ist niemals zu schwer für seine Größe, aber man ist oft zu klein für sein Gewicht." Gert Fröbe 
 "Es stimmt zwar, dass selbstsüchtige Menschen unfähig sind, andere zu lieben, aber sie sind auch nicht fähig, sich selbst zu lieben." Erich Fromm 
@@ -2047,7 +2041,6 @@
 "Das große unzerstörbare Wunder ist der Menschenglaube an Wunder." Jean Paul 
 "Kinder und Uhren dürfen nicht ständig aufgezogen werden, man muss sie auch gehen lassen." Jean Paul 
 "Die Zeit ist eine Larve der Ewigkeit." Jean Paul 
-"Die Liebe ist das Leben des Weibes, aber eine Episode im Leben des Mannes." Jean Paul 
 "Das Alter ist nicht trübe, weil darin unsere Freuden, sondern weil unsere Hoffnungen aufhören." Jean Paul 
 "Der Besitz macht uns nicht halb so glücklich, wie uns der Verlust unglücklich macht." Jean Paul 
 "Der Mensch wird wie der Stahl hart - durch öfteres Abkühlen nach Erhitzung." Jean Paul 
@@ -2345,7 +2338,6 @@
 "Wer in Unglück fällt, verliert sich leicht aus der Erinnerung der Menschen." Friedrich Schiller 
 "Schnell fertig ist die Jugend mit dem Wort." Friedrich Schiller 
 "Tugend ist zur Energie gewordene Vernunft." Friedrich Schlegel 
-"Mysterien sind weiblich; sie verhüllen sich gern, aber sie wollen doch gesehen und erraten sein." Friedrich Schlegel 
 "Nur im Auto kann ein Mensch der total organisierten Gesellschaft noch eigene Entschlüsse fassen und sein eigener Herr sein." Helmut Schmidt 
 "Wer Kritik übelnimmt, hat etwas zu verbergen." Helmut Schmidt 
 "Die Toleranz ist nicht grenzenlos. Sie findet ihre Grenze, vielleicht ihre einzige Grenze, in der etwaigen Intoleranz des anderen." Helmut Schmidt 
@@ -2528,7 +2520,6 @@
 "Wer Zahnweh hat hält jeden, dessen Zähne gesund sind, für glücklich. Der an Armut Leidende begeht denselben Irrtum den Reichen gegenüber." George Bernard Shaw 
 "Hohe Bildung kann man dadurch beweisen, dass man die kompliziertesten Dinge auf einfache Art zu erläutern versteht." George Bernard Shaw 
 "Wenn ein Mensch einen Tiger tötet, spricht man von Sport. Wenn ein Tiger einen Menschen tötet, ist das Grausamkeit." George Bernard Shaw 
-"Darin besteht ja die Teufelei weiblicher Reize, dass sie einen zwingen, sein eigenes Verderben herbeizusehnen." George Bernard Shaw 
 "Eines der traurigsten Dinge im Leben ist, dass ein Mensch viele gute Taten tun muss, um zu beweisen, dass er tüchtig ist, aber nur einen Fehler zu begehen braucht, um zu beweisen, dass er nichts taugt." George Bernard Shaw 
 "Wenn du damit beginnst, dich denen aufzuopfern, die du liebst, wirst du damit enden, die zu hassen, denen du dich aufgeopfert hast." George Bernard Shaw 
 "Du kannst nicht Schlittschuhlaufen lernen, ohne dich lächerlich zu machen. Auch das Eis des Lebens ist glatt." George Bernard Shaw 
@@ -2888,7 +2879,6 @@
 "Der Irrtum mancher Frauen liegt darin, dass sie ihren völligen Mangel an Sexappeal mit Tugendhaftigkeit verwechseln." Raquel Welch 
 "Viele Menschen sind zu gut erzogen, um mit vollem Mund zu sprechen; aber sie haben keine Bedenken, dies mit leerem Kopf zu tun." Orson Welles 
 "Geld ist jener sechste Sinn, der den Genuss der anderen fünf erst möglich macht." Orson Welles 
-"Wozu weibliche Unvernunft imstande ist, hat sich schon an der Idee erwiesen, sich von einer sprechenden Schlange Diätvorschriften geben zu lassen." Orson Welles 
 "Idioten sind eine weise Einrichtung der Natur, die es den Dummköpfen erlaubt, sich für klug zu halten." Orson Welles 
 "Fernsehen ist Kaugummi für die Augen." Orson Welles 
 "Beliebtheit sollte kein Maßstab für die Wahl von Politikern sein. Wenn es auf die Popularität ankäme, säßen Donald Duck und die Muppets längst im amerikanischen Senat." Orson Welles 
@@ -3037,7 +3027,6 @@
 "Es gibt mehr Leute, die kapitulieren, als solche, die scheitern." Henry Ford 
 "Es gibt nicht nur die ewig Gestrigen, es gibt auch die ewig Morgigen." Erich Kästner 
 "Es ist besser, ein Problem zu erörtern, ohne es zu entscheiden, als zu entscheiden, ohne es erörtert zu haben." Samuel Joubert 
-"Fürchte den Bock von vorn, das Pferd von hinten und das Weib von allen Seiten." Anton Tschechow  
 "Ich stehe hinter jeder Regierung, bei der ich nicht sitzen muss, wenn ich nicht hinter ihr stehe." Werner Finck 
 "In Italien ist alles erlaubt, was nicht verboten ist. In Deutschland ist alles verboten, was nicht erlaubt ist. In England ist alles erlaubt und verboten zugleich. In Russland ist es verboten, etwas zu erlauben. In Amerika darf man sich nicht erlauben, etwas zu verbieten, und in Frankreich fragt man nicht, ob etwas verboten oder erlaubt ist." unbekannter Autor 
 "Kann man etwas nicht verstehen, dann urteile man lieber gar nicht, als dass man verurteile." Rudolf Steiner 
@@ -3087,7 +3076,6 @@
 "Willst du den Charakter eines Menschen erkennen, so gib ihm Macht." Abraham Lincoln  
 "Zeit haben heißt wissen, wofür man Zeit haben will und wofür nicht." Emil Oesch 
 "Mit unserem Urteil ist es wie mit unseren Uhren. Nicht zwei gehen genau gleich, und doch glaubt jeder der seinigen." Alexander Pope 
-"Frauen, die immer ein Auge zudrücken, tun es am Ende nur, um zu zielen." Humphrey Bogart 
 "Der Klügere gibt solange nach, bis er der Dümmere ist." unbekannter Autor  
 "Gott gebe mir die Gelassenheit, Dinge hinzunehmen, die ich nicht ändern kann, den Mut, Dinge zu ändern, die ich ändern kann, und die Weisheit, das eine vom anderen zu unterscheiden." Reinhold Niebuhr 
 "Gib mir einen festen Punkt, und ich werde die Welt aus den Angeln heben!" Archimedes 

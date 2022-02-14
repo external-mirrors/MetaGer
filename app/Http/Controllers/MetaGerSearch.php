@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App;
 use App\MetaGer;
+use App\PrometheusExporter;
 use Cache;
 use Illuminate\Http\Request;
 use LaravelLocalization;
@@ -14,6 +15,12 @@ class MetaGerSearch extends Controller
 {
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        $locale = LaravelLocalization::getCurrentLocale();
+        $preferredLanguage = $request->getPreferredLanguage();
+        if (!empty($preferredLanguage)) {
+            PrometheusExporter::PreferredLanguage($locale, $preferredLanguage);
+        }
+
         if ($request->filled("chrome-plugin")) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
         }

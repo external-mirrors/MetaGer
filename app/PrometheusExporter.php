@@ -47,6 +47,10 @@ class PrometheusExporter
         $histogram->observe($duration, [$type]);
     }
 
+    /**
+     * @param String $language
+     * @param Array $type
+     */
     public static function PreferredLanguage($language, $type)
     {
         $registry = \Prometheus\CollectorRegistry::getDefault();

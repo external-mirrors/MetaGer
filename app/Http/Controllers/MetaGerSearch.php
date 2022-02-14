@@ -16,8 +16,8 @@ class MetaGerSearch extends Controller
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
         $locale = LaravelLocalization::getCurrentLocale();
-        $preferredLanguage = $request->getPreferredLanguage();
-        if (!empty($preferredLanguage)) {
+        $preferredLanguage = array($request->getPreferredLanguage());
+        if (!empty($preferredLanguage) && !empty($locale)) {
             PrometheusExporter::PreferredLanguage($locale, $preferredLanguage);
         }
 

@@ -28,7 +28,7 @@ class Hilfe extends Page
             ->waitForText("MetaGer - Hilfe")
             ->assertTitle("Hilfe - MetaGer")
             ->switchLanguage("English")
-            ->waitForText("MetaGer Help")
+            ->waitForText("MetaGer - Help")
             ->assertTitle("Help - MetaGer")
             ->switchLanguage("Español")
             ->waitForText("Ayuda de MetaGer")

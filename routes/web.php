@@ -139,16 +139,39 @@ Route::get('search-engine', function () {
         ->with('title', trans('titles.search-engine'))
         ->with('navbarFocus', 'info');
 });
-
 Route::get('hilfe', function () {
-    return view('hilfe')
-        ->with('title', trans('titles.hilfe'))
+    return view('help/help')
+        ->with('title', trans('titles.help'))
         ->with('navbarFocus', 'hilfe');
 });
 
 Route::get('hilfe/faktencheck', function () {
-    return view('faktencheck')
+    return view('help/faktencheck')
         ->with('title', trans('titles.faktencheck'))
+        ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/hauptseiten', function () {
+    return view('help/help-mainpages')
+        ->with('title', trans('titles.help-mainpages'))
+        ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/funktionen', function () {
+    return view('help/help-functions')
+        ->with('title', trans('titles.help-functions'))
+        ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/dienste', function () {
+    return view('help/help-services')
+        ->with('title', trans('titles.help-services'))
+        ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/datensicherheit', function () {
+    return view('help/help-privacy-protection')
+        ->with('title', trans('titles.help-privacy-protection'))
         ->with('navbarFocus', 'hilfe');
 });
 

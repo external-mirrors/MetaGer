@@ -335,8 +335,8 @@ class SettingsController extends Controller
         if (stripos($blacklist, '/') !== false) {
             $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
         }
-
-        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+        #fixme: this doesn't match all valid URLs
+        $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
         if (preg_match($regexUrl, $blacklist) === 1) {
             $path = \Request::path();
             $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);

@@ -31,7 +31,7 @@ mix
   .less("resources/less/metager/pages/asso/style-dark.less", "public/css/asso/dark.css")
   .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css")
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
-  .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css")
+  .less("resources/less/metager/pages/help-easy-language.less", "public/css/help-easy-language.css")
   // js
   .babel(
     [

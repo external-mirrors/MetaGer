@@ -24,8 +24,8 @@ return [
     "resultpage.settings" => 'Einstellungen: Wenn Sie auf Einstellungen klicken, sehen Sie die Einstellungen. Da können Sie die Einstellungen für den ausgewählten Such-Fokus einstellen.',
    
     "result.title" => 'Ergebnisse',
-    "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"></div></p>',
-    "result.info.open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
+    "result.info.1" => 'Ergebnisse sehen so aus:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"></div></p>',
+    "result.info.open" => 'ÖFFNEN: <br> Es gibt mehrere Möglichkeiten das Ergebnis zu öffnen. <br> Sie können auf die Überschrift klicken. <br> Sie können aber auch auf den blauen Link darunter klicken. <br> Dieser Link nennt sich URL. <br> Oder Sie klicken auf den Knopf öffnen.',
     "result.info.newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab.',
     "result.info.anonym" => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
     "result.info.more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png"></div></p>',

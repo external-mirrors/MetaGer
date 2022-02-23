@@ -29,6 +29,8 @@
 		    <div>
 			    <ul class="dotlist">
 				    <li>{!! trans('help/easy-language/help-mainpages.resultpage.foci') !!}</li>
+					<li>{!! trans('help/easy-language/help-mainpages.resultpage.foci.1') !!}</li>
+
 				    <li>{!! trans('help/easy-language/help-mainpages.resultpage.choice') !!}</li>
 				        <ul class="dotlist">
 				        	<li>{!! trans('help/easy-language/help-mainpages.resultpage.filter') !!}</li>

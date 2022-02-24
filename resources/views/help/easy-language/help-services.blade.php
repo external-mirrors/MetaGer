@@ -3,6 +3,7 @@
 @section('title', $title )
 
 @section('content')
+<section class="help-section">
 <h1 class="page-title">{!! trans('help/easy-language/help-services.title') !!}</h1>
 <a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-services.backarrow') !!}</a>
 <h2 id="dienste">{!! trans('help/easy-language/help-services.dienste') !!}</h2>
@@ -37,4 +38,5 @@
 			<p>{!! trans('help/easy-language/help-services.maps.2') !!}</p>
 			<p>{!! trans('help/easy-language/help-services.maps.3') !!}</p>
 		</div>
+</section>
 @endsection

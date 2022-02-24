@@ -42,21 +42,39 @@
 
 				<p>{!! trans('help/easy-language/help-mainpages.resultpage.choice') !!}</p>
 				<img class="help-easy-language-mainpages-image" src="/img/help-settings-and-filter.jpg"/>
-				<p>{!! trans('help/easy-language/help-mainpages.resultpage.filter') !!}</p>
-				<p id="difset">{!! trans('help/easy-language/help-mainpages.resultpage.settings') !!}</p>
+				<h4>{!! trans('help/easy-language/help-mainpages.resultpage.filter') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.resultpage.filter.1') !!}</p>
+
+				<h4>{!! trans('help/easy-language/help-mainpages.resultpage.settings') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.resultpage.settings.1') !!}</p>
+
             </div>
 		<h3>{!! trans('help/easy-language/help-mainpages.result.title') !!}</h3>
 			<div>
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.1') !!}</p>
-				<p>{!! trans('help/easy-language/help-mainpages.result.info.open') !!}</p>
-				<p>{!! trans('help/easy-language/help-mainpages.result.info.newtab') !!}</p>
-				<p>{!! trans('help/easy-language/help-mainpages.result.info.anonym') !!}</p>
-				<p>{!! trans('help/easy-language/help-mainpages.result.info.more') !!}</p>
+				<div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"/></div>
+				<h4>{!! trans('help/easy-language/help-mainpages.result.info.open') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.result.info.open.1') !!}</p>
+				<h4>{!! trans('help/easy-language/help-mainpages.result.info.newtab') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.result.info.newtab.1') !!}</p>
+				<h4>{!! trans('help/easy-language/help-mainpages.result.info.anonym') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.result.info.anonym.1') !!}</p>
+				<h4>{!! trans('help/easy-language/help-mainpages.result.info.more') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.result.info.more.1') !!}</p>
+				<div class="image-container"><img src="/img/hilfe-php-resultpic-02.png"></div>
 
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.2') !!}</p>
-					<p>{!! trans('help/easy-language/help-mainpages.result.info.saveresult') !!}</p>
-					<p>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch') !!}</p>
-					<p>{!! trans('help/easy-language/help-mainpages.result.info.hideresult') !!}</p>
+					<h4>{!! trans('help/easy-language/help-mainpages.result.info.saveresult') !!}</h4>
+					<p>{!! trans('help/easy-language/help-mainpages.result.info.saveresult.1') !!}</p>
+
+					<h4>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch') !!}</h4>
+					<p>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch.1') !!}</p>
+					<p>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch.2') !!}</p>
+					<p>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch.3') !!}</p>
+
+					<h4>{!! trans('help/easy-language/help-mainpages.result.info.hideresult') !!}</h4>
+					<p>{!! trans('help/easy-language/help-mainpages.result.info.hideresult.1') !!}</p>
+
 			</div>
         <h3 id="einstellungen">{!! trans('help/easy-language/help-mainpages.settings.title') !!}</h3>
                 <p>@lang('help/easy-language/help-mainpages.settings.1', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</li>

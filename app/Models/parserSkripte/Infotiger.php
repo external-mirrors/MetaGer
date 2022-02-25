@@ -18,10 +18,10 @@ class Infotiger extends Searchengine
     public function loadResults($resultstring)
     {
         $results_json = json_decode($resultstring);
-        if ($results_json === null || empty($results_json) || !$results_json->response->docs || !is_array($results_json->response->docs)) {
-            // Error parsing JSON response
+        if (!$this->validateJsonResponse($results_json)) {
             return;
         }
+
 
         try {
             foreach ($results_json->response->docs as $result) {
@@ -53,7 +53,7 @@ class Infotiger extends Searchengine
     {
         $results_json = json_decode($result);
 
-        if ($results_json === null || empty($results_json) || !$results_json->response->docs || !is_array($results_json->response->docs)) {
+        if (!$this->validateJsonResponse($results_json)) {
             // Error parsing JSON response
             return;
         }
@@ -77,6 +77,28 @@ class Infotiger extends Searchengine
             $newEngine->{"get-parameter"}->page = $current_page + 1;
             $next = new Infotiger($this->name, $newEngine, $metager);
             $this->next = $next;
+        }
+    }
+
+    /**
+     * Checks the returned object if it matches the expected format
+     * 
+     * @param Object $results_json
+     * 
+     * @return boolean Whether or not the object is valid
+     */
+    private function validateJsonResponse($results_json)
+    {
+        if (
+            $results_json === null ||                   // Error parsing JSON response (json_decode returned null)
+            empty($results_json) ||
+            !$results_json->response ||                 // Unexpected JSON format (no response object)
+            !$results_json->response->docs ||           // Unexpected JSON format (no docs object)
+            !is_array($results_json->response->docs)    // Unexpected JSON format (docs is not an array)
+        ) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

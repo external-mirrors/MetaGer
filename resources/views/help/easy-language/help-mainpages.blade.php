@@ -87,6 +87,11 @@
 
                 <h4>{!! trans('help/easy-language/help-mainpages.settings.filter') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1') !!}</p>
+				<img class="help-easy-language-mainpages-image" src="/img/help-settings-search-filter.jpg"/>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.1') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.2') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.3') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.4') !!}</p>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.2') !!}</p>
 				<img class="help-easy-language-mainpages-image" src="/img/help-settings-safesearch.png"/>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.3') !!}</p>
@@ -96,11 +101,16 @@
 				<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.1') !!}</p>
 				<img id="easy-help-mainpage-blacklist-image" src="/img/help-settings-blacklist-trashcan.jpg"/>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.2') !!}</p>
+				<h4>{!! trans('help/easy-language/help-mainpages.settings.more.settings') !!}</h4>
+				<img id="easy-help-mainpages-more-settings-image" src="/img/help-more-settings.jpg"/>
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.darkmode') !!}</h4>
+                <p>{!! trans('help/easy-language/help-mainpages.settings.darkmode.1') !!}</p>
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.newtab') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.newtab') !!}</p>
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.cite') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.cite.1') !!}</p>
+				<img id="easy-help-mainpages-settings-cite" src="/img/help-settings-cite.jpg"/>
 
-
-                <p>{!! trans('help/easy-language/help-mainpages.settings.5') !!}</p>
-                <p>{!! trans('help/easy-language/help-mainpages.settings.6') !!}</p>
-                <p>{!! trans('help/easy-language/help-mainpages.settings.7') !!}</p>
     </section>
 
 

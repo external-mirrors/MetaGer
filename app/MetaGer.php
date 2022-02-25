@@ -465,7 +465,7 @@ class MetaGer
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
          */
-        if (/*sizeof($this->ads) === 0 &&*/ rand(1, 100) >= 5) {
+        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 5) {
             return;
         }
 
@@ -623,7 +623,7 @@ class MetaGer
             }
             $filter = rtrim($filter, ",");
             $error = trans('metaGer.engines.noSpecialSearch', [
-                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->{"display-name"}),
+                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->infos->display_name),
                 'filter' => $filter,
             ]);
             $this->errors[] = $error;
@@ -733,8 +733,8 @@ class MetaGer
 
             # Prüfe ob Parser vorhanden
             if (!file_exists(app_path() . "/Models/parserSkripte/" . $engine->{"parser-class"} . ".php")) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen, da kein Parser existiert");
-                $this->errors[] = trans('metaGer.engines.noParser', ['engine' => $engine->{"display-name"}]);
+                Log::error("Konnte " . $engine->infos->display_name . " nicht abfragen, da kein Parser existiert");
+                $this->errors[] = trans('metaGer.engines.noParser', ['engine' => $engine->infos->display_name]);
                 continue;
             }
 
@@ -743,7 +743,7 @@ class MetaGer
             try {
                 $tmp = new $path($engineName, $engine, $this);
             } catch (\ErrorException $e) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . $e);
+                Log::error("Konnte " . $engine->infos->display_name . " nicht abfragen. " . $e);
                 continue;
             }
 

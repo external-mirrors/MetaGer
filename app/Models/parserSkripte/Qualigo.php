@@ -15,7 +15,7 @@ class Qualigo extends XmlSearchengine
 
     protected function loadXmlResults($resultsXml)
     {
-        if(empty($resultsXml) || !$resultsXml){
+        if (empty($resultsXml) || !$resultsXml) {
             Log::error("A problem occurred parsing results from $this->name:");
             return;
         }
@@ -33,8 +33,8 @@ class Qualigo extends XmlSearchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},
-                    $this->engine->homepage,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
                     $this->counter
                 );
             }

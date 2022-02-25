@@ -38,7 +38,7 @@ class OvertureAds extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"},
+                    $this->engine->infos->display_name,
                     $this->engine->{"homepage"},
                     $this->counter,
                     []
@@ -113,5 +113,4 @@ class OvertureAds extends Searchengine
 
         return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
     }
-
 }

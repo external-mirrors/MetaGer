@@ -95,10 +95,11 @@ class SettingsController extends Controller
         $sumas = [];
         foreach ($sumasFoki as $suma) {
             if ((!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
-                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"})) {
+                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"})
+            ) {
                 continue;
             }
-            $sumas[$suma]["display-name"] = $langFile->sumas->{$suma}->{"display-name"};
+            $sumas[$suma]["display-name"] = $langFile->sumas->{$suma}->infos->display_name;
             $sumas[$suma]["filtered"] = false;
             if (Cookie::get($fokus . "_engine_" . $suma) === "off") {
                 $sumas[$suma]["enabled"] = false;
@@ -360,7 +361,7 @@ class SettingsController extends Controller
                 }
             }
             if ($noduplicate && !empty($blacklist) > 0 && strlen($blacklist) <= 255) {
-                $cookieName= $fokus.'_blpage'.$cookieCounter;
+                $cookieName = $fokus . '_blpage' . $cookieCounter;
                 Cookie::queue($cookieName, $blacklist, 525600, $cookiePath, null, false, false);
             }
         }
@@ -389,7 +390,7 @@ class SettingsController extends Controller
         $empty = $request->input('empty');
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
         $cookies = Cookie::get();
-        
+
         foreach ($cookies as $key => $value) {
             if (stripos($key, $fokus . '_blpage') === 0) {
                 Cookie::queue($key, "", 0, $cookiePath, null, false, false);
@@ -426,10 +427,10 @@ class SettingsController extends Controller
                 foreach ($langFile->foki as $fokus => $fokusInfo) {
                     if (strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1) {
                         Cookie::queue($key, $value, 525600, $cookiePath, null, false, false);
-                    } elseif (strpos($key, $fokus.'_setting_') === 0) {
+                    } elseif (strpos($key, $fokus . '_setting_') === 0) {
                         foreach ($langFile->filter->{'parameter-filter'} as $parameter) {
                             foreach ($parameter->values as $p => $v) {
-                                if ($key === $fokus.'_setting_' . $parameter->{'get-parameter'} && $value === $p) {
+                                if ($key === $fokus . '_setting_' . $parameter->{'get-parameter'} && $value === $p) {
                                     Cookie::queue($key, $value, 525600, $cookiePath, null, false, false);
                                 }
                             }

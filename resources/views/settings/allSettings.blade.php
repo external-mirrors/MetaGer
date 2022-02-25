@@ -23,7 +23,7 @@
                         <td>{{ $key . " = " . $value }}</td>
                         <td>
                             @if(strpos($key, "_engine_") !== FALSE)
-                            @lang('settings.engineDisabled', ["engine" => $sumaFile->sumas->{substr($key, strrpos($key, "_")+1)}->{"display-name"}, "focus" => trans('index.foki.' . substr($key, 0, strpos($key, "_")))])
+                            @lang('settings.engineDisabled', ["engine" => $sumaFile->sumas->{substr($key, strrpos($key, "_")+1)}->infos->display_name, "focus" => trans('index.foki.' . substr($key, 0, strpos($key, "_")))])
                             @elseif(strpos($key, "_setting_") !== FALSE)
                             @foreach($sumaFile->filter->{"parameter-filter"} as $filterName => $filter)
                             @if($filter->{"get-parameter"} === substr($key, strrpos($key, "_")+1))

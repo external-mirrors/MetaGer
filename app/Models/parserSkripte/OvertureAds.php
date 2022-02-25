@@ -39,7 +39,7 @@ class OvertureAds extends Searchengine
                     $anzeigeLink,
                     $descr,
                     $this->engine->infos->display_name,
-                    $this->engine->{"homepage"},
+                    $this->engine->infos->homepage,
                     $this->counter,
                     []
                 );

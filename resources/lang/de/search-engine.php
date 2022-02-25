@@ -12,11 +12,12 @@ return [
     'head.9' => 'OneNewspage (Deutschland)',
     'head.10' => 'OneNewspage Video (Deutschland)',
     'head.11' => 'YaCy',
+    'head.12' => 'Infotiger',
 
 
 
     'text.1' => 'MetaGer ist eine <a href=":transparenz">Metasuchmaschine</a>. Deshalb nutzen wir die Indexe verschiedener anderer Suchmaschinen. Für jede dieser Suchmaschinen haben wir einen kurzen Steckbrief mit den wichtigsten Eckdaten erstellt. Da wir diese Übersicht nicht ständig aktualisieren, sind alle Angaben ohne Gewähr.',
-   
+
     'text.2.1' => 'Name: ',
     'text.2.1.1' => 'Yahoo!',
     'text.2.2' => 'Verwendeter Index: ',
@@ -40,25 +41,25 @@ return [
     'text.3.5' => 'Microsoft Inc.',
     'text.3.6' => 'vermutlich 8-14 Millarden',
     'text.3.7' => 'englische Suche, deutsche Suche (Nur für Mitglieder)',
-   
+
     'text.4.1' => 'Scopia',
     'text.4.2' => 'Circa 2016 ',
     'text.4.3' => 'Newark, New Jersey, USA',
     'text.4.4' => 'Scopia Technologies ASPEN LLC',
     'text.4.5' => 'deutsche Suche, englische Suche',
-   
+
     'text.5.1' => 'Netluchs',
     'text.5.2' => '2005',
     'text.5.3' => 'Hamburg, Deutschland',
     'text.5.4' => 'Michael Nebel (Privatperson)',
     'text.5.5' => '6 Millionen (Stand: 2005)',
     'text.5.6' => 'deutsche Suche',
-   
+
     'text.6.1' => 'Yandex',
     'text.6.2' => '1997',
     'text.6.3' => 'Mäntsälä, Finnland (Europa)',
     'text.6.4' => 'Yandex OY (Aktiengesellschaft)',
-    'text.6.5' => 'deutsche Suche',   
+    'text.6.5' => 'deutsche Suche',
 
 
     'text.7.1' => 'Die ZEIT',
@@ -66,21 +67,21 @@ return [
     'text.7.3' => 'Hamburg, Deutschland',
     'text.7.4' => 'Zeit Online GmbH',
     'text.7.5' => 'deutsche Suche',
-   
+
 
     'text.8.1' => 'OneNewspage (Deutschland)',
     'text.8.2' => '2008',
     'text.8.3' => 'Wales, England',
     'text.8.4' => 'One News Page Ltd.',
     'text.8.5' => 'deutsche Suche (Deutschland), englische Suche',
-   
+
 
     'text.9.1' => 'OneNewspage Video (Deutschland)',
     'text.9.2' => '2008',
     'text.9.3' => 'Wales, England',
     'text.9.4' => 'One News Page Ltd.',
     'text.9.5' => 'deutsche Suche (Deutschland), englische Suche',
-   
+
 
     'text.10.1' => 'YaCy',
     'text.10.2' => '2004',
@@ -89,5 +90,10 @@ return [
     'text.10.5' => '1,7 Milliarden',
     'text.10.6' => 'deutsche Suche',
 
-
+    'text.12.1' => 'Infotiger',
+    'text.12.2' => '1998',
+    'text.12.3' => 'München, Deutschland',
+    'text.12.4' => 'Infotiger UG (haftungsbeschränkt)',
+    'text.12.5' => '150 Millionen',
+    'text.12.6' => 'deutsche Suche, englische Suche',
 ];

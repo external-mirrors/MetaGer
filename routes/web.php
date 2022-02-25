@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
@@ -81,7 +82,7 @@ Route::get('tor', function () {
         ->with('navbarFocus', 'dienste');
 });
 
-Route::group(['prefix' => 'spende'], function(){
+Route::group(['prefix' => 'spende'], function () {
     Route::get('/', function () {
         return view('spende.spende')
             ->with('title', trans('titles.spende'))
@@ -134,11 +135,7 @@ Route::get('transparency', function () {
         ->with('navbarFocus', 'info');
 });
 
-Route::get('search-engine', function () {
-    return view('search-engine')
-        ->with('title', trans('titles.search-engine'))
-        ->with('navbarFocus', 'info');
-});
+Route::get('search-engine', [SearchEngineList::class, 'index']);
 Route::get('hilfe', function () {
     return view('help/help')
         ->with('title', trans('titles.help'))

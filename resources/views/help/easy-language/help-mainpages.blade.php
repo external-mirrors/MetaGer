@@ -78,9 +78,26 @@
 			</div>
         <h3 id="einstellungen">{!! trans('help/easy-language/help-mainpages.settings.title') !!}</h3>
                 <p>@lang('help/easy-language/help-mainpages.settings.1', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</li>
-                <p>{!! trans('help/easy-language/help-mainpages.settings.2') !!}</p>
-                <p>{!! trans('help/easy-language/help-mainpages.settings.3') !!}</p>
-                <p>{!! trans('help/easy-language/help-mainpages.settings.4') !!}</p>
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.search.engine.1') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.search.engine.2') !!}</p>
+				<img class="help-easy-language-mainpages-image" src="/img/help-used-search-engine.jpg"/>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.search.engine.3') !!}</p>
+				<img class="help-easy-language-mainpages-image" src="/img/help-used-search-engine-red.jpg"/>
+
+
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.filter') !!}</h4>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.2') !!}</p>
+				<img class="help-easy-language-mainpages-image" src="/img/help-settings-safesearch.png"/>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.filter.3') !!}</p>
+
+                <h4>{!! trans('help/easy-language/help-mainpages.settings.blacklist') !!}</h4>
+				<img class="help-easy-language-mainpages-image" src="/img/help-settings-blacklist.jpg"/>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.1') !!}</p>
+				<img id="easy-help-mainpage-blacklist-image" src="/img/help-settings-blacklist-trashcan.jpg"/>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.2') !!}</p>
+
+
                 <p>{!! trans('help/easy-language/help-mainpages.settings.5') !!}</p>
                 <p>{!! trans('help/easy-language/help-mainpages.settings.6') !!}</p>
                 <p>{!! trans('help/easy-language/help-mainpages.settings.7') !!}</p>

@@ -408,7 +408,9 @@ class MetaGer
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
                 // Disable Content Warning if it was enabled before
-                $arr[$link]->content_warning = false;
+                if ($arr[$link]->content_warning === ContentWarnings::CONTENT_WARNING_STATUS_ENGINE) {
+                    $arr[$link]->content_warning = ContentWarnings::CONTENT_WARNING_STATUS_NONE;
+                }
 
 
                 // The duplicate might already be an adgoal partnershop

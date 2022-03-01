@@ -14,6 +14,10 @@ class ContentWarnings
         "Yandex",
     ];
 
+    const CONTENT_WARNING_STATUS_NONE = 0;
+    const CONTENT_WARNING_STATUS_ENGINE = 1;
+    const CONTENT_WARNING_STATUS_DOMAIN = 2;
+
     const CACHE_KEY = "content_warnings";
     const CACHE_TTL = 300; // 5 Minutes Cache
 
@@ -22,11 +26,12 @@ class ContentWarnings
      * 
      * @param Result &$result
      * 
-     * @return boolean
+     * @return void
      */
     public static function enableContentWarnings(Result &$result)
     {
-        if (!self::checkResult($result)) {
+        $blocked = self::checkResult($result);
+        if ($blocked === 0) {
             // No content warning necessary
             return;
         }
@@ -40,7 +45,7 @@ class ContentWarnings
         ]);
 
         $result->link = $new_target_url;
-        $result->content_warning = true;
+        $result->content_warning = $blocked;
     }
 
     /**
@@ -53,10 +58,8 @@ class ContentWarnings
      */
     private static function checkResult(Result &$result)
     {
-        foreach (self::CONTENT_WARNING_ENGINES as $engine) {
-            if ($result->provider->{"parser-class"} === $engine) {
-                return true;
-            }
+        if (in_array($result->provider->{"parser-class"}, self::CONTENT_WARNING_ENGINES)) {
+            return self::CONTENT_WARNING_STATUS_ENGINE;
         }
 
 
@@ -75,10 +78,10 @@ class ContentWarnings
             }
             $domain_entry_regexp = "/^" . $domain_entry_regexp . '$/';
             if (preg_match($domain_entry_regexp, $targetDomain)) {
-                return true;
+                return self::CONTENT_WARNING_STATUS_DOMAIN;
             }
         }
-        return false;
+        return self::CONTENT_WARNING_STATUS_NONE;
     }
 
     /**

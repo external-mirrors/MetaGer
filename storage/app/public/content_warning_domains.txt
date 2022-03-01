@@ -45,7 +45,6 @@ flisland.net
 fr.sputniknews.com
 free-torrents.org
 futubra.com
-gen.lib.rus.ec
 gis-lab.info
 gorodbryansk.info
 grozrab.org
@@ -68,7 +67,6 @@ krd.sputniknews.com
 kroogi.com
 letopisi.org
 lib.rus.ec
-libgen.is
 limonka.nbp-info.com
 lingualeo.com
 linuxforum.tech

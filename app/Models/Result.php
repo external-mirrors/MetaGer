@@ -33,6 +33,7 @@ class Result
     public $strippedDomainAnzeige; # Die Domain in Form "bar.de"
     public $strippedLinkAnzeige; # Der Link in Form "foo.bar.de/test"
     public $rank; # Das Ranking für das Ergebnis
+    public $content_warning = false; # Whether or not the target website was marked by \App\ContentWarnings
     public $new = true;
     public $changed = false;
 

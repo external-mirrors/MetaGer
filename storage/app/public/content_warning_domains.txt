@@ -1,0 +1,12 @@
+// This is a public list of domains we do see the need of
+// giving a content warning and thus reminding of cross checking
+// the truth/validity of informations shown on given websites.
+//
+// Lines starting with "//" are considered comments and are being ignored
+// Only domains are allowed in this file
+// domains can either be a full domain name (i.e. example.com)
+// or a domain including all subdomains (i.e. *.example.com)
+//
+// One domain per line
+*.ru
+*.rt.com

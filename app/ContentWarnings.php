@@ -11,7 +11,7 @@ class ContentWarnings
     // If a whole search engine needs to receive content warnings
     // enter its Parser Class Name here
     const CONTENT_WARNING_ENGINES = [
-        "Yandex",
+        //"Yandex",
     ];
 
     const CONTENT_WARNING_STATUS_NONE = 0;

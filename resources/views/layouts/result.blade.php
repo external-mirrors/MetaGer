@@ -24,7 +24,8 @@
 			@endif
 		</div>
 		<div class="result-subheadline">
-			<a class="result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" target="{{ $metager->getNewtab() }}" tabindex="-1">
+			<figure class="content-warning @if($result->content_warning !== \App\ContentWarnings::CONTENT_WARNING_STATUS_NONE)active @endif" data-title="@lang('content-warning.title')" aria-haspopup="true" aria-label="@lang('content-warning.title')" tabindex="0"></figure>
+			<a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" target="{{ $metager->getNewtab() }}" tabindex="-1">
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)

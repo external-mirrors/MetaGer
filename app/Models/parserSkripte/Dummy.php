@@ -24,20 +24,21 @@ class Dummy extends Searchengine
             }
 
             foreach ($content as $result) {
-                    $title = $result->title;
-                    $link = $result->link;
-                    $anzeigeLink = $link;
-                    $descr = $result->descr;
-                    $this->counter++;
-                    $this->results[] = new \App\Models\Result(
-                        $this->engine,
-                        $title,
-                        $link,
-                        $anzeigeLink,
-                        $descr,
-                        $this->engine->{"display-name"},$this->engine->homepage,
-                        $this->counter
-                    );
+                $title = $result->title;
+                $link = $result->link;
+                $anzeigeLink = $link;
+                $descr = $result->descr;
+                $this->counter++;
+                $this->results[] = new \App\Models\Result(
+                    $this->engine,
+                    $title,
+                    $link,
+                    $anzeigeLink,
+                    $descr,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
+                    $this->counter
+                );
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -53,14 +54,14 @@ class Dummy extends Searchengine
             $newEngine = unserialize(serialize($this->engine));
 
             $perPage = 0;
-            if(isset($newEngine->{"get-parameter"}->count)){
+            if (isset($newEngine->{"get-parameter"}->count)) {
                 $perPage = $newEngine->{"get-parameter"}->count;
             } else {
                 $perPage = 10;
             }
 
             $offset = 0;
-            if(empty($newEngine->{"get-parameter"}->skip)){
+            if (empty($newEngine->{"get-parameter"}->skip)) {
                 $offset = $perPage;
             } else {
                 $offset = $newEngine->{"get-parameter"}->skip + $perPage;
@@ -74,12 +75,10 @@ class Dummy extends Searchengine
 
             $next = new Dummy($this->name, $newEngine, $metager);
             $this->next = $next;
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
-
     }
 }

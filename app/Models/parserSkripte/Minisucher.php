@@ -57,7 +57,7 @@ class Minisucher extends Searchengine
 
                 $additionalInformation = ['date' => $dateVal];
 
-                $minism = $this->engine->{"display-name"};
+                $minism = $this->engine->infos->display_name;
                 $gefVon = "Minisucher: $minism";
                 $subcollection = $result->xpath('//doc/str[@name="subcollection"]')[0]->__toString();
 
@@ -71,12 +71,9 @@ class Minisucher extends Searchengine
                     $counter,
                     $additionalInformation
                 );
-
             } catch (\ErrorException $e) {
                 continue;
             }
         }
-
     }
-
 }

@@ -63,10 +63,13 @@ class Kelkoo extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"}, $this->engine->homepage,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
                     $this->counter,
-                    ['image' => $image,
-                        'price' => $totalPrice * 100]
+                    [
+                        'image' => $image,
+                        'price' => $totalPrice * 100
+                    ]
                 );
             }
         } catch (\Exception $e) {
@@ -151,6 +154,5 @@ class Kelkoo extends Searchengine
         $token = str_replace(array("+", "/", "="), array(".", "_", "-"), $token);
         $URLreturn = $URLtmp . "&" . $URL_sig . "=" . $token;
         return $URLreturn;
-
     }
 }

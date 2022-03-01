@@ -36,11 +36,11 @@ class Yacy extends Searchengine
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->{"display-name"}, $this->engine->homepage,
+                        $this->engine->infos->display_name,
+                        $this->engine->infos->homepage,
                         $this->counter
                     );
-                } 
-
+                }
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -51,7 +51,7 @@ class Yacy extends Searchengine
 
     public function getNext(\App\MetaGer $metager, $result)
     {
-        try{
+        try {
             $resultCount = 0;
             $content = json_decode($result, true);
             $content = $content["channels"];
@@ -61,7 +61,7 @@ class Yacy extends Searchengine
                 $resultCount += sizeof($items);
             }
 
-            if($resultCount > 0){
+            if ($resultCount > 0) {
                 $engine = clone $this->engine;
                 $engine->{"get-parameter"}->startRecord += 10;
                 $next = new Yacy($this->name, $engine, $metager);

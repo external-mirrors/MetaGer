@@ -13,7 +13,7 @@ return [
     'head.10' => 'OneNewspage (Video)',
 
     'text.1' => 'MetaGer is a <a href=":transparenz">metasearch engine</a>. Therefore, we use the indexes of various other search engines. For each of these search engines, we have created a short profile with the key information. Since we do not constantly update this overview, all information is without guarantee.',
-   
+
     'text.2.1' => 'Name: ',
     'text.2.1.1' => 'Yahoo!',
     'text.2.2' => 'Used index: ',
@@ -36,25 +36,25 @@ return [
     'text.3.5' => 'Microsoft Inc.',
     'text.3.6' => 'around 8-14 billion',
     'text.3.7' => 'English search, German search (members only)',
-   
+
     'text.4.1' => 'Scopia',
     'text.4.2' => 'Around 2016 ',
     'text.4.3' => 'Newark, New Jersey, USA',
     'text.4.4' => 'Scopia Technologies ASPEN LLC',
     'text.4.5' => 'German search, English search',
-   
+
     'text.5.1' => 'Netluchs',
     'text.5.2' => '2005',
     'text.5.3' => 'Hamburg, Germany',
     'text.5.4' => 'Michael Nebel (private person)',
     'text.5.5' => '6 Million (updated: 2005)',
     'text.5.6' => 'German search',
-   
+
     'text.6.1' => 'Yandex',
     'text.6.2' => '1997',
     'text.6.3' => 'Mäntsälä, Finland (Europe)',
     'text.6.4' => 'Yandex OY (Corporation)',
-    'text.6.5' => 'German search',   
+    'text.6.5' => 'German search',
 
 
     'text.7.1' => 'Die ZEIT',
@@ -62,21 +62,21 @@ return [
     'text.7.3' => 'Hamburg, Germany',
     'text.7.4' => 'Zeit Online GmbH',
     'text.7.5' => 'German search',
-   
+
 
     'text.8.1' => 'OneNewspage (Deutschland)',
     'text.8.2' => '2008',
     'text.8.3' => 'Wales, England',
     'text.8.4' => 'One News Page Ltd.',
     'text.8.5' => 'German search (Deutschland), English search',
-   
+
 
     'text.9.1' => 'OneNewspage Video (Deutschland)',
     'text.9.2' => '2008',
     'text.9.3' => 'Wales, England',
     'text.9.4' => 'One News Page Ltd.',
     'text.9.5' => 'German search (Deutschland), English search',
-   
+
 
     'text.10.1' => 'YaCy',
     'text.10.2' => '2004',
@@ -85,5 +85,10 @@ return [
     'text.10.5' => '1,7 billion',
     'text.10.6' => 'german search',
 
-
+    'text.12.1' => 'Infotiger',
+    'text.12.2' => '1998',
+    'text.12.3' => 'Munich, Germany',
+    'text.12.4' => 'Infotiger UG (haftungsbeschränkt)',
+    'text.12.5' => '300 million',
+    'text.12.6' => 'german Suche, english Suche',
 ];

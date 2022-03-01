@@ -36,19 +36,18 @@ class Scopia extends Searchengine
                 $anzeigeLink = $link;
                 $descr = $result->description->__toString();
                 $this->counter++;
-                if(! $this->containsPornContent($title.$descr)) { //see note at filtering method
+                if (!$this->containsPornContent($title . $descr)) { //see note at filtering method
                     $this->results[] = new \App\Models\Result(
                         $this->engine,
                         $title,
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->{"display-name"},
-                        $this->engine->homepage,
+                        $this->engine->infos->display_name,
+                        $this->engine->infos->homepage,
                         $this->counter
                     );
                 }
-                
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -57,7 +56,8 @@ class Scopia extends Searchengine
         }
     }
 
-    private function containsPornContent($text) {
+    private function containsPornContent($text)
+    {
         // Returns true if pornographic content is detected
         // We noticed scopia often serving pornographic results for non-pornographic queries. After much deliberation we decided to filter pornographic results from scopia. Those will have to be supplied by other search engines.
 
@@ -108,8 +108,8 @@ class Scopia extends Searchengine
             "free" => 10,
         ];
         $acc = 0;
-        foreach($words as $word => $score) {
-            if (stristr($text,$word)) {
+        foreach ($words as $word => $score) {
+            if (stristr($text, $word)) {
                 $acc += $score;
             }
         }
@@ -122,7 +122,6 @@ class Scopia extends Searchengine
         $result = str_replace("&", "&amp;", $result);
         try {
             $content = \simplexml_load_string($result);
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
@@ -144,6 +143,5 @@ class Scopia extends Searchengine
             $next = new Scopia($this->name, $newEngine, $metager);
             $this->next = $next;
         }
-
     }
 }

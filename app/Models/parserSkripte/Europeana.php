@@ -42,7 +42,8 @@ class Europeana extends Searchengine
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->{"display-name"}, $this->engine->homepage,
+                        $this->engine->infos->display_name,
+                        $this->engine->infos->homepage,
                         $this->counter,
                         ['image' => $image]
                     );

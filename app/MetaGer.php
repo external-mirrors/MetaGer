@@ -327,6 +327,9 @@ class MetaGer
             }
         }
 
+        // Content Warnings
+        $this->contentWarnings($this->results);
+
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
@@ -404,6 +407,11 @@ class MetaGer
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+                // Disable Content Warning if it was enabled before
+                if ($arr[$link]->content_warning === ContentWarnings::CONTENT_WARNING_STATUS_ENGINE) {
+                    $arr[$link]->content_warning = ContentWarnings::CONTENT_WARNING_STATUS_NONE;
+                }
+
 
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {
@@ -465,7 +473,7 @@ class MetaGer
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
          */
-        if (/*sizeof($this->ads) === 0 &&*/ rand(1, 100) >= 5) {
+        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 5) {
             return;
         }
 
@@ -484,6 +492,16 @@ class MetaGer
         $position = random_int(0, $adCount);
 
         array_splice($this->ads, $position, 0, [$donationAd]);
+    }
+
+    private function contentWarnings(&$results)
+    {
+        /**
+         * @param \App\Models\Result $result
+         */
+        foreach ($results as $result) {
+            ContentWarnings::enableContentWarnings($result);
+        }
     }
 
     public function humanVerification(&$results)
@@ -623,7 +641,7 @@ class MetaGer
             }
             $filter = rtrim($filter, ",");
             $error = trans('metaGer.engines.noSpecialSearch', [
-                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->{"display-name"}),
+                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->infos->display_name),
                 'filter' => $filter,
             ]);
             $this->errors[] = $error;
@@ -733,8 +751,8 @@ class MetaGer
 
             # Prüfe ob Parser vorhanden
             if (!file_exists(app_path() . "/Models/parserSkripte/" . $engine->{"parser-class"} . ".php")) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen, da kein Parser existiert");
-                $this->errors[] = trans('metaGer.engines.noParser', ['engine' => $engine->{"display-name"}]);
+                Log::error("Konnte " . $engine->infos->display_name . " nicht abfragen, da kein Parser existiert");
+                $this->errors[] = trans('metaGer.engines.noParser', ['engine' => $engine->infos->display_name]);
                 continue;
             }
 
@@ -743,7 +761,7 @@ class MetaGer
             try {
                 $tmp = new $path($engineName, $engine, $this);
             } catch (\ErrorException $e) {
-                Log::error("Konnte " . $engine->{"display-name"} . " nicht abfragen. " . $e);
+                Log::error("Konnte " . $engine->infos->display_name . " nicht abfragen. " . $e);
                 continue;
             }
 

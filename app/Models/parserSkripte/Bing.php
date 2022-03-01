@@ -14,13 +14,13 @@ class Bing extends Searchengine
     {
         parent::__construct($name, $engine, $metager);
 
-        if(LaravelLocalization::getCurrentLocale() === 'en'){
+        if (LaravelLocalization::getCurrentLocale() === 'en') {
             $langFile = $metager->getLanguageFile();
             $langFile = json_decode(file_get_contents($langFile));
             $acceptLanguage = $metager->request->headers->all()['accept-language'][0];
-            foreach($langFile->filter->{'parameter-filter'}->language->sumas->bing->values as $key => $value){
-                if(stripos($acceptLanguage, "en") === 0 && stripos($acceptLanguage, $value) === 0)
-                $this->engine->{"get-parameter"}->mkt =  $value;
+            foreach ($langFile->filter->{'parameter-filter'}->language->sumas->bing->values as $key => $value) {
+                if (stripos($acceptLanguage, "en") === 0 && stripos($acceptLanguage, $value) === 0)
+                    $this->engine->{"get-parameter"}->mkt =  $value;
             }
         }
     }
@@ -51,13 +51,12 @@ class Bing extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"}, $this->engine->homepage,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
                     $this->counter,
                     []
                 );
-
             }
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
@@ -91,12 +90,10 @@ class Bing extends Searchengine
 
             $next = new Bing($this->name, $newEngine, $metager);
             $this->next = $next;
-
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
-
     }
 }

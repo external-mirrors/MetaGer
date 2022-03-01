@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
@@ -81,7 +82,7 @@ Route::get('tor', function () {
         ->with('navbarFocus', 'dienste');
 });
 
-Route::group(['prefix' => 'spende'], function(){
+Route::group(['prefix' => 'spende'], function () {
     Route::get('/', function () {
         return view('spende.spende')
             ->with('title', trans('titles.spende'))
@@ -134,11 +135,7 @@ Route::get('transparency', function () {
         ->with('navbarFocus', 'info');
 });
 
-Route::get('search-engine', function () {
-    return view('search-engine')
-        ->with('title', trans('titles.search-engine'))
-        ->with('navbarFocus', 'info');
-});
+Route::get('search-engine', [SearchEngineList::class, 'index']);
 Route::get('hilfe', function () {
     return view('help/help')
         ->with('title', trans('titles.help'))
@@ -149,7 +146,7 @@ Route::get('hilfe/faktencheck', function () {
     return view('help/faktencheck')
         ->with('title', trans('titles.faktencheck'))
         ->with('navbarFocus', 'hilfe');
-});
+})->name('faktencheck');
 
 Route::get('hilfe/hauptseiten', function () {
     return view('help/help-mainpages')
@@ -274,6 +271,14 @@ Route::get('settings', function () {
 });
 
 Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+Route::get('meta/meta.ger3/content-warning', function (Request $request) {
+    if (!$request->has('url') || !$request->has('result-page') || !$request->has('pw')) {
+        abort(404);
+    }
+    return view('content-warning', ["title" => __('content-warning.title'), 'css' => [
+        mix('/css/content-warning.css')
+    ]]);
+})->name('content-warning');
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 Route::post('img/cat.png', 'HumanVerification@remove');

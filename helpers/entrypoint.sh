@@ -37,6 +37,3 @@ fi
 if [ ! -d "/html/storage/logs/metager" ]; then
     mkdir -p /html/storage/logs/metager
 fi
-
-php artisan optimize
-php artisan route:trans:cache

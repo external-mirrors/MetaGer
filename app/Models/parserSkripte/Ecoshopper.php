@@ -36,7 +36,6 @@ class Ecoshopper extends Searchengine
                     } else {
                         $anzeigeLink = $link;
                     }
-
                 } else {
                     $anzeigeLink = $link;
                 }
@@ -49,10 +48,13 @@ class Ecoshopper extends Searchengine
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->{"display-name"}, $this->engine->homepage,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
                     $this->counter,
-                    ['partnershop' => false,
-                        'image' => $image]
+                    [
+                        'partnershop' => false,
+                        'image' => $image
+                    ]
                 );
             }
         } catch (\Exception $e) {

@@ -32,6 +32,7 @@ mix
   .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css")
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
   .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css")
+  .less('resources/less/metager/pages/content-warning.less', 'public/css/content-warning.css')
   // js
   .babel(
     [

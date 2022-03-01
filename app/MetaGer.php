@@ -407,6 +407,9 @@ class MetaGer
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
+                // Disable Content Warning if it was enabled before
+                $arr[$link]->content_warning = false;
+
 
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {

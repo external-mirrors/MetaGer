@@ -30,6 +30,7 @@ class ContentWarnings
      */
     public static function enableContentWarnings(Result &$result)
     {
+        return;
         $blocked = self::checkResult($result);
         if ($blocked === 0) {
             // No content warning necessary

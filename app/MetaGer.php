@@ -327,9 +327,6 @@ class MetaGer
             }
         }
 
-        // Content Warnings
-        $this->contentWarnings($this->results);
-
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
@@ -407,11 +404,6 @@ class MetaGer
             if (isset($arr[$link])) {
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
-                // Disable Content Warning if it was enabled before
-                if ($arr[$link]->content_warning === ContentWarnings::CONTENT_WARNING_STATUS_ENGINE) {
-                    $arr[$link]->content_warning = ContentWarnings::CONTENT_WARNING_STATUS_NONE;
-                }
-
 
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {
@@ -492,16 +484,6 @@ class MetaGer
         $position = random_int(0, $adCount);
 
         array_splice($this->ads, $position, 0, [$donationAd]);
-    }
-
-    private function contentWarnings(&$results)
-    {
-        /**
-         * @param \App\Models\Result $result
-         */
-        foreach ($results as $result) {
-            ContentWarnings::enableContentWarnings($result);
-        }
     }
 
     public function humanVerification(&$results)

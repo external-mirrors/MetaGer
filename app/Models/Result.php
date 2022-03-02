@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\ContentWarnings;
-
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
  *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
  */
@@ -34,7 +32,6 @@ class Result
     public $strippedDomainAnzeige; # Die Domain in Form "bar.de"
     public $strippedLinkAnzeige; # Der Link in Form "foo.bar.de/test"
     public $rank; # Das Ranking für das Ergebnis
-    public $content_warning = ContentWarnings::CONTENT_WARNING_STATUS_NONE; # Whether or not the target website was marked by \App\ContentWarnings
     public $new = true;
     public $changed = false;
 

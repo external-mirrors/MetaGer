@@ -33,12 +33,14 @@
 		<h3>{!! trans('help/help-mainpages.result.title') !!}</h3>
 			<div>
 				<p>{!! trans('help/help-mainpages.result.info.1') !!}</p>
+				<div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"/></div>
 				<ul class = "dotlist">
 					<li>{!! trans('help/help-mainpages.result.info.open') !!}</li>
 					<li>{!! trans('help/help-mainpages.result.info.newtab') !!}</li>
 					<li>{!! trans('help/help-mainpages.result.info.anonym') !!}</li>
 					<li>{!! trans('help/help-mainpages.result.info.more') !!}</li>
 				</ul>
+				<div class="image-container"><img src="/img/hilfe-php-resultpic-02.png"></div>
 				<p>{!! trans('help/help-mainpages.result.info.2') !!}</p>
 				<ul class = "dotlist">
 					<li>{!! trans('help/help-mainpages.result.info.saveresult') !!}</li>

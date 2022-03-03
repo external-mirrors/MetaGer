@@ -75,7 +75,7 @@ class Yandex extends Searchengine
         $target_domain = parse_url($link, PHP_URL_HOST);
         if ($target_domain !== false) {
             foreach ($filtered_domains as $filtered_domain) {
-                if (preg_match("/[\b\.]{1}" . preg_quote($filtered_domain, "$/") . "/", $target_domain)) {
+                if (preg_match("/(^|\b|\.){1}" . preg_quote($filtered_domain, "$/") . "/", $target_domain)) {
                     return true;
                 }
             }

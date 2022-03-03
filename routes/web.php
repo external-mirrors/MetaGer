@@ -271,14 +271,6 @@ Route::get('settings', function () {
 });
 
 Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
-Route::get('meta/meta.ger3/content-warning', function (Request $request) {
-    if (!$request->has('url') || !$request->has('result-page') || !$request->has('pw')) {
-        abort(404);
-    }
-    return view('content-warning', ["title" => __('content-warning.title'), 'css' => [
-        mix('/css/content-warning.css')
-    ]]);
-})->name('content-warning');
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 Route::post('img/cat.png', 'HumanVerification@remove');

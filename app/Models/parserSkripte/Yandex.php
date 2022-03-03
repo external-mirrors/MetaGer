@@ -81,28 +81,6 @@ class Yandex extends Searchengine
             }
         }
 
-        // Filters kyrillic results when the query is not kyrillic
-        $maxRatio = 0.1; # Gibt den Prozentsatz von Kyrillischen Zeichen in Titel und Beschreibung an, ab dem das Ergebnis runter gerankt werden soll
-        if (!preg_match('/[А-Яа-яЁё]/u', $this->query) === 1) {
-            # Wir überprüfen das Verhältnis von Kyrillischen Zeichen im Titel
-            if (preg_match_all('/[А-Яа-яЁё]/u', $title, $matches)) {
-                $count = sizeof($matches[0]);
-                $titleSize = strlen($title);
-                $percKyr = $count / $titleSize;
-                if ($percKyr > $maxRatio) {
-                    return true;
-                }
-            }
-            # Wir überprüfen das Verhältnis von Kyrillischen Zeichen in der Beschreibung
-            if (preg_match_all('/[А-Яа-яЁё]/u', $description, $matches)) {
-                $count = sizeof($matches[0]);
-                $descrSize = strlen($description);
-                $percKyr = $count / $descrSize;
-                if ($percKyr > $maxRatio) {
-                    return true;
-                }
-            }
-        }
         return false;
     }
 

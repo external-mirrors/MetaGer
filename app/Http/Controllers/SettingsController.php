@@ -24,6 +24,9 @@ class SettingsController extends Controller
         $langFile = json_decode(file_get_contents($langFile));
 
         $sumas = $this->getSumas($fokus);
+        if (sizeof($sumas) === 0) {
+            abort(404);
+        }
 
         # Parse the Parameter Filter
         $filters = [];
@@ -89,6 +92,11 @@ class SettingsController extends Controller
     {
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
+
+        if (empty($langFile->foki->{$fokus})) {
+            // Fokus does not exist in this suma file
+            return [];
+        }
 
         $sumasFoki = $langFile->foki->{$fokus}->sumas;
 

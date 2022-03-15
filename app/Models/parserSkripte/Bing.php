@@ -33,7 +33,9 @@ class Bing extends Searchengine
     {
         try {
             $results = json_decode($result);
-            $this->totalResults = $results->webPages->totalEstimatedMatches;
+            if (!empty($results->webPages->totalEstimatedMatches)) {
+                $this->totalResults = $results->webPages->totalEstimatedMatches;
+            }
 
             # Check if the query got altered
             if (!empty($results->{"queryContext"}) && !empty($results->{"queryContext"}->{"alteredQuery"}) && !empty($results->{"queryContext"}->{"alterationOverrideQuery"})) {
@@ -73,6 +75,9 @@ class Bing extends Searchengine
         try {
             $results = json_decode($result);
 
+            if (empty($results->webPages->totalEstimatedMatches)) {
+                return;
+            }
             $totalMatches = $results->webPages->totalEstimatedMatches;
 
             $newEngine = unserialize(serialize($this->engine));

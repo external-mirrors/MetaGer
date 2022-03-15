@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redis;
 abstract class Searchengine
 {
     public $getString = ""; # Der String für die Get-Anfrage
+    public $query = ""; # The search query
     public $engine; # Die ursprüngliche Engine XML
     public $totalResults = 0; # How many Results the Searchengine has found
     public $results = []; # Die geladenen Ergebnisse
@@ -70,7 +71,7 @@ abstract class Searchengine
         }
 
         # Suchstring generieren
-        $q = $metager->getQ();
+        $this->query = $metager->getQ();
         $filters = $metager->getSumaFile()->filter;
         foreach ($metager->getQueryFilter() as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
@@ -79,7 +80,7 @@ abstract class Searchengine
             }
             $filterOptionsEngine = $filterOptions->sumas->{$this->name};
             $query = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
-            $q = $query . " " . $q;
+            $this->query = $query . " " . $this->query;
         }
 
         $tmpPara = false;
@@ -100,7 +101,7 @@ abstract class Searchengine
             $this->engine->{"get-parameter"}->{$engineParameterKey} = $engineParameterValue;
         }
 
-        $this->getString = $this->generateGetString($q);
+        $this->getString = $this->generateGetString($this->query);
         $this->updateHash();
         $this->canCache = $metager->canCache();
     }
@@ -205,7 +206,7 @@ abstract class Searchengine
                 return $body;
             }
         }
-        
+
         if ($body === "no-result") {
             $body = "";
         }

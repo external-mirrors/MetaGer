@@ -35,8 +35,9 @@ class Scopia extends Searchengine
                 $link = $result->url->__toString();
                 $anzeigeLink = $link;
                 $descr = $result->description->__toString();
+
                 $this->counter++;
-                if (!$this->containsPornContent($title . $descr)) { //see note at filtering method
+                if (!$this->containsPornContent($title . $descr) && !$this->filterScopia($link)) { //see note at filtering method
                     $this->results[] = new \App\Models\Result(
                         $this->engine,
                         $title,
@@ -54,6 +55,33 @@ class Scopia extends Searchengine
             Log::error($e->getMessage());
             return;
         }
+    }
+
+    /**
+     * Decides whether or not to keep the result
+     * 
+     * @return boolean
+     */
+    private function filterScopia($link)
+    {
+        /**
+         * Scopia has too old of an index to have correct results regarding this domains
+         * 
+         * Important: We do not filter out those domains completely as other search engines do have them in the index
+         */
+        $filtered_domains = [
+            "rt.com",
+            "sputnik.com"
+        ];
+        $target_domain = parse_url($link, PHP_URL_HOST);
+        if ($target_domain !== false) {
+            foreach ($filtered_domains as $filtered_domain) {
+                if (preg_match("/(^|\b|\.){1}" . preg_quote($filtered_domain, "/") . "$/", $target_domain)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private function containsPornContent($text)

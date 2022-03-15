@@ -40,6 +40,9 @@ class Yandex extends Searchengine
                 if (!$descr) {
                     $descr = strip_tags($result->{"doc"}->{"passages"}->asXML());
                 }
+                if ($this->filterYandexResult($title, $descr, $link)) {
+                    continue;
+                }
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->engine,
@@ -56,6 +59,29 @@ class Yandex extends Searchengine
             Log::error("A problem occurred parsing results from $this->name:\n" . $e->getMessage() . "\n" . $result);
             return;
         }
+    }
+
+    private function filterYandexResult($title, $description, $link)
+    {
+        /**
+         * Yandex is currently not expected to have neutral results regarding this domains
+         * Thats why we filter those out here.
+         * Important: We do not filter out those domains completely as other search engines do have them in the index
+         */
+        $filtered_domains = [
+            "rt.com",
+            "sputnik.com"
+        ];
+        $target_domain = parse_url($link, PHP_URL_HOST);
+        if ($target_domain !== false) {
+            foreach ($filtered_domains as $filtered_domain) {
+                if (preg_match("/(^|\b|\.){1}" . preg_quote($filtered_domain, "/") . "$/", $target_domain)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function getNext(\App\MetaGer $metager, $result)

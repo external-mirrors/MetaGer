@@ -49,6 +49,10 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" >{{ trans('sidebar.titles.tips') }}</a>
         </li>
 
+        <li>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/faktencheck/") }}" >{{ trans('sidebar.navFactcheck') }}</a>
+        </li>
+
       </ul>
     </li>
     <hr>

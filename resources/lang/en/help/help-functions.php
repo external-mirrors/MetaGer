@@ -32,7 +32,7 @@ return [
 
     'selist.title' => 'I want to add metager.de to the search engines list of my browser.',
     'selist.explanation.1' => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
-    'selist.explanation.2' => 'Some browser need an URL. Please use "https://metager.de/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
+    'selist.explanation.2' => 'Some browser need an URL. Please use "https://metager.org/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
 
 
 ];

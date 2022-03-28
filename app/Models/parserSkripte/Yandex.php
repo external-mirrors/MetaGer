@@ -70,7 +70,7 @@ class Yandex extends Searchengine
          */
         $filtered_domains = [
             "rt.com",
-            "sputnik.com"
+            "sputniknews.com"
         ];
         $target_domain = parse_url($link, PHP_URL_HOST);
         if ($target_domain !== false) {

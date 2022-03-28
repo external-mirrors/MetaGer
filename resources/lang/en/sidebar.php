@@ -29,6 +29,7 @@ return [
     'nav29' => 'Transparency statement',
     'nav30' => 'Search engines',
     'nav31' => 'More information',
+    'navFactcheck' => 'fact checking',
     "navigationToggle" => "show navigation",
     'titles.tips' => 'Tips',
     'plugin' => 'MetaGer Plugin',

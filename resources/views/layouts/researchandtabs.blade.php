@@ -32,12 +32,12 @@
 		@yield('results')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
-	<div id="additions-container">
+	<div id="additions-container" style="--ad-display: {{ $metager->isApiAuthorized() ? 'none' : 'block' }};">
 		@include('layouts.keyboardNavBox')
 		<div id="quicktips">
-		@if( $metager->showQuicktips() )
+			@if( $metager->showQuicktips() )
 			@include('quicktips', ['quicktips', $quicktips])
-		@endif
+			@endif
 		</div>
 	</div>
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])

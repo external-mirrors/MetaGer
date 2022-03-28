@@ -92,8 +92,8 @@ class Infotiger extends Searchengine
         if (
             $results_json === null ||                   // Error parsing JSON response (json_decode returned null)
             empty($results_json) ||
-            !$results_json->response ||                 // Unexpected JSON format (no response object)
-            !$results_json->response->docs ||           // Unexpected JSON format (no docs object)
+            !property_exists($results_json, 'response') ||                 // Unexpected JSON format (no response object)
+            !property_exists($results_json->response, 'docs') ||           // Unexpected JSON format (no docs object)
             !is_array($results_json->response->docs)    // Unexpected JSON format (docs is not an array)
         ) {
             return false;

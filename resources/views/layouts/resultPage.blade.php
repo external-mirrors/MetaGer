@@ -6,15 +6,23 @@
 	<meta charset="utf-8">
 	<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-	<link rel="apple-touch-icon" href="/img/apple/touch-icon.png">
-	<link rel="apple-touch-icon" sizes="57x57" href="/img/apple/touch-icon-57.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="/img/apple/touch-icon-72.png">
-	<link rel="apple-touch-icon" sizes="76x76" href="/img/apple/touch-icon-76.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="/img/apple/touch-icon-114.png">
-	<link rel="apple-touch-icon" sizes="120x120" href="/img/apple/touch-icon-120.png">
-	<link rel="apple-touch-icon" sizes="144x144" href="/img/apple/touch-icon-144.png">
-	<link rel="apple-touch-icon" sizes="152x152" href="/img/apple/touch-icon-152.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="/img/apple/touch-icon-180.png">
+	@foreach(scandir(public_path("img/favicon")) as $file)
+	@if(in_array($file, [".", ".."]))
+	@continue
+	@endif
+	@php
+	preg_match("/(\d+)\.png$/", $file, $matches);
+	@endphp
+	@if($matches)
+	<link rel="icon" sizes="{{$matches[1]}}x{{$matches[1]}}" href="/img/favicon/{{$file}}" type="image/png">
+	<link rel="apple-touch-icon" sizes="{{$matches[1]}}x{{$matches[1]}}" href="/img/favicon/{{$file}}" type="image/png">
+	@endif
+	@endforeach
+	@if(empty(Cookie::get('key')))
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+	@else
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
+	@endif
 	@if(empty(Cookie::get('key')))
 	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
 	@else

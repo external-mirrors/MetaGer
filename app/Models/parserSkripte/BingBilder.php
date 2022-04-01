@@ -57,7 +57,6 @@ class BingBilder extends Searchengine
 
     public function getNext(\App\MetaGer $metager, $result)
     {
-        preg_match("/(\d+)\.png$/", $file, $m)
         try {
             $results = json_decode($result);
 

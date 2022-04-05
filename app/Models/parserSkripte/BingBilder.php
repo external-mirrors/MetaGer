@@ -18,7 +18,7 @@ class BingBilder extends Searchengine
     {
         try {
             $results = json_decode($result);
-            if (!empty($results->webPages->totalEstimatedMatches)) {
+            if (!empty($results->totalEstimatedMatches)) {
                 $this->totalResults = $results->totalEstimatedMatches;
             }
             $results = $results->value;
@@ -60,7 +60,7 @@ class BingBilder extends Searchengine
         try {
             $results = json_decode($result);
 
-            if (empty($results->webPages->totalEstimatedMatches)) {
+            if (empty($results->totalEstimatedMatches)) {
                 return;
             }
             $totalMatches = $results->totalEstimatedMatches;

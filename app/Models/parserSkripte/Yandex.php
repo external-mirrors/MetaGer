@@ -67,6 +67,7 @@ class Yandex extends Searchengine
          * Yandex is currently not expected to have neutral results regarding this domains
          * Thats why we filter those out here.
          * Important: We do not filter out those domains completely as other search engines do have them in the index
+         * Returns true if the result is to be excluded.
          */
         $filtered_domains = [
             "rt.com",
@@ -82,13 +83,12 @@ class Yandex extends Searchengine
         }
 
 
-        // If the query does not contain kyrillic characters the result needs to not contain them, too
+        // If the query does not contain kyrillic characters then the result must not contain them or they will be filtered
         if (
             !preg_match('/[А-Яа-яЁё]/u', $this->query) === 1 &&
             (preg_match('/[А-Яа-яЁё]/u', $title) === 1 ||
                 preg_match('/[А-Яа-яЁё]/u', $description) === 1)
         ) {
-            # Das Suchwort enthält kyrillische Zeichen, also dürfen es auch die Ergebnisse
             return true;
         }
 

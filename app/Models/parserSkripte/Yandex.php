@@ -8,12 +8,10 @@ use Log;
 class Yandex extends Searchengine
 {
     public $results = [];
-    private $query;
 
     public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
     {
         parent::__construct($name, $engine, $metager);
-        $this->query = $metager->getQ();
     }
 
     public function loadResults($result)

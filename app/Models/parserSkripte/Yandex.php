@@ -8,10 +8,12 @@ use Log;
 class Yandex extends Searchengine
 {
     public $results = [];
+    private $query;
 
     public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
     {
         parent::__construct($name, $engine, $metager);
+        $this->query = $metager->getQ();
     }
 
     public function loadResults($result)
@@ -79,6 +81,17 @@ class Yandex extends Searchengine
                     return true;
                 }
             }
+        }
+
+
+        // If the query does not contain kyrillic characters the result needs to not contain them, too
+        if (
+            !preg_match('/[А-Яа-яЁё]/u', $this->query) === 1 &&
+            (preg_match('/[А-Яа-яЁё]/u', $title) === 1 ||
+                preg_match('/[А-Яа-яЁё]/u', $description) === 1)
+        ) {
+            # Das Suchwort enthält kyrillische Zeichen, also dürfen es auch die Ergebnisse
+            return true;
         }
 
         return false;

@@ -89,37 +89,18 @@
         </form>
     </div>
 
-    <div class="card" id="blacklist">
-        <h1>@lang('settings.header.4')</h1>
+    <div class="card" id="blacklist-container">
+        <h1 id="bl">@lang('settings.header.4')</h1>
         <p>@lang('settings.text.4')</p>
         <form id="newentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
             <input type="hidden" name="url" value="{{ $url }}">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
-            <label for="blacklist">@lang('settings.address')</label>
+            <label for="blacklist">@lang('settings.address') ({{ sizeof($blacklist) }}) </label>
             <div id="create">
-                <input id="blacklist" name="blacklist" type="text" placeholder="example.com">
-                <button type="submit" class="btn btn-default">@lang('settings.add')</button>
+                <textarea name="blacklist" id="blacklist" cols="30" rows="{{ max(min(sizeof($blacklist)+1, 20), 4) }}" maxlength="2048" placeholder="example.com&#10;example2.com&#10;*.example3.com" spellcheck="false">{{ implode("\r\n", $blacklist) }}</textarea>
+                <button type="submit" class="btn btn-default">@lang('settings.save')</button>
             </div>
         </form>
-        @if(!empty($blacklist))
-        <form id="deleteentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-            <table>
-                @foreach($blacklist as $key => $value)
-                <tr>
-                    <td>
-                        {{ $value }}
-                    </td>
-                    <td>
-                        <button type="submit" name="cookieKey" value="{{ $key }}"><img class="mg-icon allSettings-trashcan-icon" src="/img/trashcan.svg" alt="{{ trans('trashcan.alt') }}"></button>
-                    </td>
-                </tr>
-                @endforeach
-            </table>
-        </form>
-        <form id="clearlist" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('clearBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
-            <button class="btn btn-default" type="submit" name="clear" value="1">@lang('settings.clear')</button>
-        </form>
-        @endif
     </div>
 
 

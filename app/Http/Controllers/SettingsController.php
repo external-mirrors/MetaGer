@@ -67,10 +67,15 @@ class SettingsController extends Controller
         # Reading cookies for black list entries
         $blacklist = [];
         foreach ($cookies as $key => $value) {
-            if (stripos($key, 'blpage') !== false && stripos($key, $fokus) !== false) {
-                $blacklist[$key] = $value;
+            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
+                $blacklist[] = $value;
+            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, $fokus) !== false) {
+                $blacklist = array_merge($blacklist, explode(",", $value));
             }
         }
+
+        $blacklist = array_unique($blacklist);
+        sort($blacklist);
 
         # Generating link with set cookies
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
@@ -338,42 +343,55 @@ class SettingsController extends Controller
         $fokus = $request->input('fokus', '');
         $url = $request->input('url', '');
 
-        $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
-        $blacklist = preg_filter($regexProtocol, '', $request->input('blacklist'));
+        $blacklist = $request->input('blacklist');
+        $blacklist = substr($blacklist, 0, 2048);
 
-        if (stripos($blacklist, '/') !== false) {
-            $blacklist = substr($blacklist, 0, stripos($blacklist, '/'));
-        }
-        #fixme: this doesn't match all valid URLs
-        $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
-        if (preg_match($regexUrl, $blacklist) === 1) {
-            $path = \Request::path();
-            $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            $cookies = Cookie::get();
-            $cookieCounter = 0;
-            $noduplicate = true;
+        // Split the blacklist by all sorts of newlines
+        $blacklist = preg_split('/\r\n|[\r\n]/', $blacklist);
 
-            ksort($cookies);
+        $valid_blacklist_entries = [];
 
-            if (!empty($cookies)) {
-                foreach ($cookies as $key => $value) {
-                    if (stripos($key, $fokus . '_blpage') === 0) {
-                        if ($value === $blacklist) {
-                            $noduplicate = false;
-                            break;
-                        }
-                        if ((int)(substr($key, strlen($fokus . '_blpage'))) === $cookieCounter) {
-                            $cookieCounter++;
-                        }
-                    }
-                }
+        foreach ($blacklist as $blacklist_entry) {
+            $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
+            $blacklist_entry = preg_filter($regexProtocol, '', $blacklist_entry);
+
+            # Allow Only Domains without path
+            if (stripos($blacklist_entry, '/') !== false) {
+                $blacklist_entry = substr($blacklist_entry, 0, stripos($blacklist_entry, '/'));
             }
-            if ($noduplicate && !empty($blacklist) > 0 && strlen($blacklist) <= 255) {
-                $cookieName = $fokus . '_blpage' . $cookieCounter;
-                Cookie::queue($cookieName, $blacklist, 525600, $cookiePath, null, false, false);
+
+            #fixme: this doesn't match all valid URLs
+            $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+
+            if (preg_match($regexUrl, $blacklist_entry) === 1) {
+                $valid_blacklist_entries[] = $blacklist_entry;
             }
         }
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+
+        # Check if any setting is active
+        $cookies = Cookie::get();
+
+        # Remove all cookies from the old method where they got stored
+        # in multiple Cookies.
+        # The old cookies are in the request currently send so just delete the old cookie
+        foreach ($cookies as $key => $value) {
+            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
+                $path = \Request::path();
+                $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            }
+        }
+
+        $valid_blacklist_entries = array_unique($valid_blacklist_entries);
+        sort($valid_blacklist_entries);
+
+
+        $path = \Request::path();
+        $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
+        $cookieName = $fokus . '_blpage';
+        Cookie::queue($cookieName, implode(",", $valid_blacklist_entries), 525600, $cookiePath, null, false, false);
+
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
     }
 
     public function deleteBlacklist(Request $request)
@@ -386,7 +404,7 @@ class SettingsController extends Controller
 
         Cookie::queue($cookieKey, "", 0, $cookiePath, null, false, false);
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
     }
 
     public function clearBlacklist(Request $request)
@@ -455,5 +473,9 @@ class SettingsController extends Controller
             }
         }
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
+    }
+
+    private function loadBlacklist(Request $request)
+    {
     }
 }

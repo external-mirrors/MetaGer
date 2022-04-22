@@ -97,7 +97,7 @@
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address') ({{ sizeof($blacklist) }}) </label>
             <div id="create">
-                <textarea name="blacklist" id="blacklist" cols="30" rows="{{ max(min(sizeof($blacklist)+1, 20), 4) }}" placeholder="example.com&#10;example2.com&#10;*.example3.com" spellcheck="false">{{ implode("\r\n", $blacklist) }}</textarea>
+                <textarea name="blacklist" id="blacklist" cols="30" rows="{{ max(min(sizeof($blacklist)+1, 20), 4) }}" maxlength="2048" placeholder="example.com&#10;example2.com&#10;*.example3.com" spellcheck="false">{{ implode("\r\n", $blacklist) }}</textarea>
                 <button type="submit" class="btn btn-default">@lang('settings.save')</button>
             </div>
         </form>

@@ -344,6 +344,7 @@ class SettingsController extends Controller
         $url = $request->input('url', '');
 
         $blacklist = $request->input('blacklist');
+        $blacklist = substr($blacklist, 0, 2048);
 
         // Split the blacklist by all sorts of newlines
         $blacklist = preg_split('/\r\n|[\r\n]/', $blacklist);

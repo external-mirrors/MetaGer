@@ -85,7 +85,7 @@ class Yandex extends Searchengine
 
         // If the query does not contain kyrillic characters then the result must not contain them or they will be filtered
         if (
-            !preg_match('/[А-Яа-яЁё]/u', $this->query) === 1 &&
+            preg_match('/[А-Яа-яЁё]/u', $this->query) !== 1 &&
             (preg_match('/[А-Яа-яЁё]/u', $title) === 1 ||
                 preg_match('/[А-Яа-яЁё]/u', $description) === 1)
         ) {

@@ -16,7 +16,7 @@ return [
     'text.3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
 
     'header.4' => 'Blacklist',
-    'text.4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.".',
+    'text.4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
     'address' => 'Adresseingabe',
 
     'save' => 'Speichern',

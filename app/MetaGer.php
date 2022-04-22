@@ -1333,22 +1333,21 @@ class MetaGer
                 $this->hostBlacklist[] = $blacklistString;
             }
         }
-        foreach (Cookie::get() as $key => $value) {
-            if ((stripos($key, $this->fokus . '_blpage') === 0) && (stripos($value, '*.') === false)) {
-                $this->hostBlacklist[] = $value;
-            }
-        }
 
         $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
         if (sizeof($this->hostBlacklist) > 0) {
-            $hostString = "";
-            foreach ($this->hostBlacklist as $host) {
-                $hostString .= $host . ", ";
+            if (sizeof($this->hostBlacklist) <= 3) {
+                $hostString = "";
+                foreach ($this->hostBlacklist as $host) {
+                    $hostString .= $host . ", ";
+                }
+                $hostString = rtrim($hostString, ", ");
+                $this->warnings[] = trans('metaGer.formdata.hostBlacklist', ['host' => $hostString]);
+            } else {
+                $this->warnings[] = trans('metaGer.formdata.hostBlacklistCount', ['count' => sizeof($this->hostBlacklist)]);
             }
-            $hostString = rtrim($hostString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.hostBlacklist', ['host' => $hostString]);
         }
     }
 
@@ -1376,8 +1375,17 @@ class MetaGer
             }
         }
         foreach (Cookie::get() as $key => $value) {
-            if (stripos($key, $this->fokus . '_blpage') === 0 && stripos($value, '*.') === 0) {
-                $this->domainBlacklist[] = str_replace("*.", "", $value);
+            $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
+            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $this->fokus) !== false && preg_match($regexUrl, $value) === 1) {
+                $this->domainBlacklist[] = substr($value, 0, 255);
+            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, $this->fokus) !== false) {
+                $blacklistItems = explode(",", $value);
+                foreach ($blacklistItems as $blacklistItem) {
+
+                    if (preg_match($regexUrl, $blacklistItem) === 1) {
+                        $this->domainBlacklist[] = substr($blacklistItem, 0, 255);
+                    }
+                }
             }
         }
 
@@ -1385,12 +1393,16 @@ class MetaGer
 
         // print the domain blacklist as a user warning
         if (sizeof($this->domainBlacklist) > 0) {
-            $domainString = "";
-            foreach ($this->domainBlacklist as $domain) {
-                $domainString .= $domain . ", ";
+            if (sizeof($this->domainBlacklist) <= 3) {
+                $domainString = "";
+                foreach ($this->domainBlacklist as $domain) {
+                    $domainString .= $domain . ", ";
+                }
+                $domainString = rtrim($domainString, ", ");
+                $this->warnings[] = trans('metaGer.formdata.domainBlacklist', ['domain' => $domainString]);
+            } else {
+                $this->warnings[] = trans('metaGer.formdata.domainBlacklistCount', ['count' => sizeof($this->domainBlacklist)]);
             }
-            $domainString = rtrim($domainString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.domainBlacklist', ['domain' => $domainString]);
         }
     }
 

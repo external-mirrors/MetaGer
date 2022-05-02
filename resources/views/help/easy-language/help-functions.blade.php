@@ -10,10 +10,13 @@
 		<h3 id="stopwordsearch">{!! trans('help/easy-language/help-functions.stopworte.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.stopworte.1') !!}</p>
+			<p>{!! trans('help/easy-language/help-functions.stopworte.2') !!}</p>
+
 			<ul class="dotlist">
-				<li>{!! trans('help/easy-language/help-functions.stopworte.2') !!}</li>
 				<li class="nodot"><div class="search-example">{!! trans('help/easy-language/help-functions.stopworte.3') !!}</div></li>
 			</ul>
+			<p>{!! trans('help/easy-language/help-functions.stopworte.4') !!}</p>
+
 		</div>
 		<h3 id="severalwords">{!! trans('help/easy-language/help-functions.mehrwortsuche.title') !!}</h3>
 		<div>

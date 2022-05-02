@@ -5,9 +5,10 @@ return [
     "backarrow" => ' Zurück',
     "suchfunktion.title" => "Suchfunktionen",
     "stopworte.title" => 'Stoppworte',
-    "stopworte.1" => "Wenn Sie unter den MetaGer-Suchergebnissen solche ausschließen wollen, in denen bestimmte Worte (Ausschlussworte / Stoppworte) vorkommen, dann erreichen Sie das, indem Sie diese Worte mit einem Minus versehen.",
-    "stopworte.2" => "Beispiel: Sie suchen ein neues Auto, aber auf keinen Fall einen BMW. Ihre Eingabe lautet also:",
+    "stopworte.1" => "Stopp-Worte sind Wörter die man nicht sehen will. <br> Wenn Sie ein Wort in den Ergebnissen nicht sehen wollen dann machen Sie das so:",
+    "stopworte.2" => "Beispiel: <br> Sie wollen nach einem neuen Auto suchen. <br> Sie wollen aber nicht das Wort BMW sehen. <br> Also schreiben Sie:",
     "stopworte.3" => "auto neu -bmw",
+    "stopworte.4" => "Wenn Sie ein Minus vor das Wort schreiben wird das Wort in den Ergebnissen nicht angezeigt.",
 
     "mehrwortsuche.title" => "Mehrwortsuche",
     "mehrwortsuche.1" => "Wenn Sie bei MetaGer nach mehr als einem Wort suchen, versuchen wir automatisch, Ihnen Ergebnisse zu liefern, in denen alle Wörter vorkommen, oder die diesen möglichst nahe kommen.",

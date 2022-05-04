@@ -35,6 +35,7 @@ ADD configuration/php/development.ini $PHP_INI_DIR/conf.d/development.ini
 ADD configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
 USER 1000:1000
+ENTRYPOINT [ "/usr/local/sbin/php-fpm" ]
 
 FROM development as production
 

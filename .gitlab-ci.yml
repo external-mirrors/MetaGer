@@ -1,3 +1,5 @@
+image: alpine/helm:3.8.2
+
 variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
     AUTO_DEVOPS_BUILD_IMAGE_EXTRA_ARGS: "--network host"

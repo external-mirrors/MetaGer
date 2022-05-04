@@ -7,6 +7,13 @@ RUN /usr/bin/installcomposer && \
 
 FROM composer as development
 
+# Create User
+# Using image as non-root
+RUN groupadd -g 1000 metager && \
+    useradd -b /home/metager -g 1000 -u 1000 -M -s /bin/bash metager && \
+    mkdir -p /home/metager &&\
+    chown 1000:1000 /home/metager
+
 # Install required php modules
 RUN apt update && apt install -y \
     libzip-dev \
@@ -27,7 +34,11 @@ ADD configuration/php/development.ini $PHP_INI_DIR/conf.d/development.ini
 # Configure FPM
 ADD configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
+USER 1000:1000
+
 FROM development as production
+
+USER 0:0
 
 # Disable xdebug extension and enable opcache
 RUN rm $PHP_INI_DIR/conf.d/xdebug.ini && \
@@ -39,3 +50,5 @@ RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 RUN rm $PHP_INI_DIR/conf.d/development.ini
 # Add production php.ini
 ADD configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
+
+USER 1000:1000

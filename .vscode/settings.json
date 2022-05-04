@@ -1,0 +1,6 @@
+{
+    "php.validate.enable": false,
+    "docker-linter.php.enable": true,
+    "docker-linter.php.container": "metager_fpm_1",
+    "docker-linter.php.machine": ""
+}

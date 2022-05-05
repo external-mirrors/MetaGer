@@ -4,7 +4,6 @@ version: "3"
 volumes:
   composer_cache: {}
   node_cache: {}
-  node_modules: {}
 
 # Services
 services:
@@ -70,6 +69,7 @@ services:
     restart: unless-stopped
     depends_on:
       - nginx
+    user: 1000:1000
     entrypoint: ["/bin/bash", "-c"]
     command: 
     - | 
@@ -78,7 +78,6 @@ services:
     working_dir: /metager/metager_app
     volumes:
       - ./metager:/metager/metager_app
-      - node_modules:/metager/metager_app/node_modules
       - node_cache:/root/.npm
   redis:
     image: redis:6

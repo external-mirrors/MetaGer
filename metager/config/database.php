@@ -53,7 +53,7 @@ return [
         ],
         'useragents' => [
             'driver' => 'sqlite',
-            'database' => database_path('useragents.sqlite'),
+            'database' => database_path(env('SQLITE_DATABASE', 'database.sqlite')),
             'prefix' => '',
         ],
         'mysql' => [

@@ -42,7 +42,7 @@ class WaitDB extends Command
 
         while (microtime(true) - $starttime < 60) {
             try {
-                $connection = DB::connection('mysql')->getPdo();
+                $connection = DB::getPdo();
                 $this->line("Connection to database successfull");
                 return 0;
             } catch (\Exception $e) {

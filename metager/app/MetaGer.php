@@ -623,7 +623,7 @@ class MetaGer
             }
             $filter = rtrim($filter, ",");
             $error = trans('metaGer.engines.noSpecialSearch', [
-                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->infos->display_name),
+                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->{"display-name"}),
                 'filter' => $filter,
             ]);
             $this->errors[] = $error;

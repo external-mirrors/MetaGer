@@ -4,6 +4,9 @@ version: "3"
 volumes:
   vendor: {}
   composer_cache: {}
+  node_cache: {}
+  node_modules: {}
+
 # Services
 services:
   fpm:
@@ -15,6 +18,16 @@ services:
     volumes:
       - ./metager:/metager/metager_app
       - vendor:/metager/metager_app/vendor
+  nginx:
+    build:
+      context: ./
+      dockerfile: build/nginx/Dockerfile
+      target: ${APP_ENV}
+    volumes:
+      - ./metager/public:/metager/metager_app/public
+    ports:
+      - 8080:8080
+
   composer:
     build:
       <<: *fpm_build
@@ -26,13 +39,17 @@ services:
       - ./metager:/metager/metager_app
       - vendor:/metager/metager_app/vendor
       - composer_cache:/composer_cache
-  nginx:
-    build:
-      context: ./
-      dockerfile: build/nginx/Dockerfile
-      target: ${APP_ENV}
+
+  node:
+    image: node:14
+    entrypoint: ["/bin/bash", "-c"]
+    command: 
+    - | 
+      npm install
+      npm run watch
+    working_dir: /metager/metager_app
     volumes:
-      - ./metager/public:/metager/metager_app/public
-    ports:
-      - 8080:8080
+      - ./metager:/metager/metager_app
+      - node_modules:/metager/metager_app/node_modules
+      - node_cache:/root/.npm
   

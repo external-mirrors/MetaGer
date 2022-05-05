@@ -1,0 +1,19 @@
+#!/bin/sh
+
+set -e
+
+validate_laravel
+
+if [ ! -f .env ];
+then
+  cp .env.example .env
+  php artisan key:generate
+fi
+
+sed -i 's/^APP_ENV=.*/APP_ENV=local/g' .env; 
+
+php artisan wait:db
+php artisan migrate
+php artisan db:seed
+
+docker-php-entrypoint php-fpm

@@ -22,7 +22,7 @@ RUN groupadd -g ${GID} metager && \
 RUN apt update && apt install -y \
     libzip-dev \
     libpng-dev && \
-    docker-php-ext-install zip gd && \
+    docker-php-ext-install zip gd pcntl && \
     yes '' | pecl install redis-5.3.7 xdebug-3.1.4 && \
     docker-php-ext-enable redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
@@ -36,10 +36,6 @@ WORKDIR /metager/metager_app
 RUN mkdir /composer_cache && \
     chown metager:metager /composer_cache
 VOLUME [ "/composer_cache" ]
-# Add composer vendor Directory
-RUN mkdir -p /metager/metager_app/vendor && \
-    chown metager:metager /metager/metager_app/vendor
-VOLUME [ "metager/metager_app/vendor" ]
 
 # Add General Customizations to php.ini
 ADD build/fpm/configuration/php/custom.ini $PHP_INI_DIR/conf.d/custom.ini

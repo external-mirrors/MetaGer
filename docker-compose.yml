@@ -2,7 +2,6 @@ version: "3"
 
 # Volumes
 volumes:
-  vendor: {}
   composer_cache: {}
   node_cache: {}
   node_modules: {}
@@ -15,18 +14,45 @@ services:
       context: ./
       dockerfile: build/fpm/Dockerfile
       target: ${APP_ENV}
+    restart: unless-stopped
     volumes:
       - ./metager:/metager/metager_app
-      - vendor:/metager/metager_app/vendor
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
   nginx:
     build:
       context: ./
       dockerfile: build/nginx/Dockerfile
       target: ${APP_ENV}
+    restart: unless-stopped
+    depends_on:
+      - fpm
     volumes:
       - ./metager/public:/metager/metager_app/public
     ports:
       - 8080:8080
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness"
+  scheduler:
+    build:
+      <<: *fpm_build
+    restart: unless-stopped
+    entrypoint: /usr/local/bin/php
+    command: artisan schedule:work
+    volumes:
+      - ./metager:/metager/metager_app
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-scheduler"
+  worker:
+    build:
+      <<: *fpm_build
+    restart: unless-stopped
+    entrypoint: /usr/local/bin/php
+    command: artisan requests:fetcher
+    volumes:
+      - ./metager:/metager/metager_app
+    healthcheck:
+      test: "curl -f http://nginx:8080/health-check/liveness-worker"
 
   composer:
     build:
@@ -37,11 +63,13 @@ services:
       - COMPOSER_HOME=/composer_cache
     volumes:
       - ./metager:/metager/metager_app
-      - vendor:/metager/metager_app/vendor
       - composer_cache:/composer_cache
 
   node:
     image: node:14
+    restart: unless-stopped
+    depends_on:
+      - nginx
     entrypoint: ["/bin/bash", "-c"]
     command: 
     - | 
@@ -52,4 +80,10 @@ services:
       - ./metager:/metager/metager_app
       - node_modules:/metager/metager_app/node_modules
       - node_cache:/root/.npm
+  redis:
+    image: redis:6
+    restart: unless-stopped
+    user: "redis:redis"
+    healthcheck:
+      test: "redis-cli ping"
   

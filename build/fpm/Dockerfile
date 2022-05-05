@@ -22,7 +22,7 @@ RUN groupadd -g ${GID} metager && \
 RUN apt update && apt install -y \
     libzip-dev \
     libpng-dev && \
-    docker-php-ext-install zip gd pcntl && \
+    docker-php-ext-install zip gd pcntl pdo_mysql && \
     yes '' | pecl install redis-5.3.7 xdebug-3.1.4 && \
     docker-php-ext-enable redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
@@ -48,8 +48,11 @@ ADD build/fpm/configuration/php/development.ini $PHP_INI_DIR/conf.d/development.
 # Configure FPM
 ADD build/fpm/configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
+ADD build/fpm/entrypoint/validate_laravel.sh /usr/local/bin/validate_laravel
+ADD build/fpm/entrypoint/entrypoint_development.sh /usr/local/bin/entrypoint
+
 USER metager:metager
-ENTRYPOINT [ "/usr/local/sbin/php-fpm" ]
+ENTRYPOINT [ "entrypoint" ]
 
 FROM development as production
 
@@ -65,5 +68,6 @@ RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 RUN rm $PHP_INI_DIR/conf.d/development.ini
 # Add production php.ini
 ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
+ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
 
 USER metager:metager

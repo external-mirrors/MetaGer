@@ -1,7 +1,7 @@
-FROM php:8.1-fpm as composer
+FROM php:7.4-fpm as composer
 
 # Add Composer installation to image
-ADD installcomposer.sh /usr/bin/installcomposer
+ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
 RUN /usr/bin/installcomposer && \
     rm /usr/bin/installcomposer
 
@@ -27,16 +27,30 @@ RUN apt update && apt install -y \
     docker-php-ext-enable redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
+# Add working dir for the code base
+RUN mkdir -p /metager/metager_app && \
+    chown -R metager:metager /metager
+WORKDIR /metager/metager_app
+
+# Add composer Cache Directory
+RUN mkdir /composer_cache && \
+    chown metager:metager /composer_cache
+VOLUME [ "/composer_cache" ]
+# Add composer vendor Directory
+RUN mkdir -p /metager/metager_app/vendor && \
+    chown metager:metager /metager/metager_app/vendor
+VOLUME [ "metager/metager_app/vendor" ]
+
 # Add General Customizations to php.ini
-ADD configuration/php/custom.ini $PHP_INI_DIR/conf.d/custom.ini
+ADD build/fpm/configuration/php/custom.ini $PHP_INI_DIR/conf.d/custom.ini
 
 # Configure PHP (use development configuration as base)
 RUN mv $PHP_INI_DIR/php.ini-development $PHP_INI_DIR/php.ini
 # Add Development Customizations
-ADD configuration/php/development.ini $PHP_INI_DIR/conf.d/development.ini
+ADD build/fpm/configuration/php/development.ini $PHP_INI_DIR/conf.d/development.ini
 
 # Configure FPM
-ADD configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
+ADD build/fpm/configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
 USER metager:metager
 ENTRYPOINT [ "/usr/local/sbin/php-fpm" ]
@@ -54,6 +68,6 @@ RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 # Remove development php.ini
 RUN rm $PHP_INI_DIR/conf.d/development.ini
 # Add production php.ini
-ADD configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
+ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
 
 USER metager:metager

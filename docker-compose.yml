@@ -1,11 +1,38 @@
 version: "3"
 
 # Volumes
-
+volumes:
+  vendor: {}
+  composer_cache: {}
 # Services
 services:
   fpm:
     build:
-      context: build/fpm
-      dockerfile: Dockerfile
+      &fpm_build
+      context: ./
+      dockerfile: build/fpm/Dockerfile
       target: ${APP_ENV}
+    volumes:
+      - ./metager:/metager/metager_app
+      - vendor:/metager/metager_app/vendor
+  composer:
+    build:
+      <<: *fpm_build
+    entrypoint: /usr/bin/composer
+    command: install
+    environment:
+      - COMPOSER_HOME=/composer_cache
+    volumes:
+      - ./metager:/metager/metager_app
+      - vendor:/metager/metager_app/vendor
+      - composer_cache:/composer_cache
+  nginx:
+    build:
+      context: ./
+      dockerfile: build/nginx/Dockerfile
+      target: ${APP_ENV}
+    volumes:
+      - ./metager/public:/metager/metager_app/public
+    ports:
+      - 8080:8080
+  

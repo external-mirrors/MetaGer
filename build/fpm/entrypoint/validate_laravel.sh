@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -e
+
 BASE_DIR=/metager/metager_app
 
 if [ ! -f "$BASE_DIR/config/sumas.json" ]; then

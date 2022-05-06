@@ -15,7 +15,7 @@ npm:
 
 composer:
   stage: build_dependencies
-  image: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_TAG:$DOCKER_COMPOSER_IMAGE_TAG
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
   script:

@@ -10,6 +10,6 @@ build_composer:
         -f build/fpm/Dockerfile
         -t ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
         --build-arg BUILDKIT_INLINE_CACHE=1 .
-    - docker push ${CI_REGISTRY_IMAGE}/fpm:$TAGNAME
+    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY

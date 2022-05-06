@@ -6,7 +6,7 @@ COMMAND_ARGS=""
 
 # Loop through all variables
 while read key; do
-  if [ -f ${!key} ]; then
+  if [ -f ${!key@Q} ]; then
     COMMAND_ARGS="${COMMAND_ARGS} --from-file=$key=${!key@Q}"
   else
     COMMAND_ARGS="${COMMAND_ARGS} --from-literal=$key=${!key@Q}"

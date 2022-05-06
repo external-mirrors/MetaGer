@@ -8,9 +8,9 @@ COMMAND_ARGS=""
 while IFS='=' read -r name value ; do
   if [[ $name == 'K8S_SECRET'* ]]; then
     if [ -f $name ]; then
-        COMMAND_ARGS = "${COMMAND_ARGS} --from-file=$value"
+        COMMAND_ARGS="${COMMAND_ARGS} --from-file=$value"
     else
-        COMMAND_ARGS = "${COMMAND_ARGS} --from-literal=$value"
+        COMMAND_ARGS="${COMMAND_ARGS} --from-literal=$value"
     fi
   fi
 done < <(env)

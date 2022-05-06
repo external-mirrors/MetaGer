@@ -1,8 +1,16 @@
-deploy:
+.deploy:
   stage: deploy
-  environment: 
-    name: $DEPLOY_ENVIRONMENT
   image: alpine/k8s:1.22.6
   script:
-    - printenv
     - kubectl -n $KUBE_NAMESPACE get pods
+
+deploy_review:
+  extends:
+    - .deploy
+  variables:
+    environment:
+      name: review/$CI_COMMIT_REF_SLUG
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master" || $CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'

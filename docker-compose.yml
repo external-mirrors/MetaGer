@@ -31,7 +31,7 @@ services:
     ports:
       - 8080:8080
     healthcheck:
-      test: "curl -f http://nginx:8080/health-check/liveness"
+      test: "curl -f http://nginx:8080/health-check/nginx"
   scheduler:
     build:
       <<: *fpm_build

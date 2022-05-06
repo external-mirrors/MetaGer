@@ -3,7 +3,7 @@ build_dependencies_npm:
   image: node:14
   script:
     - cd metager
-    - npm install
+    - npm install --cache .npm --prefer-offline --no-audit
     - npm run prod
     - ls -alh /root/.npm
   artifacts:
@@ -12,7 +12,7 @@ build_dependencies_npm:
     expire_in: 2 hrs
   cache:
     paths:
-      - /root/.npm
+      - .npm
 
 
   

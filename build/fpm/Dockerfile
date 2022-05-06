@@ -5,8 +5,6 @@ ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
 RUN /usr/bin/installcomposer && \
     rm /usr/bin/installcomposer
 
-FROM composer as development
-
 # UID and GID this image will run under
 ARG UID=1000
 ARG GID=1000
@@ -36,6 +34,8 @@ WORKDIR /metager/metager_app
 RUN mkdir /composer_cache && \
     chown metager:metager /composer_cache
 VOLUME [ "/composer_cache" ]
+
+FROM composer as development
 
 # Add General Customizations to php.ini
 ADD build/fpm/configuration/php/custom.ini $PHP_INI_DIR/conf.d/custom.ini

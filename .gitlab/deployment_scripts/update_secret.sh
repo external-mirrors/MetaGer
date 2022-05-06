@@ -2,7 +2,7 @@
 
 set -e
 
-COMMAND_ARGS = ""
+COMMAND_ARGS=""
 
 # Loop through all variables
 while IFS='=' read -r name value ; do

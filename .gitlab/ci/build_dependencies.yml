@@ -1,6 +1,6 @@
 build_dependencies_npm:
   stage: build_dependencies
-  image: ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  image: node:14
   script:
     - cd metager
     - npm install

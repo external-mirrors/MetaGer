@@ -6,10 +6,8 @@
         "web": {
             "display-name": "index.foki.web",
             "sumas": [
-                "dummy"
             ],
             "main": [
-                "dummy"
             ]
         }
     },

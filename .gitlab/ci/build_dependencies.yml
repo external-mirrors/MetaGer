@@ -13,5 +13,21 @@ build_dependencies_npm:
     paths:
       - metager/.npm/
 
+build_dependencies_composer:
+  stage: build_dependencies
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  variables:
+    COMPOSER_HOME: .composer
+  script:
+    - cd metager
+    - pwd
+    - composer install --optimize-autoloader --no-dev
+  artifacts:
+    paths:
+      - metager/vendor
+    expire_in: 2 hrs
+  cache:
+    paths:
+      - metager/.composer/
 
   

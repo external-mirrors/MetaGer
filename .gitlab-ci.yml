@@ -1,23 +1,12 @@
-image: alpine/helm:3.8.2
-
 variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
-    AUTO_DEVOPS_BUILD_IMAGE_EXTRA_ARGS: "--network host"
-    POSTGRES_ENABLED: "false"
-    CODE_QUALITY_DISABLED: "true"
-    CONTAINER_SCANNING_DISABLED: "true"
-    DAST_DISABLED: "true"
-    DEPENDENCY_SCANNING_DISABLED: "true"
-    LICENSE_MANAGEMENT_DISABLED: "true"
-    PERFORMANCE_DISABLED: "true"
-    SAST_DISABLED: "true"
-    TEST_DISABLED: "true"
-    AUTO_DEVOPS_BUILD_IMAGE_FORWARDED_CI_VARIABLES: "AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,S3_HOST,S3_BUCKETNAME"
+    BUILD_DOCKER_IMAGE: docker:20.10.15
 
 stages:
-  - dummy
+  - build_composer
 
-dummy:
-  stage: dummy
+build_composer:
+  stage: build_composer
+  image: $BUILD_DOCKER_IMAGE
   script:
-    - echo "dummy"
+    - docker build --target=composer -f build/fpm/Dockerfile .

@@ -7,7 +7,10 @@
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - echo $CI_REGISTRY_IMAGE
-    - docker build --network=host --target=composer -f build/fpm/Dockerfile .
+    - docker build --network=host \
+        --target=composer \
+        -f build/fpm/Dockerfile \
+        -t ${CI_REGISTRY_IMAGE}/fpm:$IMAGE_TAG .
   after_script:
     - docker logout $CI_REGISTRY
 

@@ -5,15 +5,13 @@ set -e
 COMMAND_ARGS=""
 
 # Loop through all variables
-while IFS='=' read -r name value ; do
-  if [[ $name == 'K8S_SECRET'* ]]; then
-    if [ -f $name ]; then
-        COMMAND_ARGS="${COMMAND_ARGS} --from-file=${value@Q}"
-    else
-        COMMAND_ARGS="${COMMAND_ARGS} --from-literal=${value@Q}"
-    fi
+while read key; do
+  if [ -f $value ]; then
+    COMMAND_ARGS="${COMMAND_ARGS} --from-file=${!key@Q}"
+  else
+    COMMAND_ARGS="${COMMAND_ARGS} --from-literal=${!key@Q}"
   fi
-done < <(env)
+done < <(compgen -v | grep -P '^K8S_SECRET')
 
 # Create/Update the secret
 echo "kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG $COMMAND_ARGS"

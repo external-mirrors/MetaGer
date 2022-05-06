@@ -71,3 +71,5 @@ ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.in
 ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
 
 USER metager:metager
+
+ADD metager /metager/metager_app

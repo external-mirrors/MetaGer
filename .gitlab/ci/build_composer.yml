@@ -1,8 +1,6 @@
 build_composer:
   stage: build_composer
   image: $BUILD_DOCKER_IMAGE
-  variables:
-    IMAGE_NAME: fpm
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -10,7 +8,7 @@ build_composer:
     - docker build --network=host
         --target=composer
         -f build/fpm/Dockerfile
-        t ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
         --build-arg BUILDKIT_INLINE_CACHE=1 .
     - docker push ${CI_REGISTRY_IMAGE}/fpm:$TAGNAME
   after_script:

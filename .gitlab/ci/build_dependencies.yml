@@ -1,0 +1,18 @@
+build_dependencies_npm:
+  stage: build_dependencies
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  script:
+    - cd metager
+    - npm install
+    - npm run prod
+    - ls -alh /root/.npm
+  artifacts:
+    paths:
+      - metager/public
+    expire_in: 2 hrs
+  cache:
+    paths:
+      - /root/.npm
+
+
+  

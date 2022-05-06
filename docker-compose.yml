@@ -78,7 +78,7 @@ services:
     working_dir: /metager/metager_app
     volumes:
       - ./metager:/metager/metager_app
-      - node_cache:/root/.npm
+      - node_cache:/home/node/.npm
   redis:
     image: redis:6
     restart: unless-stopped

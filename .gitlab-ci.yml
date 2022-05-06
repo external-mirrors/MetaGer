@@ -11,6 +11,8 @@ workflow:
       
 stages:
   - build_composer
+  - build_dependencies
 
 include:
   - local: /.gitlab/ci/build_composer.yml
+  - local: /.gitlab/ci/build_dependencies.yml

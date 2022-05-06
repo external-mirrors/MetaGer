@@ -1,7 +1,14 @@
 variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
     BUILD_DOCKER_IMAGE: docker:20.10.15
+    DOCKER_COMPOSER_IMAGE_NAME: fpm
 
+workflow:
+  rules:
+  - if: $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development" &&  ($CI_COMMIT_TAG || $CI_COMMIT_BRANCH)
+    variables:
+      DOCKER_COMPOSER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-composer
+      
 stages:
   - build_composer
 

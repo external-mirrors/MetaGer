@@ -1,4 +1,4 @@
-.build_composer:
+build_composer:
   stage: build_composer
   image: $BUILD_DOCKER_IMAGE
   variables:
@@ -6,25 +6,11 @@
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - TAGNAME=${IMAGE_TAG}-composer
     - docker build --network=host
         --target=composer
         -f build/fpm/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/fpm:$TAGNAME
+        t ${CI_REGISTRY_IMAGE}/$DOCKER_COMPOSER_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
         --build-arg BUILDKIT_INLINE_CACHE=1 .
     - docker push ${CI_REGISTRY_IMAGE}/fpm:$TAGNAME
   after_script:
     - docker logout $CI_REGISTRY
-
-build_composer_review:
-  extends:
-    - .build_composer
-  variables:
-    IMAGE_TAG: $CI_COMMIT_REF_SLUG
-  rules:
-  - if: '$CI_COMMIT_BRANCH == "master"'
-    when: never
-  - if: '$CI_COMMIT_BRANCH == "development"'
-    when: never
-  - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
-

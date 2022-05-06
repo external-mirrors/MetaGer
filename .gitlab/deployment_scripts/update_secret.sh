@@ -16,6 +16,6 @@ while IFS='=' read -r name value ; do
 done < <(env)
 
 # Create/Update the secret
-kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG $COMMAND_ARGS
+echo "kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG $COMMAND_ARGS"
 
 echo "test";

@@ -5,7 +5,6 @@ build_dependencies_npm:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
     - npm run prod
-    - ls -alh /root/.npm
   artifacts:
     paths:
       - metager/public

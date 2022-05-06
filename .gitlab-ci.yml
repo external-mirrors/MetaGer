@@ -2,6 +2,7 @@ variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
     BUILD_DOCKER_IMAGE: docker:20.10.15
     DOCKER_FPM_IMAGE_NAME: fpm
+    DOCKER_NGINX_IMAGE_NAME: nginx
 
 workflow:
   rules:
@@ -9,6 +10,7 @@ workflow:
     variables:
       DOCKER_COMPOSER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-composer
       DOCKER_FPM_IMAGE_TAG: $CI_COMMIT_REF_SLUG
+      DOCKER_NGINX_IMAGE_TAG: $CI_COMMIT_REF_SLUG
       
 stages:
   - build_composer

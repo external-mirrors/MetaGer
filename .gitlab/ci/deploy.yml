@@ -1,5 +1,6 @@
 deploy:
   stage: deploy
+  environment: $DEPLOY_ENVIRONMENT
   image: alpine/k8s:1.22.6
   script:
     - printenv

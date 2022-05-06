@@ -1,0 +1,5 @@
+deploy:
+  stage: deploy
+  image: alpine/k8s:1.22.6
+  script:
+    - kubectl -n $KUBE_NAMESPACE get pods

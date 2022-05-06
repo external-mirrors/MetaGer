@@ -5,8 +5,5 @@ variables:
 stages:
   - build_composer
 
-build_composer:
-  stage: build_composer
-  image: $BUILD_DOCKER_IMAGE
-  script:
-    - docker build --network=host --target=composer -f build/fpm/Dockerfile .
+include:
+  - local: /.gitlab/ci/build_composer.yml

@@ -1,0 +1,15 @@
+.build_composer:
+  stage: build_composer
+  image: $BUILD_DOCKER_IMAGE
+  variables:
+    IMAGE_NAME=fpm
+  script:
+    - echo $IMAGE_NAME
+    - echo $IMAGE_TAG
+    - docker build --network=host --target=composer -f build/fpm/Dockerfile .
+
+build_composer_review:
+  extends:
+    - .build_composer
+  variables:
+    IMAGE_TAG=test

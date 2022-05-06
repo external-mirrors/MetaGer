@@ -10,8 +10,9 @@
     - docker build --network=host
         --target=composer
         -f build/fpm/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/fpm:$IMAGE_TAG .
-    - docker push ${CI_REGISTRY_IMAGE}/fpm:$IMAGE_TAG
+        -t ${CI_REGISTRY_IMAGE}/fpm:$IMAGE_TAG 
+        --build-arg BUILDKIT_INLINE_CACHE=1 .
+    - docker push ${CI_REGISTRY_IMAGE}/fpm:composer-$IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY
 
@@ -20,3 +21,10 @@ build_composer_review:
     - .build_composer
   variables:
     IMAGE_TAG: $CI_COMMIT_REF_SLUG
+  rules:
+  - if: '$CI_COMMIT_BRANCH == "master"'
+    when: never
+  - if: '$CI_COMMIT_BRANCH == "development"'
+    when: never
+  - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+

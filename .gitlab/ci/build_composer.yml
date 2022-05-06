@@ -6,8 +6,7 @@
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - echo $IMAGE_NAME
-    - echo $IMAGE_TAG
+    - echo $CI_REGISTRY_IMAGE
     - docker build --network=host --target=composer -f build/fpm/Dockerfile .
   after_script:
     - docker logout $CI_REGISTRY

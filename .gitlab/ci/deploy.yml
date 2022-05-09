@@ -1,6 +1,6 @@
 .deploy:
   stage: deploy
-  image: alpine/k8s:1.22.6
+  image: $DEPLOY_KUBERNETES_IMAGE
   script:
     - .gitlab/deployment_scripts/update_secret.sh
 
@@ -19,6 +19,7 @@ deploy_review:
 
 stop_review:
   stage: stop_review
+  image: $DEPLOY_KUBERNETES_IMAGE
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     action: stop

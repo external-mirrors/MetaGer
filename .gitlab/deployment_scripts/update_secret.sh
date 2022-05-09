@@ -7,6 +7,6 @@ kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG \
   --from-file=${ENV_PRODUCTION} \
   --from-file=${SUMAS} \
   --dry-run \
-  --save-config
+  --save-config \
   -o yaml | \
   kubectl apply -f -

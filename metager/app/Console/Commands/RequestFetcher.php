@@ -64,9 +64,9 @@ class RequestFetcher extends Command
             try {
                 Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 break;
-            } catch (\Predis\Connection\ConnectionException $e) {
-                if ($count >= 9) {
-                    // If its not available after 10 seconds we will exit
+            } catch (\Exception $e) {
+                if ($count >= 60) {
+                    // If its not available after 60 seconds we will exit
                     return;
                 }
                 sleep(1);

@@ -70,6 +70,78 @@ spec:
               cpu: 500m
               memory: 500M
             limits:
+        - name: scheduler
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "schedule:work"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: http
+          startupProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100M
+            limits:
+        - name: worker
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "requests:fetcher"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          startupProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          resources:
+            requests:
+              cpu: 500m
+              memory: 100M
+            limits:
         - name: nginx
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

@@ -1,3 +1,6 @@
+# Which App Environment to set on startup
+environment: development
+
 ingress:
   annotations:
     kubernetes.io/tls-acme: "true"

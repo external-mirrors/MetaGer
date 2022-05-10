@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+# Which App Environment to set on startup
+environment: development
+
 image:
   pullPolicy: IfNotPresent
   fpm:

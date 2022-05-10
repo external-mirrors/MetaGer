@@ -26,3 +26,5 @@ FROM development as production
 USER root:root
 ADD build/nginx/configuration/nginx-default.conf /etc/nginx/conf.d/default.conf
 USER metager:metager
+
+ADD metager/public /metager/metager_app/public

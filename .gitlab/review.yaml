@@ -3,8 +3,7 @@ ingress:
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - host: replaced_by_deployment_script
-      paths:
+    - paths:
         - path: /
           pathType: ImplementationSpecific
   tls:

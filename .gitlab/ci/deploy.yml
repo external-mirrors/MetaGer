@@ -1,6 +1,8 @@
 .deploy:
   stage: deploy
   image: $DEPLOY_KUBERNETES_IMAGE
+  variables:
+    DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
   script:
     - .gitlab/deployment_scripts/update_secret.sh
     - .gitlab/deployment_scripts/update_deployment.sh
@@ -17,6 +19,7 @@ deploy_review:
   variables:
     DEPLOYMENT_URL: "${CI_COMMIT_REF_SLUG}.review.metager.de"
     DEPLOYMENT_HELM_VALUES: .gitlab/review.yaml
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
       when: never

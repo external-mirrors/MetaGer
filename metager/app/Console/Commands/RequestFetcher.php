@@ -62,7 +62,7 @@ class RequestFetcher extends Command
         // Redis might not be available now
         for ($count = 0; $count < 10; $count++) {
             try {
-                Redis::connection();
+                Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 break;
             } catch (\Predis\Connection\ConnectionException $e) {
                 if ($count >= 9) {

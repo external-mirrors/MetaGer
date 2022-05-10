@@ -31,9 +31,12 @@ stop_review:
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     action: stop
+  variables:
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
   script:
     - echo "Stopping Deployment..."
     - kubectl -n $KUBE_NAMESPACE delete secret $CI_COMMIT_REF_SLUG
+    - helm -n $KUBE_NAMESPACE delete $DEPLOYMENT_CHART_NAME
   when: manual
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'

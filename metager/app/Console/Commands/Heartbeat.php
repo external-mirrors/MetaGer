@@ -43,13 +43,24 @@ class Heartbeat extends Command
      */
     public function handle()
     {
-        try{
-            $now = Carbon::now();
-            Redis::set(self::REDIS_KEY, $now->format('Y-m-d H:i:s'));
-        } catch (\Exception $e){
-            echo $e->getTraceAsString();
-            return 1;
+        // Redis might not be available now
+        for ($count = 0; $count < 60; $count++) {
+            try {
+                return $this->heartbeat();
+            } catch (\Exception $e) {
+                if ($count >= 60) {
+                    // If its not available after 10 seconds we will exit
+                    return 1;
+                }
+                sleep(1);
+            }
         }
+    }
+
+    private function heartbeat() {
+        $now = Carbon::now();
+        Redis::set(self::REDIS_KEY, $now->format('Y-m-d H:i:s'));
         return 0;
     }
+
 }

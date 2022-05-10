@@ -51,6 +51,9 @@ spec:
           - name: secrets
             mountPath: /metager/metager_app/config/sumas.json
             subPath: SUMAS
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumasEn.json
+            subPath: SUMASEN
           ports:
             - name: http
               containerPort: 8080

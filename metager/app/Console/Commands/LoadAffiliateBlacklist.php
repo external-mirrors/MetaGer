@@ -39,6 +39,20 @@ class LoadAffiliateBlacklist extends Command
      */
     public function handle()
     {
+        // Redis might not be available now
+        for ($count = 0; $count < 60; $count++) {
+            try {
+                Redis::connection();
+                break;
+            } catch (\Exception $e) {
+                if ($count >= 59) {
+                    // If its not available after 10 seconds we will exit
+                    return;
+                }
+                sleep(1);
+            }
+        }
+        
         $blacklistItems = DB::table("affiliate_blacklist", "b")
             ->select("hostname")
             ->where("blacklist", true)

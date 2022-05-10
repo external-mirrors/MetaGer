@@ -6,4 +6,5 @@ helm -n $KUBE_NAMESPACE upgrade --install \
     -f $DEPLOYMENT_HELM_VALUES \
     --set ingress.hosts[0].host=$DEPLOYMENT_URL \
     --set image.fpm.tag=$DOCKER_FPM_IMAGE_TAG \
-    --set image.nginx.tag=$DOCKER_NGINX_IMAGE_TAG
+    --set image.nginx.tag=$DOCKER_NGINX_IMAGE_TAG \
+    --wait

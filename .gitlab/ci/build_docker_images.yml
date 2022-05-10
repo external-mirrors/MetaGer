@@ -4,7 +4,7 @@ fpm:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     # We need the vendor files in our final image. Make sure to not ignore the folder
-    - echo "!metager/vendor" >> .dockerignore
+    - echo '!metager/vendor' >> .dockerignore
   script:
     - docker build --network=host
         --target=production

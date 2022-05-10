@@ -14,9 +14,9 @@ workflow:
       DOCKER_NGINX_IMAGE_TAG: $CI_COMMIT_REF_SLUG
       
 stages:
-#  - build_composer
-#  - build_dependencies
-#  - build_docker_images
+  - build_composer
+  - build_dependencies
+  - build_docker_images
   - deploy
   - stop_review
 

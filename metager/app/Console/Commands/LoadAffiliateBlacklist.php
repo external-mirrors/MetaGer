@@ -42,21 +42,22 @@ class LoadAffiliateBlacklist extends Command
         // Redis might not be available now
         for ($count = 0; $count < 60; $count++) {
             try {
-                Redis::connection();
-                break;
+                return $this->loadAffiliateBlacklist();
             } catch (\Exception $e) {
                 if ($count >= 59) {
                     // If its not available after 10 seconds we will exit
-                    return;
+                    return 1;
                 }
                 sleep(1);
             }
         }
-        
+    }
+
+    private function loadAffiliateBlacklist() {
         $blacklistItems = DB::table("affiliate_blacklist", "b")
-            ->select("hostname")
-            ->where("blacklist", true)
-            ->get();
+        ->select("hostname")
+        ->where("blacklist", true)
+        ->get();
 
         Redis::pipeline(function ($redis) use ($blacklistItems) {
             $redisKey = \App\Http\Controllers\AdgoalController::REDIS_BLACKLIST_KEY;

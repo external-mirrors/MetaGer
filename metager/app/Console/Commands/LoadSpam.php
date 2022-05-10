@@ -42,16 +42,20 @@ class LoadSpam extends Command
         // Redis might not be available now
         for ($count = 0; $count < 60; $count++) {
             try {
-                Redis::connection();
-                break;
+                $this->loadSpam();
+                return 0;
             } catch (\Exception $e) {
                 if ($count >= 59) {
                     // If its not available after 10 seconds we will exit
-                    return;
+                    return 1;
                 }
                 sleep(1);
             }
         }
+        
+    }
+
+    private function loadSpam() {
         $filePath = \storage_path('logs/metager/ban.txt');
         $bans = [];
         if (\file_exists($filePath)) {

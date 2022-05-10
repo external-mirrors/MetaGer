@@ -48,6 +48,9 @@ spec:
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS
           ports:
             - name: http
               containerPort: 8080

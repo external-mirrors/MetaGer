@@ -10,15 +10,8 @@ then
   cp /home/metager/.env .env
 fi
 
-if [ ! -z $GITLAB_ENVIRONMENT_NAME ];
-then
-    if [ "$GITLAB_ENVIRONMENT_NAME" = "production" ]; 
-    then 
-        sed -i 's/^APP_ENV=.*/APP_ENV=production/g' .env; 
-    else 
-        sed -i 's/^APP_ENV=.*/APP_ENV=development/g' .env; 
-    fi
-fi
+# Create the useragents table in the sqlite database
+php artisan migrate:refresh --path=database/migrations/2019_10_15_103139_create_user_agents_table.php
 
 php artisan optimize
 php artisan route:trans:cache

@@ -25,7 +25,7 @@ deploy_development:
     - if: '$CI_COMMIT_BRANCH != "development"'
       when: never
 
-  deploy_production:
+deploy_production:
   extends:
     - .deploy
   environment:

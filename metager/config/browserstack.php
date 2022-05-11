@@ -24,7 +24,7 @@ return [
     |
     */
 
-    'browser' => env('BROWSERSTACK_BROWSER'),
+    'browser' => env('BROWSERSTACK_BROWSER', 'WINDOWS_10_FIREFOX'),
 
     /*
     |--------------------------------------------------------------------------

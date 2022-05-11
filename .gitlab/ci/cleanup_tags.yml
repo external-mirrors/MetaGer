@@ -8,9 +8,9 @@
   script:
     # Delete all composer image tags for this branch as we don't need them anymore
     - >
-      curl -X DELETE -k -H 'Content-Type: application/json' 
-          -H "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
-          -i "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/registry/repositories/${FPM_IMAGE_REPOSITORY_ID}/tags"
+      curl -X DELETE -k -H 'Content-Type: application/json' \
+          -H "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
+          -i "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/registry/repositories/${FPM_IMAGE_REPOSITORY_ID}/tags" \
           --data "{\"name_regex_delete\": \"$CI_COMMIT_REF_SLUG-composer-.*\"}"
 
 cleanup_tags_review:

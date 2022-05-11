@@ -12,6 +12,7 @@ workflow:
       DOCKER_COMPOSER_IMAGE_TAG: $CI_COMMIT_REF_SLUG-composer-$CI_COMMIT_SHA
       DOCKER_FPM_IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA
       DOCKER_NGINX_IMAGE_TAG: $CI_COMMIT_REF_SLUG-$CI_COMMIT_SHA
+      APP_ENV: development
 stages:
   - build_composer
   - build_dependencies

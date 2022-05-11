@@ -62,7 +62,7 @@ return [
         "version" => env("maps_version"),
     ],
     "git" => [
-        "project_name" => env("PROJECT_NAME", "Not Set"),
+        "project_name" => "MetaGer",
         "branch_name" => env("BRANCH_NAME", "Not Set"),
         "commit_name" => env("COMMIT_NAME", "Not Set"),
     ],

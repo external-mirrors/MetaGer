@@ -1,0 +1,22 @@
+.integrationtest:
+  stage: integrationtest
+  image: 
+    name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+    entrypoint: ["/bin/bash"]
+  variables:
+    BRANCH_NAME: $CI_COMMIT_REF_NAME
+    COMMIT_NAME: $CI_COMMIT_REF_SLUG
+  script:
+    # Install Dev Dependencies
+    - cp $ENV_PRODUCTION /metager/metager_app.env
+    - php artisan optimize
+    - composer install
+    - php artisan test --parallel --processes=5
+  except:
+    refs: 
+      - master
+
+integrationtest_review:
+  extends: .integrationtest
+  variables:
+    APP_URL: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"

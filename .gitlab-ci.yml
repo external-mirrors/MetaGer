@@ -17,6 +17,7 @@ stages:
   - build_dependencies
   - build_docker_images
   - deploy
+  - integrationtest
   - stop_review
 
 include:
@@ -24,3 +25,4 @@ include:
   - local: /.gitlab/ci/build_dependencies.yml
   - local: /.gitlab/ci/build_docker_images.yml
   - local: /.gitlab/ci/deploy.yml
+  - local: /.gitlab/ci/integrationtest.yml

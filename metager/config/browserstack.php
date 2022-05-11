@@ -56,7 +56,7 @@ return [
 
             'console' => env('BROWSERSTACK_CONSOLE', 'verbose'),
 
-            'local' => env('BROWSERSTACK_LOCAL_TUNNEL', true),
+            'local' => env('BROWSERSTACK_LOCAL_TUNNEL', false),
 
             'timezone' => env('BROWSERSTACK_TIMEZONE', config('app.timezone')),
             "timezone" => "Europe/Berlin",

@@ -10,7 +10,7 @@
     curl -X DELETE -k -H 'Content-Type: application/json' \
         -H "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" \
         -i "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/registry/repositories/${FPM_IMAGE_REPOSITORY_ID}/tags" \
-        --data "{\"name_regex_delete\": \"$CI_COMMIT_REF_SLUG-composer-.*\"}
+        --data "{\"name_regex_delete\": \"$CI_COMMIT_REF_SLUG-composer-.*\"}"
 
 cleanup_tags_review:
   extends: .cleanup_tags

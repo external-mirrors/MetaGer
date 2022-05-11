@@ -16,6 +16,8 @@
   cache:
     paths:
       - metager/.composer/
+  when: manual
+  allow_failure: false
   except:
     refs: 
       - master

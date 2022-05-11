@@ -8,12 +8,12 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
         - path: /wsb
-            pathType: Prefix
-            backend:
-              service:
-                name: wsb
-                port:
-                  number: 80
+          pathType: Prefix
+          backend:
+            service:
+              name: wsb
+              port:
+                number: 80
   tls:
     - hosts:
         - metager3.de

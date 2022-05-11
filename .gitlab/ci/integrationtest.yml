@@ -12,9 +12,7 @@
     - cp $ENV_PRODUCTION .env
     - php artisan optimize
     - composer install
-    - php artisan tinker --execute='echo config("app.url");'
-    - php artisan tinker --execute='print_r(config("browserstack"));'
-    - php artisan test --parallel --processes=5
+    - php artisan test
   cache:
     paths:
       - metager/.composer/

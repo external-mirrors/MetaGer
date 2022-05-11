@@ -1,0 +1,166 @@
+<?php
+
+namespace Tests\Browser;
+
+use Laravel\Dusk\Browser;
+use Tests\Browser\Pages\HomePage;
+use Tests\Browser\Pages\About;
+use Tests\Browser\Pages\App;
+use Tests\Browser\Pages\Datenschutz;
+use Tests\Browser\Pages\Hilfe;
+use Tests\Browser\Pages\Impress;
+use Tests\Browser\Pages\Kontakt;
+use Tests\Browser\Pages\Plugin;
+use Tests\Browser\Pages\SitesearchWidget;
+use Tests\Browser\Pages\Spende;
+use Tests\Browser\Pages\Team;
+use Tests\Browser\Pages\WebsearchWidget;
+use Tests\Browser\Pages\Widget;
+use Tests\DuskTestCase;
+
+class StaticPagesTest extends DuskTestCase
+{
+    /**
+     * Tests for each static page on MetaGers website whether it can be reached by navigation
+     *
+     * @return void
+     */
+    public function testStaticpages()
+    {
+        // Startpage
+        $this->browse(function (Browser $browser) {
+            $browser->visit(new HomePage);
+        });
+
+        // About
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label#navigationKontakt")
+                ->clickLink("Über uns")
+                ->waitForLocation("/about")
+                ->on(new About);
+        });
+
+        // App
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->clickLink("MetaGer App")
+                ->waitForLocation("/app")
+                ->on(new App);
+        });
+
+        // Datenschutz
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->clickLink("Datenschutz")
+                ->waitForLocation("/datenschutz")
+                ->on(new Datenschutz);
+        });
+
+        // Hilfe
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->clickLink("Hilfe")
+                ->waitForLocation("/hilfe")
+                ->on(new Hilfe);
+        });
+
+        // Impressum
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label#navigationKontakt")
+                ->clickLink("Impressum")
+                ->waitForLocation("/impressum")
+                ->on(new Impress);
+        });
+
+        // Kontakt
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label#navigationKontakt")
+                ->clickLink("Kontakt")
+                ->waitForLocation("/kontakt")
+                ->on(new Kontakt);
+        });
+
+        // Plugin
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("MetaGer Plugin")
+                ->waitForLocation("/plugin")
+                ->on(new Plugin);
+        });
+
+        //Spenden
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->clickLink("Spenden")
+                ->waitForLocation("/spende")
+                ->on(new Spende);
+        });
+
+        // Team
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label#navigationKontakt")
+                ->clickLink("Team")
+                ->waitForLocation("/team")
+                ->on(new Team);
+        });
+
+        // Widget
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->on(new Widget);
+        });
+
+        // Websearch Widget
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->clickLink("Suche im Web")
+                ->waitForLocation("\/websearch\/")
+                ->on(new WebsearchWidget);
+        });
+
+        // Sitesearch Widget
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/")
+                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label.sidebar-opener[for=sidebarToggle]")
+                ->click("label[for=servicesToggle]")
+                ->clickLink("Widget")
+                ->waitForLocation("/widget")
+                ->clickLink("Suche nur auf einer Domain")
+                ->waitForLocation("/sitesearch/")
+                ->on(new SitesearchWidget);
+        });
+    }
+}

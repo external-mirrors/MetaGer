@@ -17,7 +17,6 @@ deploy_development:
     url: https://metager3.de
     action: start
   variables:
-    variables:
     DEPLOYMENT_URL: "metager3.de"
     DEPLOYMENT_HELM_VALUES: .gitlab/development.yaml
     DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
@@ -33,7 +32,6 @@ deploy_production:
     url: https://metager.de
     action: start
   variables:
-    variables:
     DEPLOYMENT_URL: "metager.de"
     DEPLOYMENT_HELM_VALUES: .gitlab/production.yaml
     DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH

@@ -1,0 +1,44 @@
+ingress:
+  annotations:
+    kubernetes.io/tls-acme: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: metager.de
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+        - path: /wsb
+            pathType: Prefix
+            backend:
+              service:
+                name: wsb
+                port:
+                  number: 80
+    - host: metager.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+        - path: /wsb
+            pathType: Prefix
+            backend:
+              service:
+                name: wsb
+                port:
+                  number: 80
+    - host: metager.es
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+        - path: /wsb
+            pathType: Prefix
+            backend:
+              service:
+                name: wsb
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - metager.de
+        - metager.org
+        - metager.es
+      secretName: metager-tls

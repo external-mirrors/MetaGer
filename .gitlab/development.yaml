@@ -3,7 +3,8 @@ ingress:
     kubernetes.io/tls-acme: "true"
     cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
-    - paths:
+    - host: metager3.de
+      paths:
         - path: /
           pathType: ImplementationSpecific
         - path: /wsb
@@ -15,5 +16,5 @@ ingress:
                   number: 80
   tls:
     - hosts:
-        - "*.review.metager.de"
-      secretName: review-tls
+        - metager3.de
+      secretName: metager-tls

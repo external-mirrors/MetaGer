@@ -9,7 +9,7 @@ fpm:
     - docker build --network=host
         --target=production
         -f build/fpm/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG .
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY
@@ -23,7 +23,7 @@ nginx:
     - docker build --network=host
         --target=production
         -f build/nginx/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG .
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY

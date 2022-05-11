@@ -7,7 +7,7 @@ composer_image:
     - docker build --network=host
         --target=composer
         -f build/fpm/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG .
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY

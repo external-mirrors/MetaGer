@@ -1,6 +1,9 @@
-fpm:
+.fpm:
   stage: build_docker_images
   image: $BUILD_DOCKER_IMAGE
+  variables:
+    BRANCH_NAME: $CI_COMMIT_REF_NAME
+    COMMIT_NAME: $CI_COMMIT_REF_SLUG
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     # We need the vendor files in our final image. Make sure to not ignore the folder
@@ -13,6 +16,12 @@ fpm:
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY
+
+fpm_review:
+  extends:
+    - .fpm
+  variables:
+    APP_URL: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"
 
 nginx:
   stage: build_docker_images

@@ -1,11 +1,16 @@
 .integrationtest:
   stage: integrationtest
   image: 
-    name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+    name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
     entrypoint: ["/bin/bash"]
   variables:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
+  needs:
+    - composer
+    - npm
+  before_script:
+    - export COMPOSER_HOME=$(pwd)/metager/.composer
   script:
     # Install Dev Dependencies
     - cd metager

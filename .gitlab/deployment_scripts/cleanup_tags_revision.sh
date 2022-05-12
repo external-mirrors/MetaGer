@@ -50,6 +50,6 @@ done
 for nginx_tag in ${!expired_nginx_tags[@]}
 do
     echo "Deleting nginx tag $nginx_tag"
-    curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$nginx_tag"
+    curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$nginx_tag"
     echo ""
 done

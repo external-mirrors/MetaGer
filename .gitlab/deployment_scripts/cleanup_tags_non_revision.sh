@@ -102,7 +102,7 @@ do
 done
 echo ""
 
-# Delete FPM Tags that are in no revision
+# Delete NGINX Tags that are in no revision
 echo "Deleting unused NGINX Tags..."
 for nginx_tag in ${!existing_tags_nginx[@]}
 do

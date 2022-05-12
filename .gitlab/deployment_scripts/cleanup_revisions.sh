@@ -6,6 +6,8 @@ FPM_REPOSITORY_ID=418
 NGINX_REPOSITORY_ID=416
 
 helm -n $KUBE_NAMESPACE history ${CI_COMMIT_REF_SLUG} > /dev/null 2>&1
+echo $KUBENAMESPACE
+echo $CI_COMMIT_REF_SLUG
 if [ $? -ne 0 ]
 then
   echo "Release does not exist yet. Nothing to cleanup!"

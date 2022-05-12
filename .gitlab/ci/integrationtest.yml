@@ -6,9 +6,7 @@
   variables:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
-  needs:
-    - composer
-    - npm
+  dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
   script:

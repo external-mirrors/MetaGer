@@ -20,6 +20,14 @@ cleanup_composer_image:
   script:
     - 'curl -X DELETE --fail -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/418/tags/$DOCKER_COMPOSER_IMAGE_TAG"'
 
+cleanup_revision_images:
+  stage: build_docker_images
+  image: $DEPLOY_KUBERNETES_IMAGE
+  variables:
+    KEEP_N: 9   # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
+  script:
+    - .gitlab/deployment_scripts/cleanup_revisions.sh
+
 nginx:
   stage: build_docker_images
   image: $BUILD_DOCKER_IMAGE

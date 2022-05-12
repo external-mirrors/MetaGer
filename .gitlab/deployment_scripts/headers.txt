@@ -1,0 +1,20 @@
+HTTP/2 200 
+date: Thu, 12 May 2022 12:34:02 GMT
+content-type: application/json
+cache-control: max-age=0, private, must-revalidate
+etag: W/"fc941e436585c4860547c3da341029d7"
+link: <https://gitlab.metager.de/api/v4/projects/2/registry/repositories/416/tags?id=2&page=1&per_page=20&repository_id=416>; rel="prev", <https://gitlab.metager.de/api/v4/projects/2/registry/repositories/416/tags?id=2&page=1&per_page=20&repository_id=416>; rel="first", <https://gitlab.metager.de/api/v4/projects/2/registry/repositories/416/tags?id=2&page=2&per_page=20&repository_id=416>; rel="last"
+vary: Origin
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-next-page: 
+x-page: 2
+x-per-page: 20
+x-prev-page: 1
+x-request-id: 01G2W461RMNAYQ5MNT1E4A8J8Y
+x-runtime: 0.190039
+x-total: 39
+x-total-pages: 2
+strict-transport-security: max-age=15724800
+permissions-policy: interest-cohort=()
+

@@ -43,13 +43,15 @@ cleanup_composer_image:
 .cleanup_revision_images:
   stage: build_docker_images
   image: $DEPLOY_KUBERNETES_IMAGE
-  needs: []
+  needs:
+    - composer
   variables:
     KEEP_N: 9   # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
   before_script:
     - chmod go-r $KUBECONFIG
   script:
-    - .gitlab/deployment_scripts/cleanup_revisions.sh
+    - .gitlab/deployment_scripts/cleanup_tags_revision.sh
+    - .gitlab/deployment_scripts/cleanup_tags_non_revision.sh
 
 cleanup_revision_images_review:
   extends:

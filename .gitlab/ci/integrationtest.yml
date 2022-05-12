@@ -1,4 +1,4 @@
-.integrationtest:
+integrationtest:
   stage: integrationtest
   image: 
     name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
@@ -24,8 +24,3 @@
   except:
     refs: 
       - master
-
-integrationtest_review:
-  extends: .integrationtest
-  variables:
-    APP_URL: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"

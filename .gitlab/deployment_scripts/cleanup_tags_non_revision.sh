@@ -16,7 +16,7 @@ do
     tags=$(curl --fail --silent -D headers.txt "${get_tags_url}?page=$page" | jq -r ".[][\"name\"]")
     for tag in $tags
     do
-        if [[ "$tag" != $CI_COMMIT_REF_SLUG && $tag != $DOCKER_FPM_IMAGE_TAG ]]
+        if [[ $tag = ${DOCKER_IMAGE_TAG_PREFIX}-* && "$tag" != $DOCKER_IMAGE_TAG_PREFIX && $tag != $DOCKER_FPM_IMAGE_TAG ]]
         then
             existing_tags_fpm[$tag]=1
         fi
@@ -49,7 +49,7 @@ do
     tags=$(curl --fail --silent -D headers.txt "${get_tags_url}?page=$page" | jq -r ".[][\"name\"]")
     for tag in $tags
     do
-        if [[ "$tag" != $CI_COMMIT_REF_SLUG && $tag != $DOCKER_NGINX_IMAGE_TAG ]]
+        if [[ $tag = ${DOCKER_IMAGE_TAG_PREFIX}-* && "$tag" != $DOCKER_IMAGE_TAG_PREFIX && $tag != $DOCKER_NGINX_IMAGE_TAG ]]
         then
             existing_tags_nginx[$tag]=1
         fi

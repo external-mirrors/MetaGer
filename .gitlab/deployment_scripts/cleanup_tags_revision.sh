@@ -16,11 +16,6 @@ set -e
 
 revision_count=$(helm -n $KUBE_NAMESPACE history $HELM_RELEASE_NAME -o json | jq -r '. | length')
 
-# Get the latest used image tags to make sure they are not deleted
-latest_revision_values=$(helm -n $KUBE_NAMESPACE get values $HELM_RELEASE_NAME -o json)
-latest_fpm_tag=$(echo $latest_revision_values | jq -r '.image.fpm.tag')
-latest_nginx_tag=$(echo $latest_revision_values | jq -r '.image.fpm.tag')
-
 # Get List of revisions to expire (delete the image tags)
 end_index=$(($KEEP_N > $revision_count ? 0 : $revision_count-$KEEP_N))
 expired_revisions=$(helm -n $KUBE_NAMESPACE history $HELM_RELEASE_NAME -o json | jq -r ".[0:$end_index][][\"revision\"]")
@@ -36,14 +31,10 @@ do
     revision_fpm_tag=$(echo $revision_values | jq -r '.image.fpm.tag')
     revision_nginx_tag=$(echo $revision_values | jq -r '.image.nginx.tag')
 
-    # Add Tags to the arrays if they are not the latest
-    if [ "$revision_fpm_tag" != "$latest_fpm_tag" ]
+    # Add Tags to the arrays
+    if [[ $revision_fpm_tag = ${DOCKER_IMAGE_TAG_PREFIX}-* ]]
     then
         expired_fpm_tags[$revision_fpm_tag]=0
-    fi
-
-    if [ "$revision_nginx_tag" != "$latest_nginx_tag" ]
-    then
         expired_nginx_tags[$revision_nginx_tag]=0
     fi
 done

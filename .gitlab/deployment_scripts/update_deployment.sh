@@ -1,7 +1,7 @@
 #!/bin/bash
 
 helm -n $KUBE_NAMESPACE upgrade --install \
-    review-${CI_COMMIT_REF_SLUG} \
+    $HELM_RELEASE_NAME \
     chart/ \
     -f $DEPLOYMENT_HELM_VALUES \
     --set environment=$APP_ENV \

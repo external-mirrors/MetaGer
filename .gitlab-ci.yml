@@ -36,7 +36,6 @@ stages:
   - build_docker_images
   - deploy
   - integrationtest
-  - stop_review
 
 include:
   - local: /.gitlab/ci/build_composer.yml

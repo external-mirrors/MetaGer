@@ -1,6 +1,9 @@
 .deploy:
   stage: deploy
   image: $DEPLOY_KUBERNETES_IMAGE
+  needs:
+    - fpm
+    - nginx
   variables:
     DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
     BRANCH_NAME: $CI_COMMIT_REF_NAME

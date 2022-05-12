@@ -3,6 +3,7 @@ fpm:
   image: $BUILD_DOCKER_IMAGE
   needs:
     - composer
+    - npm
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     # We need the vendor files in our final image. Make sure to not ignore the folder

@@ -32,14 +32,6 @@ nginx:
   after_script:
     - docker logout $CI_REGISTRY
 
-cleanup_composer_image:
-  stage: build_docker_images
-  image: curlimages/curl
-  needs:
-    - composer
-  script:
-    - 'curl -X DELETE --fail -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/418/tags/$DOCKER_COMPOSER_IMAGE_TAG"'
-
 .cleanup_revision_images:
   stage: build_docker_images
   image: $DEPLOY_KUBERNETES_IMAGE

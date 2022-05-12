@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 FPM_REPOSITORY_ID=418
 NGINX_REPOSITORY_ID=416
 
@@ -19,7 +21,6 @@ do
             existing_tags_fpm[$tag]=1
         fi
     done
-    headers=$(cat /tmp/headers.txt)
     while read header
     do
         header=$(echo $header | sed -r 's/\s+//g')
@@ -53,7 +54,6 @@ do
             existing_tags_nginx[$tag]=1
         fi
     done
-    headers=$(cat /tmp/headers.txt)
     while read header
     do
         header=$(echo $header | sed -r 's/\s+//g')
@@ -109,7 +109,7 @@ do
     if [[ ! -v revision_tags_nginx["$nginx_tag"] ]]
     then
         echo $nginx_tag
-        curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$nginx_tag"
+        curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$nginx_tag"
         echo ""
     fi
 done

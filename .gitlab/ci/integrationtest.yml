@@ -13,8 +13,8 @@
     # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
-    - php artisan optimize
     - composer install
+    - php artisan optimize
     - php artisan test
   cache:
     paths:

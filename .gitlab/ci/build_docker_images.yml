@@ -14,6 +14,12 @@ fpm:
   after_script:
     - docker logout $CI_REGISTRY
 
+cleanup_composer_image:
+  stage: build_docker_images
+  image: curlimages/curl
+  script:
+    - 'curl -X DELETE --fail -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/api/v4/projects/$CI_PROJECT_ID/registry/repositories/418/tags/${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG'
+
 nginx:
   stage: build_docker_images
   image: $BUILD_DOCKER_IMAGE

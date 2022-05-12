@@ -6,13 +6,6 @@ ingress:
     - paths:
         - path: /
           pathType: ImplementationSpecific
-        - path: /wsb
-          pathType: Prefix
-          backend:
-            service:
-              name: wsb
-              port:
-                number: 80
   tls:
     - hosts:
         - "*.review.metager.de"

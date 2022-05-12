@@ -7,35 +7,14 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
-        - path: /wsb
-          pathType: Prefix
-          backend:
-            service:
-              name: wsb
-              port:
-                number: 80
     - host: metager.org
       paths:
         - path: /
           pathType: ImplementationSpecific
-        - path: /wsb
-          pathType: Prefix
-          backend:
-            service:
-              name: wsb
-              port:
-                number: 80
     - host: metager.es
       paths:
         - path: /
           pathType: ImplementationSpecific
-        - path: /wsb
-          pathType: Prefix
-          backend:
-            service:
-              name: wsb
-              port:
-                number: 80
   tls:
     - hosts:
         - metager.de

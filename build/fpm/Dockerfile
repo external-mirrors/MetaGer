@@ -72,4 +72,4 @@ ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
 
 USER metager:metager
 
-ADD metager /metager/metager_app
+ADD --chown=metager:metager metager /metager/metager_app

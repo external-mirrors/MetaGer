@@ -15,7 +15,7 @@
     - cp $ENV_PRODUCTION .env
     - composer install
     - php artisan optimize
-    - php artisan test
+    - php artisan test --without-tty -n
   cache:
     paths:
       - metager/.composer/

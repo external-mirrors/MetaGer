@@ -69,7 +69,7 @@ echo "Got ${#existing_tags_nginx[@]} tags."
 echo ""
 
 # Get All existing tags for the node repo
-echo "Fetching existing node tags..."
+echo "Fetching existing Node tags..."
 declare -A existing_tags_node
 get_tags_url=$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NODE_REPOSITORY_ID/tags
 page=1
@@ -145,7 +145,7 @@ do
 done
 
 # Delete Node Tags
-echo "Deleting unused NGINX Tags..."
+echo "Deleting unused Node Tags..."
 for node_tag in ${!existing_tags_node[@]}
 do
     echo $node_tag

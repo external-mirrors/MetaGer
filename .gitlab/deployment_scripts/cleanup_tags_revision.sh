@@ -2,9 +2,6 @@
 
 # Call script with KEEP_N variable set to specify the amount of releases to keep
 
-FPM_REPOSITORY_ID=418
-NGINX_REPOSITORY_ID=416
-
 helm -n $KUBE_NAMESPACE history $HELM_RELEASE_NAME
 if [ $? -ne 0 ]
 then

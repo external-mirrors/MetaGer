@@ -2,9 +2,6 @@
 
 set -e
 
-FPM_REPOSITORY_ID=418
-NGINX_REPOSITORY_ID=416
-
 # Get All existing tags for the fpm repo
 echo "Fetching existing fpm tags..."
 declare -A existing_tags_fpm

@@ -25,13 +25,16 @@ class StaticPagesTest extends DuskTestCase
      *
      * @return void
      */
-    public function testStaticpages()
+    public function testStartpage()
     {
         // Startpage
         $this->browse(function (Browser $browser) {
             $browser->visit(new HomePage);
         });
+    }
 
+    public function testAbout()
+    {
         // About
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -42,7 +45,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/about")
                 ->on(new About);
         });
+    }
 
+    public function testApp()
+    {
         // App
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -52,7 +58,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/app")
                 ->on(new App);
         });
+    }
 
+    public function testDatenschutz()
+    {
         // Datenschutz
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -61,7 +70,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/datenschutz")
                 ->on(new Datenschutz);
         });
+    }
 
+    public function testHilfe()
+    {
         // Hilfe
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -71,7 +83,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/hilfe")
                 ->on(new Hilfe);
         });
+    }
 
+    public function testImpressum()
+    {
         // Impressum
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -82,7 +97,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/impressum")
                 ->on(new Impress);
         });
+    }
 
+    public function testKontakt()
+    {
         // Kontakt
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -93,7 +111,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/kontakt")
                 ->on(new Kontakt);
         });
+    }
 
+    public function testPlugin()
+    {
         // Plugin
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -104,7 +125,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/plugin")
                 ->on(new Plugin);
         });
+    }
 
+    public function testSpenden()
+    {
         //Spenden
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -114,7 +138,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/spende")
                 ->on(new Spende);
         });
+    }
 
+    public function testTeam()
+    {
         // Team
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -125,7 +152,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/team")
                 ->on(new Team);
         });
+    }
 
+    public function testWidget()
+    {
         // Widget
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -136,7 +166,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/widget")
                 ->on(new Widget);
         });
+    }
 
+    public function testWebsearchWidget()
+    {
         // Websearch Widget
         $this->browse(function (Browser $browser) {
             $browser->visit("/")
@@ -149,7 +182,10 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("\/websearch\/")
                 ->on(new WebsearchWidget);
         });
+    }
 
+    public function testSitesearchWidget()
+    {
         // Sitesearch Widget
         $this->browse(function (Browser $browser) {
             $browser->visit("/")

@@ -1,7 +1,7 @@
 integrationtest:
   services:
     - name: selenium/standalone-firefox:99.0
-      alias: selenium_standalone_firefox
+      alias: selenium-standalone-firefox
   stage: integrationtest
   image: 
     name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
@@ -9,7 +9,7 @@ integrationtest:
   variables:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
-    SELENIUM_HOST: selenium_standalone_firefox
+    SELENIUM_HOST: selenium-standalone-firefox
   dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer

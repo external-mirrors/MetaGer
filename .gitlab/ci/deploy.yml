@@ -39,7 +39,7 @@ deploy_production:
     DEPLOYMENT_HELM_VALUES: .gitlab/production.yaml
     DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
   rules:
-    - if: '$CI_COMMIT_BRANCH != "master"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 deploy_review:
   extends:

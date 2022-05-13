@@ -19,12 +19,10 @@ integrationtest:
     - cp $ENV_PRODUCTION .env
     - composer install
     - php artisan optimize
-    - php artisan test --without-tty -n
+    - php artisan test --without-tty
   cache:
     paths:
       - metager/.composer/
-  when: manual
-  allow_failure: false
   except:
     refs: 
       - master

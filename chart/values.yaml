@@ -78,7 +78,7 @@ ingress:
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
       }
     nginx.ingress.kubernetes.io/proxy-body-size: 30m
-  hosts: {}
+  hosts: []
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:

@@ -2,12 +2,13 @@
 
 namespace Tests;
 
+use Facebook\WebDriver\Remote\DesiredCapabilities;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Laravel\Dusk\TestCase as BaseTestCase;
-use \ChinLeung\BrowserStack\RunsOnBrowserStack;
 
 abstract class DuskTestCase extends BaseTestCase
 {
-    use CreatesApplication, RunsOnBrowserStack;
+    use CreatesApplication;
 
     /**
      * Prepare for Dusk test execution.
@@ -19,8 +20,15 @@ abstract class DuskTestCase extends BaseTestCase
     {
     }
 
-    protected function getBuildName(): string
+    /**
+     * Create the RemoteWebDriver instance.
+     *
+     * @return \Facebook\WebDriver\Remote\RemoteWebDriver
+     */
+    protected function driver()
     {
-        return config("metager.metager.git.branch_name");
+        return RemoteWebDriver::create(
+            "http://" . config("metager.metager.selenium.host") . ":4444/wd/hub", DesiredCapabilities::firefox()
+        );
     }
 }

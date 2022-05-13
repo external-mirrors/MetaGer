@@ -52,7 +52,12 @@ services:
       - ./metager:/metager/metager_app
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/liveness-worker"
-
+  selenium_standalone_firefox:
+    image: ${SELENIUM_IMAGE}
+    restart: always
+    shm_size: 2GB
+    ports:
+      - "7900:7900"
   composer:
     build:
       <<: *fpm_build

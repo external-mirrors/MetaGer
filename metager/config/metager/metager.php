@@ -66,9 +66,7 @@ return [
         "branch_name" => env("BRANCH_NAME", "Not Set"),
         "commit_name" => env("COMMIT_NAME", "Not Set"),
     ],
-    "browserstack" => [
-        "username" => env("BROWSERSTACK_USERNAME", ""),
-        "access_key" => env("BROWSERSTACK_ACCESS_KEY", ""),
-        "local_tunnel" => false,
+    "selenium" => [
+        "host" => env("SELENIUM_HOST", "localhost"),
     ],
 ];

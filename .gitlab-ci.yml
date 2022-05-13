@@ -16,19 +16,22 @@ workflow:
       HELM_RELEASE_NAME: review-$DOCKER_IMAGE_TAG_PREFIX
       APP_ENV: development
       APP_URL: "https://${DOCKER_IMAGE_TAG_PREFIX}.review.metager.de"
-  - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"
+  - if: $CI_COMMIT_BRANCH == "master"
     variables:
+      APP_URL: https://metager.de
       DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_BRANCH
       DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
       DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
-  - if: $CI_COMMIT_BRANCH == "master"
-    variables:
-      APP_URL: https://metager.de
   - if: $CI_COMMIT_BRANCH == "development"
     variables:
       APP_URL: https://metager3.de
+      DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_BRANCH
+      DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
+      DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
 
 stages:
   - build_composer

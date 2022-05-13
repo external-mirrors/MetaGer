@@ -13,7 +13,7 @@ kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG \
   --from-file=${BLACKLIST_DOMAINS} \
   --from-file=${BLACKLIST_URL} \
   --from-file=${USERSEEDER} \
-  --dry-run \
+  --dry-run=client \
   --save-config \
   -o yaml | \
   kubectl apply -f -

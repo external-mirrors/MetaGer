@@ -78,7 +78,7 @@ return [
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'prefix' => '',
-            'schema' => 'public',
+            'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
 
@@ -112,7 +112,7 @@ return [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
 
-        'options' => [ 
+        'options' => [
             'cluster' => 'redis',
             'parameters' => [
                 'password' => env('REDIS_CACHE_PASSWORD', null),
@@ -120,11 +120,11 @@ return [
         ],
 
         'default' => [
-           'read_write_timeout' => -1,
-           'host' => env('REDIS_HOST', 'localhost'),
-           'password' => env('REDIS_PASSWORD', null),
-           'port' => env('REDIS_PORT', 6379),
-           'database' => 0,
+            'read_write_timeout' => -1,
+            'host' => env('REDIS_HOST', 'localhost'),
+            'password' => env('REDIS_PASSWORD', null),
+            'port' => env('REDIS_PORT', 6379),
+            'database' => 0,
         ],
 
         'cache' => [
@@ -143,7 +143,7 @@ return [
             ]],
         ]
 
-        
+
     ],
 
 ];

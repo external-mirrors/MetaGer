@@ -1,6 +1,6 @@
 npm:
   stage: build_dependencies
-  image: node:14
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_NODE_IMAGE_NAME:$DOCKER_NODE_IMAGE_TAG
   script:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit

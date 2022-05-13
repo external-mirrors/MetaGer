@@ -8,30 +8,27 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "fideloper/proxy": "^4.4",
-        "fruitcake/laravel-cors": "^2.0",
-        "globalcitizen/php-iban": "^4.0.0",
-        "guzzlehttp/guzzle": "^7.0.1",
-        "jenssegers/agent": "^2.6",
-        "laravel/framework": "^8.40",
-        "laravel/tinker": "^2.5",
-        "mcamara/laravel-localization": "1.6.*",
-        "mews/captcha": "^3.2.6",
+        "php": "^8.0.2",
+        "laravel/framework": "^9.11",
+        "laravel/sanctum": "^2.14.1",
+        "laravel/tinker": "^2.7",
+        "guzzlehttp/guzzle": "^7.2",
+        "globalcitizen/php-iban": "^4.1.0",
+        "jenssegers/agent": "^2.6.4",
+        "mcamara/laravel-localization": "1.7.0",
+        "mews/captcha": "^3.2.7",
         "predis/predis": "^1.1",
-        "promphp/prometheus_client_php": "^2.2",
-        "symfony/dom-crawler": "^5.2"
+        "promphp/prometheus_client_php": "^2.6.0",
+        "symfony/dom-crawler": "^6.0"
     },
     "require-dev": {
-        "brianium/paratest": "^6.3",
-        "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
-        "laravel/dusk": "^6.15",
         "laravel/sail": "^1.0.1",
-        "mockery/mockery": "^1.4.2",
-        "nunomaduro/collision": "^5.0",
-        "php-webdriver/webdriver": "^1.6",
-        "phpunit/phpunit": "^9.3.3"
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "phpunit/phpunit": "^9.5.10",
+        "spatie/laravel-ignition": "^1.0",
+        "php-webdriver/webdriver": "^1.12.1"
     },
     "autoload": {
         "psr-4": {
@@ -49,6 +46,9 @@
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

@@ -1,4 +1,4 @@
-FROM php:7.4-fpm as composer
+FROM php:8.0.19-fpm as composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer

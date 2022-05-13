@@ -70,19 +70,15 @@ services:
       - composer_cache:/composer_cache
 
   node:
-    image: node:14
+    build:
+      context: ./
+      dockerfile: build/node/Dockerfile
+      target: $APP_ENV
     restart: unless-stopped
     depends_on:
       - nginx
-    user: 1000:1000
-    entrypoint: ["/bin/bash", "-c"]
-    command: 
-    - | 
-      npm install
-      npm run watch
-    working_dir: /metager/metager_app
     volumes:
-      - ./metager:/metager/metager_app
+      - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
     image: redis:6
@@ -90,4 +86,3 @@ services:
     user: "redis:redis"
     healthcheck:
       test: "redis-cli ping"
-  

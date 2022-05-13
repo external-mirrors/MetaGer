@@ -41,6 +41,7 @@ nginx:
   variables:
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
+    NODE_REPOSITORY_ID: 416
     KEEP_N: 9   # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
   before_script:
     - chmod go-r $KUBECONFIG

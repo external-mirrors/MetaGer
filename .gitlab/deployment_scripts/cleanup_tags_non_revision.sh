@@ -68,6 +68,39 @@ done
 echo "Got ${#existing_tags_nginx[@]} tags."
 echo ""
 
+# Get All existing tags for the node repo
+echo "Fetching existing node tags..."
+declare -A existing_tags_node
+get_tags_url=$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NODE_REPOSITORY_ID/tags
+page=1
+counter=1
+while [[ "$page" != "" && $counter -le 50 ]]
+do
+    tags=$(curl --fail --silent -D headers.txt "${get_tags_url}?page=$page" | jq -r ".[][\"name\"]")
+    for tag in $tags
+    do
+        if [[ $tag = ${DOCKER_IMAGE_TAG_PREFIX}-* && "$tag" != $DOCKER_IMAGE_TAG_PREFIX && $tag != $DOCKER_NGINX_IMAGE_TAG ]]
+        then
+            existing_tags_node[$tag]=1
+        fi
+    done
+    while read header
+    do
+        header=$(echo $header | sed -r 's/\s+//g')
+        key=$(echo $header | cut -d':' -f1 )
+        value=$(echo $header | cut -d':' -f2 )
+        case "$key" in
+            x-next-page)
+                page="$value"
+                sleep 1
+                ;;
+        esac
+    done < headers.txt
+    counter=$((counter + 1))
+done
+echo "Got ${#existing_tags_node[@]} tags."
+echo ""
+
 # Get List of existing revisions
 echo "Fetching Tags from helm revision history to not be deleted..."
 declare -A revision_tags_fpm
@@ -109,4 +142,13 @@ do
         curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$nginx_tag"
         echo ""
     fi
+done
+
+# Delete Node Tags
+echo "Deleting unused NGINX Tags..."
+for node_tag in ${!existing_tags_node[@]}
+do
+    echo $node_tag
+    curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NODE_REPOSITORY_ID/tags/$node_tag"
+    echo ""
 done

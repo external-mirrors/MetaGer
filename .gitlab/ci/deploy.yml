@@ -25,8 +25,7 @@ deploy_development:
     DEPLOYMENT_HELM_VALUES: .gitlab/development.yaml
     DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
   rules:
-    - if: '$CI_COMMIT_BRANCH != "development"'
-      when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
 
 deploy_production:
   extends:
@@ -40,9 +39,7 @@ deploy_production:
     DEPLOYMENT_HELM_VALUES: .gitlab/production.yaml
     DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
   rules:
-    - if: '$CI_COMMIT_BRANCH != "development"'
-      when: never
-
+    - if: '$CI_COMMIT_BRANCH != "master"'
 
 deploy_review:
   extends:

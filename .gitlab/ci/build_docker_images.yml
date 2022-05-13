@@ -38,6 +38,7 @@ nginx:
   image: $DEPLOY_KUBERNETES_IMAGE
   needs:
     - composer
+    - npm
   variables:
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416

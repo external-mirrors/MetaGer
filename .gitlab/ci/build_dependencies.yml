@@ -5,7 +5,8 @@ npm:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
     - npm run prod
-  needs: []
+  needs:
+    - node_image
   artifacts:
     paths:
       - metager/public

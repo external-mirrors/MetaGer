@@ -2,7 +2,7 @@
 
 namespace App\Console;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('heartbeat')->everyMinute();
         $schedule->command('requests:gather')->everyFifteenMinutes();
         $schedule->command('requests:useragents')->everyFiveMinutes();
-        $schedule->command('logs:gather')->everyMinute();
+        // $schedule->command('logs:gather')->everyMinute();
         $schedule->command('spam:load')->everyMinute();
         $schedule->command('load:affiliate-blacklist')->everyMinute();
         $schedule->command('affilliates:store')->everyMinute()

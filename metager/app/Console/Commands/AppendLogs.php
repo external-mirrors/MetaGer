@@ -54,17 +54,19 @@ class AppendLogs extends Command
         }
 
         $elements = [];
-        $elementCount = $redis->llen(\App\Console\Commands\AppendLogs::LOGKEY);
-        $elements = $redis->lpop(\App\Console\Commands\AppendLogs::LOGKEY, $elementCount);
+        while(($value = $redis->lpop(\App\Console\Commands\AppendLogs::LOGKEY)) !== false){
+            $elements[] = $value;
+        }
 
-        if (!is_array($elements) || sizeof($elements) <= 0) {
-            return;
-        }
         if (file_put_contents(\App\MetaGer::getMGLogFile(), implode(PHP_EOL, $elements) . PHP_EOL, FILE_APPEND) === false) {
-            $this->error("Konnte Log Zeile(n) nicht schreiben");
-            $redis->lpush(\App\Console\Commands\AppendLogs::LOGKEY, array_reverse($elements));
-        } else {
-            $this->info("Added " . sizeof($elements) . " lines to todays log!");
+            $this->error("Konnte " . sizeof($elements) . " Log Zeile(n) nicht schreiben");
+            foreach($elements as $element){
+                $redis->lPush(\App\Console\Commands\AppendLogs::LOGKEY, $element);
+            }
+        }else{
+            $this->info("Added " . sizeof($elements) . " lines to todays log! " . \App\MetaGer::getMGLogFile());
         }
+
+        
     }
 }

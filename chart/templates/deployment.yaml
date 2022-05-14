@@ -31,6 +31,9 @@ spec:
         - name: secrets
           secret:
             secretName: {{ template "secret_name" . }}
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mg-logs
         - name: redis-config
           configMap:
             name: {{ include "chart.fullname" . }}-redis-container-config
@@ -74,6 +77,9 @@ spec:
           - name: secrets
             mountPath: /metager/metager_app/database/seeds/UsersSeeder.php
             subPath: USERSEEDER
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/logs/metager
+            readOnly: false
           ports:
             - name: http
               containerPort: 8080
@@ -111,6 +117,9 @@ spec:
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/logs/metager
+            readOnly: false
           ports:
             - name: http
               containerPort: 8080

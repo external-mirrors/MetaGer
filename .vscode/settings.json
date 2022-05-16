@@ -6,7 +6,6 @@
     "docker-linter.php.machine": "",
     "intelephense.stubs": [
         "apache",
-        "redis",
         "bcmath",
         "bz2",
         "calendar",

@@ -9,6 +9,8 @@ use Cache;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Log;
+use Prometheus\CollectorRegistry;
+use Prometheus\Storage\InMemory;
 use View;
 
 class MetaGerSearch extends Controller
@@ -155,7 +157,7 @@ class MetaGerSearch extends Controller
             dd($timings);
         }
 
-        $registry = \Prometheus\CollectorRegistry::getDefault();
+        $registry = new CollectorRegistry(new InMemory());
         $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
         $counter->incBy(sizeof($metager->getResults()));
         $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
@@ -303,7 +305,7 @@ class MetaGerSearch extends Controller
         $result["engines"] = $enginesLoaded;
 
         if ($newResults > 0) {
-            $registry = \Prometheus\CollectorRegistry::getDefault();
+            $registry = new CollectorRegistry(new InMemory());
             $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
             $counter->incBy($newResults);
         }

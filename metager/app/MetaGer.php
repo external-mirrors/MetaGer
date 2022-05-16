@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App;
+use Illuminate\Support\Facades\App;
 use Cache;
 use Carbon;
 use Cookie;
@@ -160,7 +160,9 @@ class MetaGer
             $viewResults[] = get_object_vars($result);
         }
         # Wir müssen natürlich noch den Log für die durchgeführte Suche schreiben:
-        $this->createLogs();
+        /** @var QueryLogger */
+        $query_logger = App::make(QueryLogger::class);
+        $query_logger->createLog();
         if ($this->fokus === "bilder") {
             switch ($this->out) {
                 case 'results':
@@ -1556,32 +1558,6 @@ class MetaGer
         }
         $logpath .= date("d") . ".log";
         return $logpath;
-    }
-
-    public function createLogs()
-    {
-        if ($this->shouldLog) {
-            try {
-                $logEntry = "";
-                $logEntry .= date("H:i:s");
-                $logEntry .= " ref=" . $this->request->header('Referer');
-                $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
-                $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
-                $logEntry .= " sprachfilter=" . $this->lang;
-                $logEntry .= " eingabe=" . $this->eingabe;
-
-                $logEntry = preg_replace("/\n+/", " ", $logEntry);
-
-                if (config("database.redis.cache.driver", "redis") === "redis") {
-                    Redis::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-                    RedisSentinel::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                }
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return;
-            }
-        }
     }
 
     public function setNext($next)

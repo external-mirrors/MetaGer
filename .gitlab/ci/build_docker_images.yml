@@ -73,6 +73,7 @@ cleanup_revision_images_development:
   rules:
     - if: '$CI_COMMIT_BRANCH != "development"'
       when: never
+    - if: '$CI_COMMIT_BRANCH == "development"'
 
 cleanup_revision_images_production:
   extends:
@@ -84,3 +85,4 @@ cleanup_revision_images_production:
   rules:
     - if: '$CI_COMMIT_BRANCH != "master"'
       when: never
+    - if: '$CI_COMMIT_BRANCH == "master"'

@@ -1,6 +1,30 @@
 {
+    "php.suggest.basic": false,
     "php.validate.enable": false,
     "docker-linter.php.enable": true,
     "docker-linter.php.container": "metager_fpm_1",
-    "docker-linter.php.machine": ""
+    "docker-linter.php.machine": "",
+    "intelephense.telemetry.enabled": false,
+    "intelephense.format.enable": true,
+    "intelephense.completion.triggerParameterHints": true,
+    "intelephense.completion.insertUseDeclaration": true,
+    "intelephense.completion.fullyQualifyGlobalConstantsAndFunctions": true,
+    "intelephense.trace.server": "messages",
+    "intelephense.files.exclude": [
+        "**/.git/**",
+        "**/.svn/**",
+        "**/.hg/**",
+        "**/CVS/**",
+        "**/.DS_Store/**",
+        "**/node_modules/**",
+        "**/bower_components/**",
+        "**/storage",
+        "**/storage/**",
+        "**/tests/**",
+        "**/resources/views/**",
+        "**/database/migrations/**",
+        "**/storage/framework/views/**",
+        "_ide_helper.php",
+        "_ide_helper_models"
+    ]
 }

@@ -1,0 +1,28 @@
+integrationtest:
+  services:
+    - name: selenium/standalone-firefox:99.0
+      alias: selenium-standalone-firefox
+  stage: integrationtest
+  image: 
+    name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
+    entrypoint: ["/bin/bash"]
+  variables:
+    BRANCH_NAME: $CI_COMMIT_REF_NAME
+    COMMIT_NAME: $CI_COMMIT_REF_SLUG
+    SELENIUM_HOST: selenium-standalone-firefox
+  dependencies: [] # No artifacts required
+  before_script:
+    - export COMPOSER_HOME=$(pwd)/metager/.composer
+  script:
+    # Install Dev Dependencies
+    - cd metager
+    - cp $ENV_PRODUCTION .env
+    - composer install
+    - php artisan optimize
+    - php artisan test --without-tty
+  cache:
+    paths:
+      - metager/.composer/
+  except:
+    refs: 
+      - master

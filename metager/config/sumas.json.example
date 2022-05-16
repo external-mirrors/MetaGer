@@ -1,0 +1,18 @@
+{
+    "sumas": {
+
+    },
+    "foki": {
+        "web": {
+            "display-name": "index.foki.web",
+            "sumas": [
+            ],
+            "main": [
+            ]
+        }
+    },
+    "filter": {
+        "query-filter": {},
+        "parameter-filter": {}
+    }
+}

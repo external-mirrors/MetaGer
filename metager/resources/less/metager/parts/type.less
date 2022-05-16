@@ -1,0 +1,133 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.5;
+  color: inherit;
+
+  small {
+    font-weight: normal;
+    line-height: 1;
+    color: #777;
+  }
+}
+
+h1,
+h2,
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+
+  small {
+    font-size: 65%;
+  }
+}
+
+h4,
+h5,
+h6 {
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  small {
+    font-size: 75%;
+  }
+}
+
+h1 {
+  font-size: 1.8rem;
+  border-bottom: 1px solid @border-color;
+  margin-bottom: 1.2rem;
+  padding-bottom: 4px;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.3rem;
+}
+
+h4 {
+  font-size: 1.1rem;
+}
+
+h5 {
+  font-size: 16px;
+}
+
+h6 {
+  font-size: 12px;
+}
+
+
+
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace;
+}
+
+.text-muted {
+  color: #777;
+}
+
+.text-info {
+  .text-emphasis-variant(#31708f);
+}
+
+.text-danger {
+  .text-emphasis-variant(#a94442);
+}
+
+p {
+  margin: 0 0 10px;
+}
+
+// Ex: (12px small font / 14px base font) * 100% = about 85%
+small {
+  font-size: floor((100% * 12px / 14px));
+}
+
+// Lists
+ul,
+ol {
+  margin-top: 0;
+  margin-bottom: 10px;
+
+  ul,
+  ol {
+    margin-bottom: 0;
+  }
+}
+
+// Unstyled keeps list items block level, just removes default browser padding and list-style
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+// Description Lists
+dl {
+  margin-top: 0; // Remove browser default
+  margin-bottom: 20 px;
+}
+
+dt,
+dd {
+  line-height: 1.428571429;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 0; // Undo browser default
+}

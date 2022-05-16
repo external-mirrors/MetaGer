@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -e
+
+validate_laravel
+
+# Production version will have the .env file mounted at /home/metager/.env
+if [ -f /home/metager/.env ];
+then
+  cp /home/metager/.env .env
+fi
+
+# Create the useragents table in the sqlite database
+php artisan migrate:refresh --path=database/migrations/2019_10_15_103139_create_user_agents_table.php
+
+php artisan optimize
+php artisan route:trans:cache
+
+php artisan spam:load
+php artisan load:affiliate-blacklist
+
+docker-php-entrypoint php-fpm

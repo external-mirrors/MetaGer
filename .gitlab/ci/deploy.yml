@@ -1,0 +1,88 @@
+.deploy:
+  stage: deploy
+  image: $DEPLOY_KUBERNETES_IMAGE
+  needs:
+    - fpm
+    - nginx
+  dependencies: [] # No Artifacts required
+  variables:
+    DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
+    BRANCH_NAME: $CI_COMMIT_REF_NAME
+    COMMIT_NAME: $CI_COMMIT_REF_SLUG
+  before_script:
+    - chmod go-r $KUBECONFIG
+  script:
+    - .gitlab/deployment_scripts/update_secret.sh
+    - .gitlab/deployment_scripts/update_deployment.sh
+
+deploy_development:
+  extends:
+    - .deploy
+  environment:
+    name: development
+    url: https://metager3.de
+    action: start
+  variables:
+    DEPLOYMENT_URL: "metager3.de"
+    DEPLOYMENT_HELM_VALUES: .gitlab/development.yaml
+    DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "development"'
+
+deploy_production:
+  extends:
+    - .deploy
+  environment:
+    name: production
+    url: https://metager.de
+    action: start
+  variables:
+    DEPLOYMENT_URL: "metager.de"
+    DEPLOYMENT_HELM_VALUES: .gitlab/production.yaml
+    DEPLOYMENT_CHART_NAME: $CI_COMMIT_BRANCH
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
+deploy_review:
+  extends:
+    - .deploy
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"
+    action: start
+    on_stop: stop_review
+    auto_stop_in: 2 days
+  variables:
+    DEPLOYMENT_URL: "${CI_COMMIT_REF_SLUG}.review.metager.de"
+    DEPLOYMENT_HELM_VALUES: .gitlab/review.yaml
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+
+stop_review:
+  stage: deploy
+  image: $DEPLOY_KUBERNETES_IMAGE
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  variables:
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
+    KEEP_N: 0   # Environment gets deleted. No Image Tags to keep
+    FPM_REPOSITORY_ID: 418
+    NGINX_REPOSITORY_ID: 416
+  script:
+    - echo "Removing Image Tags..."
+    - .gitlab/deployment_scripts/cleanup_tags_revision.sh
+    # For some reason an empty image tag gets created for this. We need to delete it until we find out why that is
+    - 'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
+    - 'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
+    - echo "Stopping Deployment..."
+    - kubectl -n $KUBE_NAMESPACE delete secret $CI_COMMIT_REF_SLUG
+    - helm -n $KUBE_NAMESPACE delete $DEPLOYMENT_CHART_NAME
+  when: manual
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'

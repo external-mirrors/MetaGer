@@ -1,0 +1,84 @@
+fpm:
+  stage: build_docker_images
+  image: $BUILD_DOCKER_IMAGE
+  needs:
+    - composer
+    - npm
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # We need the vendor files in our final image. Make sure to not ignore the folder
+    - echo '!metager/vendor' >> .dockerignore
+  script:
+    - docker build --network=host
+        --target=production
+        -f build/fpm/Dockerfile
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG .
+    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
+  after_script:
+    - docker logout $CI_REGISTRY
+
+nginx:
+  stage: build_docker_images
+  image: $BUILD_DOCKER_IMAGE
+  needs:
+    - npm
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --network=host
+        --target=production
+        -f build/nginx/Dockerfile
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG .
+    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG
+  after_script:
+    - docker logout $CI_REGISTRY
+
+.cleanup_revision_images:
+  stage: build_docker_images
+  image: $DEPLOY_KUBERNETES_IMAGE
+  needs:
+    - composer
+  variables:
+    FPM_REPOSITORY_ID: 418
+    NGINX_REPOSITORY_ID: 416
+    KEEP_N: 9   # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
+  before_script:
+    - chmod go-r $KUBECONFIG
+  script:
+    - .gitlab/deployment_scripts/cleanup_tags_revision.sh
+    - .gitlab/deployment_scripts/cleanup_tags_non_revision.sh
+
+cleanup_revision_images_review:
+  extends:
+    - .cleanup_revision_images
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"
+    action: prepare
+    auto_stop_in: 2 days
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
+      when: never
+    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+
+cleanup_revision_images_development:
+  extends:
+    - .cleanup_revision_images
+  environment:
+    name: development
+    url: https://metager3.de
+    action: prepare
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "development"'
+      when: never
+
+cleanup_revision_images_production:
+  extends:
+    - .cleanup_revision_images
+  environment:
+    name: production
+    url: https://metager.de
+    action: prepare
+  rules:
+    - if: '$CI_COMMIT_BRANCH != "master"'
+      when: never

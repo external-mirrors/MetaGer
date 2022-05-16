@@ -61,7 +61,7 @@ class QueryLogger
 
         /** @var \Redis $redis */
         $redis = Redis::connection();
-        $redis->rPush(self::REDIS_KEY, \json_encode($log_entry));
+        $redis->rpush(self::REDIS_KEY, \json_encode($log_entry));
     }
 
     /**
@@ -70,10 +70,10 @@ class QueryLogger
      */
     public static function flushLogs()
     {
-        /** @var \Redis */
+        /** @var \Predis\Client */
         $redis = Redis::connection();
 
-        $queue_size = $redis->lLen(self::REDIS_KEY);
+        $queue_size = $redis->llen(self::REDIS_KEY);
 
         /** 
          * Will hold the Strings that get written to logfile. One entry per line 
@@ -87,7 +87,7 @@ class QueryLogger
          * 
          * @var string[] $query_logs
          */
-        $query_logs = $redis->lRange(self::REDIS_KEY, 0, $queue_size - 1);
+        $query_logs = $redis->lrange(self::REDIS_KEY, 0, $queue_size - 1);
         foreach ($query_logs as $query_log) {
             $query_log = \json_decode($query_log);
             $time = DateTime::createFromFormat("Y-m-d H:i:s", $query_log->time, new DateTimeZone("Europe/Berlin"));
@@ -108,7 +108,7 @@ class QueryLogger
                 Log::info("Added " . sizeof($log_strings) . " lines to todays log! " . $log_file);
                 // Now we can pop those elements from the list
                 for ($i = 0; $i < sizeof($query_logs); $i++) {
-                    $redis->lPop(self::REDIS_KEY);
+                    $redis->lpop(self::REDIS_KEY);
                 }
             }
         } else {

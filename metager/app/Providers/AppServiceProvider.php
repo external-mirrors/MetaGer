@@ -31,24 +31,13 @@ class AppServiceProvider extends ServiceProvider
         if (stripos($host, "metager.org") !== false) {
             \App::setLocale('en');
             LaravelLocalization::setLocale('en');
-        }else if (stripos($host, "metager.es") !== false) {
+        } else if (stripos($host, "metager.es") !== false) {
             \App::setLocale('es');
             LaravelLocalization::setLocale('es');
-        }else{
+        } else {
             \App::setLocale('de');
             LaravelLocalization::setLocale();
         }
-
-        \Prometheus\Storage\Redis::setDefaultOptions(
-            [
-                'host' => config("database.redis.default.host"),
-                'port' => intval(config("database.redis.default.port")),
-                'password' => config("database.redis.default.password"),
-                'timeout' => 0.1, // in seconds
-                'read_timeout' => '10', // in seconds
-                'persistent_connections' => false
-            ]
-        );
 
         Queue::before(function (JobProcessing $event) {
         });

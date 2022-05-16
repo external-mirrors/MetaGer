@@ -6,6 +6,8 @@ use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Prometheus\CollectorRegistry;
+use Prometheus\Storage\InMemory;
 
 /*
 |--------------------------------------------------------------------------
@@ -385,7 +387,7 @@ Route::get('metrics', function (Request $request) {
         abort(401);
     }
 
-    $registry = \Prometheus\CollectorRegistry::getDefault();
+    $registry = new CollectorRegistry(new InMemory());
 
     $renderer = new RenderTextFormat();
     $result = $renderer->render($registry->getMetricFamilySamples());

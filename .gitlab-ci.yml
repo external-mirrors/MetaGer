@@ -4,6 +4,7 @@ variables:
     DEPLOY_KUBERNETES_IMAGE: alpine/k8s:1.22.6
     DOCKER_FPM_IMAGE_NAME: fpm
     DOCKER_NGINX_IMAGE_NAME: nginx
+    DOCKER_NODE_IMAGE_NAME: node
 
 workflow:
   rules:
@@ -15,6 +16,7 @@ workflow:
       DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
       DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       HELM_RELEASE_NAME: review-$DOCKER_IMAGE_TAG_PREFIX
   - if: $CI_COMMIT_BRANCH == "master"
     variables:
@@ -24,6 +26,7 @@ workflow:
       DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
       DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
   - if: $CI_COMMIT_BRANCH == "development"
     variables:
@@ -33,17 +36,18 @@ workflow:
       DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
       DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
       HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
 
 stages:
-  - build_composer
+  - build_dependency_images
   - build_dependencies
   - build_docker_images
   - deploy
   - integrationtest
 
 include:
-  - local: /.gitlab/ci/build_composer.yml
+  - local: /.gitlab/ci/build_dependency_images.yml
   - local: /.gitlab/ci/build_dependencies.yml
   - local: /.gitlab/ci/build_docker_images.yml
   - local: /.gitlab/ci/deploy.yml

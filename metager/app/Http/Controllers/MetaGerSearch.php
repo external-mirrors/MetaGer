@@ -7,7 +7,7 @@ use App\MetaGer;
 use App\PrometheusExporter;
 use Cache;
 use Illuminate\Http\Request;
-use LaravelLocalization;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Log;
 use View;
 

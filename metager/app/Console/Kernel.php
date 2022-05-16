@@ -26,7 +26,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('heartbeat')->everyMinute();
         $schedule->command('requests:gather')->everyFifteenMinutes();
         $schedule->command('requests:useragents')->everyFiveMinutes();
-        // $schedule->command('logs:gather')->everyMinute();
+        $schedule->command('logs:gather')->everyMinute();
         $schedule->command('spam:load')->everyMinute();
         $schedule->command('load:affiliate-blacklist')->everyMinute();
         $schedule->command('affilliates:store')->everyMinute()

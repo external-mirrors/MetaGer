@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\MetaGer;
 use App\PrometheusExporter;
-use Cache;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Log;
+use Illuminate\Support\Facades\Log;
 use Prometheus\CollectorRegistry;
-use View;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\App;
 
 class MetaGerSearch extends Controller
 {
@@ -346,7 +347,7 @@ class MetaGerSearch extends Controller
     public function tips(Request $request)
     {
         $tipserver = '';
-        if (\App::environment() === "development") {
+        if (App::environment() === "development") {
             $tipserver = "https://dev.quicktips.metager.de/1.1/tips.xml";
         } else {
             $tipserver = "https://quicktips.metager.de/1.1/tips.xml";
@@ -372,19 +373,5 @@ class MetaGerSearch extends Controller
         return view('tips')
             ->with('title', trans('tips.title'))
             ->with('tips', $tips);
-    }
-
-    public function quicktips(Request $request)
-    {
-        $search = $request->input('search', '');
-        $quotes = $request->input('quotes', 'on');
-        if (empty($search)) {
-            abort(404);
-        }
-
-        $quicktips = new \App\Models\Quicktips\Quicktips($search, $quotes);
-        return view('quicktips')
-            ->with('quicktips', $quicktips->getResults())
-            ->with('search', $search);
     }
 }

@@ -3,49 +3,48 @@
 namespace App;
 
 use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
 
 class PrometheusExporter
 {
 
     public static function CaptchaShown()
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'captcha_shown', 'counts how often the captcha was shown', []);
         $counter->inc();
     }
 
     public static function CaptchaCorrect()
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'captcha_correct', 'counts how often the captcha was solved correctly', []);
         $counter->inc();
     }
 
     public static function CaptchaAnswered()
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'captcha_answered', 'counts how often the captcha was answered', []);
         $counter->inc();
     }
 
     public static function HumanVerificationSuccessfull()
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'humanverification_success', 'counts how often humanverification middleware was successfull', []);
         $counter->inc();
     }
 
     public static function HumanVerificationError()
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'humanverification_error', 'counts how often humanverification middleware had an error', []);
         $counter->inc();
     }
 
     public static function Duration($duration, $type)
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $histogram = $registry->getOrRegisterHistogram('metager', 'request_time', 'Loading Times for different cases', ['type'], [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.2, 2.4, 2.6, 2.8, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 15.0, 20.0, 30.0, 35.0]);
         $histogram->observe($duration, [$type]);
     }
@@ -56,7 +55,7 @@ class PrometheusExporter
      */
     public static function PreferredLanguage($language, $type)
     {
-        $registry = new CollectorRegistry(new InMemory());
+        $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter("metager", $language, 'counts preferred language usages', ['type']);
         $counter->inc($type);
     }

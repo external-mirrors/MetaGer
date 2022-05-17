@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +21,6 @@ use Prometheus\Storage\InMemory;
 | to using a Closure or controller method. Build something great!
 |
  */
-
 Route::get("robots.txt", function (Request $request) {
     $responseData = "";
     if (App::environment("production")) {
@@ -210,7 +211,6 @@ Route::get('age.xml', function () {
     $response->header('Content-Type', "application/xml");
     return $response;
 });
-
 Route::get('age-de.xml', function () {
     $response = Response::make(file_get_contents(resource_path('age/age-de.xml')));
     $response->header('Content-Type', "application/xml");
@@ -387,7 +387,7 @@ Route::get('metrics', function (Request $request) {
         abort(401);
     }
 
-    $registry = new CollectorRegistry(new InMemory());
+    $registry = CollectorRegistry::getDefault();
 
     $renderer = new RenderTextFormat();
     $result = $renderer->render($registry->getMetricFamilySamples());

@@ -299,7 +299,6 @@ Route::get('clickstats', 'LogController@clicklog');
 Route::get('pluginClose', 'LogController@pluginClose');
 Route::get('pluginInstall', 'LogController@pluginInstall');
 
-Route::get('qt', 'MetaGerSearch@quicktips');
 Route::get('tips', 'MetaGerSearch@tips');
 Route::get('/plugins/opensearch.xml', 'StartpageController@loadPlugin');
 Route::get('owi', function () {

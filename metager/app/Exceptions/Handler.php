@@ -6,7 +6,6 @@ use Throwable;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Prometheus\CollectorRegistry;
-use Prometheus\Storage\InMemory;
 
 class Handler extends ExceptionHandler
 {
@@ -47,7 +46,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $exception)
     {
         if ($request->is('*/meta/meta.ger3*')) {
-            $registry = new CollectorRegistry(new InMemory());
+            $registry = CollectorRegistry::getDefault();
             $histogram = $registry->getOrRegisterHistogram('metager', 'result_histogram', 'counts total number of returned results', [], [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]);
             $histogram->observe(0);
         }

@@ -21,7 +21,8 @@ RUN apt update && apt install -y \
     libzip-dev \
     libpng-dev && \
     docker-php-ext-install zip gd pcntl pdo_mysql && \
-    yes '' | pecl install xdebug-3.1.4 && \
+    yes '' | pecl install xdebug-3.1.4 redis-5.3.7 && \
+    docker-php-ext-enable redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
 # Add working dir for the code base

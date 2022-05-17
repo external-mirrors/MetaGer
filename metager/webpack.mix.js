@@ -47,6 +47,12 @@ mix
   )
   .babel(
     [
+      'resources/js/admin/count.js',
+    ],
+    'public/js/admin/count.js'
+  )
+  .babel(
+    [
       "resources/js/scriptResultPage.js",
       "resources/js/result-saver.js",
       "resources/js/translations.js",

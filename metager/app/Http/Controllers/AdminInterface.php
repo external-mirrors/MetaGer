@@ -4,8 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Jobs\ConvertCountFile;
 use Carbon\Carbon;
+use DateTime;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use PDO;
 use Response;
 
 class AdminInterface extends Controller
@@ -126,110 +130,99 @@ class AdminInterface extends Controller
 
     public function count(Request $request)
     {
-        #$this->convertLogs();
-        #return;
-        $days = intval($request->input('days', 28));
-        $interface = $request->input('interface', 'all');
-        if (!is_int($days) || $days <= 0) {
-            $days = 28;
-        }
-        $logs = $this->getStats($days);
 
-        $oldLogs = [];
-        $rekordTag = 0;
-        $rekordTagSameTime = 0;
-        $minCount = 0;
-        $rekordTagDate = "";
-        $size = 0;
-        $count = 0;
-        $logToday = 0;
-
-        foreach ($logs as $key => $stats) {
-            if ($key === 0) {
-                // Log for today
-                $now = Carbon::now();
-                $now->hour = 0;
-                $now->minute = 0;
-                $now->second = 0;
-                while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
-                    $logToday += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
-                    $now->addMinutes(5);
-                }
-                continue;
-            }
-            $insgesamt = empty($stats->insgesamt->{$interface}) ? 0 : $stats->insgesamt->{$interface};
-            $sameTime = 0;
-            $now = Carbon::now();
-            $now->hour = 0;
-            $now->minute = 0;
-            $now->second = 0;
-
-            while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
-                $sameTime += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
-                $now->addMinutes(5);
-            }
-
-            if ($insgesamt > $rekordTag) {
-                $rekordTag = $insgesamt;
-                $rekordTagSameTime = $sameTime;
-                $rekordTagDate = Carbon::now()->subDays($key)->format('d.m.Y');
-            }
-            if ($minCount === 0 || $insgesamt < $minCount) {
-                $minCount = $insgesamt;
-            }
-            $oldLogs[$key]['sameTime'] = number_format(floatval($sameTime), 0, ",", ".");
-            $oldLogs[$key]['insgesamt'] = number_format(floatval($insgesamt), 0, ",", ".");
-            # Nun noch den median:
-            $count += $insgesamt;
-            $size++;
-            if ($size > 0) {
-                $oldLogs[$key]['median'] = number_format(floatval(round($count / $size)), 0, ",", ".");
-            }
-        }
-
-        $sameTimes = [];
-        $sum = 0;
-        foreach ($oldLogs as $index => $oldLog) {
-            if ($index % 7 === 0) {
-                $sameTime = $oldLog["sameTime"];
-                $sameTime = str_replace(".", "", $sameTime);
-                $sameTime = \intval($sameTime);
-                $sameTimes[] = ($logToday - $sameTime);
-                $sum += ($logToday - $sameTime);
-            }
-        }
-
-        $averageIncrease = 0;
-        if (sizeof($sameTimes) > 0) {
-            $averageIncrease = $sum / sizeof($sameTimes);
-        }
 
         if ($request->input('out', 'web') === "web") {
+            $days = $request->input("days", 28);
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
-                ->with('today', number_format(floatval($logToday), 0, ",", "."))
-                ->with('averageIncrease', $averageIncrease)
-                ->with('oldLogs', $oldLogs)
-                ->with('minCount', $minCount)
-                ->with('rekordCount', number_format(floatval($rekordTag), 0, ",", "."))
-                ->with('rekordTagSameTime', number_format(floatval($rekordTagSameTime), 0, ",", "."))
-                ->with('rekordDate', $rekordTagDate)
                 ->with('days', $days)
                 ->with('css', [mix('/css/count/style.css')])
-                ->with('darkcss', [mix('/css/count/dark.css')]);
-        } else {
-            $result = "";
-            foreach ($oldLogs as $key => $value) {
-                $resultTmp = '"' . date("D, d M y", mktime(date("H"), date("i"), date("s"), date("m"), date("d") - $key, date("Y"))) . '",';
-                $resultTmp .= '"' . $value['sameTime'] . '",';
-                $resultTmp .= '"' . $value['insgesamt'] . '",';
-                $resultTmp .= '"' . $value['median'] . '"' . "\r\n";
-                $result = $resultTmp . $result;
-            }
-            return response($result, 200)
-                ->header('Content-Type', 'text/csv')
-                ->header('Content-Disposition', 'attachment; filename="count.csv"');
+                ->with('darkcss', [mix('/css/count/dark.css')])
+                ->with('js', [
+                    mix('/js/admin/count.js')
+                ]);
         }
+    }
+
+    public function getCountDataTotal(Request $request)
+    {
+        $date = $request->input('date', '');
+        $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00");
+        if ($date === false) {
+            abort(404);
+        }
+
+        $year = $date->format("Y");
+        $month = $date->format("m");
+        $day = $date->format("d");
+        $cache_key = "admin_count_total_${year}_${month}_${day}";
+        $total_count = Cache::get($cache_key);
+
+        if ($total_count === null) {
+            $database_file = \storage_path("logs/metager/$year/$month.sqlite");
+            if (!\file_exists($database_file)) {
+                abort(404);
+            }
+
+            $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+            if (!$connection->getSchemaBuilder()->hasTable($day)) {
+                abort(404);
+            }
+
+            $total_count = $connection->table($day)->count('*');
+            // No Cache for today
+            if (!now()->isSameDay($date)) {
+                Cache::put($cache_key, $total_count, now()->addWeek());
+            }
+        }
+
+        $result = [
+            "status" => 200,
+            "error" => false,
+            "data" => [
+                "date" => "$year-$month-$day",
+                "total" => $total_count,
+            ]
+        ];
+        return \response()->json($result);
+    }
+
+    public function getCountDataUntil(Request $request)
+    {
+        $date = $request->input('date', '');
+        $date = DateTime::createFromFormat("Y-m-d", $date);
+        if ($date === false) {
+            abort(404);
+        }
+
+        $year = $date->format("Y");
+        $month = $date->format("m");
+        $day = $date->format("d");
+        $time = now()->format("H:i:s");
+
+
+        $database_file = \storage_path("logs/metager/$year/$month.sqlite");
+        if (!\file_exists($database_file)) {
+            abort(404);
+        }
+
+        $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+        if (!$connection->getSchemaBuilder()->hasTable($day)) {
+            abort(404);
+        }
+
+        $total_count = $connection->table($day)->whereTime("time", "<", $time)->count();
+
+        $result = [
+            "status" => 200,
+            "error" => false,
+            "data" => [
+                "date" => "$year-$month-$day",
+                "total" => $total_count,
+            ]
+        ];
+        return \response()->json($result);
     }
 
     public function countGraphToday()

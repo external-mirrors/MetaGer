@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
@@ -21,6 +22,7 @@ use Prometheus\CollectorRegistry;
 | to using a Closure or controller method. Build something great!
 |
  */
+
 Route::get("robots.txt", function (Request $request) {
     $responseData = "";
     if (App::environment("production")) {
@@ -232,6 +234,8 @@ Route::get('plugin', function (Request $request) {
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
     Route::get('/', 'AdminInterface@index');
     Route::match(['get', 'post'], 'count', 'AdminInterface@count');
+    Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
+    Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);
     Route::get('timings', 'MetaGerSearch@searchTimings');
     Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
     Route::get('engine/stats.json', 'AdminInterface@engineStats');

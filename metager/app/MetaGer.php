@@ -754,6 +754,7 @@ class MetaGer
 
     public function getAvailableParameterFilter()
     {
+        $request = App::make(Request::class);
         $parameterFilter = $this->sumaFile->filter->{"parameter-filter"};
 
         $availableFilter = [];
@@ -810,8 +811,8 @@ class MetaGer
 
         # Set the current values for the filters
         foreach ($availableFilter as $filterName => $filter) {
-            if (Request::filled($filter->{"get-parameter"})) {
-                $filter->value = Request::input($filter->{"get-parameter"});
+            if ($request->filled($filter->{"get-parameter"})) {
+                $filter->value = $request->input($filter->{"get-parameter"});
             } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
             }
@@ -1694,10 +1695,11 @@ class MetaGer
 
     public function getManualParameterFilterSet()
     {
+        $request = App::make(Request::class);
         $filters = $this->sumaFile->filter->{"parameter-filter"};
         foreach ($filters as $filterName => $filter) {
             if (
-                Request::filled($filter->{"get-parameter"})
+                $request->filled($filter->{"get-parameter"})
                 && Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== Request::input($filter->{"get-parameter"})
             ) {
                 return true;

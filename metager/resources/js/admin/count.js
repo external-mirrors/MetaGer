@@ -106,12 +106,7 @@ function loadTotals(parallel) {
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
         let total_requests = parseInt(localStorage.getItem("totals-" + date));
-        if (days_ago === 0) {
-            if (!data[days_ago]) {
-                data[days_ago] = {}
-            }
-            data[days_ago]["total"] = 0;
-        } else if (total_requests) {
+        if (total_requests) {
             if (!data[days_ago]) {
                 data[days_ago] = {}
             }
@@ -125,7 +120,9 @@ function loadTotals(parallel) {
                         data[days_ago] = {}
                     }
                     data[days_ago]["total"] = total_requests;
-                    localStorage.setItem("totals-" + date, total_requests);
+                    if (i > 0) {
+                        localStorage.setItem("totals-" + date, total_requests);
+                    }
                 })
                 .catch(reason => {
                     if (!data[days_ago]) {

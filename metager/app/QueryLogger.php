@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
 use ErrorException;
@@ -217,6 +218,29 @@ class QueryLogger
                 $table->string("query", self::QUERY_MAX_LENGTH)->nullable();
             });
         }
+    }
+
+    /**
+     * Fetches the latest n logs
+     * 
+     * @param int $n How many logs to fetch max
+     * 
+     * @return \Illuminate\Support\Collection
+     */
+    public function getLatestLogs(int $n)
+    {
+        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . ".sqlite");
+        $current_table = date("d");
+        if (!\file_exists($current_database)) {
+            return null;
+        }
+
+        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database));
+        if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
+            return null;
+        }
+        $queries = $connection->table($current_table)->orderBy("date", 'desc')->limit($n)->get();
+        return $queries;
     }
 
     /**

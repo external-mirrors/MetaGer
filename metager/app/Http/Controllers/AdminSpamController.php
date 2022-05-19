@@ -40,7 +40,7 @@ class AdminSpamController extends Controller
             $bans = json_decode(file_get_contents($file), true);
         }
 
-        $bans[] = ["banned-until" => Carbon::now()->add($banTime)->format("Y-m-d H:i:s"), "regexp" => $banRegexp];
+        $bans[] = ["banned-until" => now()->add($banTime)->format("Y-m-d H:i:s"), "regexp" => $banRegexp];
 
         \file_put_contents($file, json_encode($bans));
 

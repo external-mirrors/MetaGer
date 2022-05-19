@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ConvertCountFile;
+use App\QueryLogger;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use PDO;
@@ -14,119 +16,6 @@ use Response;
 
 class AdminInterface extends Controller
 {
-    public function index(Request $request)
-    {
-        // Let's get the stats for this server.
-        // First we need to check, which Fetcher could be available by parsing the sumas.xml
-        $names = $this->getSearchEngineNames();
-
-        // Now we gonna check which stats we can find
-        $stati = array();
-        foreach ($names as $name) {
-            $stats = Redis::hgetall($name . ".stats");
-            if (sizeof($stats) > 0) {
-                $fetcherStatus = Redis::get($name);
-                $stati[$name]["status"] = $fetcherStatus;
-                foreach ($stats as $pid => $value) {
-                    if (strstr($value, ";")) {
-                        $value = explode(";", $value);
-                        $connection = json_decode(base64_decode($value[0]), true);
-                        foreach ($connection as $key => $val) {
-                            if (strstr($key, "_time")) {
-                                $stati[$name]["fetcher"][$pid]["connection"][$key] = $val;
-                            }
-                        }
-                        $stati[$name]["fetcher"][$pid]["poptime"] = $value[1];
-                    }
-                }
-            }
-        }
-
-        // So now we can generate Median Times for every Fetcher
-        $fetcherCount = 0;
-        foreach ($stati as $engineName => $engineStats) {
-            $connection = array();
-            $poptime = 0;
-            $fetcherCount += sizeof($engineStats["fetcher"]);
-            foreach ($engineStats["fetcher"] as $pid => $stats) {
-                foreach ($stats["connection"] as $key => $value) {
-                    if (!isset($connection[$key])) {
-                        $connection[$key] = $value;
-                    } else {
-                        $connection[$key] += $value;
-                    }
-                }
-                $poptime += floatval($stats["poptime"]);
-            }
-            foreach ($connection as $key => $value) {
-                $connection[$key] /= sizeof($engineStats["fetcher"]);
-            }
-            $poptime /= sizeof($engineStats["fetcher"]);
-
-            $stati[$engineName]["median-connection"] = $connection;
-            $stati[$engineName]["median-poptime"] = $poptime;
-        }
-
-        return view('admin.admin')
-            ->with('title', 'Fetcher Status')
-            ->with('stati', $stati)
-            ->with('fetcherCount', $fetcherCount);
-        $stati = json_encode($stati);
-        $response = Response::make($stati, 200);
-        $response->header("Content-Type", "application/json");
-        return $response;
-    }
-
-    private function getSearchEngineNames()
-    {
-        $url = config_path() . "/sumas.xml";
-        $xml = \simplexml_load_file($url);
-        $sumas = $xml->xpath("suma");
-
-        $names = array();
-        foreach ($sumas as $suma) {
-            $names[] = $suma["name"]->__toString();
-        }
-        return $names;
-    }
-
-    private function convertLogs()
-    {
-        $oldLogsPath = \storage_path("logs/metager/old/");
-        $dir = new \DirectoryIterator($oldLogsPath);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDot()) {
-                continue;
-            }
-            $filename = $oldLogsPath . "/" . $fileinfo->getFilename();
-            $daysAgo = substr($fileinfo->getFilename(), strrpos($fileinfo->getFilename(), ".") + 1);
-            $dateOfFile = Carbon::now()->subDays($daysAgo);
-            $outputFile = \storage_path("logs/metager/" . $dateOfFile->format("Y/m/d") . ".log");
-            if (!file_exists(dirname($outputFile))) {
-                \mkdir(dirname($outputFile), 0777, true);
-            }
-            $fhw = fopen($outputFile, "w");
-            $fhr = fopen($filename, "r");
-            try {
-                $first = true;
-                while (($line = fgets($fhr)) != false) {
-                    $date = trim(substr($line, 0, strpos($line, "]")), "[");
-                    $date = trim(substr($date, strrpos($date, " ")));
-                    $rest = trim(substr($line, strpos($line, "]") + 1));
-                    $outputString = "";
-                    if (!$first) {
-                        $outputString .= PHP_EOL;
-                    }
-                    $outputString .= $date . " " . $rest;
-                    $first = false;
-                    fwrite($fhw, $outputString);
-                }
-            } finally {
-                fclose($fhw);
-                fclose($fhr);
-            }
-        }
-    }
 
     public function count(Request $request)
     {
@@ -224,35 +113,6 @@ class AdminInterface extends Controller
             ]
         ];
         return \response()->json($result);
-    }
-
-    public function countGraphToday()
-    {
-        $stats = $this->getStats(0)[0];
-
-        $hourly = [];
-        $previous = 0;
-        $max = 0;
-        foreach ($stats->time as $time => $timeStats) {
-            $hour = intval(substr($time, 0, strpos($time, ":")));
-            if (empty($hourly[$hour])) {
-                $hourly[$hour] = 0;
-            }
-            $hourly[$hour] += $timeStats->all - $previous;
-            $previous = $timeStats->all;
-            if ($hourly[$hour] > $max) {
-                $max = $hourly[$hour];
-            }
-        }
-        $result = [
-            "insgesamt" => $stats->insgesamt->all,
-            "max" => $max,
-            "hourly" => $hourly,
-        ];
-
-        return response()
-            ->view('admin.countGraphToday', ["data" => $result], 200)
-            ->header('Content-Type', "image/svg+xml");
     }
 
     public function engineStats()
@@ -393,53 +253,16 @@ class AdminInterface extends Controller
     public function check()
     {
         $q = "";
-        $logpath = \App\MetaGer::getMGLogFile();
 
-        if (file_exists($logpath)) {
-            $fp = @fopen($logpath, "r");
-            while (($line = fgets($fp)) !== false) {
-                if (!empty($line)) {
-                    $q = $line;
-                }
-            }
-            fclose($fp);
-            $q = substr($q, strpos($q, "eingabe=") + 8);
+        /** @var QueryLogger */
+        $query_logger = App::make(QueryLogger::class);
+        $query = $query_logger->getLatestLogs(1);
+        if (sizeof($query) > 0) {
+            $q = $query[0]->query;
         }
+
         return view('admin.check')
             ->with('title', 'Wer sucht was? - MetaGer')
             ->with('q', $q);
-    }
-
-    public function engines()
-    {
-        # Wir laden den Inhalt der Log Datei und übergeben ihn an den view
-        $file = "/var/log/metager/engine.log";
-        if (file_exists($file) && is_readable($file)) {
-            $engineStats = file_get_contents($file);
-            # Daten vom JSON Format dekodieren
-            $engineStats = json_decode($engineStats, true);
-
-            # Eine Sortierung wäre nicht das verkehrteste
-            uasort($engineStats["recent"], function ($a, $b) {
-                if ($a["requests"] == $b["requests"]) {
-                    return 0;
-                }
-
-                return ($a["requests"] < $b["requests"]) ? 1 : -1;
-            });
-
-            uasort($engineStats["overall"], function ($a, $b) {
-                if ($a["requests"] == $b["requests"]) {
-                    return 0;
-                }
-
-                return ($a["requests"] < $b["requests"]) ? 1 : -1;
-            });
-            return view('admin.engines')
-                ->with('engineStats', $engineStats)
-                ->with('title', "Suchmaschinenstatus - MetaGer");
-        } else {
-            return redirect(url('admin'));
-        }
     }
 }

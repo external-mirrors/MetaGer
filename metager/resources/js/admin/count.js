@@ -1,6 +1,7 @@
 let parallel_fetches = 8;
 
 let data = [];
+let chart = null;
 
 load();
 
@@ -8,17 +9,20 @@ function load() {
     let parallel = Math.floor(parallel_fetches / 2)
 
     let fetches = [];
-    fetches = fetches.concat(loadSameTimes(parallel));
-    fetches = fetches.concat(loadTotals(parallel));
+    let fetches_same_time = loadSameTimes(parallel);
+    let fetches_total = loadTotals(parallel);
+    fetches = fetches.concat(fetches_same_time, fetches_total);
     if (fetches.length > 0) {
         let allData = Promise.all(fetches)
         allData.then((res) => {
             updateTable();
+            updateChart();
             updateRecord();
             load();
         });
     } else {
         updateTable();
+        updateChart();
         updateRecord();
     }
 }
@@ -101,7 +105,7 @@ function loadTotals(parallel) {
 
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
-        let total_requests = parseInt(localStorage.getItem("totals-" + date))
+        let total_requests = parseInt(localStorage.getItem("totals-" + date));
         if (days_ago === 0) {
             if (!data[days_ago]) {
                 data[days_ago] = {}
@@ -173,4 +177,84 @@ function loadSameTimes(parallel) {
         }
     }
     return fetches
+}
+
+function updateChart() {
+
+    if (chart == undefined) {
+        createChart();
+    } else {
+
+        let totals = [];
+        let until_nows = [];
+        let labels = [];
+        for (let i = 0; i < data.length; i++) {
+            totals.unshift(data[i]["total"]);
+            until_nows.unshift(data[i]["same_time"]);
+            labels.unshift(document.querySelectorAll("tbody tr td.date")[i].dataset.date_formatted);
+        }
+
+        chart.data.datasets[0].data = totals;
+        chart.data.datasets[1].data = until_nows;
+        chart.data.labels = labels;
+
+        chart.update();
+    }
+}
+
+function createChart() {
+    let backgroundColor_total = 'rgb(255, 127, 0)';
+    let backgroundColor_until_now = 'rgb(67, 134, 221)';
+    let labels = [];
+    let data_points_total = [];
+    let data_points_until_now = [];
+
+    let css_style = window.getComputedStyle(document.getElementById("graph"));
+    let config = {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: "Gesamt",
+                    backgroundColor: backgroundColor_total,
+                    borderColor: backgroundColor_total,
+                    data: data_points_total
+                },
+                {
+                    label: "Zur gleichen Zeit",
+                    backgroundColor: backgroundColor_until_now,
+                    borderColor: backgroundColor_until_now,
+                    data: data_points_until_now
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    ticks: {
+                        color: css_style.getPropertyValue("--chart-font-color")
+                    },
+                    grid: {
+                        borderColor: css_style.getPropertyValue("--grid-axis-color"),
+                        color: css_style.getPropertyValue("--grid-color")
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: css_style.getPropertyValue("--chart-font-color")
+                    },
+                    grid: {
+                        borderColor: css_style.getPropertyValue("--grid-axis-color"),
+                        color: css_style.getPropertyValue("--grid-color")
+                    }
+                }
+            }
+        }
+    }
+    chart = new Chart(
+        document.getElementById("chart"),
+        config
+    );
+    updateChart();
 }

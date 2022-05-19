@@ -16,5 +16,8 @@
     "less-loader": "^10.2.0",
     "lodash": "^4.17.19",
     "postcss": "^8.1.14"
+  },
+  "dependencies": {
+    "chart.js": "^3.7.1"
   }
 }

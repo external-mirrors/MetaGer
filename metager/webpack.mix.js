@@ -47,6 +47,7 @@ mix
   )
   .babel(
     [
+      'node_modules/chart.js/dist/chart.js',
       'resources/js/admin/count.js',
     ],
     'public/js/admin/count.js'

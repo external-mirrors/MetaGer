@@ -4,9 +4,7 @@
 
 @section('content')
 <div id="graph">
-	<svg>
-
-	</svg>
+	<canvas id="chart" width="100%" ></canvas>
 </div>
 <p class="record">Am <span class="record-date loading"></span> zur gleichen Zeit <span class="record-same-time text-info loading"></span> - insgesamt <span class="record-total text-danger loading"></span></p>
 <p class="total-median">Mittelwert der letzten <span class="median-days loading"></span> Tage: <span class="median-value loading"></span></p>

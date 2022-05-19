@@ -26,5 +26,8 @@
         "**/storage/framework/views/**",
         "_ide_helper.php",
         "_ide_helper_models"
-    ]
+    ],
+    "emmet.includeLanguages": {
+        "blade": "html"
+    }
 }

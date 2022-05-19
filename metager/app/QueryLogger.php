@@ -98,17 +98,17 @@ class QueryLogger
          * @var string[] $query_logs
          */
         $query_logs = $redis->lrange(self::REDIS_KEY, 0, $queue_size - 1);
-        if(sizeof($query_logs) > 0){
-            if(self::insertLogEntries($query_logs)){
+        if (sizeof($query_logs) > 0) {
+            if (self::insertLogEntries($query_logs)) {
                 Log::info("Added " . sizeof($query_logs) . " lines to todays log! ");
                 // Now we can pop those elements from the list
                 for ($i = 0; $i < sizeof($query_logs); $i++) {
                     $redis->lpop(self::REDIS_KEY);
                 }
-            }else{
+            } else {
                 Log::error("Konnte " . sizeof($log_strings) . " Log Zeile(n) nicht schreiben");
             }
-        }else {
+        } else {
             Log::info("No logs to append to the file.");
         }
     }
@@ -116,28 +116,29 @@ class QueryLogger
     /**
      * Inserts new Log entries into Sqlite database
      */
-    private static function insertLogEntries($query_logs){
+    private static function insertLogEntries($query_logs)
+    {
         $insert_array = [];
 
-        foreach($query_logs as $query_log){
+        foreach ($query_logs as $query_log) {
             $query_log_object = json_decode($query_log);
-            if(empty($query_log_object)){
+            if (empty($query_log_object)) {
                 Log::error(var_export($query_log, true));
                 continue;
-            }else{
+            } else {
                 $query_log = $query_log_object;
             }
             $time = DateTime::createFromFormat("Y-m-d H:i:s", $query_log->time);
             $year = $time->format("Y");
             $month = $time->format("m");
             $day = $time->format("d");
-            if(empty($insert_array[$year])){
+            if (empty($insert_array[$year])) {
                 $insert_array[$year] = [];
             }
-            if(empty($insert_array[$year][$month])){
+            if (empty($insert_array[$year][$month])) {
                 $insert_array[$year][$month] = [];
             }
-            if(empty($insert_array[$year][$month][$day])){
+            if (empty($insert_array[$year][$month][$day])) {
                 $insert_array[$year][$month][$day] = [];
             }
             $insert_array[$year][$month][$day][] = [
@@ -152,17 +153,17 @@ class QueryLogger
 
         /** @var \Illuminate\Database\SQLiteConnection[] */
         $connections = [];
-        foreach($insert_array as $year => $months){
-            foreach($months as $month => $days){
-                foreach($days as $day => $insert_array){
-                    if(empty($connection[$year])){
+        foreach ($insert_array as $year => $months) {
+            foreach ($months as $month => $days) {
+                foreach ($days as $day => $insert_array) {
+                    if (empty($connection[$year])) {
                         $connections[$year] = [];
                     }
-                    if(empty($connections[$year][$month])){
+                    if (empty($connections[$year][$month])) {
                         $connections[$year][$month] = self::validateDatabase($year, $month);
                     }
                     self::validateTable($connections[$year][$month], $day);
-                    if(!$connections[$year][$month]->table($day)->insert($insert_array)){
+                    if (!$connections[$year][$month]->table($day)->insert($insert_array)) {
                         return false;
                     }
                 }
@@ -174,18 +175,19 @@ class QueryLogger
     /**
      * Verifies that the Sqlite Database and Table for todays Log exist
      */
-    private static function validateDatabase($year, $month) {
+    private static function validateDatabase($year, $month)
+    {
         $folder = \storage_path("logs/metager/$year");
-        if(!\file_exists($folder)){
-            if(!mkdir($folder, 0777, true)){
+        if (!\file_exists($folder)) {
+            if (!mkdir($folder, 0777, true)) {
                 throw new ErrorException("Couldn't create folder for sqlite Databse in \"$folder\"");
             }
         }
         $current_database_path = \storage_path("logs/metager/$year/$month.sqlite");
-        
+
         // Create Database if it does not exist yet
-        if(!\file_exists($current_database_path)){
-            if(!touch($current_database_path)){
+        if (!\file_exists($current_database_path)) {
+            if (!touch($current_database_path)) {
                 throw new ErrorException("Couldn't create sqlite Databse in \"$current_database_path\"");
             }
         }
@@ -201,10 +203,11 @@ class QueryLogger
      * @param Illuminate\Database\SQLiteConnection $connection
      * @param string $table
      */
-    private static function validateTable($connection, $table){
-        if(!$connection->getSchemaBuilder()->hasTable("$table")){
+    private static function validateTable($connection, $table)
+    {
+        if (!$connection->getSchemaBuilder()->hasTable("$table")) {
             // Create a new Table
-            $connection->getSchemaBuilder()->create("$table", function(Blueprint $table){
+            $connection->getSchemaBuilder()->create("$table", function (Blueprint $table) {
                 $table->bigIncrements("id");
                 $table->dateTime("time");
                 $table->string("referer", self::REFERER_MAX_LENGTH);
@@ -222,7 +225,8 @@ class QueryLogger
      * @param string $year
      * @param string $month
      */
-    public static function migrate($year, $month){
+    public static function migrate($year, $month)
+    {
         $batch_size = 10000;
         $path = \storage_path("logs/metager/$year/$month");
 
@@ -230,8 +234,8 @@ class QueryLogger
         $redis = Redis::connection();
 
         $files = scandir($path);
-        foreach($files as $file){
-            if(\in_array($file, [".", ".."])) continue;
+        foreach ($files as $file) {
+            if (\in_array($file, [".", ".."])) continue;
 
             $day = substr($file, 0, stripos($file, ".log"));
             Log::info("Parsing $file");
@@ -240,8 +244,8 @@ class QueryLogger
             \exec("mv " . $file_path . ".bak" . " " . $file_path);
             $fh = fopen($file_path, "r");
             $batch_count = 0;
-            while(($line = fgets($fh)) !== false){
-                if(preg_match("/^(\d{2}:\d{2}:\d{2})\s+?ref=(.*?)\s+?time=([^\s]+)\s+?serv=([^\s]+)\s+?interface=([^\s]+).*?eingabe=(.+)$/", $line, $matches) != false){
+            while (($line = fgets($fh)) !== false) {
+                if (preg_match("/^(\d{2}:\d{2}:\d{2})\s+?ref=(.*?)\s+?time=([^\s]+)\s+?serv=([^\s]+)\s+?interface=([^\s]+).*?eingabe=(.+)$/", $line, $matches) != false) {
                     $log_entry = [
                         "time" => "$year-$month-$day " . $matches[1],
                         "referer" => trim($matches[2]),
@@ -251,18 +255,18 @@ class QueryLogger
                         "query_string" => trim($matches[6])
                     ];
                     $json_string = \json_encode($log_entry);
-                    if($json_string === false){
+                    if ($json_string === false) {
                         Log::error("Couldn't encode");
                         Log::error(var_export($log_entry, true));
                         continue;
                     }
                     $redis->rpush(self::REDIS_KEY, $json_string);
                     $batch_count++;
-                    if($batch_count >= $batch_size){
+                    if ($batch_count >= $batch_size) {
                         Artisan::call("logs:gather");
                         $batch_count = 0;
                     }
-                }else{
+                } else {
                     Log::error("Regexp did not work for");
                     Log::error($line);
                     continue;
@@ -272,6 +276,5 @@ class QueryLogger
             Log::info("Finished $file");
             fclose($fh);
         }
-
     }
 }

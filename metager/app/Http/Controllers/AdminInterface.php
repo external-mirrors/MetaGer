@@ -157,6 +157,7 @@ class AdminInterface extends Controller
         $month = $date->format("m");
         $day = $date->format("d");
         $cache_key = "admin_count_total_${year}_${month}_${day}";
+        Cache::forget($cache_key);
         $total_count = Cache::get($cache_key);
 
         if ($total_count === null) {

@@ -3,7 +3,7 @@
 return [
     "achtung"               => 'Achtung, da unsere Suchmaschine ständig weiterentwickelt und verbessert wird, kann es dazu kommen, dass sich immer wieder Änderungen an Aufbau und Funktion ergeben. Wir versuchen zwar die Hilfe schnellstmöglich den Änderungen entsprechend anzupassen, können jedoch nicht ausschließen, dass es zu temporären Unstimmigkeiten in Teilen der Erklärungen kommt.',
     "title"                 => 'MetaGer - Hilfe in leichter Sprache',
-
+    "easy.language.back"    => "Zurück zur Hilfe",
     'tableofcontents.title' => '',
     'tableofcontents.1' => 'Die Hauptseiten',
     'tableofcontents.1.1' => 'Die Startseite',

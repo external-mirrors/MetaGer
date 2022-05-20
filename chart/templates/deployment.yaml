@@ -144,11 +144,11 @@ spec:
             limits:
           lifecycle:
             postStart:
-            exec:
-              command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
+              exec:
+                command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
             preStop:
-            exec:
-              command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
+              exec:
+                command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
         - name: worker
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

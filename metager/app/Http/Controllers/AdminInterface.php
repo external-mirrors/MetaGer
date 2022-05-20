@@ -53,11 +53,15 @@ class AdminInterface extends Controller
             }
 
             $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
-            if (!$connection->getSchemaBuilder()->hasTable($day)) {
-                abort(404);
-            }
+            try {
+                if (!$connection->getSchemaBuilder()->hasTable($day)) {
+                    abort(404);
+                }
 
-            $total_count = $connection->table($day)->count('*');
+                $total_count = $connection->table($day)->count('*');
+            } finally {
+                $connection->disconnect();
+            }
             // No Cache for today
             if (!now()->isSameDay($date)) {
                 Cache::put($cache_key, $total_count, now()->addWeek());
@@ -95,12 +99,15 @@ class AdminInterface extends Controller
         }
 
         $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
-        if (!$connection->getSchemaBuilder()->hasTable($day)) {
-            abort(404);
+        try {
+            if (!$connection->getSchemaBuilder()->hasTable($day)) {
+                abort(404);
+            }
+
+            $total_count = $connection->table($day)->whereTime("time", "<", $time)->count();
+        } finally {
+            $connection->disconnect();
         }
-
-        $total_count = $connection->table($day)->whereTime("time", "<", $time)->count();
-
         $result = [
             "status" => 200,
             "error" => false,

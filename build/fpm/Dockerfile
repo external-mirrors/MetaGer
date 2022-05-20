@@ -69,6 +69,8 @@ RUN rm $PHP_INI_DIR/conf.d/development.ini
 # Add production php.ini
 ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
 ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
+# Configure FPM for production
+ADD build/fpm/configuration/fpm/www_01_production.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
 USER metager:metager
 

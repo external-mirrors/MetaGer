@@ -1,169 +1,110 @@
 # Default values for chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
+
 replicaCount: 1
-strategyType:
-# `serviceAccountName` is deprecated in favor of `serviceAccount.name`
-serviceAccountName:
+
 image:
-  repository: gitlab.example.com/group/project
-  tag: stable
   pullPolicy: IfNotPresent
-  secrets:
-    - name: gitlab-registry
-extraLabels: {}
-lifecycle: {}
-# preStop:
-#   exec:
-#     command: ["/bin/sh", "-c", "sleep 10"]
-podAnnotations: {}
-nodeSelector: {}
-affinity: {}
-tolerations: []
-application:
-  track: stable
-  tier: web
-  migrateCommand:
-  initializeCommand:
-  secretName:
-  secretChecksum:
-hpa:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 5
-  targetCPUUtilizationPercentage: 80
-gitlab:
-  app:
-  env:
-  envName:
-  envURL:
-  projectID:
-service:
-  enabled: true
-  annotations: {}
-  name: web
-  type: ClusterIP
-  url: http://my.host.com/
-  additionalHosts:
-  commonName:
-  externalPort: 5000
-  internalPort: 5000
-ingress:
-  enabled: true
-  path: "/"
-  tls:
-    enabled: true
-    acme: true
-    secretName: ""
-    useDefaultSecret: false
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-  modSecurity:
-    enabled: false
-    secRuleEngine: "DetectionOnly"
-    # secRules:
-    #   - variable: ""
-    #     operator: ""
-    #     action: ""
-  canary:
-    weight:
-prometheus:
-  metrics: false
-livenessProbe:
-  path: "/"
-  initialDelaySeconds: 15
-  timeoutSeconds: 15
-  scheme: "HTTP"
-  probeType: "httpGet"
-readinessProbe:
-  path: "/"
-  initialDelaySeconds: 5
-  timeoutSeconds: 3
-  scheme: "HTTP"
-  probeType: "httpGet"
-postgresql:
-  managed: false
-  managedClassSelector:
-    #   matchLabels:
-    #     stack: gitlab (This is an example. The labels should match the labels on the CloudSQLInstanceClass)
+  fpm:
+    repository: registry.metager.de/open-source/metager/fpm
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  nginx:
+    repository: registry.metager.de/open-source/metager/nginx
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
 
-resources:
-#  limits:
-#    cpu: 100m
-#    memory: 128Mi
-  requests: {}
-#    cpu: 100m
-#    memory: 128Mi
-
-## Configure PodDisruptionBudget
-## ref: https://kubernetes.io/docs/concepts/workloads/pods/disruptions/
-#
-podDisruptionBudget:
-  enabled: false
-  # minAvailable: 1
-  maxUnavailable: 1
-
-## Configure NetworkPolicy
-## ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
-#
-networkPolicy:
-  enabled: false
-  spec:
-    podSelector:
-      matchLabels: {}
-    ingress:
-    - from:
-      - podSelector:
-          matchLabels: {}
-      - namespaceSelector:
-          matchLabels:
-            app.gitlab.com/managed_by: gitlab
-
-ciliumNetworkPolicy:
-  enabled: false
-  alerts:
-    enabled: false
-  spec:
-    endpointSelector: {}
-    ingress:
-    - fromEndpoints:
-      - matchLabels:
-          app.gitlab.com/managed_by: gitlab
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
-  name:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
   annotations: {}
-  createNew: false
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
 
-workers: {}
-  # worker:
-  #   replicaCount: 1
-  #   terminationGracePeriodSeconds: 60
-  #   command:
-  #   - /bin/herokuish
-  #   - procfile
-  #   - start
-  #   - worker
-  #   nodeSelector: {}
-  #   tolerations: []
-  #   livenessProbe:
-  #     path: "/"
-  #     initialDelaySeconds: 15
-  #     timeoutSeconds: 15
-  #     scheme: "HTTP"
-  #     probeType: "httpGet"
-  #   readinessProbe:
-  #     path: "/"
-  #     initialDelaySeconds: 5
-  #     timeoutSeconds: 3
-  #     scheme: "HTTP"
-  #     probeType: "httpGet"
-  #   lifecycle:
-  #     preStop:
-  #       exec:
-  #         command: ["/bin/sh", "-c", "sleep 10"]
-  #   preStopCommand:
-  #   - /bin/herokuish
-  #   - procfile
-  #   - start
-  #   - stop_worker
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    kubernetes.io/tls-acme: "false"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
+    nginx.ingress.kubernetes.io/configuration-snippet: >
+      more_set_headers "Content-Security-Policy: default-src 'self'; script-src
+      'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline';
+      script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
+      style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self'
+      'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src
+      'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self';
+      worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de;
+      form-action 'self' www.paypal.com; base-uri; manifest-src; plugin-types;
+      report-uri; report-to";
+
+      more_set_headers "X-Frame-Options: sameorigin";
+
+      more_set_headers "X-Content-Type-Options: nosniff";
+
+      more_set_headers "ReferrerPolicy: origin";
+
+      more_set_headers "X-XSS-Protection: 1; mode=block";
+
+      more_set_headers "Permissions-Policy: interest-cohort=()";
+
+      if ($arg_out = "results-with-style") {
+        more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
+      }
+    nginx.ingress.kubernetes.io/proxy-body-size: 30m
+  hosts: []
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

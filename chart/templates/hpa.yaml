@@ -1,16 +1,32 @@
-{{- if and .Values.hpa.enabled .Values.resources.requests -}}
-apiVersion: autoscaling/v1
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "chart.fullname" . }}
   labels:
-{{ include "sharedlabels" . | indent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    kind: Deployment
-    name: {{ template "appname" . }}
     apiVersion: apps/v1
-  minReplicas: {{ .Values.hpa.minReplicas }}
-  maxReplicas: {{ .Values.hpa.maxReplicas }}
-  targetCPUUtilizationPercentage: {{ .Values.hpa.targetCPUUtilizationPercentage }}
-{{- end -}}
+    kind: Deployment
+    name: {{ include "chart.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

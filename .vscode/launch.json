@@ -10,7 +10,7 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-                "/html": "${workspaceRoot}"
+                "/metager/metager_app": "${workspaceRoot}/metager"
             }
         },
         {
@@ -21,7 +21,7 @@
             "program": "${file}",
             "cwd": "${fileDirname}",
             "pathMappings": {
-                "/html": "${workspaceRoot}"
+                "/metager/metager_app": "${workspaceRoot}/metager"
             }
         }
     ]

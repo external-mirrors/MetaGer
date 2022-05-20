@@ -1,168 +1,54 @@
 variables:
     DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
-    AUTO_DEVOPS_BUILD_IMAGE_EXTRA_ARGS: "--network host"
-    POSTGRES_ENABLED: "false"
-    CODE_QUALITY_DISABLED: "true"
-    CONTAINER_SCANNING_DISABLED: "true"
-    DAST_DISABLED: "true"
-    DEPENDENCY_SCANNING_DISABLED: "true"
-    LICENSE_MANAGEMENT_DISABLED: "true"
-    PERFORMANCE_DISABLED: "true"
-    SAST_DISABLED: "true"
-    TEST_DISABLED: "true"
-    AUTO_DEVOPS_BUILD_IMAGE_FORWARDED_CI_VARIABLES: "AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,S3_HOST,S3_BUCKETNAME"
+    BUILD_DOCKER_IMAGE: docker:20.10.15
+    DEPLOY_KUBERNETES_IMAGE: alpine/k8s:1.22.6
+    DOCKER_FPM_IMAGE_NAME: fpm
+    DOCKER_NGINX_IMAGE_NAME: nginx
+    DOCKER_NODE_IMAGE_NAME: node
 
-include:
-  - template: Jobs/Build.gitlab-ci.yml
-  - template: Jobs/Deploy.gitlab-ci.yml
-
-.auto-deploy:
-  image: "registry.gitlab.com/gitlab-org/cluster-integration/auto-deploy-image:v2.12.0"
+workflow:
+  rules:
+  - if: $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development" &&  ($CI_COMMIT_TAG || $CI_COMMIT_BRANCH)
+    variables:
+      APP_URL: "https://${DOCKER_IMAGE_TAG_PREFIX}.review.metager.de"
+      APP_ENV: development
+      DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_REF_SLUG
+      DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
+      DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      HELM_RELEASE_NAME: review-$DOCKER_IMAGE_TAG_PREFIX
+  - if: $CI_COMMIT_BRANCH == "master"
+    variables:
+      APP_URL: https://metager.de
+      APP_ENV: production
+      DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_BRANCH
+      DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
+      DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
+  - if: $CI_COMMIT_BRANCH == "development"
+    variables:
+      APP_URL: https://metager3.de
+      APP_ENV: development
+      DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_BRANCH
+      DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
+      DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
+      HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
 
 stages:
-  - build
-  - deploy  # dummy stage to follow the template guidelines
-  - review
-  - dast
-  - staging
-  - canary
-  - development
-  - production
-  - incremental rollout 10%
-  - incremental rollout 25%
-  - incremental rollout 50%
-  - incremental rollout 100%
-  - performance
+  - build_dependency_images
+  - build_dependencies
+  - build_docker_images
+  - deploy
   - integrationtest
-  - cleanup
 
-build:
-  services:
-
-review:
-  variables:
-    HELM_UPGRADE_VALUES_FILE: .gitlab/review-apps-values.yaml
-    ROLLOUT_RESOURCE_TYPE: deployment
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    on_stop: stop_review
-    auto_stop_in: 2 days
-  rules:
-    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "development"'
-      when: never
-    - if: '$REVIEW_DISABLED'
-      when: never
-    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
-
-stop_review:
-  variables:
-    GIT_STRATEGY: none
-  environment:
-    name: review/$CI_COMMIT_REF_NAME
-    action: stop
-  rules:
-    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "master"'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "development"'
-      when: never
-    - if: '$REVIEW_DISABLED'
-      when: never
-    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
-      when: manual
-
-
-
-.development: &development_template
-  extends: .auto-deploy
-  stage: development
-  script:
-    - auto-deploy check_kube_domain
-    - auto-deploy download_chart
-    - auto-deploy ensure_namespace
-    - auto-deploy initialize_tiller
-    - auto-deploy create_secret
-    - auto-deploy deploy
-    - auto-deploy delete canary
-    - auto-deploy delete rollout
-    - auto-deploy persist_environment_url
-  variables:
-    HELM_UPGRADE_VALUES_FILE: .gitlab/development-values.yaml
-    ROLLOUT_RESOURCE_TYPE: deployment
-  environment:
-    name: development
-    url: https://metager3.de
-  artifacts:
-    paths: [environment_url.txt]
-
-development:
-  <<: *development_template
-  rules:
-    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
-      when: never
-    - if: '$STAGING_ENABLED'
-      when: never
-    - if: '$CANARY_ENABLED'
-      when: never
-    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
-      when: never
-    - if: '$INCREMENTAL_ROLLOUT_MODE'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-
-
-
-production:
-  variables:
-    ADDITIONAL_HOSTS: "metager.org,metager.es"
-    HELM_UPGRADE_VALUES_FILE: .gitlab/production-values.yaml
-    ROLLOUT_RESOURCE_TYPE: deployment
-  environment:
-    url: https://metager.de
-  rules:
-    - if: '$CI_KUBERNETES_ACTIVE == null || $CI_KUBERNETES_ACTIVE == ""'
-      when: never
-    - if: '$STAGING_ENABLED'
-      when: never
-    - if: '$CANARY_ENABLED'
-      when: never
-    - if: '$INCREMENTAL_ROLLOUT_ENABLED'
-      when: never
-    - if: '$INCREMENTAL_ROLLOUT_MODE'
-      when: never
-    - if: '$CI_COMMIT_BRANCH == "master"'
-
-
-integrationtest:
-  stage: integrationtest
-  image: 
-    name: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:$CI_COMMIT_SHA
-    entrypoint: ["/bin/sh"]
-  script:
-    # Install Dev Dependencies
-    - cp .env.example .env
-    - echo "" >> .env
-    - echo "BROWSERSTACK_USERNAME=\"$BROWSERSTACK_USERNAME\"" >> .env
-    - echo "BROWSERSTACK_ACCESS_KEY=\"$BROWSERSTACK_ACCESS_KEY\"" >> .env
-    - echo "BROWSERSTACK_LOCAL_TUNNEL=\"$BROWSERSTACK_LOCAL_TUNNEL\"" >> .env
-    - URL=$(cat environment_url.txt | tr -d '\n')
-    - sed -i "s#^APP_URL=.*#APP_URL=$URL#g" .env
-    - sed -i "s#^BRANCH_NAME=.*#BRANCH_NAME=$CI_COMMIT_REF_NAME#g" .env
-    - sed -i "s#^COMMIT_NAME=.*#COMMIT_NAME=$CI_COMMIT_REF_SLUG#g" .env
-    - mc alias set --path=on --api S3v4 packages $S3_HOST $AWS_ACCESS_KEY_ID $AWS_SECRET_ACCESS_KEY
-    - if mc cp packages/$S3_BUCKETNAME/packages.tar /tmp/; then tar -xf /tmp/packages.tar; fi
-    - export COMPOSER_HOME=.composer
-    - composer install
-    - tar -cf /tmp/packages.tar .npm .composer
-    - mc cp /tmp/packages.tar packages/$S3_BUCKETNAME/
-    - rm /tmp/packages.tar
-    - rm -rf .npm .composer
-    - php artisan test --parallel --processes=5
-  except:
-    refs: 
-      - master
+include:
+  - local: /.gitlab/ci/build_dependency_images.yml
+  - local: /.gitlab/ci/build_dependencies.yml
+  - local: /.gitlab/ci/build_docker_images.yml
+  - local: /.gitlab/ci/deploy.yml
+  - local: /.gitlab/ci/integrationtest.yml

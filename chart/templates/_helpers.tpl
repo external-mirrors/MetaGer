@@ -1,64 +1,78 @@
-{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 24 | trimSuffix "-" -}}
-{{- end -}}
+{{- define "chart.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+If release name contains chart name it will be used as a full name.
 */}}
-{{- define "fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- printf "%s-%s" .Release.Name $name | trimSuffix "-app" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "appname" -}}
-{{- $releaseName := default .Release.Name .Values.releaseOverride -}}
-{{- printf "%s" $releaseName | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{- define "imagename" -}}
-{{- if eq .Values.image.tag "" -}}
-{{- .Values.image.repository -}}
-{{- else -}}
-{{- printf "%s:%s" .Values.image.repository .Values.image.tag -}}
-{{- end -}}
-{{- end -}}
-
-{{- define "trackableappname" -}}
-{{- $trackableName := printf "%s-%s" (include "appname" .) .Values.application.track -}}
-{{- $trackableName | trimSuffix "-stable" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
-{{/*
-Get a hostname from URL
-*/}}
-{{- define "hostname" -}}
-{{- . | trimPrefix "http://" |  trimPrefix "https://" | trimSuffix "/" | trim | quote -}}
-{{- end -}}
-
-{{/*
-Get SecRule's arguments with unescaped single&double quotes
-*/}}
-{{- define "secrule" -}}
-{{- $operator := .operator | quote | replace "\"" "\\\"" | replace "'" "\\'" -}}
-{{- $action := .action | quote | replace "\"" "\\\"" | replace "'" "\\'" -}}
-{{- printf "SecRule %s %s %s" .variable $operator $action -}}
-{{- end -}}
-
-{{- define "sharedlabels" -}}
-app: {{ template "appname" . }}
-chart: "{{ .Chart.Name }}-{{ .Chart.Version| replace "+" "_" }}"
-release: {{ .Release.Name }}
-heritage: {{ .Release.Service }}
-app.kubernetes.io/name: {{ template "appname" . }}
-helm.sh/chart: "{{ .Chart.Name }}-{{ .Chart.Version| replace "+" "_" }}"
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if .Values.extraLabels }}
-{{ toYaml $.Values.extraLabels }}
+{{- define "chart.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
+{{- end }}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "chart.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "chart.labels" -}}
+helm.sh/chart: {{ include "chart.chart" . }}
+{{ include "chart.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Create the name of the service account to use
+*/}}
+{{- define "chart.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "chart.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{- define "fpm_image" -}}
+{{- if eq .Values.image.fpm.tag "" -}}
+{{- .Values.image.fpm.repository -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.image.fpm.repository .Values.image.fpm.tag -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "nginx_image" -}}
+{{- if eq .Values.image.nginx.tag "" -}}
+{{- .Values.image.nginx.repository -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.image.nginx.repository .Values.image.nginx.tag -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "secret_name" -}}
+{{- printf "%s" .Release.Name | replace "review-" " " | trim }}
 {{- end -}}

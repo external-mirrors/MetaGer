@@ -1,19 +1,11 @@
-{{- if .Values.podDisruptionBudget.enabled }}
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ include "chart.fullname" . }}
   labels:
-{{ include "sharedlabels" . | indent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
 spec:
-{{- if .Values.podDisruptionBudget.minAvailable }}
-  minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
-{{- end }}
-{{- if .Values.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
-{{- end }}
   selector:
     matchLabels:
-      app: {{ template "appname" . }}
-      release: {{ .Release.Name }}
-{{- end }}
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  maxUnavailable: 1

@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Providers;
+
+use App\MetaGer;
+use App\QueryLogger;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\ServiceProvider;
+
+class MetaGerProvider extends ServiceProvider
+{
+    /**
+     * @var float $start_time
+     */
+    private $start_time;
+    /**
+     * Bootstrap the application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->start_time = microtime(true);
+    }
+
+    /**
+     * Register the application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        /**
+         * @param App $app
+         */
+        $this->app->singleton(MetaGer::class, function ($app) {
+            $app->make(QueryLogger::class);
+            return new MetaGer();
+        });
+
+        $this->app->singleton(QueryLogger::class, function ($app) {
+            return new QueryLogger();
+        });
+    }
+}

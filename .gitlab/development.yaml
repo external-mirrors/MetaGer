@@ -1,0 +1,10 @@
+ingress:
+  hosts:
+    - host: metager3.de
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - hosts:
+        - metager3.de
+      secretName: metager-tls

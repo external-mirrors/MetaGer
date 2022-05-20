@@ -1,0 +1,35 @@
+npm:
+  stage: build_dependencies
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_NODE_IMAGE_NAME:$DOCKER_NODE_IMAGE_TAG
+  script:
+    - cd metager
+    - npm install --cache .npm --prefer-offline --no-audit
+    - npm run prod
+  needs:
+    - node_image
+  artifacts:
+    paths:
+      - metager/public
+    expire_in: 2 hrs
+  cache:
+    paths:
+      - metager/.npm/
+
+composer:
+  stage: build_dependencies
+  image: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  before_script:
+    - export COMPOSER_HOME=$(pwd)/metager/.composer
+  script:
+    - cd metager
+    - echo $COMPOSER_HOME
+    - composer install --optimize-autoloader --no-dev
+  artifacts:
+    paths:
+      - metager/vendor
+    expire_in: 2 hrs
+  cache:
+    paths:
+      - metager/.composer/
+
+  

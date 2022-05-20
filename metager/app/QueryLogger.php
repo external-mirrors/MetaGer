@@ -155,16 +155,19 @@ class QueryLogger
         /** @var \Illuminate\Database\SQLiteConnection[] */
         $connections = [];
         foreach ($insert_array as $year => $months) {
+            if (empty($connection[$year])) {
+                $connections[$year] = [];
+            }
             foreach ($months as $month => $days) {
+                if (empty($connections[$year][$month])) {
+                    $connections[$year][$month] = [];
+                }
                 foreach ($days as $day => $insert_array) {
-                    if (empty($connection[$year])) {
-                        $connections[$year] = [];
+                    if (empty($connections[$year][$month][$day])) {
+                        $connections[$year][$month][$day] = self::validateDatabase($year, $month, $day);
                     }
-                    if (empty($connections[$year][$month])) {
-                        $connections[$year][$month] = self::validateDatabase($year, $month);
-                    }
-                    self::validateTable($connections[$year][$month], $day);
-                    if (!$connections[$year][$month]->table($day)->insert($insert_array)) {
+                    self::validateTable($connections[$year][$month][$day]);
+                    if (!$connections[$year][$month][$day]->table("logs")->insert($insert_array)) {
                         return false;
                     }
                 }
@@ -172,10 +175,12 @@ class QueryLogger
         }
 
         // Disconnect
-        foreach ($connections as $year => $month) {
-            /** @var \Illuminate\Database\SQLiteConnection $connection */
-            foreach ($month as $connection) {
-                $connection->disconnect();
+        foreach ($connections as $year => $months) {
+            foreach ($months as $month => $days) {
+                /** @var \Illuminate\Database\SQLiteConnection $connection */
+                foreach ($days as $connection) {
+                    $connection->disconnect();
+                }
             }
         }
         return true;
@@ -184,15 +189,16 @@ class QueryLogger
     /**
      * Verifies that the Sqlite Database and Table for todays Log exist
      */
-    private static function validateDatabase($year, $month)
+    private static function validateDatabase($year, $month, $day)
     {
-        $folder = \storage_path("logs/metager/$year");
+        $folder = \storage_path("logs/metager/$year/$month");
         if (!\file_exists($folder)) {
             if (!mkdir($folder, 0777, true)) {
                 throw new ErrorException("Couldn't create folder for sqlite Databse in \"$folder\"");
             }
         }
-        $current_database_path = \storage_path("logs/metager/$year/$month.sqlite");
+
+        $current_database_path = $folder . "/$day.sqlite";
 
         // Create Database if it does not exist yet
         if (!\file_exists($current_database_path)) {
@@ -212,11 +218,11 @@ class QueryLogger
      * @param Illuminate\Database\SQLiteConnection $connection
      * @param string $table
      */
-    private static function validateTable($connection, $table)
+    private static function validateTable($connection)
     {
-        if (!$connection->getSchemaBuilder()->hasTable("$table")) {
+        if (!$connection->getSchemaBuilder()->hasTable("logs")) {
             // Create a new Table
-            $connection->getSchemaBuilder()->create("$table", function (Blueprint $table) {
+            $connection->getSchemaBuilder()->create("logs", function (Blueprint $table) {
                 $table->bigIncrements("id");
                 $table->dateTime("time");
                 $table->string("referer", self::REFERER_MAX_LENGTH);
@@ -237,8 +243,8 @@ class QueryLogger
      */
     public function getLatestLogs(int $n)
     {
-        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . ".sqlite");
-        $current_table = date("d");
+        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/" . date("d") . ".sqlite");
+        $current_table = date("logs");
         if (!\file_exists($current_database)) {
             return null;
         }
@@ -268,7 +274,8 @@ class QueryLogger
 
         $files = scandir($path);
         foreach ($files as $file) {
-            if (\in_array($file, [".", ".."])) continue;
+            if (\in_array($file, [".", ".."]) || preg_match("/\.sqlite$/", $file)) continue;
+            if ($year === "2022" && $month === "05" && $file === "20.log") continue;
 
             $day = substr($file, 0, stripos($file, ".log"));
             Log::info("Parsing $file");

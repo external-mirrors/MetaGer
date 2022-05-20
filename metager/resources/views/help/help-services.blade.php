@@ -4,6 +4,7 @@
 
 @section('content')
 <h1 class="page-title">{!! trans('help/help-services.title') !!}</h1>
+<section>
 <a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-services.backarrow') !!}</a>
 <h2 id="dienste">{!! trans('help/help-services.dienste') !!}</h2>
 	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/help-services.dienste.kostenlos') !!}</h3>
@@ -37,4 +38,6 @@
 			<p>{!! trans('help/help-services.maps.2') !!}</p>
 			<p>{!! trans('help/help-services.maps.3') !!}</p>
 		</div>
+	</section>
+</section>
 @endsection

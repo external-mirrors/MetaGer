@@ -296,7 +296,7 @@ class MailController extends Controller
                     $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
                     $messageType = "success";
                 }
-            } catch (\Swift_TransportException $e) {
+            } catch (\Exception $e) {
                 Log::error($e->getMessage());
                 $messageType = "error";
                 $messageToUser = 'Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.';

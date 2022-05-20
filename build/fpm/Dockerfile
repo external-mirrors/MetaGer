@@ -1,4 +1,4 @@
-FROM php:7.4-fpm as composer
+FROM php:8.1.6-fpm as composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
@@ -19,9 +19,12 @@ RUN groupadd -g ${GID} metager && \
 # Install required php modules
 RUN apt update && apt install -y \
     libzip-dev \
-    libpng-dev && \
+    libpng-dev \
+    libfreetype-dev \
+    libjpeg62-turbo-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install zip gd pcntl pdo_mysql && \
-    yes '' | pecl install redis-5.3.7 xdebug-3.1.4 && \
+    yes '' | pecl install xdebug-3.1.4 redis-5.3.7 && \
     docker-php-ext-enable redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
@@ -69,6 +72,8 @@ RUN rm $PHP_INI_DIR/conf.d/development.ini
 # Add production php.ini
 ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.ini
 ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
+# Configure FPM for production
+ADD build/fpm/configuration/fpm/www_01_production.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
 
 USER metager:metager
 

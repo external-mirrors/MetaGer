@@ -1,0 +1,27 @@
+composer_image:
+  stage: build_dependency_images
+  image: $BUILD_DOCKER_IMAGE
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --network=host
+        --target=composer
+        -f build/fpm/Dockerfile
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG .
+    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  after_script:
+    - docker logout $CI_REGISTRY
+
+node_image:
+  stage: build_dependency_images
+  image: $BUILD_DOCKER_IMAGE
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --network=host
+        --target=production
+        -f build/node/Dockerfile
+        -t ${CI_REGISTRY_IMAGE}/$DOCKER_NODE_IMAGE_NAME:$DOCKER_NODE_IMAGE_TAG .
+    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_NODE_IMAGE_NAME:$DOCKER_NODE_IMAGE_TAG
+  after_script:
+    - docker logout $CI_REGISTRY

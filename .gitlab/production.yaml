@@ -1,7 +1,4 @@
 ingress:
-  annotations:
-    kubernetes.io/tls-acme: "true"
-    cert-manager.io/cluster-issuer: letsencrypt-prod
   hosts:
     - host: metager.de
       paths:

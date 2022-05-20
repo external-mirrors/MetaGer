@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "chart.selectorLabels" . | nindent 8 }}
+        {{- include "chart.labels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -112,6 +112,8 @@ spec:
           env:
           - name: APP_ENV
             value: {{ .Values.environment }}
+          - name: APP_URL
+            value: {{ .Values.app_url }}
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

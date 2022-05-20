@@ -1695,12 +1695,12 @@ class MetaGer
 
     public function getManualParameterFilterSet()
     {
-        $request = App::make(Request::class);
+        $request = \request();
         $filters = $this->sumaFile->filter->{"parameter-filter"};
         foreach ($filters as $filterName => $filter) {
             if (
                 $request->filled($filter->{"get-parameter"})
-                && Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== Request::input($filter->{"get-parameter"})
+                && Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== $request->input($filter->{"get-parameter"})
             ) {
                 return true;
             }

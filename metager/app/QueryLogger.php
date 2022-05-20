@@ -170,6 +170,14 @@ class QueryLogger
                 }
             }
         }
+
+        // Disconnect
+        foreach ($connections as $year => $month) {
+            /** @var \Illuminate\Database\SQLiteConnection $connection */
+            foreach ($month as $connection) {
+                $connection->disconnect();
+            }
+        }
         return true;
     }
 
@@ -240,6 +248,7 @@ class QueryLogger
             return null;
         }
         $queries = $connection->table($current_table)->orderBy("date", 'desc')->limit($n)->get();
+        $connection->disconnect();
         return $queries;
     }
 

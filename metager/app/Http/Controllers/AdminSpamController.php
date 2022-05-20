@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\QueryLogger;
 use Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redis;
 
 class AdminSpamController extends Controller
@@ -20,7 +22,10 @@ class AdminSpamController extends Controller
             ->with('queries', $queries)
             ->with('bans', $currentBans)
             ->with('loadedBans', $loadedBans)
-            ->with('darkcss', [mix('/css/spam.css')]);
+            ->with('css', [
+                mix('/css/admin/spam/style.css')
+            ])
+            ->with('darkcss', [mix('/css/admin/spam/dark.css')]);
     }
 
     public function ban(Request $request)
@@ -35,7 +40,7 @@ class AdminSpamController extends Controller
             $bans = json_decode(file_get_contents($file), true);
         }
 
-        $bans[] = ["banned-until" => Carbon::now()->add($banTime)->format("Y-m-d H:i:s"), "regexp" => $banRegexp];
+        $bans[] = ["banned-until" => now()->add($banTime)->format("Y-m-d H:i:s"), "regexp" => $banRegexp];
 
         \file_put_contents($file, json_encode($bans));
 
@@ -89,19 +94,16 @@ class AdminSpamController extends Controller
 
     private function getQueries()
     {
-        $minuteToFetch = Carbon::now()->subMinutes(2);
-        $logFile = storage_path("logs/metager/" . $minuteToFetch->format("Y/m/d") . ".log");
+        /** @var QueryLogger */
+        $query_logger = App::make(QueryLogger::class);
 
-        $result = shell_exec("cat $logFile | grep " . $minuteToFetch->format("H:i:"));
-        $result = explode(PHP_EOL, $result);
+        $logs = $query_logger->getLatestLogs(50);
 
-        $queries = array();
-
-        foreach ($result as $line) {
-            if ($query = \preg_match("/.*eingabe=(.*)$/", $line, $matches)) {
-                $queries[] = $matches[1];
-            }
+        $queries = [];
+        foreach ($logs as $log) {
+            $queries[] = $log->query;
         }
+
         return $queries;
     }
 
@@ -112,7 +114,7 @@ class AdminSpamController extends Controller
 
         if (file_exists($file)) {
             $tmpBans = json_decode(file_get_contents($file), true);
-            if(!empty($tmpBans) && is_array($tmpBans)){
+            if (!empty($tmpBans) && is_array($tmpBans)) {
                 foreach ($tmpBans as $ban) {
                     #dd($ban["banned-until"]);
                     $bannedUntil = Carbon::createFromFormat('Y-m-d H:i:s', $ban["banned-until"]);

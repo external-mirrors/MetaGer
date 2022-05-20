@@ -3,262 +3,116 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ConvertCountFile;
+use App\QueryLogger;
 use Carbon\Carbon;
+use DateTime;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
+use PDO;
 use Response;
 
 class AdminInterface extends Controller
 {
-    public function index(Request $request)
-    {
-        // Let's get the stats for this server.
-        // First we need to check, which Fetcher could be available by parsing the sumas.xml
-        $names = $this->getSearchEngineNames();
-
-        // Now we gonna check which stats we can find
-        $stati = array();
-        foreach ($names as $name) {
-            $stats = Redis::hgetall($name . ".stats");
-            if (sizeof($stats) > 0) {
-                $fetcherStatus = Redis::get($name);
-                $stati[$name]["status"] = $fetcherStatus;
-                foreach ($stats as $pid => $value) {
-                    if (strstr($value, ";")) {
-                        $value = explode(";", $value);
-                        $connection = json_decode(base64_decode($value[0]), true);
-                        foreach ($connection as $key => $val) {
-                            if (strstr($key, "_time")) {
-                                $stati[$name]["fetcher"][$pid]["connection"][$key] = $val;
-                            }
-                        }
-                        $stati[$name]["fetcher"][$pid]["poptime"] = $value[1];
-                    }
-                }
-            }
-        }
-
-        // So now we can generate Median Times for every Fetcher
-        $fetcherCount = 0;
-        foreach ($stati as $engineName => $engineStats) {
-            $connection = array();
-            $poptime = 0;
-            $fetcherCount += sizeof($engineStats["fetcher"]);
-            foreach ($engineStats["fetcher"] as $pid => $stats) {
-                foreach ($stats["connection"] as $key => $value) {
-                    if (!isset($connection[$key])) {
-                        $connection[$key] = $value;
-                    } else {
-                        $connection[$key] += $value;
-                    }
-                }
-                $poptime += floatval($stats["poptime"]);
-            }
-            foreach ($connection as $key => $value) {
-                $connection[$key] /= sizeof($engineStats["fetcher"]);
-            }
-            $poptime /= sizeof($engineStats["fetcher"]);
-
-            $stati[$engineName]["median-connection"] = $connection;
-            $stati[$engineName]["median-poptime"] = $poptime;
-        }
-
-        return view('admin.admin')
-            ->with('title', 'Fetcher Status')
-            ->with('stati', $stati)
-            ->with('fetcherCount', $fetcherCount);
-        $stati = json_encode($stati);
-        $response = Response::make($stati, 200);
-        $response->header("Content-Type", "application/json");
-        return $response;
-    }
-
-    private function getSearchEngineNames()
-    {
-        $url = config_path() . "/sumas.xml";
-        $xml = \simplexml_load_file($url);
-        $sumas = $xml->xpath("suma");
-
-        $names = array();
-        foreach ($sumas as $suma) {
-            $names[] = $suma["name"]->__toString();
-        }
-        return $names;
-    }
-
-    private function convertLogs()
-    {
-        $oldLogsPath = \storage_path("logs/metager/old/");
-        $dir = new \DirectoryIterator($oldLogsPath);
-        foreach ($dir as $fileinfo) {
-            if ($fileinfo->isDot()) {
-                continue;
-            }
-            $filename = $oldLogsPath . "/" . $fileinfo->getFilename();
-            $daysAgo = substr($fileinfo->getFilename(), strrpos($fileinfo->getFilename(), ".") + 1);
-            $dateOfFile = Carbon::now()->subDays($daysAgo);
-            $outputFile = \storage_path("logs/metager/" . $dateOfFile->format("Y/m/d") . ".log");
-            if (!file_exists(dirname($outputFile))) {
-                \mkdir(dirname($outputFile), 0777, true);
-            }
-            $fhw = fopen($outputFile, "w");
-            $fhr = fopen($filename, "r");
-            try {
-                $first = true;
-                while (($line = fgets($fhr)) != false) {
-                    $date = trim(substr($line, 0, strpos($line, "]")), "[");
-                    $date = trim(substr($date, strrpos($date, " ")));
-                    $rest = trim(substr($line, strpos($line, "]") + 1));
-                    $outputString = "";
-                    if (!$first) {
-                        $outputString .= PHP_EOL;
-                    }
-                    $outputString .= $date . " " . $rest;
-                    $first = false;
-                    fwrite($fhw, $outputString);
-                }
-            } finally {
-                fclose($fhw);
-                fclose($fhr);
-            }
-        }
-    }
 
     public function count(Request $request)
     {
-        #$this->convertLogs();
-        #return;
-        $days = intval($request->input('days', 28));
-        $interface = $request->input('interface', 'all');
-        if (!is_int($days) || $days <= 0) {
-            $days = 28;
-        }
-        $logs = $this->getStats($days);
 
-        $oldLogs = [];
-        $rekordTag = 0;
-        $rekordTagSameTime = 0;
-        $minCount = 0;
-        $rekordTagDate = "";
-        $size = 0;
-        $count = 0;
-        $logToday = 0;
-
-        foreach ($logs as $key => $stats) {
-            if ($key === 0) {
-                // Log for today
-                $now = Carbon::now();
-                $now->hour = 0;
-                $now->minute = 0;
-                $now->second = 0;
-                while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
-                    $logToday += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
-                    $now->addMinutes(5);
-                }
-                continue;
-            }
-            $insgesamt = empty($stats->insgesamt->{$interface}) ? 0 : $stats->insgesamt->{$interface};
-            $sameTime = 0;
-            $now = Carbon::now();
-            $now->hour = 0;
-            $now->minute = 0;
-            $now->second = 0;
-
-            while ($now->lessThanOrEqualTo(Carbon::now()->subMinutes(5))) {
-                $sameTime += empty($stats->time->{$now->format('H:i')}->{$interface}) ? 0 : $stats->time->{$now->format('H:i')}->{$interface};
-                $now->addMinutes(5);
-            }
-
-            if ($insgesamt > $rekordTag) {
-                $rekordTag = $insgesamt;
-                $rekordTagSameTime = $sameTime;
-                $rekordTagDate = Carbon::now()->subDays($key)->format('d.m.Y');
-            }
-            if ($minCount === 0 || $insgesamt < $minCount) {
-                $minCount = $insgesamt;
-            }
-            $oldLogs[$key]['sameTime'] = number_format(floatval($sameTime), 0, ",", ".");
-            $oldLogs[$key]['insgesamt'] = number_format(floatval($insgesamt), 0, ",", ".");
-            # Nun noch den median:
-            $count += $insgesamt;
-            $size++;
-            if ($size > 0) {
-                $oldLogs[$key]['median'] = number_format(floatval(round($count / $size)), 0, ",", ".");
-            }
-        }
-
-        $sameTimes = [];
-        $sum = 0;
-        foreach ($oldLogs as $index => $oldLog) {
-            if ($index % 7 === 0) {
-                $sameTime = $oldLog["sameTime"];
-                $sameTime = str_replace(".", "", $sameTime);
-                $sameTime = \intval($sameTime);
-                $sameTimes[] = ($logToday - $sameTime);
-                $sum += ($logToday - $sameTime);
-            }
-        }
-
-        $averageIncrease = 0;
-        if (sizeof($sameTimes) > 0) {
-            $averageIncrease = $sum / sizeof($sameTimes);
-        }
 
         if ($request->input('out', 'web') === "web") {
+            $days = $request->input("days", 28);
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
-                ->with('today', number_format(floatval($logToday), 0, ",", "."))
-                ->with('averageIncrease', $averageIncrease)
-                ->with('oldLogs', $oldLogs)
-                ->with('minCount', $minCount)
-                ->with('rekordCount', number_format(floatval($rekordTag), 0, ",", "."))
-                ->with('rekordTagSameTime', number_format(floatval($rekordTagSameTime), 0, ",", "."))
-                ->with('rekordDate', $rekordTagDate)
                 ->with('days', $days)
                 ->with('css', [mix('/css/count/style.css')])
-                ->with('darkcss', [mix('/css/count/dark.css')]);
-        } else {
-            $result = "";
-            foreach ($oldLogs as $key => $value) {
-                $resultTmp = '"' . date("D, d M y", mktime(date("H"), date("i"), date("s"), date("m"), date("d") - $key, date("Y"))) . '",';
-                $resultTmp .= '"' . $value['sameTime'] . '",';
-                $resultTmp .= '"' . $value['insgesamt'] . '",';
-                $resultTmp .= '"' . $value['median'] . '"' . "\r\n";
-                $result = $resultTmp . $result;
-            }
-            return response($result, 200)
-                ->header('Content-Type', 'text/csv')
-                ->header('Content-Disposition', 'attachment; filename="count.csv"');
+                ->with('darkcss', [mix('/css/count/dark.css')])
+                ->with('js', [
+                    mix('/js/admin/count.js')
+                ]);
         }
     }
 
-    public function countGraphToday()
+    public function getCountDataTotal(Request $request)
     {
-        $stats = $this->getStats(0)[0];
+        $date = $request->input('date', '');
+        $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00");
+        if ($date === false) {
+            abort(404);
+        }
 
-        $hourly = [];
-        $previous = 0;
-        $max = 0;
-        foreach ($stats->time as $time => $timeStats) {
-            $hour = intval(substr($time, 0, strpos($time, ":")));
-            if (empty($hourly[$hour])) {
-                $hourly[$hour] = 0;
+        $year = $date->format("Y");
+        $month = $date->format("m");
+        $day = $date->format("d");
+        $cache_key = "admin_count_total_${year}_${month}_${day}";
+        Cache::forget($cache_key);
+        $total_count = Cache::get($cache_key);
+
+        if ($total_count === null) {
+            $database_file = \storage_path("logs/metager/$year/$month.sqlite");
+            if (!\file_exists($database_file)) {
+                abort(404);
             }
-            $hourly[$hour] += $timeStats->all - $previous;
-            $previous = $timeStats->all;
-            if ($hourly[$hour] > $max) {
-                $max = $hourly[$hour];
+
+            $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+            if (!$connection->getSchemaBuilder()->hasTable($day)) {
+                abort(404);
+            }
+
+            $total_count = $connection->table($day)->count('*');
+            // No Cache for today
+            if (!now()->isSameDay($date)) {
+                Cache::put($cache_key, $total_count, now()->addWeek());
             }
         }
-        $result = [
-            "insgesamt" => $stats->insgesamt->all,
-            "max" => $max,
-            "hourly" => $hourly,
-        ];
 
-        return response()
-            ->view('admin.countGraphToday', ["data" => $result], 200)
-            ->header('Content-Type', "image/svg+xml");
+        $result = [
+            "status" => 200,
+            "error" => false,
+            "data" => [
+                "date" => "$year-$month-$day",
+                "total" => $total_count,
+            ]
+        ];
+        return \response()->json($result);
+    }
+
+    public function getCountDataUntil(Request $request)
+    {
+        $date = $request->input('date', '');
+        $date = DateTime::createFromFormat("Y-m-d", $date);
+        if ($date === false) {
+            abort(404);
+        }
+
+        $year = $date->format("Y");
+        $month = $date->format("m");
+        $day = $date->format("d");
+        $time = now()->format("H:i:s");
+
+
+        $database_file = \storage_path("logs/metager/$year/$month.sqlite");
+        if (!\file_exists($database_file)) {
+            abort(404);
+        }
+
+        $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+        if (!$connection->getSchemaBuilder()->hasTable($day)) {
+            abort(404);
+        }
+
+        $total_count = $connection->table($day)->whereTime("time", "<", $time)->count();
+
+        $result = [
+            "status" => 200,
+            "error" => false,
+            "data" => [
+                "date" => "$year-$month-$day",
+                "total" => $total_count,
+            ]
+        ];
+        return \response()->json($result);
     }
 
     public function engineStats()
@@ -399,53 +253,16 @@ class AdminInterface extends Controller
     public function check()
     {
         $q = "";
-        $logpath = \App\MetaGer::getMGLogFile();
 
-        if (file_exists($logpath)) {
-            $fp = @fopen($logpath, "r");
-            while (($line = fgets($fp)) !== false) {
-                if (!empty($line)) {
-                    $q = $line;
-                }
-            }
-            fclose($fp);
-            $q = substr($q, strpos($q, "eingabe=") + 8);
+        /** @var QueryLogger */
+        $query_logger = App::make(QueryLogger::class);
+        $query = $query_logger->getLatestLogs(1);
+        if (sizeof($query) > 0) {
+            $q = $query[0]->query;
         }
+
         return view('admin.check')
             ->with('title', 'Wer sucht was? - MetaGer')
             ->with('q', $q);
-    }
-
-    public function engines()
-    {
-        # Wir laden den Inhalt der Log Datei und übergeben ihn an den view
-        $file = "/var/log/metager/engine.log";
-        if (file_exists($file) && is_readable($file)) {
-            $engineStats = file_get_contents($file);
-            # Daten vom JSON Format dekodieren
-            $engineStats = json_decode($engineStats, true);
-
-            # Eine Sortierung wäre nicht das verkehrteste
-            uasort($engineStats["recent"], function ($a, $b) {
-                if ($a["requests"] == $b["requests"]) {
-                    return 0;
-                }
-
-                return ($a["requests"] < $b["requests"]) ? 1 : -1;
-            });
-
-            uasort($engineStats["overall"], function ($a, $b) {
-                if ($a["requests"] == $b["requests"]) {
-                    return 0;
-                }
-
-                return ($a["requests"] < $b["requests"]) ? 1 : -1;
-            });
-            return view('admin.engines')
-                ->with('engineStats', $engineStats)
-                ->with('title', "Suchmaschinenstatus - MetaGer");
-        } else {
-            return redirect(url('admin'));
-        }
     }
 }

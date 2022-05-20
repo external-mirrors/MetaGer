@@ -18,7 +18,8 @@ mix
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css")
   .less("resources/less/metager/startpage-only-light.less", "public/css/themes/startpage-only-light.css")
   .less("resources/less/metager/startpage-only-dark.less", "public/css/themes/startpage-only-dark.css")
-  .less("resources/less/metager/pages/spam.less", "public/css/spam.css")
+  .less("resources/less/metager/pages/admin/spam/style.less", "public/css/admin/spam/style.css")
+  .less("resources/less/metager/pages/admin/spam/dark.less", "public/css/admin/spam/dark.css")
   .less("resources/less/metager/metager-dark.less", "public/css/themes/metager-dark.css")
   .less("resources/less/metager/pages/key.less", "public/css/key.css")
   .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
@@ -44,6 +45,13 @@ mix
       "resources/js/scriptSettings.js"
     ],
     "public/js/scriptSettings.js"
+  )
+  .babel(
+    [
+      'node_modules/chart.js/dist/chart.js',
+      'resources/js/admin/count.js',
+    ],
+    'public/js/admin/count.js'
   )
   .babel(
     [

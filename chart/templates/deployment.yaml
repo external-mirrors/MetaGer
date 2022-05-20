@@ -106,7 +106,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php", "artisan", "schedule:work"]
+          command: ["/bin/bash", "-c"]
+          args: ["/usr/local/bin/php artisan schedule:run && /usr/local/bin/php artisan schedule:work"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           - name: APP_ENV
@@ -143,9 +144,6 @@ spec:
               memory: 100M
             limits:
           lifecycle:
-            postStart:
-              exec:
-                command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
             preStop:
               exec:
                 command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]

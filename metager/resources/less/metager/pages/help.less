@@ -1,15 +1,6 @@
 .hilfe,
 .faq {
     section {
-        .card;
-
-        @media(max-width: @screen-medium) {
-            .card;
-        }
-
-        @media(max-width: @screen-small) {
-            .card;
-        }
 
         margin: 4px 0;
 
@@ -89,9 +80,18 @@
 .help-back-button, .help-back-button:visited {
     font-size: medium;
     color: @text-color;
+    position: sticky;
+    top: 5px;
+    background-color: @background-color;
+    padding: 5px;
+    border-color: #5b5b5b8f;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 5px;
 }
 .help-back-button .back-arrow {
     width:10px ;
+    padding-bottom: 3px;
 }
 
 #easy-language-image {

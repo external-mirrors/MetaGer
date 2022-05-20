@@ -2,16 +2,15 @@
 
 namespace App;
 
-use App;
-use Cache;
-use Carbon;
-use Cookie;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
-use LaravelLocalization;
-use Log;
-use Monospice\LaravelRedisSentinel\RedisSentinel;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Illuminate\Support\Facades\Log;
 use Predis\Connection\ConnectionException;
 
 class MetaGer
@@ -160,7 +159,9 @@ class MetaGer
             $viewResults[] = get_object_vars($result);
         }
         # Wir müssen natürlich noch den Log für die durchgeführte Suche schreiben:
-        $this->createLogs();
+        /** @var QueryLogger */
+        $query_logger = App::make(QueryLogger::class);
+        $query_logger->createLog();
         if ($this->fokus === "bilder") {
             switch ($this->out) {
                 case 'results':
@@ -426,8 +427,7 @@ class MetaGer
     }
 
     /**
-     * @param \App\Models\Admitad[] $admitads
-     * @param Boolean $wait Wait for Results?
+     * @param \App\Models\Admitad[] $affiliates
      * @return Boolean whether or not all Admitad Objects are finished
      */
     public function parseAffiliates(&$affiliates)
@@ -554,7 +554,7 @@ class MetaGer
             $autoDisabled = empty($suma->{"auto-disabled"}) ? false : $suma->{"auto-disabled"};
             if (
                 $disabled || $autoDisabled
-                || \Cookie::get($this->getFokus() . "_engine_" . $sumaName) === "off"
+                || Cookie::get($this->getFokus() . "_engine_" . $sumaName) === "off"
             ) {
                 continue;
             }
@@ -612,7 +612,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && \Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -754,6 +754,7 @@ class MetaGer
 
     public function getAvailableParameterFilter()
     {
+        $request = App::make(Request::class);
         $parameterFilter = $this->sumaFile->filter->{"parameter-filter"};
 
         $availableFilter = [];
@@ -781,7 +782,7 @@ class MetaGer
             }
             # We will also add the filter from the opt-in search engines (the searchengines that are only used when a filter of it is too)
             foreach ($this->sumaFile->foki->{$this->fokus}->sumas as $suma) {
-                if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && \Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
+                if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
                     if (!empty($filter->sumas->{$suma})) {
                         # If the searchengine is disabled this filter shouldn't be available
                         if ((!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
@@ -810,10 +811,10 @@ class MetaGer
 
         # Set the current values for the filters
         foreach ($availableFilter as $filterName => $filter) {
-            if (\Request::filled($filter->{"get-parameter"})) {
-                $filter->value = \Request::input($filter->{"get-parameter"});
-            } elseif (\Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
-                $filter->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
+            if ($request->filled($filter->{"get-parameter"})) {
+                $filter->value = $request->input($filter->{"get-parameter"});
+            } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
+                $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
             }
         }
 
@@ -1029,7 +1030,7 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale('de') || (\Cookie::has('zitate') && \Cookie::get('zitate') === 'off')) {
+        if (!App::isLocale('de') || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
             $this->sprueche = 'off';
         } else {
             $this->sprueche = 'on';
@@ -1038,7 +1039,7 @@ class MetaGer
             $this->sprueche = $request->input('quotes');
         }
 
-        $this->newtab = $request->input('new_tab', \Cookie::get('new_tab'));
+        $this->newtab = $request->input('new_tab', Cookie::get('new_tab'));
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
         } elseif ($this->framed) {
@@ -1087,7 +1088,7 @@ class MetaGer
 
         $this->apiKey = $request->input('key', '');
         if (empty($this->apiKey)) {
-            $this->apiKey = \Cookie::get('key');
+            $this->apiKey = Cookie::get('key');
             if (empty($this->apiKey)) {
                 $this->apiKey = "";
             }
@@ -1274,12 +1275,12 @@ class MetaGer
             }
 
             if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
-                \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
+                Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
                 $this->parameterFilter[$filterName] = $filter;
                 $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
-                    $this->parameterFilter[$filterName]->value = \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
+                    $this->parameterFilter[$filterName]->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
                 }
             }
         }
@@ -1558,32 +1559,6 @@ class MetaGer
         return $logpath;
     }
 
-    public function createLogs()
-    {
-        if ($this->shouldLog) {
-            try {
-                $logEntry = "";
-                $logEntry .= date("H:i:s");
-                $logEntry .= " ref=" . $this->request->header('Referer');
-                $logEntry .= " time=" . round((microtime(true) - $this->starttime), 2) . " serv=" . $this->fokus;
-                $logEntry .= " interface=" . LaravelLocalization::getCurrentLocale();
-                $logEntry .= " sprachfilter=" . $this->lang;
-                $logEntry .= " eingabe=" . $this->eingabe;
-
-                $logEntry = preg_replace("/\n+/", " ", $logEntry);
-
-                if (config("database.redis.cache.driver", "redis") === "redis") {
-                    Redis::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                } elseif (config("database.redis.cache.driver", "redis") === "redis-sentinel") {
-                    RedisSentinel::connection(config('cache.stores.redis.connection'))->rpush(\App\Console\Commands\AppendLogs::LOGKEY, $logEntry);
-                }
-            } catch (\Exception $e) {
-                Log::error($e->getMessage());
-                return;
-            }
-        }
-    }
-
     public function setNext($next)
     {
         $this->next = $next;
@@ -1720,11 +1695,12 @@ class MetaGer
 
     public function getManualParameterFilterSet()
     {
+        $request = \request();
         $filters = $this->sumaFile->filter->{"parameter-filter"};
         foreach ($filters as $filterName => $filter) {
             if (
-                \Request::filled($filter->{"get-parameter"})
-                && \Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== \Request::input($filter->{"get-parameter"})
+                $request->filled($filter->{"get-parameter"})
+                && Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== $request->input($filter->{"get-parameter"})
             ) {
                 return true;
             }
@@ -1734,12 +1710,11 @@ class MetaGer
 
     public function getSavedSettingCount()
     {
-        $cookies = \Cookie::get();
+        $cookies = Cookie::get();
         $count = 0;
 
         $sumaFile = MetaGer::getLanguageFile();
         $sumaFile = json_decode(file_get_contents($sumaFile), true);
-        $foki = array_keys($sumaFile['foki']);
 
         foreach ($cookies as $key => $value) {
             if (in_array($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {

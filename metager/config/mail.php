@@ -42,7 +42,6 @@ return [
             'username' => env('MAIL_USERNAME', "support+46521@metager.de"),
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
-            'auth_mode' => null,
         ],
 
         'ses' => [

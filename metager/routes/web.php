@@ -1,11 +1,16 @@
 <?php
 
+use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Prometheus\RenderTextFormat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Prometheus\CollectorRegistry;
 
 /*
 |--------------------------------------------------------------------------
@@ -253,7 +258,6 @@ Route::get('age.xml', function () {
     $response->header('Content-Type', "application/xml");
     return $response;
 });
-
 Route::get('age-de.xml', function () {
     $response = Response::make(file_get_contents(resource_path('age/age-de.xml')));
     $response->header('Content-Type', "application/xml");
@@ -273,13 +277,12 @@ Route::get('plugin', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
-    Route::get('/', 'AdminInterface@index');
-    Route::match(['get', 'post'], 'count', 'AdminInterface@count');
+    Route::get('count', 'AdminInterface@count');
+    Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
+    Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);
     Route::get('timings', 'MetaGerSearch@searchTimings');
-    Route::get('count/graphtoday.svg', 'AdminInterface@countGraphToday');
     Route::get('engine/stats.json', 'AdminInterface@engineStats');
     Route::get('check', 'AdminInterface@check');
-    Route::get('engines', 'AdminInterface@engines');
     Route::get('ip', function (Request $request) {
         dd($request->ip(), $_SERVER["AGENT"]);
     });
@@ -342,7 +345,6 @@ Route::get('clickstats', 'LogController@clicklog');
 Route::get('pluginClose', 'LogController@pluginClose');
 Route::get('pluginInstall', 'LogController@pluginInstall');
 
-Route::get('qt', 'MetaGerSearch@quicktips');
 Route::get('tips', 'MetaGerSearch@tips');
 Route::get('/plugins/opensearch.xml', 'StartpageController@loadPlugin');
 Route::get('owi', function () {
@@ -430,7 +432,7 @@ Route::get('metrics', function (Request $request) {
         abort(401);
     }
 
-    $registry = \Prometheus\CollectorRegistry::getDefault();
+    $registry = CollectorRegistry::getDefault();
 
     $renderer = new RenderTextFormat();
     $result = $renderer->render($registry->getMetricFamilySamples());

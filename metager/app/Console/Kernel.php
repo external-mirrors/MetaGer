@@ -9,13 +9,6 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
-    protected $commands = [];
-
-    /**
      * Define the application's command schedule.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
@@ -26,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('heartbeat')->everyMinute();
         $schedule->command('requests:gather')->everyFifteenMinutes();
         $schedule->command('requests:useragents')->everyFiveMinutes();
-        // $schedule->command('logs:gather')->everyMinute();
+        $schedule->command('logs:gather')->everyMinute();
         $schedule->command('spam:load')->everyMinute();
         $schedule->command('load:affiliate-blacklist')->everyMinute();
         $schedule->command('affilliates:store')->everyMinute()
@@ -44,7 +37,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        require base_path('routes/console.php');
         $this->load(__DIR__ . '/Commands');
+
+        require base_path('routes/console.php');
     }
 }

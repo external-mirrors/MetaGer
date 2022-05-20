@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\Redis;
-use Request;
 use \Carbon\Carbon;
 
 class Key
@@ -18,7 +17,7 @@ class Key
     {
         $this->key = $key;
         $this->status = $status;
-        if (\App::environment() !== "production") {
+        if (\app()->environment() !== "production") {
             $this->keyserver = "https://dev.key.metager.de/";
         }
     }
@@ -28,23 +27,23 @@ class Key
     {
         if ($this->key !== '' && $this->status === null) {
             $this->updateStatus();
-            if($this->status === null){
+            if ($this->status === null) {
                 // The user provided an invalid key which we will log to fail2ban
                 $fail2banEnabled = config("metager.metager.fail2ban.enabled");
                 if (!empty($fail2banEnabled) && $fail2banEnabled && !config("metager.metager.fail2ban.url") && !config("metager.metager.fail2ban.user") && !config("metager.metager.fail2ban.password")) {
                     // Submit fetch job to worker
                     $mission = [
-                            "resulthash" => "captcha",
-                            "url" => config("metager.metager.fail2ban.url") . "/mgkeytry/",
-                            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-                            "username" => config("metager.metager.fail2ban.user"),
-                            "password" => config("metager.metager.fail2ban.password"),
-                            "headers" => [
-                                "ip" => Request::ip()
-                            ],
-                            "cacheDuration" => 0,
-                            "name" => "Captcha",
-                        ];
+                        "resulthash" => "captcha",
+                        "url" => config("metager.metager.fail2ban.url") . "/mgkeytry/",
+                        "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                        "username" => config("metager.metager.fail2ban.user"),
+                        "password" => config("metager.metager.fail2ban.password"),
+                        "headers" => [
+                            "ip" => \request()->ip()
+                        ],
+                        "cacheDuration" => 0,
+                        "name" => "Captcha",
+                    ];
                     $mission = json_encode($mission);
                     Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
                 }
@@ -60,23 +59,23 @@ class Key
         $opts = array(
             'http' => array(
                 'method' => 'GET',
-                'header' => 'Authorization: Basic ' . $authKey ,
+                'header' => 'Authorization: Basic ' . $authKey,
             ),
         );
         $context = stream_context_create($opts);
 
         try {
-            $link = $this->keyserver . "v2/key/". urlencode($this->key);
+            $link = $this->keyserver . "v2/key/" . urlencode($this->key);
             $result = json_decode(file_get_contents($link, false, $context));
-            if(!empty($result)){
+            if (!empty($result)) {
                 $this->keyinfo = $result;
-                if($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited"){
+                if ($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited") {
                     $this->status = true;
-                }else{
+                } else {
                     $this->status = false;
                 }
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (\ErrorException $e) {
@@ -104,7 +103,7 @@ class Key
         $context = stream_context_create($opts);
 
         try {
-            $link = $this->keyserver . "v2/key/". urlencode($this->key) . "/request-permission";
+            $link = $this->keyserver . "v2/key/" . urlencode($this->key) . "/request-permission";
             $result = json_decode(file_get_contents($link, false, $context));
             if ($result->{'apiAccess'} == true) {
                 return true;
@@ -124,15 +123,15 @@ class Key
             'expiresAfterDays' => 365,
             'notes' => $notes
         );
-        if(!empty($key)){
+        if (!empty($key)) {
             $postdata["key"] = $key;
         }
-    
-        if(!empty($payment)){
+
+        if (!empty($payment)) {
             $postdata["payment"] = $payment;
-        }else if(!empty($adFreeSearches)){
+        } else if (!empty($adFreeSearches)) {
             $postdata["adFreeSearches"] = $adFreeSearches;
-        }else{
+        } else {
             return false;
         }
         $postdata = http_build_query($postdata, "", "&", PHP_QUERY_RFC3986);
@@ -159,7 +158,8 @@ class Key
         }
     }
 
-    public function reduce($count){
+    public function reduce($count)
+    {
         $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = http_build_query(array(
             'adFreeSearches' => $count,
@@ -194,23 +194,25 @@ class Key
      * 
      * @return boolean
      */
-    public function canChange(){
-        if(empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes) || $this->keyinfo->adFreeSearches < \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES){
+    public function canChange()
+    {
+        if (empty($this->status) || !preg_match("/^Mitgliederschlüssel\./", $this->keyinfo->notes) || $this->keyinfo->adFreeSearches < \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES) {
             return false;
         }
-        if(!empty($this->keyinfo->KeyChangedAt)){
+        if (!empty($this->keyinfo->KeyChangedAt)) {
             // "2021-03-09T09:19:44.000Z"
             $keyChangedAt = Carbon::createFromTimeString($this->keyinfo->KeyChangedAt, 'Europe/London');
-            if($keyChangedAt->diffInSeconds(Carbon::now()) > self::CHANGE_EVERY){
+            if ($keyChangedAt->diffInSeconds(Carbon::now()) > self::CHANGE_EVERY) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
         return true;
     }
 
-    public function checkForChange($newkey = "", $hash){
+    public function checkForChange($hash, $newkey = "")
+    {
         $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = http_build_query(array(
             'hash' => $hash,
@@ -234,9 +236,9 @@ class Key
             $link = $this->keyserver . "v2/key/can-change";
             $result = json_decode(file_get_contents($link, false, $context));
 
-            if(!empty($result) && $result->status === "success" && empty($result->results)){
+            if (!empty($result) && $result->status === "success" && empty($result->results)) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (\ErrorException $e) {

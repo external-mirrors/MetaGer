@@ -66,31 +66,33 @@ class KeyController extends Controller
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
 
         $host = $request->getHttpHost();
-        if(!empty($instantRedir) && in_array($host, ["metager.de", "metager.es", "metager.org", "metager3.de", "localhost:8080"])){
+        if (!empty($instantRedir) && in_array($host, ["metager.de", "metager.es", "metager.org", "metager3.de", "localhost:8080"])) {
             return redirect($instantRedir);
-        }else{
+        } else {
             return redirect($url);
         }
     }
 
-    public function changeKeyIndex(\App\Models\Key $key, Request $request){
-        if(!$key->canChange()){
+    public function changeKeyIndex(\App\Models\Key $key, Request $request)
+    {
+        if (!$key->canChange()) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
         return view('keychange', [
             "title" => trans('titles.keychange'),
             "key" => $key->key,
             "css" => [mix('css/keychange/index.css')]
-            ]);
+        ]);
     }
 
-    public function removeCurrent(\App\Models\Key $key, Request $request){
-        if(!$key->canChange()){
+    public function removeCurrent(\App\Models\Key $key, Request $request)
+    {
+        if (!$key->canChange()) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
         // Reduce Current Key
         $res = $key->reduce(self::KEYCHANGE_ADFREE_SEARCHES);
-        if(empty($res) || empty($res->status) || $res->status !== "success"){
+        if (empty($res) || empty($res->status) || $res->status !== "success") {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
         // Redirect to Cookie Remove URL with redirect to step two
@@ -107,7 +109,8 @@ class KeyController extends Controller
         return redirect($redirUrl);
     }
 
-    public function generateNew(\App\Models\Key $key, Request $request){
+    public function generateNew(\App\Models\Key $key, Request $request)
+    {
         // Validate Request Data
         $validUntil = $request->input('validUntil', '');
         $password = $request->input('password', '');
@@ -115,31 +118,31 @@ class KeyController extends Controller
 
         // Check if Validuntil
         $valid = true;
-        if(empty($validUntil)){
+        if (empty($validUntil)) {
             $valid = false;
-        }else{
+        } else {
             $validUntil = Carbon::createFromFormat($format, $validUntil, "Europe/London");
-            if(!$validUntil){
+            if (!$validUntil) {
                 $valid = false;
             }
         }
 
-        if($valid && Carbon::now()->diffInSeconds($validUntil) <= 0){
+        if ($valid && Carbon::now()->diffInSeconds($validUntil) <= 0) {
             $valid = false;
         }
-        if($valid){
+        if ($valid) {
             // Check if hash matches
             $expectedHash = hash_hmac("sha256", $validUntil->format($format), config("app.key"));
-            if(!hash_equals($expectedHash, $password)){
+            if (!hash_equals($expectedHash, $password)) {
                 $valid = false;
             }
         }
-        if(!$valid){
+        if (!$valid) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
 
         // Check if the key already was generated
-        if (!$key->checkForChange("", $password)) {
+        if (!$key->checkForChange($password, "")) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
 
@@ -149,10 +152,10 @@ class KeyController extends Controller
             "validUntil" => $validUntil,
             "css" => [mix('css/keychange/index.css')]
         ]);
-
     }
 
-    public function generateNewPost(\App\Models\Key $key, Request $request){
+    public function generateNewPost(\App\Models\Key $key, Request $request)
+    {
         // Validate Request Data
         $validUntil = $request->input('validUntil', '');
         $password = $request->input('password', '');
@@ -160,33 +163,33 @@ class KeyController extends Controller
 
         // Check if Validuntil
         $valid = true;
-        if(empty($validUntil)){
+        if (empty($validUntil)) {
             $valid = false;
-        }else{
+        } else {
             $validUntil = Carbon::createFromFormat($format, $validUntil, "Europe/London");
-            if(!$validUntil){
+            if (!$validUntil) {
                 $valid = false;
             }
         }
 
-        if($valid && Carbon::now()->diffInSeconds($validUntil) <= 0){
+        if ($valid && Carbon::now()->diffInSeconds($validUntil) <= 0) {
             $valid = false;
         }
-        if($valid){
+        if ($valid) {
             // Check if hash matches
             $expectedHash = hash_hmac("sha256", $validUntil->format($format), config("app.key"));
-            if(!hash_equals($expectedHash, $password)){
+            if (!hash_equals($expectedHash, $password)) {
                 $valid = false;
             }
         }
-        if(!$valid){
+        if (!$valid) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         }
 
         $validator = Validator::make($request->all(), [
             'newkey' => 'required|min:4|max:20',
         ]);
-        if($validator->fails()) {
+        if ($validator->fails()) {
             $data = [
                 "validUntil" => $validUntil->format($format),
                 "password" => hash_hmac("sha256", $validUntil->format($format), config("app.key")),
@@ -197,18 +200,18 @@ class KeyController extends Controller
         }
 
         $newkey = $request->input('newkey', '');
-        
+
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $randomSuffix = "";
         $suffixCount = 3;
-        for($i = 0; $i < $suffixCount; $i++){
-            $randomSuffix .= $characters[rand(0, strlen($characters)-1)];
+        for ($i = 0; $i < $suffixCount; $i++) {
+            $randomSuffix .= $characters[rand(0, strlen($characters) - 1)];
         }
         $newkey = $newkey . $randomSuffix;
 
-        if($key->checkForChange($newkey, $password)){
+        if ($key->checkForChange($password, $newkey)) {
             $result = $key->generateKey(null, self::KEYCHANGE_ADFREE_SEARCHES, $newkey, "Schlüssel gewechselt. Hash $password");
-            if(!empty($result)){
+            if (!empty($result)) {
                 Cookie::queue('key', $result, 525600, '/', null, false, false);
                 return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyThree', ["newkey" => $result])));
             }

@@ -143,10 +143,6 @@ spec:
               cpu: 100m
               memory: 100M
             limits:
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/usr/local/bin/php", "artisan" ,"schedule:run"]
         - name: worker
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

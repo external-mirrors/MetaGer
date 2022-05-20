@@ -19,7 +19,10 @@ RUN groupadd -g ${GID} metager && \
 # Install required php modules
 RUN apt update && apt install -y \
     libzip-dev \
-    libpng-dev && \
+    libpng-dev \
+    libfreetype-dev \
+    libjpeg62-turbo-dev && \
+    docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install zip gd pcntl pdo_mysql && \
     yes '' | pecl install xdebug-3.1.4 redis-5.3.7 && \
     docker-php-ext-enable redis && \

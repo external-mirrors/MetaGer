@@ -62,7 +62,9 @@ function updateTable() {
                 maximumFractionDigits: 0
             })
             total_element.classList.remove("loading")
-            sum += data[i]["total"]
+            if (typeof sum !== undefined && i > 0) {
+                sum += data[i]["total"]
+            }
         } else {
             sum = undefined;
         }

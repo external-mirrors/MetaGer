@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ConvertCountFile;
 use App\QueryLogger;
 use Carbon\Carbon;
 use DateTime;
@@ -10,9 +9,7 @@ use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Redis;
 use PDO;
-use Response;
 
 class AdminInterface extends Controller
 {
@@ -161,93 +158,6 @@ class AdminInterface extends Controller
 
         $result["resultCount"] = number_format($resultCount, 0, ",", ".");
         return response()->json($result);
-    }
-
-    private function getStats($days)
-    {
-        $maxDate = Carbon::createFromFormat('d.m.Y', "28.06.2016");
-        $selectedDate = Carbon::now()->subDays($days);
-        if ($maxDate > $selectedDate) {
-            $days = $maxDate->diffInDays(Carbon::now());
-        }
-
-        $logToday = \App\MetaGer::getMGLogFile();
-
-        $archivePath = storage_path("logs/metager/");
-
-        $today = [
-            'logFile' => $logToday,
-            'countPath' => storage_path('logs/metager/count/'),
-            'countFile' => storage_path('logs/metager/count/' . getmypid()),
-        ];
-        if (\file_exists($today["countFile"])) {
-            unlink($today["countFile"]);
-        }
-
-        $neededLogs = [
-            0 => $today,
-        ];
-        $logsToRequest = [
-            0 => $today,
-        ];
-        $requestedLogs = [];
-        for ($i = 1; $i <= $days; $i++) {
-            $date = Carbon::now()->subDays($i);
-            $countPath = storage_path('logs/metager/count/' . $date->format("Y/m") . "/");
-            $countFile = $countPath . $date->day . ".json";
-            $neededLogs[$i] = [
-                'logFile' => $archivePath . $date->format("Y/m/d") . ".log",
-                'countPath' => $countPath,
-                'countFile' => $countFile,
-            ];
-            if (!file_exists($neededLogs[$i]['countFile'])) {
-                $logsToRequest[$i] = $neededLogs[$i];
-            }
-        }
-        if (sizeof($logsToRequest) > 100) {
-            set_time_limit(600);
-        }
-        // Create the Jobs for count file creation
-        while (sizeof($logsToRequest) > 0 || sizeof($requestedLogs) > 0) {
-            if (sizeof($requestedLogs) < 20 && sizeof($logsToRequest) > 0) {
-                $newJob = array_shift($logsToRequest);
-                $newJob["startedAt"] = time();
-                $requestedLogs[] = $newJob;
-
-                Redis::set(md5($newJob["countFile"]), "running");
-                Redis::expire(md5($newJob["countFile"]), 15);
-                ConvertCountFile::dispatch($newJob);
-            } else {
-                usleep(50000);
-            }
-            // Remove all finished Jobs
-            $removedOne = false;
-            do {
-                $removedOne = false;
-                foreach ($requestedLogs as $index => $requestedLog) {
-                    if (!Redis::exists(md5($requestedLog["countFile"]))) {
-                        unset($requestedLogs[$index]);
-                        $removedOne = true;
-                        break;
-                    }
-                }
-            } while ($removedOne === true);
-        }
-
-        $result = [];
-
-        foreach ($neededLogs as $key => $value) {
-            $countFile = $value["countFile"];
-            if (file_exists($countFile)) {
-                $result[$key] = json_decode(file_get_contents($countFile));
-            }
-        }
-
-        if (\file_exists($today["countFile"])) {
-            unlink($today["countFile"]);
-        }
-
-        return $result;
     }
 
     public function check()

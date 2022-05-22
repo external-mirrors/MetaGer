@@ -116,6 +116,10 @@ class RequestFetcher extends Command
         $addedJobs = 0;
         foreach ($newJobs as $newJob) {
             $newJob = json_decode($newJob, true);
+            if (empty($newJob)) {
+                Log::error("Couldn't json decode Job: $newJob");
+                continue;
+            }
             $ch = $this->getCurlHandle($newJob);
             if (curl_multi_add_handle($this->multicurl, $ch) !== 0) {
                 $this->shouldRun = false;

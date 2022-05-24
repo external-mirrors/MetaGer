@@ -114,7 +114,7 @@ return [
 
         'options' => [
             'serializer' => Redis::SERIALIZER_IGBINARY,
-            'compression' => Redis::COMPRESSION_LZ4,
+            'compression' => Redis::COMPRESSION_ZSTD,
             'password' => env('REDIS_CACHE_PASSWORD', null),
         ],
 

@@ -21,11 +21,12 @@ RUN apt update && apt install -y \
     libzip-dev \
     libpng-dev \
     libfreetype-dev \
-    libjpeg62-turbo-dev && \
+    libjpeg62-turbo-dev \
+    libzstd-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install zip gd pcntl pdo_mysql && \
     yes 'y' | pecl install xdebug-3.1.4 igbinary-3.2.7 redis-5.3.7 && \
-    docker-php-ext-enable redis && \
+    docker-php-ext-enable igbinary redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
 # Add working dir for the code base

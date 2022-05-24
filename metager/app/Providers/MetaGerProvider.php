@@ -6,6 +6,7 @@ use App\MetaGer;
 use App\QueryLogger;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use App\QueryTimer;
 
 class MetaGerProvider extends ServiceProvider
 {
@@ -40,6 +41,10 @@ class MetaGerProvider extends ServiceProvider
 
         $this->app->singleton(QueryLogger::class, function ($app) {
             return new QueryLogger();
+        });
+
+        $this->app->singleton(QueryTimer::class, function ($app) {
+            return new QueryTimer();
         });
     }
 }

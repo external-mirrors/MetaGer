@@ -110,13 +110,11 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'predis'),
+        'client' => env('REDIS_CLIENT', 'phpredis'),
 
         'options' => [
-            'cluster' => 'redis',
-            'parameters' => [
-                'password' => env('REDIS_CACHE_PASSWORD', null),
-            ],
+            'serializer' => Redis::SERIALIZER_IGBINARY,
+            'compression' => Redis::COMPRESSION_ZSTD,
         ],
 
         'default' => [
@@ -135,12 +133,15 @@ return [
         ],
 
         "clusters" => [
-            'clustercache' => [[
-                'host' => env('REDIS_CACHE_HOST', 'localhost'),
+            'clustercache' => [
+                [
+                    'host' => env('REDIS_CACHE_HOST', 'localhost'),
+                    'port' => env('REDIS_CACHE_PORT', 6379),
+                ]
+            ],
+            'options' => [
                 'password' => env('REDIS_CACHE_PASSWORD', null),
-                'port' => env('REDIS_CACHE_PORT', 6379),
-                'database' => 0,
-            ]],
+            ],
         ]
 
 

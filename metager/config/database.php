@@ -115,7 +115,6 @@ return [
         'options' => [
             'serializer' => Redis::SERIALIZER_IGBINARY,
             'compression' => Redis::COMPRESSION_ZSTD,
-            'password' => env('REDIS_CACHE_PASSWORD', null),
         ],
 
         'default' => [
@@ -139,6 +138,9 @@ return [
                     'host' => env('REDIS_CACHE_HOST', 'localhost'),
                     'port' => env('REDIS_CACHE_PORT', 6379),
                 ]
+            ],
+            'options' => [
+                'password' => env('REDIS_CACHE_PASSWORD', null),
             ],
         ]
 

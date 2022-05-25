@@ -37,25 +37,36 @@ class UserAgentMaster
             $device = "mobile";
         }
 
+        $newAgent = null;
+
         if (!empty($_SERVER['HTTP_USER_AGENT'])) {
             // Push an entry to a list in Redis
             // App\Console\Commands\SaveUseragents.php is called regulary to save the list into a sqlite database
             Redis::rpush('useragents', json_encode(["platform" => $agent->platform(), "browser" => $agent->browser(), "device" => $device, "useragent" => $_SERVER['HTTP_USER_AGENT']]));
             Redis::expire('useragents', 301);
+
+            // Try to retrieve a random User-Agent of the same category from the sqlite database
+            $newAgent = \App\UserAgent::where("platform", $agent->platform())
+                ->where("browser", $agent->browser())
+                ->where("device", $device)
+                ->inRandomOrder()
+                ->limit(1)
+                ->get();
+        } else {
+            // Probably no Useragent provided lets use a random one
+            // Try to retrieve a random User-Agent of the same category from the sqlite database
+            $newAgent = \App\UserAgent::where("platform", $agent->platform())
+                ->where("device", $device)
+                ->inRandomOrder()
+                ->limit(1)
+                ->get();
         }
 
-        // Try to retrieve a random User-Agent of the same category from the sqlite database
-        $newAgent = \App\UserAgent::where("platform", $agent->platform())
-            ->where("browser", $agent->browser())
-            ->where("device", $device)
-            ->inRandomOrder()
-            ->limit(1)
-            ->get();
 
         if (sizeof($newAgent) >= 1) {
             // If there is an Entry in the database use it
             $newAgent = $newAgent[0]->useragent;
-        } else {
+        } elseif (!empty($_SERVER['HTTP_USER_AGENT'])) {
             // Else anonymize the version of the current User-Agent
             $agentPieces = explode(" ", $_SERVER['HTTP_USER_AGENT']);
             for ($i = 0; $i < count($agentPieces); $i++) {
@@ -63,6 +74,8 @@ class UserAgentMaster
                 $agentPieces[$i] = preg_replace("/([^\/]*)\/\w+/s", "$1/0.0", $agentPieces[$i]);
             }
             $newAgent = implode(" ", $agentPieces);
+        } else {
+            $newAgent = '';
         }
         // Replace the User-Agent
         $_SERVER['HTTP_USER_AGENT'] = $newAgent;

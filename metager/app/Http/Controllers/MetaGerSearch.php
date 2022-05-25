@@ -152,6 +152,7 @@ class MetaGerSearch extends Controller
         $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
         $counter->inc();
 
+        $query_timer->observeTotal();
         // Splitting the response return into multiple parts.
         // This might speed up page view time for users with slow network
         $responseArray = str_split($resultpage->render(), 1024);
@@ -159,7 +160,6 @@ class MetaGerSearch extends Controller
             echo ($responsePart);
             flush();
         }
-        $query_timer->observeTotal();
     }
 
     public function searchTimings(Request $request, MetaGer $metager)

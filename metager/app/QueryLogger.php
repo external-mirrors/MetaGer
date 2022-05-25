@@ -244,7 +244,7 @@ class QueryLogger
     public function getLatestLogs(int $n)
     {
         $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/" . date("d") . ".sqlite");
-        $current_table = date("logs");
+        $current_table = "logs";
         if (!\file_exists($current_database)) {
             return null;
         }

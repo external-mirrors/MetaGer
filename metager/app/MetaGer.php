@@ -71,8 +71,6 @@ class MetaGer
     protected $fullUrl;
     protected $enabledSearchengines = [];
     protected $languageDetect;
-    protected $verificationId;
-    protected $verificationCount;
     protected $searchUid;
     protected $redisResultWaitingKey;
     protected $redisResultEngineList;
@@ -473,14 +471,16 @@ class MetaGer
     public function humanVerification(&$results)
     {
         # Let's check if we need to implement a redirect for human verification
-        if ($this->verificationCount > 10) {
+        $search_settings = \app()->make(SearchSettings::class);
+        if ($search_settings->verification_count > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $pw = md5($this->verificationId . $day . $link . config("metager.metager.proxy.password"));
-                $url = route('humanverification', ['mm' => $this->verificationId, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
-                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $proxyUrl = route('humanverification', ['mm' => $this->verificationId, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
+                $verification_id = $search_settings->verification_id;
+                $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
+                $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
+                $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));
+                $proxyUrl = route('humanverification', ['mm' => $verification_id, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }
@@ -1026,8 +1026,6 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-        $this->verificationId = $request->input('verification_id', null);
-        $this->verificationCount = intval($request->input('verification_count', '0'));
 
         $this->apiKey = $request->input('key', '');
         if (empty($this->apiKey)) {
@@ -1041,7 +1039,7 @@ class MetaGer
         }
 
         // Remove Inputs that are not used
-        $this->request = $request->replace($request->except(['verification_id', 'uid', 'verification_count']));
+        $this->request = $request->replace($request->except(['uid']));
 
         // Disable freshness filter if custom freshness filter isset
         if ($this->request->filled("ff") && $this->request->filled("f")) {
@@ -1670,19 +1668,9 @@ class MetaGer
 
     # Einfache Getter
 
-    public function getVerificationId()
-    {
-        return $this->verificationId;
-    }
-
     public function getNext()
     {
         return $this->next;
-    }
-
-    public function getVerificationCount()
-    {
-        return $this->verificationCount;
     }
 
     public function getSite()

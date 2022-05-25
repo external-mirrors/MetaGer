@@ -311,10 +311,11 @@ class MetaGer
             $this->adgoalLoaded = false;
         }
 
-        if (!empty($this->jskey)) {
-            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $this->jskey);
+        $search_settings = \app()->make(SearchSettings::class);
+        if (!empty($search_settings->jskey)) {
+            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $search_settings->jskey);
             if ($js !== null && boolval($js)) {
-                $this->javascript = true;
+                $search_settings->javascript_enabled = true;
             }
         }
 
@@ -418,7 +419,7 @@ class MetaGer
     {
         $wait = false;
         $finished = true;
-        if (!$this->javascript) {
+        if (!\app()->make(SearchSettings::class)->javascript_enabled) {
             $wait = true;
         }
         foreach ($affiliates as $affiliate) {
@@ -923,18 +924,6 @@ class MetaGer
             }
             $request->replace($input);
         }
-        $this->headerPrinted = $request->input("headerPrinted", false);
-        $request->request->remove("headerPrinted");
-
-        # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
-        # Until then javascript parameter will be false
-        $this->javascript = false;
-        if ($request->filled("javascript") && is_bool($request->input("javascript"))) {
-            $this->javascript = boolval($request->input("javascript"));
-            $request->request->remove("javascript");
-        }
-        $this->jskey = $request->input('jskey', '');
-        $request->request->remove("jskey");
 
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
@@ -1903,25 +1892,11 @@ class MetaGer
         return $this->framed;
     }
 
-    public function isHeaderPrinted()
-    {
-        return $this->headerPrinted;
-    }
-
     public function isDummy()
     {
         return $this->dummy;
     }
 
-    public function jsEnabled()
-    {
-        return $this->javascript;
-    }
-
-    public function setJsEnabled(bool $bool)
-    {
-        $this->javascript = $bool;
-    }
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */

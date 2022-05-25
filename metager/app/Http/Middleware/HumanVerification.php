@@ -42,11 +42,11 @@ class HumanVerification
                     // Token is not valid. Remove it
                     Cache::forget($token);
                     \app()->make(QueryTimer::class)->observeEnd(self::class);
-                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token"])));
                 }
             } else {
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
-                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token"])));
             }
         }
 

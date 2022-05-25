@@ -8,6 +8,8 @@ use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
+use App\MetaGer;
+use App\SearchSettings;
 
 class BrowserVerification
 {
@@ -66,7 +68,9 @@ class BrowserVerification
             }
             $result = Redis::connection(config('cache.stores.redis.connection'))->blpop($mgv, 5);
             if ($result !== null) {
-                $request->request->add(["headerPrinted" => false, "jskey" => $mgv]);
+                $search_settings = \app()->make(SearchSettings::class);
+                $search_settings->jskey = $mgv;
+                $search_settings->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             } else {
@@ -86,7 +90,9 @@ class BrowserVerification
         if ($answer !== null) {
             echo (view('layouts.resultpage.resources')->render());
             flush();
-            $request->request->add(["headerPrinted" => true, "jskey" => $key]);
+            $search_settings = \app()->make(SearchSettings::class);
+            $search_settings->jskey = $key;
+            $search_settings->header_printed = true;
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
         }

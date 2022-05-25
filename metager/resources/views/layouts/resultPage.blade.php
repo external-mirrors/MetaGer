@@ -1,4 +1,4 @@
-@if(!$metager->isHeaderPrinted())
+@if(!\app()->make(\App\SearchSettings::class)->header_printed)
 <!DOCTYPE html>
 <html lang="{!! trans('staticPages.meta.language') !!}">
 

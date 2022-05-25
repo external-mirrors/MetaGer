@@ -12,6 +12,7 @@ use Prometheus\CollectorRegistry;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
 use App\QueryTimer;
+use App\SearchSettings;
 
 class MetaGerSearch extends Controller
 {
@@ -184,7 +185,7 @@ class MetaGerSearch extends Controller
 
     private function loadMoreJS(Request $request)
     {
-        $request->request->add(["javascript" => true]);
+        \app()->make(SearchSettings::class)->javascript_enabled = true;
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
 
@@ -211,7 +212,6 @@ class MetaGerSearch extends Controller
         $metager->setApiAuthorized($mg["apiAuthorized"]);
 
         $metager->parseFormData($request, false);
-        $metager->setJsEnabled(true);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);

@@ -8,6 +8,7 @@ use Cookie;
 use Log;
 use URL;
 use App\QueryTimer;
+use App\SearchSettings;
 
 class HumanVerification
 {
@@ -171,7 +172,9 @@ class HumanVerification
             }
         }
 
-        $request->request->add(['verification_id' => $user["uid"], 'verification_count' => $user["unusedResultPages"]]);
+        $search_settings = \app()->make(SearchSettings::class);
+        $search_settings->verification_id = $user["uid"];
+        $search_settings->verification_count = $user["unusedResultPages"];
         \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
     }

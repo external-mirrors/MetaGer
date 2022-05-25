@@ -22,6 +22,7 @@ class RemoveKey
         if (Cookie::has("key") && app('App\Models\Key')->getStatus() === null) {
             return redirect(route("removeCookie", ["ir" => url()->full()]));
         }
+        \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
     }
 }

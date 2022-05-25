@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
@@ -254,14 +255,12 @@ class MetaGer
         }
     }
 
-    public function prepareResults(&$timings = null)
+    public function prepareResults()
     {
         $engines = $this->engines;
         // combine
         $this->combineResults($engines);
-        if (!empty($timings)) {
-            $timings["prepareResults"]["combined results"] = microtime(true) - $timings["starttime"];
-        }
+
         // misc (WiP)
         if ($this->fokus == "nachrichten") {
             $this->results = array_filter($this->results, function ($v, $k) {
@@ -281,9 +280,7 @@ class MetaGer
                 return ($a->getRank() < $b->getRank()) ? 1 : -1;
             });
         }
-        if (!empty($timings)) {
-            $timings["prepareResults"]["sorted results"] = microtime(true) - $timings["starttime"];
-        }
+
         # Validate Results
         $newResults = [];
         foreach ($this->results as $result) {
@@ -292,14 +289,9 @@ class MetaGer
             }
         }
         $this->results = $newResults;
-        if (!empty($timings)) {
-            $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
-        }
 
         $this->duplicationCheck();
-        if (!empty($timings)) {
-            $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
-        }
+
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -313,9 +305,7 @@ class MetaGer
         }
 
         $this->ads = $newResults;
-        if (!empty($timings)) {
-            $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
-        }
+
         #Adgoal Implementation
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
@@ -331,9 +321,6 @@ class MetaGer
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
-        if (!empty($timings)) {
-            $timings["prepareResults"]["human verification"] = microtime(true) - $timings["starttime"];
-        }
 
         $counter = 0;
         $firstRank = 0;
@@ -354,9 +341,6 @@ class MetaGer
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
-            if (!empty($timings)) {
-                $timings["prepareResults"]["filled cache"] = microtime(true) - $timings["starttime"];
-            }
         } else {
             $this->next = [];
         }
@@ -512,12 +496,8 @@ class MetaGer
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
 
-    public function createSearchEngines(Request $request, &$timings)
+    public function createSearchEngines(Request $request)
     {
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["start"] = microtime(true) - $timings["starttime"];
-        }
-
         # Wenn es kein Suchwort gibt
         if (!$request->filled("eingabe") || $this->q === "") {
             return;
@@ -538,15 +518,7 @@ class MetaGer
             $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
         }
 
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["created engine array"] = microtime(true) - $timings["starttime"];
-        }
-
         $this->removeAdsFromListIfAdfree($sumas);
-
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["removed ads"] = microtime(true) - $timings["starttime"];
-        }
 
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
@@ -601,10 +573,6 @@ class MetaGer
             }
         }
 
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["filtered invalid engines"] = microtime(true) - $timings["starttime"];
-        }
-
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -629,9 +597,6 @@ class MetaGer
             $this->errors[] = $error;
         }
         $this->setEngines($request);
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
-        }
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)
@@ -670,25 +635,15 @@ class MetaGer
         }
     }
 
-    public function startSearch(&$timings)
+    public function startSearch()
     {
-        if (!empty($timings)) {
-            $timings["startSearch"]["start"] = microtime(true) - $timings["starttime"];
-        }
-
         # Check all engines for Cached responses
         $this->checkCache();
 
-        if (!empty($timings)) {
-            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
-        }
-
         # Wir starten alle Suchen
+        /** @var Searchengine $engine */
         foreach ($this->engines as $engine) {
-            $engine->startSearch($this, $timings);
-        }
-        if (!empty($timings)) {
-            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+            $engine->startSearch();
         }
     }
 

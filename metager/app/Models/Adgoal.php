@@ -39,7 +39,6 @@ class Adgoal
      */
     public function __construct(&$metager)
     {
-        $this->startTime = microtime(true);
         $publicKey = config("metager.metager.adgoal.public_key");
         $privateKey = config("metager.metager.adgoal.private_key");
         if ($publicKey === false) {
@@ -210,8 +209,6 @@ class Adgoal
             }
         }
 
-        $requestTime = microtime(true) - $this->startTime;
-        \App\PrometheusExporter::Duration($requestTime, "adgoal");
         $this->finished = true;
     }
 }

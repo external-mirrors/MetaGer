@@ -6,6 +6,7 @@ use App\MetaGer;
 use App\QueryLogger;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
 use App\QueryTimer;
 
 class MetaGerProvider extends ServiceProvider
@@ -47,4 +48,13 @@ class MetaGerProvider extends ServiceProvider
             return new QueryTimer();
         });
     }
+
+    // public function provides()
+    // {
+    //     return [
+    //         MetaGer::class,
+    //         QueryLogger::class,
+    //         QueryTimer::class,
+    //     ];
+    // }
 }

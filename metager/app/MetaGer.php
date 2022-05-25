@@ -48,7 +48,6 @@ class MetaGer
     protected $availableFoki = [];
     protected $startCount = 0;
     protected $canCache = false;
-    protected $javascript = false;
     # Daten über die Abfrage$
     protected $ip;
     protected $useragent;

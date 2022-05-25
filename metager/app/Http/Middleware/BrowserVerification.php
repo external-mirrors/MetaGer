@@ -105,7 +105,6 @@ class BrowserVerification
             ->with('url', $url)
             ->render());
         \app()->make(QueryTimer::class)->observeEnd(self::class);
-        return $next($request);
     }
 
     public static function logBrowserverification(Request $request)

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Cookie;
+use \App\QueryTimer;
 
 class RemoveKey
 {
@@ -16,10 +17,12 @@ class RemoveKey
      */
     public function handle($request, Closure $next)
     {
+        \app()->make(QueryTimer::class)->observeStart(self::class);
         // Check if a wrong Key Cookie is set and if so remove it
-        if(Cookie::has("key") && app('App\Models\Key')->getStatus() === null){
+        if (Cookie::has("key") && app('App\Models\Key')->getStatus() === null) {
             return redirect(route("removeCookie", ["ir" => url()->full()]));
         }
+        \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
     }
 }

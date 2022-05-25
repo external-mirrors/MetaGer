@@ -11,11 +11,14 @@ use Illuminate\Support\Facades\Log;
 use Prometheus\CollectorRegistry;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\App;
+use App\QueryTimer;
+use App\SearchSettings;
 
 class MetaGerSearch extends Controller
 {
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
+        $query_timer = \app()->make(QueryTimer::class);
         $locale = LaravelLocalization::getCurrentLocale();
         $preferredLanguage = array($request->getPreferredLanguage());
         if (!empty($preferredLanguage) && !empty($locale)) {
@@ -25,11 +28,6 @@ class MetaGerSearch extends Controller
         if ($request->filled("chrome-plugin")) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
         }
-        $timings = null;
-        if ($timing) {
-            $timings = ['starttime' => microtime(true)];
-        }
-        $time = microtime(true);
 
         $focus = $request->input("focus", "web");
 
@@ -45,16 +43,14 @@ class MetaGerSearch extends Controller
         }
 
         # Mit gelieferte Formulardaten parsen und abspeichern:
+        $query_timer->observeStart("Search_ParseFormData");
         $metager->parseFormData($request);
-        if (!empty($timings)) {
-            $timings["parseFormData"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_ParseFormData");
 
         # Nach Spezialsuchen überprüfen:
+        $query_timer->observeStart("Search_CheckSpecialSearches");
         $metager->checkSpecialSearches($request);
-        if (!empty($timings)) {
-            $timings["checkSpecialSearches"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_CheckSpecialSearches");
 
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
@@ -62,47 +58,50 @@ class MetaGerSearch extends Controller
             return $metager->createView();
         }
 
+        $query_timer->observeStart("Search_CreateQuicktips");
         $quicktips = $metager->createQuicktips();
-        if (!empty($timings)) {
-            $timings["createQuicktips"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_CreateQuicktips");
 
         # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
         # auf Ergebnisse warten und die Ergebnisse laden
-        $metager->createSearchEngines($request, $timings);
+        $query_timer->observeStart("Search_CreateSearchEngines");
+        $metager->createSearchEngines($request);
+        $query_timer->observeEnd("Search_CreateSearchEngines");
 
-        $metager->startSearch($timings);
+        $query_timer->observeStart("Search_StartSearch");
+        $metager->startSearch();
+        $query_timer->observeEnd("Search_StartSearch");
 
         # Versuchen die Ergebnisse der Quicktips zu laden
         if ($quicktips !== null) {
+            $query_timer->observeStart("Search_LoadQuicktips");
             $quicktipResults = $quicktips->loadResults();
-            if (!empty($timings)) {
-                $timings["Loaded Quicktip Results"] = microtime(true) - $time;
-            }
+            $query_timer->observeEnd("Search_LoadQuicktips");
         } else {
             $quicktipResults = [];
         }
 
+        $query_timer->observeStart("Search_WaitForMainResults");
         $metager->waitForMainResults();
-        if (!empty($timings)) {
-            $timings["waitForMainResults"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_WaitForMainResults");
 
+        $query_timer->observeStart("Search_RetrieveResults");
         $metager->retrieveResults();
-        if (!empty($timings)) {
-            $timings["retrieveResults"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_RetrieveResults");
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
+        $query_timer->observeStart("Search_RankAll");
         $metager->rankAll();
-        if (!empty($timings)) {
-            $timings["rankAll"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_RankAll");
 
         # Ergebnisse der Suchmaschinen kombinieren:
-        $metager->prepareResults($timings);
+        $query_timer->observeStart("Search_PrepareResults");
+        $metager->prepareResults();
+        $query_timer->observeEnd("Search_PrepareResults");
         $admitad = [];
         $adgoal = [];
+
+        $query_timer->observeStart("Search_Affiliates");
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
@@ -121,14 +120,15 @@ class MetaGerSearch extends Controller
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $metager->addDonationAdvertisement();
         }
+        $query_timer->observeEnd("Search_Affiliates");
 
-        $finished = true;
         foreach ($metager->getEngines() as $engine) {
             if ($engine->loaded) {
                 $engine->setNew(false);
                 $engine->markNew();
             }
         }
+        $query_timer->observeStart("Search_CacheFiller");
         try {
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
@@ -141,20 +141,10 @@ class MetaGerSearch extends Controller
         } catch (\Exception $e) {
             Log::error($e->getMessage());
         }
-        if (!empty($timings)) {
-            $timings["Filled resultloader Cache"] = microtime(true) - $time;
-        }
+        $query_timer->observeEnd("Search_CacheFiller");
 
         # Die Ausgabe erstellen:
         $resultpage = $metager->createView($quicktipResults);
-
-        if (!empty($timings)) {
-            $timings["createView"] = microtime(true) - $time;
-        }
-
-        if ($timings) {
-            dd($timings);
-        }
 
         $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
@@ -169,8 +159,7 @@ class MetaGerSearch extends Controller
             echo ($responsePart);
             flush();
         }
-        $requestTime = microtime(true) - $time;
-        \App\PrometheusExporter::Duration($requestTime, "request_time");
+        $query_timer->observeTotal();
     }
 
     public function searchTimings(Request $request, MetaGer $metager)
@@ -196,7 +185,7 @@ class MetaGerSearch extends Controller
 
     private function loadMoreJS(Request $request)
     {
-        $request->request->add(["javascript" => true]);
+        \app()->make(SearchSettings::class)->javascript_enabled = true;
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
 
@@ -223,7 +212,6 @@ class MetaGerSearch extends Controller
         $metager->setApiAuthorized($mg["apiAuthorized"]);
 
         $metager->parseFormData($request, false);
-        $metager->setJsEnabled(true);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);

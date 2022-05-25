@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Redis;
+use App\QueryTimer;
 use Jenssegers\Agent\Agent;
 
 class UserAgentMaster
@@ -21,6 +22,7 @@ class UserAgentMaster
      */
     public function handle($request, Closure $next)
     {
+        \app()->make(QueryTimer::class)->observeStart(self::class);
         /**
          * Categorize the User-Agents by
          * 1. Platform (i.e. Ubuntu)
@@ -65,6 +67,7 @@ class UserAgentMaster
         // Replace the User-Agent
         $_SERVER['HTTP_USER_AGENT'] = $newAgent;
 
+        \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
     }
 }

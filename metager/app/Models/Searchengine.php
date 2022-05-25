@@ -114,17 +114,9 @@ abstract class Searchengine
     }
 
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
-    public function startSearch(\App\MetaGer $metager, &$timings)
+    public function startSearch()
     {
-        if (!empty($timings)) {
-            $timings["startSearch"][$this->name]["start"] = microtime(true) - $timings["starttime"];
-        }
-
         if (!$this->cached) {
-            if (!empty($timings)) {
-                $timings["startSearch"][$this->name]["checked cache"] = microtime(true) - $timings["starttime"];
-            }
-
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
             // <ResultHash>;<URL to fetch>
@@ -160,17 +152,11 @@ abstract class Searchengine
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
             Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-            if (!empty($timings)) {
-                $timings["startSearch"][$this->name]["pushed job"] = microtime(true) - $timings["starttime"];
-            }
 
             // The request is not cached and will be submitted to the searchengine
             // We need to check if the number of requests to this engine are limited
             if (!empty($this->engine->{"monthly-requests"})) {
                 Redis::incr("monthlyRequests:" . $this->name);
-                if (!empty($timings)) {
-                    $timings["startSearch"][$this->name]["increased monthly requests"] = microtime(true) - $timings["starttime"];
-                }
             }
         }
     }

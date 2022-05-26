@@ -34,12 +34,6 @@ class RequestFetcher extends Command
     protected $proxypassword;
 
     /**
-     * If we receive an status code 0 in a curl fetch (timeout, etc.) the name of the fetcher (yahoo, adgoal, etc) will get stored
-     * in this array. And causes the next fetch to establish a fresh connection.
-     */
-    protected $error_connections = [];
-
-    /**
      * Create a new command instance.
      *
      * @return void
@@ -169,12 +163,6 @@ class RequestFetcher extends Command
                     $body = \curl_multi_getcontent($info["handle"]);
                 }
 
-                if ($responseCode === 0) {
-                    $this->error_connections[$name] = true;
-                } else {
-                    $this->error_connections[$name] = false;
-                }
-
                 Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
                     $pipe->lpush($resulthash, $body);
                     $pipe->expire($resulthash, 60);
@@ -215,11 +203,6 @@ class RequestFetcher extends Command
 
         if (!empty($job["curlopts"])) {
             curl_setopt_array($ch, $job["curlopts"]);
-        }
-
-        if (!empty($this->error_connections[$job["name"]]) && $this->error_connections[$job["name"]] === true) {
-            Log::info("Using a fresh Curl connection for " . $job["name"]);
-            curl_setopt($ch, \CURLOPT_FRESH_CONNECT, true);
         }
 
         if (!empty($this->proxyhost) && !empty($this->proxyport)) {

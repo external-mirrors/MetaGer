@@ -59,7 +59,7 @@ deploy_review:
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
       when: never
-    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+    - if: "$CI_COMMIT_TAG || $CI_COMMIT_BRANCH"
 
 stop_review:
   stage: deploy
@@ -69,20 +69,13 @@ stop_review:
     action: stop
   variables:
     DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
-    KEEP_N: 0   # Environment gets deleted. No Image Tags to keep
+    KEEP_N: 0 # Environment gets deleted. No Image Tags to keep
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
   script:
-    - echo "Removing Image Tags..."
-    - .gitlab/deployment_scripts/cleanup_tags_revision.sh
-    # For some reason an empty image tag gets created for this. We need to delete it until we find out why that is
-    - 'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
-    - 'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
-    - echo "Stopping Deployment..."
-    - kubectl -n $KUBE_NAMESPACE delete secret $CI_COMMIT_REF_SLUG
-    - helm -n $KUBE_NAMESPACE delete $DEPLOYMENT_CHART_NAME
+    - .gitlab/deployment_scripts/delete_deployment.sh
   when: manual
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
       when: never
-    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+    - if: "$CI_COMMIT_TAG || $CI_COMMIT_BRANCH"

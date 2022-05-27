@@ -74,5 +74,5 @@ Create the name of the service account to use
 {{- end -}}
 
 {{- define "secret_name" -}}
-{{- printf "%s" .Release.Name | replace "review-" " " | trim }}
+{{- printf "%s" .Release.Name }}
 {{- end -}}

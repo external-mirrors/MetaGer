@@ -1,7 +1,10 @@
 #!/bin/bash
 
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+
 helm -n $KUBE_NAMESPACE upgrade --install \
-    $HELM_RELEASE_NAME \
+    ${HELM_RELEASE_NAME} \
     chart/ \
     -f $DEPLOYMENT_HELM_VALUES \
     --set environment=$APP_ENV \

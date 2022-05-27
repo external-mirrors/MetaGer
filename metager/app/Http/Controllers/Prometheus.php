@@ -28,6 +28,7 @@ class Prometheus extends Controller
         $registry = CollectorRegistry::getDefault();
 
         $fpm_status = \fpm_get_status();
+        dd($fpm_status);
 
         $prometheus_prefix = "fpm_";
 

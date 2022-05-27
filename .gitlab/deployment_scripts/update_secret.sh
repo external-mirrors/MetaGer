@@ -2,8 +2,11 @@
 
 set -e
 
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+
 # Create/Update the secret
-kubectl -n $KUBE_NAMESPACE create secret generic $CI_COMMIT_REF_SLUG \
+kubectl -n $KUBE_NAMESPACE create secret generic ${HELM_RELEASE_NAME} \
   --from-file=${ENV_PRODUCTION} \
   --from-file=${SUMAS} \
   --from-file=${SUMASEN} \

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AllowLocalOnly;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -71,5 +72,6 @@ class Kernel extends HttpKernel
         'browserverification' => \App\Http\Middleware\BrowserVerification::class,
         'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
         'removekey' => \App\Http\Middleware\RemoveKey::class,
+        'allow-local-only' => AllowLocalOnly::class,
     ];
 }

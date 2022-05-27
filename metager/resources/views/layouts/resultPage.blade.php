@@ -1,4 +1,4 @@
-@if(!$metager->isHeaderPrinted())
+@if(!\app()->make(\App\SearchSettings::class)->header_printed)
 <!DOCTYPE html>
 <html lang="{!! trans('staticPages.meta.language') !!}">
 
@@ -46,8 +46,8 @@
 	<meta name="p" content="{{ getmypid() }}" />
 	<meta name="q" content="{{ $eingabe }}" />
 	<meta name="l" content="{{ LaravelLocalization::getCurrentLocale() }}" />
-	<meta name="mm" content="{{ $metager->getVerificationId() }}" />
-	<meta name="mn" content="{{ $metager->getVerificationCount() }}" />
+	<meta name="mm" content="{{ \app()->make(\App\SearchSettings::class)->verification_id }}" />
+	<meta name="mn" content="{{ \app()->make(\App\SearchSettings::class)->verification_count }}" />
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
 	<meta name="referrer" content="origin">
 	<meta name="age-meta-label" content="age=18" />

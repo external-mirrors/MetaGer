@@ -23,9 +23,7 @@
         "**/tests/**",
         "**/resources/views/**",
         "**/database/migrations/**",
-        "**/storage/framework/views/**",
-        "_ide_helper.php",
-        "_ide_helper_models"
+        "**/storage/framework/views/**"
     ],
     "emmet.includeLanguages": {
         "blade": "html"

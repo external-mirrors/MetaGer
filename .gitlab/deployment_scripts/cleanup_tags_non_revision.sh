@@ -2,6 +2,9 @@
 
 set -e
 
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+
 # Get All existing tags for the fpm repo
 echo "Fetching existing fpm tags..."
 declare -A existing_tags_fpm
@@ -105,10 +108,10 @@ echo ""
 echo "Fetching Tags from helm revision history to not be deleted..."
 declare -A revision_tags_fpm
 declare -A revision_tags_nginx
-helm_release_revisions=$(helm -n $KUBE_NAMESPACE history ${HELM_RELEASE_NAME:0:53} -o json | jq -r '.[]["revision"]')
+helm_release_revisions=$(helm -n $KUBE_NAMESPACE history ${HELM_RELEASE_NAME} -o json | jq -r '.[]["revision"]')
 for revision in $helm_release_revisions
 do
-    revision_values=$(helm -n $KUBE_NAMESPACE get values ${HELM_RELEASE_NAME:0:53} --revision=$revision -o json | jq -r '.')
+    revision_values=$(helm -n $KUBE_NAMESPACE get values ${HELM_RELEASE_NAME} --revision=$revision -o json | jq -r '.')
     revision_tags_fpm[$(echo $revision_values | jq -r '.image.fpm.tag')]=1
     revision_tags_nginx[$(echo $revision_values | jq -r '.image.nginx.tag')]=1
 done

@@ -26,6 +26,20 @@
 		<p>{{ trans('transparency.text.4') }}</p>
 	</div>
 	<div class="card">
+		<h2>{{ trans('transparency.head.compliance') }}</h2>
+		<p>{{ trans('transparency.text.compliance') }}</p>
+		<table>
+			<tr>
+				<th>{{ trans('transparency.table.compliance.th.authinfocomp') }}</th>
+				<th>{{ trans('transparency.table.compliance.th.authblockcomp') }}</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>0</td>
+			</tr>
+		</table> 
+	</div>
+	<div class="card">
 		<p>{!! trans('transparency.text.5', ["contact" => LaravelLocalization::getLocalizedUrl(LaravelLocalization::getCurrentLocale(), route('contact'))]) !!}</p>
 	</div>
 </div>

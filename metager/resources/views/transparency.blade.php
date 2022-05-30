@@ -34,8 +34,8 @@
 				<th>{{ trans('transparency.table.compliance.th.authblockcomp') }}</th>
 			</tr>
 			<tr>
-				<td>X</td>
-				<td>X</td>
+				<td>0</td>
+				<td>0</td>
 			</tr>
 		</table> 
 	</div>

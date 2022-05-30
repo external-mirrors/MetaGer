@@ -38,10 +38,10 @@ return [
 "result.info.hideresult" => '"Hide": hide results from this domain. You can use this filter directly after your search words (e.g. my search words -site:*.wikipedia.org), filters can be concatenated and the wildcard "*" is allowed. See also <a href="#einstellungen"> "Settings"</a> to apply a permanent solution.',
 
 "settings.title" => 'Settings',
-"settings.1" => 'Note <br> Under the intem "Note" you will find a link that shows you all your settings. You can <a href=:link>display</a> this link. You can also delete it again with one click. You will also find a link that you can copy and save as a bookmark. If you open the bookmark later, your settings are ready again.',
+"settings.1" => 'Note <br> Under the item "Note" you will find a link that shows you all your settings. You can <a href=:link>display</a> this link. You can also delete it again with one click. You will also find a link that you can copy and save as a bookmark. If you open the bookmark later, your settings are ready again.',
 "settings.2" => 'Used search engines <br> Here you can view your used search engines and adjust them if necessary. By clicking on the corresponding name you can switch it on or off accordingly.',
-"settings.3" => 'Search filters <br> With search filters xou can filter your search permanently.',
-"settings.4" => 'Blacklist <br> Here you can compile your personal blacklist. You can filter out not only search engines, but also special domains. Therfore you can produce your own search settings. With a click on "Add" these settings will be attached to the link in the "Note" section.',
+"settings.3" => 'Search filters <br> With search filters you can filter your search permanently.',
+"settings.4" => 'Blacklist <br> Here you can compile your personal blacklist. You can filter out domains here. Therfore you can produce your own search settings. With a click on "Add" these settings will be attached to the link in the "Note" section.',
 "settings.5" => 'Toggle dark mode <br> Simply switch to dark mode here.',
 "settings.6" => 'Open results in new tab <br> Here you can permanently switch on the function to open results in a new tab.',
 "settings.7" => 'Citations <br> Here you can switch on/off the display of citations.',

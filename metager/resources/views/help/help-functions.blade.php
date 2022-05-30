@@ -15,6 +15,14 @@
 				<li class="nodot"><div class="search-example">{!! trans('help/help-functions.stopworte.3') !!}</div></li>
 			</ul>
 		</div>
+		<h3 id="urls">{!! trans('help/help-functions.urls.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/help-functions.urls.explanation') !!}</p>
+			<ul class="dotlist">
+				<li>{!! trans('help/help-functions.urls.example.1') !!}</li>
+				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.urls.example.2') !!}</div></li>
+			</ul>
+		</div>
 		<h3 id="severalwords">{!! trans('help/help-functions.mehrwortsuche.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/help-functions.mehrwortsuche.1') !!}</p>
@@ -27,14 +35,6 @@
 			</ul>
 		</div>
 
-		<h3 id="urls">{!! trans('help/help-functions.urls.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/help-functions.urls.explanation') !!}</p>
-			<ul class="dotlist">
-				<li>{!! trans('help/help-functions.urls.example.1') !!}</li>
-				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.urls.example.2') !!}</div></li>
-			</ul>
-		</div>
 	</section>
 	<section id="bangs">
 		<h3>{!! trans('help/help-functions.bang.title') !!}</h3>

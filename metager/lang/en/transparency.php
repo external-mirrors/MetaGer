@@ -6,6 +6,7 @@ return [
     'head.3' => 'What is a metasearch engine?',
     'head.4' => 'What is the advantage of a metasearch engine?',
     'head.5' => 'How is our ranking made up?',
+    'head.compliance' => 'How does MetaGer respond to requests from authorities?',
 
 
     'text.1' => 'MetaGer is transparent. Our <a href=":sourcecode">source code</a> is <a href=":sourcecode">Quellcode</a>freely licensed</a> and publicly available for all to see. We do not store user data and value data protection and privacy. Therefore we grant anonymous access to the search results. This is possible through an anonymous proxy and TOR-hidden access. In addition, MetaGer has a transparent organizational structure, since it is supported by the non-profit association <a href=":sumalink">SUMA-EV</a> of which anyone can become a member.',
@@ -15,6 +16,11 @@ return [
     'text.4' => 'We take the rankings from our source search engines and weigh them. These rankings are then converted into scores. Additional points are awarded or deducted for the occurrence of the search terms in the URL and in the snippet, as well as the excessive occurrence of special characters (e.g. other character sets such as Cyrillic). We also use a blocking list to remove individual pages from the results list. We block web pages in the display if we are legally obliged to do so. We also reserve the right to block web pages with demonstrably incorrect information, web pages of extremely poor quality and other particularly dubious web pages.',
     'text.5' => 'If there are any further questions or uncertainties, please feel free to use our <a href=":contact">contact form</a> and ask us your questions!',
     
+    'text.compliance' => 'We comply with requests from authorities if we are legally obligated to do so and come to the conclusion that our compliance does not violate fundamental freedoms. We take this review very seriously. In addition, we store as little personal data as possible to reduce the risk of having to release data. In the table below you will find data on the requests from authorities we have processed during the last 5 years. Further information will follow shortly.',
+
+
+    'table.compliance.th.authinfocomp' => 'Fulfilled requests for information',
+    'table.compliance.th.authblockcomp' => 'Fulfilled blocking requests',
 
 
 

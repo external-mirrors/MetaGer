@@ -253,7 +253,7 @@ class QueryLogger
         if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
             return null;
         }
-        $queries = $connection->table($current_table)->orderBy("date", 'desc')->limit($n)->get();
+        $queries = $connection->table($current_table)->orderBy("time", 'desc')->limit($n)->get();
         $connection->disconnect();
         return $queries;
     }

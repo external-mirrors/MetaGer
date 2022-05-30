@@ -13,6 +13,8 @@ use App\SearchSettings;
 
 class BrowserVerification
 {
+
+    private ?string $verification_key = null;
     /**
      * Handle an incoming request.
      *
@@ -23,6 +25,14 @@ class BrowserVerification
     public function handle($request, Closure $next, $route = "resultpage")
     {
         \app()->make(QueryTimer::class)->observeStart(self::class);
+
+        $this->verification_key = \hash("sha512", $request->ip() . $_SERVER["AGENT"]);
+
+        if (Cache::has($this->verification_key) && Cache::get($this->verification_key) === true) {
+            \app()->make(QueryTimer::class)->observeEnd(self::class);
+            return $next($request);
+        }
+
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -72,6 +82,8 @@ class BrowserVerification
                 $search_settings->jskey = $mgv;
                 $search_settings->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
+                // Prevent another Browserverification for this user
+                Cache::put($this->verification_key, true, now()->addDay());
                 return $next($request);
             } else {
                 # We are serving that request but log it for fail2ban
@@ -93,6 +105,8 @@ class BrowserVerification
             $search_settings = \app()->make(SearchSettings::class);
             $search_settings->jskey = $key;
             $search_settings->header_printed = true;
+            // Prevent another Browserverification for this user
+            Cache::put($this->verification_key, true, now()->addDay());
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
         }

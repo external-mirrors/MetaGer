@@ -6,7 +6,7 @@ return [
     'head.3' => 'What is a metasearch engine?',
     'head.4' => 'What is the advantage of a metasearch engine?',
     'head.5' => 'How is our ranking made up?',
-    'head.compliance' => 'Wie reagiert MetaGer auf Anfragen von Behörden?',
+    'head.compliance' => 'How does MetaGer respond to requests from authorities?',
 
 
     'text.1' => 'MetaGer is transparent. Our <a href=":sourcecode">source code</a> is <a href=":sourcecode">Quellcode</a>freely licensed</a> and publicly available for all to see. We do not store user data and value data protection and privacy. Therefore we grant anonymous access to the search results. This is possible through an anonymous proxy and TOR-hidden access. In addition, MetaGer has a transparent organizational structure, since it is supported by the non-profit association <a href=":sumalink">SUMA-EV</a> of which anyone can become a member.',

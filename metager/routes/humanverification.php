@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\HumanVerification;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Http\Request;
 
 Route::post('img/cat.png', 'HumanVerification@remove');
 Route::get('verify/metager', [HumanVerification::class, 'captchaShow'])->name('captcha_show')->middleware(["throttle:humanverification"]);

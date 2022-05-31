@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
-use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;

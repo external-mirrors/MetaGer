@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
 use App\MetaGer;
+use App\Models\HumanVerification;
 use App\SearchSettings;
 
 class BrowserVerification
@@ -86,8 +87,9 @@ class BrowserVerification
                 Cache::put($this->verification_key, true, now()->addDay());
                 return $next($request);
             } else {
-                # We are serving that request but log it for fail2ban
+                # We are serving that request but after solving a captcha
                 self::logBrowserverification($request);
+                \app()->make(HumanVerification::class)->lockUser();
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             }

@@ -164,6 +164,18 @@ class HumanVerification
         }
     }
 
+    public function unverifyUser()
+    {
+        $this->user["whitelist"] = false;
+        $this->saveUser();
+    }
+
+    public function setUnusedResultPage($unusedResultPages)
+    {
+        $this->user["unusedResultPages"] = $unusedResultPages;
+        $this->saveUser();
+    }
+
     public function isWhiteListed()
     {
         return $this->user["whitelist"];
@@ -235,5 +247,15 @@ class HumanVerification
     public function getUserCount()
     {
         return sizeof($this->users);
+    }
+
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    public function getUserList()
+    {
+        return $this->users;
     }
 }

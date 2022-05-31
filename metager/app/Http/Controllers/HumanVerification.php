@@ -183,52 +183,35 @@ class HumanVerification extends Controller
 
     public function botOverview(Request $request)
     {
-        $id = "";
-        $uid = "";
-        $ip = $request->ip();
-        if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha1", "999.999.999.999");
-            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
-        } else {
-            $id = hash("sha1", $ip);
-            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-        }
-
-        $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
-        $user = $userList[$uid];
+        $human_verification = \app()->make(ModelsHumanVerification::class);
 
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
-            ->with('ip', $ip)
-            ->with('userList', $userList)
-            ->with('user', $user);
+            ->with('ip', $request->ip())
+            ->with('userList', $human_verification->getUserList())
+            ->with('user', $human_verification->getUser());
     }
 
     public function botOverviewChange(Request $request)
     {
-        $id = "";
-        $uid = "";
-        $ip = $request->ip();
-        if (\App\Http\Controllers\HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha1", "999.999.999.999");
-            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
-        } else {
-            $id = hash("sha1", $ip);
-            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-        }
-
-        $userList = Cache::get(HumanVerification::PREFIX . "." . $id);
-        $user = $userList[$uid];
+        $human_verification = \app()->make(ModelsHumanVerification::class);
 
         if ($request->filled("locked")) {
-            $user["locked"] = boolval($request->input('locked'));
+            if (\boolval($request->input("locked"))) {
+                $human_verification->lockUser();
+            } else {
+                $human_verification->unlockUser();
+            }
         } elseif ($request->filled("whitelist")) {
-            $user["whitelist"] = boolval($request->input('whitelist'));
+            if (\boolval($request->input("whitelist"))) {
+                $human_verification->verifyUser();
+            } else {
+                $human_verification->unverifyUser();
+            }
         } elseif ($request->filled("unusedResultPages")) {
-            $user["unusedResultPages"] = intval($request->input('unusedResultPages'));
+            $human_verification->setUnusedResultPage(intval($request->input('unusedResultPages')));
         }
 
-        HumanVerification::saveUser($user);
         return redirect('admin/bot');
     }
 

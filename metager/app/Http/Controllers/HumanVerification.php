@@ -67,15 +67,7 @@ class HumanVerification extends Controller
         $validator = validator()->make(request()->all(), $rules);
 
         if (empty($lockedKey) || $validator->fails()) {
-            $captcha = Captcha::create("default", true);
-            \App\PrometheusExporter::CaptchaShown();
-            return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
-                ->with('uid', $human_verification->uid)
-                ->with('id', $human_verification->id)
-                ->with('url', $redirect_url)
-                ->with('correct', $captcha["key"])
-                ->with('image', $captcha["img"])
-                ->with('errorMessage', 'Fehler: Falsche Eingabe!');
+            return redirect(route('captcha_show', ["url" => $redirect_url, "e" => ""]));
         } else {
             \App\PrometheusExporter::CaptchaCorrect();
             # Generate a token that makes the user skip Humanverification

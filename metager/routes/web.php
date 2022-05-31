@@ -277,25 +277,7 @@ Route::get('settings', function () {
 Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
-Route::post('img/cat.png', 'HumanVerification@remove');
-Route::get('verify/metager', [HumanVerification::class, 'captchaShow'])->name('captcha_show');
-Route::post('verify/metager', [HumanVerification::class, 'captchaSolve'])->name('captcha_solve');
-Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
-Route::post('img/dog.jpg', 'HumanVerification@whitelist');
-Route::get('index.css', 'HumanVerification@browserVerification');
-Route::get('index.js', function (Request $request) {
-    $key = $request->input("id", "");
 
-    // Verify that key is a md5 checksum
-    if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
-        abort(404);
-    }
-
-    Redis::connection(config('cache.stores.redis.connection'))->rpush("js" . $key, true);
-    Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
-
-    return response("", 200)->header("Content-Type", "application/javascript");
-});
 
 Route::get('meta/picture', 'Pictureproxy@get');
 Route::get('clickstats', 'LogController@clicklog');

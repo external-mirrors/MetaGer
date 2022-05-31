@@ -13,9 +13,9 @@
     <input type="hidden" name="id" value="{{ $id }}">
     <input type="hidden" name="c" value="{{ $correct }}">
     <p><img src="{{ $image }}" /></p>
-    @if(isset($errorMessage))
+    @if(Request::has('e'))
     <p>
-        <font color="red">{{$errorMessage}}</font>
+        <font color="red">{{ __('Fehler: Falsche Eingabe!') }}</font>
     </p>
     @endif
     <p><input type="text" class="form-control" name="captcha" placeholder="@lang('captcha.5')" autofocus></p>

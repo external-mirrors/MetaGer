@@ -7,7 +7,7 @@
 <p>@lang('captcha.2')</p>
 <p>@lang('captcha.3')</p>
 <p>@lang('captcha.4')</p>
-<form method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('verification', ['id' => $id, 'uid' => $uid])) }}">
+<form method="post" action="{{ route('captcha_solve') }}">
     <input type="hidden" name="url" value="{!! $url !!}">
     <input type="hidden" name="uid" value="{{ $uid }}">
     <input type="hidden" name="id" value="{{ $id }}">

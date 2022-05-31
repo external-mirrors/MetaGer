@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
@@ -277,7 +278,8 @@ Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middlew
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 Route::post('img/cat.png', 'HumanVerification@remove');
-Route::get('verify/metager/{id}/{uid}', ['as' => 'captcha', 'uses' => 'HumanVerification@captcha']);
+Route::get('verify/metager', [HumanVerification::class, 'captchaShow'])->name('captcha_show');
+Route::post('verify/metager', [HumanVerification::class, 'captchaSolve'])->name('captcha_solve');
 Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
 Route::post('img/dog.jpg', 'HumanVerification@whitelist');
 Route::get('index.css', 'HumanVerification@browserVerification');

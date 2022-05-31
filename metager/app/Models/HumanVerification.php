@@ -39,6 +39,9 @@ class HumanVerification
 
         # Get all Users of this IP
         $this->users = Cache::get(self::CACHE_PREFIX . "." . $id, []);
+        if ($this->users === null) {
+            $this->users = [];
+        }
         $this->removeOldUsers();
 
         if (empty($this->users[$this->uid])) {
@@ -51,6 +54,7 @@ class HumanVerification
                 "lockedKey" => "",
                 "expiration" => now()->addWeeks(2),
             ];
+            $this->users[$this->uid] = $this->user;
         } else {
             $this->user = $this->users[$uid];
         }
@@ -78,6 +82,17 @@ class HumanVerification
         $this->saveUser();
     }
 
+    function unlockUser()
+    {
+        $this->user["locked"] = false;
+        $this->saveUser();
+    }
+
+    /**
+     * Returns Whether this user is locked
+     * 
+     * @return bool
+     */
     function isLocked()
     {
         return $this->user["locked"];
@@ -87,13 +102,57 @@ class HumanVerification
     {
         $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
         $expiration = now()->addHours(72);
-        if ($this->user["whitelist"]) {
-            $expiration = now()->addWeeks(2);
+        foreach ($userList as $user) {
+            if ($user["whitelist"]) {
+                $expiration = now()->addWeeks(2);
+            }
         }
         $this->user["expiration"] = $expiration;
         $userList[$this->uid] = $this->user;
-        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, now()->addWeeks(2));
+        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $expiration);
         $this->users = $userList;
+    }
+
+    /**
+     * Deletes the data for this user
+     */
+    private function deleteUser()
+    {
+        $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
+
+        if (sizeof($userList) === 1) {
+            // This user is the only one for this IP
+            Cache::forget(self::CACHE_PREFIX . "." . $this->id);
+        } else {
+            $new_user_list = [];
+            $expiration = now()->addHours(72);
+            foreach ($userList as $user) {
+                if ($user["uid"] !== $this->uid) {
+                    $new_user_list[] = $user;
+                    if ($user["whitelist"]) {
+                        $expiration = now()->addWeeks(2);
+                    }
+                }
+            }
+            Cache::put(self::CACHE_PREFIX . "." . $this->id, $new_user_list, $expiration);
+        }
+    }
+
+    /**
+     * Function is called for a user on specific actions
+     * It will either delete the data for this user or put him on a whitelist and reset his counter
+     */
+    public function verifyUser()
+    {
+        # Check if we have to whitelist the user or if we can simply delete the data
+        if (!$this->alone) {
+            # Whitelist
+            $this->user["whitelist"] = true;
+            $this->user["unusedResultPages"] = 0;
+            $this->saveUser();
+        } else {
+            $this->deleteUser();
+        }
     }
 
     function addQuery()
@@ -154,5 +213,13 @@ class HumanVerification
     public function getVerificationCount()
     {
         return $this->user["unusedResultPages"];
+    }
+
+    /**
+     * Returns the number of users associated to this IP
+     */
+    public function getUserCount()
+    {
+        return sizeof($this->users);
     }
 }

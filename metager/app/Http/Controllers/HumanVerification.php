@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\HumanVerification as ModelsHumanVerification;
 use Captcha;
 use Carbon;
 use Cookie;
@@ -18,95 +19,94 @@ class HumanVerification extends Controller
     const EXPIRESHORT = 60 * 60 * 72;
     const TOKEN_PREFIX = "humanverificationtoken.";
 
-    public static function captcha(Request $request, Hasher $hasher, $id, $uid, $url = null)
+    public static function captchaShow(Request $request)
     {
-        if ($url != null) {
-            $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
-        } else {
-            $url = $request->input('url', url("/"));
-        }
-
+        $redirect_url = $request->get("url", url('/'));
         $protocol = "http://";
-
         if ($request->secure()) {
             $protocol = "https://";
         }
 
-        if (stripos($url, $protocol . $request->getHttpHost()) !== 0) {
-            $url = url("/");
+        if (stripos($redirect_url, $protocol . $request->getHttpHost()) !== 0) {
+            $redirect_url = url("/");
         }
 
-        $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
-        $user = null;
+        $human_verification = \app()->make(ModelsHumanVerification::class);
 
-        if (sizeof($userlist) === 0 || empty($userlist[$uid])) {
-            return redirect('/');
-        } else {
-            $user = $userlist[$uid];
-        }
-
-        if ($request->getMethod() == 'POST') {
-            \App\PrometheusExporter::CaptchaAnswered();
-            $lockedKey = $request->input("c", "");
-
-            $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
-            $validator = validator()->make(request()->all(), $rules);
-
-            if (empty($lockedKey) || $validator->fails()) {
-                $captcha = Captcha::create("default", true);
-                \App\PrometheusExporter::CaptchaShown();
-                return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
-                    ->with('uid', $user["uid"])
-                    ->with('id', $id)
-                    ->with('url', $url)
-                    ->with('correct', $captcha["key"])
-                    ->with('image', $captcha["img"])
-                    ->with('errorMessage', 'Fehler: Falsche Eingabe!');
-            } else {
-                \App\PrometheusExporter::CaptchaCorrect();
-                # Generate a token that makes the user skip Humanverification
-                # There are some special cases where a user that entered a correct Captcha
-                # might see a captcha again on his next request
-                $token = md5(microtime(true));
-                Cache::put(self::TOKEN_PREFIX . $token, 5, 3600);
-                $url_parts = parse_url($url);
-                // If URL doesn't have a query string.
-                if (isset($url_parts['query'])) { // Avoid 'Undefined index: query'
-                    parse_str($url_parts['query'], $params);
-                } else {
-                    $params = array();
-                }
-
-                $params['token'] = $token;     // Overwrite if exists
-
-                // Note that this will url_encode all values
-                $url_parts['query'] = http_build_query($params);
-
-                // If not
-                $url = $url_parts['scheme'] . '://' . $url_parts['host'] . (!empty($url_parts["port"]) ? ":" . $url_parts["port"] : "") . $url_parts['path'] . '?' . $url_parts['query'];
-
-                # If we can unlock the Account of this user we will redirect him to the result page
-                if ($user !== null && $user["locked"]) {
-                    # The Captcha was correct. We can remove the key from the user
-                    # Additionally we will whitelist him so he is not counted towards botnetwork
-                    $user["locked"] = false;
-                    $user["whitelist"] = true;
-                    HumanVerification::saveUser($user);
-                    return redirect($url);
-                } else {
-                    return redirect('/');
-                }
-            }
+        if (!$human_verification->isLocked()) {
+            return redirect($redirect_url);
         }
 
         $captcha = Captcha::create("default", true);
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
-            ->with('uid', $user["uid"])
-            ->with('id', $id)
-            ->with('url', $url)
+            ->with('uid', $human_verification->uid)
+            ->with('id', $human_verification->id)
+            ->with('url', $redirect_url)
             ->with('correct', $captcha["key"])
             ->with('image', $captcha["img"]);
+    }
+
+    public static function captchaSolve(Request $request)
+    {
+        \App\PrometheusExporter::CaptchaAnswered();
+        $redirect_url = $request->post("url", url('/'));
+        $protocol = "http://";
+        if ($request->secure()) {
+            $protocol = "https://";
+        }
+
+        if (stripos($redirect_url, $protocol . $request->getHttpHost()) !== 0) {
+            $redirect_url = url("/");
+        }
+        $human_verification = \app()->make(ModelsHumanVerification::class);
+
+        $lockedKey = $request->post("c", "");
+
+        $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
+        $validator = validator()->make(request()->all(), $rules);
+
+        if (empty($lockedKey) || $validator->fails()) {
+            $captcha = Captcha::create("default", true);
+            \App\PrometheusExporter::CaptchaShown();
+            return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
+                ->with('uid', $human_verification->uid)
+                ->with('id', $human_verification->id)
+                ->with('url', $redirect_url)
+                ->with('correct', $captcha["key"])
+                ->with('image', $captcha["img"])
+                ->with('errorMessage', 'Fehler: Falsche Eingabe!');
+        } else {
+            \App\PrometheusExporter::CaptchaCorrect();
+            # Generate a token that makes the user skip Humanverification
+            # There are some special cases where a user that entered a correct Captcha
+            # might see a captcha again on his next request
+            $token = md5(microtime(true));
+            Cache::put(self::TOKEN_PREFIX . $token, 5, 3600);
+            $url_parts = parse_url($redirect_url);
+            // If URL doesn't have a query string.
+            if (isset($url_parts['query'])) { // Avoid 'Undefined index: query'
+                parse_str($url_parts['query'], $params);
+            } else {
+                $params = array();
+            }
+
+            $params['token'] = $token;     // Overwrite if exists
+
+            // Note that this will url_encode all values
+            $url_parts['query'] = http_build_query($params);
+
+            // If not
+            $url = $url_parts['scheme'] . '://' . $url_parts['host'] . (!empty($url_parts["port"]) ? ":" . $url_parts["port"] : "") . (!empty($url_parts["path"]) ? $url_parts["path"] : "") . '?' . (!empty($url_parts["query"]) ? $url_parts["query"] : "");
+
+            # If we can unlock the Account of this user we will redirect him to the result page
+            # The Captcha was correct. We can remove the key from the user
+            # Additionally we will whitelist him so he is not counted towards botnetwork
+            $human_verification->verifyUser();
+            $human_verification->unlockUser();
+
+            return redirect($url);
+        }
     }
 
     public static function logCaptcha(Request $request)
@@ -139,9 +139,11 @@ class HumanVerification extends Controller
             abort(404, "Keine Katze gefunden.");
         }
 
-        if (HumanVerification::checkId($request, $request->input('mm'))) {
-            HumanVerification::removeUser($request, $request->input('mm'));
+        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($request->input("mm") === $human_verification->uid) {
+            $human_verification->verifyUser();
         }
+
         return response(hex2bin('89504e470d0a1a0a0000000d494844520000000100000001010300000025db56ca00000003504c5445000000a77a3dda0000000174524e530040e6d8660000000a4944415408d76360000000020001e221bc330000000049454e44ae426082'), 200)
             ->header('Content-Type', 'image/png');
     }
@@ -152,9 +154,11 @@ class HumanVerification extends Controller
         # If the user is correct and the password is we will delete any entry in the database
         $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 
-        if (HumanVerification::checkId($request, $mm) && $requiredPass === $password) {
-            HumanVerification::removeUser($request, $mm);
+        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($mm === $human_verification->uid && $requiredPass == $password) {
+            $human_verification->verifyUser();
         }
+
         return redirect($url);
     }
 
@@ -169,85 +173,6 @@ class HumanVerification extends Controller
         }
         $userList[$user["uid"]] = $user;
         Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
-    }
-
-    private static function deleteUser($user)
-    {
-        $userList = Cache::get(HumanVerification::PREFIX . "." . $user["id"], []);
-        $newUserList = [];
-        $changed = false;
-
-        foreach ($userList as $uid => $userTmp) {
-            if ($userTmp["uid"] !== $user["uid"]) {
-                $newUserList[$userTmp["uid"]] = $userTmp;
-            } else {
-                $changed = true;
-            }
-        }
-
-        if ($changed) {
-            if (sizeof($newUserList) > 0) {
-                Cache::put(HumanVerification::PREFIX . "." . $user["id"], $newUserList, now()->addWeeks(2));
-            } else {
-                Cache::forget(HumanVerification::PREFIX . "." . $user["id"], $newUserList);
-            }
-        }
-    }
-
-    private static function removeUser($request, $uid)
-    {
-        $ip = $request->ip();
-        $id = "";
-        if (HumanVerification::couldBeSpammer($ip)) {
-            $id = hash("sha1", "999.999.999.999");
-        } else {
-            $id = hash("sha1", $ip);
-        }
-
-        $userlist = Cache::get(HumanVerification::PREFIX . "." . $id, []);
-        $user = null;
-
-        if (sizeof($userlist) === 0 || empty($userlist[$uid])) {
-            return;
-        } else {
-            $user = $userlist[$uid];
-        }
-
-        $sum = 0;
-        foreach ($userlist as $uidTmp => $userTmp) {
-            if (!empty($userTmp) && gettype($userTmp["whitelist"]) === "boolean" && !$userTmp["whitelist"]) {
-                $sum += intval($userTmp["unusedResultPages"]);
-            }
-        }
-        # Check if we have to whitelist the user or if we can simply delete the data
-        if ($user["unusedResultPages"] < $sum && !$user["whitelist"]) {
-            # Whitelist
-            $user["whitelist"] = true;
-        }
-
-        if ($user["whitelist"]) {
-            $user["unusedResultPages"] = 0;
-            HumanVerification::saveUser($user);
-        } else {
-            HumanVerification::deleteUser($user);
-        }
-    }
-
-    private static function checkId($request, $id)
-    {
-        $uid = "";
-        $ip = $request->ip();
-        if (HumanVerification::couldBeSpammer($ip)) {
-            $uid = hash("sha1", "999.999.999.999" . $ip . $_SERVER["AGENT"] . "uid");
-        } else {
-            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-        }
-
-        if ($uid === $id) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     public static function couldBeSpammer($ip)

@@ -84,7 +84,7 @@ class HumanVerification
         if ($user->isLocked()) {
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return redirect()->route('captcha', ["id" => $user->id, "uid" => $user->uid, "url" => URL::full()]);
+            return redirect()->route('captcha_show', ["url" => URL::full()]);
         }
 
         $user->addQuery();

@@ -15,6 +15,8 @@ class HumanVerification
     public readonly ?string $id;
     public readonly ?string $uid;
     public readonly ?bool $alone;
+    public readonly ?int $whitelisted_accounts;
+    public readonly ?int $not_whitelisted_accounts;
     public int $request_count_all_users = 0;
 
     public function __construct()
@@ -64,16 +66,23 @@ class HumanVerification
         $sum = 0;
         // Defines if this is the only user using that IP Adress
         $alone = true;
+        $whitelisted_accounts = 0;
+        $not_whitelisted_accounts = 0;
         foreach ($this->users as $uidTmp => $userTmp) {
             if (!$userTmp["whitelist"]) {
+                $not_whitelisted_accounts++;
                 $sum += $userTmp["unusedResultPages"];
                 if ($userTmp["uid"] !== $uid) {
                     $alone = false;
                 }
+            } else {
+                $whitelisted_accounts++;
             }
         }
         $this->alone = $alone;
         $this->request_count_all_users = $sum;
+        $this->whitelisted_accounts = $whitelisted_accounts;
+        $this->not_whitelisted_accounts = $not_whitelisted_accounts;
     }
 
     function lockUser()
@@ -153,6 +162,11 @@ class HumanVerification
         } else {
             $this->deleteUser();
         }
+    }
+
+    public function isWhiteListed()
+    {
+        return $this->user["whitelist"];
     }
 
     function addQuery()

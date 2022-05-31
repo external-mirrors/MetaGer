@@ -75,8 +75,12 @@ class HumanVerification
         $refererLock = $user->refererLock();
 
 
-
-        if ((!$user->alone && $user->request_count_all_users >= 50 && !$user["whitelist"]) || $refererLock) {
+        /**
+         * Directly lock any user when there are many not whitelisted accounts on this IP
+         * Only applies when the user itself is not whitelisted.
+         * Also applies RefererLock from above
+         */
+        if ((!$user->alone && $user->request_count_all_users >= 50 && !$user->isWhiteListed() && $user->not_whitelisted_accounts > $user->whitelisted_accounts) || $refererLock) {
             $user->lockUser();
         }
 

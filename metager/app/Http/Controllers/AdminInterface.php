@@ -52,7 +52,7 @@ class AdminInterface extends Controller
                 abort(404);
             }
 
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
             try {
                 if (!$connection->getSchemaBuilder()->hasTable("logs")) {
                     abort(404);
@@ -98,7 +98,7 @@ class AdminInterface extends Controller
             abort(404);
         }
 
-        $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+        $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
         try {
             if (!$connection->getSchemaBuilder()->hasTable("logs")) {
                 abort(404);

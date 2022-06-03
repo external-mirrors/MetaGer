@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Carbon\Carbon;
@@ -47,7 +48,6 @@ class MetaGer
     protected $availableFoki = [];
     protected $startCount = 0;
     protected $canCache = false;
-    protected $javascript = false;
     # Daten über die Abfrage$
     protected $ip;
     protected $useragent;
@@ -71,8 +71,6 @@ class MetaGer
     protected $fullUrl;
     protected $enabledSearchengines = [];
     protected $languageDetect;
-    protected $verificationId;
-    protected $verificationCount;
     protected $searchUid;
     protected $redisResultWaitingKey;
     protected $redisResultEngineList;
@@ -254,14 +252,12 @@ class MetaGer
         }
     }
 
-    public function prepareResults(&$timings = null)
+    public function prepareResults()
     {
         $engines = $this->engines;
         // combine
         $this->combineResults($engines);
-        if (!empty($timings)) {
-            $timings["prepareResults"]["combined results"] = microtime(true) - $timings["starttime"];
-        }
+
         // misc (WiP)
         if ($this->fokus == "nachrichten") {
             $this->results = array_filter($this->results, function ($v, $k) {
@@ -281,9 +277,7 @@ class MetaGer
                 return ($a->getRank() < $b->getRank()) ? 1 : -1;
             });
         }
-        if (!empty($timings)) {
-            $timings["prepareResults"]["sorted results"] = microtime(true) - $timings["starttime"];
-        }
+
         # Validate Results
         $newResults = [];
         foreach ($this->results as $result) {
@@ -292,14 +286,9 @@ class MetaGer
             }
         }
         $this->results = $newResults;
-        if (!empty($timings)) {
-            $timings["prepareResults"]["validated results"] = microtime(true) - $timings["starttime"];
-        }
 
         $this->duplicationCheck();
-        if (!empty($timings)) {
-            $timings["prepareResults"]["duplications checked"] = microtime(true) - $timings["starttime"];
-        }
+
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
@@ -313,27 +302,23 @@ class MetaGer
         }
 
         $this->ads = $newResults;
-        if (!empty($timings)) {
-            $timings["prepareResults"]["validated ads"] = microtime(true) - $timings["starttime"];
-        }
+
         #Adgoal Implementation
         if (empty($this->adgoalLoaded)) {
             $this->adgoalLoaded = false;
         }
 
-        if (!empty($this->jskey)) {
-            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $this->jskey);
+        $search_settings = \app()->make(SearchSettings::class);
+        if (!empty($search_settings->jskey)) {
+            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $search_settings->jskey);
             if ($js !== null && boolval($js)) {
-                $this->javascript = true;
+                $search_settings->javascript_enabled = true;
             }
         }
 
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
-        if (!empty($timings)) {
-            $timings["prepareResults"]["human verification"] = microtime(true) - $timings["starttime"];
-        }
 
         $counter = 0;
         $firstRank = 0;
@@ -354,9 +339,6 @@ class MetaGer
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
-            if (!empty($timings)) {
-                $timings["prepareResults"]["filled cache"] = microtime(true) - $timings["starttime"];
-            }
         } else {
             $this->next = [];
         }
@@ -434,7 +416,7 @@ class MetaGer
     {
         $wait = false;
         $finished = true;
-        if (!$this->javascript) {
+        if (!\app()->make(SearchSettings::class)->javascript_enabled) {
             $wait = true;
         }
         foreach ($affiliates as $affiliate) {
@@ -489,14 +471,16 @@ class MetaGer
     public function humanVerification(&$results)
     {
         # Let's check if we need to implement a redirect for human verification
-        if ($this->verificationCount > 10) {
+        $search_settings = \app()->make(SearchSettings::class);
+        if ($search_settings->verification_count > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $pw = md5($this->verificationId . $day . $link . config("metager.metager.proxy.password"));
-                $url = route('humanverification', ['mm' => $this->verificationId, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
-                $proxyPw = md5($this->verificationId . $day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $proxyUrl = route('humanverification', ['mm' => $this->verificationId, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
+                $verification_id = $search_settings->verification_id;
+                $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
+                $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
+                $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));
+                $proxyUrl = route('humanverification', ['mm' => $verification_id, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }
@@ -512,12 +496,8 @@ class MetaGer
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
 
-    public function createSearchEngines(Request $request, &$timings)
+    public function createSearchEngines(Request $request)
     {
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["start"] = microtime(true) - $timings["starttime"];
-        }
-
         # Wenn es kein Suchwort gibt
         if (!$request->filled("eingabe") || $this->q === "") {
             return;
@@ -538,15 +518,7 @@ class MetaGer
             $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
         }
 
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["created engine array"] = microtime(true) - $timings["starttime"];
-        }
-
         $this->removeAdsFromListIfAdfree($sumas);
-
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["removed ads"] = microtime(true) - $timings["starttime"];
-        }
 
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
@@ -601,10 +573,6 @@ class MetaGer
             }
         }
 
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["filtered invalid engines"] = microtime(true) - $timings["starttime"];
-        }
-
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -629,9 +597,6 @@ class MetaGer
             $this->errors[] = $error;
         }
         $this->setEngines($request);
-        if (!empty($timings)) {
-            $timings["createSearchEngines"]["saved engines"] = microtime(true) - $timings["starttime"];
-        }
     }
 
     private function removeAdsFromListIfAdfree(&$sumas)
@@ -670,25 +635,15 @@ class MetaGer
         }
     }
 
-    public function startSearch(&$timings)
+    public function startSearch()
     {
-        if (!empty($timings)) {
-            $timings["startSearch"]["start"] = microtime(true) - $timings["starttime"];
-        }
-
         # Check all engines for Cached responses
         $this->checkCache();
 
-        if (!empty($timings)) {
-            $timings["startSearch"]["cache checked"] = microtime(true) - $timings["starttime"];
-        }
-
         # Wir starten alle Suchen
+        /** @var Searchengine $engine */
         foreach ($this->engines as $engine) {
-            $engine->startSearch($this, $timings);
-        }
-        if (!empty($timings)) {
-            $timings["startSearch"]["searches started"] = microtime(true) - $timings["starttime"];
+            $engine->startSearch();
         }
     }
 
@@ -968,18 +923,6 @@ class MetaGer
             }
             $request->replace($input);
         }
-        $this->headerPrinted = $request->input("headerPrinted", false);
-        $request->request->remove("headerPrinted");
-
-        # Javascript option will be set by an asynchronious script we will check for it when we are fetching adgoal
-        # Until then javascript parameter will be false
-        $this->javascript = false;
-        if ($request->filled("javascript") && is_bool($request->input("javascript"))) {
-            $this->javascript = boolval($request->input("javascript"));
-            $request->request->remove("javascript");
-        }
-        $this->jskey = $request->input('jskey', '');
-        $request->request->remove("jskey");
 
         $this->url = $request->url();
         $this->fullUrl = $request->fullUrl();
@@ -1083,8 +1026,6 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-        $this->verificationId = $request->input('verification_id', null);
-        $this->verificationCount = intval($request->input('verification_count', '0'));
 
         $this->apiKey = $request->input('key', '');
         if (empty($this->apiKey)) {
@@ -1098,7 +1039,7 @@ class MetaGer
         }
 
         // Remove Inputs that are not used
-        $this->request = $request->replace($request->except(['verification_id', 'uid', 'verification_count']));
+        $this->request = $request->replace($request->except(['uid']));
 
         // Disable freshness filter if custom freshness filter isset
         if ($this->request->filled("ff") && $this->request->filled("f")) {
@@ -1727,19 +1668,9 @@ class MetaGer
 
     # Einfache Getter
 
-    public function getVerificationId()
-    {
-        return $this->verificationId;
-    }
-
     public function getNext()
     {
         return $this->next;
-    }
-
-    public function getVerificationCount()
-    {
-        return $this->verificationCount;
     }
 
     public function getSite()
@@ -1948,25 +1879,11 @@ class MetaGer
         return $this->framed;
     }
 
-    public function isHeaderPrinted()
-    {
-        return $this->headerPrinted;
-    }
-
     public function isDummy()
     {
         return $this->dummy;
     }
 
-    public function jsEnabled()
-    {
-        return $this->javascript;
-    }
-
-    public function setJsEnabled(bool $bool)
-    {
-        $this->javascript = $bool;
-    }
     /**
      * Used by JS result loader to restore MetaGer Object of previous request
      */

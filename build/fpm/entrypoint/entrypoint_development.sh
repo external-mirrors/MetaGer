@@ -18,4 +18,8 @@ php artisan wait:db
 php artisan migrate
 php artisan db:seed
 
+# Generate helper files to fix inteliphense for laravel project
+php artisan ide-helper:generate
+php artisan ide-helper:meta
+
 docker-php-entrypoint php-fpm

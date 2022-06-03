@@ -6,6 +6,9 @@ use App\MetaGer;
 use App\QueryLogger;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Support\DeferrableProvider;
+use App\QueryTimer;
+use App\SearchSettings;
 
 class MetaGerProvider extends ServiceProvider
 {
@@ -41,5 +44,22 @@ class MetaGerProvider extends ServiceProvider
         $this->app->singleton(QueryLogger::class, function ($app) {
             return new QueryLogger();
         });
+
+        $this->app->singleton(QueryTimer::class, function ($app) {
+            return new QueryTimer();
+        });
+
+        $this->app->singleton(SearchSettings::class, function ($app) {
+            return new SearchSettings();
+        });
     }
+
+    // public function provides()
+    // {
+    //     return [
+    //         MetaGer::class,
+    //         QueryLogger::class,
+    //         QueryTimer::class,
+    //     ];
+    // }
 }

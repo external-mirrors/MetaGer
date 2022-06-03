@@ -1,16 +1,16 @@
 <?php
 
 use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
-use Prometheus\RenderTextFormat;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Prometheus\CollectorRegistry;
 
 /*
 |--------------------------------------------------------------------------
@@ -411,35 +411,10 @@ Route::group(['prefix' => 'app'], function () {
     });
 });
 
-Route::get('metrics', function (Request $request) {
-    // Only allow access to metrics from within our network
-    $ip = $request->ip();
-    $allowedNetworks = [
-        "10.",
-        "172.",
-        "192.",
-        "127.0.0.1",
-    ];
-
-    $allowed = false;
-    foreach ($allowedNetworks as $part) {
-        if (stripos($ip, $part) === 0) {
-            $allowed = true;
-        }
-    }
-
-    if (!$allowed) {
-        abort(401);
-    }
-
-    $registry = CollectorRegistry::getDefault();
-
-    $renderer = new RenderTextFormat();
-    $result = $renderer->render($registry->getMetricFamilySamples());
-
-    return response($result, 200)
-        ->header('Content-Type', RenderTextFormat::MIME_TYPE);
+Route::group(["prefix" => "metrics", "middleware" => "allow-local-only"], function (Router $router) {
+    $router->get('/', [Prometheus::class, "metrics"]);
 });
+
 
 Route::group(['prefix' => 'partner'], function () {
     Route::get('r', 'AdgoalController@forward')->name('adgoal-redirect');

@@ -7,6 +7,8 @@ use Closure;
 use Cookie;
 use Log;
 use URL;
+use App\QueryTimer;
+use App\SearchSettings;
 
 class HumanVerification
 {
@@ -19,7 +21,9 @@ class HumanVerification
      */
     public function handle($request, Closure $next)
     {
+        \app()->make(QueryTimer::class)->observeStart(self::class);
         if ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) {
+            \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
         }
 
@@ -33,14 +37,17 @@ class HumanVerification
 
                 if (!empty($value) && intval($value) > 0) {
                     Cache::decrement($token);
+                    \app()->make(QueryTimer::class)->observeEnd(self::class);
                     return $next($request);
                 } else {
                     // Token is not valid. Remove it
                     Cache::forget($token);
-                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                    \app()->make(QueryTimer::class)->observeEnd(self::class);
+                    return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token"])));
                 }
             } else {
-                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token", "headerPrinted", "jskey"])));
+                \app()->make(QueryTimer::class)->observeEnd(self::class);
+                return redirect()->to(url()->current() . '?' . http_build_query($request->except(["token"])));
             }
         }
 
@@ -73,6 +80,7 @@ class HumanVerification
             //use parameter for middleware to skip this when using associator
             if (!config("metager.metager.botprotection.enabled") || app('App\Models\Key')->getStatus()) {
                 $update = false;
+                \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             }
 
@@ -128,6 +136,7 @@ class HumanVerification
             # If the user is locked we will force a Captcha validation
             if ($user["locked"]) {
                 \App\Http\Controllers\HumanVerification::logCaptcha($request);
+                \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return redirect()->route('captcha', ["id" => $id, "uid" => $uid, "url" => url()->full()]);
             }
 
@@ -163,7 +172,10 @@ class HumanVerification
             }
         }
 
-        $request->request->add(['verification_id' => $user["uid"], 'verification_count' => $user["unusedResultPages"]]);
+        $search_settings = \app()->make(SearchSettings::class);
+        $search_settings->verification_id = $user["uid"];
+        $search_settings->verification_count = $user["unusedResultPages"];
+        \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
     }
 

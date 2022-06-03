@@ -100,6 +100,11 @@ class AdminSpamController extends Controller
         $logs = $query_logger->getLatestLogs(50);
 
         $queries = [];
+
+        if (empty($logs)) {
+            return $queries;
+        }
+
         foreach ($logs as $log) {
             $queries[] = $log->query;
         }

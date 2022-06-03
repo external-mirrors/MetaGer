@@ -10,9 +10,9 @@ fpm:
     - echo '!metager/vendor' >> .dockerignore
   script:
     - docker build --network=host
-        --target=production
-        -f build/fpm/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG .
+      --target=production
+      -f build/fpm/Dockerfile
+      -t ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG .
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY
@@ -26,9 +26,9 @@ nginx:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
     - docker build --network=host
-        --target=production
-        -f build/nginx/Dockerfile
-        -t ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG .
+      --target=production
+      -f build/nginx/Dockerfile
+      -t ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG .
     - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_NGINX_IMAGE_NAME:$DOCKER_NGINX_IMAGE_TAG
   after_script:
     - docker logout $CI_REGISTRY
@@ -42,8 +42,8 @@ nginx:
   variables:
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
-    NODE_REPOSITORY_ID: 416
-    KEEP_N: 9   # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
+    NODE_REPOSITORY_ID: 419
+    KEEP_N: 9 # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
   before_script:
     - chmod go-r $KUBECONFIG
   script:
@@ -61,7 +61,7 @@ cleanup_revision_images_review:
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "development"'
       when: never
-    - if: '$CI_COMMIT_TAG || $CI_COMMIT_BRANCH'
+    - if: "$CI_COMMIT_TAG || $CI_COMMIT_BRANCH"
 
 cleanup_revision_images_development:
   extends:

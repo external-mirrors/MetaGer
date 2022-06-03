@@ -107,13 +107,7 @@ function loadTotals(parallel) {
 
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
-        let total_requests = parseInt(localStorage.getItem("totals-" + date));
-        if (total_requests) {
-            if (!data[days_ago]) {
-                data[days_ago] = {}
-            }
-            data[days_ago]["total"] = total_requests;
-        } else if (fetches.length < parallel) {
+        if (fetches.length < parallel) {
             fetches.push(fetch('/admin/count/count-data-total?date=' + date)
                 .then(response => response.json())
                 .then(response => {
@@ -122,9 +116,6 @@ function loadTotals(parallel) {
                         data[days_ago] = {}
                     }
                     data[days_ago]["total"] = total_requests;
-                    if (i > 0) {
-                        localStorage.setItem("totals-" + date, total_requests);
-                    }
                 })
                 .catch(reason => {
                     if (!data[days_ago]) {
@@ -149,13 +140,7 @@ function loadSameTimes(parallel) {
 
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
-        let total_requests = parseInt(localStorage.getItem("until-" + date))
-        if (total_requests) {
-            if (!data[days_ago]) {
-                data[days_ago] = {}
-            }
-            data[days_ago]["same_time"] = total_requests;
-        } else if (fetches.length < parallel) {
+        if (fetches.length < parallel) {
             fetches.push(fetch('/admin/count/count-data-until?date=' + date)
                 .then(response => response.json())
                 .then(response => {

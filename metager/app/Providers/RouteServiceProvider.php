@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\HumanVerification;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -27,7 +28,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->configureRateLimiting();
 
         parent::boot();
     }
@@ -47,7 +48,7 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->mapEnableCookieRoutes();
 
-        //
+        $this->mapHumanVerificationRoutes();
     }
 
     /**
@@ -122,6 +123,24 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Define the "humanverification" routes for the application.
+     *
+     * These routes can all set cookies.
+     *
+     * @return void
+     */
+    protected function mapHumanVerificationRoutes()
+    {
+        Route::group([
+            'middleware' => 'humanverification_routes',
+            'prefix' => \Mcamara\LaravelLocalization\Facades\LaravelLocalization::setLocale(),
+            'namespace' => $this->namespace,
+        ], function ($router) {
+            require base_path('routes/humanverification.php');
+        });
+    }
+
 
     /**
      * Configure the rate limiters for the application.
@@ -132,6 +151,10 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+
+        RateLimiter::for('humanverification', function (Request $request) {
+            return Limit::perMinutes(5, 30)->by(\app()->make(HumanVerification::class)->uid);
         });
     }
 }

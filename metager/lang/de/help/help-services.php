@@ -7,7 +7,7 @@ return [
     "dienste.kostenlos" => "Selbstverständlich sind all unsere Dienste kostenlos",
 
     "app.title" => "Android-App",
-    "app.1" => "Sie können MetaGer auch als App nutzen. Laden Sie sich dazu einfach die <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> auf ihr Android Smartphone.",
+    "app.1" => "Sie können MetaGer auch als App nutzen. Laden Sie sich dazu einfach die <a href=\"https://metager.de/app\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> auf ihr Android Smartphone.",
     
     "suchwortassoziator.title" => "Suchwortassoziator",
     "suchwortassoziator.1" => 'Als Hilfe für die Erschließung eines Begriffsumfelds haben wir den <a href="/asso" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> entwickelt. Sie finden das Tool auch direkt unter dem Reiter "Dienste". Gibt man in diesen ein Suchwort ein, welches dem zu untersuchenden Fachgebiet irgendwie nahe kommt, dann wird versucht, typische Fachbegriffe dieses Gebietes aus dem WWW zu extrahieren.',

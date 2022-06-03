@@ -35,6 +35,10 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
+        'humanverification_routes' => [
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
         'api' => [
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -65,7 +69,7 @@ class Kernel extends HttpKernel
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequestsWithRedis::class,
         'referer.check' => \App\Http\Middleware\RefererCheck::class,
         'humanverification' => \App\Http\Middleware\HumanVerification::class,
         'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,

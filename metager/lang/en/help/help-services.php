@@ -7,7 +7,7 @@ return [
     "dienste.kostenlos" => "All our services are cost free. You do not pay with your data.",
 
     "app.title" => "Android-App",
-    "app.1" => "You can use MetaGer within an app, too. To do so just download the <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> on your Android smartphone.",
+    "app.1" => "You can use MetaGer within an app, too. To do so just download the <a href=\"https://metager.org/app\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> on your Android smartphone.",
     
     "suchwortassoziator.title" => "MetaGer-Web-Associator",
     "suchwortassoziator.1" => 'Ask the <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) to find connotations in a subject area. The service doesn&apos;t append upon any language because it uses webdocuments as a source. Therefore, you find any connotations to your used language and vice-versa.',

@@ -63,7 +63,7 @@ class AdminInterface extends Controller
                 $connection->disconnect();
             }
             // No Cache for today
-            if (!now()->isSameDay($date)) {
+            if ($date->isToday()) {
                 Cache::put($cache_key, $total_count, now()->addWeek());
             }
         }

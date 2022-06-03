@@ -12,7 +12,7 @@ return [
 
     "mehrwortsuche.title" => "Mehrwortsuche",
     "mehrwortsuche.1" => "Die Mehrwortsuche hat 2 Arten.",
-    "mehrwortsuche.2" => "Ein Wort soll in den Ergebnissen da sein. <br> Dann schreiben Sie das in Anführungs-Zeichen. <br> Das sieht so aus:",
+    "mehrwortsuche.2" => "Ein Wort soll in den Ergebnissen da sein. <br> Dann schreiben Sie das in Anführungs-Striche. <br> Das sieht so aus:",
     "mehrwortsuche.3" => "Beispiel: <br> Sie suchen nach <strong>der runde Tisch</strong>. <br> Sie wollen das Wort <strong>rund</strong> in den Ergebnissen finden. <br> Also schreiben Sie das Wort so:",
     "mehrwortsuche.3.example" => 'der "runde" tisch',
     "mehrwortsuche.4" => 'Es gibt noch eine weitere Art von der Mehrwortsuche. <br> Sie können auch ganze Sätze suchen. <br> Wenn Sie einen Satz in genau der Reihen-Folge sehen wollen macht man das so:',

@@ -20,9 +20,11 @@ class AdminInterface extends Controller
 
         if ($request->input('out', 'web') === "web") {
             $days = $request->input("days", 28);
+            $interface = $request->input('interface', 'all');
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
                 ->with('days', $days)
+                ->with('interface', $interface)
                 ->with('css', [mix('/css/count/style.css')])
                 ->with('darkcss', [mix('/css/count/dark.css')])
                 ->with('js', [
@@ -39,11 +41,12 @@ class AdminInterface extends Controller
             abort(404);
         }
 
+        $interface = $request->input('interface', 'all');
+
         $year = $date->format("Y");
         $month = $date->format("m");
         $day = $date->format("d");
-        $cache_key = "admin_count_total_${year}_${month}_${day}";
-        Cache::forget($cache_key);
+        $cache_key = "admin_count_total_${interface}_${year}_${month}_${day}";
         $total_count = Cache::get($cache_key);
 
         if ($total_count === null) {
@@ -58,13 +61,19 @@ class AdminInterface extends Controller
                     abort(404);
                 }
 
-                $total_count = $connection->table("logs")->count('*');
+                $total_count = $connection->table("logs");
+                if ($interface !== "all") {
+                    $total_count = $total_count->where("interface", "=", $interface);
+                }
+                $total_count = $total_count->count('*');
             } finally {
                 $connection->disconnect();
             }
             // No Cache for today
             if ($date->isToday()) {
                 Cache::put($cache_key, $total_count, now()->addWeek());
+            } else {
+                Cache::put($cache_key, $total_count, now()->addMinutes(5));
             }
         }
 
@@ -82,31 +91,44 @@ class AdminInterface extends Controller
     public function getCountDataUntil(Request $request)
     {
         $date = $request->input('date', '');
-        $date = DateTime::createFromFormat("Y-m-d", $date);
+        $date = Carbon::createFromFormat("Y-m-d", $date);
         if ($date === false) {
             abort(404);
         }
+
+        $interface = $request->input('interface', 'all');
 
         $year = $date->format("Y");
         $month = $date->format("m");
         $day = $date->format("d");
         $time = now()->format("H:i:s");
 
+        $cache_key = "admin_count_until_${interface}_${year}_${month}_${day}";
+        $total_count = Cache::get($cache_key);
 
-        $database_file = \storage_path("logs/metager/$year/$month/$day.sqlite");
-        if (!\file_exists($database_file)) {
-            abort(404);
-        }
+        if ($total_count === null) {
 
-        $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-        try {
-            if (!$connection->getSchemaBuilder()->hasTable("logs")) {
+            $database_file = \storage_path("logs/metager/$year/$month/$day.sqlite");
+            if (!\file_exists($database_file)) {
                 abort(404);
             }
 
-            $total_count = $connection->table("logs")->whereTime("time", "<", $time)->count();
-        } finally {
-            $connection->disconnect();
+            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
+            try {
+                if (!$connection->getSchemaBuilder()->hasTable("logs")) {
+                    abort(404);
+                }
+
+                $total_count = $connection->table("logs")->whereTime("time", "<", $time);
+                if ($interface !== "all") {
+                    $total_count = $total_count->where("interface", "=", $interface);
+                }
+                $total_count = $total_count->count('*');
+            } finally {
+                $connection->disconnect();
+            }
+
+            Cache::put($cache_key, $total_count, now()->addMinutes(5));
         }
         $result = [
             "status" => 200,
@@ -116,6 +138,7 @@ class AdminInterface extends Controller
                 "total" => $total_count,
             ]
         ];
+
         return \response()->json($result);
     }
 

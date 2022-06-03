@@ -20,11 +20,6 @@ return [
     "mehrwortsuche.5.example" => '"der runde tisch"',
 
 
-    'urls.title' => 'URLs ausschließen',
-    'urls.explanation' => 'Sie können Suchergebnisse ausschließen, deren Ergebnislinks bestimmte Worte enthalten, indem Sie in ihrer Suche "-url:" verwenden.',
-    'urls.example.1' => 'Beispiel: Sie möchten keine Ergebnisse, bei denen im Ergebnislink das Wort "Hund" auftaucht:',
-    'urls.example.2' => '<i>meine suche</i> -url:hund',
-
     "bang.title" => "!bangs",
     "bang.1" => "MetaGer unterstützt in geringem Umfang eine Schreibweise, die oft als „!bang“-Syntax bezeichnet wird.<br>Ein solches „!bang“ beginnt immer mit einem Ausrufezeichen und enthält keine Leerzeichen. Beispiele sind hier „!twitter“ oder „!facebook“.<br>Wird ein !bang, das wir unterstützen, in der Suchanfrage verwendet, erscheint in unseren Quicktips ein Eintrag, über den man die Suche auf Knopfdruck mit dem jeweiligen Dienst (hier Twitter oder Facebook) fortführen kann.",
     'faq.18.h' => 'Warum werden !bangs nicht direkt geöffnet?',

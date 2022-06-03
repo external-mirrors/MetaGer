@@ -33,14 +33,6 @@
 			</ul>
 		</div>
 
-		<h3 id="urls">{!! trans('help/easy-language/help-functions.urls.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/easy-language/help-functions.urls.explanation') !!}</p>
-			<ul class="dotlist">
-				<li>{!! trans('help/easy-language/help-functions.urls.example.1') !!}</li>
-				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.urls.example.2') !!}</div></li>
-			</ul>
-		</div>
 	</section>
 	<section id="bangs">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>

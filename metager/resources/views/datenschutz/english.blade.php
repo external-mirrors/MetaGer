@@ -69,7 +69,7 @@
                                 <h2 id="search-request">Entered search query</h2>
                                 Entered search terms are mandatory for a web search. As a rule, personal data cannot be
                                 obtained from them; partly because they have no fixed structure.
-                                <h3>Beispiele</h3>
+                                <h3>Examples</h3>
                                 <samp>Water consumption when showering</samp><br />
                                 <samp>Lyrics from the song There was a bird on a tree</samp><br />
                                 <samp>Grakvaloth</samp><br />

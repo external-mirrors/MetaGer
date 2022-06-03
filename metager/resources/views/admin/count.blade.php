@@ -27,9 +27,11 @@
 			<div id="refresh" style="margin-top: 11px; margin-right: 8px;">
 				<button type="submit" class="btn btn-sm btn-default">Aktualisieren</button>
 			</div>
+			<!--
 			<div id="export" style="margin-top: 11px;">
 				<button type="submit" name="out" value="csv" class="btn btn-sm btn-default">Als CSV exportieren</button>
 			</div>
+			-->
 		</form>
 	</caption>
 	<thead>

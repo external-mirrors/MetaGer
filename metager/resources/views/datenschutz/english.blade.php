@@ -11,7 +11,7 @@
         MetaGer and related services are operated by <a href="https://suma-ev.de/impressum.html">SUMA-EV</a>, which is
         also the author of this statement. By "we" in this statement usually SUMA-EV is meant.
         <br />Our contact details can be found in our <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
-            notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">encrypted form</a>.
+            notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">contact form</a>.
     </div>
     <div class="section">
         <h1>Principles</h1>
@@ -98,7 +98,7 @@
                                     <li>In addition to donations and membership fees, we must finance our operation
                                         through non-personalized advertising on the results page. To receive this
                                         advertising, we give parts of the user agent in connection with the first two
-                                        blocks of the so-called <a href="#ip-address">IP-Adresse</a> to our advertising
+                                        blocks of the so-called <a href="#ip-address">IP-Adress</a> to our advertising
                                         partners.
                                     </li>
                                 </ol>

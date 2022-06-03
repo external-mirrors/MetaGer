@@ -33,7 +33,7 @@ spec:
             secretName: {{ template "secret_name" . }}
         - name: mglogs-persistent-storage
           persistentVolumeClaim:
-            claimName: mg-logs
+            claimName: mglogs
         - name: redis-config
           configMap:
             name: {{ include "chart.fullname" . }}-redis-container-config

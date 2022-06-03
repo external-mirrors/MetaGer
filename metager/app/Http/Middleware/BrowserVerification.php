@@ -8,11 +8,12 @@ use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
-use App\MetaGer;
+use App\Models\HumanVerification;
 use App\SearchSettings;
 
 class BrowserVerification
 {
+
     /**
      * Handle an incoming request.
      *
@@ -23,6 +24,9 @@ class BrowserVerification
     public function handle($request, Closure $next, $route = "resultpage")
     {
         \app()->make(QueryTimer::class)->observeStart(self::class);
+
+        $this->verification_key = \hash("sha512", $request->ip() . $_SERVER["AGENT"]);
+
         $bvEnabled = config("metager.metager.browserverification_enabled");
         if (empty($bvEnabled) || !$bvEnabled) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -74,8 +78,9 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             } else {
-                # We are serving that request but log it for fail2ban
+                # We are serving that request but after solving a captcha
                 self::logBrowserverification($request);
+                \app()->make(HumanVerification::class)->lockUser();
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             }

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\HumanVerification;
 use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -471,12 +472,12 @@ class MetaGer
     public function humanVerification(&$results)
     {
         # Let's check if we need to implement a redirect for human verification
-        $search_settings = \app()->make(SearchSettings::class);
-        if ($search_settings->verification_count > 10) {
+        $human_verification = \app()->make(HumanVerification::class);
+        if ($human_verification->getVerificationCount() > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $verification_id = $search_settings->verification_id;
+                $verification_id = $human_verification->uid;
                 $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
                 $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
                 $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));

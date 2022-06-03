@@ -52,7 +52,7 @@ class AdminInterface extends Controller
                 abort(404);
             }
 
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
             try {
                 if (!$connection->getSchemaBuilder()->hasTable("logs")) {
                     abort(404);
@@ -63,7 +63,7 @@ class AdminInterface extends Controller
                 $connection->disconnect();
             }
             // No Cache for today
-            if (!now()->isSameDay($date)) {
+            if ($date->isToday()) {
                 Cache::put($cache_key, $total_count, now()->addWeek());
             }
         }
@@ -98,7 +98,7 @@ class AdminInterface extends Controller
             abort(404);
         }
 
-        $connection = new SQLiteConnection(new PDO("sqlite:$database_file"));
+        $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
         try {
             if (!$connection->getSchemaBuilder()->hasTable("logs")) {
                 abort(404);

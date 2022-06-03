@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", (event) => {
-  if(document.readyState == 'complete'){
+  if (document.readyState == 'complete') {
     initialize();
-  }else{
+  } else {
     document.addEventListener("readystatechange", e => {
       if (document.readyState == 'complete') {
         initialize();
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 });
 
-function initialize(){
+function initialize() {
   botProtection();
   enableFormResetter();
   loadMoreResults();
@@ -18,38 +18,58 @@ function initialize(){
 
 
 let link, newtab, top;
+let verifying = false;
 
 function botProtection() {
   document.querySelectorAll(".result a").forEach((element) => {
-    element.onclick = e => {
-      link = element.href;
-      newtab = false;
-      top = false;
-      if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
-        newtab = true;
-      } else if (element.target == "_top") {
-        top = true;
-      }
-
-      fetch("/img/cat.png", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        body: "mm=" + document.querySelector('meta[name="mm"]').content
-      })
-        .then(response => {
-          if (!newtab) {
-            if (top) {
-              window.top.location.href = link;
-            } else {
-              document.location.href = link;
-            }
-          }
-        });
-      return newtab;
-    };
+    element.addEventListener("click", verify_link);
   });
+
+  document.addEventListener("pointermove", verify);
+  document.addEventListener("pointerdown", verify);
+  document.addEventListener("scroll", verify);
+
+  function verify_link() {
+    verifying = true;
+    link = element.href;
+    newtab = false;
+    top = false;
+    if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
+      newtab = true;
+    } else if (element.target == "_top") {
+      top = true;
+    }
+
+    let promise_fetch = verify();
+    promise_fetch.then(response => {
+      if (!newtab) {
+        if (top) {
+          window.top.location.href = link;
+        } else {
+          document.location.href = link;
+        }
+      }
+    });
+    return newtab;
+  };
+
+  function verify() {
+    if (verifying) return;
+    verifying = true;
+    document.querySelectorAll(".result a").forEach((element) => {
+      element.removeEventListener("click", verify_link);
+    });
+    document.removeEventListener("pointermove", verify);
+    document.removeEventListener("pointerdown", verify);
+    document.removeEventListener("scroll", verify);
+    return fetch("/img/cat.png", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: "mm=" + document.querySelector('meta[name="mm"]').content
+    });
+  }
 }
 
 function enableFormResetter() {

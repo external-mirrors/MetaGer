@@ -249,7 +249,7 @@ class QueryLogger
             return null;
         }
 
-        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database));
+        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database, null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
         if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
             return null;
         }

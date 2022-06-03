@@ -25,8 +25,11 @@
 			<ul class="dotlist">
 				<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.3') !!}</li>
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.3.example') !!}</div></li>
-				<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.4') !!}</li>
-				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.4.example') !!}</div></li>
+			</ul>
+			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.4') !!}</p>
+			<ul class="dotlist">
+			<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.5') !!}</li>
+				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.5.example') !!}</div></li>
 			</ul>
 		</div>
 

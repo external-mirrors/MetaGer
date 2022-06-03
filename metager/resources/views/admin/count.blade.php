@@ -8,7 +8,7 @@
 </div>
 <p class="record">Am <span class="record-date loading"></span> zur gleichen Zeit <span class="record-same-time text-info loading"></span> - insgesamt <span class="record-total text-danger loading"></span></p>
 <p class="total-median">Mittelwert der letzten <span class="median-days loading"></span> Tage: <span class="median-value loading"></span></p>
-<table class="table table-striped">
+<table id="data-table" class="table table-striped" data-interface="{{ $interface }}">
 	<caption>
 		<form method="GET" style="display: flex; align-items: center;">
 			<div class="form-group" style="max-width: 100px; margin-right: 8px;">

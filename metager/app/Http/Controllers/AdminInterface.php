@@ -71,9 +71,9 @@ class AdminInterface extends Controller
             }
             // No Cache for today
             if ($date->isToday()) {
-                Cache::put($cache_key, $total_count, now()->addWeek());
-            } else {
                 Cache::put($cache_key, $total_count, now()->addMinutes(5));
+            } else {
+                Cache::put($cache_key, $total_count, now()->addWeek());
             }
         }
 

@@ -52,11 +52,6 @@
                                         searches are performed by an IP, this IP is temporarily stored in a revocation
                                         list (maximum 96 hours after the last search). Then the IP is deleted.
                                     </li>
-                                    <li>In addition to donations and membership fees, we must finance our operation
-                                        through non-personalized advertising on the results page. To receive this
-                                        advertising, we give the first two blocks of the IP in connection with parts of
-                                        the so-called user agent to our advertising partners
-                                    </li>
                                 </ol>
                                 <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
@@ -95,11 +90,7 @@
                                     Firefox/59.0</samp>
                                 <h3>What does MetaGer/SUMA-EV do with it?</h3>
                                 <ol>
-                                    <li>In addition to donations and membership fees, we must finance our operation
-                                        through non-personalized advertising on the results page. To receive this
-                                        advertising, we give parts of the user agent in connection with the first two
-                                        blocks of the so-called <a href="#ip-address">IP-Adress</a> to our advertising
-                                        partners.
+                                    <li>We use the User Agent to provide users with the correct installation instructions for their browser as well as for spam prevention. 
                                     </li>
                                 </ol>
                             </article>

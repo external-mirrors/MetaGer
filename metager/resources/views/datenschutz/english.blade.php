@@ -334,5 +334,5 @@
         <h1>Changes to this statement</h1>
         Like our offers, this privacy policy is subject to constant change. You should therefore read it again
         regularly.
-        <br />This version of our Privacy Policy is dated 2021-02-03.
+        <br />This version of our Privacy Policy is dated 2022-06-08.
     </div>

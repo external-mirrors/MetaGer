@@ -101,7 +101,6 @@
 
     var queryLoader = window.setInterval(loadQueries, 60000);
 
-    // var interval = setInterval(updateQueries, 1000);
     document.getElementById("regexp").oninput = checkRegexp;
     document.getElementById("check-against").oninput = checkRegexp;
     window.addEventListener('load', function(){
@@ -188,42 +187,9 @@
                     document.querySelector("#queries tbody").append(tr_element);
                 }
 
-                console.log(data);
-            });
-    }
-
-    function updateQueries() {
-        var updateAt = lastUpdate + 60000;
-        var updateIn = Math.round((updateAt - Date.now()) / 1000);
-
-        if(!updating){
-            document.querySelector("#head > button").classList.remove("btn-success");
-            document.querySelector("#head > button").classList.add("btn-danger");
-            buttonText = "Aktualisierung starten";
-            clearInterval(interval);
-        }
-
-        document.querySelector("#head > button").innerHTML = buttonText + " (" + updateIn + ")";
-        if(updateAt > Date.now()){
-            return;
-        }
-        fetch("{{ url('admin/spam/jsonQueries') }}")
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById("queries").innerHTML = "";
-                data.forEach((el, index) => {
-                    newElement = document.createElement("div");
-                    newElement.classList.add("query");
-                    newElement.classList.add("card");
-                    newElement.innerHTML = el;
-                    document.getElementById("queries").appendChild(newElement);
-                });
-                lastUpdate = Date.now();
                 checkRegexp();
             });
-
     }
-
 
     function checkRegexp() {
         let banRegexps = [];

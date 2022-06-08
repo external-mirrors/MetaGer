@@ -172,6 +172,12 @@ class HumanVerification
         return $this->user["whitelist"];
     }
 
+    public function setWhiteListed(bool $whitelisted)
+    {
+        return $this->user["whitelist"] = $whitelisted;
+        $this->saveUser();
+    }
+
     function addQuery()
     {
         $this->user["unusedResultPages"]++;

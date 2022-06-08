@@ -37,6 +37,8 @@ class Spam
         if ($spam === true) {
             $human_verification = \app()->make(HumanVerification::class);
             $human_verification->lockUser();
+            $human_verification->setUnusedResultPage(50);
+            $human_verification->setWhiteListed(false);
         }
 
         return $next($request);

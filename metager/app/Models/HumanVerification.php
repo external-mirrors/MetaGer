@@ -23,18 +23,9 @@ class HumanVerification
     {
         $request = \request();
         $ip = $request->ip();
-        $id = "";
-        $uid = "";
 
-        $spamID = \App\Http\Controllers\HumanVerification::couldBeSpammer($ip);
-        if (!empty($spamID)) {
-            $id = hash("sha1", $spamID);
-            $uid = hash("sha1", $spamID . $ip . $_SERVER["AGENT"] . "uid");
-        } else {
-            $id = hash("sha1", $ip);
-            $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-        }
-        unset($_SERVER["AGENT"]);
+        $id = hash("sha1", $ip);
+        $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
 
         $this->id = $id;
         $this->uid = $uid;

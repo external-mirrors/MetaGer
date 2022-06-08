@@ -167,20 +167,6 @@ class HumanVerification extends Controller
         Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
     }
 
-    public static function couldBeSpammer($ip)
-    {
-        # Check for recent Spams
-        $eingabe = \Request::input('eingabe');
-        $spams = Redis::lrange("spam", 0, -1);
-        foreach ($spams as $index => $spam) {
-            if (\preg_match($spam, $eingabe)) {
-                return "999.999.999.999" . $index;
-            }
-        }
-
-        return null;
-    }
-
     public function botOverview(Request $request)
     {
         $human_verification = \app()->make(ModelsHumanVerification::class);

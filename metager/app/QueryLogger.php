@@ -259,6 +259,30 @@ class QueryLogger
     }
 
     /**
+     * Fetches the latest n logs
+     * 
+     * @param int $n How many logs to fetch max
+     * 
+     * @return \Illuminate\Support\Collection
+     */
+    public function getLogsSince(Carbon $since)
+    {
+        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/" . date("d") . ".sqlite");
+        $current_table = "logs";
+        if (!\file_exists($current_database)) {
+            return null;
+        }
+
+        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database, null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
+        if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
+            return null;
+        }
+        $queries = $connection->table($current_table)->where("time", ">", $since->format("Y-m-d H:i:s"))->orderBy("time", 'asc')->get();
+        $connection->disconnect();
+        return $queries;
+    }
+
+    /**
      * Migrates old text file logs to sqlite
      * 
      * @param string $year

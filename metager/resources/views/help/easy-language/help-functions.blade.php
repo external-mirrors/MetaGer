@@ -38,6 +38,11 @@
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
+			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.1.example') !!}</p>
+			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
+			<img class="help-easy-language-mainpages-image" src="/img/help-bangs-easy-language.png"/>
+			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
+
 		</div>
 	</section>
 	<section id="searchinsearch">

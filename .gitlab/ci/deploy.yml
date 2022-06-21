@@ -10,7 +10,6 @@
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
   before_script:
-    - kubectl config get-contexts
     - kubectl config use-context open-source/MetaGer:metager
   script:
     - .gitlab/deployment_scripts/update_secret.sh
@@ -73,6 +72,8 @@ stop_review:
     KEEP_N: 0 # Environment gets deleted. No Image Tags to keep
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
+  before_script:
+    - kubectl config use-context open-source/MetaGer:metager
   script:
     - .gitlab/deployment_scripts/delete_deployment.sh
   when: manual

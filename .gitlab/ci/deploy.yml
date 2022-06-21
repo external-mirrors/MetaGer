@@ -9,8 +9,6 @@
     DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
-  before_script:
-    - chmod go-r $KUBECONFIG
   script:
     - .gitlab/deployment_scripts/update_secret.sh
     - .gitlab/deployment_scripts/update_deployment.sh

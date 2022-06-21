@@ -6,6 +6,9 @@ variables:
   DOCKER_NGINX_IMAGE_NAME: nginx
   DOCKER_NODE_IMAGE_NAME: node
 
+include:
+  - template: Auto-DevOps.gitlab-ci.yml
+
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development" &&  ($CI_COMMIT_TAG || $CI_COMMIT_BRANCH)

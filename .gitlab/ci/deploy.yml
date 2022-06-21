@@ -11,6 +11,7 @@
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
   before_script:
     - kubectl config get-contexts
+    - kubectl config use-context open-source/MetaGer:metager
   script:
     - .gitlab/deployment_scripts/update_secret.sh
     - .gitlab/deployment_scripts/update_deployment.sh

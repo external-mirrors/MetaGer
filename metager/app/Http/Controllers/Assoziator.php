@@ -24,8 +24,8 @@ class Assoziator extends Controller
         $url = route("resultpage", $params);
 
         # Special Case for local development as the port forwarding does not work within docker
-        if(\App::environment() === "local" && stripos($url, "http://localhost:8080") === 0){
-            $url = str_replace("http://localhost:8080", "http://nginx", $url);
+        if (\App::environment() === "local" && stripos($url, "http://localhost:8080") === 0) {
+            $url = str_replace("http://localhost:8080", config("app.url"), $url);
         }
 
         $ch = curl_init();
@@ -40,14 +40,14 @@ class Assoziator extends Controller
             CURLOPT_LOW_SPEED_TIME => 5,
             CURLOPT_TIMEOUT => 10,
             CURLOPT_URL => $url,
-            CURLOPT_HTTPHEADER, array(
+            CURLOPT_HTTPHEADER => array(
                 "X_FORWARDED_FOR: " . $request->ip(),
             ),
         ));
 
         $response = curl_exec($ch);
 
-        if(curl_errno($ch)){
+        if (curl_errno($ch)) {
             abort(500, curl_error($ch));
         }
 
@@ -55,6 +55,7 @@ class Assoziator extends Controller
         curl_close($ch);
 
         if ($responseCode !== 200) {
+            dd($response);
             abort(500, "Server currently not available");
         }
 
@@ -87,7 +88,6 @@ class Assoziator extends Controller
                     $words[$word] = 1;
                 }
             }
-
         }
         arsort($words);
 
@@ -135,6 +135,5 @@ class Assoziator extends Controller
             ->with('wordCount', $wordCount)
             ->with('css', [mix('css/asso/style.css')])
             ->with('darkcss', [mix('css/asso/dark.css')]);;
-
     }
 }

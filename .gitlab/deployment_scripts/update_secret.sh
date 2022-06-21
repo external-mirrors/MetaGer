@@ -5,11 +5,6 @@ set -e
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
 
-kubectl config get-contexts
-kubectl config use-context open-source/MetaGer:metager
-
-kubectl get pods
-
 # Create/Update the secret
 kubectl -n $KUBE_NAMESPACE create secret generic ${HELM_RELEASE_NAME} \
   --from-file=${ENV_PRODUCTION} \

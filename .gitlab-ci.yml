@@ -5,6 +5,8 @@ variables:
   DOCKER_FPM_IMAGE_NAME: fpm
   DOCKER_NGINX_IMAGE_NAME: nginx
   DOCKER_NODE_IMAGE_NAME: node
+  KUBE_INGRESS_BASE_DOMAIN: metager.de
+  KUBE_NAMESPACE: metager-2
 
 include:
   - template: Auto-DevOps.gitlab-ci.yml

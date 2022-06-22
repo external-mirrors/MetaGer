@@ -418,9 +418,7 @@ class Result
 
     /**
      * @param string $domain Pass $_SERVER['SERVER_NAME'] here
-     * @param bool $debug
      *
-     * @debug bool $debug
      * @return string
      */
     private function get_domain($domain)

@@ -29,8 +29,11 @@ return [
     'faq.18.b' => 'Die !bang-„Weiterleitungen“ sind bei uns ein Teil unserer Quicktips und benötigen einen zusätzlichen „Klick“. Das war für uns eine schwierige Entscheidung, da die !bang dadurch weniger nützlich sind. Jedoch ist es leider nötig, da die Links, auf die weitergeleitet wird, nicht von uns stammen, sondern von einem Drittanbieter, DuckDuckGo.<p>Wir achten stehts darauf, dass unsere Nutzer jederzeit die Kontrolle behalten. Wir schützen daher auf zwei Arten: Zum Einen wird der eingegebene Suchbegriff niemals an DuckDuckGo übertragen, sondern nur das !bang. Zum Anderen bestätigt der Nutzer den Besuch des !bang-Ziels explizit. Leider können wir derzeit aus Personalgründen nicht alle diese !bangs prüfen oder selbst pflegen.',
 
     "searchinsearch.title" => "Suche in der Suche",
-    "searchinsearch.1" => 'Auf die Funktion der Suche in der Suche kann mit Hilfe des "MEHR"-Knopfes rechts unten im Ergebniskasten zugegriffen werden. Beim Klick auf diesen öffnet sich ein Menü, in dem "Ergebnis speichern" an erster Stelle steht. Mit dieser Option wird das jeweilige Ergebnis in einem separaten Speicher abgelegt. Der Inhalt dieses Speichers wird rechts neben den Ergebnissen unter den Quicktips angezeigt (Auf zu kleinen Bildschirmen werden gespeicherte Ergebnisse aus Platzmangel nicht angezeigt). Dort können Sie die gespeicherten Ergebnisse nach Schlüsselworten filtern oder umsortieren lassen. Mehr Infos zum Thema "Suche in der Suche" gibt es im <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA-Blog</a>.',
-    
+    "searchinsearch.1" => 'Wenn Sie mehrere Ergebnisse speichern wollen geht das so: <br> Sie klicken bei dem Ergebnis auf <strong>MEHR</strong>.<br> Das sieht so aus:',
+    "searchinsearch.2" => 'Dann öffnet sich ein weiteres Menü. <br> Da klicken Sie auf <strong>ERGEBNIS SPEICHERN</strong>. <br> Das sieht so aus:', 
+    "searchinsearch.3" => 'Das können Sie bei allen Ergebnissen machen die Sie speichern wollen. <br> Die gespeicherten Ergebnisse sieht man dann hier:',   
+    "searchinsearch.4" => 'Diese Funktion funktioniert bei kleinen Bildschirmen wie Handys nicht.',   
+
 
     'selist.title' => 'MetaGer zur Suchmaschinenliste des Browsers hinzufügen',
     'selist.explanation.1' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',

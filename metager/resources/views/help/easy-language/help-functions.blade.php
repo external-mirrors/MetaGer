@@ -49,6 +49,13 @@
 		<h3>{!! trans('help/easy-language/help-functions.searchinsearch.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.searchinsearch.1') !!}</p>
+			<div class="image-container"><img src="/img/help-php-resultpic-01-easy-lang.png"/></div>
+			<p>{!! trans('help/easy-language/help-functions.searchinsearch.2') !!}</p>
+			<div class="image-container"><img src="/img/help-php-resultpic-02-easy-lang.png"/></div>
+			<p>{!! trans('help/easy-language/help-functions.searchinsearch.3') !!}</p>
+			<div class ="image-container"><img src="/img/help-easy-language-search-in-search.png"/></div>
+			<p>{!! trans('help/easy-language/help-functions.searchinsearch.4') !!}</p>
+
 		</div>
 	</section>
 	<section id="selist">

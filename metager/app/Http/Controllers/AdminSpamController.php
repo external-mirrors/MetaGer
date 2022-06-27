@@ -3,16 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\QueryLogger;
-use Carbon;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Redis;
+use Log;
+use PDO;
 
 class AdminSpamController extends Controller
 {
     public function index()
     {
-        $queries = $this->getQueries();
+        $since = now()->subMinutes(3);
+        $queries = $this->getQueries($since);
+        $latest = now();
+        if (sizeof($queries) > 0) {
+            $latest = clone $queries[sizeof($queries) - 1]->time;
+        }
+
 
         $currentBans = $this->getBans();
         $loadedBans = Redis::lrange("spam", 0, -1);
@@ -20,6 +30,7 @@ class AdminSpamController extends Controller
         return view("admin.spam")
             ->with('title', "Spam Konfiguration - MetaGer")
             ->with('queries', $queries)
+            ->with('latest', $latest)
             ->with('bans', $currentBans)
             ->with('loadedBans', $loadedBans)
             ->with('css', [
@@ -40,20 +51,36 @@ class AdminSpamController extends Controller
             $bans = json_decode(file_get_contents($file), true);
         }
 
-        $bans[] = ["banned-until" => now()->add($banTime)->format("Y-m-d H:i:s"), "regexp" => $banRegexp];
+        $bans[] = ["banned-until" => $banTime . " 00:00:00", "regexp" => $banRegexp];
 
         \file_put_contents($file, json_encode($bans));
 
         return redirect(url('admin/spam'));
     }
 
-    public function jsonQueries()
+    public function jsonQueries(Request $request)
     {
-        $queries = $this->getQueries();
+        if (!$request->filled("since")) {
+            abort(404);
+        } else {
+            $since = Carbon::createFromFormat("Y-m-d H:i:s", $request->input("since"));
+        }
+        $queries = $this->getQueries($since);
+
+        $latest = now();
+        if (sizeof($queries) > 0) {
+            $latest = clone $queries[sizeof($queries) - 1]->time;
+        }
+
+        $result = [
+            "latest" => $latest->format("Y-m-d H:i:s"),
+            "queries" => $queries,
+        ];
+
+
         # JSON encoding will fail if invalid UTF-8 Characters are in this string
         # mb_convert_encoding will remove thise invalid characters for us
-        $queries = mb_convert_encoding($queries, "UTF-8", "UTF-8");
-        return response()->json($queries);
+        return response()->json($result);
     }
 
     public function queryregexp(Request $request)
@@ -92,21 +119,19 @@ class AdminSpamController extends Controller
         return response()->json($resultData);
     }
 
-    private function getQueries()
+    private function getQueries(Carbon $since)
     {
-        /** @var QueryLogger */
-        $query_logger = App::make(QueryLogger::class);
-
-        $logs = $query_logger->getLatestLogs(50);
-
-        $queries = [];
-
-        if (empty($logs)) {
-            return $queries;
-        }
-
-        foreach ($logs as $log) {
-            $queries[] = $log->query;
+        $query_logger = \app()->make(QueryLogger::class);
+        $queries = $query_logger->getLogsSince($since);
+        # Parse the Time
+        foreach ($queries as $index => $query) {
+            $time = Carbon::createFromFormat("Y-m-d H:i:s", $query->time);
+            $queries[$index]->time = $time;
+            $queries[$index]->time_string = $time->isToday() ? $time->format("H:i:s") : $time->format("d.m.Y H:i:s");
+            $expiration = clone $time;
+            $expiration->addMinutes(3);
+            $queries[$index]->expiration = $expiration;
+            $queries[$index]->expiration_timestamp = $expiration->timestamp;
         }
 
         return $queries;

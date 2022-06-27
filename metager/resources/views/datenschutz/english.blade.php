@@ -11,7 +11,7 @@
         MetaGer and related services are operated by <a href="https://suma-ev.de/impressum.html">SUMA-EV</a>, which is
         also the author of this statement. By "we" in this statement usually SUMA-EV is meant.
         <br />Our contact details can be found in our <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
-            notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">encrypted form</a>.
+            notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">contact form</a>.
     </div>
     <div class="section">
         <h1>Principles</h1>
@@ -52,11 +52,6 @@
                                         searches are performed by an IP, this IP is temporarily stored in a revocation
                                         list (maximum 96 hours after the last search). Then the IP is deleted.
                                     </li>
-                                    <li>In addition to donations and membership fees, we must finance our operation
-                                        through non-personalized advertising on the results page. To receive this
-                                        advertising, we give the first two blocks of the IP in connection with parts of
-                                        the so-called user agent to our advertising partners
-                                    </li>
                                 </ol>
                                 <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
@@ -69,7 +64,7 @@
                                 <h2 id="search-request">Entered search query</h2>
                                 Entered search terms are mandatory for a web search. As a rule, personal data cannot be
                                 obtained from them; partly because they have no fixed structure.
-                                <h3>Beispiele</h3>
+                                <h3>Examples</h3>
                                 <samp>Water consumption when showering</samp><br />
                                 <samp>Lyrics from the song There was a bird on a tree</samp><br />
                                 <samp>Grakvaloth</samp><br />
@@ -95,11 +90,7 @@
                                     Firefox/59.0</samp>
                                 <h3>What does MetaGer/SUMA-EV do with it?</h3>
                                 <ol>
-                                    <li>In addition to donations and membership fees, we must finance our operation
-                                        through non-personalized advertising on the results page. To receive this
-                                        advertising, we give parts of the user agent in connection with the first two
-                                        blocks of the so-called <a href="#ip-address">IP-Adresse</a> to our advertising
-                                        partners.
+                                    <li>We use the User Agent to provide users with the correct installation instructions for their browser as well as for spam prevention. 
                                     </li>
                                 </ol>
                             </article>
@@ -343,5 +334,5 @@
         <h1>Changes to this statement</h1>
         Like our offers, this privacy policy is subject to constant change. You should therefore read it again
         regularly.
-        <br />This version of our Privacy Policy is dated 2021-02-03.
+        <br />This version of our Privacy Policy is dated 2022-06-08.
     </div>

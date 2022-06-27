@@ -5,6 +5,7 @@ variables:
   DOCKER_FPM_IMAGE_NAME: fpm
   DOCKER_NGINX_IMAGE_NAME: nginx
   DOCKER_NODE_IMAGE_NAME: node
+  KUBE_NAMESPACE: metager-2
 
 workflow:
   rules:

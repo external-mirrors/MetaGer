@@ -1,6 +1,7 @@
 let parallel_fetches = 8;
 
 let data = [];
+let lang = document.getElementById("data-table").dataset.interface;
 let chart = null;
 
 load();
@@ -108,7 +109,7 @@ function loadTotals(parallel) {
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
         if (fetches.length < parallel) {
-            fetches.push(fetch('/admin/count/count-data-total?date=' + date)
+            fetches.push(fetch('/admin/count/count-data-total?date=' + date + '&interface=' + lang)
                 .then(response => response.json())
                 .then(response => {
                     total_requests = parseInt(response.data.total);
@@ -141,7 +142,7 @@ function loadSameTimes(parallel) {
         let days_ago = parseInt(element.parentNode.dataset.days_ago)
 
         if (fetches.length < parallel) {
-            fetches.push(fetch('/admin/count/count-data-until?date=' + date)
+            fetches.push(fetch('/admin/count/count-data-until?date=' + date + '&interface=' + lang)
                 .then(response => response.json())
                 .then(response => {
                     let total_requests = parseInt(response.data.total)

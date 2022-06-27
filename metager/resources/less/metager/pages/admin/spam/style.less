@@ -1,7 +1,52 @@
 @import "../../../variables.less";
 
-#queries>.query {
-    border: 1px solid @border-color;
-    border-radius: .5em;
-    background-color: @background-color-mobile;
+#head {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+#head>button {
+    margin-left: 16px;
+}
+
+#head>h1 {
+    margin: 0;
+}
+
+.referer {
+    max-width: 19ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.matches {
+    background-color: #c9f4c9 !important;
+    color: #3c3c3c !important;
+}
+
+#block-requests {
+    margin-bottom: 16px;
+}
+
+#regexp {
+    margin-bottom: 8px;
+}
+
+#ban-time {
+    margin-bottom: 8px;
+}
+
+.table-striped tbody tr.dark {
+    background-color: #d8d8d8;
+}
+
+#queries tbody tr.matches {
+    color: green;
+}
+
+#bans button[type=submit] {
+    font-size: 2rem;
+    cursor: pointer;
 }

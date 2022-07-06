@@ -31,19 +31,22 @@ function botProtection() {
   document.addEventListener("pointermove", verify);
   document.addEventListener("pointerdown", verify);
   document.addEventListener("scroll", verify);
+}
 
-  function verify_link() {
-    verifying = true;
-    link = element.href;
-    newtab = false;
-    top = false;
-    if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
-      newtab = true;
-    } else if (element.target == "_top") {
-      top = true;
-    }
+function verify_link(event) {
+  let element = event.target;
+  link = element.href;
+  newtab = false;
+  top = false;
+  if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
+    newtab = true;
+  } else if (element.target == "_top") {
+    top = true;
+  }
 
-    let promise_fetch = verify();
+
+  let promise_fetch = verify();
+  if (typeof promise_fetch !== "undefined") {
     promise_fetch.then(response => {
       if (!newtab) {
         if (top) {
@@ -53,26 +56,26 @@ function botProtection() {
         }
       }
     });
-    return newtab;
-  };
-
-  function verify() {
-    if (verifying) return;
-    verifying = true;
-    document.querySelectorAll(".result a").forEach((element) => {
-      element.removeEventListener("click", verify_link);
-    });
-    document.removeEventListener("pointermove", verify);
-    document.removeEventListener("pointerdown", verify);
-    document.removeEventListener("scroll", verify);
-    return fetch("/img/cat.png", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: "mm=" + document.querySelector('meta[name="mm"]').content
-    });
   }
+  return newtab;
+};
+
+function verify(event) {
+  if (verifying) return;
+  verifying = true;
+  document.querySelectorAll(".result a").forEach((element) => {
+    element.removeEventListener("click", verify_link);
+  });
+  document.removeEventListener("pointermove", verify);
+  document.removeEventListener("pointerdown", verify);
+  document.removeEventListener("scroll", verify);
+  return fetch("/img/cat.png", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "mm=" + document.querySelector('meta[name="mm"]').content
+  });
 }
 
 function enableFormResetter() {

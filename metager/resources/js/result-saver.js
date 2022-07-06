@@ -430,7 +430,7 @@ Result.prototype.toHtml = function () {
  * Saves the result at the given index
  * @param {int} index The index of the result to save
  */
-function resultSaver(index) {
+export default function resultSaver(index) {
   // Remember the original result element
   var original = document.querySelector('.result[data-count="' + index + '"]');
 

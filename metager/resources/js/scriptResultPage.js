@@ -30,9 +30,9 @@ function botProtection() {
     element.addEventListener("click", verify_link);
   });
 
-  /*document.addEventListener("pointermove", verify);
+  document.addEventListener("pointermove", verify);
   document.addEventListener("pointerdown", verify);
-  document.addEventListener("scroll", verify);*/
+  document.addEventListener("scroll", verify);
 }
 
 function verify_link(event) {

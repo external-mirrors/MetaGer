@@ -326,14 +326,14 @@
         }
 
         &:checked+.result-footer>.close-result-options {
-            display: initial;
+            display: block;
         }
 
         &:checked+.result-footer+.result-options>.options {
             max-height: 150px;
             overflow: initial;
             opacity: 1;
-            display: initial;
+            display: block;
         }
     }
 
@@ -364,7 +364,6 @@
         max-width: 100%;
 
         &>.options {
-            border-top: 1px solid @border-color;
             width: 100%;
             text-align: right;
             overflow: hidden;

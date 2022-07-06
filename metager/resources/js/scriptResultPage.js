@@ -166,7 +166,7 @@ function loadMoreResults() {
                 } else if (typeof results[key] != "undefined") {
                   resultContainer.insertBefore(replacement.firstChild, results[key]);
                 } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.append(replacement.firstChild);
+                  resultContainer.appendChild(replacement.firstChild);
                 }
               } else {
                 var resultContainer = document.querySelector("#results");
@@ -178,7 +178,7 @@ function loadMoreResults() {
                 } else if (typeof results[key] != "undefined") {
                   resultContainer.insertBefore(replacement.firstChild, results[key]);
                 } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.append(replacement.firstChild);
+                  resultContainer.appendChild(replacement.firstChild);
                 }
               }
             }
@@ -204,7 +204,8 @@ function loadMoreResults() {
 function enableResultSaver() {
   document.querySelectorAll("#results .result .result-options .saver").forEach(element => {
     element.addEventListener("click", event => {
-      let id = event.originalTarget.closest(".result").dataset.count;
+      console.log(event);
+      let id = event.target.dataset.id;
       resultSaver(id);
     });
   });

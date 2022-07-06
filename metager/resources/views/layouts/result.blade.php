@@ -81,7 +81,7 @@
 		<div class="options">
 			<ul class="option-list list-unstyled small">
 				<li class="js-only">
-					<a href="#" class="saver">
+					<a href="#" class="saver" data-id="{{ $result->hash }}">
 						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}
 					</a>
 				</li>

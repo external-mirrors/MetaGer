@@ -62,7 +62,6 @@
 	@endif
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-	<script src="{{ mix('js/lib.js') }}"></script>
 	<script src="{{ mix('js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 	@foreach($js as $jsFile)

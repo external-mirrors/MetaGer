@@ -65,6 +65,5 @@
 -->
 	<button name="download" class="btn btn-success" type="submit" form="submit">Dateien herunterladen</button>
 	<button name="nextpage" class="btn btn-success" type="submit" form="submit">Nächste Seite</button>
-	<script src="{{ mix('js/lib.js') }}"></script>
 	<script src="{{ mix('js/editLanguage.js') }}"></script>
 @endsection

@@ -1,3 +1,7 @@
+require('es6-promise').polyfill();
+require('fetch-ie8');
+require('chart.js/dist/chart.js');
+
 let parallel_fetches = 8;
 
 let data = [];

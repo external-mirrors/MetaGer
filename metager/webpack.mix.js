@@ -50,10 +50,7 @@ mix
   )
   .js(
     [
-      "resources/js/lib/md5.js",
       "resources/js/scriptResultPage.js",
-      "resources/js/result-saver.js",
-      "resources/js/translations.js",
       "resources/js/keyboardNavigation.js"
     ],
     "public/js/scriptResultPage.js"

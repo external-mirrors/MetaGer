@@ -1,3 +1,6 @@
+import MD5 from './lib/md5.js';
+import t from './translations.js';
+
 if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
   // Yes, there's really no need for `Object.defineProperty` here
   NodeList.prototype.forEach = Array.prototype.forEach;

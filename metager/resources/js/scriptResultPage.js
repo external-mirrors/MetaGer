@@ -1,5 +1,6 @@
 require('es6-promise').polyfill();
 require('fetch-ie8');
+import resultSaver from './result-saver.js';
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == 'complete') {
@@ -17,6 +18,7 @@ function initialize() {
   botProtection();
   enableFormResetter();
   loadMoreResults();
+  enableResultSaver();
 }
 
 
@@ -28,9 +30,9 @@ function botProtection() {
     element.addEventListener("click", verify_link);
   });
 
-  document.addEventListener("pointermove", verify);
+  /*document.addEventListener("pointermove", verify);
   document.addEventListener("pointerdown", verify);
-  document.addEventListener("scroll", verify);
+  document.addEventListener("scroll", verify);*/
 }
 
 function verify_link(event) {
@@ -38,7 +40,7 @@ function verify_link(event) {
   link = element.href;
   newtab = false;
   top = false;
-  if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
+  if (element.target == '_blank' || event.ctrlKey || event.metaKey) {
     newtab = true;
   } else if (element.target == "_top") {
     top = true;
@@ -46,7 +48,8 @@ function verify_link(event) {
 
 
   let promise_fetch = verify();
-  if (typeof promise_fetch !== "undefined") {
+  if (typeof promise_fetch !== "undefined" && link !== "#") {
+    console.log(link);
     promise_fetch.then(response => {
       if (!newtab) {
         if (top) {
@@ -196,4 +199,13 @@ function loadMoreResults() {
         });
     }
   }, 1000);
+}
+
+function enableResultSaver() {
+  document.querySelectorAll("#results .result .result-options .saver").forEach(element => {
+    element.addEventListener("click", event => {
+      let id = event.originalTarget.closest(".result").dataset.count;
+      resultSaver(id);
+    });
+  });
 }

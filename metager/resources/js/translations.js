@@ -65,7 +65,7 @@ var translations = {
  * @param {string} key Zu übersetzender Schlüssel
  * @param {string} lang Zu verwendende Sprache
  */
-function t(key, lang) {
+export default function t(key, lang) {
   if (arguments.length == 1) {
     var lang = document.querySelector("html").getAttribute("lang");
     return t(key, lang);

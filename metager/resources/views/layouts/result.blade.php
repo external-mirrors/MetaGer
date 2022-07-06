@@ -81,26 +81,26 @@
 		<div class="options">
 			<ul class="option-list list-unstyled small">
 				<li class="js-only">
-					<a href="javascript:resultSaver('{{ $result->hash }}');" class="saver">
-						<nobr><img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}</nobr>
+					<a href="#" class="saver">
+						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}
 					</a>
 				</li>
 				@if(strlen($metager->getSite()) === 0)
 				<li>
 					<a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						<nobr>{!! trans('result.options.1') !!}</nobr>
+						{!! trans('result.options.1') !!}
 					</a>
 				</li>
 				@endif
 				<li>
 					<a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						<nobr>{!! trans('result.options.2', ['host' => $result->strippedHost]) !!}</nobr>
+						{!! trans('result.options.2', ['host' => $result->strippedHost]) !!}
 					</a>
 				</li>
 				@if( $result->strippedHost !== $result->strippedDomain )
 				<li>
 					<a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						<nobr>{!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}</nobr>
+						{!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}
 					</a>
 				</li>
 				@endif

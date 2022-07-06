@@ -1,5 +1,7 @@
 let mix = require("laravel-mix");
 
+require('laravel-mix-polyfill');
+
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -33,28 +35,22 @@ mix
   .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css")
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
   .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css")
-  // js
-  .babel(
-    [
-      "resources/js/lib/md5.js"
-    ],
-    "public/js/lib.js"
-  )
-  .babel(
+  .js(
     [
       "resources/js/scriptSettings.js"
     ],
     "public/js/scriptSettings.js"
   )
-  .babel(
+  .js(
     [
-      'node_modules/chart.js/dist/chart.js',
-      'resources/js/admin/count.js',
+      //   'node_modules/chart.js/dist/chart.js',
+      'resources/js/admin/count.js'
     ],
     'public/js/admin/count.js'
   )
-  .babel(
+  .js(
     [
+      "resources/js/lib/md5.js",
       "resources/js/scriptResultPage.js",
       "resources/js/result-saver.js",
       "resources/js/translations.js",
@@ -62,16 +58,21 @@ mix
     ],
     "public/js/scriptResultPage.js"
   )
-  .babel("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .babel("resources/js/donation.js", "public/js/donation.js")
+  .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
+  .js("resources/js/donation.js", "public/js/donation.js")
   // utility
-  .babel(
+  .js(
     ["resources/js/utility.js", "resources/js/translations.js"],
     "public/js/utility.js"
   )
-  .babel("resources/js/widgets.js", "public/js/widgets.js")
-  .babel("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
-  .babel("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
+  .js("resources/js/widgets.js", "public/js/widgets.js")
+  .js("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
+  .js("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
+  .polyfill({
+    enabled: true,
+    useBuiltIns: "usage",
+    targets: "firefox 50, IE 11"
+  })
   // source maps
   .sourceMaps(false, "inline-source-map")
   // versioning

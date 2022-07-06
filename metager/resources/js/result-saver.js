@@ -6,12 +6,12 @@ if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype
 /**
  * All results are stored in the global object 'results'
   */
-results = new Results();
+let results = new Results();
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  if(document.readyState == 'complete'){
+  if (document.readyState == 'complete') {
     initResultSaver();
-  }else{
+  } else {
     document.addEventListener("readystatechange", e => {
       if (document.readyState === 'complete') {
         initResultSaver();

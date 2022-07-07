@@ -102,15 +102,30 @@ class HumanVerification
     function saveUser()
     {
         $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-        $expiration = now()->addHours(72);
-        foreach ($userList as $user) {
-            if ($user["whitelist"]) {
-                $expiration = now()->addWeeks(2);
+        $expiration_short = now()->addHours(6);
+        $expiration_long = now()->addWeeks(2);
+
+        $cache_expiration = $expiration_short;
+        // Todo remove setting expiration for all users
+        // Just added to apply the new expiration policy to all existing entries
+        // Will not be needed in the future
+        foreach ($userList as $index => $user) {
+            if ($user["whitelist"] === true) {
+                $cache_expiration = $expiration_long;
+                if ($expiration_long < $user["expiration"]) {
+                    $userList[$index]["expiration"] = $expiration_long;
+                }
+            } else if ($expiration_short < $user["expiration"]) {
+                $userList[$index]["expiration"] = $expiration_short;
             }
         }
-        $this->user["expiration"] = $expiration;
+        if ($this->isWhiteListed() === true) {
+            $this->user["expiration"] = $expiration_long;
+        } else {
+            $this->user["expiration"] = $expiration_short;
+        }
         $userList[$this->uid] = $this->user;
-        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $expiration);
+        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $cache_expiration);
         $this->users = $userList;
     }
 
@@ -146,7 +161,7 @@ class HumanVerification
     public function verifyUser()
     {
         # Check if we have to whitelist the user or if we can simply delete the data
-        if (!$this->alone) {
+        if ($this->alone === false) {
             # Whitelist
             $this->user["whitelist"] = true;
             $this->user["unusedResultPages"] = 0;

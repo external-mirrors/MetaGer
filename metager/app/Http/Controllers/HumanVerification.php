@@ -97,6 +97,15 @@ class HumanVerification extends Controller
             $human_verification->verifyUser();
             $human_verification->unlockUser();
 
+            # ToDo Remove this again
+            # Gathering some data to debug problems with user getting caught in captchas 
+            $file_path = \storage_path("logs/metager/captcha_solve/" . $human_verification->uid . ".log");
+            if (!\file_exists(\dirname($file_path))) {
+                mkdir(\dirname($file_path), 0777);
+            }
+            $log_line = now()->format("Y-m-d_H:i:s") . " " . $_SERVER["AGENT"];
+            \file_put_contents($file_path, $log_line, \FILE_APPEND);
+
             return redirect($url);
         }
     }

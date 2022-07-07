@@ -103,7 +103,7 @@ class HumanVerification extends Controller
             if (!\file_exists(\dirname($file_path))) {
                 mkdir(\dirname($file_path), 0777);
             }
-            $log_line = now()->format("Y-m-d_H:i:s") . " " . $_SERVER["AGENT"];
+            $log_line = now()->format("Y-m-d_H:i:s") . " " . $_SERVER["AGENT"] . \PHP_EOL;
             \file_put_contents($file_path, $log_line, \FILE_APPEND);
 
             return redirect($url);

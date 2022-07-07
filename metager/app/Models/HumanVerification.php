@@ -25,6 +25,7 @@ class HumanVerification
         $ip = $request->ip();
 
         $id = hash("sha1", $ip);
+        $agent = $_SERVER["AGENT"];
         $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
 
         $this->id = $id;
@@ -216,21 +217,6 @@ class HumanVerification
         }
 
         $this->users = $newUserlist;
-    }
-
-    public function refererLock()
-    {
-        $referer = URL::previous();
-        # Just the URL-Parameter
-        if (stripos($referer, "?") !== false) {
-            $referer = substr($referer, stripos($referer, "?") + 1);
-            $referer = urldecode($referer);
-            if (preg_match("/http[s]{0,1}:\/\/metager\.de\/meta\/meta.ger3\?.*?eingabe=([\w\d]+\.){1,2}[\w\d]+/si", $referer) === 1) {
-                $this->lockUser();
-                return true;
-            }
-        }
-        return false;
     }
 
     public function getVerificationCount()

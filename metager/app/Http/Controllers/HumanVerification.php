@@ -91,11 +91,6 @@ class HumanVerification extends Controller
             // If not
             $url = $url_parts['scheme'] . '://' . $url_parts['host'] . (!empty($url_parts["port"]) ? ":" . $url_parts["port"] : "") . (!empty($url_parts["path"]) ? $url_parts["path"] : "") . '?' . (!empty($url_parts["query"]) ? $url_parts["query"] : "");
 
-            # If we can unlock the Account of this user we will redirect him to the result page
-            # The Captcha was correct. We can remove the key from the user
-            # Additionally we will whitelist him so he is not counted towards botnetwork
-            $human_verification->verifyUser();
-            $human_verification->unlockUser();
 
             # ToDo Remove this again
             # Gathering some data to debug problems with user getting caught in captchas 
@@ -108,6 +103,12 @@ class HumanVerification extends Controller
             $log_line = now()->format("Y-m-d_H:i:s") . " " . $_SERVER["AGENT"] . \PHP_EOL;
             \file_put_contents($file_path_agents, $log_line, \FILE_APPEND);
             \file_put_contents($file_path_userlist, json_encode($human_verification->getUserList(), \JSON_PRETTY_PRINT));
+
+            # If we can unlock the Account of this user we will redirect him to the result page
+            # The Captcha was correct. We can remove the key from the user
+            # Additionally we will whitelist him so he is not counted towards botnetwork
+            $human_verification->verifyUser();
+            $human_verification->unlockUser();
 
             return redirect($url);
         }

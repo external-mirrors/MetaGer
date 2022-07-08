@@ -60,11 +60,12 @@
 	</section>
 	<section id="selist">
 		<h3>{!! trans('help/easy-language/help-functions.selist.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
-			<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
-
-		</div>
+		<h4>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.1') !!}</h4>
+		<p>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.2') !!}<p>
+		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
+		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
+		<div class="image-container"><img src="/img/help-settings-install-metager.jpg"/></div>
+		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
 </section>
 @endsection

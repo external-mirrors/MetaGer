@@ -10,8 +10,8 @@ return [
     "stopworte.3" => "auto neu -bmw",
     "stopworte.4" => "Sie schreiben ein Minus vor das Wort. <br>Dann zeigt man das Wort in den Ergebnissen nicht mehr an.",
 
-    "mehrwortsuche.title" => "Mehrwortsuche",
-    "mehrwortsuche.1" => "Die Mehrwortsuche hat 2 Arten.",
+    "mehrwortsuche.title" => "Mehr-Wort-Suche",
+    "mehrwortsuche.1" => "Die Mehr-Wort-Suche hat 2 Arten.",
     "mehrwortsuche.2" => "Ein Wort soll in den Ergebnissen da sein. <br> Dann schreiben Sie das in Anführungs-Striche. <br> Das sieht so aus:",
     "mehrwortsuche.3" => "Beispiel: <br> Sie suchen nach <strong>der runde Tisch</strong>. <br> Sie wollen das Wort <strong>rund</strong> in den Ergebnissen finden. <br> Also schreiben Sie das Wort so:",
     "mehrwortsuche.3.example" => 'der "runde" tisch',
@@ -36,7 +36,10 @@ return [
 
 
     'selist.title' => 'MetaGer zur Suchmaschinenliste des Browsers hinzufügen',
-    'selist.explanation.1' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',
-    'selist.explanation.2' => 'Manche Browser erwarten die Eingabe einer URL; diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" ohne Gänsefüßchen eintragen. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>',
+    'selist.defaultsearchengine.1' => 'Was ist eine Standard-Such-Maschine?',
+    'selist.defaultsearchengine.2'=>'Das ist die Such-Maschine mit der Sie immer suchen. <br> Sie ist bei der Suche immer ausgewählt. <br> Sie öffnen Ihren Browser. <br> Sie geben das was Sie suchen wollen oben in die Adress-Leiste ein. <br> Dann wird mit der Standard-Such-Maschine gesucht.',
+    'selist.title.1' => 'MetaGer installieren',
+    'selist.explanation.1' => 'Auf der Start-Seite gibt es ein Feld <strong>MetaGer installieren</strong>.<br> Das Feld ist unter dem Such-Feld. <br> So sieht das Feld <strong>MetaGer installieren</strong> aus:<br>',
+    'selist.explanation.2' => 'Manchmal muss man auch eine URL eingeben. <br> Diese sieht so aus: <br>https://metager.de/meta/meta.ger3?eingabe=%s <br> Wenn Sie Probleme haben, wenden Sie sich an uns mit dem <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>.',
     
 ];

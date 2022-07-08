@@ -106,7 +106,7 @@
                 <h4>{!! trans('help/easy-language/help-mainpages.settings.darkmode') !!}</h4>
                 <p>{!! trans('help/easy-language/help-mainpages.settings.darkmode.1') !!}</p>
                 <h4>{!! trans('help/easy-language/help-mainpages.settings.newtab') !!}</h4>
-				<p>{!! trans('help/easy-language/help-mainpages.settings.newtab') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.settings.newtab.1') !!}</p>
                 <h4>{!! trans('help/easy-language/help-mainpages.settings.cite') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.cite.1') !!}</p>
 				<img id="easy-help-mainpages-settings-cite" src="/img/help-settings-cite.jpg"/>

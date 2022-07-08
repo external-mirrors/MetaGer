@@ -116,7 +116,7 @@ function loadTotals(parallel) {
             fetches.push(fetch('/admin/count/count-data-total?date=' + date + '&interface=' + lang)
                 .then(response => response.json())
                 .then(response => {
-                    total_requests = parseInt(response.data.total);
+                    let total_requests = parseInt(response.data.total);
                     if (!data[days_ago]) {
                         data[days_ago] = {}
                     }

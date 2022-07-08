@@ -16,7 +16,7 @@ return [
     'tableofcontents.2.1' => 'Suchfunktionen',
     'tableofcontents.2.2' => '!bangs',
     'tableofcontents.2.3' => 'Suche in der Suche',
-    'tableofcontents.2.4' => 'MetaGer hinzufügen',
+    'tableofcontents.2.4' => 'MetaGer installieren',
 
 
 
@@ -24,7 +24,7 @@ return [
     'tableofcontents.4.1' => 'Android-App',
     'tableofcontents.4.3' => 'Suchwortassoziator',
     'tableofcontents.4.4' => 'MetaGer Widget',
-    'tableofcontents.4.5' => 'MetaGer Maps',
+    'tableofcontents.4.5' => 'MetaGer Karte',
 
 
     'tableofcontents.3' => 'Funktionen zur Anonymität und Datensicherheit',

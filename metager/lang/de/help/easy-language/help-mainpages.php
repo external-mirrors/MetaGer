@@ -38,7 +38,7 @@ return [
     "result.info.newtab" => 'In neuem Tab öffnen:',
     "result.info.newtab.1" => 'Dieser Knopf öffnet das Ergebnis in einer neuen Register-Karte.',
     "result.info.anonym" => 'Anonym öffnen:',
-    "result.info.anonym.1" => 'Wenn Sie auf diesen Knopf drücken, öffnen Sie das Ergebnis geschützt. <br> Das heißt, ????? <br>----bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
+    "result.info.anonym.1" => 'Wenn Sie auf diesen Knopf drücken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Das Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver</a> finden Sie mehr über das Thema.',
     "result.info.more" => 'Mehr:',
     "result.info.more.1" => 'Wenn Sie auf <strong>MEHR</strong> klicken gibt es neue Möglichkeiten. <br> Das Ergebnis sieht dann anders aus. <br> So sieht das Ergebnis dann aus:',
     "result.info.2" => 'Es gibt neue Möglichkeiten:',

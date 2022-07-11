@@ -1,3 +1,7 @@
+require('es6-promise').polyfill();
+require('fetch-ie8');
+import resultSaver from './result-saver.js';
+
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == 'complete') {
     initialize();
@@ -14,6 +18,7 @@ function initialize() {
   botProtection();
   enableFormResetter();
   loadMoreResults();
+  enableResultSaver();
 }
 
 
@@ -28,19 +33,23 @@ function botProtection() {
   document.addEventListener("pointermove", verify);
   document.addEventListener("pointerdown", verify);
   document.addEventListener("scroll", verify);
+}
 
-  function verify_link() {
-    verifying = true;
-    link = element.href;
-    newtab = false;
-    top = false;
-    if (element.target == '_blank' || e.ctrlKey || e.metaKey) {
-      newtab = true;
-    } else if (element.target == "_top") {
-      top = true;
-    }
+function verify_link(event) {
+  let element = event.target;
+  link = element.href;
+  newtab = false;
+  top = false;
+  if (element.target == '_blank' || event.ctrlKey || event.metaKey) {
+    newtab = true;
+  } else if (element.target == "_top") {
+    top = true;
+  }
 
-    let promise_fetch = verify();
+
+  let promise_fetch = verify();
+  if (typeof promise_fetch !== "undefined" && link !== "#") {
+    console.log(link);
     promise_fetch.then(response => {
       if (!newtab) {
         if (top) {
@@ -50,26 +59,26 @@ function botProtection() {
         }
       }
     });
-    return newtab;
-  };
-
-  function verify() {
-    if (verifying) return;
-    verifying = true;
-    document.querySelectorAll(".result a").forEach((element) => {
-      element.removeEventListener("click", verify_link);
-    });
-    document.removeEventListener("pointermove", verify);
-    document.removeEventListener("pointerdown", verify);
-    document.removeEventListener("scroll", verify);
-    return fetch("/img/cat.png", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: "mm=" + document.querySelector('meta[name="mm"]').content
-    });
   }
+  return newtab;
+};
+
+function verify(event) {
+  if (verifying) return;
+  verifying = true;
+  document.querySelectorAll(".result a").forEach((element) => {
+    element.removeEventListener("click", verify_link);
+  });
+  document.removeEventListener("pointermove", verify);
+  document.removeEventListener("pointerdown", verify);
+  document.removeEventListener("scroll", verify);
+  return fetch("/img/cat.png", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "mm=" + document.querySelector('meta[name="mm"]').content
+  });
 }
 
 function enableFormResetter() {
@@ -157,7 +166,7 @@ function loadMoreResults() {
                 } else if (typeof results[key] != "undefined") {
                   resultContainer.insertBefore(replacement.firstChild, results[key]);
                 } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.append(replacement.firstChild);
+                  resultContainer.appendChild(replacement.firstChild);
                 }
               } else {
                 var resultContainer = document.querySelector("#results");
@@ -169,7 +178,7 @@ function loadMoreResults() {
                 } else if (typeof results[key] != "undefined") {
                   resultContainer.insertBefore(replacement.firstChild, results[key]);
                 } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.append(replacement.firstChild);
+                  resultContainer.appendChild(replacement.firstChild);
                 }
               }
             }
@@ -190,4 +199,14 @@ function loadMoreResults() {
         });
     }
   }, 1000);
+}
+
+function enableResultSaver() {
+  document.querySelectorAll("#results .result .result-options .saver").forEach(element => {
+    element.addEventListener("click", event => {
+      console.log(event);
+      let id = event.target.dataset.id;
+      resultSaver(id);
+    });
+  });
 }

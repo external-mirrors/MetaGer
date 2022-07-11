@@ -1,3 +1,14 @@
+import MD5 from './lib/md5.js';
+import t from './translations.js';
+
+if (!('remove' in Element.prototype)) {
+  Element.prototype.remove = function () {
+    if (this.parentNode) {
+      this.parentNode.removeChild(this);
+    }
+  };
+}
+
 if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
   // Yes, there's really no need for `Object.defineProperty` here
   NodeList.prototype.forEach = Array.prototype.forEach;
@@ -6,12 +17,12 @@ if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype
 /**
  * All results are stored in the global object 'results'
   */
-results = new Results();
+let results = new Results();
 
 document.addEventListener("DOMContentLoaded", (event) => {
-  if(document.readyState == 'complete'){
+  if (document.readyState == 'complete') {
     initResultSaver();
-  }else{
+  } else {
     document.addEventListener("readystatechange", e => {
       if (document.readyState === 'complete') {
         initResultSaver();
@@ -139,7 +150,7 @@ Results.prototype.updateResultPageInterface = function () {
       <h1>' + t('result-saver.title') + '</h1>\
     </div>';
     var tabPanel = template.firstChild;
-    document.querySelector('#additions-container').prepend(tabPanel);
+    document.querySelector('#additions-container').insertBefore(tabPanel, document.querySelector('#additions-container').firstChild);
   } else {
     // If there already is a savedFoki element, get it
     var tabPanel = document.querySelector("#savedFoki");
@@ -184,7 +195,7 @@ Results.prototype.addToContainer = function (container) {
   options.querySelector("select").value = this.sort;
 
   // Add the saver-options element to the given container
-  container.append(options);
+  container.appendChild(options);
 
   /* ~~~ Filter ~~~ */
   // When the user is done typing into the filter input field,
@@ -229,7 +240,7 @@ Results.prototype.addToContainer = function (container) {
 
   // Append all results available
   this.results.forEach(result => {
-    container.append(result.toHtml());
+    container.appendChild(result.toHtml());
   });
 };
 
@@ -430,7 +441,7 @@ Result.prototype.toHtml = function () {
  * Saves the result at the given index
  * @param {int} index The index of the result to save
  */
-function resultSaver(index) {
+export default function resultSaver(index) {
   // Remember the original result element
   var original = document.querySelector('.result[data-count="' + index + '"]');
 

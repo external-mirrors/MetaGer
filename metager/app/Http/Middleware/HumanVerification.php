@@ -69,18 +69,12 @@ class HumanVerification
         /** @var ModelsHumanVerification */
         $user = App::make(ModelsHumanVerification::class);
 
-
-        # A lot of automated requests are from websites that redirect users to our result page.
-        # We will detect those requests and put a captcha
-        $refererLock = $user->refererLock();
-
-
         /**
          * Directly lock any user when there are many not whitelisted accounts on this IP
          * Only applies when the user itself is not whitelisted.
          * Also applies RefererLock from above
          */
-        if ((!$user->alone && $user->request_count_all_users >= 50 && !$user->isWhiteListed() && $user->not_whitelisted_accounts > $user->whitelisted_accounts) || $refererLock) {
+        if (!$user->alone && $user->request_count_all_users >= 50 && !$user->isWhiteListed() && $user->not_whitelisted_accounts > $user->whitelisted_accounts) {
             $user->lockUser();
         }
 

@@ -25,6 +25,7 @@ class HumanVerification
         $ip = $request->ip();
 
         $id = hash("sha1", $ip);
+        $agent = $_SERVER["AGENT"];
         $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
 
         $this->id = $id;
@@ -101,15 +102,30 @@ class HumanVerification
     function saveUser()
     {
         $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-        $expiration = now()->addHours(72);
-        foreach ($userList as $user) {
-            if ($user["whitelist"]) {
-                $expiration = now()->addWeeks(2);
+        $expiration_short = now()->addHours(6);
+        $expiration_long = now()->addWeeks(2);
+
+        $cache_expiration = $expiration_short;
+        // Todo remove setting expiration for all users
+        // Just added to apply the new expiration policy to all existing entries
+        // Will not be needed in the future
+        foreach ($userList as $index => $user) {
+            if ($user["whitelist"] === true) {
+                $cache_expiration = $expiration_long;
+                if ($expiration_long < $user["expiration"]) {
+                    $userList[$index]["expiration"] = $expiration_long;
+                }
+            } else if ($expiration_short < $user["expiration"]) {
+                $userList[$index]["expiration"] = $expiration_short;
             }
         }
-        $this->user["expiration"] = $expiration;
+        if ($this->isWhiteListed() === true) {
+            $this->user["expiration"] = $expiration_long;
+        } else {
+            $this->user["expiration"] = $expiration_short;
+        }
         $userList[$this->uid] = $this->user;
-        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $expiration);
+        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $cache_expiration);
         $this->users = $userList;
     }
 
@@ -145,7 +161,7 @@ class HumanVerification
     public function verifyUser()
     {
         # Check if we have to whitelist the user or if we can simply delete the data
-        if (!$this->alone) {
+        if ($this->alone === false) {
             # Whitelist
             $this->user["whitelist"] = true;
             $this->user["unusedResultPages"] = 0;
@@ -216,21 +232,6 @@ class HumanVerification
         }
 
         $this->users = $newUserlist;
-    }
-
-    public function refererLock()
-    {
-        $referer = URL::previous();
-        # Just the URL-Parameter
-        if (stripos($referer, "?") !== false) {
-            $referer = substr($referer, stripos($referer, "?") + 1);
-            $referer = urldecode($referer);
-            if (preg_match("/http[s]{0,1}:\/\/metager\.de\/meta\/meta.ger3\?.*?eingabe=([\w\d]+\.){1,2}[\w\d]+/si", $referer) === 1) {
-                $this->lockUser();
-                return true;
-            }
-        }
-        return false;
     }
 
     public function getVerificationCount()

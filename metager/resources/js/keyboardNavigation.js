@@ -56,6 +56,7 @@ function escKeyPressed() {
 /**
  * Focuses the first <a> tag of the first result 
  */
+document.getElementById("focus-button-results").addEventListener("click", focusResults);
 function focusResults() {
     document.querySelector('#results-entry .result-title a').focus();
 }
@@ -63,6 +64,7 @@ function focusResults() {
 /**
  * Focuses the first <a> tag of the focus options
  */
+document.getElementById("focus-button-foki").addEventListener("click", focusFoki);
 function focusFoki() {
     document.querySelector("#foki a").focus();
 }
@@ -70,6 +72,7 @@ function focusFoki() {
 /**
  * Focuses the search settings
  */
+document.getElementById("focus-button-settings").addEventListener("click", focusSettings);
 function focusSettings() {
     document.querySelector('#settings a').focus();
 }
@@ -77,6 +80,7 @@ function focusSettings() {
 /**
  * Focuses the first <tag> of the sidebar
  */
+document.getElementById("focus-button-navigation").addEventListener("click", focusNavigation);
 function focusNavigation() {
     document.querySelector("#sidebarToggle").checked = true;
     document.querySelector(".sidebar-list a").focus();

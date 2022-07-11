@@ -466,7 +466,7 @@ a {
 
     @media (max-width: @resultpage-breakpoint-max) {
         @supports (display: grid) {
-            grid-template-columns: ~"calc(60% - 8px)"~"calc(40% - 8px)";
+            grid-template-columns: ~"calc(60% - 8px)" ~"calc(40% - 8px)";
             grid-template-areas: "searchbar .""foki .""options .""results additions""footer .";
         }
     }
@@ -505,6 +505,11 @@ a {
 
                 .search-input input {
                     border-bottom: 1px solid @border-color;
+
+                    &::-webkit-search-cancel-button,
+                    &::-webkit-search-decoration {
+                        appearance: none;
+                    }
                 }
             }
 

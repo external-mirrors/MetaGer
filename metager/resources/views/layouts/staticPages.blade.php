@@ -32,6 +32,11 @@
 	@endif
 
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+	@if (isset($css) && is_array($css))
+	@foreach($css as $cssFile)
+	<link href="{{ $cssFile }}" rel="stylesheet" />
+	@endforeach
+	@endif
 	@if(isset($page) && $page === 'startpage')
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}" />
 	@endif
@@ -57,12 +62,6 @@
 	@endif
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-    @if (isset($css) && is_array($css))
-    @foreach($css as $cssFile)
-    <link href="{{ $cssFile }}" rel="stylesheet" />
-	@endforeach
-	@endif
-	<script src="{{ mix('js/lib.js') }}"></script>
 	<script src="{{ mix('js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 	@foreach($js as $jsFile)

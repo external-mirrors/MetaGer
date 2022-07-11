@@ -77,7 +77,8 @@
 
 			</div>
         <h3 id="einstellungen">{!! trans('help/easy-language/help-mainpages.settings.title') !!}</h3>
-                <p>@lang('help/easy-language/help-mainpages.settings.1', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</li>
+				<h4>{!! trans('help/easy-language/help-mainpages.settings.cookies') !!}</h4>
+                <p>@lang('help/easy-language/help-mainpages.settings.cookies.1', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</li>
                 <h4>{!! trans('help/easy-language/help-mainpages.settings.search.engine.1') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.settings.search.engine.2') !!}</p>
 				<img class="help-easy-language-mainpages-image" src="/img/help-used-search-engine.jpg"/>

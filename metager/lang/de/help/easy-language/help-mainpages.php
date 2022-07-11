@@ -53,7 +53,8 @@ return [
 
     
     "settings.title" => 'Einstellungen',
-    "settings.1" => 'Hinweis <br> Unter dem Punkt <strong>Hinweis</strong> finden Sie einen Link, der Ihnen Ihre gesamten Einstellungen zeigt. Diesen Link können Sie sich <a href=:link>anzeigen lassen</a>. Diese können Sie auch wieder mit einem Klick löschen. Ebenfalls finden Sie auch einen Link, den Sie kopieren und als Bookmark speichern können. Wenn Sie das Bookmark später aufrufen, sind Ihre Einstellungen wieder parat.',
+    "settings.cookies" => 'Setzen von Cookies',
+    "settings.cookies.1" => 'Unter dem Punkt <strong>Hinweis</strong> finden Sie einen Link, der Ihnen Ihre gesamten Einstellungen zeigt. Diesen Link können Sie sich <a href=:link>anzeigen lassen</a>. Diese können Sie auch wieder mit einem Klick löschen. Ebenfalls finden Sie auch einen Link, den Sie kopieren und als Bookmark speichern können. Wenn Sie das Bookmark später aufrufen, sind Ihre Einstellungen wieder parat.',
     "settings.search.engine.1" => 'Verwendete Suchmaschinen:',
     "settings.search.engine.2" => 'Hier sehen Sie alle Such-Maschinen die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen.',
     "settings.search.engine.3" => 'Wenn ein Knopf rot ist nutzen Sie diese Such-Maschine nicht.',

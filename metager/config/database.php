@@ -48,12 +48,12 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'database' => database_path(env('SQLITE_DATABASE', 'database.sqlite')),
+            'database' => database_path('databases/' . env('SQLITE_DATABASE', 'database.sqlite')),
             'prefix' => '',
         ],
         'useragents' => [
             'driver' => 'sqlite',
-            'database' => database_path(env('SQLITE_DATABASE', 'database.sqlite')),
+            'database' => database_path('databases/' . env('SQLITE_DATABASE', 'database.sqlite')),
             'prefix' => '',
         ],
         'mysql' => [

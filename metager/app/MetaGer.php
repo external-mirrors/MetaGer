@@ -479,9 +479,9 @@ class MetaGer
                 $day = Carbon::now()->day;
                 $verification_id = $human_verification->uid;
                 $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
-                $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($link)))]);
+                $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => \bin2hex($link)]);
                 $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $proxyUrl = route('humanverification', ['mm' => $verification_id, 'pw' => $proxyPw, "url" => urlencode(str_replace("/", "<<SLASH>>", base64_encode($result->proxyLink)))]);
+                $proxyUrl = route('humanverification', ['mm' => $verification_id, 'pw' => $proxyPw, "url" => \bin2hex($result->proxyLink)]);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }

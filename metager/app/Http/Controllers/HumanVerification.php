@@ -155,7 +155,7 @@ class HumanVerification extends Controller
 
     public static function removeGet(Request $request, $mm, $password, $url)
     {
-        $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
+        $url = \pack("H*", $url);
         # If the user is correct and the password is we will delete any entry in the database
         $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 

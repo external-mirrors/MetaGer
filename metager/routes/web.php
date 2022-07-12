@@ -189,10 +189,13 @@ Route::get('widget', function () {
 Route::get('sitesearch', 'SitesearchController@loadPage');
 
 Route::get('websearch', function () {
+    $css = file_get_contents(public_path("css/widget/widget-template.css"));
     return view('widget.websearch')
         ->with('title', trans('titles.websearch'))
         ->with('navbarFocus', 'dienste')
-        ->with('template', view('widget.websearch-template')->render());
+        ->with('css', [mix('css/widget/widget.css'), mix('css/widget/widget-template.css')])
+        ->with('template_preview', view('widget.websearch-template')->render())
+        ->with('template_webpage', view('widget.websearch-template', ["css" => $css])->render());
 });
 
 Route::get('zitat-suche', 'ZitatController@zitatSuche');

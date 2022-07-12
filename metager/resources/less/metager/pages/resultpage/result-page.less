@@ -238,7 +238,12 @@ a {
         gap: 0;
 
         #additions-container {
+            --ad-display: block;
             display: none;
+        }
+
+        #additions-container[data-authorized=true] {
+            --ad-display: none;
         }
 
         #options {
@@ -437,6 +442,12 @@ a {
     }
 
     #additions-container {
+        --ad-display: block;
+
+        &[data-authorized=true] {
+            --ad-display: none;
+        }
+
         grid-area: additions;
         /**/
         //min-width: @additions-width-min;

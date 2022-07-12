@@ -32,7 +32,7 @@
 		@yield('results')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
-	<div id="additions-container" style="--ad-display: {{ $metager->isApiAuthorized() ? 'none' : 'block' }};">
+	<div id="additions-container" data-authorized="{{ $metager->isApiAuthorized() ? 'true' : 'false' }}">
 		@include('layouts.keyboardNavBox')
 		<div id="quicktips">
 			@if( $metager->showQuicktips() )

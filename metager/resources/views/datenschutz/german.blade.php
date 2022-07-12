@@ -11,7 +11,7 @@
         auch Verfasser dieser Erklärung ist.
         Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint.
         <br />Unsere Kontaktdaten finden Sie in unserem <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">Impressum</a>.
-        Per E-Mail sind wir über unser <a href="/kontakt">verschlüsselted Kontaktformular</a> zu erreichen.
+        Per E-Mail sind wir über unser <a href="/kontakt">Kontaktformular</a> zu erreichen.
     </div>
     <div class="section">
         <h1>Grundsätze</h1>

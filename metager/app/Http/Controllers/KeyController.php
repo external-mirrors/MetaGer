@@ -43,7 +43,7 @@ class KeyController extends Controller
             if (empty($host)) {
                 $host = $request->header("Host", "");
             }
-            Cookie::queue('key', $keyToSet, 525600, '/', null, false, false);
+            Cookie::queue('key', $keyToSet, 525600, '/', null, true, true);
             $settings = Cookie::get();
             $settings['key'] = $keyToSet;
             $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $settings));
@@ -62,7 +62,7 @@ class KeyController extends Controller
     {
         $instantRedir = $request->input("ir", "");
         $redirUrl = $request->input('redirUrl', "");
-        Cookie::queue("key", "", 0, '/', null, false, false);
+        Cookie::queue("key", "", 0, '/', null, true, true);
         $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@index', ['redirUrl' => $redirUrl]));
 
         $host = $request->getHttpHost();
@@ -212,7 +212,7 @@ class KeyController extends Controller
         if ($key->checkForChange($password, $newkey)) {
             $result = $key->generateKey(null, self::KEYCHANGE_ADFREE_SEARCHES, $newkey, "Schlüssel gewechselt. Hash $password");
             if (!empty($result)) {
-                Cookie::queue('key', $result, 525600, '/', null, false, false);
+                Cookie::queue('key', $result, 525600, '/', null, true, true);
                 return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyThree', ["newkey" => $result])));
             }
         }

@@ -157,7 +157,7 @@ class SettingsController extends Controller
         if ($sumaCount > 1 && in_array($suma, $langFile->foki->{$fokus}->sumas)) {
             $path = \Request::path();
             $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_engine_" . $suma, "off", 525600, $cookiePath, null, false, false);
+            Cookie::queue($fokus . "_engine_" . $suma, "off", 525600, $cookiePath, null, true, true);
         }
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
@@ -176,7 +176,7 @@ class SettingsController extends Controller
         if (Cookie::get($fokus . "_engine_" . $suma) !== null) {
             $path = \Request::path();
             $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-            Cookie::queue($fokus . "_engine_" . $suma, "", 525600, $cookiePath, null, false, false);
+            Cookie::queue($fokus . "_engine_" . $suma, "", 525600, $cookiePath, null, true, true);
         }
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
@@ -199,14 +199,14 @@ class SettingsController extends Controller
             if ($value === "") {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($fokus . "_setting_" . $key, "", 0, $cookiePath, null, false, false);
+                Cookie::queue($fokus . "_setting_" . $key, "", 0, $cookiePath, null, true, true);
             } else {
                 # Check if this filter and its value exists:
                 foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
                     if ($key === $filter->{"get-parameter"} && !empty($filter->values->$value)) {
                         $path = \Request::path();
                         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                        Cookie::queue($fokus . "_setting_" . $key, $value, 525600, $cookiePath, null, false, false);
+                        Cookie::queue($fokus . "_setting_" . $key, $value, 525600, $cookiePath, null, true, true);
                         break;
                     }
                 }
@@ -225,29 +225,29 @@ class SettingsController extends Controller
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
-                Cookie::queue('zitate', 'off', 525600, '/', null, false, false);
+                Cookie::queue('zitate', 'off', 525600, '/', null, true, true);
             } elseif ($quotes === "on") {
-                Cookie::queue('zitate', '', 0, '/', null, false, false);
+                Cookie::queue('zitate', '', 0, '/', null, true, true);
             }
         }
 
         $darkmode = $request->input('dm');
         if (!empty($darkmode)) {
             if ($darkmode === "off") {
-                Cookie::queue('dark_mode', '1', 525600, '/', null, false, false);
+                Cookie::queue('dark_mode', '1', 525600, '/', null, true, true);
             } elseif ($darkmode === "on") {
-                Cookie::queue('dark_mode', '2', 525600, '/', null, false, false);
+                Cookie::queue('dark_mode', '2', 525600, '/', null, true, true);
             } elseif ($darkmode === "system") {
-                Cookie::queue('dark_mode', '', 0, '/', null, false, false);
+                Cookie::queue('dark_mode', '', 0, '/', null, true, true);
             }
         }
 
         $newTab = $request->input('nt');
         if (!empty($newTab)) {
             if ($newTab === "off") {
-                Cookie::queue('new_tab', '', 0, '/', null, false, false);
+                Cookie::queue('new_tab', '', 0, '/', null, true, true);
             } elseif ($newTab === "on") {
-                Cookie::queue('new_tab', 'on', 525600, '/', null, false, false);
+                Cookie::queue('new_tab', 'on', 525600, '/', null, true, true);
             }
         }
 
@@ -267,19 +267,19 @@ class SettingsController extends Controller
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+                Cookie::queue($key, "", 0, $cookiePath, null, true, true);
             }
             if ($key === 'dark_mode') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             }
             if ($key === 'new_tab') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             }
             if ($key === 'key') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             }
             if ($key === 'zitate') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             }
         }
         $this->clearBlacklist($request);
@@ -304,15 +304,15 @@ class SettingsController extends Controller
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
         if ($key === 'dark_mode') {
-            Cookie::queue($key, "", 0, '/', null, false, false);
+            Cookie::queue($key, "", 0, '/', null, true, true);
         } elseif ($key === 'new_tab') {
-            Cookie::queue($key, "", 0, '/', null, false, false);
+            Cookie::queue($key, "", 0, '/', null, true, true);
         } elseif ($key === 'key') {
-            Cookie::queue($key, "", 0, '/', null, false, false);
+            Cookie::queue($key, "", 0, '/', null, true, true);
         } elseif ($key === 'zitate') {
-            Cookie::queue($key, "", 0, '/', null, false, false);
+            Cookie::queue($key, "", 0, '/', null, true, true);
         } else {
-            Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+            Cookie::queue($key, "", 0, $cookiePath, null, true, true);
         }
         return redirect($request->input('url', 'https://metager.de'));
     }
@@ -324,15 +324,15 @@ class SettingsController extends Controller
 
         foreach (Cookie::get() as $key => $value) {
             if ($key === 'dark_mode') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             } elseif ($key === 'new_tab') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             } elseif ($key === 'key') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             } elseif ($key === 'zitate') {
-                Cookie::queue($key, "", 0, '/', null, false, false);
+                Cookie::queue($key, "", 0, '/', null, true, true);
             } else {
-                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+                Cookie::queue($key, "", 0, $cookiePath, null, true, true);
             }
         }
         return redirect($request->input('url', 'https://metager.de'));
@@ -378,7 +378,7 @@ class SettingsController extends Controller
             if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
-                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+                Cookie::queue($key, "", 0, $cookiePath, null, true, true);
             }
         }
 
@@ -389,7 +389,7 @@ class SettingsController extends Controller
         $path = \Request::path();
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
         $cookieName = $fokus . '_blpage';
-        Cookie::queue($cookieName, implode(",", $valid_blacklist_entries), 525600, $cookiePath, null, false, false);
+        Cookie::queue($cookieName, implode(",", $valid_blacklist_entries), 525600, $cookiePath, null, true, true);
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
     }
@@ -402,7 +402,7 @@ class SettingsController extends Controller
         $cookieKey = $request->input('cookieKey');
         $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
 
-        Cookie::queue($cookieKey, "", 0, $cookiePath, null, false, false);
+        Cookie::queue($cookieKey, "", 0, $cookiePath, null, true, true);
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
     }
@@ -419,7 +419,7 @@ class SettingsController extends Controller
 
         foreach ($cookies as $key => $value) {
             if (stripos($key, $fokus . '_blpage') === 0) {
-                Cookie::queue($key, "", 0, $cookiePath, null, false, false);
+                Cookie::queue($key, "", 0, $cookiePath, null, true, true);
             }
         }
 
@@ -441,23 +441,23 @@ class SettingsController extends Controller
             if ($key === 'key') {
                 $memberKey = new Key($value);
                 if ($memberKey->getStatus()) {
-                    Cookie::queue($key, $value, 525600, '/', null, false, false);
+                    Cookie::queue($key, $value, 525600, '/', null, true, true);
                 }
             } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
-                Cookie::queue($key, $value, 525600, '/', null, false, false);
+                Cookie::queue($key, $value, 525600, '/', null, true, true);
             } elseif ($key === 'new_tab' && $value === 'on') {
-                Cookie::queue($key, 'on', 525600, '/', null, false, false);
+                Cookie::queue($key, 'on', 525600, '/', null, true, true);
             } elseif ($key === 'zitate' && $value === 'off') {
-                Cookie::queue($key, 'off', 525600, '/', null, false, false);
+                Cookie::queue($key, 'off', 525600, '/', null, true, true);
             } else {
                 foreach ($langFile->foki as $fokus => $fokusInfo) {
                     if (strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1) {
-                        Cookie::queue($key, $value, 525600, $cookiePath, null, false, false);
+                        Cookie::queue($key, $value, 525600, $cookiePath, null, true, true);
                     } elseif (strpos($key, $fokus . '_setting_') === 0) {
                         foreach ($langFile->filter->{'parameter-filter'} as $parameter) {
                             foreach ($parameter->values as $p => $v) {
                                 if ($key === $fokus . '_setting_' . $parameter->{'get-parameter'} && $value === $p) {
-                                    Cookie::queue($key, $value, 525600, $cookiePath, null, false, false);
+                                    Cookie::queue($key, $value, 525600, $cookiePath, null, true, true);
                                 }
                             }
                         }
@@ -465,7 +465,7 @@ class SettingsController extends Controller
                         $sumalist = array_keys($this->getSumas($fokus));
                         foreach ($sumalist as $suma) {
                             if (strpos($key, $fokus . '_engine_' . $suma) === 0) {
-                                Cookie::queue($key, 'off', 525600, $cookiePath, null, false, false);
+                                Cookie::queue($key, 'off', 525600, $cookiePath, null, true, true);
                             }
                         }
                     }

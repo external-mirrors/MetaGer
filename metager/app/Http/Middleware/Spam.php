@@ -85,7 +85,7 @@ class Spam
             "username" => config("metager.metager.fail2ban.user"),
             "password" => config("metager.metager.fail2ban.password"),
             "headers" => [
-                "ip" => $ip()
+                "ip" => $ip
             ],
             "cacheDuration" => 0,
             "name" => "Captcha",

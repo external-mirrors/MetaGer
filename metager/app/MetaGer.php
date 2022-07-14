@@ -311,8 +311,8 @@ class MetaGer
 
         $search_settings = \app()->make(SearchSettings::class);
         if (!empty($search_settings->jskey)) {
-            $js = Redis::connection(config('cache.stores.redis.connection'))->lpop("js" . $search_settings->jskey);
-            if ($js !== null && boolval($js)) {
+            $bvData = Cache::get($search_settings->jskey);
+            if (\array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true) {
                 $search_settings->javascript_enabled = true;
             }
         }

@@ -214,15 +214,57 @@ class HumanVerification extends Controller
         return redirect('admin/bot');
     }
 
-    public function browserVerification(Request $request)
+    public function verificationCssFile(Request $request)
     {
         $key = $request->input("id", "");
 
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
-            Redis::connection(config('cache.stores.redis.connection'))->rpush($key, true);
-            Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
+            $bvData = Cache::get($key);
+            if ($bvData === null) {
+                $bvData = [];
+            }
+            $bvData["css_loaded"] = true;
+            Cache::put($key, $bvData, now()->addSeconds(30));
         }
-        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss', ["url" => route("bv_verificationimage", ["id" => $key])]), 200)->header("Content-Type", "text/css");
+    }
+
+    public function verificationJsFile(Request $request)
+    {
+        $key = $request->input("id", "");
+
+        // Verify that key is a md5 checksum
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+            abort(404);
+        }
+
+        $bvData = Cache::get($key);
+        if ($bvData === null) {
+            $bvData = [];
+        }
+        $bvData["js_loaded"] = true;
+        Cache::put($key, $bvData, now()->addSeconds(30));
+
+        return response("", 200)->header("Content-Type", "application/javascript");
+    }
+
+    public function verificationImage(Request $request)
+    {
+        $key = $request->input("id", "");
+
+        // Verify that key is a md5 checksum
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+            abort(404);
+        }
+
+        $bvData = Cache::get($key);
+        if ($bvData === null) {
+            $bvData = [];
+        }
+        $bvData["css_image_loaded"] = true;
+        Cache::put($key, $bvData, now()->addSeconds(30));
+
+        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
     }
 }

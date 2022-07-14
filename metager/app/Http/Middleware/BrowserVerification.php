@@ -76,9 +76,8 @@ class BrowserVerification
             do {
                 $bvData = Cache::get($mgv);
                 if ($bvData !== null) {
-                    if ((array_key_exists("css_loaded", $bvData) && $bvData["css_loaded"] === true) &&
-                        (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true) &&
-                        (array_key_exists("css_image_loaded", $bvData) && $bvData["css_image_loaded"] === true)
+                    if ((array_key_exists("css_loaded", $bvData) && $bvData["css_loaded"] === true) ||
+                        (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true)
                     ) {
                         break;
                     } else {
@@ -88,14 +87,6 @@ class BrowserVerification
                 \usleep(50 * 1000);
             } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
             if ($bvData !== null) {
-                // ToDo Remove Log
-                $file_path = \storage_path("logs/metager/bv.csv");
-                $fh = fopen($file_path, "a");
-                try {
-                    \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"]) ? "js" : "nojs", $request->input("eingabe", "")]);
-                } finally {
-                    fclose($fh);
-                }
                 $search_settings = \app()->make(SearchSettings::class);
                 $search_settings->jskey = $mgv;
                 $search_settings->header_printed = false;

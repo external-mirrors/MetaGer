@@ -125,7 +125,7 @@ class AdminSpamController extends Controller
         $query_logger = \app()->make(QueryLogger::class);
         $queries = $query_logger->getLogsSince($since);
         # Parse the Time
-[]        foreach ($queries as $index => $query) {
+        foreach ($queries as $index => $query) {
             $time = Carbon::createFromFormat("Y-m-d H:i:s", $query->time);
             $queries[$index]->time = $time;
             $queries[$index]->time_string = $time->isToday() ? $time->format("H:i:s") : $time->format("d.m.Y H:i:s");

@@ -35,6 +35,21 @@ class Spam
         }
 
         if ($spam === true) {
+            // ToDo Remove Log
+            $file_path = \storage_path("logs/metager/spam.csv");
+            $fh = fopen($file_path, "a");
+            try {
+                $data = [
+                    now()->format("Y-m-d H:i:s"),
+                    $request->input("eingabe", ""),
+                ];
+                foreach ($request->header() as $key => $value) {
+                    $data[] = $key . ":" . json_encode($value);
+                }
+                \fputcsv($fh, $data);
+            } finally {
+                fclose($fh);
+            }
             $human_verification = \app()->make(HumanVerification::class);
             $human_verification->lockUser();
             $human_verification->setUnusedResultPage(50);

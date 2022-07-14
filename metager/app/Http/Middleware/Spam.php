@@ -37,6 +37,7 @@ class Spam
 
         if ($spam === true) {
             $browser = new Agent();
+            $browser->setUserAgent($_SERVER["AGENT"]);
             if ($browser === "Chrome" && $browser->version($browser) === "91.0.4472.77") {
                 $this->logFail2Ban($request->ip());
             }

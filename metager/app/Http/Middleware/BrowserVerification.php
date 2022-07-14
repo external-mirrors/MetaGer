@@ -92,7 +92,7 @@ class BrowserVerification
                 $file_path = \storage_path("logs/metager/bv.csv");
                 $fh = fopen($file_path, "a");
                 try {
-                    \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], $request->input("eingabe", "")]);
+                    \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"]) ? "js" : "nojs", $request->input("eingabe", "")]);
                 } finally {
                     fclose($fh);
                 }

@@ -88,16 +88,13 @@ class BrowserVerification
                 \usleep(50 * 1000);
             } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
             if ($bvData !== null) {
-                // ToDo Remove
-                if (!array_key_exists("css_image_loaded", $bvData)) {
-                    // Suspicious temporary Log some data
-                    $file_path = \storage_path("logs/metager/bv.csv");
-                    $fh = fopen($file_path, "a");
-                    try {
-                        \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], $request->input("eingabe", "")]);
-                    } finally {
-                        fclose($fh);
-                    }
+                // ToDo Remove Log
+                $file_path = \storage_path("logs/metager/bv.csv");
+                $fh = fopen($file_path, "a");
+                try {
+                    \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], $request->input("eingabe", "")]);
+                } finally {
+                    fclose($fh);
                 }
                 $search_settings = \app()->make(SearchSettings::class);
                 $search_settings->jskey = $mgv;

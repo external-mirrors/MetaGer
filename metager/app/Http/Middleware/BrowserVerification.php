@@ -92,7 +92,7 @@ class BrowserVerification
                 if (!array_key_exists("css_image_loaded", $bvData)) {
                     // Suspicious temporary Log some data
                     $file_path = \storage_path("logs/metager/bv.csv");
-                    $fh = fopen($file_path, "w");
+                    $fh = fopen($file_path, "a");
                     try {
                         \fputcsv($fh, [now()->format("Y-m-d H:i:s"), $_SERVER["AGENT"], $request->input("eingabe", "")]);
                     } finally {

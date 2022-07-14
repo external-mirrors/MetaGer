@@ -67,6 +67,7 @@ mix
   .js("resources/js/widgets.js", "public/js/widgets.js")
   .js("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
   .js("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
+  .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

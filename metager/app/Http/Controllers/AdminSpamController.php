@@ -33,6 +33,7 @@ class AdminSpamController extends Controller
             ->with('latest', $latest)
             ->with('bans', $currentBans)
             ->with('loadedBans', $loadedBans)
+            ->with('js', [mix('js/admin/spam.js')])
             ->with('css', [
                 mix('/css/admin/spam/style.css')
             ])

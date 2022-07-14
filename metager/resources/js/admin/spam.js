@@ -50,7 +50,7 @@ function loadQueries() {
             // Check if dark or not
             let current_queries = document.querySelectorAll("#queries tbody tr");
             let dark = current_queries.length > 0 ? !current_queries[current_queries.length - 1].classList.contains("dark") : false;
-            for (key in queries) {
+            for (let key in queries) {
                 let tr_element = document.createElement("tr");
                 tr_element.dataset.expiration = queries[key].expiration_timestamp;
                 if (dark) {

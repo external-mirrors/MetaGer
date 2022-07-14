@@ -61,7 +61,7 @@
     <button type="button" class="btn btn-success btn-sm">Alte Abfragen entfernen</button>
 </div>
 <input class="form-control" type="text" name="" id="check-against" placeholder="Match against...">
-<table id="queries" class="table table-striped" data-latest="{{$latest->format("Y-m-d H:i:s")}}">
+<table id="queries" class="table table-striped" data-latest="{{$latest->format("Y-m-d H:i:s")}}" data-api="{{ url('admin/spam/jsonQueries') }}">
     <thead>
         <tr>
             <td>Zeit</td>

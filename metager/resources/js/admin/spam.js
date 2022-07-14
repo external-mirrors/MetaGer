@@ -36,7 +36,7 @@ function expireQueries() {
 
 function loadQueries() {
     let latest_update = document.getElementById("queries").dataset.latest
-    let base_url = "{{ url('admin/spam/jsonQueries') }}";
+    let base_url = document.getElementById("queries").dataset.api;
 
     let url = base_url + "?since=" + encodeURI(latest_update);
 

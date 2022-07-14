@@ -41,6 +41,7 @@ class Spam
             $browser->setUserAgent($_SERVER["AGENT"]);
             if ($browser->browser() === "Chrome" && $browser->version($browser->browser()) === "91.0.4472.77") {
                 $this->logFail2Ban($request->ip());
+                abort(404);
             }
             // ToDo Remove Log
             $file_path = \storage_path("logs/metager/spam.csv");

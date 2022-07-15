@@ -175,7 +175,9 @@ class HumanVerification extends Controller
             ->with('title', "Bot Overview")
             ->with('ip', $request->ip())
             ->with('userList', $human_verification->getUserList())
-            ->with('user', $human_verification->getUser());
+            ->with('user', $human_verification->getUser())
+            ->with('css', [mix('css/admin/bot/index.css')])
+            ->with('js', [mix('js/admin/bot.js')]);
     }
 
     public function botOverviewChange(Request $request)

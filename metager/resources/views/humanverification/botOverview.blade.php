@@ -3,15 +3,6 @@
 @section('title', $title )
 
 @section('content')
-    <style>
-        .user {
-            width: max-content;
-            padding: 1rem;
-            border: 1px solid white;
-            background-color: #4a4a4a;
-            border-radius: 5px;
-        }
-    </style>
     <div class="user">
     <table>
         <tbody>
@@ -31,7 +22,7 @@
                 <td>Unused Resultpages</td>
                 <td>
                     <form action="" method="post">
-                        <input onchange="this.form.submit()" type="number" name="unusedResultPages" id="unusedResultPages" value="{{$user["unusedResultPages"]}}">
+                        <input type="number" name="unusedResultPages" id="unusedResultPages" value="{{$user["unusedResultPages"]}}">
                     </form>
                 </td>
             </tr>
@@ -39,7 +30,7 @@
                 <td>Whitelist</td>
                 <td>
                     <form action="" method="post">
-                        <select name="whitelist" id="locked" onchange="this.form.submit()">
+                        <select name="whitelist" id="locked">
                             <option value="1" @if($user["whitelist"]) selected @endif>True</option>
                             <option value="0" @if(!$user["whitelist"]) selected @endif>False</option>
                         </select>
@@ -50,7 +41,7 @@
                 <td>Locked</td>
                 <td>
                     <form action="" method="post">
-                        <select name="locked" id="locked" onchange="this.form.submit()">
+                        <select name="locked" id="locked">
                             <option value="1" @if($user["locked"]) selected @endif>True</option>
                             <option value="0" @if(!$user["locked"]) selected @endif>False</option>
                         </select>

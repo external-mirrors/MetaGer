@@ -44,7 +44,8 @@ class HumanVerification extends Controller
             ->with('id', $human_verification->id)
             ->with('url', $redirect_url)
             ->with('correct', $captcha["key"])
-            ->with('image', $captcha["img"]);
+            ->with('image', $captcha["img"])
+            ->with('css', [mix('css/verify/index.css')]);
     }
 
     public static function captchaSolve(Request $request)

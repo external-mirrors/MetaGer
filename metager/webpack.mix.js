@@ -29,6 +29,7 @@ mix
   .less("resources/less/metager/pages/plugin-page.less", "public/css/plugin-page.css")
   .less("resources/less/metager/pages/count/style-dark.less", "public/css/count/dark.css")
   .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css")
+  .less("resources/less/metager/pages/verify/index.less", "public/css/verify/index.css")
   .less("resources/less/metager/pages/admin/affilliates/index.less", "public/css/admin/affilliates/index.css")
   .less("resources/less/metager/pages/admin/affilliates/index-dark.less", "public/css/admin/affilliates/index-dark.css")
   .less("resources/less/metager/pages/admin/bot/index.less", "public/css/admin/bot/index.css")

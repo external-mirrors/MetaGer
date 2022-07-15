@@ -1,9 +1,6 @@
 <?php
 return [
     '1' => 'Entschuldigen Sie die Störung',
-    '2' => 'Sie befinden sich in einem Netzwerk aus dem wir verstärkt automatisierte Anfragen erhalten. Keine Sorge: Das bedeutet nicht unbedingt, dass diese Anfragen von Ihrem PC kommen.',
-    '3' => 'Allerdings können wir Ihre Anfragen nicht von denen des "Robots" unterscheiden. Zum Schutz der von uns abgefragten Suchmaschinen müssen wir aber sicherstellen, dass diese nicht mit (automatisierten) Abfragen überflutet werden.',
-    '4' => 'Bitte geben Sie deshalb die Zeichen aus dem Bild in die Eingabebox und bestätigen Sie mit "OK" um zur Ergebnisseite zu gelangen.',
-    '5' => 'Captcha eingeben',
-    '6' => 'Wochentag eingeben',
+    '2' => 'Bitte geben Sie die 5 Zeichen aus dem Bild in die Eingabebox und bestätigen Sie mit "OK" um zur Ergebnisseite zu gelangen.',
+    '3' => 'Captcha eingeben',
 ];

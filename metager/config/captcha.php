@@ -5,10 +5,17 @@ return [
     'characters' => '2346789abcdefghjmnpqrtuxyzABCDEFGHJMNPQRTUXYZ',
 
     'default'   => [
+        'bgImage'   => true,
+        'bgColor'   => '#ecf2f4',
+        'fontColors' => ['#2c3e50', '#c0392b', '#16a085', '#c0392b', '#8e44ad', '#303f9f', '#f57c00', '#795548'],
         'length'    => 5,
-        'width'     => 220,
-        'height'    => 66,
-        'quality'   => 90,
+        'width'     => 500,
+        'height'    => 125,
+        'quality'   => 1,
+        'contrast'  => -5,
+        'sensitive' => false,
+        'lines'     => 15,
+        'invert'    => false,
     ],
 
     'flat'   => [
@@ -19,7 +26,7 @@ return [
         'lines'     => 6,
         'bgImage'   => false,
         'bgColor'   => '#ecf2f4',
-        'fontColors'=> ['#2c3e50', '#c0392b', '#16a085', '#c0392b', '#8e44ad', '#303f9f', '#f57c00', '#795548'],
+        'fontColors' => ['#2c3e50', '#c0392b', '#16a085', '#c0392b', '#8e44ad', '#303f9f', '#f57c00', '#795548'],
         'contrast'  => -5,
     ],
 

@@ -17,12 +17,12 @@
 	</form>
 	@if ($site !== '')
 	<h1>{{ trans('sitesearch.generated.1') }}</h1>
-	{!! $template !!}
+	{!! $template_preview !!}
 </div>
 <div class="card">
 	<h1>{{ trans('sitesearch.generated.5') }} <button id="copyButton" class="btn btn-default js-only" type="button"><img class="mg-icon widget-mg-icon " src="/img/icon-paperclip.svg"> {{ trans('websearch.head.copy') }}</button></h1>
-	<textarea id="codesnippet" readonly style="width:100%;height:500px">
-			{!! $template !!}
+	<textarea id="codesnippet" readonly>
+			{!! $template_webpage !!}
 		</textarea>
 	@else
 </div>

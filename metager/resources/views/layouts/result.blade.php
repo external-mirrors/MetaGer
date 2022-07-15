@@ -59,7 +59,7 @@
 		</div>
 		@endif
 	</div>
-	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle" style="display: none">
+	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle">
 	<div class="result-footer">
 		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif rel="noopener">
 			{!! trans('result.options.7') !!}

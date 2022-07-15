@@ -37,6 +37,8 @@ spec:
         - name: redis-config
           configMap:
             name: {{ include "chart.fullname" . }}-redis-container-config
+        - name: sqlite-databases
+          emptyDir: {}
       containers:
         - name: fpm
           securityContext:
@@ -80,6 +82,8 @@ spec:
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/logs/metager
             readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
           ports:
             - name: http
               containerPort: 8080
@@ -122,6 +126,8 @@ spec:
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/logs/metager
             readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
           ports:
             - name: http
               containerPort: 8080

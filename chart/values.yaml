@@ -32,10 +32,12 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -54,26 +56,6 @@ ingress:
     kubernetes.io/tls-acme: "false"
     nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
     nginx.ingress.kubernetes.io/configuration-snippet: >
-      more_set_headers "Content-Security-Policy: default-src 'self'; script-src
-      'self' 'unsafe-inline'; script-src-elem 'self' 'unsafe-inline';
-      script-src-attr 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';
-      style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self'
-      'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src
-      'self'; media-src; object-src; prefetch-src; child-src; frame-src 'self';
-      worker-src; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de;
-      form-action 'self' www.paypal.com; base-uri; manifest-src; plugin-types;
-      report-uri; report-to";
-
-      more_set_headers "X-Frame-Options: sameorigin";
-
-      more_set_headers "X-Content-Type-Options: nosniff";
-
-      more_set_headers "ReferrerPolicy: origin";
-
-      more_set_headers "X-XSS-Protection: 1; mode=block";
-
-      more_set_headers "Permissions-Policy: interest-cohort=()";
-
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
       }
@@ -84,7 +66,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following

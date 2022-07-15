@@ -91,19 +91,6 @@ class HumanVerification extends Controller
             // If not
             $url = $url_parts['scheme'] . '://' . $url_parts['host'] . (!empty($url_parts["port"]) ? ":" . $url_parts["port"] : "") . (!empty($url_parts["path"]) ? $url_parts["path"] : "") . '?' . (!empty($url_parts["query"]) ? $url_parts["query"] : "");
 
-
-            # ToDo Remove this again
-            # Gathering some data to debug problems with user getting caught in captchas 
-            $file_path_agents = \storage_path("logs/metager/captcha_solve/" . $human_verification->id . ".agents");
-            $file_path_userlist = \storage_path("logs/metager/captcha_solve/" . $human_verification->id . ".userlist");
-
-            if (!\file_exists(\dirname($file_path_agents))) {
-                mkdir(\dirname($file_path_agents), 0777);
-            }
-            $log_line = now()->format("Y-m-d_H:i:s") . " " . $_SERVER["AGENT"] . \PHP_EOL;
-            \file_put_contents($file_path_agents, $log_line, \FILE_APPEND);
-            \file_put_contents($file_path_userlist, json_encode($human_verification->getUserList(), \JSON_PRETTY_PRINT));
-
             # If we can unlock the Account of this user we will redirect him to the result page
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
@@ -155,7 +142,7 @@ class HumanVerification extends Controller
 
     public static function removeGet(Request $request, $mm, $password, $url)
     {
-        $url = base64_decode(str_replace("<<SLASH>>", "/", $url));
+        $url = \pack("H*", $url);
         # If the user is correct and the password is we will delete any entry in the database
         $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 
@@ -214,15 +201,57 @@ class HumanVerification extends Controller
         return redirect('admin/bot');
     }
 
-    public function browserVerification(Request $request)
+    public function verificationCssFile(Request $request)
     {
         $key = $request->input("id", "");
 
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
-            Redis::connection(config('cache.stores.redis.connection'))->rpush($key, true);
-            Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
+            $bvData = Cache::get($key);
+            if ($bvData === null) {
+                $bvData = [];
+            }
+            $bvData["css_loaded"] = true;
+            Cache::put($key, $bvData, now()->addSeconds(30));
         }
-        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss', ["url" => route("bv_verificationimage", ["id" => $key])]), 200)->header("Content-Type", "text/css");
+    }
+
+    public function verificationJsFile(Request $request)
+    {
+        $key = $request->input("id", "");
+
+        // Verify that key is a md5 checksum
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+            abort(404);
+        }
+
+        $bvData = Cache::get($key);
+        if ($bvData === null) {
+            $bvData = [];
+        }
+        $bvData["js_loaded"] = true;
+        Cache::put($key, $bvData, now()->addSeconds(30));
+
+        return response("", 200)->header("Content-Type", "application/javascript");
+    }
+
+    public function verificationImage(Request $request)
+    {
+        $key = $request->input("id", "");
+
+        // Verify that key is a md5 checksum
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+            abort(404);
+        }
+
+        $bvData = Cache::get($key);
+        if ($bvData === null) {
+            $bvData = [];
+        }
+        $bvData["css_image_loaded"] = true;
+        Cache::put($key, $bvData, now()->addSeconds(30));
+
+        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
     }
 }

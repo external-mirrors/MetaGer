@@ -9,17 +9,6 @@ Route::get('verify/metager', [HumanVerification::class, 'captchaShow'])->name('c
 Route::post('verify/metager', [HumanVerification::class, 'captchaSolve'])->name('captcha_solve')->middleware(["throttle:humanverification"]);;
 Route::get('r/metager/{mm}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
 Route::post('img/dog.jpg', [HumanVerification::class, 'whitelist']);
-Route::get('index.css', [HumanVerification::class, 'browserVerification']);
-Route::get('index.js', function (Request $request) {
-    $key = $request->input("id", "");
-
-    // Verify that key is a md5 checksum
-    if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
-        abort(404);
-    }
-
-    Redis::connection(config('cache.stores.redis.connection'))->rpush("js" . $key, true);
-    Redis::connection(config('cache.stores.redis.connection'))->expire($key, 30);
-
-    return response("", 200)->header("Content-Type", "application/javascript");
-});
+Route::get('index.css', [HumanVerification::class, 'verificationCssFile']);
+Route::get('index.js', [HumanVerification::class, 'verificationJsFile']);
+Route::get('metager.png', [HumanVerification::class, 'verificationImage'])->name("bv_verificationimage");

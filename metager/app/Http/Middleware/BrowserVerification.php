@@ -70,8 +70,23 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 abort(404);
             }
-            $result = Redis::connection(config('cache.stores.redis.connection'))->blpop($mgv, 5);
-            if ($result !== null) {
+            $bvData = null;
+            $start_time = now();
+            $wait_time_seconds = 5;
+            do {
+                $bvData = Cache::get($mgv);
+                if ($bvData !== null) {
+                    if ((array_key_exists("css_loaded", $bvData) && $bvData["css_loaded"] === true) ||
+                        (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true)
+                    ) {
+                        break;
+                    } else {
+                        $wait_time_seconds = 2;
+                    }
+                }
+                \usleep(50 * 1000);
+            } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
+            if ($bvData !== null) {
                 $search_settings = \app()->make(SearchSettings::class);
                 $search_settings->jskey = $mgv;
                 $search_settings->header_printed = false;
@@ -91,16 +106,21 @@ class BrowserVerification
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $answer = Redis::connection(config('cache.stores.redis.connection'))->blpop($key, 2);
-        if ($answer !== null) {
-            echo (view('layouts.resultpage.resources')->render());
-            flush();
-            $search_settings = \app()->make(SearchSettings::class);
-            $search_settings->jskey = $key;
-            $search_settings->header_printed = true;
-            \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return $next($request);
-        }
+        $bvData = null;
+        $start_time = now();
+        $wait_time_seconds = 2;
+        do {
+            $bvData = Cache::get($key);
+            if ($bvData !== null) {
+                echo (view('layouts.resultpage.resources')->render());
+                flush();
+                $search_settings = \app()->make(SearchSettings::class);
+                $search_settings->jskey = $key;
+                $search_settings->header_printed = true;
+                \app()->make(QueryTimer::class)->observeEnd(self::class);
+                return $next($request);
+            }
+        } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
 
         $params = $request->all();
         $params["mgv"] = $key;
@@ -109,6 +129,7 @@ class BrowserVerification
         echo (view('layouts.resultpage.unverifiedResultPage')
             ->with('url', $url)
             ->render());
+        flush();
         \app()->make(QueryTimer::class)->observeEnd(self::class);
     }
 

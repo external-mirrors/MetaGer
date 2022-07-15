@@ -36,6 +36,8 @@ mix
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
   .less("resources/less/metager/pages/keychange/index.less", "public/css/keychange/index.css")
   .less("resources/less/metager/pages/help-easy-language.less", "public/css/help-easy-language.css")
+  .less("resources/less/metager/pages/widget/widget-template.less", "public/css/widget/widget-template.css")
+  .less("resources/less/metager/pages/widget/widget.less", "public/css/widget/widget.css")
   .js(
     [
       "resources/js/scriptSettings.js"
@@ -66,6 +68,7 @@ mix
   .js("resources/js/widgets.js", "public/js/widgets.js")
   .js("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
   .js("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
+  .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

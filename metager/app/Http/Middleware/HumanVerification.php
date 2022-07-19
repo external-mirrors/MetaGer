@@ -87,8 +87,8 @@ class HumanVerification
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             $this->logCaptcha($request); // TODO remove
-            return $next($request); // TODO remove
-            // return redirect()->route('captcha_show', ["url" => URL::full(), "bv_key" => $search_settings->bv_key]); // TODO uncomment
+            //return $next($request); // TODO remove
+            return redirect()->route('captcha_show', ["url" => URL::full(), "bv_key" => $search_settings->bv_key]); // TODO uncomment
         }
 
         $user->addQuery();

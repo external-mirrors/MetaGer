@@ -72,12 +72,19 @@ function verify(event) {
   document.removeEventListener("pointermove", verify);
   document.removeEventListener("pointerdown", verify);
   document.removeEventListener("scroll", verify);
+
+  let data = "mm=" + document.querySelector('meta[name="mm"]').content;
+  let bv_key = document.querySelector('meta[name="bv_key"]').content;
+  if (bv_key) {
+    data += "&bv_key=" + bv_key;
+  }
+
   return fetch("/img/cat.png", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: "mm=" + document.querySelector('meta[name="mm"]').content
+    body: data
   });
 }
 

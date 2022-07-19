@@ -71,6 +71,7 @@ mix
   .js("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
   .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
+  .js("resources/js/verify.js", "public/js/index.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

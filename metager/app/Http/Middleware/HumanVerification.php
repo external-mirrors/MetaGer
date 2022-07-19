@@ -68,6 +68,10 @@ class HumanVerification
 
         /** @var ModelsHumanVerification */
         $user = App::make(ModelsHumanVerification::class);
+        $search_settings = \app()->make(SearchSettings::class);
+        if (!empty($search_settings->javascript_picasso)) {
+            $user->__construct($search_settings->javascript_picasso);
+        }
 
         /**
          * Directly lock any user when there are many not whitelisted accounts on this IP
@@ -82,7 +86,9 @@ class HumanVerification
         if ($user->isLocked()) {
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return redirect()->route('captcha_show', ["url" => URL::full()]);
+            $this->logCaptcha($request); // TODO remove
+            return $next($request); // TODO remove
+            // return redirect()->route('captcha_show', ["url" => URL::full(), "bv_key" => $search_settings->bv_key]); // TODO uncomment
         }
 
         $user->addQuery();
@@ -90,5 +96,25 @@ class HumanVerification
         \App\PrometheusExporter::HumanVerificationSuccessfull();
         \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
+    }
+
+    // TODO remove function
+    private function logCaptcha(\Illuminate\Http\Request $request)
+    {
+        $log = [
+            now()->format("Y-m-d H:i:s"),
+            $request->input("eingabe"),
+            "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
+            "picasso=" . \app()->make(SearchSettings::class)->javascript_picasso,
+
+        ];
+        $file_path = \storage_path("logs/metager/captcha.csv");
+        $fh = fopen($file_path, "a");
+        try {
+            \fputcsv($fh, $log);
+        } finally {
+            fclose($fh);
+        }
+        // Temporary Log to test new functionality. Will be removed again soon
     }
 }

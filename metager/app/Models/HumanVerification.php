@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\SearchSettings;
 use Cache;
 use URL;
 
@@ -12,27 +13,32 @@ class HumanVerification
     private $users = [];
     private $user = [];
 
-    public readonly ?string $id;
-    public readonly ?string $uid;
-    public readonly ?bool $alone;
-    public readonly ?int $whitelisted_accounts;
-    public readonly ?int $not_whitelisted_accounts;
+    public string $id;
+    public string $uid;
+    public bool $alone;
+    public int $whitelisted_accounts;
+    public int $not_whitelisted_accounts;
+    public bool $picasso_enabled;
     public int $request_count_all_users = 0;
 
-    public function __construct()
+    public function __construct(string $picasso_hash = null)
     {
         $request = \request();
         $ip = $request->ip();
 
-        $id = hash("sha1", $ip);
-        $agent = $_SERVER["AGENT"];
-        $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-
-        $this->id = $id;
-        $this->uid = $uid;
+        // Check if picasso challenge was solved
+        if ($picasso_hash === null) {
+            $this->id = hash("sha1", $ip);
+            $this->uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
+            $this->picasso_enabled = false;
+        } else {
+            $this->id = hash("sha1", $picasso_hash);
+            $this->uid = hash("sha1", $picasso_hash . $ip . "uid");
+            $this->picasso_enabled = true;
+        }
 
         # Get all Users of this IP
-        $this->users = Cache::get(self::CACHE_PREFIX . "." . $id, []);
+        $this->users = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
         if ($this->users === null) {
             $this->users = [];
         }
@@ -45,12 +51,12 @@ class HumanVerification
                 'unusedResultPages' => 0,
                 'whitelist' => false,
                 'locked' => false,
-                "lockedKey" => "",
+                "picasso_enabled" => $this->picasso_enabled,
                 "expiration" => now()->addWeeks(2),
             ];
             $this->users[$this->uid] = $this->user;
         } else {
-            $this->user = $this->users[$uid];
+            $this->user = $this->users[$this->uid];
         }
 
         # Lock out everyone in a Bot network
@@ -64,7 +70,7 @@ class HumanVerification
             if (!$userTmp["whitelist"]) {
                 $not_whitelisted_accounts++;
                 $sum += $userTmp["unusedResultPages"];
-                if ($userTmp["uid"] !== $uid) {
+                if ($userTmp["uid"] !== $this->uid) {
                     $alone = false;
                 }
             } else {
@@ -229,6 +235,7 @@ class HumanVerification
 
         if ($changed) {
             Cache::put(self::CACHE_PREFIX . "." . $user["id"], $newUserlist, now()->addWeeks(2));
+            $this->users = $newUserlist;
         }
 
         $this->users = $newUserlist;

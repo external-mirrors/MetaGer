@@ -309,14 +309,6 @@ class MetaGer
             $this->adgoalLoaded = false;
         }
 
-        $search_settings = \app()->make(SearchSettings::class);
-        if (!empty($search_settings->jskey)) {
-            $bvData = Cache::get($search_settings->jskey);
-            if (\array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true) {
-                $search_settings->javascript_enabled = true;
-            }
-        }
-
         # Human Verification
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
@@ -473,15 +465,28 @@ class MetaGer
     {
         # Let's check if we need to implement a redirect for human verification
         $human_verification = \app()->make(HumanVerification::class);
+        $search_settings = \app()->make(SearchSettings::class);
         if ($human_verification->getVerificationCount() > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
                 $verification_id = $human_verification->uid;
                 $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
-                $url = route('humanverification', ['mm' => $verification_id, 'pw' => $pw, "url" => \bin2hex($link)]);
+
+                $params = [
+                    'mm' => $verification_id,
+                    'pw' => $pw,
+                    "url" => \bin2hex($link)
+                ];
+                if (!empty($search_settings->javascript_picasso)) {
+                    $params["bv_key"] = $search_settings->bv_key;
+                }
+
+                $url = route('humanverification', $params);
                 $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $proxyUrl = route('humanverification', ['mm' => $verification_id, 'pw' => $proxyPw, "url" => \bin2hex($result->proxyLink)]);
+                $params["pw"] = $proxyPw;
+                $params["url"] =  \bin2hex($result->proxyLink);
+                $proxyUrl = route('humanverification', $params);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }

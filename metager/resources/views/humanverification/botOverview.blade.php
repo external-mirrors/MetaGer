@@ -3,7 +3,7 @@
 @section('title', $title )
 
 @section('content')
-    <div class="user">
+    <div id="current-user" class="user" data-pcso="{{$picasso_hash}}">
     <table>
         <tbody>
             <tr>
@@ -22,6 +22,9 @@
                 <td>Unused Resultpages</td>
                 <td>
                     <form action="" method="post">
+                        @if(!empty($picasso_hash))
+                        <input type="hidden" name="pcso" value="{{$picasso_hash}}">
+                        @endif
                         <input type="number" name="unusedResultPages" id="unusedResultPages" value="{{$user["unusedResultPages"]}}">
                     </form>
                 </td>
@@ -30,6 +33,9 @@
                 <td>Whitelist</td>
                 <td>
                     <form action="" method="post">
+                        @if(!empty($picasso_hash))
+                        <input type="hidden" name="pcso" value="{{$picasso_hash}}">
+                        @endif
                         <select name="whitelist" id="locked">
                             <option value="1" @if($user["whitelist"]) selected @endif>True</option>
                             <option value="0" @if(!$user["whitelist"]) selected @endif>False</option>
@@ -41,6 +47,9 @@
                 <td>Locked</td>
                 <td>
                     <form action="" method="post">
+                        @if(!empty($picasso_hash))
+                        <input type="hidden" name="pcso" value="{{$picasso_hash}}">
+                        @endif
                         <select name="locked" id="locked">
                             <option value="1" @if($user["locked"]) selected @endif>True</option>
                             <option value="0" @if(!$user["locked"]) selected @endif>False</option>
@@ -48,9 +57,10 @@
                     </form>
                 </td>
             </tr>
+            
             <tr>
-                <td>Locked Key</td>
-                <td><pre>{{$user["lockedKey"]}}</pre></td>
+                <td>Picasso Enabled</td>
+                <td><pre>@if(array_key_exists("picasso_enabled", $user)){{$user["picasso_enabled"]}}@else false @endif</pre></td>
             </tr>
             <tr>
                 <td>Expiration</td>
@@ -102,8 +112,8 @@
                 </td>
             </tr>
             <tr>
-                <td>Locked Key</td>
-                <td><pre>{{$user_current["lockedKey"]}}</pre></td>
+                <td>Picasso Enabled</td>
+                <td><pre>@if(array_key_exists("picasso_enabled", $user_current)){{$user_current["picasso_enabled"]}}@else false @endif</pre></td>
             </tr>
             <tr>
                 <td>Expiration</td>

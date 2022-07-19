@@ -63,33 +63,15 @@ class BrowserVerification
         ini_set('output_handler', '');
         ob_end_clean();
 
-        $mgv = $request->input('mgv', "");
-        if (!empty($mgv)) {
+        if ($request->filled("mgv")) {
+            $key = $request->input('mgv', "");
             // Verify that key is a md5 checksum
-            if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
+            if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 abort(404);
             }
-            $bvData = null;
-            $start_time = now();
-            $wait_time_seconds = 5;
-            do {
-                $bvData = Cache::get($mgv);
-                if ($bvData !== null) {
-                    if ((array_key_exists("css_loaded", $bvData) && $bvData["css_loaded"] === true) ||
-                        (array_key_exists("js_loaded", $bvData) && $bvData["js_loaded"] === true)
-                    ) {
-                        break;
-                    } else {
-                        $wait_time_seconds = 2;
-                    }
-                }
-                \usleep(50 * 1000);
-            } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
-            if ($bvData !== null) {
-                $search_settings = \app()->make(SearchSettings::class);
-                $search_settings->jskey = $mgv;
-                $search_settings->header_printed = false;
+            if ($this->waitForBV($key)) {
+                \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             } else {
@@ -102,25 +84,20 @@ class BrowserVerification
         }
 
         $key = md5($request->ip() . microtime(true));
+        Cache::put($key, [
+            "start" => now()
+        ], now()->addMinutes(30));
 
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        $bvData = null;
-        $start_time = now();
-        $wait_time_seconds = 2;
-        do {
-            $bvData = Cache::get($key);
-            if ($bvData !== null) {
-                echo (view('layouts.resultpage.resources')->render());
-                flush();
-                $search_settings = \app()->make(SearchSettings::class);
-                $search_settings->jskey = $key;
-                $search_settings->header_printed = true;
-                \app()->make(QueryTimer::class)->observeEnd(self::class);
-                return $next($request);
-            }
-        } while (now()->diffInSeconds($start_time) < $wait_time_seconds);
+        if ($this->waitForBV($key)) {
+            echo (view('layouts.resultpage.resources')->render());
+            flush();
+            \app()->make(QueryTimer::class)->observeEnd(self::class);
+            \app()->make(SearchSettings::class)->header_printed = true;
+            return $next($request);
+        }
 
         $params = $request->all();
         $params["mgv"] = $key;
@@ -131,6 +108,45 @@ class BrowserVerification
             ->render());
         flush();
         \app()->make(QueryTimer::class)->observeEnd(self::class);
+    }
+
+    private function waitForBV($key)
+    {
+        $bvData = null;
+        $wait_time_inline_verificytion_ms = 2000;
+        $wait_time_js_ms = null;
+        do {
+            $bvData = Cache::get($key);
+            // This condition is true when at least the css file was loaded
+            if ($bvData !== null && sizeof($bvData) > 1) {
+                if (!\array_key_exists("js_loaded", $bvData) && \array_key_exists("css_loaded", $bvData)) {
+                    // CSS File was loaded but Javascript wasn't
+                    if ($wait_time_js_ms === null) {
+                        // Calculate a more acurate wait to since we do know how long it took the browser to load the css file 
+                        // we can estimate a more reasonable wait time to check if js is enabled
+                        $load_time_css_ms = $bvData["start"]->diffInMilliseconds($bvData["css_loaded"]);
+                        $wait_time_js_ms = $load_time_css_ms * 3;
+                        $wait_time_inline_verificytion_ms = max($wait_time_js_ms + 500, $wait_time_inline_verificytion_ms);
+                    }
+                    if (now()->diffInMilliseconds($bvData["start"]) <= $wait_time_js_ms) {
+                        usleep(10 * 1000);
+                        continue;
+                    }
+                }
+
+                $search_settings = \app()->make(SearchSettings::class);
+                if (\array_key_exists("js_loaded", $bvData)) {
+                    $search_settings->bv_key = $key;
+                    $search_settings->javascript_enabled = true;
+                    if (\array_key_exists("js_picasso", $bvData)) {
+                        $search_settings->javascript_picasso = $bvData["js_picasso"];
+                    }
+                }
+                return true;
+            }
+            usleep(10 * 1000);
+        } while ($bvData === null || now()->diffInMilliseconds($bvData["start"]) < $wait_time_inline_verificytion_ms);
+        return false;
     }
 
     public static function logBrowserverification(Request $request)

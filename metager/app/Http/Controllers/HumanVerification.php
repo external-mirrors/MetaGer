@@ -32,6 +32,12 @@ class HumanVerification extends Controller
         }
 
         $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($request->filled("bv_key") && Cache::has($request->input("bv_key"))) {
+            $bv_data = Cache::get($request->input("bv_key"));
+            if (is_array($bv_data) && \array_key_exists("js_picasso", $bv_data)) {
+                $human_verification->__construct($bv_data["js_picasso"]);
+            }
+        }
 
         if (!$human_verification->isLocked()) {
             return redirect($redirect_url);
@@ -42,6 +48,7 @@ class HumanVerification extends Controller
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('uid', $human_verification->uid)
             ->with('id', $human_verification->id)
+            ->with('bv_key', $request->input("bv_key", ""))
             ->with('url', $redirect_url)
             ->with('correct', $captcha["key"])
             ->with('image', $captcha["img"])
@@ -61,6 +68,12 @@ class HumanVerification extends Controller
             $redirect_url = url("/");
         }
         $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($request->filled("bv_key") && Cache::has($request->input("bv_key"))) {
+            $bv_data = Cache::get($request->input("bv_key"));
+            if (is_array($bv_data) && \array_key_exists("js_picasso", $bv_data)) {
+                $human_verification->__construct($bv_data["js_picasso"]);
+            }
+        }
 
         $lockedKey = $request->post("c", "");
 
@@ -68,7 +81,14 @@ class HumanVerification extends Controller
         $validator = validator()->make(request()->all(), $rules);
 
         if (empty($lockedKey) || $validator->fails()) {
-            return redirect(route('captcha_show', ["url" => $redirect_url, "e" => ""]));
+            $params = [
+                "url" => $redirect_url,
+                "e" => "",
+            ];
+            if ($request->filled("bv_key")) {
+                $params["bv_key"] = $request->input("bv_key");
+            }
+            return redirect(route('captcha_show', $params));
         } else {
             \App\PrometheusExporter::CaptchaCorrect();
             # Generate a token that makes the user skip Humanverification
@@ -95,8 +115,8 @@ class HumanVerification extends Controller
             # If we can unlock the Account of this user we will redirect him to the result page
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
-            $human_verification->verifyUser();
             $human_verification->unlockUser();
+            $human_verification->verifyUser();
 
             return redirect($url);
         }
@@ -133,6 +153,13 @@ class HumanVerification extends Controller
         }
 
         $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($request->filled("bv_key") && Cache::has($request->input("bv_key"))) {
+            $bv_data = Cache::get($request->input("bv_key"));
+            if (\is_array($bv_data) && \array_key_exists("js_picasso", $bv_data)) {
+                $human_verification->__construct($bv_data["js_picasso"]);
+            }
+            Cache::forget($request->input("bv_key"));
+        }
         if ($request->input("mm") === $human_verification->uid) {
             $human_verification->verifyUser();
         }
@@ -148,6 +175,13 @@ class HumanVerification extends Controller
         $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 
         $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($request->filled("bv_key") && Cache::has($request->input("bv_key"))) {
+            $bv_data = Cache::get($request->input("bv_key"));
+            if (\is_array($bv_data) && \array_key_exists("js_picasso", $bv_data)) {
+                $human_verification->__construct($bv_data["js_picasso"]);
+            }
+            Cache::forget($request->input("bv_key"));
+        }
         if ($mm === $human_verification->uid && $requiredPass == $password) {
             $human_verification->verifyUser();
         }
@@ -155,25 +189,21 @@ class HumanVerification extends Controller
         return redirect($url);
     }
 
-    private static function saveUser($user)
-    {
-        $userList = Cache::get(HumanVerification::PREFIX . "." . $user["id"], []);
-
-        if ($user["whitelist"]) {
-            $user["expiration"] = now()->addWeeks(2);
-        } else {
-            $user["expiration"] = now()->addHours(72);
-        }
-        $userList[$user["uid"]] = $user;
-        Cache::put(HumanVerification::PREFIX . "." . $user["id"], $userList, now()->addWeeks(2));
-    }
-
     public function botOverview(Request $request)
     {
+        $picasso_hash = null;
+        if ($request->filled("pcso")) {
+            $picasso_hash = $request->input("pcso");
+        }
+
         $human_verification = \app()->make(ModelsHumanVerification::class);
+        if ($picasso_hash !== null) {
+            $human_verification->__construct($picasso_hash);
+        }
 
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
+            ->with('picasso_hash', $picasso_hash)
             ->with('ip', $request->ip())
             ->with('userList', $human_verification->getUserList())
             ->with('user', $human_verification->getUser())
@@ -184,7 +214,9 @@ class HumanVerification extends Controller
     public function botOverviewChange(Request $request)
     {
         $human_verification = \app()->make(ModelsHumanVerification::class);
-
+        if ($request->filled("pcso")) {
+            $human_verification->__construct($request->input("pcso"));
+        }
         if ($request->filled("locked")) {
             if (\boolval($request->input("locked"))) {
                 $human_verification->lockUser();
@@ -214,7 +246,7 @@ class HumanVerification extends Controller
             if ($bvData === null) {
                 $bvData = [];
             }
-            $bvData["css_loaded"] = true;
+            $bvData["css_loaded"] = now();
             Cache::put($key, $bvData, now()->addSeconds(30));
         }
         return response(view('layouts.resultpage.verificationCss', ["url" => route("bv_verificationimage", ["id" => $key])]), 200)->header("Content-Type", "text/css");
@@ -225,18 +257,20 @@ class HumanVerification extends Controller
         $key = $request->input("id", "");
 
         // Verify that key is a md5 checksum
-        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+        if (!preg_match("/^[a-f0-9]{32}$/", $key) || !$request->filled("c")) {
             abort(404);
         }
+        $picasso_hash = $request->input('c');
 
         $bvData = Cache::get($key);
         if ($bvData === null) {
             $bvData = [];
         }
-        $bvData["js_loaded"] = true;
+        $bvData["js_loaded"] = now();
+        $bvData["js_picasso"] = $picasso_hash;
         Cache::put($key, $bvData, now()->addSeconds(30));
 
-        return response("", 200)->header("Content-Type", "application/javascript");
+        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
     }
 
     public function verificationImage(Request $request)
@@ -252,7 +286,7 @@ class HumanVerification extends Controller
         if ($bvData === null) {
             $bvData = [];
         }
-        $bvData["css_image_loaded"] = true;
+        $bvData["css_image_loaded"] = now();
         Cache::put($key, $bvData, now()->addSeconds(30));
 
         return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));

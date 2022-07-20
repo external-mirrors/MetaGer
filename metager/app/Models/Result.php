@@ -38,24 +38,32 @@ class Result
     const DESCRIPTION_LENGTH = 150;
 
     # Constructor for a new Result
-    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
+    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [], $originalLink = null, $longDescr = null)
     {
         $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
-        $this->originalLink = trim($link);
+        $this->originalLink = isset($originalLink) ? $originalLink : $link;
         $this->anzeigeLink = trim($anzeigeLink);
         $this->anzeigeLink = preg_replace("/(http[s]{0,1}:\/\/){0,1}(www\.){0,1}/si", "", $this->anzeigeLink);
         $this->descr = $this->sanitizeText(strip_tags(trim($descr), '<p>'));
         $this->descr = preg_replace("/\n+/si", " ", $this->descr);
-        $this->longDescr = $this->descr;
+        $this->longDescr = isset($longDescr) ? $longDescr : $this->descr;
         if (strlen($this->descr) > self::DESCRIPTION_LENGTH) {
             $this->descr = wordwrap($this->descr, self::DESCRIPTION_LENGTH);
             $this->descr = substr($this->descr, 0, strpos($this->descr, "\n"));
             $this->descr .= "…"; // Ellipsis character
         }
-        $this->gefVon[] = trim($gefVon);
-        $this->gefVonLink[] = trim($gefVonLink);
+        if (is_array($gefVon)) {
+            $this->gefVon = $gefVon;
+        } else {
+            $this->gefVon[] = trim($gefVon);
+        }
+        if (is_array($gefVonLink)) {
+            $this->gefVonLink = $gefVonLink;
+        } else {
+            $this->gefVonLink[] = trim($gefVonLink);
+        }
         $this->proxyLink = $this->generateProxyLink($this->link);
         $this->sourceRank = $sourceRank;
         if ($this->sourceRank <= 0 || $this->sourceRank > 20) {

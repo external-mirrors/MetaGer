@@ -70,7 +70,7 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 abort(404);
             }
-            if ($this->waitForBV($key)) {
+            if ($this->waitForBV($key, 6500)) {
                 \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
@@ -107,10 +107,9 @@ class BrowserVerification
         \app()->make(QueryTimer::class)->observeEnd(self::class);
     }
 
-    private function waitForBV($key)
+    private function waitForBV($key, $wait_time_inline_verificytion_ms = 2000)
     {
         $bvData = null;
-        $wait_time_inline_verificytion_ms = 2000;
         $wait_time_js_ms = null;
         $wait_start = now();
         do {

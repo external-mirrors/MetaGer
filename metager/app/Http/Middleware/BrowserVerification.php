@@ -91,7 +91,7 @@ class BrowserVerification
         echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
         flush();
 
-        if ($this->waitForBV($key)) {
+        if ($this->supportsInlineVerification() && $this->waitForBV($key)) {
             echo (view('layouts.resultpage.resources')->render());
             flush();
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -147,6 +147,37 @@ class BrowserVerification
             usleep(10 * 1000);
         } while ($bvData === null || now()->diffInMilliseconds($bvData["start"]) < $wait_time_inline_verificytion_ms);
         return false;
+    }
+
+    private function supportsInlineVerification()
+    {
+        $agent = new Agent();
+        $agent->setUserAgent($_SERVER["AGENT"]);
+
+        $browser = $agent->browser();
+        $version = $agent->version($browser);
+
+        // IE and Opera doesn't work at all
+        if ($browser === "IE") {
+            return false;
+        }
+
+        // Edge Browser up to and including version 16 doesn't support it
+        if ($browser === "Edge" && \version_compare($version, 17) === -1) {
+            return false;
+        }
+
+        // Safari Browser up to and including version 7 doesn't support it
+        if ($browser === "Safari" && \version_compare($version, 8) === -1) {
+            return false;
+        }
+        $unsupported_browsers = [
+            "IE",
+        ];
+        if (\in_array($browser, $unsupported_browsers)) {
+            return false;
+        }
+        return true;
     }
 
     public static function logBrowserverification(Request $request)

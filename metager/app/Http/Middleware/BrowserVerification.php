@@ -112,8 +112,10 @@ class BrowserVerification
         $bvData = null;
         $wait_time_inline_verificytion_ms = 2000;
         $wait_time_js_ms = null;
+        $wait_start = now();
         do {
             $bvData = Cache::get($key);
+
             // This condition is true when at least the css file was loaded
             if ($bvData !== null && sizeof($bvData) > 1) {
                 if (!\array_key_exists("js_loaded", $bvData) && \array_key_exists("css_loaded", $bvData)) {
@@ -121,11 +123,11 @@ class BrowserVerification
                     if ($wait_time_js_ms === null) {
                         // Calculate a more acurate wait to since we do know how long it took the browser to load the css file 
                         // we can estimate a more reasonable wait time to check if js is enabled
-                        $load_time_css_ms = $bvData["start"]->diffInMilliseconds($bvData["css_loaded"]);
+                        $load_time_css_ms = $wait_start->diffInMilliseconds($bvData["css_loaded"]);
                         $wait_time_js_ms = $load_time_css_ms * 3;
                         $wait_time_inline_verificytion_ms = max($wait_time_js_ms + 500, $wait_time_inline_verificytion_ms);
                     }
-                    if (now()->diffInMilliseconds($bvData["start"]) <= $wait_time_js_ms) {
+                    if (now()->diffInMilliseconds($wait_start) <= $wait_time_js_ms) {
                         usleep(10 * 1000);
                         continue;
                     }
@@ -142,7 +144,7 @@ class BrowserVerification
                 return true;
             }
             usleep(10 * 1000);
-        } while ($bvData === null || now()->diffInMilliseconds($bvData["start"]) < $wait_time_inline_verificytion_ms);
+        } while ($bvData === null || now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
         return false;
     }
 

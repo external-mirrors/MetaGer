@@ -171,12 +171,7 @@ class BrowserVerification
         if ($browser === "Safari" && \version_compare($version, 8) === -1) {
             return false;
         }
-        $unsupported_browsers = [
-            "IE",
-        ];
-        if (\in_array($browser, $unsupported_browsers)) {
-            return false;
-        }
+
         return true;
     }
 

@@ -260,14 +260,19 @@ class HumanVerification extends Controller
         if (!preg_match("/^[a-f0-9]{32}$/", $key) || !$request->filled("c")) {
             abort(404);
         }
-        $picasso_hash = $request->input('c');
+        $picasso_hash = null;
+        if ($request->filled("c")) {
+            $picasso_hash = $request->input('c');
+        }
 
         $bvData = Cache::get($key);
         if ($bvData === null) {
             $bvData = [];
         }
         $bvData["js_loaded"] = now();
-        $bvData["js_picasso"] = $picasso_hash;
+        if (!empty($picasso_hash)) {
+            $bvData["js_picasso"] = $picasso_hash;
+        }
         Cache::put($key, $bvData, now()->addSeconds(30));
 
         return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));

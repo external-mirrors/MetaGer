@@ -257,7 +257,7 @@ class HumanVerification extends Controller
         $key = $request->input("id", "");
 
         // Verify that key is a md5 checksum
-        if (!preg_match("/^[a-f0-9]{32}$/", $key) || !$request->filled("c")) {
+        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
             abort(404);
         }
         $picasso_hash = null;

@@ -3,7 +3,9 @@ require('fetch-ie8');
 
 import picassoCanvas from '../picasso';
 
-checkPicasso();
+if (document.location.href.match(/\/\/metager\.org/i) !== null) {
+    checkPicasso();
+}
 
 document.querySelectorAll("div.user input, div.user select").forEach(element => {
     element.addEventListener("change", event => {

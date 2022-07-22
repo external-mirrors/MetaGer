@@ -142,6 +142,7 @@ class HumanVerification extends Controller
                 $verificator = $hv_entry["class"]::impersonate($hv_entry["id"], $hv_entry["uid"]);
                 $verificator->verifyUser();
             }
+            Cache::forget($request->input("hv"));
         }
 
         return response(hex2bin('89504e470d0a1a0a0000000d494844520000000100000001010300000025db56ca00000003504c5445000000a77a3dda0000000174524e530040e6d8660000000a4944415408d76360000000020001e221bc330000000049454e44ae426082'), 200)
@@ -161,6 +162,7 @@ class HumanVerification extends Controller
                     $verificator = $hv_entry["class"]::impersonate($hv_entry["id"], $hv_entry["uid"]);
                     $verificator->verifyUser();
                 }
+                Cache::forget($hv);
             }
         }
 

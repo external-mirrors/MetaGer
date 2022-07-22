@@ -13,6 +13,7 @@ class HumanVerification
     public function __construct()
     {
         $this->verificators[] = new IPVerification();
+        $this->verificators[] = new AgentVerification();
 
         $this->key = \md5("hv.key." . microtime(true));
         $ids = [];

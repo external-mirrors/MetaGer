@@ -10,10 +10,9 @@ class IPVerification extends Verification
     {
         $this->cache_prefix = "humanverification.ip";
 
-        $request = \request();
-        $ip = $request->ip();
-
         if (empty($id) || empty($uid)) {
+            $request = \request();
+            $ip = $request->ip();
             $id = hash("sha1", $ip);
             $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
         }

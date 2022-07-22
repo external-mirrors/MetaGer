@@ -40,7 +40,7 @@ class HumanVerification
                 $value = Cache::get($token);
 
                 if (!empty($value) && intval($value) > 0) {
-                    Cache::decrement($token);
+                    Cache::put($token, ($value - 1), now()->addHour());
                     $should_skip = true;
                 } else {
                     // Token is not valid. Remove it
@@ -75,16 +75,14 @@ class HumanVerification
          * Only applies when the user itself is not whitelisted.
          * Also applies RefererLock from above
          */
-        if (!$user->alone && $user->request_count_all_users >= 50 && !$user->isWhiteListed() && $user->not_whitelisted_accounts > $user->whitelisted_accounts) {
-            $user->lockUser();
-        }
+        $user->checkGroupLock();
+
 
         # If the user is locked we will force a Captcha validation
         if ($user->isLocked()) {
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             $this->logCaptcha($request); // TODO remove
-            //return $next($request); // TODO remove
             return redirect()->route('captcha_show', ["url" => URL::full()]); // TODO uncomment
         }
 

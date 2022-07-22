@@ -7,8 +7,6 @@
 <p>@lang('captcha.2')</p>
 <form method="post" action="{{ route('captcha_solve') }}">
     <input type="hidden" name="url" value="{!! $url !!}">
-    <input type="hidden" name="uid" value="{{ $uid }}">
-    <input type="hidden" name="id" value="{{ $id }}">
     <input type="hidden" name="c" value="{{ $correct }}">
     <div id="captcha-container">
         <img src="{{ $image }}" />

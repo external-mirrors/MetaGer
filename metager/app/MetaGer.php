@@ -465,22 +465,20 @@ class MetaGer
     {
         # Let's check if we need to implement a redirect for human verification
         $human_verification = \app()->make(HumanVerification::class);
-        $search_settings = \app()->make(SearchSettings::class);
-        if ($human_verification->getVerificationCount() > 10) {
+        if (max($human_verification->getVerificationCount()) > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
                 $day = Carbon::now()->day;
-                $verification_id = $human_verification->uid;
-                $pw = md5($verification_id . $day . $link . config("metager.metager.proxy.password"));
+                $pw = md5($day . $link . config("metager.metager.proxy.password"));
 
                 $params = [
-                    'mm' => $verification_id,
+                    'hv' => $human_verification->key,
                     'pw' => $pw,
                     "url" => \bin2hex($link)
                 ];
 
                 $url = route('humanverification', $params);
-                $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));
+                $proxyPw = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
                 $params["pw"] = $proxyPw;
                 $params["url"] =  \bin2hex($result->proxyLink);
                 $proxyUrl = route('humanverification', $params);

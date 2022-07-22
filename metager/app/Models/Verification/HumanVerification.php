@@ -2,255 +2,158 @@
 
 namespace App\Models\Verification;
 
-use App\SearchSettings;
 use Cache;
-use URL;
 
 class HumanVerification
 {
-
-    const CACHE_PREFIX = "humanverification";
-    private $users = [];
-    private $user = [];
-
-    public string $id;
-    public string $uid;
-    public bool $alone;
-    public int $whitelisted_accounts;
-    public int $not_whitelisted_accounts;
-    public int $request_count_all_users = 0;
+    /** @var Verification[] */
+    private $verificators = array();
+    public readonly ?string $key;
 
     public function __construct()
     {
-        $request = \request();
-        $ip = $request->ip();
+        $this->verificators[] = new IPVerification();
 
-        $this->id = hash("sha1", $ip);
-        $this->uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-
-        # Get all Users of this IP
-        $this->users = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-        if ($this->users === null) {
-            $this->users = [];
-        }
-        $this->removeOldUsers();
-
-        if (empty($this->users[$this->uid])) {
-            $this->user = [
-                'uid' => $this->uid,
-                'id' => $this->id,
-                'unusedResultPages' => 0,
-                'whitelist' => false,
-                'locked' => false,
-                "expiration" => now()->addWeeks(2),
+        $this->key = \md5("hv.key." . microtime(true));
+        $ids = [];
+        foreach ($this->verificators as $verificator) {
+            $ids[] = [
+                "class" => $verificator::class,
+                "id" => $verificator->id,
+                "uid" => $verificator->uid,
             ];
-            $this->users[$this->uid] = $this->user;
-        } else {
-            $this->user = $this->users[$this->uid];
         }
+        Cache::put($this->key, $ids, now()->addMinutes(15));
+    }
 
-        # Lock out everyone in a Bot network
-        # Find out how many requests this IP has made
-        $sum = 0;
-        // Defines if this is the only user using that IP Adress
+    /**
+     * Whether or not there are other users in this group
+     */
+    public function isAlone()
+    {
         $alone = true;
-        $whitelisted_accounts = 0;
-        $not_whitelisted_accounts = 0;
-        foreach ($this->users as $uidTmp => $userTmp) {
-            if (!$userTmp["whitelist"]) {
-                $not_whitelisted_accounts++;
-                $sum += $userTmp["unusedResultPages"];
-                if ($userTmp["uid"] !== $this->uid) {
-                    $alone = false;
-                }
-            } else {
-                $whitelisted_accounts++;
+        foreach ($this->verificators as $verificator) {
+            if (!$verificator->alone) {
+                $alone = false;
+                break;
             }
         }
-        $this->alone = $alone;
-        $this->request_count_all_users = $sum;
-        $this->whitelisted_accounts = $whitelisted_accounts;
-        $this->not_whitelisted_accounts = $not_whitelisted_accounts;
-    }
-
-    function lockUser()
-    {
-        $this->user["locked"] = true;
-        $this->saveUser();
-    }
-
-    function unlockUser()
-    {
-        $this->user["locked"] = false;
-        $this->saveUser();
+        return $alone;
     }
 
     /**
-     * Returns Whether this user is locked
+     * Is this user whitelisted
      * 
-     * @return bool
+     * @return boolean
      */
-    function isLocked()
-    {
-        return $this->user["locked"];
-    }
-
-    function saveUser()
-    {
-        $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-        $expiration_short = now()->addHours(6);
-        $expiration_long = now()->addWeeks(2);
-
-        $cache_expiration = $expiration_short;
-        // Todo remove setting expiration for all users
-        // Just added to apply the new expiration policy to all existing entries
-        // Will not be needed in the future
-        foreach ($userList as $index => $user) {
-            if ($user["whitelist"] === true) {
-                $cache_expiration = $expiration_long;
-                if ($expiration_long < $user["expiration"]) {
-                    $userList[$index]["expiration"] = $expiration_long;
-                }
-            } else if ($expiration_short < $user["expiration"]) {
-                $userList[$index]["expiration"] = $expiration_short;
-            }
-        }
-        if ($this->isWhiteListed() === true) {
-            $this->user["expiration"] = $expiration_long;
-        } else {
-            $this->user["expiration"] = $expiration_short;
-        }
-        $userList[$this->uid] = $this->user;
-        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $cache_expiration);
-        $this->users = $userList;
-    }
-
-    /**
-     * Deletes the data for this user
-     */
-    private function deleteUser()
-    {
-        $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-
-        if (sizeof($userList) === 1) {
-            // This user is the only one for this IP
-            Cache::forget(self::CACHE_PREFIX . "." . $this->id);
-        } else {
-            $new_user_list = [];
-            $expiration = now()->addHours(72);
-            foreach ($userList as $user) {
-                if ($user["uid"] !== $this->uid) {
-                    $new_user_list[] = $user;
-                    if ($user["whitelist"]) {
-                        $expiration = now()->addWeeks(2);
-                    }
-                }
-            }
-            Cache::put(self::CACHE_PREFIX . "." . $this->id, $new_user_list, $expiration);
-        }
-    }
-
-    /**
-     * Function is called for a user on specific actions
-     * It will either delete the data for this user or put him on a whitelist and reset his counter
-     */
-    public function verifyUser()
-    {
-        # Check if we have to whitelist the user or if we can simply delete the data
-        if ($this->alone === false) {
-            # Whitelist
-            $this->user["whitelist"] = true;
-            $this->user["unusedResultPages"] = 0;
-            $this->saveUser();
-        } else {
-            $this->deleteUser();
-        }
-    }
-
-    public function unverifyUser()
-    {
-        $this->user["whitelist"] = false;
-        $this->saveUser();
-    }
-
-    public function setUnusedResultPage($unusedResultPages)
-    {
-        $this->user["unusedResultPages"] = $unusedResultPages;
-        $this->saveUser();
-    }
-
     public function isWhiteListed()
     {
-        return $this->user["whitelist"];
-    }
-
-    public function setWhiteListed(bool $whitelisted)
-    {
-        return $this->user["whitelist"] = $whitelisted;
-        $this->saveUser();
-    }
-
-    function addQuery()
-    {
-        $this->user["unusedResultPages"]++;
-
-        if ($this->alone || $this->user["whitelist"]) {
-            # This IP doesn't need verification yet
-            # The user currently isn't locked
-
-            # We have different security gates:
-            #   50 and then every 25 => Captcha validated Result Pages
-            # If the user shows activity on our result page the counter will be deleted
-            if ($this->user["unusedResultPages"] === 50 || ($this->user["unusedResultPages"] > 50 && $this->user["unusedResultPages"] % 25 === 0)) {
-                $this->lockUser();
+        $whitelisted = false;
+        foreach ($this->verificators as $verificator) {
+            if ($verificator->isWhiteListed()) {
+                $whitelisted = true;
+                break;
             }
         }
-        $this->saveUser();
-    }
-
-    function removeOldUsers()
-    {
-        $newUserlist = [];
-        $now = now();
-
-        $changed = false;
-        foreach ($this->users as $uid => $user) {
-            $id = $user["id"];
-            if ($now < $user["expiration"]) {
-                $newUserlist[$user["uid"]] = $user;
-            } else {
-                $changed = true;
-            }
-        }
-
-        if ($changed) {
-            Cache::put(self::CACHE_PREFIX . "." . $user["id"], $newUserlist, now()->addWeeks(2));
-            $this->users = $newUserlist;
-        }
-
-        $this->users = $newUserlist;
-    }
-
-    public function getVerificationCount()
-    {
-        return $this->user["unusedResultPages"];
+        return $whitelisted;
     }
 
     /**
-     * Returns the number of users associated to this IP
+     * Checks whether there are many not whitelisted accounts which would lead to a captcha
+     * for new users
+     * 
+     * @return boolean
      */
-    public function getUserCount()
+    public function checkGroupLock()
     {
-        return sizeof($this->users);
+        foreach ($this->verificators as $verificator) {
+            if (!$verificator->alone && $verificator->request_count_all_users >= 50 && !$verificator->isWhiteListed() && $verificator->not_whitelisted_accounts > $verificator->whitelisted_accounts) {
+                $verificator->lockUser();
+                return true;
+            }
+        }
+        return false;
     }
 
-    public function getUser()
+    /**
+     * Returns true if one of the verificators is locked
+     * 
+     * @return boolean
+     */
+    public function isLocked()
     {
-        return $this->user;
+        foreach ($this->verificators as $verificator) {
+            if ($verificator->isLocked()) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public function getUserList()
+    public function addQuery()
     {
-        return $this->users;
+        foreach ($this->verificators as $verificator) {
+            $verificator->addQuery();
+        }
+    }
+
+    /**
+     * Reports the highest verification count
+     * 
+     * @return int[]
+     */
+    public function getVerificationCount()
+    {
+        $count = array();
+        foreach ($this->verificators as $verificator) {
+            $count[] = $verificator->getVerificationCount();
+        }
+        return $count;
+    }
+
+    /**
+     * Returns the UIDS for all verificators
+     * 
+     * @return string[]
+     */
+    public function getUids()
+    {
+        $uids = array();
+        foreach ($this->verificators as $verificator) {
+            $uids[] = $verificator->uid;
+        }
+        return $uids;
+    }
+
+    /**
+     * @return Verificator[]
+     */
+    public function getVerificators()
+    {
+        return $this->verificators;
+    }
+
+    public function getUid()
+    {
+        $uid = "";
+        foreach ($this->verificators as $verificator) {
+            $uid .= $verificator->uid;
+        }
+        $uid = \sha1($uid);
+        return $uid;
+    }
+
+    public function unlockUser()
+    {
+        foreach ($this->verificators as $verificator) {
+            $verificator->unlockUser();
+        }
+    }
+
+    public function verifyUser()
+    {
+        foreach ($this->verificators as $verificator) {
+            $verificator->verifyUser();
+        }
     }
 }

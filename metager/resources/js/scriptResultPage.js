@@ -73,7 +73,7 @@ function verify(event) {
   document.removeEventListener("pointerdown", verify);
   document.removeEventListener("scroll", verify);
 
-  let data = "mm=" + document.querySelector('meta[name="mm"]').content;
+  let data = "hv=" + document.querySelector('meta[name="hv"]').content;
 
   return fetch("/img/cat.png", {
     method: "POST",

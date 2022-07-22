@@ -38,10 +38,9 @@ class HumanVerification extends Controller
         }
 
         $captcha = Captcha::create("default", true);
+
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
-            ->with('uid', $human_verification->uid)
-            ->with('id', $human_verification->id)
             ->with('url', $redirect_url)
             ->with('correct', $captcha["key"])
             ->with('image', $captcha["img"])
@@ -132,30 +131,37 @@ class HumanVerification extends Controller
 
     public static function remove(Request $request)
     {
-        if (!$request->has('mm')) {
+        if (!$request->has('hv') || !Cache::has($request->input("hv"))) {
             abort(404, "Keine Katze gefunden.");
         }
 
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        $hv_data = Cache::get($request->input("hv"));
 
-        if ($request->input("mm") === $human_verification->uid) {
-            $human_verification->verifyUser();
+        if ($hv_data !== null && is_array($hv_data)) {
+            foreach ($hv_data as $hv_entry) {
+                $verificator = $hv_entry["class"]::impersonate($hv_entry["id"], $hv_entry["uid"]);
+                $verificator->verifyUser();
+            }
         }
 
         return response(hex2bin('89504e470d0a1a0a0000000d494844520000000100000001010300000025db56ca00000003504c5445000000a77a3dda0000000174524e530040e6d8660000000a4944415408d76360000000020001e221bc330000000049454e44ae426082'), 200)
             ->header('Content-Type', 'image/png');
     }
 
-    public static function removeGet(Request $request, $mm, $password, $url)
+    public static function removeGet(Request $request, $hv, $password, $url)
     {
         $url = \pack("H*", $url);
         # If the user is correct and the password is we will delete any entry in the database
-        $requiredPass = md5($mm . Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
+        $requiredPass = md5(Carbon::NOW()->day . $url . config("metager.metager.proxy.password"));
 
-        $human_verification = \app()->make(ModelsHumanVerification::class);
-
-        if ($mm === $human_verification->uid && $requiredPass == $password) {
-            $human_verification->verifyUser();
+        if ($requiredPass == $password && !empty($hv)) {
+            $hv_data = Cache::get($hv);
+            if ($hv_data !== null && is_array($hv_data)) {
+                foreach ($hv_data as $hv_entry) {
+                    $verificator = $hv_entry["class"]::impersonate($hv_entry["id"], $hv_entry["uid"]);
+                    $verificator->verifyUser();
+                }
+            }
         }
 
         return redirect($url);
@@ -168,30 +174,31 @@ class HumanVerification extends Controller
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
             ->with('ip', $request->ip())
-            ->with('userList', $human_verification->getUserList())
-            ->with('user', $human_verification->getUser())
+            ->with('verificators', $human_verification->getVerificators())
             ->with('css', [mix('css/admin/bot/index.css')])
             ->with('js', [mix('js/admin/bot.js')]);
     }
 
     public function botOverviewChange(Request $request)
     {
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        $verificator = $request->input("verificator");
+        $verificator = new $verificator();
+
 
         if ($request->filled("locked")) {
             if (\boolval($request->input("locked"))) {
-                $human_verification->lockUser();
+                $verificator->lockUser();
             } else {
-                $human_verification->unlockUser();
+                $verificator->unlockUser();
             }
         } elseif ($request->filled("whitelist")) {
             if (\boolval($request->input("whitelist"))) {
-                $human_verification->verifyUser();
+                $verificator->verifyUser();
             } else {
-                $human_verification->unverifyUser();
+                $verificator->unverifyUser();
             }
         } elseif ($request->filled("unusedResultPages")) {
-            $human_verification->setUnusedResultPage(intval($request->input('unusedResultPages')));
+            $verificator->setUnusedResultPage(intval($request->input('unusedResultPages')));
         }
 
         return redirect('admin/bot');

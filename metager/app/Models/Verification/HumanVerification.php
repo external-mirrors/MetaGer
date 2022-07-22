@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Verification;
 
 use App\SearchSettings;
 use Cache;
@@ -18,24 +18,15 @@ class HumanVerification
     public bool $alone;
     public int $whitelisted_accounts;
     public int $not_whitelisted_accounts;
-    public bool $picasso_enabled;
     public int $request_count_all_users = 0;
 
-    public function __construct(string $picasso_hash = null)
+    public function __construct()
     {
         $request = \request();
         $ip = $request->ip();
 
-        // Check if picasso challenge was solved
-        if ($picasso_hash === null) {
-            $this->id = hash("sha1", $ip);
-            $this->uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-            $this->picasso_enabled = false;
-        } else {
-            $this->id = hash("sha1", $picasso_hash);
-            $this->uid = hash("sha1", $picasso_hash . $ip . "uid");
-            $this->picasso_enabled = true;
-        }
+        $this->id = hash("sha1", $ip);
+        $this->uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
 
         # Get all Users of this IP
         $this->users = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
@@ -51,7 +42,6 @@ class HumanVerification
                 'unusedResultPages' => 0,
                 'whitelist' => false,
                 'locked' => false,
-                "picasso_enabled" => $this->picasso_enabled,
                 "expiration" => now()->addWeeks(2),
             ];
             $this->users[$this->uid] = $this->user;

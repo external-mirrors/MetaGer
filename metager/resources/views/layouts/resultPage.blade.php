@@ -46,9 +46,8 @@
 	<meta name="p" content="{{ getmypid() }}" />
 	<meta name="q" content="{{ $eingabe }}" />
 	<meta name="l" content="{{ LaravelLocalization::getCurrentLocale() }}" />
-	<meta name="mm" content="{{ \app()->make(\App\Models\HumanVerification::class)->uid }}" />
-	<meta name="mn" content="{{ \app()->make(\App\Models\HumanVerification::class)->getVerificationCount() }}" />
-	<meta name="bv_key" content="{{ \app()->make(\App\SearchSettings::class)->bv_key }}">
+	<meta name="mm" content="{{ \app()->make(\App\Models\Verification\HumanVerification::class)->uid }}" />
+	<meta name="mn" content="{{ \app()->make(\App\Models\Verification\HumanVerification::class)->getVerificationCount() }}" />
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
 	<meta name="referrer" content="origin">
 	<meta name="age-meta-label" content="age=18" />

@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\HumanVerification;
+use App\Models\Verification\HumanVerification;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;

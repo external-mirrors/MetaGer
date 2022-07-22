@@ -3,12 +3,10 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
-use App\Models\HumanVerification;
 use App\SearchSettings;
 
 class BrowserVerification
@@ -136,9 +134,6 @@ class BrowserVerification
                 if (\array_key_exists("js_loaded", $bvData)) {
                     $search_settings->bv_key = $key;
                     $search_settings->javascript_enabled = true;
-                    if (\array_key_exists("js_picasso", $bvData)) {
-                        $search_settings->javascript_picasso = $bvData["js_picasso"];
-                    }
                 }
                 return true;
             }
@@ -179,8 +174,6 @@ class BrowserVerification
             now()->format("Y-m-d H:i:s"),
             $request->input("eingabe"),
             "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
-            "picasso=" . \app()->make(SearchSettings::class)->javascript_picasso,
-
         ];
         $file_path = \storage_path("logs/metager/bv_fail.csv");
         $fh = fopen($file_path, "a");

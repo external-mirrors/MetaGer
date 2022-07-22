@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Models\HumanVerification;
+use App\Models\Verification\HumanVerification;
 use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -478,9 +478,6 @@ class MetaGer
                     'pw' => $pw,
                     "url" => \bin2hex($link)
                 ];
-                if (!empty($search_settings->javascript_picasso)) {
-                    $params["bv_key"] = $search_settings->bv_key;
-                }
 
                 $url = route('humanverification', $params);
                 $proxyPw = md5($verification_id . $day . $result->proxyLink . config("metager.metager.proxy.password"));

@@ -80,6 +80,7 @@ class HumanVerification
 
         # If the user is locked we will force a Captcha validation
         if ($user->isLocked()) {
+            $user->saveUser();
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             $this->logCaptcha($request); // TODO remove

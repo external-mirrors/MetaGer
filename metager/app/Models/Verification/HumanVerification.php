@@ -157,4 +157,11 @@ class HumanVerification
             $verificator->verifyUser();
         }
     }
+
+    public function saveUser()
+    {
+        foreach ($this->verificators as $verificator) {
+            $verificator->saveUser();
+        }
+    }
 }

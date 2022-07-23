@@ -75,6 +75,9 @@ abstract class Verification
 
     function lockUser()
     {
+        if ($this->user["unusedResultPages"] === 0) {
+            $this->user["unusedResultPages"] = 1;
+        }
         $this->user["locked"] = true;
         $this->saveUser();
     }

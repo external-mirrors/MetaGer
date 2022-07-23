@@ -40,7 +40,7 @@ abstract class Verification
                 'unusedResultPages' => 0,
                 'whitelist' => false,
                 'locked' => false,
-                "expiration" => now()->addWeeks(2),
+                "expiration" => now()->addHours(6),
             ];
             $this->users[$this->uid] = $this->user;
         } else {
@@ -103,30 +103,21 @@ abstract class Verification
     function saveUser()
     {
         $userList = Cache::get($this->cache_prefix . "." . $this->id, []);
-        $expiration_short = now()->addHours(6);
-        $expiration_long = now()->addWeeks(2);
+        $expiration = now()->addHours(6);
 
-        $cache_expiration = $expiration_short;
         // Todo remove setting expiration for all users
         // Just added to apply the new expiration policy to all existing entries
         // Will not be needed in the future
         foreach ($userList as $index => $user) {
-            if ($user["whitelist"] === true) {
-                $cache_expiration = $expiration_long;
-                if ($expiration_long < $user["expiration"]) {
-                    $userList[$index]["expiration"] = $expiration_long;
-                }
-            } else if ($expiration_short < $user["expiration"]) {
-                $userList[$index]["expiration"] = $expiration_short;
+            if ($expiration < $user["expiration"]) {
+                $userList[$index]["expiration"] = $expiration;
             }
         }
-        if ($this->isWhiteListed() === true) {
-            $this->user["expiration"] = $expiration_long;
-        } else {
-            $this->user["expiration"] = $expiration_short;
-        }
+
+        $this->user["expiration"] = $expiration;
+
         $userList[$this->uid] = $this->user;
-        Cache::put($this->cache_prefix . "." . $this->id, $userList, $cache_expiration);
+        Cache::put($this->cache_prefix . "." . $this->id, $userList, $expiration);
         $this->users = $userList;
     }
 

@@ -1,6 +1,7 @@
 <?php
 return [
-    '1' => 'Entschuldigen Sie die Störung',
+    '1' => 'Sicherheitsabfrage',
     '2' => 'Bitte geben Sie die 5 Zeichen aus dem Bild in die Eingabebox und bestätigen Sie mit "OK" um zur Ergebnisseite zu gelangen.',
     '3' => 'Captcha eingeben',
+    '4' => 'Auf diesem Gerät nicht erneut fragen (optional; setzt einen Cookie)',
 ];

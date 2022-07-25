@@ -3,6 +3,7 @@
 namespace App\Models\Verification;
 
 use Cache;
+use Exception;
 
 class HumanVerification
 {
@@ -12,8 +13,13 @@ class HumanVerification
 
     public function __construct()
     {
-        $this->verificators[] = new IPVerification();
-        $this->verificators[] = new AgentVerification();
+        try {
+            $cookie_verificator = new CookieVerification();
+            $this->verificators[] = $cookie_verificator;
+        } catch (Exception $e) {
+            $this->verificators[] = new IPVerification();
+            $this->verificators[] = new AgentVerification();
+        }
 
         $this->key = \md5("hv.key." . microtime(true));
         $ids = [];

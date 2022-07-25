@@ -12,11 +12,13 @@
         <img src="{{ $image }}" />
     </div>
     @if(Request::has('e'))
-    <p>
-        <font color="red">{{ __('Fehler: Falsche Eingabe!') }}</font>
-    </p>
+    <p id="error">{{ __('Fehler: Falsche Eingabe!') }}</p>
     @endif
     <p><input type="text" class="form-control" name="captcha" placeholder="@lang('captcha.3')" autofocus required></p>
+    <div id="dnaa-container">
+        <input type="checkbox" name="dnaa" id="dnaa" @if(Request::has("dnaa"))checked @endif>
+        <label for="dnaa">@lang('captcha.4')</label>
+    </div>
     <p><button type="submit" class="btn btn-success" name="check">OK</button></p>
 </form>
 @endsection

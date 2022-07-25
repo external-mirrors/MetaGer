@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Verification\CookieVerification;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use Captcha;
 use Carbon;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Input;
+use Laravel\SerializableClosure\Signers\Hmac;
 
 class HumanVerification extends Controller
 {
@@ -71,8 +73,16 @@ class HumanVerification extends Controller
                 "url" => $redirect_url,
                 "e" => "",
             ];
+            if ($request->has("dnaa")) {
+                $params["dnaa"] = true;
+            }
             return redirect(route('captcha_show', $params));
         } else {
+            // Check if the user wants to store a cookie
+            if ($request->has("dnaa")) {
+                CookieVerification::createCookie();
+            }
+
             \App\PrometheusExporter::CaptchaCorrect();
             # Generate a token that makes the user skip Humanverification
             # There are some special cases where a user that entered a correct Captcha

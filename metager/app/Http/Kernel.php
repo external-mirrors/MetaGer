@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
 
         'humanverification_routes' => [
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
         ],
 
         'api' => [

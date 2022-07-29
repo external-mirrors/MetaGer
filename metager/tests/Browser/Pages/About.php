@@ -31,7 +31,7 @@ class About extends Page
             ->waitForText("What We Stand For")
             ->assertTitle("About Us - MetaGer")
             ->switchLanguage("Español")
-            ->waitForText("Wofür wir stehen")
+            ->waitForText("Lo que representamos")
             ->assertTitle("Sobre nosotros - MetaGer")
             ->switchLanguage("Deutsch");
 

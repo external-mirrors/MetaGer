@@ -38,7 +38,7 @@ class Result
     const DESCRIPTION_LENGTH = 150;
 
     # Constructor for a new Result
-    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [], $originalLink = null, $longDescr = null)
+    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [], $originalLink = null, $longDescr = null, $valid = true, $rank = 0)
     {
         $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
@@ -75,7 +75,7 @@ class Result
         } else {
             $this->engineBoost = 1;
         }
-        $this->valid = true;
+        $this->valid = $valid;
         $this->host = @parse_url($link, PHP_URL_HOST);
         $this->strippedHost = $this->getStrippedHost($this->link);
         $this->strippedDomain = $this->getStrippedDomain($this->link);
@@ -83,7 +83,7 @@ class Result
         $this->strippedHostAnzeige = $this->getStrippedHost($this->anzeigeLink);
         $this->strippedDomainAnzeige = $this->getStrippedDomain($this->anzeigeLink);
         $this->strippedLinkAnzeige = $this->getStrippedLink($this->anzeigeLink);
-        $this->rank = 0;
+        $this->rank = $rank;
         $this->partnershop = isset($additionalInformation["partnershop"]) ? $additionalInformation["partnershop"] : false;
         $this->image = isset($additionalInformation["image"]) ? $additionalInformation["image"] : "";
         $this->imageDimensions = isset($additionalInformation["imagedimensions"]) ? $additionalInformation["imagedimensions"] : [];

@@ -4,7 +4,7 @@ return [
     'angle-double-right.alt' => 'Doppelter Pfeil nach rechts',
     'icon-lupe.alt' => 'Suchen',
     'chevron-down.alt' => '',
-    'menu.alt' => 'drei horizontalen Striche',
+    'menu.alt' => 'drei horizontale Striche',
     'cogs.alt' => 'Zahnräder',
     'ellipsis.alt' => 'Fortsetzungspunkte vertikal',
     'ellipsis-horizontal.alt' => 'Fortsetzungspunkte horizontal',

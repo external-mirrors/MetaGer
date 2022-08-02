@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Verification\CookieVerification;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
-use Captcha;
+use App\Models\Verification\Captcha;
 use Carbon;
 use Cookie;
+use Crypt;
 use Illuminate\Hashing\BcryptHasher as Hasher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -39,13 +40,30 @@ class HumanVerification extends Controller
             return redirect($redirect_url);
         }
 
-        $captcha = Captcha::create("default", true);
+        $captcha = new Captcha(
+            app('Illuminate\Filesystem\Filesystem'),
+            app('Illuminate\Contracts\Config\Repository'),
+            app('Intervention\Image\ImageManager'),
+            app('Illuminate\Session\Store'),
+            app('Illuminate\Hashing\BcryptHasher'),
+            app('Illuminate\Support\Str')
+        );
+        $captcha_key = $captcha->create('default', true);
+
+        // Extract the correct solution to this captcha for generating the Audio Captcha
+        $text = implode(" ", $captcha->getText());
+
+        $key = Crypt::decrypt($captcha_key["key"]);
+
+        #  $captcha = Captcha::create("default", true);
+
+        # $key = Crypt::decrypt($captcha["key"]);
 
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('url', $redirect_url)
-            ->with('correct', $captcha["key"])
-            ->with('image', $captcha["img"])
+            ->with('correct', $captcha_key["key"])
+            ->with('image', $captcha_key["img"])
             ->with('css', [mix('css/verify/index.css')]);
     }
 

@@ -12,7 +12,7 @@
     <div id="captcha-container">
         <img src="{{ $image }}" />
         <div id="audio-captcha">
-            <audio controls="controls" autoplay="autoplay">
+            <audio controls="controls" preload="none">
                 <source src="{{$tts_url}}" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>

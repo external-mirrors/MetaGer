@@ -94,7 +94,6 @@ class HumanVerification
         return $next($request);
     }
 
-    // TODO remove function
     private function logCaptcha(\Illuminate\Http\Request $request)
     {
         $log = [
@@ -102,13 +101,12 @@ class HumanVerification
             $request->input("eingabe"),
             "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
         ];
-        $file_path = \storage_path("logs/metager/captcha.csv");
+        $file_path = \storage_path("logs/metager/captcha_show.csv");
         $fh = fopen($file_path, "a");
         try {
             \fputcsv($fh, $log);
         } finally {
             fclose($fh);
         }
-        // Temporary Log to test new functionality. Will be removed again soon
     }
 }

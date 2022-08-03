@@ -56,10 +56,6 @@ class HumanVerification extends Controller
 
         $tts_url = TTSController::CreateTTSUrl($text, LaravelLocalization::getCurrentLocale());
 
-        #  $captcha = Captcha::create("default", true);
-
-        # $key = Crypt::decrypt($captcha["key"]);
-
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('url', $redirect_url)
@@ -117,6 +113,20 @@ class HumanVerification extends Controller
                 $params = array();
             }
 
+            $query = isset($params["eingabe"]) ? $params["eingabe"] : "";
+            $time = 0;
+            if ($request->filled("begin")) {
+                $time = $request->input("begin");
+                $time = \filter_var($time, \FILTER_VALIDATE_FLOAT);
+                if ($time === false) {
+                    $time = 0;
+                } else {
+                    $time = microtime(true) - $time;
+                }
+            }
+            self::logCaptchaSolve($query, $time);
+
+
             $params['token'] = $token;     // Overwrite if exists
 
             // Note that this will url_encode all values
@@ -132,6 +142,22 @@ class HumanVerification extends Controller
             $human_verification->verifyUser();
 
             return redirect($url);
+        }
+    }
+
+    private static function logCaptchaSolve(string $query, float $time)
+    {
+        $log = [
+            now()->format("Y-m-d H:i:s"),
+            $query,
+            "time=" . $time,
+        ];
+        $file_path = \storage_path("logs/metager/captcha_solve.csv");
+        $fh = fopen($file_path, "a");
+        try {
+            \fputcsv($fh, $log);
+        } finally {
+            fclose($fh);
         }
     }
 

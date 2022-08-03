@@ -2,9 +2,9 @@
 
 namespace App\Models\Verification;
 
-use Mews\Captcha\Captcha as CaptchaCaptcha;
+use Mews\Captcha\Captcha as MewsCaptcha;
 
-class Captcha extends CaptchaCaptcha
+class Captcha extends MewsCaptcha
 {
     public function getText()
     {

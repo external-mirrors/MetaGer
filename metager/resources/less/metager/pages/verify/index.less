@@ -1,11 +1,16 @@
 #captcha-container {
     display: flex;
     justify-content: center;
+    flex-direction: column;
     margin-bottom: 2rem;
 
     >img {
         max-width: 100%;
         max-width: min
+    }
+
+    >div#audio-captcha>audio {
+        width: 100%;
     }
 }
 

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
+use App\Http\Controllers\TTSController;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -43,6 +44,8 @@ Route::get('asso', function () {
         ->with('css', [mix('css/asso/style.css')])
         ->with('darkcss', [mix('css/asso/dark.css')]);
 });
+
+Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
 Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 

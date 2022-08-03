@@ -10,6 +10,12 @@
     <input type="hidden" name="c" value="{{ $correct }}">
     <div id="captcha-container">
         <img src="{{ $image }}" />
+        <div id="audio-captcha">
+            <audio controls="controls" autoplay="autoplay">
+                <source src="{{$tts_url}}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
     </div>
     @if(Request::has('e'))
     <p id="error">{{ __('Fehler: Falsche Eingabe!') }}</p>

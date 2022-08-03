@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use Input;
 use Laravel\SerializableClosure\Signers\Hmac;
+use LaravelLocalization;
 
 class HumanVerification extends Controller
 {
@@ -53,7 +54,7 @@ class HumanVerification extends Controller
         // Extract the correct solution to this captcha for generating the Audio Captcha
         $text = implode(" ", $captcha->getText());
 
-        $key = Crypt::decrypt($captcha_key["key"]);
+        $tts_url = TTSController::CreateTTSUrl($text, LaravelLocalization::getCurrentLocale());
 
         #  $captcha = Captcha::create("default", true);
 
@@ -64,6 +65,7 @@ class HumanVerification extends Controller
             ->with('url', $redirect_url)
             ->with('correct', $captcha_key["key"])
             ->with('image', $captcha_key["img"])
+            ->with('tts_url', $tts_url)
             ->with('css', [mix('css/verify/index.css')]);
     }
 

@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
-    margin-bottom: 2rem;
+    margin-bottom: .5rem;
 
     >img {
         max-width: 100%;
@@ -23,5 +23,24 @@
     &>label[for="dnaa"],
     &>input[type=checkbox] {
         cursor: pointer;
+    }
+}
+
+#submit-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    max-width: 100%;
+    flex-wrap: wrap;
+
+    >button {
+        min-width: 8rem;
+        flex-grow: 1;
+    }
+
+    >a {
+        display: block;
+        white-space: nowrap;
     }
 }

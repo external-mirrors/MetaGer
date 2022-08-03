@@ -26,6 +26,9 @@
         <input type="checkbox" name="dnaa" id="dnaa" @if(Request::has("dnaa"))checked @endif>
         <label for="dnaa">@lang('captcha.4')</label>
     </div>
-    <p><button type="submit" class="btn btn-success" name="check">OK</button></p>
+    <div id="submit-group">
+        <button type="submit" class="btn btn-success" name="check">OK</button>
+        <a href="{{ url()->full() }}">@lang('captcha.5')</a>
+    </div>
 </form>
 @endsection

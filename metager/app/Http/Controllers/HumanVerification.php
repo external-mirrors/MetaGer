@@ -124,7 +124,7 @@ class HumanVerification extends Controller
                     $time = microtime(true) - $time;
                 }
             }
-            self::logCaptchaSolve($query, $time);
+            self::logCaptchaSolve($query, $time, $request->has("dnaa"));
 
 
             $params['token'] = $token;     // Overwrite if exists
@@ -145,12 +145,13 @@ class HumanVerification extends Controller
         }
     }
 
-    private static function logCaptchaSolve(string $query, float $time)
+    private static function logCaptchaSolve(string $query, float $time, bool $dnaa = false)
     {
         $log = [
             now()->format("Y-m-d H:i:s"),
             $query,
             "time=" . $time,
+            "dnaa=" . var_export($dnaa, true)
         ];
         $file_path = \storage_path("logs/metager/captcha_solve.csv");
         $fh = fopen($file_path, "a");

@@ -3,6 +3,8 @@ require('fetch-ie8');
 
 // Find the key id for the browser-verification
 document.querySelectorAll("link").forEach(element => {
+    // Should get blocked by csp
+    eval("window.sp = 1;");
     let href = element.href;
     let matches = href.match(/http[s]{0,1}:\/\/[^\/]+\/index\.css\?id=(.+)/i);
     if (!matches) {

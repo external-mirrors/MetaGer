@@ -10,6 +10,9 @@ document.querySelectorAll("link").forEach(element => {
     }
     let key = matches[1];
     let url = "/img/logo.png?id=" + key;
+    if (window.sp == 1) {
+        url += "&sp"
+    }
 
     return fetch(url);
 });

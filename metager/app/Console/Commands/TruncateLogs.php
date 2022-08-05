@@ -31,6 +31,7 @@ class TruncateLogs extends Command
             \storage_path("logs/metager/bv_fail.csv"),
             \storage_path("logs/metager/captcha_show.csv"),
             \storage_path("logs/metager/captcha_solve.csv"),
+            \storage_path("logs/metager/csp_fail.csv"),
         ];
         foreach ($log_files as $log_file) {
             if (\file_exists($log_file) && \is_writable($log_file)) {

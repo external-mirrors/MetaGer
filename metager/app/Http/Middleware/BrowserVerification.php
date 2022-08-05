@@ -135,6 +135,9 @@ class BrowserVerification
                     $search_settings->bv_key = $key;
                     $search_settings->javascript_enabled = true;
                 }
+                if (\array_key_exists("csp", $bvData) && $bvData["csp"] === false) {
+                    $this->logCSP();
+                }
                 return true;
             }
             usleep(10 * 1000);
@@ -176,6 +179,23 @@ class BrowserVerification
             "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
         ];
         $file_path = \storage_path("logs/metager/bv_fail.csv");
+        $fh = fopen($file_path, "a");
+        try {
+            \fputcsv($fh, $log);
+        } finally {
+            fclose($fh);
+        }
+    }
+
+    public static function logCSP()
+    {
+        $request = request();
+        $log = [
+            now()->format("Y-m-d H:i:s"),
+            $request->input("eingabe"),
+            "ua=" . $_SERVER["AGENT"],
+        ];
+        $file_path = \storage_path("logs/metager/csp_fail.csv");
         $fh = fopen($file_path, "a");
         try {
             \fputcsv($fh, $log);

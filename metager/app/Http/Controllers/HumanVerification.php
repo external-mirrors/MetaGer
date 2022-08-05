@@ -293,6 +293,11 @@ class HumanVerification extends Controller
             $bvData = [];
         }
         $bvData["js_loaded"] = now();
+        if ($request->has("sp")) {
+            $bvData["csp"] = false;
+        } else {
+            $bvData["csp"] = true;
+        }
 
         Cache::put($key, $bvData, now()->addSeconds(30));
 

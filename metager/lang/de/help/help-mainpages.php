@@ -20,11 +20,11 @@ return [
     "resultpage.settings" => 'Einstellungen: Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im aktuellen Fokus vornehmen. Sie können auch Suchmaschinen, die dem Fokus zugeordnet sind, an- und abwählen. Ihre Einstellungen werden mithilfe eines nicht personenbeziehbaren Klartextcookies gespeichert. Die Einstellungsseite erreichen Sie auch über das Menu oben rechts.',
    
     "result.title" => 'Ergebnisse',
-    "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png"></div></p>',
+    "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png" alt="Bildschrimfoto eines Suchergebnisses"></div></p>',
     "result.info.open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
     "result.info.newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab.',
     "result.info.anonym" => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
-    "result.info.more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png"></div></p>',
+    "result.info.more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png" alt="Bildschrimfoto eines ausgeklappten Suchergebnisses"></div></p>',
     "result.info.2" => 'Die neuen Optionen sind:',
     "result.info.saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="/hilfe/funktionen#searchinsearch"> Suche in der Suche</a>)',
     "result.info.domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',

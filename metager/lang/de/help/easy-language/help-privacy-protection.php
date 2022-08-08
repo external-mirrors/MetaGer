@@ -13,9 +13,9 @@ return [
     "tor.1" => "Tor-Hidden-Service ist die sicherste Art MetaGer zu nutzen. <br> Aber man braucht den Tor-Browser dafür. <br> Hier kann man den Tor-Browser runter-laden: <br><a href=\"https://www.torproject.org/\" target=\"_blank\" rel=\"noopener\">https://www.torproject.org</a> <br> Wenn der Tor-Browser runter-geladen ist, kann man den Tor-Hidden-Service hier nutzen: <br><a href=\"https://metager.de/tor/\" target=\"_blank\" rel=\"noopener\">https://metager.de/tor</a>",
     "tor.2" => "MetaGer erreichen Sie im Tor-Browser dann unter: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion",
 
-    "proxy.title" => "Anonymisierender MetaGer-Proxyserver",
-    "proxy.1" => "Um ihn zu verwenden, müssen Sie auf der MetaGer-Ergebnisseite nur auf \"ANONYM ÖFFNEN\" am unteren Rand des Ergebnisses klicken. Dann wird Ihre Anfrage an die Zielwebseite über unseren anonymisierenden Proxy-Server geleitet und Ihre persönlichen Daten bleiben weiterhin völlig geschützt. Wichtig: wenn Sie ab dieser Stelle den Links auf den Seiten folgen, bleiben Sie durch den Proxy geschützt. Sie können aber oben im Adressfeld keine neue Adresse ansteuern. In diesem Fall verlieren Sie den Schutz. Ob Sie noch geschützt sind, sehen Sie ebenfalls im Adressfeld. Es zeigt: https://proxy.suma-ev.de/?url=hier steht die eigentlich Adresse.",
-
+    "proxy.title" => "MetaGer-Proxy (Anonym öffnen)",
+    "proxy.1" => "Mit unserem MetaGer-Proxy kann man Web-Seiten anonym öffnen. <br> Das heißt, dass man unerkannt bleibt. <br> Der MetaGer-Proxy ist also wie ein Schutz-Schild. <br> Wenn Sie unerkannt suchen wollen geht das so: <br> Bei den Ergebnissen gibt es den Knopf <strong>Anonym öffnen</strong>. <br> So sieht der Knopf aus:",
+    "proxy.2" => "Wenn man auf den Knopf drückt sucht man unerkannt. <br> Wenn Sie oben in der Such-Leiste eine neue Web-Seite eingeben, <br> suchen Sie nicht mehr unerkannt.",
 
     'content.title' => 'Fragwürdige Inhalte / Jugendschutz',
     'content.explanation.1' => 'Ich habe "Treffer" erhalten, die finde ich nicht nur ärgerlich, sondern die enthalten meiner Meinung nach illegale Inhalte!',

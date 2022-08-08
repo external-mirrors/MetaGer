@@ -25,6 +25,10 @@
 		<h3>{!! trans('help/easy-language/help-privacy-protection.proxy.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.1') !!}</p>
+			<div class="image-container"><img src="/img/help-easy-lang-proxy.png"/></div>
+			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.2') !!}</p>
+
+
 		</div>
 	</section>
 

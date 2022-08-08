@@ -18,7 +18,7 @@ return [
     "proxy.2" => "Wenn man auf den Knopf drückt sucht man unerkannt. <br> Wenn Sie oben in der Such-Leiste eine neue Web-Seite eingeben, <br> suchen Sie nicht mehr unerkannt.",
 
     'content.title' => 'Fragwürdige Inhalte / Jugendschutz',
-    'content.explanation.1' => 'Ich habe "Treffer" erhalten, die finde ich nicht nur ärgerlich, sondern die enthalten meiner Meinung nach illegale Inhalte!',
-    'content.explanation.2' => 'Wenn Sie im Internet etwas finden, das Sie für illegal oder jugendgefährdend halten, dann können Sie sich per Mail an <a href="mailto:hotline@jugendschutz.net" target="_blank" rel="noopener">hotline@jugendschutz.net</a> wenden oder Sie gehen auf <a href="http://www.jugendschutz.net/" target="_blank" rel="noopener">www.jugendschutz.net</a> und füllen das dort zu findende Beschwerdeformular aus. Sinnvoll ist ein kurzer Hinweis, was Sie konkret für unzulässig halten und wie Sie auf dieses Angebot gestoßen sind. Direkt an uns können Sie fragwürdige Inhalte auch melden. Schreiben Sie dazu eine Mail an unseren Jugendschutzbeauftragten (<a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a>).',
+    'content.explanation.1' => 'Wenn Sie im Internet Inhalte finden, die verboten aussehen, kann man diese melden. <br> Sie können eine E-Mail an <a href="mailto:hotline@jugendschutz.net" target="_blank" rel="noopener">hotline@jugendschutz.net</a> schicken. <br> Oder Sie gehen auf <a href="http://www.jugendschutz.net/" target="_blank" rel="noopener">www.jugendschutz.net</a> und füllen das Beschwerde-Formular aus. ',
+    'content.explanation.2' => 'Wenn Sie auf MetaGer verbotene Inhalte finden, schreiben Sie uns. <br> Sie können eine E-Mail an <a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a> schicken.',
 
 ];

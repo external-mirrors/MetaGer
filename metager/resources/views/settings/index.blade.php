@@ -29,7 +29,7 @@
                     <input type="hidden" name="suma" value="{{ $suma }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit">{{ $sumaInfo["display-name"] }}</button>
+                    <button type="submit" aria-label="{{ $sumaInfo["display-name"] }} aktiviert">{{ $sumaInfo["display-name"] }}</button>
                 </form>
             </div>
             @endif
@@ -43,7 +43,7 @@
                     <input type="hidden" name="suma" value="{{ $suma }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit">{{ $sumaInfo["display-name"] }}</button>
+                    <button type="submit" aria-label="{{ $sumaInfo["display-name"] }} deaktiviert">{{ $sumaInfo["display-name"] }}</button>
                 </form>
             </div>
             @endif

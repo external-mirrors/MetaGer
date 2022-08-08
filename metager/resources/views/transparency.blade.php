@@ -12,7 +12,7 @@
 	</div>
 	<div class="card">
 		<h2>{{ trans('transparency.head.3') }}</h2>
-		<img src="/img/transparency-metaindex.svg" id="transparency-metaindex-img">
+		<img src="/img/transparency-metaindex.svg" alt="Visuelle Darstellung von zwei Indexen die sich zu einem Meta-Index ergänzen" id="transparency-metaindex-img">
 
 		<p>{{ trans('transparency.text.2.1') }}</p>
 		<p>{{ trans('transparency.text.2.2') }}</p>

@@ -373,6 +373,7 @@ class HumanVerification extends Controller
                     $bvData["csp"]["line-numbers"] = array();
                 }
                 $bvData["csp"]["line-numbers"][] = $report->{"line-number"};
+                sort($bvData["csp"]["line-numbers"]);
             }
 
             if (\property_exists($report, "column-number")) {
@@ -380,6 +381,7 @@ class HumanVerification extends Controller
                     $bvData["csp"]["column-numbers"] = array();
                 }
                 $bvData["csp"]["column-numbers"][] = $report->{"column-number"};
+                sort($bvData["csp"]["column-numbers"]);
             }
 
             Cache::put($mgv, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));

@@ -2,6 +2,7 @@
 
 namespace App\Models\Verification;
 
+use App\SearchSettings;
 use Cache;
 use Exception;
 
@@ -13,12 +14,24 @@ class HumanVerification
 
     public function __construct()
     {
+        $search_settings = \app()->make(SearchSettings::class);
+        $bv_key = $search_settings->bv_key;
+        $bv_data = Cache::get($bv_key);
+
         try {
             $cookie_verificator = new CookieVerification();
             $this->verificators[] = $cookie_verificator;
         } catch (Exception $e) {
-            $this->verificators[] = new IPVerification();
-            $this->verificators[] = new AgentVerification();
+            // If we detected usage of a webdriver
+            if (!empty($bv_data) && is_array($bv_data) && $bv_data["webdriver"] === true) {
+                $this->verificators[] = new WebdriverVerification();
+            } elseif (\array_key_exists("csp", $bv_data) && \array_key_exists("error_count", $bv_data["csp"]) && $bv_data["csp"]["error_count"] > 1) {
+                $this->verificators[] = new IPVerification();
+                $this->verificators[] = new CSPVerification($bv_data["csp"]);
+            } else {
+                $this->verificators[] = new IPVerification();
+                $this->verificators[] = new AgentVerification();
+            }
         }
 
         $this->key = \md5("hv.key." . microtime(true));

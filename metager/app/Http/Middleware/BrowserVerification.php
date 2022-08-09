@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
 use App\SearchSettings;
+use Response;
 
 class BrowserVerification
 {
@@ -88,6 +89,8 @@ class BrowserVerification
         Cache::put($key, [
             "start" => now()
         ], now()->addMinutes(30));
+        $search_settings = \app()->make(SearchSettings::class);
+        $search_settings->bv_key = $key;
 
         $report_to = route("csp_verification", ["mgv" => $key]);
         return response()->stream(function () use ($next, $request, $route, $key) {
@@ -99,7 +102,8 @@ class BrowserVerification
                 flush();
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 \app()->make(SearchSettings::class)->header_printed = true;
-                return $next($request);
+                $next($request);
+                return;
             }
 
             $params = $request->all();
@@ -129,13 +133,12 @@ class BrowserVerification
             $bvData = Cache::get($key);
 
             if ($bvData === null) {
-                continue;
+                return null;
             }
 
             if (!$js_loaded && \array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"])) {
                 $js_loaded = true;
                 $search_settings = \app()->make(SearchSettings::class);
-                $search_settings->bv_key = $key;
                 $search_settings->javascript_enabled = true;
             }
 

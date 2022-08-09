@@ -22,6 +22,7 @@ class HumanVerification extends Controller
     const EXPIRELONG = 60 * 60 * 24 * 14;
     const EXPIRESHORT = 60 * 60 * 72;
     const TOKEN_PREFIX = "humanverificationtoken.";
+    const BV_DATA_EXPIRATION_MINUTES = 5;
 
     public static function captchaShow(Request $request)
     {
@@ -269,14 +270,19 @@ class HumanVerification extends Controller
 
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
-            $bvData = Cache::get($key);
-            if ($bvData === null) {
-                $bvData = [];
-            }
-            $bvData["css_loaded"] = now();
-            Cache::put($key, $bvData, now()->addSeconds(30));
+            Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
+                $bvData = Cache::get($key);
+                if ($bvData === null) {
+                    $bvData = [];
+                }
+                if (\array_key_exists("css", $bvData)) {
+                    $bvData["css"] = array();
+                }
+                $bvData["css"]["loaded"] = now();
+                Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+            });
         }
-        return response(view('layouts.resultpage.verificationCss', ["url" => route("bv_verificationimage", ["id" => $key])]), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
     }
 
     public function verificationJsFile(Request $request)
@@ -288,38 +294,95 @@ class HumanVerification extends Controller
             abort(404);
         }
 
-        $bvData = Cache::get($key);
-        if ($bvData === null) {
-            $bvData = [];
-        }
-        $bvData["js_loaded"] = now();
-        if ($request->has("sp")) {
-            $bvData["csp"] = false;
-        } else {
-            $bvData["csp"] = true;
-        }
+        // Acquire lock
+        Cache::lock($key . "_lock", 10)->block(5, function () use ($key, $request) {
+            $bvData = Cache::get($key);
+            if ($bvData === null) {
+                $bvData = [];
+            }
+            if (!\array_key_exists("js", $bvData)) {
+                $bvData["js"] = array();
+            }
+            $bvData["js"]["loaded"] = now();
 
-        Cache::put($key, $bvData, now()->addSeconds(30));
+            if (!\array_key_exists("csp", $bvData)) {
+                $bvData["csp"] = array();
+            }
+            if ($request->has("sp")) {
+                $bvData["csp"]["honor"] = false;
+            } else {
+                $bvData["csp"]["honor"] = true;
+            }
+
+            if ($request->has("wd")) {
+                $bvData["webdriver"] = true;
+            } else {
+                $bvData["webdriver"] = false;
+            }
+
+            Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+        });
+
+
 
         return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
     }
 
-    public function verificationImage(Request $request)
+    public function verificationCSP(Request $request, string $mgv)
     {
-        $key = $request->input("id", "");
-
         // Verify that key is a md5 checksum
-        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+        if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
             abort(404);
         }
 
-        $bvData = Cache::get($key);
-        if ($bvData === null) {
-            $bvData = [];
-        }
-        $bvData["css_image_loaded"] = now();
-        Cache::put($key, $bvData, now()->addSeconds(30));
+        Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv, $request) {
+            $bvData = Cache::get($mgv);
+            if ($bvData === null) {
+                $bvData = [];
+            }
 
-        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
+            $report = $request->getContent();
+            $report = \json_decode($report);
+            if (empty($report) || !\property_exists($report, "csp-report")) {
+                return;
+            } else {
+                $report = $report->{"csp-report"};
+            }
+
+            if (!\array_key_exists("csp", $bvData)) {
+                $bvData["csp"] = array();
+            }
+            // Check if this is our wanted CSP error
+            $js_url = url("/js/index.js");
+            if (\property_exists($report, "source-file") && stripos($report->{"source-file"}, $js_url) === 0) {
+                $bvData["csp"]["reporting_enabled"] = true;
+            } else {
+                $bvData["csp"]["loaded"] = now();
+            }
+
+            // Update CSP Error Count
+            if (!\array_key_exists("error_count", $bvData["csp"])) {
+                $bvData["csp"]["error_count"] = 1;
+            } else {
+                $bvData["csp"]["error_count"]++;
+            }
+
+            // Update Array of Column- and Line-Numbers of the errors
+            if (\property_exists($report, "line-number")) {
+                if (!\array_key_exists("line-numbers", $bvData["csp"])) {
+                    $bvData["csp"]["line-numbers"] = array();
+                }
+                $bvData["csp"]["line-numbers"][] = $report->{"line-number"};
+            }
+
+            if (\property_exists($report, "column-number")) {
+                if (!\array_key_exists("column-numbers", $bvData["csp"])) {
+                    $bvData["csp"]["column-numbers"] = array();
+                }
+                $bvData["csp"]["column-numbers"][] = $report->{"column-number"};
+            }
+
+            Cache::put($mgv, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+        });
     }
 }

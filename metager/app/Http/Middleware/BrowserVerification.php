@@ -73,8 +73,10 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
             } else {
+                $params = request()->except("mgv");
+                $url = route("resultpage", $params);
                 self::logBrowserverification($request);
-                return redirect(url("/"));
+                return redirect($url);
             }
         }
 
@@ -113,8 +115,12 @@ class BrowserVerification
         do {
             $bvData = Cache::get($key);
 
+            if ($bvData === null) {
+                return false;
+            }
+
             // This condition is true when at least the css file was loaded
-            if ($bvData !== null && sizeof($bvData) > 1) {
+            if (sizeof($bvData) > 1) {
                 if (!\array_key_exists("js_loaded", $bvData) && \array_key_exists("css_loaded", $bvData)) {
                     // CSS File was loaded but Javascript wasn't
                     if ($wait_time_js_ms === null) {
@@ -141,7 +147,7 @@ class BrowserVerification
                 return true;
             }
             usleep(10 * 1000);
-        } while ($bvData === null || now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
+        } while (now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
         return false;
     }
 

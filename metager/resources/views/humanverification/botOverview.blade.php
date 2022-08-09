@@ -26,6 +26,7 @@
                     <td>
                         <form action="" method="post">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
+                            <input type="hidden" name="key" value="{{ $key }}">
                             <input type="number" name="unusedResultPages" id="unusedResultPages" value="{{$verificator->getVerificationCount()}}">
                         </form>
                     </td>
@@ -35,6 +36,7 @@
                     <td>
                         <form action="" method="post">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
+                            <input type="hidden" name="key" value="{{ $key }}">
                             <select name="whitelist" id="locked">
                                 <option value="1" @if($verificator->isWhitelisted()) selected @endif>True</option>
                                 <option value="0" @if(!$verificator->isWhitelisted()) selected @endif>False</option>
@@ -47,6 +49,7 @@
                     <td>
                         <form action="" method="post">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
+                            <input type="hidden" name="key" value="{{ $key }}">
                             <select name="locked" id="locked">
                                 <option value="1" @if($verificator->isLocked()) selected @endif>True</option>
                                 <option value="0" @if(!$verificator->isLocked()) selected @endif>False</option>

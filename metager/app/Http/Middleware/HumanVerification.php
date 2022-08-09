@@ -68,7 +68,11 @@ class HumanVerification
 
         /** @var ModelsHumanVerification */
         $user = App::make(ModelsHumanVerification::class);
-        $search_settings = \app()->make(SearchSettings::class);
+
+        if ($request->has("admin_bot")) {
+            echo redirect(route("admin_bot", ["key" => $user->key]));
+            return;
+        }
 
         /**
          * Directly lock any user when there are many not whitelisted accounts on this IP
@@ -83,8 +87,9 @@ class HumanVerification
             $user->saveUser();
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            $this->logCaptcha($request); // TODO remove
-            return redirect()->route('captcha_show', ["url" => URL::full()]); // TODO uncomment
+            $this->logCaptcha($request);
+            echo redirect()->route('captcha_show', ["url" => URL::full(), "key" => $user->key]); // TODO uncomment
+            return;
         }
 
         $user->addQuery();

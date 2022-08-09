@@ -7,6 +7,7 @@
 <p>@lang('captcha.2')</p>
 <form method="post" action="{{ route('captcha_solve') }}">
     <input type="hidden" name="url" value="{!! $url !!}">
+    <input type="hidden" name="key" value="{{ $key }}">
     <input type="hidden" name="begin" value="{{ \microtime(true) }}">
     <input type="hidden" name="c" value="{{ $correct }}">
     <div id="captcha-container">

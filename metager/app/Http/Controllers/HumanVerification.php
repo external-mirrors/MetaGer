@@ -36,7 +36,11 @@ class HumanVerification extends Controller
             $redirect_url = url("/");
         }
 
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if (!$request->filled("key")) {
+            abort(404);
+        }
+
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
         if (!$human_verification->isLocked()) {
             return redirect($redirect_url);
@@ -60,6 +64,7 @@ class HumanVerification extends Controller
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('url', $redirect_url)
+            ->with("key", $request->input("key"))
             ->with('correct', $captcha_key["key"])
             ->with('image', $captcha_key["img"])
             ->with('tts_url', $tts_url)
@@ -78,17 +83,17 @@ class HumanVerification extends Controller
         if (stripos($redirect_url, $protocol . $request->getHttpHost()) !== 0) {
             $redirect_url = url("/");
         }
-        $human_verification = \app()->make(ModelsHumanVerification::class);
 
         $lockedKey = $request->post("c", "");
 
         $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
-        if (empty($lockedKey) || $validator->fails()) {
+        if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
             $params = [
                 "url" => $redirect_url,
                 "e" => "",
+                "key" => $request->input("key", "")
             ];
             if ($request->has("dnaa")) {
                 $params["dnaa"] = true;
@@ -139,6 +144,7 @@ class HumanVerification extends Controller
             # If we can unlock the Account of this user we will redirect him to the result page
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
+            $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
             $human_verification->unlockUser();
             $human_verification->verifyUser();
 
@@ -229,11 +235,22 @@ class HumanVerification extends Controller
 
     public function botOverview(Request $request)
     {
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if (!$request->has("key") || !Cache::has($request->input("key"))) {
+            $url = route("resultpage", ["admin_bot" => ""]);
+            return redirect($url);
+        }
+
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
+
+        if ($human_verification === null) {
+            $url = route("resultpage", ["admin_bot" => ""]);
+            return redirect($url);
+        }
 
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
             ->with('ip', $request->ip())
+            ->with("key", $request->input("key"))
             ->with('verificators', $human_verification->getVerificators())
             ->with('css', [mix('css/admin/bot/index.css')])
             ->with('js', [mix('js/admin/bot.js')]);
@@ -241,9 +258,17 @@ class HumanVerification extends Controller
 
     public function botOverviewChange(Request $request)
     {
-        $verificator = $request->input("verificator");
-        $verificator = new $verificator();
+        $verificator_class = $request->input("verificator");
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
+        $verificator = null;
+        foreach ($human_verification->getVerificators() as $verificator_tmp) {
+            if ($verificator_tmp::class !== $verificator_class) {
+                continue;
+            } else {
+                $verificator = $verificator_tmp;
+            }
+        }
 
         if ($request->filled("locked")) {
             if (\boolval($request->input("locked"))) {
@@ -261,7 +286,7 @@ class HumanVerification extends Controller
             $verificator->setUnusedResultPage(intval($request->input('unusedResultPages')));
         }
 
-        return redirect('admin/bot');
+        return redirect(route("admin_bot", ["key" => $request->input("key")]));
     }
 
     public function verificationCssFile(Request $request)

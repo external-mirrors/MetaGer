@@ -68,15 +68,19 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 abort(404);
             }
-            if ($this->waitForBV($key, 6500)) {
+            $bv_result = $this->waitForBV($key, 6500);
+            if ($bv_result) {
                 \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 return $next($request);
-            } else {
+            } elseif ($bv_result === null) {
                 $params = request()->except("mgv");
                 $url = route("resultpage", $params);
                 self::logBrowserverification($request);
                 return redirect($url);
+            } else {
+                self::logBrowserverification($request);
+                return redirect(url("/"));
             }
         }
 
@@ -116,7 +120,7 @@ class BrowserVerification
             $bvData = Cache::get($key);
 
             if ($bvData === null) {
-                return false;
+                return null;
             }
 
             // This condition is true when at least the css file was loaded

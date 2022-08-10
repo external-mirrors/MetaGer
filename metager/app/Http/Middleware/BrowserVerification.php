@@ -89,8 +89,6 @@ class BrowserVerification
         Cache::put($key, [
             "start" => now()
         ], now()->addMinutes(30));
-        $search_settings = \app()->make(SearchSettings::class);
-        $search_settings->bv_key = $key;
 
         $report_to = route("csp_verification", ["mgv" => $key]);
         return response()->stream(function () use ($next, $request, $route, $key) {
@@ -126,6 +124,9 @@ class BrowserVerification
 
         $js_loaded = false;
         $csp_loaded = null;
+
+        $search_settings = \app()->make(SearchSettings::class);
+        $search_settings->bv_key = $key;
 
         do {
             usleep(10 * 1000);

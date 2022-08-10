@@ -3,4 +3,7 @@
 </head>
 <body>
     <iframe id="mg-framed" src="{{ $url }}" autofocus="true" onload="this.contentWindow.focus();"></iframe>
+    <script nonce="{{ $mgv }}">
+        document.querySelector("iframe").src += "&js=true";
+    </script>
 </body>

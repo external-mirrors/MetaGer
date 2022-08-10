@@ -69,7 +69,11 @@ class BrowserVerification
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
                 abort(404);
             }
-            $bv_result = $this->waitForBV($key, 6500);
+            $js_enabled = false;
+            if ($request->filled("js") && $request->input("js") === "true") {
+                $js_enabled = true;
+            }
+            $bv_result = $this->waitForBV($key, false, $js_enabled);
             if ($bv_result) {
                 \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -95,7 +99,7 @@ class BrowserVerification
             echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
             flush();
 
-            if ($this->supportsInlineVerification() && $this->waitForBV($key)) {
+            if ($this->supportsInlineVerification() && $this->waitForBV($key, true, null)) {
                 echo (view('layouts.resultpage.resources')->render());
                 flush();
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -110,23 +114,30 @@ class BrowserVerification
 
             echo (view('layouts.resultpage.unverifiedResultPage')
                 ->with('url', $url)
+                ->with('mgv', $key)
                 ->render());
             flush();
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-        }, 200, ["Content-Security-Policy" => "default-src 'self'; script-src 'self'; script-src-elem 'self'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to]);
+        }, 200, ["Content-Security-Policy" => "default-src 'self'; script-src 'self' 'nonce-$key'; script-src-elem 'self' 'nonce-$key'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to]);
     }
 
-    private function waitForBV($key, $wait_time_inline_verificytion_ms = 2000)
+    private function waitForBV($key, $inline = false, $js_enabled = false)
     {
         $bvData = null;
+        $max_wait_time_ms = 10000;
+        if ($inline) {
+            $max_wait_time_ms = 2000;
+        }
         $wait_time_ms = 250;
         $wait_start = now();
 
+        $css_loaded = false;
         $js_loaded = false;
         $csp_loaded = null;
 
         $search_settings = \app()->make(SearchSettings::class);
         $search_settings->bv_key = $key;
+
 
         do {
             usleep(10 * 1000);
@@ -137,33 +148,51 @@ class BrowserVerification
                 return null;
             }
 
-            if (!$js_loaded && \array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"])) {
-                $js_loaded = true;
-                $search_settings = \app()->make(SearchSettings::class);
-                $search_settings->javascript_enabled = true;
+            if ($css_loaded !== true) {
+                if (\array_key_exists("css", $bvData) && \array_key_exists("loaded", $bvData["css"])) {
+                    $css_loaded = true;
+                }
             }
 
-            if (\array_key_exists("csp", $bvData) && \array_key_exists("loaded", $bvData["csp"])) {
-                if (now()->diffInMilliseconds($bvData["csp"]["loaded"]) > $wait_time_ms) {
-                    $csp_loaded = true;
-                } else {
-                    $csp_loaded = false;
+            if ($js_loaded !== true) {
+                if (\array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"])) {
+                    $js_loaded = true;
+                    $search_settings = \app()->make(SearchSettings::class);
+                    $search_settings->javascript_enabled = true;
+                } elseif ($js_enabled === false) {
+                    $js_loaded = true;
+                } elseif ($js_enabled === null && $css_loaded && now()->diffInMilliseconds($bvData["css"]["loaded"]) > $wait_time_ms) {
+                    break;
+                }
+            }
+
+            if ($csp_loaded !== true) {
+                if (\array_key_exists("csp", $bvData) && \array_key_exists("loaded", $bvData["csp"])) {
+                    if (now()->diffInMilliseconds($bvData["csp"]["loaded"]) > $wait_time_ms) {
+                        $csp_loaded = true;
+                    } else {
+                        $csp_loaded = false;
+                    }
+                } elseif ($css_loaded && $js_loaded && $csp_loaded !== false) {
+                    // If css and javascript is both loaded we will wait a few more moments
+                    $latest_ready_state_change = $bvData["css"]["loaded"];
+                    if (\array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"]) && $bvData["js"]["loaded"] > $latest_ready_state_change) {
+                        $latest_ready_state_change = $bvData["js"]["loaded"];
+                    }
+                    if (now()->diffInMilliseconds($latest_ready_state_change) > $wait_time_ms) {
+                        $csp_loaded = true;
+                    }
                 }
             }
 
             if (
-                \array_key_exists("css", $bvData) && \array_key_exists("loaded", $bvData["css"]) &&
-                now()->diffInMilliseconds($bvData["css"]["loaded"]) > $wait_time_ms && ($csp_loaded === null ||
-                    $csp_loaded === true
-                )
+                $css_loaded &&
+                $js_loaded &&
+                $csp_loaded
             ) {
-                // Css is loaded and all other checks should've been, too
-                if (\array_key_exists("csp", $bvData) && array_key_exists("honor", $bvData["csp"]) && $bvData["csp"]["honor"] === false) {
-                    $this->logCSP();
-                }
                 return true;
             }
-        } while ($bvData === null || now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
+        } while (now()->diffInMilliseconds($wait_start) < $max_wait_time_ms);
         return false;
     }
 

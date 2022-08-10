@@ -256,6 +256,24 @@ class HumanVerification extends Controller
             ->with('js', [mix('js/admin/bot.js')]);
     }
 
+    public function bv(Request $request)
+    {
+        $bv_key = $request->input("bv_key", "");
+        $bv_data = null;
+        if (!empty($bv_key)) {
+            if (Cache::has($bv_key)) {
+                $bv_data = Cache::get($bv_key);
+            } else {
+                return redirect(url("/admin/bv"));
+            }
+        }
+
+        return view('humanverification.bv')
+            ->with('title', 'BV Data')
+            ->with('bv_key', $bv_key)
+            ->with("bv_data", $bv_data);
+    }
+
     public function botOverviewChange(Request $request)
     {
         $verificator_class = $request->input("verificator");

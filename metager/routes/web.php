@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
@@ -248,6 +249,7 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     });
     Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
     Route::post('bot', 'HumanVerification@botOverviewChange');
+    Route::get('bv', [HumanVerification::class, 'bv']);
     Route::group(['prefix' => 'spam'], function () {
         Route::get('/', 'AdminSpamController@index');
         Route::post('/', 'AdminSpamController@ban');

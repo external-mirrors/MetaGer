@@ -114,6 +114,8 @@ class HumanVerification
         if (!empty($locked_verificators)) {
             $log[] = "verificators=" . implode(",", $locked_verificators);
         }
+        $search_settings = \app()->make(SearchSettings::class);
+        $log[] = "bv_key=" . $search_settings->bv_key;
         $file_path = \storage_path("logs/metager/captcha_show.csv");
         $fh = fopen($file_path, "a");
         try {

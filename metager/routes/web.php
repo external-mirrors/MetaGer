@@ -246,7 +246,7 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     Route::get('ip', function (Request $request) {
         dd($request->ip(), $_SERVER["AGENT"]);
     });
-    Route::get('bot', 'HumanVerification@botOverview');
+    Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
     Route::post('bot', 'HumanVerification@botOverviewChange');
     Route::group(['prefix' => 'spam'], function () {
         Route::get('/', 'AdminSpamController@index');

@@ -22,6 +22,7 @@ class HumanVerification extends Controller
     const EXPIRELONG = 60 * 60 * 24 * 14;
     const EXPIRESHORT = 60 * 60 * 72;
     const TOKEN_PREFIX = "humanverificationtoken.";
+    const BV_DATA_EXPIRATION_MINUTES = 5;
 
     public static function captchaShow(Request $request)
     {
@@ -35,7 +36,11 @@ class HumanVerification extends Controller
             $redirect_url = url("/");
         }
 
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if (!$request->filled("key")) {
+            abort(404);
+        }
+
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
         if (!$human_verification->isLocked()) {
             return redirect($redirect_url);
@@ -59,6 +64,7 @@ class HumanVerification extends Controller
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
             ->with('url', $redirect_url)
+            ->with("key", $request->input("key"))
             ->with('correct', $captcha_key["key"])
             ->with('image', $captcha_key["img"])
             ->with('tts_url', $tts_url)
@@ -77,17 +83,17 @@ class HumanVerification extends Controller
         if (stripos($redirect_url, $protocol . $request->getHttpHost()) !== 0) {
             $redirect_url = url("/");
         }
-        $human_verification = \app()->make(ModelsHumanVerification::class);
 
         $lockedKey = $request->post("c", "");
 
         $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
-        if (empty($lockedKey) || $validator->fails()) {
+        if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
             $params = [
                 "url" => $redirect_url,
                 "e" => "",
+                "key" => $request->input("key", "")
             ];
             if ($request->has("dnaa")) {
                 $params["dnaa"] = true;
@@ -138,6 +144,7 @@ class HumanVerification extends Controller
             # If we can unlock the Account of this user we will redirect him to the result page
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
+            $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
             $human_verification->unlockUser();
             $human_verification->verifyUser();
 
@@ -228,11 +235,22 @@ class HumanVerification extends Controller
 
     public function botOverview(Request $request)
     {
-        $human_verification = \app()->make(ModelsHumanVerification::class);
+        if (!$request->has("key") || !Cache::has($request->input("key"))) {
+            $url = route("resultpage", ["admin_bot" => "true"]);
+            return redirect($url);
+        }
+
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
+
+        if ($human_verification === null) {
+            $url = route("resultpage", ["admin_bot" => "true"]);
+            return redirect($url);
+        }
 
         return view('humanverification.botOverview')
             ->with('title', "Bot Overview")
             ->with('ip', $request->ip())
+            ->with("key", $request->input("key"))
             ->with('verificators', $human_verification->getVerificators())
             ->with('css', [mix('css/admin/bot/index.css')])
             ->with('js', [mix('js/admin/bot.js')]);
@@ -240,9 +258,17 @@ class HumanVerification extends Controller
 
     public function botOverviewChange(Request $request)
     {
-        $verificator = $request->input("verificator");
-        $verificator = new $verificator();
+        $verificator_class = $request->input("verificator");
+        $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
+        $verificator = null;
+        foreach ($human_verification->getVerificators() as $verificator_tmp) {
+            if ($verificator_tmp::class !== $verificator_class) {
+                continue;
+            } else {
+                $verificator = $verificator_tmp;
+            }
+        }
 
         if ($request->filled("locked")) {
             if (\boolval($request->input("locked"))) {
@@ -260,7 +286,7 @@ class HumanVerification extends Controller
             $verificator->setUnusedResultPage(intval($request->input('unusedResultPages')));
         }
 
-        return redirect('admin/bot');
+        return redirect(route("admin_bot", ["key" => $request->input("key")]));
     }
 
     public function verificationCssFile(Request $request)
@@ -269,14 +295,19 @@ class HumanVerification extends Controller
 
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
-            $bvData = Cache::get($key);
-            if ($bvData === null) {
-                $bvData = [];
-            }
-            $bvData["css_loaded"] = now();
-            Cache::put($key, $bvData, now()->addSeconds(30));
+            Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
+                $bvData = Cache::get($key);
+                if ($bvData === null) {
+                    $bvData = [];
+                }
+                if (\array_key_exists("css", $bvData)) {
+                    $bvData["css"] = array();
+                }
+                $bvData["css"]["loaded"] = now();
+                Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+            });
         }
-        return response(view('layouts.resultpage.verificationCss', ["url" => route("bv_verificationimage", ["id" => $key])]), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
     }
 
     public function verificationJsFile(Request $request)
@@ -288,38 +319,97 @@ class HumanVerification extends Controller
             abort(404);
         }
 
-        $bvData = Cache::get($key);
-        if ($bvData === null) {
-            $bvData = [];
-        }
-        $bvData["js_loaded"] = now();
-        if ($request->has("sp")) {
-            $bvData["csp"] = false;
-        } else {
-            $bvData["csp"] = true;
-        }
+        // Acquire lock
+        Cache::lock($key . "_lock", 10)->block(5, function () use ($key, $request) {
+            $bvData = Cache::get($key);
+            if ($bvData === null) {
+                $bvData = [];
+            }
+            if (!\array_key_exists("js", $bvData)) {
+                $bvData["js"] = array();
+            }
+            $bvData["js"]["loaded"] = now();
 
-        Cache::put($key, $bvData, now()->addSeconds(30));
+            if (!\array_key_exists("csp", $bvData)) {
+                $bvData["csp"] = array();
+            }
+            if ($request->has("sp")) {
+                $bvData["csp"]["honor"] = false;
+            } else {
+                $bvData["csp"]["honor"] = true;
+            }
+
+            if ($request->has("wd")) {
+                $bvData["webdriver"] = true;
+            } else {
+                $bvData["webdriver"] = false;
+            }
+
+            Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+        });
+
+
 
         return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
     }
 
-    public function verificationImage(Request $request)
+    public function verificationCSP(Request $request, string $mgv)
     {
-        $key = $request->input("id", "");
-
         // Verify that key is a md5 checksum
-        if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
+        if (!preg_match("/^[a-f0-9]{32}$/", $mgv)) {
             abort(404);
         }
 
-        $bvData = Cache::get($key);
-        if ($bvData === null) {
-            $bvData = [];
-        }
-        $bvData["css_image_loaded"] = now();
-        Cache::put($key, $bvData, now()->addSeconds(30));
+        Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv, $request) {
+            $bvData = Cache::get($mgv);
+            if ($bvData === null) {
+                $bvData = [];
+            }
 
-        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
+            $report = $request->getContent();
+            $report = \json_decode($report);
+            if (empty($report) || !\property_exists($report, "csp-report")) {
+                return;
+            } else {
+                $report = $report->{"csp-report"};
+            }
+
+            if (!\array_key_exists("csp", $bvData)) {
+                $bvData["csp"] = array();
+            }
+            // Check if this is our wanted CSP error
+            $js_url = url("/js/index.js");
+            if (\property_exists($report, "source-file") && stripos($report->{"source-file"}, $js_url) === 0) {
+                $bvData["csp"]["reporting_enabled"] = true;
+            } else {
+                $bvData["csp"]["loaded"] = now();
+            }
+
+            // Update CSP Error Count
+            if (!\array_key_exists("error_count", $bvData["csp"])) {
+                $bvData["csp"]["error_count"] = 1;
+            } else {
+                $bvData["csp"]["error_count"]++;
+            }
+
+            // Update Array of Column- and Line-Numbers of the errors
+            if (\property_exists($report, "line-number")) {
+                if (!\array_key_exists("line-numbers", $bvData["csp"])) {
+                    $bvData["csp"]["line-numbers"] = array();
+                }
+                $bvData["csp"]["line-numbers"][] = $report->{"line-number"};
+                sort($bvData["csp"]["line-numbers"]);
+            }
+
+            if (\property_exists($report, "column-number")) {
+                if (!\array_key_exists("column-numbers", $bvData["csp"])) {
+                    $bvData["csp"]["column-numbers"] = array();
+                }
+                $bvData["csp"]["column-numbers"][] = $report->{"column-number"};
+                sort($bvData["csp"]["column-numbers"]);
+            }
+
+            Cache::put($mgv, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
+        });
     }
 }

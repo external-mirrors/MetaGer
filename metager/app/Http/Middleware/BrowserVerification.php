@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\QueryTimer;
 use Cache;
 use App\SearchSettings;
+use Response;
 
 class BrowserVerification
 {
@@ -88,70 +89,80 @@ class BrowserVerification
         Cache::put($key, [
             "start" => now()
         ], now()->addMinutes(30));
+        $search_settings = \app()->make(SearchSettings::class);
+        $search_settings->bv_key = $key;
 
-        echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
-        flush();
+        $report_to = route("csp_verification", ["mgv" => $key]);
+        return response()->stream(function () use ($next, $request, $route, $key) {
+            echo (view('layouts.resultpage.verificationHeader')->with('key', $key)->render());
+            flush();
 
-        if ($this->supportsInlineVerification() && $this->waitForBV($key)) {
-            echo (view('layouts.resultpage.resources')->render());
+            if ($this->supportsInlineVerification() && $this->waitForBV($key)) {
+                echo (view('layouts.resultpage.resources')->render());
+                flush();
+                \app()->make(QueryTimer::class)->observeEnd(self::class);
+                \app()->make(SearchSettings::class)->header_printed = true;
+                $next($request);
+                return;
+            }
+
+            $params = $request->all();
+            $params["mgv"] = $key;
+            $url = route($route, $params);
+
+            echo (view('layouts.resultpage.unverifiedResultPage')
+                ->with('url', $url)
+                ->render());
             flush();
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            \app()->make(SearchSettings::class)->header_printed = true;
-            return $next($request);
-        }
-
-        $params = $request->all();
-        $params["mgv"] = $key;
-        $url = route($route, $params);
-
-        echo (view('layouts.resultpage.unverifiedResultPage')
-            ->with('url', $url)
-            ->render());
-        flush();
-        \app()->make(QueryTimer::class)->observeEnd(self::class);
+        }, 200, ["Content-Security-Policy" => "default-src 'self'; script-src 'self'; script-src-elem 'self'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to]);
     }
 
     private function waitForBV($key, $wait_time_inline_verificytion_ms = 2000)
     {
         $bvData = null;
-        $wait_time_js_ms = null;
+        $wait_time_ms = 250;
         $wait_start = now();
+
+        $js_loaded = false;
+        $csp_loaded = null;
+
         do {
+            usleep(10 * 1000);
+
             $bvData = Cache::get($key);
 
             if ($bvData === null) {
                 return null;
             }
 
-            // This condition is true when at least the css file was loaded
-            if (sizeof($bvData) > 1) {
-                if (!\array_key_exists("js_loaded", $bvData) && \array_key_exists("css_loaded", $bvData)) {
-                    // CSS File was loaded but Javascript wasn't
-                    if ($wait_time_js_ms === null) {
-                        // Calculate a more acurate wait to since we do know how long it took the browser to load the css file 
-                        // we can estimate a more reasonable wait time to check if js is enabled
-                        $load_time_css_ms = $wait_start->diffInMilliseconds($bvData["css_loaded"]);
-                        $wait_time_js_ms = $load_time_css_ms * 3;
-                        $wait_time_inline_verificytion_ms = max($wait_time_js_ms + 500, $wait_time_inline_verificytion_ms);
-                    }
-                    if (now()->diffInMilliseconds($wait_start) <= $wait_time_js_ms) {
-                        usleep(10 * 1000);
-                        continue;
-                    }
-                }
-
+            if (!$js_loaded && \array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"])) {
+                $js_loaded = true;
                 $search_settings = \app()->make(SearchSettings::class);
-                if (\array_key_exists("js_loaded", $bvData)) {
-                    $search_settings->bv_key = $key;
-                    $search_settings->javascript_enabled = true;
+                $search_settings->javascript_enabled = true;
+            }
+
+            if (\array_key_exists("csp", $bvData) && \array_key_exists("loaded", $bvData["csp"])) {
+                if (now()->diffInMilliseconds($bvData["csp"]["loaded"]) > $wait_time_ms) {
+                    $csp_loaded = true;
+                } else {
+                    $csp_loaded = false;
                 }
-                if (\array_key_exists("csp", $bvData) && $bvData["csp"] === false) {
+            }
+
+            if (
+                \array_key_exists("css", $bvData) && \array_key_exists("loaded", $bvData["css"]) &&
+                now()->diffInMilliseconds($bvData["css"]["loaded"]) > $wait_time_ms && ($csp_loaded === null ||
+                    $csp_loaded === true
+                )
+            ) {
+                // Css is loaded and all other checks should've been, too
+                if (\array_key_exists("csp", $bvData) && array_key_exists("honor", $bvData["csp"]) && $bvData["csp"]["honor"] === false) {
                     $this->logCSP();
                 }
                 return true;
             }
-            usleep(10 * 1000);
-        } while (now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
+        } while ($bvData === null || now()->diffInMilliseconds($wait_start) < $wait_time_inline_verificytion_ms);
         return false;
     }
 

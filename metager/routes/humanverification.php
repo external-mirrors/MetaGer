@@ -9,4 +9,4 @@ Route::post('verify/metager', [HumanVerification::class, 'captchaSolve'])->name(
 Route::get('r/metager/{hv}/{pw}/{url}', ['as' => 'humanverification', 'uses' => 'HumanVerification@removeGet']);
 Route::post('img/dog.jpg', [HumanVerification::class, 'whitelist']);
 Route::get('index.css', [HumanVerification::class, 'verificationCssFile']);
-Route::get('metager.png', [HumanVerification::class, 'verificationImage'])->name("bv_verificationimage");
+Route::post('{mgv}/csp-report', [HumanVerification::class, 'verificationCSP'])->name("csp_verification");

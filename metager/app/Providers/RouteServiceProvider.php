@@ -154,7 +154,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('humanverification', function (Request $request) {
-            return Limit::perMinutes(5, 30)->by(\app()->make(HumanVerification::class)->getUid());
+            return Limit::perMinutes(5, 30)->by($request->input("key"));
         });
     }
 }

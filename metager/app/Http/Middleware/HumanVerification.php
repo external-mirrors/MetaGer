@@ -6,8 +6,6 @@ use App;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use Cache;
 use Closure;
-use Cookie;
-use Log;
 use URL;
 use App\QueryTimer;
 use App\SearchSettings;
@@ -64,11 +62,14 @@ class HumanVerification
 
         // The specific user
         $user = null;
-        $update = true;
 
         /** @var ModelsHumanVerification */
         $user = App::make(ModelsHumanVerification::class);
-        $search_settings = \app()->make(SearchSettings::class);
+
+        if ($request->has("admin_bot")) {
+            echo redirect(route("admin_bot", ["key" => $user->key]));
+            return;
+        }
 
         /**
          * Directly lock any user when there are many not whitelisted accounts on this IP
@@ -83,8 +84,9 @@ class HumanVerification
             $user->saveUser();
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            $this->logCaptcha($request); // TODO remove
-            return redirect()->route('captcha_show', ["url" => URL::full()]); // TODO uncomment
+            $this->logCaptcha($request, $user);
+            echo redirect()->route('captcha_show', ["url" => URL::full(), "key" => $user->key]); // TODO uncomment
+            return;
         }
 
         $user->addQuery();
@@ -94,13 +96,24 @@ class HumanVerification
         return $next($request);
     }
 
-    private function logCaptcha(\Illuminate\Http\Request $request)
+    private function logCaptcha(\Illuminate\Http\Request $request, ModelsHumanVerification $user)
     {
         $log = [
             now()->format("Y-m-d H:i:s"),
             $request->input("eingabe"),
             "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
         ];
+        $locked_verificators = array();
+        foreach ($user->getVerificators() as $verificator) {
+            if ($verificator->isLocked()) {
+                $locked_verificator = $verificator::class;
+                $locked_verificator = substr($locked_verificator, \strrpos($locked_verificator, "\\") + 1);
+                $locked_verificators[] = $locked_verificator;
+            }
+        }
+        if (!empty($locked_verificators)) {
+            $log[] = "verificators=" . implode(",", $locked_verificators);
+        }
         $file_path = \storage_path("logs/metager/captcha_show.csv");
         $fh = fopen($file_path, "a");
         try {

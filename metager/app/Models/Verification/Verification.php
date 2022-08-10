@@ -7,6 +7,7 @@ use Cache;
 abstract class Verification
 {
     protected $cache_prefix = "humanverification";
+    protected int $cache_duration_minutes = 360;
     private $users = [];
     private $user = [];
 
@@ -40,7 +41,7 @@ abstract class Verification
                 'unusedResultPages' => 0,
                 'whitelist' => false,
                 'locked' => false,
-                "expiration" => now()->addHours(6),
+                "expiration" => now()->addMinutes($this->cache_duration_minutes),
             ];
             $this->users[$this->uid] = $this->user;
         } else {
@@ -103,7 +104,7 @@ abstract class Verification
     function saveUser()
     {
         $userList = Cache::get($this->cache_prefix . "." . $this->id, []);
-        $expiration = now()->addHours(6);
+        $expiration = now()->addMinutes($this->cache_duration_minutes);
 
         // Todo remove setting expiration for all users
         // Just added to apply the new expiration policy to all existing entries
@@ -133,13 +134,10 @@ abstract class Verification
             Cache::forget($this->cache_prefix . "." . $this->id);
         } else {
             $new_user_list = [];
-            $expiration = now()->addHours(72);
+            $expiration = now()->addMinutes($this->cache_duration_minutes);
             foreach ($userList as $user) {
                 if ($user["uid"] !== $this->uid) {
                     $new_user_list[] = $user;
-                    if ($user["whitelist"]) {
-                        $expiration = now()->addWeeks(2);
-                    }
                 }
             }
             Cache::put($this->cache_prefix . "." . $this->id, $new_user_list, $expiration);

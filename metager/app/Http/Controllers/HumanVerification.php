@@ -236,14 +236,14 @@ class HumanVerification extends Controller
     public function botOverview(Request $request)
     {
         if (!$request->has("key") || !Cache::has($request->input("key"))) {
-            $url = route("resultpage", ["admin_bot" => ""]);
+            $url = route("resultpage", ["admin_bot" => "true"]);
             return redirect($url);
         }
 
         $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
         if ($human_verification === null) {
-            $url = route("resultpage", ["admin_bot" => ""]);
+            $url = route("resultpage", ["admin_bot" => "true"]);
             return redirect($url);
         }
 

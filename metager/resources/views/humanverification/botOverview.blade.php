@@ -24,7 +24,7 @@
                 <tr>
                     <td>Unused Resultpages</td>
                     <td>
-                        <form action="" method="post">
+                        <form action="" method="post" target="__top">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
                             <input type="hidden" name="key" value="{{ $key }}">
                             <input type="number" name="unusedResultPages" id="unusedResultPages" value="{{$verificator->getVerificationCount()}}">
@@ -34,7 +34,7 @@
                 <tr>
                     <td>Whitelist</td>
                     <td>
-                        <form action="" method="post">
+                        <form action="" method="post" target="__top">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
                             <input type="hidden" name="key" value="{{ $key }}">
                             <select name="whitelist" id="locked">
@@ -47,7 +47,7 @@
                 <tr>
                     <td>Locked</td>
                     <td>
-                        <form action="" method="post">
+                        <form action="" method="post" target="__top">
                             <input type="hidden" name="verificator" value="{{$verificator::class}}">
                             <input type="hidden" name="key" value="{{ $key }}">
                             <select name="locked" id="locked">

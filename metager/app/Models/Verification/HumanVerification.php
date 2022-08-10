@@ -25,7 +25,7 @@ class HumanVerification
                 $this->verificators[] = $cookie_verificator;
             } catch (Exception $e) {
                 // If we detected usage of a webdriver
-                if (!empty($bv_data) && is_array($bv_data) && $bv_data["webdriver"] === true) {
+                if (!empty($bv_data) && is_array($bv_data) && array_key_exists("webdriver", $bv_data) && $bv_data["webdriver"] === true) {
                     $this->verificators[] = new WebdriverVerification();
                 } elseif (!empty($bv_data) && \array_key_exists("csp", $bv_data) && \array_key_exists("error_count", $bv_data["csp"]) && $bv_data["csp"]["error_count"] > 1) {
                     $this->verificators[] = new IPVerification();

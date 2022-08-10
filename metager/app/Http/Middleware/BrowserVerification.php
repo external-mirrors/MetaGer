@@ -124,7 +124,7 @@ class BrowserVerification
     private function waitForBV($key, $inline = false, $js_enabled = false)
     {
         $bvData = null;
-        $max_wait_time_ms = 10000;
+        $max_wait_time_ms = 15000;
         if ($inline) {
             $max_wait_time_ms = 2000;
         }
@@ -159,6 +159,8 @@ class BrowserVerification
                     $js_loaded = true;
                     $search_settings = \app()->make(SearchSettings::class);
                     $search_settings->javascript_enabled = true;
+                } elseif ($css_loaded && $js_enabled && now()->diffInSeconds($bvData["css"]["loaded"]) >= 10) {
+                    $js_loaded = true;
                 } elseif ($js_enabled === false) {
                     $js_loaded = true;
                 } elseif ($js_enabled === null && $css_loaded && now()->diffInMilliseconds($bvData["css"]["loaded"]) > $wait_time_ms) {
@@ -175,11 +177,12 @@ class BrowserVerification
                     }
                 } elseif ($css_loaded && $js_loaded && $csp_loaded !== false) {
                     // If css and javascript is both loaded we will wait a few more moments
-                    $latest_ready_state_change = $bvData["css"]["loaded"];
-                    if (\array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"]) && $bvData["js"]["loaded"] > $latest_ready_state_change) {
-                        $latest_ready_state_change = $bvData["js"]["loaded"];
+                    $stop_waiting_for_csp = $bvData["css"]["loaded"]->addMilliseconds($wait_time_ms);
+                    if (\array_key_exists("js", $bvData) && \array_key_exists("loaded", $bvData["js"])) {
+                        $diff_css_js_milliseconds = $bvData["css"]["loaded"]->diffInMilliseconds($bvData["js"]["loaded"]);
+                        $stop_waiting_for_csp = $bvData["css"]["loaded"]->addMilliseconds($diff_css_js_milliseconds * 2);
                     }
-                    if (now()->diffInMilliseconds($latest_ready_state_change) > $wait_time_ms) {
+                    if (now() > $stop_waiting_for_csp) {
                         $csp_loaded = true;
                     }
                 }

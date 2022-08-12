@@ -21,6 +21,6 @@ return [
     'table.compliance.th.authinfocomp' => 'Erfüllte Auskunftsanfragen',
     'table.compliance.th.authblockcomp' => 'Erfüllte Sperranfragen',
 
-
+    'alt.text.1' => 'Visuelle Darstellung von zwei Indexen die sich zu einem Meta-Index ergänzen'
 
 ];

@@ -51,4 +51,7 @@ return [
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
+
+    'aria.label.1' =>'aktiviert',
+    'aria.label.2' =>'deaktiviert',
 ];

@@ -11,5 +11,6 @@
     "options.more"	=>	"Más",
     "options.less"	=>	"Menos",
     "gefVon"	=>	"Encontrado de",
+    'providers' => 'Proveedores',
     "proxytext"	=>	"Abrirá el link anonimizado."
 ];

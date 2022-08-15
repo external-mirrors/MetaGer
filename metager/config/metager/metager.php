@@ -17,6 +17,9 @@ return [
         "assoziator" => env("ASSO_KEY"),
         "berlin" => env("berlin"),
     ],
+    "tts" => [
+        "base_url" => env("TTS_BASE_URL", ""),
+    ],
     "fetcher" => [
         "proxy" => [
             "host" => env("PROXY_HOST", ""),

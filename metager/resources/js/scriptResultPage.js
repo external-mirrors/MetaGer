@@ -72,12 +72,15 @@ function verify(event) {
   document.removeEventListener("pointermove", verify);
   document.removeEventListener("pointerdown", verify);
   document.removeEventListener("scroll", verify);
+
+  let data = "hv=" + document.querySelector('meta[name="hv"]').content;
+
   return fetch("/img/cat.png", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: "mm=" + document.querySelector('meta[name="mm"]').content
+    body: data
   });
 }
 

@@ -1,38 +1,34 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Verification;
 
 use Cache;
-use URL;
 
-class HumanVerification
+abstract class Verification
 {
-
-    const CACHE_PREFIX = "humanverification";
+    protected $cache_prefix = "humanverification";
+    protected int $cache_duration_minutes = 360;
     private $users = [];
     private $user = [];
 
     public readonly ?string $id;
     public readonly ?string $uid;
-    public readonly ?bool $alone;
-    public readonly ?int $whitelisted_accounts;
-    public readonly ?int $not_whitelisted_accounts;
+    public bool $alone;
+    public int $whitelisted_accounts;
+    public int $not_whitelisted_accounts;
     public int $request_count_all_users = 0;
 
-    public function __construct()
+    /**
+     * @param string $id The Group ID for the verifier
+     * @param string $uid The User ID for the verifier
+     */
+    public function __construct($id, $uid)
     {
-        $request = \request();
-        $ip = $request->ip();
-
-        $id = hash("sha1", $ip);
-        $agent = $_SERVER["AGENT"];
-        $uid = hash("sha1", $ip . $_SERVER["AGENT"] . "uid");
-
         $this->id = $id;
         $this->uid = $uid;
 
         # Get all Users of this IP
-        $this->users = Cache::get(self::CACHE_PREFIX . "." . $id, []);
+        $this->users = Cache::get($this->cache_prefix . "." . $this->id, []);
         if ($this->users === null) {
             $this->users = [];
         }
@@ -45,12 +41,11 @@ class HumanVerification
                 'unusedResultPages' => 0,
                 'whitelist' => false,
                 'locked' => false,
-                "lockedKey" => "",
-                "expiration" => now()->addWeeks(2),
+                "expiration" => now()->addMinutes($this->cache_duration_minutes),
             ];
             $this->users[$this->uid] = $this->user;
         } else {
-            $this->user = $this->users[$uid];
+            $this->user = $this->users[$this->uid];
         }
 
         # Lock out everyone in a Bot network
@@ -64,7 +59,7 @@ class HumanVerification
             if (!$userTmp["whitelist"]) {
                 $not_whitelisted_accounts++;
                 $sum += $userTmp["unusedResultPages"];
-                if ($userTmp["uid"] !== $uid) {
+                if ($userTmp["uid"] !== $this->uid) {
                     $alone = false;
                 }
             } else {
@@ -77,16 +72,23 @@ class HumanVerification
         $this->not_whitelisted_accounts = $not_whitelisted_accounts;
     }
 
+    public static abstract function impersonate($id, $uid);
+
     function lockUser()
     {
+        if ($this->user["unusedResultPages"] === 0) {
+            $this->user["unusedResultPages"] = 1;
+        }
         $this->user["locked"] = true;
         $this->saveUser();
     }
 
     function unlockUser()
     {
-        $this->user["locked"] = false;
-        $this->saveUser();
+        if ($this->user["locked"]) {
+            $this->user["locked"] = false;
+            $this->saveUser();
+        }
     }
 
     /**
@@ -101,31 +103,22 @@ class HumanVerification
 
     function saveUser()
     {
-        $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
-        $expiration_short = now()->addHours(6);
-        $expiration_long = now()->addWeeks(2);
+        $userList = Cache::get($this->cache_prefix . "." . $this->id, []);
+        $expiration = now()->addMinutes($this->cache_duration_minutes);
 
-        $cache_expiration = $expiration_short;
         // Todo remove setting expiration for all users
         // Just added to apply the new expiration policy to all existing entries
         // Will not be needed in the future
         foreach ($userList as $index => $user) {
-            if ($user["whitelist"] === true) {
-                $cache_expiration = $expiration_long;
-                if ($expiration_long < $user["expiration"]) {
-                    $userList[$index]["expiration"] = $expiration_long;
-                }
-            } else if ($expiration_short < $user["expiration"]) {
-                $userList[$index]["expiration"] = $expiration_short;
+            if ($expiration < $user["expiration"]) {
+                $userList[$index]["expiration"] = $expiration;
             }
         }
-        if ($this->isWhiteListed() === true) {
-            $this->user["expiration"] = $expiration_long;
-        } else {
-            $this->user["expiration"] = $expiration_short;
-        }
+
+        $this->user["expiration"] = $expiration;
+
         $userList[$this->uid] = $this->user;
-        Cache::put(self::CACHE_PREFIX . "." . $this->id, $userList, $cache_expiration);
+        Cache::put($this->cache_prefix . "." . $this->id, $userList, $expiration);
         $this->users = $userList;
     }
 
@@ -134,23 +127,20 @@ class HumanVerification
      */
     private function deleteUser()
     {
-        $userList = Cache::get(self::CACHE_PREFIX . "." . $this->id, []);
+        $userList = Cache::get($this->cache_prefix . "." . $this->id, []);
 
         if (sizeof($userList) === 1) {
             // This user is the only one for this IP
-            Cache::forget(self::CACHE_PREFIX . "." . $this->id);
+            Cache::forget($this->cache_prefix . "." . $this->id);
         } else {
             $new_user_list = [];
-            $expiration = now()->addHours(72);
+            $expiration = now()->addMinutes($this->cache_duration_minutes);
             foreach ($userList as $user) {
                 if ($user["uid"] !== $this->uid) {
                     $new_user_list[] = $user;
-                    if ($user["whitelist"]) {
-                        $expiration = now()->addWeeks(2);
-                    }
                 }
             }
-            Cache::put(self::CACHE_PREFIX . "." . $this->id, $new_user_list, $expiration);
+            Cache::put($this->cache_prefix . "." . $this->id, $new_user_list, $expiration);
         }
     }
 
@@ -228,7 +218,8 @@ class HumanVerification
         }
 
         if ($changed) {
-            Cache::put(self::CACHE_PREFIX . "." . $user["id"], $newUserlist, now()->addWeeks(2));
+            Cache::put($this->cache_prefix . "." . $user["id"], $newUserlist, now()->addWeeks(2));
+            $this->users = $newUserlist;
         }
 
         $this->users = $newUserlist;
@@ -237,6 +228,11 @@ class HumanVerification
     public function getVerificationCount()
     {
         return $this->user["unusedResultPages"];
+    }
+
+    function getExpiration()
+    {
+        return $this->user["expiration"];
     }
 
     /**

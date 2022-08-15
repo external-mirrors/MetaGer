@@ -4,7 +4,7 @@ return [
     "header.1" => "Search Preferences",
     "text.1" => "Here you can set permanent search settings for your MetaGer search in focus :fokusName. If these do not remain permanently stored, please check in your browser settings whether it deletes cookies stored on exit.",
 
-    "hint.header" => "Note",
+    "hint.header" => "Setting Cookies",
     "hint.text" => "To save your search settings, we use non-personally identifiable cookies. These are saved in clear text in your browser. You can see an <a href=\":link\">overview</a> of all the settings and cookies you have made.",
     'hint.loadSettings' => 'Here is a link you can use as startpage or bookmark to keep your current settings. The URL sets your settings as cookies.',
 

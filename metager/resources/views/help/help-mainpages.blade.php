@@ -48,7 +48,6 @@
 			</div>
         <h3 id="einstellungen">{!! trans('help/help-mainpages.settings.title') !!}</h3>
             <ul>
-                <li>@lang('help/help-mainpages.settings.1', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</li>
                 <li>{!! trans('help/help-mainpages.settings.2') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.3') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.4') !!}</li>

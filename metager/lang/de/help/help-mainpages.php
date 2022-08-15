@@ -32,7 +32,6 @@ return [
 
     
     "settings.title" => 'Einstellungen',
-    "settings.1" => 'Hinweis <br> Unter dem Punkt „Hinweis“ finden Sie einen Link, der Ihnen Ihre gesamten Einstellungen zeigt. Diesen Link können Sie sich <a href=:link>anzeigen lassen</a>. Diese können Sie auch wieder mit einem Klick löschen. Ebenfalls finden Sie auch einen Link, den Sie kopieren und als Bookmark speichern können. Wenn Sie das Bookmark später aufrufen, sind Ihre Einstellungen wieder parat.',
     "settings.2" => 'Verwendete Suchmaschinen <br> Hier können Sie Ihre verwendeten Suchmaschinen einsehen und gegebenenfalls anpassen. Durch einen Klick auf den entsprechenden Namen kann diese entsprechend ein- oder ausgeschaltet werden.',
     "settings.3" => 'Suchfilter <br> Durch Suchfilter können Sie Ihre Suche dauerhaft filtern.',
     "settings.4" => 'Blacklist <br> Hier können Sie sich eine persönliche Blacklist zusammenzustellen. Sie können damit spezielle Domains ausfiltern und damit eigene Sucheinstellungen produzieren. Mit einem Klick auf "Hinzufügen" werden diese Einstellungen an den Link im Abschnitt "Hinweis" angehängt.',

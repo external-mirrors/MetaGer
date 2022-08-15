@@ -1,0 +1,46 @@
+#captcha-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: .5rem;
+
+    >img {
+        max-width: 100%;
+        max-width: min
+    }
+
+    >div#audio-captcha>audio {
+        width: 100%;
+    }
+}
+
+#error {
+    color: red;
+}
+
+#dnaa-container {
+
+    &>label[for="dnaa"],
+    &>input[type=checkbox] {
+        cursor: pointer;
+    }
+}
+
+#submit-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    max-width: 100%;
+    flex-wrap: wrap;
+
+    >button {
+        min-width: 8rem;
+        flex-grow: 1;
+    }
+
+    >a {
+        display: block;
+        white-space: nowrap;
+    }
+}

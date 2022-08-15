@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'heading' => 'Tienda asociada a MetaGer',
+    'paragraph.1' => 'Si en la lista de resultados de MetaGer aparecen enlaces con la palabra "tienda asociada", se trata inicialmente de resultados normales de una búsqueda en MetaGer. No se les da prioridad o una clasificación más alta, sino que se tratan como todos los demás resultados de búsqueda',
+    'paragraph.2' => 'Cuando se hace clic en el enlace, recibimos una pequeña cantidad para financiar MetaGer. El logotipo de la empresa asociada se muestra en el resultado. También puede reconocer siempre nuestras tiendas asociadas en este. Al hacer clic en dicho resultado, será dirigido a uno de nuestros servicios "direct.metager.de". Esto se comunica con nuestra red publicitaria para generar un enlace de afiliación. No se transmiten datos del usuario en el proceso. A continuación, le redirigimos directamente al sitio web de destino. Si quieres evitarlo, puedes hacer clic en "abrir anónimamente" en MetaGer. Sin embargo, en ese caso no recibiremos ninguna contribución para la financiación de MetaGer. Le pedimos entonces una <a href=":link">donación</a> para que podamos seguir desarrollando y operando MetaGer como una alternativa independiente en una asociación sin ánimo de lucro.',
+    'paragraph.3' => 'Los miembros del SUMA_EV pueden utilizar nuestra búsqueda sin publicidad <a href="/beitritt"> Hágase socio!</a>',
+];    

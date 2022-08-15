@@ -55,7 +55,8 @@ class MetaGerSearch extends Controller
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
         if (empty($metager->getQ())) {
-            return $metager->createView();
+            echo $metager->createView();
+            return;
         }
 
         $query_timer->observeStart("Search_CreateQuicktips");

@@ -55,9 +55,7 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
-        pcntl_signal(SIGINT, [$this, "sig_handler"]);
-        pcntl_signal(SIGTERM, [$this, "sig_handler"]);
-        pcntl_signal(SIGHUP, [$this, "sig_handler"]);
+        pcntl_signal(SIGQUIT, [$this, "sig_handler"]);
 
         // Redis might not be available now
         for ($count = 0; $count < 10; $count++) {
@@ -233,6 +231,7 @@ class RequestFetcher extends Command
 
     public function sig_handler($sig)
     {
+        $this->info("Received Shutdown signal");
         $this->shouldRun = false;
         echo ("Terminating Process\n");
     }

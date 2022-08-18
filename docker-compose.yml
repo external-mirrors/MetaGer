@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 # Volumes
 volumes:
@@ -75,6 +75,7 @@ services:
       dockerfile: build/node/Dockerfile
       target: $APP_ENV
     restart: unless-stopped
+    stop_signal: SIGKILL
     depends_on:
       - nginx
     volumes:

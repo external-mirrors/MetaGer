@@ -37,7 +37,7 @@ services:
       <<: *fpm_build
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
-    command: artisan schedule:work
+    command: artisan schedule:work-mg
     volumes:
       - ./metager:/metager/metager_app
     healthcheck:
@@ -82,7 +82,8 @@ services:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
-    image: redis:6
+    build:
+      context: ./build/redis
     restart: unless-stopped
     user: "redis:redis"
     healthcheck:

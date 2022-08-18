@@ -1,6 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
+
+_trap() {
+  echo "Stopping FPM"
+  kill -s SIGQUIT $FPM_PID
+}
+
+trap _trap SIGQUIT
 
 validate_laravel
 
@@ -22,4 +29,6 @@ php artisan db:seed
 php artisan ide-helper:generate
 php artisan ide-helper:meta
 
-docker-php-entrypoint php-fpm
+docker-php-entrypoint php-fpm &
+FPM_PID=$!
+wait

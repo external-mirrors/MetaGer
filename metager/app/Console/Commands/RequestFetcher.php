@@ -72,7 +72,7 @@ class RequestFetcher extends Command
         }
 
         try {
-            while ($this->shouldRun) {
+            while (true) {
                 Redis::set(self::HEALTHCHECK_KEY, Carbon::now()->format(self::HEALTHCHECK_FORMAT));
                 $operationsRunning = true;
                 curl_multi_exec($this->multicurl, $operationsRunning);
@@ -83,6 +83,9 @@ class RequestFetcher extends Command
 
                 if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
+                }
+                if (!$this->shouldRun && $operationsRunning === 0) {
+                    break;
                 }
             }
         } finally {

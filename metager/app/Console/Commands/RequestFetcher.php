@@ -84,7 +84,8 @@ class RequestFetcher extends Command
                 if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
                 }
-                if (!$this->shouldRun && $operationsRunning === 0) {
+
+                if (!$this->shouldRun && $operationsRunning === 0 && Redis::get(FPMGracefulStop::REDIS_FPM_STOPPED_KEY) !== NULL) {
                     break;
                 }
             }
@@ -234,8 +235,7 @@ class RequestFetcher extends Command
 
     public function sig_handler($sig)
     {
-        $this->info("Received Shutdown signal");
         $this->shouldRun = false;
-        echo ("Terminating Process\n");
+        $this->info("Terminating Process\n");
     }
 }

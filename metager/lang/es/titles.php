@@ -7,6 +7,10 @@
     "spende"	=>	"Donaciones - MetaGer",
     "datenschutz"	=>	"Protección de datos y privacidad - MetaGer",
     "help"	=>	"Ayuda - MetaGer",
+    'help-mainpages' =>'Ayuda - MetaGer',
+    'help-functions' =>'Ayuda - MetaGer',
+    'help-services' =>'Ayuda - MetaGer',
+    'help-privacy-protection' =>'Ayuda - MetaGer',
     "widget"	=>	"MetaGer Widget",
     "settings"	=>	"Preferencias",
     "websearch"	=>	"Widget para buscar la web - MetaGer",
@@ -22,5 +26,9 @@
     "asso"	=>	"Asociador - MetaGer",
     "plugin"	=>	"Plugin - MetaGer",
     "key"	=>	"Llave para afiliadas/os",
-    "allSettings"	=>	"Configuraciones para buscar - MetaGer"
+    'keychange' => 'Cambiar la clave del miembro',
+    'settings' => 'ajustes de búsqueda (:focus)',
+    "allSettings"	=>	"Configuraciones para buscar - MetaGer",
+    'transparency' => 'Declaración de transparencia - MetaGer',
+    'search-engine' => 'Motores de búsqueda - MetaGer',
 ];

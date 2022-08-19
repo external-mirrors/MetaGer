@@ -214,7 +214,7 @@ spec:
               memory: 100M
             limits:
         - name: redis
-          image: "redis:6"
+          image: "{{ template "redis_image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
           volumeMounts:

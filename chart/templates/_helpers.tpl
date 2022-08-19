@@ -73,6 +73,14 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
+{{- define "redis_image" -}}
+{{- if eq .Values.image.redis.tag "" -}}
+{{- .Values.image.redis.repository -}}
+{{- else -}}
+{{- printf "%s:%s" .Values.image.redis.repository .Values.image.redis.tag -}}
+{{- end -}}
+{{- end -}}
+
 {{- define "secret_name" -}}
 {{- printf "%s" .Release.Name }}
 {{- end -}}

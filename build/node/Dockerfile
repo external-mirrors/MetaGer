@@ -13,3 +13,5 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint" ]
 FROM development as production
 
 ADD build/node/entrypoint_production.sh /usr/local/bin/entrypoint
+
+STOPSIGNAL SIGKILL

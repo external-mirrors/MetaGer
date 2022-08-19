@@ -73,6 +73,7 @@ stop_review:
     KEEP_N: 0 # Environment gets deleted. No Image Tags to keep
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
+    REDIS_REPOSITORY_ID: 425
   before_script:
     - kubectl config get-contexts
     - kubectl config use-context open-source/MetaGer:metager

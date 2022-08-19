@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 # Volumes
 volumes:
@@ -37,7 +37,7 @@ services:
       <<: *fpm_build
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
-    command: artisan schedule:work
+    command: artisan schedule:work-mg
     volumes:
       - ./metager:/metager/metager_app
     healthcheck:
@@ -75,13 +75,15 @@ services:
       dockerfile: build/node/Dockerfile
       target: $APP_ENV
     restart: unless-stopped
+    stop_signal: SIGKILL
     depends_on:
       - nginx
     volumes:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
-    image: redis:6
+    build:
+      context: ./build/redis
     restart: unless-stopped
     user: "redis:redis"
     healthcheck:

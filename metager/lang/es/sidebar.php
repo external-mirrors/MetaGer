@@ -27,7 +27,10 @@ return [
     "nav27"	=>	"MetaGer Maps",
     "nav28"	=>	"Ajustes",
     "nav29"	=>	"Declaración de transparencia",
+    'nav30' => 'Motores de búsqueda',
+    'nav31' => 'Más información',
     "navigationToggle"	=>	"Mostrar navegación",
+    'navFactcheck' => 'Factcheck',
     "titles.tips"	=>	"Sugerencias",
     "plugin"	=>	"MetaGer Plugin"
 ];

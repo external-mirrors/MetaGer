@@ -5,6 +5,10 @@ return [
     "browserverification_whitelist" => [
         "w3m\/",
     ],
+    "admin" => [
+        "user" => env("ADMIN_USER", "admin"),
+        "password" => env("ADMIN_PASSWORD", "admin"),
+    ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),

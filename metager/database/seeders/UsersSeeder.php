@@ -18,9 +18,9 @@ class UsersSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('users')->insert(
             [
-                'email' => 'admin',
-                'name' => 'admin',
-                'password' => Hash::make('admin'),
+                'email' => config("metager.metager.admin.user"),
+                'name' => config("metager.metager.admin.user"),
+                'password' => Hash::make(config("metager.metager.admin.password")),
             ]
         );
     }

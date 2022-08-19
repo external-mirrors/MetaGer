@@ -238,6 +238,7 @@ Route::get('plugin', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
+    Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
     Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
     Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);

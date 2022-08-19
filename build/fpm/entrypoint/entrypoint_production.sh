@@ -3,6 +3,8 @@
 set -e
 
 _trap() {
+  echo "Waiting for child processes to finish"
+  php artisan fpm:graceful-stop
   echo "Stopping FPM"
   kill -s SIGQUIT $FPM_PID
 }

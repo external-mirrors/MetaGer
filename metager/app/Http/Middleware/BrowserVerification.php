@@ -74,6 +74,7 @@ class BrowserVerification
                 $js_enabled = true;
             }
             $bv_result = $this->waitForBV($key, false, $js_enabled);
+
             if ($bv_result) {
                 \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -140,7 +141,13 @@ class BrowserVerification
 
 
         do {
-            usleep(10 * 1000);
+            // Calculate Sleep Time
+            // Sleeptime gradually increases with the current wait time
+            // Min 10ms and max 1s
+            $sleep_time_milliseconds = round(now()->diffInMilliseconds($wait_start) / 10);
+            $sleep_time_milliseconds = max(10, $sleep_time_milliseconds);
+            $sleep_time_milliseconds = min(1000, $sleep_time_milliseconds);
+            usleep($sleep_time_milliseconds * 1000);
 
             $bvData = Cache::get($key);
 

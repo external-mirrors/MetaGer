@@ -44,11 +44,11 @@
 							<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
 							</label>
 						</div>
-							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc" onchange="if(!this.checked){this.form.submit()}"/>
+							<input id="custom-date" type="checkbox" form="searchForm" @if(Request::input('fc', "off") === "on")checked @endif name="fc"/>
 						@else
 						</div>
 						@endif
-						<select name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm" onchange="this.form.submit()">
+						<select name="{{$filter->{'get-parameter'} }}" class="custom-select custom-select-sm" form="searchForm">
 						@foreach($filter->values as $value => $text)
 						@if($value === "nofilter" && Cookie::get($metager->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null)
 						<option value="off" @if(empty($filter->value) || $filter->value === "off")selected @endif>{{trans($text)}}</option>

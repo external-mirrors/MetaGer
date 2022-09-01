@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use LaravelLocalization;
 use Log;
 
 class Overture extends Searchengine
@@ -12,9 +13,31 @@ class Overture extends Searchengine
     public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
     {
         parent::__construct($name, $engine, $metager);
+
+        $this->checkLanguage();
+
         # We need some Affil-Data for the advertisements
+        $this->getString = $this->generateGetString($this->query);
         $this->getString .= $this->getOvertureAffilData($metager->getUrl());
         $this->updateHash();
+    }
+
+    private function checkLanguage()
+    {
+        if (LaravelLocalization::getCurrentLocale() === 'en') {
+            $supported_default_languages = [
+                "en_US" => "us",
+                "en_GB" => "gb",
+                "en_IE" => "ie",
+                "en_AU" => "au",
+                "en_NZ" => "nz",
+            ];
+            $preferred_language = request()->getPreferredLanguage(\array_keys($supported_default_languages));
+
+            if (\array_key_exists($preferred_language, $supported_default_languages)) {
+                $this->engine->{"get-parameter"}->mkt = $supported_default_languages[$preferred_language];
+            }
+        }
     }
 
     public function loadResults($result)

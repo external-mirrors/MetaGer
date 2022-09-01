@@ -161,12 +161,18 @@ class Overture extends Searchengine
         $affil_data .= '&ua=' . $this->useragent;
         $affilDataValue = $this->urlEncode($affil_data);
 
+        $serve_domain = "https://metager.de/";
+        if (LaravelLocalization::getCurrentLocale() === "en") {
+            $serve_domain = "https://metager.org/";
+        }
+
         if (\preg_match("/https:\/\/.*\.review\.metager\.de\//", $url)) {
-            $serve_domain = "https://metager.de/";
-            if (LaravelLocalization::getCurrentLocale() === "en") {
-                $serve_domain = "https://metager.org/";
-            }
+
             $url = \preg_replace("/https:\/\/.*\.review\.metager\.de\//", $serve_domain, $url);
+        }
+
+        if (\strpos($url, "https://metager3.de") === 0) {
+            $url = str_replace("https://metager3.de", $serve_domain, $url);
         }
 
         # Wir benötigen die ServeUrl:

@@ -15,13 +15,13 @@ return [
     "mehrwortsuche.2" => "Ein Wort soll in den Ergebnissen da sein. <br> Dann schreiben Sie das in Anführungs-Striche. <br> Das sieht so aus:",
     "mehrwortsuche.3" => "Beispiel: <br> Sie suchen nach <strong>der runde Tisch</strong>. <br> Sie wollen das Wort <strong>rund</strong> in den Ergebnissen finden. <br> Also schreiben Sie das Wort so:",
     "mehrwortsuche.3.example" => 'der "runde" tisch',
-    "mehrwortsuche.4" => 'Es gibt noch eine weitere Art von der Mehrwortsuche. <br> Sie können auch ganze Sätze suchen. <br> Sie wollen einen Satz in genau der Reihen-Folge sehen. <br> Dann macht man das so:',
+    "mehrwortsuche.4" => 'Es gibt noch eine weitere Art von der Mehr-Wort-Suche. <br> Sie können auch ganze Sätze suchen. <br> Sie wollen einen Satz in genau der Reihen-Folge sehen. <br> Dann macht man das so:',
     "mehrwortsuche.5" => "Beispiel: <br> Sie suchen nach <strong>der runde Tisch</strong>.<br> Sie wollen es in genau der Reihen-Folge sehen. <br> Das schreibt man dann so:",
     "mehrwortsuche.5.example" => '"der runde tisch"',
 
 
     "bang.title" => "!bangs",
-    "bang.1" => "MetaGer unterstützt eine Schreibweise die !bang heißt. <br> Wenn man das benutzen will sieht das so aus: <br> <strong>!twitter</strong> oder <strong>!facebook</strong><br> Beispiel:<br> Sie möchten auf Twitter nach Katzen suchen. <br> Also geben Sie das so ein:",
+    "bang.1" => "MetaGer unterstützt eine Schreib-Weise die !bang heißt. <br> Wenn man das benutzen will sieht das so aus: <br> <strong>!twitter</strong> oder <strong>!facebook</strong><br> Beispiel:<br> Sie möchten auf Twitter nach Katzen suchen. <br> Also geben Sie das so ein:",
     "bang.1.example" => "!twitter katze",
     "bang.2" => "Damit zeigt man bei dem Suchen rechts ein Feld an. <br> So sieht das Feld aus:",
     "bang.3" => "Man kann auf den blauen Knopf drücken. <br> Dann öffnet sich die Web-Seite von Twitter mit der Suche nach Katzen.",

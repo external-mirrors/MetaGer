@@ -12,7 +12,6 @@ return [
     "suchwortassoziator.title" => "Suchwortassoziator",
     "suchwortassoziator.1" => 'Mit dem Such-Wort-Assoziator können Sie ähnliche Begriffe finden. <br> Sie können im Assoziator einen Begriff eingeben. <br> Dann bekommen Sie Vorschläge für andere passende Begriffe.',
     "suchwortassoziator.2" => "Beispiel: <br> Sie möchten mehr über Zecken-Bisse und die Gefahren davon wissen. <br> Sie kennen die Fach-Begriffe dafür aber nicht. <br> Also geben Sie <strong>Zeckenbisse</strong> ein. <br> Der Assoziator zeigt Ihnen dann Begriffe wie <strong>Borreliose</strong> und <strong>fsme</strong>.",
-    "suchwortassoziator.3" => "Da diese Assoziationsanalyse u.a. aus Web-Dokumenten selber gewonnen wird, ist sie sprachunabhängig; d.h. Sie können bei Eingabe deutscher Wörter Fachbegriffe aus beliebigen Sprachen gewinnen (und umgekehrt). Wenn Ihnen andererseits Assoziationsanalysen auffallen, die mit Hilfe Ihrer Fachkenntnisse besser sein könnten, dann zögern Sie bitte nicht, uns dieses samt Ihrem Verbesserungsvorschlag über <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">unser Kontaktformular</a> mitzuteilen.",
 
     "widget.title" => "MetaGer Widget",
     "widget.1" => "Hierbei handelt es sich um einen Codegenerator, der es Ihnen ermöglicht, MetaGer in Ihre Webseite einzubinden. Sie können damit dann nach Belieben auf Ihrer eigenen Seite oder im Internet suchen lassen. Bei allen Fragen: <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">unser Kontaktformular</a>",

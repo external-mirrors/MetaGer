@@ -22,7 +22,6 @@
 		<div>
 			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.2') !!}</p>
-			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.3') !!}</p>
 		</div>
 	</section>
 	<section id="widget">

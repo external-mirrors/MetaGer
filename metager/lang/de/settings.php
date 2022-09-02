@@ -4,7 +4,7 @@ return [
     'header.1' => 'Sucheinstellungen',
     'text.1' => 'Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im Fokus :fokusName vornehmen. Sollten diese nicht dauerhaft gespeichert bleiben, überprüfen Sie bitte in Ihren Browsereinstellungen, ob dieser beim Beenden gespeicherte Cookies löscht.',
 
-    'hint.header' => 'Hinweis',
+    'hint.header' => 'Setzen von Cookies',
     'hint.text' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert. Sie können sich eine Übersicht aller von Ihnen vorgenommenen Einstellungen und Cookies <a href=:link>anzeigen lassen</a>.',
     'hint.loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen mitzunehmen. Der Link erstellt beim Aufrufen Cookies mit dem entsprechenden Einstellungen.',
 
@@ -51,4 +51,7 @@ return [
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'blentry' => 'Blacklisteintrag',
     'removeCookie' => 'Diesen Cookie entfernen',
+
+    'aria.label.1' =>'aktiviert',
+    'aria.label.2' =>'deaktiviert',
 ];

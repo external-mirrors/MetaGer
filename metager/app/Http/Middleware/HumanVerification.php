@@ -3,11 +3,9 @@
 namespace App\Http\Middleware;
 
 use App;
-use App\Models\HumanVerification as ModelsHumanVerification;
+use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use Cache;
 use Closure;
-use Cookie;
-use Log;
 use URL;
 use App\QueryTimer;
 use App\SearchSettings;
@@ -40,7 +38,7 @@ class HumanVerification
                 $value = Cache::get($token);
 
                 if (!empty($value) && intval($value) > 0) {
-                    Cache::decrement($token);
+                    Cache::put($token, ($value - 1), now()->addHour());
                     $should_skip = true;
                 } else {
                     // Token is not valid. Remove it
@@ -64,25 +62,31 @@ class HumanVerification
 
         // The specific user
         $user = null;
-        $update = true;
 
         /** @var ModelsHumanVerification */
         $user = App::make(ModelsHumanVerification::class);
+
+        if ($request->has("admin_bot")) {
+            echo redirect(route("admin_bot", ["key" => $user->key]));
+            return;
+        }
 
         /**
          * Directly lock any user when there are many not whitelisted accounts on this IP
          * Only applies when the user itself is not whitelisted.
          * Also applies RefererLock from above
          */
-        if (!$user->alone && $user->request_count_all_users >= 50 && !$user->isWhiteListed() && $user->not_whitelisted_accounts > $user->whitelisted_accounts) {
-            $user->lockUser();
-        }
+        $user->checkGroupLock();
+
 
         # If the user is locked we will force a Captcha validation
         if ($user->isLocked()) {
+            $user->saveUser();
             \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return redirect()->route('captcha_show', ["url" => URL::full()]);
+            $this->logCaptcha($request, $user);
+            echo redirect()->route('captcha_show', ["url" => URL::full(), "key" => $user->key]); // TODO uncomment
+            return;
         }
 
         $user->addQuery();
@@ -90,5 +94,34 @@ class HumanVerification
         \App\PrometheusExporter::HumanVerificationSuccessfull();
         \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
+    }
+
+    private function logCaptcha(\Illuminate\Http\Request $request, ModelsHumanVerification $user)
+    {
+        $log = [
+            now()->format("Y-m-d H:i:s"),
+            $request->input("eingabe"),
+            "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
+        ];
+        $locked_verificators = array();
+        foreach ($user->getVerificators() as $verificator) {
+            if ($verificator->isLocked()) {
+                $locked_verificator = $verificator::class;
+                $locked_verificator = substr($locked_verificator, \strrpos($locked_verificator, "\\") + 1);
+                $locked_verificators[] = $locked_verificator;
+            }
+        }
+        if (!empty($locked_verificators)) {
+            $log[] = "verificators=" . implode(",", $locked_verificators);
+        }
+        $search_settings = \app()->make(SearchSettings::class);
+        $log[] = "bv_key=" . $search_settings->bv_key;
+        $file_path = \storage_path("logs/metager/captcha_show.csv");
+        $fh = fopen($file_path, "a");
+        try {
+            \fputcsv($fh, $log);
+        } finally {
+            fclose($fh);
+        }
     }
 }

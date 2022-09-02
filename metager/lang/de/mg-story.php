@@ -17,10 +17,10 @@ return [
     'btn-donate' => 'Spendenformular',
     'btn-member' => 'Aufnahmeantrag',
     'btn-member-advantage' => 'Mitgliedschaft',
-    'ngo.p' => 'Metager wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf Metager werbefrei.',
-    'btn-mg-code' => 'Metager-Quellcode',
+    'ngo.p' => 'MetaGer wird getragen vom gemeinnützigen SUMA-EV, Verein für freien Wissenszugang. Unterstützen Sie uns, indem Sie spenden oder Mitglied werden. Mitglieder suchen auf MetaGer werbefrei.',
+    'btn-mg-code' => 'MetaGer-Quellcode',
     'btn-mg-algorithm' => 'Unser Algorithmus',
-    'diversity.p' => 'Metager schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiniert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und Open Source.',
+    'diversity.p' => 'MetaGer schützt gegen Zensur, indem es Ergebnisse vieler Suchmaschinen kombiniert. Unsere Algorithmen sind transparent und für jeden einsehbar.<br>Der Quellcode ist frei und Open Source.',
 
     'btn-more' => 'Mehr dazu',
     'eco.p' => 'Wir achten auf die Nachhaltigkeit und den Ressourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.',

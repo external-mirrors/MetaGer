@@ -5,6 +5,10 @@ return [
     "browserverification_whitelist" => [
         "w3m\/",
     ],
+    "admin" => [
+        "user" => env("ADMIN_USER", "admin"),
+        "password" => env("ADMIN_PASSWORD", "admin"),
+    ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
@@ -16,6 +20,9 @@ return [
         "uni_mainz" => env("mainz_key"),
         "assoziator" => env("ASSO_KEY"),
         "berlin" => env("berlin"),
+    ],
+    "tts" => [
+        "base_url" => env("TTS_BASE_URL", ""),
     ],
     "fetcher" => [
         "proxy" => [

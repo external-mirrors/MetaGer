@@ -205,4 +205,10 @@ class AdminInterface extends Controller
             ->with('title', 'Wer sucht was? - MetaGer')
             ->with('q', $q);
     }
+
+    public function getFPMStatus()
+    {
+        $status = \fpm_get_status();
+        return response()->json($status);
+    }
 }

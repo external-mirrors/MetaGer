@@ -22,6 +22,6 @@ return [
     'table.compliance.th.authinfocomp' => 'Fulfilled requests for information',
     'table.compliance.th.authblockcomp' => 'Fulfilled blocking requests',
 
-
+    'alt.text.1'=> 'Visual representation of two indexes that complement each other to form a meta-index'
 
 ];

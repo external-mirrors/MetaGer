@@ -215,7 +215,10 @@
     .sidebar-opener-placeholder {
         display: initial;
     }
+
+
 }
+
 
 /* Sidebar opener */
 
@@ -235,9 +238,6 @@
     color: grey;
     background-color: transparent;
 
-    &:after {
-        content: "≡";
-    }
 
     &:hover {
         color: @metager-orange;
@@ -254,15 +254,21 @@
     display: none;
 }
 
+.sidebar-opener.close {
+    display: none;
+ }
+
 #sidebarToggle:checked {
     &~.sidebar {
         right: 0px;
     }
 
     &~.sidebar-opener {
-        &:after {
-            content: "×";
-        }
+       display: none;
+    }
+
+    &~.sidebar-opener.close {
+        display: initial;
     }
 }
 

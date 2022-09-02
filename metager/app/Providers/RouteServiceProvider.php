@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\HumanVerification;
+use App\Models\Verification\HumanVerification;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -154,7 +154,7 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('humanverification', function (Request $request) {
-            return Limit::perMinutes(5, 30)->by(\app()->make(HumanVerification::class)->uid);
+            return Limit::perMinutes(5, 30)->by($request->input("key"));
         });
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
+use App\Http\Controllers\TTSController;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -43,6 +45,8 @@ Route::get('asso', function () {
         ->with('css', [mix('css/asso/style.css')])
         ->with('darkcss', [mix('css/asso/dark.css')]);
 });
+
+Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
 Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 
@@ -279,6 +283,7 @@ Route::get('plugin', function (Request $request) {
 });
 
 Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
+    Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
     Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
     Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);
@@ -288,8 +293,9 @@ Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () 
     Route::get('ip', function (Request $request) {
         dd($request->ip(), $_SERVER["AGENT"]);
     });
-    Route::get('bot', 'HumanVerification@botOverview');
+    Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
     Route::post('bot', 'HumanVerification@botOverviewChange');
+    Route::get('bv', [HumanVerification::class, 'bv']);
     Route::group(['prefix' => 'spam'], function () {
         Route::get('/', 'AdminSpamController@index');
         Route::post('/', 'AdminSpamController@ban');

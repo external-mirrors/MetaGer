@@ -20,11 +20,11 @@ return [
     "resultpage.settings" => 'Einstellungen: Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im aktuellen Fokus vornehmen. Sie können auch Suchmaschinen, die dem Fokus zugeordnet sind, an- und abwählen. Ihre Einstellungen werden mithilfe eines nicht personenbeziehbaren Klartextcookies gespeichert. Die Einstellungsseite erreichen Sie auch über das Menu oben rechts.',
    
     "result.title" => 'Ergebnisse',
-    "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:',
+    "result.info.1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"></div></p>',
     "result.info.open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
     "result.info.newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab.',
     "result.info.anonym" => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
-    "result.info.more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:',
+    "result.info.more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png" alt="Bildschirmfoto eines ausgeklappten Suchergebnisses"></div></p>',
     "result.info.2" => 'Die neuen Optionen sind:',
     "result.info.saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="/hilfe/funktionen#searchinsearch"> Suche in der Suche</a>)',
     "result.info.domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
@@ -32,7 +32,6 @@ return [
 
     
     "settings.title" => 'Einstellungen',
-    "settings.1" => 'Hinweis <br> Unter dem Punkt „Hinweis“ finden Sie einen Link, der Ihnen Ihre gesamten Einstellungen zeigt. Diesen Link können Sie sich <a href=:link>anzeigen lassen</a>. Diese können Sie auch wieder mit einem Klick löschen. Ebenfalls finden Sie auch einen Link, den Sie kopieren und als Bookmark speichern können. Wenn Sie das Bookmark später aufrufen, sind Ihre Einstellungen wieder parat.',
     "settings.2" => 'Verwendete Suchmaschinen <br> Hier können Sie Ihre verwendeten Suchmaschinen einsehen und gegebenenfalls anpassen. Durch einen Klick auf den entsprechenden Namen kann diese entsprechend ein- oder ausgeschaltet werden.',
     "settings.3" => 'Suchfilter <br> Durch Suchfilter können Sie Ihre Suche dauerhaft filtern.',
     "settings.4" => 'Blacklist <br> Hier können Sie sich eine persönliche Blacklist zusammenzustellen. Sie können damit spezielle Domains ausfiltern und damit eigene Sucheinstellungen produzieren. Mit einem Klick auf "Hinzufügen" werden diese Einstellungen an den Link im Abschnitt "Hinweis" angehängt.',

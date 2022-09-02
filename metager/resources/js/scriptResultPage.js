@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function initialize() {
+  submitFilterOnChange();
   botProtection();
   enableFormResetter();
   loadMoreResults();
@@ -24,6 +25,29 @@ function initialize() {
 
 let link, newtab, top;
 let verifying = false;
+
+function submitFilterOnChange() {
+  // All normal select fields
+  document.querySelectorAll("#options #options-box select").forEach((value, index) => {
+    value.addEventListener("change", e => e.target.form.submit());
+  });
+  // Custom date picker
+  document.querySelector("#options #options-box input[name=fc]").addEventListener("change", e => {
+    if (!e.target.checked) {
+      e.target.form.submit();
+    }
+  })
+  // Custom date selected
+  document.querySelectorAll("#options #options-box input[name=ff], #options #options-box input[name=ft]").forEach((value, index) => {
+    value.addEventListener("change", e => {
+      let ff_value = document.querySelector("#options #options-box input[name=ff]").value;
+      let ft_value = document.querySelector("#options #options-box input[name=ft]").value;
+      if (ff_value != '' && ft_value != '') {
+        e.target.form.submit();
+      }
+    });
+  });
+}
 
 function botProtection() {
   document.querySelectorAll(".result a").forEach((element) => {
@@ -72,12 +96,15 @@ function verify(event) {
   document.removeEventListener("pointermove", verify);
   document.removeEventListener("pointerdown", verify);
   document.removeEventListener("scroll", verify);
+
+  let data = "hv=" + document.querySelector('meta[name="hv"]').content;
+
   return fetch("/img/cat.png", {
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: "mm=" + document.querySelector('meta[name="mm"]').content
+    body: data
   });
 }
 

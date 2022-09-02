@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\MetaGer;
-use App\Models\HumanVerification;
+use App\Models\Verification\HumanVerification;
 use App\QueryLogger;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;

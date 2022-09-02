@@ -29,8 +29,10 @@ mix
   .less("resources/less/metager/pages/plugin-page.less", "public/css/plugin-page.css")
   .less("resources/less/metager/pages/count/style-dark.less", "public/css/count/dark.css")
   .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css")
+  .less("resources/less/metager/pages/verify/index.less", "public/css/verify/index.css")
   .less("resources/less/metager/pages/admin/affilliates/index.less", "public/css/admin/affilliates/index.css")
   .less("resources/less/metager/pages/admin/affilliates/index-dark.less", "public/css/admin/affilliates/index-dark.css")
+  .less("resources/less/metager/pages/admin/bot/index.less", "public/css/admin/bot/index.css")
   .less("resources/less/metager/pages/asso/style-dark.less", "public/css/asso/dark.css")
   .less("resources/less/metager/pages/asso/style.less", "public/css/asso/style.css")
   .less("resources/less/metager/pages/spende/danke.less", "public/css/spende/danke.css")
@@ -69,6 +71,8 @@ mix
   .js("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
   .js("resources/js/admin/affilliates/index.js", "public/js/admin/affilliates.js")
   .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
+  .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
+  .js("resources/js/verify.js", "public/js/index.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

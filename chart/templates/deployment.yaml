@@ -110,8 +110,8 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
-          command: ["/bin/bash", "-c"]
-          args: ["/usr/local/bin/php artisan schedule:run && /usr/local/bin/php artisan schedule:work"]
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "schedule:work-mg"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           - name: APP_ENV
@@ -214,9 +214,9 @@ spec:
               memory: 100M
             limits:
         - name: redis
-          image: "redis:6"
+          image: "{{ template "redis_image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+          args: ["redis-server", "/usr/local/etc/redis/redis.conf"]
           volumeMounts:
           - name: redis-config
             mountPath: /usr/local/etc/redis/redis.conf

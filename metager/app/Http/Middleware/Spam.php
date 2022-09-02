@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\HumanVerification;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;

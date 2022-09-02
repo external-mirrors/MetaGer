@@ -38,7 +38,7 @@ return [
     "result.info.newtab" => 'In neuem Tab öffnen:',
     "result.info.newtab.1" => 'Dieser Knopf öffnet das Ergebnis in einer neuen Register-Karte.',
     "result.info.anonym" => 'Anonym öffnen:',
-    "result.info.anonym.1" => 'Wenn Sie auf diesen Knopf drücken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Das Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver</a> finden Sie mehr über das Thema.',
+    "result.info.anonym.1" => 'Wenn Sie auf diesen Knopf drücken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Das Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/datensicherheit#proxy/">MetaGer-Proxy (Anonym öffnen)</a> finden Sie mehr über das Thema.',
     "result.info.more" => 'Mehr:',
     "result.info.more.1" => 'Wenn Sie auf <strong>MEHR</strong> klicken gibt es neue Möglichkeiten. <br> Das Ergebnis sieht dann anders aus. <br> So sieht das Ergebnis dann aus:',
     "result.info.2" => 'Es gibt neue Möglichkeiten:',
@@ -54,7 +54,7 @@ return [
     
     "settings.title" => 'Einstellungen',
     "settings.cookies" => 'Setzen von Cookies',
-    "settings.cookies.1" => 'Unter dem Punkt <strong>Hinweis</strong> finden Sie einen Link, der Ihnen Ihre gesamten Einstellungen zeigt. Diesen Link können Sie sich <a href=:link>anzeigen lassen</a>. Diese können Sie auch wieder mit einem Klick löschen. Ebenfalls finden Sie auch einen Link, den Sie kopieren und als Bookmark speichern können. Wenn Sie das Bookmark später aufrufen, sind Ihre Einstellungen wieder parat.',
+    "settings.cookies.1" => 'Manche Browser löschen Ihre Cookies nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können sich den Link auch anzeigen lassen. <br> <a href=:link>Cookie-Link</a> <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers die Einstellungen wieder da. ',
     "settings.search.engine.1" => 'Verwendete Suchmaschinen:',
     "settings.search.engine.2" => 'Hier sehen Sie alle Such-Maschinen die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen.',
     "settings.search.engine.3" => 'Wenn ein Knopf rot ist nutzen Sie diese Such-Maschine nicht.',

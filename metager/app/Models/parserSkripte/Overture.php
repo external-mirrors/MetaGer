@@ -29,8 +29,8 @@ class Overture extends Searchengine
                 "en_US" => "us",
                 "en_GB" => "gb",
                 "en_IE" => "ie",
-                "en_AU" => "au",
-                "en_NZ" => "nz",
+                "en_AU" => "us", # we don't get results for AU
+                "en_NZ" => "us", # we don't get results for NZ
             ];
             $preferred_language = request()->getPreferredLanguage(\array_keys($supported_default_languages));
 

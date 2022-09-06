@@ -39,6 +39,8 @@ spec:
             name: {{ include "chart.fullname" . }}-redis-container-config
         - name: sqlite-databases
           emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
       containers:
         - name: fpm
           securityContext:
@@ -84,6 +86,8 @@ spec:
             readOnly: false
           - name: sqlite-databases
             mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/logs/metager/fast_dir
           ports:
             - name: http
               containerPort: 8080
@@ -128,6 +132,8 @@ spec:
             readOnly: false
           - name: sqlite-databases
             mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/logs/metager/fast_dir
           ports:
             - name: http
               containerPort: 8080

@@ -9,6 +9,7 @@ use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use PDO;
 
 class AdminInterface extends Controller
@@ -49,9 +50,10 @@ class AdminInterface extends Controller
         $cache_key = "admin_count_total_${interface}_${year}_${month}_${day}";
         $total_count = Cache::get($cache_key);
 
+
         if ($total_count === null) {
-            $database_file = \storage_path("logs/metager/$year/$month/$day.sqlite");
-            if (!\file_exists($database_file)) {
+            $database_file = $this->getDatabaseLogFile($date);
+            if ($database_file === null) {
                 abort(404);
             }
 
@@ -107,9 +109,8 @@ class AdminInterface extends Controller
         $total_count = Cache::get($cache_key);
 
         if ($total_count === null) {
-
-            $database_file = \storage_path("logs/metager/$year/$month/$day.sqlite");
-            if (!\file_exists($database_file)) {
+            $database_file = $this->getDatabaseLogFile($date);
+            if ($database_file === null) {
                 abort(404);
             }
 
@@ -210,5 +211,48 @@ class AdminInterface extends Controller
     {
         $status = \fpm_get_status();
         return response()->json($status);
+    }
+
+    private function getDatabaseLogFile(Carbon $date)
+    {
+        $original_file = \storage_path("logs/metager/" . $date->format("Y/m/d") . ".sqlite");
+        $fast_file = \storage_path("logs/metager/fast_dir/" . $date->format("Y/m/d") . ".sqlite");
+        if (!\file_exists($original_file)) {
+            return null;
+        }
+
+        if ($date->isToday()) {
+            return $original_file;
+        }
+        $lock_hash = \md5($fast_file);
+        if (\file_exists($fast_file) && Redis::get($lock_hash) === null) {
+            return $fast_file;
+        }
+
+        // Verify that the target directory exists
+        $fast_file_dir = dirname($fast_file);
+        if (!\file_exists($fast_file_dir) && !\mkdir($fast_file_dir, 0777, true)) {
+            return null;
+        }
+
+        // Acquire a lock for this file to make sure we're the only process copying it
+
+        do {
+            $lock = Redis::setnx($lock_hash, "lock");
+            if ($lock === 1) {
+                Redis::expire($lock_hash, 15);
+            } else {
+                \usleep(350 * 1000);
+            }
+        } while ($lock !== 1);
+
+        try {
+            if (\copy($original_file, $fast_file)) {
+                return $fast_file;
+            }
+        } finally {
+            Redis::del($lock_hash);
+        }
+        return null;
     }
 }

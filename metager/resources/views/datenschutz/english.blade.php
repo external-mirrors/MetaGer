@@ -52,6 +52,11 @@
                                         searches are performed by an IP, this IP is temporarily stored in a revocation
                                         list (maximum 96 hours after the last search). Then the IP is deleted.
                                     </li>
+                                    <li>In addition to donations and membership fees, we must finance our operation
+                                        through non-personalized advertising on the results page. To receive this
+                                        advertising, we give the first two blocks of the IP in connection with some non-identifying parts of
+                                        the so-called user agent to our advertising partners
+                                    </li>
                                 </ol>
                                 <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
@@ -91,6 +96,12 @@
                                 <h3>What does MetaGer/SUMA-EV do with it?</h3>
                                 <ol>
                                     <li>We use the User Agent to provide users with the correct installation instructions for their browser as well as for spam prevention. 
+                                    </li>
+                                    <li>In addition to donations and membership fees, we must finance our operation
+                                        through non-personalized advertising on the results page. To receive this
+                                        advertising, we give some non-identifying parts of the user agent—specifically the browser brand (eg. Firefox), if supplied the general device type (eg. mobile or desktop) and if supplied the operating system name (eg. Ubuntu)—in connection with the first two
+                                        blocks of the so-called <a href="#ip-address">IP-Adress</a> to our advertising
+                                        partners.
                                     </li>
                                 </ol>
                             </article>
@@ -334,5 +345,5 @@
         <h1>Changes to this statement</h1>
         Like our offers, this privacy policy is subject to constant change. You should therefore read it again
         regularly.
-        <br />This version of our Privacy Policy is dated 2022-06-08.
+        <br />This version of our Privacy Policy is dated 2022-09-06.
     </div>

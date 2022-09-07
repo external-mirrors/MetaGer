@@ -13,6 +13,7 @@ return [
     'options.more' => 'MEHR',
     'options.less' => 'WENIGER',
     'gefVon' => 'von',
+    'advertisement' => 'Anzeige',
     'providers' => 'Anbietern',
     'proxytext' => 'Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt.',
 ];

@@ -60,8 +60,29 @@ class LocalizationRedirect
         ];
 
         if (\array_key_exists($host, $matched_host_default_locales) && request()->segment(1) === $matched_host_default_locales[$host]) {
-            $new_url = LaravelLocalization::getLocalizedUrl(null, request()->getRequestUri());
-            return redirect($new_url);
+            // Check if the user would automatically be redirected back from the base domain
+            // If so we leave the locale in the path
+            // Auto redirect only happens for regions in the same language as the domain
+            $base_language = $matched_host_default_locales[$host];
+            $base_language = \preg_replace("/^([a-zA-Z]+).*/", "$1", $base_language);
+
+            $supported_locales_and_regionals = LaravelLocalization::getSupportedLocales();
+            $supported_locales_and_regionals = \array_map(function ($locale) {
+                return $locale["regional"];
+            }, $supported_locales_and_regionals);
+            $supported_locales_and_regionals = \array_flip($supported_locales_and_regionals);
+            $supported_locales_and_regionals = array_filter($supported_locales_and_regionals, function ($key) use ($base_language) {
+                if (stripos($key, $base_language) === 0) {
+                    return true;
+                }
+                return false;
+            }, \ARRAY_FILTER_USE_KEY);
+            $supported_locales = \array_keys($supported_locales_and_regionals);
+            $auto_locale = request()->getPreferredLanguage($supported_locales);
+            if (!array_key_exists($auto_locale, $supported_locales_and_regionals) || $matched_host_default_locales[$host] === $supported_locales_and_regionals[$auto_locale]) {
+                $new_url = LaravelLocalization::getLocalizedUrl(null, request()->getRequestUri());
+                return redirect($new_url);
+            }
         }
 
         return $next($request);

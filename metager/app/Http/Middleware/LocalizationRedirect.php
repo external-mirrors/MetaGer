@@ -20,7 +20,7 @@ class LocalizationRedirect
         $host = $request->getHttpHost();
 
         // We only redirect to the TLDs in the production version and exclude our onion domain
-        if (\App::environment() !== "production" || $host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is(['metrics', 'health-check/*'])) {
+        if ($host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is(['metrics', 'health-check/*'])) {
             return $next($request);
         }
 
@@ -29,24 +29,39 @@ class LocalizationRedirect
             return redirect("http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion");
         }
 
+        $allowed_hostnames = [
+            "127.0.0.1",
+            "localhost",
+        ];
+        $required_hostname = "metager.de";
+        if (\stripos($locale, "de") === 0) {
+            $allowed_hostnames[] = "metager.de";
+        } elseif (\stripos($locale, "en") === 0) {
+            $allowed_hostnames[] = "metager.org";
+            $required_hostname = "metager.org";
+        } elseif (\stripos($locale, "es") === 0) {
+            $allowed_hostnames[] = "metager.es";
+            $required_hostname = "metager.es";
+        }
+
         $url = url()->full();
-        $url = preg_replace("/^http:\/\//", "https://", $url);
-        if ($host !== "metager.de" && $locale == "de") {
-            $url = str_replace($host, "metager.de", $url);
-            $url = preg_replace("/^(https:\/\/[^\/]+)\/de/", "$1", $url);
-            return redirect($url);
+        if ($host !== $required_hostname && !\in_array($host, $allowed_hostnames) && preg_match("/^(https?:\/\/[^\/]+)(.*)/", $url, $matches)) {
+            $new_host = \str_replace($host, $required_hostname, $matches[1]);
+            $new_url = $new_host . $matches[2];
+            return redirect($new_url);
         }
 
-        if ($host !== "metager.es" && $locale == "es") {
-            $url = str_replace($host, "metager.es", $url);
-            $url = preg_replace("/^(https:\/\/[^\/]+)\/es/", "$1", $url);
-            return redirect($url);
-        }
+        // If you switch languages between our domains (metager.de/metager.es/metager.org) a language parameter will be added 
+        // allthough the language already is default for that domain (de-DE for metager.de, en-US for metager.org, es-ES for metager.es)
+        $matched_host_default_locales = [
+            "metager.de"    => "de-DE",
+            "metager.org"   => "en-US",
+            "metager.es"    =>  "es-ES",
+        ];
 
-        if ($host !== "metager.org" && $locale == "en") {
-            $url = str_replace($host, "metager.org", $url);
-            $url = preg_replace("/^(https:\/\/[^\/]+)\/en/", "$1", $url);
-            return redirect($url);
+        if (\array_key_exists($host, $matched_host_default_locales) && request()->segment(1) === $matched_host_default_locales[$host]) {
+            $new_url = LaravelLocalization::getLocalizedUrl(null, request()->getRequestUri());
+            return redirect($new_url);
         }
 
         return $next($request);

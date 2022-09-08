@@ -26,9 +26,9 @@
 	@endif
 	@endforeach
 	@if(empty(Cookie::get('key')))
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action([App\Http\Controllers\StartpageController::class, 'loadPlugin'])) }}">
 	@else
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ['key' => Cookie::get('key')])) }}">
 	@endif
 
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />

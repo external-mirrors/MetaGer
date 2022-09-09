@@ -521,7 +521,7 @@ class MetaGer
         $this->removeAdsFromListIfAdfree($sumas);
 
         $current_regional_locale = LaravelLocalization::getCurrentLocaleRegional();
-        $current_locale = explode("_", $current_regional_locale)[0];
+        $current_language = Localization::getLanguage();
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
             $disabled = empty($suma->disabled) ? false : $suma->disabled;
@@ -539,7 +539,7 @@ class MetaGer
             }
             // Skip if engine does not support current locale or region (locale i.e. en is enough to get enabled)
             if (
-                !isset($suma->lang->languages[$current_locale]) &&
+                !\property_exists($suma->lang->languages, $current_language) &&
                 !\property_exists($suma->lang->regions, $current_regional_locale)
             ) {
                 continue;

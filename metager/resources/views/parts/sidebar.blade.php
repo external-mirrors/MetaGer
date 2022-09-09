@@ -172,7 +172,7 @@
       <ul class="metager-dropdown-content">
         @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
           <li>
-            <a rel="alternate" hreflang="{{$localeCode}}" href="{{LaravelLocalization::getLocalizedURL($localeCode) }}" >{{{ $properties['native'] }}}</a>
+            <a rel="alternate" hreflang="{{$localeCode}}" href="{{LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" >{{{ $properties['native'] }}}</a>
           </li>
         @endforeach
       </ul>

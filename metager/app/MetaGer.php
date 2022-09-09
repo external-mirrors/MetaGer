@@ -944,11 +944,12 @@ class MetaGer
         # Fokus
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
-        if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
+        if ($this->dummy) {
+            $this->sumaFile = \config_path("stress.json");
         } else {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
+            $this->sumaFile = \config_path("sumas.json");
         }
+
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
         } else {

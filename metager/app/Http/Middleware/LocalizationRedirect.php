@@ -17,7 +17,7 @@ class LocalizationRedirect
     public function handle($request, Closure $next)
     {
         $locale = LaravelLocalization::getCurrentLocale();
-        $host = $request->getHttpHost();
+        $host = $request->getHost();
 
         // We only redirect to the TLDs in the production version and exclude our onion domain
         if ($host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is(['metrics', 'health-check/*'])) {

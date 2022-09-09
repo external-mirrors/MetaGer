@@ -42,4 +42,32 @@ class Localization
 
         return $locale_path;
     }
+
+    /**
+     * Extracts the language part from our current locale
+     * 
+     * @return string language (i.e. de,en,es,...)
+     */
+    public static function getLanguage()
+    {
+        $current_locale = LaravelLocalization::getCurrentLocale();
+        if (\preg_match("/^([a-zA-Z]+)/", $current_locale, $matches)) {
+            $current_locale = $matches[1];
+        }
+        return $current_locale;
+    }
+
+    /**
+     * Extracts the region part from our current locale
+     * 
+     * @return string region (i.e. de,us,...)
+     */
+    public static function getRegion()
+    {
+        $current_region = LaravelLocalization::getCurrentLocale();
+        if (\preg_match("/([a-zA-Z]+)$/", $current_region, $matches)) {
+            $current_region = $matches[1];
+        }
+        return $current_region;
+    }
 }

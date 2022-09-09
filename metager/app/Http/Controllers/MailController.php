@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use App\Mail\Sprachdatei;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -83,7 +84,9 @@ class MailController extends Controller
                 }
             }
 
-            if (LaravelLocalization::getCurrentLocale() === "de") {
+            $language = Localization::getLanguage();
+
+            if ($language === "de") {
                 $postdata["deptId"] = 1;
             }
 

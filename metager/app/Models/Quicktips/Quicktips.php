@@ -33,6 +33,9 @@ class Quicktips
 
     public function startSearch($search, $locale, $max_time)
     {
+        if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
+            $locale = $matches[1];
+        }
         $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale  . "&quotes=" . $this->quotes;
         $this->hash = md5($url);
 

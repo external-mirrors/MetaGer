@@ -45,7 +45,7 @@
 	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
 	<meta name="p" content="{{ getmypid() }}" />
 	<meta name="q" content="{{ $eingabe }}" />
-	<meta name="l" content="{{ LaravelLocalization::getCurrentLocale() }}" />
+	<meta name="l" content="{{ App\Localization::getLanguage() }}" />
 	<meta name="hv" content="{{ app()->make(\App\Models\Verification\HumanVerification::class)->key }}" />
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
 	<meta name="referrer" content="origin">

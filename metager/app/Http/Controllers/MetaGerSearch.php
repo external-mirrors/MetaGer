@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use App\MetaGer;
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Cache;
@@ -19,15 +20,11 @@ class MetaGerSearch extends Controller
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
         $query_timer = \app()->make(QueryTimer::class);
-        $locale = LaravelLocalization::getCurrentLocale();
+        $language = Localization::getLanguage();
 
         $preferredLanguage = array($request->getPreferredLanguage());
-        if (!empty($preferredLanguage) && !empty($locale)) {
-            // Extract language part from locale (i.e. "de" from "de-DE")
-            if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
-                $locale = $matches[1];
-            }
-            PrometheusExporter::PreferredLanguage($locale, $preferredLanguage);
+        if (!empty($preferredLanguage) && !empty($language)) {
+            PrometheusExporter::PreferredLanguage($language, $preferredLanguage);
         }
 
         if ($request->filled("chrome-plugin")) {
@@ -350,7 +347,7 @@ class MetaGerSearch extends Controller
         } else {
             $tipserver = "https://quicktips.metager.de/1.1/tips.xml";
         }
-        if (LaravelLocalization::getCurrentLocale() == "en") {
+        if (Localization::getLanguage() == "en") {
             $tipserver .= "?locale=en";
         }
         $tips_text = file_get_contents($tipserver);

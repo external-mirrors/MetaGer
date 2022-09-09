@@ -26,7 +26,7 @@
                 </div>
                 <p><br>{!! trans('spende.paypal.1') !!}</p>
                 <div class="center-wrapper">
-                    @if (LaravelLocalization::getCurrentLocale() == "de")
+                    @if (Localization::getLanguage() == "de")
                     <input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
                     <input type="hidden" name="cmd" value="_s-xclick" />
                     <input type="hidden" name="hosted_button_id" value="5JPHYQT88JSRQ" />

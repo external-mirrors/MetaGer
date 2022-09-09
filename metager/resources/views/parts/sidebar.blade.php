@@ -124,7 +124,7 @@
         <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>
         </li>
-        @if(LaravelLocalization::getCurrentLocale() == "de")
+        @if(App\Localization::getLanguage() == "de")
           <li>
             <a href="https://shop.spreadshirt.de/metager/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
           </li>
@@ -155,7 +155,7 @@
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.nachrichten') }}</a>
           </li>
-        @if(LaravelLocalization::getCurrentLocale() !== "en")
+        @if(App\Localization::getLanguage() !== "en")
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
           </li>

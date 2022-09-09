@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Localization;
 use Cache;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -69,24 +70,7 @@ class Adgoal
 
         # Which country to use
         # Will be de for metager.de and en for metager.org
-        $country = "de";
-        if (LaravelLocalization::getCurrentLocale() === "en") {
-            $country = "us";
-        }
-        $preferredLanguage = Request::getPreferredLanguage();
-        if (!empty($preferredLanguage)) {
-            if (str_contains($preferredLanguage, "_")) {
-                $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "_") + 1);
-            } elseif (str_contains($preferredLanguage, "-")) {
-                $preferredLanguage = substr($preferredLanguage, stripos($preferredLanguage, "-") + 1);
-            }
-
-            $preferredLanguage = strtolower($preferredLanguage);
-
-            if (in_array($preferredLanguage, self::COUNTRIES)) {
-                $country = $preferredLanguage;
-            }
-        }
+        $country = Localization::getRegion();
 
         $postfields = [
             "key" => $publicKey,

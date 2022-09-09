@@ -125,7 +125,7 @@
                     <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
                 </select>
             </div>
-            @if(LaravelLocalization::getCurrentLocale() === "de")
+            @if(App\Localization::getLanguage() === "de")
             <div class="form-group">
                 <label for="zitate">Zitate</label>
                 <select name="zitate" id="zitate" class="form-control">

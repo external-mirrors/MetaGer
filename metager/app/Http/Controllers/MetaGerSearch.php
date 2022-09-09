@@ -20,8 +20,13 @@ class MetaGerSearch extends Controller
     {
         $query_timer = \app()->make(QueryTimer::class);
         $locale = LaravelLocalization::getCurrentLocale();
+
         $preferredLanguage = array($request->getPreferredLanguage());
         if (!empty($preferredLanguage) && !empty($locale)) {
+            // Extract language part from locale (i.e. "de" from "de-DE")
+            if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
+                $locale = $matches[1];
+            }
             PrometheusExporter::PreferredLanguage($locale, $preferredLanguage);
         }
 

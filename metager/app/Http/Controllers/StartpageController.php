@@ -52,10 +52,6 @@ class StartpageController extends Controller
         if (in_array('autocomplete', array_keys($option_values))) {
             $autocomplete = $option_values['autocomplete'];
         }
-        $lang = Localization::getLanguage();
-        if ($lang === 'de' || $lang === "en") {
-            $lang = 'all';
-        }
 
         return view('index')
             ->with('title', trans('titles.index'))

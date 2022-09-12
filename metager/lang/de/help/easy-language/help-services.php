@@ -17,7 +17,7 @@ return [
     "widget.1" => "Mit dem MetaGer Widget kann man unsere Suche auf andere Webseiten packen. <br> Sie haben eine eigene Webseite. <br> Dann können Sie MetaGer auf ihrer Seite hinzufügen. <br> Sie können dann auf ihrer eigenen Seite mit MetaGer suchen. <br> Sie können nach Inhalten auf ihrer eigenen Seite suchen. <br> Oder Sie können im Internet suchen. <br> Bei Fragen können Sie unser <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">Kontaktformular</a> nutzen.",
 
     "maps.title" => "MetaGer Maps",
-    "maps.1" => ' <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> ist ein von MetaGer entwickelter Karten-Dienst. <br> MetaGer Maps gibt es auch für das Handy. Hier können Sie die App runterladen: <a href="/app" target="_blank">App runterladen</a>. <br> Wenn man bei MetaGer sucht kann man auch MetaGer Maps in der Suche nutzen. <br> Dafür können Sie einfach auf den neuen Such-Fokus <strong>Maps</strong> klicken. <br> So sieht der Such-Fokus aus:',
+    "maps.1" => ' <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> ist ein von MetaGer entwickelter Karten-Dienst. <br> MetaGer Maps gibt es auch für das Handy. <br> Hier können Sie die App runterladen: <a href="/app" target="_blank">App runterladen</a>. <br> Wenn man bei MetaGer sucht kann man auch MetaGer Maps in der Suche nutzen. <br> Dafür können Sie einfach auf den neuen Such-Fokus <strong>Maps</strong> klicken. <br> So sieht der Such-Fokus aus:',
     "maps.2" => "Wenn Sie darauf geklickt haben kommen Sie zu der entsprechenden Karte. <br> Dann sehen Sie auf der rechten Seite eine Spalte. <br> Diese Spalte zeigt gefundene Punkte auf der Karte an. <br> Diese Punkte passen zu der Suche. <br> So sieht diese Spalte aus:",
 
 

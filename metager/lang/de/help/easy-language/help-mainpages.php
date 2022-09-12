@@ -54,7 +54,7 @@ return [
     
     "settings.title" => 'Einstellungen',
     "settings.cookies" => 'Setzen von Cookies',
-    "settings.cookies.1" => 'Manche Browser löschen Ihre Cookies nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können sich den Link auch anzeigen lassen. <br> <a href=:link>Cookie-Link</a> <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers die Einstellungen wieder da. ',
+    "settings.cookies.1" => 'Manche Browser löschen Ihre Cookies nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können sich den Link auch anzeigen lassen: <br> <a href=:link>Cookie-Link</a> <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers die Einstellungen wieder da. ',
     "settings.search.engine.1" => 'Verwendete Suchmaschinen:',
     "settings.search.engine.2" => 'Hier sehen Sie alle Such-Maschinen die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen.',
     "settings.search.engine.3" => 'Wenn ein Knopf rot ist nutzen Sie diese Such-Maschine nicht.',

@@ -3,7 +3,7 @@
 return [
     "title"                 => 'MetaGer - Hilfe',
     "backarrow"             => ' Zurück',
-    "datenschutz.title" => "Anonymität und Datensicherheit",
+    "datenschutz.title" => "Anonymität und Daten-Sicherheit",
 
     "datenschutz.1" => 'Tracking-Cookies, Session-IDs und IP-Adressen',
     "datenschutz.2" => 'Bei MetaGer ist man anonym. <br> Das heißt man ist unerkannt. <br> Wir speichern keine Daten mit denen man jemanden erkennen kann. <br> Wir bieten 2 Funktionen dafür an: <br> Tor-Hidden-Service und <br> Anonym öffnen',
@@ -17,7 +17,7 @@ return [
     "proxy.1" => "Mit unserem MetaGer-Proxy kann man Web-Seiten anonym öffnen. <br> Das heißt, dass man unerkannt bleibt. <br> Der MetaGer-Proxy ist also wie ein Schutz-Schild. <br> Wenn Sie unerkannt suchen wollen geht das so: <br> Bei den Ergebnissen gibt es den Knopf <strong>Anonym öffnen</strong>. <br> So sieht der Knopf aus:",
     "proxy.2" => "Wenn man auf den Knopf drückt sucht man unerkannt. <br> Wenn Sie oben in der Such-Leiste eine neue Web-Seite eingeben, <br> suchen Sie nicht mehr unerkannt.",
 
-    'content.title' => 'Fragwürdige Inhalte / Jugendschutz',
+    'content.title' => 'Fragwürdige Inhalte / Jugend-Schutz',
     'content.explanation.1' => 'Wenn Sie im Internet Inhalte finden, die verboten aussehen, kann man diese melden. <br> Sie können eine E-Mail an <a href="mailto:hotline@jugendschutz.net" target="_blank" rel="noopener">hotline@jugendschutz.net</a> schicken. <br> Oder Sie gehen auf <a href="http://www.jugendschutz.net/" target="_blank" rel="noopener">www.jugendschutz.net</a> und füllen das Beschwerde-Formular aus. ',
     'content.explanation.2' => 'Wenn Sie auf MetaGer verbotene Inhalte finden, schreiben Sie uns. <br> Sie können eine E-Mail an <a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a> schicken.',
 

@@ -33,9 +33,10 @@
 	<section id="maps">
 		<h3>{!! trans('help/easy-language/help-services.maps.title') !!}</h3>
 		<div>
-			<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>
+		<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>
+			<img id="easy-help-services-maps" src="/img/help-easy-lang-maps.png"/>
 			<p>{!! trans('help/easy-language/help-services.maps.2') !!}</p>
-			<p>{!! trans('help/easy-language/help-services.maps.3') !!}</p>
+			<img id="easy-help-services-maps-right-list" src="/img/help-easy-lang-maps-right-list.png"/>
 		</div>
 </section>
 @endsection

@@ -9,7 +9,7 @@
         <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
           <img src="/img/metager.svg" alt="MetaGer" />
         </a>
-        <a class="lang" href="#">
+        <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
           <span>{{ App\Localization::getRegion() }}</span>
         </a>
       </h1>

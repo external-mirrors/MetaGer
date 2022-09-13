@@ -70,4 +70,28 @@ class Localization
         }
         return $current_region;
     }
+
+    /**
+     * Returns the supported Locales grouped by language and sorted by native name within the group
+     */
+    public static function getLanguageSelectorLocales()
+    {
+        $locales = [];
+
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_details) {
+            if (\preg_match("/^([a-zA-Z]+)-/", $locale, $matches)) {
+                $locales[$matches[1]][$locale] = $locale_details["native"];
+            }
+        }
+
+        // Sort languages
+        \ksort($locales);
+
+        // Sort locales in the languages
+        foreach ($locales as $language => &$tmp_locales) {
+            ksort($tmp_locales);
+        }
+
+        return $locales;
+    }
 }

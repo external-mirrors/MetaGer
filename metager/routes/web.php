@@ -303,6 +303,11 @@ Route::get('MG20', function () {
 Route::get('databund', function () {
     return redirect('https://metager.de/klassik/databund');
 });
+Route::get("lang", function () {
+    return view('lang-selector')
+        ->with("title", trans("titles.lang-selector"))
+        ->with('css', [mix('css/lang-selector.css')]);
+})->name("lang-selector");
 Route::get('languages', 'LanguageController@createOverview');
 Route::get('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@createSynopticEditPage');
 Route::post('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@processSynopticPageInput');

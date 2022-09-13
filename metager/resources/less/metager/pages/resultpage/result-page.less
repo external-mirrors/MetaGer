@@ -27,6 +27,7 @@
     z-index: 0;
     padding-right: 8px;
     padding-left: 8px;
+    white-space: nowrap;
 
     h1 {
         .logo;
@@ -37,6 +38,17 @@
 
         >img {
             width: 100px;
+        }
+    }
+
+    a.lang {
+        position: relative;
+        font-size: .7rem;
+        bottom: -6px;
+        left: -5px;
+
+        span {
+            padding: .1rem;
         }
     }
 
@@ -55,6 +67,10 @@
             img {
                 width: 20px;
             }
+        }
+
+        a.lang {
+            left: 0;
         }
     }
 }

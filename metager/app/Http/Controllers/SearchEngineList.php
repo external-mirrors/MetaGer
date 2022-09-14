@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\App;
+use App\Localization;
+use LaravelLocalization;
 
 class SearchEngineList extends Controller
 {
@@ -22,10 +22,20 @@ class SearchEngineList extends Controller
         if ($suma_file === null) {
             abort(404);
         }
+
+        $locale = LaravelLocalization::getCurrentLocaleRegional();
+        $lang = Localization::getLanguage();
         $sumas = [];
         foreach ($suma_file->foki as $fokus_name => $fokus) {
             foreach ($fokus->sumas as $suma_name) {
-                $sumas[$fokus_name][] = $suma_name;
+                if (
+                    ## Lang support is not defined
+                    (\property_exists($suma_file->sumas->{$suma_name}, "lang") && \property_exists($suma_file->sumas->{$suma_name}->lang, "languages") && \property_exists($suma_file->sumas->{$suma_name}->lang, "regions")) &&
+                    ## Current Locale/Lang is not supported by this engine
+                    (\property_exists($suma_file->sumas->{$suma_name}->lang->languages, $lang) || \property_exists($suma_file->sumas->{$suma_name}->lang->regions, $locale))
+                ) {
+                    $sumas[$fokus_name][] = $suma_name;
+                }
             }
         }
         $suma_infos = [];

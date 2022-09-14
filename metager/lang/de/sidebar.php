@@ -17,7 +17,6 @@ return [
     'nav16' => 'Fördern',
     'nav17' => 'MetaGer-Fördershops',
     'nav18' => 'Kontakt',
-    'nav19' => 'Sprache',
     'nav20' => 'Hilfe',
     'nav22' => 'Zitatsuche',
     'nav23' => 'Mitglied werden',

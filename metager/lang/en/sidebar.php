@@ -17,7 +17,6 @@ return [
     "nav16" => "Support Us",
     "nav17" => "Purchase at affiliate shops",
     "nav18" => "Contact",
-    "nav19" => "Language",
     "nav20" => "Help",
     "nav22" => "Citation Search",
     "nav23" => "Become a member",

@@ -162,20 +162,12 @@
         @endif
       </ul>
     </li>
-    <li class="metager-dropdown">
-      <input id="languagesToggle" class="sidebarCheckbox" type="checkbox">
-      <label for="languagesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationSprache" tabindex=0>
+    <hr>
+    <li>
+      <a  href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
       <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
-        <span>{{ trans('sidebar.nav19') }} ({{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }})</span>
-        <span class="caret"></span>
-      </label>
-      <ul class="metager-dropdown-content">
-        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-          <li>
-            <a rel="alternate" hreflang="{{$localeCode}}" href="{{LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}" >{{{ $properties['native'] }}}</a>
-          </li>
-        @endforeach
-      </ul>
+        <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
+      </a>
     </li>
   </ul>
 </div>

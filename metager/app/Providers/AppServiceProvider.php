@@ -2,13 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Queue\Events\JobProcessed;
-use Illuminate\Queue\Events\JobProcessing;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Request;
+use App\Localization;
 use Illuminate\Support\ServiceProvider;
-use \Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Queue;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +14,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if (app()->routesAreCached()) {
+            // Apply the correct locale configuration
+            // This is also done in RouteServiceProvider if routes are not cached
+            Localization::setLocale();
+        }
+
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
                 'host' => config("database.redis.default.host"),

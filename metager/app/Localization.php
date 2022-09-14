@@ -24,10 +24,13 @@ class Localization
 
         if (stripos($host, "metager.org") !== false) {
             App::setLocale("en-US");
+            App::setFallbackLocale("en");
         } else if (stripos($host, "metager.es") !== false) {
             App::setLocale("es-ES");
+            App::setFallbackLocale("es");
         } else {
             App::setLocale("de-DE");
+            App::setFallbackLocale("de");
         }
 
         $locale_path = LaravelLocalization::setLocale();
@@ -36,8 +39,7 @@ class Localization
         // Our locale includes the requested region however our translated strings are not differentiating regions
         // We need to define a fallback locale for each regional locale to just use the language part stripping the region
         if (\preg_match("/^([a-zA-Z]{2,5})-[a-zA-Z]{2,5}$/", $locale, $matches)) {
-            App::setLocale($matches[1]);
-            $locale = config("app.locale");
+            App::setFallbackLocale($matches[1]);
         }
 
         return $locale_path;

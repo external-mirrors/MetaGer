@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use LaravelLocalization;
+use URL;
 
 class LocalizationRedirect
 {
@@ -54,7 +55,7 @@ class LocalizationRedirect
             $allowed_hostnames[] = $host;
         }
 
-        $url = url()->full();
+        $url = URL::full();
         if ($host !== $required_hostname && !\in_array($host, $allowed_hostnames) && preg_match("/^(https?:\/\/[^\/]+)(.*)/", $url, $matches)) {
             $new_host = \str_replace($host, $required_hostname, $matches[1]);
             $new_url = $new_host . $matches[2];

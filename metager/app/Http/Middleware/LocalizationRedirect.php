@@ -32,6 +32,7 @@ class LocalizationRedirect
         $allowed_hostnames = [
             "127.0.0.1",
             "localhost",
+            "nginx"
         ];
         $required_hostname = "metager.de";
         if (\stripos($locale, "de") === 0) {

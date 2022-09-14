@@ -3,6 +3,9 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
+use Log;
 
 class About extends Page
 {
@@ -11,9 +14,9 @@ class About extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/about';
+        return LaravelLocalization::getLocalizedUrl($locale, "/about");
     }
 
     /**
@@ -24,17 +27,23 @@ class About extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Wofür wir stehen")
-            ->assertTitle("Über Uns - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("What We Stand For")
-            ->assertTitle("About Us - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Wofür wir stehen")
-            ->assertTitle("Sobre nosotros - MetaGer")
-            ->switchLanguage("Deutsch");
+        $browser->visit("/")
+            ->waitFor("label.sidebar-opener[for=sidebarToggle]")
+            ->click("label.sidebar-opener[for=sidebarToggle]")
+            ->click("label#navigationKontakt")
+            ->clickLink("Über uns")
+            ->waitForLocation("/about");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            if ($locale === "de-DE") {
+                continue;
+            }
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("about.head.3", [], $lang))
+                ->assertTitle(trans("titles.about", [], $lang));
+        }
     }
 
     /**

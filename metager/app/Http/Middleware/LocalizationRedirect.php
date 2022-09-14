@@ -44,6 +44,11 @@ class LocalizationRedirect
             $required_hostname = "metager.es";
         }
 
+        // Allow the MetaGer review apps aswell
+        if (\preg_match("/\.review\.metager\.de$/", $host)) {
+            $allowed_hostnames[] = $host;
+        }
+
         $url = url()->full();
         if ($host !== $required_hostname && !\in_array($host, $allowed_hostnames) && preg_match("/^(https?:\/\/[^\/]+)(.*)/", $url, $matches)) {
             $new_host = \str_replace($host, $required_hostname, $matches[1]);

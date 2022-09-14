@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ App\Localization::getLanguage() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/index.css?id={{ $key }}">

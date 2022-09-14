@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{!! trans('staticPages.meta.language') !!}">
+<html lang="{{ App\Localization::getLanguage() }}">
 
 <head>
 	<meta charset="utf-8" />

@@ -10,7 +10,11 @@
     <h2>{{ trans("lang-selector.lang.$language", [], $language) }}</h2>
     <ul>
         @foreach($locales as $locale => $locale_native)
-        <li><a @if(LaravelLocalization::getCurrentLocale() === $locale)class="active" @endif rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, null, [], true) }}">{{ $locale_native }}</a></li>
+        @if(LaravelLocalization::getCurrentLocale() === $locale)
+        <li>{{ $locale_native }}</li>
+        @else
+        <li><a rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, null, [], true) }}">{{ $locale_native }}</a></li>
+        @endif
         @endforeach
     </ul>
     @endforeach

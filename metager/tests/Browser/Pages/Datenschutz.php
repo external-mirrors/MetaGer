@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Datenschutz extends Page
 {
@@ -11,9 +13,9 @@ class Datenschutz extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/datenschutz';
+        return LaravelLocalization::getLocalizedUrl($locale, "/datenschutz");
     }
 
     /**
@@ -24,16 +26,14 @@ class Datenschutz extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Datenschutzerklärung")
-            ->assertTitle("Datenschutz und Privatsphäre - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("Data protection")
-            ->assertTitle("Privacy - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Data protection")
-            ->assertTitle("Protección de datos y privacidad - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
+            $text = $lang === "de" ? "Datenschutzerklärung" : "Data protection";
+            $browser->visit($url)
+                ->waitForText($text)
+                ->assertTitle(trans("titles.datenschutz", [], $lang));
+        }
     }
 
     /**

@@ -53,7 +53,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new App);
         });
     }
-/*
+
     public function testDatenschutz()
     {
         // Datenschutz
@@ -78,7 +78,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Hilfe);
         });
     }
-
+    /*
     public function testImpressum()
     {
         // Impressum

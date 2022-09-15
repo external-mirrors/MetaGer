@@ -8,7 +8,7 @@
     "options.5"    =>    "ABRIR ANÓNIMO",
     "options.6"    =>    "ABRIR NUEVA PESTAÑA",
     "options.7"    =>    "ABRIR",
-    'options.direct' => 'Direkt öffnen',
+    'options.direct' => 'Abre directamente',
     "options.more"    =>    "Más",
     "options.less"    =>    "Menos",
     "gefVon"    =>    "Encontrado de",

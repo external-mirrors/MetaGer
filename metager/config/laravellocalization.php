@@ -36,6 +36,7 @@ return [
         //'da'          => ['name' => 'Danish',                 'script' => 'Latn', 'native' => 'dansk', 'regional' => 'da_DK'],
         //'se'          => ['name' => 'Northern Sami',          'script' => 'Latn', 'native' => 'davvisámegiella', 'regional' => 'se_NO'],
         'de-DE'          => ['name' => 'German (Germany)',                 'script' => 'Latn', 'native' => 'Deutsch (Deutschland)', 'regional' => 'de_DE'],
+        'de-AT'          => ['name' => 'German (Austria)',                 'script' => 'Latn', 'native' => 'Deutsch (Österreich)', 'regional' => 'de_AT'],
         //'luo'         => ['name' => 'Luo',                    'script' => 'Latn', 'native' => 'Dholuo', 'regional' => ''],
         //'nv'          => ['name' => 'Navajo',                 'script' => 'Latn', 'native' => 'Diné bizaad', 'regional' => ''],
         //'dua'         => ['name' => 'Duala',                  'script' => 'Latn', 'native' => 'duálá', 'regional' => ''],
@@ -339,6 +340,7 @@ return [
         'en-UK' => 'uk',
         'en-IE' => 'ie',
         'es-ES' => 'es',
+        'de-AT' => 'at',
     ],
 
     // Locale suffix for LC_TIME and LC_MONETARY

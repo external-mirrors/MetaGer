@@ -61,9 +61,6 @@ spec:
             mountPath: /metager/metager_app/config/sumas.json
             subPath: SUMAS
           - name: secrets
-            mountPath: /metager/metager_app/config/sumasEn.json
-            subPath: SUMASEN
-          - name: secrets
             mountPath: /metager/metager_app/config/blacklistDomains.txt
             subPath: BLACKLIST_DOMAINS
           - name: secrets

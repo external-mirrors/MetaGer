@@ -1748,12 +1748,7 @@ class MetaGer
 
     public static function getLanguageFile()
     {
-        $locale = LaravelLocalization::getCurrentLocale();
-        if ($locale === "en") {
-            return config_path('sumasEn.json');
-        } else {
-            return config_path('sumas.json');
-        }
+        return config_path('sumas.json');
     }
 
     public function getLang()

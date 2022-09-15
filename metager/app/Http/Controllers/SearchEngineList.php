@@ -9,12 +9,9 @@ class SearchEngineList extends Controller
 {
     function index()
     {
-        $suma_file = "";
-        if (App::isLocale("en")) {
-            $suma_file = config_path() . "/sumasEn.json";
-        } else {
-            $suma_file = config_path() . "/sumas.json";
-        }
+
+        $suma_file = config_path() . "/sumas.json";
+
         if (empty($suma_file)) {
             abort(404);
         }

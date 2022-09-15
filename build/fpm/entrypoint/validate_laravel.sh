@@ -8,10 +8,6 @@ if [ ! -f "$BASE_DIR/config/sumas.json" ]; then
     cp $BASE_DIR/config/sumas.json.example $BASE_DIR/config/sumas.json
 fi
 
-if [ ! -f "$BASE_DIR/config/sumasEn.json" ]; then
-    cp $BASE_DIR/config/sumas.json.example $BASE_DIR/config/sumasEn.json
-fi
-
 if [ ! -d "$BASE_DIR/database/databases/" ]; then
     mkdir -p "$BASE_DIR/database/databases/"
 fi

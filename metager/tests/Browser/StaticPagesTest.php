@@ -147,7 +147,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Team);
         });
     }
-/*
+
     public function testWidget()
     {
         // Widget
@@ -161,7 +161,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Widget);
         });
     }
-
+/*
     public function testWebsearchWidget()
     {
         // Websearch Widget

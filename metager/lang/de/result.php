@@ -10,6 +10,7 @@ return [
     'options.5' => 'ANONYM ÖFFNEN',
     'options.6' => 'IN NEUEM TAB ÖFFNEN',
     'options.7' => 'ÖFFNEN',
+    'options.direct' => 'Direkt öffnen',
     'options.more' => 'MEHR',
     'options.less' => 'WENIGER',
     'gefVon' => 'von',

@@ -4,6 +4,7 @@ return [
         0   => 'Director ejecutivo [CEO]',
         1   => [
             1   => 'la junta directiva',
+            0   => 'la junta directiva',
         ],
         2   => 'Moderar y protección de menores',
         3   => 'Revistar la prensa',

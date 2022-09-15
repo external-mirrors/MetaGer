@@ -133,7 +133,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Spende);
         });
     }
-    /*
+    
     public function testTeam()
     {
         // Team
@@ -147,7 +147,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Team);
         });
     }
-
+/*
     public function testWidget()
     {
         // Widget

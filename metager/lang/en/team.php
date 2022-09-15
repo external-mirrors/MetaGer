@@ -4,6 +4,7 @@ return [
         0   => 'CEO',
         1   => [
             1   => 'executive',
+            0   => 'executive',
         ],
         2   => 'Youth protection commissioner',
         3   => 'press secretary',

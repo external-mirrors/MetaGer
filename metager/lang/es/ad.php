@@ -1,6 +1,5 @@
 <?php
-
 return [
     'werbung' => 'Anuncio',
-    'von' => 'de',
+    'von'     => 'de',
 ];

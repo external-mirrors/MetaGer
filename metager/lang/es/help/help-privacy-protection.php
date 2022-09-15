@@ -1,7 +1,4 @@
 <?php
-
 return [
-    "title"	=>	"Ayuda de MetaGer",
-   
-
+    'title' => 'Ayuda de MetaGer',
 ];

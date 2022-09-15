@@ -1,5 +1,4 @@
 <?php
-
 return [
     'title'         => 'MetaGer - Quote Search',
     'subtitle'      => 'Enter queries (authors or quotes) into the below textfield.',

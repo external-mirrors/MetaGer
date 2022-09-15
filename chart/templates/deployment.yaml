@@ -59,7 +59,7 @@ spec:
             readOnly: true
           - name: secrets
             mountPath: /metager/metager_app/config/sumas.json
-            subPath: SUMAS
+            subPath: SUMAS_JSON
           - name: secrets
             mountPath: /metager/metager_app/config/blacklistDomains.txt
             subPath: BLACKLIST_DOMAINS

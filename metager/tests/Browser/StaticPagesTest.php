@@ -92,7 +92,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Impress);
         });
     }
-    /*
+
     public function testKontakt()
     {
         // Kontakt
@@ -106,7 +106,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Kontakt);
         });
     }
-
+    /*
     public function testPlugin()
     {
         // Plugin

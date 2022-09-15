@@ -177,7 +177,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new WebsearchWidget);
         });
     }
-/*
+
     public function testSitesearchWidget()
     {
         // Sitesearch Widget
@@ -192,5 +192,5 @@ class StaticPagesTest extends DuskTestCase
                 ->waitForLocation("/sitesearch/")
                 ->on(new SitesearchWidget);
         });
-    }*/
+    }
 }

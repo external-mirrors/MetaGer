@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class App extends Page
 {
@@ -11,9 +13,9 @@ class App extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/app';
+        return LaravelLocalization::getLocalizedUrl($locale, "/app");
     }
 
     /**
@@ -24,17 +26,14 @@ class App extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Diese App bringt die volle Power unserer Suchmaschine auf ihr Smartphone.")
-            ->assertTitle("Apps - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("This App brings the full Metager power to your smartphone.")
-            ->assertTitle("Apps - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Con esta aplicación, obtiene toda la potencia de nuestro motor de búsqueda en su smartphone.")
-            ->assertTitle("Aplicaciones - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("app.metager.1", [], $lang))
+                ->assertTitle(trans("titles.app", [], $lang));
+        }
     }
 
     /**

@@ -40,7 +40,7 @@ class StaticPagesTest extends DuskTestCase
             $browser->visit(new About);
         });
     }
-/*
+
     public function testApp()
     {
         // App
@@ -53,7 +53,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new App);
         });
     }
-
+/*
     public function testDatenschutz()
     {
         // Datenschutz

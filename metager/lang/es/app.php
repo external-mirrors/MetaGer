@@ -10,8 +10,7 @@ return [
         1   => 'Actualmente solo podemos proporcionar nuestras aplicaciones para dispositivos Android.',
     ],
     'metager'      => [
-        1           => 'Con esta aplicación, obtiene toda la potencia de nuestro motor de búsqueda en su smartphone.
-Busque en Internet con solo deslizar un dedo mientras que mantiene su privacidad.',
+        1           => 'Con esta aplicación, obtiene toda la potencia de nuestro motor de búsqueda en su smartphone. Busque en Internet con solo deslizar un dedo mientras que mantiene su privacidad.',
         2           => 'Puede instalar la aplicación para nuestra búsqueda a través de Google Playstore o instalarla manualmente desde nuestro servidor en su smartphone, protegida de datos.',
         'playstore' => 'Google Playstore',
         'fdroid'    => 'F-Droid Store',

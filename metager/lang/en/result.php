@@ -12,6 +12,7 @@ return [
         7          => 'OPEN',
         'more'     => 'MORE',
         'less'     => 'LESS',
+        'direct'   => 'Direct Open',
     ],
     'gefVon'        => 'by',
     'advertisement' => 'Ad',

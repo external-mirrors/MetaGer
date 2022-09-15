@@ -10,59 +10,76 @@ return [
     ],
     'timeline' => [
         1    => [
-            1   => 'The idea of MetaGer arises during the CeBIT computer fair over lunch on a paper napkin. Work on the first prototype begins that same evening. ',
+            1   => 'March 1996: Cebit Hanover',
+            2   => 'The idea for MetaGer came to German engineer Dr. Wolfgang Sander-Beuermann during the CeBIT computer trade fair while he was having lunch on a paper napkin. Work on the first prototype begins that same evening.',
         ],
         2    => [
-            1   => 'MetaGer is developed as a research project by the University of Hanover and the regional data center in Lower Saxony. ',
+            1   => 'End of 1996: Launch of MetaGer',
+            2   => 'MetaGer is being developed as a research project of the University of Hannover and the regional computing center of Lower Saxony.',
         ],
         3    => [
-            1   => 'This is what MetaGer looks like as it first goes online. MetaGer provides an innovative new service at that time.',
+            1   => '1997-2006: MetaGer Homepage',
+            2   => 'This is what MetaGer looks like when it first goes online. MetaGer thus provides an innovative new service.',
         ],
         4    => [
-            1   => 'MetaGer is transferred to the non-profit association SUMA-EV - Association for Free Access to Knowledge. The cooperation with the University of Hannover is continued.',
+            1   => '01.10.2012: Change of Sponsorship to SUMA-EV',
+            2   => 'MetaGer is transferred to the non-profit association <i>SUMA-EV - Association for Free Access to Knowledge</i>. The cooperation with the University of Hannover will be continued.',
         ],
         5    => [
-            1   => '
-    The original MetaGer home page goes through many small changes in the following years.',
+            1   => '2006-2015: Introduction of new designs',
+            2   => 'The original MetaGer home page goes through many small changes in the following years.',
         ],
         6    => [
-            1   => 'For the first time, the interface of MetaGer is also offered in English.',
+            1   => '29.08.2013 English Version Launched',
+            2   => 'For the first time, MetaGer\'s interface is also offered in English.',
         ],
         7    => [
-            1   => 'MetaGer offers access within the Tor anonymization network as a security feature.',
+            1   => 'December  2013: Tor-Service',
+            2   => 'MetaGer offers access within the Tor anonymization network as a security-related feature.',
         ],
         8    => [
-            1   => 'The new "Open anonymously" function provides a proxy service. Through this MetaGer users remain protected even after the search.',
+            1   => 'March 2014: Implementation of the "Open Anonymously" Function',
+            2   => 'A proxy service is offered with the new "Open anonymously" function. Through this MetaGer users remain protected even after the search ',
         ],
         9    => [
-            1   => 'As part of more extensive modernizations, a new simplified home page is introduced.',
+            1   => '2015-2016: MetaGer Homepage',
+            2   => 'As part of more extensive modernizations, a new simplified home page is offered.',
         ],
         10   => [
-            1   => 'Optimizations at MetaGer\'s core reduce the average response time of the search engine to less than 1.3 seconds. Over the next few years, this drops further to almost half.',
+            1   => 'March 2016: Search results in under 1.3 seconds',
+            2   => 'Extensive modernization at the core of MetaGer reduces the average response time of the search engine to less than 1.3 seconds. Over the next few years, this will drop further to almost half.',
         ],
         11   => [
-            1   => 'Other small adjustments gradually solidify orange as the MetaGer color.  ',
+            1   => '2016-2019: MetaGer Homepage',
+            2   => 'Other small adjustments gradually solidify orange as the MetaGer color ',
         ],
         12   => [
-            1   => 'MetaGer is released as Open Source under the free GNU AGPL license.',
+            1   => '16.08.2016: Release of the source code',
+            2   => 'MetaGer is published as open source under the free GNU AGPL license.',
         ],
         13   => [
-            1   => 'Maps.MetaGer.de is launched as a privacy-friendly map service. The maps are based on data from the OpenStreetMap project, but have their own display and route planner.',
+            1   => 'December 2016: Launch of MetaGer Maps',
+            2   => 'Maps.MetaGer.de launches as a privacy-friendly map service. The maps are based on the data of the OpenStreetMap project, but have their own display and route planner.',
         ],
         14   => [
-            1   => 'The english MetaGer version is greatly improved by extensive fine-tuning and own result sources.',
+            1   => '2017: Relaunch of English MetaGer Version',
+            2   => 'Extensive fine-tuning and custom result sources greatly improve the English MetaGer version.',
         ],
         15   => [
-            1   => 'The Quicktips, which offer hints beyond normal search results, are expanded in functionality and spun off into a separate project. Instead of being located above the results, they are now in a sidebar.',
+            1   => 'September 2017: Revision of the Quicktips',
+            2   => 'Quicktips, which offer hints beyond normal search results, are expanded in functionality and spun off into a separate project. Instead of being above the results, they are now located in a sidebar.',
         ],
         16   => [
-            1   => 'On the new home page, four characteristic features of MetaGer are highlighted and promoted for the first time.',
+            1   => '2016-2019: MetaGer Homepage',
+            2   => 'On the new home page, four charakeristic features of MetaGer are highlighted and promoted for the first time.',
         ],
         17   => [
-            1   => 'As part of an extensive redesign of the start page, MetaGer\'s four unique selling points have been revisited and presented in an expanded form. In order to avoid overloading the central function of the web search, the descriptions can be reached by scrolling. <br> Another feature of the new revision is the page-wide dark mode. This allows MetaGer to be in a dark design on all pages.',
+            1   => '26.10.2020: Current home page and dark mode',
+            2   => 'As part of an extensive redesign of the home page, MetaGer\'s four unique selling propositions are revisited and presented in an expanded format. In order not to overload the central web search function, the descriptions can be reached by scrolling. <br> Another feature of the new redesign is the page-wide dark mode. This allows MetaGer to be used on all pages in a dark design.</br> ',
         ],
         18   => [
-            1   => 'Even today, MetaGer is constantly evolving.',
+            1   => 'Today',
+            2   => 'Even today, MetaGer is constantly evolving.',
         ],
     ],
 ];

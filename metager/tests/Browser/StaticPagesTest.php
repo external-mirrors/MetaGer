@@ -78,7 +78,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Hilfe);
         });
     }
-    /*
+
     public function testImpressum()
     {
         // Impressum
@@ -92,7 +92,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Impress);
         });
     }
-
+    /*
     public function testKontakt()
     {
         // Kontakt

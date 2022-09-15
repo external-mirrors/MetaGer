@@ -106,7 +106,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Kontakt);
         });
     }
-    /*
+
     public function testPlugin()
     {
         // Plugin
@@ -120,7 +120,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Plugin);
         });
     }
-
+    /*
     public function testSpenden()
     {
         //Spenden

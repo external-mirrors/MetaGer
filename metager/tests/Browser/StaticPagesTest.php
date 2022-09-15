@@ -120,7 +120,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Plugin);
         });
     }
-    /*
+
     public function testSpenden()
     {
         //Spenden
@@ -133,7 +133,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Spende);
         });
     }
-
+    /*
     public function testTeam()
     {
         // Team

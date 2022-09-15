@@ -11,6 +11,7 @@ return [
     ],
     'wunschbetrag'  => [
         'placeholder' => 'Importe en €',
+        'label'       => 'Cantidad deseada',
     ],
     'frequency'     => [
         'once'        => 'Única vez',
@@ -23,9 +24,6 @@ return [
         'lastschrift' => 'Domiciliación bancaria',
     ],
     'ueberweisung'  => 'Transferencia bancaria',
-    'paypal'        => [
-        1   => 'Con un clic en donar, será redirigido a PayPal.',
-    ],
     'bankinfo'      => [
         1   => 'Para donar a nuestra asociación patrocinadora SUMA-EV, solo necesita hacer una transferencia a la siguiente cuenta:',
         2   => [
@@ -45,9 +43,14 @@ return [
         8    => [
             'message' => [
                 'placeholder' => 'Más información',
+                'label'       => 'Aquí puede enviarnos un mensaje adicional si lo desea:',
             ],
         ],
         10   => 'Sus datos se nos transmiten a través de una conexión cifrada y no pueden ser leídos por terceros. SUMA-EV utiliza sus datos exclusivamente para la liquidación de donaciones; Nunca compartiremos sus datos. Las donaciones al SUMA-EV son deducibles de impuestos, ya que es una asociación sin fines de lucro y está reconocida como tal por la Oficina de Impuestos del Norte de Hanover e inscrita en el registro de asociaciones en el Tribunal de Distrito de Hanover bajo VR200033.',
+    ],
+    'paypal'        => [
+        1   => 'Con un clic en donar, será redirigido a PayPal.',
+        0   => 'Paypal / tarjeta de crédito',
     ],
     'submit'        => 'Donar',
     'member'        => [

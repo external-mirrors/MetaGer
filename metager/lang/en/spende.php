@@ -10,6 +10,7 @@ return [
     ],
     'wunschbetrag'  => [
         'placeholder' => 'Amount in €',
+        'label'       => 'Custom amount',
     ],
     'frequency'     => [
         'once'        => 'Once',
@@ -22,9 +23,6 @@ return [
         'lastschrift' => 'Sepa direct debit',
     ],
     'ueberweisung'  => 'Bank transfer',
-    'paypal'        => [
-        1   => 'You will be redirected where you can finalize your donation.',
-    ],
     'bankinfo'      => [
         1   => 'By bank transfer',
         2   => [
@@ -58,11 +56,16 @@ your E-Mail adress on the money transfer form.',
         8         => [
             'message' => [
                 'placeholder' => 'Message',
+                'label'       => 'Here you can informally add a message to your donation:',
             ],
         ],
         10        => 'Your information is transmitted encrypted and is not read by a third party. SUMA-EV only uses your information for accounting; Your information is not passed on. Donations to the SUMA-EV are tax-deductible, because the association is recognized as charitable by the Finanzamt Hannover Nord (revenue board), listed in the register of associations, Amtsgericht Hannover under VR200033. A certificate for single donations above 300,-EUR is sent automatically (post address is required!). For donations below 300,-EUR an account current is enough for tax-deduction.',
         'private' => '*As a Person:',
         'company' => '*As a Business:',
+    ],
+    'paypal'        => [
+        1   => 'You will be redirected where you can finalize your donation.',
+        0   => 'Paypal / Credit Card',
     ],
     'submit'        => 'Donate',
     'member'        => [

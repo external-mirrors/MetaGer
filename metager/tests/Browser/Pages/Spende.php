@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Spende extends Page
 {
@@ -11,9 +13,9 @@ class Spende extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/spende';
+        return LaravelLocalization::getLocalizedUrl($locale, "/spende");
     }
 
     /**
@@ -24,16 +26,14 @@ class Spende extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Ihre Spende")
-            ->assertTitle("Spenden - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("Your Donation")
-            ->assertTitle("Donation - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Su donación")
-            ->assertTitle("Donaciones - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
+
+            $browser->visit($url)
+                ->waitForText(trans("spende.headline.1", [], $lang))
+                ->assertTitle(trans("titles.spende", [], $lang));
+        }
     }
 
     /**

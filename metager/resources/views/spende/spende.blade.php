@@ -22,7 +22,7 @@
                 <div id="payment-methods">
                     <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
                     <a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-                    <a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+                    <a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal.0') !!}</a>
                 </div>
                 <p><br>{!! trans('spende.paypal.1') !!}</p>
                 <div class="center-wrapper">
@@ -48,7 +48,7 @@
             <div id="payment-methods">
                 <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
                 <a class="payment-label payment-label-selected" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-                <a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+                <a class="payment-label" href="?method=paypal">{!! trans('spende.paypal.0') !!}</a>
             </div>
             <p>
                 <br>{!! trans('spende.bankinfo.1') !!} <br>
@@ -73,7 +73,7 @@
                         <nobr>{!! trans('spende.ueberweisung') !!}</nobr>
                     </a>
                     <a class="payment-label" href="?method=paypal">
-                        <nobr>{!! trans('spende.paypal') !!}</nobr>
+                        <nobr>{!! trans('spende.paypal.0') !!}</nobr>
                     </a>
                 </div>
                 <p id="lastschrift-info">@lang('spende.lastschrift.info')</p>
@@ -91,7 +91,7 @@
                     <input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required" @if(!empty($data) && $data["betrag"]==="300" )checked="checked" @endif><label for="amount-300euro" class="amount-label">300€</label>
                 </div>
                 <div class="custom-amount-container">
-                    <input type="radio" name="amount" id="amount-custom" value="custom" required="required" @if(!empty($data) && $data["betrag"]==="custom" )checked="checked" @endif><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="@lang('spende.wunschbetrag.placeholder')" value="">
+                    <input type="radio" name="amount" id="amount-custom" value="custom" required="required" @if(!empty($data) && $data["betrag"]==="custom" )checked="checked" @endif><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag.label') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="@lang('spende.wunschbetrag.placeholder')" value="">
                 </div>
                 <h3>{!! trans('spende.headline.4') !!}</h3>
                 <div id="frequency">
@@ -141,7 +141,7 @@
                     <input type="text" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
                 </div>
                 <div class="form-group donation-form-group">
-                    <label for="msg">{!! trans('spende.lastschrift.8.message')!!}</label>
+                    <label for="msg">{!! trans('spende.lastschrift.8.message.label')!!}</label>
                     <p>{!! trans('spende.bankinfo.3')!!}</p>
                     <textarea class="form-control" id="msg" name="Nachricht" placeholder="{!! trans('spende.lastschrift.8.message.placeholder') !!}">@if(isset($data['nachricht'])){{$data['nachricht']}}@endif</textarea>
                 </div>

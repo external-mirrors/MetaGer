@@ -1,7 +1,14 @@
 <?php
 return [
-    'results'    => 'Results',
-    'settings'   => 'Settings',
+    'results'    => [
+        'failed'           => 'Unfortunately we have no results for your search.',
+        'failedSitesearch' => 'Unfortunately we have no results for your search. This might be the case because your current search is restricted to the website ":site". If you want to remove this restriction, click here: <a href=":altSearch">New Search</a>',
+        'name'             => 'Results',
+    ],
+    'settings'   => [
+        'noneSelected' => 'Attention: you did not choose any search engine.',
+        'name'         => 'Settings',
+    ],
     'engines'    => [
         'noParser'        => 'There is an error: Requesting \\":engine\\" failed. Please report to our <a href=\\"/en/kontakt\\">contact form</a>',
         'noSpecialSearch' => 'There was no search engine supporting one of your filter options. Filters currently active: ":filter".',

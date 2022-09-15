@@ -5,6 +5,7 @@ return [
     ],
     'settings'   => [
         'noneSelected' => '¡Guarda! No habéis seleccionado un motor de busqueda.',
+        'name'         => 'Ajustes',
     ],
     'engines'    => [
         'noParser' => 'Falta: Preguntar :engine. Por favor notificáis MetaGer:  <a href="/es/kontakt">Formulario encriptado</a>',

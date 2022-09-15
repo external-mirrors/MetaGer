@@ -1,9 +1,11 @@
 <?php
 
 return [
+    'results.name' => "Ergebnisse",
     'results.failed' => 'Leider konnten wir zu Ihrer Sucheingabe keine passenden Ergebnisse finden.',
     'results.failedSitesearch' => 'Leider konnten wir zu Ihrer Sucheingabe keine passenden Ergebnisse finden. Dies könnte daran liegen, dass Sie aktuell eine Suche ausführen, die sich auf Ergebnisse der Seite ":site" beschränkt. Wenn sie diese beschränkung entfernen möchten, klicken Sie hier: <a href=":altSearch">Neue Suche</a>',
 
+    "settings.name" => "Einstellungen",
     'settings.noneSelected' => 'Achtung: Sie haben in ihren Einstellungen keine Suchmaschine ausgewählt.',
 
     'engines.noParser' => 'Beim Abfragen von :engine ist ein Fehler aufgetreten. Bitte benachrichtigen Sie uns über unser <a href="/kontakt" target="_blank">Kontaktformular</a>',
@@ -24,7 +26,6 @@ return [
     'sitesearch.success' => 'Sie führen eine Sitesearch durch. Es werden nur Ergebnisse von der Seite: ":site" angezeigt.',
     'feedback' => 'Nichts Passendes dabei? Geben Sie uns Feedback: ',
 
-    'results' => "Ergebnisse",
     'filter.noFilter' => 'Beliebig',
     'filter.reset' => 'Filter zurücksetzen',
 
@@ -140,8 +141,6 @@ return [
     "filter.skip" => "Überspringen",
     "filter.min" => "Minimum Sleep (in s)",
     "filter.max" => "Maximum Sleep (in s)",
-
-    "settings" => "Einstellungen",
 
     "ads.own.title" => "Jetzt MetaGer unterstützen",
     "ads.own.description" => "Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV.",

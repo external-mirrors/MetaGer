@@ -5,6 +5,7 @@ return [
     ],
     'paragraph' => [
         1   => '¿De dónde viene el mensaje?',
+        2   => 'Hay varias formas de hacerlo. Para comprobar la calidad de la información, existe el llamado <a href="https://library.csuchico.edu/sites/default/files/craap-test.pdf">"test CRAAP</a>". Se desarrolló en la Universidad Estatal de California en Chico. Esta prueba ofrece muchas preguntas útiles para ver si la información es fiable. Además de esta prueba, puede encontrar más información útil aquí:',
     ],
     'list'      => [
         1   => [
@@ -25,6 +26,7 @@ return [
             2   => 'Verifique el historial de versiones: ¿Quién escribió qué y cuándo?',
             3   => '¿Se puede saber algo sobre estos autores?',
             4   => '¿Hay una página de discusión para esta entrada de Wikipedia de la que se puedan sacar más conclusiones?',
+            5   => 'Comprueba qué origen se indican en la entrada de Wikipedia. A menudo también pueden servir como origen de información adicional.',
         ],
         4   => [
             1   => '¡Falsificar correos electrónicos es MUY fácil! => Correos electrónicos falsos.',

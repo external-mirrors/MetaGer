@@ -29,4 +29,9 @@ En "Motor de búsqueda predeterminado" seleccione MetaGer.',
         3   => 'En "Nuevas ventanas y pestañas", haga clic en el menú desplegable junto a "Inicio y nuevas ventanas" y seleccione "Dirección personalizada".',
         4   => 'Ingrese ":link" en el campo de texto que aparece.',
     ],
+    'default-search-v89' => [
+        1   => 'Alternativamente, haz clic con el botón derecho del ratón en la barra de direcciones de la parte superior de tu navegador y luego haz clic en "MetaGer: buscar y encontrar con seguridad" para añadirlo. MetaGer ya está instalado como motor de búsqueda disponible.',
+        2   => 'En la esquina superior derecha del navegador, haga clic en <img class= "mg-icon" src="/img/menu.svg"><span class="sr-only">el icono de los tres puntos</span> y abra la opción de "Configuración".',
+        3   => 'En "Búsqueda", haga clic en el menú desplegable en "Motor de búsqueda predeterminado" y seleccione "MetaGer (en)".',
+    ],
 ];

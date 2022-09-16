@@ -30,4 +30,7 @@ return [
         'tips' => 'Sugerencias',
     ],
     'plugin'           => 'MetaGer Plugin',
+    'nav30'            => 'Motores de búsqueda',
+    'nav31'            => 'Más información',
+    'navFactcheck'     => 'Comprobación de hechos',
 ];

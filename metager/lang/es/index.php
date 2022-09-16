@@ -8,4 +8,11 @@ return [
     ],
     'placeholder'  => 'MetaGer: Buscar & encontrar de forma segura',
     'searchbutton' => 'MetaGer - Búsqueda',
+    'foki'         => [
+        'web'         => 'Web',
+        'bilder'      => 'Imágenes',
+        'nachrichten' => 'Noticias/Política',
+        'science'     => 'Ciencia',
+        'produkte'    => 'Productos',
+    ],
 ];

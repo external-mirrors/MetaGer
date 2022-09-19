@@ -12,7 +12,12 @@ return [
         3   => 'At this point you can set search filters permanently. With the selection of a search filter, only search engines are available that support this filter. Conversely, only search filters are displayed which are supported by the current search engine selection.',
         4   => 'Here you can add domains to exclude when searching. If you want to exclude all subdomains start with "*.". One domain per line.',
     ],
-    'hint'             => 'These settings affect all foci and sub-pages!',
+    'hint'             => [
+        'header'       => 'Setting Cookies',
+        'text'         => 'To save your search settings, we use non-personally identifiable cookies. These are saved in clear text in your browser. You can see an <a href=":link">overview</a> of all the settings and cookies you have made.',
+        'loadSettings' => 'Here is a link you can use as startpage or bookmark to keep your current settings. The URL sets your settings as cookies.',
+        'hint'         => 'These settings affect all foci and sub-pages!',
+    ],
     'disabledByFilter' => 'Disabled by Search Filter:',
     'address'          => 'Address',
     'save'             => 'Save',

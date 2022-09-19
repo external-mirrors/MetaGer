@@ -12,7 +12,12 @@ return [
         3   => 'En este punto puede establecer filtros de búsqueda de forma permanente. Cuando se selecciona un filtro de búsqueda, sólo están disponibles los motores de búsqueda que admiten este filtro. A la inversa, sólo se muestran los filtros de búsqueda compatibles con la selección actual del motor de búsqueda.',
         4   => 'Aquí puede introducir los dominios que deben ser excluidos de su búsqueda. Si desea incluir todos los subdominios, comience con "*.". Un dominio por línea.',
     ],
-    'hint'             => 'Estos ajustes afectan a todos los focos y subpáginas en general',
+    'hint'             => [
+        'header'       => 'Configuración de las cookies',
+        'text'         => 'Para guardar su configuración de búsqueda, utilizamos cookies no identificables personalmente. Estos se almacenan en texto plano en su navegador. Puedes <a href=:link>ver</a> un resumen de todos los ajustes y cookies que has hecho.',
+        'loadSettings' => 'Aquí encontrarás un enlace que puedes establecer como página de inicio o marcador para llevarte tu configuración actual. El enlace crea cookies con la configuración correspondiente cuando se llama.',
+        'hint'         => 'Estos ajustes afectan a todos los focos y subpáginas en general',
+    ],
     'disabledByFilter' => 'Desactivado por el filtro de búsqueda:',
     'address'          => 'Introducción de la dirección',
     'save'             => 'Guardar',

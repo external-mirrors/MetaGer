@@ -63,14 +63,14 @@ class MailController extends Controller
 
             # Wir versenden die Mail des Benutzers an uns:
             $postdata = [
-                "alert" => true,
+                "alert" => false,
                 "autorespond" => true,
                 "source" => "API",
                 "name" => $name,
                 "email" => $replyTo,
                 "subject" => $subject,
                 "ip" => $request->ip(),
-                "deptId" => 5,
+                "topicId" => 11,    // English
                 "message" => "data:text/plain;charset=utf-8, $message",
                 "attachments" => []
             ];
@@ -84,7 +84,7 @@ class MailController extends Controller
             }
 
             if (LaravelLocalization::getCurrentLocale() === "de") {
-                $postdata["deptId"] = 1;
+                $postdata["topicId"] = 1;    // German
             }
 
             $postdata = json_encode($postdata);
@@ -107,9 +107,9 @@ class MailController extends Controller
                 "curlopts" => [
                     CURLOPT_POST => true,
                     CURLOPT_POSTFIELDS => $postdata,
-                    CURLOPT_LOW_SPEED_TIME => 20,
+                    CURLOPT_LOW_SPEED_TIME => 60,
                     CURLOPT_CONNECTTIMEOUT => 10,
-                    CURLOPT_TIMEOUT => 20
+                    CURLOPT_TIMEOUT => 60
                 ]
             ];
             $mission = json_encode($mission);

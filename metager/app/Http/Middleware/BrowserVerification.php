@@ -41,7 +41,7 @@ class BrowserVerification
             }
         }
 
-        if (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
+        if (\in_array($request->input("out", ""), ["api", "atom10", "rss20"]) && (app('App\Models\Key')->getStatus() || ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz")))) {
             header('Content-type: application/xml; charset=utf-8');
         } elseif (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -50,17 +50,19 @@ class BrowserVerification
             header('Content-type: text/html; charset=utf-8');
         }
         header('X-Accel-Buffering: no');
-
-        //use parameter for middleware to skip this when using associator
-        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
-            \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return $next($request);
-        }
-
         ini_set('zlib.output_compression', 'Off');
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');
         ob_end_clean();
+
+        //use parameter for middleware to skip this when using associator
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus() ||
+            ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz"))
+        ) {
+            \app()->make(QueryTimer::class)->observeEnd(self::class);
+            \app()->make(SearchSettings::class)->header_printed = false;
+            return $next($request);
+        }
 
         if ($request->filled("mgv")) {
             $key = $request->input('mgv', "");

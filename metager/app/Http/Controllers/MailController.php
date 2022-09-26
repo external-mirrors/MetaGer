@@ -63,7 +63,7 @@ class MailController extends Controller
 
             # Wir versenden die Mail des Benutzers an uns:
             $postdata = [
-                "alert" => false,
+                "alert" => true,
                 "autorespond" => true,
                 "source" => "API",
                 "name" => $name,

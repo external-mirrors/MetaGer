@@ -1,9 +1,10 @@
 <?php
 return [
+    'backarrow'   => ' back',
     'title'       => [
         2   => 'Use of the search engine',
+        1   => 'MetaGer - Help',
     ],
-    'backarrow'   => ' back',
     'startpage'   => [
         'title' => 'The start page',
         'info'  => 'The start page contains the search field and a menu button in the upper right corner. There is a link below the search field which let you add MetaGer to your web browser. At last, at the bottom of the page there is some information about MetaGer and its supporting association, the SUMA-EV.',

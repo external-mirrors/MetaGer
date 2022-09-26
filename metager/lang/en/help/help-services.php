@@ -4,6 +4,7 @@ return [
     'backarrow'          => ' back',
     'dienste'            => [
         'kostenlos' => 'All our services are cost free. You do not pay with your data.',
+        'text'      => 'Services',
     ],
     'app'                => [
         'title' => 'Android-App',

@@ -17,9 +17,11 @@ return [
         2       => 'Example: search for Shakespears <div class="well well-sm">to be or not to be</div> will deliver many results, but the exact phrase will only be found using <div class="well well-sm">"to be or nor to be"</div>',
         3       => [
             'example' => '"round-table" "decision"',
+            'text'    => 'Please use quotes to make sure to get your search words in the results list.',
         ],
         4       => [
             'example' => '"round-table decision"',
+            'text'    => 'Put words or phrases in quotation marks to search for exact combinations.',
         ],
     ],
     'urls'           => [

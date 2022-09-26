@@ -2,6 +2,7 @@
 return [
     'title'       => [
         2   => 'Uso del motor de búsqueda',
+        1   => 'Ayuda de MetaGer',
     ],
     'startpage'   => [
         'title' => 'La página de inicio',

@@ -17,9 +17,11 @@ return [
         2       => 'Si esto no es suficiente para usted, tiene 2 opciones para hacer su búsqueda más precisa:',
         3       => [
             'example' => '"la" "mesa" "redonda"',
+            'text'    => 'Si quiere estar seguro de que las palabras de su búsqueda también aparecen en los resultados, debe ponerlas entre comillas.',
         ],
         4       => [
             'example' => '"la mesa redonda"',
+            'text'    => 'Con la búsqueda de frases, también puede buscar combinaciones de palabras en lugar de palabras individuales. Para ello, basta con colocar las palabras que deben aparecer juntas entre comillas.',
         ],
     ],
     'urls'           => [

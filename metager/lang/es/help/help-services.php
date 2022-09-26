@@ -4,6 +4,7 @@ return [
     'backarrow'          => 'Devolver',
     'dienste'            => [
         'kostenlos' => 'Por supuesto, todos nuestros servicios son gratuitos',
+        'text'      => 'Otros servicios en torno a la búsqueda',
     ],
     'app'                => [
         'title' => 'Aplicación Android',

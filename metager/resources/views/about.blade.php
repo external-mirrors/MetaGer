@@ -108,9 +108,17 @@
 				<img src="/img/startpage_2020.png" alt="MetaGer 2020">
 			</picture>
 		</div>
-		<div>
+		<div class="timeline-item-alternate" >
 			<h2>{{ trans('about.timeline.18') }}</h2>
 			<p>{{ trans('about.timeline.18.1') }}</p>
+			<picture>
+				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
+				<img src="/img/help-page_2022.png" alt="MetaGer Hilfe Seite">
+			</picture>
+		</div>
+		<div>
+			<h2>{{ trans('about.timeline.19') }}</h2>
+			<p>{{ trans('about.timeline.19.1') }}</p>
 		</div>
 	</div>
 </div>

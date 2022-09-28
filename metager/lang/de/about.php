@@ -59,6 +59,9 @@ return [
     'timeline.17' => '26.10.2020: Aktuelle Startseite und Dark Mode',
     'timeline.17.1' => 'Im Rahmen einer umfangreichen Überarbeitung der Startseite werden die vier Alleinstellungsmerkmale von MetaGer wieder aufgegriffen und in einer erweiterten Darstellung präsentiert. Um die zentrale Funktion der Websuche nicht zu überladen, sind die Beschreibungen durch Scrollen zu erreichen. <br> Ein weiteres Feature der neuen Überarbeitung ist der seitenweite Dark Mode. Dadurch kann MetaGer auf allen Seiten in einem dunklen Design genutzt werden.',
 
-    'timeline.18' => 'Heute',
-    'timeline.18.1' => 'Auch heute entwickelt sich MetaGer stetig weiter.'
+    'timeline.18' => '14.02.2022: Erneuerung der Hilfe',
+    'timeline.18.1' => 'Die Hilfe von MetaGer erhält eine neue Übersichtsseite. Diese strukturiert und visualisiert die Hilfeseiten durch einfach zu erkennende Symbole.',
+
+    'timeline.19' => 'Heute',
+    'timeline.19.1' => 'Auch heute entwickelt sich MetaGer stetig weiter.'
 ]; 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
 
 helm -n $KUBE_NAMESPACE upgrade --install \
     ${HELM_RELEASE_NAME} \

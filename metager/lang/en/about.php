@@ -4,26 +4,34 @@ return [
     'head.1' => 'About Us',
     'head.2' => 'Timeline',
     'head.3' => 'What We Stand For',
+    'head.4.' => 'What makes MetaGer special?',
 
-    'text.1'=>'<h3> <img id="about-lock" src="/img/lock.svg"> Guaranteed Privacy </h3> Data protection and privacy are important to us. That\'s why we don\'t track or store personal data and offer several services to protect your privacy, for example our anonymizing proxy ("Open Anonymously" feature).<h3><img id= "about-heart" src="/img/heart.svg"> Non-Profit Association</h3> MetaGer is a project of the non-profit association SUMA-EV, Association for Free Access to Knowledge. SUMA-EV is primarily committed to promoting media literacy. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Diverse and Free</h3> MetaGer produces diverse results because it is a metasearch engine. We have explained exactly what this means in our <a href=":transparenz">transparency statement</a>. By publishing our source code, we show that free access to knowledge is important to us. Our source code is free and open source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Renewable Energy </h3>Sustainability and resource consumption is also a big issue for us. Therefore we pay attention to the energy consumption of our services and only use electricity from renewable energy sources.',
-   
+    'text.1' => '<h3> <img id="about-lock" src="/img/lock.svg"> Guaranteed Privacy </h3> Data protection and privacy are important to us. That\'s why we don\'t track or store personal data and offer several services to protect your privacy, for example our anonymizing proxy ("Open Anonymously" feature).<h3><img id= "about-heart" src="/img/heart.svg"> Non-Profit Association</h3> MetaGer is a project of the non-profit association SUMA-EV, Association for Free Access to Knowledge. SUMA-EV is primarily committed to promoting media literacy. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Diverse and Free</h3> MetaGer produces diverse results because it is a metasearch engine. We have explained exactly what this means in our <a href=":transparenz">transparency statement</a>. By publishing our source code, we show that free access to knowledge is important to us. Our source code is free and open source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Renewable Energy </h3>Sustainability and resource consumption is also a big issue for us. Therefore we pay attention to the energy consumption of our services and only use electricity from renewable energy sources.',
+
+    'text.2' => 'MetaGer is different from other search engines. This is reflected not only in our public benefit orientation and focus on privacy, but also through some unique features:',
+    'text.3' => 'Possibility of creating a personal blacklist',
+    'text.4' => 'Search in search function',
+    'text.5' => 'Ad-free search possible (for members)',
+    'text.6' => 'Integration of search engine projects like YaCy',
+    'text.7' => 'The only German search engine that combines results from several large web indexes',
+    'text.8' => 'And much more…',
 
     'timeline.1' => 'March 1996: Cebit Hanover',
     'timeline.1.1' => 'The idea of MetaGer arises during the CeBIT computer fair over lunch on a paper napkin. Work on the first prototype begins that same evening. ',
-   
+
     'timeline.2' => 'End of 1996: Launch of MetaGer',
     'timeline.2.1' => 'MetaGer is developed as a research project by the University of Hanover and the regional data center in Lower Saxony. ',
-   
+
     'timeline.3' => '1997-2006: MetaGer Startpage',
     'timeline.3.1' => 'This is what MetaGer looks like as it first goes online. MetaGer provides an innovative new service at that time.',
-   
+
     'timeline.4' => '01.10.2012: Change of Sponsorship to SUMA-EV ',
     'timeline.4.1' => 'MetaGer is transferred to the non-profit association SUMA-EV - Association for Free Access to Knowledge. The cooperation with the University of Hannover is continued.',
-   
+
     'timeline.5' => '2006-2015: Introduction of New Designs',
     'timeline.5.1' => '
     The original MetaGer home page goes through many small changes in the following years.',
-    
+
     'timeline.6' => '29.08.2013 English Version Launched',
     'timeline.6.1' => 'For the first time, the interface of MetaGer is also offered in English.',
 
@@ -37,7 +45,7 @@ return [
     'timeline.9.1' => 'As part of more extensive modernizations, a new simplified home page is introduced.',
 
     'timeline.10' => 'March 2016: Search Results under 1.3 Seconds',
-    'timeline.10.1' =>'Optimizations at MetaGer\'s core reduce the average response time of the search engine to less than 1.3 seconds. Over the next few years, this drops further to almost half.',
+    'timeline.10.1' => 'Optimizations at MetaGer\'s core reduce the average response time of the search engine to less than 1.3 seconds. Over the next few years, this drops further to almost half.',
 
     'timeline.11' => '2016-2019: MetaGer Startpage',
     'timeline.11.1' => 'Other small adjustments gradually solidify orange as the MetaGer color.  ',
@@ -60,6 +68,9 @@ return [
     'timeline.17' => '26.10.2020: Current Startpage and Dark Mode',
     'timeline.17.1' => 'As part of an extensive redesign of the start page, MetaGer\'s four unique selling points have been revisited and presented in an expanded form. In order to avoid overloading the central function of the web search, the descriptions can be reached by scrolling. <br> Another feature of the new revision is the page-wide dark mode. This allows MetaGer to be in a dark design on all pages.',
 
-    'timeline.18' => 'Today',
-    'timeline.18.1' => 'Even today, MetaGer is constantly evolving.'
-]; 
+    'timeline.18' => '14.02.2022: Renewal of the Helppage',
+    'timeline.18.1' => 'MetaGer has added a new overview help page. This structures and visualizes the help pages through easy to recognize symbols.',
+
+    'timeline.19' => 'Today',
+    'timeline.19.1' => 'Even today, MetaGer is constantly evolving.'
+];

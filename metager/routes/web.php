@@ -44,7 +44,7 @@ Route::get('asso', function () {
         ->with('navbarFocus', 'dienste')
         ->with('css', [mix('css/asso/style.css')])
         ->with('darkcss', [mix('css/asso/dark.css')]);
-});
+})->name("asso");
 
 Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 

@@ -17,7 +17,7 @@ ingress:
         - metager.de
         - metager.org
         - metager.es
-      secretName: metager-tls
+      secretName: metager-tls-2022
 
 autoscaling:
   maxReplicas: 100

@@ -127,8 +127,10 @@ class Assoziator extends Controller
             $i++;
         }
 
-        return view('assoziator.asso')
-            ->with('title', trans('titles.asso'))
+        $title = empty($eingabe) ? trans('titles.asso') : trans('titles.assosearch', ["q" => $eingabe]);
+
+        echo view('assoziator.asso')
+            ->with('title', $title)
             ->with('navbarFocus', 'dienste')
             ->with('words', $words)
             ->with('keywords', $eingabe)

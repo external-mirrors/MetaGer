@@ -127,7 +127,7 @@ class Assoziator extends Controller
             $i++;
         }
 
-        return view('assoziator.asso')
+        echo view('assoziator.asso')
             ->with('title', trans('titles.asso'))
             ->with('navbarFocus', 'dienste')
             ->with('words', $words)

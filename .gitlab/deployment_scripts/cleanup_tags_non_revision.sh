@@ -3,7 +3,7 @@
 set -e
 
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
 
 # Get All existing tags for the fpm repo
 echo "Fetching existing fpm tags..."

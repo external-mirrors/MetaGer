@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
 
 echo "Removing Image Tags..."
 .gitlab/deployment_scripts/cleanup_tags_revision.sh

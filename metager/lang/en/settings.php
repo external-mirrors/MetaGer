@@ -51,4 +51,7 @@ return [
     'key' => "Your key to the ad-free search",
     'blentry' => 'Black list entry',
     'removeCookie' => "Remove this cookie",
+
+    'aria.label.1' =>'active',
+    'aria.label.2' =>'deactivated',
 ];

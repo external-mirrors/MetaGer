@@ -94,6 +94,7 @@ return [
     "filter.market.ea" => "Englisch (Australien)",
     "filter.market.ec" => "Englisch (Kanada)",
     "filter.market.ei" => "Englisch (Indien)",
+    "filter.market.eir" => "Englisch (Irland)",
     "filter.market.ein" => "Englisch (Indonesien)",
     "filter.market.em" => "Englisch (Malaysia)",
     "filter.market.enz" => "Englisch (Neuseeland)",

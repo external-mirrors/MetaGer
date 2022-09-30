@@ -8,11 +8,11 @@
 						{{ $ad->titel }}
 					</a>
 				</h2>
-				<a class="ad-label" href="{{ $ad->gefVonLink[0] }}" target="_blank" rel="noopener">{!! $ad->gefVon[0] !!}</a>
+				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
 			</div>
 			<div class="result-subheadline">
 				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" tabindex="-1">
-					<span class="advertisement-mark">Anzeige</span>
+					<span class="advertisement-mark">@lang('result.advertisement')</span>
 					<span>{{ $ad->anzeigeLink }}</span>
 				</a>
 			</div>
@@ -24,10 +24,10 @@
 		</div>
 		<div class="result-footer">
 		<a class="result-open" href="{{ $ad->link }}" target="_self" rel="noopener">
-			ÖFFNEN
+			{!! trans('result.options.7') !!}
 		</a>
 		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener">
-			IN NEUEM TAB
+			{!! trans('result.options.6') !!}
 		</a>
 	</div>
 	</div>

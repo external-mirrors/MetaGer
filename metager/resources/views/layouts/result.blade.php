@@ -80,6 +80,11 @@
 	<div class="result-options">
 		<div class="options">
 			<ul class="option-list list-unstyled small">
+				@if($result->partnershop)
+				<li>
+					<a href="{{ $result->originalLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">{{ __('result.options.direct') }}</a>
+				</li>
+				@endif
 				<li class="js-only">
 					<a href="#" class="saver" data-id="{{ $result->hash }}">
 						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}

@@ -26,20 +26,23 @@ class MetaGerSearch extends Controller
         }
 
         if ($request->filled("chrome-plugin")) {
-            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
+            echo redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
+            return;
         }
 
         $focus = $request->input("focus", "web");
 
         if ($focus === "maps") {
             $searchinput = $request->input('eingabe', '');
-            return redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
+            echo redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
+            return;
         }
 
         # If there is no query parameter we redirect to the startpage
         $eingabe = $request->input('eingabe', '');
         if (empty(trim($eingabe))) {
-            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
+            echo redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
+            return;
         }
 
         # Mit gelieferte Formulardaten parsen und abspeichern:
@@ -55,7 +58,8 @@ class MetaGerSearch extends Controller
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
         if (empty($metager->getQ())) {
-            return $metager->createView();
+            echo $metager->createView();
+            return;
         }
 
         $query_timer->observeStart("Search_CreateQuicktips");

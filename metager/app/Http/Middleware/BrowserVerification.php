@@ -41,7 +41,7 @@ class BrowserVerification
             }
         }
 
-        if (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && app('App\Models\Key')->getStatus()) {
+        if (\in_array($request->input("out", ""), ["api", "atom10", "rss20"]) && (app('App\Models\Key')->getStatus() || ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz")))) {
             header('Content-type: application/xml; charset=utf-8');
         } elseif (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -50,17 +50,19 @@ class BrowserVerification
             header('Content-type: text/html; charset=utf-8');
         }
         header('X-Accel-Buffering: no');
-
-        //use parameter for middleware to skip this when using associator
-        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus()) {
-            \app()->make(QueryTimer::class)->observeEnd(self::class);
-            return $next($request);
-        }
-
         ini_set('zlib.output_compression', 'Off');
         ini_set('output_buffering', 'Off');
         ini_set('output_handler', '');
         ob_end_clean();
+
+        //use parameter for middleware to skip this when using associator
+        if (($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus() ||
+            ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz"))
+        ) {
+            \app()->make(QueryTimer::class)->observeEnd(self::class);
+            \app()->make(SearchSettings::class)->header_printed = false;
+            return $next($request);
+        }
 
         if ($request->filled("mgv")) {
             $key = $request->input('mgv', "");
@@ -74,6 +76,7 @@ class BrowserVerification
                 $js_enabled = true;
             }
             $bv_result = $this->waitForBV($key, false, $js_enabled);
+
             if ($bv_result) {
                 \app()->make(SearchSettings::class)->header_printed = false;
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -140,7 +143,13 @@ class BrowserVerification
 
 
         do {
-            usleep(10 * 1000);
+            // Calculate Sleep Time
+            // Sleeptime gradually increases with the current wait time
+            // Min 10ms and max 1s
+            $sleep_time_milliseconds = round(now()->diffInMilliseconds($wait_start) / 10);
+            $sleep_time_milliseconds = max(10, $sleep_time_milliseconds);
+            $sleep_time_milliseconds = min(1000, $sleep_time_milliseconds);
+            usleep($sleep_time_milliseconds * 1000);
 
             $bvData = Cache::get($key);
 

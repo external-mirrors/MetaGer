@@ -556,9 +556,10 @@ class MetaGer
             # Check if this engine should only be active when filter is used
             if ($suma->{"filter-opt-in"}) {
                 # This search engine should only be used when a parameter filter of it is used
+                # and no other search engine can provide this filter
                 $validTmp = false;
                 foreach ($this->parameterFilter as $filterName => $filter) {
-                    if (!empty($filter->sumas->{$sumaName})) {
+                    if (count((array)$filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
                         $validTmp = true;
                         break;
                     }

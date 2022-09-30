@@ -11,6 +11,19 @@
 	<p>{!! trans('about.text.1', ["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
 </div>
 <div class="card">
+	<h1>{{ trans('about.head.4') }}</h1>
+	<p>{{ trans('about.text.2') }}</p>
+	<ul>
+		<li>{{ trans('about.text.3') }}</li>
+		<li>{{ trans('about.text.4') }}</li>
+		<li>{{ trans('about.text.5') }}</li>
+		<li>{{ trans('about.text.6') }}</li>
+		<li>{{ trans('about.text.7') }}</li>
+		<li>{{ trans('about.text.8') }}</li>
+
+	</ul>
+</div>
+<div class="card">
 	<h1>{{ trans('about.head.2') }}</h1>
 	<div class="timeline-container">
 		<div>

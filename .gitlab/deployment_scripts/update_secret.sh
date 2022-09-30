@@ -2,11 +2,8 @@
 
 set -e
 
-echo $HELM_RELEASE_NAME;
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-echo $HELM_RELEASE_NAME;
 HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
-echo $HELM_RELEASE_NAME;
 
 # Create/Update the secret
 kubectl -n $KUBE_NAMESPACE create secret generic ${HELM_RELEASE_NAME} \

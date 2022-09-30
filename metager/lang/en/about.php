@@ -4,8 +4,17 @@ return [
     'head.1' => 'About Us',
     'head.2' => 'Timeline',
     'head.3' => 'What We Stand For',
+    'head.4.'=> 'What makes MetaGer special?',
 
     'text.1'=>'<h3> <img id="about-lock" src="/img/lock.svg"> Guaranteed Privacy </h3> Data protection and privacy are important to us. That\'s why we don\'t track or store personal data and offer several services to protect your privacy, for example our anonymizing proxy ("Open Anonymously" feature).<h3><img id= "about-heart" src="/img/heart.svg"> Non-Profit Association</h3> MetaGer is a project of the non-profit association SUMA-EV, Association for Free Access to Knowledge. SUMA-EV is primarily committed to promoting media literacy. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Diverse and Free</h3> MetaGer produces diverse results because it is a metasearch engine. We have explained exactly what this means in our <a href=":transparenz">transparency statement</a>. By publishing our source code, we show that free access to knowledge is important to us. Our source code is free and open source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Renewable Energy </h3>Sustainability and resource consumption is also a big issue for us. Therefore we pay attention to the energy consumption of our services and only use electricity from renewable energy sources.',
+   
+    'text.2' =>'MetaGer is different from other search engines. This is reflected not only in our public benefit orientation and focus on privacy, but also through some unique features:',
+    'text.3' =>'Possibility of creating a personal blacklist',
+    'text.4' =>'Search in search function',
+    'text.5' =>'Ad-free search possible (for members)',
+    'text.6' =>'Integration of search engine projects like YaCy',
+    'text.7' =>'The only German search engine that combines results from several large web indexes',
+    'text.8' =>'And much more..',
    
     'timeline.1' => 'March 1996: Cebit Hanover',
     'timeline.1.1' => 'The idea of MetaGer arises during the CeBIT computer fair over lunch on a paper napkin. Work on the first prototype begins that same evening. ',

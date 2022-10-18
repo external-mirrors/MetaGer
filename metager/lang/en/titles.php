@@ -31,5 +31,6 @@ return [
     "keychange"	=>	"Change membership key",
     "allSettings"	=>	"All Settings - MetaGer",
     "transparency"	=>	"Transparency statement - MetaGer",
-    "search-engine" => 'Search engines - MetaGer'
+    "search-engine" => 'Search engines - MetaGer',
+    "prevention" => 'Help and Support for Suicide Prevention - MetaGer'
 ];

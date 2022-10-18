@@ -209,6 +209,13 @@ Route::get('jugendschutz', function () {
         ->with('title', trans('titles.jugendschutz'));
 });
 
+
+Route::get('prevention', function () {
+    return view('prevention-information')
+        ->with('title', trans('titles.prevention'))
+        ->with('css', [mix('/css/prevention-information.css')]);
+});
+
 Route::get('ad-info', function () {
     return view('ad-info')
         ->with('title', trans('titles.ad-info'));

@@ -22,5 +22,7 @@
     "asso"	=>	"Asociador - MetaGer",
     "plugin"	=>	"Plugin - MetaGer",
     "key"	=>	"Llave para afiliadas/os",
-    "allSettings"	=>	"Configuraciones para buscar - MetaGer"
+    "allSettings"	=>	"Configuraciones para buscar - MetaGer",
+    "prevention" => 'Ayuda con pensamientos suicidas - MetaGer'
+
 ];

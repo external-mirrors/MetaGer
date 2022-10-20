@@ -119,7 +119,7 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" >{{ trans('sidebar.nav22') }}</a>
         </li>
         <li>
-          <a href="{{ action([App\Http\Controllers\Assoziator::class, 'asso']) }}" >{{ trans('sidebar.nav11') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(null, route("asso")) }}" >{{ trans('sidebar.nav11') }}</a>
         </li>
         <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>

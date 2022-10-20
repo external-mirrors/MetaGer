@@ -27,6 +27,7 @@ return [
     'jugendschutz' => 'Jugendschutz',
     'ad-info' => 'Werbung bei MetaGer',
     'asso' => 'Assoziator - MetaGer',
+    'assosearch' => 'Assoziationen für ":q" - MetaGer',
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Mitgliederschlüssel - MetaGer',
     'keychange' => 'Mitgliederschlüssel wechseln',

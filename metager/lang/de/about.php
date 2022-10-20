@@ -4,6 +4,7 @@ return [
     'head.1' => 'Über uns',
     'head.2' => 'Chronik',
     'head.3' => 'Wofür wir stehen',
+    'head.4' => 'Was macht MetaGer besonders?',
 
     'text.1' => '<h3> <img id="about-lock" src="/img/lock.svg"> Garantierte Privatsphäre</h3>Uns sind Datenschutz und Privatsphäre wichtig. Daher tracken und speichern wir keine Nutzerprofile. Außerdem bieten wir Dienste zum Schutz Ihrer Privatsphäre an, zum Beispiel unseren anonymisierenden Proxy („Anonym öffnen“-Funktion). <h3><img id= "about-heart" src="/img/heart.svg"> Gemeinnütziger Verein</h3> MetaGer ist ein Projekt des gemeinnützigen Vereins <a href="https://suma-ev.de">SUMA-EV, Verein für freien Wissenszugang</a>. Der SUMA-EV setzt sich vor allem für die Förderung von Medienkompetenz ein. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Vielfältig und Frei </h3> MetaGer bringt vielfältige Ergebnisse, da es eine Metasuchmaschine ist. Was das genau bedeutet, haben wir in unserer <a href=":transparenz">Transparenzerklärung</a> erklärt. Durch die Veröffentlichung unseres Quellcodes zeigen wir, dass uns freier Wissenszugang wichtig ist. Unser Quellcode ist frei und Open Source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Ökostrom </h3> Nachhaltigkeit und Ressourcenverbrauch ist auch für uns ein großes Thema. Daher achten wir auf den Energieverbrauch unserer Dienste und verwenden nur Strom aus erneuerbaren Energiequellen.',
 
@@ -59,6 +60,9 @@ return [
     'timeline.17.1' => '26.10.2020: Aktuelle Startseite und Dark Mode',
     'timeline.17.2' => 'Im Rahmen einer umfangreichen Überarbeitung der Startseite werden die vier Alleinstellungsmerkmale von MetaGer wieder aufgegriffen und in einer erweiterten Darstellung präsentiert. Um die zentrale Funktion der Websuche nicht zu überladen, sind die Beschreibungen durch Scrollen zu erreichen. <br> Ein weiteres Feature der neuen Überarbeitung ist der seitenweite Dark Mode. Dadurch kann MetaGer auf allen Seiten in einem dunklen Design genutzt werden.',
 
-    'timeline.18.1' => 'Heute',
-    'timeline.18.2' => 'Auch heute entwickelt sich MetaGer stetig weiter.'
+    'timeline.18.1' => '14.02.2022: Erneuerung der Hilfe',
+    'timeline.18.2' => 'Die Hilfe von MetaGer erhält eine neue Übersichtsseite. Diese strukturiert und visualisiert die Hilfeseiten durch einfach zu erkennende Symbole.',
+
+    'timeline.19.1' => 'Heute',
+    'timeline.19.2' => 'Auch heute entwickelt sich MetaGer stetig weiter.'
 ];

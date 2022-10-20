@@ -11,6 +11,19 @@
 	<p>{!! trans('about.text.1', ["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
 </div>
 <div class="card">
+	<h1>{{ trans('about.head.4') }}</h1>
+	<p>{{ trans('about.text.2') }}</p>
+	<ul>
+		<li>{{ trans('about.text.3') }}</li>
+		<li>{{ trans('about.text.4') }}</li>
+		<li>{{ trans('about.text.5') }}</li>
+		<li>{{ trans('about.text.6') }}</li>
+		<li>{{ trans('about.text.7') }}</li>
+		<li>{{ trans('about.text.8') }}</li>
+
+	</ul>
+</div>
+<div class="card">
 	<h1>{{ trans('about.head.2') }}</h1>
 	<div class="timeline-container">
 		<div>
@@ -108,9 +121,17 @@
 				<img src="/img/startpage_2020.png" alt="MetaGer 2020">
 			</picture>
 		</div>
-		<div>
+		<div class="timeline-item-alternate" >
 			<h2>{{ trans('about.timeline.18.1') }}</h2>
 			<p>{{ trans('about.timeline.18.2') }}</p>
+			<picture>
+				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
+				<img src="/img/help-page_2022.png" alt="MetaGer Hilfe Seite">
+			</picture>
+		</div>
+		<div>
+			<h2>{{ trans('about.timeline.19.1') }}</h2>
+			<p>{{ trans('about.timeline.19.2') }}</p>
 		</div>
 	</div>
 </div>

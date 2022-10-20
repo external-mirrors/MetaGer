@@ -4,9 +4,17 @@ return [
         1   => 'About Us',
         2   => 'Timeline',
         3   => 'What We Stand For',
+        4   => 'What makes MetaGer special?',
     ],
     'text'     => [
         1   => '<h3> <img id="about-lock" src="/img/lock.svg"> Guaranteed Privacy </h3> Data protection and privacy are important to us. That\'s why we don\'t track or store personal data and offer several services to protect your privacy, for example our anonymizing proxy ("Open Anonymously" feature).<h3><img id= "about-heart" src="/img/heart.svg"> Non-Profit Association</h3> MetaGer is a project of the non-profit association SUMA-EV, Association for Free Access to Knowledge. SUMA-EV is primarily committed to promoting media literacy. <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Diverse and Free</h3> MetaGer produces diverse results because it is a metasearch engine. We have explained exactly what this means in our <a href=":transparenz">transparency statement</a>. By publishing our source code, we show that free access to knowledge is important to us. Our source code is free and open source.<h3> <img id="about-leaf" src="/img/leaf.svg"> 100% Renewable Energy </h3>Sustainability and resource consumption is also a big issue for us. Therefore we pay attention to the energy consumption of our services and only use electricity from renewable energy sources.',
+        2   => 'MetaGer is different from other search engines. This is reflected not only in our public good orientation and focus on privacy, but also through some unique features:',
+        3   => 'Possibility of creating a personal blacklist',
+        4   => 'Function of the search in the search',
+        5   => 'Advertising-free search possible (for members)',
+        6   => 'Integration of search engine projects like YaCy',
+        7   => 'The only German search engine that combines results from several large web indexes',
+        8   => 'And much more..',
     ],
     'timeline' => [
         1    => [
@@ -78,6 +86,10 @@ return [
             2   => 'As part of an extensive redesign of the home page, MetaGer\'s four unique selling propositions are revisited and presented in an expanded format. In order not to overload the central web search function, the descriptions can be reached by scrolling. <br> Another feature of the new redesign is the page-wide dark mode. This allows MetaGer to be used on all pages in a dark design.</br> ',
         ],
         18   => [
+            1   => 'Today',
+            2   => 'Even today, MetaGer is constantly evolving.',
+        ],
+        19   => [
             1   => 'Today',
             2   => 'Even today, MetaGer is constantly evolving.',
         ],

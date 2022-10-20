@@ -33,4 +33,5 @@ return [
     'keychange'               => 'Cambiar la clave de socio',
     'transparency'            => 'Declaración de transparencia - MetaGer',
     'search-engine'           => 'Motores de búsqueda - MetaGer',
+    'assosearch'              => 'Asociaciones para ":q" - MetaGer',
 ];

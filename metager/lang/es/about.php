@@ -4,9 +4,17 @@ return [
         1   => 'Sobre nosotros',
         2   => 'Crónica',
         3   => 'Lo que representamos',
+        4   => '¿Qué hace especial a MetaGer?',
     ],
     'text'     => [
         1   => '<h3> <img id="about-lock" src="/img/lock.svg"> Privacidad garantizada</h3>La protección de datos y la privacidad son importantes para nosotros. Por lo tanto, no rastreamos ni almacenamos los perfiles de los usuarios. También ofrecemos servicios para proteger su privacidad, por ejemplo, nuestro proxy de anonimización (función "abrir anónimo") <h3><img id= "about-heart" src="/img/heart.svg"> Asociación sin ánimo de lucro</h3> MetaGer es un proyecto de la asociación sin ánimo de lucro <a href="https://suma-ev.de">SUMA-EV, Asociación para el Libre Acceso al Conocimiento</a>. SUMA-EV se compromete principalmente a promover la alfabetización mediática <h3> <img id= "about-rainbow" src="/img/rainbow.svg"> Diversos y libres </h3> MetaGer produce una variedad de resultados porque es un metabuscador. Hemos explicado exactamente lo que esto significa en nuestra <a href=":transparenz">declaración de transparencia</a>. Al publicar nuestro código fuente, demostramos que el libre acceso al conocimiento es importante para nosotros. Nuestro código fuente es gratuito y de código abierto.<h3> <img id="about-leaf" src="/img/leaf.svg"> electricidad 100% verde </h3> La sostenibilidad y el consumo de recursos también es un tema importante para nosotros. Por ello, prestamos atención al consumo energético de nuestros servicios y sólo utilizamos electricidad procedente de fuentes de energía renovables.',
+        2   => 'MetaGer es diferente de otros motores de búsqueda. Esto se refleja no sólo en nuestra orientación hacia el bien público y el enfoque en la privacidad, sino también a través de algunas características únicas:',
+        3   => 'Posibilidad de crear una lista negra personal',
+        4   => 'Función de la búsqueda en la búsqueda',
+        5   => 'Posibilidad de búsqueda sin publicidad (para los afiliados)',
+        6   => 'Integración de proyectos de motores de búsqueda como YaCy',
+        7   => 'Único motor de búsqueda alemán que combina resultados de varios grandes índices web',
+        8   => 'Y mucho más..',
     ],
     'timeline' => [
         1    => [
@@ -78,6 +86,10 @@ return [
             2   => 'Como parte de un amplio rediseño de la página de inicio, se retoman los cuatro puntos de venta únicos de MetaGer y se presentan de forma ampliada. Para no sobrecargar la función central de la búsqueda web, se puede llegar a las descripciones desplazándose. <br> Otra característica de la nueva revisión es el modo oscuro en toda la página. Esto permite utilizar MetaGer en todas las páginas con un diseño oscuro.</br> ',
         ],
         18   => [
+            1   => 'Hoy',
+            2   => 'Aún hoy, MetaGer sigue desarrollándose.',
+        ],
+        19   => [
             1   => 'Hoy',
             2   => 'Aún hoy, MetaGer sigue desarrollándose.',
         ],

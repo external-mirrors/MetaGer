@@ -33,4 +33,5 @@ return [
     'transparency'            => 'Transparency statement - MetaGer',
     'search-engine'           => 'Search engines - MetaGer',
     'lang-selector'           => 'Language selection',
+    'assosearch'              => 'Associations for ":q" - MetaGer',
 ];

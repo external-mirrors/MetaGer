@@ -2,7 +2,7 @@
 return [
     'headline'      => [
         1   => 'Your Donation',
-        2   => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a>.',
+        2   => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a> and <a href=":beitrittlink" target="_blank" rel="noopener">become a member.</a>',
         3   => 'How much would you like to donate?',
         4   => 'How frequent do you want to donate?',
         5   => 'Choose a payment method',
@@ -30,6 +30,7 @@ return [
             2   => 'BIC: GENODEM1GLS',
             3   => 'Bank: GLS Gemeinschaftsbank, Bochum',
             4   => '(AN: 4075 0332 01, BC: 43060967)',
+            0   => 'SUMA-EV - Association for Free Access to Knowledge.',
         ],
         3   => 'If you wish to receive a donation receipt,
 please specify your full adress and (if available)

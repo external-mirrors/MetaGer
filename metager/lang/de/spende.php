@@ -25,7 +25,7 @@ return [
 
 
     'bankinfo.1' => 'Um für den SUMA-EV unseren Trägerverein zu spenden, brauchen Sie nur eine Überweisung auf folgendes Konto zu tätigen:',
-    'bankinfo.2' => 'SUMA-EV',
+    'bankinfo.2.0' => 'SUMA-EV',
     'bankinfo.2.1' => 'IBAN: DE64 4306 0967 4075 0332 01',
     'bankinfo.2.2' => 'BIC: GENODEM1GLS',
     'bankinfo.2.3' => 'Bank: GLS Gemeinschaftsbank, Bochum',

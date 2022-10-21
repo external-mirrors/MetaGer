@@ -2,7 +2,8 @@
 return [
     'headline'      => [
         1   => 'Su donación',
-        2   => 'Con su donación, apoya el mantenimiento y desarrollo del motor de búsqueda independiente metager.de y la labor de la asociación patrocinadora sin fines de lucro SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Obtenga más información</a>.',
+        2   => 'Con su donación, apoya el mantenimiento y desarrollo del motor de búsqueda independiente metager.de y la labor de la asociación patrocinadora sin fines de lucro SUMA-EV. 
+<a href=":aboutlink" rel="noopener" target=_blank>Obtenga más información</a> y <a href=":beitrittlink" target="_blank" rel="noopener"> conviértase en miembro. </a>.',
         3   => '¿Qué cantidad desea donar?',
         4   => '¿Con qué frecuencia desea donar?',
         5   => '¿Cómo le gustaría donar?',
@@ -30,6 +31,7 @@ return [
             2   => 'BIC: GENODEM1GLS',
             3   => 'Banco: GLS Gemeinschaftsbank, Bochum',
             4   => '(NDC: 4075 0332 01, Código: 43060967)',
+            0   => 'SUMA-EV',
         ],
         3   => 'Si desea un recibo de donación, indíquenos su dirección completa. Para las donaciones de hasta 300 euros, el extracto bancario es suficiente para la deducción fiscal.',
     ],

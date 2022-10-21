@@ -52,7 +52,7 @@
             </div>
             <p>
                 <br>{!! trans('spende.bankinfo.1') !!} <br>
-                <br>{!! trans('spende.bankinfo.2') !!}
+                <br>{!! trans('spende.bankinfo.2.0') !!}
                 <br>{!! trans('spende.bankinfo.2.1') !!}
                 <br>{!! trans('spende.bankinfo.2.2') !!}
                 <br>{!! trans('spende.bankinfo.2.3') !!}

@@ -155,8 +155,6 @@ class Overture extends Searchengine
             $url = str_replace("https://metager3.de", $serve_domain, $url);
         }
 
-        $url = str_replace("http://localhost:8080", "https://metager.org", $url);
-
         # Wir benötigen die ServeUrl:
         $serveUrl = $this->urlEncode($url);
 

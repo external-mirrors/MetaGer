@@ -152,6 +152,7 @@
         <div class="section">
             <p>{!! trans('spende.lastschrift.10') !!}</p>
         </div>
+        @if (App\Localization::getLanguage() === "de")
         <div class="section member">
             <h3>{!! trans('spende.member.1') !!}</h3>
             <p>{!! trans('spende.member.2') !!}</p>
@@ -163,6 +164,7 @@
             </ul>
             <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}">{!! trans('spende.member.7') !!}</a>
         </div>
+        @endif
     </div>
 </div>
 @endsection

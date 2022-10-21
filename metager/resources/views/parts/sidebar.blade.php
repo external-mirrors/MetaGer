@@ -62,12 +62,14 @@
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
+    @if (App\Localization::getLanguage() === "de")
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" >
       <img src="/img/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
     </li>
+    @endif
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" >

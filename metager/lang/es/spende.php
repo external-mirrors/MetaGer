@@ -2,8 +2,7 @@
 return [
     'headline'      => [
         1   => 'Su donación',
-        2   => 'Con su donación, apoya el mantenimiento y desarrollo del motor de búsqueda independiente metager.de y la labor de la asociación patrocinadora sin fines de lucro SUMA-EV. 
-<a href=":aboutlink" rel="noopener" target=_blank>Obtenga más información</a> y <a href=":beitrittlink" target="_blank" rel="noopener"> conviértase en miembro. </a>.',
+        2   => 'Con su donación, apoya el mantenimiento y desarrollo del motor de búsqueda independiente metager.de y la labor de la asociación patrocinadora sin fines de lucro SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Obtenga más información</a>.',
         3   => '¿Qué cantidad desea donar?',
         4   => '¿Con qué frecuencia desea donar?',
         5   => '¿Cómo le gustaría donar?',

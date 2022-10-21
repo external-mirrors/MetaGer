@@ -2,7 +2,7 @@
 return [
     'headline'      => [
         1   => 'Your Donation',
-        2   => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a> and <a href=":beitrittlink" target="_blank" rel="noopener">become a member.</a>',
+        2   => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a>.',
         3   => 'How much would you like to donate?',
         4   => 'How frequent do you want to donate?',
         5   => 'Choose a payment method',

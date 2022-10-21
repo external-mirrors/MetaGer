@@ -26,6 +26,7 @@ mix
   .less("resources/less/metager/pages/key.less", "public/css/key.css")
   .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
   .less("resources/less/utility.less", "public/css/utility.css")
+  .less("resources/less/metager/pages/lang-selector.less", "public/css/lang-selector.css")
   .less("resources/less/metager/pages/plugin-page.less", "public/css/plugin-page.css")
   .less("resources/less/metager/pages/count/style-dark.less", "public/css/count/dark.css")
   .less("resources/less/metager/pages/count/style.less", "public/css/count/style.css")

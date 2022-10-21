@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Kontakt extends Page
 {
@@ -11,9 +13,9 @@ class Kontakt extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/kontakt';
+        return LaravelLocalization::getLocalizedUrl($locale, "/kontakt");
     }
 
     /**
@@ -24,17 +26,14 @@ class Kontakt extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Sicheres Kontaktformular")
-            ->assertTitle("Kontakt - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("Secure Contact Form")
-            ->assertTitle("Contact - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Formulario de contacto seguro")
-            ->assertTitle("Contacto - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("kontakt.form.1", [], $lang))
+                ->assertTitle(trans("titles.kontakt", [], $lang));
+        }
     }
 
     /**

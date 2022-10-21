@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Localization;
 use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
@@ -50,11 +51,6 @@ class StartpageController extends Controller
         $autocomplete = 'on';
         if (in_array('autocomplete', array_keys($option_values))) {
             $autocomplete = $option_values['autocomplete'];
-        }
-
-        $lang = LaravelLocalization::getCurrentLocale();
-        if ($lang === 'de' || $lang === "en") {
-            $lang = 'all';
         }
 
         return view('index')

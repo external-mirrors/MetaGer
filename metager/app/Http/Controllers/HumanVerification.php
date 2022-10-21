@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use App\Models\Verification\CookieVerification;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use App\Models\Verification\Captcha;
@@ -59,7 +60,7 @@ class HumanVerification extends Controller
         // Extract the correct solution to this captcha for generating the Audio Captcha
         $text = implode(" ", $captcha->getText());
 
-        $tts_url = TTSController::CreateTTSUrl($text, LaravelLocalization::getCurrentLocale());
+        $tts_url = TTSController::CreateTTSUrl($text, Localization::getLanguage());
 
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')

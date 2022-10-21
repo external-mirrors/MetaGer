@@ -6,8 +6,11 @@
   <div id="search-wrapper">
     <div id="search-block">
       <h1 id="startpage-logo">
-        <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+        <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
           <img src="/img/metager.svg" alt="MetaGer" />
+        </a>
+        <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
+          <span>{{ App\Localization::getRegion() }}</span>
         </a>
       </h1>
       @include('parts.searchbar', ['class' => 'startpage-searchbar'])

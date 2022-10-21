@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use Cookie;
 use LaravelLocalization;
 use \App\MetaGer;
@@ -33,7 +34,6 @@ class SettingsController extends Controller
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
             $values = $filter->values;
-            $cookie = Cookie::get($fokus . "_setting_" . $filter->{"get-parameter"});
             foreach ($sumas as $suma => $sumaInfo) {
                 if (!$filteredSumas && $sumaInfo["filtered"]) {
                     $filteredSumas = true;
@@ -106,9 +106,15 @@ class SettingsController extends Controller
         $sumasFoki = $langFile->foki->{$fokus}->sumas;
 
         $sumas = [];
+        $locale = LaravelLocalization::getCurrentLocaleRegional();
+        $lang = Localization::getLanguage();
         foreach ($sumasFoki as $suma) {
             if ((!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
-                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"})
+                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"}) ||
+                ## Lang support is not defined
+                (!\property_exists($langFile->sumas->{$suma}, "lang") || !\property_exists($langFile->sumas->{$suma}->lang, "languages") || !\property_exists($langFile->sumas->{$suma}->lang, "regions")) ||
+                ## Current Locale/Lang is not supported by this engine
+                (!\property_exists($langFile->sumas->{$suma}->lang->languages, $lang) && !\property_exists($langFile->sumas->{$suma}->lang->regions, $locale))
             ) {
                 continue;
             }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Localization;
 use Cache;
 use Log;
 use LaravelLocalization;
@@ -30,18 +31,18 @@ class Admitad
         $results = $metager->getResults();
         // Generate a list of URLs
         $resultLinks = [];
-        foreach($results as $result){
+        foreach ($results as $result) {
             if ($result->new) {
                 $resultLinks[] = $result->originalLink;
             }
         }
 
-        if(empty($resultLinks)){
+        if (empty($resultLinks)) {
             return;
         }
 
-        $lang = LaravelLocalization::getCurrentLocale();
-        if(!in_array($lang, self::VALID_LANGS)){
+        $lang = Localization::getLanguage();
+        if (!in_array($lang, self::VALID_LANGS)) {
             $lang = "de";
         }
 
@@ -80,14 +81,15 @@ class Admitad
      * Fetches the Admitad Response from Redis
      * @param Boolean $wait Whether or not to wait for a response
      */
-    public function fetchAffiliates($wait = false) {
-        if($this->affiliates !== null){
+    public function fetchAffiliates($wait = false)
+    {
+        if ($this->affiliates !== null) {
             return;
         }
 
         $answer = null;
         $startTime = microtime(true);
-        if($wait){
+        if ($wait) {
             while (microtime(true) - $startTime < 5) {
                 $answer = Cache::get($this->hash);
                 if ($answer === null) {
@@ -96,18 +98,18 @@ class Admitad
                     break;
                 }
             }
-        }else{
+        } else {
             $answer = Cache::get($this->hash);
         }
         $answer = json_decode($answer, true);
-        
+
         // If the fetcher had an Error
-        if($answer === "no-result"){
+        if ($answer === "no-result") {
             $this->affiliates = [];
             return;
         }
 
-        if(empty($answer) || !isset($answer["error"]) || $answer["error"] || !is_array($answer["result"])){
+        if (empty($answer) || !isset($answer["error"]) || $answer["error"] || !is_array($answer["result"])) {
             return;
         }
 
@@ -119,16 +121,17 @@ class Admitad
      * 
      * @param \App\Models\Result[] $results
      */
-    public function parseAffiliates(&$results){
-        if($this->finished || $this->affiliates === null){
+    public function parseAffiliates(&$results)
+    {
+        if ($this->finished || $this->affiliates === null) {
             return;
         }
-        foreach($this->affiliates as $linkResult){
+        foreach ($this->affiliates as $linkResult) {
             $originalUrl = $linkResult["originalUrl"];
             $redirUrl = $linkResult["redirUrl"];
             $image = $linkResult["image"];
 
-            if(empty($redirUrl)){
+            if (empty($redirUrl)) {
                 // No Partnershop
                 continue;
             }

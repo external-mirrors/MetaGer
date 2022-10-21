@@ -185,7 +185,7 @@ i.fa {
         margin-bottom: 25px;
     }
 
-    &>a {
+    >a.logo {
         .logo;
         display: block;
         width: fit-content;
@@ -200,31 +200,65 @@ i.fa {
             width: 4.6em;
         }
     }
+
+    >a.lang {
+        display: block;
+        height: min-content;
+        align-self: flex-end;
+        position: relative;
+        left: -10px;
+        font-style: initial;
+        color: @metager-orange;
+        bottom: 2px;
+        font-weight: bold;
+
+        &>span {
+            font-size: 1rem;
+            display: block;
+            padding: .3rem;
+        }
+    }
 }
 
 #subpage-logo {
     padding: 16px 0 5px 0px;
+    display: flex;
 
     .navbar-brand {
         .noprint;
-        line-height: 100% !important;
         font-size: 18px;
-        height: 40px;
         padding: 0;
         padding-left: 8px;
-        position: absolute;
         z-index: 5;
-        left: 10px;
 
         h1 {
             border: 0;
             .logo;
             font-size: 1.6em;
             margin: 0;
+            line-height: 1;
+            padding-bottom: 0;
 
             >img {
                 width: 4.8em;
             }
+        }
+    }
+
+    a.lang {
+        display: block;
+        height: min-content;
+        align-self: flex-end;
+        position: relative;
+        bottom: -9px;
+        left: -4px;
+        color: @metager-orange;
+        font-weight: bold;
+
+        &>span {
+            font-size: .7rem;
+            display: block;
+            padding: .1rem;
         }
     }
 }

@@ -1,7 +1,7 @@
 <?php
 return [
     'h1'           => 'Claves para su búsqueda sin publicidad',
-    'p1'           => 'MetaGer ofrece a <a href=":url1">los miembros de SUMA-EV</a> y a los <a href=":url2">donantes generosos</a> una clave para acceder a una cuota de búsquedas sin publicidad.',
+    'p1'           => 'MetaGer ofrece a los <a href=":url2">donantes generosos</a> una clave para acceder a una cuota de búsquedas sin publicidad.',
     'p2'           => 'En esta página puede introducir su clave (si la conoce). Lo almacenamos en su PC con la ayuda de una cookie. De este modo, su navegador nos envía automáticamente la clave cada vez que realiza una búsqueda, para que podamos eliminar los anuncios por usted.',
     'p3'           => 'Si miras la cookie, dice "key=xxxx". No se almacena ni se registra por nosotros de ninguna forma en ningún momento. En particular, no la utilizamos con fines de seguimiento',
     'p4'           => 'Importante: Para utilizar esta función, debe haber permitido las cookies en su navegador. La configuración permanece guardada mientras su navegador almacene cookies.',

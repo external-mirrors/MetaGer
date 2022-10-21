@@ -505,7 +505,6 @@ class MetaGer
         }
 
         $this->enabledSearchengines = [];
-        $overtureEnabled = false;
 
         # Check if selected focus is valid
         if (empty($this->sumaFile->foki->{$this->fokus})) {
@@ -521,6 +520,8 @@ class MetaGer
 
         $this->removeAdsFromListIfAdfree($sumas);
 
+        $current_regional_locale = LaravelLocalization::getCurrentLocaleRegional();
+        $current_language = Localization::getLanguage();
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
             $disabled = empty($suma->disabled) ? false : $suma->disabled;
@@ -532,6 +533,17 @@ class MetaGer
                 continue;
             }
 
+            // Skip if language support is not defined
+            if (!\property_exists($suma, "lang") || !\property_exists($suma->lang, "languages") || !\property_exists($suma->lang, "regions")) {
+                continue;
+            }
+            // Skip if engine does not support current locale or region (locale i.e. en is enough to get enabled)
+            if (
+                !\property_exists($suma->lang->languages, $current_language) &&
+                !\property_exists($suma->lang->regions, $current_regional_locale)
+            ) {
+                continue;
+            }
             $valid = true;
 
             # Check if this engine can use potentially defined query-filter
@@ -932,11 +944,12 @@ class MetaGer
         # Fokus
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
-        if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
+        if ($this->dummy) {
+            $this->sumaFile = \config_path("stress.json");
         } else {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
+            $this->sumaFile = \config_path("sumas.json");
         }
+
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
         } else {
@@ -1623,14 +1636,6 @@ class MetaGer
         }
     }
 
-    public function getImageProxyLink($link)
-    {
-        $requestData = [];
-        $requestData["url"] = $link;
-        $link = action('Pictureproxy@get', $requestData);
-        return $link;
-    }
-
     public function getSearchUid()
     {
         return $this->searchUid;
@@ -1735,12 +1740,7 @@ class MetaGer
 
     public static function getLanguageFile()
     {
-        $locale = LaravelLocalization::getCurrentLocale();
-        if ($locale === "en") {
-            return config_path('sumasEn.json');
-        } else {
-            return config_path('sumas.json');
-        }
+        return config_path('sumas.json');
     }
 
     public function getLang()

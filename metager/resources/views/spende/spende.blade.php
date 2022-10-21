@@ -22,22 +22,22 @@
                 <div id="payment-methods">
                     <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
                     <a class="payment-label" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-                    <a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+                    <a class="payment-label payment-label-selected" href="?method=paypal">{!! trans('spende.paypal.0') !!}</a>
                 </div>
                 <p><br>{!! trans('spende.paypal.1') !!}</p>
                 <div class="center-wrapper">
-                    @if (LaravelLocalization::getCurrentLocale() == "de")
+                    @if (\App\Localization::getLanguage() == "de")
                     <input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
                     <input type="hidden" name="cmd" value="_s-xclick" />
                     <input type="hidden" name="hosted_button_id" value="5JPHYQT88JSRQ" />
-                    <input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                    <img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/de_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
+                    <input type="image" src="{{ \App\Http\Controllers\Pictureproxy::generateUrl('https://www.paypalobjects.com/de_DE/DE/i/btn/btn_donateCC_LG.gif') }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                    <img alt="" border="0" src="{{ \App\Http\Controllers\Pictureproxy::generateUrl('https://www.paypal.com/de_DE/i/scr/pixel.gif') }}" width="1" height="1" />
                     @else
                     <input type="hidden" name="lc" value="{{ Request::getPreferredLanguage([]) }}">
                     <input type="hidden" name="cmd" value="_s-xclick" />
                     <input type="hidden" name="hosted_button_id" value="LXWAVD6P3ZSWG" />
-                    <input type="image" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif']) }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
-                    <img alt="" border="0" src="{{ action('Pictureproxy@get', ['url' => 'https://www.paypal.com/en_DE/i/scr/pixel.gif']) }}" width="1" height="1" />
+                    <input type="image" src="{{ \App\Http\Controllers\Pictureproxy::generateUrl('https://www.paypalobjects.com/en_US/DK/i/btn/btn_donateCC_LG.gif') }}" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                    <img alt="" border="0" src="{{ \App\Http\Controllers\Pictureproxy::generateUrl('https://www.paypal.com/en_DE/i/scr/pixel.gif') }}" width="1" height="1" />
                     @endif
                 </div>
             </div>
@@ -48,11 +48,11 @@
             <div id="payment-methods">
                 <a class="payment-label" href="?method=debit">{!! trans('spende.head.lastschrift') !!}</a>
                 <a class="payment-label payment-label-selected" href="?method=bank-transfer">{!! trans('spende.ueberweisung') !!}</a>
-                <a class="payment-label" href="?method=paypal">{!! trans('spende.paypal') !!}</a>
+                <a class="payment-label" href="?method=paypal">{!! trans('spende.paypal.0') !!}</a>
             </div>
             <p>
                 <br>{!! trans('spende.bankinfo.1') !!} <br>
-                <br>{!! trans('spende.bankinfo.2') !!}
+                <br>{!! trans('spende.bankinfo.2.0') !!}
                 <br>{!! trans('spende.bankinfo.2.1') !!}
                 <br>{!! trans('spende.bankinfo.2.2') !!}
                 <br>{!! trans('spende.bankinfo.2.3') !!}
@@ -73,7 +73,7 @@
                         <nobr>{!! trans('spende.ueberweisung') !!}</nobr>
                     </a>
                     <a class="payment-label" href="?method=paypal">
-                        <nobr>{!! trans('spende.paypal') !!}</nobr>
+                        <nobr>{!! trans('spende.paypal.0') !!}</nobr>
                     </a>
                 </div>
                 <p id="lastschrift-info">@lang('spende.lastschrift.info')</p>
@@ -91,7 +91,7 @@
                     <input type="radio" value="300" class="amount-radio" name="amount" id="amount-300euro" required="required" @if(!empty($data) && $data["betrag"]==="300" )checked="checked" @endif><label for="amount-300euro" class="amount-label">300€</label>
                 </div>
                 <div class="custom-amount-container">
-                    <input type="radio" name="amount" id="amount-custom" value="custom" required="required" @if(!empty($data) && $data["betrag"]==="custom" )checked="checked" @endif><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="@lang('spende.wunschbetrag.placeholder')" value="">
+                    <input type="radio" name="amount" id="amount-custom" value="custom" required="required" @if(!empty($data) && $data["betrag"]==="custom" )checked="checked" @endif><label for="amount-custom" class="amount-custom">{!! trans('spende.wunschbetrag.label') !!}</label> <input id="custom-amount" type="number" name="custom-amount" min="0" step=".01" placeholder="@lang('spende.wunschbetrag.placeholder')" value="">
                 </div>
                 <h3>{!! trans('spende.headline.4') !!}</h3>
                 <div id="frequency">
@@ -141,7 +141,7 @@
                     <input type="text" class="form-control" id="bic" name="bic" placeholder="BIC" @if(isset($data['bic'])) value="{{$data['bic']}}" @endif>
                 </div>
                 <div class="form-group donation-form-group">
-                    <label for="msg">{!! trans('spende.lastschrift.8.message')!!}</label>
+                    <label for="msg">{!! trans('spende.lastschrift.8.message.label')!!}</label>
                     <p>{!! trans('spende.bankinfo.3')!!}</p>
                     <textarea class="form-control" id="msg" name="Nachricht" placeholder="{!! trans('spende.lastschrift.8.message.placeholder') !!}">@if(isset($data['nachricht'])){{$data['nachricht']}}@endif</textarea>
                 </div>
@@ -152,6 +152,7 @@
         <div class="section">
             <p>{!! trans('spende.lastschrift.10') !!}</p>
         </div>
+        @if (App\Localization::getLanguage() === "de")
         <div class="section member">
             <h3>{!! trans('spende.member.1') !!}</h3>
             <p>{!! trans('spende.member.2') !!}</p>
@@ -163,6 +164,7 @@
             </ul>
             <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}">{!! trans('spende.member.7') !!}</a>
         </div>
+        @endif
     </div>
 </div>
 @endsection

@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Hilfe extends Page
 {
@@ -11,9 +13,9 @@ class Hilfe extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/hilfe';
+        return LaravelLocalization::getLocalizedUrl($locale, "/hilfe");
     }
 
     /**
@@ -24,17 +26,14 @@ class Hilfe extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("MetaGer - Hilfe")
-            ->assertTitle("Hilfe - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("MetaGer - Help")
-            ->assertTitle("Help - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Ayuda de MetaGer")
-            ->assertTitle("Ayuda - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("help/help.title", [], $lang))
+                ->assertTitle(trans("titles.help", [], $lang));
+        }
     }
 
     /**

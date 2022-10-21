@@ -43,13 +43,10 @@ class MonthlyRequestsGather extends Command
     {
         # Read in the suma Files
         $sumaFile = config_path('sumas.json');
-        $sumaEnFile = config_path('sumasEn.json');
-        if (file_exists($sumaFile) && file_exists($sumaEnFile)) {
+        if (file_exists($sumaFile)) {
             $sumas = json_decode(file_get_contents($sumaFile));
-            $sumasEn = json_decode(file_get_contents($sumaEnFile));
 
             $this->gatherLogs($sumas);
-            $this->gatherLogs($sumasEn);
 
             foreach ($this->values as $name => $value) {
                 $entry = DB::table('monthlyrequests')->where(['name' => $name])->first();
@@ -63,7 +60,6 @@ class MonthlyRequestsGather extends Command
             }
 
             $this->disableOverusedEngines($sumaFile, $sumas);
-            $this->disableOverusedEngines($sumaEnFile, $sumasEn);
             DB::disconnect('mysql');
         }
     }
@@ -115,7 +111,6 @@ class MonthlyRequestsGather extends Command
                     $this->values[$sumaName] = intval($currentValue);
                 }
             }
-
         }
     }
 }

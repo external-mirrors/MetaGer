@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class WebsearchWidget extends Page
 {
@@ -11,9 +13,9 @@ class WebsearchWidget extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return "/websearch/";
+        return LaravelLocalization::getLocalizedUrl($locale, "/websearch");
     }
 
     /**
@@ -24,17 +26,14 @@ class WebsearchWidget extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Hier finden Sie ein Metager-Widget für Ihre Webseite.")
-            ->assertTitle("Websuche-Widget - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("Here you find a Metager-Widget for your website.")
-            ->assertTitle("Websearch-Widget - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Aquí encuentra el MetaGer-widget para su sitio web")
-            ->assertTitle("Widget para buscar la web - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("websearch.head.2", [], $lang))
+                ->assertTitle(trans("titles.websearch", [], $lang));
+        }
     }
 
     /**

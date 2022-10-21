@@ -5,6 +5,7 @@ use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
+use App\Localization;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -44,7 +45,7 @@ Route::get('asso', function () {
         ->with('navbarFocus', 'dienste')
         ->with('css', [mix('css/asso/style.css')])
         ->with('darkcss', [mix('css/asso/dark.css')]);
-});
+})->name("asso");
 
 Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
@@ -118,7 +119,7 @@ Route::get('partnershops', function () {
 });
 
 Route::get('beitritt', function () {
-    if (LaravelLocalization::getCurrentLocale() === "de") {
+    if (Localization::getLanguage() === "de") {
         return response()->download(storage_path('app/public/aufnahmeantrag-de.pdf'), "SUMA-EV_Beitrittsformular_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
     } else {
         return response()->download(storage_path('app/public/aufnahmeantrag-en.pdf'), "SUMA-EV_Membershipform_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
@@ -293,7 +294,7 @@ Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middlew
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 
 
-Route::get('meta/picture', 'Pictureproxy@get');
+Route::get('meta/picture', 'Pictureproxy@get')->name("imageproxy");
 Route::get('clickstats', 'LogController@clicklog');
 Route::get('pluginClose', 'LogController@pluginClose');
 Route::get('pluginInstall', 'LogController@pluginInstall');
@@ -309,6 +310,11 @@ Route::get('MG20', function () {
 Route::get('databund', function () {
     return redirect('https://metager.de/klassik/databund');
 });
+Route::get("lang", function () {
+    return view('lang-selector')
+        ->with("title", trans("titles.lang-selector"))
+        ->with('css', [mix('css/lang-selector.css')]);
+})->name("lang-selector");
 Route::get('languages', 'LanguageController@createOverview');
 Route::get('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@createSynopticEditPage');
 Route::post('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@processSynopticPageInput');

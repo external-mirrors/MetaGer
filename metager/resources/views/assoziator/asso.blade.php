@@ -5,7 +5,7 @@
 @section('content')
 <h1 class="page-title">{{ trans('asso.head.1') }}</h1>
 <div class="card">
-    <p>{{ trans('asso.1.1') }} <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/datenschutz') }}" target="_blank">{{ trans('asso.1.2') }}</a>{{ trans('asso.1.3') }}.</p>
+    <p>{{ trans('asso.1.1') }} <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/datenschutz') }}" target="_blank">{{ trans('asso.1.2') }}</a>.</p>
 
 
     <form method="get" class="form-inline" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('assoresults')) }}">

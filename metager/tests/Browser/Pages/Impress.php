@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Impress extends Page
 {
@@ -11,9 +13,9 @@ class Impress extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/impressum';
+        return LaravelLocalization::getLocalizedUrl($locale, "/impressum");
     }
 
     /**
@@ -24,17 +26,14 @@ class Impress extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("Haftungshinweis:")
-            ->assertTitle("Impressum - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("Liability Note:")
-            ->assertTitle("Site Notice - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Exención de responsabilidad")
-            ->assertTitle("Aviso legal - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("impressum.info.9", [], $lang))
+                ->assertTitle(trans("titles.impressum", [], $lang));
+        }
     }
 
     /**

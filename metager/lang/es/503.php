@@ -1,6 +1,5 @@
 <?php
-
 return [
-    "title"	=>	"Servicio no disponible",
-    "text"	=>	"En un momento regresamos"
+    'title' => 'Servicio no disponible',
+    'text'  => 'En un momento regresamos',
 ];

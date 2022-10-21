@@ -28,9 +28,9 @@
 			<p>{!! trans('help/help-functions.mehrwortsuche.1') !!}</p>
 			<p>{!! trans('help/help-functions.mehrwortsuche.2') !!}</p>
 			<ul class="dotlist">
-				<li>{!! trans('help/help-functions.mehrwortsuche.3') !!}</li>
+				<li>{!! trans('help/help-functions.mehrwortsuche.3.text') !!}</li>
 				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.3.example') !!}</div></li>
-				<li>{!! trans('help/help-functions.mehrwortsuche.4') !!}</li>
+				<li>{!! trans('help/help-functions.mehrwortsuche.4.text') !!}</li>
 				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.4.example') !!}</div></li>
 			</ul>
 		</div>

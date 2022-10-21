@@ -2,7 +2,9 @@
 
 namespace app\Models\parserSkripte;
 
+use App\Http\Controllers\Pictureproxy;
 use App\Models\Searchengine;
+use Crypt;
 use Log;
 
 class BingBilder extends Searchengine
@@ -94,9 +96,7 @@ class BingBilder extends Searchengine
         $requestDataBing = http_build_query($requestDataBing, "", "&", PHP_QUERY_RFC3986);
         $url .= "&" . $requestDataBing;
 
-        $requestData = [];
-        $requestData["url"] = $url;
-        $link = action('Pictureproxy@get', $requestData);
+        $link = Pictureproxy::generateUrl($url);
         return $link;
     }
 }

@@ -11,7 +11,7 @@
 				<p>Hebeler, Dominik - {!! trans('team.role.0') !!}
 			</li>
 			<li>
-				<p>Riel, Carsten - {!! trans('team.role.1') !!} & {!! trans('team.role.7') !!}
+				<p>Riel, Carsten - {!! trans('team.role.1.0') !!} & {!! trans('team.role.7') !!}
 			</li>
 			<li>
 				<p>Branz, Manuela - {!! trans('team.role.1.1') !!} & {!! trans('team.role.3') !!}

@@ -85,7 +85,16 @@ abstract class Searchengine
             $this->query = $query . " " . $this->query;
         }
 
-        $tmpPara = false;
+        # Apply current locale
+        if (!empty($this->engine->lang->parameter)) {
+            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+            if (\property_exists($this->engine->lang->regions, $current_locale)) {
+                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->regions->{$current_locale};
+            } elseif (\property_exists($this->engine->lang->languages, Localization::getLanguage())) {
+                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->languages->{Localization::getLanguage()};
+            }
+        }
+
         # Parse enabled Parameter-Filter
         foreach ($metager->getParameterFilter() as $filterName => $filter) {
             $inputParameter = $filter->value;
@@ -93,7 +102,6 @@ abstract class Searchengine
             if (empty($inputParameter) || empty($filter->sumas->{$name}->values->{$inputParameter})) {
                 continue;
             }
-            $tmpPara = true;
             $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
@@ -232,16 +240,6 @@ abstract class Searchengine
         $getString .= "?";
 
         $parameters = (array) clone $this->engine->{"get-parameter"};
-
-        # Apply current locale
-        if (!empty($this->engine->lang->parameter)) {
-            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
-            if (\property_exists($this->engine->lang->regions, $current_locale)) {
-                $parameters[$this->engine->lang->parameter] = $this->engine->lang->regions->{$current_locale};
-            } elseif (\property_exists($this->engine->lang->languages, Localization::getLanguage())) {
-                $parameters[$this->engine->lang->parameter] = $this->engine->lang->languages->{Localization::getLanguage()};
-            }
-        }
 
         # Append the Query String
         $parameters[$this->engine->{"query-parameter"}] = $query;

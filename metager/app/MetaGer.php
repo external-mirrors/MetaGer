@@ -586,7 +586,7 @@ class MetaGer
                 $this->enabledSearchengines[$sumaName] = $suma;
             }
         }
-
+        $engines = $this->enabledSearchengines;
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -745,7 +745,9 @@ class MetaGer
                         $availableFilter[$filterName]->values = new \stdClass();
                     }
                     foreach ($filter->sumas->{$engineName}->values as $key => $value) {
-                        $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        if (\property_exists($values, $key)) {
+                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        }
                     }
                 }
             }
@@ -771,7 +773,9 @@ class MetaGer
                             $availableFilter[$filterName]->values = new \stdClass();
                         }
                         foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            if (\property_exists($values, $key)) {
+                                $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            }
                         }
                     }
                 }
@@ -784,6 +788,27 @@ class MetaGer
                 $filter->value = $request->input($filter->{"get-parameter"});
             } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
+            }
+        }
+
+        if (\array_key_exists("language", $availableFilter)) {
+            $current_locale = LaravelLocalization::getCurrentLocale();
+            $default_language_value = "";
+            # Set default Value for language selector to current locale
+            foreach ($availableFilter["language"]->sumas as $filter_suma) {
+                foreach ($filter_suma->values as $filter_key => $filter_locale) {
+                    if ($filter_locale === $current_locale) {
+                        $default_language_value = $filter_key;
+                        break 2;
+                    }
+                }
+            }
+            if (\property_exists($availableFilter["language"], "value") && $availableFilter["language"]->value === $default_language_value) {
+                unset($availableFilter["language"]->value);
+            }
+            if (!empty($default_language_value) && \property_exists($availableFilter["language"]->values, $default_language_value)) {
+                $availableFilter["language"]->values->nofilter = $availableFilter["language"]->values->$default_language_value;
+                unset($availableFilter["language"]->values->$default_language_value);
             }
         }
 

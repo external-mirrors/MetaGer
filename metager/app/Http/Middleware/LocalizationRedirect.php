@@ -33,6 +33,7 @@ class LocalizationRedirect
         $allowed_hostnames = [
             "127.0.0.1",
             "localhost",
+            "metager3.de"
         ];
 
         if (app()->environment("local")) {

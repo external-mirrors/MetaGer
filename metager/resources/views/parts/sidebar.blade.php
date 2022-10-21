@@ -75,12 +75,14 @@
         <span>@lang('sidebar.nav25')</span>
       </a>
     </li>
+    @if (App\Localization::getLanguage() === "de")
     <li>
       <a  href="https://maps.metager.de" target="_blank" >
       <img src="/img/icon-map.svg" alt="" aria-hidden="true" id="sidebar-img-map"> 
         <span>{{ trans('sidebar.nav27') }}</span> 
       </a>
     </li>
+    @endif
     <hr>
     <li class="metager-dropdown">
       <input id="contactToggle" class="sidebarCheckbox" type="checkbox">

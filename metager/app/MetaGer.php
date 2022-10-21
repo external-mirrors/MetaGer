@@ -1636,14 +1636,6 @@ class MetaGer
         }
     }
 
-    public function getImageProxyLink($link)
-    {
-        $requestData = [];
-        $requestData["url"] = $link;
-        $link = action('Pictureproxy@get', $requestData);
-        return $link;
-    }
-
     public function getSearchUid()
     {
         return $this->searchUid;

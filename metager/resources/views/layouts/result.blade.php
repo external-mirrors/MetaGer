@@ -38,14 +38,14 @@
 		@if( isset($result->logo) )
 		<div class="result-logo">
 			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
-				<img src="{{ $metager->getImageProxyLink($result->logo) }}" alt="" />
+				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt="" />
 			</a>
 		</div>
 		@endif
 		@if( $result->image !== "" )
 		<div class="result-image">
 			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
-				<img src="{{ $metager->getImageProxyLink($result->image) }}" alt="" />
+				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt="" />
 			</a>
 		</div>
 		@endif

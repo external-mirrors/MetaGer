@@ -287,7 +287,7 @@ Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middlew
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 
 
-Route::get('meta/picture', 'Pictureproxy@get');
+Route::get('meta/picture', 'Pictureproxy@get')->name("imageproxy");
 Route::get('clickstats', 'LogController@clicklog');
 Route::get('pluginClose', 'LogController@pluginClose');
 Route::get('pluginInstall', 'LogController@pluginInstall');

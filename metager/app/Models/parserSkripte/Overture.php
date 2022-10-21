@@ -142,7 +142,7 @@ class Overture extends Searchengine
         $affilDataValue = $this->urlEncode($affil_data);
 
         $serve_domain = "https://metager.de/";
-        if (LaravelLocalization::getCurrentLocale() === "en") {
+        if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
             $serve_domain = "https://metager.org/";
         }
 
@@ -154,6 +154,8 @@ class Overture extends Searchengine
         if (\strpos($url, "https://metager3.de") === 0) {
             $url = str_replace("https://metager3.de", $serve_domain, $url);
         }
+
+        $url = str_replace("http://localhost:8080", "https://metager.org", $url);
 
         # Wir benötigen die ServeUrl:
         $serveUrl = $this->urlEncode($url);

@@ -4,7 +4,7 @@ return [
     "head.2" => "You are not alone",
     "text.1"=> "If you suffer from mood swings, depression or suicidal thoughts, or you know someone who does, you can get help. You can reach professional counselors who will listen to you at the numbers provided. If you are in acute danger, please dial the emergency number for your country, or go to the nearest emergency room.",
 
-    "europe" => "Europe 🇪🇺",
+    "europe" => "Europe",
     "belgium" => "Belgium 🇧🇪",
         "belgium.1" => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: +32 800 32 123<br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: +32 2 648 40 14 <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: +32 1813',
     "germany" => "Germany 🇩🇪",
@@ -20,7 +20,7 @@ return [
     "latvia" => "Latvia 🇱🇻",
         'latvia.1'=>'<strong>Skalbes:</strong> <a href="https://www.skalbes.lv" target="_blank"> https://www.skalbes.lv</a> <br> Tālrunis: +371 6722 2922, +371 2722 2292',
     'lithuania'=>"Lithuania 🇱🇹",
-        'lithuania.1'=>'<strong>Lietuvos emocinės paramos tarnybų asociacija:</strong> <a href="http://www.klausau.lt" target="_blank"> http://www.klausau.lt</a> <br><strong>Vaikų linija (Hotline for children):</strong> <a href="https://www.vaikulinija.lt" target="_blank"> https://www.vaikulinija.lt</a> <br> Telefonas: +370 116111 <br><strong>Jaunimo linija (Hotline for teens):</strong> <a href="https://www.jaunimolinija.lt/laiskai/" target="_blank">https://www.jaunimolinija.lt/laiskai/</a> <br> Telefonas: +370 8 800 28888 <br> <strong>Vilties linija (Hotline for hope):</strong> <a href="https://www.viltieslinija.lt" target="_blank">https://www.viltieslinija.lt</a> <br> Telefonas: +370 116 1213; El. paštas: 116123@viltieslinija.lt <br> <strong>Pagalbos moterims linija (Hotline for women):</strong> <a href="https://www.moteriai.lt" target="_blank">https://www.moteriai.lt</a> <br> Telefonas: +370 8 800 66366; El. paštas: pagalba@moteriai.lt <br> <strong>Linija Doverija (Hilfe russian speakers):</strong> <br> Telefonas: +370 8 800 77277',
+        'lithuania.1'=>'<strong>Lietuvos emocinės paramos tarnybų asociacija:</strong> <a href="http://www.klausau.lt" target="_blank"> http://www.klausau.lt</a> <br><strong>Vaikų linija (Hotline for children):</strong> <a href="https://www.vaikulinija.lt" target="_blank"> https://www.vaikulinija.lt</a> <br> Telefonas: +370 116111 <br><strong>Jaunimo linija (Hotline for teens):</strong> <a href="https://www.jaunimolinija.lt/laiskai/" target="_blank">https://www.jaunimolinija.lt/laiskai/</a> <br> Telefonas: +370 8 800 28888 <br> <strong>Vilties linija (Hotline for hope):</strong> <a href="https://www.viltieslinija.lt" target="_blank">https://www.viltieslinija.lt</a> <br> Telefonas: +370 116 1213; El. paštas: 116123@viltieslinija.lt <br> <strong>Pagalbos moterims linija (Hotline for women):</strong> <a href="https://www.moteriai.lt" target="_blank">https://www.moteriai.lt</a> <br> Telefonas: +370 8 800 66366; El. paštas: pagalba@moteriai.lt <br> <strong>Linija Doverija (Hotline for russian speakers):</strong> <br> Telefonas: +370 8 800 77277',
     "luxembourg" => "Luxembourg 🇱🇺",
         "luxembourg.1" => '<strong>SOS Détresse – Hëllef iwwer Telefon</strong> <a href="https://www.454545.lu" target="_blank"> https://www.454545.lu</a> <br> Telefon: +352 454545 <br> <strong>Kanner-Jugendtelefon:</strong> <a href="https://www.kjt.lu" target="_blank"> https://www.kjt.lu</a> <br> Telefon: +352 0800 0113',
     "netherlands" => "Netherlands 🇳🇱",
@@ -55,10 +55,15 @@ return [
 
 
     "north.america" => "North Amerika",
-    "costa.rica" => "Costa Rica",
-    "canada" => "Canada",
-    "mexico" => "Mexico",
-    "usa" => "USA",
+
+    "costa.rica" => "Costa Rica 🇨🇷",
+        "costa.rica.1" => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono: +506 2272 3774',
+    "canada" => "Canada 🇨🇦",
+        "canada.1" => '<strong>Kids Help Phone (for teens below 20):</strong> <br> Phone: +1 800 668 6868 <br> <strong> CASP - Canadian Association for suicide prevention</strong>: <a href="https://suicideprevention.ca" target="_blank"> https://suicideprevention.ca</a> <br> Phone: +1 833 456 4566 <br> Téléphone (Quebec): +1 866 277 3553',
+    "mexico" => "Mexico 🇲🇽",
+        "mexico.1" => '<strong>Consejo Ciudadano:</strong> <a href="https://consejociudadanomx.org" target="_blank"> httpss://consejociudadanomx.org</a> <br> Teléfono: +52 55 5533 5533 <br> <strong>Instituto Hispanoamericano de Suicidologia, A.C:</strong> <br> Teléfono: +52 55 4631 3300; Correo electrónico: info@suicidiologia.com.mx ',
+    "usa" => "USA 🇺🇸",
+        "usa.1" => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: 988 <br> <strong>Veterans/Military Crisis Line (For active members, veterans and family members of the U.S. Armed Forces):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone: +1 800 273 8255, press 1; Text message: +1 838255 <br> <strong>The Trevor Project (For teens, friends and family members of the LGBT community.):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone: +1 866 488 7386',
 
     "south.america" => "South Amerika",
     "argentina" => "Argentina",

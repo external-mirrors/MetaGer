@@ -85,4 +85,21 @@
 	<p>{!! trans('prevention-information.uk.1') !!}</p>
 
 </div>
+<div class="card">
+	<h1>{{ trans('prevention-information.north.america') }}</h1>
+
+	<h2>{{ trans('prevention-information.costa.rica') }}</h2>
+	<p>{!! trans('prevention-information.costa.rica.1') !!}</p>
+
+	<h2>{{ trans('prevention-information.canada') }}</h2>
+	<p>{!! trans('prevention-information.canada.1') !!}</p>
+
+	<h2>{{ trans('prevention-information.mexico') }}</h2>
+	<p>{!! trans('prevention-information.mexico.1') !!}</p>
+
+	<h2>{{ trans('prevention-information.usa') }}</h2>
+	<p>{!! trans('prevention-information.usa.1') !!}</p>
+
+
+</div>	
 @endsection

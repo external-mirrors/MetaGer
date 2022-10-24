@@ -6,7 +6,7 @@ return [
     "text.1"=> "Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.",
 
  
-    "europe" => 'Europa 🇪🇺',
+    "europe" => 'Europa',
     "belgium" => "Belgien 🇧🇪",
         "belgium.1" => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: +32 800 32 123<br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: +32 2 648 40 14 <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: +32 1813',
     "germany" => "Deutschland 🇩🇪",
@@ -55,11 +55,17 @@ return [
         "uk.1" => '<strong>Samaritans</strong> <a href="https://www.samaritans.org" target="_blank"> https://www.samaritans.org</a> <br> Telefon: +46 166 123; E-Mail: jo@samaritans.org',
 
 
-        "north.america" => "Nord-Amerika",
-        "costa.rica" => "Costa Rica",
-        "canada" => "Kanada",
-        "mexico" => "Mexiko",
-        "usa" => "USA",
+    "north.america" => "Nord-Amerika",
+
+    "costa.rica" => "Costa Rica 🇨🇷",
+        "costa.rica.1" => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono: +506 2272 3774',
+    "canada" => 'Kanada 🇨🇦',
+        "canada.1" => '<strong>Kids Help Phone (für Jugendliche unter 20):</strong> <br> Phone: +1 800 668 6868 <br> <strong> CASP - Canadian Association for suicide prevention</strong>: <a href="https://suicideprevention.ca" target="_blank"> https://suicideprevention.ca</a> <br> Phone: +1 833 456 4566 <br> Téléphone (Quebec): +1 866 277 3553',
+    "mexico" => "Mexiko 🇲🇽",
+        "mexico.1" => '<strong>Consejo Ciudadano:</strong> <a href="https://consejociudadanomx.org" target="_blank"> httpss://consejociudadanomx.org</a> <br> Teléfono: +52 55 5533 5533 <br> <strong>Instituto Hispanoamericano de Suicidologia, A.C:</strong> <br> Teléfono: +52 55 4631 3300; Correo electrónico: info@suicidiologia.com.mx ',
+    "usa" => "USA 🇺🇸",
+        "usa.1" => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: 988 <br> <strong>Veterans/Military Crisis Line (für aktive Angehörige, Veteranen und Familienmitglieder der US-Streitkräfte):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone: +1 800 273 8255, press 1; Text message: +1 838255 <br> <strong>The Trevor Project (für Jugendliche, Freunde und Familienmitglieder der LGBT-Gemeinschaft):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone: +1 866 488 7386',
+
 
     "south.america" => "Süd-Amerika",
     "argentina" => "Argentinien",

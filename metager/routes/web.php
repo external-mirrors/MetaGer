@@ -304,7 +304,17 @@ Route::get('databund', function () {
     return redirect('https://metager.de/klassik/databund');
 });
 Route::get("lang", function () {
+    // Check if a previous URL is given that we can offer a back button for
+    $previous = request()->input("previous_url", URL::previous());
+    $host = parse_url($previous, PHP_URL_HOST);
+    $current_host = request()->getHost();
+
+    $previous_url = null; // URL for the back button
+    if ($host === $current_host && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
+        $previous_url = LaravelLocalization::getLocalizedUrl(null, $previous);
+    }
     return view('lang-selector')
+        ->with("previous_url", $previous_url)
         ->with("title", trans("titles.lang-selector"))
         ->with('css', [mix('css/lang-selector.css')]);
 })->name("lang-selector");

@@ -66,9 +66,12 @@ return [
         "usa.1" => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: 988 <br> <strong>Veterans/Military Crisis Line (For active members, veterans and family members of the U.S. Armed Forces):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone: +1 800 273 8255, press 1; Text message: +1 838255 <br> <strong>The Trevor Project (For teens, friends and family members of the LGBT community.):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone: +1 866 488 7386',
 
     "south.america" => "South Amerika",
-    "argentina" => "Argentina",
-    "brasil" => "Brasil",
-    "chile" => "Chile",
+    "argentina" => "Argentina 🇦🇷",
+        "argentina.1" => '<strong>Centro de Asistencia al Suicida:</strong> <a href="https://www.asistenciaalsuicida.org.ar/" target="_blank"> https://www.asistenciaalsuicida.org.ar/</a> <br> Teléfono: 135',
+    "brazil" => "Brasil 🇧🇷",
+        "brazil.1" => '<strong>CVV:</strong> <a href="https://www.cvv.org.br/" target="_blank"> https://www.cvv.org.br</a> <br> Teléfono: 188; Correo electrónico: atendimento@cvv.org.br',
+    "chile" => "Chile 🇨🇱",
+        "chile.1" => '<strong>Teléfono de la Esperanza:</strong> <a href="https://telefonodelaesperanza.org/intervencion-en-crisis" target="_blank"> https://telefonodelaesperanza.org/intervencion-en-crisis</a> <br> Teléfono: +56 717 003 717',
 
     "asia" => "Asia",
     "china" => "China",

@@ -1,17 +1,20 @@
 <?php
 
 return [
-    "head.1" => "Hilfe bei Selbstmordgedanken - MetaGer",
-    "head.2" => "Sie sind nicht allein",
-    "text.1"=> "Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.",
+    'head.1' => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'head.2' => 'Sie sind nicht allein',
+    'text.1'=> 'Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.',
+    'head.3'=>'',
+    'search.helpline' =>'Ist Ihr Land nicht dabei? ',
+    'search.helpline.1' =>'Unter <a href="https://findahelpline.com/i/iasp" target="_blank">https://findahelpline.com/i/iasp</a> können Sie weitere hilfreiche Telefonnummern und Webseiten finden.',
 
  
-    "europe" => 'Europa',
-    "belgium" => "Belgien 🇧🇪",
-        "belgium.1" => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: +32 800 32 123<br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: +32 2 648 40 14 <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: +32 1813',
-    "germany" => "Deutschland 🇩🇪",
-        "germany.1" =>'<strong>Telefonseelsorge:</strong> <a href="https://www.telefonseelsorge.de" target="_blank"> https://www.telefonseelsorge.de</a> <br> Telefon: +49 800 111 0 111 oder +49 800 111 0 222 <br> <strong>Nummer gegen Kummer:</strong> <a href="https://www.nummergegenkummer.de" target="_blank"> https://www.nummergegenkummer.de</a> <br> Telefon:  +49 800 111 0 550 (Erwachsene), +49 800 111 0 333 (Kinder)',
-    "denmark" => "Dänemark 🇩🇰",
+    'europe' => 'Europa',
+    'belgium' => 'Belgien 🇧🇪',
+        'belgium.1' => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: +32 800 32 123<br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: +32 2 648 40 14 <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: +32 1813',
+    'germany' => 'Deutschland 🇩🇪',
+        'germany.1' =>'<strong>Telefonseelsorge:</strong> <a href="https://www.telefonseelsorge.de" target="_blank"> https://www.telefonseelsorge.de</a> <br> Telefon: +49 800 111 0 111 oder +49 800 111 0 222 <br> <strong>Nummer gegen Kummer:</strong> <a href="https://www.nummergegenkummer.de" target="_blank"> https://www.nummergegenkummer.de</a> <br> Telefon:  +49 800 111 0 550 (Erwachsene), +49 800 111 0 333 (Kinder)',
+    'denmark' => "Dänemark 🇩🇰",
         "denmark.1" => '<strong>Livslinien:</strong> <a href="https://www.livslinien.dk" target="_blank">https://www.livslinien.dk</a> <br> Telefon: +45 70 201 201 <br> <strong>Børne:</strong></strong> <a href="https://bornetelefonen.dk/ring" target="_blank"> https://bornetelefonen.dk/ring</a> <br> Telefon: +45 116 111 Telefonhjælpelinjen for børn er tilgængelig dagligt fra 11:00 til 23:00. (Telefon-Helpline für Kinder ist täglich von 11:00 bis 23:00 Uhr erreichbar.)',
     "france" => "Frankreich 🇫🇷",
         "france.1" => '<strong>S.O.S Amitié:</strong> <a href="https://www.sos-amitie.com" target="_blank"> https://www.sos-amitie.com</a> <br> Téléphone: +33 9 72 39 40 50',
@@ -36,7 +39,7 @@ return [
     "portugal" => "Portugal 🇵🇹",
         'portugal.1'=> '<strong>SOS voz amiga:</strong><a href="https://www.sosvozamiga.org" target="_blank"> https://www.sosvozamiga.org</a> <br>Telefone: +351 213 544 545, +351 912 802 669, +351 963 524 660 (Diariamente das 15:30 às 00:30 /Täglich von 15:30 bis 00:30 Uhr)',
     "czech" => "Tschechische Republik 🇨🇿",
-    'czech.1' => '<strong>Linka bezpečí:</strong> <a href="https://www.linkabezpeci.cz" target="_blank"> https://www.linkabezpeci.cz</a> <br>Telefon: +420 116 111 <br><strong>Pražská linka důvěry :</strong> <a href="https://www.csspraha.cz/prazska-linka-duvery" target="_blank"> https://www.csspraha.cz/prazska-linka-duvery</a> <br>Telefon: +420 222 580 697 <br> <strong>Linka důvěry Ostrava:</strong> <a href="https://www.mnof.cz/linka-duvery" target="_blank"> https://www.mnof.cz/linka-duvery</a> <br>Telefon: +420 596 618 908,+420 737 267 939; Skype: ldt.most <br><strong>Linka důvěry DKC:</strong> <a href="http://dkc.cz/linka_duvery.php" target="_blank"> http://dkc.cz/linka_duvery.php</a> <br>Telefon: +420 241 484 149; Skype: ld_dkc',
+        'czech.1' => '<strong>Linka bezpečí:</strong> <a href="https://www.linkabezpeci.cz" target="_blank"> https://www.linkabezpeci.cz</a> <br>Telefon: +420 116 111 <br><strong>Pražská linka důvěry :</strong> <a href="https://www.csspraha.cz/prazska-linka-duvery" target="_blank"> https://www.csspraha.cz/prazska-linka-duvery</a> <br>Telefon: +420 222 580 697 <br> <strong>Linka důvěry Ostrava:</strong> <a href="https://www.mnof.cz/linka-duvery" target="_blank"> https://www.mnof.cz/linka-duvery</a> <br>Telefon: +420 596 618 908,+420 737 267 939; Skype: ldt.most <br><strong>Linka důvěry DKC:</strong> <a href="http://dkc.cz/linka_duvery.php" target="_blank"> http://dkc.cz/linka_duvery.php</a> <br>Telefon: +420 241 484 149; Skype: ld_dkc',
     "russia" => "Russland 🇷🇺",
         "russia.1" => '<strong>Samariter (Cherepovets):</strong> <br> Телефон: +7 (8202) 577-577 (09:00 - 21:00) <br> <strong> Psychologischer Dienst des Katastrophenschutzministeriums der Russischen Föderation (EMERCOM) (Интернет-служба экстренной психологической помощи):</strong> <a href="https://www.psi.mchs.gov.ru" target="_blank"> https://www.psi.mchs.gov.ru</a> <br>Телефон: +7 (495) 989 5050 <br> <strong>Фонд поддержки детей, находящихся в трудной жизненной ситуации (Stiftung zur Unterstützung von Kindern in schwierigen Situationen):</strong> <a href="https://www.ya-roditel.ru" target="_blank"> https://www.ya-roditel.ru</a> <br>Телефон: +7 8 800 2000 122',
     "sweden" =>"Schweden 🇸🇪",
@@ -55,7 +58,7 @@ return [
         "uk.1" => '<strong>Samaritans</strong> <a href="https://www.samaritans.org" target="_blank"> https://www.samaritans.org</a> <br> Telefon: +46 166 123; E-Mail: jo@samaritans.org',
 
 
-    "north.america" => "Nord-Amerika",
+    "america" => "Amerika",
 
     "costa.rica" => "Costa Rica 🇨🇷",
         "costa.rica.1" => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono: +506 2272 3774',
@@ -66,11 +69,13 @@ return [
     "usa" => "USA 🇺🇸",
         "usa.1" => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: 988 <br> <strong>Veterans/Military Crisis Line (für aktive Angehörige, Veteranen und Familienmitglieder der US-Streitkräfte):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone: +1 800 273 8255, press 1; Text message: +1 838255 <br> <strong>The Trevor Project (für Jugendliche, Freunde und Familienmitglieder der LGBT-Gemeinschaft):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone: +1 866 488 7386',
 
+    "argentina" => "Argentinien 🇦🇷",
+        "argentina.1" => '<strong>Centro de Asistencia al Suicida:</strong> <a href="https://www.asistenciaalsuicida.org.ar/" target="_blank"> https://www.asistenciaalsuicida.org.ar/</a> <br> Teléfono: 135',
+    "brazil" => "Brasilien 🇧🇷",
+        "brazil.1" => '<strong>CVV:</strong> <a href="https://www.cvv.org.br/" target="_blank"> https://www.cvv.org.br</a> <br> Teléfono: 188; Correo electrónico: atendimento@cvv.org.br',
+    "chile" => "Chile 🇨🇱",
+        "chile.1" => '<strong>Teléfono de la Esperanza:</strong> <a href="https://telefonodelaesperanza.org/intervencion-en-crisis" target="_blank"> https://telefonodelaesperanza.org/intervencion-en-crisis</a> <br> Teléfono: +56 717 003 717',
 
-    "south.america" => "Süd-Amerika",
-    "argentina" => "Argentinien",
-    "brasil" => "Brasilien",
-    "chile" => "Chile",
 
     "asia" => "Asien",
     "china" => "China",

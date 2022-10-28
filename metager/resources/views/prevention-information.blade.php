@@ -28,7 +28,7 @@
 		<a class="country-button" href="#poland" title="{{ trans('prevention-information.poland') }}">🇵🇱</a>
 		<a class="country-button" href="#portugal" title="{{ trans('prevention-information.portugal') }}">🇵🇹</a>
 		<a class="country-button" href="#czech" title="{{ trans('prevention-information.czech') }}">🇨🇿</a>
-		<a class="country-button" href="#russia" title="{{ trans('prevention-information.russia') }}">🇷🇺</a>
+		<a class="country-button" href="#russia-europe" title="{{ trans('prevention-information.russia') }}">🇷🇺</a>
 		<a class="country-button" href="#sweden" title="{{ trans('prevention-information.sweden') }}">🇸🇪</a>
 		<a class="country-button" href="#switzerland" title="{{ trans('prevention-information.switzerland') }}">🇨🇭</a>
 		<a class="country-button" href="#serbia" title="{{ trans('prevention-information.serbia') }}">🇷🇸</a>
@@ -121,7 +121,7 @@
 	<h2 id="czech">{{ trans('prevention-information.czech') }}</h2>
 	<p>{!! trans('prevention-information.czech.1') !!}</p>
 
-	<h2 id="russia">{{ trans('prevention-information.russia') }}</h2>
+	<h2 id="russia-europe">{{ trans('prevention-information.russia') }}</h2>
 	<p>{!! trans('prevention-information.russia.1') !!}</p>
 
 	<h2 id="serbia">{{ trans('prevention-information.serbia') }}</h2>
@@ -147,7 +147,7 @@
 
 </div>
 <div class="card">
-	<h1 id="north-america">{{ trans('prevention-information.america') }}</h1>
+	<h1 id="america">{{ trans('prevention-information.america') }}</h1>
 
 	<h2 id="costa-rica">{{ trans('prevention-information.costa.rica') }}</h2>
 	<p>{!! trans('prevention-information.costa.rica.1') !!}</p>
@@ -170,5 +170,45 @@
 	<h2 id="chile">{{ trans('prevention-information.chile') }}</h2>
 	<p>{!! trans('prevention-information.chile.1') !!}</p>
 
-</div>	
+</div>
+<div class="card">
+	<h1 id="asia">{{ trans('prevention-information.asia') }}</h1>	
+
+	<h2 id="china">{{ trans('prevention-information.china') }}</h2>
+	<p>{!! trans('prevention-information.china.1') !!}</p>
+
+	<h2 id="hongkong">{{ trans('prevention-information.hongkong') }}</h2>
+	<p>{!! trans('prevention-information.hongkong.1') !!}</p>
+
+	<h2 id="india">{{ trans('prevention-information.india') }}</h2>
+	<p>{!! trans('prevention-information.india.1') !!}</p>
+
+	<h2 id="iran">{{ trans('prevention-information.iran') }}</h2>
+	<p>{!! trans('prevention-information.iran.1') !!}</p>
+
+	<h2 id="israel">{{ trans('prevention-information.israel') }}</h2>
+	<p>{!! trans('prevention-information.israel.1') !!}</p>
+
+	<h2 id="japan">{{ trans('prevention-information.japan') }}</h2>
+	<p>{!! trans('prevention-information.japan.1') !!}</p>
+
+	<h2 id="parkistan">{{ trans('prevention-information.parkistan') }}</h2>
+	<p>{!! trans('prevention-information.parkistan.1') !!}</p>
+
+	<h2 id="philippines">{{ trans('prevention-information.philippines') }}</h2>
+	<p>{!! trans('prevention-information.philippines.1') !!}</p>
+
+	<h2 id="russia-asia">{{ trans('prevention-information.russia') }}</h2>
+	<p>{!! trans('prevention-information.russia.1') !!}</p>
+
+	<h2 id="singapore">{{ trans('prevention-information.singapore') }}</h2>
+	<p>{!! trans('prevention-information.singapore.1') !!}</p>
+
+	<h2 id="south-korea">{{ trans('prevention-information.south.korea') }}</h2>
+	<p>{!! trans('prevention-information.south.korea.1') !!}</p>
+
+	<h2 id="taiwan">{{ trans('prevention-information.taiwan') }}</h2>
+	<p>{!! trans('prevention-information.taiwan.1') !!}</p>
+</div>
+
 @endsection

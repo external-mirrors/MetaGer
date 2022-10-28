@@ -6,7 +6,7 @@ return [
     'text.1'=> 'Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.',
     'head.3'=>'',
     'search.helpline' =>'Ist Ihr Land nicht dabei? ',
-    'search.helpline.1' =>'Unter <a href="https://findahelpline.com/i/iasp" target="_blank">https://findahelpline.com/i/iasp</a> können Sie weitere hilfreiche Telefonnummern und Webseiten finden.',
+    'search.helpline.1' =>'Unter <a href="https://findahelpline.com" target="_blank">https://findahelpline.com</a> können Sie weitere hilfreiche Telefonnummern und Webseiten finden.',
 
  
     'europe' => 'Europa',
@@ -79,7 +79,9 @@ return [
 
     "asia" => "Asien",
     "china" => "China",
+    'china.1'=>'<strong>Bejing Suicide Research and Prevenion Center:</strong> <a href="https://www.crisis.org" target="_blank"> https://www.crisis.org</a> <br> Phone: +86 800 810 1117',
     "hongkong" => "Hongkong",
+    'hongkong.1'=>'<strong>Suicide Prevention Services</strong> <a href="https://www.sps.org" target="_blank"> https://www.sps.org</a> <br> Phone: +825 2382 0000 <br> <strong>Hong Kong Samaritan Association for Suicide Prevention:</strong> <a href="https://www.help4suicide.com.hk" target="_blank"> https://www.help4suicide.com.hk</a> <br> <strong>The Samaritan Befrienders Hong Kong:</strong> <a href="https://www.sbhk.org.hk" target="_blank"> https://www.sbhk.org.hk</a> <br> Phone: +852 2389 2222; (English Hotline: +852 2389 2223)',
     "india" => "Indien",
     "iran" => "Iran",
     "israel" => "Israel",

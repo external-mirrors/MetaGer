@@ -44,6 +44,7 @@ class MetaGer
     protected $ads = [];
     protected $infos = [];
     protected $warnings = [];
+    protected $htmlwarnings = [];
     protected $errors = [];
     protected $addedHosts = [];
     protected $availableFoki = [];
@@ -169,6 +170,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -180,6 +182,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -197,6 +200,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -209,6 +213,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -241,6 +246,7 @@ class MetaGer
                         ->with('focusPages', $focusPages)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -1246,6 +1252,17 @@ class MetaGer
         $this->searchCheckUrlBlacklist();
         $this->searchCheckStopwords($request);
         $this->searchCheckNoSearch();
+
+        # Check for self-harm related searches
+        $triggers = ["suizid", "selbstmord", "Selbstmordgedanken", "selbsttötung", "Freitod", "Sterbehilfe", "umbringen", "suizidale", "depressionen", "depressiv", "selbstverletzung", "einsam", "einsamkeit", "self harm", "self injury", "suicidal", "suicidality", "self-murder", "self-slaughter", "self-destruction", "self-homocide", "self-murderer", "kill oneself", "lonely", "depression"];
+        foreach ($triggers as $i => $trigger) {
+            if (stripos($this->q, $trigger) !== false) {
+                $this->htmlwarnings[] = trans('metaGer.prevention.phrase', ['prevurl' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "prevention")]);
+                break;
+            }
+        }
+
+
     }
 
     private function searchCheckPhrase()

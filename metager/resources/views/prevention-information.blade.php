@@ -76,6 +76,8 @@
 
 	<div class="country-button-row">
 		<a class="country-button" href="#south-africa" title="{{ trans('prevention-information.south.africa') }}">🇿🇦</a>
+		<a class="country-button" href="#nigeria" title="{{ trans('prevention-information.nigeria') }}">🇳🇬</a>
+		<a class="country-button" href="#kenya" title="{{ trans('prevention-information.kenya') }}">🇰🇪</a>
 	</div>
 
 	<h2>{{ trans('prevention-information.australia.continent') }}</h2>
@@ -227,6 +229,19 @@
 
 	<h2 id="taiwan">{{ trans('prevention-information.taiwan') }}</h2>
 	<p>{!! trans('prevention-information.taiwan.1') !!}</p>
+</div>
+
+<div class="card">
+	<h1 id="africa">{{ trans('prevention-information.africa') }}</h1>
+
+	<h2 id="south-africa">{{ trans('prevention-information.south.africa') }}</h2>
+	<p>{!! trans('prevention-information.south-africa.1') !!}</p>
+
+	<h2 id="nigeria">{{ trans('prevention-information.nigeria') }}</h2>
+	<p>{!! trans('prevention-information.nigeria.1') !!}</p>
+
+	<h2 id="nigeria">{{ trans('prevention-information.kenya') }}</h2>
+	<p>{!! trans('prevention-information.kenya.1') !!}</p>
 </div>
 
 <div class="card">
@@ -301,6 +316,9 @@
 
 	<div class="country-button-row">
 		<a class="country-button" href="#south-africa" title="{{ trans('prevention-information.south.africa') }}">🇿🇦</a>
+		<a class="country-button" href="#nigeria" title="{{ trans('prevention-information.nigeria') }}">🇳🇬</a>
+		<a class="country-button" href="#kenya" title="{{ trans('prevention-information.kenya') }}">🇰🇪</a>
+
 	</div>
 
 	<h2>{{ trans('prevention-information.australia.continent') }}</h2>
@@ -453,6 +471,20 @@
 	<h2 id="taiwan">{{ trans('prevention-information.taiwan') }}</h2>
 	<p>{!! trans('prevention-information.taiwan.1') !!}</p>
 </div>
+
+<div class="card">
+	<h1 id="africa">{{ trans('prevention-information.africa') }}</h1>
+
+	<h2 id="south-africa">{{ trans('prevention-information.south.africa') }}</h2>
+	<p>{!! trans('prevention-information.south.africa.1') !!}</p>
+
+	<h2 id="nigeria">{{ trans('prevention-information.nigeria') }}</h2>
+	<p>{!! trans('prevention-information.nigeria.1') !!}</p>
+
+	<h2 id="nigeria">{{ trans('prevention-information.kenya') }}</h2>
+	<p>{!! trans('prevention-information.kenya.1') !!}</p>
+</div>
+
 <div class="card">
 	<h1 id="australia-continent">{{ trans('prevention-information.australia.continent') }}</h1>
 

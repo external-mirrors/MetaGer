@@ -3,6 +3,9 @@ return [
     "head.1" => "Help and Support for Suicide Prevention - MetaGer",
     "head.2" => "You are not alone",
     "text.1"=> "If you suffer from mood swings, depression or suicidal thoughts, or you know someone who does, you can get help. You can reach professional counselors who will listen to you at the numbers provided. If you are in acute danger, please dial the emergency number for your country, or go to the nearest emergency room.",
+    'search.helpline' =>'Is your country not included?',
+    'search.helpline.1' =>'You can find more helpful phone numbers and websites at <a href="https://findahelpline.com" target="_blank">https://findahelpline.com</a>.',
+
 
     "europe" => "Europe",
     "belgium" => "Belgium 🇧🇪",
@@ -54,7 +57,7 @@ return [
 
 
 
-    "north.america" => "North Amerika",
+    "america" => "America",
 
     "costa.rica" => "Costa Rica 🇨🇷",
         "costa.rica.1" => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono: +506 2272 3774',
@@ -64,8 +67,6 @@ return [
         "mexico.1" => '<strong>Consejo Ciudadano:</strong> <a href="https://consejociudadanomx.org" target="_blank"> https://consejociudadanomx.org</a> <br> Teléfono: +52 55 5533 5533 <br> <strong>Instituto Hispanoamericano de Suicidologia, A.C:</strong> <br> Teléfono: +52 55 4631 3300; Correo electrónico: info@suicidiologia.com.mx ',
     "usa" => "USA 🇺🇸",
         "usa.1" => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: 988 <br> <strong>Veterans/Military Crisis Line (For active members, veterans and family members of the U.S. Armed Forces):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone: +1 800 273 8255, press 1; Text message: +1 838255 <br> <strong>The Trevor Project (For teens, friends and family members of the LGBT community.):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone: +1 866 488 7386',
-
-    "south.america" => "South Amerika",
     "argentina" => "Argentina 🇦🇷",
         "argentina.1" => '<strong>Centro de Asistencia al Suicida:</strong> <a href="https://www.asistenciaalsuicida.org.ar/" target="_blank"> https://www.asistenciaalsuicida.org.ar/</a> <br> Teléfono: 135',
     "brazil" => "Brasil 🇧🇷",
@@ -74,21 +75,45 @@ return [
         "chile.1" => '<strong>Teléfono de la Esperanza:</strong> <a href="https://telefonodelaesperanza.org/intervencion-en-crisis" target="_blank"> https://telefonodelaesperanza.org/intervencion-en-crisis</a> <br> Teléfono: +56 717 003 717',
 
     "asia" => "Asia",
-    "china" => "China",
-    "hongkong" => "Hongkong",
-    "india" => "India",
-    "iran" => "Iran",
-    "israel" => "Israel",
-    "japan" => "Japan",
-    "parkistan" => "Parkistan",
-    "philippines" => "Philippines",
-    "singapore" => "Singapore",
-    "south.korea" => "South Korea",
-    "taiwan" => "Taiwan",
+    "china" => "China 🇨🇳",
+        'china.1'=>'<strong>Bejing Suicide Research and Prevenion Center:</strong> <a href="https://www.crisis.org" target="_blank"> https://www.crisis.org</a> <br> Phone: +86 800 810 1117',
+    "hongkong" => "Hongkong 🇭🇰",
+        'hongkong.1'=>'<strong>Suicide Prevention Services:</strong> <a href="https://www.sps.org" target="_blank"> https://www.sps.org</a> <br> Phone: +825 2382 0000 <br> <strong>Hong Kong Samaritan Association for Suicide Prevention:</strong> <a href="https://www.help4suicide.com.hk" target="_blank"> https://www.help4suicide.com.hk</a> <br> <strong>The Samaritan Befrienders Hong Kong:</strong> <a href="https://www.sbhk.org.hk" target="_blank"> https://www.sbhk.org.hk</a> <br> Phone: +852 2389 2222; (English Hotline: +852 2389 2223)',
+    "india" => "India 🇮🇳",
+        'india.1'=>'<strong>iCall Helpline:</strong> <a href="https://icallhelpline.org" target="_blank"> https://icallhelpline.org</a> <br>  Phone:+91 9152987821',
+    "iran" => "Iran 🇮🇷",
+        'iran.1'=>'<strong>[Eran] ער"ן</strong> <a href="https://eran.org" target="_blank"> https://eran.org</a> <br> Phone: +98 1201',
+    "israel" => "Israel 🇮🇱",
+        'israel.1' =>'<strong>Eran:</strong> <a href="https://eran.org.il" target="_blank"> https://eran.org.il</a> <br> Phone: +972 1201 <br> <strong>SAHAR (Emotional support chatline) (Hebrew)</strong> <a href="https://sahar.org.li" target="_blank"> https://sahar.org.li</a>',
+    "japan" => "Japan 🇯🇵",
+        'japan.1'=>'<strong>TELL Lifeline:</strong> <a href="https://telljp.com/lifeline" target="_blank"> https://telljp.com/lifeline</a> (Chat in English/Japanese) <br> Phone +81 3 5774 0992 <br> <strong>Ministry of Education, Culture, Sports, Science and Technology</strong> <a href="https://mext.go.jp" target="_blank"> https://mext.go.jp</a> <br> Telefon: +81 120 0 78310',
+    "pakistan" => "Pakistan 🇵🇰",
+        'pakistan.1'=>'<strong>Umang Pakistan:</strong> <a href="https://umang.com.pk" target="_blank"> https://umang.com.pk</a>',
+    "philippines" => "Philippines 🇵🇭",
+        'philippines.1'=>'<strong>Department of Health:</strong> <a href="https://doh.gov.ph/NCMH-Crisis-Hotline" target="_blank"> https://doh.gov.ph/NCMH-Crisis-Hotline</a> <br> Telefon: +63 966 351 4518',    
+    "singapore" => "Singapore 🇸🇬",
+        "singapore.1" => '<strong>Samaritans of Singapore (SOS):</strong> <a href="https://samaritans.org.sg" target="_blank"> https://samaritans.org.sg</a> <br> Phone: +65 1800 221 4444; E-Mail:pat@samaritans.org.sg',
+    "south.korea" => "South Korea 🇰🇷",
+        "south.korea.1" => '<strong>Korea Foundation for Suicide Prevention (한국생명존중희망재단):</strong> <a href="https://kfsp.org" target="_blank"> https://kfsp.org</a> <br> 핸드폰: +65 2 3706 0500 <br> <stong>보건복지부 보건복지콜센터 (Call center of the Ministry of Health and Social Affairs): </strong> <br> 핸드폰: 129 (24시간 위기상담 / 24-Hour-Hotline) <br> <strong>정신건강증진센터 정신건강위기상담전화 (Crisis center and mental health counseling):</strong> <br> 핸드폰:+65 1577-0199 (24시간 위기상담 / 24-Hour-Hotline)',
+    "taiwan" => "Taiwan 🇹🇼",
+        "taiwan.1" => '<strong>Suicide prevention telephone of the Ministry of Health and Social Affairs (MOHW) (衛生福利部):</strong> <a href="www.life1995.org.tw" target="_blank"> www.life1995.org.tw</a> <br> Phone: 1995 ',
+
+
 
     "africa" => "Africa",
-    "south.africa" => "South Africa",
+    'nigeria'=>'Nigeria 🇳🇬',
+        'nigeria.1'=>'<strong>SURPIN Helpline Nigeria:</strong> <a href="https://surpinng.com" target="_blank"> https://surpinng.com</a> <br> Phone:+234 8000 7877 46',
+    "south.africa" => "South Africa 🇿🇦",
+        'south.africa.1'=>'<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: +27 800 567 567; SMS: +27 31393 ',
+    'kenya'=>'Kenya 🇰🇪',
+    'kenya.1'=>'<strong>Befriender\'s Kenya:</strong> <a href="https://befrienderskenya.org" target="_blank"> https://befrienderskenya.org</a> <br> Phone: +25 47 221 78177',
 
-    "australia" => "Australia",
-    "new.zealand" => "New Zealand",
+
+    "australia.continent" => "Australia/Oceania",
+    "australia" => "Australia 🇦🇺",
+        "australia.1" => '<strong>Lifeline Australia:</strong> <a href="https://lifeline.org.au" target="_blank"> https://lifeline.org.au</a> Phone: +61 13 11 14 <br> <strong>Kids Helpline:</strong> <a href="https://kidshelp.com.au" target="_blank"> https://kidshelp.com.au</a> <br> Phone: +61 1800 55 1800',
+    "new.zealand" => "New Zealand 🇳🇿",
+        "new.zealand.1" => '<strong>National Depression Initiative:</strong> <a href="https://depression.org.nz" target="_blank"> https://depression.org.nz</a> <br> <strong>The Lowdown:</strong> <a href="https://thelowdown.co.nz" target="_blank"> https://lowdown.co.nz</a> <br> Phone: +64 800 111 757 <br> <strong>Youthline:</strong> <a href="https://youthline.co.nz" target="_blank"> https://youthline.co.nz</a> <br> Phone: +64 800 376633; SMS: +64 234; E-Mail: talk@youthline.co.nz; parenttalk@youthline.co.nz',
+
+
 ];

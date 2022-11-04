@@ -104,10 +104,14 @@ return [
 
 
     "africa" => "Afrika",
+    'nigeria'=>'Nigeria 🇳🇬',
+        'nigeria.1'=>'<strong>SURPIN Helpline Nigeria:</strong> <a href="https://surpinng.com" target="_blank"> https://surpinng.com</a> <br> Phone:+234 8000 7877 46',
     "south.africa" => "Südafrika 🇿🇦",
         'south.africa.1'=>'<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: +27 800 567 567; SMS: +27 31393 ',
+    'kenya'=>'Kenia 🇰🇪',
+    'kenya.1'=>'<strong>Befriender\'s Kenya:</strong> <a href="https://befrienderskenya.org" target="_blank"> https://befrienderskenya.org</a> <br> Phone: +25 47 221 78177',
 
-    "australia.continent" => "Australien",
+    "australia.continent" => "Australien/Ozeanien",
     "australia" => "Australien 🇦🇺",
         "australia.1" => '<strong>Lifeline Australia:</strong> <a href="https://lifeline.org.au" target="_blank"> https://lifeline.org.au</a> Phone: +61 13 11 14 <br> <strong>Kids Helpline:</strong> <a href="https://kidshelp.com.au" target="_blank"> https://kidshelp.com.au</a> <br> Phone: +61 1800 55 1800',
     "new.zealand" => "Neuseeland 🇳🇿",

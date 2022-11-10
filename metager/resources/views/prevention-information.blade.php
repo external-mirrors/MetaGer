@@ -235,7 +235,7 @@
 	<h1 id="africa">{{ trans('prevention-information.africa') }}</h1>
 
 	<h2 id="south-africa">{{ trans('prevention-information.south.africa') }}</h2>
-	<p>{!! trans('prevention-information.south-africa.1') !!}</p>
+	<p>{!! trans('prevention-information.south.africa.1') !!}</p>
 
 	<h2 id="nigeria">{{ trans('prevention-information.nigeria') }}</h2>
 	<p>{!! trans('prevention-information.nigeria.1') !!}</p>

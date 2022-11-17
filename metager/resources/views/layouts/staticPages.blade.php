@@ -43,6 +43,7 @@
 	@endforeach
 	@endif
 	@if(isset($page) && $page === 'startpage')
+	<meta http-equiv="onion-location" content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/" />
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}" />
 	@endif
 	@if(Cookie::get('dark_mode') === "2")

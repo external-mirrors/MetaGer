@@ -3,7 +3,7 @@
 return [
     'head.1' => 'Hilfe bei Selbstmordgedanken - MetaGer',
     'head.2' => 'Sie sind nicht allein',
-    'text.1'=> 'Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.',
+    'text.1'=> 'Wenn Sie selbst unter Stimmungsschwankungen, Depressionen oder Selbstmordgedanken leiden oder Sie jemanden kennen, der daran leidet, können Sie sich helfen lassen. Unter den angegebenenen Nummern erreichen Sie professionelle Berater, die Ihnen zuhören. Sollten Sie sich in akuter Gefahr befinden, wählen Sie bitte den Notruf Ihres Landes, oder suchen die nächste Notaufnahme auf.',
     'head.3'=>'',
     'search.helpline' =>'Ist Ihr Land nicht dabei? ',
     'search.helpline.1' =>'Unter <a href="https://findahelpline.com" target="_blank">https://findahelpline.com</a> können Sie weitere hilfreiche Telefonnummern und Webseiten finden.',

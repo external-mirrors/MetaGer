@@ -85,7 +85,7 @@
                 @endif
                 @endforeach
             </div>
-            <button type="submit" class="btn btn-default">@lang('settings.save')</button>
+            <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
         </form>
     </div>
 

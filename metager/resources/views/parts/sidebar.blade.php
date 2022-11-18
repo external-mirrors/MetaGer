@@ -12,7 +12,9 @@
         <span>{{ trans('sidebar.nav1') }}</span>
       </a>
     </li>
-    <hr>
+  </ul>
+  <hr>
+  <ul class="sidebar-list">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" >
       <img src="/img/lock.svg" alt="" aria-hidden="true" id="sidebar-img-lock"> 
@@ -55,7 +57,9 @@
 
       </ul>
     </li>
-    <hr>
+  </ul>
+  <hr>
+  <ul class="sidebar-list">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" >
       <img src="/img/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
@@ -70,7 +74,9 @@
       </a>
     </li>
     @endif
-    <hr>
+  </ul>
+  <hr>
+  <ul class="sidebar-list">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" >
       <img src="/img/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
@@ -85,7 +91,9 @@
       </a>
     </li>
     @endif
-    <hr>
+  </ul>
+  <hr>
+  <ul class="sidebar-list">
     <li class="metager-dropdown">
       <input id="contactToggle" class="sidebarCheckbox" type="checkbox">
       <label for="contactToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationKontakt" tabindex=0>
@@ -154,7 +162,9 @@
           @endforeach
       </ul>
     </li>
-    <hr>
+  </ul>
+  <hr>
+  <ul class="sidebar-list">
     <li>
       <a  href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
       <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 

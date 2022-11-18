@@ -5,7 +5,7 @@
 @section('content')
 	<h1 class="page-title">{!! trans('help/easy-language/help-mainpages.title') !!}</h1>
 
-	<section id="startpage" class="help-section">
+	<section id="startpage" class="help-section card">
 		<a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-mainpages.backarrow') !!}</a>
 		<h2>{!! trans('help/easy-language/help-mainpages.title.2') !!}</h2>
 

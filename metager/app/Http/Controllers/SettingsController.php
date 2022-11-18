@@ -202,7 +202,7 @@ class SettingsController extends Controller
         $langFile = json_decode(file_get_contents($langFile));
 
         foreach ($newFilters as $key => $value) {
-            if ($value === "") {
+            if (empty($value)) {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
                 Cookie::queue($fokus . "_setting_" . $key, "", 0, $cookiePath, null, true, true);

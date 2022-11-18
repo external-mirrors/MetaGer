@@ -127,7 +127,7 @@ class BrowserVerification
     private function waitForBV($key, $inline = false, $js_enabled = false)
     {
         $bvData = null;
-        $max_wait_time_ms = 15000;
+        $max_wait_time_ms = 5000;
         if ($inline) {
             $max_wait_time_ms = 2000;
         }

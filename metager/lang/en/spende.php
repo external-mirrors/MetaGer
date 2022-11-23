@@ -18,6 +18,7 @@ return [
         'quarterly'   => 'Quarterly',
         'six-monthly' => 'Six-Monthly',
         'annual'      => 'Annual',
+        'name'        => 'Frequency',
     ],
     'head'          => [
         'lastschrift' => 'Sepa direct debit',

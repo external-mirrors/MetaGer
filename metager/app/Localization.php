@@ -25,9 +25,6 @@ class Localization
         if (stripos($host, "metager.org") !== false) {
             App::setLocale("en-US");
             App::setFallbackLocale("en");
-        } else if (stripos($host, "metager.es") !== false) {
-            App::setLocale("es-ES");
-            App::setFallbackLocale("es");
         } else {
             App::setLocale("de-DE");
             App::setFallbackLocale("de");

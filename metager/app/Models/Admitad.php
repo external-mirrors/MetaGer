@@ -87,7 +87,6 @@ class Admitad
             ]
         ];
         $mission = json_encode($mission);
-        Cache::delete($this->hash); // ToDo remove
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
 

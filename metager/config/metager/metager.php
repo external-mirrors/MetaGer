@@ -47,12 +47,9 @@ return [
         "apikey" => env("CIVICRM_API_KEY", ""),
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
     ],
-    "adgoal" => [
-        "public_key" => env("adgoal_public", ""),
-        "private_key" => env("adgoal_private", ""),
-    ],
     "admitad" => [
-        "token" => env("ADMITAD_TOKEN", ""),
+        "germany_public_key" => env("admitad_germany_public", ""),
+        "international_public_key" => env("admitad_international_public", "")
     ],
     "keyserver" => [
         "user" => env("KEY_USER", "test"),

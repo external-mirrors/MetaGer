@@ -104,24 +104,17 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_PrepareResults");
         $metager->prepareResults();
         $query_timer->observeEnd("Search_PrepareResults");
-        //        $admitad = [];
-        $adgoal = [];
+        $admitad = [];
 
         $query_timer->observeStart("Search_Affiliates");
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            /*
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitad[] = $newAdmitad;
-            }*/
-            $newAdgoal = new \App\Models\Adgoal($metager);
-            if (!empty($newAdgoal->hash)) {
-                $adgoal[] = $newAdgoal;
             }
         }
 
-        // $metager->parseAffiliates($admitad);
-        $metager->parseAffiliates($adgoal);
+        $metager->parseAffiliates($admitad);
 
         // Add Advertisement for Donations
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
@@ -141,8 +134,7 @@ class MetaGerSearch extends Controller
                 "metager" => [
                     "apiAuthorized" => $metager->isApiAuthorized(),
                 ],
-                //                "admitad" => $admitad,
-                "adgoal" => $adgoal,
+                "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
@@ -211,7 +203,7 @@ class MetaGerSearch extends Controller
         }
 
         $engines = $cached["engines"];
-        $adgoal = $cached["adgoal"];
+        $admitad = $cached["admitad"];
         //        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
@@ -232,18 +224,13 @@ class MetaGerSearch extends Controller
         $metager->prepareResults();
 
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            /*$newAdmitad = new \App\Models\Admitad($metager);
+            $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitad[] = $newAdmitad;
-            }*/
-            $newAdgoal = new \App\Models\Adgoal($metager);
-            if (!empty($newAdgoal->hash)) {
-                $adgoal[] = $newAdgoal;
             }
         }
 
-        //        $admitadFinished = $metager->parseAffiliates($admitad);
-        $adgoalFinished = $metager->parseAffiliates($adgoal);
+        $adgoalFinished = $metager->parseAffiliates($admitad);
 
         $result = [
             'finished' => true,
@@ -308,8 +295,7 @@ class MetaGerSearch extends Controller
             "metager" => [
                 "apiAuthorized" => $metager->isApiAuthorized(),
             ],
-            //            "admitad" => $admitad,
-            "adgoal" => $adgoal,
+            "admitad" => $admitad,
             "engines" => $metager->getEngines(),
         ], 1 * 60);
 

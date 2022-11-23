@@ -118,7 +118,7 @@ class Admitad
         $answer = json_decode($answer, true);
 
         // If the fetcher had an Error
-        if ($answer === "no-result" || !\array_key_exists("data", $answer)) {
+        if ($answer === null || $answer === "no-result" || !\array_key_exists("data", $answer)) {
             $this->affiliates = [];
             return;
         } else {

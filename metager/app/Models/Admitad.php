@@ -87,7 +87,6 @@ class Admitad
             ]
         ];
         $mission = json_encode($mission);
-        Cache::delete($this->hash); // ToDo remove
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
 
@@ -116,22 +115,25 @@ class Admitad
             return;
         }
 
-        $answer = json_decode($answer, true);
+        $json_answer = \json_decode($answer, true);
+        if ($json_answer === null) {
+            Log::error("Invalid JSON: $answer");
+        }
 
         // If the fetcher had an Error
-        if ($answer === "no-result" || !\array_key_exists("data", $answer)) {
+        if ($json_answer === null || $json_answer === "no-result" || !\array_key_exists("data", $json_answer)) {
             $this->affiliates = [];
             return;
         } else {
-            $answer = $answer["data"];
+            $json_answer = $json_answer["data"];
         }
 
-        if (!is_array($answer)) {
+        if (!is_array($json_answer)) {
             $this->affiliates = [];
             return;
         }
 
-        $this->affiliates = $answer;
+        $this->affiliates = $json_answer;
     }
 
     /**

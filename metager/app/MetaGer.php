@@ -26,6 +26,7 @@ class MetaGer
     protected $test;
     protected $eingabe;
     protected $q;
+    protected $out;
     protected $page;
     protected $lang;
     protected $cache = "";
@@ -984,6 +985,8 @@ class MetaGer
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
 
+        $this->out = $request->input("out", "");
+
         if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
             $this->framed = true;
         } else {
@@ -1703,6 +1706,11 @@ class MetaGer
     public function getNext()
     {
         return $this->next;
+    }
+
+    public function getOut()
+    {
+        return $this->out;
     }
 
     public function getSite()

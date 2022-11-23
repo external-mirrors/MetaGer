@@ -8,7 +8,7 @@
 html,
 body,
 * {
-    font-family: @metager-font;
+  font-family: @metager-font;
 }
 
 /* Main Containers */
@@ -16,58 +16,58 @@ body,
 html,
 body,
 .content-wrapper {
-    width: 100%;
+  width: 100%;
 }
 
 html {
-    min-height: 100%;
-    height: auto;
-    display: flex;
-    font-size: 14px;
-    font-size: 3.8mm;
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  font-size: 14px;
+  font-size: 3.8mm;
 }
 
 body {
-    flex-grow: 1;
-    background-image: inherit;
-    background-color: @body-background-color;
-    background-attachment: fixed;
-    min-height: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    font-size: 1.0em;
+  flex-grow: 1;
+  background-image: inherit;
+  background-color: @body-background-color;
+  background-attachment: fixed;
+  min-height: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-size: 1em;
 
-    @media(max-width: @screen-mobile) {
-        background-color: @body-background-color-mobile
-    }
+  @media (max-width: @screen-mobile) {
+    background-color: @body-background-color-mobile;
+  }
 }
 
 .wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 5rem;
-    padding: 0px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5rem;
+  padding: 0px;
 
-    @media(min-width: @screen-mobile) {
-        padding: 0px 8px;
-    }
+  @media (min-width: @screen-mobile) {
+    padding: 0px 8px;
+  }
 
-    overflow: hidden;
+  overflow: hidden;
 
-    main {
-        width: 100%;
-        max-width: 1000px;
-    }
+  main {
+    width: 100%;
+    max-width: 1000px;
+  }
 }
 
 .navbar,
 #navbar-static-pages {
-    box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
+  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.2);
 }
 
 /* Scrollbox Style */
@@ -75,19 +75,31 @@ body {
 @scrollfade-color: white;
 
 .scrollbox {
+  position: relative;
+  width: 100%;
+  max-width: @results-width-max;
+
+  .scrollfade-right {
+    background: -webkit-gradient(
+      linear,
+      right top,
+      left top,
+      from(@scrollfade-color),
+      color-stop(fade(@scrollfade-color, 80%)),
+      to(fade(@scrollfade-color, 0%))
+    );
+    background: linear-gradient(
+      to left,
+      @scrollfade-color,
+      fade(@scrollfade-color, 80%),
+      fade(@scrollfade-color, 0%)
+    );
+    right: 1px;
+  }
+
+  .search-option-frame {
     position: relative;
-    width: 100%;
-    max-width: @results-width-max;
-
-    .scrollfade-right {
-        background: -webkit-gradient(linear, right top, left top, from(@scrollfade-color), color-stop(fade(@scrollfade-color, 80%)), to(fade(@scrollfade-color, 0%)));
-        background: linear-gradient(to left, @scrollfade-color, fade(@scrollfade-color, 80%), fade(@scrollfade-color, 0%));
-        right: 1px;
-    }
-
-    .search-option-frame {
-        position: relative;
-    }
+  }
 }
 
 /* General font sizing */
@@ -95,215 +107,214 @@ body {
 @default-font-size: 15px;
 
 .first-last-child-margin-fix() {
-    &:first-child {
-        margin-top: 0px;
-    }
+  &:first-child {
+    margin-top: 0px;
+  }
 }
 
 h1 {
-    font-size: 2em;
-    .first-last-child-margin-fix;
+  font-size: 2em;
+  .first-last-child-margin-fix;
 }
 
 h2 {
-    font-size: 1.5em;
-    .first-last-child-margin-fix;
+  font-size: 1.5em;
+  .first-last-child-margin-fix;
 }
 
 h3 {
-    font-size: 1.3em;
-    .first-last-child-margin-fix;
+  font-size: 1.3em;
+  .first-last-child-margin-fix;
 }
 
 .static-page-header {
-    text-align: center;
+  text-align: center;
 }
 
 p {
-    font-size: 1em;
-    .first-last-child-margin-fix;
+  font-size: 1em;
+  .first-last-child-margin-fix;
 }
 
 body {
-    .first-last-child-margin-fix;
+  .first-last-child-margin-fix;
 }
 
 .page-title {
-    font-size: 2.5em;
-    text-align: center;
+  font-size: 2.5em;
+  text-align: center;
 }
 
 .page-subtitle {
-    font-size: 1em;
-    text-align: center;
+  font-size: 1em;
+  text-align: center;
 }
 
 .subheading {
-    font-size: 1.2em;
-    margin: 20px 0px;
-    white-space: center;
+  font-size: 1.2em;
+  margin: 20px 0px;
+  white-space: center;
 }
 
 a {
-    font-size: 1em;
+  font-size: 1em;
+  color: @link-color;
+
+  &:visited {
     color: @link-color;
+  }
 
-    &:visited {
-        color: @link-color;
-    }
-
-    &:hover {
-        text-decoration: none;
-        color: @a-hover-color;
-    }
+  &:hover {
+    text-decoration: none;
+    color: @a-hover-color;
+  }
 }
 
 i.fa {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 /* Logo */
 
 .logo {
-    color: @metager-orange;
-    font-family: @metager-font;
-    font-style: italic;
-    font-weight: bold;
-    white-space: nowrap;
+  color: @metager-orange;
+  font-family: @metager-font;
+  font-style: italic;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 #startpage-logo {
+  .logo;
+  border: 0;
+  display: flex;
+  justify-content: center;
+  margin: 0px 0px 45px 0px;
+  white-space: nowrap;
+  text-align: center;
+
+  @media (max-width: @screen-mobile) {
+    margin-bottom: 25px;
+  }
+
+  > a.logo {
     .logo;
-    border: 0;
-    display: flex;
-    justify-content: center;
-    margin: 0px 0px 45px 0px;
-    white-space: nowrap;
-    text-align: center;
+    display: block;
+    width: fit-content;
+    text-decoration: none;
+    font-size: 2.7em;
 
-    @media(max-width: @screen-mobile) {
-        margin-bottom: 25px;
+    @media (max-width: @screen-mobile) {
+      font-size: 2em;
     }
 
-    >a.logo {
-        .logo;
-        display: block;
-        width: fit-content;
-        text-decoration: none;
-        font-size: 2.7em;
-
-        @media(max-width: @screen-mobile) {
-            font-size: 2em;
-        }
-
-        >img {
-            width: 4.6em;
-        }
+    > img {
+      width: 4.6em;
     }
+  }
 
-    >a.lang {
-        display: block;
-        height: min-content;
-        align-self: flex-end;
-        position: relative;
-        left: -10px;
-        font-style: initial;
-        color: @metager-orange;
-        bottom: 2px;
-        font-weight: bold;
+  > a.lang {
+    display: block;
+    height: min-content;
+    align-self: flex-end;
+    position: relative;
+    left: -10px;
+    font-style: initial;
+    color: @metager-orange;
+    bottom: 2px;
+    font-weight: bold;
 
-        &>span {
-            font-size: 1rem;
-            display: block;
-            padding: .3rem;
-        }
+    & > span {
+      font-size: 1rem;
+      display: block;
+      padding: 0.3rem;
     }
+  }
 }
 
 #subpage-logo {
-    padding: 16px 0 5px 0px;
-    display: flex;
+  padding: 16px 0 5px 0px;
+  display: flex;
 
-    .navbar-brand {
-        .noprint;
-        font-size: 18px;
-        padding: 0;
-        padding-left: 8px;
-        z-index: 5;
+  .navbar-brand {
+    .noprint;
+    font-size: 18px;
+    padding: 0;
+    padding-left: 8px;
+    z-index: 5;
 
-        h1 {
-            border: 0;
-            .logo;
-            font-size: 1.6em;
-            margin: 0;
-            line-height: 1;
-            padding-bottom: 0;
+    h1 {
+      border: 0;
+      .logo;
+      font-size: 1.6em;
+      margin: 0;
+      line-height: 1;
+      padding-bottom: 0;
 
-            >img {
-                width: 4.8em;
-            }
-        }
+      > img {
+        width: 4.8em;
+      }
     }
+  }
 
-    a.lang {
-        display: block;
-        height: min-content;
-        align-self: flex-end;
-        position: relative;
-        bottom: -9px;
-        left: -4px;
-        color: @metager-orange;
-        font-weight: bold;
+  a.lang {
+    display: block;
+    height: min-content;
+    align-self: flex-end;
+    position: relative;
+    bottom: -9px;
+    left: -4px;
+    color: @metager-orange;
+    font-weight: bold;
 
-        &>span {
-            font-size: .7rem;
-            display: block;
-            padding: .1rem;
-        }
+    & > span {
+      font-size: 0.7rem;
+      display: block;
+      padding: 0.1rem;
     }
+  }
 }
 
 /* Links that look like text */
 
 .mutelink {
-
-    &,
-    &:hover,
-    &:active,
-    &:focus,
-    &:visited {
-        color: inherit;
-    }
+  &,
+  &:hover,
+  &:active,
+  &:focus,
+  &:visited {
+    color: inherit;
+  }
 }
 
 /* Summary Elements */
 
 summary {
-    cursor: pointer;
+  cursor: pointer;
 
-    &::-webkit-details-marker {
-        display: none;
-    }
+  &::-webkit-details-marker {
+    display: none;
+  }
 
-    &::-moz-details-marker {
-        display: none;
-    }
+  &::-moz-details-marker {
+    display: none;
+  }
 
-    &::-ms-details-marker {
-        display: none;
-    }
+  &::-ms-details-marker {
+    display: none;
+  }
 
-    &::-o-details-marker {
-        display: none;
-    }
+  &::-o-details-marker {
+    display: none;
+  }
 
-    &::details-marker {
-        display: none;
-    }
+  &::details-marker {
+    display: none;
+  }
 
-    &:focus {
-        outline: none;
-    }
+  &:focus {
+    outline: none;
+  }
 }
 
 /* Tooltips 
@@ -313,101 +324,98 @@ summary {
  */
 
 *[data-tooltip] {
-    position: relative;
+  position: relative;
 
-    &:hover {
-        &:after {
-            opacity: 1;
-        }
-    }
-
+  &:hover {
     &:after {
-        content: attr(data-tooltip);
-        position: absolute;
-        top: 100%;
-        left: 0;
-        z-index: 1;
-        color: @text-color;
-        background-color: @body-background-color;
-        border: 2px solid @metager-orange;
-        border-radius: 6px;
-        padding: 3px 8px;
-        width: 200px;
-        white-space: pre-wrap;
-        font-size: .9em;
-        font-weight: normal;
-        text-decoration: none;
-        text-align: center;
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        text-transform: initial; // Resets specific styles
+      opacity: 1;
     }
+  }
 
-    &.hide-tooltip-on-resultpage:after {
+  &:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+    color: @text-color;
+    background-color: @body-background-color;
+    border: 2px solid @metager-orange;
+    border-radius: 6px;
+    padding: 3px 8px;
+    width: 200px;
+    white-space: pre-wrap;
+    font-size: 0.9em;
+    font-weight: normal;
+    text-decoration: none;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-transform: initial; // Resets specific styles
+  }
 
-        /* Auf kleinen Bildschirmen wird der Tooltip nicht angezeigt */
-        @media (max-width: 700px) {
-            display: none;
-        }
+  &.hide-tooltip-on-resultpage:after {
+    /* Auf kleinen Bildschirmen wird der Tooltip nicht angezeigt */
+    @media (max-width: 700px) {
+      display: none;
     }
+  }
 
-    &.delayed:after {
-        text-align: center;
+  &.delayed:after {
+    text-align: center;
 
-        transition-delay: 0.5s;
-    }
+    transition-delay: 0.5s;
+  }
 
-    &.delayed-soft:after {
-        transition-delay: 0.2s;
-    }
+  &.delayed-soft:after {
+    transition-delay: 0.2s;
+  }
 
-    &.delayed-strong:after {
-        transition-delay: 1s;
-    }
+  &.delayed-strong:after {
+    transition-delay: 1s;
+  }
 }
 
 /* For Containers that are supposed to split their content up into two columns */
 
 .two-col {
-    >* {
-        width: 50%;
-        margin: 0;
-        padding: 0;
-        float: left;
+  > * {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    float: left;
 
-        @media (max-width: @screen-mobile) {
-            width: 100%;
-        }
+    @media (max-width: @screen-mobile) {
+      width: 100%;
     }
+  }
 }
 
 /* Links */
-
-
 
 /* Little helpers */
 
 // Bold text
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 // Do not print this
 .noprint {
-    @media print {
-        display: none !important;
-    }
+  @media print {
+    display: none !important;
+  }
 }
 
 // For print: Start new page after this
 .newpage {
-    page-break-after: always;
+  page-break-after: always;
 }
 
 // For list elements without a dot
 li.nodot {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 // Disabled elements (only visual)
@@ -415,90 +423,110 @@ li.nodot {
 :disabled,
 .disabled *,
 :disabled * {
-    color: #aaa !important;
-    cursor: not-allowed !important;
+  color: #aaa !important;
+  cursor: not-allowed !important;
 }
 
 // Convert excess text into "..."
 .overflow-ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 // Used on labels which initiate visual change (e.g. open-sidebar-button)
 .navigation-element {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 /* Button */
 
 button {
-    border: none;
-    background-color: transparent;
+  border: none;
+  background-color: transparent;
 
-    i {
-        filter: invert(@icon-color);
-    }
+  i {
+    filter: invert(@icon-color);
+  }
 }
 
 /* Lists with dots */
 
 .dotlist {
-    list-style-type: disc;
-    text-align: left;
+  list-style-type: disc;
+  text-align: left;
 
-    li {
-        margin-bottom: 5px !important;
-    }
+  li {
+    margin-bottom: 5px !important;
+  }
 }
 
 /* Code */
 
 code {
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    word-break: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Adresses */
 
 address {
-    white-space: pre;
+  white-space: pre;
 }
 
 /* Unknown Uses */
 
 label a {
-    color: inherit;
+  color: inherit;
 
-    &:hover {
-        text-decoration: none;
-        color: inherit;
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
+// Copy button
+.copyLink {
+  > button.success {
+    background-color: green;
+    &::before {
+      content: "✓";
+      position: relative;
+      padding-right: 0.5rem;
     }
+  }
+  > button.failure {
+    background-color: #820000;
+    &::before {
+      content: "❌";
+      position: relative;
+      padding-right: 0.5rem;
+    }
+  }
 }
 
 // For Elements where newlines should actually be displayed
 .wrap {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 // When the content should be centerd horizontally
 .center-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #impressum,
 #kontakt,
 #team,
 #about {
-    .card {
-        margin: 8px 0;
-    }
+  .card {
+    margin: 8px 0;
+  }
 }
 
 main {
-    row-gap: 8px;
+  row-gap: 8px;
 }

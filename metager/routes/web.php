@@ -309,8 +309,13 @@ Route::get("lang", function () {
     $host = parse_url($previous, PHP_URL_HOST);
     $current_host = request()->getHost();
 
+    $allowed_hosts = [
+        "metager.de",
+        "metager.org"
+    ];
+
     $previous_url = null; // URL for the back button
-    if ($host === $current_host && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
+    if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
         $previous_url = LaravelLocalization::getLocalizedUrl(null, $previous);
     }
     return view('lang-selector')

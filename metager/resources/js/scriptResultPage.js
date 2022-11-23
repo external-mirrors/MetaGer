@@ -34,13 +34,16 @@ function submitFilterOnChange() {
       value.addEventListener("change", (e) => e.target.form.submit());
     });
   // Custom date picker
-  document
-    .querySelector("#options #options-box input[name=fc]")
-    .addEventListener("change", (e) => {
+  let custom_date_picker_element = document.querySelector(
+    "#options #options-box input[name=fc]"
+  );
+  if (custom_date_picker_element) {
+    custom_date_picker_element.addEventListener("change", (e) => {
       if (!e.target.checked) {
         e.target.form.submit();
       }
     });
+  }
   // Custom date selected
   document
     .querySelectorAll(
@@ -123,29 +126,29 @@ function enableFormResetter() {
   var deleteButton = document.querySelector("#search-delete-btn");
   var timeout = null;
 
-  deleteButton.onclick = (e) => {
-    if (timeout != null) {
-      clearTimeout(timeout);
-      timeout = null;
-    }
-    document.querySelector('input[name="eingabe"]').value = "";
-    document.querySelector('input[name="eingabe"]').focus();
-  };
+  if (deleteButton) {
+    deleteButton.onclick = (e) => {
+      if (timeout != null) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      document.querySelector('input[name="eingabe"]').value = "";
+      document.querySelector('input[name="eingabe"]').focus();
+    };
+  }
 
-  document
-    .querySelector('input[name="eingabe"]')
-    .addEventListener("focusin", (e) => {
+  let input_field = document.querySelector('input[name="eingabe"]');
+  if (input_field) {
+    input_field.addEventListener("focusin", (e) => {
       deleteButton.style.display = "initial";
     });
-
-  document
-    .querySelector('input[name="eingabe"]')
-    .addEventListener("focusout", (e) => {
+    input_field.addEventListener("focusout", (e) => {
       timeout = window.setTimeout(function () {
         deleteButton.style.display = "none";
         timeout = null;
       }, 500);
     });
+  }
 }
 
 function loadMoreResults() {

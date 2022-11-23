@@ -46,7 +46,7 @@ class QueryLogger
         $request = App::make(Request::class);
         $this->focus = $request->input('focus', "");
         $this->referer = $request->header('Referer');
-        $this->interface = LaravelLocalization::getCurrentLocale();
+        $this->interface = Localization::getLanguage();
         $this->query_string = $request->input("eingabe", "");
     }
 

@@ -2,7 +2,7 @@
 
 return [
     'role.0'    => 'geschäftsführender Vorstand',
-    'role.1'    => 'Vorstand',
+    'role.1.0'    => 'Vorstand',
     'role.1.1'  => 'Vorständin',
     'role.2'    => 'Jugendschutzbeauftragte',
     'role.3'    => 'Pressereferentin',

@@ -4,7 +4,7 @@
 				<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())])) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
 				<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
 					@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
-					@lang('metaGer.settings')&hellip;
+					@lang('metaGer.settings.name')&hellip;
 				</a>
 			</div>
 			<div id="filter-toggle">
@@ -23,7 +23,7 @@
 			</div>
 			@if($metager->getTotalResultCount() > 0)
 			<div id="result-count">
-				<nobr>~ {{$metager->getTotalResultCount()}}</nobr> {{ trans('metaGer.results') }}
+				<nobr>~ {{$metager->getTotalResultCount()}}</nobr> {{ trans('metaGer.results.name') }}
 			</div>
 			@endif
 		</div>

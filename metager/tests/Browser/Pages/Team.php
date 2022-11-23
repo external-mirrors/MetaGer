@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class Team extends Page
 {
@@ -11,9 +13,9 @@ class Team extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/team';
+        return LaravelLocalization::getLocalizedUrl($locale, "/team");
     }
 
     /**
@@ -24,17 +26,14 @@ class Team extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->assertPathIs($this->url())
-            ->waitForText("geschäftsführender Vorstand")
-            ->assertTitle("Team - MetaGer")
-            ->switchLanguage("English")
-            ->waitForText("CEO")
-            ->assertTitle("Team - MetaGer")
-            ->switchLanguage("Español")
-            ->waitForText("Director ejecutivo [CEO]")
-            ->assertTitle("Nuestra gente - MetaGer")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
+            $browser->visit($url)
+                ->waitForText(trans("team.role.0", [], $lang))
+                ->assertTitle(trans("titles.team", [], $lang));
+        }
     }
 
     /**

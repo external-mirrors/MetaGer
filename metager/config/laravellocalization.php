@@ -5,7 +5,7 @@ return [
     // Uncomment the languages that your site supports - or add new ones.
     // These are sorted by the native name, which is the order you might show them in a language selector.
     // Regional languages are sorted by their base language, so "British English" sorts as "English, British"
-    'supportedLocales'        => [
+    'supportedLocales' => [
         //'ace'         => ['name' => 'Achinese',               'script' => 'Latn', 'native' => 'Aceh', 'regional' => ''],
         //'af'          => ['name' => 'Afrikaans',              'script' => 'Latn', 'native' => 'Afrikaans', 'regional' => 'af_ZA'],
         //'agq'         => ['name' => 'Aghem',                  'script' => 'Latn', 'native' => 'Aghem', 'regional' => ''],
@@ -35,24 +35,27 @@ return [
         //'cy'          => ['name' => 'Welsh',                  'script' => 'Latn', 'native' => 'Cymraeg', 'regional' => 'cy_GB'],
         //'da'          => ['name' => 'Danish',                 'script' => 'Latn', 'native' => 'dansk', 'regional' => 'da_DK'],
         //'se'          => ['name' => 'Northern Sami',          'script' => 'Latn', 'native' => 'davvisámegiella', 'regional' => 'se_NO'],
-        'de' => ['name' => 'German', 'script' => 'Latn', 'native' => 'Deutsch', 'regional' => 'de_DE'],
+        'de-DE'          => ['name' => 'German (Germany)',                 'script' => 'Latn', 'native' => 'Deutsch (Deutschland)', 'regional' => 'de_DE'],
+        //'de-AT'          => ['name' => 'German (Austria)',                 'script' => 'Latn', 'native' => 'Deutsch (Österreich)', 'regional' => 'de_AT'],
         //'luo'         => ['name' => 'Luo',                    'script' => 'Latn', 'native' => 'Dholuo', 'regional' => ''],
         //'nv'          => ['name' => 'Navajo',                 'script' => 'Latn', 'native' => 'Diné bizaad', 'regional' => ''],
         //'dua'         => ['name' => 'Duala',                  'script' => 'Latn', 'native' => 'duálá', 'regional' => ''],
         //'et'          => ['name' => 'Estonian',               'script' => 'Latn', 'native' => 'eesti', 'regional' => 'et_EE'],
         //'na'          => ['name' => 'Nauru',                  'script' => 'Latn', 'native' => 'Ekakairũ Naoero', 'regional' => ''],
         //'guz'         => ['name' => 'Ekegusii',               'script' => 'Latn', 'native' => 'Ekegusii', 'regional' => ''],
-        'en' => ['name' => 'English', 'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
+        //'en'          => ['name' => 'English',                'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
         //'en-AU'       => ['name' => 'Australian English',     'script' => 'Latn', 'native' => 'Australian English', 'regional' => 'en_AU'],
-        //'en-GB'       => ['name' => 'British English',        'script' => 'Latn', 'native' => 'British English', 'regional' => 'en_GB'],
-        //'en-US'       => ['name' => 'U.S. English',           'script' => 'Latn', 'native' => 'U.S. English', 'regional' => 'en_US'],
-        'es' => ['name' => 'Spanish', 'script' => 'Latn', 'native' => 'Español', 'regional' => 'es_ES'],
+        'en-UK'       => ['name' => 'English (UK)',        'script' => 'Latn', 'native' => 'English (United Kingdom)', 'regional' => 'en_UK'],
+        //'en-CA'       => ['name' => 'Canadian English',       'script' => 'Latn', 'native' => 'Canadian English', 'regional' => 'en_CA'],
+        'en-US'       => ['name' => 'English (US)',           'script' => 'Latn', 'native' => 'English (USA)', 'regional' => 'en_US'],
+        'en-IE'       => ['name' => 'English (Ireland)',           'script' => 'Latn', 'native' => 'English (Ireland)', 'regional' => 'en_IE'],
+        //'es-ES'          => ['name' => 'Spanish (Spain)',                'script' => 'Latn', 'native' => 'Español (España)', 'regional' => 'es_ES'],
         //'eo'          => ['name' => 'Esperanto',              'script' => 'Latn', 'native' => 'esperanto', 'regional' => ''],
         //'eu'          => ['name' => 'Basque',                 'script' => 'Latn', 'native' => 'euskara', 'regional' => 'eu_ES'],
         //'ewo'         => ['name' => 'Ewondo',                 'script' => 'Latn', 'native' => 'ewondo', 'regional' => ''],
         //'ee'          => ['name' => 'Ewe',                    'script' => 'Latn', 'native' => 'eʋegbe', 'regional' => ''],
         //'fil'         => ['name' => 'Filipino',               'script' => 'Latn', 'native' => 'Filipino', 'regional' => 'fil_PH'],
-        //'fr' => ['name' => 'French', 'script' => 'Latn', 'native' => 'français', 'regional' => 'fr_FR'],
+        //'fr'          => ['name' => 'French',                 'script' => 'Latn', 'native' => 'français', 'regional' => 'fr_FR'],
         //'fr-CA'       => ['name' => 'Canadian French',        'script' => 'Latn', 'native' => 'français canadien', 'regional' => 'fr_CA'],
         //'fy'          => ['name' => 'Western Frisian',        'script' => 'Latn', 'native' => 'frysk', 'regional' => 'fy_DE'],
         //'fur'         => ['name' => 'Friulian',               'script' => 'Latn', 'native' => 'furlan', 'regional' => 'fur_IT'],
@@ -199,7 +202,7 @@ return [
         //'ts'          => ['name' => 'Tsonga',                 'script' => 'Latn', 'native' => 'Xitsonga', 'regional' => 'ts_ZA'],
         //'dje'         => ['name' => 'Zarma',                  'script' => 'Latn', 'native' => 'Zarmaciine', 'regional' => ''],
         //'yo'          => ['name' => 'Yoruba',                 'script' => 'Latn', 'native' => 'Èdè Yorùbá', 'regional' => 'yo_NG'],
-        //'de-AT'       => ['name' => 'Austrian German',        'script' => 'Latn', 'native' => 'Österreichisches Deutsch', 'regional' => 'de_AT'],
+        // 'de-AT'       => ['name' => 'Austrian German',        'script' => 'Latn', 'native' => 'Österreichisches Deutsch', 'regional' => 'de_AT'],
         //'is'          => ['name' => 'Icelandic',              'script' => 'Latn', 'native' => 'íslenska', 'regional' => 'is_IS'],
         //'cs'          => ['name' => 'Czech',                  'script' => 'Latn', 'native' => 'čeština', 'regional' => 'cs_CZ'],
         //'bas'         => ['name' => 'Basa',                   'script' => 'Latn', 'native' => 'Ɓàsàa', 'regional' => ''],
@@ -230,7 +233,7 @@ return [
         //'cv'          => ['name' => 'Chuvash',                'script' => 'Cyrl', 'native' => 'чӑваш чӗлхи', 'regional' => 'cv_RU'],
         //'cu'          => ['name' => 'Church Slavic',          'script' => 'Cyrl', 'native' => 'ѩзыкъ словѣньскъ', 'regional' => ''],
         //'kk'          => ['name' => 'Kazakh',                 'script' => 'Cyrl', 'native' => 'қазақ тілі', 'regional' => 'kk_KZ'],
-        //'hy'          => ['name' => 'Armenian',               'script' => 'Armn', 'native' => 'Հայերէն', 'regional' => 'hy_AM'],
+        //'hy'          => ['name' => 'Armenian',               'script' => 'Armn', 'native' => 'Հայերեն', 'regional' => 'hy_AM'],
         //'yi'          => ['name' => 'Yiddish',                'script' => 'Hebr', 'native' => 'ייִדיש', 'regional' => 'yi_US'],
         //'he'          => ['name' => 'Hebrew',                 'script' => 'Hebr', 'native' => 'עברית', 'regional' => 'he_IL'],
         //'ug'          => ['name' => 'Uyghur',                 'script' => 'Arab', 'native' => 'ئۇيغۇرچە', 'regional' => 'ug_CN'],
@@ -297,16 +300,56 @@ return [
         //'ko'          => ['name' => 'Korean',                 'script' => 'Hang', 'native' => '한국어', 'regional' => 'ko_KR'],
     ],
 
-    // Negotiate for the user locale using the Accept-Language header if it's not defined in the URL?
+    // Requires middleware `LaravelSessionRedirect.php`.
+    //
+    // Automatically determine locale from browser (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept-Language)
+    // on first call if it's not defined in the URL. Redirect user to computed localized url.
+    // For example, if users browser language is `de`, and `de` is active in the array `supportedLocales`,
+    // the `/about` would be redirected to `/de/about`.
+    //
+    // The locale will be stored in session and only be computed from browser
+    // again if the session expires.
+    //
     // If false, system will take app.php locale attribute
-    'useAcceptLanguageHeader' => false,
+    'useAcceptLanguageHeader' => true,
 
-    // If LaravelLocalizationRedirectFilter is active and hideDefaultLocaleInURL
-    // is true, the url would not have the default application language
+    // If `hideDefaultLocaleInURL` is true, then a url without locale
+    // is identical with the same url with default locale.
+    // For example, if `en` is default locale, then `/en/about` and `/about`
+    // would be identical.
     //
-    // IMPORTANT - When hideDefaultLocaleInURL is set to true, the unlocalized root is treated as the applications default locale "app.locale".
-    // Because of this language negotiation using the Accept-Language header will NEVER occur when hideDefaultLocaleInURL is true.
+    // If in addition the middleware `LaravelLocalizationRedirectFilter` is active, then
+    // every url with default locale is redirected to url without locale.
+    // For example, `/en/about` would be redirected to `/about`.
+    // It is recommended to use `hideDefaultLocaleInURL` only in
+    // combination with the middleware `LaravelLocalizationRedirectFilter`
+    // to avoid duplicate content (SEO).
     //
-    'hideDefaultLocaleInURL'  => true,
+    // If `useAcceptLanguageHeader` is true, then the first time
+    // the locale will be determined from browser and redirect to that language.
+    // After that, `hideDefaultLocaleInURL` behaves as usual.
+    'hideDefaultLocaleInURL' => true,
 
+    // If you want to display the locales in particular order in the language selector you should write the order here.
+    //CAUTION: Please consider using the appropriate locale code otherwise it will not work
+    //Example: 'localesOrder' => ['es','en'],
+    'localesOrder' => [],
+
+    //  If you want to use custom lang url segments like 'at' instead of 'de-AT', you can use the mapping to tallow the LanguageNegotiator to assign the descired locales based on HTTP Accept Language Header. For example you want ot use 'at', so map HTTP Accept Language Header 'de-AT' to 'at' (['de-AT' => 'at']).
+    'localesMapping' => [
+        'en-UK' => 'uk',
+        'en-IE' => 'ie',
+        'es-ES' => 'es',
+        'de-AT' => 'at',
+    ],
+
+    // Locale suffix for LC_TIME and LC_MONETARY
+    // Defaults to most common ".UTF-8". Set to blank on Windows systems, change to ".utf8" on CentOS and similar.
+    'utf8suffix' => env('LARAVELLOCALIZATION_UTF8SUFFIX', '.UTF-8'),
+
+    // URLs which should not be processed, e.g. '/nova', '/nova/*', '/nova-api/*' or specific application URLs
+    // Defaults to []
+    'urlsIgnored' => ['/skipped'],
+
+    'httpMethodsIgnored' => ['POST', 'PUT', 'PATCH', 'DELETE'],
 ];

@@ -3,6 +3,8 @@
 namespace Tests\Browser\Pages;
 
 use Laravel\Dusk\Browser;
+use Laravel\Dusk\Page;
+use LaravelLocalization;
 
 class HomePage extends Page
 {
@@ -11,42 +13,31 @@ class HomePage extends Page
      *
      * @return string
      */
-    public function url()
+    public function url($locale = null)
     {
-        return '/';
+        return LaravelLocalization::getLocalizedUrl($locale, "/");
     }
 
     /**
      * Assert that the browser is on the page.
      *
-     * @param  \Laravel\Dusk\Browser  $browser
+     * @param  Browser  $browser
      * @return void
      */
     public function assert(Browser $browser)
     {
-        # German
-        $browser->assertPathIs($this->url())
-            ->waitForText("Garantierte Privatsphäre", 1)
-            ->assertTitle('MetaGer - Mehr als eine Suchmaschine')
-            ->assertSee("Gemeinnütziger Verein")
-            ->assertSee("Vielfältig & Frei")
-            ->assertSee("100% Ökostrom")
-            ->assertSee("Jetzt MetaGer installieren")
-            ->switchLanguage("English")
-            ->waitForText("Guaranteed Privacy", 1)
-            ->assertTitle('MetaGer: Privacy Protected Search & Find')
-            ->assertSee("Run by a Nonprofit Organization")
-            ->assertSee("Diverse & Free")
-            ->assertSee("100% Renewable Energy")
-            ->assertSee("Install MetaGer Now")
-            ->switchLanguage("Español")
-            ->waitForText("Privacidad garantizada", 1)
-            ->assertTitle('MetaGer: Buscar & encontrar seguro, proteger la privacidad')
-            ->assertSee("Organización sin ánimo de lucro")
-            ->assertSee("Diversos y libres")
-            ->assertSee("100% electricidad verde")
-            ->assertSee("Instale MetaGer ahora")
-            ->switchLanguage("Deutsch");
+        foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            $url = $this->url($locale);
+            $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
+
+            $browser->visit($url)
+                ->waitForText(trans("mg-story.privacy.title", [], $lang))
+                ->assertTitle(trans("titles.index", [], $lang))
+                ->assertSee(trans("mg-story.ngo.title", [], $lang))
+                ->assertSee(trans("mg-story.diversity.title", [], $lang))
+                ->assertSee(trans("mg-story.eco.title", [], $lang))
+                ->assertSee(trans("index.plugin", [], $lang));
+        }
     }
 
     /**

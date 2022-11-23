@@ -1,9 +1,14 @@
 @if(!\app()->make(\App\SearchSettings::class)->header_printed)
 <!DOCTYPE html>
-<html lang="{!! trans('staticPages.meta.language') !!}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 
 <head>
 	<meta charset="utf-8">
+	@foreach(LaravelLocalization::getSupportedLocales() as $locale => $locale_data)
+	@if(LaravelLocalization::getCurrentLocale() !== $locale)
+	<link rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
+	@endif
+	@endforeach
 	<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 	@foreach(scandir(public_path("img/favicon")) as $file)
@@ -45,10 +50,10 @@
 	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
 	<meta name="p" content="{{ getmypid() }}" />
 	<meta name="q" content="{{ $eingabe }}" />
-	<meta name="l" content="{{ LaravelLocalization::getCurrentLocale() }}" />
+	<meta name="l" content="{{ App\Localization::getLanguage() }}" />
 	<meta name="hv" content="{{ app()->make(\App\Models\Verification\HumanVerification::class)->key }}" />
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
-	<meta name="referrer" content="origin">
+	<meta name="referrer" content="origin-when-cross-origin">
 	<meta name="age-meta-label" content="age=18" />
 	@include('parts.utility')
 </head>

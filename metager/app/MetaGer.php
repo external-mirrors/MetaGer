@@ -26,6 +26,7 @@ class MetaGer
     protected $test;
     protected $eingabe;
     protected $q;
+    protected $out;
     protected $page;
     protected $lang;
     protected $cache = "";
@@ -505,7 +506,6 @@ class MetaGer
         }
 
         $this->enabledSearchengines = [];
-        $overtureEnabled = false;
 
         # Check if selected focus is valid
         if (empty($this->sumaFile->foki->{$this->fokus})) {
@@ -521,6 +521,8 @@ class MetaGer
 
         $this->removeAdsFromListIfAdfree($sumas);
 
+        $current_regional_locale = LaravelLocalization::getCurrentLocaleRegional();
+        $current_language = Localization::getLanguage();
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
             $disabled = empty($suma->disabled) ? false : $suma->disabled;
@@ -532,6 +534,17 @@ class MetaGer
                 continue;
             }
 
+            // Skip if language support is not defined
+            if (!\property_exists($suma, "lang") || !\property_exists($suma->lang, "languages") || !\property_exists($suma->lang, "regions")) {
+                continue;
+            }
+            // Skip if engine does not support current locale or region (locale i.e. en is enough to get enabled)
+            if (
+                !\property_exists($suma->lang->languages, $current_language) &&
+                !\property_exists($suma->lang->regions, $current_regional_locale)
+            ) {
+                continue;
+            }
             $valid = true;
 
             # Check if this engine can use potentially defined query-filter
@@ -574,7 +587,7 @@ class MetaGer
                 $this->enabledSearchengines[$sumaName] = $suma;
             }
         }
-
+        $engines = $this->enabledSearchengines;
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -733,7 +746,9 @@ class MetaGer
                         $availableFilter[$filterName]->values = new \stdClass();
                     }
                     foreach ($filter->sumas->{$engineName}->values as $key => $value) {
-                        $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        if (\property_exists($values, $key)) {
+                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        }
                     }
                 }
             }
@@ -759,7 +774,9 @@ class MetaGer
                             $availableFilter[$filterName]->values = new \stdClass();
                         }
                         foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            if (\property_exists($values, $key)) {
+                                $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            }
                         }
                     }
                 }
@@ -772,6 +789,27 @@ class MetaGer
                 $filter->value = $request->input($filter->{"get-parameter"});
             } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
+            }
+        }
+
+        if (\array_key_exists("language", $availableFilter)) {
+            $current_locale = LaravelLocalization::getCurrentLocale();
+            $default_language_value = "";
+            # Set default Value for language selector to current locale
+            foreach ($availableFilter["language"]->sumas as $filter_suma) {
+                foreach ($filter_suma->values as $filter_key => $filter_locale) {
+                    if ($filter_locale === $current_locale) {
+                        $default_language_value = $filter_key;
+                        break 2;
+                    }
+                }
+            }
+            if (\property_exists($availableFilter["language"], "value") && $availableFilter["language"]->value === $default_language_value) {
+                unset($availableFilter["language"]->value);
+            }
+            if (!empty($default_language_value) && \property_exists($availableFilter["language"]->values, $default_language_value)) {
+                $availableFilter["language"]->values->nofilter = $availableFilter["language"]->values->$default_language_value;
+                unset($availableFilter["language"]->values->$default_language_value);
             }
         }
 
@@ -932,11 +970,12 @@ class MetaGer
         # Fokus
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
-        if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
+        if ($this->dummy) {
+            $this->sumaFile = \config_path("stress.json");
         } else {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
+            $this->sumaFile = \config_path("sumas.json");
         }
+
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
         } else {
@@ -945,6 +984,8 @@ class MetaGer
         # Sucheingabe
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
+
+        $this->out = $request->input("out", "");
 
         if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
             $this->framed = true;
@@ -1623,14 +1664,6 @@ class MetaGer
         }
     }
 
-    public function getImageProxyLink($link)
-    {
-        $requestData = [];
-        $requestData["url"] = $link;
-        $link = action('Pictureproxy@get', $requestData);
-        return $link;
-    }
-
     public function getSearchUid()
     {
         return $this->searchUid;
@@ -1673,6 +1706,11 @@ class MetaGer
     public function getNext()
     {
         return $this->next;
+    }
+
+    public function getOut()
+    {
+        return $this->out;
     }
 
     public function getSite()
@@ -1735,12 +1773,7 @@ class MetaGer
 
     public static function getLanguageFile()
     {
-        $locale = LaravelLocalization::getCurrentLocale();
-        if ($locale === "en") {
-            return config_path('sumasEn.json');
-        } else {
-            return config_path('sumas.json');
-        }
+        return config_path('sumas.json');
     }
 
     public function getLang()

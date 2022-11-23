@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Localization;
 use App\MetaGer;
 use Illuminate\Support\Facades\Redis;
+use LaravelLocalization;
 
 abstract class Searchengine
 {
@@ -83,7 +85,16 @@ abstract class Searchengine
             $this->query = $query . " " . $this->query;
         }
 
-        $tmpPara = false;
+        # Apply current locale
+        if (!empty($this->engine->lang->parameter)) {
+            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+            if (\property_exists($this->engine->lang->regions, $current_locale)) {
+                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->regions->{$current_locale};
+            } elseif (\property_exists($this->engine->lang->languages, Localization::getLanguage())) {
+                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->languages->{Localization::getLanguage()};
+            }
+        }
+
         # Parse enabled Parameter-Filter
         foreach ($metager->getParameterFilter() as $filterName => $filter) {
             $inputParameter = $filter->value;
@@ -91,7 +102,6 @@ abstract class Searchengine
             if (empty($inputParameter) || empty($filter->sumas->{$name}->values->{$inputParameter})) {
                 continue;
             }
-            $tmpPara = true;
             $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
@@ -228,16 +238,23 @@ abstract class Searchengine
         }
 
         $getString .= "?";
-        $parameter = [];
-        foreach ($this->engine->{"get-parameter"} as $key => $value) {
-            $parameter[] = $this->urlEncode($key) . "=" . $this->urlEncode($value);
-        }
-        $getString .= implode("&", $parameter);
+
+        $parameters = (array) clone $this->engine->{"get-parameter"};
 
         # Append the Query String
-        $getString .= "&" . $this->engine->{"query-parameter"} . "=" . $this->urlEncode($query);
+        $parameters[$this->engine->{"query-parameter"}] = $query;
 
-        $getString .= $this->getDynamicParamsString();
+        # Dynamic Parameters
+        $parameters = \array_merge($parameters, $this->getDynamicParams());
+
+        if (isset($this->inputEncoding)) {
+            $inputEncoding = $this->inputEncoding;
+            \array_walk($parameters, function (&$value, $key) use ($inputEncoding) {
+                $value = \mb_convert_encoding($value, $inputEncoding);
+            });
+        }
+
+        $getString .= \http_build_query($parameters, "", "&", \PHP_QUERY_RFC3986);
 
         return $getString;
     }
@@ -250,18 +267,6 @@ abstract class Searchengine
         } else {
             return urlencode($string);
         }
-    }
-
-    private function getDynamicParamsString()
-    {
-        $paramString = "";
-
-        $params = $this->getDynamicParams();
-        foreach ($params as $key => $value) {
-            $paramString .= sprintf("&%s=%s", urlencode($key), urlencode($value));
-        }
-
-        return $paramString;
     }
 
     protected function getDynamicParams()

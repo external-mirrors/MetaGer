@@ -38,14 +38,14 @@
 		@if( isset($result->logo) )
 		<div class="result-logo">
 			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
-				<img src="{{ $metager->getImageProxyLink($result->logo) }}" alt="" />
+				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt="" />
 			</a>
 		</div>
 		@endif
 		@if( $result->image !== "" )
 		<div class="result-image">
 			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
-				<img src="{{ $metager->getImageProxyLink($result->image) }}" alt="" />
+				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt="" />
 			</a>
 		</div>
 		@endif
@@ -85,7 +85,7 @@
 					<a href="{{ $result->originalLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">{{ __('result.options.direct') }}</a>
 				</li>
 				@endif
-				<li class="js-only">
+				<li class="result-saver js-only">
 					<a href="#" class="saver" data-id="{{ $result->hash }}">
 						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}
 					</a>

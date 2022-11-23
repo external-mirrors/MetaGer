@@ -37,13 +37,7 @@ class StaticPagesTest extends DuskTestCase
     {
         // About
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
-                ->waitFor("label.sidebar-opener[for=sidebarToggle]")
-                ->click("label.sidebar-opener[for=sidebarToggle]")
-                ->click("label#navigationKontakt")
-                ->clickLink("Über uns")
-                ->waitForLocation("/about")
-                ->on(new About);
+            $browser->visit(new About);
         });
     }
 
@@ -139,7 +133,7 @@ class StaticPagesTest extends DuskTestCase
                 ->on(new Spende);
         });
     }
-
+    
     public function testTeam()
     {
         // Team

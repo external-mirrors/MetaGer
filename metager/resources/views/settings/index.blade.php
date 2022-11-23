@@ -106,7 +106,7 @@
 
     <div class="card">
         <h1>@lang('settings.more')</h1>
-        <p>@lang('settings.hint')</p>
+        <p>@lang('settings.hint.hint')</p>
         <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
@@ -125,7 +125,7 @@
                     <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
                 </select>
             </div>
-            @if(LaravelLocalization::getCurrentLocale() === "de")
+            @if(App\Localization::getLanguage() === "de")
             <div class="form-group">
                 <label for="zitate">Zitate</label>
                 <select name="zitate" id="zitate" class="form-control">

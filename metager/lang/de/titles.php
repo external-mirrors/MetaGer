@@ -19,6 +19,7 @@ return [
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Partnershops - MetaGer',
+    'lang-selector' => 'Sprachauswahl',
     'languages' => 'Übersetzungstool - MetaGer',
     'languages.edit' => 'Sprachdateien bearbeiten - MetaGer',
     'app' => 'Apps - MetaGer',

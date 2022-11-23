@@ -62,12 +62,14 @@
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
+    @if (App\Localization::getLanguage() === "de")
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" >
       <img src="/img/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
     </li>
+    @endif
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" >
@@ -75,12 +77,14 @@
         <span>@lang('sidebar.nav25')</span>
       </a>
     </li>
+    @if (App\Localization::getLanguage() === "de")
     <li>
       <a  href="https://maps.metager.de" target="_blank" >
       <img src="/img/icon-map.svg" alt="" aria-hidden="true" id="sidebar-img-map"> 
         <span>{{ trans('sidebar.nav27') }}</span> 
       </a>
     </li>
+    @endif
     <hr>
     <li class="metager-dropdown">
       <input id="contactToggle" class="sidebarCheckbox" type="checkbox">
@@ -124,7 +128,7 @@
         <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>
         </li>
-        @if(LaravelLocalization::getCurrentLocale() == "de")
+        @if(App\Localization::getLanguage() == "de")
           <li>
             <a href="https://shop.spreadshirt.de/metager/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
           </li>
@@ -143,39 +147,19 @@
         <span class="caret"></span>
       </label>
       <ul class="metager-dropdown-content">
-          <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=web&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.web') }}</a>
-          </li>
-          <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=bilder&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.bilder') }}</a>
-          </li>
-          <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=produkte&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.produkte') }}</a>
-          </li>
-          <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=nachrichten&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.nachrichten') }}</a>
-          </li>
-        @if(LaravelLocalization::getCurrentLocale() !== "en")
-          <li>
-            <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/settings?fokus=science&url=" . urlencode(url()->full())) }}" >{{ trans('index.foki.science') }}</a>
-          </li>
-        @endif
+          @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
+            <li>
+              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["fokus" => $fokus, "url" => url()->full()])) }}" >{{ trans("index.foki.$fokus") }}</a>
+            </li>
+          @endforeach
       </ul>
     </li>
-    <li class="metager-dropdown">
-      <input id="languagesToggle" class="sidebarCheckbox" type="checkbox">
-      <label for="languagesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationSprache" tabindex=0>
+    <hr>
+    <li>
+      <a  href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
       <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
-        <span>{{ trans('sidebar.nav19') }} ({{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }})</span>
-        <span class="caret"></span>
-      </label>
-      <ul class="metager-dropdown-content">
-        @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
-          <li>
-            <a rel="alternate" hreflang="{{$localeCode}}" href="{{LaravelLocalization::getLocalizedURL($localeCode) }}" >{{{ $properties['native'] }}}</a>
-          </li>
-        @endforeach
-      </ul>
+        <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
+      </a>
     </li>
   </ul>
 </div>

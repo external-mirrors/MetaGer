@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{!! trans('staticPages.meta.language') !!}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 
 <head>
 	<meta charset="utf-8" />
@@ -13,6 +13,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+	@foreach(LaravelLocalization::getSupportedLocales() as $locale => $locale_data)
+	@if(LaravelLocalization::getCurrentLocale() !== $locale)
+	<link rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
+	@endif
+	@endforeach
 	@foreach(scandir(public_path("img/favicon")) as $file)
 	@if(in_array($file, [".", ".."]))
 	@continue
@@ -26,9 +31,9 @@
 	@endif
 	@endforeach
 	@if(empty(Cookie::get('key')))
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin')) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action([App\Http\Controllers\StartpageController::class, 'loadPlugin'])) }}">
 	@else
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('StartpageController@loadPlugin', ['key' => Cookie::get('key')])) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ['key' => Cookie::get('key')])) }}">
 	@endif
 
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
@@ -38,6 +43,7 @@
 	@endforeach
 	@endif
 	@if(isset($page) && $page === 'startpage')
+	<meta http-equiv="onion-location" content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/" />
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}" />
 	@endif
 	@if(Cookie::get('dark_mode') === "2")

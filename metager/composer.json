@@ -9,16 +9,17 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "globalcitizen/php-iban": "^4.1.0",
+        "guzzlehttp/guzzle": "^7.2",
+        "jenssegers/agent": "^2.6.4",
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
         "laravel/tinker": "^2.7",
-        "guzzlehttp/guzzle": "^7.2",
-        "globalcitizen/php-iban": "^4.1.0",
-        "jenssegers/agent": "^2.6.4",
         "mcamara/laravel-localization": "1.7.0",
         "mews/captcha": "^3.2.7",
         "promphp/prometheus_client_php": "^2.6.0",
-        "symfony/dom-crawler": "^6.0"
+        "symfony/dom-crawler": "^6.0",
+        "tio/laravel": "^1.20"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

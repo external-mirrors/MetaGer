@@ -43,7 +43,11 @@ class StorePartnerCalls extends Command
 
         # Remove old entries
         # The duration in hours for entries to last is defined as constant in AdgoalController
-        DB::delete("delete from affiliate_clicks where created_at < DATE_SUB(NOW(), INTERVAL ? HOUR);", [\App\Http\Controllers\AdgoalController::STORAGE_DURATION_HOURS]);
+        if (config("database.default") === "sqlite") {
+            DB::delete("delete from affiliate_clicks where created_at < datetime('now', '-' || ? || ' hours');", [\App\Http\Controllers\AdgoalController::STORAGE_DURATION_HOURS]);
+        } else {
+            DB::delete("delete from affiliate_clicks where created_at < DATE_SUB(NOW(), INTERVAL ? HOUR);", [\App\Http\Controllers\AdgoalController::STORAGE_DURATION_HOURS]);
+        }
 
         return 0;
     }

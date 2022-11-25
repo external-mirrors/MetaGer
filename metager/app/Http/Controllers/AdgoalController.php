@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AdgoalController extends Controller
 {
-    # Data will be stored for 24 hours
-    const STORAGE_DURATION_HOURS = 24;
+    # Data will be stored for 7 days
+    const STORAGE_DURATION_HOURS = 24 * 7;
     const REDIS_STORAGE_KEY = "affiliate_click";
     const REDIS_BLACKLIST_KEY = "affiliate_blacklist";
 

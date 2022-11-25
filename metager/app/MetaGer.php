@@ -1016,7 +1016,7 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale('de') || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
+        if (Localization::getLanguage() !== "de" || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
             $this->sprueche = 'off';
         } else {
             $this->sprueche = 'on';

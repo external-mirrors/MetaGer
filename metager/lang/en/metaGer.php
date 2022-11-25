@@ -162,4 +162,5 @@ return [
             'description' => 'With your donation you support the maintenance and further development of the independent search engine metager.de and the work of the non-profit association SUMA-EV.',
         ],
     ],
+    'prevention.phrase' =>'<h2>Do you need help?</h2> Do you have negative thoughts or want to talk to someone? At our <a href=":prevurl" target="_blank">prevention page</a>, you\'ll find a list of support services you can turn to.',
 ];

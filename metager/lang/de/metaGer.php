@@ -142,6 +142,7 @@ return [
     "filter.min" => "Minimum Sleep (in s)",
     "filter.max" => "Maximum Sleep (in s)",
 
+    'prevention.phrase' =>'<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
     "ads.own.title" => "Jetzt MetaGer unterstützen",
     "ads.own.description" => "Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV.",
 ];

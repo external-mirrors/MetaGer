@@ -35,4 +35,5 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
+    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer'
 ];

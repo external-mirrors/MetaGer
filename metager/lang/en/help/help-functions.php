@@ -27,10 +27,8 @@ return [
     'urls'           => [
         'title'       => 'Exclude URLs',
         'explanation' => 'Use "-url:" to exclude search results containing specified words.',
-        'example'     => [
-            1   => 'Example: You don\' t want the word "dog" in the results:',
-            2   => 'Type <i>my search words</i> -url:dog',
-        ],
+        'example_b'   => 'Type <i>my search words</i> -url:dog',
+        'example_a'   => 'Example: You don\' t want the word "dog" in the results:',
     ],
     'bang'           => [
         'title' => '!bangs',
@@ -47,10 +45,8 @@ return [
         1       => 'The result will be stored in a new TAB appearing at the right side of the screen. It is called "Saved results". You can store here single results from several searches. The TAB persists. Entering this TAB you get your personal result list with tools to filter and sort the results. Click another TAB to go back for further searches. You won´t have this if the screen is too small. More info (only german so far): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blog</a>.',
     ],
     'selist'         => [
-        'title'       => 'I want to add metager.de to the search engines list of my browser.',
-        'explanation' => [
-            1   => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
-            2   => 'Some browser need an URL. Please use "https://metager.org/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
-        ],
+        'title'         => 'I want to add metager.de to the search engines list of my browser.',
+        'explanation_b' => 'Some browser need an URL. Please use "https://metager.org/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
+        'explanation_a' => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
     ],
 ];

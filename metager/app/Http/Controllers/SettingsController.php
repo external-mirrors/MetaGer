@@ -63,11 +63,13 @@ class SettingsController extends Controller
             $suma_name = "bing";
         }
         if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {
-            $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
-            foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
-                if ($value === $region_suma_value) {
-                    $default_language_value = $key;
-                    break;
+            if (\array_key_exists("language", $filters) && \property_exists($filters["language"], "sumas") && \property_exists($filters["language"]->sumas, $suma_name)) {
+                $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
+                foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
+                    if ($value === $region_suma_value) {
+                        $default_language_value = $key;
+                        break;
+                    }
                 }
             }
         }

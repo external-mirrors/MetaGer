@@ -803,7 +803,7 @@ class MetaGer
             $default_language_value = "";
             # Set default Value for language selector to current locale
             foreach ($this->enabledSearchengines as $name => $engine) {
-                if (\property_exists($engine->lang->regions, $current_locale)) {
+                if (\property_exists($engine->lang->regions, $current_locale) && \property_exists($availableFilter["language"]->sumas, $name)) {
                     $region_suma_value = $engine->lang->regions->{$current_locale};
                     foreach ($availableFilter["language"]->sumas->{$name}->values as $key => $value) {
                         if ($value === $region_suma_value) {

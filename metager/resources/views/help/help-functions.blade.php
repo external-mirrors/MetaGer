@@ -19,8 +19,8 @@
 		<div>
 			<p>{!! trans('help/help-functions.urls.explanation') !!}</p>
 			<ul class="dotlist">
-				<li>{!! trans('help/help-functions.urls.example.a') !!}</li>
-				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.urls.example.b') !!}</div></li>
+				<li>{!! trans('help/help-functions.urls.example_a') !!}</li>
+				<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.urls.example_b') !!}</div></li>
 			</ul>
 		</div>
 		<h3 id="severalwords">{!! trans('help/help-functions.mehrwortsuche.title') !!}</h3>
@@ -51,8 +51,8 @@
 	<section id="selist">
 		<h3>{!! trans('help/help-functions.selist.title') !!}</h3>
 		<div>
-			<p>{!! trans('help/help-functions.selist.explanation.a') !!}</p>
-			<p>{!! trans('help/help-functions.selist.explanation.b') !!}</p>
+			<p>{!! trans('help/help-functions.selist.explanation_a') !!}</p>
+			<p>{!! trans('help/help-functions.selist.explanation_b') !!}</p>
 
 		</div>
 	</section>

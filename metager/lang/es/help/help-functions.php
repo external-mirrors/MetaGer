@@ -27,10 +27,8 @@ return [
     'urls'           => [
         'title'       => 'Excluir URLs',
         'explanation' => 'Puede excluir los resultados de la búsqueda cuyos enlaces contengan determinadas palabras utilizando "-url:" en su búsqueda.',
-        'example'     => [
-            1   => 'Ejemplo: No quiere ningún resultado en el que aparezca la palabra "perro" en el enlace del resultado:',
-            2   => '<i>mi búsqueda</i> -url:hund',
-        ],
+        'example_b'   => '<i>mi búsqueda</i> -url:hund',
+        'example_a'   => 'Ejemplo: No quiere ningún resultado en el que aparezca la palabra "perro" en el enlace del resultado:',
     ],
     'bang'           => [
         'title' => '!bangs',
@@ -47,10 +45,8 @@ return [
         1       => 'Se puede acceder a la función de búsqueda en el buscador mediante el botón "MÁS" situado en la parte inferior derecha del cuadro de resultados. Al hacer clic se abre un menú en el que "Guardar resultado" está en primer lugar. Con esta opción, el resultado respectivo se almacena en una memoria separada. El contenido de esta memoria se muestra a la derecha de los resultados, bajo los consejos rápidos (en las pantallas demasiado pequeñas, los resultados guardados no se muestran por falta de espacio). Allí puede filtrar o reordenar los resultados guardados por palabra clave. Puede encontrar más información sobre el tema "Búsqueda en la búsqueda" en el <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> blog de SUMA</a>.',
     ],
     'selist'         => [
-        'title'       => 'Añadir MetaGer a la lista de motores de búsqueda del navegador',
-        'explanation' => [
-            1   => 'Por favor, intente instalar primero el plugin actual. Para instalarlo, basta con hacer clic en el enlace que se encuentra justo debajo del campo de búsqueda. Su navegador ya debería haber sido reconocido allí.',
-            2   => 'Algunos navegadores esperan que introduzca una URL; esto es "https://metager.de/meta/meta.ger3?eingabe=%s" sin introducir comillas. Puede generar la URL usted mismo si busca algo con metager.de y luego reemplaza lo que está en la parte superior del campo de dirección después de "eingabe=" con %s. Si sigue teniendo problemas, póngase en contacto con nosotros: <a href="/kontakt" target="_blank" rel="noopener">Formulario de contacto</a>',
-        ],
+        'title'         => 'Añadir MetaGer a la lista de motores de búsqueda del navegador',
+        'explanation_b' => 'Algunos navegadores esperan que introduzca una URL; esto es "https://metager.de/meta/meta.ger3?eingabe=%s" sin introducir comillas. Puede generar la URL usted mismo si busca algo con metager.de y luego reemplaza lo que está en la parte superior del campo de dirección después de "eingabe=" con %s. Si sigue teniendo problemas, póngase en contacto con nosotros: <a href="/kontakt" target="_blank" rel="noopener">Formulario de contacto</a>',
+        'explanation_a' => 'Por favor, intente instalar primero el plugin actual. Para instalarlo, basta con hacer clic en el enlace que se encuentra justo debajo del campo de búsqueda. Su navegador ya debería haber sido reconocido allí.',
     ],
 ];

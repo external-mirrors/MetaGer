@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <label for="{{ $filterInfo->{"get-parameter"} }}">@lang($filterInfo->name)</label>
                     <select name="{{ $filterInfo->{"get-parameter"} }}" id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
-                        <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@lang('metaGer.filter.noFilter')</option>
+                        <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@if(property_exists($filterInfo->values, "nofilter"))@lang($filterInfo->values->nofilter)@else @lang('metaGer.filter.noFilter')@endif</option>
                         @foreach($filterInfo->values as $key => $value)
                         @if(!empty($key))
                         <option value="{{ $key }}" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }}>@lang($value)</option>

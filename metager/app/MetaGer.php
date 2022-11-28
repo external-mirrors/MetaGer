@@ -799,17 +799,21 @@ class MetaGer
         }
 
         if (\array_key_exists("language", $availableFilter)) {
-            $current_locale = LaravelLocalization::getCurrentLocale();
+            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
             $default_language_value = "";
             # Set default Value for language selector to current locale
-            foreach ($availableFilter["language"]->sumas as $filter_suma) {
-                foreach ($filter_suma->values as $filter_key => $filter_locale) {
-                    if ($filter_locale === $current_locale) {
-                        $default_language_value = $filter_key;
-                        break 2;
+            foreach ($this->enabledSearchengines as $name => $engine) {
+                if (\property_exists($engine->lang->regions, $current_locale)) {
+                    $region_suma_value = $engine->lang->regions->{$current_locale};
+                    foreach ($availableFilter["language"]->sumas->{$name}->values as $key => $value) {
+                        if ($value === $region_suma_value) {
+                            $default_language_value = $key;
+                            break 2;
+                        }
                     }
                 }
             }
+
             if (\property_exists($availableFilter["language"], "value") && $availableFilter["language"]->value === $default_language_value) {
                 unset($availableFilter["language"]->value);
             }
@@ -1289,8 +1293,6 @@ class MetaGer
                 break;
             }
         }
-
-
     }
 
     private function searchCheckPhrase()

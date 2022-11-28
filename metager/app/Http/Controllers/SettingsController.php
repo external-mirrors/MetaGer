@@ -71,14 +71,13 @@ class SettingsController extends Controller
                         break;
                     }
                 }
+                if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
+                    $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
+                    unset($filters["language"]->values->$default_language_value);
+                } else {
+                    $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
+                }
             }
-        }
-
-        if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
-            $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
-            unset($filters["language"]->values->$default_language_value);
-        } else {
-            $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
         }
 
         $url = $request->input('url', '');

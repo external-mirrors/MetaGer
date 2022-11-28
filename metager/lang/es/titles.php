@@ -34,4 +34,5 @@ return [
     'transparency'            => 'Declaración de transparencia - MetaGer',
     'search-engine'           => 'Motores de búsqueda - MetaGer',
     'assosearch'              => 'Asociaciones para ":q" - MetaGer',
+    'prevention'              => 'Ayuda con los pensamientos suicidas - MetaGer',
 ];

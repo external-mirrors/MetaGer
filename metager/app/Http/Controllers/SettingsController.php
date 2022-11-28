@@ -53,6 +53,32 @@ class SettingsController extends Controller
             }
         }
 
+        // Apply default value for Language selection
+        $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+        $default_language_value = "";
+        # Set default Value for language selector to current locale
+        $key = app(Key::class);
+        $suma_name = "yahoo";
+        if ($key->getStatus()) {
+            $suma_name = "bing";
+        }
+        if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {
+            $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
+            foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
+                if ($value === $region_suma_value) {
+                    $default_language_value = $key;
+                    break;
+                }
+            }
+        }
+
+        if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
+            $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
+            unset($filters["language"]->values->$default_language_value);
+        } else {
+            $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
+        }
+
         $url = $request->input('url', '');
 
         # Check if any setting is active

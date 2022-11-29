@@ -446,16 +446,17 @@ class MetaGer
         /**
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
+         * ToDo set back to 5 once we do not want to advertise donations as much anymore
          */
-        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 5) {
+        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 34) {
             return;
         }
 
         $donationAd = new \App\Models\Result(
             "MetaGer",
             __("metaGer.ads.own.title"),
-            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
-            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
+            LaravelLocalization::getLocalizedURL(null, route("spende")),
+            LaravelLocalization::getLocalizedURL(null, route("spende")),
             __("metaGer.ads.own.description"),
             "MetaGer",
             "https://metager.de",

@@ -15,6 +15,10 @@ class Overture extends Searchengine
         parent::__construct($name, $engine, $metager);
 
         # We need some Affil-Data for the advertisements
+        if (preg_match("/^ukraine$/i", trim($this->query))) {
+            $this->query .= " p";
+        }
+
         $this->getString = $this->generateGetString($this->query);
         $this->getString .= $this->getOvertureAffilData($metager->getUrl());
         $this->updateHash();

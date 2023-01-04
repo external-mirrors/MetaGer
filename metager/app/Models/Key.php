@@ -258,7 +258,7 @@ class Key
             'hash' => $hash,
             'key' => $newkey,
         );
-        $url = $this->keyserver . "v2/key/" . $this->key . "/reduce-searches";
+        $url = $this->keyserver . "v2/key/can-change";
         $result_hash = md5($url . microtime(true));
         $mission = [
             "resulthash" => $result_hash,

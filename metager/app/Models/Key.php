@@ -18,7 +18,7 @@ class Key
         $this->key = $key;
         $this->status = $status;
         if (\app()->environment() !== "production") {
-            $this->keyserver = "https://dev.key.metager.de/";
+            $this->keyserver = "https://key.metager.de/";
         }
     }
 
@@ -54,29 +54,36 @@ class Key
 
     public function updateStatus()
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
+        // Submit fetch job to worker
+        $url = $this->keyserver . "v2/key/" . urlencode($this->key);
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $opts = array(
-            'http' => array(
-                'method' => 'GET',
-                'header' => 'Authorization: Basic ' . $authKey,
-            ),
-        );
-        $context = stream_context_create($opts);
-
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/" . urlencode($this->key);
-            $result = json_decode(file_get_contents($link, false, $context));
-            if (!empty($result)) {
-                $this->keyinfo = $result;
-                if ($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited") {
-                    $this->status = true;
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
                 } else {
-                    $this->status = false;
+                    $this->keyinfo = $result;
+                    if ($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited") {
+                        $this->status = true;
+                    } else {
+                        $this->status = false;
+                    }
+                    return true;
                 }
-                return true;
-            } else {
-                return false;
             }
         } catch (\ErrorException $e) {
             return false;

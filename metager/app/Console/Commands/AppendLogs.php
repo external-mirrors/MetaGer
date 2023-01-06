@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Http\Middleware\BrowserVerification;
 use App\QueryLogger;
 use Illuminate\Console\Command;
 
@@ -44,5 +45,6 @@ class AppendLogs extends Command
     private function handleMGLogs()
     {
         QueryLogger::flushLogs();
+        BrowserVerification::FLUSH_LOGS();
     }
 }

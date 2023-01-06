@@ -87,7 +87,7 @@ class HumanVerification extends Controller
 
         $lockedKey = $request->post("c", "");
 
-        $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
+        $rules = ['captcha' => 'required|captcha_api:' . $lockedKey . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
         if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
@@ -134,7 +134,7 @@ class HumanVerification extends Controller
             self::logCaptchaSolve($query, $time, $request->has("dnaa"));
 
 
-            $params['token'] = $token;     // Overwrite if exists
+            $params['token'] = $token; // Overwrite if exists
 
             // Note that this will url_encode all values
             $url_parts['query'] = http_build_query($params);
@@ -366,10 +366,7 @@ class HumanVerification extends Controller
 
             Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
-
-
-
-        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
+        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png"]);
     }
 
     public function verificationCSP(Request $request, string $mgv)

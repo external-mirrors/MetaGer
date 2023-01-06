@@ -78,7 +78,8 @@ class BrowserVerification
                 }
                 if ($framed) {
                     self::logBrowserverification($request);
-                    abort(429);
+                    $params = $request->except(["mgv", "iframe"]);
+                    return response(view("errors/410", ["refresh" => route($route, $params)]));
                 } else {
                     $params = $request->all();
                     unset($params["mgv"]);
@@ -138,7 +139,7 @@ class BrowserVerification
                 "tries" => [
                     now()
                 ]
-            ], now()->addMinutes(30));
+            ], now()->addSeconds(30));
             $report_to = route("csp_verification", ["mgv" => $key]);
             $params = $request->all();
             $params["mgv"] = $key;
@@ -149,7 +150,12 @@ class BrowserVerification
             return response(
                 view('layouts.resultpage.framedResultPage', ["frame_url" => $frame_url, "js_url" => $js_url, "mgv" => $key]),
                 200,
-                ["Content-Security-Policy" => "default-src 'self'; script-src 'self' 'nonce-$key'; script-src-elem 'self' 'nonce-$key'; script-src-attr 'self'; style-src 'self' 'nonce-$key'; style-src-elem 'self' 'nonce-$key'; style-src-attr 'self' 'nonce-$key'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to]
+                [
+                    "Cache-Control" => "no-cache, no-store, must-revalidate",
+                    "Pragma" => "no-cache",
+                    "Expires" => "0",
+                    "Content-Security-Policy" => "default-src 'self'; script-src 'self' 'nonce-$key'; script-src-elem 'self' 'nonce-$key'; script-src-attr 'self'; style-src 'self' 'nonce-$key'; style-src-elem 'self' 'nonce-$key'; style-src-attr 'self' 'nonce-$key'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to
+                ]
             );
         }
     }

@@ -317,7 +317,7 @@ class HumanVerification extends Controller
             Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
                 $bvData = Cache::get($key);
                 if ($bvData === null) {
-                    $bvData = [];
+                    abort(404);
                 }
                 if (\array_key_exists("css", $bvData)) {
                     $bvData["css"] = array();
@@ -342,7 +342,7 @@ class HumanVerification extends Controller
         Cache::lock($key . "_lock", 10)->block(5, function () use ($key, $request) {
             $bvData = Cache::get($key);
             if ($bvData === null) {
-                $bvData = [];
+                abort(404);
             }
             if (!\array_key_exists("js", $bvData)) {
                 $bvData["js"] = array();
@@ -379,7 +379,7 @@ class HumanVerification extends Controller
         Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv, $request) {
             $bvData = Cache::get($mgv);
             if ($bvData === null) {
-                $bvData = [];
+                abort(404);
             }
 
             $report = $request->getContent();
@@ -427,5 +427,6 @@ class HumanVerification extends Controller
 
             Cache::put($mgv, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
+        return response("", 200);
     }
 }

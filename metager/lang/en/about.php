@@ -19,7 +19,7 @@ return [
     'timeline' => [
         1    => [
             1   => 'March 1996: Cebit Hanover',
-            2   => 'The initial idea for MetaGer comes to German engineer Dr. Wolfgang Sander-Beuermann during the CeBIT computer trade fair. It is drawn on a paper napkin during lunch. Work on the first prototype begins that same evening.',
+            2   => 'The idea for MetaGer came to German engineer Dr. Wolfgang Sander-Beuermann during the CeBIT computer trade fair while he was having lunch on a paper napkin. Work on the first prototype begins that same evening.',
         ],
         2    => [
             1   => 'End of 1996: Launch of MetaGer',
@@ -86,8 +86,8 @@ return [
             2   => 'As part of an extensive redesign of the home page, MetaGer\'s four unique selling propositions are revisited and presented in an expanded format. In order not to overload the central web search function, the descriptions can be reached by scrolling. <br> Another feature of the new redesign is the page-wide dark mode. This allows MetaGer to be used on all pages in a dark design.</br> ',
         ],
         18   => [
-            1   => '14.02.2022: Reworked Help Page',
-            2   => 'MetaGer\'s help gets a new overview page with easily distinguishable icons.',
+            1   => 'Today',
+            2   => 'Even today, MetaGer is constantly evolving.',
         ],
         19   => [
             1   => 'Today',

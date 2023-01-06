@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\HumanVerification;
 use Closure;
+use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use App\QueryTimer;
@@ -13,6 +14,7 @@ use Response;
 
 class BrowserVerification
 {
+    const LOG_KEY = "bv_logs";
 
     /**
      * Handle an incoming request.
@@ -42,6 +44,7 @@ class BrowserVerification
 
         if (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
+            self::logBrowserverification($request);
             abort(403);
         }
 
@@ -59,6 +62,7 @@ class BrowserVerification
             // Verify that key is a md5 checksum
             if (!preg_match("/^[a-f0-9]{32}$/", $key)) {
                 \app()->make(QueryTimer::class)->observeEnd(self::class);
+                self::logBrowserverification($request);
                 abort(404);
             }
 
@@ -204,60 +208,42 @@ class BrowserVerification
         return false;
     }
 
-    private function supportsInlineVerification()
-    {
-        $agent = new Agent();
-        $agent->setUserAgent($_SERVER["AGENT"]);
-
-        $browser = $agent->browser();
-        $version = $agent->version($browser);
-
-        // IE and Opera doesn't work at all
-        if ($browser === "IE") {
-            return false;
-        }
-
-        // Edge Browser up to and including version 16 doesn't support it
-        if ($browser === "Edge" && \version_compare($version, 17) === -1) {
-            return false;
-        }
-
-        // Safari Browser up to and including version 7 doesn't support it
-        if ($browser === "Safari" && \version_compare($version, 8) === -1) {
-            return false;
-        }
-
-        return true;
-    }
-
     public static function logBrowserverification(Request $request)
     {
+
         $log = [
             now()->format("Y-m-d H:i:s"),
             $request->input("eingabe"),
             "js=" . \app()->make(SearchSettings::class)->javascript_enabled,
         ];
-        $file_path = \storage_path("logs/metager/bv_fail.csv");
-        $fh = fopen($file_path, "a");
-        try {
-            \fputcsv($fh, $log);
-        } finally {
-            fclose($fh);
-        }
+
+        Redis::rpush(self::LOG_KEY, $log);
     }
 
-    public static function logCSP()
+    public static function FLUSH_LOGS()
     {
-        $request = request();
-        $log = [
-            now()->format("Y-m-d H:i:s"),
-            $request->input("eingabe"),
-            "ua=" . $_SERVER["AGENT"],
-        ];
-        $file_path = \storage_path("logs/metager/csp_fail.csv");
+        $max_entries = 250;
+        $file_path = \storage_path("logs/metager/bv_fail.csv");
         $fh = fopen($file_path, "a");
+
+        $logs = [];
         try {
-            \fputcsv($fh, $log);
+            while (true) {
+                $entry = Redis::lpop(self::LOG_KEY);
+                if (!empty($entry)) {
+                    $logs[] = $entry;
+                }
+                if (sizeof($logs) >= $max_entries || empty($entry)) {
+                    if (sizeof($logs) > 0) {
+                        foreach ($logs as $log) {
+                            \fputcsv($fh, $log);
+                        }
+                    }
+                    if (empty($entry)) {
+                        break;
+                    }
+                }
+            }
         } finally {
             fclose($fh);
         }

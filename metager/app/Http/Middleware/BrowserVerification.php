@@ -237,6 +237,7 @@ class BrowserVerification
                     if (sizeof($logs) > 0) {
                         foreach ($logs as $log) {
                             \fputcsv($fh, $log);
+                            $logs = [];
                         }
                     }
                     if (empty($entry)) {

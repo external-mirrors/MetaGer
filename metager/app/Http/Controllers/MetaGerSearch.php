@@ -28,23 +28,20 @@ class MetaGerSearch extends Controller
         }
 
         if ($request->filled("chrome-plugin")) {
-            echo redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
-            return;
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
         }
 
         $focus = $request->input("focus", "web");
 
         if ($focus === "maps") {
             $searchinput = $request->input('eingabe', '');
-            echo redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
-            return;
+            return redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
         }
 
         # If there is no query parameter we redirect to the startpage
         $eingabe = $request->input('eingabe', '');
         if (empty(trim($eingabe))) {
-            echo redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
-            return;
+            return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
 
         # Mit gelieferte Formulardaten parsen und abspeichern:
@@ -60,8 +57,7 @@ class MetaGerSearch extends Controller
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
         if (empty($metager->getQ())) {
-            echo $metager->createView();
-            return;
+            return $metager->createView();
         }
 
         $query_timer->observeStart("Search_CreateQuicktips");
@@ -142,9 +138,6 @@ class MetaGerSearch extends Controller
         }
         $query_timer->observeEnd("Search_CacheFiller");
 
-        # Die Ausgabe erstellen:
-        $resultpage = $metager->createView($quicktipResults);
-
         $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
         $counter->incBy(sizeof($metager->getResults()));
@@ -152,13 +145,7 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        // Splitting the response return into multiple parts.
-        // This might speed up page view time for users with slow network
-        $responseArray = str_split($resultpage->render(), 1024);
-        foreach ($responseArray as $responsePart) {
-            echo ($responsePart);
-            flush();
-        }
+        return $metager->createView($quicktipResults);
     }
 
     public function searchTimings(Request $request, MetaGer $metager)

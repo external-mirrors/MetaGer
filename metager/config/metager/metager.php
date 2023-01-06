@@ -3,7 +3,6 @@
 return [
     "browserverification_enabled" => true,
     "browserverification_whitelist" => [
-        "w3m\/",
     ],
     "admin" => [
         "user" => env("ADMIN_USER", "admin"),

@@ -62,6 +62,7 @@ class MetaGer
     # Konfigurationseinstellungen:
     protected $sumaFile;
     protected $mobile;
+    protected $framed;
     protected $resultCount;
     protected $sprueche;
     protected $newtab;
@@ -300,7 +301,8 @@ class MetaGer
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
-            if (($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
+            if (
+                ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
                     in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
                     in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
             ) {
@@ -403,7 +405,7 @@ class MetaGer
                     $arr[$link]->changed = true;
                 }
             } else {
-                $arr[$link] = &$this->results[$i];
+                $arr[$link] = & $this->results[$i];
             }
         }
     }
@@ -448,7 +450,7 @@ class MetaGer
          * every so often. ~33% in this case
          * ToDo set back to 5 once we do not want to advertise donations as much anymore
          */
-        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 34) {
+        if ( /*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 34) {
             return;
         }
 
@@ -488,7 +490,7 @@ class MetaGer
                 $url = route('humanverification', $params);
                 $proxyPw = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
                 $params["pw"] = $proxyPw;
-                $params["url"] =  \bin2hex($result->proxyLink);
+                $params["url"] = \bin2hex($result->proxyLink);
                 $proxyUrl = route('humanverification', $params);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
@@ -579,7 +581,7 @@ class MetaGer
                 # and no other search engine can provide this filter
                 $validTmp = false;
                 foreach ($this->parameterFilter as $filterName => $filter) {
-                    if (count((array)$filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
+                    if (count((array) $filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
                         $validTmp = true;
                         break;
                     }
@@ -602,7 +604,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off" && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -764,7 +766,8 @@ class MetaGer
                 if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
                     if (!empty($filter->sumas->{$suma})) {
                         # If the searchengine is disabled this filter shouldn't be available
-                        if ((!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
+                        if (
+                            (!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
                             || (!empty($this->sumaFile->sumas->{$suma}->{"auto-disabled"}) && $this->sumaFile->sumas->{$suma}->{"auto-disabled"} === true)
                         ) {
                             continue;
@@ -851,14 +854,14 @@ class MetaGer
     public function sumaIsOverture($suma)
     {
         return
-            $suma["name"]->__toString() === "overture"
+                $suma["name"]->__toString() === "overture"
             || $suma["name"]->__toString() === "overtureAds";
     }
 
     public function sumaIsNotAdsuche($suma)
     {
         return
-            $suma["name"]->__toString() !== "qualigo"
+                $suma["name"]->__toString() !== "qualigo"
             && $suma["name"]->__toString() !== "similar_product_ads"
             && $suma["name"]->__toString() !== "overtureAds";
     }
@@ -998,11 +1001,16 @@ class MetaGer
 
         $this->out = $request->input("out", "");
 
-        if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
+        // Check if request header "Sec-Fetch-Dest" is set
+        $this->framed = false;
+        if ($request->header("Sec-Fetch-Dest") === "iframe") {
             $this->framed = true;
-        } else {
-            $this->framed = false;
+        } elseif ($request->input("out", "") === "results-with-style") {
+            $this->framed = true;
+        } elseif ($request->input("iframe", "false") === "true") {
+            $this->framed = true;
         }
+        unset($request["iframe"]);
 
         # IP
         $this->ip = $this->anonymizeIp($request->ip());
@@ -1269,7 +1277,8 @@ class MetaGer
                 $usedParameters[$filter->{"get-parameter"}] = true;
             }
 
-            if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
+            if (
+                ($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
                 $this->parameterFilter[$filterName] = $filter;

@@ -1,4 +1,3 @@
-@if(!\app()->make(\App\SearchSettings::class)->header_printed)
 <!DOCTYPE html>
 <html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 
@@ -45,7 +44,6 @@
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
 
-	@endif
 	<title>{{ $eingabe }} - MetaGer</title>
 	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
 	<meta name="p" content="{{ getmypid() }}" />

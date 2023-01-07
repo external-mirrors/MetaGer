@@ -1007,7 +1007,7 @@ class MetaGer
             $this->framed = true;
         } elseif ($request->input("out", "") === "results-with-style") {
             $this->framed = true;
-        } elseif ($request->input("iframe", "false") === "true") {
+        } elseif ($request->input("iframe", "false") === "1") {
             $this->framed = true;
         }
         unset($request["iframe"]);

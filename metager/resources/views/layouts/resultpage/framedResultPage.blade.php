@@ -66,10 +66,15 @@
                 <div class="sidebar-opener-placeholder"></div>
             </div>
         </div>
+        <div id="foki"></div>
+        <div id="options"></div>
+        <div id="results-container"></div>
+        <div id="additions-container"></div>
+        <footer class="resultPageFooter noprint"></footer>
     </div>
     <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
     <script nonce="{{ $mgv }}">
         document.getElementById("mg-framed").src = "";
-        document.getElementById("resultpage-container").style.display = "block";
+        document.getElementById("resultpage-container").style.display = "grid";
     </script>
 </body>

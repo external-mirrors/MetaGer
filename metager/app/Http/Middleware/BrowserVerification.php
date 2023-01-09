@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\HumanVerification;
+use App\MetaGer;
 use Closure;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;

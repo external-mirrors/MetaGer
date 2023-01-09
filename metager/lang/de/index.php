@@ -14,4 +14,7 @@ return [
     'key.tooltip' => 'Schlüssel für werbefreie Suche eingeben',
     'placeholder' => 'MetaGer: Sicher suchen & finden',
     'searchbutton' => 'MetaGer-Suche',
+    'searchbar.alt.lupe' =>'Suche Lupen-Icon',
+    'searchbar.alt.key' =>'Schlüssel für werbefreie Suchen Icon',
+
 ];

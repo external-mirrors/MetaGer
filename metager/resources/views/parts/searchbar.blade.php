@@ -4,7 +4,7 @@
 			<div class="search-input-submit">
 				<div id="search-key">
 					<a id="key-link" @if(app('App\Models\Key')->getStatus())class="authorized" @else class="unauthorized"@endif href="{{ action([App\Http\Controllers\KeyController::class, 'index'], ['redirUrl' => !empty($metager) ? $metager->generateSearchLink($metager->getFokus()) : url()->full() ]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
-						<img @if(app('App\Models\Key')->getStatus())src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="" aria-hidden="true" id="searchbar-img-key">
+						<img @if(app('App\Models\Key')->getStatus())src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="@lang('index.searchbar.alt.key')" aria-hidden="true" id="searchbar-img-key">
 					</a>
 				</div>
 				<div class="search-input">
@@ -15,7 +15,7 @@
 				</div>
 				<div class="search-submit" id="submit-inputgroup">
 					<button type="submit" tabindex="-1" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
-						<img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
+						<img src="/img/icon-lupe.svg" alt="@lang('index.searchbar.alt.lupe')" aria-hidden="true" id="searchbar-img-lupe">
 					</button>
 				</div>
 			</div>

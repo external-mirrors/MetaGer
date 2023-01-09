@@ -32,4 +32,20 @@ return [
     'navigationToggle' => 'Navigation anzeigen',
     'titles.tips' => 'Tipps',
     'plugin' => 'MetaGer Plugin',
+
+    "alt" => [
+        "lupe" =>"Suche Lupe-Icon",
+        "lock" => "Datenschutz Schloss-Icon",
+        "info"=>"Information-Icon",
+        "help" => "Hilfe-Icon",
+        "donate" => "Spenden-Icon",
+        "member" => "Mitglied werden Icon",
+        "app" =>"App-Icon",
+        "map" => "Karte-Icon",
+        "contact" =>"Kontakt-Icon",
+        "services" =>"Dienste-Icon",
+        "outlink" => "Verlinken-Icon",
+        "language" => "Sprache-Icon",
+
+    ],
 ];

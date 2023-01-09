@@ -39,6 +39,9 @@
             height: 100%;
             height: 100vh;
         }
+        html > body > #resultpage-container {
+            display: none;
+        }
     </style>
 </head>
 <body>

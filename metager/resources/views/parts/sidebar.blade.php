@@ -167,7 +167,7 @@
   <ul class="sidebar-list">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
+      <img src="/img/icon-language.svg" alt="{{ trans('sidebar.alt.language') }}" aria-hidden="true" id="sidebar-img-language"> 
         <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
       </a>
     </li>

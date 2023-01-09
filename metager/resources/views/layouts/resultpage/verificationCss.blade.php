@@ -14,3 +14,7 @@ iframe#mg-framed {
     height: 100%;
     height: 100vh;
 }
+
+html > body > #resultpage-container {
+    display: none;
+}

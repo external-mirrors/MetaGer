@@ -43,28 +43,30 @@
 </head>
 <body>
 	<div id="resultpage-container">
-	<div id="whitespace"></div>
-	<div id="research-bar-container">
-		<div id="research-bar">
-			<div id="header-logo">
-				<a class="screen-large" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif tabindex="4">
-					<h1><img src="/img/metager.svg" alt="MetaGer" /></h1>
-				</a>
-				<a class="screen-small" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
-					<h1><img src="/img/metager-schloss-orange.svg" alt="MetaGer" /></h1>
-				</a>
-				<a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
-					<span>{{ App\Localization::getRegion() }}</span>
-				</a>
-			</div>
-			<div id="header-searchbar">
-				@include('parts.searchbar', ['class' => 'resultpage-searchbar', 'request' => Request::method()])
-			</div>
-			<div class="sidebar-opener-placeholder"></div>
-		</div>
-	</div>
+        <div id="whitespace"></div>
+        <div id="research-bar-container">
+            <div id="research-bar">
+                <div id="header-logo">
+                    <a class="screen-large" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif tabindex="4">
+                        <h1><img src="/img/metager.svg" alt="MetaGer" /></h1>
+                    </a>
+                    <a class="screen-small" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
+                        <h1><img src="/img/metager-schloss-orange.svg" alt="MetaGer" /></h1>
+                    </a>
+                    <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
+                        <span>{{ App\Localization::getRegion() }}</span>
+                    </a>
+                </div>
+                <div id="header-searchbar">
+                    @include('parts.searchbar', ['class' => 'resultpage-searchbar', 'request' => Request::method()])
+                </div>
+                <div class="sidebar-opener-placeholder"></div>
+            </div>
+        </div>
+    </div>
     <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
     <script nonce="{{ $mgv }}">
         document.getElementById("mg-framed").src = "";
+        document.getElementById("resultpage-container").style.display = "block";
     </script>
 </body>

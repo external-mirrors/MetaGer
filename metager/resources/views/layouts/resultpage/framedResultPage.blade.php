@@ -72,7 +72,9 @@
         <div id="additions-container"></div>
         <footer class="resultPageFooter noprint"></footer>
     </div>
-    <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
+    <noscript>
+        <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
+    </noscript>
     <script nonce="{{ $mgv }}">
         document.getElementById("mg-framed").src = "";
         document.getElementById("resultpage-container").style.display = "grid";

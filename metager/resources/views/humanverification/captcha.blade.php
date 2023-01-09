@@ -5,7 +5,7 @@
 @section('content')
 <h1>@lang('captcha.1')</h1>
 <p>@lang('captcha.2')</p>
-<form method="post" action="{{ route('captcha_solve') }}">
+<form method="post" action="{{ route('captcha_solve') }}" target="_top">
     <input type="hidden" name="url" value="{!! $url !!}">
     <input type="hidden" name="key" value="{{ $key }}">
     <input type="hidden" name="begin" value="{{ \microtime(true) }}">

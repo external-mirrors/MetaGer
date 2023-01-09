@@ -1,4 +1,3 @@
-@if(!\app()->make(\App\SearchSettings::class)->header_printed)
 <!DOCTYPE html>
 <html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 
@@ -45,7 +44,6 @@
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
 
-	@endif
 	<title>{{ $eingabe }} - MetaGer</title>
 	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
 	<meta name="p" content="{{ getmypid() }}" />
@@ -53,7 +51,7 @@
 	<meta name="l" content="{{ App\Localization::getLanguage() }}" />
 	<meta name="hv" content="{{ app()->make(\App\Models\Verification\HumanVerification::class)->key }}" />
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
-	<meta name="referrer" content="origin">
+	<meta name="referrer" content="origin-when-cross-origin">
 	<meta name="age-meta-label" content="age=18" />
 	@include('parts.utility')
 </head>

@@ -1,13 +1,13 @@
 <input id="sidebarToggle" class="hidden" type="checkbox">
 <div class="sidebar">
-  <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+  <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>
       <img src="/img/metager.svg" alt="MetaGer">
     </span>
   </a>
   <ul class="sidebar-list">
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}"  id="navigationSuche">
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}"  id="navigationSuche" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/icon-lupe.svg" alt="{{ trans('sidebar.alt.lupe') }}" aria-hidden="true" id="sidebar-img-lupe">
         <span>{{ trans('sidebar.nav1') }}</span>
       </a>
@@ -16,13 +16,13 @@
   <hr>
   <ul class="sidebar-list">
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" >
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/lock.svg" alt="{{ trans('sidebar.alt.lock') }}" aria-hidden="true" id="sidebar-img-lock"> 
         <span>{{ trans('sidebar.nav3') }}</span>
       </a>
     </li>
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/") }}" >
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/help-icon.svg" alt="{{ trans('sidebar.alt.help') }}" aria-hidden="true" id="sidebar-img-help"> 
         <span>{{ trans('sidebar.nav20') }}</span>
       </a>
@@ -36,23 +36,23 @@
       </label>
       <ul class="metager-dropdown-content">
       <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" >{{ trans('sidebar.nav29') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/transparency/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav29') }}</a>
         </li>
         <li>
-          <a href="https://gitlab.metager.de/open-source/MetaGer" >{{ trans('sidebar.nav24') }}</a>
+          <a href="https://gitlab.metager.de/open-source/MetaGer" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav24') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/search-engine/") }}" >{{ trans('sidebar.nav30') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/search-engine/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav30') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/about/") }}" >{{ trans('sidebar.nav7') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/about/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav7') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" >{{ trans('sidebar.titles.tips') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tips/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.titles.tips') }}</a>
         </li>
 
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/faktencheck/") }}" >{{ trans('sidebar.navFactcheck') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/faktencheck/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.navFactcheck') }}</a>
         </li>
 
       </ul>
@@ -61,14 +61,14 @@
   <hr>
   <ul class="sidebar-list">
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" >
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/donate-icon.svg" alt="{{ trans('sidebar.alt.donate') }}" aria-hidden="true" id="sidebar-img-donate"> 
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
     @if (App\Localization::getLanguage() === "de")
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" >
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/beitritt/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/member-icon.svg" alt="{{ trans('sidebar.alt.member') }}" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
@@ -78,7 +78,7 @@
   <hr>
   <ul class="sidebar-list">
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" >
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/app-icon.svg" alt="{{ trans('sidebar.alt.app') }}" aria-hidden="true" id="sidebar-img-app"> 
         <span>@lang('sidebar.nav25')</span>
       </a>
@@ -103,13 +103,13 @@
       </label>
       <ul class="metager-dropdown-content">
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt/") }}" >{{ trans('sidebar.nav5') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav5') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/team/") }}" >{{ trans('sidebar.nav6') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/team/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav6') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/impressum/") }}" >{{ trans('sidebar.nav8') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/impressum/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav8') }}</a>
         </li>
       </ul>
     </li>
@@ -122,19 +122,19 @@
         </label>
       <ul class="metager-dropdown-content">
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin/") }}" >{{ trans('sidebar.plugin') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.plugin') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/widget/") }}" >{{ trans('sidebar.nav10') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/widget/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav10') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" >{{ trans('sidebar.nav22') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav22') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(null, route("asso")) }}" >{{ trans('sidebar.nav11') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(null, route("asso")) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav11') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" >{{ trans('sidebar.nav14') }}</a>
+          <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav14') }}</a>
         </li>
         @if(App\Localization::getLanguage() == "de")
           <li>
@@ -142,7 +142,7 @@
           </li>
         @endif
         <li>
-          <a href="https://www.wecanhelp.de/430159004" >{{ trans('sidebar.nav17') }} <img src="/img/icon-outlink.svg" alt="{{ trans('sidebar.alt.outlink') }}" aria-hidden="true" id="sidebar-img-outlink"></a>
+          <a href="https://www.wecanhelp.de/430159004" target="_blank">{{ trans('sidebar.nav17') }} <img src="/img/icon-outlink.svg" alt="{{ trans('sidebar.alt.outlink') }}" aria-hidden="true" id="sidebar-img-outlink"></a>
          
         </li>
       </ul>
@@ -157,7 +157,7 @@
       <ul class="metager-dropdown-content">
           @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
             <li>
-              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["fokus" => $fokus, "url" => url()->full()])) }}" >{{ trans("index.foki.$fokus") }}</a>
+              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["fokus" => $fokus, "url" => url()->full()])) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
             </li>
           @endforeach
       </ul>
@@ -166,7 +166,7 @@
   <hr>
   <ul class="sidebar-list">
     <li>
-      <a  href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
         <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
       </a>

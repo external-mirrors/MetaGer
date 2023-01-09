@@ -11,7 +11,7 @@ return [
 
     'wunschbetrag.label' => 'Wunschbetrag',
     'wunschbetrag.placeholder' => 'Betrag in €',
-    'frequency' => 'Häufigkeit',
+    'frequency.name' => 'Häufigkeit',
 
     'frequency.once' => 'Einmalig',
     'frequency.monthly' => 'Monatlich',

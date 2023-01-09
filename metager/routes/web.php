@@ -210,6 +210,13 @@ Route::get('jugendschutz', function () {
         ->with('title', trans('titles.jugendschutz'));
 });
 
+
+Route::get('prevention', function () {
+    return view('prevention-information')
+        ->with('title', trans('titles.prevention'))
+        ->with('css', [mix('/css/prevention-information.css')]);
+});
+
 Route::get('ad-info', function () {
     return view('ad-info')
         ->with('title', trans('titles.ad-info'));
@@ -306,13 +313,30 @@ Route::get('databund', function () {
 Route::get("lang", function () {
     // Check if a previous URL is given that we can offer a back button for
     $previous = request()->input("previous_url", URL::previous());
-    $host = parse_url($previous, PHP_URL_HOST);
-    $current_host = request()->getHost();
 
+    $allowed_hosts = [
+        "metager.de",
+        "metager.org"
+    ];
+
+    $components = parse_url($previous);
     $previous_url = null; // URL for the back button
-    if ($host === $current_host && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
-        $previous_url = LaravelLocalization::getLocalizedUrl(null, $previous);
+    if (is_array($components) && array_key_exists("host", $components)) {
+        $host = $components["host"];
+        $current_host = request()->getHost();
+
+        $path = "/";
+        if (array_key_exists("path", $components)) {
+            $path = $components["path"];
+        }
+        if (array_key_exists("query", $components)) {
+            $path .= "?" . $components["query"];
+        }
+        if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
+            $previous_url = LaravelLocalization::getLocalizedUrl(null, $path);
+        }
     }
+
     return view('lang-selector')
         ->with("previous_url", $previous_url)
         ->with("title", trans("titles.lang-selector"))

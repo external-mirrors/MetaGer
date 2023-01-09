@@ -162,4 +162,7 @@ return [
         'min'             => 'Sueño mínimo (en s)',
         'max'             => 'Sueño máximo (en s)',
     ],
+    'prevention' => [
+        'phrase' => '<h2>¿Necesitas ayuda?</h2> ¿Tienes pensamientos negativos o quieres hablar con alguien? En nuestra <a href=":prevurl" target="_blank"> página de prevención</a> encontrará una lista de servicios de apoyo a los que puede recurrir.',
+    ],
 ];

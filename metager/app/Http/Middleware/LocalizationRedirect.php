@@ -46,9 +46,6 @@ class LocalizationRedirect
         } elseif (\stripos($locale, "en") === 0) {
             $allowed_hostnames[] = "metager.org";
             $required_hostname = "metager.org";
-        } elseif (\stripos($locale, "es") === 0) {
-            $allowed_hostnames[] = "metager.es";
-            $required_hostname = "metager.es";
         }
 
         // Allow the MetaGer review apps aswell

@@ -34,4 +34,5 @@ return [
     'search-engine'           => 'Search engines - MetaGer',
     'lang-selector'           => 'Language selection',
     'assosearch'              => 'Associations for ":q" - MetaGer',
+    'prevention'              => 'Help with Suicidal Thoughts - MetaGer',
 ];

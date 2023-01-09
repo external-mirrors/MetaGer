@@ -16,7 +16,7 @@ return [
 	'list.2.4'		=> 'Seit wann gibt es dieses Profil?',
 	'list.2.5'		=> 'Wie viele Abonenten oder Freunde hat dieses Profil? Was kann über die Namen dieser Personen herausgefunden werden?',
 	'list.3.0'		=> 'Wikipedia',
-	'list.3.1'		=> 'Nicht alles, was bei Wikipedia steht ist, stimmt auch. Um hier zu kontrollieren, wie akkurat die Informationen sind, kann man folgenes tun:',
+	'list.3.1'		=> 'Nicht alles, was bei Wikipedia steht, stimmt auch. Um hier zu kontrollieren, wie akkurat die Informationen sind, kann man folgenes tun:',
 	'list.3.2'		=> 'Versionsgeschichte prüfen: Wer hat wann was geschrieben?',
 	'list.3.3'		=> 'Kann zu diesen Autoren etwas herausgefunden werden?',
 	'list.3.4'		=> 'Gibt es eine Diskussionsseite zu diesem Wikipedia-Eintrag, aus der weitere Rückschlüsse möglich sind?',

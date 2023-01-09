@@ -17,8 +17,8 @@ class AffiliateClicks extends Migration
         Schema::create('affiliate_clicks', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('hostname');
-            $table->string('affillink');
-            $table->string('link');
+            $table->text('affillink');
+            $table->text('link');
             $table->timestamp('created_at')->nullable(false)->useCurrent();
         });
     }

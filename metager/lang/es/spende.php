@@ -19,6 +19,7 @@ return [
         'quarterly'   => 'Trimestral',
         'six-monthly' => 'Semestral',
         'annual'      => 'Anual',
+        'name'        => 'Frecuencia',
     ],
     'head'          => [
         'lastschrift' => 'Domiciliación bancaria',

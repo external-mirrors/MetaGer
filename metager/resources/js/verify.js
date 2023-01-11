@@ -29,16 +29,13 @@ document.querySelectorAll("link").forEach((element) => {
       let nonce = document.querySelector("meta[name=nonce]").content;
       let check = `/index.css?id=${nonce}`;
 
-      console.log(url);
-      console.log(nonce);
-      console.log(check);
-
       let interval = setInterval(function () {
         let links = document.querySelectorAll("link");
         for (let i = 0; i < links.length; i++) {
           if (links[i].href.includes(check)) {
             clearInterval(interval);
-            window.location = url;
+            history.replaceState(null, "", url);
+            history.go();
           }
         }
       }, 100);

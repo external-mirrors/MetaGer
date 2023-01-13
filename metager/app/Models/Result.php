@@ -2,60 +2,68 @@
 
 namespace App\Models;
 
-/* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
- *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
+/* The Result class represents a single search result.
+ *  Instances are created by the search engine parser scripts.
  */
 
 class Result
 {
-    public $provider; # Die Engine von der das Suchergebnis kommt
-    public $titel; # Der Groß Angezeigte Name für das Suchergebnis
-    public $originalLink;
-    public $link; # Der Link auf die Ergebnisseite
-    public $anzeigeLink; # Der tatsächlich angezeigte Link (rein optisch)
-    public $descr; # Die eventuell gekürzte Beschreibung des Suchergebnisses
-    public $longDescr; # Die ungekürzte Beschreibung des Suchergebnisses
-    public $gefVon = []; # Die Suchmaschine von der dieses Ergebnis stammt
-    public $gefVonLink = [];
-    public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
-    public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
-    public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
-    public $imageDimensions; # Ein Array in welchem wenn verfügbar Breite/Höhe des Bildes gespeichert sind ["width" => ..., "height" => ...]
-    public $proxyLink; # Der Link für die Seite über unseren Proxy-Service
-    public $engineBoost = 1; # Der Boost für den Provider des Suchergebnisses
-    public $valid = true; # Ob das Ergebnis noch gültig ist (bool)
-    public $host; # Der aus dem Link gelesene Host des Suchergebnisses
-    public $strippedHost; # Der Host in Form "foo.bar.de"
-    public $strippedDomain; # Die Domain in Form "bar.de"
-    public $strippedLink; # Der Link in Form "foo.bar.de/test"
-    public $strippedHostAnzeige; # Der Host in Form "foo.bar.de"
-    public $strippedDomainAnzeige; # Die Domain in Form "bar.de"
-    public $strippedLinkAnzeige; # Der Link in Form "foo.bar.de/test"
-    public $rank; # Das Ranking für das Ergebnis
+    public $provider; # The result's source engine
+    public $titel; # The result's title
+    public $originalLink; # The result's target link as it was set by the source engine
+    public $link; # The result's target link, possibly modified
+    public $anzeigeLink; # The link that is visible to users
+    public $descr; # The result's description snippet, might be shortened
+    public $longDescr; # The result's full description snippet
+    public $gefVon = []; # String array of source engine names
+    public $gefVonLink = []; # String array of source engine links
+    public $sourceRank; # ranking inherited by source engine (20 - Position in result list in most cases)
+    public $partnershop; # Is this an affiliate link? (bool)
+    public $image; # The result's optional preview image (URL)
+    public $imageDimensions; # The result's preview image's dimensions. Array like ["width" => ..., "height" => ...]
+    public $proxyLink; # The result's proxified link for our anonymous proxy service
+    public $engineBoost = 1; # A ranking boost set depending on the result's provider entry
+    public $valid = true; # Used to filter the result from display (bool)
+    public $host; # The result's host, read from $link
+    public $strippedHost; # The result's host in form "foo.bar.de"
+    public $strippedDomain; # The result's domain in form "bar.de"
+    public $strippedLink; # The result's link in form "foo.bar.de/test"
+    public $strippedHostAnzeige; # The result's in form "foo.bar.de"
+    public $strippedDomainAnzeige; # The result's domain in Form "bar.de"
+    public $strippedLinkAnzeige; # The result's link in form "foo.bar.de/test"
+    public $rank; # The result's ranking
     public $new = true;
     public $changed = false;
 
     const DESCRIPTION_LENGTH = 150;
 
-    # Erstellt ein neues Ergebnis
-    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
+    # Constructor for a new Result
+    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [], $originalLink = null, $longDescr = null, $valid = true, $rank = 0)
     {
         $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
-        $this->originalLink = trim($link);
+        $this->originalLink = isset($originalLink) ? $originalLink : $link;
         $this->anzeigeLink = trim($anzeigeLink);
         $this->anzeigeLink = preg_replace("/(http[s]{0,1}:\/\/){0,1}(www\.){0,1}/si", "", $this->anzeigeLink);
         $this->descr = $this->sanitizeText(strip_tags(trim($descr), '<p>'));
         $this->descr = preg_replace("/\n+/si", " ", $this->descr);
-        $this->longDescr = $this->descr;
+        $this->longDescr = isset($longDescr) ? $longDescr : $this->descr;
         if (strlen($this->descr) > self::DESCRIPTION_LENGTH) {
             $this->descr = wordwrap($this->descr, self::DESCRIPTION_LENGTH);
             $this->descr = substr($this->descr, 0, strpos($this->descr, "\n"));
             $this->descr .= "…"; // Ellipsis character
         }
-        $this->gefVon[] = trim($gefVon);
-        $this->gefVonLink[] = trim($gefVonLink);
+        if (is_array($gefVon)) {
+            $this->gefVon = $gefVon;
+        } else {
+            $this->gefVon[] = trim($gefVon);
+        }
+        if (is_array($gefVonLink)) {
+            $this->gefVonLink = $gefVonLink;
+        } else {
+            $this->gefVonLink[] = trim($gefVonLink);
+        }
         $this->proxyLink = $this->generateProxyLink($this->link);
         $this->sourceRank = $sourceRank;
         if ($this->sourceRank <= 0 || $this->sourceRank > 20) {
@@ -67,7 +75,7 @@ class Result
         } else {
             $this->engineBoost = 1;
         }
-        $this->valid = true;
+        $this->valid = $valid;
         $this->host = @parse_url($link, PHP_URL_HOST);
         $this->strippedHost = $this->getStrippedHost($this->link);
         $this->strippedDomain = $this->getStrippedDomain($this->link);
@@ -75,7 +83,7 @@ class Result
         $this->strippedHostAnzeige = $this->getStrippedHost($this->anzeigeLink);
         $this->strippedDomainAnzeige = $this->getStrippedDomain($this->anzeigeLink);
         $this->strippedLinkAnzeige = $this->getStrippedLink($this->anzeigeLink);
-        $this->rank = 0;
+        $this->rank = $rank;
         $this->partnershop = isset($additionalInformation["partnershop"]) ? $additionalInformation["partnershop"] : false;
         $this->image = isset($additionalInformation["image"]) ? $additionalInformation["image"] : "";
         $this->imageDimensions = isset($additionalInformation["imagedimensions"]) ? $additionalInformation["imagedimensions"] : [];
@@ -97,25 +105,25 @@ class Result
         return $price_text;
     }
 
-    /* Ranked das Ergebnis nach folgenden Aspekten:
-     *  Startwert 0
-     *  + 0.02 * Sourcerank (20 - Position in Ergebnisliste des Suchanbieters)
-     *  * Engine-Boost
+    /* Ranks the result as follows:
+     *  Initial value 0
+     *  + 0.02 * source rank (20 - position in result list of source engine)
+     *  * engine boost
      */
     public function rank($eingabe)
     {
         $rank = 0;
 
-        # Boost für Source Ranking
+        # boost for source ranking
         $rank += ($this->sourceRank * 0.02);
 
-        # Boost für passende ??? URL
+        # boost for URL ??? (reevaluation needed)
         $rank += $this->calcURLBoost($eingabe);
 
-        # Boost für Vorkommen der Suchwörter:
+        # boost for occurence of search words in description (reevaluation needed)
         $rank += $this->calcSuchwortBoost($eingabe);
 
-        # Boost für Suchmaschine
+        # engine boost
         if ($this->engineBoost > 0) {
             $rank *= floatval($this->engineBoost);
         }
@@ -123,7 +131,7 @@ class Result
         $this->rank = $rank;
     }
 
-    # Berechnet den Ranking-Boost durch ??? URL
+    # calculate ranking boost for URL (reevaluation needed)
     public function calcURLBoost($tmpEingabe)
     {
         $link = $this->anzeigeLink;
@@ -169,7 +177,7 @@ class Result
         }
     }
 
-    # Berechnet den Ranking-Boost durch das Vorkommen von Suchwörtern
+    # calculate ranking boost for description (reevaluation needed)
     private function calcSuchwortBoost($tmpEingabe)
     {
         $maxRank = 0.1;
@@ -206,7 +214,7 @@ class Result
         return $tmpRank;
     }
 
-    # Überprüft ob das Ergebnis aus irgendwelchen Gründen unerwünscht ist.
+    # checks if the result should be excluded for some reason
     public function isValid(\App\MetaGer $metager)
     {
         # Perönliche Host und Domain Blacklist
@@ -302,10 +310,9 @@ class Result
         return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl()) || in_array($this->strippedLinkAnzeige, $metager->getBlacklistDescriptionUrl());
     }
 
-    /* Liest aus einem Link den Host.
-     *  Dieser wird dabei in die Form:
+    /* Reads host from link
+     *  Example:
      *  "http://www.foo.bar.de/test?ja=1" -> "foo.bar.de"
-     *  gebracht.
      */
     public function getStrippedHost($link)
     {
@@ -313,10 +320,9 @@ class Result
         return $match['host'];
     }
 
-    /* Entfernt "http://", "www" und Parameter von einem Link
-     *  Dieser wird dabei in die Form:
+    /* Strips "http://", "www" and parameters from link
+     *  Example:
      *  "http://www.foo.bar.de/test?ja=1" -> "foo.bar.de/test"
-     *  gebracht.
      */
     public function getStrippedLink($link)
     {
@@ -324,10 +330,9 @@ class Result
         return $match['host'] . $match['path'];
     }
 
-    /* Liest aus einem Link die Domain.
-     *  Dieser wird dabei in die Form:
+    /* Reads Domain from link.
+     *  Example:
      *  "http://www.foo.bar.de/test?ja=1" -> "bar.de"
-     *  gebracht.
      */
     public function getStrippedDomain($link)
     {
@@ -335,7 +340,7 @@ class Result
         return $match['domain'];
     }
 
-    # Erstellt aus einem Link einen Proxy-Link für unseren Proxy-Service
+    # generates proxy link for our anonymous proxy service
     public function generateProxyLink($link)
     {
         if (!$link || empty($link)) {
@@ -369,7 +374,7 @@ class Result
         return $proxyUrl;
     }
 
-    /* Liest aus einer URL alle Informationen aus
+    /* Reads all information from Url
      * https://max:muster@www.example.site.page.com:8080/index/indexer/list.html?p1=A&p2=B#ressource
      * (?:((?:http)|(?:https))(?::\/\/))?
      * https://                  => [1] = http / https

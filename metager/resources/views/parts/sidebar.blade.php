@@ -1,6 +1,6 @@
 <input id="sidebarToggle" class="hidden" type="checkbox">
 <div class="sidebar">
-  <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+  <a class="sidebar-logo" title="MetaGer" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>
       <img src="/img/metager.svg" alt="MetaGer">
     </span>

@@ -3,13 +3,12 @@
 set -e
 
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME%%*(-)}
+HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
 
 # Create/Update the secret
 kubectl -n $KUBE_NAMESPACE create secret generic ${HELM_RELEASE_NAME} \
   --from-file=${ENV_PRODUCTION} \
-  --from-file=${SUMAS} \
-  --from-file=${SUMASEN} \
+  --from-file=${SUMAS_JSON} \
   --from-file=${ADBLACKLIST_DOMAINS} \
   --from-file=${ADBLACKLIST_URL} \
   --from-file=${BLACKLIST_DESCRIPTION_URL} \

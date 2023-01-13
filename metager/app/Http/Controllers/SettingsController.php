@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use Cookie;
 use LaravelLocalization;
 use \App\MetaGer;
@@ -33,7 +34,6 @@ class SettingsController extends Controller
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
             $values = $filter->values;
-            $cookie = Cookie::get($fokus . "_setting_" . $filter->{"get-parameter"});
             foreach ($sumas as $suma => $sumaInfo) {
                 if (!$filteredSumas && $sumaInfo["filtered"]) {
                     $filteredSumas = true;
@@ -49,6 +49,33 @@ class SettingsController extends Controller
                     foreach ($filter->sumas->{$suma}->values as $key => $value) {
                         $filters[$name]->values->$key = $values->$key;
                     }
+                }
+            }
+        }
+
+        // Apply default value for Language selection
+        $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+        $default_language_value = "";
+        # Set default Value for language selector to current locale
+        $key = app(Key::class);
+        $suma_name = "yahoo";
+        if ($key->getStatus()) {
+            $suma_name = "bing";
+        }
+        if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {
+            if (\array_key_exists("language", $filters) && \property_exists($filters["language"], "sumas") && \property_exists($filters["language"]->sumas, $suma_name)) {
+                $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
+                foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
+                    if ($value === $region_suma_value) {
+                        $default_language_value = $key;
+                        break;
+                    }
+                }
+                if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
+                    $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
+                    unset($filters["language"]->values->$default_language_value);
+                } else {
+                    $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
                 }
             }
         }
@@ -106,9 +133,15 @@ class SettingsController extends Controller
         $sumasFoki = $langFile->foki->{$fokus}->sumas;
 
         $sumas = [];
+        $locale = LaravelLocalization::getCurrentLocaleRegional();
+        $lang = Localization::getLanguage();
         foreach ($sumasFoki as $suma) {
             if ((!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
-                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"})
+                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"}) ||
+                ## Lang support is not defined
+                (!\property_exists($langFile->sumas->{$suma}, "lang") || !\property_exists($langFile->sumas->{$suma}->lang, "languages") || !\property_exists($langFile->sumas->{$suma}->lang, "regions")) ||
+                ## Current Locale/Lang is not supported by this engine
+                (!\property_exists($langFile->sumas->{$suma}->lang->languages, $lang) && !\property_exists($langFile->sumas->{$suma}->lang->regions, $locale))
             ) {
                 continue;
             }
@@ -196,7 +229,7 @@ class SettingsController extends Controller
         $langFile = json_decode(file_get_contents($langFile));
 
         foreach ($newFilters as $key => $value) {
-            if ($value === "") {
+            if (empty($value)) {
                 $path = \Request::path();
                 $cookiePath = "/" . substr($path, 0, strpos($path, "meta/") + 5);
                 Cookie::queue($fokus . "_setting_" . $key, "", 0, $cookiePath, null, true, true);

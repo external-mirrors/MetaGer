@@ -22,7 +22,7 @@
 	</a>
 </div>
 
-<h2>{!! trans('help/help.tableofcontents.2') !!}</h2>
+<h2>{!! trans('help/help.tableofcontents.2.0') !!}</h2>
 <div class="help-topic-row">
 	<a id=help-topic-searchfunctions href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/help.tableofcontents.2.1') !!}</p>
@@ -38,7 +38,7 @@
 	</a>
 </div>
 
-<h2>{!! trans('help/help.tableofcontents.3') !!}</h2>
+<h2>{!! trans('help/help.tableofcontents.3.0') !!}</h2>
 	<div class="help-topic-row">
 		<a id=help-topic-tracking href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/datensicherheit#tracking") }}" class="help-topic"><p>{!! trans('help/help.tableofcontents.3.2') !!}</p>
 		</a>
@@ -50,7 +50,7 @@
 		</a>
 	</div>
 		
-<h2>{!! trans('help/help.tableofcontents.4') !!}</h2>
+<h2>{!! trans('help/help.tableofcontents.4.0') !!}</h2>
 
 	<div class="help-topic-row">
 		<a id=help-topic-app href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/dienste") }}" class="help-topic">

@@ -3,36 +3,69 @@
 namespace App\Http\Controllers;
 
 use App;
+use Carbon;
+use Crypt;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
+use LaravelLocalization;
 use Response;
+use Validator;
 
 class Pictureproxy extends Controller
 {
     public function get(Request $request)
     {
-        if ($request->filled('url')) {
-            try {
-                $arrContextOptions = array(
-                    "ssl" => array(
-                        "verify_peer"      => false,
-                        "verify_peer_name" => false,
-                    ),
-                );
-                $file         = file_get_contents($request->input('url'), false, stream_context_create($arrContextOptions));
-                $responseCode = explode(" ", $http_response_header[0])[1];
-                $contentType  = "";
-                foreach ($http_response_header as $header) {
-                    if (strpos($header, "Content-Type:") === 0) {
-                        $tmp         = explode(": ", $header);
-                        $contentType = $tmp[1];
-                    }
-                }
-                $response = Response::make($file, $responseCode);
-                $response->header('Content-Type', $contentType);
-            } catch (\ErrorException $e) {
-                $response = Response::make("", 404);
-            }
-            return $response;
+        // Validate input arguments
+        $validator = Validator::make($request->all(), [
+            'data' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            abort(404);
         }
+
+        try {
+            $input_data = Crypt::decrypt($request->input('data'));
+        } catch (DecryptException $e) {
+            abort(404);
+        }
+
+        $validator = Validator::make($input_data, [
+            'expires' => 'required|after_or_equal:now',
+            'url' => 'required|url',
+        ]);
+        if ($validator->fails()) {
+            abort(404);
+        }
+
+        try {
+            $url = $input_data["url"];
+
+            $file         = file_get_contents($url, false);
+            $responseCode = explode(" ", $http_response_header[0])[1];
+            $contentType  = "";
+            foreach ($http_response_header as $header) {
+                if (strpos($header, "Content-Type:") === 0) {
+                    $tmp         = explode(": ", $header);
+                    $contentType = $tmp[1];
+                }
+            }
+            $response = Response::make($file, $responseCode);
+            $response->header('Content-Type', $contentType);
+        } catch (\ErrorException $e) {
+            $response = Response::make("", 404);
+        }
+        return $response;
+    }
+
+    public static function generateUrl($link)
+    {
+        $params = [
+            "url" => $link,
+            "expires" => now()->addDay()
+        ];
+
+        $params = Crypt::encrypt($params);
+        return LaravelLocalization::getLocalizedUrl(null, route("imageproxy", ["data" => $params]));
     }
 }

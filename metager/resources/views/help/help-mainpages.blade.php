@@ -3,7 +3,7 @@
 @section('title', $title )
 
 @section('content')
-	<h1 class="page-title">{!! trans('help/help-mainpages.title') !!}</h1>
+	<h1 class="page-title">{!! trans('help/help-mainpages.title.1') !!}</h1>
 
 	<section id="startpage">
 		<a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-mainpages.backarrow') !!}</a>

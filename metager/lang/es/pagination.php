@@ -1,6 +1,5 @@
 <?php
-
 return [
-    "previous"	=>	"« Regresar",
-    "next"	=>	"Siguiente »"
+    'previous' => '« Regresar',
+    'next'     => 'Siguiente »',
 ];

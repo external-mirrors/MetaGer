@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <label for="{{ $filterInfo->{"get-parameter"} }}">@lang($filterInfo->name)</label>
                     <select name="{{ $filterInfo->{"get-parameter"} }}" id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
-                        <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@lang('metaGer.filter.noFilter')</option>
+                        <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@if(property_exists($filterInfo->values, "nofilter"))@lang($filterInfo->values->nofilter)@else @lang('metaGer.filter.noFilter')@endif</option>
                         @foreach($filterInfo->values as $key => $value)
                         @if(!empty($key))
                         <option value="{{ $key }}" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }}>@lang($value)</option>
@@ -85,7 +85,7 @@
                 @endif
                 @endforeach
             </div>
-            <button type="submit" class="btn btn-default">@lang('settings.save')</button>
+            <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
         </form>
     </div>
 
@@ -106,7 +106,7 @@
 
     <div class="card">
         <h1>@lang('settings.more')</h1>
-        <p>@lang('settings.hint')</p>
+        <p>@lang('settings.hint.hint')</p>
         <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
             <input type="hidden" name="fokus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
@@ -125,7 +125,7 @@
                     <option value="on" {{ Cookie::get('new_tab') === "on" ? "disabled selected" : "" }}>@lang('settings.on')</option>
                 </select>
             </div>
-            @if(LaravelLocalization::getCurrentLocale() === "de")
+            @if(App\Localization::getLanguage() === "de")
             <div class="form-group">
                 <label for="zitate">Zitate</label>
                 <select name="zitate" id="zitate" class="form-control">

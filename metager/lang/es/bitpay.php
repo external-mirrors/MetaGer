@@ -1,3 +1,4 @@
-<?php return [
-    "amount"	=>	"Cantidad"
+<?php
+return [
+    'amount' => 'Cantidad',
 ];

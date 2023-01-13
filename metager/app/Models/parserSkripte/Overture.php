@@ -14,30 +14,14 @@ class Overture extends Searchengine
     {
         parent::__construct($name, $engine, $metager);
 
-        $this->checkLanguage();
-
         # We need some Affil-Data for the advertisements
+        if (preg_match("/^ukraine$/i", trim($this->query))) {
+            $this->query .= " p";
+        }
+
         $this->getString = $this->generateGetString($this->query);
         $this->getString .= $this->getOvertureAffilData($metager->getUrl());
         $this->updateHash();
-    }
-
-    private function checkLanguage()
-    {
-        if (LaravelLocalization::getCurrentLocale() === 'en') {
-            $supported_default_languages = [
-                "en_US" => "us",
-                "en_GB" => "gb",
-                "en_IE" => "ie",
-                "en_AU" => "au",
-                "en_NZ" => "nz",
-            ];
-            $preferred_language = request()->getPreferredLanguage(\array_keys($supported_default_languages));
-
-            if (\array_key_exists($preferred_language, $supported_default_languages)) {
-                $this->engine->{"get-parameter"}->mkt = $supported_default_languages[$preferred_language];
-            }
-        }
     }
 
     public function loadResults($result)
@@ -162,7 +146,7 @@ class Overture extends Searchengine
         $affilDataValue = $this->urlEncode($affil_data);
 
         $serve_domain = "https://metager.de/";
-        if (LaravelLocalization::getCurrentLocale() === "en") {
+        if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
             $serve_domain = "https://metager.org/";
         }
 

@@ -351,7 +351,7 @@
                 hin eine Löschung, Änderung u.s.w. durchgeführt haben.
             </article>
         </ol>
-        Zur Wahrnehmung dieser Rechte genügt es, uns eine <b>E-Mail mit unserem <a href="/kontakt">verschlüsseltem Kontaktformular</a></b> zu schreiben. Sollten Sie
+        Zur Wahrnehmung dieser Rechte genügt es, uns mit unserem <a href="/kontakt">Kontaktformular</a></b> zu kontaktieren. Sollten Sie
         die Briefform bevorzugen, senden Sie uns Post an unsere Büroadresse:
         <br />
         <br />SUMA-EV
@@ -362,5 +362,5 @@
         <h1>Änderungen an dieser Erklärung</h1>
         Wie unsere Angebote ist auch diese Datenschutzerklärung einem ständigen Wandel unterworfen. Sie sollten sie
         daher regelmäßig erneut lesen.
-        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2021-02-03
+        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2023-01-23
     </div>

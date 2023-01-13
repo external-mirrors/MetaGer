@@ -18,7 +18,7 @@ class Key
         $this->key = $key;
         $this->status = $status;
         if (\app()->environment() !== "production") {
-            $this->keyserver = "https://dev.key.metager.de/";
+            $this->keyserver = "https://key.metager.de/";
         }
     }
 
@@ -54,29 +54,36 @@ class Key
 
     public function updateStatus()
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
+        // Submit fetch job to worker
+        $url = $this->keyserver . "v2/key/" . urlencode($this->key);
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $opts = array(
-            'http' => array(
-                'method' => 'GET',
-                'header' => 'Authorization: Basic ' . $authKey,
-            ),
-        );
-        $context = stream_context_create($opts);
-
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/" . urlencode($this->key);
-            $result = json_decode(file_get_contents($link, false, $context));
-            if (!empty($result)) {
-                $this->keyinfo = $result;
-                if ($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited") {
-                    $this->status = true;
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
                 } else {
-                    $this->status = false;
+                    $this->keyinfo = $result;
+                    if ($this->keyinfo->adFreeSearches > 0 || $this->keyinfo->apiAccess === "unlimited") {
+                        $this->status = true;
+                    } else {
+                        $this->status = false;
+                    }
+                    return true;
                 }
-                return true;
-            } else {
-                return false;
             }
         } catch (\ErrorException $e) {
             return false;
@@ -85,31 +92,41 @@ class Key
 
     public function requestPermission()
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
-        $postdata = http_build_query(array(
-            'dummy' => 0,
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => [
-                    'Content-type: application/x-www-form-urlencoded',
-                    'Authorization: Basic ' . $authKey
-                ],
-                'content' => $postdata,
-            ),
-        );
+        $url = $this->keyserver . "v2/key/" . urlencode($this->key) .  "/request-permission";
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+            "headers" => [
+                'Content-type' => "application/x-www-form-urlencoded"
+            ],
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => \http_build_query(["dummy" => 0])
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $context = stream_context_create($opts);
-
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/" . urlencode($this->key) . "/request-permission";
-            $result = json_decode(file_get_contents($link, false, $context));
-            if ($result->{'apiAccess'} == true) {
-                return true;
-            } else {
-                $this->status = false;
-                return false;
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
+                } else {
+                    if ($result->{'apiAccess'} == true) {
+                        return true;
+                    } else {
+                        $this->status = false;
+                        return false;
+                    }
+                }
             }
         } catch (\ErrorException $e) {
             return false;
@@ -117,7 +134,6 @@ class Key
     }
     public function generateKey($payment = null, $adFreeSearches = null, $key = null, $notes = "")
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
         $postdata = array(
             'apiAccess' => 'normal',
             'expiresAfterDays' => 365,
@@ -134,25 +150,38 @@ class Key
         } else {
             return false;
         }
-        $postdata = http_build_query($postdata, "", "&", PHP_QUERY_RFC3986);
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => [
-                    'Content-type: application/x-www-form-urlencoded',
-                    'Authorization: Basic ' . $authKey
-                ],
-                'content' => $postdata,
-                'timeout' => 5
-            ),
-        );
 
-        $context = stream_context_create($opts);
+        $url = $this->keyserver . "v2/key/";
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+            "headers" => [
+                'Content-type' => "application/x-www-form-urlencoded"
+            ],
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => \http_build_query($postdata)
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/";
-            $result = json_decode(file_get_contents($link, false, $context));
-            return $result->{'mgKey'};
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
+                } else {
+                    return $result->{'mgKey'};
+                }
+            }
         } catch (\ErrorException $e) {
             return false;
         }
@@ -160,28 +189,40 @@ class Key
 
     public function reduce($count)
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
-        $postdata = http_build_query(array(
+        $postdata = array(
             'adFreeSearches' => $count,
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => [
-                    'Content-type: application/x-www-form-urlencoded',
-                    'Authorization: Basic ' . $authKey
-                ],
-                'content' => $postdata,
-                'timeout' => 5
-            ),
         );
+        $url = $this->keyserver . "v2/key/" . $this->key . "/reduce-searches";
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+            "headers" => [
+                'Content-type' => "application/x-www-form-urlencoded"
+            ],
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => \http_build_query($postdata)
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $context = stream_context_create($opts);
-
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/" . $this->key . "/reduce-searches";
-            $result = json_decode(file_get_contents($link, false, $context));
-            return $result;
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
+                } else {
+                    return $result;
+                }
+            }
         } catch (\ErrorException $e) {
             return false;
         }
@@ -213,33 +254,44 @@ class Key
 
     public function checkForChange($hash, $newkey = "")
     {
-        $authKey = base64_encode(config("metager.metager.keyserver.user") . ':' . config("metager.metager.keyserver.password"));
-        $postdata = http_build_query(array(
+        $postdata = array(
             'hash' => $hash,
             'key' => $newkey,
-        ));
-        $opts = array(
-            'http' => array(
-                'method' => 'POST',
-                'header' => [
-                    'Content-type: application/x-www-form-urlencoded',
-                    'Authorization: Basic ' . $authKey
-                ],
-                'content' => $postdata,
-                'timeout' => 5
-            ),
         );
+        $url = $this->keyserver . "v2/key/can-change";
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "username" => config("metager.metager.keyserver.user"),
+            "password" => config("metager.metager.keyserver.password"),
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+            "headers" => [
+                'Content-type' => "application/x-www-form-urlencoded"
+            ],
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => \http_build_query($postdata)
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $context = stream_context_create($opts);
-
+        $result = Redis::blpop($result_hash, 10);
         try {
-            $link = $this->keyserver . "v2/key/can-change";
-            $result = json_decode(file_get_contents($link, false, $context));
-
-            if (!empty($result) && $result->status === "success" && empty($result->results)) {
-                return true;
-            } else {
-                return false;
+            if ($result && \is_array($result) && sizeof($result) === 2) {
+                $result = \json_decode($result[1]);
+                if ($result === null) {
+                    return false;
+                } else {
+                    if ($result->status === "success" && empty($result->results)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
             }
         } catch (\ErrorException $e) {
             return false;

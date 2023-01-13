@@ -49,7 +49,7 @@
 		</div>
 		@if(!empty($data['frequency']))
 		<div class="data-element">
-			<label for="frequency" style="margin-right: 16px;">{{ trans('spende.frequency') }}</label>
+			<label for="frequency" style="margin-right: 16px;">{{ trans('spende.frequency.name') }}</label>
 			<input type="text" name="frequency" id="frequency" value="{{ trans('spende.frequency.' . $data['frequency']) }}" readonly>
 		</div>
 		@endif
@@ -58,13 +58,13 @@
 			<textarea name="nachricht" id="nachricht" readonly>{{ $data['nachricht'] }}</textarea>
 		</div>
 	</div>
-	<button type="button" style="margin-top: 16px; margin-bottom: 16px;" class="btn btn-primary noprint js-only" onclick="window.print();">{{ trans('spende.drucken') }}</button>
+	<button type="button" style="margin-top: 16px; margin-bottom: 16px;" class="btn btn-primary noprint print-button js-only">{{ trans('spende.drucken') }}</button>
 	@if($data['key'] !== false)
 	<div class="card">
 		<p style="text-align: center; width:100%;">{!! trans('spende.danke.schluessel') !!}</p>
 		<div class="copyLink">
 			<input id="key" class="loadSettings" type="text" style="text-align: center;" value="{{ $data['key'] }}">
-			<button class="btn btn-default js-only" onclick="var copyText = document.getElementById('key');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">Kopieren</button>
+			<button class="btn btn-default js-only">Kopieren</button>
 		</div>
 	</div>
 	@endif

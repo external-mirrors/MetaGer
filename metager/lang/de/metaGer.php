@@ -1,9 +1,11 @@
 <?php
 
 return [
+    'results.name' => "Ergebnisse",
     'results.failed' => 'Leider konnten wir zu Ihrer Sucheingabe keine passenden Ergebnisse finden.',
     'results.failedSitesearch' => 'Leider konnten wir zu Ihrer Sucheingabe keine passenden Ergebnisse finden. Dies könnte daran liegen, dass Sie aktuell eine Suche ausführen, die sich auf Ergebnisse der Seite ":site" beschränkt. Wenn sie diese beschränkung entfernen möchten, klicken Sie hier: <a href=":altSearch">Neue Suche</a>',
 
+    "settings.name" => "Einstellungen",
     'settings.noneSelected' => 'Achtung: Sie haben in ihren Einstellungen keine Suchmaschine ausgewählt.',
 
     'engines.noParser' => 'Beim Abfragen von :engine ist ein Fehler aufgetreten. Bitte benachrichtigen Sie uns über unser <a href="/kontakt" target="_blank">Kontaktformular</a>',
@@ -24,22 +26,21 @@ return [
     'sitesearch.success' => 'Sie führen eine Sitesearch durch. Es werden nur Ergebnisse von der Seite: ":site" angezeigt.',
     'feedback' => 'Nichts Passendes dabei? Geben Sie uns Feedback: ',
 
-    'results' => "Ergebnisse",
     'filter.noFilter' => 'Beliebig',
     'filter.reset' => 'Filter zurücksetzen',
 
     'filter.sitesearch' => 'Sitesearch',
-    'filter.safesearch' => "SafeSearch",
+    'filter.safesearch.name' => "SafeSearch",
     'filter.safesearch.strict' => 'Strikt',
     'filter.safesearch.moderate' => 'Moderat',
     'filter.safesearch.off' => 'Aus',
-    'filter.size' => 'Bildgröße',
+    'filter.size.name' => 'Bildgröße',
     'filter.size.small' => 'Klein',
     'filter.size.medium' => 'Mittel',
     'filter.size.large' => 'Groß',
     'filter.size.xtralarge' => 'Extra Groß',
 
-    "filter.color" => "Farbe",
+    "filter.color.name" => "Farbe",
     "filter.color.colorOnly" => "Nur Farbe",
     "filter.color.monochrome" => "Schwarzweiß",
     "filter.color.black" => "Schwarz",
@@ -55,23 +56,23 @@ return [
     "filter.color.white" => "Weiß",
     "filter.color.yellow" => "Gelb",
 
-    "filter.imagetype" => "Typ",
+    "filter.imagetype.name" => "Typ",
     "filter.imagetype.photo" => "Foto",
     "filter.imagetype.clipart" => "Grafik",
     "filter.imagetype.strich" => "Strichzeichnung",
     "filter.imagetype.gif" => "Animierte GIF",
     "filter.imagetype.transparent" => "Transparent",
 
-    "filter.imageaspect" => "Layout",
+    "filter.imageaspect.name" => "Layout",
     "filter.imageaspect.square" => "Rechteck",
     "filter.imageaspect.wide" => "Breit",
     "filter.imageaspect.tall" => "Hoch",
 
-    "filter.imagecontent" => "Personen",
+    "filter.imagecontent.name" => "Personen",
     "filter.imagecontent.face" => "Nahaufnahmen",
     "filter.imagecontent.portrait" => "Kopf & Schultern",
 
-    "filter.imagelicense" => "Lizenz",
+    "filter.imagelicense.name" => "Lizenz",
     "filter.imagelicense.any" => "Beliebig",
     "filter.imagelicense.public" => "Public Domain",
     "filter.imagelicense.share" => "Teilen",
@@ -79,7 +80,7 @@ return [
     "filter.imagelicense.modify" => "Verändern",
     "filter.imagelicense.modifycommercially" => "Verändern (kommerziell)",
 
-    "filter.freshness" => "Datum",
+    "filter.freshness.name" => "Datum",
     "filter.freshness.day" => "Letzte 24h",
     "filter.freshness.week" => "Letzte Woche",
     "filter.freshness.month" => "Letzter Monat",
@@ -87,7 +88,7 @@ return [
     "filter.freshness.custom" => "Benutzerdefiniert",
     "filter.customdatetitle" => "Benutzerdefiniertes Datum auswählen",
 
-    "filter.market" => "Sprache",
+    "filter.market.name" => "Sprache",
     "filter.market.ga" => "Deutsch (Österreich)",
     "filter.market.gg" => "Deutsch (Deutschland)",
     "filter.market.gs" => "Deutsch (Schweiz)",
@@ -128,7 +129,7 @@ return [
     "filter.market.cc" => "Chinesisch (China)",
     "filter.market.ct" => "Chinesisch (Taiwan)",
 
-    "filter.sort" => "Sortieren nach",
+    "filter.sort.name" => "Sortieren nach",
     "filter.sort.priceascending" => "Preis (aufsteigend)",
     "filter.sort.pricedescending" => "Preis (absteigend)",
     "filter.sort.totalpriceascending" => "Gesamtpreis (aufsteigend)",
@@ -141,8 +142,7 @@ return [
     "filter.min" => "Minimum Sleep (in s)",
     "filter.max" => "Maximum Sleep (in s)",
 
-    "settings" => "Einstellungen",
-
+    'prevention.phrase' =>'<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
     "ads.own.title" => "Jetzt MetaGer unterstützen",
     "ads.own.description" => "Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV.",
 ];

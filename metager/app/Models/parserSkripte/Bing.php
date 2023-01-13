@@ -4,7 +4,6 @@ namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
 use Log;
-use LaravelLocalization;
 
 class Bing extends Searchengine
 {
@@ -13,20 +12,6 @@ class Bing extends Searchengine
     public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
     {
         parent::__construct($name, $engine, $metager);
-
-        if (LaravelLocalization::getCurrentLocale() === 'en') {
-            $langFile = $metager->getLanguageFile();
-            $langFile = json_decode(file_get_contents($langFile));
-            $acceptLanguage = $metager->request->headers->all();
-            if (!empty($acceptLanguage["accept-language"]) && is_array($acceptLanguage["accept-language"]) && sizeof($acceptLanguage["accept-language"]) > 0) {
-                $acceptLanguage = $acceptLanguage['accept-language'][0];
-                foreach ($langFile->filter->{'parameter-filter'}->language->sumas->bing->values as $key => $value) {
-                    if (stripos($acceptLanguage, "en") === 0 && stripos($acceptLanguage, $value) === 0) {
-                        $this->engine->{"get-parameter"}->mkt =  $value;
-                    }
-                }
-            }
-        }
     }
 
     public function loadResults($result)

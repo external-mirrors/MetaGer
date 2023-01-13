@@ -26,6 +26,7 @@ class MetaGer
     protected $test;
     protected $eingabe;
     protected $q;
+    protected $out;
     protected $page;
     protected $lang;
     protected $cache = "";
@@ -44,6 +45,7 @@ class MetaGer
     protected $ads = [];
     protected $infos = [];
     protected $warnings = [];
+    protected $htmlwarnings = [];
     protected $errors = [];
     protected $addedHosts = [];
     protected $availableFoki = [];
@@ -60,6 +62,7 @@ class MetaGer
     # Konfigurationseinstellungen:
     protected $sumaFile;
     protected $mobile;
+    protected $framed;
     protected $resultCount;
     protected $sprueche;
     protected $newtab;
@@ -169,6 +172,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -180,6 +184,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -197,6 +202,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -209,6 +215,7 @@ class MetaGer
                         ->with('eingabe', $this->eingabe)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -241,6 +248,7 @@ class MetaGer
                         ->with('focusPages', $focusPages)
                         ->with('mobile', $this->mobile)
                         ->with('warnings', $this->warnings)
+                        ->with('htmlwarnings', $this->htmlwarnings)
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
@@ -293,7 +301,8 @@ class MetaGer
         # Validate Advertisements
         $newResults = [];
         foreach ($this->ads as $ad) {
-            if (($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
+            if (
+                ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
                     in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
                     in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
             ) {
@@ -396,7 +405,7 @@ class MetaGer
                     $arr[$link]->changed = true;
                 }
             } else {
-                $arr[$link] = &$this->results[$i];
+                $arr[$link] = & $this->results[$i];
             }
         }
     }
@@ -439,16 +448,17 @@ class MetaGer
         /**
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
+         * ToDo set back to 5 once we do not want to advertise donations as much anymore
          */
-        if (/*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 5) {
+        if ( /*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 34) {
             return;
         }
 
         $donationAd = new \App\Models\Result(
             "MetaGer",
             __("metaGer.ads.own.title"),
-            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
-            LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("spende")),
+            LaravelLocalization::getLocalizedURL(null, route("spende")),
+            LaravelLocalization::getLocalizedURL(null, route("spende")),
             __("metaGer.ads.own.description"),
             "MetaGer",
             "https://metager.de",
@@ -480,7 +490,7 @@ class MetaGer
                 $url = route('humanverification', $params);
                 $proxyPw = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
                 $params["pw"] = $proxyPw;
-                $params["url"] =  \bin2hex($result->proxyLink);
+                $params["url"] = \bin2hex($result->proxyLink);
                 $proxyUrl = route('humanverification', $params);
                 $result->link = $url;
                 $result->proxyLink = $proxyUrl;
@@ -505,7 +515,6 @@ class MetaGer
         }
 
         $this->enabledSearchengines = [];
-        $overtureEnabled = false;
 
         # Check if selected focus is valid
         if (empty($this->sumaFile->foki->{$this->fokus})) {
@@ -521,6 +530,8 @@ class MetaGer
 
         $this->removeAdsFromListIfAdfree($sumas);
 
+        $current_regional_locale = LaravelLocalization::getCurrentLocaleRegional();
+        $current_language = Localization::getLanguage();
         foreach ($sumas as $sumaName => $suma) {
             # Check if this engine is disabled and can't be used
             $disabled = empty($suma->disabled) ? false : $suma->disabled;
@@ -532,6 +543,17 @@ class MetaGer
                 continue;
             }
 
+            // Skip if language support is not defined
+            if (!\property_exists($suma, "lang") || !\property_exists($suma->lang, "languages") || !\property_exists($suma->lang, "regions")) {
+                continue;
+            }
+            // Skip if engine does not support current locale or region (locale i.e. en is enough to get enabled)
+            if (
+                !\property_exists($suma->lang->languages, $current_language) &&
+                !\property_exists($suma->lang->regions, $current_regional_locale)
+            ) {
+                continue;
+            }
             $valid = true;
 
             # Check if this engine can use potentially defined query-filter
@@ -559,7 +581,7 @@ class MetaGer
                 # and no other search engine can provide this filter
                 $validTmp = false;
                 foreach ($this->parameterFilter as $filterName => $filter) {
-                    if (count((array)$filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
+                    if (count((array) $filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
                         $validTmp = true;
                         break;
                     }
@@ -574,7 +596,7 @@ class MetaGer
                 $this->enabledSearchengines[$sumaName] = $suma;
             }
         }
-
+        $engines = $this->enabledSearchengines;
         # Include Yahoo Ads if Yahoo is not enabled as a searchengine
         if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
             $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
@@ -582,7 +604,7 @@ class MetaGer
 
         # Special case if search engines are disabled
         # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off"  && isset($this->sumaFile->sumas->{"bing"})) {
+        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off" && isset($this->sumaFile->sumas->{"bing"})) {
             $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
         }
 
@@ -733,7 +755,9 @@ class MetaGer
                         $availableFilter[$filterName]->values = new \stdClass();
                     }
                     foreach ($filter->sumas->{$engineName}->values as $key => $value) {
-                        $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        if (\property_exists($values, $key)) {
+                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                        }
                     }
                 }
             }
@@ -742,7 +766,8 @@ class MetaGer
                 if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
                     if (!empty($filter->sumas->{$suma})) {
                         # If the searchengine is disabled this filter shouldn't be available
-                        if ((!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
+                        if (
+                            (!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
                             || (!empty($this->sumaFile->sumas->{$suma}->{"auto-disabled"}) && $this->sumaFile->sumas->{$suma}->{"auto-disabled"} === true)
                         ) {
                             continue;
@@ -759,7 +784,9 @@ class MetaGer
                             $availableFilter[$filterName]->values = new \stdClass();
                         }
                         foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                            $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            if (\property_exists($values, $key)) {
+                                $availableFilter[$filterName]->values->{$key} = $values->$key;
+                            }
                         }
                     }
                 }
@@ -772,6 +799,31 @@ class MetaGer
                 $filter->value = $request->input($filter->{"get-parameter"});
             } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
                 $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
+            }
+        }
+
+        if (\array_key_exists("language", $availableFilter)) {
+            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+            $default_language_value = "";
+            # Set default Value for language selector to current locale
+            foreach ($this->enabledSearchengines as $name => $engine) {
+                if (\property_exists($engine->lang->regions, $current_locale) && \property_exists($availableFilter["language"]->sumas, $name)) {
+                    $region_suma_value = $engine->lang->regions->{$current_locale};
+                    foreach ($availableFilter["language"]->sumas->{$name}->values as $key => $value) {
+                        if ($value === $region_suma_value) {
+                            $default_language_value = $key;
+                            break 2;
+                        }
+                    }
+                }
+            }
+
+            if (\property_exists($availableFilter["language"], "value") && $availableFilter["language"]->value === $default_language_value) {
+                unset($availableFilter["language"]->value);
+            }
+            if (!empty($default_language_value) && \property_exists($availableFilter["language"]->values, $default_language_value)) {
+                $availableFilter["language"]->values->nofilter = $availableFilter["language"]->values->$default_language_value;
+                unset($availableFilter["language"]->values->$default_language_value);
             }
         }
 
@@ -802,14 +854,14 @@ class MetaGer
     public function sumaIsOverture($suma)
     {
         return
-            $suma["name"]->__toString() === "overture"
+                $suma["name"]->__toString() === "overture"
             || $suma["name"]->__toString() === "overtureAds";
     }
 
     public function sumaIsNotAdsuche($suma)
     {
         return
-            $suma["name"]->__toString() !== "qualigo"
+                $suma["name"]->__toString() !== "qualigo"
             && $suma["name"]->__toString() !== "similar_product_ads"
             && $suma["name"]->__toString() !== "overtureAds";
     }
@@ -932,11 +984,12 @@ class MetaGer
         # Fokus
         $this->fokus = $request->input('focus', 'web');
         # Suma-File
-        if (App::isLocale("en")) {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumasEn.json");
+        if ($this->dummy) {
+            $this->sumaFile = \config_path("stress.json");
         } else {
-            $this->sumaFile = config_path() . ($this->dummy ? "/stress.json" : "/sumas.json");
+            $this->sumaFile = \config_path("sumas.json");
         }
+
         if (!file_exists($this->sumaFile)) {
             die(trans('metaGer.formdata.cantLoad'));
         } else {
@@ -946,11 +999,18 @@ class MetaGer
         $this->eingabe = trim($request->input('eingabe', ''));
         $this->q = $this->eingabe;
 
-        if ($request->filled("mgv") || $request->input("out", "") === "results-with-style") {
+        $this->out = $request->input("out", "");
+
+        // Check if request header "Sec-Fetch-Dest" is set
+        $this->framed = false;
+        if ($request->header("Sec-Fetch-Dest") === "iframe") {
             $this->framed = true;
-        } else {
-            $this->framed = false;
+        } elseif ($request->input("out", "") === "results-with-style") {
+            $this->framed = true;
+        } elseif ($request->input("iframe", "false") === "1") {
+            $this->framed = true;
         }
+        unset($request["iframe"]);
 
         # IP
         $this->ip = $this->anonymizeIp($request->ip());
@@ -975,7 +1035,7 @@ class MetaGer
         $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (!App::isLocale('de') || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
+        if (Localization::getLanguage() !== "de" || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
             $this->sprueche = 'off';
         } else {
             $this->sprueche = 'on';
@@ -1217,7 +1277,8 @@ class MetaGer
                 $usedParameters[$filter->{"get-parameter"}] = true;
             }
 
-            if (($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
+            if (
+                ($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
                 Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
                 $this->parameterFilter[$filterName] = $filter;
@@ -1233,6 +1294,15 @@ class MetaGer
         $this->searchCheckUrlBlacklist();
         $this->searchCheckStopwords($request);
         $this->searchCheckNoSearch();
+
+        # Check for self-harm related searches
+        $triggers = ["suizid", "selbstmord", "Selbstmordgedanken", "selbsttötung", "Freitod", "Sterbehilfe", "umbringen", "suizidale", "depressionen", "depressiv", "selbstverletzung", "einsam", "einsamkeit", "self harm", "self injury", "suicidal", "suicidality", "self-murder", "self-slaughter", "self-destruction", "self-homocide", "self-murderer", "kill oneself", "lonely", "depression"];
+        foreach ($triggers as $i => $trigger) {
+            if (stripos($this->q, $trigger) !== false) {
+                $this->htmlwarnings[] = trans('metaGer.prevention.phrase', ['prevurl' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "prevention")]);
+                break;
+            }
+        }
     }
 
     private function searchCheckPhrase()
@@ -1623,14 +1693,6 @@ class MetaGer
         }
     }
 
-    public function getImageProxyLink($link)
-    {
-        $requestData = [];
-        $requestData["url"] = $link;
-        $link = action('Pictureproxy@get', $requestData);
-        return $link;
-    }
-
     public function getSearchUid()
     {
         return $this->searchUid;
@@ -1673,6 +1735,11 @@ class MetaGer
     public function getNext()
     {
         return $this->next;
+    }
+
+    public function getOut()
+    {
+        return $this->out;
     }
 
     public function getSite()
@@ -1735,12 +1802,7 @@ class MetaGer
 
     public static function getLanguageFile()
     {
-        $locale = LaravelLocalization::getCurrentLocale();
-        if ($locale === "en") {
-            return config_path('sumasEn.json');
-        } else {
-            return config_path('sumas.json');
-        }
+        return config_path('sumas.json');
     }
 
     public function getLang()

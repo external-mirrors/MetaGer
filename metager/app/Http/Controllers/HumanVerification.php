@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use App\Models\Verification\CookieVerification;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use App\Models\Verification\Captcha;
@@ -59,7 +60,7 @@ class HumanVerification extends Controller
         // Extract the correct solution to this captcha for generating the Audio Captcha
         $text = implode(" ", $captcha->getText());
 
-        $tts_url = TTSController::CreateTTSUrl($text, LaravelLocalization::getCurrentLocale());
+        $tts_url = TTSController::CreateTTSUrl($text, Localization::getLanguage());
 
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
@@ -86,7 +87,7 @@ class HumanVerification extends Controller
 
         $lockedKey = $request->post("c", "");
 
-        $rules = ['captcha' => 'required|captcha_api:' . $lockedKey  . ',math'];
+        $rules = ['captcha' => 'required|captcha_api:' . $lockedKey . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
         if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
@@ -133,7 +134,7 @@ class HumanVerification extends Controller
             self::logCaptchaSolve($query, $time, $request->has("dnaa"));
 
 
-            $params['token'] = $token;     // Overwrite if exists
+            $params['token'] = $token; // Overwrite if exists
 
             // Note that this will url_encode all values
             $url_parts['query'] = http_build_query($params);
@@ -316,7 +317,7 @@ class HumanVerification extends Controller
             Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
                 $bvData = Cache::get($key);
                 if ($bvData === null) {
-                    $bvData = [];
+                    abort(404);
                 }
                 if (\array_key_exists("css", $bvData)) {
                     $bvData["css"] = array();
@@ -341,7 +342,7 @@ class HumanVerification extends Controller
         Cache::lock($key . "_lock", 10)->block(5, function () use ($key, $request) {
             $bvData = Cache::get($key);
             if ($bvData === null) {
-                $bvData = [];
+                abort(404);
             }
             if (!\array_key_exists("js", $bvData)) {
                 $bvData["js"] = array();
@@ -365,10 +366,7 @@ class HumanVerification extends Controller
 
             Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
-
-
-
-        return response()->file(\public_path("img/1px.png", ["Content-Type" => "image/png"]));
+        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png"]);
     }
 
     public function verificationCSP(Request $request, string $mgv)
@@ -381,7 +379,7 @@ class HumanVerification extends Controller
         Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv, $request) {
             $bvData = Cache::get($mgv);
             if ($bvData === null) {
-                $bvData = [];
+                abort(404);
             }
 
             $report = $request->getContent();
@@ -429,5 +427,6 @@ class HumanVerification extends Controller
 
             Cache::put($mgv, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
+        return response("", 200);
     }
 }

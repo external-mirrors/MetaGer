@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use App\QueryTimer;
+use App\Searchengines;
 use App\SearchSettings;
 
 class MetaGerProvider extends ServiceProvider
@@ -52,6 +53,10 @@ class MetaGerProvider extends ServiceProvider
 
         $this->app->singleton(SearchSettings::class, function ($app) {
             return new SearchSettings();
+        });
+
+        $this->app->singleton(Searchengines::class, function ($app) {
+            return new Searchengines();
         });
 
         $this->app->singleton(HumanVerification::class, function ($app) {

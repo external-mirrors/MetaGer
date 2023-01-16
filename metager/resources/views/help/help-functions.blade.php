@@ -5,7 +5,7 @@
 @section('content')
 <h1 class="page-title">{!! trans('help/help-functions.title') !!}</h1>
 <section>
-<a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-functions.backarrow') !!}</a>
+<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-functions.backarrow') !!}</a>
 		<h2 id="searchfunctions">{!! trans('help/help-functions.suchfunktion.title') !!}</h2>
 		<h3 id="stopwordsearch">{!! trans('help/help-functions.stopworte.title') !!}</h3>
 		<div>

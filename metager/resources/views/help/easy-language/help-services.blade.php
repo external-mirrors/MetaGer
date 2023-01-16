@@ -5,7 +5,7 @@
 @section('content')
 <section class="help-section">
 <h1 class="page-title">{!! trans('help/easy-language/help-services.title') !!}</h1>
-<a  class=help-back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-services.backarrow') !!}</a>
+<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-services.backarrow') !!}</a>
 <h2 id="dienste">{!! trans('help/easy-language/help-services.dienste') !!}</h2>
 	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/easy-language/help-services.dienste.kostenlos') !!}</h3>
 	<section id="app">

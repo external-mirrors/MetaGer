@@ -6,7 +6,7 @@ return [
 
 
 
-    "backarrow"             => ' Zurück',
+    "backarrow"             => 'Zurück',
     "result"        => [
         "info"       => [
             "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"></div></p>',

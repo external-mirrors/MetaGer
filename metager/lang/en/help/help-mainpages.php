@@ -1,6 +1,6 @@
 <?php
 return [
-    'backarrow'   => ' back',
+    'backarrow'   => 'back',
     'title'       => [
         2   => 'Use of the search engine',
         1   => 'MetaGer - Help',

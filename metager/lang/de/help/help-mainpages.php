@@ -6,7 +6,7 @@ return [
 
 
 
-    "backarrow"             => ' Zurück',
+    "backarrow"             => 'Zurück',
     "result"        => [
         "info"       => [
             "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"></div></p>',
@@ -30,7 +30,7 @@ return [
     ],
     "searchfield"       => [
         "info"      => 'Das Suchfeld besteht aus mehreren Teilen:',
-        "memberkey" => 'dem Schlüsselsymbol: Hier können Mitglieder des SUMA-EV oder Spender Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Sie wollen das auch? Werden Sie Mitglied über unser <a href = "/beitritt/">Beitrittsformular</a> oder <a href = "/spende/">spenden</a> Sie an den SUMA-EV.',
+        "memberkey" => 'dem Schlüsselsymbol: Hier können Mitglieder des SUMA-EV Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Sie wollen das auch? Werden Sie Mitglied über unser <a href = "/beitritt/">Beitrittsformular</a> oder <a href = "/spende/">spenden</a> Sie an den SUMA-EV.',
         "morefunctions" => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>"',
         "search"    => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
         "slot"      => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',

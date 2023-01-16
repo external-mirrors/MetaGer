@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\Mail\Sprachdatei;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 use LaravelLocalization;
 use Mail;
 use Log;
@@ -63,34 +65,52 @@ class MailController extends Controller
             $subject = $request->input('subject');
 
             # Wir versenden die Mail des Benutzers an uns:
-            $postdata = [
-                "alert" => true,
-                "autorespond" => true,
-                "source" => "API",
-                "name" => $name,
-                "email" => $replyTo,
-                "subject" => $subject,
-                "ip" => $request->ip(),
-                "topicId" => 11,    // English
-                "message" => "data:text/plain;charset=utf-8, $message",
-                "attachments" => []
-            ];
+            $ip = $request->ip();
+            $date = (new Carbon())->toRfc822String();
+            
+            $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
+            $message_id = Str::uuid()->toString();
+            $from_host = substr($replyTo, strpos($replyTo, "@") + 1);
+            $boundary = md5($message);
+            $boundary_inline = md5($message_id);
+            $postdata = <<<POSTDATA
+            MIME-Version: 1.0
+            Received: by $ip with HTTP; $date
+            Date: $date
+            Delivered-To: $to_mail
+            Message-ID: <$message_id@$from_host>
+            Subject: $subject
+            From: $name <$replyTo>
+            To: $to_mail
+            Content-Type: multipart/mixed; boundary=$boundary
+
+            --$boundary
+            Content-Type: multipart/alternative; boundary=$boundary_inline
+
+            --$boundary_inline
+            Content-Type: text/plain; charset=UTF-8
+
+            $message
+
+            --$boundary_inline--
+            POSTDATA;
 
             if ($request->has("attachments") && is_array($request->file("attachments"))) {
                 foreach ($request->file("attachments") as $attachment) {
-                    $postdata["attachments"][] = [
-                        $attachment->getClientOriginalName() => "data:" . $attachment->getMimeType() . ";base64," . base64_encode(file_get_contents($attachment->getRealPath()))
-                    ];
+                    $file_content = base64_encode(file_get_contents($attachment->getRealPath()));
+                    $filename = $attachment->getClientOriginalName();
+                    $file_mimetype = $attachment->getMimeType();
+                    $postdata .= PHP_EOL . "--$boundary" . PHP_EOL;
+                    $postdata .= <<<ATTACHMENT
+                    Content-Type: $file_mimetype; charset=utf-8; name="$filename"
+                    Content-Disposition: attachment; filename="$filename"
+                    Content-Transfer-Encoding: base64
+
+                    $file_content
+                    ATTACHMENT;
                 }
             }
-
-            $language = Localization::getLanguage();
-
-            if ($language === "de") {
-                $postdata["topicId"] = 1;    // German
-            }
-
-            $postdata = json_encode($postdata);
+            $postdata .= PHP_EOL . "--$boundary--" . PHP_EOL;
 
             $resulthash = md5($subject . $message);
 
@@ -102,7 +122,6 @@ class MailController extends Controller
                 "password" => null,
                 "headers" => [
                     "X-API-Key" => config("metager.metager.ticketsystem.apikey"),
-                    "Content-Type" => "application/json",
                     "Content-Length" => strlen($postdata)
                 ],
                 "cacheDuration" => 0,
@@ -124,16 +143,16 @@ class MailController extends Controller
             // Fehlerfall
             if (empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")) {
                 $messageType = "error";
-                $returnMessage = trans('kontakt.error.2', ["email" => config("mail.mailers.smtp.username")]);
+                $returnMessage = trans('kontakt.error.2', ["email" => $to_mail]);
             } else {
                 $returnMessage = trans('kontakt.success.1', ["email" => $replyTo]);
                 $messageType = "success";
             }
         }
 
-        return view('kontakt.kontakt')
+        return response(view('kontakt.kontakt')
             ->with('title', 'Kontakt')
-            ->with($messageType, $returnMessage);
+            ->with($messageType, $returnMessage));
     }
 
     public function donation(Request $request)

@@ -14,7 +14,6 @@ kubectl -n $KUBE_NAMESPACE create secret generic ${HELM_RELEASE_NAME} \
   --from-file=${BLACKLIST_DESCRIPTION_URL} \
   --from-file=${BLACKLIST_DOMAINS} \
   --from-file=${BLACKLIST_URL} \
-  --from-file=${USERSEEDER} \
   --dry-run=client \
   --save-config \
   -o yaml | \

@@ -5,7 +5,7 @@ return [
         "1" => "Sie können MetaGer auch als App nutzen. Laden Sie sich dazu einfach die <a href=\"https://metager.de/app\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> auf ihr Android Smartphone.",
         "title" => "Android-App",
     ],
-    "backarrow"             => ' Zurück',
+    "backarrow"             => 'Zurück',
     "dienste"   => [
         "kostenlos" => "Selbstverständlich sind all unsere Dienste kostenlos",
         "text" => "Weitere Dienste um die Suche herum",

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bef46997991684e2585a33612e100f13",
+    "content-hash": "1061199e4285925f49b2e6d4cb4b7a4d",
     "packages": [
         {
             "name": "brick/math",
@@ -5689,6 +5689,63 @@
                 "source": "https://github.com/translation/laravel/tree/v1.20"
             },
             "time": "2022-06-16T14:31:10+00:00"
+        },
+        {
+            "name": "vizir/laravel-keycloak-web-guard",
+            "version": "v3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mariovalney/laravel-keycloak-web-guard.git",
+                "reference": "eb30758e4479aadde2a784594e18bf54fe6ae07a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mariovalney/laravel-keycloak-web-guard/zipball/eb30758e4479aadde2a784594e18bf54fe6ae07a",
+                "reference": "eb30758e4479aadde2a784594e18bf54fe6ae07a",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.5|^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Vizir\\KeycloakWebGuard\\KeycloakWebGuardServiceProvider"
+                    ],
+                    "aliases": {
+                        "KeycloakWeb": "Vizir\\KeycloakWebGuard\\Facades\\KeycloakWeb"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Vizir\\KeycloakWebGuard\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mário Valney",
+                    "email": "mariovalney@gmail.com"
+                }
+            ],
+            "description": "Simple Keycloak Guard to Laravel Web Routes",
+            "homepage": "https://github.com/Vizir/laravel-keycloak-web-guard",
+            "keywords": [
+                "Authentication",
+                "jwt",
+                "keycloak",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/mariovalney/laravel-keycloak-web-guard/issues",
+                "source": "https://github.com/mariovalney/laravel-keycloak-web-guard/tree/v3.0.1"
+            },
+            "time": "2022-09-28T17:31:42+00:00"
         },
         {
             "name": "vlucas/phpdotenv",

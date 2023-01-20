@@ -1,4 +1,7 @@
 <?php
+use App\Http\Controllers\AdminInterface;
+use App\Http\Controllers\HumanVerification;
+
 # In this File we collect all routes which require a session or other cookies to be active
 Route::get('login', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "login"])->name('keycloak.login');
 Route::get('logout', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "logout"])->name('keycloak.logout');

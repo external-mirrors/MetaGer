@@ -60,10 +60,14 @@ class HumanVerification extends Controller
         // Extract the correct solution to this captcha for generating the Audio Captcha
         $text = implode(" ", $captcha->getText());
 
+        // Make sure each capture can only be tried once
+        $captcha_id = Crypt::encryptString(md5(microtime(true) . $text));
+
         $tts_url = TTSController::CreateTTSUrl($text, Localization::getLanguage());
 
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
+            ->with("id", $captcha_id)
             ->with('url', $redirect_url)
             ->with("key", $request->input("key"))
             ->with('correct', $captcha_key["key"])
@@ -90,7 +94,21 @@ class HumanVerification extends Controller
         $rules = ['captcha' => 'required|captcha_api:' . $lockedKey . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
-        if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
+        // There will be an entry in Cache for this key if this same captcha was already tried
+        $captcha_id = $request->input("id", "");
+        if (!empty($captcha_id)) {
+            try {
+                $captcha_id = Crypt::decryptString($captcha_id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                $captcha_id = "";
+            }
+            // If this is not a md5
+            if (strlen($captcha_id) !== 32 || !ctype_xdigit($captcha_id)) {
+                $captcha_id = "";
+            }
+        }
+
+        if (empty($captcha_id) || Cache::has($captcha_id) || empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
             $params = [
                 "url" => $redirect_url,
                 "e" => "",
@@ -99,6 +117,7 @@ class HumanVerification extends Controller
             if ($request->has("dnaa")) {
                 $params["dnaa"] = true;
             }
+            Cache::put($captcha_id, true, now()->addMinutes(10));
             return redirect(route('captcha_show', $params));
         } else {
             // Check if the user wants to store a cookie
@@ -148,6 +167,8 @@ class HumanVerification extends Controller
             $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
             $human_verification->unlockUser();
             $human_verification->verifyUser();
+
+            Cache::put($captcha_id, true, now()->addMinutes(10));
 
             return redirect($url);
         }

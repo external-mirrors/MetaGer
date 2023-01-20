@@ -137,7 +137,8 @@ function loadTotals(parallel) {
     if (fetches.length < parallel) {
       fetches.push(
         fetch(
-          "/admin/count/count-data-total?date=" + date + "&interface=" + lang
+          "/admin/count/count-data-total?date=" + date + "&interface=" + lang,
+          { redirect: "error" }
         )
           .then((response) => {
             if (response.status === 302) {
@@ -155,10 +156,8 @@ function loadTotals(parallel) {
             data[days_ago]["total"] = total_requests;
           })
           .catch((reason) => {
-            if (!data[days_ago]) {
-              data[days_ago] = {};
-            }
-            data[days_ago]["total"] = 0;
+            // We are not logged in anymore
+            history.go();
           })
       );
     } else {
@@ -181,7 +180,8 @@ function loadSameTimes(parallel) {
     if (fetches.length < parallel) {
       fetches.push(
         fetch(
-          "/admin/count/count-data-until?date=" + date + "&interface=" + lang
+          "/admin/count/count-data-until?date=" + date + "&interface=" + lang,
+          { redirect: "error" }
         )
           .then((response) => {
             if (response.status === 302) {

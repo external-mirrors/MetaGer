@@ -39,15 +39,8 @@ function loadQueries() {
 
   let url = base_url + "?since=" + encodeURI(latest_update);
 
-  fetch(url)
-    .then((response) => {
-      if (response.status === 302) {
-        // We are not logged in anymore
-        history.go();
-      } else {
-        return response.json();
-      }
-    })
+  fetch(url, { redirect: "error" })
+    .then((response) => response.json())
     .then((data) => {
       let latest = data.latest;
       document.getElementById("queries").dataset.latest = latest;
@@ -101,6 +94,10 @@ function loadQueries() {
       }
 
       checkRegexp();
+    })
+    .catch((reason) => {
+      // We are not logged in anymore
+      history.go();
     });
 }
 

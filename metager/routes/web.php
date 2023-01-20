@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;

@@ -24,7 +24,7 @@ return [
     "bang.1" => "MetaGer unterstützt eine Schreib-Weise die !bang heißt. <br> Wenn man das benutzen will sieht das so aus: <br> <strong>!twitter</strong> oder <strong>!facebook</strong><br> Beispiel:<br> Sie möchten auf Twitter nach Katzen suchen. <br> Also geben Sie das so ein:",
     "bang.1.example" => "!twitter katze",
     "bang.2" => "Damit zeigt man bei dem Suchen rechts ein Feld an. <br> So sieht das Feld aus:",
-    "bang.3" => "Man kann auf den blauen Knopf drücken. <br> Dann öffnet sich die Web-Seite von Twitter mit der Suche nach Katzen.",
+    "bang.3" => "Man kann auf den blauen Knopf drücken. <br> Dann öffnet sich die Web-Seite von Twitter mit der Suche nach Katzen. <br> Diese Funktion funktioniert bei kleinen Bild-Schirmen wie Handys nicht.",
     'faq.18.h' => 'Warum werden !bangs nicht direkt geöffnet?',
     'faq.18.b' => 'Die !bang-„Weiterleitungen“ sind bei uns ein Teil unserer Quicktips und benötigen einen zusätzlichen „Klick“. Das war für uns eine schwierige Entscheidung, da die !bang dadurch weniger nützlich sind. Jedoch ist es leider nötig, da die Links, auf die weitergeleitet wird, nicht von uns stammen, sondern von einem Drittanbieter, DuckDuckGo.<p>Wir achten stehts darauf, dass unsere Nutzer jederzeit die Kontrolle behalten. Wir schützen daher auf zwei Arten: Zum Einen wird der eingegebene Suchbegriff niemals an DuckDuckGo übertragen, sondern nur das !bang. Zum Anderen bestätigt der Nutzer den Besuch des !bang-Ziels explizit. Leider können wir derzeit aus Personalgründen nicht alle diese !bangs prüfen oder selbst pflegen.',
 

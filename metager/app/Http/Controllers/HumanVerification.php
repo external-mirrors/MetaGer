@@ -170,30 +170,6 @@ class HumanVerification extends Controller
         }
     }
 
-    public static function logCaptcha(Request $request)
-    {
-        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
-        if (empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")) {
-            return;
-        }
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => "captcha",
-            "url" => config("metager.metager.fail2ban.url") . "/captcha/",
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => config("metager.metager.fail2ban.user"),
-            "password" => config("metager.metager.fail2ban.password"),
-            "headers" => [
-                "ip" => $request->ip()
-            ],
-            "cacheDuration" => 0,
-            "name" => "Captcha",
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-    }
-
     public static function remove(Request $request)
     {
         if (!$request->has('hv') || !Cache::has($request->input("hv"))) {

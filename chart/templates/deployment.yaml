@@ -75,9 +75,6 @@ spec:
           - name: secrets
             mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
             subPath: BLACKLIST_DESCRIPTION_URL
-          - name: secrets
-            mountPath: /metager/metager_app/database/seeds/UsersSeeder.php
-            subPath: USERSEEDER
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/logs/metager
             readOnly: false

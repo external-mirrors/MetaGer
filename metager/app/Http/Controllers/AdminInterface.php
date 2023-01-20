@@ -17,8 +17,6 @@ class AdminInterface extends Controller
 
     public function count(Request $request)
     {
-
-
         if ($request->input('out', 'web') === "web") {
             $days = $request->input("days", 28);
             $interface = $request->input('interface', 'all');

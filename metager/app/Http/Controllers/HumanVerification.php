@@ -165,8 +165,10 @@ class HumanVerification extends Controller
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
             $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
-            $human_verification->unlockUser();
-            $human_verification->verifyUser();
+            if ($human_verification !== null) {
+                $human_verification->unlockUser();
+                $human_verification->verifyUser();
+            }
 
             Cache::put($captcha_id, true, now()->addMinutes(10));
 

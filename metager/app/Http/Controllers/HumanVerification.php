@@ -43,7 +43,7 @@ class HumanVerification extends Controller
 
         $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
-        if (!$human_verification->isLocked()) {
+        if ($human_verification === null || !$human_verification->isLocked()) {
             return redirect($redirect_url);
         }
 

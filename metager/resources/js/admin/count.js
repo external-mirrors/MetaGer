@@ -13,18 +13,23 @@ load();
 function load() {
   let parallel = Math.floor(parallel_fetches / 2);
 
-  let fetches = [];
-  let fetches_same_time = loadSameTimes(parallel);
-  let fetches_total = loadTotals(parallel);
-  fetches = fetches.concat(fetches_same_time, fetches_total);
+  let fetches = loadData(parallel);
+
   if (fetches.length > 0) {
     let allData = Promise.all(fetches);
-    allData.then((res) => {
-      updateTable();
-      updateChart();
-      updateRecord();
-      load();
-    });
+    allData
+      .then((res) => {
+        updateTable();
+        updateChart();
+        updateRecord();
+        load();
+      })
+      .catch((reason) => {
+        if (reason === "Unauthorized") {
+          // Not logged in anymore. Reload
+          history.go();
+        }
+      });
   } else {
     updateTable();
     updateChart();
@@ -125,49 +130,7 @@ function updateTable() {
   }
 }
 
-function loadTotals(parallel) {
-  let loading_elements = document.querySelectorAll("tr > td.total.loading");
-  let fetches = [];
-  for (let i = 0; i < loading_elements.length; i++) {
-    let element = loading_elements[i];
-    let date = element.parentNode.querySelector(".date").dataset.date;
-
-    let days_ago = parseInt(element.parentNode.dataset.days_ago);
-
-    if (fetches.length < parallel) {
-      fetches.push(
-        fetch(
-          "/admin/count/count-data-total?date=" + date + "&interface=" + lang,
-          { redirect: "error" }
-        )
-          .then((response) => {
-            if (response.status === 302) {
-              // We are not logged in anymore
-              history.go();
-            } else {
-              return response.json();
-            }
-          })
-          .then((response) => {
-            let total_requests = parseInt(response.data.total);
-            if (!data[days_ago]) {
-              data[days_ago] = {};
-            }
-            data[days_ago]["total"] = total_requests;
-          })
-          .catch((reason) => {
-            // We are not logged in anymore
-            history.go();
-          })
-      );
-    } else {
-      break;
-    }
-  }
-  return fetches;
-}
-
-function loadSameTimes(parallel) {
+function loadData(parallel) {
   let loading_elements = document.querySelectorAll("tr > td.same-time.loading");
   let fetches = [];
 
@@ -179,30 +142,30 @@ function loadSameTimes(parallel) {
 
     if (fetches.length < parallel) {
       fetches.push(
-        fetch(
-          "/admin/count/count-data-until?date=" + date + "&interface=" + lang,
-          { redirect: "error" }
-        )
+        fetch("/admin/count/count-data?date=" + date + "&interface=" + lang)
           .then((response) => {
-            if (response.status === 302) {
-              // We are not logged in anymore
-              history.go();
+            if (response.status === 404) {
+              // File Could not be found
+              return {
+                data: {
+                  total: 0,
+                  until_now: 0,
+                },
+              };
+            } else if (response.redirected) {
+              throw "Unauthorized";
             } else {
               return response.json();
             }
           })
           .then((response) => {
             let total_requests = parseInt(response.data.total);
+            let until_now = parseInt(response.data.until_now);
             if (!data[days_ago]) {
               data[days_ago] = {};
             }
-            data[days_ago]["same_time"] = total_requests;
-          })
-          .catch((reason) => {
-            if (!data[days_ago]) {
-              data[days_ago] = {};
-            }
-            data[days_ago]["same_time"] = 0;
+            data[days_ago]["total"] = total_requests;
+            data[days_ago]["same_time"] = until_now;
           })
       );
     } else {

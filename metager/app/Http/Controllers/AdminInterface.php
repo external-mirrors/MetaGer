@@ -32,7 +32,7 @@ class AdminInterface extends Controller
         }
     }
 
-    public function getCountDataTotal(Request $request)
+    public function getCountData(Request $request)
     {
         $date = $request->input('date', '');
         $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00");
@@ -45,36 +45,51 @@ class AdminInterface extends Controller
         $year = $date->format("Y");
         $month = $date->format("m");
         $day = $date->format("d");
-        $cache_key = "admin_count_total_${interface}_${year}_${month}_${day}";
-        $total_count = Cache::get($cache_key);
+        $now = now();
+        $cache_key = "admin_count_data_${interface}_${year}_${month}_${day}";
+        $result = Cache::get($cache_key);
 
 
-        if ($total_count === null) {
-            $database_file = $this->getDatabaseLogFile($date);
+        if ($result === null) {
+            $result = [
+                "total" => 0,
+                "until_now" => 0
+            ];
+
+            $database_file = \storage_path("logs/metager/" . $date->format("Y/m/d") . ".sqlite");
             if ($database_file === null) {
                 abort(404);
             }
 
             $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
+            $connection->disableQueryLog();
             try {
                 if (!$connection->getSchemaBuilder()->hasTable("logs")) {
                     abort(404);
                 }
 
-                $total_count = $connection->table("logs");
+                $data = $connection->table("logs")->selectRaw("COUNT(*) AS count, time");
                 if ($interface !== "all") {
-                    $total_count = $total_count->where("interface", "=", $interface);
+                    $data = $data->where("interface", "=", $interface);
                 }
-                $total_count = $total_count->count('*');
+                $data->groupByRaw("STRFTIME('%s', time) / 300");
+                $data = $data->get();
             } finally {
                 $connection->disconnect();
             }
-            // No Cache for today
-            if ($date->isToday()) {
-                Cache::put($cache_key, $total_count, now()->addMinutes(5));
-            } else {
-                Cache::put($cache_key, $total_count, now()->addWeek());
+
+            foreach ($data as $entry) {
+                $time = Carbon::createFromFormat("Y-m-d H:i:s", $entry->time);
+                $time->year($now->year);
+                $time->month($now->month);
+                $time->day($now->day);
+                $result["total"] += $entry->count;
+                if ($time->isBefore($now)) {
+                    $result["until_now"] += $entry->count;
+                }
             }
+
+            Cache::put($cache_key, $result, now()->addMinutes(5));
         }
 
         $result = [
@@ -82,62 +97,11 @@ class AdminInterface extends Controller
             "error" => false,
             "data" => [
                 "date" => "$year-$month-$day",
-                "total" => $total_count,
+                "time" => $now->format("H:i:s"),
+                "total" => $result["total"],
+                "until_now" => $result["until_now"],
             ]
         ];
-        return \response()->json($result);
-    }
-
-    public function getCountDataUntil(Request $request)
-    {
-        $date = $request->input('date', '');
-        $date = Carbon::createFromFormat("Y-m-d", $date);
-        if ($date === false) {
-            abort(404);
-        }
-
-        $interface = $request->input('interface', 'all');
-
-        $year = $date->format("Y");
-        $month = $date->format("m");
-        $day = $date->format("d");
-        $time = now()->format("H:i:s");
-
-        $cache_key = "admin_count_until_${interface}_${year}_${month}_${day}";
-        $total_count = Cache::get($cache_key);
-
-        if ($total_count === null) {
-            $database_file = $this->getDatabaseLogFile($date);
-            if ($database_file === null) {
-                abort(404);
-            }
-
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-            try {
-                if (!$connection->getSchemaBuilder()->hasTable("logs")) {
-                    abort(404);
-                }
-
-                $total_count = $connection->table("logs")->whereTime("time", "<", $time);
-                if ($interface !== "all") {
-                    $total_count = $total_count->where("interface", "=", $interface);
-                }
-                $total_count = $total_count->count('*');
-            } finally {
-                $connection->disconnect();
-            }
-
-            Cache::put($cache_key, $total_count, now()->addMinutes(5));
-        }
-        $result = [
-            "status" => 200,
-            "error" => false,
-            "data" => [
-                "date" => "$year-$month-$day",
-                "total" => $total_count,
-            ]
-        ];
-
         return \response()->json($result);
     }
 
@@ -209,48 +173,5 @@ class AdminInterface extends Controller
     {
         $status = \fpm_get_status();
         return response()->json($status);
-    }
-
-    private function getDatabaseLogFile(Carbon $date)
-    {
-        $original_file = \storage_path("logs/metager/" . $date->format("Y/m/d") . ".sqlite");
-        $fast_file = \storage_path("logs/metager/fast_dir/" . $date->format("Y/m/d") . ".sqlite");
-        if (!\file_exists($original_file)) {
-            return null;
-        }
-
-        if ($date->isToday()) {
-            return $original_file;
-        }
-        $lock_hash = \md5($fast_file);
-        if (\file_exists($fast_file) && Redis::get($lock_hash) === null) {
-            return $fast_file;
-        }
-
-        // Verify that the target directory exists
-        $fast_file_dir = dirname($fast_file);
-        if (!\file_exists($fast_file_dir) && !\mkdir($fast_file_dir, 0777, true)) {
-            return null;
-        }
-
-        // Acquire a lock for this file to make sure we're the only process copying it
-
-        do {
-            $lock = Redis::setnx($lock_hash, "lock");
-            if ($lock === 1) {
-                Redis::expire($lock_hash, 15);
-            } else {
-                \usleep(350 * 1000);
-            }
-        } while ($lock !== 1);
-
-        try {
-            if (\copy($original_file, $fast_file)) {
-                return $fast_file;
-            }
-        } finally {
-            Redis::del($lock_hash);
-        }
-        return null;
     }
 }

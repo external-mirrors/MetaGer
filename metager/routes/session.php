@@ -7,11 +7,10 @@ Route::get('login', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "
 Route::get('logout', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "logout"])->name('keycloak.logout');
 Route::get('callback', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "callback"])->name('keycloak.callback');
 
-Route::group(['middleware' => ['keycloak-web'], 'prefix' => 'admin'], function () {
+Route::group(['middleware' => ["keycloak-web"], 'prefix' => 'admin'], function () {
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
-    Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
-    Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);
+    Route::get('count/count-data', [AdminInterface::class, 'getCountData']);
     Route::get('timings', 'MetaGerSearch@searchTimings');
     Route::get('engine/stats.json', 'AdminInterface@engineStats');
     Route::get('check', 'AdminInterface@check');

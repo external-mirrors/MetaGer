@@ -24,12 +24,12 @@
 			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.2') !!}</p>
 			<ul class="dotlist">
-				<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.3') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.3.0') !!}</li>
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.3.example') !!}</div></li>
 			</ul>
 			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.4') !!}</p>
 			<ul class="dotlist">
-			<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.5') !!}</li>
+			<li>{!! trans('help/easy-language/help-functions.mehrwortsuche.5.0') !!}</li>
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.5.example') !!}</div></li>
 			</ul>
 		</div>
@@ -39,7 +39,7 @@
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
-			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.1.example') !!}</p>
+			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.example') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
 			<img class="help-easy-language-mainpages-image" src="/img/help-bangs-easy-language.png"/>
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
@@ -60,7 +60,7 @@
 		</div>
 	</section>
 	<section id="selist">
-		<h3>{!! trans('help/easy-language/help-functions.selist.title') !!}</h3>
+		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.2') !!}<p>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>

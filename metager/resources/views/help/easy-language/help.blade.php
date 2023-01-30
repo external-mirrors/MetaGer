@@ -6,7 +6,7 @@
 <h1>{!! trans('help/easy-language/help.title') !!}</h1>
 <a id=help-easy-language-button-back href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/") }}"><img id="easy-language-image-back" src=/img/help-icon.svg>{!! trans('help/easy-language/help.easy.language.back') !!}
 </a>
-<h2>{!! trans('help/easy-language/help.tableofcontents.1') !!}</h2>
+<h2>{!! trans('help/easy-language/help.tableofcontents.1.0') !!}</h2>
 <div class="help-topic-row">
 	<a id=help-topic-mainpage href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/hauptseiten") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.1.1') !!}</p>
@@ -22,7 +22,7 @@
 	</a>
 </div>
 
-<h2>{!! trans('help/easy-language/help.tableofcontents.2') !!}</h2>
+<h2>{!! trans('help/easy-language/help.tableofcontents.2.0') !!}</h2>
 <div class="help-topic-row">
 	<a id=help-topic-searchfunctions href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/funktionen") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.2.1') !!}</p>
@@ -38,7 +38,7 @@
 	</a>
 </div>
 
-<h2>{!! trans('help/easy-language/help.tableofcontents.3') !!}</h2>
+<h2>{!! trans('help/easy-language/help.tableofcontents.3.0') !!}</h2>
 	<div class="help-topic-row">
 		<a id=help-topic-tracking href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/datensicherheit#tracking") }}" class="help-topic"><p>{!! trans('help/easy-language/help.tableofcontents.3.2') !!}</p>
 		</a>
@@ -50,12 +50,11 @@
 		</a>
 	</div>
 		
-<h2>{!! trans('help/easy-language/help.tableofcontents.4') !!}</h2>
+<h2>{!! trans('help/easy-language/help.tableofcontents.4.0') !!}</h2>
 
 	<div class="help-topic-row">
 		<a id=help-topic-app href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/dienste") }}" class="help-topic">
 			<p>{!! trans('help/easy-language/help.tableofcontents.4.1') !!}<br></p>
-		</a>
 		</a>
 		<a id=help-topic-asso href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/dienste#asso") }}" class="help-topic">
 			<p>{!! trans('help/easy-language/help.tableofcontents.4.3') !!}<br></p>

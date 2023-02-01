@@ -8,16 +8,12 @@ use Log;
 
 class Overture extends Searchengine
 {
+    public $failed_results = false;
     public $results = [];
 
     public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
     {
         parent::__construct($name, $engine, $metager);
-
-        # We need some Affil-Data for the advertisements
-        if (preg_match("/^ukraine$/i", trim($this->query))) {
-            $this->query .= " p";
-        }
 
         $this->getString = $this->generateGetString($this->query);
         $this->getString .= $this->getOvertureAffilData($metager->getUrl());
@@ -41,6 +37,15 @@ class Overture extends Searchengine
             }
             $this->totalResults = $resultCount;
             $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+            $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
+
+            if (sizeof($results) === 0 && sizeof($ads) === 0) {
+                // There are cases where Yahoo will return empty responses
+                // when search terms are not monetized although websearch results should exist
+                $this->failed_results = true;
+                return;
+            }
+
             foreach ($results as $result) {
                 $title = html_entity_decode($result["title"]);
                 $link = $result->{"ClickUrl"}->__toString();
@@ -48,20 +53,19 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                        $this->engine,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
-                    $this->counter,
+                        $this->engine->infos->display_name,
+                        $this->engine->infos->homepage,
+                        $this->counter,
                     []
                 );
             }
 
             # Nun noch die Werbeergebnisse:
-            $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
             foreach ($ads as $ad) {
                 $title = html_entity_decode($ad["title"]);
                 $link = $ad->{"ClickUrl"}->__toString();
@@ -69,14 +73,14 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                    $this->engine,
+                        $this->engine,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
-                    $this->counter,
+                        $this->engine->infos->display_name,
+                        $this->engine->infos->homepage,
+                        $this->counter,
                     []
                 );
             }

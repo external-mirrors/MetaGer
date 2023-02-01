@@ -91,6 +91,12 @@ class MetaGerSearch extends Controller
         $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
 
+        if ($metager->yahoo_failed()) {
+            $params = $request->all();
+            $params["skip_yahoo"] = true;
+            return redirect(route("resultpage", $params));
+        }
+
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
         $metager->rankAll();

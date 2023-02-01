@@ -43,6 +43,7 @@ class Overture extends Searchengine
                 // There are cases where Yahoo will return empty responses
                 // when search terms are not monetized although websearch results should exist
                 $this->failed_results = true;
+                $this->log_failed_yahoo_search();
                 return;
             }
 
@@ -167,5 +168,21 @@ class Overture extends Searchengine
         $serveUrl = $this->urlEncode($url);
 
         return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
+    }
+
+    private function log_failed_yahoo_search()
+    {
+        $log_file = storage_path("logs/metager/yahoo_fail.csv");
+
+        $data = [
+            "time" => now()->format("Y-m-d H:i:s"),
+            "query" => $this->query
+        ];
+        $fh = fopen($log_file, "a");
+        try {
+            fputcsv($fh, $data);
+        } finally {
+            fclose($fh);
+        }
     }
 }

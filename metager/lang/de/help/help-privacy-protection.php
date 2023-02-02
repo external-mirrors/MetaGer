@@ -2,7 +2,7 @@
 
 return [
     "title"                 => 'MetaGer - Hilfe',
-    "backarrow"             => ' Zurück',
+    "backarrow"             => 'Zurück',
     "datenschutz.title" => "Anonymität und Datensicherheit",
 
     "datenschutz.1" => 'Tracking-Cookies, Session-IDs und IP-Adressen',

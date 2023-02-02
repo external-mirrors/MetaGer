@@ -4,10 +4,6 @@ return [
     "browserverification_enabled" => true,
     "browserverification_whitelist" => [
     ],
-    "admin" => [
-        "user" => env("ADMIN_USER", "admin"),
-        "password" => env("ADMIN_PASSWORD", "admin"),
-    ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
@@ -40,6 +36,8 @@ return [
     "ticketsystem" => [
         "url" => env("TICKET_URL", "https://metager.de"),
         "apikey" => env("TICKET_APIKEY", ""),
+        "germanmail" => env("TICKET_GERMAN_MAIL", ""),
+        "englishmail" => env("TICKET_ENGLISH_MAIL", "")
     ],
     "civicrm" => [
         "url" => env("CIVICRM_URL", "https://metager.de"),

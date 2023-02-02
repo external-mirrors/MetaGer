@@ -507,7 +507,7 @@ class MetaGer
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
 
-    public function createSearchEngines(Request $request)
+    public function createSearchEngines(Request &$request)
     {
         # Wenn es kein Suchwort gibt
         if (!$request->filled("eingabe") || $this->q === "") {
@@ -554,6 +554,17 @@ class MetaGer
             ) {
                 continue;
             }
+
+            // Skip Yahoo if it failed this search
+            if ($sumaName === "yahoo") {
+                $skip_yahoo = $request->input("skip_yahoo", "0");
+                $skip_yahoo = filter_var($skip_yahoo, FILTER_VALIDATE_BOOLEAN);
+                if ($skip_yahoo === true) {
+                    unset($request["skip_yahoo"]);
+                    continue;
+                }
+            }
+
             $valid = true;
 
             # Check if this engine can use potentially defined query-filter
@@ -960,6 +971,16 @@ class MetaGer
                 $this->alterationOverrideQuery = $engine->alterationOverrideQuery;
             }
         }
+    }
+
+    public function yahoo_failed()
+    {
+        foreach ($this->engines as $engine) {
+            if ($engine->name === "yahoo" && $engine->loaded && $engine->failed_results) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /*

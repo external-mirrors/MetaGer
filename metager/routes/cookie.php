@@ -15,9 +15,12 @@ Route::group([
     Route::get('generate-new', 'KeyController@generateNew')->name('changeKeyTwo');
     Route::post('generate-new', 'KeyController@generateNewPost');
 
-    Route::get('save-new', function () {
-        return view('keychangethree', ["title" => trans('titles.keychange'), "css" => [mix('css/keychange/index.css')]]);
-    })->name('changeKeyThree');
+    Route::get(
+        'save-new',
+        function () {
+            return view('keychangethree', ["title" => trans('titles.keychange'), "css" => [mix('css/keychange/index.css')]]);
+        }
+    )->name('changeKeyThree');
 });
 
 

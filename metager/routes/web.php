@@ -226,6 +226,15 @@ Route::get('hilfe/easy-language/datensicherheit', function () {
         ]);
 });
 
+Route::get('hilfe/easy-language/glossary', function () {
+    return view('help/easy-language/glossary')
+        ->with('title', trans('titles.help-glossary'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
+});
+
 Route::get('faq', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/hilfe'));
 });

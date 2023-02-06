@@ -9,7 +9,7 @@ return [
         "info"  => [
             "1"        => 'Die Start-Seite hat viele Funktionen. <br>Oben rechts auf der Seite ist ein Knopf. <br> So sieht der Knopf aus.',
             "2"      => 'Sie können auf diesen Knopf drücken. <br> Dann sehen Sie ein Menü. <br> In diesem Menü können Sie viele verschiedene Sachen auswählen. ',
-            "3"      => 'In der Mitte von der Start-Seite ist das Such-Feld. <br> Unter dem Such-Feld steht <strong>MetaGer installieren</strong>. <br> Sie können darauf klicken. <br> Dann können Sie MetaGer als Standard-Such-Maschine einstellen. <br> <br> Bei <a href = "/hilfe/easy-language/funktionen#selist">MetaGer installieren</a> finden Sie mehr über das Thema <strong>Standard-Such-Maschine</strong>.',
+            "3"      => 'In der Mitte von der Start-Seite ist das Such-Feld. <br> Unter dem Such-Feld steht <strong>MetaGer <a title="Wort erklärung" href="/hilfe/easy-language/glossary" >installieren</a></strong>. <br> Sie können darauf klicken. <br> Dann können Sie MetaGer als Standard-Such-Maschine einstellen. <br> <br> Bei <a href = "/hilfe/easy-language/funktionen#selist">MetaGer installieren</a> finden Sie mehr über das Thema <strong>Standard-Such-Maschine</strong>.',
             "4"      => 'Unten auf der Start-Seite sind bunte Felder. <br> Sie können auf diese Felder klicken. <br> Dort können Sie mehr über MetaGer erfahren.',
         ]
     ], 

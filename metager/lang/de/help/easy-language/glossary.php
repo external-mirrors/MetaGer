@@ -3,6 +3,7 @@
 return [
     "title"=>"Glossar",
     "tableofcontents"=>"Inhaltsverzeichnis",
+    "backarrow"=>"Zurück",
 
     "entry" => [
         "1"=>"Installieren",
@@ -14,6 +15,9 @@ return [
         "7"=>"Anonym öffnen",
         "8"=>"Safesearch",
         "9"=>"!bangs",
+        "10"=>"Cookies",
+        "11"=>"Domain",
+        "12"=>"Browser",
     ],
 
     "explanation" => [

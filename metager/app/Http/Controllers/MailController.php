@@ -41,12 +41,12 @@ class MailController extends Controller
             [
                 'email' => 'required|email',
                 'subject-2' => 'size:0',
-                'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
+                'pcsrf' => new \App\Rules\PCSRF,
                 'attachments' => ['max:5'],
                 'attachments.*' => ['file', 'max:' . $maxFileSize],
             ]
             ,
-            ["size" => trans('kontakt.error.2', ["email" => $to_mail])]
+            ["size" => trans("validation.pcsrf")]
         );
 
         if ($validator->fails()) {

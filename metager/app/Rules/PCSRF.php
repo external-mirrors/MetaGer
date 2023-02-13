@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Validation\Rule;
 
 class PCSRF implements Rule
@@ -29,7 +30,11 @@ class PCSRF implements Rule
         // oranges or 60m rinse hoses
         // However CSRF requires some sort of user session which we want to avoid
         // That's why we implement a similar but easier to bypass method of pseudo CSRF
-        $value = \Crypt::decrypt($value);
+        try {
+            $value = \Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            return false;
+        }
 
         if (!\is_int($value)) {
             return false;

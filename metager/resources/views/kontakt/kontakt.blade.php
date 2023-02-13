@@ -15,7 +15,7 @@
         @endif
         <form class="contact" name="contact" method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/kontakt") }}" enctype="multipart/form-data" onsubmit="document.getElementById('submit').disabled=true;">
             {{ csrf_field() }}
-            <input type="hidden" name="pcsrf" value="{{ base64_encode(\time()) }}">
+            <input type="hidden" name="pcsrf" value="{{ \Crypt::encrypt(\time()) }}">
             <div class="form-group kontakt-form-group">
                 <input class="form-control" name="name" placeholder="{!!trans('kontakt.form.name')!!}" type="text" required @if((isset($formerrors) || !empty($error)) && Request::has('name'))value="{{Request::input('name')}}" @endif>
             </div>
@@ -25,6 +25,7 @@
             <div class="form-group kontakt-form-group">
                 <input class="form-control" name="subject" placeholder="{!! trans('kontakt.form.7') !!}" type="text" required @if((isset($formerrors) || !empty($error)) && Request::has('subject'))value="{{Request::input('subject')}}" @endif>
             </div>
+            <input class="form-control" name="subject-2" tabindex="-1" placeholder="{!!trans('kontakt.form.7')!!}" type="text" autocomplete="off">
             <div class="form-group kontakt-form-group">
                 @if(isset($url) && $url !== "")
                 <label for="message">Wenn MetaGer bestimmte Webseiten nicht angezeigt hat, von denen Sie wissen, dass es sie gibt: Bitte nennen Sie deren Adresse/n (http:// ...???...). Wir werden das detailliert untersuchen.</label>

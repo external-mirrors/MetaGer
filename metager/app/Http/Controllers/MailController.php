@@ -29,6 +29,8 @@ class MailController extends Controller
         # Nachricht, die wir an den Nutzer weiterleiten:
         $messageType = ""; # [success|error]
         $returnMessage = '';
+        $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
+
 
         # Wir benötigen 3 Felder von dem Benutzer wenn diese nicht übermittelt wurden, oder nicht korrekt sind geben wir einen Error zurück
         $input_data = $request->all();
@@ -38,14 +40,17 @@ class MailController extends Controller
             $input_data,
             [
                 'email' => 'required|email',
-                'pcsrf' => ['required', 'string', new \App\Rules\PCSRF],
+                'subject-2' => 'size:0',
+                'pcsrf' => new \App\Rules\PCSRF,
                 'attachments' => ['max:5'],
                 'attachments.*' => ['file', 'max:' . $maxFileSize],
             ]
+            ,
+            ["size" => trans("validation.pcsrf")]
         );
 
         if ($validator->fails()) {
-            return view('kontakt.kontakt')->with('formerrors', $validator)->with('title', trans('titles.kontakt'))->with('navbarFocus', 'kontakt');
+            return response(view('kontakt.kontakt')->with('formerrors', $validator)->with('title', trans('titles.kontakt'))->with('navbarFocus', 'kontakt')->with("css", ["css/contact.css"])->with("js", ["js/contact.js"]));
         }
 
         $name = $request->input('name', '');
@@ -67,8 +72,7 @@ class MailController extends Controller
             # Wir versenden die Mail des Benutzers an uns:
             $ip = $request->ip();
             $date = (new Carbon())->toRfc822String();
-            
-            $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
+
             $message_id = Str::uuid()->toString();
             $from_host = substr($replyTo, strpos($replyTo, "@") + 1);
             $boundary = md5($message);
@@ -152,7 +156,9 @@ class MailController extends Controller
 
         return response(view('kontakt.kontakt')
             ->with('title', 'Kontakt')
-            ->with($messageType, $returnMessage));
+            ->with($messageType, $returnMessage)
+            ->with("css", ["css/contact.css"])
+            ->with("js", ["js/contact.js"]));
     }
 
     public function donation(Request $request)
@@ -536,12 +542,12 @@ class MailController extends Controller
             if (!strpos($key, "#")) {
                 $data[$key] = $value;
             } else {
-                $ref = &$data;
+                $ref = & $data;
                 do {
-                    $ref = &$ref[substr($key, 0, strpos($key, "#"))];
+                    $ref = & $ref[substr($key, 0, strpos($key, "#"))];
                     $key = substr($key, strpos($key, "#") + 1);
                 } while (strpos($key, "#"));
-                $ref = &$ref[$key];
+                $ref = & $ref[$key];
                 $ref = $value;
             }
         }

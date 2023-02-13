@@ -7,7 +7,16 @@ Route::get('login', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "
 Route::get('logout', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "logout"])->name('keycloak.logout');
 Route::get('callback', [Vizir\KeycloakWebGuard\Controllers\AuthController::class, "callback"])->name('keycloak.callback');
 
-Route::group(['middleware' => ["keycloak-web"], 'prefix' => 'admin'], function () {
+$auth_middleware = [];
+/**
+ * Disable Authentication in local environments
+ * but keep it enabled for development/production
+ */
+if (in_array(App::environment(), ["development", "production"])) {
+    $auth_middleware[] = "keycloak-web";
+}
+
+Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function () {
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
     Route::get('count/count-data', [AdminInterface::class, 'getCountData']);

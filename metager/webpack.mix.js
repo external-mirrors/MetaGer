@@ -39,6 +39,7 @@ mix
     "public/css/themes/metager-dark.css"
   )
   .less("resources/less/metager/pages/key.less", "public/css/key.css")
+  .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
   .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(
@@ -113,6 +114,7 @@ mix
     ["resources/js/scriptResultPage.js", "resources/js/keyboardNavigation.js"],
     "public/js/scriptResultPage.js"
   )
+  .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
   .js("resources/js/donation.js", "public/js/donation.js")
   // utility

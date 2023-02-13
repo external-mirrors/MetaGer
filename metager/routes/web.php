@@ -78,7 +78,9 @@ Route::get('kontakt/{url?}', function ($url = "") {
     return view('kontakt.kontakt')
         ->with('title', trans('titles.kontakt'))
         ->with('navbarFocus', 'kontakt')
-        ->with('url', $url);
+        ->with('url', $url)
+        ->with('js', [mix('js/contact.js')])
+        ->with("css", [mix("css/contact.css")]);
 })->name("contact");
 
 Route::post('kontakt', 'MailController@contactMail');

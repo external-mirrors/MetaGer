@@ -29,17 +29,10 @@ class PCSRF implements Rule
         // oranges or 60m rinse hoses
         // However CSRF requires some sort of user session which we want to avoid
         // That's why we implement a similar but easier to bypass method of pseudo CSRF
+        $value = \Crypt::decrypt($value);
 
-        // $value should contain a base64 encoded timestamp
-        if (base64_encode(base64_decode($value, true)) !== $value) {
+        if (!\is_int($value)) {
             return false;
-        } else {
-            $value = base64_decode($value, true);
-        }
-        if (\is_int($value)) {
-            return false;
-        } else {
-            $value = intval($value);
         }
 
         $currentTime = \time();

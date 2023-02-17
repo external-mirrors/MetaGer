@@ -56,7 +56,12 @@
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.1') !!}</p>
 				<div class="image-container"><img src="/img/help-php-resultpic-01.png"/></div>
 				<h4>{!! trans('help/easy-language/help-mainpages.result.info.open.title') !!}</h4>
-				<p>{!! trans('help/easy-language/help-mainpages.result.info.open.1') !!}</p>
+				<p>{!! trans('help/easy-language/help-mainpages.result.info.open.0') !!}</p>
+				<ul>
+					<li>{!! trans('help/easy-language/help-mainpages.result.info.open.1') !!}</li>
+					<li>{!! trans('help/easy-language/help-mainpages.result.info.open.2') !!}</li>
+					<li>{!! trans('help/easy-language/help-mainpages.result.info.open.3') !!}</li>
+				</ul>				
 				<h4>{!! trans('help/easy-language/help-mainpages.result.info.newtab.title') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.newtab.1') !!}</p>
 				<h4>{!! trans('help/easy-language/help-mainpages.result.info.anonym.title') !!}</h4>

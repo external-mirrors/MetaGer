@@ -34,6 +34,7 @@
         width: 16em;
         font-size: medium;
         color: @text-color;
+        text-decoration: none;
     }
     #help-easy-language-button:hover {
         border-color:#f47216;
@@ -79,14 +80,14 @@
     }
 }
 @media(max-width: @screen-lg-min){
-    .back-button {
+    .back-button, .up-button {
         visibility: hidden;
     }
 }
 .back-button, .back-button:visited {
     font-size: medium;
     color: @text-color;
-    position: sticky;
+    display: block;
     top: 5px;
     background-color: @background-color;
     padding: 5px;
@@ -103,6 +104,33 @@
     padding-bottom: 3px;
 }
 
+.up-button, .up-button:visited {
+    font-size: medium;
+    color: @text-color;
+    display: block;
+    top: 5px;
+    background-color: @background-color;
+    padding: 5px;
+    margin-top: 0.5em;
+    width: 7.2em;
+    border-color: #5b5b5b8f;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: -80px;
+    text-decoration: none;
+}
+.up-button .up-arrow {
+    width:12px ;
+    padding-bottom: 3px;
+    margin-right: 0.5em;
+}
+
+#navigationsticky{
+    position: sticky;
+    display: block;
+    top:5px;
+}
 #easy-language-image {
     width:20px;
     margin-right: 5px;

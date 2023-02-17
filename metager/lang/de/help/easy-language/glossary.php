@@ -4,6 +4,7 @@ return [
     "title"=>"Glossar",
     "tableofcontents"=>"Inhaltsverzeichnis",
     "backarrow"=>"Zurück",
+    "uparrow"=>"Nach Oben",
 
     "entry" => [
         "1"=>"Installieren",
@@ -21,10 +22,18 @@ return [
     ],
 
     "explanation" => [
+        "entry1"=> [],
         "entry2"=> [
             '1' => 'Was ist eine Standard-Such-Maschine?',
             '2'=>'Das ist die Such-Maschine mit der Sie immer suchen. <br> Sie ist bei der Suche immer ausgewählt. <br> Sie öffnen Ihren Browser. <br> Sie geben das was Sie suchen wollen oben in die Adress-Leiste ein. <br> Dann sucht man mit der Standard-Such-Maschine.',
         ],
+        "entry3"=> [],
+        "entry4"=> [],
+        "entry5"=> [],
+        "entry6"=> [],
+        "entry7"=> [],
+        "entry8"=> [],
+        "entry9"=> [],
         "1"=>"Placeholder",
         "2"=>"Placeholder",
         "3"=>"Placeholder",

@@ -6,7 +6,9 @@
 	<h1 class="page-title">{!! trans('help/help-mainpages.title.1') !!}</h1>
 
 	<section id="startpage">
+	<div id="navigationsticky">
 		<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-mainpages.backarrow') !!}</a>
+	</div>
 		<h2>{!! trans('help/help-mainpages.title.2') !!}</h2>
 
 		<h3 id="startseite">{!! trans('help/help-mainpages.startpage.title') !!}</h3>

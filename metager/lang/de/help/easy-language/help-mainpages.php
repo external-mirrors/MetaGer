@@ -2,7 +2,7 @@
 
 return [
     "title"                 => 'MetaGer - Hilfe in leichter Sprache',
-    "backarrow"             => ' Zurück',
+    "backarrow"             => 'Zurück',
     "title.2"               => 'Die Benutzung von den Haupt-Seiten',
     "startpage"  => [
         "title"       => 'Die Start-Seite',

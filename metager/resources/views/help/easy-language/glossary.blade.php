@@ -5,7 +5,10 @@
 @section('content')
 
 	<h1 class="page-title">{!! trans('help/easy-language/glossary.title') !!}</h1>
-	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/glossary.backarrow') !!}</a>
+	<div id="navigationsticky">
+		<a class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/glossary.backarrow') !!}</a>
+		<a class=up-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/glossary") }}"><img class="up-arrow" src=/img/up-arrow.svg>{!! trans('help/easy-language/glossary.uparrow') !!}</a>
+	</div>
 	<div class="card">
 
 	<h2>{!! trans('help/easy-language/glossary.tableofcontents') !!}</h2>
@@ -60,10 +63,43 @@
 
 		</ol>
 	</div>
+	<div class="card" id="installieren">
+		<h2>{!! trans('help/easy-language/glossary.entry.1') !!}</h2>
+	</div>
 	<div class="card" id="standardsuche">
-	<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>
+		<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>
 	
-	<h3>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}</h3>
-	<p>{!! trans('help/easy-language/glossary.explanation.entry2.2') !!}
+		<h3>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}</h3>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry2.2') !!}
 	</div>	
+	<div class="card" id="suchkategorien">
+		<h2>{!! trans('help/easy-language/glossary.entry.3') !!}</h2>
+	</div>
+	<div class="card" id="filter">
+		<h2>{!! trans('help/easy-language/glossary.entry.4') !!}</h2>
+	</div>
+	<div class="card" id="url">
+		<h2>{!! trans('help/easy-language/glossary.entry.5') !!}</h2>
+	</div>
+	<div class="card" id="tab">
+		<h2>{!! trans('help/easy-language/glossary.entry.6') !!}</h2>
+	</div>
+	<div class="card" id="anonymoeffnen">
+		<h2>{!! trans('help/easy-language/glossary.entry.7') !!}</h2>
+	</div>
+	<div class="card" id="safesearch">
+		<h2>{!! trans('help/easy-language/glossary.entry.8') !!}</h2>
+	</div>
+	<div class="card" id="bangs">
+		<h2>{!! trans('help/easy-language/glossary.entry.9') !!}</h2>
+	</div>
+	<div class="card" id="cookies">
+		<h2>{!! trans('help/easy-language/glossary.entry.10') !!}</h2>
+	</div>
+	<div class="card" id="domain">
+		<h2>{!! trans('help/easy-language/glossary.entry.11') !!}</h2>
+	</div>
+	<div class="card" id="browser">
+		<h2>{!! trans('help/easy-language/glossary.entry.12') !!}</h2>
+	</div>
 @endsection

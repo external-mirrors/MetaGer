@@ -2,7 +2,7 @@
 
 return [
     'title' => 'MetaGer - Hilfe',
-    "backarrow" => ' Zurück',
+    "backarrow" => 'Zurück',
     "suchfunktion"  => [
         "title" => "Such-Funktionen",
     ],

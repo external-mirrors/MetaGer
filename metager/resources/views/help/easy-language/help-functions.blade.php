@@ -3,9 +3,9 @@
 @section('title', $title )
 
 @section('content')
-<h1 class="page-title">{!! trans('help/easy-language/help-functions.title') !!}</h1>
-<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
 <section class="help-section">
+	<h1 class="page-title">{!! trans('help/easy-language/help-functions.title') !!}</h1>
+	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
 	
 		<h2 id="searchfunctions">{!! trans('help/easy-language/help-functions.suchfunktion.title') !!}</h2>
 		<h3 id="stopwordsearch">{!! trans('help/easy-language/help-functions.stopworte.title') !!}</h3>
@@ -33,8 +33,7 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.5.example') !!}</div></li>
 			</ul>
 		</div>
-
-	</section>
+</section>
 	<section id="bangs">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
@@ -68,5 +67,4 @@
 		<div class="image-container"><img src="/img/help-settings-install-metager.jpg"/></div>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
-</section>
 @endsection

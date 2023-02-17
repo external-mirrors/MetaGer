@@ -4,7 +4,6 @@
 
 @section('content')
 
-<div id="team">
 	<h1 class="page-title">{!! trans('help/easy-language/glossary.title') !!}</h1>
 	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/glossary.backarrow') !!}</a>
 	<div class="card">
@@ -16,7 +15,7 @@
 			</li>
 
 			<li>
-			<a href="#standartsuche" >{!! trans('help/easy-language/glossary.entry.2') !!}</a>
+			<a href="#standardsuche" >{!! trans('help/easy-language/glossary.entry.2') !!}</a>
 			</li>
 
 			<li>
@@ -61,5 +60,10 @@
 
 		</ol>
 	</div>
-</div>
+	<div class="card" id="standardsuche">
+	<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>
+	
+	<h3>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}</h3>
+	<p>{!! trans('help/easy-language/glossary.explanation.entry2.2') !!}
+	</div>	
 @endsection

@@ -62,7 +62,7 @@
         </div>
         @else
         <form method="post" class="form" onsubmit="document.getElementById('donate-button').disabled=true;">
-            <input type="hidden" name="pcsrf" value="{{ base64_encode(\time()) }}">
+            <input type="hidden" name="pcsrf" value="{{ \Crypt::encrypt(\time()) }}">
             <div class="section">
                 <h3>{!! trans('spende.headline.5') !!}</h3>
                 <div id="payment-methods">

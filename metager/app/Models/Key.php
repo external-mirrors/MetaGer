@@ -9,12 +9,13 @@ class Key
 {
     public $key;
     public $status; # Null If Key invalid | false if valid but has no adFreeSearches | true if valid and has adFreeSearches
+    public $discharged = 0;
     private $keyserver = "";
     public $keyinfo;
-    public function __construct($key, $status = null)
+    public function __construct($key)
     {
         $this->key = $key;
-        $this->status = $status;
+        $this->status = null;
         $this->keyserver = config("metager.metager.keymanager.server") . "/keys/api/json";
     }
 
@@ -90,22 +91,22 @@ class Key
 
     public function requestPermission()
     {
-        $url = $this->keyserver . "v2/key/" . urlencode($this->key) . "/request-permission";
+        $url = $this->keyserver . "/key/" . urlencode($this->key) . "/discharge";
         $result_hash = md5($url . microtime(true));
+        $discharge = 1;
         $mission = [
             "resulthash" => $result_hash,
             "url" => $url,
             "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => config("metager.metager.keyserver.user"),
-            "password" => config("metager.metager.keyserver.password"),
+            "headers" => [
+                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
+                "Content-Type" => "application/json",
+            ],
             "cacheDuration" => 0,
             "name" => "Key Login",
-            "headers" => [
-                'Content-type' => "application/x-www-form-urlencoded"
-            ],
             "curlopts" => [
                 CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => \http_build_query(["dummy" => 0])
+                CURLOPT_POSTFIELDS => json_encode(["amount" => $discharge])
             ]
         ];
         $mission = json_encode($mission);
@@ -118,7 +119,8 @@ class Key
                 if ($result === null) {
                     return false;
                 } else {
-                    if ($result->{'apiAccess'} == true) {
+                    if ($result->discharged === $discharge) {
+                        $this->discharged += $discharge;
                         return true;
                     } else {
                         $this->status = false;
@@ -129,5 +131,20 @@ class Key
         } catch (\ErrorException $e) {
             return false;
         }
+    }
+
+    public function setStatus(bool $status)
+    {
+        $this->status = $status;
+    }
+
+    public function setDischarged(int $discharged)
+    {
+        $this->discharged = $discharged;
+    }
+
+    public function setKeyInfo($keyinfo)
+    {
+        $this->keyinfo = $keyinfo;
     }
 }

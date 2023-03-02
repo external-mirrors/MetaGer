@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Key;
 use App\Models\Verification\HumanVerification;
 use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
@@ -1104,9 +1105,9 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-
-        if (app('App\Models\Key')->getStatus() === true) {
-            app('App\Models\Key')->requestPermission();
+        $key = app(Key::class);
+        if ($key->discharged === 0 && $key->status === true) {
+            $this->apiAuthorized = app('App\Models\Key')->requestPermission();
         }
 
         // Remove Inputs that are not used

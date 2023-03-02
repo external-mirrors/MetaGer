@@ -6,8 +6,6 @@ use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
 use \App\Models\Key;
-use \Carbon\Carbon;
-use Validator;
 
 class KeyController extends Controller
 {

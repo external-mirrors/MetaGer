@@ -498,11 +498,6 @@ class MetaGer
         }
     }
 
-    public function authorize($key)
-    {
-        return app('App\Models\Key')->requestPermission();
-    }
-
     /*
      * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
      */
@@ -1110,15 +1105,8 @@ class MetaGer
 
         $this->queryFilter = [];
 
-        $this->apiKey = $request->input('key', '');
-        if (empty($this->apiKey)) {
-            $this->apiKey = Cookie::get('key');
-            if (empty($this->apiKey)) {
-                $this->apiKey = "";
-            }
-        }
-        if ($this->apiKey && $auth) {
-            $this->apiAuthorized = $this->authorize($this->apiKey);
+        if (app('App\Models\Key')->getStatus() === true) {
+            app('App\Models\Key')->requestPermission();
         }
 
         // Remove Inputs that are not used

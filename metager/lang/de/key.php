@@ -2,7 +2,7 @@
 
 return [
     'h1' => "Schlüssel für Ihre werbefreie Suche",
-    'p1' => 'MetaGer bietet <a href=":url1">SUMA-EV Mitgliedern</a> und großzügigen <a href=":url2">Spendern</a> einen Schlüssel an, mit dem sie Zugriff auf ein Kontingent an werbefreien Suchen haben.',
+    'p1' => 'MetaGer bietet <a href=":url1">SUMA-EV Mitgliedern</a> einen Schlüssel an, mit dem sie Zugriff auf ein Kontingent an werbefreien Suchen haben.',
     'p2' => 'Auf dieser Seite können Sie Ihren Schlüssel (sofern bekannt) eingeben. Wir speichern diesen mit Hilfe eines Cookies auf Ihrem PC. Auf diese Weise sendet Ihr Browser den Schlüssel automatisch bei jeder durchgeführten Suche an uns, sodass wir die Werbung für Sie entfernen können.',
     'p3' => 'Wenn Sie sich den Cookie anschauen steht dort drin "key=xxxx". Er wird zu keinem Zeitpunkt in irgendeiner Form von uns gespeichert oder geloggt. Wir verwenden diesen insbesondere auch nicht für Tracking-Zwecke',
     'p4' => 'Wichtig: Um diese Funktion nutzen zu können, müssen Sie Cookies in Ihrem Browser zugelassen haben. Die Einstellung bleibt dann solange gespeichert, wie Ihr Browser Cookies speichert.',
@@ -14,8 +14,4 @@ return [
     'invalidKey' => 'Der eingegebene Schlüssel ist ungültig',
     'empty' => 'Ihr Schlüssel ist zwar gültig, enthält aber keine werbefreien Suchen mehr.',
     'backLink' => 'Zurück zur letzten Seite',
-    'custom.h3' => 'Wunsch-Schlüssel',
-    'custom.p1' => 'Mitglieder des SUMA-EV haben die Möglichkeit, sich einen eigenen Schlüssel auszusuchen.',
-    'custom.p2' => 'Der nächste Wechsel Ihres Schlüssels ist in :nextchange möglich.',
-    'custom.a1' => 'Wunsch Schlüssel einrichten'
 ];

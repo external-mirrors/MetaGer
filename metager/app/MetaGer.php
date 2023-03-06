@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Key;
 use App\Models\Verification\HumanVerification;
 use App\Models\Searchengine;
 use Illuminate\Support\Facades\App;
@@ -496,11 +497,6 @@ class MetaGer
                 $result->proxyLink = $proxyUrl;
             }
         }
-    }
-
-    public function authorize($key)
-    {
-        return app('App\Models\Key')->requestPermission();
     }
 
     /*
@@ -1109,16 +1105,9 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-
-        $this->apiKey = $request->input('key', '');
-        if (empty($this->apiKey)) {
-            $this->apiKey = Cookie::get('key');
-            if (empty($this->apiKey)) {
-                $this->apiKey = "";
-            }
-        }
-        if ($this->apiKey && $auth) {
-            $this->apiAuthorized = $this->authorize($this->apiKey);
+        $key = app(Key::class);
+        if ($key->discharged === 0 && $key->status === true) {
+            $this->apiAuthorized = app('App\Models\Key')->requestPermission();
         }
 
         // Remove Inputs that are not used

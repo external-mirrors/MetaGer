@@ -108,6 +108,7 @@ services:
       test: "redis-cli ping"
 networks:
   metager:
+    name: metager_net
     ipam:
       driver: default
       config:

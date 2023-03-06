@@ -11,6 +11,10 @@ return [
     "proxy" => [
         "password" => env("PROXY_PASSWORD", "secure_password"),
     ],
+    "keymanager" => [
+        "server" => env("KEY_SERVER"),
+        "access_token" => env("KEY_ACCESS_TOKEN")
+    ],
     "keys" => [
         "uni_mainz" => env("mainz_key"),
         "assoziator" => env("ASSO_KEY"),

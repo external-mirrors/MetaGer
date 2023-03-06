@@ -91,10 +91,6 @@ mix
     "public/css/prevention-information.css"
   )
   .less(
-    "resources/less/metager/pages/keychange/index.less",
-    "public/css/keychange/index.css"
-  )
-  .less(
     "resources/less/metager/pages/widget/widget-template.less",
     "public/css/widget/widget-template.css"
   )

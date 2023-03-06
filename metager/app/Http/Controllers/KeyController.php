@@ -9,9 +9,6 @@ use \App\Models\Key;
 
 class KeyController extends Controller
 {
-    // How many Ad Free searches should a user get max when he creates a new key
-    const KEYCHANGE_ADFREE_SEARCHES = 150;
-
     public function index(Key $key, Request $request)
     {
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));

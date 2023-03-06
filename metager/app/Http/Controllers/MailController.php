@@ -461,7 +461,6 @@ class MailController extends Controller
 
         // Fetch the result
         $answer = Redis::blpop($resulthash, 20);
-        $key = "";
 
         $messageToUser = "";
         $messageType = ""; # [success|error]
@@ -476,7 +475,6 @@ class MailController extends Controller
             $messageType = "error";
             $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
         } else {
-            $key = $answer["values"][0]["MGKey.MGKey"];
             $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spende erhalten.";
             $messageType = "success";
         }
@@ -486,7 +484,6 @@ class MailController extends Controller
                 ->with('title', 'Kontakt')
                 ->with($messageType, $messageToUser);
         } else {
-            $data['key'] = $key;
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }

@@ -42,18 +42,6 @@
     </div>
     
     <div class="section">
-        <h3>@lang('key.custom.h3')</h3>
-        <p>@lang('key.custom.p1')</p>
-        @if(app('App\Models\Key')->canChange())
-        <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('changeKeyOne')) }}">@lang('key.custom.a1')</a>
-        @elseif(!empty($changedAt) && app('App\Models\Key')->keyinfo->adFreeSearches >= \App\Http\Controllers\KeyController::KEYCHANGE_ADFREE_SEARCHES)
-        <p>@lang('key.custom.p2', [
-            'nextchange' => trim(str_replace(" später", "", $changedAt->addSeconds(\App\Models\Key::CHANGE_EVERY)->longRelativeDiffForHumans(Carbon::now("Europe/London"), 2)))
-        ])</p>
-        @endif
-    </div>
-    
-    <div class="section">
         @if(isset($keystatus) && $keystatus === false)
         <p class="error">@lang('key.empty')</p>
         @endif

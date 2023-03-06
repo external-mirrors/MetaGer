@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\MetaGer;
+use App\Models\Key;
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
@@ -132,9 +133,15 @@ class MetaGerSearch extends Controller
         }
         $query_timer->observeStart("Search_CacheFiller");
         try {
+            $key = app(Key::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "apiAuthorized" => $metager->isApiAuthorized(),
+                    "key" => [
+                        "key" => $key->key,
+                        "status" => $key->status,
+                        "discharged" => $key->discharged,
+                        "keyinfo" => $key->keyinfo,
+                    ]
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -201,7 +208,10 @@ class MetaGerSearch extends Controller
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
-        $metager->setApiAuthorized($mg["apiAuthorized"]);
+        $key = app(Key::class);
+        $key->setStatus($mg["key"]["status"]);
+        $key->setDischarged($mg["key"]["discharged"]);
+        $key->setKeyInfo($mg["key"]["keyinfo"]);
 
         $metager->parseFormData($request, false);
         # Nach Spezialsuchen überprüfen:
@@ -284,9 +294,15 @@ class MetaGerSearch extends Controller
             $counter->incBy($newResults);
         }
         // Update new Engines
+        $key = app(Key::class);
         Cache::put("loader_" . $metager->getSearchUid(), [
             "metager" => [
-                "apiAuthorized" => $metager->isApiAuthorized(),
+                "key" => [
+                    "key" => $key->key,
+                    "status" => $key->status,
+                    "discharged" => $key->discharged,
+                    "keyinfo" => $key->keyinfo,
+                ]
             ],
             "admitad" => $admitad,
             "engines" => $metager->getEngines(),

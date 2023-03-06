@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AllowLocalOnly;
+use App\Http\Middleware\SettingsMigration;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -33,6 +34,7 @@ class Kernel extends HttpKernel
         protected $middlewareGroups = [
                 'web' => [
                                 \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
                 ],
 
                 'humanverification_routes' => [
@@ -82,5 +84,6 @@ class Kernel extends HttpKernel
                 'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
                 'removekey' => \App\Http\Middleware\RemoveKey::class,
                 'allow-local-only' => AllowLocalOnly::class,
+                'settings-migration' => SettingsMigration::class,
         ];
 }

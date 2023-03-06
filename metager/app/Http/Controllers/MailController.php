@@ -307,7 +307,6 @@ class MailController extends Controller
 
                 // Fetch the result
                 $answer = Redis::blpop($resulthash, 20);
-                $key = "";
 
                 // Fehlerfall
                 if (empty($answer) || (is_array($answer) && sizeof($answer) === 2 && $answer[1] === "no-result")) {
@@ -319,7 +318,6 @@ class MailController extends Controller
                     $messageType = "error";
                     $messageToUser = "Beim Senden Ihrer Spendenbenachrichtigung ist ein Fehler auf unserer Seite aufgetreten. Bitte schicken Sie eine E-Mail an: dominik@suma-ev.de, damit wir uns darum kümmern können.";
                 } else {
-                    $key = $answer["values"][0]["MGKey.MGKey"];
                     $messageToUser = "Herzlichen Dank!! Wir haben Ihre Spendenbenachrichtigung erhalten.";
                     $messageType = "success";
                 }
@@ -337,7 +335,6 @@ class MailController extends Controller
                 ->with('data', $data);
         } else {
             $data['iban'] = $iban->HumanFormat();
-            $data['key'] = $key;
             $data = base64_encode(serialize($data));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route("danke", ['data' => $data])));
         }
@@ -542,12 +539,12 @@ class MailController extends Controller
             if (!strpos($key, "#")) {
                 $data[$key] = $value;
             } else {
-                $ref = & $data;
+                $ref = &$data;
                 do {
-                    $ref = & $ref[substr($key, 0, strpos($key, "#"))];
+                    $ref = &$ref[substr($key, 0, strpos($key, "#"))];
                     $key = substr($key, strpos($key, "#") + 1);
                 } while (strpos($key, "#"));
-                $ref = & $ref[$key];
+                $ref = &$ref[$key];
                 $ref = $value;
             }
         }

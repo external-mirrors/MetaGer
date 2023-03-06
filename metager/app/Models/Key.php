@@ -75,7 +75,6 @@ class Key
                     return false;
                 } else {
                     $this->keyinfo = $result;
-                    $this->key = $this->keyinfo->key;
                     if ($this->keyinfo->charge > 0) {
                         $this->status = true;
                     } else {

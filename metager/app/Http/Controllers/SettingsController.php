@@ -451,9 +451,7 @@ class SettingsController extends Controller
         $settings = $request->all();
         foreach ($settings as $key => $value) {
             if ($key === 'key') {
-                $key = new Key($value);
-                $key->updateStatus();
-                Cookie::queue(Cookie::forever("key", $key->key, '/', null, true, true));
+                Cookie::queue(Cookie::forever("key", $value, '/', null, true, true));
             } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
                 Cookie::queue(Cookie::forever($key, $value, '/', null, true, true));
             } elseif ($key === 'new_tab' && $value === 'on') {

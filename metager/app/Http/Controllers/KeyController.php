@@ -25,8 +25,8 @@ class KeyController extends Controller
 
     public function setKey(Request $request)
     {
-        $keyToSet = $request->input('keyToSet');
-        $key = new Key($request->input('keyToSet', ''));
+        $key_to_set = $request->input('keyToSet', '');
+        $key = new Key($key_to_set);
 
         $status = $key->getStatus();
         if ($status !== null) {
@@ -35,10 +35,7 @@ class KeyController extends Controller
             if (empty($host)) {
                 $host = $request->header("Host", "");
             }
-            Cookie::queue('key', $key->key, 525600, '/', null, true, true);
-            $settings = Cookie::get();
-            $settings['key'] = $key->key;
-            $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $settings));
+            Cookie::queue(Cookie::forever('key', $key_to_set, '/', null, true, true));
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('keyindex')));
         } else {
             $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', Cookie::get()));

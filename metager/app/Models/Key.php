@@ -132,12 +132,12 @@ class Key
         }
     }
 
-    public function setStatus(bool $status)
+    public function setStatus(?bool $status)
     {
         $this->status = $status;
     }
 
-    public function setDischarged(int $discharged)
+    public function setDischarged(int $discharged = 0)
     {
         $this->discharged = $discharged;
     }

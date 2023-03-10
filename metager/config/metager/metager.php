@@ -12,7 +12,7 @@ return [
         "password" => env("PROXY_PASSWORD", "secure_password"),
     ],
     "keymanager" => [
-        "server" => env("KEY_SERVER"),
+        "server" => env("KEY_SERVER", null),
         "access_token" => env("KEY_ACCESS_TOKEN")
     ],
     "keys" => [
@@ -51,10 +51,6 @@ return [
     "admitad" => [
         "germany_public_key" => env("admitad_germany_public", ""),
         "international_public_key" => env("admitad_international_public", "")
-    ],
-    "keyserver" => [
-        "user" => env("KEY_USER", "test"),
-        "password" => env("KEY_PASSWORD", "test"),
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

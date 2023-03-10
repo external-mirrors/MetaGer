@@ -16,7 +16,9 @@ class Key
     {
         $this->key = $key;
         $this->status = null;
-        $this->keyserver = config("app.url") . "/keys/api/json";
+        // Use Keymanager Server from .env if defined or App URL otherwise
+        $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
+        $this->keyserver = $keyserver . "/api/json";
     }
 
     # always returns true or false

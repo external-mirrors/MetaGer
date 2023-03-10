@@ -17,7 +17,7 @@ class Token extends Authorization
         }
 
         foreach ($tokenJson as $token) {
-            if (!property_exists($token, "token") || !property_exists($token, "date") || !property_exists($token, "signature")) {
+            if (!property_exists($token, "token") || !property_exists($token, "expiration") || !property_exists($token, "signature")) {
                 continue;
             }
             $tokenString = $token->token;
@@ -28,14 +28,14 @@ class Token extends Authorization
             if (!is_string($tokenSignature)) {
                 continue;
             }
-            $tokenDate = $token->date;
-            if (!is_string($tokenDate)) {
+            $tokenExpiration = $token->expiration;
+            if (!is_string($tokenExpiration)) {
                 continue;
             }
             $this->tokens[] = [
                 "token" => $tokenString,
                 "signature" => $tokenSignature,
-                "date" => $tokenDate
+                "expiration" => $tokenExpiration
             ];
         }
         $this->availableTokens = sizeof($this->tokens);

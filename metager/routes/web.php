@@ -35,7 +35,7 @@ Route::get("robots.txt", function (Request $request) {
 
 /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
-Route::get('/', 'StartpageController@loadStartPage')->name("startpage")->middleware(["removekey"]);
+Route::get('/', 'StartpageController@loadStartPage')->name("startpage");
 
 Route::get('asso', function () {
     return view('assoziator.asso')
@@ -255,7 +255,7 @@ Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
 });
 
-Route::match (['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', "settings-migration", 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware("settings-migration", 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 

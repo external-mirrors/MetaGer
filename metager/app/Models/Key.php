@@ -16,7 +16,9 @@ class Key
     {
         $this->key = $key;
         $this->status = null;
-        $this->keyserver = config("metager.metager.keymanager.server") . "/keys/api/json";
+        // Use Keymanager Server from .env if defined or App URL otherwise
+        $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
+        $this->keyserver = $keyserver . "/api/json";
     }
 
     # always returns true or false
@@ -62,6 +64,8 @@ class Key
             ],
             "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
             "cacheDuration" => 0,
+            "proxy" => false,
+            // Don't use Http Proxy if defined in .env
             "name" => "Key Login",
         ];
         $mission = json_encode($mission);
@@ -103,6 +107,8 @@ class Key
             ],
             "cacheDuration" => 0,
             "name" => "Key Login",
+            "proxy" => false,
+            // Don't use Http Proxy if defined in .env
             "curlopts" => [
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => json_encode(["amount" => $discharge])

@@ -188,18 +188,21 @@ class RequestFetcher extends Command
     {
         $ch = curl_init();
 
-        curl_setopt_array($ch, array(
-            CURLOPT_URL => $job["url"],
-            CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => $job["useragent"],
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 8,
-            CURLOPT_MAXCONNECTS => 500,
-            CURLOPT_LOW_SPEED_LIMIT => 50000,
-            CURLOPT_LOW_SPEED_TIME => 10,
-            CURLOPT_TIMEOUT => 10,
-        ));
+        curl_setopt_array(
+            $ch,
+            array(
+                CURLOPT_URL => $job["url"],
+                CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_USERAGENT => $job["useragent"],
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_CONNECTTIMEOUT => 8,
+                CURLOPT_MAXCONNECTS => 500,
+                CURLOPT_LOW_SPEED_LIMIT => 50000,
+                CURLOPT_LOW_SPEED_TIME => 10,
+                CURLOPT_TIMEOUT => 10,
+            )
+        );
 
 
 
@@ -207,7 +210,7 @@ class RequestFetcher extends Command
             curl_setopt_array($ch, $job["curlopts"]);
         }
 
-        if (!empty($this->proxyhost) && !empty($this->proxyport)) {
+        if ((!array_key_exists("proxy", $job) || $job["proxy"] === true) && !empty($this->proxyhost) && !empty($this->proxyport)) {
             curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
             if (!empty($this->proxyuser) && !empty($this->proxypassword)) {
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);

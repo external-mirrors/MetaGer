@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use \Carbon\Carbon;
 use Log;
 
 class BASE extends Searchengine
@@ -16,47 +17,95 @@ class BASE extends Searchengine
 
     public function loadResults($result)
     {
-        $result = preg_replace("/\r\n/si", "", $result);
+        $results = json_decode($result);
+        if ($results === null) {
+            // Invalid JSON returned
+            return;
+        }
+
         try {
-            $content = \simplexml_load_string($result);
-            if (!$content) {
-                return;
+            $results = $results->response;
+
+            if (property_exists($results, "numFound")) {
+                $this->totalResults = $results->numFound;
             }
 
-            $results = $content->xpath('//response/result/doc');
-            foreach ($results as $result) {
-                // searches for the fitting values of name as in
-                // <str name = "dctitle">Digitisation of library collections</str>
-                foreach ($result as $attribute) {
-                    switch ((string) $attribute['name']) {
-                        case 'dctitle':
-                            $title = $attribute;
-                            break;
-                        case 'dclink':
-                            $link = $attribute;
-                            $anzeigeLink = $link;
-                            break;
-                        case 'dcdescription':
-                            $descr = $attribute;
-                            break;
+            foreach ($results->docs as $result) {
+                if (!property_exists($result, "dctitle") || !property_exists($result, "dclink")) {
+                    continue;
+                }
+                $title = $result->dctitle;
+                $link = $result->dclink;
+                $anzeigeLink = $link;
+                $description = "";
+                if (property_exists($result, "dctype")) {
+                    $description .= "Type: " . implode(",", $result->dctype);
+                }
+                if (property_exists($result, "dcprovider")) {
+                    $description .= " From: " . $result->dcprovider;
+                    if (property_exists($result, "dccreator")) {
+                        $description .= " (" . implode($result->dccreator) . ")";
                     }
                 }
-                if (isset($title) && isset($link) && isset($anzeigeLink) && isset($descr)) {
-                    $this->counter++;
-                    $this->results[] = new \App\Models\Result(
-                        $this->engine,
-                        $title,
-                        $link,
-                        $anzeigeLink,
-                        $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
-                        $this->counter
-                    );
+                if (property_exists($result, "dclang") && $result->dclang[0] !== "unknown") {
+                    $description .= " Lang: " . implode(",", $result->dclang);
                 }
+                if (property_exists($result, "dchdate")) {
+                    $date = Carbon::createFromFormat("Y-m-d\TH:i:s\Z", $result->dchdate);
+                    $description .= " Date: " . $date->format("d.m.Y H:i:s");
+                }
+                if (property_exists($result, "dcdescription")) {
+                    $description .= " " . $result->dcdescription;
+                }
+
+                $this->counter++;
+                $this->results[] = new \App\Models\Result(
+                    $this->engine,
+                    $title,
+                    $link,
+                    $anzeigeLink,
+                    $description,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
+                    $this->counter
+                );
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:\n" . $e->getMessage() . "\n" . $result);
+            return;
+        }
+    }
+
+    public function getNext(\App\MetaGer $metager, $result)
+    {
+        $results = json_decode($result);
+        if ($results === null) {
+            // Invalid JSON returned
+            return;
+        }
+
+        try {
+            $results = $results->response;
+
+            $totalMatches = $results->numFound;
+
+            $newEngine = unserialize(serialize($this->engine));
+
+            $perPage = $newEngine->{"get-parameter"}->hits;
+
+            $offset = $results->start + $perPage;
+
+            if ($totalMatches < ($offset + $perPage)) {
+                return;
+            } else {
+                $newEngine->{"get-parameter"}->offset = $offset;
+            }
+
+            $next = new BASE($this->name, $newEngine, $metager);
+            $this->next = $next;
+        } catch (\Exception $e) {
+            Log::error("A problem occurred parsing results from $this->name:");
+            Log::error($e->getMessage());
             return;
         }
     }

@@ -20,7 +20,7 @@ class TokenAuthorization extends Authorization
         }
 
         foreach ($tokenJson as $token) {
-            if (!property_exists($token, "token") || !property_exists($token, "expiration") || !property_exists($token, "signature")) {
+            if (!property_exists($token, "token") || !property_exists($token, "date") || !property_exists($token, "signature")) {
                 continue;
             }
             $tokenString = $token->token;
@@ -31,11 +31,11 @@ class TokenAuthorization extends Authorization
             if (!is_string($tokenSignature)) {
                 continue;
             }
-            $tokenExpiration = $token->expiration;
-            if (!is_string($tokenExpiration)) {
+            $tokenDate = $token->date;
+            if (!is_string($tokenDate)) {
                 continue;
             }
-            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenExpiration);
+            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
         }
         $this->availableTokens = sizeof($this->tokens);
     }
@@ -61,18 +61,18 @@ class Token
     /**
      * @var string $token
      * @var string $signature
-     * @var string $expiration
+     * @var string $date
      */
-    public $token, $signature, $expiration;
+    public $token, $signature, $date;
     /**
      * @param string $token
      * @param string $signature
-     * @param string $expiration
+     * @param string $date
      */
-    public function __construct($token, $signature, $expiration)
+    public function __construct($token, $signature, $date)
     {
         $this->token = $token;
         $this->signature = $signature;
-        $this->expiration = $expiration;
+        $this->date = $date;
     }
 }

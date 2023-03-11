@@ -3,12 +3,13 @@
 namespace App\Http\Middleware;
 
 use App;
+use App\Models\Authorization\Authorization;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
+use App\QueryTimer;
+use App\SearchSettings;
 use Cache;
 use Closure;
 use URL;
-use App\QueryTimer;
-use App\SearchSettings;
 
 class HumanVerification
 {
@@ -51,7 +52,7 @@ class HumanVerification
             }
         }
 
-        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app('App\Models\Key')->getStatus()) {
+        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app(Authorization::class)->canDoAuthenticatedSearch()) {
             $should_skip = true;
         }
 

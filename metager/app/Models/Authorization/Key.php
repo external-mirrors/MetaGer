@@ -57,10 +57,13 @@ class Key extends Authorization
         }
     }
 
+    /**
+     * @return bool
+     */
     public function authenticate()
     {
         if (!$this->canDoAuthenticatedSearch()) {
-            return;
+            return false;
         }
         $url = $this->keyserver . "/key/" . urlencode($this->key) . "/discharge";
         $result_hash = md5($url . microtime(true));
@@ -89,14 +92,16 @@ class Key extends Authorization
             if ($result && \is_array($result) && sizeof($result) === 2) {
                 $result = \json_decode($result[1]);
                 if ($result === null) {
-                    return;
+                    return false;
                 } else {
                     $this->usedTokens = $result->discharged;
+                    return true;
                 }
             }
         } catch (\ErrorException $e) {
-            return;
+            return false;
         }
+        return false;
     }
     /**
      * @return string

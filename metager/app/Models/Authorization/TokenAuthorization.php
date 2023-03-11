@@ -2,9 +2,12 @@
 
 namespace App\Models\Authorization;
 
-class Token extends Authorization
+class TokenAuthorization extends Authorization
 {
 
+    /**
+     * @var Token[]
+     */
     private $tokens = [];
 
     public function __construct($tokenString)
@@ -32,11 +35,7 @@ class Token extends Authorization
             if (!is_string($tokenExpiration)) {
                 continue;
             }
-            $this->tokens[] = [
-                "token" => $tokenString,
-                "signature" => $tokenSignature,
-                "expiration" => $tokenExpiration
-            ];
+            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenExpiration);
         }
         $this->availableTokens = sizeof($this->tokens);
     }
@@ -49,9 +48,31 @@ class Token extends Authorization
     }
 
     /**
-     * @return mixed
+     * @return Token[]
      */
     public function getToken()
     {
+        return $this->tokens;
+    }
+}
+
+class Token
+{
+    /**
+     * @var string $token
+     * @var string $signature
+     * @var string $expiration
+     */
+    public $token, $signature, $expiration;
+    /**
+     * @param string $token
+     * @param string $signature
+     * @param string $expiration
+     */
+    public function __construct($token, $signature, $expiration)
+    {
+        $this->token = $token;
+        $this->signature = $signature;
+        $this->expiration = $expiration;
     }
 }

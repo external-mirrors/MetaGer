@@ -4,7 +4,7 @@ namespace App\Models\Authorization;
 
 use Illuminate\Support\Facades\Redis;
 
-class Key extends Authorization
+class KeyAuthorization extends Authorization
 {
     public $key;
     private $keyserver = "";

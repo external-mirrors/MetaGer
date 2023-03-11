@@ -3,8 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Authorization\Authorization;
-use App\Models\Authorization\Key;
-use App\Models\Authorization\Token;
+use App\Models\Authorization\KeyAuthorization;
+use App\Models\Authorization\TokenAuthorization;
 use Illuminate\Support\ServiceProvider;
 use Request;
 use Cookie;
@@ -22,7 +22,7 @@ class AuthorizationServiceProvider extends ServiceProvider
         $tokens = Cookie::get("tokens");
         if ($tokens !== null) {
             $this->app->singleton(Authorization::class, function ($app) use ($tokens) {
-                return new Token($tokens);
+                return new TokenAuthorization($tokens);
             });
         } else {
             $key = "";
@@ -33,7 +33,7 @@ class AuthorizationServiceProvider extends ServiceProvider
                 $key = Request::input('key');
             }
             $this->app->singleton(Authorization::class, function ($app) use ($key) {
-                return new Key($key);
+                return new KeyAuthorization($key);
             });
         }
     }

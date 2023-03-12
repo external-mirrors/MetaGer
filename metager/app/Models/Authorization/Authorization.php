@@ -25,6 +25,7 @@ abstract class Authorization
     public function __construct()
     {
         $this->cost = $this->calculateCost();
+        $this->availableTokens = 0;
     }
 
     /**

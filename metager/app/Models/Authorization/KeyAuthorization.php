@@ -22,7 +22,7 @@ class KeyAuthorization extends Authorization
     public function fetchKeyData()
     {
         if (empty($this->key)) {
-            $this->availableTokens = 0;
+            return;
         }
         // Submit fetch job to worker
         $url = $this->keyserver . "/key/" . urlencode($this->key);

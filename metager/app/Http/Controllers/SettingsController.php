@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
-use Cookie;
-use LaravelLocalization;
 use \App\MetaGer;
-use \App\Models\Key;
+use App\Models\Authorization\Authorization;
+use Cookie;
 use \Illuminate\Http\Request;
+use LaravelLocalization;
 
 class SettingsController extends Controller
 {
@@ -57,9 +57,9 @@ class SettingsController extends Controller
         $current_locale = LaravelLocalization::getCurrentLocaleRegional();
         $default_language_value = "";
         # Set default Value for language selector to current locale
-        $key = app(Key::class);
+        $authorization = app(Authorization::class);
         $suma_name = "yahoo";
-        if ($key->getStatus()) {
+        if ($authorization->canDoAuthenticatedSearch()) {
             $suma_name = "bing";
         }
         if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {

@@ -82,7 +82,6 @@ class Kernel extends HttpKernel
                 'browserverification' => \App\Http\Middleware\BrowserVerification::class,
                 'spam' => \App\Http\Middleware\Spam::class,
                 'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
-                'removekey' => \App\Http\Middleware\RemoveKey::class,
                 'allow-local-only' => AllowLocalOnly::class,
                 'settings-migration' => SettingsMigration::class,
         ];

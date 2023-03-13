@@ -3,15 +3,14 @@
 namespace App\Http\Middleware;
 
 use App\Http\Controllers\HumanVerification;
-use App\MetaGer;
+use App\Models\Authorization\Authorization;
+use App\QueryTimer;
+use App\SearchSettings;
+use Cache;
 use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
-use Illuminate\Http\Request;
-use App\QueryTimer;
-use Cache;
-use App\SearchSettings;
-use Response;
 
 class BrowserVerification
 {
@@ -43,7 +42,7 @@ class BrowserVerification
             }
         }
 
-        if (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app('App\Models\Key')->getStatus()) {
+        if (($request->input("out", "") === "api" || $request->input("out", "") === "atom10") && !app(Authorization::class)->canDoAuthenticatedSearch()) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             self::logBrowserverification($request);
             abort(403);
@@ -51,7 +50,7 @@ class BrowserVerification
 
         //use parameter for middleware to skip this when using associator
         if (
-            ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app('App\Models\Key')->getStatus() ||
+            ($request->filled("loadMore") && Cache::has($request->input("loadMore"))) || app(Authorization::class)->canDoAuthenticatedSearch() ||
             ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz"))
         ) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);

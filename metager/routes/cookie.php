@@ -1,7 +1,7 @@
 <?php
 
 
-Route::get('meta/key', "KeyController@index")->middleware('removekey')->name('keyindex');
+Route::get('meta/key', "KeyController@index")->name('keyindex');
 Route::post('meta/key', 'KeyController@setKey');
 Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
 

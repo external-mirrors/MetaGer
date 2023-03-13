@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Authorization\Authorization;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -18,7 +19,7 @@ class Spam
      */
     public function handle(Request $request, Closure $next)
     {
-        if (app('App\Models\Key')->getStatus()) {
+        if (app(Authorization::class)->canDoAuthenticatedSearch()) {
             return $next($request);
         }
         # Check for recent Spams

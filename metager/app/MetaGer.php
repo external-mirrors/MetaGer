@@ -2,18 +2,18 @@
 
 namespace App;
 
-use App\Models\Key;
-use App\Models\Verification\HumanVerification;
+use App\Models\Authorization\Authorization;
 use App\Models\Searchengine;
+use App\Models\Verification\HumanVerification;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use Jenssegers\Agent\Agent;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Illuminate\Support\Facades\Log;
 use Predis\Connection\ConnectionException;
 
 class MetaGer
@@ -406,7 +406,7 @@ class MetaGer
                     $arr[$link]->changed = true;
                 }
             } else {
-                $arr[$link] = & $this->results[$i];
+                $arr[$link] = &$this->results[$i];
             }
         }
     }
@@ -861,14 +861,14 @@ class MetaGer
     public function sumaIsOverture($suma)
     {
         return
-                $suma["name"]->__toString() === "overture"
+            $suma["name"]->__toString() === "overture"
             || $suma["name"]->__toString() === "overtureAds";
     }
 
     public function sumaIsNotAdsuche($suma)
     {
         return
-                $suma["name"]->__toString() !== "qualigo"
+            $suma["name"]->__toString() !== "qualigo"
             && $suma["name"]->__toString() !== "similar_product_ads"
             && $suma["name"]->__toString() !== "overtureAds";
     }
@@ -1105,9 +1105,12 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-        $key = app(Key::class);
-        if ($key->discharged === 0 && $key->status === true) {
-            $this->apiAuthorized = app('App\Models\Key')->requestPermission();
+        /**
+         * @var {Authorization}
+         */
+        $authorization = app(Authorization::class);
+        if (!$authorization->isAuthenticated() && $authorization->canDoAuthenticatedSearch()) {
+            $this->apiAuthorized = $authorization->authenticate();
         }
 
         // Remove Inputs that are not used

@@ -19,7 +19,7 @@
         <p>{{ trans('key.p2') }}</p>
         <p>{{ trans('key.p3') }}</p>
         <p>{{ trans('key.p4') }}</p>
-        @if(isset($keystatus) && $keystatus !== null)
+        @if(!empty($token))
         <p>{{ trans('key.p5') }}</p>
         <ol>
             <li>
@@ -33,7 +33,7 @@
             <li>
                 @lang('key.li2')
                 <div class="copyLink">
-                    <input id="searchString" class="loadSettings" type="text" value="{{route("resultpage", ["key" => $cookie]) . "&eingabe=%s"}}" readonly>
+                    <input id="searchString" class="loadSettings" type="text" value="{{route("resultpage", ["key" => $token]) . "&eingabe=%s"}}" readonly>
                     <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('searchString');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
                 </div>
             </li>
@@ -42,19 +42,16 @@
     </div>
     
     <div class="section">
-        @if(isset($keystatus) && $keystatus === false)
+        @if(!empty($token) && $authStatus === false)
         <p class="error">@lang('key.empty')</p>
-        @endif
-        @if(isset($keyValid) && $keyValid === false)
-        <p class="error">@lang('key.invalidKey')</p>
         @endif
         <div id="form-wrapper">
             <form id="enter-key-form" method="post">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
-                <input type="text" name="keyToSet" value="{{$cookie === '' ? '' : $cookie}}" placeholder="@lang('key.placeholder1')" autofocus>
+                <input type="text" name="keyToSet" value="{{$token}}" placeholder="@lang('key.placeholder1')" autofocus>
                 <button type="submit" class="btn btn-default">OK</button>
             </form>
-            @if(isset($keystatus) && $keystatus !== null)
+            @if(!empty($token))
             <form id="remove-key" method="post" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), action('KeyController@removeKey', ['redirUrl' => url()->full()])) }}">
                 <input type="hidden" name="redirUrl" value="{{ Request::input('redirUrl', '') }}" />
                 <button type="submit" class="btn btn-default">@lang('key.removeKey')</button>

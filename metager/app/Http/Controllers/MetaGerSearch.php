@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\MetaGer;
-use App\Models\Key;
+use App\Models\Authorization\Authorization;
 use App\PrometheusExporter;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Illuminate\Support\Facades\Log;
-use Prometheus\CollectorRegistry;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\App;
 use App\QueryTimer;
 use App\SearchSettings;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Prometheus\CollectorRegistry;
 
 class MetaGerSearch extends Controller
 {
@@ -133,15 +133,10 @@ class MetaGerSearch extends Controller
         }
         $query_timer->observeStart("Search_CacheFiller");
         try {
-            $key = app(Key::class);
+            $authorization = app(Authorization::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "key" => [
-                        "key" => $key->key,
-                        "status" => $key->status,
-                        "discharged" => $key->discharged,
-                        "keyinfo" => $key->keyinfo,
-                    ]
+                    "authorization" => serialize($authorization)
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -208,10 +203,11 @@ class MetaGerSearch extends Controller
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
-        $key = app(Key::class);
-        $key->setStatus($mg["key"]["status"]);
-        $key->setDischarged($mg["key"]["discharged"]);
-        $key->setKeyInfo($mg["key"]["keyinfo"]);
+        $authorization = unserialize($mg["authorization"]);
+        app()->singleton(Authorization::class, function ($app) use ($authorization) {
+            return $authorization;
+        });
+
 
         $metager->parseFormData($request, false);
         # Nach Spezialsuchen überprüfen:
@@ -294,15 +290,10 @@ class MetaGerSearch extends Controller
             $counter->incBy($newResults);
         }
         // Update new Engines
-        $key = app(Key::class);
+        $authorization = app(Authorization::class);
         Cache::put("loader_" . $metager->getSearchUid(), [
             "metager" => [
-                "key" => [
-                    "key" => $key->key,
-                    "status" => $key->status,
-                    "discharged" => $key->discharged,
-                    "keyinfo" => $key->keyinfo,
-                ]
+                "authorization" => serialize($authorization)
             ],
             "admitad" => $admitad,
             "engines" => $metager->getEngines(),

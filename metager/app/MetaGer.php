@@ -45,9 +45,9 @@ class MetaGer
     protected $parameterFilter = [];
     protected $ads = [];
     protected $infos = [];
-    protected $warnings = [];
-    protected $htmlwarnings = [];
-    protected $errors = [];
+    public $warnings = [];
+    public $htmlwarnings = [];
+    public $errors = [];
     protected $addedHosts = [];
     protected $availableFoki = [];
     protected $startCount = 0;
@@ -1939,6 +1939,11 @@ class MetaGer
     public function getEngines()
     {
         return $this->engines;
+    }
+
+    public function isMobile()
+    {
+        return $this->mobile;
     }
 
     public function isApiAuthorized()

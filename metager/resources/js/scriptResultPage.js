@@ -176,103 +176,12 @@ function loadMoreResults() {
             clearInterval(resultLoader);
           }
 
-          if (typeof data.changedResults != "undefined") {
-            for (var key in data.changedResults) {
-              var value = data.changedResults[key];
-              // If there are more results than the given index we will prepend otherwise we will append the result
-              if (!data.imagesearch) {
-                var results = document.querySelectorAll(".result:not(.ad)");
-                var replacement = document.createElement("div");
-                replacement.innerHTML = value.trim();
-                results[key].parentNode.replaceChild(
-                  replacement.firstChild,
-                  results[key]
-                );
-              } else {
-                var results = document.querySelectorAll(
-                  ".image-container > .image"
-                );
-                var replacement = document.createElement("div");
-                replacement.innerHTML = value.trim();
-                results[key].parentNode.replaceChild(
-                  replacement.firstChild,
-                  results[key]
-                );
-              }
-            }
+          if ("results" in data) {
+            let container = document.createElement("div");
+            container.innerHTML = data.results;
+            let new_source = container.querySelector("#results").innerHTML;
+            document.querySelector("#results").innerHTML = new_source;
             botProtection();
-          }
-
-          // If there are new results we can add them
-          if (typeof data.newResults != "undefined") {
-            for (var key in data.newResults) {
-              var value = data.newResults[key];
-
-              // If there are more results than the given index we will prepend otherwise we will append the result
-              if (!data.imagesearch) {
-                var resultContainer = document.querySelector("#results");
-                var results = document.querySelectorAll(".result:not(.ad)");
-                var replacement = document.createElement("div");
-                replacement.innerHTML = value.trim();
-                if (key == 0) {
-                  resultContainer.insertBefore(
-                    replacement.firstChild,
-                    results[0]
-                  );
-                } else if (typeof results[key] != "undefined") {
-                  resultContainer.insertBefore(
-                    replacement.firstChild,
-                    results[key]
-                  );
-                } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.appendChild(replacement.firstChild);
-                }
-              } else {
-                var resultContainer = document.querySelector("#results");
-                var results = document.querySelectorAll(
-                  ".image-container > .image"
-                );
-                var replacement = document.createElement("div");
-                replacement.innerHTML = value.trim();
-                if (key == 0) {
-                  resultContainer.insertBefore(
-                    replacement.firstChild,
-                    results[0]
-                  );
-                } else if (typeof results[key] != "undefined") {
-                  resultContainer.insertBefore(
-                    replacement.firstChild,
-                    results[key]
-                  );
-                } else if (typeof results[key - 1] != "undefined") {
-                  resultContainer.appendChild(replacement.firstChild);
-                }
-              }
-            }
-            botProtection();
-            if (
-              (document.querySelectorAll(".no-results-error").length > 0 &&
-                document.querySelectorAll(".image-container > .image").length >
-                  0) ||
-              document.querySelectorAll(".result:not(.ad)").length > 0
-            ) {
-              document
-                .querySelectorAll(".no-results-error")
-                .forEach((element) => {
-                  element.remove();
-                });
-              if (
-                document.querySelector(".alert.alert-danger > ul") != null &&
-                document.querySelector(".alert.alert-danger > ul").children()
-                  .length == 0
-              ) {
-                document
-                  .querySelectorAll(".alert.alert-danger")
-                  .forEach((element) => {
-                    element.remove();
-                  });
-              }
-            }
           }
 
           currentlyLoading = false;

@@ -85,11 +85,11 @@ class MetaGerSearch extends Controller
         }
 
         $query_timer->observeStart("Search_WaitForMainResults");
-        $metager->waitForMainResults();
+        //$metager->waitForMainResults(); ToDo Enable again
         $query_timer->observeEnd("Search_WaitForMainResults");
 
         $query_timer->observeStart("Search_RetrieveResults");
-        $metager->retrieveResults();
+        //$metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
 
         if ($metager->yahoo_failed()) {
@@ -153,7 +153,10 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        return $metager->createView($quicktipResults);
+        return response($metager->createView($quicktipResults), 200, [
+            "Cache-Control" => "no-cache, max-age=0, must-revalidate",
+            "Last-Modified" => date("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function searchTimings(Request $request, MetaGer $metager)
@@ -199,7 +202,6 @@ class MetaGerSearch extends Controller
 
         $engines = $cached["engines"];
         $admitad = $cached["admitad"];
-        //        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
@@ -233,34 +235,24 @@ class MetaGerSearch extends Controller
 
         $result = [
             'finished' => true,
-            'newResults' => [],
-            'changedResults' => [],
+            'results' => "",
+            'nextSearchLink' => $metager->nextSearchLink(),
+            'imagesearch' => false,
         ];
-        $result["nextSearchLink"] = $metager->nextSearchLink();
 
+        $changedResults = false;
         $newResults = 0;
+        $viewResults = [];
         foreach ($metager->getResults() as $index => $resultTmp) {
+            $viewResults[] = get_object_vars($resultTmp);
             if ($resultTmp->new || $resultTmp->changed) {
-                if ($metager->getFokus() !== "bilder") {
-                    $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = false;
-                } else {
-                    $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = true;
-                }
+                $changedResults = true;
+            }
+            if ($resultTmp->new) {
                 $newResults++;
+            }
+            if ($metager->getFokus() === "bilder") {
+                $result["imagesearch"] = true;
             }
         }
 
@@ -281,6 +273,11 @@ class MetaGerSearch extends Controller
             $finished = false;
         }
 
+        if ($request->header("If-Modified-Since") !== null && !$changedResults) {
+            // Nothing changed but we are not finished yet either
+            return response("", 304);
+        }
+
         $result["finished"] = $finished;
         $result["engines"] = $enginesLoaded;
 
@@ -299,10 +296,24 @@ class MetaGerSearch extends Controller
             "engines" => $metager->getEngines(),
         ], 1 * 60);
 
+        $result["results"] = view('resultpages.results')
+            ->with('results', $viewResults)
+            ->with('eingabe', $metager->getEingabe())
+            ->with('mobile', $metager->isMobile())
+            ->with('warnings', $metager->warnings)
+            ->with('htmlwarnings', $metager->htmlwarnings)
+            ->with('errors', $metager->errors)
+            ->with('apiAuthorized', $metager->isApiAuthorized())
+            ->with('metager', $metager)
+            ->with('fokus', $metager->getFokus())->render();
+
         # JSON encoding will fail if invalid UTF-8 Characters are in this string
         # mb_convert_encoding will remove thise invalid characters for us
         $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
-        return response()->json($result);
+        return response()->json($result, 200, [
+            "Cache-Control" => "no-cache, max-age=0, must-revalidate",
+            "Last-Modified" => date("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function botProtection($redirect)

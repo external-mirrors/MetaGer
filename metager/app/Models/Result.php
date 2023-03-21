@@ -20,6 +20,7 @@ class Result
     public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
     public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
+    public $logo;
     public $imageDimensions; # Ein Array in welchem wenn verfügbar Breite/Höhe des Bildes gespeichert sind ["width" => ..., "height" => ...]
     public $proxyLink; # Der Link für die Seite über unseren Proxy-Service
     public $engineBoost = 1; # Der Boost für den Provider des Suchergebnisses
@@ -136,12 +137,18 @@ class Result
         $tmpLink = "";
         # Löscht verschiedene unerwünschte Teile aus $link und $tmpEingabe
         $regex = [
-            "/\s+/si", # Leerzeichen
-            "/http:/si", # "http:"
-            "/https:/si", # "https:"
-            "/www\./si", # "www."
-            "/\//si", # "/"
-            "/\./si", # "."
+            "/\s+/si",
+            # Leerzeichen
+            "/http:/si",
+            # "http:"
+            "/https:/si",
+            # "https:"
+            "/www\./si",
+            # "www."
+            "/\//si",
+            # "/"
+            "/\./si",
+            # "."
             "/-/si", # "-"
         ];
         foreach ($regex as $reg) {
@@ -250,43 +257,43 @@ class Result
         return false;
         }
         }
-         */
+        */
 
         /* Der Dublettenfilter, der sicher stellt,
-         *  dass wir nach Möglichkeit keinen Link doppelt in der Ergebnisliste haben.
+        *  dass wir nach Möglichkeit keinen Link doppelt in der Ergebnisliste haben.
         
         $dublettenLink = $this->strippedLink;
         if (!empty($this->provider->{"dubletten-include-parameter"}) && sizeof($this->provider->{"dubletten-include-parameter"}) > 0) {
-            $dublettenLink .= "?";
-            $query = parse_url($this->link);
-            if (!empty($query["query"])) {
-                $queryTmp = explode("&", $query["query"]);
-                $query = [];
-                foreach ($queryTmp as $getParameter) {
-                    $keyVal = explode("=", $getParameter);
-                    $query[$keyVal[0]] = $keyVal[1];
-                }
-                foreach ($this->provider->{"dubletten-include-parameter"} as $param) {
-                    if (!empty($query[$param])) {
-                        $dublettenLink .= $param . "=" . $query[$param] . "&";
-                    }
-                }
-                $dublettenLink = rtrim($dublettenLink, "&");
-            }
+        $dublettenLink .= "?";
+        $query = parse_url($this->link);
+        if (!empty($query["query"])) {
+        $queryTmp = explode("&", $query["query"]);
+        $query = [];
+        foreach ($queryTmp as $getParameter) {
+        $keyVal = explode("=", $getParameter);
+        $query[$keyVal[0]] = $keyVal[1];
         }
-
+        foreach ($this->provider->{"dubletten-include-parameter"} as $param) {
+        if (!empty($query[$param])) {
+        $dublettenLink .= $param . "=" . $query[$param] . "&";
+        }
+        }
+        $dublettenLink = rtrim($dublettenLink, "&");
+        }
+        }
         if ($metager->addLink($this)) {
-            $metager->addHostCount($this->strippedHost);
-            return true;
+        $metager->addHostCount($this->strippedHost);
+        return true;
         } else {
-            return false;
+        return false;
         }*/
         return true;
     }
 
     public function isBlackListed(\App\MetaGer $metager)
     {
-        if (($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
+        if (
+            ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLink, $metager->getUrlBlacklist()))) ||
             ($this->strippedHostAnzeige !== "" && (in_array($this->strippedHostAnzeige, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLinkAnzeige, $metager->getUrlBlacklist())))
@@ -447,7 +454,7 @@ class Result
                     array_unshift($arr, $removed);
                 else {
                     // non country TLD according to IANA
-                    $tlds = array('aero',    'arpa',    'asia',    'biz',    'cat',    'com',    'coop',    'edu',    'gov',    'info',    'jobs',    'mil',    'mobi',    'museum',    'name',    'net',    'org',    'post',    'pro',    'tel',    'travel',    'xxx',);
+                    $tlds = array('aero', 'arpa', 'asia', 'biz', 'cat', 'com', 'coop', 'edu', 'gov', 'info', 'jobs', 'mil', 'mobi', 'museum', 'name', 'net', 'org', 'post', 'pro', 'tel', 'travel', 'xxx', );
                     if (count($arr) > 2 && in_array($_sub[0], $tlds) !== false) { //special TLD don't have a country
                         array_shift($arr);
                     }

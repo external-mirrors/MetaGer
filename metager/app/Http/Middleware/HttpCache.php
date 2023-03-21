@@ -16,13 +16,24 @@ class HttpCache
      */
     public function handle(Request $request, Closure $next)
     {
+        if (!$request->filled("mgv") && !$request->filled("out")) {
+            $key = md5($request->ip() . microtime(true));
+            $params = $request->all();
+            $params["mgv"] = $key;
+            $url = route("resultpage", $params);
+            return redirect($url);
+        }
+
         /**
          * MGV Parameter is different for every search executed
          * Let the browser use the cached version if it can provide one for the specified mgv
          * This will happen if the browser restores opened tabs or the user opens a result page from history
          */
         if ($request->header("If-Modified-Since") !== null && $request->filled("mgv") && !$request->filled("out")) {
-            return response("", 304);
+            return response("", 304, [
+                "Cache-Control" => "no-cache, max-age=3600, must-revalidate, public",
+                "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+            ]);
         }
         return $next($request);
     }

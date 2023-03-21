@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Prometheus\CollectorRegistry;
 
@@ -85,12 +84,21 @@ class MetaGerSearch extends Controller
         }
 
         $query_timer->observeStart("Search_WaitForMainResults");
-        //$metager->waitForMainResults(); ToDo Enable again
+        $metager->waitForMainResults();
         $query_timer->observeEnd("Search_WaitForMainResults");
 
         $query_timer->observeStart("Search_RetrieveResults");
-        //$metager->retrieveResults();
+        $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
+
+        $admitad = [];
+        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if (!empty($newAdmitad->hash)) {
+                $admitad[] = $newAdmitad;
+            }
+        }
+        $admitad = $metager->parseAffiliates($admitad);
 
         if ($metager->yahoo_failed()) {
             $params = $request->all();
@@ -107,17 +115,9 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_PrepareResults");
         $metager->prepareResults();
         $query_timer->observeEnd("Search_PrepareResults");
-        $admitad = [];
+
 
         $query_timer->observeStart("Search_Affiliates");
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitad[] = $newAdmitad;
-            }
-        }
-
-        $metager->parseAffiliates($admitad);
 
         // Add Advertisement for Donations
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
@@ -136,7 +136,7 @@ class MetaGerSearch extends Controller
             $authorization = app(Authorization::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "authorization" => serialize($authorization)
+                    "authorization" => $authorization
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -154,8 +154,8 @@ class MetaGerSearch extends Controller
 
         $query_timer->observeTotal();
         return response($metager->createView($quicktipResults), 200, [
-            "Cache-Control" => "no-cache, max-age=0, must-revalidate",
-            "Last-Modified" => date("D, d M Y H:i:s T"),
+            "Cache-Control" => "max-age=3600, must-revalidate, public",
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);
     }
 
@@ -197,7 +197,14 @@ class MetaGerSearch extends Controller
 
         $cached = Cache::get($hash);
         if ($cached === null) {
-            return response()->json(['finished' => true]);
+            if ($request->header("If-Modified-Since") !== null) {
+                return response("", 304, [
+                    "Cache-Control" => "max-age=3600, must-revalidate, public",
+                    "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+                ]);
+            } else {
+                return response()->json(['finished' => true]);
+            }
         }
 
         $engines = $cached["engines"];
@@ -205,7 +212,7 @@ class MetaGerSearch extends Controller
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
-        $authorization = unserialize($mg["authorization"]);
+        $authorization = $mg["authorization"];
         app()->singleton(Authorization::class, function ($app) use ($authorization) {
             return $authorization;
         });
@@ -216,22 +223,31 @@ class MetaGerSearch extends Controller
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
 
+        $admitadCountBefore = sizeof($admitad);
+        $engineCountBefore = 0;
+        foreach ($metager->getEngines() as $engine) {
+            if ($engine->loaded) {
+                $engineCountBefore++;
+            }
+        }
+
         # Checks Cache for engine Results
         $metager->checkCache();
-
         $metager->retrieveResults();
-
-        $metager->rankAll();
-        $metager->prepareResults();
 
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
+                $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
                 $admitad[] = $newAdmitad;
             }
         }
+        $admitad = $metager->parseAffiliates($admitad);
 
-        $adgoalFinished = $metager->parseAffiliates($admitad);
+        $metager->rankAll();
+        $metager->prepareResults();
+
+
 
         $result = [
             'finished' => true,
@@ -240,14 +256,10 @@ class MetaGerSearch extends Controller
             'imagesearch' => false,
         ];
 
-        $changedResults = false;
         $newResults = 0;
         $viewResults = [];
         foreach ($metager->getResults() as $index => $resultTmp) {
             $viewResults[] = get_object_vars($resultTmp);
-            if ($resultTmp->new || $resultTmp->changed) {
-                $changedResults = true;
-            }
             if ($resultTmp->new) {
                 $newResults++;
             }
@@ -258,6 +270,7 @@ class MetaGerSearch extends Controller
 
         $finished = true;
         $enginesLoaded = [];
+        $enginesLoadedAfter = 0;
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
                 $enginesLoaded[$engine->name] = false;
@@ -266,14 +279,15 @@ class MetaGerSearch extends Controller
                 $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
                 $engine->markNew();
+                $enginesLoadedAfter++;
             }
         }
 
-        if (!$adgoalFinished /*|| !$admitadFinished*/) {
+        if (sizeof($admitad) > 0) {
             $finished = false;
         }
 
-        if ($request->header("If-Modified-Since") !== null && !$changedResults) {
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }
@@ -288,13 +302,19 @@ class MetaGerSearch extends Controller
         }
         // Update new Engines
         $authorization = app(Authorization::class);
-        Cache::put("loader_" . $metager->getSearchUid(), [
-            "metager" => [
-                "authorization" => serialize($authorization)
-            ],
-            "admitad" => $admitad,
-            "engines" => $metager->getEngines(),
-        ], 1 * 60);
+        $cacheControl = "no-cache, must-revalidate, public";
+        if ($finished) {
+            Cache::forget("loader_" . $metager->getSearchUid());
+            $cacheControl = "max-age=3600, must-revalidate, public";
+        } else {
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "authorization" => $authorization
+                ],
+                "admitad" => $admitad,
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
+        }
 
         $result["results"] = view('resultpages.results')
             ->with('results', $viewResults)
@@ -311,8 +331,8 @@ class MetaGerSearch extends Controller
         # mb_convert_encoding will remove thise invalid characters for us
         $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
         return response()->json($result, 200, [
-            "Cache-Control" => "no-cache, max-age=0, must-revalidate",
-            "Last-Modified" => date("D, d M Y H:i:s T"),
+            "Cache-Control" => $cacheControl,
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);
     }
 

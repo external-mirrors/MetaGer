@@ -5,12 +5,12 @@
 				@if( isset($result->price) && $result->price != 0)
 				<span class="result-price">{!! $result->price_text !!}</span>
 				@endif
-				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+				<a href="{{ $result->link }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>
 					{!! $result->titel !!}
 				</a>
 			</h2>
 			@if(sizeof($result->gefVon)===1)
-			<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
+			<a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif tabindex="-1">{{ trans('result.gefVon') . " " . $result->gefVon[0] }} </a>
 			@else
 			<span title="{{ (implode(', ', $result->gefVon)) }}" class="result-hoster" tabindex="0">
 				{{ trans('result.gefVon') . " " . sizeof($result->gefVon) . " " . trans('result.providers') }}
@@ -24,7 +24,7 @@
 			@endif
 		</div>
 		<div class="result-subheadline">
-			<a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" rel="noopener" target="{{ $metager->getNewtab() }}" tabindex="-1">
+			<a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}" tabindex="-1">
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
@@ -37,14 +37,14 @@
 	<div class="result-body {{ (!empty($result->logo) || !empty($result->image) ? "with-image" : "")}}">
 		@if( isset($result->logo) )
 		<div class="result-logo">
-			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
+			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif>
 				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt="" />
 			</a>
 		</div>
 		@endif
 		@if( $result->image !== "" )
 		<div class="result-image">
-			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif rel="noopener">
+			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif>
 				<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt="" />
 			</a>
 		</div>
@@ -61,13 +61,13 @@
 	</div>
 	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle">
 	<div class="result-footer">
-		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif rel="noopener">
+		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
 			{!! trans('result.options.7') !!}
 		</a>
 		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
 			{!! trans('result.options.6') !!}
 		</a>
-		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">
+		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>
 			{!! trans('result.options.5') !!}
 		</a>
 		<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
@@ -82,7 +82,7 @@
 			<ul class="option-list list-unstyled small">
 				@if($result->partnershop)
 				<li>
-					<a href="{{ $result->originalLink }}" target="{{ $metager->getNewtab() }}" rel="noopener">{{ __('result.options.direct') }}</a>
+					<a href="{{ $result->originalLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>{{ __('result.options.direct') }}</a>
 				</li>
 				@endif
 				<li class="result-saver js-only">

@@ -160,8 +160,8 @@ function loadMoreResults() {
 
   var currentlyLoading = false;
   var counter = 0;
-  // Regularily check for not yet delivered Results
-  var resultLoader = window.setInterval(function () {
+
+  var fetchResults = function () {
     if (!currentlyLoading) {
       counter++;
       if (counter >= 10) {
@@ -187,7 +187,11 @@ function loadMoreResults() {
           currentlyLoading = false;
         });
     }
-  }, 1000);
+  };
+
+  // Regularily check for not yet delivered Results
+  var resultLoader = window.setInterval(fetchResults, 1000);
+  fetchResults();
 }
 
 function enableResultSaver() {

@@ -185,6 +185,8 @@ class MetaGerSearch extends Controller
         \app()->make(SearchSettings::class)->javascript_enabled = true;
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
+        unset($request["loadMore"]);
+        unset($request["script"]);
 
         # Parser Skripte einhängen
         $dir = app_path() . "/Models/parserSkripte/";

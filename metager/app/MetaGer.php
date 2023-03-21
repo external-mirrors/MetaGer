@@ -45,9 +45,9 @@ class MetaGer
     protected $parameterFilter = [];
     protected $ads = [];
     protected $infos = [];
-    protected $warnings = [];
-    protected $htmlwarnings = [];
-    protected $errors = [];
+    public $warnings = [];
+    public $htmlwarnings = [];
+    public $errors = [];
     protected $addedHosts = [];
     protected $availableFoki = [];
     protected $startCount = 0;
@@ -413,23 +413,25 @@ class MetaGer
 
     /**
      * @param \App\Models\Admitad[] $affiliates
-     * @return Boolean whether or not all Admitad Objects are finished
+     * @return \App\Models\Admitad[] whether or not all Admitad Objects are finished
      */
-    public function parseAffiliates(&$affiliates)
+    public function parseAffiliates($affiliates)
     {
         $wait = false;
         $finished = true;
         if (!\app()->make(SearchSettings::class)->javascript_enabled) {
             $wait = true;
         }
+        $newAffiliates = [];
         foreach ($affiliates as $affiliate) {
             $affiliate->fetchAffiliates($wait);
-            $affiliate->parseAffiliates($this->results);
+            $affiliate->parseAffiliates($this->engines);
             if (!$affiliate->finished) {
-                $finished = false;
+                $newAffiliates[] = $affiliate;
             }
         }
-        return $finished;
+
+        return $newAffiliates;
     }
 
 
@@ -1936,9 +1938,17 @@ class MetaGer
         return $this->redisCurrentResultList;
     }
 
+    /**
+     * @return SearchEngine
+     */
     public function getEngines()
     {
         return $this->engines;
+    }
+
+    public function isMobile()
+    {
+        return $this->mobile;
     }
 
     public function isApiAuthorized()

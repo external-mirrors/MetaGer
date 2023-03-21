@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Prometheus\CollectorRegistry;
 
@@ -92,6 +91,15 @@ class MetaGerSearch extends Controller
         $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
 
+        $admitad = [];
+        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if (!empty($newAdmitad->hash)) {
+                $admitad[] = $newAdmitad;
+            }
+        }
+        $admitad = $metager->parseAffiliates($admitad);
+
         if ($metager->yahoo_failed()) {
             $params = $request->all();
             $params["skip_yahoo"] = true;
@@ -107,17 +115,9 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_PrepareResults");
         $metager->prepareResults();
         $query_timer->observeEnd("Search_PrepareResults");
-        $admitad = [];
+
 
         $query_timer->observeStart("Search_Affiliates");
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitad[] = $newAdmitad;
-            }
-        }
-
-        $metager->parseAffiliates($admitad);
 
         // Add Advertisement for Donations
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
@@ -136,7 +136,7 @@ class MetaGerSearch extends Controller
             $authorization = app(Authorization::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "authorization" => serialize($authorization)
+                    "authorization" => $authorization
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -153,7 +153,10 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        return $metager->createView($quicktipResults);
+        return response($metager->createView($quicktipResults), 200, [
+            "Cache-Control" => "max-age=3600, must-revalidate, public",
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function searchTimings(Request $request, MetaGer $metager)
@@ -194,16 +197,22 @@ class MetaGerSearch extends Controller
 
         $cached = Cache::get($hash);
         if ($cached === null) {
-            return response()->json(['finished' => true]);
+            if ($request->header("If-Modified-Since") !== null) {
+                return response("", 304, [
+                    "Cache-Control" => "max-age=3600, must-revalidate, public",
+                    "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+                ]);
+            } else {
+                return response()->json(['finished' => true]);
+            }
         }
 
         $engines = $cached["engines"];
         $admitad = $cached["admitad"];
-        //        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
-        $authorization = unserialize($mg["authorization"]);
+        $authorization = $mg["authorization"];
         app()->singleton(Authorization::class, function ($app) use ($authorization) {
             return $authorization;
         });
@@ -214,58 +223,54 @@ class MetaGerSearch extends Controller
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);
 
+        $admitadCountBefore = sizeof($admitad);
+        $engineCountBefore = 0;
+        foreach ($metager->getEngines() as $engine) {
+            if ($engine->loaded) {
+                $engineCountBefore++;
+            }
+        }
+
         # Checks Cache for engine Results
         $metager->checkCache();
-
         $metager->retrieveResults();
-
-        $metager->rankAll();
-        $metager->prepareResults();
 
         if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
+                $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
                 $admitad[] = $newAdmitad;
             }
         }
+        $admitad = $metager->parseAffiliates($admitad);
 
-        $adgoalFinished = $metager->parseAffiliates($admitad);
+        $metager->rankAll();
+        $metager->prepareResults();
+
+
 
         $result = [
             'finished' => true,
-            'newResults' => [],
-            'changedResults' => [],
+            'results' => "",
+            'nextSearchLink' => $metager->nextSearchLink(),
+            'imagesearch' => false,
         ];
-        $result["nextSearchLink"] = $metager->nextSearchLink();
 
         $newResults = 0;
+        $viewResults = [];
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new || $resultTmp->changed) {
-                if ($metager->getFokus() !== "bilder") {
-                    $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = false;
-                } else {
-                    $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = true;
-                }
+            $viewResults[] = get_object_vars($resultTmp);
+            if ($resultTmp->new) {
                 $newResults++;
+            }
+            if ($metager->getFokus() === "bilder") {
+                $result["imagesearch"] = true;
             }
         }
 
         $finished = true;
         $enginesLoaded = [];
+        $enginesLoadedAfter = 0;
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
                 $enginesLoaded[$engine->name] = false;
@@ -274,11 +279,17 @@ class MetaGerSearch extends Controller
                 $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
                 $engine->markNew();
+                $enginesLoadedAfter++;
             }
         }
 
-        if (!$adgoalFinished /*|| !$admitadFinished*/) {
+        if (sizeof($admitad) > 0) {
             $finished = false;
+        }
+
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad)) {
+            // Nothing changed but we are not finished yet either
+            return response("", 304);
         }
 
         $result["finished"] = $finished;
@@ -291,18 +302,38 @@ class MetaGerSearch extends Controller
         }
         // Update new Engines
         $authorization = app(Authorization::class);
-        Cache::put("loader_" . $metager->getSearchUid(), [
-            "metager" => [
-                "authorization" => serialize($authorization)
-            ],
-            "admitad" => $admitad,
-            "engines" => $metager->getEngines(),
-        ], 1 * 60);
+        $cacheControl = "no-cache, must-revalidate, public";
+        if ($finished) {
+            Cache::forget("loader_" . $metager->getSearchUid());
+            $cacheControl = "max-age=3600, must-revalidate, public";
+        } else {
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "authorization" => $authorization
+                ],
+                "admitad" => $admitad,
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
+        }
+
+        $result["results"] = view('resultpages.results')
+            ->with('results', $viewResults)
+            ->with('eingabe', $metager->getEingabe())
+            ->with('mobile', $metager->isMobile())
+            ->with('warnings', $metager->warnings)
+            ->with('htmlwarnings', $metager->htmlwarnings)
+            ->with('errors', $metager->errors)
+            ->with('apiAuthorized', $metager->isApiAuthorized())
+            ->with('metager', $metager)
+            ->with('fokus', $metager->getFokus())->render();
 
         # JSON encoding will fail if invalid UTF-8 Characters are in this string
         # mb_convert_encoding will remove thise invalid characters for us
         $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
-        return response()->json($result);
+        return response()->json($result, 200, [
+            "Cache-Control" => $cacheControl,
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function botProtection($redirect)

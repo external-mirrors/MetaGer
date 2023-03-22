@@ -42,7 +42,7 @@ class BrowserVerification
             }
         }
 
-        if ($request->filled("out")) {
+        if ($request->filled("out") && in_array($request->input("out", ""), ["rss20", "api", "atom10"])) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             if (app(Authorization::class)->canDoAuthenticatedSearch()) {
                 return $next($request);

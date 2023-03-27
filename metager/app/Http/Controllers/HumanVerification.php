@@ -325,7 +325,7 @@ class HumanVerification extends Controller
                 Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
             });
         }
-        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css")->header("Cache-Control", "no-store");
     }
 
     public function verificationJsFile(Request $request)
@@ -365,7 +365,7 @@ class HumanVerification extends Controller
 
             Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
-        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png"]);
+        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png", "Cache-Control" => "no-store"]);
     }
 
     public function verificationCSP(Request $request, string $mgv)

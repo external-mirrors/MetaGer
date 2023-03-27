@@ -16,14 +16,6 @@ class HttpCache
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->filled("mgv") && !$request->filled("out")) {
-            $key = md5($request->ip() . microtime(true));
-            $params = $request->all();
-            $params["mgv"] = $key;
-            $url = route("resultpage", $params);
-            return redirect($url);
-        }
-
         /**
          * MGV Parameter is different for every search executed
          * Let the browser use the cached version if it can provide one for the specified mgv

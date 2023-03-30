@@ -51,25 +51,54 @@ class BrowserVerification
                 abort(403);
             }
         }
+        // Make sure MGV Parameter is defined
+        $mgv = $request->input("mgv", "");
+        if (!empty($mgv) && preg_match("/^[a-z0-9]{32}$/", $request->input("mgv")) !== 1) {
+            $mgv = "";
+        }
 
-        //use parameter for middleware to skip this when using associator
         if (
-            $request->filled("loadMore") || app(Authorization::class)->canDoAuthenticatedSearch() ||
+            $request->filled("loadMore") ||
+            (!empty($mgv) && app(Authorization::class)->canDoAuthenticatedSearch()) ||
             ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz"))
         ) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
         }
 
-        $mgv = $request->input("mgv", "");
-        if (preg_match("/^[a-z0-9]{32}$/", $mgv) !== 1) {
-            \app()->make(QueryTimer::class)->observeEnd(self::class);
-            self::logBrowserverification($request);
-            abort(401);
+        $bvData = null;
+        if (empty($mgv) || !Cache::has($request->input("mgv"))) {
+            $framed = false;
+            if ($request->header("Sec-Fetch-Dest") === "iframe") {
+                $framed = true;
+            } elseif ($request->input("iframe", "0") === "1") {
+                $framed = true;
+            }
+            if ($framed) {
+                self::logBrowserverification($request);
+                $params = $request->except(["mgv", "iframe"]);
+                return response(view("errors/410", ["refresh" => route($route, $params)]));
+            } else {
+                $mgv = md5($request->ip() . microtime(true));
+                Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv) {
+                    $bvData = Cache::get($mgv);
+                    if ($bvData === null) {
+                        $bvData = [];
+                    }
+                    $bvData["start"] = now();
+                    Cache::put($mgv, $bvData, now()->addMinutes(HumanVerification::BV_DATA_EXPIRATION_MINUTES));
+                });
+                $params = $request->all();
+                $params["mgv"] = $mgv;
+                $url = route("resultpage", $params);
+                return redirect($url);
+            }
+        } else {
+            $mgv = $request->input("mgv");
+            $bvData = Cache::get($mgv);
         }
 
-        if (Cache::has($mgv)) {
-
+        if (array_key_exists("tries", $bvData)) {
             $bvData = Cache::get($mgv);
             if ($bvData === null) {
                 // Key does not exist if this is called in a frame abort. if not redirect to the page without mgv parameter
@@ -93,9 +122,10 @@ class BrowserVerification
 
             // The css key has to be present in order to continue
             if (!array_key_exists("css", $bvData)) {
-                if (sizeof($bvData["tries"]) < 5) {
+                if (sizeof($bvData["tries"]) < 15) {
                     $time_since_last_try = now()->diffInMilliseconds($bvData["tries"][sizeof($bvData["tries"]) - 1]);
-                    // Redirect the user to make him refresh (up to 5 times)
+                    $time_between_requests = sizeof($bvData["tries"]) < 5 ? 100 : 500;
+
                     Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv) {
                         $bvData = Cache::get($mgv);
                         if ($bvData === null) {
@@ -104,10 +134,12 @@ class BrowserVerification
                         $bvData["tries"][] = now();
                         Cache::put($mgv, $bvData, now()->addMinutes(HumanVerification::BV_DATA_EXPIRATION_MINUTES));
                     });
-                    if ($time_since_last_try < 100) {
+                    if ($time_since_last_try < $time_between_requests) {
                         // Make sure there are at least 100ms between each try
-                        usleep((100 - $time_since_last_try) * 1000);
+                        usleep(($time_between_requests - $time_since_last_try) * 1000);
                     }
+
+                    // Redirect the user to make him refresh (up to 15 times)
                     $params = $request->all();
                     $params["mgv"] = $mgv;
                     $url = route($route, $params);
@@ -137,12 +169,11 @@ class BrowserVerification
             return $next($request);
         } else {
             // The verification key
-            Cache::put($mgv, [
-                "start" => now(),
-                "tries" => [
-                    now()
-                ]
-            ], now()->addSeconds(30));
+            Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv) {
+                $bvData = Cache::get($mgv);
+                $bvData["tries"] = [now()];
+                Cache::put($mgv, $bvData, now()->addMinutes(HumanVerification::BV_DATA_EXPIRATION_MINUTES));
+            });
             $report_to = route("csp_verification", ["mgv" => $mgv]);
             $params = $request->all();
             $params["mgv"] = $mgv;

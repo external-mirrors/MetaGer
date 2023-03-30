@@ -122,7 +122,7 @@ class BrowserVerification
 
             // The css key has to be present in order to continue
             if (!array_key_exists("css", $bvData)) {
-                if (sizeof($bvData["tries"]) < 5) {
+                if (sizeof($bvData["tries"]) < 15) {
                     $time_since_last_try = now()->diffInMilliseconds($bvData["tries"][sizeof($bvData["tries"]) - 1]);
                     // Redirect the user to make him refresh (up to 5 times)
                     Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv) {
@@ -133,9 +133,10 @@ class BrowserVerification
                         $bvData["tries"][] = now();
                         Cache::put($mgv, $bvData, now()->addMinutes(HumanVerification::BV_DATA_EXPIRATION_MINUTES));
                     });
-                    if ($time_since_last_try < 100) {
+                    $time_between_requests = $bvData["tries"] < 5 ? 100 : 500;
+                    if ($time_since_last_try < $time_between_requests) {
                         // Make sure there are at least 100ms between each try
-                        usleep((100 - $time_since_last_try) * 1000);
+                        usleep(($time_between_requests - $time_since_last_try) * 1000);
                     }
                     $params = $request->all();
                     $params["mgv"] = $mgv;

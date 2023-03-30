@@ -310,7 +310,6 @@ class HumanVerification extends Controller
     public function verificationCssFile(Request $request)
     {
         $key = $request->input("id", "");
-
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
             Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
@@ -318,7 +317,7 @@ class HumanVerification extends Controller
                 if ($bvData === null) {
                     abort(404);
                 }
-                if (\array_key_exists("css", $bvData)) {
+                if (!\array_key_exists("css", $bvData)) {
                     $bvData["css"] = array();
                 }
                 $bvData["css"]["loaded"] = now();

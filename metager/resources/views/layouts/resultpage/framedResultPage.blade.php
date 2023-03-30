@@ -76,7 +76,10 @@
         <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
     </noscript>
     <script nonce="{{ $mgv }}">
-        document.getElementById("mg-framed").src = "";
+        let frame = document.getElementById("mg-framed");
+        if(frame != null){
+            document.getElementById("mg-framed").src = "";
+        }
         document.getElementById("resultpage-container").style.display = "grid";
     </script>
 </body>

@@ -136,8 +136,9 @@ class QueryLogger
         }
 
         if (sizeof($insert_array) > 0) {
-            DB::connection("logs")->table("logs")->insert($insert_array);
+            return DB::connection("logs")->table("logs")->insert($insert_array);
         }
+        return false
     }
 
     /**

@@ -40,7 +40,7 @@
 			<th>Datum</th>
 			<th>Suchanfragen zur gleichen Zeit</th>
 			<th>Suchanfragen insgesamt</th>
-			<th>Mittelwert (bis zum jeweiligen Tag zurück)</th>
+			<th>Mittelwert</th>
 		</tr>
 	</thead>
 	<tbody>

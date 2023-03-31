@@ -150,7 +150,7 @@ class QueryLogger
     public function getLogsSince(Carbon $since)
     {
         $connection = DB::connection("logs");
-
+        $since->setTimezone("UTC"); // We will query in UTC time
         $queries = $connection->table("logs")
             ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s O") . "' and (time at time zone 'UTC') < '" . $since->addHours(2)->format("Y-m-d H:i:s O") . "'")
             ->limit(1000)

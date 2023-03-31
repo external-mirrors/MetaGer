@@ -10,7 +10,7 @@ let chart = null;
 let record = {
   count: 0,
   same_time: 0,
-  date: "1.1.1970"
+  date: "1.1.1970",
 };
 
 load();
@@ -52,12 +52,13 @@ function updateRecord() {
   let record_same_time_element = document.querySelector(
     ".record .record-same-time"
   );
-  let record_total_element = document.querySelector(
-    ".record .record-total"
+  let record_total_element = document.querySelector(".record .record-total");
+  record_same_time_element.innerHTML = record.same_time.toLocaleString(
+    "de-DE",
+    {
+      maximumFractionDigits: 0,
+    }
   );
-  record_same_time_element.innerHTML = record.same_time.toLocaleString("de-DE", {
-    maximumFractionDigits: 0,
-  });
   record_same_time_element.classList.remove("loading");
   record_total_element.innerHTML = record.count.toLocaleString("de-DE", {
     maximumFractionDigits: 0,
@@ -101,42 +102,41 @@ function loadData(parallel) {
             element.classList.remove("loading");
             let same_time_element = element.querySelector("td.same-time");
             same_time_element.dataset.same_time = until_now;
-            same_time_element.textContent = until_now.toLocaleString(
-              "de-DE",
-              {
-                maximumFractionDigits: 0,
-              }
-            );
+            same_time_element.textContent = until_now.toLocaleString("de-DE", {
+              maximumFractionDigits: 0,
+            });
 
             let total_element = element.querySelector("td.total");
             total_element.dataset.total = total_requests;
-            total_element.textContent = total_requests.toLocaleString(
-              "de-DE",
-              {
-                maximumFractionDigits: 0,
-              }
-            );
+            total_element.textContent = total_requests.toLocaleString("de-DE", {
+              maximumFractionDigits: 0,
+            });
 
             // Update total sums
             let elements = document.querySelectorAll("tbody tr");
             let sum = 0;
             for (let j = 0; j < elements.length; j++) {
-              let total = parseInt(elements[j].querySelector(".total").dataset.total);
+              let total = parseInt(
+                elements[j].querySelector(".total").dataset.total
+              );
               sum += total;
               if (j === 0 || total === 0) {
                 continue;
               }
               let median_element = elements[j].querySelector(".median");
-              let median = (new Number((sum / (j + 1)).toFixed(0))).toLocaleString(
-                "de-DE",
-                {
-                  maximumFractionDigits: 0,
-                }
-              );
+              let median = new Number(
+                (sum / (j + 1)).toFixed(0)
+              ).toLocaleString("de-DE", {
+                maximumFractionDigits: 0,
+              });
               median_element.textContent = median;
 
-              let total_median_days_element = document.querySelector(".total-median .median-days");
-              let total_median_count_element = document.querySelector(".total-median .median-value");
+              let total_median_days_element = document.querySelector(
+                ".total-median .median-days"
+              );
+              let total_median_count_element = document.querySelector(
+                ".total-median .median-value"
+              );
               total_median_days_element.classList.remove("loading");
               total_median_days_element.textContent = j + 1;
               total_median_count_element.classList.remove("loading");
@@ -161,16 +161,15 @@ function updateChart() {
     let elements = document.querySelectorAll("tbody tr");
     for (let i = 0; i < elements.length; i++) {
       let total = parseInt(elements[i].querySelector(".total").dataset.total);
-      let until_now = parseInt(elements[i].querySelector(".same-time").dataset.same_time);
+      let until_now = parseInt(
+        elements[i].querySelector(".same-time").dataset.same_time
+      );
       let formatted_date = elements[i].dataset.date;
       if (total > record.count) {
         record.count = total;
         record.same_time = until_now;
         record.date = formatted_date;
         updateRecord();
-      }
-      if (total === 0 || until_now === 0) {
-        break;
       }
 
       totals.unshift(total);
@@ -240,13 +239,12 @@ function createChart() {
   updateChart();
 }
 
-
 // JS for Date picker
-document.querySelector("#start").addEventListener("change", e => {
+document.querySelector("#start").addEventListener("change", (e) => {
   let min = e.target.value;
   document.querySelector("#end").min = min;
 });
-document.querySelector("#end").addEventListener("change", e => {
+document.querySelector("#end").addEventListener("change", (e) => {
   let max = e.target.value;
   document.querySelector("#start").max = max;
 });

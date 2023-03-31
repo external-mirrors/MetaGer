@@ -152,7 +152,7 @@ class QueryLogger
     {
         $connection = DB::connection("logs");
         $since->setTimezone("UTC"); // We will query in UTC time
-        dd($since->format("Y-m-d H:i:s"));
+
         $queries = $connection->table("logs")
             ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s") . "'")
             ->orderBy("time", "asc")

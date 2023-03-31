@@ -153,7 +153,7 @@ class QueryLogger
 
         $queries = $connection->table("logs")
             ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s O") . "' and (time at time zone 'UTC') < '" . $since->addHours(2)->format("Y-m-d H:i:s O") . "'")
-            ->limit(250)
+            ->limit(1000)
             ->get();
         return $queries;
     }

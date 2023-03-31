@@ -11,18 +11,35 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use PDO;
+use DB;
 
 class AdminInterface extends Controller
 {
 
     public function count(Request $request)
     {
+        try {
+            if ($request->filled("end") && $request->filled("start")) {
+                $start = Carbon::createFromFormat("Y-m-d", $request->input("start"));
+                $end = Carbon::createFromFormat("Y-m-d", $request->input("end"));
+            }
+        } catch (\Exception $e) {
+            $start = null;
+            $end = null;
+        }
+        if (empty($start) || empty($end) || $start->isAfter($end) || $end->isBefore($start)) {
+            $end = Carbon::createMidnightDate();
+            $start = clone $end;
+            $start->subDays(28);
+        }
+
         if ($request->input('out', 'web') === "web") {
-            $days = $request->input("days", 28);
             $interface = $request->input('interface', 'all');
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
-                ->with('days', $days)
+                ->with('start', $start)
+                ->with('end', $end)
+                ->with("days", $start->diffInDays($end))
                 ->with('interface', $interface)
                 ->with('css', [mix('/css/count/style.css')])
                 ->with('darkcss', [mix('/css/count/dark.css')])
@@ -42,66 +59,46 @@ class AdminInterface extends Controller
 
         $interface = $request->input('interface', 'all');
 
-        $year = $date->format("Y");
-        $month = $date->format("m");
-        $day = $date->format("d");
-        $now = now();
-        $cache_key = "admin_count_data_${interface}_${year}_${month}_${day}";
-        $result = Cache::get($cache_key);
+        $connection = DB::connection("logs");
+        $log_summary = $connection
+            ->table("logs")
+            ->select(DB::raw('to_timestamp(floor(EXTRACT(epoch FROM time) / EXTRACT(epoch FROM interval \'5 min\')) * EXTRACT(epoch FROM interval \'5 min\')) as timestamp, count(*)'))
+            ->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'");
+        if ($interface !== "all") {
+            $log_summary = $log_summary->where("locale", "=", $interface);
+        }
+        $log_summary = $log_summary->groupBy("timestamp")
+            ->orderBy("timestamp")
+            ->get();
 
+        $result = [
+            "total" => 0,
+            "until_now" => 0
+        ];
 
-        if ($result === null) {
-            $result = [
-                "total" => 0,
-                "until_now" => 0
-            ];
-
-            $database_file = \storage_path("logs/metager/" . $date->format("Y/m/d") . ".sqlite");
-            if ($database_file === null) {
-                abort(404);
+        $now = Carbon::now();
+        foreach ($log_summary as $entry) {
+            $time = Carbon::createFromFormat("Y-m-d H:i:sO", $entry->timestamp);
+            $time->year($now->year);
+            $time->month($now->month);
+            $time->day($now->day);
+            $result["total"] += $entry->count;
+            if ($time->isBefore($now)) {
+                $result["until_now"] += $entry->count;
             }
-
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-            $connection->disableQueryLog();
-            try {
-                if (!$connection->getSchemaBuilder()->hasTable("logs")) {
-                    abort(404);
-                }
-
-                $data = $connection->table("logs")->selectRaw("COUNT(*) AS count, time");
-                if ($interface !== "all") {
-                    $data = $data->where("interface", "=", $interface);
-                }
-                $data->groupByRaw("STRFTIME('%s', time) / 300");
-                $data = $data->get();
-            } finally {
-                $connection->disconnect();
-            }
-
-            foreach ($data as $entry) {
-                $time = Carbon::createFromFormat("Y-m-d H:i:s", $entry->time);
-                $time->year($now->year);
-                $time->month($now->month);
-                $time->day($now->day);
-                $result["total"] += $entry->count;
-                if ($time->isBefore($now)) {
-                    $result["until_now"] += $entry->count;
-                }
-            }
-
-            Cache::put($cache_key, $result, now()->addMinutes(5));
         }
 
         $result = [
             "status" => 200,
             "error" => false,
             "data" => [
-                "date" => "$year-$month-$day",
+                "date" => $now->format("Y-m-d"),
                 "time" => $now->format("H:i:s"),
                 "total" => $result["total"],
                 "until_now" => $result["until_now"],
             ]
         ];
+
         return \response()->json($result);
     }
 

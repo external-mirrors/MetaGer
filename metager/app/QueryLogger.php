@@ -58,7 +58,7 @@ class QueryLogger
         /** @var MetaGer */
         $metager = App::make(MetaGer::class);
         $log_entry = [
-            "time" => (new DateTime('now', new DateTimeZone("Europe/Berlin")))->format("Y-m-d H:i:s O"),
+            "time" => (new DateTime('now', new DateTimeZone("UTC")))->format("Y-m-d H:i:s"),
             "referer" => $this->referer,
             "request_time" => $this->end_time - $this->start_time,
             "focus" => $metager->getFokus(),
@@ -151,9 +151,10 @@ class QueryLogger
     {
         $connection = DB::connection("logs");
         $since->setTimezone("UTC"); // We will query in UTC time
+        dd($since->format("Y-m-d H:i:s"));
         $queries = $connection->table("logs")
-            ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s O") . "' and (time at time zone 'UTC') < '" . $since->addHours(2)->format("Y-m-d H:i:s O") . "'")
-            ->limit(1000)
+            ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s") . "'")
+            ->orderBy("time", "asc")
             ->get();
         return $queries;
     }

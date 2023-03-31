@@ -5,16 +5,12 @@ namespace App;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeZone;
-use ErrorException;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\SQLiteConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use PDO;
+use DB;
 
 class QueryLogger
 {
@@ -62,7 +58,7 @@ class QueryLogger
         /** @var MetaGer */
         $metager = App::make(MetaGer::class);
         $log_entry = [
-            "time" => (new DateTime('now', new DateTimeZone("Europe/Berlin")))->format("Y-m-d H:i:s"),
+            "time" => (new DateTime('now', new DateTimeZone("Europe/Berlin")))->format("Y-m-d H:i:s O"),
             "referer" => $this->referer,
             "request_time" => $this->end_time - $this->start_time,
             "focus" => $metager->getFokus(),
@@ -129,133 +125,19 @@ class QueryLogger
             } else {
                 $query_log = $query_log_object;
             }
-            $time = DateTime::createFromFormat("Y-m-d H:i:s", $query_log->time);
-            $year = $time->format("Y");
-            $month = $time->format("m");
-            $day = $time->format("d");
-            if (empty($insert_array[$year])) {
-                $insert_array[$year] = [];
-            }
-            if (empty($insert_array[$year][$month])) {
-                $insert_array[$year][$month] = [];
-            }
-            if (empty($insert_array[$year][$month][$day])) {
-                $insert_array[$year][$month][$day] = [];
-            }
-            $insert_array[$year][$month][$day][] = [
+            $insert_array[] = [
                 "time" => $query_log->time,
                 "referer" => substr($query_log->referer, 0, self::REFERER_MAX_LENGTH),
-                "request_time" => round($query_log->request_time, 3),
-                "focus" => $query_log->focus,
-                "interface" => substr($query_log->interface, 0, 5),
+                "request_time" => round($query_log->request_time, 2),
+                "focus" => substr($query_log->focus, 0, 20),
+                "locale" => substr($query_log->interface, 0, 5),
                 "query" => $query_log->query_string
             ];
         }
 
-        /** @var \Illuminate\Database\SQLiteConnection[] */
-        $connections = [];
-        foreach ($insert_array as $year => $months) {
-            if (empty($connection[$year])) {
-                $connections[$year] = [];
-            }
-            foreach ($months as $month => $days) {
-                if (empty($connections[$year][$month])) {
-                    $connections[$year][$month] = [];
-                }
-                foreach ($days as $day => $insert_array) {
-                    if (empty($connections[$year][$month][$day])) {
-                        $connections[$year][$month][$day] = self::validateDatabase($year, $month, $day);
-                    }
-                    self::validateTable($connections[$year][$month][$day]);
-                    if (!$connections[$year][$month][$day]->table("logs")->insert($insert_array)) {
-                        return false;
-                    }
-                }
-            }
+        if (sizeof($insert_array) > 0) {
+            DB::connection("logs")->table("logs")->insert($insert_array);
         }
-
-        // Disconnect
-        foreach ($connections as $year => $months) {
-            foreach ($months as $month => $days) {
-                /** @var \Illuminate\Database\SQLiteConnection $connection */
-                foreach ($days as $connection) {
-                    $connection->disconnect();
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Verifies that the Sqlite Database and Table for todays Log exist
-     */
-    private static function validateDatabase($year, $month, $day)
-    {
-        $folder = \storage_path("logs/metager/$year/$month");
-        if (!\file_exists($folder)) {
-            if (!mkdir($folder, 0777, true)) {
-                throw new ErrorException("Couldn't create folder for sqlite Databse in \"$folder\"");
-            }
-        }
-
-        $current_database_path = $folder . "/$day.sqlite";
-
-        // Create Database if it does not exist yet
-        if (!\file_exists($current_database_path)) {
-            if (!touch($current_database_path)) {
-                throw new ErrorException("Couldn't create sqlite Databse in \"$current_database_path\"");
-            }
-        }
-
-        $connection = new SQLiteConnection(new PDO("sqlite:${current_database_path}"));
-
-        return $connection;
-    }
-
-    /**
-     * Creates the table for the requested month if it does not exist
-     * 
-     * @param Illuminate\Database\SQLiteConnection $connection
-     * @param string $table
-     */
-    private static function validateTable($connection)
-    {
-        if (!$connection->getSchemaBuilder()->hasTable("logs")) {
-            // Create a new Table
-            $connection->getSchemaBuilder()->create("logs", function (Blueprint $table) {
-                $table->bigIncrements("id");
-                $table->dateTime("time");
-                $table->string("referer", self::REFERER_MAX_LENGTH);
-                $table->float("request_time", 5, 3);
-                $table->string("focus", 10);
-                $table->string("interface", 5);
-                $table->string("query", self::QUERY_MAX_LENGTH)->nullable();
-            });
-        }
-    }
-
-    /**
-     * Fetches the latest n logs
-     * 
-     * @param int $n How many logs to fetch max
-     * 
-     * @return \Illuminate\Support\Collection
-     */
-    public function getLatestLogs(int $n)
-    {
-        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/" . date("d") . ".sqlite");
-        $current_table = "logs";
-        if (!\file_exists($current_database)) {
-            return null;
-        }
-
-        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database, null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-        if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
-            return null;
-        }
-        $queries = $connection->table($current_table)->orderBy("time", 'desc')->limit($n)->get();
-        $connection->disconnect();
-        return $queries;
     }
 
     /**
@@ -267,18 +149,12 @@ class QueryLogger
      */
     public function getLogsSince(Carbon $since)
     {
-        $current_database = \storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/" . date("d") . ".sqlite");
-        $current_table = "logs";
-        if (!\file_exists($current_database)) {
-            return null;
-        }
+        $connection = DB::connection("logs");
 
-        $connection = new SQLiteConnection(new PDO('sqlite:' . $current_database, null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-        if (!$connection->getSchemaBuilder()->hasTable($current_table)) {
-            return null;
-        }
-        $queries = $connection->table($current_table)->where("time", ">", $since->format("Y-m-d H:i:s"))->orderBy("time", 'asc')->get();
-        $connection->disconnect();
+        $queries = $connection->table("logs")
+            ->whereRaw("(time at time zone 'UTC') > '" . $since->format("Y-m-d H:i:s O") . "' and (time at time zone 'UTC') < '" . $since->addHours(2)->format("Y-m-d H:i:s O") . "'")
+            ->limit(250)
+            ->get();
         return $queries;
     }
 
@@ -298,8 +174,10 @@ class QueryLogger
 
         $files = scandir($path);
         foreach ($files as $file) {
-            if (\in_array($file, [".", ".."]) || preg_match("/\.sqlite$/", $file)) continue;
-            if ($year === "2022" && $month === "05" && $file === "20.log") continue;
+            if (\in_array($file, [".", ".."]) || preg_match("/\.sqlite$/", $file))
+                continue;
+            if ($year === "2022" && $month === "05" && $file === "20.log")
+                continue;
 
             $day = substr($file, 0, stripos($file, ".log"));
             Log::info("Parsing $file");

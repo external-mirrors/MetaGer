@@ -31,8 +31,8 @@ class Test extends Command
      */
     public function handle()
     {
-        $start = Carbon::createFromFormat("Y-m-d", "2022-09-28");
-        $daysToProcess = 3;
+        $start = Carbon::createFromFormat("Y-m-d", "2022-12-01");
+        $daysToProcess = 90;
 
         $chunk = 10000;
 

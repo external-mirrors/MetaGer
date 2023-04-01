@@ -79,9 +79,7 @@ class AdminInterface extends Controller
         $now = Carbon::now();
         foreach ($log_summary as $entry) {
             $time = Carbon::createFromFormat("Y-m-d H:i:sO", $entry->timestamp);
-            $time->year($now->year);
-            $time->month($now->month);
-            $time->day($now->day);
+            $time->day(1)->year($now->year)->month($now->month)->day($now->day);
             $result["total"] += $entry->count;
             if ($time->isBefore($now)) {
                 $result["until_now"] += $entry->count;

@@ -188,7 +188,7 @@ class BrowserVerification
                     "Cache-Control" => "no-cache, no-store, must-revalidate",
                     "Pragma" => "no-cache",
                     "Expires" => "0",
-                    "Content-Security-Policy" => "default-src 'self'; script-src 'self' 'nonce-$mgv'; script-src-elem 'self' 'nonce-$mgv'; script-src-attr 'self'; style-src 'self' 'nonce-$mgv'; style-src-elem 'self' 'nonce-$mgv'; style-src-attr 'self' 'nonce-$mgv'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to
+                    "Content-Security-Policy" => "default-src 'self'; script-src 'self'; script-src-elem 'self'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src 'self'; frame-ancestors 'self' https://scripts.zdv.uni-mainz.de; form-action 'self' www.paypal.com; report-uri " . $report_to . "; report_to " . $report_to
                 ]
             );
         }

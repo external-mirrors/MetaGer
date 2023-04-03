@@ -17,6 +17,12 @@ if (navigator.webdriver) {
 }
 
 let interval;
+let unload = false;
+
+window.addEventListener("beforeunload", () => {
+  unload = true;
+})
+
 fetch(url).then(result => {
   interval = setInterval(verify, 100);
 });
@@ -27,6 +33,10 @@ function getKey() {
 }
 
 function verify() {
+  if (unload) {
+    clearInterval(interval);
+    return;
+  }
   let styleSheet = getStyleSheet();
   if (!styleSheet || !("cssRules" in styleSheet) || styleSheet.cssRules.length === 0) {
     return false;

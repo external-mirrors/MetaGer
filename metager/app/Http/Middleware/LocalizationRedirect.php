@@ -39,7 +39,7 @@ class LocalizationRedirect
         if (app()->environment("local")) {
             $allowed_hostnames[] = "nginx";
             // Allow ngrok aswell under local env
-            if (\preg_match("/\.ngrok\.io$/", $host)) {
+            if (\preg_match("/\.ngrok-free\.app$/", $host)) {
                 $allowed_hostnames[] = $host;
             }
         }

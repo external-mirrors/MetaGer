@@ -55,6 +55,12 @@ class TokenAuthorization extends Authorization
         if (!$this->canDoAuthenticatedSearch()) {
             return false;
         }
+
+        $tokens_to_use = [];
+        for ($i = 0; $i < $this->cost; $i++) {
+            $tokens_to_use[] = array_shift($this->tokens);
+        }
+
         $url = $this->keyserver . "/token/use";
 
         $ch = curl_init($url);
@@ -66,7 +72,7 @@ class TokenAuthorization extends Authorization
             ],
             CURLOPT_TIMEOUT => 5,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["tokens" => $this->tokens]),
+            CURLOPT_POSTFIELDS => json_encode(["tokens" => $tokens_to_use]),
             CURLOPT_USERAGENT => "MetaGer"
         ]);
 
@@ -74,15 +80,19 @@ class TokenAuthorization extends Authorization
         $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($response_code === 201) {
-            $this->usedTokens = sizeof($this->tokens);
-            Cookie::queue(Cookie::forget("tokens", "/"));
+            $this->usedTokens = sizeof($tokens_to_use);
+            $this->updateCookie();
             return true;
         } elseif ($response_code === 422) {
             $result = json_decode($result);
-            if ($result === null) {
-                return false;
+            if ($result !== null) {
+                $remaining_tokens = $this->parseError($result);
+                for ($i = sizeof($remaining_tokens); $i >= 0; $i--) {
+                    array_unshift($this->tokens, $remaining_tokens[$i]);
+                }
             }
-            $this->parseError($result);
+            $this->updateCookie();
+            return false;
         }
     }
 
@@ -145,8 +155,7 @@ class TokenAuthorization extends Authorization
                         $new_tokens[] = new Token($error_token->token, $error_token->signature, $error_token->date);
                     }
                 }
-                $this->tokens = $new_tokens;
-                $this->updateCookie();
+                return $new_tokens;
             }
         }
     }

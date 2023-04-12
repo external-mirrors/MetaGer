@@ -141,7 +141,11 @@ class TokenAuthorization extends Authorization
 
     private function updateCookie()
     {
-        Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, true, true));
+        if (sizeof($this->tokens) === 0) {
+            Cookie::queue(Cookie::forget("tokens", "/", null));
+        } else {
+            Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, true, true));
+        }
     }
 
     private function parseError($result)

@@ -9,7 +9,7 @@ return [
         "info"  => [
             "1"        => 'Die Start-Seite hat viele Funktionen. <br>Oben rechts auf der Seite ist ein Knopf. <br> So sieht der Knopf aus.',
             "2"      => 'Sie können auf diesen Knopf drücken. <br> Dann sehen Sie ein Menü. <br> In diesem Menü können Sie viele verschiedene Sachen auswählen. ',
-            "3"      => 'In der Mitte von der Start-Seite ist das Such-Feld. <br> Unter dem Such-Feld steht <strong>MetaGer installieren<a title="Wort erklärung" href="/hilfe/easy-language/glossary#installieren" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a></strong>. <br> Sie können darauf klicken. <br> Dann können Sie MetaGer als Standard-Such-Maschine<a title="Die Standard-Such-Maschine ist die Such-Maschine mit der Sie immer suchen. Für mehr Informationen klicken" href="/hilfe/easy-language/glossary#standardsuche" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> einstellen.',
+            "3"      => 'In der Mitte von der Start-Seite ist das Such-Feld. <br> Unter dem Such-Feld steht <strong>MetaGer installieren</strong>. <br> Sie können darauf klicken. <br> Damit können Sie MetaGer herunterladen. <br> Dann können Sie MetaGer als Standard-Such-Maschine<a title="Die Standard-Such-Maschine ist die Such-Maschine mit der Sie immer suchen. Für mehr Informationen klicken" href="/hilfe/easy-language/glossary#standardsuche" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> einstellen.',
             "4"      => 'Unten auf der Start-Seite sind bunte Felder. <br> Sie können auf diese Felder klicken. <br> Dort können Sie mehr über MetaGer erfahren.',
         ]
     ], 
@@ -41,11 +41,11 @@ return [
         "choice"     => 'Unter der Zeile mit den mehreren Knöpfen sind 2 andere Knöpfe. <br> Diese Knöpfe sind Einstellungen und Filter.',
         "filter"  => [
             "title"     => 'Filter:',
-            "1"     => 'Wenn Sie auf Filter<a title="Wort erklärung" href="/hilfe/easy-language/glossary#filter" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> klicken, können Sie ihre Suche filtern. <br> Hier können Sie ihre Such-Ergebnisse filtern. <br> Jede Such-Kategorie hat verschiedene Möglichkeiten zum Filtern.',
+            "1"     => 'Wenn Sie auf Filter<a title="Wort erklärung" href="/hilfe/easy-language/glossary#filter" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> klicken, können Sie ihre Suche filtern. <br> Hier können Sie ihre Such-Ergebnisse filtern. <br> Jede Such-Kategorie hat verschiedene Möglichkeiten zum Filtern.<br> Sie können zum Beispiel nach Ergebnissen der letzten 30 Tagen suchen.<br> Dann sehen Sie nur Ergebnisse von den letzen 30 Tagen.<br> In unseren Einstellungen können Sie den Filter einstellen.',
         ],
         "settings"  => [
             "title" => 'Einstellungen:',
-            "1" => 'Wenn Sie auf Einstellungen klicken, sehen Sie die Einstellungen. <br> Da können Sie die Einstellungen für die ausgewählte Such-Kategorie einstellen.',
+            "1" => 'Wenn Sie auf Einstellungen klicken, sehen Sie die Einstellungen. <br> Da können Sie die Einstellungen für die ausgewählte Such-Kategorie<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchkategorien" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> einstellen.',
         ],
     ],
     "result"  => [
@@ -61,7 +61,7 @@ return [
             ],
             "newtab"  => [
                 "title" => 'In neuem Tab öffnen:',
-                "1" => 'Dieser Knopf öffnet das Ergebnis in einem neuen Tab<a title="Wort erklärung" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>.',
+                "1" => 'Dieser Knopf öffnet das Ergebnis in einem neuen Tab<a title="Wort erklärung" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>. <br> Mit der Tastenkombination STRG und Linksklick kann man ein Ergebnis auch im neuen Tab öffnen. <br> Alternativ können Sie auch die mittlere Maustaste drücken. <br> Man kann das Ergebnis auch immer im neuen Tab öffnen. <br> Dafür öffnet man unsere Einstellungen: <br> Unter <strong>Weitere Einstellungen</strong> finden Sie Ergebnisse in neuem Tab öffnen. <br> Dort können Sie das auf <strong>an</strong> schalten. <br> Dann öffnen sich die Ergebnisse immer im neuen Tab.',
             ],
             "anonym"  => [
                 "title" => 'Anonym öffnen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#anonymoeffnen" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>:',
@@ -96,8 +96,8 @@ return [
             "1" => 'Manche Browser<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> löschen Ihre Cookies<a title="Wort erklärung" href="/hilfe/easy-language/glossary#cookies" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können sich den Link auch anzeigen lassen: <br> <a href=:link>Cookie-Link</a> <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die Einstellungen wieder da. ',
         ],
         "searchengine"  => [
-            "title" => 'Verwendete Such-maschinen:',
-            "1" => 'Hier sehen Sie alle Such-Maschinen die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen.',
+            "title" => 'Verwendete Such-Maschinen:',
+            "1" => 'Hier sehen Sie alle Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>.',
             "2" => 'Wenn ein Knopf rot ist nutzen Sie diese Such-Maschine nicht.',
         ],
         "filter"  => [
@@ -110,11 +110,11 @@ return [
                 "4" => 'Hier können Sie die Sprache vom Such-Ergebnis aussuchen. <br> Man zeigt dann nur Ergebnisse mit der ausgewählten Sprache an.',
             ],
             "2" => 'Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>:', 
-            "3" => 'Mit dem Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Filter verstecken Sie unangenehme Ergebnisse. <br> <strong>Strikt</strong> findet fast keine unangenehmen Ergebnisse. <br> <strong>Aus</strong> findet alle Ergebnisse, also auch unangenehme Ergebnisse. <br> <strong>Moderat</strong> findet ein paar unangenehme Ergebnisse. <br> Bei <strong>Beliebig</strong> entscheiden die einzelnen Such-Maschinen selber.', 
+            "3" => 'Mit dem Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Filter (Jugendschutz-Filter) verstecken Sie unangenehme Ergebnisse. <br> <strong>Strikt</strong> findet fast keine unangenehmen Ergebnisse. <br> <strong>Aus</strong> findet alle Ergebnisse, also auch unangenehme Ergebnisse. <br> <strong>Moderat</strong> findet ein paar unangenehme Ergebnisse. <br> Bei <strong>Beliebig</strong> entscheiden die einzelnen Such-Maschinen selber.', 
         ],
         "blacklist"  => [
-            "title" => 'Blacklist:',
-            "1" => 'Hier können Sie Web-Seiten angeben, die Sie nicht in den Ergebnissen sehen wollen. <br> In das Feld geben Sie die Seite ein. <br> Dann drücken Sie auf den Knopf <Strong>Hinzufügen</strong>. <br> Dann verstecken Sie die Seite in den Ergebnissen. <br> Hier können Sie mehrere Ergebnisse hinuzufügen.',
+            "title" => 'Blacklist / Schwarze Liste:',
+            "1" => 'Hier können Sie Web-Seiten angeben, die Sie nicht in den Ergebnissen sehen wollen. <br> In das Feld geben Sie die Seite ein. <br> Dann drücken Sie auf den Knopf <Strong>Hinzufügen</strong>. <br> Hier können Sie mehrere Ergebnisse hinzufügen.<br> Dann verstecken Sie die Seite in den Ergebnissen. ',
             "2" => 'Wenn Sie eine Seite doch wieder sehen wollen, können Sie auf die Müll-Tonne drücken. <br> Oder Sie drücken auf den Knopf <strong>Blacklist leeren</strong> um alle Seiten wieder zu zeigen.',
         ],
         "moresettings" => 'Weitere Einstellungen:',

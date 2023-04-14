@@ -57,6 +57,9 @@
                                         advertising, we give the first two blocks of the IP in connection with some non-identifying parts of
                                         the so-called user agent to our advertising partners
                                     </li>
+                                    <li>
+                                        If you use a MetaGer key, your IP address will not be stored. In this case, no data will be forwarded to any advertising partners.
+                                    </li>
                                 </ol>
                                 <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
@@ -102,6 +105,9 @@
                                         advertising, we give some non-identifying parts of the user agent—specifically the browser brand (eg. Firefox), if supplied the general device type (eg. mobile or desktop) and if supplied the operating system name (eg. Ubuntu)—in connection with the first two
                                         blocks of the so-called <a href="#ip-address">IP-Adress</a> to our advertising
                                         partners.
+                                    </li>
+                                    <li>
+                                        If you use a MetaGer key, your IP address will not be stored. In this case, no data will be forwarded to any advertising partners.
                                     </li>
                                 </ol>
                             </article>
@@ -214,7 +220,7 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h1>Simple Website useage</h1>
+                    <h1>Simple Website usage</h1>
                     When visiting websites of the domain "suma-ev.de", the following data are collected and stored for
                     up to one week:
                     <ul>

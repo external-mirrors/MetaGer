@@ -4,7 +4,6 @@ namespace App\Http;
 
 use App\Http\Middleware\AllowLocalOnly;
 use App\Http\Middleware\HttpCache;
-use App\Http\Middleware\SettingsMigration;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -84,7 +83,6 @@ class Kernel extends HttpKernel
                 'spam' => \App\Http\Middleware\Spam::class,
                 'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
                 'allow-local-only' => AllowLocalOnly::class,
-                'settings-migration' => SettingsMigration::class,
                 'httpcache' => HttpCache::class,
         ];
 }

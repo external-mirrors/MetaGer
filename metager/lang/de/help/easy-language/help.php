@@ -19,14 +19,14 @@ return [
             '1' => 'Such-Funktionen',
             '2' => '!bangs',
             '3' => 'Suche in der Suche',
-            '4' => 'MetaGer installieren',
+            '4' => 'MetaGer herunterladen',
         ],
 
         "3"  => [
             '0' => 'Funktionen zur Anonymität und Daten-Sicherheit',
             '2' => 'Cookies & Co.',
             '3' => 'Tor-Hidden-Service',
-            '4' => 'MetaGer-Proxy',
+            '4' => 'Anonym öffnen',
             '5' => 'Jugend-Schutz',
         ],
         

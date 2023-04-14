@@ -63,8 +63,14 @@
 
 		</ol>
 	</div>
-	<div class="card" id="installieren">
+	<div class="card" id="suchmaschine">
 		<h2>{!! trans('help/easy-language/glossary.entry.1') !!}</h2>
+
+		<p>{!! trans('help/easy-language/glossary.explanation.entry1.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry1.2') !!}</p>
+		<h3>{!! trans('help/easy-language/glossary.explanation.entry1.3') !!}</h3>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry1.4') !!}</p>
+
 	</div>
 	<div class="card" id="standardsuche">
 		<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>

@@ -41,6 +41,19 @@ return [
         "2" => "Sollte Ihnen das nicht ausreichen, haben Sie 2 Möglichkeiten, Ihre Suche genauer zu machen:",
         "1" => "Wenn Sie bei MetaGer nach mehr als einem Wort suchen, versuchen wir automatisch, Ihnen Ergebnisse zu liefern, in denen alle Wörter vorkommen, oder die diesen möglichst nahe kommen.",
     ],
+    "exactsearch" =>[
+        "title" => "Exakte Suche",
+        "1" =>"Wenn Sie in den MetaGer-Suchergebnissen",
+        "2" =>"Placeholder",
+        "3" =>"Placeholder",
+        "4" =>"Placeholder",
+        "example" => [
+            "1" => "Placeholder",
+            "2" => "Placeholder",
+            "3" => "Placeholder",
+        ],
+
+    ],
     "bang"  => [
         "title" => "!bangs",
         "1" => "MetaGer unterstützt in geringem Umfang eine Schreibweise, die oft als „!bang“-Syntax bezeichnet wird.<br>Ein solches „!bang“ beginnt immer mit einem Ausrufezeichen und enthält keine Leerzeichen. Beispiele sind hier „!twitter“ oder „!facebook“.<br>Wird ein !bang, das wir unterstützen, in der Suchanfrage verwendet, erscheint in unseren Quicktips ein Eintrag, über den man die Suche auf Knopfdruck mit dem jeweiligen Dienst (hier Twitter oder Facebook) fortführen kann.",

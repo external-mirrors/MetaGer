@@ -36,8 +36,19 @@
 			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.4.example') !!}</div></li>
 		</ul>
 	</div>
-
+	<h3 id="exactsearch">{!! trans('help/help-functions.exactsearch.title') !!}</h3>
+	<div>
+		<p>{!! trans('help/help-functions.exactsearch.1') !!}</p>
+		<p>{!! trans('help/help-functions.exactsearch.2') !!}</p>
+		<ul class="dotlist">
+			<li>{!! trans('help/help-functions.exactsearch.3') !!}</li>
+			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.exactsearch.example.1') !!}</div></li>
+			<li>{!! trans('help/help-functions.exactsearch.4') !!}</li>
+			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.exactsearch.example.2') !!}</div></li>
+		</ul>
+	</div>
 	</section>
+
 	<section id="bangs">
 		<h3>{!! trans('help/help-functions.bang.title') !!}</h3>
 		<div>

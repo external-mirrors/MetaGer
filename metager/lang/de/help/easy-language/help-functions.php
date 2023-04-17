@@ -43,7 +43,7 @@ return [
     ],
     "selist"  => [
         "title"  => [
-            '0' => 'MetaGer zur Suchmaschinen-liste des Browsers hinzufügen',
+            '0' => 'MetaGer zur Such-Maschinen-Liste des Browsers hinzufügen',
             '1' => 'MetaGer installieren',
         ],
         "defaultsearchengine"  => [

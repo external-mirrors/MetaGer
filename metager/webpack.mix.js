@@ -38,9 +38,7 @@ mix
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
   )
-  .less("resources/less/metager/pages/key.less", "public/css/key.css")
   .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
-  .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(
     "resources/less/metager/pages/lang-selector.less",

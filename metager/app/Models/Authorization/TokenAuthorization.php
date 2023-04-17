@@ -87,7 +87,7 @@ class TokenAuthorization extends Authorization
             $result = json_decode($result);
             if ($result !== null) {
                 $remaining_tokens = $this->parseError($result);
-                for ($i = sizeof($remaining_tokens); $i >= 0; $i--) {
+                for ($i = sizeof($remaining_tokens) - 1; $i >= 0; $i--) {
                     array_unshift($this->tokens, $remaining_tokens[$i]);
                 }
             }

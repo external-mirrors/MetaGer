@@ -55,6 +55,6 @@ abstract class Authorization
      */
     private function calculateCost()
     {
-        return 1;
+        return 3;
     }
 }

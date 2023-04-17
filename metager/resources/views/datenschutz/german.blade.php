@@ -61,6 +61,9 @@
                                         Werbung zu erhalten, geben wir die ersten beiden Blöcke der IP in Verbindung mit
                                         Teilen vom sog. <a href="#user-agent">User-Agent</a> an unsere Werbepartner.
                                     </li>
+                                    <li>
+                                        Wenn Sie einen MetaGer Schlüssel verwenden entfällt die Speicherung Ihrer IP-Addresse. In diesem Fall werden auch keinerlei Daten an etwaige Werbepartner weitergeleitet.
+                                    </li>
                                 </ol>
                                 <h3>Welche Rechte habe ich als Nutzer?</h3>
                                 Da die vollständige Form der Internet-Protokoll-Adresse personenbezogen ist, haben Sie
@@ -107,6 +110,7 @@
                                         ersten beiden Blöcken der sog. <a href="#ip-address">IP-Adresse</a> an unsere
                                         Werbepartner.
                                     </li>
+                                    <li>Wenn Sie einen MetaGer Schlüssel verwenden, werden keine Daten an etwaige Werbepartner weitergeleitet.</li>
                                 </ol>
                             </article>
                         </li>
@@ -189,6 +193,37 @@
                                 Die hier eingegebene Nachricht wird an uns übertragen und bei der Bearbeitung Ihrer
                                 Spende berücksichtigt.
                             </article>
+                        </li>
+                    </ol>
+                </article>
+                <article class="kontext">
+                    <h1 id="donation">Kaufabwicklung MetaGer Schlüssel</h1>
+                    <ol class="datum-list">
+                        <li>
+                            <article class="datum">
+                                <h2>Zahlungsdaten</h2>
+                                Bei der Kaufabwicklung für einen MetaGer Schlüssel fallen je nach Zahlungsanbieter verschiedene Zahlungsdaten an
+                                <h3>Beispiele</h3>
+                                <samp>Max Mustermann, mail@example.com</samp><br />
+                                <samp>IBAN: DE1234567890123</samp><br />
+                                <samp>Letzte Ziffern der Kreditkartennummer: XXXXXXXXXXX1234</samp><br />
+                            </article>
+                        </li>
+                        <li>
+                            <article class="datum">
+                                <h2>Rechnungsdaten</h2>
+                                Wenn Sie eine Rechnung für Ihren Einkauf wünschen, lassen Sie uns Rechnungsdaten zukommen
+                                <h3>Beispiele</h3>
+                                <samp>Max Mustermann, mail@example.com</samp><br />
+                                <samp>Mustergasse 3, 00000 Musterstadt</samp><br />
+                            </article>
+                        </li>
+                    </ol>
+                    <h3>Was macht MetaGer/SUMA-EV damit?</h3>
+                    <ol>
+                        <li>Aus Steuerrechtlichen Gründen sind wir dazu verpflichtet diese Daten 10 Jahre lang 
+                            aufzubewahren und somit abzuspeichern. Die Daten werden anschließend automatisch gelöscht und
+                            ansonsten nicht weiter verarbeitet.
                         </li>
                     </ol>
                 </article>
@@ -362,5 +397,5 @@
         <h1>Änderungen an dieser Erklärung</h1>
         Wie unsere Angebote ist auch diese Datenschutzerklärung einem ständigen Wandel unterworfen. Sie sollten sie
         daher regelmäßig erneut lesen.
-        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2023-01-23
+        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2023-04-17
     </div>

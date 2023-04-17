@@ -57,6 +57,9 @@
                                         advertising, we give the first two blocks of the IP in connection with some non-identifying parts of
                                         the so-called user agent to our advertising partners
                                     </li>
+                                    <li>
+                                        If you use a MetaGer key, your IP address will not be stored. In this case, no data will be forwarded to any advertising partners.
+                                    </li>
                                 </ol>
                                 <h2>Which rights do I have as a user?</h2>
                                 Since the full form of the Internet Protocol address is personal, you have the following
@@ -102,6 +105,9 @@
                                         advertising, we give some non-identifying parts of the user agent—specifically the browser brand (eg. Firefox), if supplied the general device type (eg. mobile or desktop) and if supplied the operating system name (eg. Ubuntu)—in connection with the first two
                                         blocks of the so-called <a href="#ip-address">IP-Adress</a> to our advertising
                                         partners.
+                                    </li>
+                                    <li>
+                                        If you use a MetaGer key, your IP address will not be stored. In this case, no data will be forwarded to any advertising partners.
                                     </li>
                                 </ol>
                             </article>
@@ -183,7 +189,38 @@
                     </ol>
                 </article>
                 <article class="kontext">
-                    <h1>Simple Website useage</h1>
+                    <h1 id="donation">Purchase transaction MetaGer key</h1>
+                    <ol class="datum-list">
+                        <li>
+                            <article class="datum">
+                                <h2>Payment data</h2>
+                                During the checkout process for a MetaGer key, different payment data is required depending on the payment provider
+                                <h3>Examples</h3>
+                                <samp>John Sample, mail@example.com</samp><br />
+                                <samp>IBAN: DE1234567890123</samp><br />
+                                <samp>Last digits of the credit card number: XXXXXXXXXXX1234</samp><br />
+                            </article>
+                        </li>
+                        <li>
+                            <article class="datum">
+                                <h2>Invoice data</h2>
+                                You will send us invoice data if you require a receipt
+                                <h3>Examples</h3>
+                                <samp>John Sample, mail@example.com</samp><br />
+                                <samp>Any Street, Any City, Any State</samp><br />
+                            </article>
+                        </li>
+                    </ol>
+                    <h3>What does MetaGer/SUMA-EV do with it?</h3>
+                    <ol>
+                        <li>For reasons of tax law, we are obliged to retain and thus store this data for 10 years. 
+                            and thus to store it. The data is then automatically deleted and
+                            otherwise not further processed.
+                        </li>
+                    </ol>
+                </article>
+                <article class="kontext">
+                    <h1>Simple Website usage</h1>
                     When visiting websites of the domain "suma-ev.de", the following data are collected and stored for
                     up to one week:
                     <ul>
@@ -345,5 +382,5 @@
         <h1>Changes to this statement</h1>
         Like our offers, this privacy policy is subject to constant change. You should therefore read it again
         regularly.
-        <br />This version of our Privacy Policy is dated 2022-09-06.
+        <br />This version of our Privacy Policy is dated 2023-04-17.
     </div>

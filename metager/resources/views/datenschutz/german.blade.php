@@ -397,5 +397,5 @@
         <h1>Änderungen an dieser Erklärung</h1>
         Wie unsere Angebote ist auch diese Datenschutzerklärung einem ständigen Wandel unterworfen. Sie sollten sie
         daher regelmäßig erneut lesen.
-        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2023-01-23
+        <br />Die vorliegende Version unserer Datenschutzerklärung trägt folgendes Datum: 2023-04-17
     </div>

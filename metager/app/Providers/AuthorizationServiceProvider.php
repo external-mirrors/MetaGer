@@ -19,7 +19,10 @@ class AuthorizationServiceProvider extends ServiceProvider
     public function register()
     {
         // Check if Authorization is done through Token or through Key
-        $tokens = Cookie::get("tokens");
+        $tokens = Request::header(("tokens"));
+        if ($tokens === null) {
+            $tokens = Cookie::get("tokens");
+        }
         if ($tokens !== null) {
             $this->app->singleton(Authorization::class, function ($app) use ($tokens) {
                 return new TokenAuthorization($tokens);

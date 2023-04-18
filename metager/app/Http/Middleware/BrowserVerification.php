@@ -51,6 +51,10 @@ class BrowserVerification
                 abort(403);
             }
         }
+        // Make sure cost cookie is deleted after this request
+        if (\Cookie::has("cost")) {
+            \Cookie::expire("cost");
+        }
         // Make sure MGV Parameter is defined
         $mgv = $request->input("mgv", "");
         if (!empty($mgv) && preg_match("/^[a-z0-9]{32}$/", $request->input("mgv")) !== 1) {
@@ -91,6 +95,11 @@ class BrowserVerification
                 $params = $request->all();
                 $params["mgv"] = $mgv;
                 $url = route("resultpage", $params);
+                if (\Cookie::has("tokenauthorization")) {
+                    // When Token Authorization is used we will tell the App/Extension the
+                    // cost of the upcoming search by setting a Cookie 
+                    \Cookie::queue("cost", 3, 0);
+                }
                 return redirect($url);
             }
         } else {

@@ -21,8 +21,26 @@ class TokenAuthorization extends Authorization
         $this->keyserver = $keyserver . "/api/json";
 
         $tokenJson = json_decode($tokenString);
-        if ($tokenJson === null || !is_array($tokenJson)) {
+        if ($tokenJson === null) {
+            if (strlen($tokenString) > 0 && in_array($tokenString, ["full", "low", "empty"])) {
+                switch ($tokenString) {
+                    case "full":
+                        $this->availableTokens = 150;
+                        break;
+                    case "low":
+                        $this->availableTokens = 30;
+                    case "empty":
+                        $this->availableTokens = 0;
+                }
+            } else {
+                $this->availableTokens = 0;
+            }
+            $tokenJson = [];
+        } else if (!is_array($tokenJson)) {
             $this->availableTokens = 0;
+            $tokenJson = [];
+        } else {
+            $this->availableTokens = sizeof($tokenJson);
         }
 
         foreach ($tokenJson as $token) {
@@ -44,7 +62,9 @@ class TokenAuthorization extends Authorization
             $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
         }
         $this->checkTokens();
-        $this->availableTokens = sizeof($this->tokens);
+        if (sizeof($this->tokens) > 0) {
+            $this->availableTokens = sizeof($this->tokens);
+        }
     }
 
     /**

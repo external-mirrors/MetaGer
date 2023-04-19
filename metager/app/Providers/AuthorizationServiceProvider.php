@@ -23,6 +23,9 @@ class AuthorizationServiceProvider extends ServiceProvider
         if ($tokens === null) {
             $tokens = Cookie::get("tokens");
         }
+        if ($tokens === null && Cookie::has("tokenauthorization") && !Cookie::has("key")) {
+            $tokens = Cookie::get("tokenauthorization");
+        }
         if ($tokens !== null) {
             $this->app->singleton(Authorization::class, function ($app) use ($tokens) {
                 return new TokenAuthorization($tokens);

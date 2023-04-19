@@ -51,7 +51,7 @@ abstract class Authorization
 
     /**
      * Calculates the cost of the current search 
-     * Will currently be always 1;
+     * Will currently be always 3;
      */
     private function calculateCost()
     {

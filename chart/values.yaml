@@ -59,12 +59,18 @@ ingress:
   className: "nginx"
   annotations:
     kubernetes.io/tls-acme: "false"
-    nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
     nginx.ingress.kubernetes.io/configuration-snippet: >
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
       }
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
+    nginx.ingress.kubernetes.io/client-header-buffer-size: 256k
     nginx.ingress.kubernetes.io/proxy-body-size: 30m
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 256k
+    nginx.ingress.kubernetes.io/proxy-buffers: 32 256k
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 256k;
+      large_client_header_buffers 32 256k;
   hosts: []
   tls: []
   #  - secretName: chart-example-tls

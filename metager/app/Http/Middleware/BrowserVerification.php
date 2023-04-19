@@ -97,8 +97,9 @@ class BrowserVerification
                 $url = route("resultpage", $params);
                 if (\Cookie::has("tokenauthorization")) {
                     // When Token Authorization is used we will tell the App/Extension the
-                    // cost of the upcoming search by setting a Cookie 
-                    \Cookie::queue("cost", 3, 0);
+                    // cost of the upcoming search by setting a Cookie
+                    $cost = app(Authorization::class)->cost;
+                    \Cookie::queue("cost", $cost, 0);
                 }
                 return redirect($url);
             }

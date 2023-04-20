@@ -26,7 +26,10 @@ class SettingsController extends Controller
 
 
         # Parse the Parameter Filter
-        $filters = [];
+        $filters = $settings->parameterFilter;
+        foreach ($filters as $name => $value) {
+            $test = "test";
+        }
 
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {

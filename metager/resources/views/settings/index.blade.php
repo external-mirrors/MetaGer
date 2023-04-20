@@ -61,6 +61,16 @@
             @endforeach
         </div>
         @endif
+        <h4>@lang('settings.disabledBecausePaymentRequired')</h4>
+        <div class="sumas payment-required-engines">
+            @foreach($sumas as $name => $suma)
+            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::PAYMENT_REQUIRED)
+            <div class="suma">
+                {{ $suma->configuration->infos->displayName }}
+            </div>
+            @endif
+            @endforeach
+        </div>
     </div>
     <div class="card">
         <h1>@lang('settings.header.3')</h1>
@@ -77,7 +87,7 @@
                         <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@if(property_exists($filterInfo->values, "nofilter"))@lang($filterInfo->values->nofilter)@else @lang('metaGer.filter.noFilter')@endif</option>
                         @foreach($filterInfo->values as $key => $value)
                         @if(!empty($key))
-                        <option value="{{ $key }}" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }}>@lang($value)</option>
+                        <option value="{{ $key }}" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }} @if(sizeof($filterInfo->{"disabled-values"}) > 0)disabled @endif>@lang($value)</option>
                         @endif
                         @endforeach
                     </select>

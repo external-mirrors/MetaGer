@@ -17,7 +17,7 @@ use Log;
 class Searchengines
 {
     /** @var SearchEngine[] */
-    private $sumas = [];
+    public $sumas = [];
     public function __construct()
     {
         $settings = app(SearchSettings::class);
@@ -58,6 +58,9 @@ class Searchengines
                 $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FOKUS;
                 continue;
             }
+            // Disable all searchengines not supporting the current locale
+            $suma->configuration->applyLocale();
+
             if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::PAYMENT_REQUIRED;
@@ -77,21 +80,27 @@ class Searchengines
                     continue 2;
                 }
             }
-            // Disable searchengine if it does not support a possibly defined parameter filter
-            foreach ($settings->parameterFilter as $filterName => $filter) {
-                // We need to check if the searchengine supports the parameter value, too
-                if (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value})) {
-                    $suma->configuration->disabled = true;
-                    $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FILTER;
-                    continue 2;
-                }
-            }
         }
 
         // Enable Yahoo Ads if query is unauthorized and yahoo is disabled
         if (!app(Authorization::class)->canDoAuthenticatedSearch() && $settings->fokus !== "bilder") {
             if ($this->sumas["yahoo"]->configuration->disabled === true) {
                 $this->sumas["yahoo-ads"]->configuration->disabled = false;
+            }
+        }
+
+        $settings->loadQueryFilter();
+        $settings->loadParameterFilter($this);
+
+        foreach ($this->sumas as $suma) {
+            // Disable searchengine if it does not support a possibly defined parameter filter
+            foreach ($settings->parameterFilter as $filterName => $filter) {
+                // We need to check if the searchengine supports the parameter value, too
+                if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value}))) {
+                    $suma->configuration->disabled = true;
+                    $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FILTER;
+                    continue 2;
+                }
             }
         }
     }

@@ -3,6 +3,8 @@
 namespace App;
 
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
 use Cookie;
 use Request;
 
@@ -31,11 +33,9 @@ class SearchSettings
         if (!in_array($this->fokus, ["web", "bilder", "produkte", "nachrichten", "science"])) {
             $this->fokus = "web";
         }
-        $this->loadQueryFilter();
-        $this->loadParameterFilter();
     }
 
-    private function loadQueryFilter()
+    public function loadQueryFilter()
     {
         # Check for query-filter (i.e. Sitesearch, etc.):
         foreach ($this->sumasJson->filter->{"query-filter"} as $filterName => $filter) {
@@ -57,10 +57,15 @@ class SearchSettings
         }
     }
 
-    private function loadParameterFilter()
+    public function loadParameterFilter(Searchengines $searchengines)
     {
         $authorized = app(Authorization::class)->canDoAuthenticatedSearch();
         foreach ($this->sumasJson->filter->{"parameter-filter"} as $filterName => $filter) {
+            // Do not add filter if not available for current focus
+            if (sizeof(array_intersect(array_keys((array) $filter->sumas), $this->sumasJson->foki->{$this->fokus}->sumas)) === 0) {
+                continue;
+            }
+
             $this->parameterFilter[$filterName] = $filter;
             if (
                 (Request::filled($filter->{"get-parameter"}) && Request::input($filter->{"get-parameter"}) !== "off") ||
@@ -76,21 +81,28 @@ class SearchSettings
             }
             // Check if any options will be disabled
             $this->parameterFilter[$filterName]->{"disabled-values"} = [];
-            if (!$authorized) {
-                $free_to_use_values = [];
-                foreach ($this->parameterFilter[$filterName]->sumas as $name => $options) {
-                    if (!in_array($this->fokus, $this->sumasJson->foki->{$this->fokus}->sumas)) {
-                        continue;
+            $enabledValues = [];
+            $disabledValues = [];
+            foreach ($this->parameterFilter[$filterName]->sumas as $name => $options) {
+                if (!in_array($name, (array) $this->sumasJson->foki->{$this->fokus}->sumas)) {
+                    continue;
+                }
+                foreach ($options->values as $value => $sumaValue) {
+                    if ($searchengines->sumas[$name]->configuration->disabled === true && !in_array($value, $enabledValues)) {
+                        if (!array_key_exists($value, $disabledValues)) {
+                            $disabledValues[$value] = [];
+                        }
+                        $disabledValues[$value][] = $searchengines->sumas[$name]->configuration->disabledReason;
                     }
-                    foreach ($options->values as $value => $sumaValue) {
-                        if ($this->sumasJson->sumas->$name->cost === 0) {
-                            $free_to_use_values[] = $value;
+                    if (!$searchengines->sumas[$name]->configuration->disabled && !in_array($value, $enabledValues)) {
+                        $enabledValues[] = $value;
+                        if (array_key_exists($value, $disabledValues)) {
+                            unset($disabledValues[$value]);
                         }
                     }
                 }
-                $test = "test";
             }
+            $this->parameterFilter[$filterName]->{"disabled-values"} = $disabledValues;
         }
-
     }
 }

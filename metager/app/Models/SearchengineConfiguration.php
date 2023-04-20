@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Localization;
+use App\Models\DisabledReason;
 use LaravelLocalization;
 use \Log;
 
@@ -88,14 +89,13 @@ class SearchengineConfiguration
             }
             $this->infos = new SearchEngineInfos($engineConfigurationJson->infos);
             $this->cost = $engineConfigurationJson->cost;
-            // Apply the current locale
-            $this->applyLocale();
+
         } catch (\Exception $e) {
             Log::error($e->getTraceAsString());
         }
     }
 
-    private function applyLocale()
+    public function applyLocale()
     {
         $key = $this->languages->getParameter;
         $value = $this->languages->getParameterForLocale();
@@ -103,6 +103,7 @@ class SearchengineConfiguration
             $this->getParameter->{$key} = $value;
         } else {
             $this->disabled = true;
+            $this->disabledReason = DisabledReason::INCOMPATIBLE_LOCALE;
         }
     }
 
@@ -170,14 +171,4 @@ class SearchEngineInfos
         $this->operator = $langJson->operator;
         $this->indexSize = $langJson->index_size;
     }
-}
-
-enum DisabledReason
-{
-    case USER_CONFIGURATION;
-    case PAYMENT_REQUIRED;
-    case SERVES_ADVERTISEMENTS;
-    case INCOMPATIBLE_FILTER;
-    case INCOMPATIBLE_FOKUS;
-    case SUMAS_CONFIGURATION;
 }

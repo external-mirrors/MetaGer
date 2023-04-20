@@ -51,10 +51,6 @@ class MetaGerProvider extends ServiceProvider
             return new QueryTimer();
         });
 
-        $this->app->singleton(Searchengines::class, function ($app) {
-            return new Searchengines();
-        });
-
         $this->app->singleton(HumanVerification::class, function ($app) {
             return new HumanVerification();
         });

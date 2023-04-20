@@ -4,11 +4,11 @@ return [
     'actions' => 'Aktionen',
     'add' => 'Hinzufügen',
     'address' => 'Adresseingabe',
-    'allSettings'   => [
+    'allSettings' => [
         'header' => 'Auf :root gesetzte Einstellungen',
         'text' => 'Hier finden Sie eine Übersicht aller von Ihnen gesetzten Einstellungen und Cookies. Sie können einzelne Einträge löschen, oder alle entfernen. Bedenken Sie, dass die zugehörigen Einstellungen dann nicht mehr verwendet werden.',
     ],
-    'aria.label'    => [
+    'aria.label' => [
         '1' => 'aktiviert',
         '2' => 'deaktiviert',
     ],
@@ -19,14 +19,15 @@ return [
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
+    'disabledBecausePaymentRequired' => "Diese Suchmaschinen erfordern einen MetaGer Schlüssel",
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
-    'header'        => [
+    'header' => [
         '1' => 'Sucheinstellungen',
         '2' => 'Verwendete Suchmaschinen',
         '3' => 'Suchfilter',
         '4' => 'Blacklist',
     ],
-    'hint'      => [
+    'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
         'header' => 'Setzen von Cookies',
         'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen mitzunehmen. Der Link erstellt beim Aufrufen Cookies mit dem entsprechenden Einstellungen.',
@@ -45,7 +46,7 @@ return [
     'reset' => 'Alle Einstellungen löschen',
     'save' => 'Speichern',
     'system' => 'Systemstandard',
-    'text'      => [
+    'text' => [
         '1' => 'Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im Fokus :fokusName vornehmen. Sollten diese nicht dauerhaft gespeichert bleiben, überprüfen Sie bitte in Ihren Browsereinstellungen, ob dieser beim Beenden gespeicherte Cookies löscht.',
         '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden. Eingeschaltete Suchmaschinen sind in grün dargestellt. Ausgeschaltete in rot oder grau.',
         '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',

@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Loklak extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -24,10 +25,10 @@ class Loklak extends Searchengine
         }
 
         foreach ($results['statuses'] as $result) {
-            $title       = $result["screen_name"];
-            $link        = $result['link'];
+            $title = $result["screen_name"];
+            $link = $result['link'];
             $anzeigeLink = $link;
-            $descr       = $result["text"];
+            $descr = $result["text"];
             $this->counter++;
             $this->results[] = new \App\Models\Result(
                 $this->engine,

@@ -3,23 +3,24 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Dmoznebel_int extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
     {
 
-        $title       = "";
-        $link        = "";
+        $title = "";
+        $link = "";
         $anzeigeLink = $link;
-        $descr       = "";
+        $descr = "";
 
         $this->counter++;
         $this->results[] = new \App\Models\Result(

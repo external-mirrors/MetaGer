@@ -8,14 +8,14 @@ class Wikipedia extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
     {
-        $result  = utf8_decode($result);
+        $result = utf8_decode($result);
         $counter = 0;
 
         $this->results[] = new \App\Models\Result(

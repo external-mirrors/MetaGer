@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Nebel extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)

@@ -142,6 +142,8 @@ class MetaGer
         $this->redisEngineResult = $redisPrefix . "." . $this->searchUid . ".results.";
         # A list of all search results already delivered to the user (sorted of course)
         $this->redisCurrentResultList = $redisPrefix . "." . $this->searchUid . ".currentResults";
+
+        $this->parseFormData();
     }
 
     # Erstellt aus den gesammelten Ergebnissen den View
@@ -985,23 +987,23 @@ class MetaGer
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */
 
-    public function parseFormData(Request $request, $auth = true)
+    public function parseFormData($auth = true)
     {
         # Sichert, dass der request in UTF-8 formatiert ist
-        if ($request->input('encoding', 'utf8') !== "utf8") {
+        if (\Request::input('encoding', 'utf8') !== "utf8") {
             # In früheren Versionen, als es den Encoding Parameter noch nicht gab, wurden die Daten in ISO-8859-1 übertragen
-            $input = $request->all();
+            $input = \Request::all();
             foreach ($input as $key => $value) {
                 $input[$key] = mb_convert_encoding("$value", "UTF-8", "ISO-8859-1");
             }
-            $request->replace($input);
+            \Request::replace($input);
         }
 
-        $this->url = $request->url();
-        $this->fullUrl = $request->fullUrl();
+        $this->url = \Request::url();
+        $this->fullUrl = \Request::fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
         # Fokus
-        $this->fokus = $request->input('focus', 'web');
+        $this->fokus = \Request::input('focus', 'web');
         # Suma-File
         if ($this->dummy) {
             $this->sumaFile = \config_path("stress.json");
@@ -1015,26 +1017,26 @@ class MetaGer
             $this->sumaFile = json_decode(file_get_contents($this->sumaFile));
         }
         # Sucheingabe
-        $this->eingabe = trim($request->input('eingabe', ''));
+        $this->eingabe = trim(\Request::input('eingabe', ''));
         $this->q = $this->eingabe;
 
-        $this->out = $request->input("out", "");
+        $this->out = \Request::input("out", "");
 
         // Check if request header "Sec-Fetch-Dest" is set
         $this->framed = false;
-        if ($request->header("Sec-Fetch-Dest") === "iframe") {
+        if (\Request::header("Sec-Fetch-Dest") === "iframe") {
             $this->framed = true;
-        } elseif ($request->input("out", "") === "results-with-style") {
+        } elseif (\Request::input("out", "") === "results-with-style") {
             $this->framed = true;
-        } elseif ($request->input("iframe", "false") === "1") {
+        } elseif (\Request::input("iframe", "false") === "1") {
             $this->framed = true;
         }
-        unset($request["iframe"]);
+        unset(app(Request::class)["iframe"]);
 
         # IP
-        $this->ip = $this->anonymizeIp($request->ip());
+        $this->ip = $this->anonymizeIp(\Request::ip());
 
-        $this->useragent = $request->header('User-Agent');
+        $this->useragent = \Request::header('User-Agent');
 
         # Language
         if (isset($_SERVER['HTTP_LANGUAGE'])) {
@@ -1046,7 +1048,7 @@ class MetaGer
         # Page
         $this->page = 1;
         # Lang
-        $this->lang = $request->input('lang', 'all');
+        $this->lang = \Request::input('lang', 'all');
         if ($this->lang !== "de" && $this->lang !== "en" && $this->lang !== "all") {
             $this->lang = "all";
         }
@@ -1059,11 +1061,11 @@ class MetaGer
         } else {
             $this->sprueche = 'on';
         }
-        if ($request->filled('zitate') && $request->input('zitate') === 'on' || $request->input('zitate') === 'off') {
-            $this->sprueche = $request->input('quotes');
+        if (\Request::filled('zitate') && \Request::input('zitate') === 'on' || \Request::input('zitate') === 'off') {
+            $this->sprueche = \Request::input('quotes');
         }
 
-        $this->newtab = $request->input('new_tab', Cookie::get('new_tab'));
+        $this->newtab = \Request::input('new_tab', Cookie::get('new_tab'));
         if ($this->newtab === "on") {
             $this->newtab = "_blank";
         } elseif ($this->framed) {
@@ -1071,36 +1073,36 @@ class MetaGer
         } else {
             $this->newtab = "_self";
         }
-        if ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz")) {
+        if (\Request::filled("key") && \Request::input('key') === config("metager.metager.keys.uni_mainz")) {
             $this->newtab = "_blank";
         }
         # Theme
-        $this->theme = preg_replace("/[^[:alnum:][:space:]]/u", '', $request->input('theme', 'default'));
+        $this->theme = preg_replace("/[^[:alnum:][:space:]]/u", '', \Request::input('theme', 'default'));
         # Ergebnisse pro Seite:
-        $this->resultCount = $request->input('resultCount', '20');
+        $this->resultCount = \Request::input('resultCount', '20');
 
-        if ($request->filled('minism') && ($request->filled('fportal') || $request->filled('harvest'))) {
-            $input = $request->all();
+        if (\Request::filled('minism') && (\Request::filled('fportal') || \Request::filled('harvest'))) {
+            $input = \Request::all();
             $newInput = [];
             foreach ($input as $key => $value) {
                 if ($key !== "fportal" && $key !== "harvest") {
                     $newInput[$key] = $value;
                 }
             }
-            $request->replace($newInput);
+            \Request::replace($newInput);
         }
 
         if ($this->resultCount <= 0 || $this->resultCount > 200) {
             $this->resultCount = 1000;
         }
-        if ($request->filled('onenewspageAll') || $request->filled('onenewspageGermanyAll')) {
+        if (\Request::filled('onenewspageAll') || \Request::filled('onenewspageGermanyAll')) {
             $this->time = 5000;
             $this->cache = "cache";
         }
-        if ($request->filled('password')) {
-            $this->password = $request->input('password');
+        if (\Request::filled('password')) {
+            $this->password = \Request::input('password');
         }
-        if ($request->filled('quicktips')) {
+        if (\Request::filled('quicktips')) {
             $this->quicktips = false;
         } else {
             $this->quicktips = true;
@@ -1116,7 +1118,7 @@ class MetaGer
         }
 
         // Remove Inputs that are not used
-        $this->request = $request->replace($request->except(['uid']));
+        $this->request = \Request::replace(\Request::except(['uid']));
 
         // Disable freshness filter if custom freshness filter isset
         if ($this->request->filled("ff") && $this->request->filled("f")) {
@@ -1178,7 +1180,7 @@ class MetaGer
             $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
         }
 
-        $this->out = $request->input('out', "html");
+        $this->out = \Request::input('out', "html");
         # Standard output format html
         if ($this->out !== "html" && $this->out !== "json" && $this->out !== "results" && $this->out !== "results-with-style" && $this->out !== "result-count" && $this->out !== "atom10" && $this->out !== "api" && $this->out !== "rss20") {
             $this->out = "html";
@@ -1266,8 +1268,8 @@ class MetaGer
 
         # Check for query-filter (i.e. Sitesearch, etc.):
         foreach ($this->sumaFile->filter->{"query-filter"} as $filterName => $filter) {
-            if (!empty($filter->{"optional-parameter"}) && $request->filled($filter->{"optional-parameter"})) {
-                $this->queryFilter[$filterName] = $request->input($filter->{"optional-parameter"});
+            if (!empty($filter->{"optional-parameter"}) && \Request::filled($filter->{"optional-parameter"})) {
+                $this->queryFilter[$filterName] = \Request::input($filter->{"optional-parameter"});
             } elseif (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
                 switch ($filter->match) {
                     case "last":
@@ -1293,11 +1295,11 @@ class MetaGer
             }
 
             if (
-                ($request->filled($filter->{"get-parameter"}) && $request->input($filter->{"get-parameter"}) !== "off") ||
+                (\Request::filled($filter->{"get-parameter"}) && \Request::input($filter->{"get-parameter"}) !== "off") ||
                 Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { # If the filter is set via Cookie
                 $this->parameterFilter[$filterName] = $filter;
-                $this->parameterFilter[$filterName]->value = $request->input($filter->{"get-parameter"}, '');
+                $this->parameterFilter[$filterName]->value = \Request::input($filter->{"get-parameter"}, '');
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
                 }

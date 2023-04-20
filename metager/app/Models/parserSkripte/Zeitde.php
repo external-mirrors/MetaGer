@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Zeitde extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -26,10 +27,10 @@ class Zeitde extends Searchengine
                 continue;
             }
 
-            $title       = $result->{"title"};
-            $link        = $result->{"href"};
+            $title = $result->{"title"};
+            $link = $result->{"href"};
             $anzeigeLink = $link;
-            $descr       = $result->{"snippet"};
+            $descr = $result->{"snippet"};
 
             $this->counter++;
             $this->results[] = new \App\Models\Result(

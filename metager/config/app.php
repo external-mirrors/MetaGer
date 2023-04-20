@@ -1,4 +1,5 @@
 <?php
+use App\Providers\SearchSettingsProvider;
 
 return [
 
@@ -182,6 +183,7 @@ return [
         App\Providers\AuthorizationServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Mews\Captcha\CaptchaServiceProvider::class,
+        SearchSettingsProvider::class,
     ],
 
     /*

@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Kelkoo extends Searchengine
@@ -10,9 +11,9 @@ class Kelkoo extends Searchengine
     public $results = [];
     public $unsignedGetString = "";
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         $this->unsignedGetString = $this->getString;
         $this->getString = $this->UrlSigner($this->unsignedGetString);
         $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);

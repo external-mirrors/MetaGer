@@ -51,10 +51,6 @@ class MetaGerProvider extends ServiceProvider
             return new QueryTimer();
         });
 
-        $this->app->singleton(SearchSettings::class, function ($app) {
-            return new SearchSettings();
-        });
-
         $this->app->singleton(Searchengines::class, function ($app) {
             return new Searchengines();
         });
@@ -64,12 +60,12 @@ class MetaGerProvider extends ServiceProvider
         });
     }
 
-    // public function provides()
-    // {
-    //     return [
-    //         MetaGer::class,
-    //         QueryLogger::class,
-    //         QueryTimer::class,
-    //     ];
-    // }
+// public function provides()
+// {
+//     return [
+//         MetaGer::class,
+//         QueryLogger::class,
+//         QueryTimer::class,
+//     ];
+// }
 }

@@ -8,7 +8,6 @@ namespace App\Models;
 
 class Result
 {
-    public $provider; # Die Engine von der das Suchergebnis kommt
     public $titel; # Der Groß Angezeigte Name für das Suchergebnis
     public $originalLink;
     public $link; # Der Link auf die Ergebnisseite
@@ -39,9 +38,8 @@ class Result
     const DESCRIPTION_LENGTH = 150;
 
     # Erstellt ein neues Ergebnis
-    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
+    public function __construct($engineBoost, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
     {
-        $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
         $this->originalLink = trim($link);
@@ -63,11 +61,7 @@ class Result
             $this->sourceRank = 20;
         }
         $this->sourceRank = 20 - $this->sourceRank;
-        if (isset($provider->{"engine-boost"})) {
-            $this->engineBoost = floatval($provider->{"engine-boost"});
-        } else {
-            $this->engineBoost = 1;
-        }
+        $this->engineBoost = empty($engineBoost) ? 1 : $engineBoost;
         $this->valid = true;
         $this->host = @parse_url($link, PHP_URL_HOST);
         $this->strippedHost = $this->getStrippedHost($this->link);

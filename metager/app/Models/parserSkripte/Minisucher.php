@@ -2,16 +2,19 @@
 
 namespace App\Models\parserSkripte;
 
+use App\MetaGer;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Minisucher extends Searchengine
 {
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         # Für die Newssuche stellen wir die Minisucher auf eine Sortierung nach Datum um.
-        if ($metager->getFokus() === "nachrichten") {
-            $this->getString .= "sort=" . $this->urlencode("documentDate desc");
+        if (app(MetaGer::class)->getFokus() === "nachrichten") {
+            $this->configuration->getParameter->sort = "documentDate desc";
+            $this->updateHash();
         }
     }
 

@@ -7,9 +7,9 @@ use App\Models\Searchengine;
 class Similar_product_ads extends Searchengine
 {
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         $tmp = $metager->getEingabe();
         $tmp = preg_replace("/\W/si", "", $tmp);
         if (strlen($tmp) < 3) {
@@ -22,10 +22,10 @@ class Similar_product_ads extends Searchengine
         $results = json_decode($result);
 
         foreach ($results->{"products"} as $result) {
-            $title       = $result->{"title"};
-            $link        = $result->{"product_url"};
+            $title = $result->{"title"};
+            $link = $result->{"product_url"};
             $anzeigeLink = $link;
-            $descr       = $result->{"description"};
+            $descr = $result->{"description"};
 
             $this->counter++;
             $this->ads[] = new \App\Models\Result(

@@ -4,6 +4,7 @@ namespace app\Models\parserSkripte;
 
 use App\Models\Result;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Onenewspagegermany extends Searchengine
 {
@@ -11,9 +12,9 @@ class Onenewspagegermany extends Searchengine
     public $resultCount = 0;
 
     private $offset = 0;
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)

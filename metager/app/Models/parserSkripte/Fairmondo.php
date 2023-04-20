@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Fairmondo extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -28,11 +29,11 @@ class Fairmondo extends Searchengine
                     break;
                 }
 
-                $title       = $result["title"];
-                $link        = "https://www.fairmondo.de/articles/" . $result["id"];
+                $title = $result["title"];
+                $link = "https://www.fairmondo.de/articles/" . $result["id"];
                 $anzeigeLink = $link;
-                $price       = 0;
-                $descr       = "";
+                $price = 0;
+                $descr = "";
                 if (isset($result['price_cents'])) {
                     $price = intval($result['price_cents']);
                     $descr .= "<p>Preis: " . (intval($result['price_cents']) / 100.0) . " €</p>";

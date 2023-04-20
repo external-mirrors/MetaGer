@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Infotiger extends Searchengine
@@ -10,9 +11,9 @@ class Infotiger extends Searchengine
     const RESULTS_PER_PAGE = 10;
     public $results = [];
 
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($resultstring)
@@ -90,11 +91,11 @@ class Infotiger extends Searchengine
     private function validateJsonResponse($results_json)
     {
         if (
-            $results_json === null ||                   // Error parsing JSON response (json_decode returned null)
+            $results_json === null || // Error parsing JSON response (json_decode returned null)
             empty($results_json) ||
-            !property_exists($results_json, 'response') ||                 // Unexpected JSON format (no response object)
-            !property_exists($results_json->response, 'docs') ||           // Unexpected JSON format (no docs object)
-            !is_array($results_json->response->docs)    // Unexpected JSON format (docs is not an array)
+            !property_exists($results_json, 'response') || // Unexpected JSON format (no response object)
+            !property_exists($results_json->response, 'docs') || // Unexpected JSON format (no docs object)
+            !is_array($results_json->response->docs) // Unexpected JSON format (docs is not an array)
         ) {
             return false;
         } else {

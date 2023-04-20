@@ -2,18 +2,19 @@
 
 namespace App\Models\parserSkripte;
 
+use App\MetaGer;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class OvertureAds extends Searchengine
 {
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         # We need some Affil-Data for the advertisements
-        $this->getString .= $this->getOvertureAffilData($metager->getUrl());
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+        $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
 
     public function loadResults($result)
@@ -103,14 +104,12 @@ class OvertureAds extends Searchengine
     }
 
     # Liefert Sonderdaten für Yahoo
-    private function getOvertureAffilData($url)
+    private function setOvertureAffilData($url)
     {
         $affil_data = 'ip=' . $this->ip;
         $affil_data .= '&ua=' . $this->useragent;
-        $affilDataValue = $this->urlEncode($affil_data);
-        # Wir benötigen die ServeUrl:
-        $serveUrl = $this->urlEncode($url);
-
-        return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
+        $this->configuration->getParameter->affilData = $affil_data;
+        $this->configuration->getParameter->serveUrl = $url;
+        $this->updateHash();
     }
 }

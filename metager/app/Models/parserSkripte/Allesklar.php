@@ -3,15 +3,16 @@
 namespace App\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 use Symfony\Component\DomCrawler\Crawler;
 
 class Allesklar extends Searchengine
 {
     protected $tds = "";
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -29,8 +30,8 @@ class Allesklar extends Searchengine
             if ($i < 20) {
                 try {
                     $titleTag = $node->filter('tr > td > a.katalogtitel')->first();
-                    $title    = trim($titleTag->text());
-                    $link     = $titleTag->attr('href');
+                    $title = trim($titleTag->text());
+                    $link = $titleTag->attr('href');
                     // Sometimes the description is in the 3rd element
                     $descr = trim($node->filter('tr > td.bodytext')->eq(2)->text());
                     if (strlen($descr) <= 2) {
@@ -38,13 +39,13 @@ class Allesklar extends Searchengine
                     }
                     $this->counter++;
                     $this->results[] = new \App\Models\Result(
-                        $this->engine,
+                        $this->configuration->engineBoost,
                         $title,
                         $link,
                         $link,
                         $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
                         $this->counter
                     );
                 } catch (\Exception $e) {

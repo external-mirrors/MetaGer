@@ -44,11 +44,6 @@ class MetaGerSearch extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
 
-        # Mit gelieferte Formulardaten parsen und abspeichern:
-        $query_timer->observeStart("Search_ParseFormData");
-        $metager->parseFormData($request);
-        $query_timer->observeEnd("Search_ParseFormData");
-
         # Nach Spezialsuchen überprüfen:
         $query_timer->observeStart("Search_CheckSpecialSearches");
         $metager->checkSpecialSearches($request);
@@ -220,7 +215,6 @@ class MetaGerSearch extends Controller
         });
 
 
-        $metager->parseFormData($request, false);
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
         $metager->restoreEngines($engines);

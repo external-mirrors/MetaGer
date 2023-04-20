@@ -22,28 +22,28 @@
         <p>@lang('settings.text.2')</p>
         <p></p>
         <div class="sumas enabled-engines">
-            @foreach($sumas as $suma => $sumaInfo)
-            @if(! $sumaInfo["filtered"] && $sumaInfo["enabled"])
+            @foreach($sumas as $name => $suma)
+            @if($suma->configuration->disabled === false)
             <div class="suma">
                 <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post">
-                    <input type="hidden" name="suma" value="{{ $suma }}">
+                    <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit" aria-label="{{ $sumaInfo["display-name"] }} @lang('settings.aria.label.1')">{{ $sumaInfo["display-name"] }}</button>
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.1')">{{ $suma->configuration->infos->displayName }}</button>
                 </form>
             </div>
             @endif
             @endforeach
         </div>
         <div class="sumas disabled-engines">
-            @foreach($sumas as $suma => $sumaInfo)
-            @if( !$sumaInfo["filtered"] && !$sumaInfo["enabled"])
+            @foreach($sumas as $name => $suma)
+            @if( $suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::USER_CONFIGURATION)
             <div class="suma">
                 <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post">
-                    <input type="hidden" name="suma" value="{{ $suma }}">
+                    <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit" aria-label="{{ $sumaInfo["display-name"] }} @lang('settings.aria.label.2')">{{ $sumaInfo["display-name"] }}</button>
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }}</button>
                 </form>
             </div>
             @endif
@@ -52,10 +52,10 @@
         @if($filteredSumas)
         <h4>@lang('settings.disabledByFilter')</h4>
         <div class="sumas filtered-engines">
-            @foreach($sumas as $suma => $sumaInfo)
-            @if($sumaInfo["filtered"])
+            @foreach($sumas as $name => $suma)
+            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::INCOMPATIBLE_FILTER)
             <div class="suma">
-                {{ $sumaInfo["display-name"] }}
+                {{ $suma->configuration->infos->displayName }}
             </div>
             @endif
             @endforeach

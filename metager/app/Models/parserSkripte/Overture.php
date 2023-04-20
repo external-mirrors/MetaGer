@@ -2,7 +2,9 @@
 
 namespace app\Models\parserSkripte;
 
+use App\MetaGer;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use LaravelLocalization;
 use Log;
 
@@ -11,13 +13,10 @@ class Overture extends Searchengine
     public $failed_results = false;
     public $results = [];
 
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
-
-        $this->getString = $this->generateGetString($this->query);
-        $this->getString .= $this->getOvertureAffilData($metager->getUrl());
-        $this->updateHash();
+        parent::__construct($name, $configuration);
+        $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
 
     public function loadResults($result)
@@ -54,14 +53,14 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                        $this->engine,
+                    $this->engine,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
-                        $this->counter,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
+                    $this->counter,
                     []
                 );
             }
@@ -74,14 +73,14 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                        $this->engine,
+                    $this->engine,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
-                        $this->counter,
+                    $this->engine->infos->display_name,
+                    $this->engine->infos->homepage,
+                    $this->counter,
                     []
                 );
             }
@@ -144,11 +143,10 @@ class Overture extends Searchengine
     }
 
     # Liefert Sonderdaten für Yahoo
-    private function getOvertureAffilData($url)
+    private function setOvertureAffilData($url)
     {
         $affil_data = 'ip=' . $this->ip;
         $affil_data .= '&ua=' . $this->useragent;
-        $affilDataValue = $this->urlEncode($affil_data);
 
         $serve_domain = "https://metager.de/";
         if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
@@ -164,10 +162,9 @@ class Overture extends Searchengine
             $url = str_replace("https://metager3.de", $serve_domain, $url);
         }
 
-        # Wir benötigen die ServeUrl:
-        $serveUrl = $this->urlEncode($url);
-
-        return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
+        $this->configuration->getParameter->affilData = $affil_data;
+        $this->configuration->getParameter->serveUrl = $url;
+        $this->updateHash();
     }
 
     private function log_failed_yahoo_search()

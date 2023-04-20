@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Localization;
 use \App\MetaGer;
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
+use App\SearchSettings;
 use Cookie;
 use \Illuminate\Http\Request;
 use LaravelLocalization;
@@ -13,43 +16,37 @@ class SettingsController extends Controller
 {
     public function index(Request $request)
     {
-        $fokus = $request->input('fokus', '');
-        $fokusName = "";
-        if (empty($fokus)) {
-            return redirect('/');
-        } else {
-            $fokusName = trans('index.foki.' . $fokus);
-        }
+        $settings = app(SearchSettings::class);
+        $sumas = app(Searchengines::class)->getSearchEnginesForFokus();
+        $fokus = $settings->fokus;
+        $fokusName = trans('index.foki.' . $fokus);
 
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
-        $sumas = $this->getSumas($fokus);
-        if (sizeof($sumas) === 0) {
-            abort(404);
-        }
 
         # Parse the Parameter Filter
         $filters = [];
+
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
             $values = $filter->values;
-            foreach ($sumas as $suma => $sumaInfo) {
-                if (!$filteredSumas && $sumaInfo["filtered"]) {
+            foreach ($sumas as $name => $suma) {
+                if ($suma->configuration->disabled && $suma->configuration->disabledReason === DisabledReason::INCOMPATIBLE_FILTER) {
                     $filteredSumas = true;
-                }
-                if (!$sumaInfo["filtered"] && $sumaInfo["enabled"] && !empty($filter->sumas->{$suma})) {
-                    if (empty($filters[$name])) {
-                        $filters[$name] = $filter;
-                        unset($filters[$name]->values);
-                    }
-                    if (empty($filters[$name]->values)) {
-                        $filters[$name]->values = (object) [];
-                    }
-                    foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                        $filters[$name]->values->$key = $values->$key;
-                    }
-                }
+                } /*
+                 if (!$sumaInfo["filtered"] && $sumaInfo["enabled"] && !empty($filter->sumas->{$suma})) {
+                 if (empty($filters[$name])) {
+                 $filters[$name] = $filter;
+                 unset($filters[$name]->values);
+                 }
+                 if (empty($filters[$name]->values)) {
+                 $filters[$name]->values = (object) [];
+                 }
+                 foreach ($filter->sumas->{$suma}->values as $key => $value) {
+                 $filters[$name]->values->$key = $values->$key;
+                 }
+                 }*/
             }
         }
 
@@ -109,7 +106,7 @@ class SettingsController extends Controller
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
-            ->with('fokus', $request->input('fokus', ''))
+            ->with('fokus', $settings->fokus)
             ->with('fokusName', $fokusName)
             ->with('filteredSumas', $filteredSumas)
             ->with('sumas', $sumas)

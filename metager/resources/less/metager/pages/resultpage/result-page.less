@@ -139,12 +139,16 @@ body {
   padding: 5px 15px;
 }
 
-.alert ul {
-  list-style-type: none;
-  padding-left: 49px;
+#results-container .alert {
+  border: 0;
+  border-radius: initial;
+  padding: 0;
+  margin: 0;
 
-  @media (max-width: @screen-mobile) {
-    padding-left: 0px;
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
   }
 }
 
@@ -398,21 +402,16 @@ a {
 }
 
 #resultpage-container {
-  margin: @padding-small-default;
+  margin: 0 auto;
   margin-top: 0;
   display: grid;
-  grid-template-columns: minmax(0px, 150px) @results-width-max @additions-width-max;
-  grid-template-areas: "whitespace searchbar ." "whitespace foki ." "whitespace options ." "whitespace results additions" "whitespace footer .";
-  grid-column-gap: (@padding-small-default * 2);
+  grid-template-columns: @results-width-max max-content;
+  grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
   grid-row-gap: @padding-small-default;
   justify-items: stretch;
   align-items: stretch;
   /**/
   background-color: @resultpage-background-color;
-
-  #whitespace {
-    grid-area: whitespace;
-  }
 
   #research-bar-container {
     grid-area: searchbar;
@@ -501,13 +500,12 @@ a {
 
   @media (max-width: @resultpage-breakpoint-max) {
     @supports (display: grid) {
-      grid-template-columns: ~"calc(60% - 8px)" ~"calc(40% - 8px)";
+      grid-template-columns: @results-width-max max-content;
       grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
     }
   }
 
   @media (max-width: @resultpage-breakpoint-min) {
-    margin-left: @padding-small-default;
     grid-template-columns: 100%;
     grid-template-areas: "searchbar" "foki" "options" "results" "footer";
 
@@ -639,8 +637,14 @@ a {
     display: none;
   }
 
+  .metager-key-hint {
+    font-size: 0.8em;
+    margin-bottom: 0;
+  }
+
   .scrollbox {
     max-height: 0;
+    padding: 0.5rem 0;
     transform-origin: top;
     transform: scaleY(0);
     transition: transform 0.5s, max-height 0.5s;

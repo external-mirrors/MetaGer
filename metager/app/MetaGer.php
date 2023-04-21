@@ -1478,21 +1478,6 @@ class MetaGer
         return $this->searchUid;
     }
 
-    public function getManualParameterFilterSet()
-    {
-        $request = \request();
-        $filters = $this->sumaFile->filter->{"parameter-filter"};
-        foreach ($filters as $filterName => $filter) {
-            if (
-                $request->filled($filter->{"get-parameter"})
-                && Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== $request->input($filter->{"get-parameter"})
-            ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public function getSavedSettingCount()
     {
         $cookies = Cookie::get();

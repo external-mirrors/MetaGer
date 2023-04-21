@@ -6,7 +6,7 @@ use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use Cookie;
-use Request;
+use \Request;
 
 class SearchSettings
 {
@@ -73,9 +73,13 @@ class SearchSettings
                 Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"}) !== null
             ) { // If the filter is set via Cookie
 
-                $this->parameterFilter[$filterName]->value = Request::input($filter->{"get-parameter"}, '');
+                $this->parameterFilter[$filterName]->value = Request::input($filter->{"get-parameter"}, null);
+
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"});
+                }
+                if ($this->parameterFilter[$filterName]->value === "off") {
+                    $this->parameterFilter[$filterName]->value = null;
                 }
             } else {
                 $this->parameterFilter[$filterName]->value = null;
@@ -105,5 +109,26 @@ class SearchSettings
             }
             $this->parameterFilter[$filterName]->{"disabled-values"} = $disabledValues;
         }
+    }
+    public function isParameterFilterSet()
+    {
+        foreach ($this->parameterFilter as $filterName => $filter) {
+            if ($filter->value !== null) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public function isTemporaryParameterFilterSet()
+    {
+        foreach ($this->parameterFilter as $filterName => $filter) {
+            if (
+                Request::filled($filter->{"get-parameter"})
+                && Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"}) !== Request::input($filter->{"get-parameter"})
+            ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -6,6 +6,7 @@ return [
     'results.failedSitesearch' => 'Leider konnten wir zu Ihrer Sucheingabe keine passenden Ergebnisse finden. Dies könnte daran liegen, dass Sie aktuell eine Suche ausführen, die sich auf Ergebnisse der Seite ":site" beschränkt. Wenn sie diese beschränkung entfernen möchten, klicken Sie hier: <a href=":altSearch">Neue Suche</a>',
 
     "settings.name" => "Einstellungen",
+    'settings.metager-key-hint' => "Für einige Filter ist ein <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> erforderlich.",
     'settings.noneSelected' => 'Achtung: Sie haben in ihren Einstellungen keine Suchmaschine ausgewählt.',
 
     'engines.noParser' => 'Beim Abfragen von :engine ist ein Fehler aufgetreten. Bitte benachrichtigen Sie uns über unser <a href="/kontakt" target="_blank">Kontaktformular</a>',
@@ -142,7 +143,7 @@ return [
     "filter.min" => "Minimum Sleep (in s)",
     "filter.max" => "Maximum Sleep (in s)",
 
-    'prevention.phrase' =>'<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
+    'prevention.phrase' => '<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
     "ads.own.title" => "Jetzt MetaGer unterstützen",
     "ads.own.description" => "Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV.",
 ];

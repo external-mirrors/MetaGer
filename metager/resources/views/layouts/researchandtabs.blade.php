@@ -1,5 +1,4 @@
 <div id="resultpage-container">
-	<div id="whitespace"></div>
 	<div id="research-bar-container">
 		<div id="research-bar">
 			<div id="header-logo">

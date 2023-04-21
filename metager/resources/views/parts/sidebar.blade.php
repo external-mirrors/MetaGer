@@ -149,7 +149,7 @@
       <ul class="metager-dropdown-content">
           @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
             <li>
-              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["fokus" => $fokus, "url" => url()->full()])) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
+              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["focus" => $fokus, "url" => url()->full()])) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
             </li>
           @endforeach
       </ul>

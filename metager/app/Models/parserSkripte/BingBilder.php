@@ -34,13 +34,13 @@ class BingBilder extends Searchengine
                 $image = $result->thumbnailUrl;
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     [
                         'image' => $image,
@@ -73,9 +73,11 @@ class BingBilder extends Searchengine
                 return;
             }
 
-            $newEngine = unserialize(serialize($this->engine));
-            $newEngine->{"get-parameter"}->offset = $nextOffset;
-            $next = new BingBilder($this->name, $newEngine, $metager);
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+
+            $newConfiguration->getParameter->offset = $nextOffset;
+            $next = new BingBilder($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

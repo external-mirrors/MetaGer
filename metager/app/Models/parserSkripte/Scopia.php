@@ -40,13 +40,13 @@ class Scopia extends Searchengine
                 $this->counter++;
                 if (!$this->containsPornContent($title . $descr) && !$this->filterScopia($link)) { //see note at filtering method
                     $this->results[] = new \App\Models\Result(
-                        $this->engine,
+                        $this->configuration->engineBoost,
                         $title,
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
                         $this->counter
                     );
                 }
@@ -166,11 +166,12 @@ class Scopia extends Searchengine
         if ($more) {
             $results = $content->xpath('//results/result');
             $number = $results[sizeof($results) - 1]->number->__toString();
-            # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-            $newEngine = unserialize(serialize($this->engine));
-            $newEngine->{"get-parameter"}->s = $number;
-            $next = new Scopia($this->name, $newEngine, $metager);
-            $this->next = $next;
+            // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->s = $number;
+
+            $this->next = new Scopia($this->name, $newConfiguration);
         }
     }
 }

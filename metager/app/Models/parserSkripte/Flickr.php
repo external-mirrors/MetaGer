@@ -33,13 +33,13 @@ class Flickr extends Searchengine
                 $image = "http://farm" . $result["farm"]->__toString() . ".staticflickr.com/" . $result["server"]->__toString() . "/" . $result["id"]->__toString() . "_" . $result["secret"]->__toString() . "_t.jpg";
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     ['image' => $image]
                 );
@@ -65,9 +65,10 @@ class Flickr extends Searchengine
             if ($page >= intval($results["pages"]->__toString())) {
                 return;
             }
-            $next = new Flickr($this->name, $this->engine, $metager);
-            $next->getString .= "&page=" . $page;
-            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->page = $page;
+            $next = new Flickr($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

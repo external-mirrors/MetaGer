@@ -36,13 +36,13 @@ class Tuhh extends Searchengine
                 $descr = strip_tags($result->{"summary"}->__toString());
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter
                 );
                 $count++;

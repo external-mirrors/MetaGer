@@ -32,19 +32,16 @@ class Onenewspagevideo extends Searchengine
 
             $this->counter++;
             $this->results[] = new \App\Models\Result(
-                $this->engine,
+                $this->configuration->engineBoost,
                 $title,
                 $link,
                 $anzeigeLink,
                 $descr,
-                $this->engine->infos->display_name,
-                $this->engine->infos->homepage,
+                $this->configuration->infos->displayName,
+                $this->configuration->infos->homepage,
                 $this->counter,
                 $additionalInformation
             );
-        }
-        if (count($this->results) > $this->resultCount) {
-            $this->resultCount += count($this->results);
         }
     }
 
@@ -54,11 +51,14 @@ class Onenewspagevideo extends Searchengine
             return;
         }
 
-        $next = new Onenewspagevideo($this->name, $this->engine, $metager);
-        $next->resultCount = $this->resultCount;
-        $next->offset = $this->offset + $this->resultCount;
-        $next->getString .= "&o=" . $next->offset;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        if (property_exists($newConfiguration->getParameter, "o")) {
+            $newConfiguration->getParameter->o += count($this->results);
+        } else {
+            $newConfiguration->getParameter->o = count($this->results);
+        }
+        $next = new Onenewspagevideo($this->name, $newConfiguration);
         $this->next = $next;
     }
 }

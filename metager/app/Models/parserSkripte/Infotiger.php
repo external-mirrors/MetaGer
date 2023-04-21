@@ -33,13 +33,13 @@ class Infotiger extends Searchengine
                 $descr = $result->desc;
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter
                 );
             }
@@ -62,7 +62,7 @@ class Infotiger extends Searchengine
         if (!empty($results_json->response->numFound)) {
             $numFound = $results_json->response->numFound;
         }
-        $current_page = intval($this->engine->{"get-parameter"}->page);
+        $current_page = intval($this->configuration->getParameter->page);
 
         // Currently only 20 pages are supported
         // No next page if we reached that
@@ -73,11 +73,11 @@ class Infotiger extends Searchengine
         $current_max_result = (($current_page - 1) * self::RESULTS_PER_PAGE) + sizeof($results_json->response->docs);
 
         if ($numFound > $current_max_result) {
-            # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-            $newEngine = unserialize(serialize($this->engine));
-            $newEngine->{"get-parameter"}->page = $current_page + 1;
-            $next = new Infotiger($this->name, $newEngine, $metager);
-            $this->next = $next;
+            // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->page = $current_page + 1;
+            $this->next = new Infotiger($this->name, $newConfiguration);
         }
     }
 

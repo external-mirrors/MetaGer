@@ -34,13 +34,13 @@ class OvertureAds extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -96,9 +96,14 @@ class OvertureAds extends Searchengine
             }
         }
 
-        # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new OvertureAds($this->name, $this->engine, $metager);
-        $next->getString = preg_replace("/&Keywords=.*?&/si", "&", $next->getString) . "&" . $nextArgs;
+        parse_str($nextArgs, $query_data);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        foreach ($query_data as $key => $value) {
+            $newConfiguration->getParameter->$key = $value;
+        }
+        // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
+        $next = new OvertureAds($this->name, $newConfiguration);
         $this->next = $next;
     }
 

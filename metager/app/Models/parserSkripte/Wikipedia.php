@@ -19,13 +19,13 @@ class Wikipedia extends Searchengine
         $counter = 0;
 
         $this->results[] = new \App\Models\Result(
-            $this->engine,
+            $this->configuration->engineBoost,
             trim(strip_tags($result[1])),
             $link,
             $result[3],
             $result[2],
-            $this->engine->infos->display_name,
-            $this->engine->infos->homepage,
+            $this->configuration->infos->displayName,
+            $this->configuration->infos->homepage,
             $counter
         );
     }

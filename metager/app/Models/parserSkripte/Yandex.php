@@ -46,13 +46,13 @@ class Yandex extends Searchengine
                 }
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter
                 );
             }
@@ -114,9 +114,10 @@ class Yandex extends Searchengine
             if (count($this->results) <= 0 || $pageLast >= $resultCount) {
                 return;
             }
-            $next = new Yandex($this->name, $this->engine, $metager);
-            $next->getString .= "&page=" . ($metager->getPage() + 1);
-            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->page = $metager->getPage() + 1;
+            $next = new Yandex($this->name, $newConfiguration);
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:\n" . $e->getMessage() . "\n" . $result);
             return;

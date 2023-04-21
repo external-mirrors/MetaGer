@@ -30,7 +30,7 @@ class SearchSettings
             throw new \Exception("Cannot load sumas.json file");
         }
         $this->q = trim(Request::input('eingabe', ''));
-        $this->fokus = Request::input("fokus", "web");
+        $this->fokus = Request::input("focus", "web");
         if (!in_array($this->fokus, ["web", "bilder", "produkte", "nachrichten", "science"])) {
             $this->fokus = "web";
         }

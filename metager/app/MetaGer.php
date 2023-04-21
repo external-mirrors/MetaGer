@@ -168,7 +168,7 @@ class MetaGer
         /** @var QueryLogger */
         $query_logger = App::make(QueryLogger::class);
         $query_logger->createLog();
-        if ($this->fokus === "bilder") {
+        if (app(SearchSettings::class)->fokus === "bilder") {
             switch ($this->out) {
                 case 'results':
                     return view('resultpages.results_images')
@@ -194,7 +194,7 @@ class MetaGer
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
                         ->with('quicktips', $quicktipResults)
-                        ->with('focus', $this->fokus)
+                        ->with('focus', app(SearchSettings::class)->fokus)
                         ->with('imagesearch', true)
                         ->with('resultcount', count($this->results));
             }
@@ -211,7 +211,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
-                        ->with('fokus', $this->fokus);
+                        ->with('fokus', app(SearchSettings::class)->fokus);
                     break;
                 case 'results-with-style':
                     return view('resultpages.resultpage')
@@ -225,7 +225,7 @@ class MetaGer
                         ->with('metager', $this)
                         ->with('suspendheader', "yes")
                         ->with('browser', (new Agent())->browser())
-                        ->with('fokus', $this->fokus);
+                        ->with('fokus', app(SearchSettings::class)->fokus);
                     break;
                 case 'rss20':
                     return view('resultpages.metager3resultsrss20')
@@ -234,7 +234,7 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('resultcount', sizeof($viewResults))
-                        ->with('fokus', $this->fokus);
+                        ->with('fokus', app(SearchSettings::class)->fokus);
                     break;
                 case 'api':
                     return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
@@ -259,7 +259,7 @@ class MetaGer
                         ->with('browser', (new Agent())->browser())
                         ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
-                        ->with('focus', $this->fokus);
+                        ->with('focus', app(SearchSettings::class)->fokus);
                     break;
             }
         }
@@ -271,7 +271,7 @@ class MetaGer
         $this->combineResults();
 
         // misc (WiP)
-        if ($this->fokus == "nachrichten") {
+        if (app(SearchSettings::class)->fokus == "nachrichten") {
             $this->results = array_filter($this->results, function ($v, $k) {
                 return !is_null($v->getRank());
             }, ARRAY_FILTER_USE_BOTH);
@@ -530,7 +530,7 @@ class MetaGer
             }
         } else {
             $types = explode(",", $suma["type"]);
-            if (in_array($this->fokus, $types)) {
+            if (in_array(app(SearchSettings::class)->fokus, $types)) {
                 return true;
             }
         }
@@ -599,7 +599,7 @@ class MetaGer
                 }
             }
             # We will also add the filter from the opt-in search engines (the searchengines that are only used when a filter of it is too)
-            foreach ($this->sumaFile->foki->{$this->fokus}->sumas as $suma) {
+            foreach ($this->sumaFile->foki->{app(SearchSettings::class)->fokus}->sumas as $suma) {
                 if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
                     if (!empty($filter->sumas->{$suma})) {
                         # If the searchengine is disabled this filter shouldn't be available
@@ -669,7 +669,7 @@ class MetaGer
 
     public function isBildersuche()
     {
-        return $this->fokus === "bilder";
+        return app(SearchSettings::class)->fokus === "bilder";
     }
 
     public function sumaIsAdsuche($suma, $overtureEnabled)
@@ -707,7 +707,7 @@ class MetaGer
     {
         $engines = app(Searchengines::class)->getEnabledSearchengines();
         $enginesToWaitFor = [];
-        $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
+        $mainEngines = $this->sumaFile->foki->{app(SearchSettings::class)->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
                 if ($engine->name === $mainEngine) {
@@ -813,7 +813,7 @@ class MetaGer
         $this->fullUrl = \Request::fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
         # Fokus
-        $this->fokus = \Request::input('focus', 'web');
+        app(SearchSettings::class)->fokus = \Request::input('focus', 'web');
         # Suma-File
         if ($this->dummy) {
             $this->sumaFile = \config_path("stress.json");
@@ -1170,9 +1170,9 @@ class MetaGer
         }
         foreach (Cookie::get() as $key => $value) {
             $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
-            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $this->fokus) !== false && preg_match($regexUrl, $value) === 1) {
+            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, app(SearchSettings::class)->fokus) !== false && preg_match($regexUrl, $value) === 1) {
                 $this->domainBlacklist[] = substr($value, 0, 255);
-            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, $this->fokus) !== false) {
+            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, app(SearchSettings::class)->fokus) !== false) {
                 $blacklistItems = explode(",", $value);
                 foreach ($blacklistItems as $blacklistItem) {
 
@@ -1547,7 +1547,7 @@ class MetaGer
 
     public function getFokus()
     {
-        return $this->fokus;
+        return app(SearchSettings::class)->fokus;
     }
 
     public function getIp()

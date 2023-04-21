@@ -59,12 +59,12 @@ class Minisucher extends Searchengine
 
                 $additionalInformation = ['date' => $dateVal];
 
-                $minism = $this->engine->infos->display_name;
+                $minism = $this->configuration->infos->displayName;
                 $gefVon = "Minisucher: $minism";
                 $subcollection = $result->xpath('//doc/str[@name="subcollection"]')[0]->__toString();
 
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $link,

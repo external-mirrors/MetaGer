@@ -53,13 +53,13 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -73,13 +73,13 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -135,10 +135,14 @@ class Overture extends Searchengine
             }
         }
 
+        parse_str($nextArgs, $query_data);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        foreach ($query_data as $key => $value) {
+            $newConfiguration->getParameter->$key = $value;
+        }
         # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new Overture($this->name, $this->engine, $metager);
-        $next->getString = preg_replace("/&Keywords=.*?&/si", "&", $next->getString) . "&" . $nextArgs;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+        $next = new Overture($this->name, $newConfiguration);
         $this->next = $next;
     }
 

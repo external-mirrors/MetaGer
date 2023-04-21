@@ -84,10 +84,9 @@
                 <div class="form-group">
                     <label for="{{ $filterInfo->{"get-parameter"} }}">@lang($filterInfo->name)</label>
                     <select name="{{ $filterInfo->{"get-parameter"} }}" id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
-                        <option value="" @if(Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === null)disabled selected @endif>@if(property_exists($filterInfo->values, "nofilter"))@lang($filterInfo->values->nofilter)@else @lang('metaGer.filter.noFilter')@endif</option>
                         @foreach($filterInfo->values as $key => $value)
                         @if(!empty($key))
-                        <option value="{{ $key }}" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }} @if(sizeof($filterInfo->{"disabled-values"}) > 0)disabled @endif>@lang($value)</option>
+                        <option value="@if($key !== "nofilter"){{ $key }}@endif" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }} @if(array_key_exists($key, $filterInfo->{"disabled-values"}) && sizeof($filterInfo->{"disabled-values"}[$key]) > 0)disabled @endif>@lang($value)</option>
                         @endif
                         @endforeach
                     </select>
@@ -162,6 +161,5 @@
         </div>
     </div>
 
-    <script src="{{ mix('js/scriptSettings.js') }}"></script>
 </div>
 @endsection

@@ -27,9 +27,6 @@ class SettingsController extends Controller
 
         # Parse the Parameter Filter
         $filters = $settings->parameterFilter;
-        foreach ($filters as $name => $value) {
-            $test = "test";
-        }
 
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
@@ -37,19 +34,7 @@ class SettingsController extends Controller
             foreach ($sumas as $name => $suma) {
                 if ($suma->configuration->disabled && $suma->configuration->disabledReason === DisabledReason::INCOMPATIBLE_FILTER) {
                     $filteredSumas = true;
-                } /*
-                 if (!$sumaInfo["filtered"] && $sumaInfo["enabled"] && !empty($filter->sumas->{$suma})) {
-                 if (empty($filters[$name])) {
-                 $filters[$name] = $filter;
-                 unset($filters[$name]->values);
-                 }
-                 if (empty($filters[$name]->values)) {
-                 $filters[$name]->values = (object) [];
-                 }
-                 foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                 $filters[$name]->values->$key = $values->$key;
-                 }
-                 }*/
+                }
             }
         }
 
@@ -117,7 +102,8 @@ class SettingsController extends Controller
             ->with('settingActive', $settingActive)
             ->with('url', $url)
             ->with('blacklist', $blacklist)
-            ->with('cookieLink', $cookieLink);
+            ->with('cookieLink', $cookieLink)
+            ->with('js', [mix('js/scriptSettings.js')]);
     }
 
     private function getSumas($fokus)

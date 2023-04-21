@@ -8,71 +8,104 @@
     <div class="card">
         <p>@lang('settings.text.1', ["fokusName" => $fokusName])</p>
     </div>
-    <div class="card">
-        <h1>@lang('settings.hint.header')</h1>
-        <p>@lang('settings.hint.text', ["link" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('showAllSettings', ['url' => url()->full()])) ])</p>
-        <p>@lang('settings.hint.loadSettings')</p>
+    <div class="card" id="metager-key">
+        <h1>@lang('settings.metager-key.header')</h1>
+        @if(!empty($authorization->key))
+        <h2 class="charge">
+            @lang('settings.metager-key.charge', ["token" => $authorization->availableTokens])
+        </h2>
         <div class="copyLink">
-            <input id="loadSettings" class="loadSettings" type="text" value="{{$cookieLink}}">
-            <button class="js-only btn btn-default" onclick="var copyText = document.getElementById('loadSettings');copyText.select();copyText.setSelectionRange(0, 99999);document.execCommand('copy');">@lang('settings.copy')</button>
+            <input type="text" name="key" id="key" readonly value="{{ $authorization->key }}" size="30">
+            <button class="btn btn-default">@lang('settings.copy')</button>
         </div>
+        
+        <div class="actions">
+            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter')}}" class="btn btn-default">@lang("settings.metager-key.manage")</a>
+            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(url()->full()))}}" class="btn btn-default">@lang("settings.metager-key.logout")</a>
+        </div>
+        @else
+        <p>@lang('settings.metager-key.no-key')</p>
+        <div class="no-key-actions">
+            <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys')}}">@lang('settings.metager-key.actions.info')</a>
+            <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter')}}">@lang('settings.metager-key.actions.login')</a>
+            <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/create')}}">@lang('settings.metager-key.actions.create')</a>
+        </div>
+        @endif
     </div>
-    <div class="card">
+    <div class="card" id="engines">
         <h1>@lang('settings.header.2')</h1>
         <p>@lang('settings.text.2')</p>
-        <p></p>
         <div class="sumas enabled-engines">
             @foreach($sumas as $name => $suma)
             @if($suma->configuration->disabled === false)
             <div class="suma">
-                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post">
+                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post" title="@lang("settings.disable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.1')">{{ $suma->configuration->infos->displayName }}</button>
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.1')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>
             </div>
             @endif
             @endforeach
         </div>
+        @if(in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $disabledReasons))
         <div class="sumas disabled-engines">
             @foreach($sumas as $name => $suma)
             @if( $suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::USER_CONFIGURATION)
-            <div class="suma">
-                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post">
+            <div class="suma disabled-engine">
+                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post" title="@lang("settings.enable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="fokus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
-                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }}</button>
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>
-            </div>
-            @endif
-            @endforeach
-        </div>
-        @if($filteredSumas)
-        <h4>@lang('settings.disabledByFilter')</h4>
-        <div class="sumas filtered-engines">
-            @foreach($sumas as $name => $suma)
-            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::INCOMPATIBLE_FILTER)
-            <div class="suma">
-                {{ $suma->configuration->infos->displayName }}
             </div>
             @endif
             @endforeach
         </div>
         @endif
-        <h4>@lang('settings.disabledBecausePaymentRequired')</h4>
-        <div class="sumas payment-required-engines">
+        @if(in_array(\App\Models\DisabledReason::INCOMPATIBLE_FILTER, $disabledReasons))
+        <h4>@lang('settings.disabledByFilter')</h4>
+        <div class="sumas filtered-engines">
             @foreach($sumas as $name => $suma)
-            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::PAYMENT_REQUIRED)
-            <div class="suma">
-                {{ $suma->configuration->infos->displayName }}
+            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::INCOMPATIBLE_FILTER)
+            <div class="suma disabled-engine not-available">
+                <form action="" title="@lang("settings.filtered-engine")">
+                    <input type="hidden" name="suma" value="{{ $name }}">
+                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="url" value="{{ $url }}">
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
+                </form>
             </div>
             @endif
             @endforeach
         </div>
+        @endif
+        @if(in_array(\App\Models\DisabledReason::PAYMENT_REQUIRED, $disabledReasons))
+        <h4>@lang('settings.disabledBecausePaymentRequired')</h4>
+        <div class="sumas payment-required-engines">
+            @foreach($sumas as $name => $suma)
+            @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::PAYMENT_REQUIRED)
+            <div class="suma disabled-engine not-available">
+                <form action="#engines" title="@lang("settings.payment-engine")">
+                    <input type="hidden" name="suma" value="{{ $name }}">
+                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="url" value="{{ $url }}">
+                    <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
+                </form>
+            </div>
+            @endif
+            @endforeach
+        </div>
+        @endif
+        @if($searchCost > 0)
+        <p>@lang('settings.cost', ["cost" => $searchCost])</p>
+        @else
+        <p>@lang('settings.cost-free')</p>        
+        @endif
     </div>
-    <div class="card">
+    <div class="card" id="filter">
         <h1>@lang('settings.header.3')</h1>
         <p>@lang('settings.text.3')</p>
         <form id="filter-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableFilter')) }}" method="post" class="form">
@@ -112,8 +145,7 @@
         </form>
     </div>
 
-
-    <div class="card">
+    <div class="card" id="more-settings">
         <h1>@lang('settings.more')</h1>
         <p>@lang('settings.hint.hint')</p>
         <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
@@ -160,6 +192,13 @@
             <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
         </div>
     </div>
-
+        <div class="card">
+        <h1>@lang('settings.hint.header')</h1>
+        <p>@lang('settings.hint.loadSettings')</p>
+        <div class="copyLink">
+            <input id="loadSettings" class="loadSettings" type="text" value="{{$cookieLink}}">
+            <button class="js-only btn btn-default">@lang('settings.copy')</button>
+        </div>
+    </div>
 </div>
 @endsection

@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let input_field = el.querySelector("input[type=text]");
     let copy_button = el.querySelector("button");
     if (copy_button) {
-      copy_button.addEventListener("pointerdown", (e) => {
+      copy_button.addEventListener("click", (e) => {
         // Select all the text
         let key = input_field.value;
+        input_field.select();
         navigator.clipboard
           .writeText(key)
           .then(() => {

@@ -18,6 +18,10 @@ class Searchengines
 {
     /** @var SearchEngine[] */
     public $sumas = [];
+
+    /** @var DisabledReason[] */
+    public $disabledReasons = [];
+
     public function __construct()
     {
         $settings = app(SearchSettings::class);
@@ -44,6 +48,7 @@ class Searchengines
                 if ($engine_user_setting === "off" && $suma->configuration->disabled === false) {
                     $suma->configuration->disabled = true;
                     $suma->configuration->disabledReason = DisabledReason::USER_CONFIGURATION;
+                    $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
                 }
                 if ($engine_user_setting === "on" && $suma->configuration->disabled === true) {
                     $suma->configuration->disabled = false;
@@ -56,6 +61,7 @@ class Searchengines
             if (!in_array($suma->name, $engines_in_fokus)) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FOKUS;
+                $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FOKUS;
                 continue;
             }
             // Disable all searchengines not supporting the current locale
@@ -64,21 +70,15 @@ class Searchengines
             if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::PAYMENT_REQUIRED;
+                $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 continue;
             }
             // Disable searchengine if it serves ads and this request is authorized
             if ($suma->configuration->ads && app(Authorization::class)->canDoAuthenticatedSearch()) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::SERVES_ADVERTISEMENTS;
+                $this->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
                 continue;
-            }
-            // Disable searchengine if it does not support a possibly defined query filter
-            foreach ($settings->queryFilter as $filterName => $filter) {
-                if (empty($settings->sumasJson->filter->{"query-filter"}->$filterName->sumas->{$suma->name})) {
-                    $suma->configuration->disabled = true;
-                    $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FILTER;
-                    continue 2;
-                }
             }
         }
 
@@ -93,16 +93,33 @@ class Searchengines
         $settings->loadParameterFilter($this);
 
         foreach ($this->sumas as $suma) {
+            // Disable searchengine if it does not support a possibly defined query filter
+            foreach ($settings->queryFilter as $filterName => $filter) {
+                if (empty($settings->sumasJson->filter->{"query-filter"}->$filterName->sumas->{$suma->name})) {
+                    $suma->configuration->disabled = true;
+                    $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FILTER;
+                    $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
+                    continue 2;
+                }
+            }
             // Disable searchengine if it does not support a possibly defined parameter filter
             foreach ($settings->parameterFilter as $filterName => $filter) {
                 // We need to check if the searchengine supports the parameter value, too
                 if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value}))) {
                     $suma->configuration->disabled = true;
                     $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FILTER;
+                    $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
                     continue 2;
                 }
             }
         }
+
+        uasort($this->sumas, function ($a, $b) {
+            if ($a->configuration->engineBoost === $b->configuration->engineBoost) {
+                return 0;
+            }
+            return ($a->configuration->engineBoost > $b->configuration->engineBoost) ? -1 : 1;
+        });
     }
 
     public function getSearchEnginesForFokus()
@@ -116,5 +133,16 @@ class Searchengines
             }
         }
         return $sumas;
+    }
+
+    public function getSearchCost()
+    {
+        $cost = 0;
+        foreach ($this->sumas as $suma) {
+            if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
+                $cost += $suma->configuration->cost;
+            }
+        }
+        return $cost;
     }
 }

@@ -92,12 +92,17 @@ class SettingsController extends Controller
         # Generating link with set cookies
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
 
+
+
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $settings->fokus)
             ->with('fokusName', $fokusName)
+            ->with('authorization', $authorization)
             ->with('filteredSumas', $filteredSumas)
+            ->with('disabledReasons', app(Searchengines::class)->disabledReasons)
             ->with('sumas', $sumas)
+            ->with('searchCost', app(Searchengines::class)->getSearchCost())
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
             ->with('url', $url)
@@ -178,7 +183,7 @@ class SettingsController extends Controller
             Cookie::queue(Cookie::forever($fokus . "_engine_" . $suma, "off", "/", null, true, true));
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#engines");
     }
 
     public function enableSearchEngine(Request $request)
@@ -195,7 +200,7 @@ class SettingsController extends Controller
             Cookie::queue(Cookie::forget($fokus . "_engine_" . $suma, "/"));
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#engines");
     }
 
     public function enableFilter(Request $request)
@@ -229,7 +234,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#filter");
     }
 
     public function enableSetting(Request $request)
@@ -267,7 +272,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#more-settings");
     }
 
     public function deleteSettings(Request $request)

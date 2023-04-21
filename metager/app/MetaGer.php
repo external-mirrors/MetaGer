@@ -1109,13 +1109,6 @@ class MetaGer
         }
 
         $this->queryFilter = [];
-        /**
-         * @var {Authorization}
-         */
-        $authorization = app(Authorization::class);
-        if (!$authorization->isAuthenticated() && $authorization->canDoAuthenticatedSearch()) {
-            $this->apiAuthorized = $authorization->authenticate();
-        }
 
         // Remove Inputs that are not used
         $this->request = \Request::replace(\Request::except(['uid']));

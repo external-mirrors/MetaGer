@@ -14,7 +14,6 @@ class Minisucher extends Searchengine
         # Für die Newssuche stellen wir die Minisucher auf eine Sortierung nach Datum um.
         if (app(MetaGer::class)->getFokus() === "nachrichten") {
             $this->configuration->getParameter->sort = "documentDate desc";
-            $this->updateHash();
         }
     }
 

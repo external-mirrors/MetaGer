@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\SearchSettings;
+
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
  *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
  */
@@ -97,8 +99,9 @@ class Result
      *  + 0.02 * Sourcerank (20 - Position in Ergebnisliste des Suchanbieters)
      *  * Engine-Boost
      */
-    public function rank($eingabe)
+    public function rank()
     {
+        $eingabe = app(SearchSettings::class)->q;
         $rank = 0;
 
         # Boost für Source Ranking

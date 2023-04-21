@@ -29,7 +29,6 @@ abstract class Searchengine
     public $disabled; # Ob diese Suchmaschine ausgeschaltet ist
     public $useragent; # Der HTTP Useragent
     public $startTime; # Die Zeit der Erstellung dieser Suchmaschine
-    public $hash; # Der Hash-Wert dieser Suchmaschine
 
     private $username; # Username für HTTP-Auth (falls angegeben)
     private $password; # Passwort für HTTP-Auth (falls angegeben)
@@ -87,7 +86,6 @@ abstract class Searchengine
             $this->configuration->getParameter->{$engineParameterKey} = $engineParameterValue;
         }
 
-        $this->updateHash();
         $this->canCache = $metager->canCache();
     }
 
@@ -101,7 +99,7 @@ abstract class Searchengine
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch()
     {
-        if (!$this->cached || 1 == 1) {
+        if (!$this->cached || 1 == 1) { // ToDo enable Cache
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
             // <ResultHash>;<URL to fetch>
@@ -121,7 +119,7 @@ abstract class Searchengine
             $url .= $this->generateGetString();
 
             $mission = [
-                "resulthash" => $this->hash,
+                "resulthash" => $this->getHash(),
                 "url" => $url,
                 "useragent" => $this->useragent,
                 "username" => $this->configuration->httpAuthUsername,
@@ -136,21 +134,15 @@ abstract class Searchengine
             // Submit this mission to the corresponding Redis Queue
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
-            // The request is not cached and will be submitted to the searchengine
-            // We need to check if the number of requests to this engine are limited
-            if (!empty($this->configuration->monthlyRequests)) {
-                Redis::incr("monthlyRequests:" . $this->name);
-            }
+            Redis::rpush(MetaGer::FETCHQUEUE_KEY, $mission);
         }
     }
 
     # Ruft die Ranking-Funktion aller Ergebnisse auf.
-    public function rank($eingabe)
+    public function rank()
     {
         foreach ($this->results as $result) {
-            $result->rank($eingabe);
+            $result->rank();
         }
     }
 
@@ -159,9 +151,9 @@ abstract class Searchengine
         $this->resultHash = $hash;
     }
 
-    public function updateHash()
+    public function getHash()
     {
-        $this->hash = md5(serialize($this->configuration));
+        return md5(serialize($this->configuration));
     }
 
     # Fragt die Ergebnisse von Redis ab und lädt Sie
@@ -171,8 +163,8 @@ abstract class Searchengine
             return true;
         }
         if (!$this->cached && empty($body)) {
-            $body = Redis::rpoplpush($this->hash, $this->hash);
-            Redis::expire($this->hash, 60);
+            $body = Redis::rpoplpush($this->getHash(), $this->getHash());
+            Redis::expire($this->getHash(), 60);
             if ($body === false) {
                 return $body;
             }

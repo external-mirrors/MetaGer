@@ -135,6 +135,17 @@ class Searchengines
         return $sumas;
     }
 
+    public function getEnabledSearchengines()
+    {
+        $sumas = [];
+        foreach ($this->sumas as $suma) {
+            if ($suma->configuration->disabled === false) {
+                $sumas[] = $suma;
+            }
+        }
+        return $sumas;
+    }
+
     public function getSearchCost()
     {
         $cost = 0;
@@ -144,5 +155,27 @@ class Searchengines
             }
         }
         return $cost;
+    }
+
+    public function checkPagination()
+    {
+        if (!\Request::has("next") || !\Cache::has(\Request::input("next"))) {
+            return;
+        }
+        $next = unserialize(\Cache::get(\Request::input("next")));
+        // Pagination call detected. Disable all Searchengines and replace the searchengines with the cached ones
+        foreach ($this->sumas as $suma) {
+            $suma->configuration->disabled = true;
+            $suma->configuration->disabledReason = DisabledReason::SUMAS_CONFIGURATION;
+        }
+        foreach ($next["engines"] as $engine) {
+            foreach ($this->sumas as $name => $suma) {
+                if ($engine instanceof $suma) {
+                    $this->sumas[$name] = $engine;
+                }
+            }
+        }
+        $settings = app(SearchSettings::class);
+        $settings->page = $next["page"];
     }
 }

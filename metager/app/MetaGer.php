@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
 use App\Models\Verification\HumanVerification;
 use Carbon\Carbon;
@@ -266,9 +267,8 @@ class MetaGer
 
     public function prepareResults()
     {
-        $engines = $this->engines;
         // combine
-        $this->combineResults($engines);
+        $this->combineResults();
 
         // misc (WiP)
         if ($this->fokus == "nachrichten") {
@@ -325,9 +325,6 @@ class MetaGer
         $this->humanVerification($this->results);
         $this->humanVerification($this->ads);
 
-        $counter = 0;
-        $firstRank = 0;
-
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
                 $no_sitesearch_query = str_replace(urlencode("site:" . $this->site), "", $this->fullUrl);
@@ -338,7 +335,7 @@ class MetaGer
         }
 
         if ($this->canCache() && isset($this->next) && count($this->next) > 0 && count($this->results) > 0) {
-            $page = $this->page + 1;
+            $page = app(SearchSettings::class)->page + 1;
             $this->next = [
                 'page' => $page,
                 'engines' => $this->next,
@@ -349,14 +346,11 @@ class MetaGer
         }
     }
 
-    public function combineResults($engines)
+    public function combineResults()
     {
-        foreach ($engines as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (isset($engine->next)) {
                 $this->next[] = $engine->next;
-            }
-            if (isset($engine->last)) {
-                $this->last[] = $engine->last;
             }
             foreach ($engine->results as $result) {
                 if ($result->valid) {
@@ -427,7 +421,7 @@ class MetaGer
         $newAffiliates = [];
         foreach ($affiliates as $affiliate) {
             $affiliate->fetchAffiliates($wait);
-            $affiliate->parseAffiliates($this->engines);
+            $affiliate->parseAffiliates();
             if (!$affiliate->finished) {
                 $newAffiliates[] = $affiliate;
             }
@@ -503,181 +497,13 @@ class MetaGer
         }
     }
 
-    /*
-     * Die Erstellung der Suchmaschinen bis die Ergebnisse da sind mit Unterfunktionen
-     */
-
-    public function createSearchEngines(Request &$request)
-    {
-        # Wenn es kein Suchwort gibt
-        if (!$request->filled("eingabe") || $this->q === "") {
-            return;
-        }
-
-        $this->enabledSearchengines = [];
-
-        # Check if selected focus is valid
-        if (empty($this->sumaFile->foki->{$this->fokus})) {
-            $this->fokus = "web";
-        }
-
-        $sumaNames = $this->sumaFile->foki->{$this->fokus}->sumas;
-
-        $sumas = [];
-        foreach ($sumaNames as $sumaName) {
-            $sumas[$sumaName] = $this->sumaFile->sumas->{$sumaName};
-        }
-
-        $this->removeAdsFromListIfAdfree($sumas);
-
-        $current_regional_locale = LaravelLocalization::getCurrentLocaleRegional();
-        $current_language = Localization::getLanguage();
-        foreach ($sumas as $sumaName => $suma) {
-            # Check if this engine is disabled and can't be used
-            $disabled = empty($suma->disabled) ? false : $suma->disabled;
-            $autoDisabled = empty($suma->{"auto-disabled"}) ? false : $suma->{"auto-disabled"};
-            if (
-                $disabled || $autoDisabled
-                || Cookie::get($this->getFokus() . "_engine_" . $sumaName) === "off"
-            ) {
-                continue;
-            }
-
-            // Skip if language support is not defined
-            if (!\property_exists($suma, "lang") || !\property_exists($suma->lang, "languages") || !\property_exists($suma->lang, "regions")) {
-                continue;
-            }
-            // Skip if engine does not support current locale or region (locale i.e. en is enough to get enabled)
-            if (
-                !\property_exists($suma->lang->languages, $current_language) &&
-                !\property_exists($suma->lang->regions, $current_regional_locale)
-            ) {
-                continue;
-            }
-
-            // Skip Yahoo if it failed this search
-            if ($sumaName === "yahoo") {
-                $skip_yahoo = $request->input("skip_yahoo", "0");
-                $skip_yahoo = filter_var($skip_yahoo, FILTER_VALIDATE_BOOLEAN);
-                if ($skip_yahoo === true) {
-                    unset($request["skip_yahoo"]);
-                    continue;
-                }
-            }
-
-            $valid = true;
-
-            # Check if this engine can use potentially defined query-filter
-            foreach ($this->queryFilter as $filterName => $filter) {
-                if (empty($this->sumaFile->filter->{"query-filter"}->$filterName->sumas->$sumaName)) {
-                    $valid = false;
-                    break;
-                }
-            }
-
-            # Check if this engine can use potentially defined parameter-filter
-            if ($valid) {
-                foreach ($this->parameterFilter as $filterName => $filter) {
-                    # We need to check if the searchengine supports the parameter value, too
-                    if (empty($filter->sumas->$sumaName) || empty($filter->sumas->{$sumaName}->values->{$filter->value})) {
-                        $valid = false;
-                        break;
-                    }
-                }
-            }
-
-            # Check if this engine should only be active when filter is used
-            if ($suma->{"filter-opt-in"}) {
-                # This search engine should only be used when a parameter filter of it is used
-                # and no other search engine can provide this filter
-                $validTmp = false;
-                foreach ($this->parameterFilter as $filterName => $filter) {
-                    if (count((array) $filter->sumas) === 1 && !empty($filter->sumas->{$sumaName})) {
-                        $validTmp = true;
-                        break;
-                    }
-                }
-                if (!$validTmp) {
-                    $valid = false;
-                }
-            }
-
-            # If the suma is still valid, we can add it
-            if ($valid) {
-                $this->enabledSearchengines[$sumaName] = $suma;
-            }
-        }
-        $engines = $this->enabledSearchengines;
-        # Include Yahoo Ads if Yahoo is not enabled as a searchengine
-        if (!$this->apiAuthorized && $this->fokus != "bilder" && empty($this->enabledSearchengines["yahoo"]) && isset($this->sumaFile->sumas->{"yahoo-ads"})) {
-            $this->enabledSearchengines["yahoo-ads"] = $this->sumaFile->sumas->{"yahoo-ads"};
-        }
-
-        # Special case if search engines are disabled
-        # Since bing is normally only active if a filter is set but it should be active, too if yahoo is disabled
-        if ($this->getFokus() === "web" && empty($this->enabledSearchengines["yahoo"]) && Cookie::get("web_engine_bing") !== "off" && isset($this->sumaFile->sumas->{"bing"})) {
-            $this->enabledSearchengines["bing"] = $this->sumaFile->sumas->{"bing"};
-        }
-
-        if (sizeof($this->enabledSearchengines) === 0) {
-            $filter = "";
-            foreach ($this->queryFilter as $queryFilter => $filterPhrase) {
-                $filter .= trans($this->sumaFile->filter->{"query-filter"}->{$queryFilter}->name) . ",";
-            }
-            $filter = rtrim($filter, ",");
-            $error = trans('metaGer.engines.noSpecialSearch', [
-                'fokus' => trans($this->sumaFile->foki->{$this->fokus}->{"display-name"}),
-                'filter' => $filter,
-            ]);
-            $this->errors[] = $error;
-        }
-        $this->setEngines($request);
-    }
-
-    private function removeAdsFromListIfAdfree(&$sumas)
-    {
-        if ($this->apiAuthorized) {
-            foreach ($sumas as $sumaName => $suma) {
-                $ads = $suma->ads ?? false;
-                if ($ads) {
-                    unset($sumas[$sumaName]);
-
-                    $adBackups = $suma->{"ad-backups"} ?? [];
-                    $adBackupName = $adBackups->{$this->fokus} ?? null;
-                    if (isset($adBackupName)) {
-                        $this->sumaFile->sumas->{$adBackupName}->{"filter-opt-in"} = false;
-                    }
-                }
-            }
-        }
-    }
-
-    public function setEngines(Request $request, $enabledSearchengines = [])
-    {
-        if ($this->requestIsCached($request)) {
-            # If this is a page other than 1 the request is "cached"
-            $engines = $this->getCachedEngines($request);
-            # We need to edit some Options of the Cached Search Engines
-            foreach ($engines as $engine) {
-                $engine->setResultHash($this->getSearchUid());
-            }
-            $this->engines = $engines;
-        } else {
-            if (sizeof($enabledSearchengines) > 0) {
-                $this->enabledSearchengines = $enabledSearchengines;
-            }
-            $this->actuallyCreateSearchEngines($this->enabledSearchengines);
-        }
-    }
-
     public function startSearch()
     {
-        # Check all engines for Cached responses
+        // Check all engines for Cached responses
         $this->checkCache();
 
-        # Wir starten alle Suchen
-        /** @var Searchengine $engine */
-        foreach ($this->engines as $engine) {
+        // Wir starten alle Suchen
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             $engine->startSearch();
         }
     }
@@ -685,16 +511,16 @@ class MetaGer
     public function checkCache()
     {
         if ($this->canCache()) {
-            foreach ($this->engines as $engine) {
-                if (Cache::has($engine->hash)) {
-                    $engine->cached = true;
-                    $engine->retrieveResults($this, Cache::get($engine->hash));
+            foreach (app(Searchengines::class)->getEnabledSearchengines() as $suma) {
+                if (Cache::has($suma->getHash())) {
+                    $suma->cached = true;
+                    $suma->retrieveResults($this, Cache::get($suma->getHash()));
                 }
             }
         }
     }
 
-    # Spezielle Suchen und Sumas
+    // Spezielle Suchen und Sumas
 
     public function sumaIsSelected($suma, $request, $custom)
     {
@@ -877,31 +703,15 @@ class MetaGer
             && $suma["name"]->__toString() !== "overtureAds";
     }
 
-    public function requestIsCached($request)
-    {
-        return
-            $request->filled('next')
-            && Cache::has($request->input('next'))
-            && unserialize(Cache::get($request->input('next')))['page'] > 1;
-    }
-
-    public function getCachedEngines($request)
-    {
-        $next = unserialize(Cache::get($request->input('next')));
-        $this->page = $next['page'];
-        $engines = $next['engines'];
-        return $engines;
-    }
-
     public function waitForMainResults()
     {
-        $engines = $this->engines;
+        $engines = app(Searchengines::class)->getEnabledSearchengines();
         $enginesToWaitFor = [];
         $mainEngines = $this->sumaFile->foki->{$this->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
                 if ($engine->name === $mainEngine) {
-                    $enginesToWaitFor[] = $engine->hash;
+                    $enginesToWaitFor[] = $engine->getHash();
                 }
             }
         }
@@ -909,14 +719,14 @@ class MetaGer
         # If no main engines are enabled by the user we will wait for all results
         if (sizeof($enginesToWaitFor) === 0) {
             foreach ($engines as $engine) {
-                $enginesToWaitFor[] = $engine->hash;
+                $enginesToWaitFor[] = $engine->getHash();
             }
         } else {
             $newEnginesToWaitFor = [];
             // Don't wait for engines that are already loaded in Cache
             foreach ($enginesToWaitFor as $engineToWaitFor) {
                 foreach ($engines as $engine) {
-                    if ($engine->hash === $engineToWaitFor && !$engine->loaded) {
+                    if ($engine->getHash() === $engineToWaitFor && !$engine->loaded) {
                         $newEnginesToWaitFor[] = $engineToWaitFor;
                     }
                 }
@@ -938,7 +748,7 @@ class MetaGer
                 Redis::expire($answer[0], 60);
             }
             foreach ($engines as $index => $engine) {
-                if ($engine->hash === $answer[0]) {
+                if ($engine->getHash() === $answer[0]) {
                     $engine->retrieveResults($this, $answer[1]);
                     foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
                         if ($engineToWaitFor === $answer[0]) {
@@ -953,7 +763,7 @@ class MetaGer
 
     public function retrieveResults()
     {
-        $engines = $this->engines;
+        $engines = app(Searchengines::class)->getEnabledSearchengines();
         # Von geladenen Engines die Ergebnisse holen
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
@@ -1259,46 +1069,6 @@ class MetaGer
     {
         $this->searchCheckPhrase();
 
-        # Check for query-filter (i.e. Sitesearch, etc.):
-        foreach ($this->sumaFile->filter->{"query-filter"} as $filterName => $filter) {
-            if (!empty($filter->{"optional-parameter"}) && \Request::filled($filter->{"optional-parameter"})) {
-                $this->queryFilter[$filterName] = \Request::input($filter->{"optional-parameter"});
-            } elseif (preg_match_all("/" . $filter->regex . "/si", $this->q, $matches) > 0) {
-                switch ($filter->match) {
-                    case "last":
-                        $this->queryFilter[$filterName] = $matches[$filter->save][sizeof($matches[$filter->save]) - 1];
-                        $toDelete = preg_quote($matches[$filter->delete][sizeof($matches[$filter->delete]) - 1], "/");
-                        $this->q = preg_replace('/(' . $toDelete . '(?!.*' . $toDelete . '))/si', '', $this->q);
-                        break;
-                    default: # First occurence
-                        $this->queryFilter[$filterName] = $matches[$filter->save][0];
-                        $toDelete = preg_quote($matches[$filter->delete][0], "/");
-                        $this->q = preg_replace('/' . $toDelete . '/si', '', $this->q, 1);
-                }
-            }
-        }
-        # Check for parameter-filter (i.e. SafeSearch)
-        $this->parameterFilter = [];
-        $usedParameters = [];
-        foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
-            if (!empty($usedParameters[$filter->{"get-parameter"}])) {
-                die("Der Get-Parameter \"" . $filter->{"get-parameter"} . "\" wird mehrfach verwendet!");
-            } else {
-                $usedParameters[$filter->{"get-parameter"}] = true;
-            }
-
-            if (
-                (\Request::filled($filter->{"get-parameter"}) && \Request::input($filter->{"get-parameter"}) !== "off") ||
-                Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null
-            ) { # If the filter is set via Cookie
-                $this->parameterFilter[$filterName] = $filter;
-                $this->parameterFilter[$filterName]->value = \Request::input($filter->{"get-parameter"}, '');
-                if (empty($this->parameterFilter[$filterName]->value)) {
-                    $this->parameterFilter[$filterName]->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
-                }
-            }
-        }
-
         $this->searchCheckHostBlacklist($request);
         $this->searchCheckDomainBlacklist($request);
         $this->searchCheckUrlBlacklist();
@@ -1520,8 +1290,8 @@ class MetaGer
 
     public function rankAll()
     {
-        foreach ($this->engines as $engine) {
-            $engine->rank($this->getQ());
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
+            $engine->rank();
         }
     }
 
@@ -1836,7 +1606,7 @@ class MetaGer
     }
     public function getPage()
     {
-        return $this->page;
+        return app(SearchSettings::class)->page;
     }
 
     public function getSumaFile()
@@ -1964,14 +1734,6 @@ class MetaGer
     public function isDummy()
     {
         return $this->dummy;
-    }
-
-    /**
-     * Used by JS result loader to restore MetaGer Object of previous request
-     */
-    public function restoreEngines($engines)
-    {
-        $this->engines = $engines;
     }
 
     public function setDummy($dummy)

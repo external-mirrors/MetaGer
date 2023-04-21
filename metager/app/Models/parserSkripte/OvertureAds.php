@@ -99,7 +99,6 @@ class OvertureAds extends Searchengine
         # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
         $next = new OvertureAds($this->name, $this->engine, $metager);
         $next->getString = preg_replace("/&Keywords=.*?&/si", "&", $next->getString) . "&" . $nextArgs;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
         $this->next = $next;
     }
 
@@ -110,6 +109,5 @@ class OvertureAds extends Searchengine
         $affil_data .= '&ua=' . $this->useragent;
         $this->configuration->getParameter->affilData = $affil_data;
         $this->configuration->getParameter->serveUrl = $url;
-        $this->updateHash();
     }
 }

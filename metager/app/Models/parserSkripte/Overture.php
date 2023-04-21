@@ -164,7 +164,6 @@ class Overture extends Searchengine
 
         $this->configuration->getParameter->affilData = $affil_data;
         $this->configuration->getParameter->serveUrl = $url;
-        $this->updateHash();
     }
 
     private function log_failed_yahoo_search()

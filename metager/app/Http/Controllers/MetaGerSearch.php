@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\SearchSettings;
@@ -31,16 +32,14 @@ class MetaGerSearch extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
         }
 
-        $focus = $request->input("focus", "web");
+        $settings = app(SearchSettings::class);
 
-        if ($focus === "maps") {
-            $searchinput = $request->input('eingabe', '');
-            return redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
+        if ($settings->fokus === "maps") {
+            return redirect()->to('https://maps.metager.de/map/' . $settings->q . '/1240908.5493525574,6638783.2192695495,6');
         }
 
         # If there is no query parameter we redirect to the startpage
-        $eingabe = $request->input('eingabe', '');
-        if (empty(trim($eingabe))) {
+        if (empty(trim($settings->q))) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
 
@@ -55,15 +54,11 @@ class MetaGerSearch extends Controller
             return $metager->createView();
         }
 
+        app(Searchengines::class)->checkPagination();
+
         $query_timer->observeStart("Search_CreateQuicktips");
         $quicktips = $metager->createQuicktips();
         $query_timer->observeEnd("Search_CreateQuicktips");
-
-        # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
-        # auf Ergebnisse warten und die Ergebnisse laden
-        $query_timer->observeStart("Search_CreateSearchEngines");
-        $metager->createSearchEngines($request);
-        $query_timer->observeEnd("Search_CreateSearchEngines");
 
         $query_timer->observeStart("Search_StartSearch");
         $metager->startSearch();
@@ -87,19 +82,13 @@ class MetaGerSearch extends Controller
         $query_timer->observeEnd("Search_RetrieveResults");
 
         $admitad = [];
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitad[] = $newAdmitad;
             }
         }
         $admitad = $metager->parseAffiliates($admitad);
-
-        if ($metager->yahoo_failed()) {
-            $params = $request->all();
-            $params["skip_yahoo"] = true;
-            return redirect(route("resultpage", $params));
-        }
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
@@ -115,12 +104,12 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_Affiliates");
 
         // Add Advertisement for Donations
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
             $metager->addDonationAdvertisement();
         }
         $query_timer->observeEnd("Search_Affiliates");
 
-        foreach ($metager->getEngines() as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
                 $engine->setNew(false);
                 $engine->markNew();
@@ -129,9 +118,13 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_CacheFiller");
         try {
             $authorization = app(Authorization::class);
+            $searchengines = app(Searchengines::class);
+            $settings = app(SearchSettings::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "authorization" => $authorization
+                    "authorization" => $authorization,
+                    "searchengines" => $searchengines,
+                    "settings" => $settings
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -213,15 +206,22 @@ class MetaGerSearch extends Controller
         app()->singleton(Authorization::class, function ($app) use ($authorization) {
             return $authorization;
         });
+        $settings = $mg["settings"];
+        app()->singleton(SearchSettings::class, function ($app) use ($settings) {
+            return $settings;
+        });
+        $searchengines = $mg["searchengines"];
+        app()->singleton(Searchengines::class, function ($app) use ($searchengines) {
+            return $searchengines;
+        });
 
 
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
-        $metager->restoreEngines($engines);
 
         $admitadCountBefore = sizeof($admitad);
         $engineCountBefore = 0;
-        foreach ($metager->getEngines() as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
                 $engineCountBefore++;
             }
@@ -267,7 +267,7 @@ class MetaGerSearch extends Controller
         $finished = true;
         $enginesLoaded = [];
         $enginesLoadedAfter = 0;
-        foreach ($engines as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (!$engine->loaded) {
                 $enginesLoaded[$engine->name] = false;
                 $finished = false;
@@ -298,6 +298,7 @@ class MetaGerSearch extends Controller
         }
         // Update new Engines
         $authorization = app(Authorization::class);
+        $searchengines = app(Searchengines::class);
         $cacheControl = "no-cache, must-revalidate, public";
         if ($finished) {
             Cache::forget("loader_" . $metager->getSearchUid());
@@ -305,7 +306,9 @@ class MetaGerSearch extends Controller
         } else {
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "authorization" => $authorization
+                    "authorization" => $authorization,
+                    "searchengines" => $searchengines,
+                    "settings" => $settings
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),

@@ -80,7 +80,6 @@ class RequestFetcher extends Command
                 $answersRead = $status[0];
                 $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
-
                 if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
                 }
@@ -114,7 +113,6 @@ class RequestFetcher extends Command
             });
             $newJobs = $elements[0];
         }
-
         $addedJobs = 0;
         foreach ($newJobs as $newJob) {
             $newJob = json_decode($newJob, true);

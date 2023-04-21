@@ -16,7 +16,6 @@ class Kelkoo extends Searchengine
         parent::__construct($name, $configuration);
         $this->unsignedGetString = $this->getString;
         $this->getString = $this->UrlSigner($this->unsignedGetString);
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
     }
 
     public function loadResults($result)
@@ -123,7 +122,6 @@ class Kelkoo extends Searchengine
         $next->unsignedGetString .= "&start=" . ($current + 20);
         $next->getString = $next->UrlSigner($next->unsignedGetString);
 
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
         $this->next = $next;
     }
 

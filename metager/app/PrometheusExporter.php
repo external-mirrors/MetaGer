@@ -50,8 +50,8 @@ class PrometheusExporter
     }
 
     /**
-     * @param String $language
-     * @param Array $type
+     * @param string $language
+     * @param array $type
      */
     public static function PreferredLanguage($language, $type)
     {

@@ -17,6 +17,7 @@ class SearchSettings
     public $q;
     /** @var string */
     public $fokus;
+    public $page = 1;
     public $queryFilter = [];
     public $parameterFilter = [];
     /** @var object */

@@ -34,6 +34,7 @@
 		@yield('results')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
+	@if(sizeof($quicktips) > 0)
 	<div id="additions-container" data-authorized="{{ $metager->isApiAuthorized() ? 'true' : 'false' }}">
 		@include('layouts.keyboardNavBox')
 		<div id="quicktips">
@@ -42,5 +43,6 @@
 			@endif
 		</div>
 	</div>
+	@endif
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 </div>

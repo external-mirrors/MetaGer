@@ -403,6 +403,8 @@ a {
 
 #resultpage-container {
   margin: 0 auto;
+  max-width: 100%;
+  padding: 0 0.5rem;
   margin-top: 0;
   display: grid;
   grid-template-columns: @results-width-max max-content;
@@ -410,6 +412,8 @@ a {
   grid-row-gap: @padding-small-default;
   justify-items: stretch;
   align-items: stretch;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
   /**/
   background-color: @resultpage-background-color;
 
@@ -498,14 +502,14 @@ a {
     grid-area: footer;
   }
 
-  @media (max-width: @resultpage-breakpoint-max) {
+  @media (min-width: 1350px) {
     @supports (display: grid) {
       grid-template-columns: @results-width-max max-content;
       grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
     }
   }
 
-  @media (max-width: @resultpage-breakpoint-min) {
+  @media (max-width: 1350px) {
     grid-template-columns: 100%;
     grid-template-areas: "searchbar" "foki" "options" "results" "footer";
 
@@ -634,6 +638,10 @@ a {
   }
 
   input[type="checkbox"] {
+    display: none;
+  }
+
+  input[type="checkbox"]:not(:checked) + .scrollbox {
     display: none;
   }
 

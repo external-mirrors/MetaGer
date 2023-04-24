@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Localization;
 use App\MetaGer;
+use App\Models\Authorization\Authorization;
 use App\SearchSettings;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
@@ -176,6 +177,11 @@ abstract class Searchengine
             if ($body === false) {
                 return $body;
             }
+        }
+
+        // Pay for the searchengine if cost > 0
+        if (!$this->cached && $this->configuration->cost > 0) {
+            app(Authorization::class)->makePayment($this->configuration->cost);
         }
 
         if ($body === "no-result") {

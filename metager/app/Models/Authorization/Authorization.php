@@ -39,8 +39,15 @@ abstract class Authorization
         return $this->availableTokens >= $this->cost;
     }
 
-    public abstract function authenticate();
     public abstract function getToken();
+
+    /**
+     * Makes a payment for the current request
+     * @param int $cost Amount of token to pay
+     * 
+     * @return bool
+     */
+    public abstract function makePayment(int $cost);
 
     /**
      * Checks whether the user has already paid for his

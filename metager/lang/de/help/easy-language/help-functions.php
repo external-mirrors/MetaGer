@@ -46,10 +46,6 @@ return [
             '0' => 'MetaGer zur Such-Maschinen-Liste des Browsers hinzufügen',
             '1' => 'MetaGer installieren',
         ],
-        "defaultsearchengine"  => [
-            '1' => 'Was ist eine Standard-Such-Maschine?',
-            '2'=>'Das ist die Such-Maschine mit der Sie immer suchen. <br> Sie ist bei der Suche immer ausgewählt. <br> Sie öffnen Ihren Browser. <br> Sie geben das was Sie suchen wollen oben in die Adress-Leiste ein. <br> Dann sucht man mit der Standard-Such-Maschine.',
-        ],
         "explanation"  => [
             '1' => 'Auf der Start-Seite gibt es ein Feld <strong>MetaGer installieren</strong>.<br> Das Feld ist unter dem Such-Feld. <br> So sieht das Feld <strong>MetaGer installieren</strong> aus:<br>',
             '2' => 'Manchmal muss man auch eine URL eingeben. <br> Diese sieht so aus: <br>https://metager.de/meta/meta.ger3?eingabe=%s <br> Wenn Sie Probleme haben, wenden Sie sich an uns mit dem <a href="/kontakt" target="_blank" rel="noopener">Kontakt-Formular</a>.',

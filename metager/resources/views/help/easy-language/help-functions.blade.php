@@ -61,8 +61,6 @@
 	</section>
 	<section id="selist">
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
-		<h4>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.1') !!}</h4>
-		<p>{!! trans('help/easy-language/help-functions.selist.defaultsearchengine.2') !!}<p>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
 		<div class="image-container"><img src="/img/help-settings-install-metager.jpg"/></div>

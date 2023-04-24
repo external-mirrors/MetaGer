@@ -17,12 +17,20 @@
       @if(Request::filled('key'))
       <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
       @endif
-	    <div id="plugin-btn-div">
-		@if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-		<button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
-		@else
-		<a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
-		@endif
+	    <div id="startpage-quicklinks">
+      @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
+      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+        <img src="/img/key-icon.svg" alt="Key Icon" />
+        <span>
+          @lang("index.adfree")
+        </span>
+      </a>
+      @endif
+      @if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
+      <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
+      @else
+      <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
+      @endif
 	</div>
     </div>
   </div>

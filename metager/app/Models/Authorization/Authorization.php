@@ -2,6 +2,8 @@
 
 namespace App\Models\Authorization;
 
+use LaravelLocalization;
+
 /**
  * Summary of Authorization
  */
@@ -56,5 +58,20 @@ abstract class Authorization
     private function calculateCost()
     {
         return 3;
+    }
+
+    /**
+     * Returns a link where the user should be sent to, when we want
+     * to advertise the metager key.
+     * => /keys Startpage when unauthorized
+     * => /keys/key/<USER_KEY> when a key is configured
+     */
+    public function getAdfreeLink()
+    {
+        if (!empty($this->getToken()) && is_string($this->getToken())) {
+            return LaravelLocalization::getLocalizedUrl(null, "/keys/key/" . urlencode($this->getToken()));
+        } else {
+            return LaravelLocalization::getLocalizedUrl(null, "/keys");
+        }
     }
 }

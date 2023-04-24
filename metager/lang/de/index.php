@@ -8,6 +8,7 @@ return [
     'foki.produkte' => 'Produkte',
 
     'plugin' => 'MetaGer installieren',
+    'adfree' => 'MetaGer werbefrei nutzen',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
 
     'key.placeholder' => 'Schlüssel für werbefreie Suche eingeben',

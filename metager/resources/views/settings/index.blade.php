@@ -119,7 +119,16 @@
                     <select name="{{ $filterInfo->{"get-parameter"} }}" id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
                         @foreach($filterInfo->values as $key => $value)
                         @if(!empty($key))
-                        <option value="@if($key !== "nofilter"){{ $key }}@endif" {{ Cookie::get($fokus . "_setting_" . $filterInfo->{"get-parameter"}) === $key ? "disabled selected" : "" }} @if(array_key_exists($key, $filterInfo->{"disabled-values"}) && sizeof($filterInfo->{"disabled-values"}[$key]) > 0)disabled @endif>@lang($value)</option>
+                        <option 
+                            value="@if($key !== "nofilter"){{ $key }}@endif" 
+                            @if(!empty($filterInfo->value) && $filterInfo->value === $key ||
+                                (empty($filterInfo->value) && $filterInfo->{"default-value"} === $key))
+                                selected
+                            @endif
+                            @if(array_key_exists($key, $filterInfo->{"disabled-values"}) && sizeof($filterInfo->{"disabled-values"}[$key]) > 0)
+                            disabled 
+                            @endif
+                        >@lang($value)</option>
                         @endif
                         @endforeach
                     </select>

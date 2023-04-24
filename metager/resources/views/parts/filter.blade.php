@@ -63,7 +63,10 @@
 					@else
 					<option 
 						value="@if($value !== 'nofilter'){{$value}} @endif"
-						@if(!empty($filter->value) && $filter->value === $value)selected @endif
+						@if(!empty($filter->value) && $filter->value === $value ||
+                            (empty($filter->value) && $filter->{"default-value"} === $value))
+						selected
+						@endif
 						@if(array_key_exists($value, $filter->{"disabled-values"}) && sizeof($filter->{"disabled-values"}[$value]) > 0)
 						disabled
 						@endif

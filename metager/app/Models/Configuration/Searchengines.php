@@ -112,6 +112,8 @@ class Searchengines
                     continue 2;
                 }
             }
+            // Apply final settings to Sumas
+            $suma->applySettings();
         }
 
         uasort($this->sumas, function ($a, $b) {

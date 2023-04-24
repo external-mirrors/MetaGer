@@ -38,36 +38,10 @@ class SettingsController extends Controller
             }
         }
 
-        // Apply default value for Language selection
-        $current_locale = LaravelLocalization::getCurrentLocaleRegional();
-        $default_language_value = "";
-        # Set default Value for language selector to current locale
         $authorization = app(Authorization::class);
-        $suma_name = "yahoo";
-        if ($authorization->canDoAuthenticatedSearch()) {
-            $suma_name = "bing";
-        }
-        if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {
-            if (\array_key_exists("language", $filters) && \property_exists($filters["language"], "sumas") && \property_exists($filters["language"]->sumas, $suma_name)) {
-                $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
-                foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
-                    if ($value === $region_suma_value) {
-                        $default_language_value = $key;
-                        break;
-                    }
-                }
-                if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
-                    $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
-                    unset($filters["language"]->values->$default_language_value);
-                } else {
-                    $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
-                }
-            }
-        }
-
         $url = $request->input('url', '');
 
-        # Check if any setting is active
+        // Check if any setting is active
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
@@ -91,8 +65,6 @@ class SettingsController extends Controller
 
         # Generating link with set cookies
         $cookieLink = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('loadSettings', $cookies));
-
-
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -216,7 +188,18 @@ class SettingsController extends Controller
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
+        $settings = app(SearchSettings::class);
+        app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated
+
         foreach ($newFilters as $key => $value) {
+            if (!empty($value)) {
+                // Check if the new value is the default value for this filter
+                foreach ($settings->parameterFilter as $name => $filter) {
+                    if ($filter->{"get-parameter"} === $key && $filter->{"default-value"} === $value) {
+                        $value = null;
+                    }
+                }
+            }
             if (empty($value)) {
                 $path = \Request::path();
                 $cookiePath = "/";

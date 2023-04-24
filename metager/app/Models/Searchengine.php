@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Localization;
 use App\MetaGer;
+use App\SearchSettings;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 
@@ -56,10 +57,19 @@ abstract class Searchengine
         $this->ip = $metager->getIp();
         $this->startTime = microtime(true);
 
-        # Suchstring generieren
-        $query = $metager->getQ();
-        $filters = $metager->getSumaFile()->filter;
-        foreach ($metager->getQueryFilter() as $queryFilter => $filter) {
+        $this->canCache = $metager->canCache();
+    }
+
+    /**
+     * SearchSettings are not fully loaded when Searchengines are created
+     * this function is called when all Settings are finished loading
+     */
+    public function applySettings()
+    {
+        $settings = app(SearchSettings::class);
+        $query = $settings->q;
+        $filters = $settings->sumasJson->filter;
+        foreach (app(SearchSettings::class)->queryFilter as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
             if (!$filterOptions->sumas->{$this->name}) {
                 continue;
@@ -70,23 +80,21 @@ abstract class Searchengine
         }
         $this->configuration->applyQuery($query);
 
-        # Parse enabled Parameter-Filter
-        foreach ($metager->getParameterFilter() as $filterName => $filter) {
+        // Parse enabled Parameter-Filter
+        foreach (app(SearchSettings::class)->parameterFilter as $filterName => $filter) {
             $inputParameter = $filter->value;
 
-            if (empty($inputParameter) || empty($filter->sumas->{$name}->values->{$inputParameter})) {
+            if (empty($inputParameter) || empty($filter->sumas->{$this->name}->values->{$inputParameter})) {
                 continue;
             }
-            $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
-            $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
+            $engineParameterKey = $filter->sumas->{$this->name}->{"get-parameter"};
+            $engineParameterValue = $filter->sumas->{$this->name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
                 $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
                 $engineParameterValue = \App\DynamicEngineParameters::$functionname();
             }
             $this->configuration->getParameter->{$engineParameterKey} = $engineParameterValue;
         }
-
-        $this->canCache = $metager->canCache();
     }
 
     abstract public function loadResults($result);
@@ -99,7 +107,7 @@ abstract class Searchengine
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch()
     {
-        if (!$this->cached) { // ToDo enable Cache
+        if (!$this->cached) {
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
             // <ResultHash>;<URL to fetch>

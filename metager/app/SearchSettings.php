@@ -6,6 +6,7 @@ use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use Cookie;
+use LaravelLocalization;
 use \Request;
 
 class SearchSettings
@@ -38,7 +39,6 @@ class SearchSettings
 
     public function loadQueryFilter()
     {
-        # Check for query-filter (i.e. Sitesearch, etc.):
         foreach ($this->sumasJson->filter->{"query-filter"} as $filterName => $filter) {
             if (!empty($filter->{"optional-parameter"}) && Request::filled($filter->{"optional-parameter"})) {
                 $this->queryFilter[$filterName] = Request::input($filter->{"optional-parameter"});
@@ -49,7 +49,7 @@ class SearchSettings
                         $toDelete = preg_quote($matches[$filter->delete][sizeof($matches[$filter->delete]) - 1], "/");
                         $this->q = preg_replace('/(' . $toDelete . '(?!.*' . $toDelete . '))/si', '', $this->q);
                         break;
-                    default: # First occurence
+                    default:
                         $this->queryFilter[$filterName] = $matches[$filter->save][0];
                         $toDelete = preg_quote($matches[$filter->delete][0], "/");
                         $this->q = preg_replace('/' . $toDelete . '/si', '', $this->q, 1);
@@ -60,26 +60,37 @@ class SearchSettings
 
     public function loadParameterFilter(Searchengines $searchengines)
     {
-        $authorized = app(Authorization::class)->canDoAuthenticatedSearch();
         foreach ($this->sumasJson->filter->{"parameter-filter"} as $filterName => $filter) {
             // Do not add filter if not available for current focus
             if (sizeof(array_intersect(array_keys((array) $filter->sumas), $this->sumasJson->foki->{$this->fokus}->sumas)) === 0) {
                 continue;
             }
-
             $this->parameterFilter[$filterName] = $filter;
+            if ($filterName === "language") {
+                // Update default Parameter for language
+                $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+                $this->parameterFilter["language"]->{"default-value"} = $current_locale;
+            }
+            if (!property_exists($filter, "default-value")) {
+                $this->parameterFilter[$filterName]->{"default-value"} = "nofilter";
+            }
             if (
                 (Request::filled($filter->{"get-parameter"}) && Request::input($filter->{"get-parameter"}) !== "off") ||
                 Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"}) !== null
-            ) { // If the filter is set via Cookie
-
+            ) {
                 $this->parameterFilter[$filterName]->value = Request::input($filter->{"get-parameter"}, null);
 
                 if (empty($this->parameterFilter[$filterName]->value)) {
                     $this->parameterFilter[$filterName]->value = Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"});
                 }
-                if ($this->parameterFilter[$filterName]->value === "off") {
+                if (
+                    $this->parameterFilter[$filterName]->value === "off"
+                ) {
                     $this->parameterFilter[$filterName]->value = null;
+                }
+                if ($this->parameterFilter[$filterName]->value === $this->parameterFilter[$filterName]->{"default-value"}) {
+                    $this->parameterFilter[$filterName]->value = null;
+                    unset(app(\Illuminate\Http\Request::class)[$filter->{"get-parameter"}]);
                 }
             } else {
                 $this->parameterFilter[$filterName]->value = null;

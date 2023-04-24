@@ -15,7 +15,7 @@ return [
             "domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
             "hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',
             "more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png" alt="Bildschirmfoto eines ausgeklappten Suchergebnisses"></div></p>',
-            "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab.',
+            "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab. Alternativ können Sie auch ein neues Tab öffnen, indem Sie STRG und Linksklick oder die mittlere Maustaste verwenden.',
             "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
             "saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="/hilfe/funktionen#searchinsearch"> Suche in der Suche</a>)',
         ],
@@ -30,7 +30,7 @@ return [
     ],
     "searchfield"       => [
         "info"      => 'Das Suchfeld besteht aus mehreren Teilen:',
-        "memberkey" => 'dem Schlüsselsymbol: Hier können Mitglieder des SUMA-EV Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Sie wollen das auch? Werden Sie Mitglied über unser <a href = "/beitritt/">Beitrittsformular</a> oder <a href = "/spende/">spenden</a> Sie an den SUMA-EV.',
+        "memberkey" => 'dem Schlüsselsymbol: Hier Ihren Schlüssel eingeben, um die werbefreie Suche nutzen zu können. Zusätzlich können Sie Ihren Tokenstand einsehen und Ihren Schlüssel verwalten.',
         "morefunctions" => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>"',
         "search"    => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
         "slot"      => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',

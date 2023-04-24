@@ -16,6 +16,13 @@
     gap: 1rem;
     flex-wrap: wrap;
     margin: 1rem 0;
+    .no-engines {
+      color: rgba(255, 0, 0, 0.432);
+      padding: 0.5rem;
+      border: 1px solid;
+      border-radius: 5px;
+      display: block;
+    }
     .suma {
       border: 1px solid;
       border-radius: 10px;
@@ -43,21 +50,9 @@
         }
       }
     }
-    /*&.enabled-engines .suma {
-      background-color: #9ad79a;
+    .suma + .no-engines {
+      display: none;
     }
-    &.disabled-engines .suma button {
-      background-color: #fea0a0;
-      text-decoration: line-through;
-    }
-    &.filtered-engines .suma {
-      background-color: #bababa;
-      color: #777;
-      padding: 8px;
-      margin-left: 8px;
-      margin-top: 8px;
-      border-radius: 4px;
-    }*/
   }
 
   #filter-options {

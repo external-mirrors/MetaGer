@@ -48,6 +48,7 @@
             </div>
             @endif
             @endforeach
+            <div class="no-engines">@lang('settings.no-engines')</div>
         </div>
         @if(in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $disabledReasons))
         <div class="sumas disabled-engines">

@@ -50,8 +50,12 @@ class MetaGerSearch extends Controller
 
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
-        if (empty($metager->getQ())) {
+        if (empty($settings->q)) {
             return $metager->createView();
+        }
+
+        if (empty(app(Searchengines::class)->getEnabledSearchengines())) {
+            return redirect(LaravelLocalization::getLocalizedUrl(null, route("settings", ["focus" => "bilder"])) . "#engines");
         }
 
         app(Searchengines::class)->checkPagination();

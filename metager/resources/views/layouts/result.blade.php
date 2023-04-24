@@ -68,7 +68,7 @@
 			{!! trans('result.options.6') !!}
 		</a>
 		@if( isset($result->partnershop) && $result->partnershop === TRUE)
-		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
 			@lang('result.options.8')
 		</a>
 		@else

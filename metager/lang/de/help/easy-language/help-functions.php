@@ -27,6 +27,17 @@ return [
             "example" => '"der runde tisch"',
         ],
     ],
+    "exactsearch" =>[
+        "title" => "Exakte Suche",
+        "1" =>"Bei der exakten Suche wird genau das was Sie schreiben gesucht. <br> Ein Wort soll genau so wie geschrieben in den Ergebnissen vorkommen. <br> Dann schreibt man das mit einem Plus vor dem Wort. <br> Das sieht so aus: ",
+        "2" =>"Beispiel: Sie suchen nach Beispielwort. <br> Sie möchten das Wort soll genau so wie geschrieben in den Ergebnissen finden. <br> Also schreiben Sie das Wort so: ",
+        "3" =>'Sie können auch nach ganzen Sätzen suchen. <br> Sie wollen einen Satz in genau so wie geschrieben in den Ergebnissen sehen.',
+        "4" => 'Beispiel: Sie suchen nach einem Beispielsatz. <br> Dann schreibt man das so: ',
+        "example" => [
+            "1" => "+Beispielwort",
+            "2" => '+"Beispiel Phrase"',
+        ],
+    ],
     "bang"  => [
         "title" => "!bangs",
         "1" => "MetaGer unterstützt eine Schreib-Weise die !bang heißt. <br> Wenn man das benutzen will sieht das so aus: <br> <strong>!twitter</strong> oder <strong>!facebook</strong><br> Beispiel:<br> Sie möchten auf Twitter nach Katzen suchen. <br> Also geben Sie das so ein:",

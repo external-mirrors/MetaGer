@@ -43,16 +43,13 @@ return [
     ],
     "exactsearch" =>[
         "title" => "Exakte Suche",
-        "1" =>"Wenn Sie in den MetaGer-Suchergebnissen",
-        "2" =>"Placeholder",
-        "3" =>"Placeholder",
-        "4" =>"Placeholder",
+        "1" =>"Wenn Sie in den MetaGer-Suchergebnissen ein bestimmtes Wort finden möchten, können Sie dieses Wort mit einem Plus versehen. Bei der Verwendung von einem Plus und Anführungszeichen wird eine Phrase exakt so wie Sie es eingegeben haben, gesucht.",
+        "2" =>"Beispiel: S",
+        "3" =>'Beispiel: ',
         "example" => [
-            "1" => "Placeholder",
-            "2" => "Placeholder",
-            "3" => "Placeholder",
+            "1" => "+Beispielwort",
+            "2" => '+"Beispiel Phrase"',
         ],
-
     ],
     "bang"  => [
         "title" => "!bangs",

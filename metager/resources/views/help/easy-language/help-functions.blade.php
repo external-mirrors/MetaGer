@@ -34,6 +34,17 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.5.example') !!}</div></li>
 			</ul>
 		</div>
+		<h3 id="exactsearch">{!! trans('help/easy-language/help-functions.exactsearch.title') !!}</h3>
+		<div>
+			<p>{!! trans('help/easy-language/help-functions.exactsearch.1') !!}</p>
+			<ul class="dotlist">
+				<li>{!! trans('help/easy-language/help-functions.exactsearch.2') !!}</li>
+				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.exactsearch.example.1') !!}</div></li>
+				<p>{!! trans('help/easy-language/help-functions.exactsearch.3') !!}</p>
+				<li>{!! trans('help/easy-language/help-functions.exactsearch.4') !!}</li>
+				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.exactsearch.example.2') !!}</div></li>
+			</ul>
+		</div>
 </section>
 	<section id="bangs">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>

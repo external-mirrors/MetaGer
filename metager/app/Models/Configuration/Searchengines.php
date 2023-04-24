@@ -43,6 +43,12 @@ class Searchengines
 
         // Parse user configuration
         foreach ($this->sumas as $name => $suma) {
+            // Default mode for this searchengine. Can be overriden by the user configuration
+            if ($suma->configuration->disabledByDefault) {
+                $suma->configuration->disabled = true;
+                $suma->configuration->disabledReason = DisabledReason::USER_CONFIGURATION;
+                $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
+            }
             $engine_user_setting = Cookie::get($settings->fokus . "_engine_" . $name, null);
             if ($engine_user_setting !== null) {
                 if ($engine_user_setting === "off" && $suma->configuration->disabled === false) {

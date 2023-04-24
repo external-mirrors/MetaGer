@@ -41,7 +41,7 @@
             <div class="suma">
                 <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post" title="@lang("settings.disable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
-                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.1')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>
@@ -57,7 +57,7 @@
             <div class="suma disabled-engine">
                 <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post" title="@lang("settings.enable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
-                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>

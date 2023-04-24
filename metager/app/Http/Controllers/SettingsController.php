@@ -132,47 +132,46 @@ class SettingsController extends Controller
 
     public function disableSearchEngine(Request $request)
     {
-        $suma = $request->input('suma', '');
-        $fokus = $request->input('fokus', '');
+        $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty($suma) || empty($fokus)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
-        # Only disable this engine if it's not the last
-        $sumas = $this->getSumas($fokus);
-        $sumaCount = 0;
-        foreach ($sumas as $name => $sumainfo) {
-            if (!$sumainfo["filtered"] && $sumainfo["enabled"]) {
-                $sumaCount++;
+        $settings = app(SearchSettings::class);
+        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if (!$engines[$sumaName]->configuration->disabled) {
+            if ($engines[$sumaName]->configuration->disabledByDefault) {
+                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+            } else {
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, true, true));
             }
         }
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
 
-        if ($sumaCount > 1 && in_array($suma, $langFile->foki->{$fokus}->sumas)) {
-            Cookie::queue(Cookie::forever($fokus . "_engine_" . $suma, "off", "/", null, true, true));
-        }
-
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#engines");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableSearchEngine(Request $request)
     {
-        $suma = $request->input('suma', '');
-        $fokus = $request->input('fokus', '');
+        $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty($suma) || empty($fokus)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
-        if (Cookie::get($fokus . "_engine_" . $suma) !== null) {
-            Cookie::queue(Cookie::forget($fokus . "_engine_" . $suma, "/"));
+        $settings = app(SearchSettings::class);
+        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if ($engines[$sumaName]->configuration->disabled) {
+            if ($engines[$sumaName]->configuration->disabledByDefault) {
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, true, true));
+            } else {
+                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+            }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#engines");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableFilter(Request $request)

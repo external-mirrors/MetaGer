@@ -37,13 +37,15 @@ class SearchengineConfiguration
     public $cacheDuration = 60;
     /** @var int */
     public $cost = 0;
-    /** @var boolean */
+    /** @var bool */
     public $disabled;
     /** @var DisabledReason */
     public $disabledReason;
-    /** @var boolean */
+    /** @var bool */
+    public $disabledByDefault = false;
+    /** @var bool */
     public $ads = false;
-    /** @var boolean */
+    /** @var bool */
     public $filterOptIn;
     /** @var int */
     public $monthlyRequests;

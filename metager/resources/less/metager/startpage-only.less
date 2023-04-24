@@ -1,3 +1,5 @@
+@import "./variables.less";
+
 @clippathHeight: 30px;
 @scrollLinkHeight: 40px;
 @scrollLinkHeightMedium: 50px;
@@ -34,6 +36,25 @@ html {
   height: 100%;
   margin: 0;
   padding: 0px;
+}
+
+#foki-switcher {
+  list-style-type: none;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-size: clamp(0.7rem, 3vw, 1rem);
+  > li {
+    > a {
+      color: fade(@text-color, 50%);
+      &.active {
+        text-decoration: underline;
+      }
+    }
+  }
 }
 
 #search-wrapper {

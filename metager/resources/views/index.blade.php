@@ -1,15 +1,24 @@
 @extends('layouts.staticPages', ['page' => 'startpage'])
-
 @section('title', $title )
 
 @section('content')
+  <ul id="foki-switcher">
+  @foreach(app(\App\SearchSettings::class)->sumasJson->foki as $name => $fokus)
+  <li>
+    <a href="{{ LaravelLocalization::getLocalizedURL(null, route('startpage', ['focus' => $name])) }}"
+      @if(app(\App\SearchSettings::class)->fokus === $name)
+      class="active"
+      @endif
+    >@lang($fokus->{"display-name"})</a>
+  @endforeach
+  </ul>
   <div id="search-wrapper">
     <div id="search-block">
       <h1 id="startpage-logo">
-        <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}">
+        <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
           <img src="/img/metager.svg" alt="MetaGer" />
         </a>
-        <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
+        <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
           <span>{{ App\Localization::getRegion() }}</span>
         </a>
       </h1>

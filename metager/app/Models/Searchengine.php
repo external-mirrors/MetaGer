@@ -99,7 +99,7 @@ abstract class Searchengine
     # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
     public function startSearch()
     {
-        if (!$this->cached || 1 == 1) { // ToDo enable Cache
+        if (!$this->cached) { // ToDo enable Cache
             // We need to submit a action that one of our workers can understand
             // The missions are submitted to a redis queue in the following string format
             // <ResultHash>;<URL to fetch>

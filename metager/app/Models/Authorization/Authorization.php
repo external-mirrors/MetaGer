@@ -14,7 +14,7 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    public int $cost = 0;
+    public int $cost = 3;
 
     /**
      * How many Tokens are available to the user

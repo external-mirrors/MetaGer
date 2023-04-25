@@ -13,7 +13,6 @@ class Scopia extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        $this->configuration->disabledByDefault = true;
     }
 
     public function loadResults($result)

@@ -101,7 +101,9 @@ class Searchengines
 
         $settings->loadQueryFilter();
         $settings->loadParameterFilter($this);
-        app(Authorization::class)->cost = 0; // Update cost with actual cost that are correct for current engine configuration
+        $authorization = app(Authorization::class);
+
+        $authorization->cost = 0; // Update cost with actual cost that are correct for current engine configuration
         foreach ($this->sumas as $suma) {
             // Disable searchengine if it does not support a possibly defined query filter
             foreach ($settings->queryFilter as $filterName => $filter) {
@@ -124,9 +126,10 @@ class Searchengines
             }
             // Apply final settings to Sumas
             if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
-                app(Authorization::class)->cost += $suma->configuration->cost;
+                $authorization->cost += $suma->configuration->cost;
             }
         }
+        $authorization->cost = max($authorization->cost, 3);
 
         uasort($this->sumas, function ($a, $b) {
             if ($a->configuration->engineBoost === $b->configuration->engineBoost) {

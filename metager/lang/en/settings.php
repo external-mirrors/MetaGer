@@ -7,14 +7,14 @@ return [
         4   => 'Black list',
     ],
     'text'                           => [
-        1   => 'Here you can set permanent search settings for your MetaGer search in focus :fokusName. If these do not remain permanently stored, please check in your browser settings whether it deletes cookies stored on exit.',
-        2   => 'Below are all the search engines available for this focus. With a click on the name they can be switched on / off. Used search engines are shown in green. Not used ones in red or gray.',
+        1   => 'To save your search settings, we use non-personally identifiable cookies. These are stored in plain text in your browser.',
+        2   => 'Below you can see all search engines available for this focus. You can switch them on/off by clicking on the name.',
         3   => 'At this point you can set search filters permanently. With the selection of a search filter, only search engines are available that support this filter. Conversely, only search filters are displayed which are supported by the current search engine selection.',
         4   => 'Here you can add domains to exclude when searching. If you want to exclude all subdomains start with "*.". One domain per line.',
     ],
     'hint'                           => [
-        'header'       => 'Setting Cookies',
-        'loadSettings' => 'Here is a link you can use as startpage or bookmark to keep your current settings. The URL sets your settings as cookies.',
+        'header'       => 'Restore all current settings',
+        'loadSettings' => 'Here you will find a link that you can set as a home page or bookmark to restore your current settings.',
         'hint'         => 'These settings affect all foci and sub-pages!',
     ],
     'disabledByFilter'               => 'Disabled by Search Filter:',

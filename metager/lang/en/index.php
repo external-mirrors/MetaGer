@@ -11,7 +11,7 @@ return [
     'foki'         => [
         'web'         => 'Web',
         'bilder'      => 'Images',
-        'nachrichten' => 'News/Politics',
+        'nachrichten' => 'News',
         'science'     => 'Science',
         'produkte'    => 'Products',
     ],

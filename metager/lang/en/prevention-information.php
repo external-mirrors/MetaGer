@@ -183,7 +183,7 @@ return [
     ],
     'singapore'   => [
         'name' => 'Singapore 🇸🇬',
-        'text' => '<strong>Samaritans of Singapore (SOS):</strong> <a href="https://samaritans.org.sg" target="_blank"> https://samaritans.org.sg</a> <br> Phone: <a href="tel:+65 1800 221 4444"> +65 1800 221 4444</a>; e-mail:pat@samaritans.org.sg',
+        'text' => '<strong>Samaritans of Singapore (SOS):</strong> <a href="https://samaritans.org.sg" target="_blank"> https://samaritans.org.sg</a> <br> Phone: <a href="tel:+65 1800 221 4444"> +65 1800 221 4444</a>; e-mail:pat@samaritans.org.sg<a href="https://www.samaritans.org.sg" target="_blank">',
     ],
     'south'       => [
         'korea'  => [

@@ -1,7 +1,7 @@
 <?php
 return [
     'title'       => 'MetaGer - Help',
-    'backarrow'   => ' back',
+    'backarrow'   => 'Back',
     'datenschutz' => [
         'title' => 'Privacy',
         1       => 'Tracking-Cookies, Session-IDs, IP addresses',

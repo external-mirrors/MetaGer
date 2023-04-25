@@ -19,6 +19,8 @@ class Mojeek extends Searchengine
         $this->configuration->getParameter->lr = $lang;
         $region = Localization::getRegion();
         $this->configuration->getParameter->rb = $region;
+
+        $this->configuration->disabledByDefault = true;
     }
 
     public function loadResults($resultstring)

@@ -32,6 +32,7 @@
 		@include('parts.errors')
 		@include('parts.warnings')
 		@yield('results')
+		@include('parts.enginefooter')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
 	@if(sizeof($quicktips) > 0)

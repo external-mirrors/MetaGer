@@ -9,6 +9,7 @@ use App\Models\SearchengineConfiguration;
 use App\SearchSettings;
 use Cookie;
 use Log;
+use Request;
 
 /**
  * Stores all available Searchengines for usage
@@ -50,6 +51,9 @@ class Searchengines
                 $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
             }
             $engine_user_setting = Cookie::get($settings->fokus . "_engine_" . $name, null);
+            if (Request::has($settings->fokus . "_engine_" . $name) && in_array(Request::input($settings->fokus . "_engine_" . $name), ["on", "off"])) {
+                $engine_user_setting = Request::input($settings->fokus . "_engine_" . $name);
+            }
             if ($engine_user_setting !== null) {
                 if ($engine_user_setting === "off" && $suma->configuration->disabled === false) {
                     $suma->configuration->disabled = true;
@@ -152,6 +156,21 @@ class Searchengines
             }
         }
         return $sumas;
+    }
+
+    /**
+     * Is there a disabled searchengine with given reason
+     *
+     * @return bool
+     */
+    public function hasDisabledSearchenginesWithReason(DisabledReason $reason)
+    {
+        foreach ($this->sumas as $suma) {
+            if ($suma->configuration->disabled && $suma->configuration->disabledReason == $reason) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getSearchCost()

@@ -466,6 +466,40 @@ a {
       text-align: center;
       margin: 1em 0;
     }
+
+    #engine-footer {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      > div {
+        border-radius: 3px;
+        > h3 {
+          font-size: 0.9rem;
+          margin: 0;
+          color: fade(@text-color, 70%);
+          border-bottom: 1px dotted fade(@metager-orange, 70%);
+          > a {
+            color: fade(@metager-orange, 70%);
+          }
+          text-align: center;
+        }
+        > .engines {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+          padding: 0.5rem 1rem;
+          > .engine {
+            color: fade(@text-color, 70%);
+            font-size: 0.8rem;
+            border-radius: 10px;
+            &.disabled-by-configuration {
+              cursor: copy;
+            }
+          }
+        }
+      }
+    }
   }
 
   #additions-container {

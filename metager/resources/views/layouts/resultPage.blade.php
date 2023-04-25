@@ -74,6 +74,7 @@
 			@yield('results')
 			<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 		</div>
+		@include('parts.enginefooter')
 	</div>
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 	@endif

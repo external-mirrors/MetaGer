@@ -31,7 +31,7 @@
 	<input type="checkbox" id="options-toggle" @if(app(\App\SearchSettings::class)->isParameterFilterSet())checked @endif />
 	<div class="scrollbox">
 	@if(!app(App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
-	<p class="metager-key-hint">@lang('metaGer.settings.metager-key-hint')</p>
+	<p class="metager-key-hint">@lang('metaGer.settings.metager-key-hint', ["link" => app(App\Models\Authorization\Authorization::class)->getAdfreeLink()])</p>
 	@endif
 		<div id="options-box">
 			<div id="options-items">

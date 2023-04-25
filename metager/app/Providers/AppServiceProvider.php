@@ -25,8 +25,10 @@ class AppServiceProvider extends ServiceProvider
                 'host' => config("database.redis.default.host"),
                 'port' => config("database.redis.default.port"),
                 'password' => config("database.redis.default.password"),
-                'timeout' => 0.1, // in seconds
-                'read_timeout' => '10', // in seconds
+                'timeout' => 0.1,
+                // in seconds
+                'read_timeout' => '10',
+                // in seconds
                 'persistent_connections' => false
             ]
         );
@@ -39,6 +41,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+
     }
 }

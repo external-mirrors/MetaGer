@@ -158,6 +158,10 @@ function loadMoreResults() {
 
   updateUrl = updateUrl.replace("/meta.ger3", "/loadMore");
 
+  if (updateUrl.match(/focus=bilder/)) {
+    return;
+  }
+
   var currentlyLoading = false;
   var counter = 0;
 

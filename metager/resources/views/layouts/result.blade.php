@@ -67,9 +67,15 @@
 		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
 			{!! trans('result.options.6') !!}
 		</a>
+		@if( isset($result->partnershop) && $result->partnershop === TRUE)
+		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
+			@lang('result.options.8')
+		</a>
+		@else
 		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>
 			{!! trans('result.options.5') !!}
 		</a>
+		@endif
 		<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
 			{{ trans('result.options.more')}}
 		</label>
@@ -80,11 +86,6 @@
 	<div class="result-options">
 		<div class="options">
 			<ul class="option-list list-unstyled small">
-				@if($result->partnershop)
-				<li>
-					<a href="{{ $result->originalLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>{{ __('result.options.direct') }}</a>
-				</li>
-				@endif
 				<li class="result-saver js-only">
 					<a href="#" class="saver" data-id="{{ $result->hash }}">
 						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}

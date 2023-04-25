@@ -50,6 +50,13 @@ class Pictureproxy extends Controller
                     $contentType = $tmp[1];
                 }
             }
+            if (stripos($contentType, "image/") === false) {
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $contentType = $finfo->buffer($file);
+            }
+            if (stripos($contentType, "image/") === false) {
+                abort(404);
+            }
             $response = Response::make($file, $responseCode, [
                 'Content-Type' => $contentType,
                 "Cache-Control" => "max-age=3600, must-revalidate, public",

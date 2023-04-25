@@ -3,15 +3,16 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Shopzilla extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -42,13 +43,13 @@ class Shopzilla extends Searchengine
                 $this->counter++;
 
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     [
                         'partnershop' => true,
@@ -96,15 +97,10 @@ class Shopzilla extends Searchengine
             return;
         }
 
-        # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new Shopzilla($this->name, $this->engine, $metager);
-        if (strpos($next->getString, "&start=") !== false) {
-            $next->getString = preg_replace("/&start=\d+/si", "&start=" . ($current + 10), $next->getString);
-        } else {
-            $next->getString .= "&start=" . ($current + 10);
-        }
-
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
-        $this->next = $next;
+        // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        $newConfiguration->getParameter->start = $current + 10;
+        $this->next = new Shopzilla($this->name, $newConfiguration);
     }
 }

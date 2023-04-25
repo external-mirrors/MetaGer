@@ -1,18 +1,18 @@
 <?php
 return [
-    'plugin'       => 'Install MetaGer',
+    'plugin' => 'Install MetaGer',
     'plugin-title' => 'Add MetaGer to your browser',
-    'key'          => [
+    'key' => [
         'placeholder' => 'Enter member key',
-        'tooltip'     => 'Enter member key',
+        'tooltip' => 'Enter member key',
     ],
-    'placeholder'  => 'MetaGer: Privacy Protected Search & Find',
+    'placeholder' => 'MetaGer: Privacy Protected Search & Find',
     'searchbutton' => 'MetaGer-Search',
-    'foki'         => [
-        'web'         => 'Web',
-        'bilder'      => 'Images',
-        'nachrichten' => 'News/Politics',
-        'science'     => 'Science',
-        'produkte'    => 'Products',
+    'foki' => [
+        'web' => 'Web',
+        'bilder' => 'Images',
+        'nachrichten' => 'News',
+        'science' => 'Science',
+        'produkte' => 'Products',
     ],
 ];

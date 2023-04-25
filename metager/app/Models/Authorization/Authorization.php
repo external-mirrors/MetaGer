@@ -2,6 +2,10 @@
 
 namespace App\Models\Authorization;
 
+use App\Models\Configuration\Searchengines;
+use App\SearchSettings;
+use LaravelLocalization;
+
 /**
  * Summary of Authorization
  */
@@ -10,7 +14,7 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    public int $cost;
+    public int $cost = 0;
 
     /**
      * How many Tokens are available to the user
@@ -24,8 +28,7 @@ abstract class Authorization
 
     public function __construct()
     {
-        $this->cost = $this->calculateCost();
-        $this->availableTokens = 0;
+        $this->availableTokens = -1;
     }
 
     /**
@@ -37,8 +40,15 @@ abstract class Authorization
         return $this->availableTokens >= $this->cost;
     }
 
-    public abstract function authenticate();
     public abstract function getToken();
+
+    /**
+     * Makes a payment for the current request
+     * @param int $cost Amount of token to pay
+     * 
+     * @return bool
+     */
+    public abstract function makePayment(int $cost);
 
     /**
      * Checks whether the user has already paid for his
@@ -55,6 +65,21 @@ abstract class Authorization
      */
     private function calculateCost()
     {
-        return 3;
+
+    }
+
+    /**
+     * Returns a link where the user should be sent to, when we want
+     * to advertise the metager key.
+     * => /keys Startpage when unauthorized
+     * => /keys/key/<USER_KEY> when a key is configured
+     */
+    public function getAdfreeLink()
+    {
+        if (!empty($this->getToken()) && is_string($this->getToken())) {
+            return LaravelLocalization::getLocalizedUrl(null, "/keys/key/" . urlencode($this->getToken()));
+        } else {
+            return LaravelLocalization::getLocalizedUrl(null, "/keys");
+        }
     }
 }

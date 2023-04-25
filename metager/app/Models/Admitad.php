@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Localization;
+use App\Models\Configuration\Searchengines;
 use Cache;
 use Illuminate\Support\Facades\Redis;
 use Log;
@@ -273,13 +274,12 @@ class Admitad
         if ($publicKey === false) {
             return true;
         }
-        $results = $metager->getResults();
         $postData = [
             "iris" => [],
             "subId" => Localization::getLanguage() === "de" ? "metager_de" : "metager_org",
             "withImages" => true,
         ];
-        foreach ($metager->getEngines() as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             foreach ($engine->results as $result) {
                 if (!$result->new) {
                     continue;
@@ -371,7 +371,7 @@ class Admitad
      * 
      * @param \App\Models\Result[] $results
      */
-    public function parseAffiliates(&$engines)
+    public function parseAffiliates()
     {
         if ($this->affiliates === null) {
             return;
@@ -382,7 +382,7 @@ class Admitad
 
             $targetHost = parse_url($targetUrl, PHP_URL_HOST);
 
-            foreach ($engines as $engine) {
+            foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
                 foreach ($engine->results as $result) {
                     if ($result->originalLink === $targetUrl && !$result->partnershop) {
                         # Ein Advertiser gefunden

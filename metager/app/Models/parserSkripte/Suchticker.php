@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Suchticker extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -22,20 +23,20 @@ class Suchticker extends Searchengine
             if (sizeof($res) < 3) {
                 continue;
             }
-            $title       = trim($res[0], "'");
-            $link        = trim($res[1], "'");
+            $title = trim($res[0], "'");
+            $link = trim($res[1], "'");
             $anzeigeLink = $link;
-            $descr       = trim($res[2], "'");
+            $descr = trim($res[2], "'");
 
             $this->counter++;
             $this->results[] = new \App\Models\Result(
-                $this->engine,
+                $this->configuration->engineBoost,
                 $title,
                 $link,
                 $anzeigeLink,
                 $descr,
-                $this->engine->infos->display_name,
-                $this->engine->infos->homepage,
+                $this->configuration->infos->displayName,
+                $this->configuration->infos->homepage,
                 $this->counter
             );
         }

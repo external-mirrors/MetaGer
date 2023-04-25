@@ -1,4 +1,4 @@
-@if(isset($ad)  && !$apiAuthorized)
+@if(isset($ad)  && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
 	<div class="result ad">
 		</span>
 		<div class="result-header">
@@ -28,6 +28,9 @@
 		</a>
 		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener">
 			{!! trans('result.options.6') !!}
+		</a>
+		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
+			@lang('result.options.8')
 		</a>
 	</div>
 	</div>

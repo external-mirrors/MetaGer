@@ -67,17 +67,14 @@ class TokenAuthorization extends Authorization
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function authenticate()
+    function makePayment(int $cost)
     {
         if (!$this->canDoAuthenticatedSearch()) {
             return false;
         }
 
         $tokens_to_use = [];
-        for ($i = 0; $i < $this->cost; $i++) {
+        for ($i = 0; $i < $cost; $i++) {
             $tokens_to_use[] = array_shift($this->tokens);
         }
 
@@ -100,7 +97,7 @@ class TokenAuthorization extends Authorization
         $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($response_code === 201) {
-            $this->usedTokens = sizeof($tokens_to_use);
+            $this->usedTokens += sizeof($tokens_to_use);
             $this->updateCookie();
             return true;
         } elseif ($response_code === 422) {
@@ -114,6 +111,7 @@ class TokenAuthorization extends Authorization
             $this->updateCookie();
             return false;
         }
+        return false;
     }
 
     /**

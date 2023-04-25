@@ -60,7 +60,7 @@ class KeyAuthorization extends Authorization
     /**
      * @return bool
      */
-    public function authenticate()
+    public function makePayment(int $cost)
     {
         if (!$this->canDoAuthenticatedSearch()) {
             return false;
@@ -81,7 +81,7 @@ class KeyAuthorization extends Authorization
             // Don't use Http Proxy if defined in .env
             "curlopts" => [
                 CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode(["amount" => $this->cost])
+                CURLOPT_POSTFIELDS => json_encode(["amount" => $cost])
             ]
         ];
         $mission = json_encode($mission);
@@ -94,7 +94,7 @@ class KeyAuthorization extends Authorization
                 if ($result === null) {
                     return false;
                 } else {
-                    $this->usedTokens = $result->discharged;
+                    $this->usedTokens += $result->discharged;
                     return true;
                 }
             }

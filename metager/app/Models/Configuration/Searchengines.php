@@ -125,6 +125,7 @@ class Searchengines
                 }
             }
             // Apply final settings to Sumas
+            $suma->applySettings();
             if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
                 $authorization->cost += $suma->configuration->cost;
             }

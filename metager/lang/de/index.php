@@ -3,7 +3,7 @@
 return [
     'foki.web' => 'Web',
     'foki.bilder' => 'Bilder',
-    'foki.nachrichten' => 'News/Politik',
+    'foki.nachrichten' => 'News',
     'foki.science' => 'Wissenschaft',
     'foki.produkte' => 'Produkte',
 

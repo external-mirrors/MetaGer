@@ -44,6 +44,8 @@ return [
     "filter.color.name" => "Farbe",
     "filter.color.colorOnly" => "Nur Farbe",
     "filter.color.monochrome" => "Schwarzweiß",
+    "filter.color.transparent" => "Transparent",
+    "filter.color.turquoise" => "Türkis",
     "filter.color.black" => "Schwarz",
     "filter.color.blue" => "Blau",
     "filter.color.brown" => "Braun",
@@ -63,6 +65,7 @@ return [
     "filter.imagetype.strich" => "Strichzeichnung",
     "filter.imagetype.gif" => "Animierte GIF",
     "filter.imagetype.transparent" => "Transparent",
+    "filter.imagetype.vector" => "Vektorgrafik",
 
     "filter.imageaspect.name" => "Layout",
     "filter.imageaspect.square" => "Rechteck",

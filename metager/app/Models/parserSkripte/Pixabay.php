@@ -24,6 +24,10 @@ class Pixabay extends Searchengine
                 return;
             }
 
+            if (property_exists($content, "total")) {
+                $this->totalResults = $content->total;
+            }
+
             $results = $content->hits;
             foreach ($results as $result) {
                 $title = $result->tags;
@@ -60,28 +64,16 @@ class Pixabay extends Searchengine
     public function getNext(\App\MetaGer $metager, $result)
     {
         try {
-            $content = json_decode($result);
-            if (!$content) {
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+
+            $newConfiguration->getParameter->page = $metager->getPage() + 1;
+
+            if ($newConfiguration->getParameter->page * $newConfiguration->getParameter->per_page > $this->totalResults) {
                 return;
             }
 
-            $page = $metager->getPage() + 1;
-            try {
-                $content = json_decode($result);
-            } catch (\Exception $e) {
-                Log::error("Results from $this->name are not a valid json string");
-                return;
-            }
-            if (!$content) {
-                return;
-            }
-            if ($page * 20 > $content->total) {
-                return;
-            }
-            $next = new Pixabay($this->name, $this->engine, $metager);
-            $next->getString .= "&page=" . $page;
-            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
-            $this->next = $next;
+            $this->next = new Pixabay($this->name, $newConfiguration);
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());

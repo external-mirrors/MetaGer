@@ -5,10 +5,9 @@ namespace app\Models\parserSkripte;
 use App\Http\Controllers\Pictureproxy;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
-use Crypt;
 use Log;
 
-class BingBilder extends Searchengine
+class Pixabay extends Searchengine
 {
     public $results = [];
 
@@ -20,18 +19,18 @@ class BingBilder extends Searchengine
     public function loadResults($result)
     {
         try {
-            $results = json_decode($result);
-            if (!empty($results->totalEstimatedMatches)) {
-                $this->totalResults = $results->totalEstimatedMatches;
+            $content = json_decode($result);
+            if (!$content) {
+                return;
             }
-            $results = $results->value;
 
+            $results = $content->hits;
             foreach ($results as $result) {
-                $title = $result->name;
-                $link = $result->hostPageUrl;
+                $title = $result->tags;
+                $link = $result->pageURL;
                 $anzeigeLink = $link;
                 $descr = "";
-                $image = $this->generateThumbnailUrl($result->thumbnailUrl);
+                $image = Pictureproxy::generateUrl($result->previewURL);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -45,8 +44,8 @@ class BingBilder extends Searchengine
                     [
                         'image' => $image,
                         'imagedimensions' => [
-                            "width" => $result->width,
-                            "height" => $result->height
+                            "width" => $result->previewWidth,
+                            "height" => $result->previewHeight
                         ]
                     ]
                 );
@@ -61,43 +60,32 @@ class BingBilder extends Searchengine
     public function getNext(\App\MetaGer $metager, $result)
     {
         try {
-            $results = json_decode($result);
-
-            if (empty($results->totalEstimatedMatches)) {
-                return;
-            }
-            $totalMatches = $results->totalEstimatedMatches;
-            $nextOffset = $results->nextOffset;
-
-            if ($nextOffset >= $totalMatches) {
+            $content = json_decode($result);
+            if (!$content) {
                 return;
             }
 
-            /** @var SearchEngineConfiguration */
-            $newConfiguration = unserialize(serialize($this->configuration));
-
-            $newConfiguration->getParameter->offset = $nextOffset;
-            $next = new BingBilder($this->name, $newConfiguration);
+            $page = $metager->getPage() + 1;
+            try {
+                $content = json_decode($result);
+            } catch (\Exception $e) {
+                Log::error("Results from $this->name are not a valid json string");
+                return;
+            }
+            if (!$content) {
+                return;
+            }
+            if ($page * 20 > $content->total) {
+                return;
+            }
+            $next = new Pixabay($this->name, $this->engine, $metager);
+            $next->getString .= "&page=" . $page;
+            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
-    }
-
-    public static function generateThumbnailUrl(string $url)
-    {
-
-        $newHeight = 150;
-
-        $requestDataBing = [
-            "h" => $newHeight,
-        ];
-
-        $requestDataBing = http_build_query($requestDataBing, "", "&", PHP_QUERY_RFC3986);
-        $url .= "&" . $requestDataBing;
-
-        return Pictureproxy::generateUrl($url);
     }
 }

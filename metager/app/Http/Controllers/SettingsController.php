@@ -149,7 +149,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $settings->fokus, "url" => $url])) . "#engines");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableSearchEngine(Request $request)
@@ -171,7 +171,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $settings->fokus, "url" => $url])) . "#engines");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableFilter(Request $request)

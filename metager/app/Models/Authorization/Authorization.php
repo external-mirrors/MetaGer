@@ -2,6 +2,8 @@
 
 namespace App\Models\Authorization;
 
+use App\Models\Configuration\Searchengines;
+use App\SearchSettings;
 use LaravelLocalization;
 
 /**
@@ -12,7 +14,7 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    public int $cost;
+    public int $cost = 0;
 
     /**
      * How many Tokens are available to the user
@@ -26,8 +28,7 @@ abstract class Authorization
 
     public function __construct()
     {
-        $this->cost = $this->calculateCost();
-        $this->availableTokens = 0;
+        $this->availableTokens = -1;
     }
 
     /**
@@ -64,7 +65,7 @@ abstract class Authorization
      */
     private function calculateCost()
     {
-        return 3;
+
     }
 
     /**

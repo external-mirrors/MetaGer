@@ -67,6 +67,9 @@ abstract class Searchengine
      */
     public function applySettings()
     {
+        if (!$this->configuration->disabled && $this->configuration->cost > 0) {
+            app(Authorization::class)->cost += $this->configuration->cost;
+        }
         $settings = app(SearchSettings::class);
         $query = $settings->q;
         $filters = $settings->sumasJson->filter;

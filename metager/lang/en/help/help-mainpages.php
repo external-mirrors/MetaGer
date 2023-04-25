@@ -1,6 +1,6 @@
 <?php
 return [
-    'backarrow'   => 'back',
+    'backarrow'   => ' back',
     'title'       => [
         2   => 'Use of the search engine',
         1   => 'MetaGer - Help',
@@ -12,7 +12,7 @@ return [
     'searchfield' => [
         'title'         => 'The search field',
         'info'          => 'The search field contains:',
-        'memberkey'     => 'The key symbol: Here members of SUMA-EV can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "https://metager.org/beitritt">Membership form</a> or <a href = "https://metager.org/spende/">donate</a> to SUMA-EV.',
+        'memberkey'     => 'The key symbol: Here members of SUMA-EV or donors can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "https://metager.org/beitritt">Membership form</a> or <a href = "https://metager.org/spende/">donate</a> to SUMA-EV.',
         'slot'          => 'The search field: Enter your words here. Upper case will not be distinguished from lower case.',
         'search'        => 'The magnifier: Start your search.',
         'morefunctions' => 'More information on other functions are available under "<a href = "/hilfe/funktionen">search functions</a>"',

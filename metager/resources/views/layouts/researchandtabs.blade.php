@@ -1,5 +1,4 @@
 <div id="resultpage-container">
-	<div id="whitespace"></div>
 	<div id="research-bar-container">
 		<div id="research-bar">
 			<div id="header-logo">
@@ -33,8 +32,10 @@
 		@include('parts.errors')
 		@include('parts.warnings')
 		@yield('results')
+		@include('parts.enginefooter')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
+	@if(sizeof($quicktips) > 0)
 	<div id="additions-container" data-authorized="{{ $metager->isApiAuthorized() ? 'true' : 'false' }}">
 		@include('layouts.keyboardNavBox')
 		<div id="quicktips">
@@ -43,5 +44,6 @@
 			@endif
 		</div>
 	</div>
+	@endif
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 </div>

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Http\Controllers\HumanVerification;
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
 use App\QueryTimer;
 use App\SearchSettings;
 use Cache;
@@ -95,9 +96,11 @@ class BrowserVerification
                 $params = $request->all();
                 $params["mgv"] = $mgv;
                 $url = route("resultpage", $params);
+
                 if (\Cookie::has("tokenauthorization")) {
                     // When Token Authorization is used we will tell the App/Extension the
                     // cost of the upcoming search by setting a Cookie
+                    app(Searchengines::class);
                     $cost = app(Authorization::class)->cost;
                     \Cookie::queue("cost", $cost, 0);
                 }

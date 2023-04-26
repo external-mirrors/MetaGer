@@ -9,9 +9,9 @@ class Dart extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -26,7 +26,7 @@ class Dart extends Searchengine
 
             if ($i === 1) {
                 $this->description = $node->text();
-                $this->link        = "http://www.dart-europe.eu/" . $node->filter('a')->attr('href');
+                $this->link = "http://www.dart-europe.eu/" . $node->filter('a')->attr('href');
             }
             if ($i === 2) {
                 $this->title = $node->text();
@@ -42,23 +42,23 @@ class Dart extends Searchengine
 
             if ($i === 5) {
                 $this->title .= "|" . $node->text();
-                $title             = $this->title;
-                $this->title       = "";
-                $link              = $this->link;
-                $this->link        = "";
-                $anzeigeLink       = $link;
-                $descr             = $this->description;
+                $title = $this->title;
+                $this->title = "";
+                $link = $this->link;
+                $this->link = "";
+                $anzeigeLink = $link;
+                $descr = $this->description;
                 $this->description = "";
 
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter
                 );
             }

@@ -139,12 +139,16 @@ body {
   padding: 5px 15px;
 }
 
-.alert ul {
-  list-style-type: none;
-  padding-left: 49px;
+#results-container .alert {
+  border: 0;
+  border-radius: initial;
+  padding: 0;
+  margin: 0;
 
-  @media (max-width: @screen-mobile) {
-    padding-left: 0px;
+  ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
   }
 }
 
@@ -293,6 +297,8 @@ a {
             > div {
               > img {
                 width: 100%;
+                max-width: 300px;
+                max-height: 250px;
               }
             }
           }
@@ -398,21 +404,20 @@ a {
 }
 
 #resultpage-container {
-  margin: @padding-small-default;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 0 0.5rem;
   margin-top: 0;
   display: grid;
-  grid-template-columns: minmax(0px, 150px) @results-width-max @additions-width-max;
-  grid-template-areas: "whitespace searchbar ." "whitespace foki ." "whitespace options ." "whitespace results additions" "whitespace footer .";
-  grid-column-gap: (@padding-small-default * 2);
+  grid-template-columns: @results-width-max max-content;
+  grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
   grid-row-gap: @padding-small-default;
   justify-items: stretch;
   align-items: stretch;
+  column-gap: 1rem;
+  row-gap: 0.5rem;
   /**/
   background-color: @resultpage-background-color;
-
-  #whitespace {
-    grid-area: whitespace;
-  }
 
   #research-bar-container {
     grid-area: searchbar;
@@ -463,6 +468,40 @@ a {
       text-align: center;
       margin: 1em 0;
     }
+
+    #engine-footer {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      > div {
+        border-radius: 3px;
+        > h3 {
+          font-size: 0.9rem;
+          margin: 0;
+          color: fade(@text-color, 70%);
+          border-bottom: 1px dotted fade(@metager-orange, 70%);
+          > a {
+            color: fade(@metager-orange, 70%);
+          }
+          text-align: center;
+        }
+        > .engines {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: center;
+          padding: 0.5rem 1rem;
+          > .engine {
+            color: fade(@text-color, 70%);
+            font-size: 0.8rem;
+            border-radius: 10px;
+            &.disabled-by-configuration {
+              cursor: copy;
+            }
+          }
+        }
+      }
+    }
   }
 
   #additions-container {
@@ -499,15 +538,16 @@ a {
     grid-area: footer;
   }
 
-  @media (max-width: @resultpage-breakpoint-max) {
+  @media (min-width: 1350px) {
     @supports (display: grid) {
-      grid-template-columns: ~"calc(60% - 8px)" ~"calc(40% - 8px)";
+      grid-template-columns: @results-width-max max-content;
       grid-template-areas: "searchbar ." "foki ." "options ." "results additions" "footer .";
     }
   }
 
-  @media (max-width: @resultpage-breakpoint-min) {
-    margin-left: @padding-small-default;
+  @media (max-width: 1350px) {
+    width: 100%;
+    max-width: 800px;
     grid-template-columns: 100%;
     grid-template-areas: "searchbar" "foki" "options" "results" "footer";
 
@@ -639,8 +679,18 @@ a {
     display: none;
   }
 
+  input[type="checkbox"]:not(:checked) + .scrollbox {
+    display: none;
+  }
+
+  .metager-key-hint {
+    font-size: 0.8em;
+    margin-bottom: 0;
+  }
+
   .scrollbox {
     max-height: 0;
+    padding: 0.5rem 0;
     transform-origin: top;
     transform: scaleY(0);
     transition: transform 0.5s, max-height 0.5s;
@@ -863,9 +913,9 @@ footer.resultPageFooter {
 
 .metager3-unstable-warning-static-pages {
   .metager3-unstable-warning;
-  top: 0;
+  top: 3.5rem;
   padding-right: 50px;
-
+  background-color: inherit;
   @media (max-width: @screen-mobile) {
     padding: 5px;
     padding-right: 50px;
@@ -876,6 +926,7 @@ footer.resultPageFooter {
   .metager3-unstable-warning;
   bottom: 0;
   margin-bottom: 0px;
+  background-color: inherit;
 }
 
 /* Settings button and checkboxes */

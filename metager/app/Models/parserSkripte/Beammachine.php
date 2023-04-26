@@ -3,14 +3,15 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Beammachine extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -22,20 +23,20 @@ class Beammachine extends Searchengine
             if (sizeof($res) < 3) {
                 continue;
             }
-            $title       = $res[0];
-            $link        = $res[1];
+            $title = $res[0];
+            $link = $res[1];
             $anzeigeLink = $link;
-            $descr       = $res[2];
+            $descr = $res[2];
 
             $this->counter++;
             $this->results[] = new \App\Models\Result(
-                $this->engine,
+                $this->configuration->engineBoost,
                 $title,
                 $link,
                 $anzeigeLink,
                 $descr,
-                $this->engine->infos->display_name,
-                $this->engine->infos->homepage,
+                $this->configuration->infos->displayName,
+                $this->configuration->infos->homepage,
                 $this->counter
             );
         }

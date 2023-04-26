@@ -2,18 +2,19 @@
 
 namespace App\Models\parserSkripte;
 
+use App\MetaGer;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class OvertureAds extends Searchengine
 {
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         # We need some Affil-Data for the advertisements
-        $this->getString .= $this->getOvertureAffilData($metager->getUrl());
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+        $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
 
     public function loadResults($result)
@@ -33,13 +34,13 @@ class OvertureAds extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -95,22 +96,23 @@ class OvertureAds extends Searchengine
             }
         }
 
-        # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new OvertureAds($this->name, $this->engine, $metager);
-        $next->getString = preg_replace("/&Keywords=.*?&/si", "&", $next->getString) . "&" . $nextArgs;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+        parse_str($nextArgs, $query_data);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        foreach ($query_data as $key => $value) {
+            $newConfiguration->getParameter->$key = $value;
+        }
+        // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
+        $next = new OvertureAds($this->name, $newConfiguration);
         $this->next = $next;
     }
 
     # Liefert Sonderdaten für Yahoo
-    private function getOvertureAffilData($url)
+    private function setOvertureAffilData($url)
     {
         $affil_data = 'ip=' . $this->ip;
         $affil_data .= '&ua=' . $this->useragent;
-        $affilDataValue = $this->urlEncode($affil_data);
-        # Wir benötigen die ServeUrl:
-        $serveUrl = $this->urlEncode($url);
-
-        return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
+        $this->configuration->getParameter->affilData = $affil_data;
+        $this->configuration->getParameter->serveUrl = $url;
     }
 }

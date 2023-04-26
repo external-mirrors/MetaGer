@@ -1,6 +1,6 @@
 <?php
 return [
-    'options'       => [
+    'options'        => [
         'headline' => 'Opciónes',
         'savetab'  => 'Grabar resultado',
         1          => 'Nueva búsqueda en este dominio',
@@ -13,9 +13,11 @@ return [
         'more'     => 'Más',
         'less'     => 'Menos',
         'direct'   => 'Abrir directamente',
+        8          => 'ELIMINAR LA PUBLICIDAD',
     ],
-    'gefVon'        => 'Encontrado de',
-    'proxytext'     => 'Abrirá el link anonimizado.',
-    'advertisement' => 'Mostrar',
-    'providers'     => 'Proveedores',
+    'gefVon'         => 'Encontrado de',
+    'proxytext'      => 'Abrirá el link anonimizado.',
+    'advertisement'  => 'Mostrar',
+    'providers'      => 'Proveedores',
+    'metagerkeytext' => 'Utiliza MetaGer sin publicidad',
 ];

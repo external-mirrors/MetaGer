@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Localization;
 use \App\MetaGer;
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
+use App\SearchSettings;
 use Cookie;
 use \Illuminate\Http\Request;
 use LaravelLocalization;
@@ -13,76 +16,32 @@ class SettingsController extends Controller
 {
     public function index(Request $request)
     {
-        $fokus = $request->input('fokus', '');
-        $fokusName = "";
-        if (empty($fokus)) {
-            return redirect('/');
-        } else {
-            $fokusName = trans('index.foki.' . $fokus);
-        }
+        $settings = app(SearchSettings::class);
+        $sumas = app(Searchengines::class)->getSearchEnginesForFokus();
+        $fokus = $settings->fokus;
+        $fokusName = trans('index.foki.' . $fokus);
 
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
-        $sumas = $this->getSumas($fokus);
-        if (sizeof($sumas) === 0) {
-            abort(404);
-        }
 
         # Parse the Parameter Filter
-        $filters = [];
+        $filters = $settings->parameterFilter;
+
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
             $values = $filter->values;
-            foreach ($sumas as $suma => $sumaInfo) {
-                if (!$filteredSumas && $sumaInfo["filtered"]) {
+            foreach ($sumas as $name => $suma) {
+                if ($suma->configuration->disabled && $suma->configuration->disabledReason === DisabledReason::INCOMPATIBLE_FILTER) {
                     $filteredSumas = true;
                 }
-                if (!$sumaInfo["filtered"] && $sumaInfo["enabled"] && !empty($filter->sumas->{$suma})) {
-                    if (empty($filters[$name])) {
-                        $filters[$name] = $filter;
-                        unset($filters[$name]->values);
-                    }
-                    if (empty($filters[$name]->values)) {
-                        $filters[$name]->values = (object) [];
-                    }
-                    foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                        $filters[$name]->values->$key = $values->$key;
-                    }
-                }
             }
         }
 
-        // Apply default value for Language selection
-        $current_locale = LaravelLocalization::getCurrentLocaleRegional();
-        $default_language_value = "";
-        # Set default Value for language selector to current locale
         $authorization = app(Authorization::class);
-        $suma_name = "yahoo";
-        if ($authorization->canDoAuthenticatedSearch()) {
-            $suma_name = "bing";
-        }
-        if (\property_exists($langFile->sumas->{$suma_name}->lang->regions, $current_locale)) {
-            if (\array_key_exists("language", $filters) && \property_exists($filters["language"], "sumas") && \property_exists($filters["language"]->sumas, $suma_name)) {
-                $region_suma_value = $langFile->sumas->{$suma_name}->lang->regions->{$current_locale};
-                foreach ($filters["language"]->sumas->{$suma_name}->values as $key => $value) {
-                    if ($value === $region_suma_value) {
-                        $default_language_value = $key;
-                        break;
-                    }
-                }
-                if (!empty($default_language_value) && \property_exists($filters["language"]->values, $default_language_value)) {
-                    $filters["language"]->values->nofilter = $filters["language"]->values->$default_language_value;
-                    unset($filters["language"]->values->$default_language_value);
-                } else {
-                    $filters["language"]->values->nofilter = "metaGer.filter.noFilter";
-                }
-            }
-        }
-
         $url = $request->input('url', '');
 
-        # Check if any setting is active
+        // Check if any setting is active
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
@@ -109,15 +68,19 @@ class SettingsController extends Controller
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
-            ->with('fokus', $request->input('fokus', ''))
+            ->with('fokus', $settings->fokus)
             ->with('fokusName', $fokusName)
+            ->with('authorization', $authorization)
             ->with('filteredSumas', $filteredSumas)
+            ->with('disabledReasons', app(Searchengines::class)->disabledReasons)
             ->with('sumas', $sumas)
+            ->with('searchCost', app(Searchengines::class)->getSearchCost())
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
             ->with('url', $url)
             ->with('blacklist', $blacklist)
-            ->with('cookieLink', $cookieLink);
+            ->with('cookieLink', $cookieLink)
+            ->with('js', [mix('js/scriptSettings.js')]);
     }
 
     private function getSumas($fokus)
@@ -169,47 +132,46 @@ class SettingsController extends Controller
 
     public function disableSearchEngine(Request $request)
     {
-        $suma = $request->input('suma', '');
-        $fokus = $request->input('fokus', '');
+        $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty($suma) || empty($fokus)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
-        # Only disable this engine if it's not the last
-        $sumas = $this->getSumas($fokus);
-        $sumaCount = 0;
-        foreach ($sumas as $name => $sumainfo) {
-            if (!$sumainfo["filtered"] && $sumainfo["enabled"]) {
-                $sumaCount++;
+        $settings = app(SearchSettings::class);
+        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if (!$engines[$sumaName]->configuration->disabled) {
+            if ($engines[$sumaName]->configuration->disabledByDefault) {
+                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+            } else {
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, true, true));
             }
         }
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
 
-        if ($sumaCount > 1 && in_array($suma, $langFile->foki->{$fokus}->sumas)) {
-            Cookie::queue(Cookie::forever($fokus . "_engine_" . $suma, "off", "/", null, true, true));
-        }
-
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableSearchEngine(Request $request)
     {
-        $suma = $request->input('suma', '');
-        $fokus = $request->input('fokus', '');
+        $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty($suma) || empty($fokus)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
-        if (Cookie::get($fokus . "_engine_" . $suma) !== null) {
-            Cookie::queue(Cookie::forget($fokus . "_engine_" . $suma, "/"));
+        $settings = app(SearchSettings::class);
+        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        if ($engines[$sumaName]->configuration->disabled) {
+            if ($engines[$sumaName]->configuration->disabledByDefault) {
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, true, true));
+            } else {
+                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+            }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $settings->fokus, "url" => $url])) . "#engines");
     }
 
     public function enableFilter(Request $request)
@@ -225,7 +187,18 @@ class SettingsController extends Controller
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
+        $settings = app(SearchSettings::class);
+        app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated
+
         foreach ($newFilters as $key => $value) {
+            if (!empty($value)) {
+                // Check if the new value is the default value for this filter
+                foreach ($settings->parameterFilter as $name => $filter) {
+                    if ($filter->{"get-parameter"} === $key && $filter->{"default-value"} === $value) {
+                        $value = null;
+                    }
+                }
+            }
             if (empty($value)) {
                 $path = \Request::path();
                 $cookiePath = "/";
@@ -243,7 +216,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#filter");
     }
 
     public function enableSetting(Request $request)
@@ -281,7 +254,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#more-settings");
     }
 
     public function deleteSettings(Request $request)

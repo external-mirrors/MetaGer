@@ -86,8 +86,8 @@ return [
             2   => 'As part of an extensive redesign of the home page, MetaGer\'s four unique selling propositions are revisited and presented in an expanded format. In order not to overload the central web search function, the descriptions can be reached by scrolling. <br> Another feature of the new redesign is the page-wide dark mode. This allows MetaGer to be used on all pages in a dark design.</br> ',
         ],
         18   => [
-            1   => 'Today',
-            2   => 'Even today, MetaGer is constantly evolving.',
+            1   => '14.02.2022: Renewal of the help page',
+            2   => 'MetaGer\'s help page gets a new overview. This structures and visualizes the help pages with easy-to-recognize icons.',
         ],
         19   => [
             1   => 'Today',

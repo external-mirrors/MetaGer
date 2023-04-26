@@ -3,15 +3,16 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Openclipart extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -32,13 +33,13 @@ class Openclipart extends Searchengine
                 $image = $result->svg->png_thumb;
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     ['image' => $image]
                 );
@@ -61,9 +62,10 @@ class Openclipart extends Searchengine
             if ($content->info->current_page > $content->info->pages) {
                 return;
             }
-            $next = new Openclipart($this->name, $this->engine, $metager);
-            $next->getString .= "&page=" . ($metager->getPage() + 1);
-            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->page = $metager->getPage() + 1;
+            $next = new Openclipart($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

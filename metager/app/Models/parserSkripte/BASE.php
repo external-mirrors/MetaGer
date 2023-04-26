@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use \Carbon\Carbon;
 use Log;
 
@@ -10,9 +11,9 @@ class BASE extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -60,13 +61,13 @@ class BASE extends Searchengine
 
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $description,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter
                 );
             }
@@ -89,19 +90,20 @@ class BASE extends Searchengine
 
             $totalMatches = $results->numFound;
 
-            $newEngine = unserialize(serialize($this->engine));
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
 
-            $perPage = $newEngine->{"get-parameter"}->hits;
+            $perPage = $newConfiguration->getParameter->hits;
 
             $offset = $results->start + $perPage;
 
             if ($totalMatches < ($offset + $perPage)) {
                 return;
             } else {
-                $newEngine->{"get-parameter"}->offset = $offset;
+                $newConfiguration->getParameter->offset = $offset;
             }
 
-            $next = new BASE($this->name, $newEngine, $metager);
+            $next = new BASE($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

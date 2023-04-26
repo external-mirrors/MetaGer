@@ -245,41 +245,45 @@ a {
 .imagesearch {
   #resultpage-container {
     grid-template-areas:
-      "whitespace searchbar"
-      "whitespace foki"
-      "whitespace options"
-      "results results"
-      "footer footer";
-    grid-template-columns: minmax(0, 150px) minmax(800px, 1770px);
-
-    @media (max-width: 800px) {
-      grid-template-columns: 0 1fr 0;
-      grid-template-areas:
-        "searchbar searchbar searchbar"
-        "foki foki foki"
-        "options options options"
-        "results results results"
-        "footer footer footer";
-    }
-
+      "searchbar"
+      "foki"
+      "options"
+      "results"
+      "footer";
+    grid-template-columns: minmax(800px, 1770px);
+    justify-content: center;
+    place-items: center;
     margin: 0;
     gap: 0;
+    width: initial;
+    max-width: initial;
+
+    @media (max-width: 800px) {
+      grid-template-columns: 100%;
+    }
 
     #additions-container {
       --ad-display: block;
       display: none;
     }
 
+    #research-bar-container {
+      width: 100%;
+    }
+    #foki {
+      width: 100%;
+    }
     #additions-container[data-authorized="true"] {
       --ad-display: none;
     }
 
     #options {
+      width: 100%;
       margin: 8px 0;
     }
 
     #results-container {
-      max-width: initial;
+      max-width: 100%;
       padding: 8px;
 
       .image-container {

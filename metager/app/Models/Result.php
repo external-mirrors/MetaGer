@@ -79,7 +79,7 @@ class Result
         $this->price = isset($additionalInformation["price"]) ? $additionalInformation["price"] : 0;
         $this->price_text = $this->price_to_text($this->price);
         $this->additionalInformation = $additionalInformation;
-        $this->hash = spl_object_hash($this);
+        $this->hash = md5(serialize($this));
     }
 
     private function price_to_text($price)

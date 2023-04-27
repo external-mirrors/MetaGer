@@ -812,8 +812,7 @@ class MetaGer
         $this->url = \Request::url();
         $this->fullUrl = \Request::fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
-        # Fokus
-        app(SearchSettings::class)->fokus = \Request::input('focus', 'web');
+
         # Suma-File
         if ($this->dummy) {
             $this->sumaFile = \config_path("stress.json");

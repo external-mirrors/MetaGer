@@ -39,7 +39,6 @@ class Searchengines
             }
         }
 
-        $settings = app(SearchSettings::class);
         $engines_in_fokus = $settings->sumasJson->foki->{$settings->fokus}->sumas;
 
         // Parse user configuration

@@ -28,7 +28,7 @@
 				{{ $result->anzeigeLink }}
 			</a>
 			@if( isset($result->partnershop) && $result->partnershop === TRUE)
-			<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/partnershops") }}" target="_blank" class="partnershop-info" rel="noopener">
+			<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/partnershops") }}" target="_blank" class="badge" rel="noopener">
 				<span>{!! trans('result.options.4') !!}</span>
 			</a>
 			@endif

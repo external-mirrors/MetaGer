@@ -32,7 +32,8 @@ class SearchSettings
         }
         $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
-        if (!in_array($this->fokus, ["web", "bilder", "produkte", "nachrichten", "science"])) {
+
+        if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
             $this->fokus = "web";
         }
     }

@@ -6,9 +6,11 @@ use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\SearchSettings;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -55,6 +57,28 @@ class MetaGerSearch extends Controller
         }
 
         if (empty(app(Searchengines::class)->getEnabledSearchengines())) {
+            /**
+             * Temporary migration to fix settings for users that already
+             * had now invalid settings saved when we updated.
+             */
+            if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
+                $settings = app(SearchSettings::class);
+                $setting_removed = false;
+                foreach ($settings->parameterFilter as $filterName => $filter) {
+                    // Check if the user has an option enabled that is only available with metager key
+                    if (
+                        Cookie::has($settings->fokus . "_setting_" . $filter->{"get-parameter"}) &&
+                        in_array($filter->value, array_keys($filter->{"disabled-values"})) &&
+                        in_array(DisabledReason::PAYMENT_REQUIRED, $filter->{"disabled-values"}[$filter->value])
+                    ) {
+                        Cookie::queue(Cookie::forget($settings->fokus . "_setting_" . $filter->{"get-parameter"}));
+                        $setting_removed = true;
+                    }
+                }
+                if ($setting_removed) {
+                    return redirect(url()->full());
+                }
+            }
             return redirect(LaravelLocalization::getLocalizedUrl(null, route("settings", ["focus" => $settings->fokus])) . "#engines");
         }
 

@@ -2,6 +2,8 @@ require("es6-promise").polyfill();
 require("fetch-ie8");
 import resultSaver from "./result-saver.js";
 
+let mutationCheckerInterval;
+
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == "complete") {
     initialize();
@@ -21,6 +23,7 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
+  mutationCheckerInterval = setInterval(mutationChecker, 2000);
 }
 
 let link, newtab, top;
@@ -186,6 +189,9 @@ function loadMoreResults() {
             let new_source = container.querySelector("#results").innerHTML;
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
+            if (!mutationCheckerInterval) {
+              mutationCheckerInterval = setInterval(mutationChecker, 2000);
+            }
           }
 
           currentlyLoading = false;
@@ -218,5 +224,23 @@ function enablePagination() {
     last_search_link.addEventListener("pointerdown", (e) => {
       history.back();
     });
+  }
+}
+
+function mutationChecker() {
+  let validAttributes = ["class", "id", "data-count", "data-index"];
+  let elements = document.querySelectorAll("#results > .result");
+  let attributeRemoved = false;
+  for (let i = 0; i < elements.length; i++) {
+    for (let j = 0; j < elements[i].attributes.length; j++) {
+      if (!validAttributes.includes(elements[i].attributes[j].name)) {
+        elements[i].attributes.removeNamedItem(elements[i].attributes[j].name);
+        attributeRemoved = true;
+      }
+    }
+  }
+  if (!attributeRemoved && mutationCheckerInterval) {
+    clearInterval(mutationCheckerInterval);
+    mutationCheckerInterval = null;
   }
 }

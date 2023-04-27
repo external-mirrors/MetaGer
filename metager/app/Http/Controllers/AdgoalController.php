@@ -58,7 +58,9 @@ class AdgoalController extends Controller
 
         $this->storePartnerCallFast($request->input('affillink'), $request->input('link'));
 
-        return redirect($request->input('affillink'));
+        return redirect($request->input('affillink'), 301, [
+            "Referrer-Policy" => "no-referrer-when-downgrade"
+        ]);
     }
 
     /**

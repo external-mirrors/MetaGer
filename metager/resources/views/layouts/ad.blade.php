@@ -3,14 +3,14 @@
 		<div class="result-header">
 			<div class="result-headline">
 				<h2 class="result-title">
-					<a href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" rel="no-referrer-when-downgrade">
+					<a href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade">
 						{{ $ad->titel }}
 					</a>
 				</h2>
-				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="no-referrer-when-downgrade" tabindex="-1">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
+				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
 			</div>
 			<div class="result-subheadline">
-				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" tabindex="-1" rel="no-referrer-when-downgrade">
+				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
 					<span class="advertisement-mark">@lang('result.advertisement')</span>
 					<span>{{ $ad->anzeigeLink }}</span>
 				</a>
@@ -22,10 +22,10 @@
 			</div>
 		</div>
 		<div class="result-footer">
-		<a class="result-open" href="{{ $ad->link }}" target="_self" rel="no-referrer-when-downgrade">
+		<a class="result-open" href="{{ $ad->link }}" target="_self" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
 			{!! trans('result.options.7') !!}
 		</a>
-		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="no-referrer-when-downgrade">
+		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
 			{!! trans('result.options.6') !!}
 		</a>
 		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">

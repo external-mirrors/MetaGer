@@ -228,14 +228,12 @@ function enablePagination() {
 }
 
 function mutationChecker() {
-  console.log("Running");
   let validAttributes = ["class", "id", "data-count", "data-index"];
   let elements = document.querySelectorAll("#results > .result");
   let attributeRemoved = false;
   for (let i = 0; i < elements.length; i++) {
     for (let j = 0; j < elements[i].attributes.length; j++) {
       if (!validAttributes.includes(elements[i].attributes[j].name)) {
-        console.log("Removing: " + elements[i].attributes[j].name);
         elements[i].attributes.removeNamedItem(elements[i].attributes[j].name);
         attributeRemoved = true;
       }

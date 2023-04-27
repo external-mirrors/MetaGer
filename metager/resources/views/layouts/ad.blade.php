@@ -1,5 +1,5 @@
 @if(isset($ad)  && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
-	<div class="result ad">
+	<div class="result">
 		<div class="result-header">
 			<div class="result-headline">
 				<h2 class="result-title">

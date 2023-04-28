@@ -8,6 +8,7 @@
 <div id="navigationsticky">
 	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-privacy-protection.backarrow') !!}</a>
 </div>
+	<p>{!! trans('help/easy-language/help-privacy-protection.glossary') !!}</p>
 	<h2>{!! trans('help/easy-language/help-privacy-protection.datenschutz.title') !!}</h2>
 	<section id="tracking">
 		<h3>{!! trans('help/easy-language/help-privacy-protection.datenschutz.1') !!}</h3>

@@ -40,7 +40,7 @@
 
 <h2>{!! trans('help/easy-language/help.tableofcontents.3.0') !!}</h2>
 	<div class="help-topic-row">
-		<a id=help-topic-tracking href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/datensicherheit#tracking") }}" class="help-topic"><p>{!! trans('help/easy-language/help.tableofcontents.3.2') !!}</p>
+		<a id=help-topic-tracking href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/datensicherheit") }}" class="help-topic"><p>{!! trans('help/easy-language/help.tableofcontents.3.2') !!}</p>
 		</a>
 		<a id=help-topic-tor href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/datensicherheit#torhidden") }}" class="help-topic"><p>{!! trans('help/easy-language/help.tableofcontents.3.3') !!}<br></p>
 		</a>

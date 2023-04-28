@@ -3,6 +3,7 @@
 return [
     "title"                 => 'MetaGer - Hilfe in leichter Sprache',
     "backarrow"             => 'Zurück',
+    'glossary'              => 'Durch Klicken auf das Symbol<a title="Dieses Symbol führt zum Glossar" href="/hilfe/easy-language/glossary" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>  kommen Sie zur Erklärung von den schwierigen Wörtern.',
     "title.2"               => 'Die Benutzung von den Haupt-Seiten',
     "startpage"  => [
         "title"       => 'Die Start-Seite',

@@ -8,6 +8,7 @@
 <div id="navigationsticky">
 	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-services.backarrow') !!}</a>
 </div>
+<p>{!! trans('help/easy-language/help-services.glossary') !!}</p>
 <h2 id="dienste">{!! trans('help/easy-language/help-services.dienste.1') !!}</h2>
 	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/easy-language/help-services.dienste.kostenlos') !!}</h3>
 	<section id="app">

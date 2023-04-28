@@ -194,6 +194,13 @@ function loadMoreResults() {
             }
           }
 
+          if ("quicktips" in data) {
+            let container = document.createElement("div");
+            container.innerHTML = data.quicktips;
+            let new_quicktips = container.querySelector("#additions-container");
+            document.getElementById("resultpage-container").append(new_quicktips);
+          }
+
           currentlyLoading = false;
         });
     }

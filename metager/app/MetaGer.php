@@ -911,11 +911,6 @@ class MetaGer
         if (\Request::filled('password')) {
             $this->password = \Request::input('password');
         }
-        if (\Request::filled('quicktips')) {
-            $this->quicktips = false;
-        } else {
-            $this->quicktips = true;
-        }
 
         $this->queryFilter = [];
 
@@ -1320,11 +1315,6 @@ class MetaGer
             }
         }
         return false;
-    }
-
-    public function showQuicktips()
-    {
-        return $this->quicktips;
     }
 
     public function popAd()

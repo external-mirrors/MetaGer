@@ -21,6 +21,7 @@ class SearchSettings
     public $parameterFilter = [];
     /** @var object */
     public $sumasJson;
+    public $quicktips = true;
 
     public function __construct()
     {
@@ -37,6 +38,10 @@ class SearchSettings
 
         if (Cookie::has("js_available") && Cookie::get("js_available") === "true") {
             $this->javascript_enabled = true;
+        }
+
+        if (Request::filled('quicktips')) {
+            $this->quicktips = false;
         }
     }
 

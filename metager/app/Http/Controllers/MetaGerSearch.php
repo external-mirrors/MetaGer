@@ -172,7 +172,12 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        return response($metager->createView($quicktips->quicktips), 200, [
+        if ($quicktips !== null) {
+            $quicktip_results = $quicktips->quicktips;
+        } else {
+            $quicktip_results = null;
+        }
+        return response($metager->createView($quicktip_results), 200, [
             "Cache-Control" => "max-age=3600, must-revalidate, public",
             "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);

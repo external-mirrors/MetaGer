@@ -6,7 +6,7 @@
 
 	<h1 class="page-title">{!! trans('help/easy-language/glossary.title') !!}</h1>
 	<div id="navigationsticky">
-		<a class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/glossary.backarrow') !!}</a>
+		@if($previous_url !== null)<div><a  class=back-button href="{{$previous_url}}"><img class="back-arrow" src=/img/back-arrow.svg>{{__("results.zurueck")}}</a></div>@endif
 		<a class=up-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/glossary") }}"><img class="up-arrow" src=/img/up-arrow.svg>{!! trans('help/easy-language/glossary.uparrow') !!}</a>
 	</div>
 	<div class="card">

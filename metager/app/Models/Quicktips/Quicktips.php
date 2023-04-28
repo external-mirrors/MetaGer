@@ -2,6 +2,7 @@
 
 namespace App\Models\Quicktips;
 
+use App\SearchSettings;
 use Cache;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Support\Facades\Redis;
@@ -17,16 +18,18 @@ class Quicktips
 
     private $hash;
     private $startTime;
-    private $quotes;
+    private $enableQuotes;
+    public $quicktips;
+    public $new = true;
 
-    public function __construct($search, $locale, $max_time, $quotes = "on")
+    public function __construct($search, $locale, $max_time, $enableQuotes = true)
     {
         if (\App::environment() === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
-        $this->quotes = $quotes;
+        $this->enableQuotes = $enableQuotes;
         $this->startTime = microtime(true);
         $this->startSearch($search, $locale, $max_time);
     }
@@ -36,7 +39,7 @@ class Quicktips
         if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
             $locale = $matches[1];
         }
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale  . "&quotes=" . $this->quotes;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . ($this->enableQuotes ? "on" : "off");
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {
@@ -69,19 +72,27 @@ class Quicktips
      */
     public function loadResults()
     {
-        $resultsRaw = $this->retrieveResults($this->hash);
+        if (is_array($this->quicktips)) {
+            $this->new = false;
+            return;
+        }
+        $resultsRaw = $this->retrieveResults($this->hash, !app(SearchSettings::class)->javascript_enabled);
         if ($resultsRaw) {
-            $results = $this->parseResults($resultsRaw);
-            return $results;
-        } else {
-            return [];
+            $this->parseResults($resultsRaw);
         }
     }
 
-    public function retrieveResults($hash)
+    /**
+     * Retrieves queried quicktip results
+     *
+     * @param string $hash
+     * @param bool $wait
+     *
+     * @return bool
+     */
+    public function retrieveResults($hash, $wait)
     {
         $body = null;
-
         if (Cache::has($this->hash)) {
             return Cache::get($this->hash, false);
         }
@@ -90,11 +101,13 @@ class Quicktips
             $body = Redis::rpoplpush($this->hash, $this->hash);
             Redis::expire($this->hash, 60);
             if ($body === false || $body === null) {
-                usleep(50 * 1000);
+                if ($wait) {
+                    usleep(50 * 1000);
+                }
             } else {
                 break;
             }
-        } while (microtime(true) - $this->startTime < 0.5);
+        } while ($wait && microtime(true) - $this->startTime < 0.5);
 
         if ($body === false) {
             return false;
@@ -122,7 +135,7 @@ class Quicktips
 
             $content->registerXPathNamespace('main', 'http://www.w3.org/2005/Atom');
 
-            $quicktips = [];
+            $this->quicktips = [];
 
             $quicktips_xpath = $content->xpath('main:entry');
             foreach ($quicktips_xpath as $quicktip_xml) {
@@ -182,7 +195,7 @@ class Quicktips
                         );
                     }
                 }
-                $quicktips[] = new \App\Models\Quicktips\Quicktip(
+                $this->quicktips[] = new \App\Models\Quicktips\Quicktip(
                     $type,
                     $title,
                     $link,
@@ -193,10 +206,8 @@ class Quicktips
                     $details
                 );
             }
-            return $quicktips;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing quicktips");
-            return [];
         }
     }
 

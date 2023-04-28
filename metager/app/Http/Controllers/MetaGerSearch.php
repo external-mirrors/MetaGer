@@ -265,7 +265,7 @@ class MetaGerSearch extends Controller
         $metager->checkCache();
         $metager->retrieveResults();
 
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request

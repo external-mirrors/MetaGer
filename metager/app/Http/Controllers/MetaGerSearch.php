@@ -96,14 +96,6 @@ class MetaGerSearch extends Controller
         $metager->startSearch();
         $query_timer->observeEnd("Search_StartSearch");
 
-        # Versuchen die Ergebnisse der Quicktips zu laden
-        if ($quicktips !== null) {
-            $query_timer->observeStart("Search_LoadQuicktips");
-            $quicktips->loadResults();
-            $query_timer->observeEnd("Search_LoadQuicktips");
-        } else {
-        }
-
         $query_timer->observeStart("Search_WaitForMainResults");
         $metager->waitForMainResults();
         $query_timer->observeEnd("Search_WaitForMainResults");
@@ -111,6 +103,13 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_RetrieveResults");
         $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
+
+        // Versuchen die Ergebnisse der Quicktips zu laden
+        if ($quicktips !== null) {
+            $query_timer->observeStart("Search_LoadQuicktips");
+            $quicktips->loadResults();
+            $query_timer->observeEnd("Search_LoadQuicktips");
+        }
 
         $admitad = [];
         if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
@@ -322,7 +321,7 @@ class MetaGerSearch extends Controller
             $finished = false;
         }
 
-        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad)) {
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad) && !array_key_exists("quicktips", $result)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }

@@ -35,3 +35,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   });
 });
+
+reportJSAvailabilityForAuthenticatedSearch();
+function reportJSAvailabilityForAuthenticatedSearch() {
+  let Cookies = require("js-cookie");
+  let key_cookie = Cookies.get("key");
+  if (key_cookie !== undefined) {
+    console.log("setting cookie");
+    Cookies.set("js_available", "true");
+  }
+}

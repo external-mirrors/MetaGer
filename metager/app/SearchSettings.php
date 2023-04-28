@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
-use App\Models\DisabledReason;
 use Cookie;
 use LaravelLocalization;
 use \Request;
@@ -35,6 +33,10 @@ class SearchSettings
 
         if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
             $this->fokus = "web";
+        }
+
+        if (Cookie::has("js_available") && Cookie::get("js_available") === "true") {
+            $this->javascript_enabled = true;
         }
     }
 

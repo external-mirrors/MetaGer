@@ -1,4 +1,4 @@
-@extends('layouts.subPages')
+@extends('layouts.subPages', ['page' => 'hilfe'])
 
 @section('title', $title )
 

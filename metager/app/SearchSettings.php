@@ -2,9 +2,7 @@
 
 namespace App;
 
-use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
-use App\Models\DisabledReason;
 use Cookie;
 use LaravelLocalization;
 use \Request;
@@ -23,6 +21,8 @@ class SearchSettings
     public $parameterFilter = [];
     /** @var object */
     public $sumasJson;
+    public $quicktips = true;
+    public $enableQuotes = true;
 
     public function __construct()
     {
@@ -35,6 +35,18 @@ class SearchSettings
 
         if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
             $this->fokus = "web";
+        }
+
+        if (Cookie::has("js_available") && Cookie::get("js_available") === "true") {
+            $this->javascript_enabled = true;
+        }
+
+        if (Cookie::has("zitate") && Cookie::get("zitate") === "off") {
+            $this->enableQuotes = false;
+        }
+
+        if (Request::filled('quicktips')) {
+            $this->quicktips = false;
         }
     }
 

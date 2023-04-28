@@ -7,9 +7,11 @@ use App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
+use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\SearchSettings;
+use Blade;
 use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -85,21 +87,14 @@ class MetaGerSearch extends Controller
         app(Searchengines::class)->checkPagination();
 
         $query_timer->observeStart("Search_CreateQuicktips");
+
+        /** @var Quicktips */
         $quicktips = $metager->createQuicktips();
         $query_timer->observeEnd("Search_CreateQuicktips");
 
         $query_timer->observeStart("Search_StartSearch");
         $metager->startSearch();
         $query_timer->observeEnd("Search_StartSearch");
-
-        # Versuchen die Ergebnisse der Quicktips zu laden
-        if ($quicktips !== null) {
-            $query_timer->observeStart("Search_LoadQuicktips");
-            $quicktipResults = $quicktips->loadResults();
-            $query_timer->observeEnd("Search_LoadQuicktips");
-        } else {
-            $quicktipResults = [];
-        }
 
         $query_timer->observeStart("Search_WaitForMainResults");
         $metager->waitForMainResults();
@@ -108,6 +103,13 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_RetrieveResults");
         $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
+
+        // Versuchen die Ergebnisse der Quicktips zu laden
+        if ($quicktips !== null) {
+            $query_timer->observeStart("Search_LoadQuicktips");
+            $quicktips->loadResults();
+            $query_timer->observeEnd("Search_LoadQuicktips");
+        }
 
         $admitad = [];
         if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
@@ -152,7 +154,8 @@ class MetaGerSearch extends Controller
                 "metager" => [
                     "authorization" => $authorization,
                     "searchengines" => $searchengines,
-                    "settings" => $settings
+                    "settings" => $settings,
+                    "quicktips" => $quicktips
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -169,7 +172,7 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        return response($metager->createView($quicktipResults), 200, [
+        return response($metager->createView($quicktips->quicktips), 200, [
             "Cache-Control" => "max-age=3600, must-revalidate, public",
             "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);
@@ -198,7 +201,7 @@ class MetaGerSearch extends Controller
 
     private function loadMoreJS(Request $request)
     {
-        \app()->make(SearchSettings::class)->javascript_enabled = true;
+        \app(SearchSettings::class)->javascript_enabled = true;
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
         unset($request["loadMore"]);
@@ -242,6 +245,9 @@ class MetaGerSearch extends Controller
         app()->singleton(Searchengines::class, function ($app) use ($searchengines) {
             return $searchengines;
         });
+        /** @var Quicktips */
+        $quicktips = $mg["quicktips"];
+        $quicktips->loadResults();
 
 
         # Nach Spezialsuchen überprüfen:
@@ -259,7 +265,7 @@ class MetaGerSearch extends Controller
         $metager->checkCache();
         $metager->retrieveResults();
 
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
@@ -279,6 +285,10 @@ class MetaGerSearch extends Controller
             'nextSearchLink' => $metager->nextSearchLink(),
             'imagesearch' => false,
         ];
+
+        if ($quicktips->new) {
+            $result["quicktips"] = Blade::render("parts.quicktips", ["quicktips" => $quicktips->quicktips]);
+        }
 
         $newResults = 0;
         $viewResults = [];
@@ -311,7 +321,7 @@ class MetaGerSearch extends Controller
             $finished = false;
         }
 
-        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad)) {
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad) && !array_key_exists("quicktips", $result)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }
@@ -336,7 +346,8 @@ class MetaGerSearch extends Controller
                 "metager" => [
                     "authorization" => $authorization,
                     "searchengines" => $searchengines,
-                    "settings" => $settings
+                    "settings" => $settings,
+                    "quicktips" => $quicktips
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),

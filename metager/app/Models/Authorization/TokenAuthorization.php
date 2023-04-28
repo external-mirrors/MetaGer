@@ -79,39 +79,31 @@ class TokenAuthorization extends Authorization
         }
 
         $url = $this->keyserver . "/token/use";
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . config("metager.metager.keymanager.access_token"),
-                "Content-Type: application/json"
+        $result_hash = md5($url . microtime(true));
+        $mission = [
+            "resulthash" => $result_hash,
+            "url" => $url,
+            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+            "headers" => [
+                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
+                "Content-Type" => "application/json",
             ],
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["tokens" => $tokens_to_use]),
-            CURLOPT_USERAGENT => "MetaGer"
-        ]);
+            "cacheDuration" => 0,
+            "name" => "Key Login",
+            "proxy" => false,
+            // Don't use Http Proxy if defined in .env
+            "curlopts" => [
+                CURLOPT_POST => true,
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_POSTFIELDS => json_encode(["tokens" => $tokens_to_use])
+            ]
+        ];
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
+        $this->usedTokens += sizeof($tokens_to_use);
+        $this->updateCookie();
 
-        $result = curl_exec($ch);
-        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if ($response_code === 201) {
-            $this->usedTokens += sizeof($tokens_to_use);
-            $this->updateCookie();
-            return true;
-        } elseif ($response_code === 422) {
-            $result = json_decode($result);
-            if ($result !== null) {
-                $remaining_tokens = $this->parseError($result);
-                for ($i = sizeof($remaining_tokens) - 1; $i >= 0; $i--) {
-                    array_unshift($this->tokens, $remaining_tokens[$i]);
-                }
-            }
-            $this->updateCookie();
-            return false;
-        }
-        return false;
+        return true;
     }
 
     /**

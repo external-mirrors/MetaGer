@@ -35,15 +35,7 @@
 		@include('parts.enginefooter')
 		<div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
 	</div>
-	@if(sizeof($quicktips) > 0)
-	<div id="additions-container" data-authorized="{{ $metager->isApiAuthorized() ? 'true' : 'false' }}">
-		@include('layouts.keyboardNavBox')
-		<div id="quicktips">
-			@if( $metager->showQuicktips() )
-			@include('quicktips', ['quicktips', $quicktips])
-			@endif
-		</div>
-	</div>
-	@endif
+	@include('parts.quicktips', ["quicktips" => $quicktips])
+	
 	@include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 </div>

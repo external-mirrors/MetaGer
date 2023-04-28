@@ -911,11 +911,6 @@ class MetaGer
         if (\Request::filled('password')) {
             $this->password = \Request::input('password');
         }
-        if (\Request::filled('quicktips')) {
-            $this->quicktips = false;
-        } else {
-            $this->quicktips = true;
-        }
 
         $this->queryFilter = [];
 
@@ -1005,7 +1000,7 @@ class MetaGer
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
         if (!$this->dummy && $this->getFokus() !== "bilder") {
-            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
+            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), app(SearchSettings::class)->enableQuotes);
             return $quicktips;
         } else {
             return null;
@@ -1320,11 +1315,6 @@ class MetaGer
             }
         }
         return false;
-    }
-
-    public function showQuicktips()
-    {
-        return $this->quicktips;
     }
 
     public function popAd()

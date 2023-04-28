@@ -1000,7 +1000,7 @@ class MetaGer
     {
         # Die quicktips werden als job erstellt und zur Abarbeitung freigegeben
         if (!$this->dummy && $this->getFokus() !== "bilder") {
-            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), $this->sprueche);
+            $quicktips = new \App\Models\Quicktips\Quicktips($this->q, LaravelLocalization::getCurrentLocale(), $this->getTime(), app(SearchSettings::class)->enableQuotes);
             return $quicktips;
         } else {
             return null;

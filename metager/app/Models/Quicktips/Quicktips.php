@@ -18,18 +18,18 @@ class Quicktips
 
     private $hash;
     private $startTime;
-    private $quotes;
+    private $enableQuotes;
     public $quicktips;
     public $new = true;
 
-    public function __construct($search, $locale, $max_time, $quotes = "on")
+    public function __construct($search, $locale, $max_time, $enableQuotes = true)
     {
         if (\App::environment() === "production") {
             $this->quicktipUrl = "https://quicktips.metager.de" . $this->quicktipUrl;
         } else {
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
-        $this->quotes = $quotes;
+        $this->enableQuotes = $enableQuotes;
         $this->startTime = microtime(true);
         $this->startSearch($search, $locale, $max_time);
     }
@@ -39,7 +39,7 @@ class Quicktips
         if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
             $locale = $matches[1];
         }
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . $this->quotes;
+        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . ($this->enableQuotes ? "on" : "off");
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {

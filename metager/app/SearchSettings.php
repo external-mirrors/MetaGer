@@ -22,6 +22,7 @@ class SearchSettings
     /** @var object */
     public $sumasJson;
     public $quicktips = true;
+    public $enableQuotes = true;
 
     public function __construct()
     {
@@ -38,6 +39,10 @@ class SearchSettings
 
         if (Cookie::has("js_available") && Cookie::get("js_available") === "true") {
             $this->javascript_enabled = true;
+        }
+
+        if (Cookie::has("zitate") && Cookie::get("zitate") === "off") {
+            $this->enableQuotes = false;
         }
 
         if (Request::filled('quicktips')) {

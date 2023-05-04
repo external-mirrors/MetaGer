@@ -74,7 +74,7 @@
             <div class="suma disabled-engine not-available">
                 <form action="" title="@lang("settings.filtered-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
-                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>
@@ -84,14 +84,14 @@
         </div>
         @endif
         @if(in_array(\App\Models\DisabledReason::PAYMENT_REQUIRED, $disabledReasons))
-        <h4>@lang('settings.disabledBecausePaymentRequired')</h4>
+        <h4>@lang('settings.disabledBecausePaymentRequired', ["link" => app(\App\Models\Authorization\Authorization::class)->getAdfreeLink()])</h4>
         <div class="sumas payment-required-engines">
             @foreach($sumas as $name => $suma)
             @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::PAYMENT_REQUIRED)
             <div class="suma disabled-engine not-available">
                 <form action="#engines" title="@lang("settings.payment-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
-                    <input type="hidden" name="fokus" value="{{ $fokus }}">
+                    <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <button type="submit" aria-label="{{ $suma->configuration->infos->displayName }} @lang('settings.aria.label.2')">{{ $suma->configuration->infos->displayName }} ({{ $suma->configuration->cost > 0 ? $suma->configuration->cost . " Token" : __('settings.free') }})</button>
                 </form>
@@ -110,7 +110,7 @@
         <h1>@lang('settings.header.3')</h1>
         <p>@lang('settings.text.3')</p>
         <form id="filter-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableFilter')) }}" method="post" class="form">
-            <input type="hidden" name="fokus" value="{{ $fokus }}">
+            <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
             <div id="filter-options">
                 @foreach($filter as $name => $filterInfo)
@@ -146,7 +146,7 @@
         <p>@lang('settings.text.4')</p>
         <form id="newentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
             <input type="hidden" name="url" value="{{ $url }}">
-            <input type="hidden" name="fokus" value="{{ $fokus }}">
+            <input type="hidden" name="focus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address') ({{ sizeof($blacklist) }}) </label>
             <div id="create">
                 <textarea name="blacklist" id="blacklist" cols="30" rows="{{ max(min(sizeof($blacklist)+1, 20), 4) }}" maxlength="2048" placeholder="example.com&#10;example2.com&#10;*.example3.com" spellcheck="false">{{ implode("\r\n", $blacklist) }}</textarea>
@@ -159,7 +159,7 @@
         <h1>@lang('settings.more')</h1>
         <p>@lang('settings.hint.hint')</p>
         <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
-            <input type="hidden" name="fokus" value="{{ $fokus }}">
+            <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
             <div class="form-group">
                 <label for="dm">@lang('settings.darkmode')</label>
@@ -193,7 +193,7 @@
         <div id="reset">
             <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteSettings', ["fokus" => $fokus, "url" => $url])) }}" method="post">
                 <input type="hidden" name="url" value="{{ $url }}">
-                <input type="hidden" name="fokus" value="{{ $fokus }}">
+                <input type="hidden" name="focus" value="{{ $fokus }}">
                 <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
             </form>
         </div>

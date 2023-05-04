@@ -63,7 +63,7 @@ return [
             'create' => 'Create new key',
         ],
     ],
-    'disabledBecausePaymentRequired' => 'The following search engines require a <a href="#metager-key">MetaGer key</a>',
+    'disabledBecausePaymentRequired' => 'You can use these search engines with a <a href=":link" target="_blank">MetaGer key</a>.',
     'no-engines'                     => 'With the current search settings, no search engine is queried.',
     'cost'                           => 'We calculate <strong>:cost tokens</strong> per search query with the current settings.',
     'cost-free'                      => 'Your searches are <strong>free</strong> with the current settings.',

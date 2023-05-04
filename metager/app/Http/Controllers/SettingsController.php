@@ -176,13 +176,13 @@ class SettingsController extends Controller
 
     public function enableFilter(Request $request)
     {
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
         if (empty($fokus)) {
             abort(404);
         }
 
-        $newFilters = $request->except(["fokus", "url"]);
+        $newFilters = $request->except(["focus", "url"]);
 
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
@@ -216,12 +216,12 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#filter");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])) . "#filter");
     }
 
     public function enableSetting(Request $request)
     {
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
         // Currently only the setting for quotes is supported
 
@@ -254,12 +254,12 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#more-settings");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])) . "#more-settings");
     }
 
     public function deleteSettings(Request $request)
     {
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
         if (empty($fokus)) {
             abort(404);
@@ -285,7 +285,7 @@ class SettingsController extends Controller
         }
         $this->clearBlacklist($request);
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])));
     }
 
     public function allSettingsIndex(Request $request)
@@ -338,7 +338,7 @@ class SettingsController extends Controller
 
     public function newBlacklist(Request $request)
     {
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
 
         $blacklist = $request->input('blacklist');
@@ -384,24 +384,24 @@ class SettingsController extends Controller
         $cookieName = $fokus . '_blpage';
         Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, true, true));
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])) . "#bl");
     }
 
     public function deleteBlacklist(Request $request)
     {
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
         $cookieKey = $request->input('cookieKey');
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])) . "#bl");
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])) . "#bl");
     }
 
     public function clearBlacklist(Request $request)
     {
         //function to clear the whole black list
-        $fokus = $request->input('fokus', '');
+        $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
         $cookies = Cookie::get();
 
@@ -411,7 +411,7 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["fokus" => $fokus, "url" => $url])));
+        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])));
     }
 
     public function loadSettings(Request $request)

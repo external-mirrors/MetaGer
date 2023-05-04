@@ -7,14 +7,22 @@
     <div class="card blacklist">
         <h3><a href="#">Blacklist (?)</a></h3>
         <div class="skeleton"></div>
-        <ul class="blacklist-items">
-        </ul>
+        <div class="blacklist-items">
+        </div>
+        <div class="actions pagination">
+            <a href="#" class="backward">&lt; Last Page</a>
+            <a href="#" class="forward">Next Page &gt;</a>
+        </div>
     </div>
     <div class="card whitelist">
         <h3><a href="#">Whitelist (?)</a></h3>
         <div class="skeleton"></div>
-        <ul class="whitelist-items">
-        </ul>
+        <div class="whitelist-items">
+        </div>
+        <div class="actions pagination">
+            <a href="#" class="backward">&lt; Last Page</a>
+            <a href="#" class="forward">Next Page &gt;</a>
+        </div>
     </div>
 </div>
 <div id="affilliate-clicks" class="card">

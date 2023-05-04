@@ -151,8 +151,8 @@ class AdgoalController extends Controller
             return response()->json("Invalid Request Data", 422);
         }
 
-        $count = 5; # How Many results to return
-        $skip = 0; # How many results to skip
+        $count = intval($request->input("count", 5)); # How Many results to return
+        $skip = intval($request->input("skip", 0)); # How many results to skip
         $blacklist = $request->input('blacklist', true);
 
         $total = DB::select("select count(*) as total_rows from affiliate_blacklist where blacklist = ?", [$blacklist]);

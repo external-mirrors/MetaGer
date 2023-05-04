@@ -41,15 +41,17 @@ class Searchengines
 
         $engines_in_fokus = $settings->sumasJson->foki->{$settings->fokus}->sumas;
 
-        // Parse user configuration
         foreach ($this->sumas as $name => $suma) {
+            // Parse user configuration
             // Default mode for this searchengine. Can be overriden by the user configuration
             if ($suma->configuration->disabledByDefault) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::USER_CONFIGURATION;
                 $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
             }
+            // User setting defined via permanent cookie in browser
             $engine_user_setting = Cookie::get($settings->fokus . "_engine_" . $name, null);
+            // Temporary User settings defined as URL parameter
             if (Request::has($settings->fokus . "_engine_" . $name) && in_array(Request::input($settings->fokus . "_engine_" . $name), ["on", "off"])) {
                 $engine_user_setting = Request::input($settings->fokus . "_engine_" . $name);
             }
@@ -75,7 +77,9 @@ class Searchengines
             }
             // Disable all searchengines not supporting the current locale
             $suma->configuration->applyLocale();
-
+            if ($suma->configuration->disabled) {
+                continue;
+            }
             if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::PAYMENT_REQUIRED;
@@ -104,6 +108,9 @@ class Searchengines
 
         $authorization->cost = 0; // Update cost with actual cost that are correct for current engine configuration
         foreach ($this->sumas as $suma) {
+            if ($suma->configuration->disabled) {
+                continue;
+            }
             // Disable searchengine if it does not support a possibly defined query filter
             foreach ($settings->queryFilter as $filterName => $filter) {
                 if (empty($settings->sumasJson->filter->{"query-filter"}->$filterName->sumas->{$suma->name})) {
@@ -115,6 +122,11 @@ class Searchengines
             }
             // Disable searchengine if it does not support a possibly defined parameter filter
             foreach ($settings->parameterFilter as $filterName => $filter) {
+                // If a searchengine does not support safesearch and safesearch is set to off
+                // it will not get disabled as it is probably the same
+                if ($filterName === "safesearch" && $filter->value === "o") {
+                    continue;
+                }
                 // We need to check if the searchengine supports the parameter value, too
                 if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value}))) {
                     $suma->configuration->disabled = true;

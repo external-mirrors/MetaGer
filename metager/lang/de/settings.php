@@ -31,7 +31,7 @@ return [
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
-    'disabledBecausePaymentRequired' => "Folgende Suchmaschinen erfordern einen <a href=\"#metager-key\">MetaGer Schlüssel</a>",
+    'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",
     'no-engines' => "Mit den aktuellen Sucheinstellungen wird keine Suchmaschine abgefragt.",
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
     'header' => [

@@ -68,18 +68,6 @@ class Searchengines
         }
 
         foreach ($this->sumas as $suma) {
-            // Disable all searchengines not supported by this fokus
-            if (!in_array($suma->name, $engines_in_fokus)) {
-                $suma->configuration->disabled = true;
-                $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FOKUS;
-                $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FOKUS;
-                continue;
-            }
-            // Disable all searchengines not supporting the current locale
-            $suma->configuration->applyLocale();
-            if ($suma->configuration->disabled) {
-                continue;
-            }
             if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReason = DisabledReason::PAYMENT_REQUIRED;
@@ -93,6 +81,15 @@ class Searchengines
                 $this->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
                 continue;
             }
+            // Disable all searchengines not supported by this fokus
+            if (!in_array($suma->name, $engines_in_fokus)) {
+                $suma->configuration->disabled = true;
+                $suma->configuration->disabledReason = DisabledReason::INCOMPATIBLE_FOKUS;
+                $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FOKUS;
+                continue;
+            }
+            // Disable all searchengines not supporting the current locale
+            $suma->configuration->applyLocale();
         }
 
         // Enable Yahoo Ads if query is unauthorized and yahoo is disabled

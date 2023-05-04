@@ -84,7 +84,7 @@
         </div>
         @endif
         @if(in_array(\App\Models\DisabledReason::PAYMENT_REQUIRED, $disabledReasons))
-        <h4>@lang('settings.disabledBecausePaymentRequired')</h4>
+        <h4>@lang('settings.disabledBecausePaymentRequired', ["link" => app(\App\Models\Authorization\Authorization::class)->getAdfreeLink()])</h4>
         <div class="sumas payment-required-engines">
             @foreach($sumas as $name => $suma)
             @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::PAYMENT_REQUIRED)

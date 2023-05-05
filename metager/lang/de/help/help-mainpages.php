@@ -9,12 +9,12 @@ return [
     "backarrow"             => 'Zurück',
     "result"        => [
         "info"       => [
-            "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"></div></p>',
+            "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:',
             "2" => 'Die neuen Optionen sind:',
             "anonym" => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
             "domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
             "hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',
-            "more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png" alt="Bildschirmfoto eines ausgeklappten Suchergebnisses"></div></p>',
+            "more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:',
             "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab. Alternativ können Sie auch ein neues Tab öffnen, indem Sie STRG und Linksklick oder die mittlere Maustaste verwenden.',
             "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
             "saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="/hilfe/funktionen#searchinsearch"> Suche in der Suche</a>)',

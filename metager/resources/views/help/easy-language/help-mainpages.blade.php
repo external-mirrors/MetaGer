@@ -16,7 +16,7 @@
 		
 		<h3 id="startseite">{!! trans('help/easy-language/help-mainpages.startpage.title') !!}</h3>
 		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.1') !!}</p>
-		<img id="help-vertial-menu-image" src="/img/help-vertical-menu.png"/>
+		<img id="help-vertial-menu-image" src="/img/menu.svg"/>
 		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.2') !!}</p>
 		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.3') !!}</p>
 		<p>{!! trans('help/easy-language/help-mainpages.startpage.info.4') !!}</p>

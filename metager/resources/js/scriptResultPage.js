@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 function initialize() {
   submitFilterOnChange();
   botProtection();
-  enableFormResetter();
   loadMoreResults();
   enableResultSaver();
   enablePagination();
@@ -123,35 +122,6 @@ function verify(event) {
     },
     body: data,
   });
-}
-
-function enableFormResetter() {
-  var deleteButton = document.querySelector("#search-delete-btn");
-  var timeout = null;
-
-  if (deleteButton) {
-    deleteButton.onclick = (e) => {
-      if (timeout != null) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      document.querySelector('input[name="eingabe"]').value = "";
-      document.querySelector('input[name="eingabe"]').focus();
-    };
-  }
-
-  let input_field = document.querySelector('input[name="eingabe"]');
-  if (input_field) {
-    input_field.addEventListener("focusin", (e) => {
-      deleteButton.style.display = "initial";
-    });
-    input_field.addEventListener("focusout", (e) => {
-      timeout = window.setTimeout(function () {
-        deleteButton.style.display = "none";
-        timeout = null;
-      }, 500);
-    });
-  }
 }
 
 function loadMoreResults() {

@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+  enableFormResetter();
 });
 
 reportJSAvailabilityForAuthenticatedSearch();
@@ -43,5 +44,20 @@ function reportJSAvailabilityForAuthenticatedSearch() {
   if (key_cookie !== undefined) {
     console.log("setting cookie");
     Cookies.set("js_available", "true");
+  }
+}
+function enableFormResetter() {
+  var deleteButton = document.querySelector("#search-delete-btn");
+  var timeout = null;
+  console.log(deleteButton);
+  if (deleteButton) {
+    deleteButton.onclick = (e) => {
+      if (timeout != null) {
+        clearTimeout(timeout);
+        timeout = null;
+      }
+      document.querySelector('input[name="eingabe"]').value = "";
+      document.querySelector('input[name="eingabe"]').focus();
+    };
   }
 }

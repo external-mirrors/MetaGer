@@ -38,8 +38,7 @@ mix
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
   )
-  .less("resources/less/metager/pages/key.less", "public/css/key.css")
-  .less("resources/less/metager/pages/key-dark.less", "public/css/key-dark.css")
+  .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(
     "resources/less/metager/pages/lang-selector.less",
@@ -94,10 +93,6 @@ mix
     "public/css/prevention-information.css"
   )
   .less(
-    "resources/less/metager/pages/keychange/index.less",
-    "public/css/keychange/index.css"
-  )
-  .less(
     "resources/less/metager/pages/widget/widget-template.less",
     "public/css/widget/widget-template.css"
   )
@@ -117,6 +112,7 @@ mix
     ["resources/js/scriptResultPage.js", "resources/js/keyboardNavigation.js"],
     "public/js/scriptResultPage.js"
   )
+  .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
   .js("resources/js/donation.js", "public/js/donation.js")
   // utility

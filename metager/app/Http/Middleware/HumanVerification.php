@@ -3,12 +3,13 @@
 namespace App\Http\Middleware;
 
 use App;
+use App\Models\Authorization\Authorization;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
+use App\QueryTimer;
+use App\SearchSettings;
 use Cache;
 use Closure;
 use URL;
-use App\QueryTimer;
-use App\SearchSettings;
 
 class HumanVerification
 {
@@ -51,7 +52,7 @@ class HumanVerification
             }
         }
 
-        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app('App\Models\Key')->getStatus()) {
+        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app(Authorization::class)->canDoAuthenticatedSearch()) {
             $should_skip = true;
         }
 
@@ -82,7 +83,6 @@ class HumanVerification
         # If the user is locked we will force a Captcha validation
         if ($user->isLocked()) {
             $user->saveUser();
-            \App\Http\Controllers\HumanVerification::logCaptcha($request);
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             $this->logCaptcha($request, $user);
             echo redirect()->route('captcha_show', ["url" => URL::full(), "key" => $user->key]); // TODO uncomment

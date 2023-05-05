@@ -1,26 +1,9 @@
 <?php
 
 
-Route::get('meta/key', "KeyController@index")->middleware('removekey')->name('keyindex');
-Route::post('meta/key', 'KeyController@setKey');
-Route::any('meta/key/remove', 'KeyController@removeKey')->name("removeCookie");
-
-Route::group([
-    'prefix' => 'meta/key/change'
-], function () {
-    // Routes to change the key for members
-    Route::get('remove-current', 'KeyController@changeKeyIndex')->middleware('removekey')->name('changeKeyOne');
-    Route::post('remove-current', 'KeyController@removeCurrent')->middleware('removekey');
-
-    Route::get('generate-new', 'KeyController@generateNew')->name('changeKeyTwo');
-    Route::post('generate-new', 'KeyController@generateNewPost');
-
-    Route::get('save-new', function () {
-        return view('keychangethree', ["title" => trans('titles.keychange'), "css" => [mix('css/keychange/index.css')]]);
-    })->name('changeKeyThree');
-});
-
-
+Route::get('meta/key', function () {
+    return redirect(LaravelLocalization::getLocalizedUrl(null, "/keys/key/enter"));
+})->name('keyindex');
 
 Route::group(
     [

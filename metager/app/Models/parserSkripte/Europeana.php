@@ -3,15 +3,16 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Europeana extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -37,13 +38,13 @@ class Europeana extends Searchengine
                     $image = urldecode($result->edmPreview[0]);
                     $this->counter++;
                     $this->results[] = new \App\Models\Result(
-                        $this->engine,
+                        $this->configuration->engineBoost,
                         $title,
                         $link,
                         $anzeigeLink,
                         $descr,
-                        $this->engine->infos->display_name,
-                        $this->engine->infos->homepage,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
                         $this->counter,
                         ['image' => $image]
                     );
@@ -68,9 +69,10 @@ class Europeana extends Searchengine
             if ($start > $content->totalResults) {
                 return;
             }
-            $next = new Europeana($this->engine, $metager);
-            $next->getString .= "&start=" . $start;
-            $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration->getParameter->start = $start;
+            $next = new Europeana($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

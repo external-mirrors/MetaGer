@@ -2,36 +2,40 @@
 @import "../variables.less";
 @import "../general/cards.less";
 #key-site {
-    background-color:@background-color;
-    color:@text-color;
-    .section {
-        .card;
-        margin: 8px 0;
-        .error {
-            color: red;
-            text-align: center;
-            font-weight: bold;
-        }
+  background-color: @background-color;
+  color: @text-color;
+  .section {
+    .card;
+    margin: 8px 0;
+    .error {
+      color: red;
+      text-align: center;
+      font-weight: bold;
     }
-    #form-wrapper {
-        margin-top: 8px;
-        form {
-            text-align: center;
-        }
+  }
+  #form-wrapper {
+    margin-top: 8px;
+    form {
+      text-align: center;
     }
-    
-    #back-link {
-        text-align: center;
-        margin-top: 16px;
-    }
+  }
 
-    #remove-key {
-        margin-top: 8px;
-    }
+  #back-link {
+    text-align: center;
+    margin-top: 16px;
+  }
 
-    #enter-key-form {
-        display: flex;
-        justify-content: center;
-        gap: 4px;
-    }
+  #remove-key {
+    margin-top: 8px;
+  }
+
+  #enter-key-form {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  input[name="keyToSet"] {
+    width: 21em;
+    text-align: center;
+  }
 }

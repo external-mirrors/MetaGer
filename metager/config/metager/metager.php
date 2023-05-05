@@ -4,16 +4,16 @@ return [
     "browserverification_enabled" => true,
     "browserverification_whitelist" => [
     ],
-    "admin" => [
-        "user" => env("ADMIN_USER", "admin"),
-        "password" => env("ADMIN_PASSWORD", "admin"),
-    ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
     ],
     "proxy" => [
         "password" => env("PROXY_PASSWORD", "secure_password"),
+    ],
+    "keymanager" => [
+        "server" => env("KEY_SERVER", null),
+        "access_token" => env("KEY_ACCESS_TOKEN")
     ],
     "keys" => [
         "uni_mainz" => env("mainz_key"),
@@ -40,6 +40,8 @@ return [
     "ticketsystem" => [
         "url" => env("TICKET_URL", "https://metager.de"),
         "apikey" => env("TICKET_APIKEY", ""),
+        "germanmail" => env("TICKET_GERMAN_MAIL", ""),
+        "englishmail" => env("TICKET_ENGLISH_MAIL", "")
     ],
     "civicrm" => [
         "url" => env("CIVICRM_URL", "https://metager.de"),
@@ -49,10 +51,6 @@ return [
     "admitad" => [
         "germany_public_key" => env("admitad_germany_public", ""),
         "international_public_key" => env("admitad_international_public", "")
-    ],
-    "keyserver" => [
-        "user" => env("KEY_USER", "test"),
-        "password" => env("KEY_PASSWORD", "test"),
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

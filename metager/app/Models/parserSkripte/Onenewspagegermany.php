@@ -4,6 +4,7 @@ namespace app\Models\parserSkripte;
 
 use App\Models\Result;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 
 class Onenewspagegermany extends Searchengine
 {
@@ -11,9 +12,9 @@ class Onenewspagegermany extends Searchengine
     public $resultCount = 0;
 
     private $offset = 0;
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -35,13 +36,13 @@ class Onenewspagegermany extends Searchengine
 
                 $counter++;
                 $this->results[] = new Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     $additionalInformation
                 );
@@ -58,11 +59,14 @@ class Onenewspagegermany extends Searchengine
             return;
         }
 
-        $next = new Onenewspagegermany($this->name, $this->engine, $metager);
-        $next->resultCount = $this->resultCount;
-        $next->offset = $this->offset + $this->resultCount;
-        $next->getString .= "&o=" . $next->offset;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        if (property_exists($newConfiguration->getParameter, "o")) {
+            $newConfiguration->getParameter->o += count($this->results);
+        } else {
+            $newConfiguration->getParameter->o = count($this->results);
+        }
+        $next = new Onenewspagegermany($this->name, $newConfiguration);
         $this->next = $next;
     }
 }

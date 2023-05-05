@@ -4,6 +4,14 @@
 let clicksCount = 10;
 let clicksSkip = 0;
 
+let blacklistTotal = 0;
+let blacklistCount = 5;
+let blacklistSkip = 0;
+
+let whitelistTotal = 0;
+let whitelistCount = 5;
+let whitelistSkip = 0;
+
 
 window.addEventListener("load", function () {
     refreshBlacklist();
@@ -20,21 +28,44 @@ window.addEventListener("load", function () {
         clicksSkip = Math.max(0, clicksSkip);
         refreshHostlist();
     });
+
+    document.querySelector("#blacklist-container .whitelist .pagination .backward").addEventListener("click", e => {
+        whitelistSkip = Math.max(whitelistSkip - whitelistCount, 0);
+        refreshWhitelist();
+    });
+    document.querySelector("#blacklist-container .whitelist .pagination .forward").addEventListener("click", e => {
+        whitelistSkip = Math.min(whitelistSkip + whitelistCount, whitelistTotal - whitelistCount);
+        refreshWhitelist();
+    });
+
+    document.querySelector("#blacklist-container .blacklist .pagination .backward").addEventListener("click", e => {
+        blacklistSkip = Math.max(blacklistSkip - blacklistCount, 0);
+        refreshBlacklist();
+    });
+    document.querySelector("#blacklist-container .blacklist .pagination .forward").addEventListener("click", e => {
+        blacklistSkip = Math.min(blacklistSkip + blacklistCount, blacklistTotal - blacklistCount);
+        refreshBlacklist();
+    });
 });
 
 function refreshBlacklist() {
     let templateHtml = `
-        <li>
+        <div>
             <div class="number"></div>
             <div class="hostname"></div>
             <a href="#" class="remove" data-id="">&#x1F5D1;</a>
-        </li>
+        </div>
     `;
     let template = document.createElement("template");
     template.innerHTML = templateHtml.trim();
     template = template.content.firstChild;
 
-    fetch('/admin/affiliates/json/blacklist')
+    let params = new URLSearchParams({
+        "count": blacklistCount,
+        "skip": blacklistSkip
+    });
+
+    fetch(`/admin/affiliates/json/blacklist?${params.toString()}`)
         .then(response => response.json())
         .catch(error => console.log(error))
         .then(blacklist => {
@@ -50,6 +81,21 @@ function refreshBlacklist() {
                 newElement.querySelector(".remove").addEventListener("click", removeBlacklistItem);
                 document.querySelector("#blacklist-container > .blacklist > .blacklist-items").appendChild(newElement);
             });
+            blacklistTotal = blacklist.total;
+            let pagination = document.querySelector("#blacklist-container > .blacklist .pagination");
+            if (blacklist.total > 0) {
+                pagination.style.display = "flex";
+            }
+            if (blacklistSkip == 0) {
+                pagination.querySelector(".backward").classList.add("disabled");
+            } else {
+                pagination.querySelector(".backward").classList.remove("disabled");
+            }
+            if (blacklistSkip >= blacklistTotal - blacklistCount) {
+                pagination.querySelector(".forward").classList.add("disabled");
+            } else {
+                pagination.querySelector(".forward").classList.remove("disabled");
+            }
         })
         .catch(error => console.log(error));
 }
@@ -66,12 +112,12 @@ function addBlacklistItem(element) {
     }
 
     fetch('/admin/affiliates/json/blacklist', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
         .catch(error => console.log(error))
         .then(response => response.json())
         .then(response => {
@@ -93,12 +139,12 @@ function removeBlacklistItem(element) {
     }
 
     fetch('/admin/affiliates/json/blacklist', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
         .catch(error => console.log(error))
         .then(response => response.json())
         .then(response => {
@@ -109,20 +155,26 @@ function removeBlacklistItem(element) {
 
 function refreshWhitelist() {
     let templateHtml = `
-        <li>
+        <div>
             <div class="number"></div>
             <div class="hostname"></div>
             <a href="#" class="remove" data-id="">&#x1F5D1;</a>
-        </li>
+        </div>
     `;
     let template = document.createElement("template");
     template.innerHTML = templateHtml.trim();
     template = template.content.firstChild;
 
-    fetch('/admin/affiliates/json/whitelist')
+    let params = new URLSearchParams({
+        "count": whitelistCount,
+        "skip": whitelistSkip
+    });
+
+    fetch(`/admin/affiliates/json/whitelist?${params.toString()}`)
         .then(response => response.json())
         .catch(error => console.log(error))
         .then(whitelist => {
+            console.log(whitelist);
             document.querySelector("#blacklist-container > .whitelist > h3 > a").innerHTML = "Whitelist (" + whitelist.total + ")";
             document.querySelector("#blacklist-container > .whitelist .skeleton").style.display = "none";
             document.querySelector("#blacklist-container > .whitelist > .whitelist-items").innerHTML = "";
@@ -135,6 +187,21 @@ function refreshWhitelist() {
                 newElement.querySelector(".remove").addEventListener("click", removeWhitelistItem);
                 document.querySelector("#blacklist-container > .whitelist > .whitelist-items").appendChild(newElement);
             });
+            whitelistTotal = whitelist.total;
+            let pagination = document.querySelector("#blacklist-container > .whitelist .pagination");
+            if (whitelist.total > 0) {
+                pagination.style.display = "flex";
+            }
+            if (whitelistSkip == 0) {
+                pagination.querySelector(".backward").classList.add("disabled");
+            } else {
+                pagination.querySelector(".backward").classList.remove("disabled");
+            }
+            if (whitelistSkip >= whitelistTotal - whitelistCount) {
+                pagination.querySelector(".forward").classList.add("disabled");
+            } else {
+                pagination.querySelector(".forward").classList.remove("disabled");
+            }
         })
         .catch(error => console.log(error));
 }
@@ -151,12 +218,12 @@ function addWhitelistItem(element) {
     }
 
     fetch('/admin/affiliates/json/whitelist', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
         .catch(error => console.log(error))
         .then(response => response.json())
         .then(response => {
@@ -178,12 +245,12 @@ function removeWhitelistItem(element) {
     }
 
     fetch('/admin/affiliates/json/whitelist', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
         .catch(error => console.log(error))
         .then(response => response.json())
         .then(response => {

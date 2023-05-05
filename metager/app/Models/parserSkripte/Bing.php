@@ -3,15 +3,16 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Bing extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -37,13 +38,13 @@ class Bing extends Searchengine
                 $descr = $result->snippet;
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -65,24 +66,25 @@ class Bing extends Searchengine
             }
             $totalMatches = $results->webPages->totalEstimatedMatches;
 
-            $newEngine = unserialize(serialize($this->engine));
+            /** @var SearchEngineConfiguration */
+            $newConfiguration = unserialize(serialize($this->configuration));
 
-            $perPage = $newEngine->{"get-parameter"}->count;
+            $perPage = $newConfiguration->getParameter->count;
 
             $offset = 0;
-            if (empty($newEngine->{"get-parameter"}->offset)) {
+            if (empty($newConfiguration->getParameter->offset)) {
                 $offset = $perPage;
             } else {
-                $offset = $newEngine->{"get-parameter"}->offset + $perPage;
+                $offset = $newConfiguration->getParameter->offset + $perPage;
             }
 
             if ($totalMatches < ($offset + $perPage)) {
                 return;
             } else {
-                $newEngine->{"get-parameter"}->offset = $offset;
+                $newConfiguration->getParameter->offset = $offset;
             }
 
-            $next = new Bing($this->name, $newEngine, $metager);
+            $next = new Bing($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

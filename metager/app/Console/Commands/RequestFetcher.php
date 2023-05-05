@@ -80,7 +80,6 @@ class RequestFetcher extends Command
                 $answersRead = $status[0];
                 $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
-
                 if ($newJobs === 0 && $answersRead === 0) {
                     usleep(10 * 1000);
                 }
@@ -114,7 +113,6 @@ class RequestFetcher extends Command
             });
             $newJobs = $elements[0];
         }
-
         $addedJobs = 0;
         foreach ($newJobs as $newJob) {
             $newJob = json_decode($newJob, true);
@@ -161,6 +159,7 @@ class RequestFetcher extends Command
                 if ($responseCode !== 200 && $responseCode !== 201) {
                     Log::debug($resulthash);
                     Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
+                    Log::debug(\curl_multi_getcontent($info["handle"]));
                 } else {
                     $body = \curl_multi_getcontent($info["handle"]);
                 }
@@ -188,18 +187,21 @@ class RequestFetcher extends Command
     {
         $ch = curl_init();
 
-        curl_setopt_array($ch, array(
-            CURLOPT_URL => $job["url"],
-            CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_USERAGENT => $job["useragent"],
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_CONNECTTIMEOUT => 8,
-            CURLOPT_MAXCONNECTS => 500,
-            CURLOPT_LOW_SPEED_LIMIT => 50000,
-            CURLOPT_LOW_SPEED_TIME => 10,
-            CURLOPT_TIMEOUT => 10,
-        ));
+        curl_setopt_array(
+            $ch,
+            array(
+                CURLOPT_URL => $job["url"],
+                CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_USERAGENT => $job["useragent"],
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_CONNECTTIMEOUT => 8,
+                CURLOPT_MAXCONNECTS => 500,
+                CURLOPT_LOW_SPEED_LIMIT => 50000,
+                CURLOPT_LOW_SPEED_TIME => 10,
+                CURLOPT_TIMEOUT => 10,
+            )
+        );
 
 
 
@@ -207,7 +209,7 @@ class RequestFetcher extends Command
             curl_setopt_array($ch, $job["curlopts"]);
         }
 
-        if (!empty($this->proxyhost) && !empty($this->proxyport)) {
+        if ((!array_key_exists("proxy", $job) || $job["proxy"] === true) && !empty($this->proxyhost) && !empty($this->proxyport)) {
             curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
             if (!empty($this->proxyuser) && !empty($this->proxypassword)) {
                 curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);

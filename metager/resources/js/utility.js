@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let input_field = el.querySelector("input[type=text]");
     let copy_button = el.querySelector("button");
     if (copy_button) {
-      copy_button.addEventListener("pointerdown", (e) => {
+      copy_button.addEventListener("click", (e) => {
         // Select all the text
         let key = input_field.value;
+        input_field.select();
         navigator.clipboard
           .writeText(key)
           .then(() => {
@@ -34,3 +35,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   });
 });
+
+reportJSAvailabilityForAuthenticatedSearch();
+function reportJSAvailabilityForAuthenticatedSearch() {
+  let Cookies = require("js-cookie");
+  let key_cookie = Cookies.get("key");
+  if (key_cookie !== undefined) {
+    console.log("setting cookie");
+    Cookies.set("js_available", "true");
+  }
+}

@@ -53,11 +53,12 @@ class LoadAffiliateBlacklist extends Command
         }
     }
 
-    private function loadAffiliateBlacklist() {
+    private function loadAffiliateBlacklist()
+    {
         $blacklistItems = DB::table("affiliate_blacklist", "b")
-        ->select("hostname")
-        ->where("blacklist", true)
-        ->get();
+            ->select("hostname")
+            ->where("blacklist", true)
+            ->get();
 
         Redis::pipeline(function ($redis) use ($blacklistItems) {
             $redisKey = \App\Http\Controllers\AdgoalController::REDIS_BLACKLIST_KEY;

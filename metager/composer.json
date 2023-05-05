@@ -19,7 +19,8 @@
         "mews/captcha": "^3.2.7",
         "promphp/prometheus_client_php": "^2.6.0",
         "symfony/dom-crawler": "^6.0",
-        "tio/laravel": "^1.20"
+        "tio/laravel": "^1.20",
+        "vizir/laravel-keycloak-web-guard": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.12",

@@ -58,7 +58,9 @@ class AdgoalController extends Controller
 
         $this->storePartnerCallFast($request->input('affillink'), $request->input('link'));
 
-        return redirect($request->input('affillink'));
+        return redirect($request->input('affillink'), 301, [
+            "Referrer-Policy" => "no-referrer-when-downgrade"
+        ]);
     }
 
     /**
@@ -149,8 +151,8 @@ class AdgoalController extends Controller
             return response()->json("Invalid Request Data", 422);
         }
 
-        $count = 5; # How Many results to return
-        $skip = 0; # How many results to skip
+        $count = intval($request->input("count", 5)); # How Many results to return
+        $skip = intval($request->input("skip", 0)); # How many results to skip
         $blacklist = $request->input('blacklist', true);
 
         $total = DB::select("select count(*) as total_rows from affiliate_blacklist where blacklist = ?", [$blacklist]);
@@ -180,7 +182,7 @@ class AdgoalController extends Controller
                 },
                 function ($attribute, $value, $fail) use ($request) {
                     # Validate that entry does not already exist in database
-                    $entry = DB::select("select * from metager.affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
+                    $entry = DB::select("select * from affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
                     if (sizeof($entry) !== 0) {
                         $fail("The selected entry does already exist in database");
                     }
@@ -196,7 +198,7 @@ class AdgoalController extends Controller
 
         $hostname = $validator->validated()["hostname"];
 
-        $rowsInserted = DB::insert("insert into metager.affiliate_blacklist (hostname, blacklist) values (?, 1)", [$hostname]);
+        $rowsInserted = DB::insert("insert into affiliate_blacklist (hostname, blacklist) values (?, 1)", [$hostname]);
         if ($rowsInserted === TRUE) {
             return response()->json([
                 "message" => "Entry added."
@@ -211,12 +213,17 @@ class AdgoalController extends Controller
     public function deleteblacklistJson(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "id" => ["required", "integer", "min:1", function ($attribute, $value, $fail) use ($request) {
-                $entry = DB::select("select * from metager.affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), true]);
-                if (sizeof($entry) !== 1) {
-                    $fail("The selected entry does not exist in database");
+            "id" => [
+                "required",
+                "integer",
+                "min:1",
+                function ($attribute, $value, $fail) use ($request) {
+                    $entry = DB::select("select * from affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), true]);
+                    if (sizeof($entry) !== 1) {
+                        $fail("The selected entry does not exist in database");
+                    }
                 }
-            }],
+            ],
         ]);
 
         if ($validator->fails()) {
@@ -224,7 +231,7 @@ class AdgoalController extends Controller
         }
 
         $id = intval($validator->validated()["id"]);
-        $rowsDeleted = DB::delete("delete from metager.affiliate_blacklist where id = ?", [$id]);
+        $rowsDeleted = DB::delete("delete from affiliate_blacklist where id = ?", [$id]);
         if ($rowsDeleted > 0) {
             return response()->json([
                 "message" => "$rowsDeleted entries deleted."
@@ -257,7 +264,7 @@ class AdgoalController extends Controller
                 },
                 function ($attribute, $value, $fail) use ($request) {
                     # Validate that entry does not already exist in database
-                    $entry = DB::select("select * from metager.affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
+                    $entry = DB::select("select * from affiliate_blacklist where hostname = ?", [$request->input("hostname")]);
                     if (sizeof($entry) !== 0) {
                         $fail("The selected entry does already exist in database");
                     }
@@ -273,7 +280,7 @@ class AdgoalController extends Controller
 
         $hostname = $validator->validated()["hostname"];
 
-        $rowsInserted = DB::insert("insert into metager.affiliate_blacklist (hostname, blacklist) values (?, 0)", [$hostname]);
+        $rowsInserted = DB::insert("insert into affiliate_blacklist (hostname, blacklist) values (?, 0)", [$hostname]);
         if ($rowsInserted === TRUE) {
             return response()->json([
                 "message" => "Entry added."
@@ -288,12 +295,17 @@ class AdgoalController extends Controller
     public function deletewhitelistJson(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "id" => ["required", "integer", "min:1", function ($attribute, $value, $fail) use ($request) {
-                $entry = DB::select("select * from metager.affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), false]);
-                if (sizeof($entry) !== 1) {
-                    $fail("The selected entry does not exist in database");
+            "id" => [
+                "required",
+                "integer",
+                "min:1",
+                function ($attribute, $value, $fail) use ($request) {
+                    $entry = DB::select("select * from affiliate_blacklist where id = ? and blacklist = ?", [$request->input("id"), false]);
+                    if (sizeof($entry) !== 1) {
+                        $fail("The selected entry does not exist in database");
+                    }
                 }
-            }],
+            ],
         ]);
 
         if ($validator->fails()) {
@@ -301,7 +313,7 @@ class AdgoalController extends Controller
         }
 
         $id = intval($validator->validated()["id"]);
-        $rowsDeleted = DB::delete("delete from metager.affiliate_blacklist where id = ?", [$id]);
+        $rowsDeleted = DB::delete("delete from affiliate_blacklist where id = ?", [$id]);
         if ($rowsDeleted > 0) {
             return response()->json([
                 "message" => "$rowsDeleted entries deleted."
@@ -329,33 +341,33 @@ class AdgoalController extends Controller
 
         $filter = $request->input("filter", "");
 
-        $hostCount = DB::table("metager.affiliate_clicks", "c")
+        $hostCount = DB::table("affiliate_clicks", "c")
             ->select(DB::raw("count(distinct c.hostname) as total_hosts"))
-            ->leftJoin("metager.affiliate_blacklist", function ($join) {
-                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            ->leftJoin("affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "affiliate_blacklist.hostname");
             })
             ->where("c.hostname", 'like', "%$filter%")
-            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->whereNull("affiliate_blacklist.hostname")
             ->get();
         $hostCount = $hostCount[0]->{"total_hosts"};
 
-        $clickCount = DB::table("metager.affiliate_clicks", "c")
+        $clickCount = DB::table("affiliate_clicks", "c")
             ->select(DB::raw("count(*) as click_count"))
-            ->leftJoin("metager.affiliate_blacklist", function ($join) {
-                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            ->leftJoin("affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "affiliate_blacklist.hostname");
             })
             ->where("c.hostname", 'like', "%$filter%")
-            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->whereNull("affiliate_blacklist.hostname")
             ->get();
         $clickCount = $clickCount[0]->{"click_count"};
 
-        $hosts = DB::table("metager.affiliate_clicks", "c")
+        $hosts = DB::table("affiliate_clicks", "c")
             ->select("c.hostname", DB::raw('count(c.hostname) as clicks'))
-            ->leftJoin("metager.affiliate_blacklist", function ($join) {
-                $join->on("c.hostname", "=", "metager.affiliate_blacklist.hostname");
+            ->leftJoin("affiliate_blacklist", function ($join) {
+                $join->on("c.hostname", "=", "affiliate_blacklist.hostname");
             })
             ->where("c.hostname", 'like', "%$filter%")
-            ->whereNull("metager.affiliate_blacklist.hostname")
+            ->whereNull("affiliate_blacklist.hostname")
             ->groupBy("c.hostname")
             ->orderByDesc("clicks")
             ->limit($count)

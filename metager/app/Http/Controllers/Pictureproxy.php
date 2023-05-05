@@ -41,17 +41,27 @@ class Pictureproxy extends Controller
         try {
             $url = $input_data["url"];
 
-            $file         = file_get_contents($url, false);
+            $file = file_get_contents($url, false);
             $responseCode = explode(" ", $http_response_header[0])[1];
-            $contentType  = "";
+            $contentType = "";
             foreach ($http_response_header as $header) {
                 if (strpos($header, "Content-Type:") === 0) {
-                    $tmp         = explode(": ", $header);
+                    $tmp = explode(": ", $header);
                     $contentType = $tmp[1];
                 }
             }
-            $response = Response::make($file, $responseCode);
-            $response->header('Content-Type', $contentType);
+            if (stripos($contentType, "image/") === false) {
+                $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                $contentType = $finfo->buffer($file);
+            }
+            if (stripos($contentType, "image/") === false) {
+                abort(404);
+            }
+            $response = Response::make($file, $responseCode, [
+                'Content-Type' => $contentType,
+                "Cache-Control" => "max-age=3600, must-revalidate, public",
+                "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+            ]);
         } catch (\ErrorException $e) {
             $response = Response::make("", 404);
         }

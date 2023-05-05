@@ -11,9 +11,10 @@
 <table id="data-table" class="table table-striped" data-interface="{{ $interface }}">
 	<caption>
 		<form method="GET" style="display: flex; align-items: center;">
-			<div class="form-group" style="max-width: 100px; margin-right: 8px;">
-				<label for="days">Tage</label>
-				<input class="form-control" type="number" id="days" name="days" value="{{$days}}" />
+			<div id="daterange" class="form-group" style="max-width: 100px; margin-right: 8px;">
+				<label for="days">Zeitraum (von/bis)</label>
+				<input class="form-control" type="date" id="start" name="start" value="{{$start->format("Y-m-d")}}" max="{{$end->format("Y-m-d")}}"/>
+				<input class="form-control" type="date" id="end" name="end" value="{{$end->format("Y-m-d")}}" min="{{$start->format("Y-m-d")}}" max="{{Carbon::createMidnightDate()->format("Y-m-d")}}"/>
 			</div>
 			<div class="form-group" style="max-width: 100px; margin-right: 8px;">
 				<label for="interface">Sprache</label>
@@ -39,20 +40,24 @@
 			<th>Datum</th>
 			<th>Suchanfragen zur gleichen Zeit</th>
 			<th>Suchanfragen insgesamt</th>
-			<th>Mittelwert (bis zum jeweiligen Tag zurück)</th>
+			<th>Mittelwert</th>
 		</tr>
 	</thead>
 	<tbody>
-		@for($i = 0; $i < $days; $i++) <tr class="{{ $i % 7 === 0 ? 'same-day' : ''}}" data-days_ago="{{$i}}">
-			@php
-			$date = (new Carbon())->subDays($i);
-			@endphp
-			<td class="date" data-date="{{ $date->format("Y-m-d") }}" data-date_formatted="{{ $date->format("d.m.Y")}}">{{ (new Carbon())->locale("de_DE")->subDays($i)->translatedFormat("d.m.Y - l") }}</td>
-			<td class="loading same-time"></td>
-			<td class="loading total"></td>
-			<td class="loading median"></td>
-			</tr>
-			@endfor
+		@php
+		$date_iterator = clone $end;
+		@endphp
+		@while($date_iterator->isBetween($start, $end))
+		<tr class="same-day loading" data-date="{{$date_iterator->format("Y-m-d")}}">
+			<td class="date" data-date="{{ $date_iterator->format("Y-m-d") }}" data-date_formatted="{{ $date_iterator->format("d.m.Y")}}">{{ $date_iterator->locale("de_DE")->translatedFormat("d.m.Y - l") }}</td>
+			<td class="same-time" data-same_time="0"></td>
+			<td class="total" data-total="0"></td>
+			<td class="median"></td>
+		</tr>
+		@php
+		$date_iterator->subDay();
+		@endphp
+		@endwhile
 	</tbody>
 </table>
 

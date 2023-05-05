@@ -12,17 +12,6 @@
             "pathMappings": {
                 "/metager/metager_app": "${workspaceRoot}/metager"
             }
-        },
-        {
-            "name": "PHP - Launch currently open script",
-            "type": "php",
-            "request": "launch",
-            "port": 9003,
-            "program": "${file}",
-            "cwd": "${fileDirname}",
-            "pathMappings": {
-                "/metager/metager_app": "${workspaceRoot}/metager"
-            }
         }
     ]
 }

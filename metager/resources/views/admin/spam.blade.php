@@ -68,7 +68,7 @@
             <td>Referer</td>
             <td>Abfragezeit</td>
             <td>Fokus</td>
-            <td>Interface</td>
+            <td>Locale</td>
             <td>Abfrage</td>
         </tr>
     </thead>
@@ -85,7 +85,7 @@
             <td class="referer" title="{{$query->referer}}">{{$query->referer}}</td>
             <td>{{$query->request_time}}</td>
             <td>{{$query->focus}}</td>
-            <td>{{$query->interface}}</td>
+            <td>{{$query->locale}}</td>
             <td>{{$query->query}}</td>
         </tr>
         @endforeach

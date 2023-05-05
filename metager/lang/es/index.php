@@ -15,4 +15,5 @@ return [
         'science'     => 'Ciencia',
         'produkte'    => 'Productos',
     ],
+    'adfree'       => 'Utiliza MetaGer sin publicidad',
 ];

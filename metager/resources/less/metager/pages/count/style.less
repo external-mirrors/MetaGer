@@ -1,32 +1,43 @@
 td {
-    padding: 4px 8px;
-    text-align: center;
+  padding: 4px 8px;
+  text-align: center;
 }
 
 td.date {
-    text-align: left;
+  text-align: left;
 }
 
-table.table-striped>tbody>tr:nth-child(odd) {
-    background-color: lightgrey;
+table.table-striped > tbody > tr:nth-child(odd) {
+  background-color: lightgrey;
 }
 
-.loading {
-    background-image: url("/img/ajax-loader.gif");
-    background-repeat: no-repeat;
-    background-position: center;
+tr.loading td:not(.date) {
+  background-image: url("/img/ajax-loader.gif");
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .total-median .loading,
 .record .loading {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
 }
 
 #graph {
-    height: auto;
-    --chart-font-color: #000000;
-    --grid-axis-color: #777;
-    --grid-color: #dfdfdf;
+  height: auto;
+  --chart-font-color: #000000;
+  --grid-axis-color: #777;
+  --grid-color: #dfdfdf;
+}
+
+form {
+  > #daterange {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    > label {
+      grid-column: span 2;
+    }
+  }
 }

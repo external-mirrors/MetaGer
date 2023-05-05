@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\SearchSettings;
+
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
  *  Die Results werden von den Suchmaschinenspezifischen Parser-Skripten erstellt.
  */
 
 class Result
 {
-    public $provider; # Die Engine von der das Suchergebnis kommt
     public $titel; # Der Groß Angezeigte Name für das Suchergebnis
     public $originalLink;
     public $link; # Der Link auf die Ergebnisseite
@@ -20,6 +21,7 @@ class Result
     public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
     public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)
+    public $logo;
     public $imageDimensions; # Ein Array in welchem wenn verfügbar Breite/Höhe des Bildes gespeichert sind ["width" => ..., "height" => ...]
     public $proxyLink; # Der Link für die Seite über unseren Proxy-Service
     public $engineBoost = 1; # Der Boost für den Provider des Suchergebnisses
@@ -38,9 +40,8 @@ class Result
     const DESCRIPTION_LENGTH = 150;
 
     # Erstellt ein neues Ergebnis
-    public function __construct($provider, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
+    public function __construct($engineBoost, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
     {
-        $this->provider = $provider;
         $this->titel = $this->sanitizeText(strip_tags(trim($titel)));
         $this->link = trim($link);
         $this->originalLink = trim($link);
@@ -62,11 +63,7 @@ class Result
             $this->sourceRank = 20;
         }
         $this->sourceRank = 20 - $this->sourceRank;
-        if (isset($provider->{"engine-boost"})) {
-            $this->engineBoost = floatval($provider->{"engine-boost"});
-        } else {
-            $this->engineBoost = 1;
-        }
+        $this->engineBoost = empty($engineBoost) ? 1 : $engineBoost;
         $this->valid = true;
         $this->host = @parse_url($link, PHP_URL_HOST);
         $this->strippedHost = $this->getStrippedHost($this->link);
@@ -82,7 +79,7 @@ class Result
         $this->price = isset($additionalInformation["price"]) ? $additionalInformation["price"] : 0;
         $this->price_text = $this->price_to_text($this->price);
         $this->additionalInformation = $additionalInformation;
-        $this->hash = spl_object_hash($this);
+        $this->hash = md5(serialize($this));
     }
 
     private function price_to_text($price)
@@ -102,8 +99,9 @@ class Result
      *  + 0.02 * Sourcerank (20 - Position in Ergebnisliste des Suchanbieters)
      *  * Engine-Boost
      */
-    public function rank($eingabe)
+    public function rank()
     {
+        $eingabe = app(SearchSettings::class)->q;
         $rank = 0;
 
         # Boost für Source Ranking
@@ -136,12 +134,18 @@ class Result
         $tmpLink = "";
         # Löscht verschiedene unerwünschte Teile aus $link und $tmpEingabe
         $regex = [
-            "/\s+/si", # Leerzeichen
-            "/http:/si", # "http:"
-            "/https:/si", # "https:"
-            "/www\./si", # "www."
-            "/\//si", # "/"
-            "/\./si", # "."
+            "/\s+/si",
+            # Leerzeichen
+            "/http:/si",
+            # "http:"
+            "/https:/si",
+            # "https:"
+            "/www\./si",
+            # "www."
+            "/\//si",
+            # "/"
+            "/\./si",
+            # "."
             "/-/si", # "-"
         ];
         foreach ($regex as $reg) {
@@ -250,43 +254,43 @@ class Result
         return false;
         }
         }
-         */
+        */
 
         /* Der Dublettenfilter, der sicher stellt,
-         *  dass wir nach Möglichkeit keinen Link doppelt in der Ergebnisliste haben.
+        *  dass wir nach Möglichkeit keinen Link doppelt in der Ergebnisliste haben.
         
         $dublettenLink = $this->strippedLink;
         if (!empty($this->provider->{"dubletten-include-parameter"}) && sizeof($this->provider->{"dubletten-include-parameter"}) > 0) {
-            $dublettenLink .= "?";
-            $query = parse_url($this->link);
-            if (!empty($query["query"])) {
-                $queryTmp = explode("&", $query["query"]);
-                $query = [];
-                foreach ($queryTmp as $getParameter) {
-                    $keyVal = explode("=", $getParameter);
-                    $query[$keyVal[0]] = $keyVal[1];
-                }
-                foreach ($this->provider->{"dubletten-include-parameter"} as $param) {
-                    if (!empty($query[$param])) {
-                        $dublettenLink .= $param . "=" . $query[$param] . "&";
-                    }
-                }
-                $dublettenLink = rtrim($dublettenLink, "&");
-            }
+        $dublettenLink .= "?";
+        $query = parse_url($this->link);
+        if (!empty($query["query"])) {
+        $queryTmp = explode("&", $query["query"]);
+        $query = [];
+        foreach ($queryTmp as $getParameter) {
+        $keyVal = explode("=", $getParameter);
+        $query[$keyVal[0]] = $keyVal[1];
         }
-
+        foreach ($this->provider->{"dubletten-include-parameter"} as $param) {
+        if (!empty($query[$param])) {
+        $dublettenLink .= $param . "=" . $query[$param] . "&";
+        }
+        }
+        $dublettenLink = rtrim($dublettenLink, "&");
+        }
+        }
         if ($metager->addLink($this)) {
-            $metager->addHostCount($this->strippedHost);
-            return true;
+        $metager->addHostCount($this->strippedHost);
+        return true;
         } else {
-            return false;
+        return false;
         }*/
         return true;
     }
 
     public function isBlackListed(\App\MetaGer $metager)
     {
-        if (($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
+        if (
+            ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLink, $metager->getUrlBlacklist()))) ||
             ($this->strippedHostAnzeige !== "" && (in_array($this->strippedHostAnzeige, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLinkAnzeige, $metager->getUrlBlacklist())))
@@ -447,7 +451,7 @@ class Result
                     array_unshift($arr, $removed);
                 else {
                     // non country TLD according to IANA
-                    $tlds = array('aero',    'arpa',    'asia',    'biz',    'cat',    'com',    'coop',    'edu',    'gov',    'info',    'jobs',    'mil',    'mobi',    'museum',    'name',    'net',    'org',    'post',    'pro',    'tel',    'travel',    'xxx',);
+                    $tlds = array('aero', 'arpa', 'asia', 'biz', 'cat', 'com', 'coop', 'edu', 'gov', 'info', 'jobs', 'mil', 'mobi', 'museum', 'name', 'net', 'org', 'post', 'pro', 'tel', 'travel', 'xxx', );
                     if (count($arr) > 2 && in_array($_sub[0], $tlds) !== false) { //special TLD don't have a country
                         array_shift($arr);
                     }

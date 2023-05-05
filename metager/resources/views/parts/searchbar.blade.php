@@ -3,8 +3,8 @@
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(app('App\Models\Key')->getStatus())class="authorized" @else class="unauthorized"@endif href="{{ action([App\Http\Controllers\KeyController::class, 'index'], ['redirUrl' => !empty($metager) ? $metager->generateSearchLink($metager->getFokus()) : url()->full() ]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
-						<img @if(app('App\Models\Key')->getStatus())src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="" aria-hidden="true" id="searchbar-img-key">
+					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
+						<img @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="" aria-hidden="true" id="searchbar-img-key">
 					</a>
 				</div>
 				<div class="search-input">

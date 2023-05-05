@@ -2,10 +2,9 @@
 <html lang="{{ LaravelLocalization::getCurrentLocale() }}">
 <head>
     <meta charset="UTF-8">
+    <title>{{ Request::input('eingabe', '') }} - MetaGer</title>
     <meta name="nonce" content="{{ $mgv }}">
     <meta name="url" content="{!! $js_url !!}">
-    <link rel="stylesheet" href="/index.css?id={{ $mgv }}">
-    <script src="{{ mix('js/index.js') }}"></script>
     @foreach(LaravelLocalization::getSupportedLocales() as $locale => $locale_data)
 	@if(LaravelLocalization::getCurrentLocale() !== $locale)
 	<link rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
@@ -19,34 +18,13 @@
 	@elseif(Request::input('out', '') !== "results-with-style" )
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
-    <title>{{ Request::input('eingabe', '') }} - MetaGer</title>
+    <script src="{{ mix('js/index.js') }}"></script>
+    <link rel="stylesheet" href="/index.css?id={{ $mgv }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-
-    <style nonce="{{ $mgv }}">
-        html {
-            height: 100%;
-        }
-
-        body {
-            margin: 0;
-            height: 100%;
-        }
-
-        iframe#mg-framed {
-            display: block;
-            width: 100%;
-            border: 0;
-            height: 100%;
-            height: 100vh;
-        }
-        html > body > #resultpage-container {
-            display: none;
-        }
-    </style>
+    <meta http-equiv="refresh" content="1">
 </head>
 <body>
 	<div id="resultpage-container">
-        <div id="whitespace"></div>
         <div id="research-bar-container">
             <div id="research-bar">
                 <div id="header-logo">
@@ -72,11 +50,4 @@
         <div id="additions-container"></div>
         <footer class="resultPageFooter noprint"></footer>
     </div>
-    <noscript>
-        <iframe id="mg-framed" src="{{ $frame_url }}" autofocus="true"></iframe>
-    </noscript>
-    <script nonce="{{ $mgv }}">
-        document.getElementById("mg-framed").src = "";
-        document.getElementById("resultpage-container").style.display = "grid";
-    </script>
 </body>

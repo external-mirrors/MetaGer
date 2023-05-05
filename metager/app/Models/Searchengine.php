@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Localization;
 use App\MetaGer;
+use App\Models\Authorization\Authorization;
+use App\SearchSettings;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 
@@ -11,7 +13,10 @@ abstract class Searchengine
 {
     public $getString = ""; # Der String für die Get-Anfrage
     public $query = ""; # The search query
-    public $engine; # Die ursprüngliche Engine XML
+
+    /** @var SearchEngineConfiguration */
+    public $configuration;
+
     public $totalResults = 0; # How many Results the Searchengine has found
     public $results = []; # Die geladenen Ergebnisse
     public $ads = []; # Die geladenen Werbungen
@@ -26,7 +31,6 @@ abstract class Searchengine
     public $disabled; # Ob diese Suchmaschine ausgeschaltet ist
     public $useragent; # Der HTTP Useragent
     public $startTime; # Die Zeit der Erstellung dieser Suchmaschine
-    public $hash; # Der Hash-Wert dieser Suchmaschine
 
     private $username; # Username für HTTP-Auth (falls angegeben)
     private $password; # Passwort für HTTP-Auth (falls angegeben)
@@ -41,79 +45,57 @@ abstract class Searchengine
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
     public $new = true; # Important for loading results by JS
 
-    public function __construct($name, \stdClass $engine, MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        $this->engine = $engine;
+        $this->configuration = $configuration;
         $this->name = $name;
 
-        if (isset($engine->{"cache-duration"}) && $engine->{"cache-duration"} !== -1) {
-            $this->cacheDuration = $engine->{"cache-duration"};
-        }
-        $this->cacheDuration = max($this->cacheDuration, 5);
 
+        $metager = app(MetaGer::class);
         // Thanks to our Middleware this is a almost completely random useragent
         // which matches the correct device type
         $this->useragent = $metager->getUserAgent();
         $this->ip = $metager->getIp();
         $this->startTime = microtime(true);
-        # check for http Auth
-        if (!empty($this->engine->{"http-auth-credentials"}->username) && !empty($this->engine->{"http-auth-credentials"}->password)) {
-            $this->username = $this->engine->{"http-auth-credentials"}->username;
-            $this->password = $this->engine->{"http-auth-credentials"}->password;
-        }
 
-        if (!empty($this->engine->{"request-header"})) {
-            $this->headers = [];
-            foreach ($this->engine->{"request-header"} as $key => $value) {
-                $this->headers[$key] = $value;
-            }
-            if (sizeof($this->headers) == 0) {
-                $this->headers = null;
-            }
-        }
+        $this->canCache = $metager->canCache();
+    }
 
-        # Suchstring generieren
-        $this->query = $metager->getQ();
-        $filters = $metager->getSumaFile()->filter;
-        foreach ($metager->getQueryFilter() as $queryFilter => $filter) {
+    /**
+     * SearchSettings are not fully loaded when Searchengines are created
+     * this function is called when all Settings are finished loading
+     */
+    public function applySettings()
+    {
+        $settings = app(SearchSettings::class);
+        $query = $settings->q;
+        $filters = $settings->sumasJson->filter;
+        foreach (app(SearchSettings::class)->queryFilter as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
             if (!$filterOptions->sumas->{$this->name}) {
                 continue;
             }
             $filterOptionsEngine = $filterOptions->sumas->{$this->name};
-            $query = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
-            $this->query = $query . " " . $this->query;
+            $query_part = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
+            $query .= " " . $query_part;
         }
+        $this->configuration->applyQuery($query);
 
-        # Apply current locale
-        if (!empty($this->engine->lang->parameter)) {
-            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
-            if (\property_exists($this->engine->lang->regions, $current_locale)) {
-                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->regions->{$current_locale};
-            } elseif (\property_exists($this->engine->lang->languages, Localization::getLanguage())) {
-                $this->engine->{"get-parameter"}->{$this->engine->lang->parameter} = $this->engine->lang->languages->{Localization::getLanguage()};
-            }
-        }
-
-        # Parse enabled Parameter-Filter
-        foreach ($metager->getParameterFilter() as $filterName => $filter) {
+        // Parse enabled Parameter-Filter
+        foreach (app(SearchSettings::class)->parameterFilter as $filterName => $filter) {
             $inputParameter = $filter->value;
 
-            if (empty($inputParameter) || empty($filter->sumas->{$name}->values->{$inputParameter})) {
+            if (empty($inputParameter) || empty($filter->sumas->{$this->name}->values->{$inputParameter})) {
                 continue;
             }
-            $engineParameterKey = $filter->sumas->{$name}->{"get-parameter"};
-            $engineParameterValue = $filter->sumas->{$name}->values->{$inputParameter};
+            $engineParameterKey = $filter->sumas->{$this->name}->{"get-parameter"};
+            $engineParameterValue = $filter->sumas->{$this->name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
                 $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
                 $engineParameterValue = \App\DynamicEngineParameters::$functionname();
             }
-            $this->engine->{"get-parameter"}->{$engineParameterKey} = $engineParameterValue;
+            $this->configuration->getParameter->{$engineParameterKey} = $engineParameterValue;
         }
-
-        $this->getString = $this->generateGetString($this->query);
-        $this->updateHash();
-        $this->canCache = $metager->canCache();
     }
 
     abstract public function loadResults($result);
@@ -134,25 +116,25 @@ abstract class Searchengine
             // and <URL to fetch> being the full URL to the searchengine
 
             $url = "";
-            if ($this->engine->port === 443) {
+            if ($this->configuration->port === 443) {
                 $url = "https://";
             } else {
                 $url = "http://";
             }
-            $url .= $this->engine->host;
-            if ($this->engine->port !== 80 && $this->engine->port !== 443) {
-                $url .= ":" . $this->engine->port;
+            $url .= $this->configuration->host;
+            if ($this->configuration->port !== 80 && $this->configuration->port !== 443) {
+                $url .= ":" . $this->configuration->port;
             }
-            $url .= $this->getString;
+            $url .= $this->generateGetString();
 
             $mission = [
-                "resulthash" => $this->hash,
+                "resulthash" => $this->getHash(),
                 "url" => $url,
                 "useragent" => $this->useragent,
-                "username" => $this->username,
-                "password" => $this->password,
-                "headers" => $this->headers,
-                "cacheDuration" => $this->cacheDuration,
+                "username" => $this->configuration->httpAuthUsername,
+                "password" => $this->configuration->httpAuthPassword,
+                "headers" => (array) $this->configuration->requestHeader,
+                "cacheDuration" => $this->configuration->cacheDuration,
                 "name" => $this->name
             ];
 
@@ -161,21 +143,15 @@ abstract class Searchengine
             // Submit this mission to the corresponding Redis Queue
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-
-            // The request is not cached and will be submitted to the searchengine
-            // We need to check if the number of requests to this engine are limited
-            if (!empty($this->engine->{"monthly-requests"})) {
-                Redis::incr("monthlyRequests:" . $this->name);
-            }
+            Redis::rpush(MetaGer::FETCHQUEUE_KEY, $mission);
         }
     }
 
     # Ruft die Ranking-Funktion aller Ergebnisse auf.
-    public function rank($eingabe)
+    public function rank()
     {
         foreach ($this->results as $result) {
-            $result->rank($eingabe);
+            $result->rank();
         }
     }
 
@@ -184,9 +160,9 @@ abstract class Searchengine
         $this->resultHash = $hash;
     }
 
-    public function updateHash()
+    public function getHash()
     {
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
+        return md5(serialize($this->configuration));
     }
 
     # Fragt die Ergebnisse von Redis ab und lädt Sie
@@ -196,11 +172,16 @@ abstract class Searchengine
             return true;
         }
         if (!$this->cached && empty($body)) {
-            $body = Redis::rpoplpush($this->hash, $this->hash);
-            Redis::expire($this->hash, 60);
+            $body = Redis::rpoplpush($this->getHash(), $this->getHash());
+            Redis::expire($this->getHash(), 60);
             if ($body === false) {
                 return $body;
             }
+        }
+
+        // Pay for the searchengine if cost > 0
+        if (!$this->cached && $this->configuration->cost > 0) {
+            app(Authorization::class)->makePayment($this->configuration->cost);
         }
 
         if ($body === "no-result") {
@@ -226,29 +207,26 @@ abstract class Searchengine
     }
 
     # Erstellt den für die Get-Anfrage genutzten String
-    protected function generateGetString($query)
+    protected function generateGetString()
     {
         $getString = "";
 
         # Skript:
-        if (!empty($this->engine->path)) {
-            $getString .= $this->engine->path;
+        if (!empty($this->configuration->path)) {
+            $getString .= $this->configuration->path;
         } else {
             $getString .= "/";
         }
 
         $getString .= "?";
 
-        $parameters = (array) clone $this->engine->{"get-parameter"};
-
-        # Append the Query String
-        $parameters[$this->engine->{"query-parameter"}] = $query;
+        $parameters = (array) clone $this->configuration->getParameter;
 
         # Dynamic Parameters
         $parameters = \array_merge($parameters, $this->getDynamicParams());
 
-        if (isset($this->inputEncoding)) {
-            $inputEncoding = $this->inputEncoding;
+        if (!empty($this->configuration->inputEncoding)) {
+            $inputEncoding = $this->configuration->inputEncoding;
             \array_walk($parameters, function (&$value, $key) use ($inputEncoding) {
                 $value = \mb_convert_encoding($value, $inputEncoding);
             });
@@ -262,8 +240,8 @@ abstract class Searchengine
     # Wandelt einen String nach aktuell gesetztem inputEncoding dieser Searchengine in URL-Format um
     protected function urlEncode($string)
     {
-        if (isset($this->inputEncoding)) {
-            return urlencode(mb_convert_encoding($string, $this->inputEncoding));
+        if (isset($this->configuration->inputEncoding)) {
+            return urlencode(mb_convert_encoding($string, $this->configuration->inputEncoding));
         } else {
             return urlencode($string);
         }

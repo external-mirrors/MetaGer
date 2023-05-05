@@ -12,11 +12,7 @@ class EventServiceProvider extends ServiceProvider
      *
      * @var array
      */
-    protected $listen = [
-        'Illuminate\Auth\Events\Failed' => [
-            'App\Listeners\LogFailedAuthenticationAttempt',
-        ],
-    ];
+    protected $listen = [];
 
     /**
      * Register any events for your application.

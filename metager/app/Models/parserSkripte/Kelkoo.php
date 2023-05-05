@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Kelkoo extends Searchengine
@@ -10,12 +11,11 @@ class Kelkoo extends Searchengine
     public $results = [];
     public $unsignedGetString = "";
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
         $this->unsignedGetString = $this->getString;
         $this->getString = $this->UrlSigner($this->unsignedGetString);
-        $this->hash = md5($this->engine->host . $this->getString . $this->engine->port . $this->name);
     }
 
     public function loadResults($result)
@@ -58,13 +58,13 @@ class Kelkoo extends Searchengine
                 $anzeigeLink = $result->Merchant[0]->Name[0]->__toString();
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     [
                         'image' => $image,
@@ -122,7 +122,6 @@ class Kelkoo extends Searchengine
         $next->unsignedGetString .= "&start=" . ($current + 20);
         $next->getString = $next->UrlSigner($next->unsignedGetString);
 
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
         $this->next = $next;
     }
 

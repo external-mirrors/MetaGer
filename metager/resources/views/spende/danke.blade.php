@@ -59,14 +59,5 @@
 		</div>
 	</div>
 	<button type="button" style="margin-top: 16px; margin-bottom: 16px;" class="btn btn-primary noprint print-button js-only">{{ trans('spende.drucken') }}</button>
-	@if($data['key'] !== false)
-	<div class="card">
-		<p style="text-align: center; width:100%;">{!! trans('spende.danke.schluessel') !!}</p>
-		<div class="copyLink">
-			<input id="key" class="loadSettings" type="text" style="text-align: center;" value="{{ $data['key'] }}">
-			<button class="btn btn-default js-only">Kopieren</button>
-		</div>
-	</div>
-	@endif
 </div>
 @endsection

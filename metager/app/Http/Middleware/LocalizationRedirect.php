@@ -38,6 +38,10 @@ class LocalizationRedirect
 
         if (app()->environment("local")) {
             $allowed_hostnames[] = "nginx";
+            // Allow ngrok aswell under local env
+            if (\preg_match("/\.ngrok-free\.app$/", $host)) {
+                $allowed_hostnames[] = $host;
+            }
         }
 
         $required_hostname = "metager.de";
@@ -63,9 +67,9 @@ class LocalizationRedirect
         // If you switch languages between our domains (metager.de/metager.es/metager.org) a language parameter will be added 
         // allthough the language already is default for that domain (de-DE for metager.de, en-US for metager.org, es-ES for metager.es)
         $matched_host_default_locales = [
-            "metager.de"    => "de-DE",
-            "metager.org"   => "en-US",
-            "metager.es"    =>  "es-ES",
+            "metager.de" => "de-DE",
+            "metager.org" => "en-US",
+            "metager.es" => "es-ES",
         ];
 
         if (\array_key_exists($host, $matched_host_default_locales) && request()->segment(1) === $matched_host_default_locales[$host]) {

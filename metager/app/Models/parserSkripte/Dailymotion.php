@@ -3,15 +3,16 @@
 namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use Log;
 
 class Dailymotion extends Searchengine
 {
     public $results = [];
 
-    public function __construct($name, \StdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
+        parent::__construct($name, $configuration);
     }
 
     public function loadResults($result)
@@ -25,20 +26,20 @@ class Dailymotion extends Searchengine
 
             $results = $content->list;
             foreach ($results as $result) {
-                $title       = $result->title;
-                $link        = $result->url;
+                $title = $result->title;
+                $link = $result->url;
                 $anzeigeLink = $link;
-                $descr       = $result->description;
-                $image       = $result->thumbnail_240_url;
+                $descr = $result->description;
+                $image = $result->thumbnail_240_url;
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     ['partnershop' => false]
                 );

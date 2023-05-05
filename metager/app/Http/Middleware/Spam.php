@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Authorization\Authorization;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -18,7 +19,7 @@ class Spam
      */
     public function handle(Request $request, Closure $next)
     {
-        if (app('App\Models\Key')->getStatus()) {
+        if (app(Authorization::class)->canDoAuthenticatedSearch()) {
             return $next($request);
         }
         # Check for recent Spams
@@ -39,7 +40,6 @@ class Spam
 
             $browser->setUserAgent($_SERVER["AGENT"]);
             if ($browser->browser() === "Chrome" && $browser->version($browser->browser()) === "91.0.4472.77") {
-                $this->logFail2Ban($request->ip());
                 abort(404);
             }
             // ToDo Remove Log
@@ -68,29 +68,5 @@ class Spam
         }
 
         return $next($request);
-    }
-
-    private function logFail2Ban($ip)
-    {
-        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
-        if (empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")) {
-            return;
-        }
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => "browserverification.ban",
-            "url" => config("metager.metager.fail2ban.url") . "/spam/",
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => config("metager.metager.fail2ban.user"),
-            "password" => config("metager.metager.fail2ban.password"),
-            "headers" => [
-                "ip" => $ip
-            ],
-            "cacheDuration" => 0,
-            "name" => "Captcha",
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
 }

@@ -31,7 +31,6 @@ return [
     'assosearch' => 'Assoziationen für ":q" - MetaGer',
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Mitgliederschlüssel - MetaGer',
-    'keychange' => 'Mitgliederschlüssel wechseln',
     'settings' => 'Sucheinstellungen (:fokus)',
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',

@@ -4,13 +4,25 @@ return [
     'actions' => 'Aktionen',
     'add' => 'Hinzufügen',
     'address' => 'Adresseingabe',
-    'allSettings'   => [
+    'allSettings' => [
         'header' => 'Auf :root gesetzte Einstellungen',
         'text' => 'Hier finden Sie eine Übersicht aller von Ihnen gesetzten Einstellungen und Cookies. Sie können einzelne Einträge löschen, oder alle entfernen. Bedenken Sie, dass die zugehörigen Einstellungen dann nicht mehr verwendet werden.',
     ],
-    'aria.label'    => [
+    'aria.label' => [
         '1' => 'aktiviert',
         '2' => 'deaktiviert',
+    ],
+    'metager-key' => [
+        'header' => 'Werbefreie Suche',
+        'charge' => 'Guthaben: :token Token',
+        'manage' => 'Schlüssel aufladen',
+        'logout' => 'Schlüssel entfernen',
+        'no-key' => 'Sie haben keinen Schlüssel für werbefreie Suchen eingerichtet.',
+        'actions' => [
+            'info' => 'Was ist das?',
+            'login' => 'Vorhandenen Schlüssel einrichten',
+            'create' => 'Neuen Schlüssel erstellen'
+        ]
     ],
     'back' => 'Zurück zur letzten Seite',
     'blentry' => 'Blacklisteintrag',
@@ -19,19 +31,23 @@ return [
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
+    'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",
+    'no-engines' => "Mit den aktuellen Sucheinstellungen wird keine Suchmaschine abgefragt.",
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
-    'header'        => [
+    'header' => [
         '1' => 'Sucheinstellungen',
         '2' => 'Verwendete Suchmaschinen',
         '3' => 'Suchfilter',
         '4' => 'Blacklist',
     ],
-    'hint'      => [
+    'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
-        'header' => 'Setzen von Cookies',
-        'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen mitzunehmen. Der Link erstellt beim Aufrufen Cookies mit dem entsprechenden Einstellungen.',
-        'text' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert. Sie können sich eine Übersicht aller von Ihnen vorgenommenen Einstellungen und Cookies <a href=:link>anzeigen lassen</a>.',
+        'header' => 'Wiederherstellen aller aktuellen Einstellungen',
+        'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen wiederherzustellen.',
     ],
+    'cost' => 'Wir berechnen mit den aktuellen Einstellungen <strong>:cost Token</strong> pro Suchanfrage.',
+    'cost-free' => 'Ihre Suchanfragen sind mit den aktuellen Einstellungen <strong>kostenlos</strong>.',
+    'free' => 'kostenlos',
     'inFocus' => 'im Fokus',
     'key' => 'Ihr Schlüssel für die werbefreie Suche',
     'light' => 'Hell',
@@ -45,9 +61,13 @@ return [
     'reset' => 'Alle Einstellungen löschen',
     'save' => 'Speichern',
     'system' => 'Systemstandard',
-    'text'      => [
-        '1' => 'Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im Fokus :fokusName vornehmen. Sollten diese nicht dauerhaft gespeichert bleiben, überprüfen Sie bitte in Ihren Browsereinstellungen, ob dieser beim Beenden gespeicherte Cookies löscht.',
-        '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden. Eingeschaltete Suchmaschinen sind in grün dargestellt. Ausgeschaltete in rot oder grau.',
+    "enable-engine" => "Suchmaschine einschalten",
+    "disable-engine" => "Suchmaschine ausscahlten",
+    "filtered-engine" => "Suchmaschine durch Filter deaktiviert",
+    "payment-engine" => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
+    'text' => [
+        '1' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert.',
+        '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden.',
         '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
     ],

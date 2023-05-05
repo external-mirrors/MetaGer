@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\MetaGer;
+use App\Models\Authorization\Authorization;
+use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
+use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Request;
-use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Illuminate\Support\Facades\Log;
-use Prometheus\CollectorRegistry;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\App;
 use App\QueryTimer;
 use App\SearchSettings;
+use Blade;
+use Cookie;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
+use Prometheus\CollectorRegistry;
 
 class MetaGerSearch extends Controller
 {
@@ -31,23 +36,16 @@ class MetaGerSearch extends Controller
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin"));
         }
 
-        $focus = $request->input("focus", "web");
+        $settings = app(SearchSettings::class);
 
-        if ($focus === "maps") {
-            $searchinput = $request->input('eingabe', '');
-            return redirect()->to('https://maps.metager.de/map/' . $searchinput . '/1240908.5493525574,6638783.2192695495,6');
+        if ($settings->fokus === "maps") {
+            return redirect()->to('https://maps.metager.de/map/' . $settings->q . '/1240908.5493525574,6638783.2192695495,6');
         }
 
         # If there is no query parameter we redirect to the startpage
-        $eingabe = $request->input('eingabe', '');
-        if (empty(trim($eingabe))) {
+        if (empty(trim($settings->q))) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
         }
-
-        # Mit gelieferte Formulardaten parsen und abspeichern:
-        $query_timer->observeStart("Search_ParseFormData");
-        $metager->parseFormData($request);
-        $query_timer->observeEnd("Search_ParseFormData");
 
         # Nach Spezialsuchen überprüfen:
         $query_timer->observeStart("Search_CheckSpecialSearches");
@@ -56,32 +54,47 @@ class MetaGerSearch extends Controller
 
         # Search query can be empty after parsing the formdata
         # we will cancel the search in that case and show an error to the user
-        if (empty($metager->getQ())) {
+        if (empty($settings->q)) {
             return $metager->createView();
         }
 
+        if (empty(app(Searchengines::class)->getEnabledSearchengines())) {
+            /**
+             * Temporary migration to fix settings for users that already
+             * had now invalid settings saved when we updated.
+             */
+            if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
+                $settings = app(SearchSettings::class);
+                $setting_removed = false;
+                foreach ($settings->parameterFilter as $filterName => $filter) {
+                    // Check if the user has an option enabled that is only available with metager key
+                    if (
+                        Cookie::has($settings->fokus . "_setting_" . $filter->{"get-parameter"}) &&
+                        in_array($filter->value, array_keys($filter->{"disabled-values"})) &&
+                        in_array(DisabledReason::PAYMENT_REQUIRED, $filter->{"disabled-values"}[$filter->value])
+                    ) {
+                        Cookie::queue(Cookie::forget($settings->fokus . "_setting_" . $filter->{"get-parameter"}));
+                        $setting_removed = true;
+                    }
+                }
+                if ($setting_removed) {
+                    return redirect(url()->full());
+                }
+            }
+            return redirect(LaravelLocalization::getLocalizedUrl(null, route("settings", ["focus" => $settings->fokus])) . "#engines");
+        }
+
+        app(Searchengines::class)->checkPagination();
+
         $query_timer->observeStart("Search_CreateQuicktips");
+
+        /** @var Quicktips */
         $quicktips = $metager->createQuicktips();
         $query_timer->observeEnd("Search_CreateQuicktips");
-
-        # Suche für alle zu verwendenden Suchmaschinen als Job erstellen,
-        # auf Ergebnisse warten und die Ergebnisse laden
-        $query_timer->observeStart("Search_CreateSearchEngines");
-        $metager->createSearchEngines($request);
-        $query_timer->observeEnd("Search_CreateSearchEngines");
 
         $query_timer->observeStart("Search_StartSearch");
         $metager->startSearch();
         $query_timer->observeEnd("Search_StartSearch");
-
-        # Versuchen die Ergebnisse der Quicktips zu laden
-        if ($quicktips !== null) {
-            $query_timer->observeStart("Search_LoadQuicktips");
-            $quicktipResults = $quicktips->loadResults();
-            $query_timer->observeEnd("Search_LoadQuicktips");
-        } else {
-            $quicktipResults = [];
-        }
 
         $query_timer->observeStart("Search_WaitForMainResults");
         $metager->waitForMainResults();
@@ -90,6 +103,22 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_RetrieveResults");
         $metager->retrieveResults();
         $query_timer->observeEnd("Search_RetrieveResults");
+
+        // Versuchen die Ergebnisse der Quicktips zu laden
+        if ($quicktips !== null) {
+            $query_timer->observeStart("Search_LoadQuicktips");
+            $quicktips->loadResults();
+            $query_timer->observeEnd("Search_LoadQuicktips");
+        }
+
+        $admitad = [];
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if (!empty($newAdmitad->hash)) {
+                $admitad[] = $newAdmitad;
+            }
+        }
+        $admitad = $metager->parseAffiliates($admitad);
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
@@ -100,25 +129,17 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_PrepareResults");
         $metager->prepareResults();
         $query_timer->observeEnd("Search_PrepareResults");
-        $admitad = [];
+
 
         $query_timer->observeStart("Search_Affiliates");
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitad[] = $newAdmitad;
-            }
-        }
-
-        $metager->parseAffiliates($admitad);
 
         // Add Advertisement for Donations
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
             $metager->addDonationAdvertisement();
         }
         $query_timer->observeEnd("Search_Affiliates");
 
-        foreach ($metager->getEngines() as $engine) {
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
                 $engine->setNew(false);
                 $engine->markNew();
@@ -126,9 +147,15 @@ class MetaGerSearch extends Controller
         }
         $query_timer->observeStart("Search_CacheFiller");
         try {
+            $authorization = app(Authorization::class);
+            $searchengines = app(Searchengines::class);
+            $settings = app(SearchSettings::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [
-                    "apiAuthorized" => $metager->isApiAuthorized(),
+                    "authorization" => $authorization,
+                    "searchengines" => $searchengines,
+                    "settings" => $settings,
+                    "quicktips" => $quicktips
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -145,7 +172,15 @@ class MetaGerSearch extends Controller
         $counter->inc();
 
         $query_timer->observeTotal();
-        return $metager->createView($quicktipResults);
+        if ($quicktips !== null) {
+            $quicktip_results = $quicktips->quicktips;
+        } else {
+            $quicktip_results = null;
+        }
+        return response($metager->createView($quicktip_results), 200, [
+            "Cache-Control" => "max-age=3600, must-revalidate, public",
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function searchTimings(Request $request, MetaGer $metager)
@@ -171,9 +206,11 @@ class MetaGerSearch extends Controller
 
     private function loadMoreJS(Request $request)
     {
-        \app()->make(SearchSettings::class)->javascript_enabled = true;
+        \app(SearchSettings::class)->javascript_enabled = true;
         # Create a MetaGer Instance with the supplied hash
         $hash = $request->input('loadMore', '');
+        unset($request["loadMore"]);
+        unset($request["script"]);
 
         # Parser Skripte einhängen
         $dir = app_path() . "/Models/parserSkripte/";
@@ -186,75 +223,94 @@ class MetaGerSearch extends Controller
 
         $cached = Cache::get($hash);
         if ($cached === null) {
-            return response()->json(['finished' => true]);
+            if ($request->header("If-Modified-Since") !== null) {
+                return response("", 304, [
+                    "Cache-Control" => "max-age=3600, must-revalidate, public",
+                    "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+                ]);
+            } else {
+                return response()->json(['finished' => true]);
+            }
         }
 
         $engines = $cached["engines"];
         $admitad = $cached["admitad"];
-        //        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
-        $metager->setApiAuthorized($mg["apiAuthorized"]);
+        $authorization = $mg["authorization"];
+        app()->singleton(Authorization::class, function ($app) use ($authorization) {
+            return $authorization;
+        });
+        $settings = $mg["settings"];
+        app()->singleton(SearchSettings::class, function ($app) use ($settings) {
+            return $settings;
+        });
+        $searchengines = $mg["searchengines"];
+        app()->singleton(Searchengines::class, function ($app) use ($searchengines) {
+            return $searchengines;
+        });
+        /** @var Quicktips */
+        $quicktips = $mg["quicktips"];
+        $quicktips->loadResults();
 
-        $metager->parseFormData($request, false);
+
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
-        $metager->restoreEngines($engines);
+
+        $admitadCountBefore = sizeof($admitad);
+        $engineCountBefore = 0;
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
+            if ($engine->loaded) {
+                $engineCountBefore++;
+            }
+        }
 
         # Checks Cache for engine Results
         $metager->checkCache();
-
         $metager->retrieveResults();
+
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
+            $newAdmitad = new \App\Models\Admitad($metager);
+            if (!empty($newAdmitad->hash)) {
+                $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
+                $admitad[] = $newAdmitad;
+            }
+        }
+        $admitad = $metager->parseAffiliates($admitad);
 
         $metager->rankAll();
         $metager->prepareResults();
 
-        if (!$metager->isApiAuthorized() && !$metager->isDummy()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitad[] = $newAdmitad;
-            }
-        }
 
-        $adgoalFinished = $metager->parseAffiliates($admitad);
 
         $result = [
             'finished' => true,
-            'newResults' => [],
-            'changedResults' => [],
+            'results' => "",
+            'nextSearchLink' => $metager->nextSearchLink(),
+            'imagesearch' => false,
         ];
-        $result["nextSearchLink"] = $metager->nextSearchLink();
+
+        if ($quicktips->new) {
+            $result["quicktips"] = Blade::render("parts.quicktips", ["quicktips" => $quicktips->quicktips]);
+        }
 
         $newResults = 0;
+        $viewResults = [];
         foreach ($metager->getResults() as $index => $resultTmp) {
-            if ($resultTmp->new || $resultTmp->changed) {
-                if ($metager->getFokus() !== "bilder") {
-                    $view = View::make('layouts.result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = false;
-                } else {
-                    $view = View::make('layouts.image_result', ['index' => $index, 'result' => $resultTmp, 'metager' => $metager]);
-                    $html = $view->render();
-                    if (!$resultTmp->new && $resultTmp->changed) {
-                        $result['changedResults'][$index] = $html;
-                    } else {
-                        $result['newResults'][$index] = $html;
-                    }
-                    $result["imagesearch"] = true;
-                }
+            $viewResults[] = get_object_vars($resultTmp);
+            if ($resultTmp->new) {
                 $newResults++;
+            }
+            if ($metager->getFokus() === "bilder") {
+                $result["imagesearch"] = true;
             }
         }
 
         $finished = true;
         $enginesLoaded = [];
-        foreach ($engines as $engine) {
+        $enginesLoadedAfter = 0;
+        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (!$engine->loaded) {
                 $enginesLoaded[$engine->name] = false;
                 $finished = false;
@@ -262,11 +318,17 @@ class MetaGerSearch extends Controller
                 $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
                 $engine->markNew();
+                $enginesLoadedAfter++;
             }
         }
 
-        if (!$adgoalFinished /*|| !$admitadFinished*/) {
+        if (sizeof($admitad) > 0) {
             $finished = false;
+        }
+
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad) && !array_key_exists("quicktips", $result)) {
+            // Nothing changed but we are not finished yet either
+            return response("", 304);
         }
 
         $result["finished"] = $finished;
@@ -278,18 +340,43 @@ class MetaGerSearch extends Controller
             $counter->incBy($newResults);
         }
         // Update new Engines
-        Cache::put("loader_" . $metager->getSearchUid(), [
-            "metager" => [
-                "apiAuthorized" => $metager->isApiAuthorized(),
-            ],
-            "admitad" => $admitad,
-            "engines" => $metager->getEngines(),
-        ], 1 * 60);
+        $authorization = app(Authorization::class);
+        $searchengines = app(Searchengines::class);
+        $cacheControl = "no-cache, must-revalidate, public";
+        if ($finished) {
+            Cache::forget("loader_" . $metager->getSearchUid());
+            $cacheControl = "max-age=3600, must-revalidate, public";
+        } else {
+            Cache::put("loader_" . $metager->getSearchUid(), [
+                "metager" => [
+                    "authorization" => $authorization,
+                    "searchengines" => $searchengines,
+                    "settings" => $settings,
+                    "quicktips" => $quicktips
+                ],
+                "admitad" => $admitad,
+                "engines" => $metager->getEngines(),
+            ], 60 * 60);
+        }
+
+        $result["results"] = view('resultpages.results')
+            ->with('results', $viewResults)
+            ->with('eingabe', $metager->getEingabe())
+            ->with('mobile', $metager->isMobile())
+            ->with('warnings', $metager->warnings)
+            ->with('htmlwarnings', $metager->htmlwarnings)
+            ->with('errors', $metager->errors)
+            ->with('apiAuthorized', $metager->isApiAuthorized())
+            ->with('metager', $metager)
+            ->with('fokus', $metager->getFokus())->render();
 
         # JSON encoding will fail if invalid UTF-8 Characters are in this string
         # mb_convert_encoding will remove thise invalid characters for us
         $result = mb_convert_encoding($result, "UTF-8", "UTF-8");
-        return response()->json($result);
+        return response()->json($result, 200, [
+            "Cache-Control" => $cacheControl,
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+        ]);
     }
 
     public function botProtection($redirect)

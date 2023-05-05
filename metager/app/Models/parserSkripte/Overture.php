@@ -2,26 +2,21 @@
 
 namespace app\Models\parserSkripte;
 
+use App\MetaGer;
 use App\Models\Searchengine;
+use App\Models\SearchengineConfiguration;
 use LaravelLocalization;
 use Log;
 
 class Overture extends Searchengine
 {
+    public $failed_results = false;
     public $results = [];
 
-    public function __construct($name, \stdClass $engine, \App\MetaGer $metager)
+    public function __construct($name, SearchengineConfiguration $configuration)
     {
-        parent::__construct($name, $engine, $metager);
-
-        # We need some Affil-Data for the advertisements
-        if (preg_match("/^ukraine$/i", trim($this->query))) {
-            $this->query .= " p";
-        }
-
-        $this->getString = $this->generateGetString($this->query);
-        $this->getString .= $this->getOvertureAffilData($metager->getUrl());
-        $this->updateHash();
+        parent::__construct($name, $configuration);
+        $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
 
     public function loadResults($result)
@@ -41,6 +36,16 @@ class Overture extends Searchengine
             }
             $this->totalResults = $resultCount;
             $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+            $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
+
+            if (sizeof($results) === 0 && sizeof($ads) === 0) {
+                // There are cases where Yahoo will return empty responses
+                // when search terms are not monetized although websearch results should exist
+                $this->failed_results = true;
+                $this->log_failed_yahoo_search();
+                return;
+            }
+
             foreach ($results as $result) {
                 $title = html_entity_decode($result["title"]);
                 $link = $result->{"ClickUrl"}->__toString();
@@ -48,20 +53,19 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
             }
 
             # Nun noch die Werbeergebnisse:
-            $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
             foreach ($ads as $ad) {
                 $title = html_entity_decode($ad["title"]);
                 $link = $ad->{"ClickUrl"}->__toString();
@@ -69,13 +73,13 @@ class Overture extends Searchengine
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
                 $this->ads[] = new \App\Models\Result(
-                    $this->engine,
+                    $this->configuration->engineBoost,
                     $title,
                     $link,
                     $anzeigeLink,
                     $descr,
-                    $this->engine->infos->display_name,
-                    $this->engine->infos->homepage,
+                    $this->configuration->infos->displayName,
+                    $this->configuration->infos->homepage,
                     $this->counter,
                     []
                 );
@@ -131,19 +135,22 @@ class Overture extends Searchengine
             }
         }
 
+        parse_str($nextArgs, $query_data);
+        /** @var SearchEngineConfiguration */
+        $newConfiguration = unserialize(serialize($this->configuration));
+        foreach ($query_data as $key => $value) {
+            $newConfiguration->getParameter->$key = $value;
+        }
         # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new Overture($this->name, $this->engine, $metager);
-        $next->getString = preg_replace("/&Keywords=.*?&/si", "&", $next->getString) . "&" . $nextArgs;
-        $next->hash = md5($next->engine->host . $next->getString . $next->engine->port . $next->name);
+        $next = new Overture($this->name, $newConfiguration);
         $this->next = $next;
     }
 
     # Liefert Sonderdaten für Yahoo
-    private function getOvertureAffilData($url)
+    private function setOvertureAffilData($url)
     {
         $affil_data = 'ip=' . $this->ip;
         $affil_data .= '&ua=' . $this->useragent;
-        $affilDataValue = $this->urlEncode($affil_data);
 
         $serve_domain = "https://metager.de/";
         if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
@@ -159,9 +166,23 @@ class Overture extends Searchengine
             $url = str_replace("https://metager3.de", $serve_domain, $url);
         }
 
-        # Wir benötigen die ServeUrl:
-        $serveUrl = $this->urlEncode($url);
+        $this->configuration->getParameter->affilData = $affil_data;
+        $this->configuration->getParameter->serveUrl = $url;
+    }
 
-        return "&affilData=" . $affilDataValue . "&serveUrl=" . $serveUrl;
+    private function log_failed_yahoo_search()
+    {
+        $log_file = storage_path("logs/metager/yahoo_fail.csv");
+
+        $data = [
+            "time" => now()->format("Y-m-d H:i:s"),
+            "query" => $this->query
+        ];
+        $fh = fopen($log_file, "a");
+        try {
+            fputcsv($fh, $data);
+        } finally {
+            fclose($fh);
+        }
     }
 }

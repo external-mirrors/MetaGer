@@ -43,7 +43,7 @@ class HumanVerification extends Controller
 
         $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
 
-        if (!$human_verification->isLocked()) {
+        if ($human_verification === null || !$human_verification->isLocked()) {
             return redirect($redirect_url);
         }
 
@@ -60,10 +60,14 @@ class HumanVerification extends Controller
         // Extract the correct solution to this captcha for generating the Audio Captcha
         $text = implode(" ", $captcha->getText());
 
+        // Make sure each capture can only be tried once
+        $captcha_id = Crypt::encryptString(md5(microtime(true) . $text));
+
         $tts_url = TTSController::CreateTTSUrl($text, Localization::getLanguage());
 
         \App\PrometheusExporter::CaptchaShown();
         return view('humanverification.captcha')->with('title', 'Bestätigung notwendig')
+            ->with("id", $captcha_id)
             ->with('url', $redirect_url)
             ->with("key", $request->input("key"))
             ->with('correct', $captcha_key["key"])
@@ -90,7 +94,21 @@ class HumanVerification extends Controller
         $rules = ['captcha' => 'required|captcha_api:' . $lockedKey . ',math'];
         $validator = validator()->make(request()->all(), $rules);
 
-        if (empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
+        // There will be an entry in Cache for this key if this same captcha was already tried
+        $captcha_id = $request->input("id", "");
+        if (!empty($captcha_id)) {
+            try {
+                $captcha_id = Crypt::decryptString($captcha_id);
+            } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+                $captcha_id = "";
+            }
+            // If this is not a md5
+            if (strlen($captcha_id) !== 32 || !ctype_xdigit($captcha_id)) {
+                $captcha_id = "";
+            }
+        }
+
+        if (empty($captcha_id) || Cache::has($captcha_id) || empty($lockedKey) || $validator->fails() || !$request->has("key") || !Cache::has($request->input("key"))) {
             $params = [
                 "url" => $redirect_url,
                 "e" => "",
@@ -99,6 +117,7 @@ class HumanVerification extends Controller
             if ($request->has("dnaa")) {
                 $params["dnaa"] = true;
             }
+            Cache::put($captcha_id, true, now()->addMinutes(10));
             return redirect(route('captcha_show', $params));
         } else {
             // Check if the user wants to store a cookie
@@ -146,8 +165,12 @@ class HumanVerification extends Controller
             # The Captcha was correct. We can remove the key from the user
             # Additionally we will whitelist him so he is not counted towards botnetwork
             $human_verification = ModelsHumanVerification::createFromKey($request->input("key"));
-            $human_verification->unlockUser();
-            $human_verification->verifyUser();
+            if ($human_verification !== null) {
+                $human_verification->unlockUser();
+                $human_verification->verifyUser();
+            }
+
+            Cache::put($captcha_id, true, now()->addMinutes(10));
 
             return redirect($url);
         }
@@ -168,30 +191,6 @@ class HumanVerification extends Controller
         } finally {
             fclose($fh);
         }
-    }
-
-    public static function logCaptcha(Request $request)
-    {
-        $fail2banEnabled = config("metager.metager.fail2ban.enabled");
-        if (empty($fail2banEnabled) || !$fail2banEnabled || !config("metager.metager.fail2ban.url") || !config("metager.metager.fail2ban.user") || !config("metager.metager.fail2ban.password")) {
-            return;
-        }
-
-        // Submit fetch job to worker
-        $mission = [
-            "resulthash" => "captcha",
-            "url" => config("metager.metager.fail2ban.url") . "/captcha/",
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "username" => config("metager.metager.fail2ban.user"),
-            "password" => config("metager.metager.fail2ban.password"),
-            "headers" => [
-                "ip" => $request->ip()
-            ],
-            "cacheDuration" => 0,
-            "name" => "Captcha",
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
 
     public static function remove(Request $request)
@@ -311,7 +310,6 @@ class HumanVerification extends Controller
     public function verificationCssFile(Request $request)
     {
         $key = $request->input("id", "");
-
         // Verify that key is a md5 checksum
         if (preg_match("/^[a-f0-9]{32}$/", $key)) {
             Cache::lock($key . "_lock", 10)->block(5, function () use ($key) {
@@ -319,14 +317,14 @@ class HumanVerification extends Controller
                 if ($bvData === null) {
                     abort(404);
                 }
-                if (\array_key_exists("css", $bvData)) {
+                if (!\array_key_exists("css", $bvData)) {
                     $bvData["css"] = array();
                 }
                 $bvData["css"]["loaded"] = now();
                 Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
             });
         }
-        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css");
+        return response(view('layouts.resultpage.verificationCss'), 200)->header("Content-Type", "text/css")->header("Cache-Control", "no-store");
     }
 
     public function verificationJsFile(Request $request)
@@ -366,7 +364,7 @@ class HumanVerification extends Controller
 
             Cache::put($key, $bvData, now()->addMinutes(self::BV_DATA_EXPIRATION_MINUTES));
         });
-        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png"]);
+        return response()->file(\public_path("img/1px.png"), ["Content-Type" => "image/png", "Cache-Control" => "no-store"]);
     }
 
     public function verificationCSP(Request $request, string $mgv)

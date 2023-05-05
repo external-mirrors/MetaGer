@@ -11,20 +11,35 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 use PDO;
+use DB;
 
 class AdminInterface extends Controller
 {
 
     public function count(Request $request)
     {
-
+        try {
+            if ($request->filled("end") && $request->filled("start")) {
+                $start = Carbon::createFromFormat("Y-m-d", $request->input("start"));
+                $end = Carbon::createFromFormat("Y-m-d", $request->input("end"));
+            }
+        } catch (\Exception $e) {
+            $start = null;
+            $end = null;
+        }
+        if (empty($start) || empty($end) || $start->isAfter($end) || $end->isBefore($start)) {
+            $end = Carbon::createMidnightDate();
+            $start = clone $end;
+            $start->subDays(28);
+        }
 
         if ($request->input('out', 'web') === "web") {
-            $days = $request->input("days", 28);
             $interface = $request->input('interface', 'all');
             return view('admin.count')
                 ->with('title', 'Suchanfragen - MetaGer')
-                ->with('days', $days)
+                ->with('start', $start)
+                ->with('end', $end)
+                ->with("days", $start->diffInDays($end))
                 ->with('interface', $interface)
                 ->with('css', [mix('/css/count/style.css')])
                 ->with('darkcss', [mix('/css/count/dark.css')])
@@ -34,7 +49,7 @@ class AdminInterface extends Controller
         }
     }
 
-    public function getCountDataTotal(Request $request)
+    public function getCountData(Request $request)
     {
         $date = $request->input('date', '');
         $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00");
@@ -44,99 +59,41 @@ class AdminInterface extends Controller
 
         $interface = $request->input('interface', 'all');
 
-        $year = $date->format("Y");
-        $month = $date->format("m");
-        $day = $date->format("d");
-        $cache_key = "admin_count_total_${interface}_${year}_${month}_${day}";
-        $total_count = Cache::get($cache_key);
-
-
-        if ($total_count === null) {
-            $database_file = $this->getDatabaseLogFile($date);
-            if ($database_file === null) {
-                abort(404);
-            }
-
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-            try {
-                if (!$connection->getSchemaBuilder()->hasTable("logs")) {
-                    abort(404);
-                }
-
-                $total_count = $connection->table("logs");
-                if ($interface !== "all") {
-                    $total_count = $total_count->where("interface", "=", $interface);
-                }
-                $total_count = $total_count->count('*');
-            } finally {
-                $connection->disconnect();
-            }
-            // No Cache for today
-            if ($date->isToday()) {
-                Cache::put($cache_key, $total_count, now()->addMinutes(5));
-            } else {
-                Cache::put($cache_key, $total_count, now()->addWeek());
-            }
+        $connection = DB::connection("logs");
+        $log_summary = $connection
+            ->table("logs")
+            ->select(DB::raw('to_timestamp(floor(EXTRACT(epoch FROM time) / EXTRACT(epoch FROM interval \'5 min\')) * EXTRACT(epoch FROM interval \'5 min\')) as timestamp, count(*)'))
+            ->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'");
+        if ($interface !== "all") {
+            $log_summary = $log_summary->where("locale", "=", $interface);
         }
+        $log_summary = $log_summary->groupBy("timestamp")
+            ->orderBy("timestamp")
+            ->get();
 
         $result = [
-            "status" => 200,
-            "error" => false,
-            "data" => [
-                "date" => "$year-$month-$day",
-                "total" => $total_count,
-            ]
+            "total" => 0,
+            "until_now" => 0
         ];
-        return \response()->json($result);
-    }
 
-    public function getCountDataUntil(Request $request)
-    {
-        $date = $request->input('date', '');
-        $date = Carbon::createFromFormat("Y-m-d", $date);
-        if ($date === false) {
-            abort(404);
+        $now = Carbon::now();
+        foreach ($log_summary as $entry) {
+            $time = Carbon::createFromFormat("Y-m-d H:i:sO", $entry->timestamp);
+            $time->day(1)->year($now->year)->month($now->month)->day($now->day);
+            $result["total"] += $entry->count;
+            if ($time->isBefore($now)) {
+                $result["until_now"] += $entry->count;
+            }
         }
 
-        $interface = $request->input('interface', 'all');
-
-        $year = $date->format("Y");
-        $month = $date->format("m");
-        $day = $date->format("d");
-        $time = now()->format("H:i:s");
-
-        $cache_key = "admin_count_until_${interface}_${year}_${month}_${day}";
-        $total_count = Cache::get($cache_key);
-
-        if ($total_count === null) {
-            $database_file = $this->getDatabaseLogFile($date);
-            if ($database_file === null) {
-                abort(404);
-            }
-
-            $connection = new SQLiteConnection(new PDO("sqlite:$database_file", null, null, [PDO::SQLITE_ATTR_OPEN_FLAGS => PDO::SQLITE_OPEN_READONLY]));
-            try {
-                if (!$connection->getSchemaBuilder()->hasTable("logs")) {
-                    abort(404);
-                }
-
-                $total_count = $connection->table("logs")->whereTime("time", "<", $time);
-                if ($interface !== "all") {
-                    $total_count = $total_count->where("interface", "=", $interface);
-                }
-                $total_count = $total_count->count('*');
-            } finally {
-                $connection->disconnect();
-            }
-
-            Cache::put($cache_key, $total_count, now()->addMinutes(5));
-        }
         $result = [
             "status" => 200,
             "error" => false,
             "data" => [
-                "date" => "$year-$month-$day",
-                "total" => $total_count,
+                "date" => $now->format("Y-m-d"),
+                "time" => $now->format("H:i:s"),
+                "total" => $result["total"],
+                "until_now" => $result["until_now"],
             ]
         ];
 
@@ -211,48 +168,5 @@ class AdminInterface extends Controller
     {
         $status = \fpm_get_status();
         return response()->json($status);
-    }
-
-    private function getDatabaseLogFile(Carbon $date)
-    {
-        $original_file = \storage_path("logs/metager/" . $date->format("Y/m/d") . ".sqlite");
-        $fast_file = \storage_path("logs/metager/fast_dir/" . $date->format("Y/m/d") . ".sqlite");
-        if (!\file_exists($original_file)) {
-            return null;
-        }
-
-        if ($date->isToday()) {
-            return $original_file;
-        }
-        $lock_hash = \md5($fast_file);
-        if (\file_exists($fast_file) && Redis::get($lock_hash) === null) {
-            return $fast_file;
-        }
-
-        // Verify that the target directory exists
-        $fast_file_dir = dirname($fast_file);
-        if (!\file_exists($fast_file_dir) && !\mkdir($fast_file_dir, 0777, true)) {
-            return null;
-        }
-
-        // Acquire a lock for this file to make sure we're the only process copying it
-
-        do {
-            $lock = Redis::setnx($lock_hash, "lock");
-            if ($lock === 1) {
-                Redis::expire($lock_hash, 15);
-            } else {
-                \usleep(350 * 1000);
-            }
-        } while ($lock !== 1);
-
-        try {
-            if (\copy($original_file, $fast_file)) {
-                return $fast_file;
-            }
-        } finally {
-            Redis::del($lock_hash);
-        }
-        return null;
     }
 }

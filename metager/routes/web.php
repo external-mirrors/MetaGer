@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
@@ -23,7 +21,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 | by your application. Just tell Laravel the URIs it should respond
 | to using a Closure or controller method. Build something great!
 |
- */
+*/
 
 Route::get("robots.txt", function (Request $request) {
     $responseData = "";
@@ -37,7 +35,7 @@ Route::get("robots.txt", function (Request $request) {
 
 /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
-Route::get('/', 'StartpageController@loadStartPage')->name("startpage")->middleware("removekey");
+Route::get('/', 'StartpageController@loadStartPage')->name("startpage");
 
 Route::get('asso', function () {
     return view('assoziator.asso')
@@ -80,7 +78,9 @@ Route::get('kontakt/{url?}', function ($url = "") {
     return view('kontakt.kontakt')
         ->with('title', trans('titles.kontakt'))
         ->with('navbarFocus', 'kontakt')
-        ->with('url', $url);
+        ->with('url', $url)
+        ->with('js', [mix('js/contact.js')])
+        ->with("css", [mix("css/contact.css")]);
 })->name("contact");
 
 Route::post('kontakt', 'MailController@contactMail');
@@ -92,24 +92,30 @@ Route::get('tor', function () {
 });
 
 Route::group(['prefix' => 'spende'], function () {
-    Route::get('/', function () {
-        return view('spende.spende')
-            ->with('title', trans('titles.spende'))
-            ->with('js', [mix('/js/donation.js')])
-            ->with('navbarFocus', 'foerdern');
-    })->name("spende");
+    Route::get(
+        '/',
+        function () {
+            return view('spende.spende')
+                ->with('title', trans('titles.spende'))
+                ->with('js', [mix('/js/donation.js')])
+                ->with('navbarFocus', 'foerdern');
+        }
+    )->name("spende");
 
     Route::post('/', 'MailController@donation');
 
     Route::get('paypal', 'MailController@donationPayPalCallback')->name('paypal-callback');
 
-    Route::get('danke/{data?}', function ($data) {
-        return view('spende.danke')
-            ->with('title', trans('titles.spende'))
-            ->with('navbarFocus', 'foerdern')
-            ->with('css', [mix('/css/spende/danke.css')])
-            ->with('data', unserialize(base64_decode($data)));
-    })->name("danke");
+    Route::get(
+        'danke/{data?}',
+        function ($data) {
+            return view('spende.danke')
+                ->with('title', trans('titles.spende'))
+                ->with('navbarFocus', 'foerdern')
+                ->with('css', [mix('/css/spende/danke.css')])
+                ->with('data', unserialize(base64_decode($data)));
+        }
+    )->name("danke");
 });
 
 Route::get('partnershops', function () {
@@ -325,51 +331,11 @@ Route::get('plugin', function (Request $request) {
         ]);
 });
 
-Route::group(['middleware' => ['auth.basic'], 'prefix' => 'admin'], function () {
-    Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
-    Route::get('count', 'AdminInterface@count');
-    Route::get('count/count-data-total', [AdminInterface::class, 'getCountDataTotal']);
-    Route::get('count/count-data-until', [AdminInterface::class, 'getCountDataUntil']);
-    Route::get('timings', 'MetaGerSearch@searchTimings');
-    Route::get('engine/stats.json', 'AdminInterface@engineStats');
-    Route::get('check', 'AdminInterface@check');
-    Route::get('ip', function (Request $request) {
-        dd($request->ip(), $_SERVER["AGENT"]);
-    });
-    Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
-    Route::post('bot', 'HumanVerification@botOverviewChange');
-    Route::get('bv', [HumanVerification::class, 'bv']);
-    Route::group(['prefix' => 'spam'], function () {
-        Route::get('/', 'AdminSpamController@index');
-        Route::post('/', 'AdminSpamController@ban');
-        Route::get('jsonQueries', 'AdminSpamController@jsonQueries');
-        Route::post('queryregexp', 'AdminSpamController@queryregexp');
-        Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
-    });
-    Route::get('stress', 'Stresstest@index');
-    Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
-    Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
-    Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
-    Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
-
-    Route::group(['prefix' => 'affiliates'], function () {
-        Route::get('/', 'AdgoalController@adminIndex');
-        Route::get('/json/blacklist', 'AdgoalController@blacklistJson');
-        Route::put('/json/blacklist', 'AdgoalController@addblacklistJson');
-        Route::delete('/json/blacklist', 'AdgoalController@deleteblacklistJson');
-        Route::get('/json/whitelist', 'AdgoalController@whitelistJson');
-        Route::put('/json/whitelist', 'AdgoalController@addwhitelistJson');
-        Route::delete('/json/whitelist', 'AdgoalController@deletewhitelistJson');
-        Route::get('/json/hosts', 'AdgoalController@hostsJson');
-        Route::get('/json/hosts/clicks', 'AdgoalController@hostClicksJson');
-    });
-});
-
 Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
 });
 
-Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('removekey', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('httpcache', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 
@@ -412,7 +378,7 @@ Route::get("lang", function () {
         if (array_key_exists("query", $components)) {
             $path .= "?" . $components["query"];
         }
-        if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) {    // only if the host of that URL matches the current host
+        if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) { // only if the host of that URL matches the current host
             $previous_url = LaravelLocalization::getLocalizedUrl(null, $path);
         }
     }
@@ -429,52 +395,74 @@ Route::get('languages/edit/{from}/{to}/{exclude?}/{email?}', 'LanguageController
 Route::post('languages/edit/{from}/{to}/{exclude?}/{email?}', 'MailController@sendLanguageFile');
 
 Route::group(['prefix' => 'app'], function () {
-    Route::get('/', function () {
-        return view('app')
-            ->with('title', trans('titles.app'))
-            ->with('navbarFocus', 'dienste');
-    });
-    Route::get('metager', function () {
-        return response()->streamDownload(function () {
-            $fh = null;
-            try {
-                $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
-                while (!feof($fh)) {
-                    echo (fread($fh, 1024));
-                }
-            } catch (\Exception $e) {
-                abort(404);
-            } finally {
-                if ($fh != null) {
-                    fclose($fh);
-                }
-            }
-        }, 'MetaGerSearch.apk', ["Content-Type" => "application/vnd.android.package-archive"]);
-    });
-    Route::get('maps', function () {
-        return response()->streamDownload(function () {
-            $fh = null;
-            try {
-                $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
-                while (!feof($fh)) {
-                    echo (fread($fh, 1024));
-                }
-            } catch (\Exception $e) {
-                abort(404);
-            } finally {
-                if ($fh != null) {
-                    fclose($fh);
-                }
-            }
-        }, 'MetaGerMaps.apk', ["Content-Type" => "application/vnd.android.package-archive"]);
-    });
+    Route::get(
+        '/',
+        function () {
+            return view('app')
+                ->with('title', trans('titles.app'))
+                ->with('navbarFocus', 'dienste');
+        }
+    );
+    Route::get(
+        'metager',
+        function () {
+            return response()->streamDownload(
+                function () {
+                        $fh = null;
+                        try {
+                            $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
+                            while (!feof($fh)) {
+                                echo (fread($fh, 1024));
+                            }
+                        } catch (\Exception $e) {
+                            abort(404);
+                        } finally {
+                            if ($fh != null) {
+                                fclose($fh);
+                            }
+                        }
+                    }
+                ,
+                'MetaGerSearch.apk',
+                ["Content-Type" => "application/vnd.android.package-archive"]
+            );
+        }
+    );
+    Route::get(
+        'maps',
+        function () {
+            return response()->streamDownload(
+                function () {
+                        $fh = null;
+                        try {
+                            $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
+                            while (!feof($fh)) {
+                                echo (fread($fh, 1024));
+                            }
+                        } catch (\Exception $e) {
+                            abort(404);
+                        } finally {
+                            if ($fh != null) {
+                                fclose($fh);
+                            }
+                        }
+                    }
+                ,
+                'MetaGerMaps.apk',
+                ["Content-Type" => "application/vnd.android.package-archive"]
+            );
+        }
+    );
 
-    Route::get('maps/version', function () {
-        $filePath = config("metager.metager.maps.version");
-        $fileContents = file_get_contents($filePath);
-        return response($fileContents, 200)
-            ->header('Content-Type', 'text/plain');
-    });
+    Route::get(
+        'maps/version',
+        function () {
+            $filePath = config("metager.metager.maps.version");
+            $fileContents = file_get_contents($filePath);
+            return response($fileContents, 200)
+                ->header('Content-Type', 'text/plain');
+        }
+    );
 });
 
 Route::group(["prefix" => "metrics", "middleware" => "allow-local-only"], function (Router $router) {

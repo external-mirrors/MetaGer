@@ -24,9 +24,9 @@ return [
         "2" => "Beispiel: Sie suchen ein neues Auto, aber auf keinen Fall einen BMW. Ihre Eingabe lautet also:",
         "1" => "Wenn Sie unter den MetaGer-Suchergebnissen solche ausschließen wollen, in denen bestimmte Worte (Ausschlussworte / Stoppworte) vorkommen, dann erreichen Sie das, indem Sie diese Worte mit einem Minus versehen.",
     ],
-    "searchinsearch"    => [
-        "title" => "Suche in der Suche",
-        "1" => 'Auf die Funktion der Suche in der Suche kann mit Hilfe des "MEHR"-Knopfes rechts unten im Ergebniskasten zugegriffen werden. Beim Klick auf diesen öffnet sich ein Menü, in dem "Ergebnis speichern" an erster Stelle steht. Mit dieser Option wird das jeweilige Ergebnis in einem separaten Speicher abgelegt. Der Inhalt dieses Speichers wird rechts neben den Ergebnissen unter den Quicktips angezeigt (Auf zu kleinen Bildschirmen werden gespeicherte Ergebnisse aus Platzmangel nicht angezeigt). Dort können Sie die gespeicherten Ergebnisse nach Schlüsselworten filtern oder umsortieren lassen. Mehr Infos zum Thema "Suche in der Suche" gibt es im <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA-Blog</a>.',
+    "key"    => [
+        "title" => "MetaGer Schlüssel hinzufügen",
+        "1" => 'Placeholder',
     ],
     "mehrwortsuche"     => [
         "title" => "Mehrwortsuche",

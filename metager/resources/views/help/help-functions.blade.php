@@ -54,10 +54,10 @@
 			<p>{!! trans('help/help-functions.bang.1') !!}</p>
 		</div>
 	</section>
-	<section id="searchinsearch">
-		<h3>{!! trans('help/help-functions.searchinsearch.title') !!}</h3>
+	<section id="keyexplain">
+		<h3>{!! trans('help/help-functions.key.title') !!}</h3>
 		<div>
-			<p>{!! trans('help/help-functions.searchinsearch.1') !!}</p>
+			<p>{!! trans('help/help-functions.key.1') !!}</p>
 		</div>
 	</section>
 	<section id="selist">

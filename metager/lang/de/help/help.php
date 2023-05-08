@@ -16,7 +16,7 @@ return [
             '0' => 'Nützliche Funktionen und Hinweise',
             '1' => 'Suchfunktionen',
             '2' => '!bangs',
-            '3' => 'Suche in der Suche',
+            '3' => 'MetaGer Schlüssel',
             '4' => 'MetaGer hinzufügen',
         ],
         "3" => [

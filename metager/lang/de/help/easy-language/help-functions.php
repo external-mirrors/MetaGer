@@ -46,12 +46,12 @@ return [
         "2" => "Damit zeigt man bei dem Suchen rechts ein Feld an. <br> So sieht das Feld aus:",
         "3" => "Man kann auf den blauen Knopf drücken. <br> Dann öffnet sich die Web-Seite von Twitter mit der Suche nach Katzen. <br> Diese Funktion funktioniert bei kleinen Bild-Schirmen wie Handys nicht.",
     ],
-    "searchinsearch"  => [
-        "title" => "Suche in der Suche",
-        "1" => 'Wenn Sie mehrere Ergebnisse speichern wollen geht das so: <br> Sie klicken bei dem Ergebnis auf <strong>MEHR</strong>.<br> Das sieht so aus:',
-        "2" => 'Dann öffnet sich ein weiteres Menü. <br> Da klicken Sie auf <strong>ERGEBNIS SPEICHERN</strong>. <br> Das sieht so aus:', 
-        "3" => 'Das können Sie bei allen Ergebnissen machen die Sie speichern wollen.<br> Ergebnisse löscht man aus der Liste, wenn man auf die Müll-Tonne drückt. <br> Die gespeicherten Ergebnisse sieht man dann hier:',   
-        "4" => 'Diese Funktion funktioniert bei kleinen Bild-Schirmen wie Handys nicht.',   
+    "key"  => [
+        "title" => "MetaGer Schlüssel hinzufügen",
+        "1" => 'Placeholder',
+        "2" => 'Placeholder', 
+        "3" => 'Placeholder',   
+        "4" => 'Placeholder',   
     ],
     "selist"  => [
         "title"  => [

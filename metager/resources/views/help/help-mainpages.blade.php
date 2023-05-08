@@ -52,7 +52,6 @@
 				</div>
 				<p>{!! trans('help/help-mainpages.result.info.2') !!}</p>
 				<ul class = "dotlist">
-					<li>{!! trans('help/help-mainpages.result.info.saveresult') !!}</li>
 					<li>{!! trans('help/help-mainpages.result.info.domainnewsearch') !!}</li>
 					<li>{!! trans('help/help-mainpages.result.info.hideresult') !!}</li>
 				</ul>

@@ -17,7 +17,6 @@ return [
             "more" => 'MEHR: Wenn Sie auf „MEHR“ klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:',
             "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab. Alternativ können Sie auch ein neues Tab öffnen, indem Sie STRG und Linksklick oder die mittlere Maustaste verwenden.',
             "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
-            "saveresult" => '"Ergebnis speichern" (Nur Desktopversion): Dieses Ergebnis wird in einem Sammeltab gespeichert. Der TAB erscheint rechts und bleibt über beliebig viele Suchen aktiv. (siehe <a href="/hilfe/funktionen#searchinsearch"> Suche in der Suche</a>)',
         ],
         "title" => 'Ergebnisse',
     ],

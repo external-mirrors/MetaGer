@@ -72,11 +72,7 @@ return [
                 "title" => 'Mehr:',
                 "1" => 'Wenn Sie auf <strong>MEHR</strong> klicken, gibt es neue Möglichkeiten. <br> Das Ergebnis sieht dann anders aus. <br> So sieht das Ergebnis dann aus:',
             ],
-            "2" => 'Es gibt neue Möglichkeiten:',
-            "saveresult"  => [
-                "title" => 'Ergebnis speichern:', 
-                "1" => 'Diese Funktion ist nur auf Ihrem Computer möglich. <br> Auf dem Telefon können Sie das nicht. <br> Das Ergebnis speichert man in einem Sammel-Tab. <br> Dieser Tab<a title="Wort erklärung" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> ist dann auf der rechten Seite. <br> Mehr darüber finden Sie unter <a href="/hilfe/funktionen#searchinsearch">Suche in der Suche</a>.',
-            ],
+            "2" => 'Es gibt neue Möglichkeiten:',           
             "domainnewsearch"  => [
                 "title" => 'Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#domain" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> neu suchen:',
                 "1" => 'Wenn Sie darauf drücken, suchen Sie nur auf dieser Seite.',

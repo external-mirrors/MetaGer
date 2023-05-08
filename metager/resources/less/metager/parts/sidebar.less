@@ -1,349 +1,343 @@
 .sidebar {
-    border-left: 1px solid @border-color;
-    box-shadow: 0px 1px 1.5px 1px #c0c0c0;
-    position: fixed;
-    display: block;
-    top: 0px;
-    right: -270px;
-    width: 270px;
-    height: 100%;
-    padding-top: 55px;
-    overflow: hidden;
-    overflow-y: auto;
-    z-index: 10;
-    background-color: @background-color;
-    color: @text-color;
-    transition: 0.5s;
-    border-left: none;
+  border-left: 1px solid @border-color;
+  box-shadow: 0px 1px 1.5px 1px #c0c0c0;
+  position: fixed;
+  display: block;
+  top: 0px;
+  right: -270px;
+  width: 270px;
+  height: 100%;
+  padding-top: 55px;
+  overflow: hidden;
+  overflow-y: auto;
+  z-index: 10;
+  background-color: @background-color;
+  color: @text-color;
+  transition: 0.5s;
+  border-left: none;
 
-    .sidebar-logo {
-        >span {
-            display: block;
-            margin: 20px;
-            padding: 10px 0;
-            text-align: center;
-            border-radius: 10px;
+  .sidebar-logo {
+    > span {
+      display: block;
+      margin: 20px;
+      padding: 10px 0;
+      text-align: center;
+      border-radius: 10px;
 
-            >img {
-                width: 10em;
-            }
-        }
+      > img {
+        width: 10em;
+      }
     }
+  }
 
-    .sidebar-list {
-        padding-left: 0;
-        list-style: none;
-        margin-left: -5px;
+  .sidebar-list {
+    padding-left: 0;
+    list-style: none;
+    margin-left: -5px;
 
-        &>li {
-            width: 100%;
+    & > li {
+      width: 100%;
 
-            &:hover {
-                background-color: @sidebar-list-hover-color;
-            }
+      &:hover {
+        background-color: @sidebar-list-hover-color;
+      }
 
-            &>label,
-            &>a {
-                padding: 10px 0px;
+      & > label,
+      & > a {
+        padding: 10px 0px;
 
-                &:focus {
-                    outline: none;
-                }
-
-                &>i.fa {
-                    width: 30px;
-                    text-align: center;
-                    margin-right: 7px;
-                }
-
-                &>img {
-                    filter: invert(@icon-color);
-                }
-            }
-
-            &>label {
-                font-size: 1.1em;
-                font-weight: normal;
-                text-decoration: none;
-                text-indent: 12px;
-                color: @text-color;
-                line-height: 20px;
-                display: inline-block;
-                width: 100%;
-
-                &:hover,
-                &:focus {
-                    color: red;
-                }
-            }
-        }
-    }
-
-    .metager-dropdown-content {
-        display: none;
-        min-width: 160px;
-        max-height: 0px;
-        text-align: left;
-        list-style-type: none;
-        z-index: 30;
-        overflow: hidden;
-        transition: 0.5s ease;
-
-        &>li>a {
-            display: block;
-            font-size: .9em;
-            padding: 6px 20px;
-            width: 100%;
-            clear: both;
-            font-weight: normal;
-            line-height: 1.42857143;
-            margin-left: 2px;
-
-            &:hover {
-                text-decoration: none;
-            }
+        &:focus {
+          outline: none;
         }
 
-        label:after {
-            #navbar-static-pages {
-                z-index: 40;
-                width: 100%;
-            }
+        & > i.fa {
+          width: 30px;
+          text-align: center;
+          margin-right: 7px;
         }
-    }
 
-    a {
+        & > img {
+          filter: invert(@icon-color);
+        }
+      }
+
+      & > label {
         font-size: 1.1em;
-        line-height: 20px;
+        font-weight: normal;
         text-decoration: none;
         text-indent: 12px;
+        color: @text-color;
+        line-height: 20px;
         display: inline-block;
         width: 100%;
-        color: @text-color;
 
         &:hover,
         &:focus {
-            color: red;
+          color: red;
         }
+      }
+    }
+  }
+
+  .metager-dropdown-content {
+    display: none;
+    min-width: 160px;
+    max-height: 0px;
+    text-align: left;
+    list-style-type: none;
+    z-index: 30;
+    overflow: hidden;
+    transition: 0.5s ease;
+
+    & > li > a {
+      display: block;
+      font-size: 0.9em;
+      padding: 6px 20px;
+      width: 100%;
+      clear: both;
+      font-weight: normal;
+      line-height: 1.42857143;
+      margin-left: 2px;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
 
-    p {
-        width: 90%;
-        text-align: center;
-        font-weight: bold;
-        font-style: italic;
-        font-size: large;
-        background-color: @metager-orange;
-        border-radius: .25em;
-        margin: 5%;
-        color: white;
-        font-size: 30px;
-        line-height: 35px;
+    label:after {
+      #navbar-static-pages {
+        z-index: 40;
+        width: 100%;
+      }
+    }
+  }
+
+  a {
+    font-size: 1.1em;
+    line-height: 20px;
+    text-decoration: none;
+    text-indent: 12px;
+    display: inline-block;
+    width: 100%;
+    color: @text-color;
+
+    &:hover,
+    &:focus {
+      color: red;
+    }
+  }
+
+  p {
+    width: 90%;
+    text-align: center;
+    font-weight: bold;
+    font-style: italic;
+    font-size: large;
+    background-color: @metager-orange;
+    border-radius: 0.25em;
+    margin: 5%;
+    color: white;
+    font-size: 30px;
+    line-height: 35px;
+  }
+
+  .caret {
+    position: absolute;
+    left: 90%;
+    margin-top: 8px;
+  }
+
+  input.sidebarCheckbox {
+    display: none;
+
+    &:checked {
+      & ~ .metager-dropdown-content {
+        display: initial;
+        max-height: 1000px;
+        padding: 0px 0px 0px 0px;
+      }
+
+      & ~ label > .caret {
+        border-top: 0 solid;
+        border-bottom: 4px solid;
+        transition: border-top 0.1s, border-bottom 0.1s 0.1s;
+      }
     }
 
-    .caret {
-        position: absolute;
-        left: 90%;
-        margin-top: 8px;
+    &:not(:checked) {
+      & ~ .metager-dropdown-content {
+        padding: 0px 0;
+      }
     }
+  }
 
-    input.sidebarCheckbox {
-        display: none;
+  input#nav0:checked ~ & {
+    border-left: 1px solid LightGray;
+  }
 
-        &:checked {
-            &~.metager-dropdown-content {
-                display: initial;
-                max-height: 1000px;
-                padding: 0px 0px 0px 0px;
-            }
-
-            &~label>.caret {
-                border-top: 0 solid;
-                border-bottom: 4px solid;
-                transition: border-top .1s, border-bottom .1s .1s;
-            }
-        }
-
-        &:not(:checked) {
-            &~.metager-dropdown-content {
-                padding: 0px 0;
-            }
-        }
-    }
-
-    input#nav0:checked~& {
-        border-left: 1px solid LightGray;
-    }
-
-    hr {
-        margin: 0px;
-        border-color: #e0e0e0;
-    }
+  hr {
+    margin: 0px;
+    border-color: #e0e0e0;
+  }
 }
 
-@media(max-height: 635px) {
-    .sidebar .sidebar-logo {
-        display: none;
-    }
+@media (max-height: 635px) {
+  .sidebar .sidebar-logo {
+    display: none;
+  }
 }
 
 @media (max-width: @screen-mobile) {
-    .sidebar {
-        padding-top: 15px;
-        right: -90%;
-        width: 90%;
-        overflow: auto;
+  .sidebar {
+    padding-top: 15px;
+    right: -90%;
+    width: 90%;
+    overflow: auto;
 
-        .sidebar-list {
-            max-height: 1000px;
-        }
-
-        ul.metager-dropdown-content {
-            position: inherit;
-            width: 100%;
-        }
+    .sidebar-list {
+      max-height: 1000px;
     }
 
-    .sidebar-opener {
-        // Make the open and close button bigger, so it is easier to hit
-        @sidebar-opener-mobile-magnification: 10px;
-        margin: @sidebar-opener-mobile-magnification;
-        top: (@sidebar-opener-position-top - @sidebar-opener-mobile-magnification);
-        right: (@sidebar-opener-position-right - @sidebar-opener-mobile-magnification);
+    ul.metager-dropdown-content {
+      position: inherit;
+      width: 100%;
     }
+  }
 
-    .sidebar-opener-placeholder {
-        display: initial;
-    }
+  .sidebar-opener {
+    // Make the open and close button bigger, so it is easier to hit
+    @sidebar-opener-mobile-magnification: 10px;
+    margin: @sidebar-opener-mobile-magnification;
+    top: (@sidebar-opener-position-top - @sidebar-opener-mobile-magnification);
+    right: (
+      @sidebar-opener-position-right - @sidebar-opener-mobile-magnification
+    );
+  }
 
-
+  .sidebar-opener-placeholder {
+    display: initial;
+  }
 }
-
 
 /* Sidebar opener */
 
 // Top right starting position of the sidebar icon
-@sidebar-opener-position-top: 22px;
-@sidebar-opener-position-right: 25px;
+@sidebar-opener-position-top: 21px;
+@sidebar-opener-position-right: 20px;
 
 .sidebar-opener {
-    position: fixed;
-    top: @sidebar-opener-position-top;
-    right: @sidebar-opener-position-right;
-    margin: 0px;
-    z-index: 20;
-    font-size: 36px;
-    line-height: 23px;
-    border-radius: 5px;
-    color: grey;
-    background-color: transparent;
+  position: fixed;
+  top: @sidebar-opener-position-top;
+  right: @sidebar-opener-position-right;
+  margin: 0px;
+  z-index: 20;
+  font-size: 36px;
+  line-height: 23px;
+  border-radius: 5px;
+  color: grey;
+  background-color: transparent;
 
-
-    &:hover {
-        color: @metager-orange;
-    }
+  &:hover {
+    color: @metager-orange;
+  }
 }
 
 .sidebar-opener-placeholder {
-    display: none;
-    width: 45px;
+  display: none;
+  width: 45px;
 }
 
 /* Sidebar toggle checkbox */
 #sidebarToggle {
-    display: none;
+  display: none;
 }
 
 .sidebar-opener.close {
-    display: none;
- }
+  display: none;
+}
 
 #sidebarToggle:checked {
-    &~.sidebar {
-        right: 0px;
-    }
+  & ~ .sidebar {
+    right: 0px;
+  }
 
-    &~.sidebar-opener {
-       display: none;
-    }
+  & ~ .sidebar-opener {
+    display: none;
+  }
 
-    &~.sidebar-opener.close {
-        display: initial;
-    }
+  & ~ .sidebar-opener.close {
+    display: initial;
+  }
 }
 
 #sidebar-img-app {
-    height: 20px;
-    margin-right: 13px;
-    margin-left: 13px;
+  height: 20px;
+  margin-right: 13px;
+  margin-left: 13px;
 }
 
 #sidebar-img-lock {
-    height: 20px;
-    margin-right: 10px;
-    margin-left: 10px;
+  height: 20px;
+  margin-right: 10px;
+  margin-left: 10px;
 }
 
 #sidebar-img-help {
-    height: 20px;
-    margin-right: 15px;
-    margin-left: 15px;
+  height: 20px;
+  margin-right: 15px;
+  margin-left: 15px;
 }
 
 #sidebar-img-donate {
-    height: 20px;
-    margin-right: 7px;
-    margin-left: 9px;
+  height: 20px;
+  margin-right: 7px;
+  margin-left: 9px;
 }
 
 #sidebar-img-member {
-    height: 20px;
-    margin-right: 8px;
-    margin-left: 12px;
+  height: 20px;
+  margin-right: 8px;
+  margin-left: 12px;
 }
 
 #sidebar-img-contact {
-    height: 13px;
-    margin-left: 10px;
-    margin-right: 8px;
+  height: 13px;
+  margin-left: 10px;
+  margin-right: 8px;
 }
 
 #sidebar-img-language {
-    height: 20px;
-    margin-right: 9px;
-    margin-left: 12px;
+  height: 20px;
+  margin-right: 9px;
+  margin-left: 12px;
 }
 
 #sidebar-img-services {
-    height: 20px;
-    margin-right: 9px;
-    margin-left: 10px;
+  height: 20px;
+  margin-right: 9px;
+  margin-left: 10px;
 }
 
 #sidebar-img-map {
-    height: 15px;
-    margin-left: 10px;
-    ;
-    margin-right: 9px;
+  height: 15px;
+  margin-left: 10px;
+  margin-right: 9px;
 }
 
 #sidebar-img-lupe {
-
-    height: 20px;
-    margin-left: 10px;
-    margin-right: 8px;
+  height: 20px;
+  margin-left: 10px;
+  margin-right: 8px;
 }
 
 #sidebar-img-outlink {
-    height: 20px;
-    margin-left: 10px;
-
+  height: 20px;
+  margin-left: 10px;
 }
 
 #sidebar-img-info {
-    height: 18px;
-    margin-top: -4px;
-    margin-left: 7px;
-    margin-right: 8px;
-
+  height: 18px;
+  margin-top: -4px;
+  margin-left: 7px;
+  margin-right: 8px;
 }

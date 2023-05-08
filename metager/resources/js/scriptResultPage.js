@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function initialize() {
+  initQueryInputField();
   submitFilterOnChange();
   botProtection();
-  enableFormResetter();
   loadMoreResults();
   enableResultSaver();
   enablePagination();
@@ -125,35 +125,6 @@ function verify(event) {
   });
 }
 
-function enableFormResetter() {
-  var deleteButton = document.querySelector("#search-delete-btn");
-  var timeout = null;
-
-  if (deleteButton) {
-    deleteButton.onclick = (e) => {
-      if (timeout != null) {
-        clearTimeout(timeout);
-        timeout = null;
-      }
-      document.querySelector('input[name="eingabe"]').value = "";
-      document.querySelector('input[name="eingabe"]').focus();
-    };
-  }
-
-  let input_field = document.querySelector('input[name="eingabe"]');
-  if (input_field) {
-    input_field.addEventListener("focusin", (e) => {
-      deleteButton.style.display = "initial";
-    });
-    input_field.addEventListener("focusout", (e) => {
-      timeout = window.setTimeout(function () {
-        deleteButton.style.display = "none";
-        timeout = null;
-      }, 500);
-    });
-  }
-}
-
 function loadMoreResults() {
   var searchKey = document.querySelector("meta[name=searchkey]").content;
   var updateUrl = document.location.href;
@@ -250,4 +221,11 @@ function mutationChecker() {
     clearInterval(mutationCheckerInterval);
     mutationCheckerInterval = null;
   }
+}
+
+function initQueryInputField() {
+  let field = document.querySelector("input[name=eingabe]");
+  let value = field.value;
+  field.attributes.removeNamedItem("value");
+  field.value = value;
 }

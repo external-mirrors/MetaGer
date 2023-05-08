@@ -82,4 +82,36 @@ abstract class Authorization
             return LaravelLocalization::getLocalizedUrl(null, "/keys");
         }
     }
+
+    /**
+     * Returns a link to the correct key icon corresponding to the current key charge
+     */
+    public function getKeyIcon()
+    {
+        if ($this->availableTokens < 0) {
+            return "/img/key-icon.svg";
+        } else if ($this->availableTokens < $this->cost) {
+            return "/img/key-empty.svg";
+        } else if ($this->availableTokens <= 30) {
+            return "/img/key-low.svg";
+        } else {
+            return "/img/key-full.svg";
+        }
+    }
+
+    /**
+     * Returns a tooltip text corresponding to the current key charge
+     */
+    public function getKeyTooltip()
+    {
+        if ($this->availableTokens < 0) {
+            return __("index.key.tooltip.nokey");
+        } else if ($this->availableTokens < $this->cost) {
+            return __("index.key.tooltip.empty");
+        } else if ($this->availableTokens <= 30) {
+            return __("index.key.tooltip.low");
+        } else {
+            return __("index.key.tooltip.full");
+        }
+    }
 }

@@ -2,227 +2,223 @@
 @searchbar-border-color-light: #777777;
 
 .searchbar {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 1em;
+  background-color: transparent;
+  color: #333;
+
+  .search-input-submit {
+    width: 100%;
+    width: calc(100% - 16px);
+    max-width: 600px;
+    background-color: @searchbar-background-color;
+    -webkit-box-flex: 1;
+    -ms-flex-positive: 1;
+    flex-grow: 1;
     display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
-    -webkit-box-direction: normal;
-    -moz-box-direction: normal;
-    -webkit-box-orient: horizontal;
-    -moz-box-orient: horizontal;
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
-    flex-direction: row;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    -webkit-box-pack: center;
-    -moz-box-pack: center;
-    -webkit-justify-content: center;
-    -ms-flex-pack: center;
-    justify-content: center;
-    -webkit-align-content: stretch;
-    -ms-flex-line-pack: stretch;
-    align-content: stretch;
-    -webkit-box-align: center;
-    -moz-box-align: center;
-    -webkit-align-items: center;
-    -ms-flex-align: center;
     align-items: center;
-    font-size: 1em;
-    background-color: transparent;
-    color: #333;
-
-    .search-input-submit {
-        width: 100%;
-        width: calc(100% - 16px);
-        max-width: 600px;
-        background-color: @searchbar-background-color;
-        -webkit-box-flex: 1;
-        -ms-flex-positive: 1;
-        flex-grow: 1;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        align-items: center;
-
-        #search-key {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            >a {
-                padding: 0px 16px 0px 16px;
-                color: #585858;
-
-                &.authorized {
-                    color: green;
-                }
-            }
+    padding: 0.7rem 1rem;
+    gap: 1rem;
+    #search-key {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 1.25rem;
+      > a {
+        color: #585858;
+        display: block;
+        height: 100%;
+        > img {
+          height: 100%;
+          display: block;
+          transform: rotate(-90deg);
         }
-
-        .search-input {
-            position: relative;
-            -webkit-box-flex: 1;
-            -ms-flex-positive: 1;
-            flex-grow: 1;
-
-            input {
-                border: none;
-                height: 40px;
-                -webkit-box-shadow: none;
-                box-shadow: none;
-                background-color: transparent;
-                color: @text-color;
-            }
-
-            #search-delete-btn {
-                position: absolute;
-                right: 0;
-                bottom: 0;
-                width: auto;
-                height: calc(100% - 4px);
-                margin: 2px 2px 2px 0;
-                border: none;
-                background-color: transparent;
-                font-size: 1.8em;
-                font-weight: normal;
-                display: none;
-                filter: invert(@icon-color);
-
-                &:hover {
-                    color: red;
-                    filter: invert(0);
-                }
-            }
+        &.authorized {
+          color: green;
         }
-
-        .search-submit {
-            button {
-                width: 50px;
-                line-height: 100%;
-                border: 0;
-                background-color: transparent;
-                padding: 0;
-                color: #585858;
-                filter: invert(@icon-color);
-            }
-        }
+      }
     }
 
-    .search-hidden {
+    .search-input {
+      flex-grow: 1;
+      height: 1.5rem;
+      position: relative;
+      input {
+        border: none;
+        height: 100%;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        background-color: transparent;
+        color: @text-color;
+        padding: 0;
+        line-height: 100%;
+        font-size: 100%;
+        &:focus {
+          outline: 0;
+        }
+        &::-webkit-clear-button,
+        &::-webkit-search-cancel-button {
+          display: none;
+        }
+      }
+      #search-delete-btn {
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        bottom: 0;
+        width: auto;
+        height: 100%;
+        border: none;
+        background-color: transparent;
+        font-size: 1.8em;
+        font-weight: normal;
         display: none;
+        place-content: center;
+        filter: invert(@icon-color);
+
+        &:hover {
+          color: red;
+          filter: invert(0);
+        }
+      }
+
+      &:focus-within > input:not(:placeholder-shown) {
+        padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
+        + #search-delete-btn {
+          display: grid;
+        }
+      }
     }
 
-    .search-custom-hidden {
-        display: none;
+    .search-submit {
+      height: 1.25rem;
+      button {
+        height: 100%;
+        line-height: 100%;
+        border: 0;
+        background-color: transparent;
+        padding: 0;
+        color: #585858;
+        filter: invert(@icon-color);
+        > img#searchbar-img-lupe {
+          height: 100%;
+          display: block;
+        }
+      }
     }
+  }
 
-    @media (max-width: @screen-mobile) {
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: reverse;
-        -ms-flex-direction: column-reverse;
-        flex-direction: column-reverse;
-    }
+  .search-hidden {
+    display: none;
+  }
+
+  .search-custom-hidden {
+    display: none;
+  }
 }
 
 .startpage-searchbar {
-    >* {
-        border: 1px solid @searchbar-border-color;
+  > * {
+    border: 1px solid @searchbar-border-color;
 
-        &:not(:first-child) {
-            border-left: none;
-        }
+    &:not(:first-child) {
+      border-left: none;
+    }
+  }
+
+  .search-input-submit {
+    border-radius: 5px;
+    margin: 0 8px;
+
+    @media (max-width: @screen-mobile) {
+      max-width: initial;
+    }
+  }
+
+  @media (max-width: @screen-mobile) {
+    .search-focus-selector {
+      border: 1px solid #aaa;
+      border-top: none;
+      border-radius: 5px;
     }
 
     .search-input-submit {
-        border-radius: 5px;
-        margin: 0 8px;
-
-        @media (max-width: @screen-mobile) {
-            max-width: initial;
-        }
-
-        >#search-key {
-            border-right: 1px solid @searchbar-border-color-light;
-        }
-
-        >#submit-inputgroup {
-            border-left: 1px solid @searchbar-border-color-light;
-        }
+      border: 1px solid #aaa;
+      border-radius: 5px;
     }
 
-    @media (max-width: @screen-mobile) {
-        .search-focus-selector {
-            border: 1px solid #aaa;
-            border-top: none;
-            border-radius: 5px;
-        }
+    > * {
+      border: 1px solid #aaa;
+      border-radius: 5px;
+      min-height: 40px;
 
-        .search-input-submit {
-            border: 1px solid #aaa;
-            border-radius: 5px;
-        }
-
-        >* {
-            border: 1px solid #aaa;
-            border-radius: 5px;
-            min-height: 40px;
-
-            &:not(:first-child) {
-                border-left: 1px solid #aaa;
-            }
-        }
+      &:not(:first-child) {
+        border-left: 1px solid #aaa;
+      }
     }
+  }
 }
 
 .resultpage-searchbar {
-    #search-key>a {
-        padding: 5px 16px 0px 16px !important;
+  .search-input-submit {
+    padding: 0 0.5rem;
+    margin-right: 2rem;
+    .search-input {
+      height: 1.9rem;
+      > input {
+        padding: 0 0.5rem;
+      }
     }
-
-    .search-input-submit {
-        .search-input input {
-            padding-right: 35px; // Makes it so the overlayed delete button does not hide the text belowF
-        }
-
-        .search-submit button {
-            @media(max-width: @screen-mobile) {
-                margin-right: 30px;
-            }
-
-            i.fa-search {
-                margin-top: 5px;
-            }
-        }
-    }
+  }
 }
 
 #research-bar-placeholder {
-    width: 100%;
-    max-width: 760px;
-    height: 51px;
+  width: 100%;
+  max-width: 760px;
+  height: 51px;
 }
 
 #searchForm {
-    margin: 0;
+  margin: 0;
 }
 
 #searchbar-img-key {
-    height: 15px;
-    filter: invert(1) brightness(0.4);
+  filter: brightness(@searchbar-key-brightness);
 }
 
 #searchbar-img-lupe {
-    height: 15px;
-    filter: invert(1) brightness(0.1);
+  filter: invert(1) brightness(@searchbar-searchicon-brightness);
 }
 
 .search-submit button {
-    cursor: pointer;
-}
-
-.authorized #searchbar-img-key {
-    filter: initial;
+  cursor: pointer;
 }

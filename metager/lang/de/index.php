@@ -15,8 +15,8 @@ return [
         'placeholder' => 'Schlüssel für werbefreie Suche eingeben',
         'tooltip' => [
             'nokey' => 'Werbefreie Suche einrichten',
-            'empty' => 'Token aufgebraucht. Jetzt auffüllen.',
-            'low' => 'Token bald aufgebraucht. Jetzt auffüllen.',
+            'empty' => 'Token aufgebraucht. Jetzt aufladen.',
+            'low' => 'Token bald aufgebraucht. Jetzt aufladen.',
             'full' => 'Werbefreie Suche aktiviert.'
         ]
     ],

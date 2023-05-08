@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function initialize() {
+  initQueryInputField();
   submitFilterOnChange();
   botProtection();
   loadMoreResults();
@@ -220,4 +221,11 @@ function mutationChecker() {
     clearInterval(mutationCheckerInterval);
     mutationCheckerInterval = null;
   }
+}
+
+function initQueryInputField() {
+  let field = document.querySelector("input[name=eingabe]");
+  let value = field.value;
+  field.attributes.removeNamedItem("value");
+  field.value = value;
 }

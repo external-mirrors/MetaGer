@@ -85,19 +85,24 @@
         &:focus {
           outline: 0;
         }
+        &::-webkit-clear-button,
+        &::-webkit-search-cancel-button {
+          display: none;
+        }
       }
       #search-delete-btn {
         position: absolute;
         cursor: pointer;
         right: 0;
-        bottom: calc(50% - 2px);
+        bottom: 0;
         width: auto;
-        height: calc(100% - 4px);
+        height: 100%;
         border: none;
         background-color: transparent;
         font-size: 1.8em;
         font-weight: normal;
         display: none;
+        place-content: center;
         filter: invert(@icon-color);
 
         &:hover {
@@ -109,7 +114,7 @@
       &:focus-within > input:not(:placeholder-shown) {
         padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
         + #search-delete-btn {
-          display: block;
+          display: grid;
         }
       }
     }
@@ -191,9 +196,6 @@
       height: 1.9rem;
       > input {
         padding: 0 0.5rem;
-      }
-      #search-delete-btn {
-        bottom: calc(50%);
       }
     }
   }

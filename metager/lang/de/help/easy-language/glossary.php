@@ -29,8 +29,7 @@ return [
             '4'=>'MetaGer ist eine Meta-Such-Maschine. <br> Eine Meta-Such-Maschine sammelt Ergebnisse von mehreren Such-Maschinen. <br> Diese Ergebnisse werden dann neu sortiert. <br> Dann werden alle Ergebnisse auf einer Seite zusammen gezeigt. <br> Man sucht also bei einer Meta-Such-Maschine bei ganz vielen Such-Maschinen gleichzeitig. ',
         ],
         "entry2"=> [
-            '1' => 'Was ist eine Standard-Such-Maschine?',
-            '2'=>'Das ist die Such-Maschine mit der Sie immer suchen. <br> Sie ist bei der Suche immer ausgewählt. <br> Sie öffnen Ihren Browser. <br> Sie geben das was Sie suchen wollen oben in die Adress-Leiste ein. <br> Dann sucht man mit der Standard-Such-Maschine.',
+            '1'=>'Das ist die Such-Maschine mit der Sie immer suchen. <br> Sie ist bei der Suche immer ausgewählt. <br> Sie öffnen Ihren Browser. <br> Sie geben das was Sie suchen wollen oben in die Adress-Leiste ein. <br> Dann sucht man mit der Standard-Such-Maschine.',
         ],
         "entry3"=> [],
         "entry4"=> [],

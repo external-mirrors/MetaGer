@@ -74,9 +74,7 @@
 	</div>
 	<div class="card" id="standardsuche">
 		<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>
-	
-		<h3>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}</h3>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry2.2') !!}
+			<p>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}
 	</div>	
 	<div class="card" id="suchkategorien">
 		<h2>{!! trans('help/easy-language/glossary.entry.3') !!}</h2>

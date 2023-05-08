@@ -4,6 +4,7 @@ namespace App\Models\Authorization;
 
 use App\Models\Configuration\Searchengines;
 use App\SearchSettings;
+use Cookie;
 use LaravelLocalization;
 
 /**
@@ -88,15 +89,31 @@ abstract class Authorization
      */
     public function getKeyIcon()
     {
+        $keyIcon = "";
         if ($this->availableTokens < 0) {
-            return "/img/key-icon.svg";
+            $keyIcon = "/img/key-icon.svg";
         } else if ($this->availableTokens < $this->cost) {
-            return "/img/key-empty.svg";
+            $keyIcon = "/img/key-empty.svg";
         } else if ($this->availableTokens <= 30) {
-            return "/img/key-low.svg";
+            $keyIcon = "/img/key-low.svg";
         } else {
-            return "/img/key-full.svg";
+            $keyIcon = "/img/key-full.svg";
         }
+
+        if (Cookie::has("tokenauthorization")) {
+            switch (Cookie::get("tokenauthorization")) {
+                case "full":
+                    $keyIcon = "/img/key-full.svg";
+                    break;
+                case "low":
+                    $keyIcon = "/img/key-low.svg";
+                    break;
+                case "empty":
+                    $keyIcon = "/img/key-empty.svg";
+                    break;
+            }
+        }
+        return $keyIcon;
     }
 
     /**
@@ -104,14 +121,29 @@ abstract class Authorization
      */
     public function getKeyTooltip()
     {
+        $tooltip = "";
         if ($this->availableTokens < 0) {
-            return __("index.key.tooltip.nokey");
+            $tooltip = __("index.key.tooltip.nokey");
         } else if ($this->availableTokens < $this->cost) {
-            return __("index.key.tooltip.empty");
+            $tooltip = __("index.key.tooltip.empty");
         } else if ($this->availableTokens <= 30) {
-            return __("index.key.tooltip.low");
+            $tooltip = __("index.key.tooltip.low");
         } else {
-            return __("index.key.tooltip.full");
+            $tooltip = __("index.key.tooltip.full");
         }
+        if (Cookie::has("tokenauthorization")) {
+            switch (Cookie::get("tokenauthorization")) {
+                case "full":
+                    $tooltip = __("index.key.tooltip.full");
+                    break;
+                case "low":
+                    $tooltip = __("index.key.tooltip.low");
+                    break;
+                case "empty":
+                    $tooltip = __("index.key.tooltip.empty");
+                    break;
+            }
+        }
+        return $tooltip;
     }
 }

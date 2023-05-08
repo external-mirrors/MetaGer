@@ -38,7 +38,7 @@
           @lang("index.adfree")
         </span>
       </a>
-      @elseif(app(\App\Models\Authorization\Authorization::class)->availableTokens < app(\App\Models\Authorization\Authorization::class)->cost)
+      @elseif(app(\App\Models\Authorization\Authorization::class)->availableTokens < app(\App\Models\Authorization\Authorization::class)->cost && Cookie::get("tokenauthorization", "empty") === "empty")
       <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
         <img src="/img/key-empty.svg" alt="Key Icon" />
         <span>

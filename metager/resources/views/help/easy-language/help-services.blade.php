@@ -10,7 +10,6 @@
 </div>
 <p>{!! trans('help/easy-language/help-services.glossary') !!}</p>
 <h2 id="dienste">{!! trans('help/easy-language/help-services.dienste.1') !!}</h2>
-	<h3><img class= "mg-icon" src="/img/angle-double-right.svg" alt="{{ trans('angle-double-right.alt') }}" aria-hidden= "true"> {!! trans('help/easy-language/help-services.dienste.kostenlos') !!}</h3>
 	<section id="app">
 		<div id="mg-app" style="margin-top: -100px"></div>
 		<div style="margin-top: 100px"></div>

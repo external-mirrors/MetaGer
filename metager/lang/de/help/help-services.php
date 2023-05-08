@@ -7,7 +7,6 @@ return [
     ],
     "backarrow"             => 'Zurück',
     "dienste"   => [
-        "kostenlos" => "Selbstverständlich sind all unsere Dienste kostenlos",
         "text" => "Weitere Dienste um die Suche herum",
     ],
     "maps"      => [

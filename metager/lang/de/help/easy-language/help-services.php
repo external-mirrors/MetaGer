@@ -6,7 +6,6 @@ return [
     'glossary'              => 'Durch Klicken auf das Symbol<a title="Dieses Symbol führt zum Glossar" href="/hilfe/easy-language/glossary" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>  kommen Sie zur Erklärung von den schwierigen Wörtern.',
     "dienste"  => [
         "1" => "Weitere Dienste um die Suche herum",
-        "kostenlos" => "Alle unsere Dienste sind kosten-los",
     ],
     "app"  => [
         "title" => "Android-App",

@@ -111,7 +111,8 @@
         }
       }
 
-      &:focus-within > input:not(:placeholder-shown) {
+      &:focus-within:not(.search-delete-js-only)
+        > input:not(:placeholder-shown) {
         padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
         + #search-delete-btn {
           display: grid;

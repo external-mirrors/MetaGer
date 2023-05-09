@@ -224,6 +224,7 @@ function mutationChecker() {
 }
 
 function initQueryInputField() {
+  document.querySelector(".search-input").classList.remove("search-delete-js-only");
   let field = document.querySelector("input[name=eingabe]");
   let value = field.value;
   field.attributes.removeNamedItem("value");

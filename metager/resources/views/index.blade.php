@@ -31,11 +31,18 @@
       <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
       @endif
 	    <div id="startpage-quicklinks">
-      @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
+      @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
       <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-        <img src="/img/key-icon.svg" alt="Key Icon" />
+        <img src="/img/metager-schloss.svg" alt="Key Icon" />
         <span>
           @lang("index.adfree")
+        </span>
+      </a>
+      @elseif(app(\App\Models\Authorization\Authorization::class)->availableTokens < app(\App\Models\Authorization\Authorization::class)->cost && Cookie::get("tokenauthorization", "empty") === "empty")
+      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+        <img src="/img/key-empty.svg" alt="Key Icon" />
+        <span>
+          @lang("index.key.tooltip.empty")
         </span>
       </a>
       @endif

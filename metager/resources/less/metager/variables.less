@@ -1,5 +1,5 @@
 // MetaGer Brand Color
-@metager-orange: #FF8000;
+@metager-orange: #ff8000;
 // Shades of Gray
 @color-white: white;
 @color-almost-white: mix(@color-white, @color-black, 90%);
@@ -10,19 +10,18 @@
 @color-black: black;
 // Default Background Color
 @background-color: @color-white;
-@background-color-mobile: #FAFAFA;
+@background-color-mobile: #fafafa;
 @sidebar-list-hover-color: @color-almost-white;
-@invert-state: invert(0%); // Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
+@invert-state: invert(
+  0%
+); // Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
 // Default Font
-@metager-font: "Liberation Sans",
-    "Helvetica Neue",
-    "Helvetica",
-    "Arial",
-    sans-serif;
+@metager-font: "Liberation Sans", "Helvetica Neue", "Helvetica", "Arial",
+  sans-serif;
 // General text color.
 @text-color: @color-black;
 // Default textual link color.
-@link-color: #06C;
+@link-color: #06c;
 // Default Mini-Padding
 @padding-small-default: 8px;
 // Screen sizes
@@ -54,13 +53,20 @@
 @additions-width-min: 500px;
 @additions-width-max: 500px;
 // Breakpoints for the 2 resultpage columns
-@resultpage-breakpoint-max: (@results-width-max + @additions-width-max + @padding-small-default * 2 + @padding-small-default * 4 + 6);
-@resultpage-breakpoint-min: (@results-width-min + @additions-width-min + @padding-small-default * 4);
+@resultpage-breakpoint-max: (
+  @results-width-max + @additions-width-max + @padding-small-default * 2 +
+    @padding-small-default * 4 + 6
+);
+@resultpage-breakpoint-min: (
+  @results-width-min + @additions-width-min + @padding-small-default * 4
+);
 @product-shop-color: green;
 // The point upon which a .screen-large logo is displayed
 @logo-size-breakpoint: (@results-width-min + @padding-small-default * 2);
 // The point upon which the sidebar opener switches place
-@sidebar-opener-breakpoint: (@results-width-max + @padding-small-default * 2 + 60px);
+@sidebar-opener-breakpoint: (
+  @results-width-max + @padding-small-default * 2 + 60px
+);
 // Quicktip background color
 @quicktip-background-color: @color-white;
 // Color of the Spruch author
@@ -69,7 +75,7 @@
 @story-privacy-background: @color-almost-white;
 @story-privacy-color: @color-almost-black;
 @story-ngo-background: white;
-@story-ngo-color: #AD1A00;
+@story-ngo-color: #ad1a00;
 @story-diversity-background: #edfdff;
 @story-diversity-color: #0c4690;
 @story-eco-background: #e3ffe9;
@@ -85,3 +91,6 @@
 
 @blacklist-entries-odd: rgb(240, 240, 240);
 @blacklist-entries-even: rgb(255, 215, 200);
+
+@searchbar-searchicon-brightness: 0;
+@searchbar-key-brightness: 1;

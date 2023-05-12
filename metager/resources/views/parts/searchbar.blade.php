@@ -3,13 +3,17 @@
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif data-tooltip="{{ trans ('index.key.tooltip') }}" tabindex="0">
-						<img @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())src="/img/key-verified.svg" @else src="/img/key-icon.svg"@endif alt="" aria-hidden="true" id="searchbar-img-key">
+					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
+						data-tooltip="{{ app('App\Models\Authorization\Authorization')->getKeyTooltip() }}" tabindex="0">
+						<img 
+							src="{{ app('App\Models\Authorization\Authorization')->getKeyIcon() }}"
+							alt="" aria-hidden="true" id="searchbar-img-key"
+						>
 					</a>
 				</div>
-				<div class="search-input">
+				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
 					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" tabindex="0">
-					<button id="search-delete-btn" name="delete-search-input" type="button" tabindex="-1">
+					<button id="search-delete-btn" name="delete-search-input" type="reset" tabindex="-1">
 						&#xd7;
 					</button>
 				</div>

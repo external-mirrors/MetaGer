@@ -27,26 +27,32 @@
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.info') !!}</p>
 			<h4>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.2') !!}</p>
-			<img class="help-easy-language-mainpages-image" src="/img/help-left-searchfield.jpg"/>
+			<img class="help-easy-language-mainpages-image lm-only" src="/img/help-left-searchfield-lm.png"/>
+			<img class="help-easy-language-mainpages-image dm-only" src="/img/help-left-searchfield-dm.png"/>
+
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.3') !!}</p>
 
 			<h4>{!! trans('help/easy-language/help-mainpages.searchfield.slot.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.slot.2') !!}</p>
-			<img class="help-easy-language-mainpages-image" src="/img/help-middle-searchfield.jpg"/>
+			<img class="help-easy-language-mainpages-image lm-only" src="/img/help-middle-searchfield-lm.png"/>
+			<img class="help-easy-language-mainpages-image dm-only" src="/img/help-middle-searchfield-dm.png"/>
 			<h4>{!! trans('help/easy-language/help-mainpages.searchfield.search.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.search.2') !!}<p>
-			<img class="help-easy-language-mainpages-image" src="/img/help-right-searchfield.jpg"/>
+			<img class="help-easy-language-mainpages-image lm-only" src="/img/help-right-searchfield-lm.png"/>
+			<img class="help-easy-language-mainpages-image dm-only" src="/img/help-right-searchfield-dm.png"/>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.search.3') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.searchfield.morefunctions') !!}</p>
 		</div>
         <h3 id="ergebnis">{!! trans('help/easy-language/help-mainpages.resultpage.title') !!}</h3>
 		    <div>
 				<p>{!! trans('help/easy-language/help-mainpages.resultpage.foci.1') !!}</p>
-				<img class="help-easy-language-mainpages-image" src="/img/help-search-focus.jpg"/>
+				<img class="help-easy-language-mainpages-image lm-only" src="/img/help-search-focus-lm.png"/>
+				<img class="help-easy-language-mainpages-image dm-only" src="/img/help-search-focus-dm.png"/>
 				<p>{!! trans('help/easy-language/help-mainpages.resultpage.foci.2') !!}</p>
 
 				<p>{!! trans('help/easy-language/help-mainpages.resultpage.choice') !!}</p>
-				<img class="help-easy-language-mainpages-image" src="/img/help-settings-and-filter.jpg"/>
+				<img class="help-easy-language-mainpages-image lm-only" src="/img/help-settings-filter-lm.png"/>
+				<img class="help-easy-language-mainpages-image dm-only" src="/img/help-settings-filter-dm.png"/>
 				<h4>{!! trans('help/easy-language/help-mainpages.resultpage.filter.title') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.resultpage.filter.1') !!}</p>
 
@@ -57,7 +63,10 @@
 		<h3>{!! trans('help/easy-language/help-mainpages.result.title') !!}</h3>
 			<div>
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.1') !!}</p>
-				<div class="image-container"><img src="/img/help-php-resultpic-01.png"/></div>
+				<div class="image-container">
+					<img class="lm-only" src="/img/help-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+					<img class="dm-only" src="/img/help-php-resultpic-01-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				</div>
 				<h4>{!! trans('help/easy-language/help-mainpages.result.info.open.title') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.open.0') !!}</p>
 				<ul>
@@ -71,7 +80,10 @@
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.anonym.1') !!}</p>
 				<h4>{!! trans('help/easy-language/help-mainpages.result.info.more.title') !!}</h4>
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.more.1') !!}</p>
-				<div class="image-container"><img src="/img/help-php-resultpic-02.png"></div>
+				<div class="image-container">
+					<img class="lm-only" src="/img/help-php-resultpic-02.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+					<img class="dm-only" src="/img/help-php-resultpic-02-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				</div>
 
 				<p>{!! trans('help/easy-language/help-mainpages.result.info.2') !!}</p>
 					<h4>{!! trans('help/easy-language/help-mainpages.result.info.saveresult.title') !!}</h4>

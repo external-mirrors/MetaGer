@@ -169,7 +169,9 @@ function loadMoreResults() {
             let container = document.createElement("div");
             container.innerHTML = data.quicktips;
             let new_quicktips = container.querySelector("#additions-container");
-            document.getElementById("resultpage-container").append(new_quicktips);
+            document
+              .getElementById("resultpage-container")
+              .append(new_quicktips);
           }
 
           currentlyLoading = false;
@@ -216,6 +218,11 @@ function mutationChecker() {
         attributeRemoved = true;
       }
     }
+    let displayProperty = window.getComputedStyle(elements[i], null).display;
+    if (displayProperty != "block") {
+      elements[i].style.display = "block";
+      attributeRemoved = true;
+    }
   }
   if (!attributeRemoved && mutationCheckerInterval) {
     clearInterval(mutationCheckerInterval);
@@ -224,7 +231,9 @@ function mutationChecker() {
 }
 
 function initQueryInputField() {
-  document.querySelector(".search-input").classList.remove("search-delete-js-only");
+  document
+    .querySelector(".search-input")
+    .classList.remove("search-delete-js-only");
   let field = document.querySelector("input[name=eingabe]");
   let value = field.value;
   field.attributes.removeNamedItem("value");

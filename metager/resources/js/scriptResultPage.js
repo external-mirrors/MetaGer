@@ -3,6 +3,7 @@ require("fetch-ie8");
 import resultSaver from "./result-saver.js";
 
 let mutationCheckerInterval;
+let mutationCheckerIntervalInterval = 100;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == "complete") {
@@ -23,7 +24,10 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
-  mutationCheckerInterval = setInterval(mutationChecker, 2000);
+  mutationCheckerInterval = setInterval(
+    mutationChecker,
+    mutationCheckerIntervalInterval
+  );
 }
 
 let link, newtab, top;
@@ -161,7 +165,10 @@ function loadMoreResults() {
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
             if (!mutationCheckerInterval) {
-              mutationCheckerInterval = setInterval(mutationChecker, 2000);
+              mutationCheckerInterval = setInterval(
+                mutationChecker,
+                mutationCheckerIntervalInterval
+              );
             }
           }
 

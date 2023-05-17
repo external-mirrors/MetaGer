@@ -2,8 +2,8 @@ require("es6-promise").polyfill();
 require("fetch-ie8");
 import resultSaver from "./result-saver.js";
 
-let mutationCheckerInterval;
-let mutationCheckerIntervalInterval = 100;
+let mutationCheckerInterval_one;
+let mutationCheckerInterval_two;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == "complete") {
@@ -24,10 +24,8 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
-  mutationCheckerInterval = setInterval(
-    mutationChecker,
-    mutationCheckerIntervalInterval
-  );
+  mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
+  mutationCheckerInterval_two = setInterval(mutationChecker, 100);
 }
 
 let link, newtab, top;
@@ -164,11 +162,11 @@ function loadMoreResults() {
             let new_source = container.querySelector("#results").innerHTML;
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
-            if (!mutationCheckerInterval) {
-              mutationCheckerInterval = setInterval(
-                mutationChecker,
-                mutationCheckerIntervalInterval
-              );
+            if (!mutationCheckerInterval_one) {
+              mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
+            }
+            if (!mutationCheckerInterval_two) {
+              mutationCheckerInterval_two = setInterval(mutationChecker, 100);
             }
           }
 
@@ -231,9 +229,22 @@ function mutationChecker() {
       attributeRemoved = true;
     }
   }
-  if (!attributeRemoved && mutationCheckerInterval) {
-    clearInterval(mutationCheckerInterval);
-    mutationCheckerInterval = null;
+  if (!attributeRemoved) {
+    if (mutationCheckerInterval_one) {
+      clearInterval(mutationCheckerInterval_one);
+      mutationCheckerInterval_one = null;
+    }
+    if (mutationCheckerInterval_two) {
+      clearInterval(mutationCheckerInterval_two);
+      mutationCheckerInterval_two = null;
+    }
+  } else {
+    if (!mutationCheckerInterval_one) {
+      mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
+    }
+    if (!mutationCheckerInterval_two) {
+      mutationCheckerInterval_two = setInterval(mutationChecker, 100);
+    }
   }
 }
 

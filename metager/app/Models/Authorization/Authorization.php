@@ -4,6 +4,7 @@ namespace App\Models\Authorization;
 
 use App\Models\Configuration\Searchengines;
 use App\SearchSettings;
+use Cookie;
 use LaravelLocalization;
 
 /**
@@ -81,5 +82,68 @@ abstract class Authorization
         } else {
             return LaravelLocalization::getLocalizedUrl(null, "/keys");
         }
+    }
+
+    /**
+     * Returns a link to the correct key icon corresponding to the current key charge
+     */
+    public function getKeyIcon()
+    {
+        $keyIcon = "";
+        if ($this->availableTokens < 0) {
+            $keyIcon = "/img/key-icon.svg";
+        } else if ($this->availableTokens < $this->cost) {
+            $keyIcon = "/img/key-empty.svg";
+        } else if ($this->availableTokens <= 30) {
+            $keyIcon = "/img/key-low.svg";
+        } else {
+            $keyIcon = "/img/key-full.svg";
+        }
+
+        if (Cookie::has("tokenauthorization")) {
+            switch (Cookie::get("tokenauthorization")) {
+                case "full":
+                    $keyIcon = "/img/key-full.svg";
+                    break;
+                case "low":
+                    $keyIcon = "/img/key-low.svg";
+                    break;
+                case "empty":
+                    $keyIcon = "/img/key-empty.svg";
+                    break;
+            }
+        }
+        return $keyIcon;
+    }
+
+    /**
+     * Returns a tooltip text corresponding to the current key charge
+     */
+    public function getKeyTooltip()
+    {
+        $tooltip = "";
+        if ($this->availableTokens < 0) {
+            $tooltip = __("index.key.tooltip.nokey");
+        } else if ($this->availableTokens < $this->cost) {
+            $tooltip = __("index.key.tooltip.empty");
+        } else if ($this->availableTokens <= 30) {
+            $tooltip = __("index.key.tooltip.low");
+        } else {
+            $tooltip = __("index.key.tooltip.full");
+        }
+        if (Cookie::has("tokenauthorization")) {
+            switch (Cookie::get("tokenauthorization")) {
+                case "full":
+                    $tooltip = __("index.key.tooltip.full");
+                    break;
+                case "low":
+                    $tooltip = __("index.key.tooltip.low");
+                    break;
+                case "empty":
+                    $tooltip = __("index.key.tooltip.empty");
+                    break;
+            }
+        }
+        return $tooltip;
     }
 }

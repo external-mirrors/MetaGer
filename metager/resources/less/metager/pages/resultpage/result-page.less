@@ -583,12 +583,14 @@ a {
       .search-input-submit {
         background-color: @background-color;
 
-        .search-input input {
+        .search-input {
           border-bottom: 1px solid @border-color;
-
-          &::-webkit-search-cancel-button,
-          &::-webkit-search-decoration {
-            appearance: none;
+          border-radius: 5px;
+          input {
+            &::-webkit-search-cancel-button,
+            &::-webkit-search-decoration {
+              appearance: none;
+            }
           }
         }
       }
@@ -597,11 +599,6 @@ a {
         .search-focus-selector {
           border-top: none;
           border-radius: 5px;
-        }
-
-        .search-input-submit {
-          border-radius: 5px;
-          margin-right: 30px;
         }
 
         > * {

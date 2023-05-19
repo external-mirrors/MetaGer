@@ -2,8 +2,9 @@ require("es6-promise").polyfill();
 require("fetch-ie8");
 import resultSaver from "./result-saver.js";
 
-let mutationCheckerInterval_one;
-let mutationCheckerInterval_two;
+let mutationCheckerInterval;
+let mutationCheckerIntervalDuration = 25;
+let start = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == "complete") {
@@ -24,8 +25,10 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
-  mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
-  mutationCheckerInterval_two = setInterval(mutationChecker, 100);
+  mutationCheckerInterval = setInterval(
+    mutationChecker,
+    mutationCheckerIntervalDuration
+  );
 }
 
 let link, newtab, top;
@@ -162,11 +165,11 @@ function loadMoreResults() {
             let new_source = container.querySelector("#results").innerHTML;
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
-            if (!mutationCheckerInterval_one) {
-              mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
-            }
-            if (!mutationCheckerInterval_two) {
-              mutationCheckerInterval_two = setInterval(mutationChecker, 100);
+            if (!mutationCheckerInterval) {
+              mutationCheckerInterval = setInterval(
+                mutationChecker,
+                mutationCheckerIntervalDuration
+              );
             }
           }
 
@@ -230,21 +233,19 @@ function mutationChecker() {
     }
   }
   if (!attributeRemoved) {
-    if (mutationCheckerInterval_one) {
-      clearInterval(mutationCheckerInterval_one);
-      mutationCheckerInterval_one = null;
+    if (start == null) {
+      start = new Date().getTime();
     }
-    if (mutationCheckerInterval_two) {
-      clearInterval(mutationCheckerInterval_two);
-      mutationCheckerInterval_two = null;
+    if (mutationCheckerInterval && new Date().getTime() - start > 3000) {
+      console.log("Interval removed");
+      clearInterval(mutationCheckerInterval);
+      mutationCheckerInterval = null;
     }
-  } else {
-    if (!mutationCheckerInterval_one) {
-      mutationCheckerInterval_one = setInterval(mutationChecker, 2000);
-    }
-    if (!mutationCheckerInterval_two) {
-      mutationCheckerInterval_two = setInterval(mutationChecker, 100);
-    }
+  } else if (!mutationCheckerInterval) {
+    mutationCheckerInterval = setInterval(
+      mutationChecker,
+      mutationCheckerIntervalDuration
+    );
   }
 }
 

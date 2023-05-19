@@ -256,4 +256,11 @@ function initQueryInputField() {
   let value = field.value;
   field.attributes.removeNamedItem("value");
   field.value = value;
+
+  let delete_button = document.querySelector("#search-delete-btn");
+  delete_button.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    field.value = "";
+    return false;
+  });
 }

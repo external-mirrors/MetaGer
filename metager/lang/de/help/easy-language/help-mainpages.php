@@ -36,7 +36,7 @@ return [
     "resultpage"  => [
         "title"      => 'Die Ergebnis-Seite',
         "foci"  => [
-            "1"       => 'Unter dem Such-Feld gibt es eine Zeile mit mehreren Knöpfen. <br>Das sind verschiedene Such-Kategorien<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchkategorien" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>. <br> So sieht die Zeile aus:',
+            "1"       => 'Unter dem Such-Feld gibt es eine Zeile mit mehreren Knöpfen. <br>Das sind verschiedene Such-Kategorien<a title="Ergebnisse werden sortiert, damit man sie leichter findet. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#suchkategorien" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>. <br> So sieht die Zeile aus:',
             "2"      => 'Wenn Sie auf diese Knöpfe drücken sehen Sie verschiedene Arten von Ergebnissen. <br> Das sind zum Beispiel Bilder oder Nachrichten.',
         ],
         "choice"     => 'Unter der Zeile mit den mehreren Knöpfen sind 2 andere Knöpfe. <br> Diese Knöpfe sind Einstellungen und Filter.',
@@ -46,7 +46,7 @@ return [
         ],
         "settings"  => [
             "title" => 'Einstellungen:',
-            "1" => 'Wenn Sie auf Einstellungen klicken, sehen Sie die Einstellungen. <br> Da können Sie die Einstellungen für die ausgewählte Such-Kategorie<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchkategorien" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> einstellen.',
+            "1" => 'Wenn Sie auf Einstellungen klicken, sehen Sie die Einstellungen. <br> Da können Sie die Einstellungen für die ausgewählte Such-Kategorie<a title="Ergebnisse werden sortiert, damit man sie leichter findet. Für mehr Informationen klicken" href="/hilfe/easy-language/glossary#suchkategorien" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> einstellen.',
         ],
     ],
     "result"  => [

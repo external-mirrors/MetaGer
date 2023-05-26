@@ -32,7 +32,7 @@ return [
     
    "content" => [
         'title' => 'Fragwürdige Inhalte / Jugendschutz',
-        "explanation" [
+        "explanation" => [
             '1' => 'Ich habe "Treffer" erhalten, die finde ich nicht nur ärgerlich, sondern die enthalten meiner Meinung nach illegale Inhalte!',
             '2' => 'Wenn Sie im Internet etwas finden, das Sie für illegal oder jugendgefährdend halten, dann können Sie sich per Mail an <a href="mailto:hotline@jugendschutz.net" target="_blank" rel="noopener">hotline@jugendschutz.net</a> wenden oder Sie gehen auf <a href="http://www.jugendschutz.net/" target="_blank" rel="noopener">www.jugendschutz.net</a> und füllen das dort zu findende Beschwerdeformular aus. Sinnvoll ist ein kurzer Hinweis, was Sie konkret für unzulässig halten und wie Sie auf dieses Angebot gestoßen sind. Direkt an uns können Sie fragwürdige Inhalte auch melden. Schreiben Sie dazu eine Mail an unseren Jugendschutzbeauftragten (<a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a>).',    
         ],   

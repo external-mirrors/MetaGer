@@ -74,36 +74,64 @@
 	</div>
 	<div class="card" id="standardsuche">
 		<h2>{!! trans('help/easy-language/glossary.entry.2') !!}</h2>
-			<p>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}
+		<p>{!! trans('help/easy-language/glossary.explanation.entry2.1') !!}</p>
 	</div>	
 	<div class="card" id="suchkategorien">
 		<h2>{!! trans('help/easy-language/glossary.entry.3') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry3.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry3.2') !!}</p>
 	</div>
 	<div class="card" id="filter">
 		<h2>{!! trans('help/easy-language/glossary.entry.4') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry4.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry4.2') !!}</p>
 	</div>
 	<div class="card" id="url">
 		<h2>{!! trans('help/easy-language/glossary.entry.5') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry5.1') !!}</p>
+
 	</div>
 	<div class="card" id="tab">
 		<h2>{!! trans('help/easy-language/glossary.entry.6') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry6.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry6.2') !!}</p>
+
 	</div>
 	<div class="card" id="anonymoeffnen">
 		<h2>{!! trans('help/easy-language/glossary.entry.7') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry7.2') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry7.3') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry7.4') !!}</p>
+		<h3>{!! trans('help/easy-language/glossary.explanation.entry7.0') !!}</h3>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry7.1') !!}</p>
+
+		
 	</div>
 	<div class="card" id="safesearch">
 		<h2>{!! trans('help/easy-language/glossary.entry.8') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry8.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry8.2') !!}</p>
+
 	</div>
 	<div class="card" id="bangs">
 		<h2>{!! trans('help/easy-language/glossary.entry.9') !!}</h2>
+
+
 	</div>
 	<div class="card" id="cookies">
 		<h2>{!! trans('help/easy-language/glossary.entry.10') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry10.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry10.2') !!}</p>
 	</div>
 	<div class="card" id="domain">
 		<h2>{!! trans('help/easy-language/glossary.entry.11') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry11.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry11.2') !!}</p>
+
 	</div>
 	<div class="card" id="browser">
 		<h2>{!! trans('help/easy-language/glossary.entry.12') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry12.1') !!}</p>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry12.2') !!}</p>
 	</div>
 @endsection

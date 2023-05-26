@@ -28,7 +28,8 @@
 		<h3>{!! trans('help/easy-language/help-privacy-protection.proxy.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.1') !!}</p>
-			<div class="image-container"><img src="/img/help-easy-lang-proxy.png"/></div>
+				<img class="help-easy-language-mainpages-image lm-only" src="/img/help-anonym-lm.png"/>
+				<img class="help-easy-language-mainpages-image dm-only" src="/img/help-anonym-dm.png"/>
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.2') !!}</p>
 
 

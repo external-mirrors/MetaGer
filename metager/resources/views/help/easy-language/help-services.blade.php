@@ -35,8 +35,9 @@
 	<section id="maps">
 		<h3>{!! trans('help/easy-language/help-services.maps.title') !!}</h3>
 		<div>
-		<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>
-			<img id="easy-help-services-maps" src="/img/help-easy-lang-maps.png"/>
+			<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>
+			<img id="easy-help-services-maps" class="help-easy-language-mainpages-image lm-only" src="/img/help-maps-01-lm.png"/>
+			<img id="easy-help-services-maps"class="help-easy-language-mainpages-image dm-only" src="/img/help-maps-01-dm.png"/>
 			<p>{!! trans('help/easy-language/help-services.maps.2') !!}</p>
 			<img id="easy-help-services-maps-right-list" src="/img/help-easy-lang-maps-right-list.png"/>
 		</div>

@@ -73,7 +73,8 @@
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
-		<div class="image-container"><img src="/img/help-settings-install-metager.jpg"/></div>
+		<img class="help-easy-language-mainpages-image lm-only" src="/img/help-install-metager-lm.png"/>
+		<img class="help-easy-language-mainpages-image dm-only" src="/img/help-install-metager-dm.png"/>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
 @endsection

@@ -32,7 +32,7 @@
       @endif
 	    <div id="startpage-quicklinks">
       @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
-      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+      <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
         <img src="/img/metager-schloss.svg" alt="Key Icon" />
         <span>
           @lang("index.adfree")

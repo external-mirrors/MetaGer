@@ -25,10 +25,6 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
-  mutationCheckerInterval = setInterval(
-    mutationChecker,
-    mutationCheckerIntervalDuration
-  );
 }
 
 let link, newtab, top;
@@ -165,12 +161,6 @@ function loadMoreResults() {
             let new_source = container.querySelector("#results").innerHTML;
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
-            if (!mutationCheckerInterval) {
-              mutationCheckerInterval = setInterval(
-                mutationChecker,
-                mutationCheckerIntervalDuration
-              );
-            }
           }
 
           if ("quicktips" in data) {
@@ -212,40 +202,6 @@ function enablePagination() {
     last_search_link.addEventListener("pointerdown", (e) => {
       history.back();
     });
-  }
-}
-
-function mutationChecker() {
-  let validAttributes = ["class", "id", "data-count", "data-index"];
-  let elements = document.querySelectorAll("#results > .result");
-  let attributeRemoved = false;
-  for (let i = 0; i < elements.length; i++) {
-    for (let j = 0; j < elements[i].attributes.length; j++) {
-      if (!validAttributes.includes(elements[i].attributes[j].name)) {
-        elements[i].attributes.removeNamedItem(elements[i].attributes[j].name);
-        attributeRemoved = true;
-      }
-    }
-    let displayProperty = window.getComputedStyle(elements[i], null).display;
-    if (displayProperty != "block") {
-      elements[i].style.display = "block";
-      attributeRemoved = true;
-    }
-  }
-  if (!attributeRemoved) {
-    if (start == null) {
-      start = new Date().getTime();
-    }
-    if (mutationCheckerInterval && new Date().getTime() - start > 3000) {
-      console.log("Interval removed");
-      clearInterval(mutationCheckerInterval);
-      mutationCheckerInterval = null;
-    }
-  } else if (!mutationCheckerInterval) {
-    mutationCheckerInterval = setInterval(
-      mutationChecker,
-      mutationCheckerIntervalDuration
-    );
   }
 }
 

@@ -108,6 +108,7 @@ mix
     ["resources/js/scriptResultPage.js", "resources/js/keyboardNavigation.js"],
     "public/js/scriptResultPage.js"
   )
+  .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
   .js("resources/js/donation.js", "public/js/donation.js")

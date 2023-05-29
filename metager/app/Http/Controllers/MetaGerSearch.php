@@ -282,7 +282,10 @@ class MetaGerSearch extends Controller
         $metager->rankAll();
         $metager->prepareResults();
 
-
+        // Add Advertisement for Donations
+        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
+            $metager->addDonationAdvertisement();
+        }
 
         $result = [
             'finished' => true,

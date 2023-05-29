@@ -18,7 +18,6 @@ function validateDom(mutationlist, observer) {
     let expectedStyle = "display: block !important;";
     let currentStyle = target.getAttribute("style");
     if (currentStyle == null || currentStyle != expectedStyle) {
-      console.log(currentStyle, expectedStyle);
       target.style = "display: block!important";
     }
 

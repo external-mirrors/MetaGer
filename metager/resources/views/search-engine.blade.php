@@ -9,7 +9,11 @@
 
 	<div class="card">
 		<h2>{{ trans('search-engine.head.2') }}</h2>
-		<p>{!! trans('search-engine.text.1',["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
+		<p>{!! trans('search-engine.text.1.1',["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
+		<h2>{{ trans('search-engine.head.3') }}</h2>
+		<p>{{ trans('search-engine.text.1.2') }}</p>
+		<p>{!! trans('search-engine.text.1.3', ["contact" => LaravelLocalization::getLocalizedUrl(LaravelLocalization::getCurrentLocale(), route('contact'))]) !!}</p>
+
 	</div>
 	@foreach($suma_infos as $fokus_name => $suma_list)
 	<h1>{{ __('index.foki.' . $fokus_name) }}</h2>

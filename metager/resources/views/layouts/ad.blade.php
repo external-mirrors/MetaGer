@@ -11,7 +11,7 @@
 			</div>
 			<div class="result-subheadline">
 				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
-					<span class="advertisement-mark">@lang('result.advertisement')</span>
+					<span class="mark">@lang('result.advertisement')</span>
 					<span>{{ $ad->anzeigeLink }}</span>
 				</a>
 			</div>

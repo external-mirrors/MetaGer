@@ -6,7 +6,7 @@ return [
     'options.1' => 'Auf dieser Domain neu suchen',
     'options.2' => ':host ausblenden',
     'options.3' => '*.:domain ausblenden',
-    'options.4' => 'Partnershop',
+    'options.4' => 'Partner',
     'options.5' => 'ANONYM ÖFFNEN',
     'options.6' => 'IN NEUEM TAB ÖFFNEN',
     'options.7' => 'ÖFFNEN',

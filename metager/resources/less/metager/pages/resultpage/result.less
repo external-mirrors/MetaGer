@@ -189,27 +189,43 @@
     &.with-image {
       display: grid;
       grid-template-columns: auto auto;
-      grid-column-gap: 8px;
-      grid-row-gap: 8px;
+      grid-template-rows: auto auto auto;
+      grid-template-areas: "description image" "footer image" "options options";
+
+      gap: 1rem;
       margin-top: 0.3rem;
 
-      @media (max-width: 380px) {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
+      .result-description {
+        grid-area: description;
       }
 
       .result-image {
+        grid-area: image;
         align-self: center;
         justify-self: left;
-
-        @media (max-width: 380px) {
-          align-self: center;
-          justify-self: center;
-        }
+        border-radius: 15px;
+        overflow: hidden;
+      }
+      .result-footer {
+        grid-area: footer;
+      }
+      .result-options {
+        grid-area: options;
       }
 
-      .result-description {
-        align-self: center;
+      @media (max-width: 535px) {
+        grid-template-columns: auto auto;
+        grid-template-rows: repeat(3, auto);
+        grid-template-areas: "description image" "footer footer" "options options";
+      }
+
+      @media (max-width: 425px) {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(4, auto);
+        grid-template-areas: "image" "description" "footer" "options";
+        .result-image {
+          justify-self: center;
+        }
       }
     }
 
@@ -232,7 +248,6 @@
     }
 
     .result-description {
-      align-self: center;
       margin-bottom: 3px;
       color: @result-description-color;
       font-size: 0.95em;
@@ -258,6 +273,123 @@
         max-width: 120px;
         max-height: 200px;
         border: solid 1px @result-image-border-color;
+      }
+    }
+
+    .result-footer {
+    }
+
+    /* CSS Rules for the result options */
+    .result-toggle {
+      display: none;
+
+      &:checked + .result-footer > .open-result-options {
+        display: none;
+      }
+
+      &:checked + .result-footer > .close-result-options {
+        display: block;
+      }
+
+      &:checked + .result-footer + .result-options {
+        display: block;
+        > .options {
+          max-height: 150px;
+          overflow: initial;
+          overflow-x: auto;
+          opacity: 1;
+          display: block;
+        }
+      }
+    }
+
+    .result-footer * {
+      font-size: 0.7em;
+    }
+
+    &.ad .ad-hoster {
+      &,
+      & a,
+      & a:active,
+      & a:hover,
+      & a:focus,
+      & a:visited {
+        font-size: 0.9em;
+        color: #808080;
+      }
+    }
+
+    & > .remover {
+      cursor: pointer;
+      text-align: right;
+      color: #777;
+    }
+
+    & > .result-options {
+      display: none;
+      max-width: 100%;
+      overflow-x: auto;
+
+      & > .options {
+        width: 100%;
+        text-align: right;
+        overflow: hidden;
+        display: none;
+        max-height: 0px;
+        transition: all 1s;
+        -webkit-transition: all 1s;
+        opacity: 0;
+      }
+
+      ul {
+        display: flex;
+        margin-bottom: 0;
+
+        li {
+          font-size: 0.85em;
+          margin: 8px 16px 8px 0;
+        }
+
+        @media (max-width: @screen-mobile) {
+          li.result-saver {
+            display: none;
+          }
+        }
+
+        li > a {
+          color: @link-color;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  > .result-inherited-results {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+    padding: 0 1rem 1rem 1rem;
+    @media (min-width: 500px) {
+      > .inherited-result {
+        max-width: calc(50% - 0.5rem);
+      }
+    }
+  }
+
+  > .result-deep-buttons {
+    display: flex;
+    overflow-x: auto;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    > li {
+      &:nth-child(1) {
+        list-style-type: none;
+      }
+      > a {
+        white-space: nowrap;
       }
     }
   }
@@ -316,85 +448,6 @@
 
     .close-result-options {
       display: none;
-    }
-  }
-
-  /* CSS Rules for the result options */
-  .result-toggle {
-    display: none;
-
-    &:checked + .result-footer > .open-result-options {
-      display: none;
-    }
-
-    &:checked + .result-footer > .close-result-options {
-      display: block;
-    }
-
-    &:checked + .result-footer + .result-options > .options {
-      max-height: 150px;
-      overflow: initial;
-      opacity: 1;
-      display: block;
-    }
-  }
-
-  .result-footer * {
-    font-size: 0.7em;
-  }
-
-  &.ad .ad-hoster {
-    &,
-    & a,
-    & a:active,
-    & a:hover,
-    & a:focus,
-    & a:visited {
-      font-size: 0.9em;
-      color: #808080;
-    }
-  }
-
-  & > .remover {
-    cursor: pointer;
-    text-align: right;
-    color: #777;
-  }
-
-  & > .result-options {
-    max-width: 100%;
-
-    & > .options {
-      width: 100%;
-      text-align: right;
-      overflow: hidden;
-      display: none;
-      max-height: 0px;
-      transition: all 1s;
-      -webkit-transition: all 1s;
-      opacity: 0;
-    }
-
-    ul {
-      display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 0;
-
-      li {
-        font-size: 0.85em;
-        margin: 8px 16px 8px 0;
-      }
-
-      @media (max-width: @screen-mobile) {
-        li.result-saver {
-          display: none;
-        }
-      }
-
-      li > a {
-        color: @link-color;
-        white-space: nowrap;
-      }
     }
   }
 }

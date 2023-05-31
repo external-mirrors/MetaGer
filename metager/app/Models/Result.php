@@ -30,14 +30,16 @@ class Result
     public $strippedHost; # Der Host in Form "foo.bar.de"
     public $strippedDomain; # Die Domain in Form "bar.de"
     public $strippedLink; # Der Link in Form "foo.bar.de/test"
-    public $strippedHostAnzeige; # Der Host in Form "foo.bar.de"
-    public $strippedDomainAnzeige; # Die Domain in Form "bar.de"
-    public $strippedLinkAnzeige; # Der Link in Form "foo.bar.de/test"
     public $rank; # Das Ranking für das Ergebnis
     public $new = true;
     public $changed = false;
+    /** @var Result[] */
+    public $inheritedResults = [];
 
-    const DESCRIPTION_LENGTH = 150;
+    public $deepResults = [
+        "buttons" => []
+    ];
+    const DESCRIPTION_LENGTH = 250;
 
     # Erstellt ein neues Ergebnis
     public function __construct($engineBoost, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])
@@ -69,9 +71,6 @@ class Result
         $this->strippedHost = $this->getStrippedHost($this->link);
         $this->strippedDomain = $this->getStrippedDomain($this->link);
         $this->strippedLink = $this->getStrippedLink($this->link);
-        $this->strippedHostAnzeige = $this->getStrippedHost($this->anzeigeLink);
-        $this->strippedDomainAnzeige = $this->getStrippedDomain($this->anzeigeLink);
-        $this->strippedLinkAnzeige = $this->getStrippedLink($this->anzeigeLink);
         $this->rank = 0;
         $this->partnershop = isset($additionalInformation["partnershop"]) ? $additionalInformation["partnershop"] : false;
         $this->image = isset($additionalInformation["image"]) ? $additionalInformation["image"] : "";
@@ -291,9 +290,7 @@ class Result
     {
         if (
             ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
-                in_array($this->strippedLink, $metager->getUrlBlacklist()))) ||
-            ($this->strippedHostAnzeige !== "" && (in_array($this->strippedHostAnzeige, $metager->getDomainBlacklist()) ||
-                in_array($this->strippedLinkAnzeige, $metager->getUrlBlacklist())))
+                in_array($this->strippedLink, $metager->getUrlBlacklist())))
         ) {
             return true;
         } else {
@@ -303,7 +300,7 @@ class Result
 
     public function isDescriptionBlackListed(\App\MetaGer $metager)
     {
-        return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl()) || in_array($this->strippedLinkAnzeige, $metager->getBlacklistDescriptionUrl());
+        return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl());
     }
 
     /* Liest aus einem Link den Host.

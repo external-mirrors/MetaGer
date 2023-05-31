@@ -306,8 +306,7 @@ class MetaGer
         foreach ($this->ads as $ad) {
             if (
                 ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
+                    in_array($ad->strippedLink, $this->adUrlsBlacklisted)))
             ) {
                 continue;
             }

@@ -34,7 +34,27 @@
 			@endif
 		</div>
 	</div>
+	@if(sizeof($result->deepResults["buttons"]) > 0)
+	<ul class="result-deep-buttons">
+	@foreach($result->deepResults["buttons"] as $button)
+		<li>
+			<a href="{{ $button->link }}"  title="{{ $button->link }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}">
+				{{ $button->title }}
+			</a>
+		</li>
+	@endforeach
+	</ul>
+	@endif
 	<div class="result-body {{ (!empty($result->logo) || !empty($result->image) ? "with-image" : "")}}">
+		@if( $metager->getFokus() == "nachrichten" )
+		<div class="result-description">
+			<span class="date">{{ isset($result->additionalInformation["date"])?date("Y-m-d H:i:s", $result->additionalInformation["date"]):"" }}</span> {{ $result->descr }}
+		</div>
+		@else
+		<div class="result-description">
+			{{ $result->descr }}
+		</div>
+		@endif
 		@if( isset($result->logo) )
 		<div class="result-logo">
 			<a href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif>
@@ -49,68 +69,67 @@
 			</a>
 		</div>
 		@endif
-		@if( $metager->getFokus() == "nachrichten" )
-		<div class="result-description">
-			<span class="date">{{ isset($result->additionalInformation["date"])?date("Y-m-d H:i:s", $result->additionalInformation["date"]):"" }}</span> {{ $result->descr }}
+		<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle">
+		<div class="result-footer">
+			@if($metager->getNewtab() === "_blank")
+			<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
+				{!! trans('result.options.7') !!}
+			</a>
+			@else
+			<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
+				{!! trans('result.options.6') !!}
+			</a>
+			@endif
+			@if( isset($result->partnershop) && $result->partnershop === TRUE)
+			<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
+				@lang('result.options.8')
+			</a>
+			@else
+			<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>
+				{!! trans('result.options.5') !!}
+			</a>
+			@endif
+			<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
+				{{ trans('result.options.more')}}
+			</label>
+			<label class="close-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
+				{{ trans('result.options.less')}}
+			</label>
 		</div>
-		@else
-		<div class="result-description">
-			{{ $result->descr }}
-		</div>
-		@endif
-	</div>
-	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle">
-	<div class="result-footer">
-		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-			{!! trans('result.options.7') !!}
-		</a>
-		<a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
-			{!! trans('result.options.6') !!}
-		</a>
-		@if( isset($result->partnershop) && $result->partnershop === TRUE)
-		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
-			@lang('result.options.8')
-		</a>
-		@else
-		<a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" target="{{ $metager->getNewtab() }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif>
-			{!! trans('result.options.5') !!}
-		</a>
-		@endif
-		<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
-			{{ trans('result.options.more')}}
-		</label>
-		<label class="close-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
-			{{ trans('result.options.less')}}
-		</label>
-	</div>
-	<div class="result-options">
-		<div class="options">
-			<ul class="option-list list-unstyled small">
-				<li class="result-saver js-only">
-					<a href="#" class="saver" data-id="{{ $result->hash }}">
-						<img class="mg-icon result-icon-floppy" src="/img/floppy.svg"> {!! trans('result.options.savetab') !!}
-					</a>
-				</li>
-				@if(strlen($metager->getSite()) === 0)
-				<li>
-					<a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						{!! trans('result.options.1') !!}
-					</a>
-				</li>
-				@endif
-				<li>
-					<a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						{!! trans('result.options.2', ['host' => $result->strippedHost]) !!}
-					</a>
-				</li>
-				@if( $result->strippedHost !== $result->strippedDomain )
-				<li>
-					<a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
-						{!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}
-					</a>
-				</li>
-				@endif
-			</ul>
+		<div class="result-options">
+			<div class="options">
+				<ul class="option-list list-unstyled small">
+					@if(strlen($metager->getSite()) === 0)
+					<li>
+						<a href="{{ $metager->generateSiteSearchLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
+							{!! trans('result.options.1') !!}
+						</a>
+					</li>
+					@endif
+					<li>
+						<a href="{{ $metager->generateRemovedHostLink($result->strippedHost) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
+							{!! trans('result.options.2', ['host' => $result->strippedHost]) !!}
+						</a>
+					</li>
+					@if( $result->strippedHost !== $result->strippedDomain )
+					<li>
+						<a href="{{ $metager->generateRemovedDomainLink($result->strippedDomain) }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>
+							{!! trans('result.options.3', ['domain' => $result->strippedDomain]) !!}
+						</a>
+					</li>
+					@endif
+				</ul>
+			</div>
 		</div>
 	</div>
+	@if(sizeof($result->inheritedResults) > 0)
+	<div class="result-inherited-results">
+		@foreach($result->inheritedResults as $inheritedResult)
+		<div class="inherited-result">
+			<a class="inherited-title" href="{{ $inheritedResult->link }}" title="{{ $inheritedResult->link }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}">{{ $inheritedResult->titel }}</a>
+			<div class="inherited-description">{{ $inheritedResult->descr }}</div>
+		</div>
+		@endforeach
+	</div>
+	@endif
 </div>

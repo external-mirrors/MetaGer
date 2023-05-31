@@ -97,6 +97,8 @@ Route::group(['prefix' => 'spende'], function () {
         function () {
             return view('spende.spende')
                 ->with('title', trans('titles.spende'))
+                ->with('css', [mix('/css/spende.css')])
+                ->with('darkcss', [mix('/css/spende-dark.css')])
                 ->with('js', [mix('/js/donation.js')])
                 ->with('navbarFocus', 'foerdern');
         }
@@ -328,20 +330,20 @@ Route::group(['prefix' => 'app'], function () {
         function () {
             return response()->streamDownload(
                 function () {
-                        $fh = null;
-                        try {
-                            $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
-                            while (!feof($fh)) {
-                                echo (fread($fh, 1024));
-                            }
-                        } catch (\Exception $e) {
-                            abort(404);
-                        } finally {
-                            if ($fh != null) {
-                                fclose($fh);
-                            }
+                    $fh = null;
+                    try {
+                        $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
+                        while (!feof($fh)) {
+                            echo (fread($fh, 1024));
+                        }
+                    } catch (\Exception $e) {
+                        abort(404);
+                    } finally {
+                        if ($fh != null) {
+                            fclose($fh);
                         }
                     }
+                }
                 ,
                 'MetaGerSearch.apk',
                 ["Content-Type" => "application/vnd.android.package-archive"]
@@ -353,20 +355,20 @@ Route::group(['prefix' => 'app'], function () {
         function () {
             return response()->streamDownload(
                 function () {
-                        $fh = null;
-                        try {
-                            $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
-                            while (!feof($fh)) {
-                                echo (fread($fh, 1024));
-                            }
-                        } catch (\Exception $e) {
-                            abort(404);
-                        } finally {
-                            if ($fh != null) {
-                                fclose($fh);
-                            }
+                    $fh = null;
+                    try {
+                        $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
+                        while (!feof($fh)) {
+                            echo (fread($fh, 1024));
+                        }
+                    } catch (\Exception $e) {
+                        abort(404);
+                    } finally {
+                        if ($fh != null) {
+                            fclose($fh);
                         }
                     }
+                }
                 ,
                 'MetaGerMaps.apk',
                 ["Content-Type" => "application/vnd.android.package-archive"]

@@ -81,8 +81,12 @@ mix
     "public/css/asso/style.css"
   )
   .less(
-    "resources/less/metager/pages/spende/danke.less",
-    "public/css/spende/danke.css"
+    "resources/less/metager/pages/spende/base.less",
+    "public/css/spende.css"
+  )
+  .less(
+    "resources/less/metager/pages/spende/base-dark.less",
+    "public/css/spende-dark.css"
   )
   .less(
     "resources/less/metager/pages/prevention-information.less",

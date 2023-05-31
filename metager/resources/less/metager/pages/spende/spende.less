@@ -1,0 +1,30 @@
+#donation {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  > #breadcrumps {
+    list-style-type: disclosure-closed;
+    display: flex;
+    padding: 0;
+    gap: 1.5rem;
+    font-size: clamp(0.8rem, 3vw, 1.1rem);
+    > li {
+      &:nth-child(1) {
+        list-style-type: none;
+      }
+      &.current {
+        color: #009f64;
+      }
+      &.next {
+        color: fade(@text-color, 50%);
+      }
+    }
+    @media (max-width: 400px) {
+      list-style-type: none;
+      text-align: center;
+    }
+  }
+  > #content-container {
+    @import "./amount.less";
+  }
+}

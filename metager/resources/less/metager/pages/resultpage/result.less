@@ -262,6 +262,19 @@
     }
   }
 
+  > .result-inherited-results {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    gap: 0.5rem;
+    padding: 0 1rem 1rem 1rem;
+    @media (min-width: 500px) {
+      > .inherited-result {
+        max-width: calc(50% - 0.5rem);
+      }
+    }
+  }
+
   .result-footer {
     margin-top: 2px;
     max-width: 100%;

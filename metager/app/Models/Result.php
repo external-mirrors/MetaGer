@@ -33,6 +33,8 @@ class Result
     public $rank; # Das Ranking für das Ergebnis
     public $new = true;
     public $changed = false;
+    /** @var Result[] */
+    public $inheritedResults = [];
 
     const DESCRIPTION_LENGTH = 150;
 

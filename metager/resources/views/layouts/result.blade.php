@@ -59,6 +59,16 @@
 		</div>
 		@endif
 	</div>
+	@if(sizeof($result->inheritedResults) > 0)
+	<div class="result-inherited-results">
+		@foreach($result->inheritedResults as $inheritedResult)
+		<div class="inherited-result">
+			<a class="inherited-title" href="{{ $inheritedResult->link }}">{{ $inheritedResult->titel }}</a>
+			<div class="inherited-description">{{ $inheritedResult->descr }}</div>
+		</div>
+		@endforeach
+	</div>
+	@endif
 	<input type="checkbox" id="result-toggle-{{$result->hash}}" class="result-toggle">
 	<div class="result-footer">
 		<a class="result-open" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@else target="_self"@endif>

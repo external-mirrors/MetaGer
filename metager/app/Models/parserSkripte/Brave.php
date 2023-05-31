@@ -67,12 +67,12 @@ class Brave extends Searchengine
 
             $web = $results->web;
             foreach ($web->results as $result) {
-                $title = $result->title;
+                $title = html_entity_decode($result->title);
                 $link = $result->url;
                 $anzeigeLink = $result->meta_url->netloc . " " . $result->meta_url->path;
-                $descr = $result->description;
+                $descr = html_entity_decode($result->description);
                 $this->counter++;
-                $this->results[] = new \App\Models\Result(
+                $newResult = new \App\Models\Result(
                     $this->configuration->engineBoost,
                     $title,
                     $link,
@@ -83,6 +83,20 @@ class Brave extends Searchengine
                     $this->counter,
                     []
                 );
+
+                if (property_exists($result, "cluster")) {
+                    foreach ($result->cluster as $index => $clusterMember) {
+                        $clustertitle = $clusterMember->title;
+                        $clusterlink = $clusterMember->url;
+                        $clusterdescr = html_entity_decode($clusterMember->description);
+                        if (strlen($clusterdescr) > 100) {
+                            $clusterdescr = substr($clusterdescr, 0, 100) . "...";
+                        }
+                        $newResult->inheritedResults[] = new \App\Models\Result($this->configuration->engineBoost, $clustertitle, $clusterlink, $clusterlink, $clusterdescr, $this->configuration->infos->displayName, $this->configuration->infos->homepage, ($index + 1), []);
+                    }
+                }
+
+                $this->results[] = $newResult;
             }
 
 

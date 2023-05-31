@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Localization;
+use App\Models\DeepResults\Button;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use Log;
@@ -84,6 +85,10 @@ class Brave extends Searchengine
                     []
                 );
 
+                if (property_exists($result, "thumbnail")) {
+                    $newResult->image = $result->thumbnail->src;
+                }
+
                 if (property_exists($result, "cluster")) {
                     foreach ($result->cluster as $index => $clusterMember) {
                         $clustertitle = $clusterMember->title;
@@ -93,6 +98,14 @@ class Brave extends Searchengine
                             $clusterdescr = substr($clusterdescr, 0, 100) . "...";
                         }
                         $newResult->inheritedResults[] = new \App\Models\Result($this->configuration->engineBoost, $clustertitle, $clusterlink, $clusterlink, $clusterdescr, $this->configuration->infos->displayName, $this->configuration->infos->homepage, ($index + 1), []);
+                    }
+                }
+
+                if (property_exists($result, "deep_results")) {
+                    if (property_exists($result->deep_results, "buttons")) {
+                        foreach ($result->deep_results->buttons as $button) {
+                            $newResult->deepResults["buttons"][] = new Button($button->title, $button->url);
+                        }
                     }
                 }
 

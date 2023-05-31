@@ -36,7 +36,10 @@ class Result
     /** @var Result[] */
     public $inheritedResults = [];
 
-    const DESCRIPTION_LENGTH = 150;
+    public $deepResults = [
+        "buttons" => []
+    ];
+    const DESCRIPTION_LENGTH = 250;
 
     # Erstellt ein neues Ergebnis
     public function __construct($engineBoost, $titel, $link, $anzeigeLink, $descr, $gefVon, $gefVonLink, $sourceRank, $additionalInformation = [])

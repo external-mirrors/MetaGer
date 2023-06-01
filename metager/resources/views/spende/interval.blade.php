@@ -11,7 +11,7 @@
         @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about'), 'beitrittlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/beitritt')])
     </div>
     <ul id="breadcrumps">
-        <li class="done">{{ $donation["amount"] }}€</li>
+        <li class="done">{{ number_format($donation["amount"], 2, ",", ".") }}€</li>
         <li class="current">@lang('spende.breadcrumps.payment_interval')</li>
         <li class="next">@lang('spende.breadcrumps.payment_method')</li>
     </ul>

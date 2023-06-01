@@ -19,15 +19,15 @@
         <h3>@lang('spende.headline.3')</h3>
         <div>@lang('spende.amount.description')</div>
         <ul>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/5.00') }}">5€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/10.00') }}">10€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/15.00') }}">15€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/20.00') }}">20€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/25.00') }}">25€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/50.00') }}">50€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/100.00') }}">100€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/200.00') }}">200€</a></li>
-            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/300.00') }}">300€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/5.00#breadcrumps') }}">5€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/10.00#breadcrumps') }}">10€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/15.00#breadcrumps') }}">15€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/20.00#breadcrumps') }}">20€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/25.00#breadcrumps') }}">25€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/50.00#breadcrumps') }}">50€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/100.00#breadcrumps') }}">100€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/200.00#breadcrumps') }}">200€</a></li>
+            <li><a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/300.00#breadcrumps') }}">300€</a></li>
             <input type="checkbox" name="custom-amount-switch" id="custom-amount-switch">
             <li class="grow-x custom-amount">
                 <form action="">

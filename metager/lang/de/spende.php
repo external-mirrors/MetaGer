@@ -9,11 +9,31 @@ return [
     'breadcrumps' => [
         'amount' => 'Betrag wählen',
         'payment_method' => 'Zahlungsart wählen',
-        'payment_execute' => 'Zahlung abschließen'
+        'payment_interval' => 'Zahlungsinterval wählen'
     ],
 
-    'wunschbetrag.label' => 'Wunschbetrag',
-    'wunschbetrag.placeholder' => 'Betrag in €',
+    'amount' => [
+        'description' => 'Wählen Sie nachfolgend den Betrag, welchen Sie spenden möchten. Möchten Sie die Spende mit einer SEPA/SWIFT Banküberweisung durchführen? Dann finden Sie alternativ unsere Kontoverbindung unten auf dieser Seite.',
+        'custom' => 'Wunschbetrag',
+        'taxes' => 'Spenden an den <a href="https://suma-ev.de">SUMA-EV</a> sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
+        'banktransfer' => [
+            'title' => "Unsere Kontoverbindung"
+        ],
+        'membershiphint' => [
+            'title' => 'Oder vielleicht Mitglied werden?',
+            'description' => 'Als Mitglied im <a href="https://suma-ev">SUMA-EV</a> können Sie MetaGer werbefrei verwenden und erhalten Zugriff auf alle kostenpflichtigen Suchmaschinen.'
+        ]
+    ],
+    'interval' => [
+        'heading' => 'Darf es eine regelmäßige Spende sein?',
+        'frequency' => [
+            'once' => 'Einmalig',
+            'monthly' => 'Monatlich',
+            'quarterly' => 'Vierteljährlich',
+            'six-monthly' => 'Halbjährlich',
+            'annual' => 'Jährlich'
+        ]
+    ],
 
 
 

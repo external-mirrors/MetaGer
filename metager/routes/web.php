@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
@@ -92,17 +93,8 @@ Route::get('tor', function () {
 });
 
 Route::group(['prefix' => 'spende'], function () {
-    Route::get(
-        '/',
-        function () {
-            return view('spende.spende')
-                ->with('title', trans('titles.spende'))
-                ->with('css', [mix('/css/spende.css')])
-                ->with('darkcss', [mix('/css/spende-dark.css')])
-                ->with('js', [mix('/js/donation.js')])
-                ->with('navbarFocus', 'foerdern');
-        }
-    )->name("spende");
+    Route::get('/', [DonationController::class, "amount"])->name("spende");
+    Route::get('/{amount}', [DonationController::class, "interval"]);
 
     Route::post('/', 'MailController@donation');
 

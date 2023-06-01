@@ -58,6 +58,9 @@ return [
     ],
     "paypal" => [
         'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
+        'client_id' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_CLIENT_ID") : env("PAYPAL_CLIENT_ID"),
+        'secret' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
+        'subscription_plan' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN") : env("PAYPAL_SUBSCRIPTION_PLAN"),
     ],
     "maps" => [
         "version" => env("maps_version"),

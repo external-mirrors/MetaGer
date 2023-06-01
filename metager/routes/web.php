@@ -95,6 +95,7 @@ Route::get('tor', function () {
 Route::group(['prefix' => 'spende'], function () {
     Route::get('/', [DonationController::class, "amount"])->name("spende");
     Route::get('/{amount}', [DonationController::class, "interval"]);
+    Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
 
     Route::post('/', 'MailController@donation');
 

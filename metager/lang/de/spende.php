@@ -35,7 +35,9 @@ return [
         ]
     ],
 
-
+    'payment-method' => [
+        'heading' => 'Wie möchten Sie die Zahlung durchführen?'
+    ],
 
     'frequency.name' => 'Häufigkeit',
 

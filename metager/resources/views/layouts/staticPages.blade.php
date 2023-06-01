@@ -71,7 +71,7 @@
 	<script src="{{ mix('js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 	@foreach($js as $jsFile)
-	<script src="{{$jsFile}}" async></script>
+	<script src="{{$jsFile}}" defer></script>
 	@endforeach
 	@endif
 </head>

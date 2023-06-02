@@ -44,7 +44,6 @@
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
 	<script src="{{ mix('js/scriptResultPage.js') }}" defer></script>
-	<script src="{{ mix('js/aaresultpage.js') }}"></script>	
 
 	<title>{{ $eingabe }} - MetaGer</title>
 	<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />

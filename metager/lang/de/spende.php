@@ -71,7 +71,13 @@ return [
 
     'execute-payment' => [
         'heading' => 'Zahlung abschließen',
-        'item-name' => 'Spende an den SUMA-EV'
+        'item-name' => 'Spende an den SUMA-EV',
+        'card' => [
+            'number' => 'Kartennummer',
+            'expiration' => 'Gültig bis',
+            'cvv' => 'CVV',
+            'submit' => "Jetzt Spenden"
+        ]
     ],
 
     'frequency.name' => 'Häufigkeit',

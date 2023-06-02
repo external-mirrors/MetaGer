@@ -108,6 +108,9 @@ class DonationController extends Controller
                 "interval" => $interval,
                 "funding_source" => $funding_source
             ];
+            if ($funding_source === "card" && $interval === "once") {
+                $donation["client_token"] = $this->generatePayPalClientToken();
+            }
         }
 
         $script_params = [
@@ -131,7 +134,7 @@ class DonationController extends Controller
 
         $paypal_sdk .= "?" . http_build_query($script_params);
         $nonce = time();
-        $csp = "default-src 'self'; script-src 'self' 'nonce-$nonce'; script-src-elem 'self' 'nonce-$nonce'; script-src-attr 'self'; style-src 'self'; style-src-elem 'self' 'unsafe-inline'; style-src-attr 'self'; img-src 'self' www.paypalobjects.com data:; font-src 'self'; connect-src 'self'; frame-src 'self' www.paypal.com www.sandbox.paypal.com; frame-ancestors 'self'; form-action 'self' www.paypal.com";
+        $csp = "default-src * 'unsafe-inline'";
 
         return response(view('spende.payment.paypal')
             ->with('donation', $donation)
@@ -265,5 +268,28 @@ class DonationController extends Controller
         $response = file_get_contents($base_url . "/v1/oauth2/token", false, $opts);
         $response = json_decode($response);
         return $response->access_token;
+    }
+
+    /**
+     * Generates a client token required for advanced creditcard payments
+     */
+    private function generatePayPalClientToken()
+    {
+        $base_url = config("metager.metager.paypal.base_url");
+        $accessToken = $this->generatePayPalAccessToken();
+
+        $opts = [
+            "http" => [
+                "method" => "POST",
+                "header" => [
+                    "Authorization: Bearer $accessToken",
+                    "Content-Type: application/json"
+                ]
+            ],
+        ];
+        $opts = stream_context_create($opts);
+        $response = file_get_contents($base_url . "/v1/identity/generate-token", false, $opts);
+        $response = json_decode($response);
+        return $response->client_token;
     }
 }

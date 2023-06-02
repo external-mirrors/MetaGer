@@ -15,27 +15,59 @@ if (customAmountSwitch) {
 }
 
 if (document.querySelector("#content-container.paymentMethod")) {
+  let base_url = document.querySelector("input[name=baseurl]").value;
   paypal.getFundingSources().forEach(function (fundingSource) {
     let mark = paypal.Marks({ fundingSource: fundingSource });
     console.log(fundingSource);
-    if (mark.isEligible()) {
-      /*let paymentMethodLinkContainer = document.createElement("li");
-      paymentMethodLinkContainer.classList.add("payment-method");
-      paymentMethodLinkContainer.id = fundingSource;
-      document
-        .getElementById("payment-methods")
-        .appendChild(paymentMethodLinkContainer);
-      mark.render("#" + fundingSource);*/
+    if (mark.isEligible() && fundingSource !== "card" && fundingSource !== "sepa") {
+      let paymentMethodContainer = document.createElement("li");
+      paymentMethodContainer.classList.add("paypal");
+      let atag = document.createElement("a");
+      atag.href = `${base_url}/${fundingSource}`
+      paymentMethodContainer.appendChild(atag);
+      let imagecontainer = document.createElement("div");
+      imagecontainer.classList.add("image");
+      atag.appendChild(imagecontainer);
+      let imagetag = document.createElement("img");
+      imagetag.setAttribute("src", `/img/funding_source/${fundingSource}.svg`);
+      imagecontainer.appendChild(imagetag);
+      document.querySelector("#payment-methods").appendChild(paymentMethodContainer);
     }
   });
 }
 
 if (document.querySelector("#content-container.paypal-subscription")) {
-  paypal.Buttons(paypalOptions()).render("#paypal-buttons");
+  let funding_source = document.querySelector("input[name=funding_source]").value;
+  if (funding_source == "card") {
+
+  } else {
+    let paymentFieldsContainer = document.createElement("div");
+    paymentFieldsContainer.id = "payment-fields";
+    let paymentButtonContainer = document.createElement("div");
+    paymentButtonContainer.id = "payment-button";
+    document.querySelector("#content-container.paypal-subscription").appendChild(paymentFieldsContainer);
+    document.querySelector("#content-container.paypal-subscription").appendChild(paymentButtonContainer);
+    paypal.PaymentFields({
+      fundingSource: funding_source,
+      style: {
+        textColor: 'white',
+        base: {
+          backgroundColor: 'white',
+          textColor: 'white',
+          color: 'white'
+        },
+        input: {
+          backgroundColor: 'white',
+        }
+      },
+      fields: {}
+    }).render("#payment-fields");
+  }
+  paypal.Buttons(paypalOptions()).render("#payment-button");
   function paypalOptions() {
     let amount = document.querySelector("input[name=amount]").value;
     let interval = document.querySelector("input[name=interval]").value;
-    let funding_source = document.querySelector("input[name=funding_source]").value;
+
 
     let paypalOptions = {};
 
@@ -64,47 +96,27 @@ if (document.querySelector("#content-container.paypal-subscription")) {
       }
       paypalOptions.onApprove = paymentSuccessful;
     } else {
-      let checkout_data = {
-        purchase_units: [{
-          amount: {
-            currency_code: "EUR",
-            value: amount
-          }
-        }],
-        intent: "CAPTURE",
-        application_context: {
-          shipping_preference: 'NO_SHIPPING'
-        }
-      };
       paypalOptions.createOrder = function (data, actions) {
         let order_url = document.querySelector("input[name=order-url]").value;
         return fetch(order_url).then(response => response.json()).then(order => order.id);
       }
+      paypalOptions.onApprove = function (data, actions) {
+        let order_url = document.querySelector("input[name=order-url]").value;
+        return fetch(order_url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            orderID: data.orderID
+          })
+        }).then(response => response.json()).then(orderData => paymentSuccessful(orderData));
+      }
     }
     paypalOptions.application_context = { shipping_preference: 'NO_SHIPPING' };
     paypalOptions.fundingSource = funding_source;
-    paypalOptions.onApprove = function (data, actions) {
-      let order_url = document.querySelector("input[name=order-url]").value;
-      return fetch(order_url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          orderID: data.orderID
-        })
-      }).then(response => response.json()).then(orderData => paymentSuccessful(orderData));
-    }
+
     return paypalOptions;
-
-    paypal.Buttons({
-      createSubscription: function (data, actions) {
-        return actions.subscription.create();
-      },
-      onApprove: function (data, actions) {
-
-      }
-    }).render('#paypal-buttons');
   }
   function paymentSuccessful(data) {
     console.log("success", data);

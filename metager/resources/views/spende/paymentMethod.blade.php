@@ -18,6 +18,7 @@
     </ul>
     <div id="content-container" class="paymentMethod">
         <h3>@lang("spende.payment-method.heading")</h3>
+        <input type="hidden" name="baseurl" value="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal') }}">
         <ul id="payment-methods">
             <li>
                 <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/banktransfer') }}">
@@ -27,11 +28,6 @@
             <li>
                 <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/directdebit') }}">
                     <div class="image"><img src="/img/funding_source/sepa.svg" alt="SEPA"></div>
-                </a>
-            </li>
-            <li class="paypal">
-                <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal/paypal') }}">
-                    <div class="image"><img src="/img/funding_source/paypal.svg" alt="PayPal"></div>
                 </a>
             </li>
             <li class="paypal">

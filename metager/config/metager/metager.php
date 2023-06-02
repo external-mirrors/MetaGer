@@ -58,9 +58,17 @@ return [
     ],
     "paypal" => [
         'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
+        'base_url' => env("APP_ENV") !== "production" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com",
         'client_id' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_CLIENT_ID") : env("PAYPAL_CLIENT_ID"),
         'secret' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
-        'subscription_plan' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN") : env("PAYPAL_SUBSCRIPTION_PLAN"),
+        'subscription_plans' => [
+            'de' => [
+                'monthly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_MONTHLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_MONTHLY"),
+                'quaterly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_QUATERLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_QUATERLY"),
+                'six-monthly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_SIXMONTHLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_SIXMONTHLY"),
+                'yearly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_YEARLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_YEARLY"),
+            ]
+        ]
     ],
     "maps" => [
         "version" => env("maps_version"),

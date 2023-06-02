@@ -36,7 +36,42 @@ return [
     ],
 
     'payment-method' => [
-        'heading' => 'Wie möchten Sie die Zahlung durchführen?'
+        'heading' => 'Wie möchten Sie die Zahlung durchführen?',
+        'methods' => [
+            'banktransfer' => 'Banküberweisung',
+            'directdebit' => 'Lastschrift',
+            'paypal' => 'PayPal',
+            'venmo' => 'Venmo',
+            'itau' => 'Itau',
+            'credit' => 'Kredit',
+            'paylater' => 'Später zahlen',
+            'applepay' => 'Applepay',
+            'ideal' => 'IDEAL',
+            'sepa' => 'Lastschrift',
+            'bancontact' => 'Bancontact',
+            'giropay' => 'Giropay',
+            'eps' => 'EPS',
+            'sofort' => 'SOFORT',
+            'mybank' => 'MyBank',
+            'blik' => 'BLIK',
+            'p24' => 'P24',
+            'wechatpay' => 'WeChatPay',
+            'payu' => 'Payu',
+            'trustly' => 'Trustly',
+            'oxxo' => 'Oxxo',
+            'boleto' => 'Boleto',
+            'boletobacario' => 'Boletobancario',
+            'mercadopago' => 'Mercadopago',
+            'mulitbanco' => 'Multibanco',
+            'satispay' => 'Satispay',
+            'paidy' => 'Paidy',
+            'card' => 'Kredit-/Debitkarte'
+        ]
+    ],
+
+    'execute-payment' => [
+        'heading' => 'Zahlung abschließen',
+        'item-name' => 'Spende an den SUMA-EV'
     ],
 
     'frequency.name' => 'Häufigkeit',

@@ -8,15 +8,41 @@
       display: grid;
       grid-template-columns: 3fr 1fr 1fr;
       gap: 0.5rem;
-      > div.input-group {
-        > div {
-          height: 3rem;
-          border: 1px solid @color-light-grey;
+      > div {
+        &#card-errors {
+          grid-column: span 3;
+          > .error {
+            color: #ff5a34;
+          }
+        }
+        &.card-name {
+          grid-column: span 3;
+          display: grid;
+          > input {
+            padding: 0.5rem 1rem;
+          }
+        }
+        &.input-group {
+          > div {
+            height: 3rem;
+            border: 1px solid @color-light-grey;
+          }
         }
       }
       > button {
         grid-column: span 3;
       }
+    }
+  }
+
+  #payment-pending {
+    display: flex;
+    gap: 1rem;
+    border-radius: 5px;
+    background-color: @highlightcolor;
+    color: @text-color;
+    &:not([open]) {
+      display: none;
     }
   }
 }

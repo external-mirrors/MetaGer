@@ -76,8 +76,21 @@ return [
             'number' => 'Kartennummer',
             'expiration' => 'Gültig bis',
             'cvv' => 'CVV',
-            'submit' => "Jetzt Spenden"
-        ]
+            'submit' => "Jetzt Spenden",
+            'error' => [
+                '9500' => 'Kreditkarte als betrügerisch abgelehnt',
+                '5100' => 'Die Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '00N7' => 'Falsche CVV. Bitte Eingabe überprüfen',
+                '5400' => 'Kreditkarte abgelaufen',
+                '5180' => 'Luhn Überprüfung fehlgeschlagen',
+                '5120' => 'Kreditkarte wurde wegen nicht ausreichender Deckung abgelehnt.',
+                '9520' => 'Kreditkarte als verloren/gestohlen abgelehnt',
+                '0500' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '1330' => 'Kreditkarte ungültig. Bitte überprüfen Sie Ihre Eingabe',
+                'generic' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
+            ]
+        ],
+        'processing' => 'Zahlung wird verarbeitet'
     ],
 
     'frequency.name' => 'Häufigkeit',

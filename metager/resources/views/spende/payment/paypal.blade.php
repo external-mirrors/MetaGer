@@ -31,6 +31,19 @@
         <h3>@lang('spende.execute-payment.heading')</h3>
        <div id="paypal-buttons"></div>
        <form id="card-form-skeleton" class="hidden">
+            <div id="card-errors">
+                <div id="error-9500" class="error hidden">@lang('spende.execute-payment.card.error.9500')</div>
+                <div id="error-5100" class="error hidden">@lang('spende.execute-payment.card.error.5100')</div>
+                <div id="error-00N7" class="error hidden">@lang('spende.execute-payment.card.error.00N7')</div>
+                <div id="error-5110" class="error hidden">@lang('spende.execute-payment.card.error.00N7')</div>
+                <div id="error-5400" class="error hidden">@lang('spende.execute-payment.card.error.5400')</div>
+                <div id="error-5180" class="error hidden">@lang('spende.execute-payment.card.error.5180')</div>
+                <div id="error-5120" class="error hidden">@lang('spende.execute-payment.card.error.5120')</div>
+                <div id="error-9520" class="error hidden">@lang('spende.execute-payment.card.error.9520')</div>
+                <div id="error-0500" class="error hidden">@lang('spende.execute-payment.card.error.0500')</div>
+                <div id="error-1330" class="error hidden">@lang('spende.execute-payment.card.error.1330')</div>
+                <div id="error-generic" class="error hidden">@lang('spende.execute-payment.card.error.generic')</div>
+            </div>
             <div class="input-group card-number-group">
                 <label for="card-number">@lang('spende.execute-payment.card.number')</label>
                 <div id="card-number"></div>
@@ -43,7 +56,17 @@
                 <label for="card-number">@lang('spende.execute-payment.card.cvv')</label>
                 <div id="card-cvv"></div>
             </div>
+            @if(app()->environment("local"))
+            <div class="input-group card-name">
+                <label for="card-name">Card Rejection Trigger (Testing)</label>
+                <input type="text" id="card-name">
+            </div>
+            @endif
             <button type="submit" id="card-submit" class="btn btn-default">@lang('spende.execute-payment.card.submit')</button>
+            <dialog id="payment-pending">
+                <img src="/img/ajax-loader.gif" alt="Loading">
+                <div>@lang('spende.execute-payment.processing')</div>
+            </dialog>
        </form>
     </div>
 </div>

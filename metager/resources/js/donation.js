@@ -43,6 +43,7 @@ if (document.querySelector("#content-container.paymentMethod")) {
 }
 
 if (document.querySelector("#content-container.paypal-subscription")) {
+  let orderID;
   let funding_source = document.querySelector(
     "input[name=funding_source]"
   ).value;
@@ -65,7 +66,6 @@ if (document.querySelector("#content-container.paypal-subscription")) {
     let fontColor = window.getComputedStyle(
       document.querySelector("body")
     ).color;
-    console.log(fontColor);
     paypal.HostedFields.render({
       createOrder: paypal_options.createOrder,
       fields: {
@@ -94,7 +94,35 @@ if (document.querySelector("#content-container.paypal-subscription")) {
         .getElementById("card-form")
         .addEventListener("submit", (event) => {
           event.preventDefault();
-          cardFields.submit().then(() => {});
+          document.querySelector("#payment-pending").showModal();
+          let params = {
+            contingencies: ["SCA_WHEN_REQUIRED"],
+          };
+          if (document.getElementById("card-name")) {
+            params.cardholderName = document.getElementById("card-name").value;
+          }
+          console.log(params);
+
+          cardFields
+            .submit(params)
+            .then((response) => {
+              console.log(response);
+
+              document.querySelector("#payment-pending").close();
+              // Check if card was declined
+              paypal_options.onApprove();
+            })
+            .catch((error) => {
+              document.querySelector("#payment-pending").close();
+              for (let i = 0; i < error.details.length; i++) {
+                let error_container = document.createElement("div");
+                error_container.classList.add("error");
+                error_container.textContent = error.details[i].description;
+                document
+                  .querySelector("#card-errors")
+                  .appendChild(error_container);
+              }
+            });
         });
     });
   } else {
@@ -161,7 +189,10 @@ if (document.querySelector("#content-container.paypal-subscription")) {
         let order_url = document.querySelector("input[name=order-url]").value;
         return fetch(order_url)
           .then((response) => response.json())
-          .then((order) => order.id);
+          .then((order) => {
+            orderID = order.id;
+            return order.id;
+          });
       };
       paypalOptions.onApprove = function (data, actions) {
         let order_url = document.querySelector("input[name=order-url]").value;
@@ -171,11 +202,33 @@ if (document.querySelector("#content-container.paypal-subscription")) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            orderID: data.orderID,
+            orderID: orderID,
           }),
         })
           .then((response) => response.json())
-          .then((orderData) => paymentSuccessful(orderData));
+          .then((orderData) => {
+            console.log(orderData);
+            if (
+              orderData.purchase_units[0].payments.captures[0].status ==
+              "DECLINED"
+            ) {
+              let processor_response_code =
+                orderData.purchase_units[0].payments.captures[0]
+                  .processor_response.response_code;
+              let error_container = document.querySelector(
+                "#card-errors > #error-" + processor_response_code
+              );
+              if (error_container) {
+                error_container.classList.remove("hidden");
+              } else {
+                document
+                  .querySelector("#card-errors > #error-generic")
+                  .classList.remove("hidden");
+              }
+            } else {
+              paymentSuccessful(orderData);
+            }
+          });
       };
     }
     paypalOptions.application_context = { shipping_preference: "NO_SHIPPING" };

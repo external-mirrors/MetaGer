@@ -71,7 +71,6 @@ function processPaypalCard() {
                             capture_response.purchase_units[0].payments.captures[0].status ==
                             "DECLINED"
                         ) {
-                            console.log("error");
                             let processor_response_code =
                                 capture_response.purchase_units[0].payments.captures[0]
                                     .processor_response.response_code;
@@ -82,7 +81,6 @@ function processPaypalCard() {
                         lockForm(false);
                     })
                     .catch((error) => {
-                        console.log(error);
                         lockForm(false);
                         let card_errors_container = document.querySelector("#card-errors");
                         if (card_errors_container.classList.contains("hidden")) {

@@ -35,8 +35,17 @@
     }
     > button {
       grid-column: span 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
       &:disabled::before {
         content: "";
+        background-image: url("/img/ajax-loader.gif");
+        width: 20px;
+        display: block;
+        height: 100%;
+        background-repeat: no-repeat;
       }
     }
   }

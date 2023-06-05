@@ -54,7 +54,8 @@
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
 			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.example') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
-			<img class="help-easy-language-mainpages-image" src="/img/help-bangs-easy-language.png"/>
+			<img class="help-easy-language-mainpages-image lm-only" src="/img/help-bangs-lm.png"/>
+			<img class="help-easy-language-mainpages-image dm-only" src="/img/help-bangs-dm.png"/>
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
 
 		</div>

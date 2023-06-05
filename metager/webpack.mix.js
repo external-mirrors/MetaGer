@@ -115,7 +115,7 @@ mix
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .js(["resources/js/donation/base.js", "resources/js/donation/paypal-options.js", "resources/js/donation/paypal-card.js", "resources/js/donation/paypal-subscription-card.js"], "public/js/donation.js")
+  .js(["resources/js/donation/base.js", "resources/js/donation/paypal-options.js", "resources/js/donation/paypal-card.js", "resources/js/donation/paypal-subscription.js"], "public/js/donation.js")
   // utility
   .js(
     ["resources/js/utility.js", "resources/js/translations.js"],

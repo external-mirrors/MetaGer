@@ -9,8 +9,8 @@ return [
     "backarrow"             => 'Zurück',
     "result"        => [
         "info"       => [
-            "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:',
-            "2" => 'Die neuen Optionen sind:',
+            "1" => 'Alle Ergebnisse werden in folgender Form ausgegeben:<div class="image-container"><img class="lm-only" src="/img/help-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"/> <img class="dm-only" src="/img/help-php-resultpic-01-dm.png" alt="Bildschrimfoto eines Suchergebnisses"/></div>',
+            "2" => '<div class="image-container"><img class="lm-only" src="/img/help-php-resultpic-02.png" alt="Bildschirmfoto eines Suchergebnisses"/> <img class="dm-only" src="/img/help-php-resultpic-02-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/></div> Die neuen Optionen sind:',
             "anonym" => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
             "domainnewsearch" => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
             "hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',

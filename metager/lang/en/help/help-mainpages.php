@@ -27,11 +27,11 @@ return [
     'result'      => [
         'title' => 'Results',
         'info'  => [
-            1                 => 'All results will look like this:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-01.png"></div></p>',
+            1                 => 'All results will look like this:<div class="image-container"><img class="lm-only" src="/img/help-result-en-lm-01.png" alt="Screenshot of a search result"/> <img class="dm-only" src="/img/help-result-en-dm-01.png" alt="Screenshot of a search result"/></div>',
             'open'            => '"OPEN": Click the headline, the link below (URL) or the "OPEN" button to open the result in the same TAB.',
             'newtab'          => '"OPEN IN NEW TAB" will open the result in a new TAB.',
             'anonym'          => '"OPEN ANONYMOUSLY": the page will be opened under the proxy protection.You can find some info about this in the <a href = "/hilfe/datensicherheit#proxy/">MetaGer proxy server</a> section.',
-            'more'            => '"MORE": you will get more options, the result changes its appearance to:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
+            'more'            => '"MORE": you will get more options, the result changes its appearance to:<div class="image-container"><img class="lm-only" src="/img/help-result-en-lm-02.png" alt="Screenshot of a search result"/> <img class="dm-only" src="/img/help-result-en-dm-02.png" alt="Screenshot of a search result"/></div>',
             2                 => 'The new options are:',
             'saveresult'      => '"Save result in TAB" (Only desktop): The result will be stored in a new TAB. It´ s used for collecting results out of several searches. This TAB appears on the right side of your screen. (info: <a href="/hilfe/funktionen#searchinsearch"> Search in search</a>)',
             'domainnewsearch' => '"Start a new search on this domain": search only on this domain.',

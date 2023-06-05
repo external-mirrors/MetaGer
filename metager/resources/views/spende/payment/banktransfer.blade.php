@@ -31,6 +31,7 @@
             </div>
             <div id="bank-qr">
                 <img src="{{ $donation['qr_uri'] }}" width="100%" alt="SEPA QR Code">
+                <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/banktransfer/qr') }}" target="_blank">@lang('spende.execute-payment.banktransfer.qrdownload')</a>
             </div>
         </div>
     </div>

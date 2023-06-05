@@ -136,6 +136,43 @@ class DonationController extends Controller
             ->with('js', [mix('/js/donation.js')]));
     }
 
+    function banktransferQr(Request $request, $amount, $interval)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
+        ]);
+        if ($validator->fails()) {
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } else {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
+            }
+        } else {
+            $donation = [
+                "amount" => round(floatval($amount), 2),
+                "interval" => $interval,
+                "funding_source" => "banktransfer"
+            ];
+        }
+
+        // Generate qr data uri
+        $payment_data = Data::create()
+            ->setName("SUMA-EV")
+            ->setIban("DE64430609674075033201")
+            ->setBic("GENODEM1GLS")
+            ->setCurrency("EUR")
+            ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]))
+            ->setAmount($amount);
+        $qr = Builder::create()
+            ->data($payment_data)
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->build();
+
+        return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);
+    }
+
     function paypalPayment(Request $request, $amount, $interval, $funding_source)
     {
         $validator = Validator::make(["amount" => $amount, "interval" => $interval], [

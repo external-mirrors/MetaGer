@@ -3,34 +3,40 @@
   margin: 0 auto;
   width: 100%;
 
-  > #payment-fields {
-    > form#card-form {
-      display: grid;
-      grid-template-columns: 3fr 1fr 1fr;
-      gap: 0.5rem;
-      > div {
-        &#card-errors {
-          grid-column: span 3;
-          > .error {
-            color: #ff5a34;
-          }
-        }
-        &.card-name {
-          grid-column: span 3;
-          display: grid;
-          > input {
-            padding: 0.5rem 1rem;
-          }
-        }
-        &.input-group {
-          > div {
-            height: 3rem;
-            border: 1px solid @color-light-grey;
-          }
+  > h3 {
+    margin: 0;
+  }
+
+  > form#card-form {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    gap: 0.5rem;
+    row-gap: 1rem;
+    > div {
+      &#card-errors {
+        grid-column: span 3;
+        > .error {
+          color: #ff5a34;
         }
       }
-      > button {
+      &.card-name {
         grid-column: span 3;
+        display: grid;
+        > input {
+          padding: 0.5rem 1rem;
+        }
+      }
+      &.input-group {
+        > div {
+          height: 3rem;
+          border: 1px solid @color-light-grey;
+        }
+      }
+    }
+    > button {
+      grid-column: span 3;
+      &:disabled::before {
+        content: "";
       }
     }
   }

@@ -1,4 +1,5 @@
 import processPaypalCard from './paypal-card';
+import { processPaypalSubscription } from './paypal-subscription';
 import { paypalOptions, funding_source } from './paypal-options';
 let customAmountSwitch = document.querySelector(
   "#content-container.amount #custom-amount-switch"
@@ -37,6 +38,10 @@ if (document.querySelector("#content-container.paymentMethod")) {
       let imagetag = document.createElement("img");
       imagetag.setAttribute("src", `/img/funding_source/${fundingSource}.svg`);
       imagecontainer.appendChild(imagetag);
+      let invertLightImages = ["p24", "applepay", "bancontact", "boleto", "eps", "mercadopago", "multibanco", "oxxo", "paidy", "satispay"];
+      if (invertLightImages.includes(fundingSource)) {
+        imagetag.classList.add("invert-light");
+      }
       document
         .querySelector("#payment-methods")
         .appendChild(paymentMethodContainer);
@@ -44,48 +49,45 @@ if (document.querySelector("#content-container.paymentMethod")) {
   });
 }
 
-if (document.querySelector("#content-container.paypal-subscription")) {
-  let orderID;
+if (document.querySelector("#content-container.paypal")) {
+  let interval = document.querySelector("#content-container.paypal input[name=interval]").value;
+  if (interval == "once") {
+    if (funding_source == "card") {
+      processPaypalCard();
+    } else {
+      if (funding_source != "paypal") {
+        let paymentFieldsContainer = document.createElement("div");
+        paymentFieldsContainer.id = "payment-fields";
+        document
+          .querySelector("#content-container.paypal")
+          .appendChild(paymentFieldsContainer);
 
+        paypal
+          .PaymentFields({
+            fundingSource: funding_source,
+            styles: {
+              base: {
+                color: "white",
+              }
+            },
+            fields: {},
+          })
+          .render("#payment-fields");
+      }
+      let paymentButtonContainer = document.createElement("div");
+      paymentButtonContainer.id = "payment-button";
 
-  if (funding_source == "card") {
-    processPaypalCard();
+      document
+        .querySelector("#content-container.paypal")
+        .appendChild(paymentButtonContainer);
+      paypal.Buttons(paypalOptions()).render("#payment-button");
+    }
   } else {
-    let paymentFieldsContainer = document.createElement("div");
-    paymentFieldsContainer.id = "payment-fields";
-    document
-      .querySelector("#content-container.paypal-subscription")
-      .appendChild(paymentFieldsContainer);
-    let paymentButtonContainer = document.createElement("div");
-    paymentButtonContainer.id = "payment-button";
-
-    document
-      .querySelector("#content-container.paypal-subscription")
-      .appendChild(paymentButtonContainer);
-    paypal
-      .PaymentFields({
-        fundingSource: funding_source,
-        style: {
-          textColor: "white",
-          base: {
-            backgroundColor: "white",
-            textColor: "white",
-            color: "white",
-          },
-          input: {
-            backgroundColor: "white",
-          },
-        },
-        fields: {},
-      })
-      .render("#payment-fields");
-    paypal.Buttons(paypalOptions()).render("#payment-button");
+    processPaypalSubscription();
   }
 
 
-  function paymentSuccessful(data) {
-    console.log("success", data);
-  }
+
   function cardSubscription() {
     let cardFields = document.createElement("div");
     cardFields.id = "card-fields";

@@ -77,6 +77,7 @@ return [
             'expiration' => 'Gültig bis',
             'cvv' => 'CVV',
             'submit' => "Jetzt Spenden",
+            'recurring-hint' => 'Hinweis: Eine direkte Kreditkartenzahlung ohne Address-/Namensvalidierung ist nur für einmalige Spenden möglich.',
             'error' => [
                 '9500' => 'Kreditkarte als betrügerisch abgelehnt',
                 '5100' => 'Die Kreditkarte wurde vom Kreditinstitut abgelehnt',

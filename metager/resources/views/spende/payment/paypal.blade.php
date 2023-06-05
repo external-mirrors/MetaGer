@@ -16,7 +16,7 @@
         <li class="done"><a href="{{ LaravelLOcalization::getLocalizedUrl(null, '/spende/' . $donation['amount']) }}">@lang('spende.interval.frequency.' . $donation["interval"])</a></li>
         <li class="done"><a href="{{ LaravelLOcalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval']) }}">@lang('spende.payment-method.methods.' . $donation["funding_source"])</a></li>
     </ul>
-    <div id="content-container" class="paypal-subscription">
+    <div id="content-container" class="paypal">
         @if(array_key_exists("plan_id", $donation))
         <input type="hidden" name="plan-id" value="{{ $donation['plan_id'] }}">
         @else
@@ -29,6 +29,9 @@
         <input type="hidden" name="interval" value="{{ $donation['interval'] }}">
         <input type="hidden" name="funding_source" value="{{ $donation['funding_source'] }}">
         <h3>@lang('spende.execute-payment.heading')</h3>
+        @if($donation["interval"] !== "once" && $donation["funding_source"] === "card")
+        <div id="paypal-card-recurring-hint">@lang('spende.execute-payment.card.recurring-hint')</div>
+        @endif
     </div>
 </div>
 <form id="card-form-skeleton" class="hidden">

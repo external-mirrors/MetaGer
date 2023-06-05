@@ -68,3 +68,7 @@ export function paypalOptions() {
 
     return paypalOptions;
 }
+
+function paymentSuccessful(data) {
+    console.log("success", data);
+}

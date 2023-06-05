@@ -30,7 +30,7 @@
 	<a id=help-topic-bangs href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/funktionen#bangs") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.2.2') !!}<br></p>
 	</a>
-	<a id=help-topic-searchinsearch href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/funktionen#searchinsearch") }}" class="help-topic">
+	<a id=help-topic-searchinsearch href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/funktionen#keyexplain") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.2.3') !!}<br></p>
 	</a>
 	<a id=help-topic-addmetager href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/funktionen#selist") }}" class="help-topic">

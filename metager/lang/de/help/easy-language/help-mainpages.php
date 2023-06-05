@@ -88,31 +88,36 @@ return [
     
     "settings"  => [
         "title" => 'Einstellungen',
+        "metagerkey" => [
+            "title" => "Werbefreie Suche",
+            "1"=> 'Hier kann man das Guthaben für die werbe-freie Suche sehen. <br> Die Werbe-freie Suche kann man mit einem MetaGer Schlüssel nutzen. <br>Unter dem Guthaben kann man den MetaGer Schlüssel sehen. <br> Darunter findet man zwei Knöpfe. <br> Man kann auf den linken Knopf <strong>Schlüssel aufladen</strong> drücken. <br> Dann kann man den Schlüssel aufladen. <br> Man auf den rechten Knopf <strong>Schlüssel entfernen</strong> drücken. <br> Dann wird der Schlüssel aus dem Browser <a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> gelöscht. <br> Mehr Informationen über den MetaGer Schlüssel findet man hier:  <a href = "/hilfe/easy-language/funktionen#keyexplain/">MetaGer Schlüssel</a> <br> Wenn man keinen Schlüssel hat, sieht das so aus:',
+            "2"=> "Es werden 3 Knöpfe angezeigt. <br> Man kann auf den linken Knopf mit dem Text <strong>Was ist das?</strong> drücken. <br> Dann kommt man auf die Informations-seite vom MetaGer Schlüssel. <br> Man kann auf den mittleren Knopf mit dem Text <strong>Vorhandenen Schlüssel einrichten</strong> drücken. <br> Wenn man schon einen MetaGer Schlüssel hat, kann man den da eingeben. <br> Wenn man keinen Schlüssel hat, kann man auf den rechten Knopf <strong>Neuen Schlüssel einrichten</strong> drücken um einen neuen Schlüssel zu kaufen.",
+        ],
         "cookies"  => [
-            "title" => 'Setzen von Cookies<a title="Wort erklärung" href="/hilfe/easy-language/glossary#cookies" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>',
-            "1" => 'Manche Browser<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> löschen Ihre Cookies<a title="Wort erklärung" href="/hilfe/easy-language/glossary#cookies" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können sich den Link auch anzeigen lassen: <br> <a href=:link>Cookie-Link</a> <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die Einstellungen wieder da. ',
+            "title" => 'Wiederherstellen aller aktuellen Einstellungen',
+            "1" => 'Manche Browser<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> löschen Ihre Cookies<a title="Wort erklärung" href="/hilfe/easy-language/glossary#cookies" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> nach einer Sitzung. <br> Dann werden auch die Einstellungen von MetaGer gelöscht. <br> Mit dem Link können Sie die Einstellungen wieder her-stellen. <br> Sie können diesen Link als Start-Seite speichern. <br> Dann sind beim Öffnen des Browsers<a title="Wort erklärung" href="/hilfe/easy-language/glossary#browser" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die Einstellungen wieder da. ',
         ],
         "searchengine"  => [
             "title" => 'Verwendete Such-Maschinen:',
-            "1" => 'Hier sehen Sie alle Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe grün sind, dann nutzen Sie die Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>.',
-            "2" => 'Wenn ein Knopf rot ist nutzen Sie diese Such-Maschine nicht.',
+            "1" => 'Hier sehen Sie alle Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe durchgestrichen sind, dann nutzen Sie die Such-Maschinen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#suchmaschine" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> nicht. <br> Einige Such-Maschinen sind nur mit einem <a href = "/hilfe/easy-language/funktionen#keyexplain/">MetaGer-Schlüssel</a> nutzbar.',
+            "2" => 'Such-Maschinen die man nur mit MetaGer Schlüssel verwenden kann, sind ausgegraut.',
         ],
         "filter"  => [
             "title" => 'Such-Filter<a title="Wort erklärung" href="/hilfe/easy-language/glossary#filter" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>:', 
             "1"  => [   
                 "0" => 'Mit dem Such-Filter<a title="Wort erklärung" href="/hilfe/easy-language/glossary#filter" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> können Sie Ihre Suche filtern. <br> Sie können also auswählen was Sie sehen wollen.',
                 "1" => 'Datum:',
-                "2" => 'Hier können Sie das Datum vom Such-Ergebnis aussuchen.<br> Man zeigt dann nur Ergebnisse mit dem ausgewählten Datum an.',
+                "2" => 'Hier können Sie das Datum vom Such-Ergebnis aussuchen.<br> Man zeigt dann nur Ergebnisse mit dem ausgewählten Datum an. <br> Diese Funktion ist nur mit einem MetaGer Schlüssel möglich.',
                 "3" => 'Sprache:',
-                "4" => 'Hier können Sie die Sprache vom Such-Ergebnis aussuchen. <br> Man zeigt dann nur Ergebnisse mit der ausgewählten Sprache an.',
+                "4" => 'Hier können Sie die Sprache vom Such-Ergebnis aussuchen. <br> Man zeigt dann nur Ergebnisse mit der ausgewählten Sprache an. <br> Für einige Sprachen braucht man einen MetaGer Schlüssel.',
             ],
             "2" => 'Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a>:', 
-            "3" => 'Mit dem Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Filter (Jugendschutz-Filter) verstecken Sie unangenehme Ergebnisse. <br> <strong>Strikt</strong> findet fast keine unangenehmen Ergebnisse. <br> <strong>Aus</strong> findet alle Ergebnisse, also auch unangenehme Ergebnisse. <br> <strong>Moderat</strong> findet ein paar unangenehme Ergebnisse. <br> Bei <strong>Beliebig</strong> entscheiden die einzelnen Such-Maschinen selber.', 
+            "3" => 'Mit dem Safesearch<a title="Wort erklärung" href="/hilfe/easy-language/glossary#safesearch" ><img class="glossary-icon" src="/img/glossary-icon.svg"/></a> Filter (Jugendschutz-Filter) verstecken Sie unangenehme Ergebnisse. <br> <strong>Strikt</strong> findet fast keine unangenehmen Ergebnisse. <br> <strong>Aus</strong> findet alle Ergebnisse, also auch unangenehme Ergebnisse. <br> <strong>Moderat</strong> findet ein paar unangenehme Ergebnisse. <br> Bei <strong>Beliebig</strong> entscheiden die einzelnen Such-Maschinen selber. <br> Für den moderaten Modus braucht man einen MetaGer Schlüssel.', 
         ],
         "blacklist"  => [
             "title" => 'Blacklist / Schwarze Liste:',
-            "1" => 'Hier können Sie Web-Seiten angeben, die Sie nicht in den Ergebnissen sehen wollen. <br> In das Feld geben Sie die Seite ein. <br> Dann drücken Sie auf den Knopf <Strong>Hinzufügen</strong>. <br> Hier können Sie mehrere Ergebnisse hinzufügen.<br> Dann verstecken Sie die Seite in den Ergebnissen. ',
-            "2" => 'Wenn Sie eine Seite doch wieder sehen wollen, können Sie auf die Müll-Tonne drücken. <br> Oder Sie drücken auf den Knopf <strong>Blacklist leeren</strong> um alle Seiten wieder zu zeigen.',
+            "1" => 'Hier können Sie Web-Seiten angeben, die Sie nicht in den Ergebnissen sehen wollen. <br> In das Feld geben Sie die Seite ein. <br> Dann drücken Sie auf den Knopf <Strong>Speichern</strong>. <br> Hier können Sie mehrere Ergebnisse eintragen.<br> Dann verstecken Sie die Seite in den Ergebnissen. ',
+            "2" => 'Wenn Sie eine Seite doch wieder sehen wollen, können Sie die Web-Seite aus dem Feld löschen.',
         ],
         "moresettings" => 'Weitere Einstellungen:',
         "darkmode"  => [

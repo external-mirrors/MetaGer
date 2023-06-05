@@ -1,6 +1,9 @@
 export let funding_source = document.querySelector(
     "input[name=funding_source]"
-).value;
+);
+if (funding_source) {
+    funding_source = funding_source.value;
+}
 
 export let orderID;
 

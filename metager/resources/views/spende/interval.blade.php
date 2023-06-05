@@ -11,9 +11,9 @@
         @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about'), 'beitrittlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/beitritt')])
     </div>
     <ul id="breadcrumps">
-        <li class="done">{{ number_format($donation["amount"], 2, ",", ".") }}€</li>
-        <li class="current">@lang('spende.breadcrumps.payment_interval')</li>
-        <li class="next">@lang('spende.breadcrumps.payment_method')</li>
+        <li class="done"><a href="{{ LaravelLOcalization::getLocalizedUrl(null, '/spende/') }}">{{ number_format($donation["amount"], 2, ",", ".") }}€</a></li>
+        <li class="current"><a href="#">@lang('spende.breadcrumps.payment_interval')</a></li>
+        <li class="next"><a href="#">@lang('spende.breadcrumps.payment_method')</a></li>
     </ul>
     <div id="content-container" class="interval">
         <h3>@lang('spende.interval.heading')</h3>

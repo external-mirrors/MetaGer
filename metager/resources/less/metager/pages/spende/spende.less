@@ -17,32 +17,54 @@
 
     text-align: center;
     background-color: @highlightcolor;
-    @checked-color: #008220;
+    @checked-color: @hightlighttextcolorcurrent;
     > li {
-      padding: 1rem;
-      white-space: nowrap;
       &:nth-child(2) {
         border-right: 1px solid darken(@highlightcolor, 10%);
         border-left: 1px solid darken(@highlightcolor, 10%);
       }
-      &.done {
-        background-color: @checked-color;
+      &.done > a {
+        background-color: @highlightbackgroundcolorcurrent;
         color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        &::after {
+          content: "";
+          background-image: url("/img/edit.svg");
+          background-repeat: no-repeat;
+          display: block;
+          width: 10px;
+          height: 10px;
+          background-size: contain;
+          position: relative;
+          top: -5px;
+          filter: brightness(0) invert(1);
+        }
       }
       &.current {
         color: @checked-color;
       }
       &.next {
-        color: darken(@highlightcolor, 20%);
+        color: @highlighttextcolor;
+      }
+      > a {
+        display: block;
+        color: inherit;
+        padding: 1rem;
+        white-space: nowrap;
       }
     }
     @media (max-width: 590px) {
       grid-template-columns: 1fr 1fr;
       > li {
-        padding: 0.5rem;
         &:nth-last-child(1) {
           grid-column: span 2;
           border-top: 1px solid darken(@highlightcolor, 10%);
+        }
+        > a {
+          padding: 0.5rem;
         }
       }
     }

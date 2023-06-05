@@ -41,10 +41,16 @@
         <div id="other">
             <div id="bank-transfer">
                 <h3>@lang('spende.amount.banktransfer.title')</h3>
-                <pre class="bankaccount">SUMA-EV
-DE64 4306 0967 4075 0332 01
-GENODEM1GLS
-GLS Gemeinschaftsbank, Bochum</pre>
+                <div class="bankaccount">
+                    <div class="name">SUMA-EV</div>
+                    <div class="iban">DE64 4306 0967 4075 0332 01</div>
+                    <div class="bic">GENODEM1GLS</div>
+                    <div class="bank">GLS Gemeinschaftsbank, Bochum</div>
+                </div>
+                <div class="qr">
+                    <img src="{{ $banktransfer_qr_uri }}" width="100%" alt="@lang('spende.amount.qr.alt')">
+                    <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/qr') }}" target="_blank">@lang('spende.execute-payment.banktransfer.qrdownload')</a>
+                </div>
             </div>
             @if(\App\Localization::getLanguage() === "de")
             <div id="membership-hint">

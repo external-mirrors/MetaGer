@@ -22,6 +22,9 @@ return [
         'membershiphint' => [
             'title' => 'Oder vielleicht Mitglied werden?',
             'description' => 'Als Mitglied im <a href="https://suma-ev">SUMA-EV</a> können Sie MetaGer werbefrei verwenden und erhalten Zugriff auf alle kostenpflichtigen Suchmaschinen.'
+        ],
+        'qr' => [
+            'alt' => 'Fotoüberweisung'
         ]
     ],
     'interval' => [

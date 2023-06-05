@@ -18,12 +18,45 @@ class DonationController extends Controller
         if ($request->filled("amount")) {
             return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $request->input('amount')));
         }
+
+        // Generate qr data uri
+        $payment_data = Data::create()
+            ->setName("SUMA-EV")
+            ->setIban("DE64430609674075033201")
+            ->setBic("GENODEM1GLS")
+            ->setCurrency("EUR")
+            ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]));
+        $qr_uri = Builder::create()
+            ->data($payment_data)
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->build()
+            ->getDataUri();
+
         return view('spende.amount')
+            ->with('banktransfer_qr_uri', $qr_uri)
             ->with('title', trans('titles.spende'))
             ->with('css', [mix('/css/spende.css')])
             ->with('darkcss', [mix('/css/spende-dark.css')])
             ->with('js', [mix('/js/donation.js')])
             ->with('navbarFocus', 'foerdern');
+    }
+
+    function amountQr(Request $request)
+    {
+        // Generate qr data uri
+        $payment_data = Data::create()
+            ->setName("SUMA-EV")
+            ->setIban("DE64430609674075033201")
+            ->setBic("GENODEM1GLS")
+            ->setCurrency("EUR")
+            ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]))
+            ->setAmount(10);
+        $qr = Builder::create()
+            ->data($payment_data)
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->build();
+
+        return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);
     }
 
     function interval(Request $request, $amount)

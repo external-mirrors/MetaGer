@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Illuminate\Http\Request;
@@ -162,6 +163,75 @@ class DonationController extends Controller
         $donation["qr_uri"] = $qr_uri;
 
         return response(view('spende.payment.banktransfer')
+            ->with('donation', $donation)
+            ->with('title', trans('titles.spende'))
+            ->with('css', [mix('/css/spende.css')])
+            ->with('darkcss', [mix('/css/spende-dark.css')])
+            ->with('js', [mix('/js/donation.js')]));
+    }
+
+    function directdebit(Request $request, $amount, $interval)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
+        ]);
+        if ($validator->fails()) {
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } else {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
+            }
+        } else {
+            $donation = [
+                "amount" => round(floatval($amount), 2),
+                "interval" => $interval,
+                "funding_source" => "directdebit"
+            ];
+        }
+
+        return response(view('spende.payment.directdebit')
+            ->with('donation', $donation)
+            ->with('title', trans('titles.spende'))
+            ->with('css', [mix('/css/spende.css')])
+            ->with('darkcss', [mix('/css/spende-dark.css')])
+            ->with('js', [mix('/js/donation.js')]));
+    }
+
+    function directdebitExecute(Request $request, $amount, $interval)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval, "iban" => $request->input("iban", ""), "name" => $request->input("name")], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"]),
+            'iban' => ["required", new IBANValidator()],
+            "name" => 'required'
+        ]);
+        $donation = [
+            "amount" => round(floatval($amount), 2),
+            "interval" => $interval,
+            "funding_source" => "directdebit"
+        ];
+        if ($validator->fails()) {
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } elseif (array_key_exists("interval", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
+            } else {
+                return response(view('spende.payment.directdebit')
+                    ->withErrors($validator)
+                    ->with('donation', $donation)
+                    ->with('title', trans('titles.spende'))
+                    ->with('css', [mix('/css/spende.css')])
+                    ->with('darkcss', [mix('/css/spende-dark.css')])
+                    ->with('js', [mix('/js/donation.js')]));
+            }
+        } else {
+            $donation["iban"] = $request->input("iban");
+        }
+
+        return response(view('spende.payment.directdebit')
             ->with('donation', $donation)
             ->with('title', trans('titles.spende'))
             ->with('css', [mix('/css/spende.css')])

@@ -102,6 +102,19 @@ return [
             'qr-remittance' => 'Spende vom :date',
             'qrdownload' => 'Herunterladen'
         ],
+        'directdebit' => [
+            'description' => 'Bitte tragen Sie nachfolgend die Informationen zu Ihrem Bankkonto ein von dem wir die Spende im Lastschriftverfahren einziehen dürfen. Es kann 1-2 Wochen dauern bis der Betrag eingezogen wird.',
+            'name' => [
+                'label' => 'Kontoinhaber',
+                'placeholder' => 'Max Mustermann'
+            ],
+            'iban' => [
+                'label' => 'IBAN',
+                'placeholder' => 'DE89 3704 0044 0532 0130 00',
+                'error' => 'Die eingegebene IBAN ist ungültig.'
+            ],
+            'submit' => 'Zahlung durchführen'
+        ],
         'processing' => 'Zahlung wird verarbeitet'
     ],
 

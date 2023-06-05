@@ -98,6 +98,8 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/{amount}', [DonationController::class, "interval"]);
     Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
     Route::get('/{amount}/{interval}/banktransfer', [DonationController::class, 'banktransfer']);
+    Route::get('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebit']);
+    Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);
     Route::get('/{amount}/{interval}/banktransfer/qr', [DonationController::class, 'banktransferQr']);
     Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment']);
     Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
+use SepaQr\Data;
 
 class DonationController extends Controller
 {
@@ -87,6 +90,50 @@ class DonationController extends Controller
             ->with('css', [mix('/css/spende.css')])
             ->with('darkcss', [mix('/css/spende-dark.css')])
             ->with('js', [mix('/js/donation.js')]), 200, ["Content-Security-Policy" => $csp]);
+    }
+
+    function banktransfer(Request $request, $amount, $interval)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
+        ]);
+        if ($validator->fails()) {
+            $failedParams = $validator->failed();
+            if (array_key_exists("amount", $failedParams)) {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
+            } else {
+                return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende/' . $amount));
+            }
+        } else {
+            $donation = [
+                "amount" => round(floatval($amount), 2),
+                "interval" => $interval,
+                "funding_source" => "banktransfer"
+            ];
+        }
+
+        // Generate qr data uri
+        $payment_data = Data::create()
+            ->setName("SUMA-EV")
+            ->setIban("DE64430609674075033201")
+            ->setBic("GENODEM1GLS")
+            ->setCurrency("EUR")
+            ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]))
+            ->setAmount($amount);
+        $qr_uri = Builder::create()
+            ->data($payment_data)
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->build()
+            ->getDataUri();
+        $donation["qr_uri"] = $qr_uri;
+
+        return response(view('spende.payment.banktransfer')
+            ->with('donation', $donation)
+            ->with('title', trans('titles.spende'))
+            ->with('css', [mix('/css/spende.css')])
+            ->with('darkcss', [mix('/css/spende-dark.css')])
+            ->with('js', [mix('/js/donation.js')]));
     }
 
     function paypalPayment(Request $request, $amount, $interval, $funding_source)

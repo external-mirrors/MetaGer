@@ -96,6 +96,7 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/', [DonationController::class, "amount"])->name("spende");
     Route::get('/{amount}', [DonationController::class, "interval"]);
     Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
+    Route::get('/{amount}/{interval}/banktransfer', [DonationController::class, 'banktransfer']);
     Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment']);
     Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
     Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);

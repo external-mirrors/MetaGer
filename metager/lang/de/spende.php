@@ -91,6 +91,13 @@ return [
                 'generic' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
             ]
         ],
+        'banktransfer' => [
+            'description' => [
+                'once' => 'Bitte stoßen Sie bei Ihrer Hausbank eine Banküberweisung auf folgende Bankverbindung an (z.B. über Onlinebanking). Sie können auch mit Ihrer Onlinebanking App den QR Code scannen, um die Daten automatisch zu übernehmen.',
+                'recurring' => 'Bitte erstellen Sie bei Ihrer Hausbank einen Dauerauftrag auf folgende Bankverbindung (z.B. über Onlinebanking). Sie können auch mit Ihrer Onlinebanking App den QR Code scannen, um die Daten automatisch zu übernehmen.',
+            ],
+            'qr-remittance' => 'Spende vom :date'
+        ],
         'processing' => 'Zahlung wird verarbeitet'
     ],
 

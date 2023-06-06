@@ -63,10 +63,16 @@ return [
         'secret' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
         'subscription_plans' => [
             'de' => [
-                'monthly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_MONTHLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_MONTHLY"),
-                'quaterly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_QUATERLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_QUATERLY"),
-                'six-monthly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_SIXMONTHLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_SIXMONTHLY"),
-                'yearly' => env("APP_ENV") !== "production" ? env("PAYPAL_SANDBOX_SUBSCRIPTION_PLAN_DE_YEARLY") : env("PAYPAL_SUBSCRIPTION_PLAN_DE_YEARLY"),
+                'monthly' => env("APP_ENV") !== "production" ? "P-9PS701646J694893UMR44BKY" : "P-5T792079318830948MR7RKNQ",
+                'quaterly' => env("APP_ENV") !== "production" ? "P-0FB89268F4436550RMR44A4Q" : "P-3D628243GH926471NMR7RKWQ",
+                'six-monthly' => env("APP_ENV") !== "production" ? "P-6HV135640N2728211MR44BEA" : "P-5KN001613L661163GMR7RK7Q",
+                'yearly' => env("APP_ENV") !== "production" ? "P-9PS701646J694893UMR44BKY" : "P-02W54082PW9013238MR7RLGQ",
+            ],
+            'en' => [
+                'monthly' => env("APP_ENV") !== "production" ? "P-9PS701646J694893UMR44BKY" : "P-4KU89480TX608823SMR7RL5Q",
+                'quaterly' => env("APP_ENV") !== "production" ? "P-0FB89268F4436550RMR44A4Q" : "P-8X9762928E906321AMR7RMEA",
+                'six-monthly' => env("APP_ENV") !== "production" ? "P-6HV135640N2728211MR44BEA" : "P-4P034150HX9413052MR7RMLI",
+                'yearly' => env("APP_ENV") !== "production" ? "P-9PS701646J694893UMR44BKY" : "P-7KK84338ST943905WMR7RMSA",
             ]
         ]
     ],

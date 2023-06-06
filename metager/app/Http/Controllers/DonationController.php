@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateDirectDebit;
 use App\Localization;
 use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
+use PHP_IBAN\IBAN;
 use SepaQr\Data;
 
 class DonationController extends Controller
@@ -228,8 +230,11 @@ class DonationController extends Controller
                     ->with('js', [mix('/js/donation.js')]));
             }
         } else {
+            $donation["fullname"] = $request->input("name");
             $donation["iban"] = $request->input("iban");
         }
+
+        CreateDirectDebit::dispatch($donation["fullname"], new IBAN($donation["iban"]), $donation["amount"], $donation["interval"] === "annual" ? "yearly" : $donation["interval"])->onQueue("donations");
 
         return response(view('spende.payment.directdebit')
             ->with('donation', $donation)

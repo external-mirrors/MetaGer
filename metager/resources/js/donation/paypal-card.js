@@ -1,4 +1,4 @@
-import { paypalOptions, orderID } from "./paypal-options";
+import { paypalOptions, paymentSuccessful, orderID } from "./paypal-options";
 
 /**
  * Process PayPal Card payments
@@ -50,7 +50,7 @@ function processPaypalCard() {
                 hideErrors();
                 lockForm(true);
                 let params = {
-                    contingencies: ["SCA_ALWAYS"],
+                    contingencies: ["SCA_WHEN_REQUIRED"],
                 };
                 if (document.getElementById("card-name") && document.getElementById("card-name").value.length > 0) {
                     params.cardholderName = document.getElementById("card-name").value;
@@ -59,56 +59,36 @@ function processPaypalCard() {
                 cardFields
                     .submit(params)
                     .then((response) => {
-                        console.log(response);
                         if (typeof response.liabilityShift != "undefined" && response.liabilityShift != "POSSIBLE") {
                             return Promise.reject({ details: [{ description: "3D Authentication failed" }] });
                         }
                         // Check if card was declined
                         return paypal_options.onApprove();
                     })
-                    .then(capture_response => {
-                        if (
-                            capture_response.purchase_units[0].payments.captures[0].status ==
-                            "DECLINED"
-                        ) {
+                    .catch((error) => {
+                        console.error(error);
+                        lockForm(false);
+                        try {
                             let processor_response_code =
-                                capture_response.purchase_units[0].payments.captures[0]
+                                error.purchase_units[0].payments.captures[0]
                                     .processor_response.response_code;
                             showError(`error-${processor_response_code}`);
-                        } else {
-                            paymentSuccessful(capture_response);
-                        }
-                        lockForm(false);
-                    })
-                    .catch((error) => {
-                        lockForm(false);
-                        let card_errors_container = document.querySelector("#card-errors");
-                        if (card_errors_container.classList.contains("hidden")) {
-                            card_errors_container.classList.remove("hidden");
-                        }
-                        for (let i = 0; i < error.details.length; i++) {
-                            let error_container = document.createElement("div");
-                            error_container.classList.add("error");
-                            error_container.textContent = error.details[i].description;
-                            card_errors_container.appendChild(error_container);
-                        }
+                        } catch (e) { }
+
+                        try {
+                            let card_errors_container = document.querySelector("#card-errors");
+                            if (card_errors_container.classList.contains("hidden")) {
+                                card_errors_container.classList.remove("hidden");
+                            }
+                            for (let i = 0; i < error.details.length; i++) {
+                                let error_container = document.createElement("div");
+                                error_container.classList.add("error");
+                                error_container.textContent = error.details[i].description;
+                                card_errors_container.appendChild(error_container);
+                            }
+                        } catch (e) { }
                     });
             });
-    });
-}
-
-function hideErrors() {
-    let error_container = document.querySelector("#card-errors");
-    if (!error_container) {
-        return;
-    }
-    if (!error_container.classList.contains("hidden")) {
-        error_container.classList.add("hidden");
-    }
-    error_container.querySelectorAll(".error").forEach(error_element => {
-        if (!error_element.classList.contains("hidden")) {
-            error_element.classList.add("hidden");
-        }
     });
 }
 
@@ -127,6 +107,21 @@ function showError(errorId) {
     if (error_element.classList.contains("hidden")) {
         error_element.classList.remove("hidden");
     }
+}
+
+function hideErrors() {
+    let error_container = document.querySelector("#card-errors");
+    if (!error_container) {
+        return;
+    }
+    if (!error_container.classList.contains("hidden")) {
+        error_container.classList.add("hidden");
+    }
+    error_container.querySelectorAll(".error").forEach(error_element => {
+        if (!error_element.classList.contains("hidden")) {
+            error_element.classList.add("hidden");
+        }
+    });
 }
 
 /**

@@ -21,7 +21,6 @@ if (document.querySelector("#content-container.paymentMethod")) {
   let base_url = document.querySelector("input[name=baseurl]").value;
   paypal.getFundingSources().forEach(function (fundingSource) {
     let mark = paypal.Marks({ fundingSource: fundingSource });
-    console.log(fundingSource);
     if (
       mark.isEligible() &&
       fundingSource !== "card" &&
@@ -84,35 +83,5 @@ if (document.querySelector("#content-container.paypal")) {
     }
   } else {
     processPaypalSubscription();
-  }
-
-
-
-  function cardSubscription() {
-    let cardFields = document.createElement("div");
-    cardFields.id = "card-fields";
-
-    let number = document.createElement("input");
-    number.type = "text";
-    number.name = "card";
-    number.id = "card-number";
-    cardFields.appendChild(number);
-
-    let expiration = document.createElement("input");
-    expiration.type = "text";
-    expiration.name = "expiration";
-    expiration.id = "card-expiration";
-    cardFields.appendChild(expiration);
-
-    document.querySelector("#paypal-buttons").appendChild(cardFields);
-
-    paypal.HostedFields.render({
-      createOrder: () => { },
-      onApprove: () => { },
-      fields: {
-        number: "#card-number",
-        expirationDate: "#card-expiration",
-      },
-    });
   }
 }

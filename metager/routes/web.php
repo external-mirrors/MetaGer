@@ -97,6 +97,7 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/qr', [DonationController::class, "amountQr"]);
     Route::get('/{amount}', [DonationController::class, "interval"]);
     Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
+    Route::get('/{amount}/{interval}/{funding_source}/finished', [DonationController::class, "donationFinished"])->name("thankyou");
     Route::get('/{amount}/{interval}/banktransfer', [DonationController::class, 'banktransfer']);
     Route::get('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebit']);
     Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);

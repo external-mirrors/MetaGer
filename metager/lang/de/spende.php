@@ -118,6 +118,13 @@ return [
         'processing' => 'Zahlung wird verarbeitet'
     ],
 
+    'thankyou' => [
+        'heading' => 'Herzlichen Dank!',
+        'description' => 'Ihre Spende trägt wesentlich dazu bei, dass wir MetaGer dauerhaft betreiben und weiterentwickeln können.',
+        'taxes' => 'Hinweis: Der SUMA-EV ist als gemeinnütziger Verein anerkannt. Das bedeutet, dass Sie Ihre Spende steuerlich geltend machen können. Bis zu einer Spendenhöhe von 300€ genügt Ihrem Finanzamt als Nachweis der Spende ein Kontoauszug. Wünschen Sie dennoch eine Spendenbescheinigung, teilen Sie uns bitte noch Ihre vollständige Addresse über unser <a href=":kontakt">Kontaktformular</a> mit.',
+        'button' => 'Zurück zur MetaGer Suche'
+    ],
+
     'frequency.name' => 'Häufigkeit',
 
     'frequency.once' => 'Einmalig',

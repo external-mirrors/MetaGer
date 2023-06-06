@@ -13,6 +13,7 @@ use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
 use PHP_IBAN\IBAN;
 use SepaQr\Data;
+use URL;
 
 class DonationController extends Controller
 {
@@ -236,12 +237,9 @@ class DonationController extends Controller
 
         CreateDirectDebit::dispatch($donation["fullname"], new IBAN($donation["iban"]), $donation["amount"], $donation["interval"] === "annual" ? "yearly" : $donation["interval"])->onQueue("donations");
 
-        return response(view('spende.payment.directdebit')
-            ->with('donation', $donation)
-            ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]));
+        // Generate URL to thankyou page
+        $url = URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit"]);
+        return redirect($url);
     }
 
     function banktransferQr(Request $request, $amount, $interval)
@@ -437,7 +435,35 @@ class DonationController extends Controller
         $response = file_get_contents($url, false, $opts);
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
-        return response()->json(json_decode($response), $responsecode);
+
+        $response = json_decode($response);
+        $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
+
+        return response()->json($response, $responsecode);
+    }
+
+    public function donationFinished(Request $request, $amount, $interval, $funding_source)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
+        ]);
+        if ($validator->fails() || !$request->hasValidSignature()) {
+            abort(404);
+        } else {
+            $donation = [
+                "amount" => round(floatval($amount), 2),
+                "interval" => $interval,
+                "funding_source" => $funding_source
+            ];
+        }
+
+        return response(view('spende.danke')
+            ->with('donation', $donation)
+            ->with('title', trans('titles.spende'))
+            ->with('css', [mix('/css/spende.css')])
+            ->with('darkcss', [mix('/css/spende-dark.css')])
+            ->with('js', [mix('/js/donation.js')]), 200);
     }
 
     private function generatePayPalAccessToken()

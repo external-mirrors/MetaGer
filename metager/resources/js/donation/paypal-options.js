@@ -38,7 +38,12 @@ export function paypalOptions() {
         paypalOptions.createSubscription = function (data, actions) {
             return actions.subscription.create(subscription_data);
         };
-        paypalOptions.onApprove = paymentSuccessful;
+        paypalOptions.onApprove = () => {
+            let url = document.querySelector("input[name=success-url]").value;
+            paymentSuccessful({
+                redirect_to: url
+            });
+        };
     } else {
         paypalOptions.createOrder = function (data, actions) {
             let order_url = document.querySelector("input[name=order-url]").value;
@@ -60,7 +65,17 @@ export function paypalOptions() {
                     orderID: orderID,
                 }),
             })
-                .then((response) => response.json());
+                .then((response) => response.json()).then(response => {
+
+                    if (
+                        response.purchase_units[0].payments.captures[0].status ==
+                        "DECLINED"
+                    ) {
+                        return Promise.reject(response);
+                    } else {
+                        return paymentSuccessful(response);
+                    }
+                });
         };
     }
     paypalOptions.application_context = { shipping_preference: "NO_SHIPPING" };
@@ -69,6 +84,8 @@ export function paypalOptions() {
     return paypalOptions;
 }
 
-function paymentSuccessful(data) {
-    console.log("success", data);
+export function paymentSuccessful(data) {
+    if (data.redirect_to) {
+        window.location.replace(data.redirect_to);
+    }
 }

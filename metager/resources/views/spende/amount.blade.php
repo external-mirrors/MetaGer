@@ -49,7 +49,7 @@
                 </div>
                 <div class="qr">
                     <img src="{{ $banktransfer_qr_uri }}" width="100%" alt="@lang('spende.amount.qr.alt')">
-                    <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/qr') }}" target="_blank">@lang('spende.execute-payment.banktransfer.qrdownload')</a>
+                    <a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/qr') }}">@lang('spende.execute-payment.banktransfer.qrdownload')</a>
                 </div>
             </div>
             @if(\App\Localization::getLanguage() === "de")

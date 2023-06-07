@@ -16,7 +16,6 @@ class Brave extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        $this->configuration->disabledByDefault = true;
     }
 
     public function applySettings()

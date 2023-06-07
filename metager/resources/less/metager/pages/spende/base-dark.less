@@ -1,0 +1,14 @@
+@highlightcolor: #444444;
+@highlighttextcolor: darken(white, 55%);
+@hightlighttextcolorcurrent: #7fff7f;
+@highlightbackgroundcolorcurrent: darken(@hightlighttextcolorcurrent, 60%);
+.invert-dark {
+  filter: invert(1);
+}
+
+.invert-light:not(.invert-dark) {
+  filter: invert(0);
+}
+
+@import "../../variables-dark.less";
+@import "./spende.less";

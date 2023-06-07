@@ -1,0 +1,23 @@
+&.directdebit {
+  > form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    > div.input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      > input {
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        font-size: 1.1rem;
+      }
+      > .error {
+        color: red;
+      }
+    }
+  }
+}

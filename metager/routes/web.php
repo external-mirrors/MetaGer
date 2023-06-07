@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
@@ -92,30 +93,18 @@ Route::get('tor', function () {
 });
 
 Route::group(['prefix' => 'spende'], function () {
-    Route::get(
-        '/',
-        function () {
-            return view('spende.spende')
-                ->with('title', trans('titles.spende'))
-                ->with('js', [mix('/js/donation.js')])
-                ->with('navbarFocus', 'foerdern');
-        }
-    )->name("spende");
-
-    Route::post('/', 'MailController@donation');
-
-    Route::get('paypal', 'MailController@donationPayPalCallback')->name('paypal-callback');
-
-    Route::get(
-        'danke/{data?}',
-        function ($data) {
-            return view('spende.danke')
-                ->with('title', trans('titles.spende'))
-                ->with('navbarFocus', 'foerdern')
-                ->with('css', [mix('/css/spende/danke.css')])
-                ->with('data', unserialize(base64_decode($data)));
-        }
-    )->name("danke");
+    Route::get('/', [DonationController::class, "amount"])->name("spende");
+    Route::get('/qr', [DonationController::class, "amountQr"]);
+    Route::get('/{amount}', [DonationController::class, "interval"]);
+    Route::get('/{amount}/{interval}', [DonationController::class, "paymentMethod"]);
+    Route::get('/{amount}/{interval}/{funding_source}/{timestamp}/finished', [DonationController::class, "donationFinished"])->name("thankyou");
+    Route::get('/{amount}/{interval}/banktransfer', [DonationController::class, 'banktransfer']);
+    Route::get('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebit']);
+    Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);
+    Route::get('/{amount}/{interval}/banktransfer/qr', [DonationController::class, 'banktransferQr']);
+    Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment']);
+    Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
+    Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
 });
 
 Route::get('partnershops', function () {
@@ -328,20 +317,20 @@ Route::group(['prefix' => 'app'], function () {
         function () {
             return response()->streamDownload(
                 function () {
-                        $fh = null;
-                        try {
-                            $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
-                            while (!feof($fh)) {
-                                echo (fread($fh, 1024));
-                            }
-                        } catch (\Exception $e) {
-                            abort(404);
-                        } finally {
-                            if ($fh != null) {
-                                fclose($fh);
-                            }
+                    $fh = null;
+                    try {
+                        $fh = fopen("https://gitlab.metager.de/open-source/app-en/-/raw/latest/app/release_manual/app-release_manual.apk", "r");
+                        while (!feof($fh)) {
+                            echo (fread($fh, 1024));
+                        }
+                    } catch (\Exception $e) {
+                        abort(404);
+                    } finally {
+                        if ($fh != null) {
+                            fclose($fh);
                         }
                     }
+                }
                 ,
                 'MetaGerSearch.apk',
                 ["Content-Type" => "application/vnd.android.package-archive"]
@@ -353,20 +342,20 @@ Route::group(['prefix' => 'app'], function () {
         function () {
             return response()->streamDownload(
                 function () {
-                        $fh = null;
-                        try {
-                            $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
-                            while (!feof($fh)) {
-                                echo (fread($fh, 1024));
-                            }
-                        } catch (\Exception $e) {
-                            abort(404);
-                        } finally {
-                            if ($fh != null) {
-                                fclose($fh);
-                            }
+                    $fh = null;
+                    try {
+                        $fh = fopen("https://gitlab.metager.de/open-source/metager-maps-android/raw/latest/app/release/app-release.apk?inline=false", "r");
+                        while (!feof($fh)) {
+                            echo (fread($fh, 1024));
+                        }
+                    } catch (\Exception $e) {
+                        abort(404);
+                    } finally {
+                        if ($fh != null) {
+                            fclose($fh);
                         }
                     }
+                }
                 ,
                 'MetaGerMaps.apk',
                 ["Content-Type" => "application/vnd.android.package-archive"]

@@ -64,15 +64,15 @@ return [
         'subscription_plans' => [
             'de' => [
                 'monthly' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-5T792079318830948MR7RKNQ",
-                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-3D628243GH926471NMR7RKWQ",
-                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-5KN001613L661163GMR7RK7Q",
-                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-02W54082PW9013238MR7RLGQ",
+                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-62V62940SW941451CMSADXYY",
+                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-02012023JU117583VMSADYCA",
+                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-76933683ME4978749MSADYKA",
             ],
             'en' => [
                 'monthly' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-4KU89480TX608823SMR7RL5Q",
-                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-8X9762928E906321AMR7RMEA",
-                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-4P034150HX9413052MR7RMLI",
-                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-7KK84338ST943905WMR7RMSA",
+                'quarterly' => env("APP_ENV") === "local" ? "P-0FB89268F4436550RMR44A4Q" : "P-84X85829590029937MSADY4I",
+                'six-monthly' => env("APP_ENV") === "local" ? "P-6HV135640N2728211MR44BEA" : "P-4BN89043UV429704AMSADZDY",
+                'annual' => env("APP_ENV") === "local" ? "P-9PS701646J694893UMR44BKY" : "P-5BK5465420316543SMSADZKY",
             ]
         ]
     ],

@@ -81,8 +81,12 @@ mix
     "public/css/asso/style.css"
   )
   .less(
-    "resources/less/metager/pages/spende/danke.less",
-    "public/css/spende/danke.css"
+    "resources/less/metager/pages/spende/base.less",
+    "public/css/spende.css"
+  )
+  .less(
+    "resources/less/metager/pages/spende/base-dark.less",
+    "public/css/spende-dark.css"
   )
   .less(
     "resources/less/metager/pages/prevention-information.less",
@@ -111,7 +115,7 @@ mix
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .js("resources/js/donation.js", "public/js/donation.js")
+  .js(["resources/js/donation/base.js", "resources/js/donation/paypal-options.js", "resources/js/donation/paypal-card.js", "resources/js/donation/paypal-subscription.js"], "public/js/donation.js")
   // utility
   .js(
     ["resources/js/utility.js", "resources/js/translations.js"],

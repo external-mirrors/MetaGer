@@ -238,7 +238,7 @@ class DonationController extends Controller
         CreateDirectDebit::dispatch($donation["fullname"], new IBAN($donation["iban"]), $donation["amount"], $donation["interval"] === "annual" ? "yearly" : $donation["interval"])->onQueue("donations");
 
         // Generate URL to thankyou page
-        $url = URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit"]);
+        $url = URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit", "timestamp" => time()]);
         return redirect($url);
     }
 
@@ -437,7 +437,7 @@ class DonationController extends Controller
         $responsecode = intval($matches[0]);
 
         $response = json_decode($response);
-        $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
+        $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
 
         return response()->json($response, $responsecode);
     }

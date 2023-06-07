@@ -19,7 +19,7 @@
     <div id="content-container" class="paypal">
         @if(array_key_exists("plan_id", $donation))
         <input type="hidden" name="plan-id" value="{{ $donation['plan_id'] }}">
-        <input type="hidden" name="success-url" value="{{ URL::signedRoute('thankyou', ['amount' => $donation['amount'], 'interval' => $donation['interval'], 'funding_source' => $donation['funding_source']]) }}">
+        <input type="hidden" name="success-url" value="{{ URL::signedRoute('thankyou', ['amount' => $donation['amount'], 'interval' => $donation['interval'], 'funding_source' => $donation['funding_source'], 'timestamp' => time()]) }}">
         @else
         <input type="hidden" name="order-url" value="{{ LaravelLocalization::getLocalizedUrl(null, null) . '/order' }}">
         @endif

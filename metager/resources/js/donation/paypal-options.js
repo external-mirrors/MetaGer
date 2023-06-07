@@ -10,7 +10,6 @@ export let orderID;
 export function paypalOptions() {
     let amount = document.querySelector("input[name=amount]").value;
     let interval = document.querySelector("input[name=interval]").value;
-
     let paypalOptions = {};
 
     if (interval != "once") {

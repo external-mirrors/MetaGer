@@ -38,6 +38,7 @@
             <li class="grow-x custom-amount-switch"><label for="custom-amount-switch">@lang('spende.amount.custom')</label></li>
         </ul>
         <div>@lang('spende.amount.taxes')</div>
+        
         <div id="other">
             <div id="bank-transfer">
                 <h3>@lang('spende.amount.banktransfer.title')</h3>
@@ -60,6 +61,7 @@
             </div>
             @endif
         </div>
+        <div>@lang('spende.amount.banktransfer.description')</div>
     </div>
 </div>
 @endsection

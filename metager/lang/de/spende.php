@@ -13,11 +13,12 @@ return [
     ],
 
     'amount' => [
-        'description' => 'Wählen Sie nachfolgend den Betrag, welchen Sie spenden möchten. Möchten Sie die Spende mit einer SEPA/SWIFT Banküberweisung durchführen? Dann finden Sie alternativ unsere Kontoverbindung unten auf dieser Seite.',
+        'description' => 'Wählen Sie bitte zunächst den Betrag aus, welchen Sie spenden möchten. Anschließend können Sie Ihre gewünschte Zahlungsmethode auswählen.',
         'custom' => 'Wunschbetrag',
         'taxes' => 'Spenden an den <a href="https://suma-ev.de">SUMA-EV</a> sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
         'banktransfer' => [
-            'title' => "Unsere Kontoverbindung"
+            'title' => "Unsere Kontoverbindung",
+            'description' => 'Möchten Sie Ihre Spende direkt mit einer Banküberweisung durchführen? Sie können auch den QR-Code für eine Fotoüberweisung verwenden um unsere Daten automatisch zu übernehmen.'
         ],
         'membershiphint' => [
             'title' => 'Oder vielleicht Mitglied werden?',

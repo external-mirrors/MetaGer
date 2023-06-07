@@ -105,20 +105,6 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment']);
     Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
     Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
-    Route::post('/', 'MailController@donation');
-
-    Route::get('paypal', 'MailController@donationPayPalCallback')->name('paypal-callback');
-
-    Route::get(
-        'danke/{data?}',
-        function ($data) {
-            return view('spende.danke')
-                ->with('title', trans('titles.spende'))
-                ->with('navbarFocus', 'foerdern')
-                ->with('css', [mix('/css/spende/danke.css')])
-                ->with('data', unserialize(base64_decode($data)));
-        }
-    )->name("danke");
 });
 
 Route::get('partnershops', function () {

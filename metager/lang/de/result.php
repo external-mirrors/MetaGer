@@ -12,8 +12,6 @@ return [
     'options.7' => 'ÖFFNEN',
     'options.8' => 'WERBUNG ENTFERNEN',
     'options.direct' => 'Direkt öffnen',
-    'options.more' => 'MEHR',
-    'options.less' => 'WENIGER',
     'gefVon' => 'von',
     'advertisement' => 'Anzeige',
     'providers' => 'Anbietern',

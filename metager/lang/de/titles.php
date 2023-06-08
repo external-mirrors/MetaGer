@@ -14,7 +14,6 @@ return [
     'help-services' => 'Hilfe - MetaGer',
     'help-privacy-protection' => 'Hilfe - MetaGer',
     'widget' => 'MetaGer Widget',
-    'settings' => 'Einstellungen',
     'websearch' => 'Websuche-Widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
     'faq' => 'FAQ - MetaGer',
@@ -34,5 +33,6 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
-    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer'
+    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'new-default-setting' => 'Neue Standardeinstellung für die werbefreie Suche - MetaGer'
 ];

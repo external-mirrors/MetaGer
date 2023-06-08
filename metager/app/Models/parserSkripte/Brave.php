@@ -16,7 +16,6 @@ class Brave extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        $this->configuration->disabledByDefault = true;
     }
 
     public function applySettings()
@@ -46,6 +45,8 @@ class Brave extends Searchengine
                 $this->alteredQuery = $results->{"query"}->{"altered"};
                 $override = "";
                 $original = trim($results->query->original);
+                $wordstart = true;
+                $inphrase = false;
                 for ($i = 0; $i < strlen($original); $i++) {
                     $char = $original[$i];
                     if ($wordstart && !$inphrase) {

@@ -39,10 +39,16 @@ html {
 }
 
 #foki-switcher {
-  position: absolute;
+  position: relative;
   list-style-type: none;
   display: flex;
   gap: 1rem;
+  @supports not (selector(:first-child)) {
+    gap: 0;
+    > * {
+      padding: 0 1rem;
+    }
+  }
   width: 100%;
   align-items: center;
   justify-content: center;

@@ -33,18 +33,18 @@
 			</a>
 			@endif
 		</div>
+		@if(sizeof($result->deepResults["buttons"]) > 0)
+		<ul class="result-deep-buttons">
+		@foreach($result->deepResults["buttons"] as $button)
+			<li>
+				<a href="{{ $button->link }}"  title="{{ $button->link }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}">
+					{{ $button->title }}
+				</a>
+			</li>
+		@endforeach
+		</ul>
+		@endif
 	</div>
-	@if(sizeof($result->deepResults["buttons"]) > 0)
-	<ul class="result-deep-buttons">
-	@foreach($result->deepResults["buttons"] as $button)
-		<li>
-			<a href="{{ $button->link }}"  title="{{ $button->link }}" @if($metager->getNewtab() === "_blank")rel="noopener"@endif target="{{ $metager->getNewtab() }}">
-				{{ $button->title }}
-			</a>
-		</li>
-	@endforeach
-	</ul>
-	@endif
 	<div class="result-body {{ (!empty($result->logo) || !empty($result->image) ? "with-image" : "")}}">
 		@if( $metager->getFokus() == "nachrichten" )
 		<div class="result-description">
@@ -90,10 +90,10 @@
 			</a>
 			@endif
 			<label class="open-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
-				{{ trans('result.options.more')}}
+				<img src="/img/ellipsis.svg" alt="settings" height="100%" />
 			</label>
 			<label class="close-result-options navigation-element" for="result-toggle-{{$result->hash}}" tabindex='0'>
-				{{ trans('result.options.less')}}
+				<img src="/img/ellipsis.svg" alt="settings" height="100%" />
 			</label>
 		</div>
 		<div class="result-options">

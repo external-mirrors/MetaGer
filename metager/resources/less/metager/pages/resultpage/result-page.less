@@ -442,29 +442,52 @@ a {
     grid-area: results;
     /**/
     max-width: @results-width-max;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 1rem;
 
-    .alert {
-      margin-bottom: @padding-small-default;
+    > span[name="top"] {
+      display: none;
     }
 
-    #results .alteration {
-      margin: (@padding-small-default * 2) 0px;
-      margin-top: 0;
-      padding: 0px 8px;
-      font-weight: 400;
-
-      a i {
-        font-size: 0.9em;
+    #results {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      @supports not (selector(:first-child)) {
+        gap: 0;
+        > * {
+          padding: 0.6rem 0;
+        }
       }
-
-      .original {
-        font-size: 0.9em;
-      }
-
-      @media (max-width: @screen-mobile) {
-        .card;
-        margin: @padding-small-default 0px;
+      .alteration {
         margin-top: 0;
+        font-weight: 400;
+
+        a i {
+          font-size: 0.9em;
+        }
+
+        a {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        img {
+          filter: invert(1) brightness(0.7);
+        }
+
+        .original {
+          font-size: 0.9em;
+        }
+
+        @media (max-width: @screen-mobile) {
+          .card;
+          margin: @padding-small-default 0px;
+          margin-top: 0;
+        }
       }
     }
 
@@ -495,12 +518,18 @@ a {
           gap: 0.5rem;
           justify-content: center;
           padding: 0.5rem 1rem;
+          flex-wrap: wrap;
           > .engine {
             color: fade(@text-color, 70%);
             font-size: 0.8rem;
             border-radius: 10px;
+            white-space: nowrap;
+
             &.disabled-by-configuration {
               cursor: copy;
+            }
+            > a {
+              cursor: inherit;
             }
           }
         }
@@ -626,7 +655,7 @@ a {
     max-width: @results-width-max;
     background-color: @resultpage-background-color;
     overflow-x: auto;
-    padding: 8px;
+    padding-bottom: 8px;
     border-bottom: 1px solid @border-color;
 
     @media (max-width: @screen-mobile) {
@@ -669,7 +698,6 @@ a {
   grid-area: options;
   background-color: @resultpage-background-color;
   max-width: @results-width-max;
-  padding: 0 8px;
 
   @media (max-width: @screen-mobile) {
     .card;
@@ -691,7 +719,6 @@ a {
 
   .scrollbox {
     max-height: 0;
-    padding: 0.5rem 0;
     transform-origin: top;
     transform: scaleY(0);
     transition: transform 0.5s, max-height 0.5s;
@@ -747,7 +774,8 @@ a {
     justify-content: left;
     overflow: hidden;
     overflow-x: auto;
-    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid @border-color;
 
     #options-items {
       display: -ms-flexbox;

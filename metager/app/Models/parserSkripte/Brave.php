@@ -45,6 +45,8 @@ class Brave extends Searchengine
                 $this->alteredQuery = $results->{"query"}->{"altered"};
                 $override = "";
                 $original = trim($results->query->original);
+                $wordstart = true;
+                $inphrase = false;
                 for ($i = 0; $i < strlen($original); $i++) {
                     $char = $original[$i];
                     if ($wordstart && !$inphrase) {

@@ -455,6 +455,12 @@ a {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+      @supports not (selector(:first-child)) {
+        gap: 0;
+        > * {
+          padding: 0.6rem 0;
+        }
+      }
       .alteration {
         margin-top: 0;
         font-weight: 400;

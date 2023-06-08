@@ -179,11 +179,6 @@ abstract class Searchengine
             }
         }
 
-        // Pay for the searchengine if cost > 0
-        if (!$this->cached && $this->configuration->cost > 0) {
-            app(Authorization::class)->makePayment($this->configuration->cost);
-        }
-
         if ($body === "no-result") {
             $body = "";
         }
@@ -191,6 +186,10 @@ abstract class Searchengine
         if ($body !== null) {
             $this->loadResults($body);
             $this->getNext($metager, $body);
+            // Pay for the searchengine if cost > 0 and returned results
+            if (!$this->cached && $this->configuration->cost > 0 && sizeof($this->results) > 0) {
+                app(Authorization::class)->makePayment($this->configuration->cost);
+            }
             $this->markNew();
             $this->loaded = true;
             return true;

@@ -442,31 +442,37 @@ a {
     grid-area: results;
     /**/
     max-width: @results-width-max;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 
-    .alert {
-      margin-bottom: @padding-small-default;
+    > span[name="top"] {
+      display: none;
     }
 
-    @import "./default-changed.less";
-
-    #results .alteration {
-      margin: (@padding-small-default * 2) 0px;
-      margin-top: 0;
-      padding: 0px 8px;
-      font-weight: 400;
-
-      a i {
-        font-size: 0.9em;
-      }
-
-      .original {
-        font-size: 0.9em;
-      }
-
-      @media (max-width: @screen-mobile) {
-        .card;
-        margin: @padding-small-default 0px;
+    #results {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      .alteration {
+        margin: (@padding-small-default * 2) 0px;
         margin-top: 0;
+        padding: 0px 8px;
+        font-weight: 400;
+
+        a i {
+          font-size: 0.9em;
+        }
+
+        .original {
+          font-size: 0.9em;
+        }
+
+        @media (max-width: @screen-mobile) {
+          .card;
+          margin: @padding-small-default 0px;
+          margin-top: 0;
+        }
       }
     }
 
@@ -671,7 +677,6 @@ a {
   grid-area: options;
   background-color: @resultpage-background-color;
   max-width: @results-width-max;
-  padding: 0 8px;
 
   @media (max-width: @screen-mobile) {
     .card;

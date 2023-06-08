@@ -29,7 +29,6 @@
 	@include('parts.filter')
 	<div id="results-container">
 		<span name="top"></span>
-		@include('layouts.resultpage.changeddefault')
 		@include('parts.errors')
 		@include('parts.warnings')
 		@yield('results')

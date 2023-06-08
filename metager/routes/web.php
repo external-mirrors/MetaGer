@@ -38,10 +38,6 @@ Route::get("robots.txt", function (Request $request) {
 
 Route::get('/', 'StartpageController@loadStartPage')->name("startpage");
 
-Route::get('/new-default-setting', function () {
-    return view('newDefaultSetting', ["title" => __('titles.new-default-setting')]);
-});
-
 Route::get('asso', function () {
     return view('assoziator.asso')
         ->with('title', trans('titles.asso'))

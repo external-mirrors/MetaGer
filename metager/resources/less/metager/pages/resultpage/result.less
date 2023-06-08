@@ -6,19 +6,14 @@
 @result-image-border-color: @color-almost-white;
 
 .result {
-  // Remove the margin from the first result because it already has margin from the grid ruleset
-  &:nth-child(1) {
-    margin-top: 0;
-  }
-
-  margin: @padding-small-default 0px;
-
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   @media (max-width: @screen-mobile) {
     .card;
-    margin: @padding-small-default 0px;
+    margin: 0;
   }
 
-  padding: 0px 8px;
   width: 100%;
 
   .result-header {
@@ -32,12 +27,9 @@
       align-items: center;
 
       .result-title {
-        font-size: 22px;
+        font-size: 1.1em;
         margin: 0px;
-
-        & > * {
-          font-size: 0.8em;
-        }
+        line-height: 1;
 
         .overflow-ellipsis;
 
@@ -56,6 +48,7 @@
           &:visited {
             color: @text-color;
             text-decoration: none;
+            display: block;
           }
         }
       }
@@ -179,21 +172,40 @@
         top: 1px;
       }
     }
+
+    > .result-deep-buttons {
+      display: flex;
+      overflow-x: auto;
+      gap: 1.5rem;
+      margin: 0;
+      padding: 0;
+      margin-bottom: -0.25rem;
+      font-size: 0.8rem;
+      > li {
+        &:nth-child(1) {
+          list-style-type: none;
+        }
+        > a {
+          white-space: nowrap;
+          display: block;
+          padding-bottom: 0.5rem;
+        }
+      }
+    }
   }
 
   .result-body {
-    margin-top: 1px;
     max-width: 100%;
-    margin-bottom: 8px;
-
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     &.with-image {
       display: grid;
       grid-template-columns: auto auto;
       grid-template-rows: auto auto auto;
       grid-template-areas: "description image" "footer image" "options options";
-
-      gap: 1rem;
-      margin-top: 0.3rem;
+      column-gap: 1rem;
+      row-gap: 0.5rem;
 
       .result-description {
         grid-area: description;
@@ -208,7 +220,6 @@
       }
       .result-footer {
         grid-area: footer;
-        align-self: end;
       }
       .result-options {
         grid-area: options;
@@ -218,19 +229,11 @@
         grid-template-columns: auto auto;
         grid-template-rows: repeat(3, auto);
         grid-template-areas: "description image" "footer footer" "options options";
-      }
-
-      @media (max-width: 425px) {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(4, auto);
-        grid-template-areas: "image" "description" "footer" "options";
-        .result-image {
-          justify-self: center;
+        > .result-image img {
+          max-width: 120px;
         }
       }
     }
-
-    text-align: justify;
 
     .result-image {
       max-width: 160px;
@@ -249,7 +252,6 @@
     }
 
     .result-description {
-      margin-bottom: 3px;
       color: @result-description-color;
       font-size: 0.95em;
       line-height: 1.3;
@@ -277,9 +279,6 @@
       }
     }
 
-    .result-footer {
-    }
-
     /* CSS Rules for the result options */
     .result-toggle {
       display: none;
@@ -289,7 +288,7 @@
       }
 
       &:checked + .result-footer > .close-result-options {
-        display: block;
+        display: flex;
       }
 
       &:checked + .result-footer + .result-options {
@@ -345,10 +344,10 @@
       ul {
         display: flex;
         margin-bottom: 0;
+        gap: 1rem;
 
         li {
           font-size: 0.85em;
-          margin: 8px 16px 8px 0;
         }
 
         @media (max-width: @screen-mobile) {
@@ -370,7 +369,7 @@
     flex-wrap: wrap;
     font-size: 0.9rem;
     gap: 0.5rem;
-    padding: 0 1rem 1rem 1rem;
+    padding: 0 1rem 0 1rem;
     @media (min-width: 500px) {
       > .inherited-result {
         max-width: calc(50% - 0.5rem);
@@ -378,32 +377,13 @@
     }
   }
 
-  > .result-deep-buttons {
-    display: flex;
-    overflow-x: auto;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0.5rem 0;
-    font-size: 0.8rem;
-    > li {
-      &:nth-child(1) {
-        list-style-type: none;
-      }
-      > a {
-        white-space: nowrap;
-      }
-    }
-  }
-
   .result-footer {
-    margin-top: 2px;
-    max-width: 100%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
-
-    & > * {
-      margin-right: 20px;
-    }
+    gap: 1rem;
+    align-items: center;
+    align-self: end;
 
     .result-open,
     .result-open-newtab,
@@ -442,9 +422,13 @@
     .close-result-options {
       font-weight: normal;
       font-size: 0.7em;
-      flex-grow: 1;
       text-align: right;
-      margin-right: 0;
+      margin: 0;
+      height: 12px;
+      display: flex;
+      > img {
+        filter: invert(1) brightness(0.7);
+      }
     }
 
     .close-result-options {

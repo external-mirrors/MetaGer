@@ -456,13 +456,21 @@ a {
       flex-direction: column;
       gap: 1.25rem;
       .alteration {
-        margin: (@padding-small-default * 2) 0px;
         margin-top: 0;
-        padding: 0px 8px;
         font-weight: 400;
 
         a i {
           font-size: 0.9em;
+        }
+
+        a {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        img {
+          filter: invert(1) brightness(0.7);
         }
 
         .original {

@@ -698,7 +698,8 @@ a {
   grid-area: options;
   background-color: @resultpage-background-color;
   max-width: @results-width-max;
-
+  display: grid;
+  gap: 0.5rem;
   @media (max-width: @screen-mobile) {
     .card;
     margin: 0;
@@ -722,6 +723,8 @@ a {
     transform-origin: top;
     transform: scaleY(0);
     transition: transform 0.5s, max-height 0.5s;
+    display: grid;
+    gap: 0.5rem;
   }
 
   input[type="checkbox"]:checked + div.scrollbox {

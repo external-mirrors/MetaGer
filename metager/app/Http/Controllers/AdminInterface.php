@@ -19,9 +19,13 @@ class AdminInterface extends Controller
     public function count(Request $request)
     {
         try {
-            if ($request->filled("end") && $request->filled("start")) {
-                $start = Carbon::createFromFormat("Y-m-d", $request->input("start"));
-                $end = Carbon::createFromFormat("Y-m-d", $request->input("end"));
+            if ($request->filled("start")) {
+                $start = Carbon::createFromFormat("Y-m-d H:i:s", $request->input("start") . " 00:00:00");
+            }
+            if ($request->filled("end")) {
+                $end = Carbon::createFromFormat("Y-m-d H:i:s", $request->input("end") . " 00:00:00");
+            } else {
+                $end = Carbon::createMidnightDate();
             }
         } catch (\Exception $e) {
             $start = null;

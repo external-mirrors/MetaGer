@@ -446,8 +446,11 @@ class SettingsController extends Controller
                     } else {
                         $sumalist = array_keys($this->getSumas($fokus));
                         foreach ($sumalist as $suma) {
+                            if ($value !== "on") {
+                                $value = "off";
+                            }
                             if (strpos($key, $fokus . '_engine_' . $suma) === 0) {
-                                Cookie::queue(Cookie::forever($key, 'off', "/", null, true, true));
+                                Cookie::queue(Cookie::forever($key, $value, "/", null, true, true));
                             }
                         }
                     }

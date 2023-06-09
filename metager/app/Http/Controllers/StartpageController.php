@@ -18,7 +18,6 @@ class StartpageController extends Controller
      * Load Startpage accordingly to the given URL-Parameter and Mobile
      *
      * @param  int  $id
-     * @return Response
      */
 
     public function loadStartPage(Request $request)
@@ -64,7 +63,8 @@ class StartpageController extends Controller
             ->with('option_values', $option_values)
             ->with('autocomplete', $autocomplete)
             ->with('pluginmodal', $request->input('plugin-modal', 'off'))
-            ->with('darkcss', [mix('css/themes/startpage-only-dark.css')]);
+            ->with('css', [mix('css/themes/startpage/light.css')])
+            ->with('darkcss', [mix('css/themes/startpage/dark.css')]);
     }
 
     public function loadPage($subpage)

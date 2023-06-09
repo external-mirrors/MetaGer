@@ -19,12 +19,12 @@ mix
   .styles(["resources/css/noheader.css"], "public/css/noheader.css")
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css")
   .less(
-    "resources/less/metager/startpage-only-light.less",
-    "public/css/themes/startpage-only-light.css"
+    "resources/less/metager/pages/startpage/light.less",
+    "public/css/themes/startpage/light.css"
   )
   .less(
-    "resources/less/metager/startpage-only-dark.less",
-    "public/css/themes/startpage-only-dark.css"
+    "resources/less/metager/pages/startpage/dark.less",
+    "public/css/themes/startpage/dark.css"
   )
   .less(
     "resources/less/metager/pages/admin/spam/style.less",

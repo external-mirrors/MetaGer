@@ -75,27 +75,8 @@ body {
 @scrollfade-color: white;
 
 .scrollbox {
-  position: relative;
   width: 100%;
   max-width: @results-width-max;
-
-  .scrollfade-right {
-    background: -webkit-gradient(
-      linear,
-      right top,
-      left top,
-      from(@scrollfade-color),
-      color-stop(fade(@scrollfade-color, 80%)),
-      to(fade(@scrollfade-color, 0%))
-    );
-    background: linear-gradient(
-      to left,
-      @scrollfade-color,
-      fade(@scrollfade-color, 80%),
-      fade(@scrollfade-color, 0%)
-    );
-    right: 1px;
-  }
 
   .search-option-frame {
     position: relative;

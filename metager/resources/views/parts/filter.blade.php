@@ -82,7 +82,6 @@
 			@endforeach
 			</div>
 		</div>
-		<div class="scrollfade-right"></div>
 	</div>
 	@endif
 </div>

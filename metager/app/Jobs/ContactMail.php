@@ -65,7 +65,7 @@ class ContactMail implements ShouldQueue
                     "Authorization: Token " . config("metager.metager.ticketsystem.apikey")
                 ],
                 "content" => json_encode([
-                    "title" => $this->name . ": " . $this->subject,
+                    "title" => $this->subject,
                     "group" => $this->group,
                     "customer_id" => "guess:" . $this->email,
                     "preferences" => ["channel_id" => 3],

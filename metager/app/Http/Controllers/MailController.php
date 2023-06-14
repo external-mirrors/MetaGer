@@ -76,7 +76,7 @@ class MailController extends Controller
                 ];
             }
         }
-        ContactMail::dispatch($to_mail, $group, $name, $email, $subject, $message, $attachments);
+        ContactMail::dispatch($to_mail, $group, $name, $email, $subject, $message, $attachments)->onQueue("contact");
 
         $returnMessage = trans('kontakt.success.1', ["email" => $email]);
         $messageType = "success";

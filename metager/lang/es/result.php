@@ -10,8 +10,6 @@ return [
         5          => 'ABRIR ANÓNIMO',
         6          => 'ABRIR NUEVA PESTAÑA',
         7          => 'ABRIR',
-        'more'     => 'Más',
-        'less'     => 'Menos',
         'direct'   => 'Abrir directamente',
         8          => 'ELIMINAR LA PUBLICIDAD',
     ],

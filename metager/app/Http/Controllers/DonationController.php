@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CreateDirectDebit;
+use App\Jobs\DonationNotification;
 use App\Localization;
 use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
@@ -236,6 +237,7 @@ class DonationController extends Controller
         }
 
         CreateDirectDebit::dispatch($donation["fullname"], new IBAN($donation["iban"]), $donation["amount"], $donation["interval"] === "annual" ? "yearly" : $donation["interval"])->onQueue("donations");
+        DonationNotification::dispatch($donation["amount"], $donation["interval"], "Lastschrift")->onQueue("general");
 
         // Generate URL to thankyou page
         $url = URL::signedRoute("thankyou", ["amount" => $donation["amount"], "interval" => $donation["interval"], "funding_source" => "directdebit", "timestamp" => time()]);
@@ -435,6 +437,8 @@ class DonationController extends Controller
         $response = file_get_contents($url, false, $opts);
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
+
+        DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
 
         $response = json_decode($response);
         $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);

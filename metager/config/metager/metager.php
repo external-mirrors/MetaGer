@@ -41,7 +41,8 @@ return [
         "url" => env("TICKET_URL", "https://metager.de"),
         "apikey" => env("TICKET_APIKEY", ""),
         "germanmail" => env("TICKET_GERMAN_MAIL", ""),
-        "englishmail" => env("TICKET_ENGLISH_MAIL", "")
+        "englishmail" => env("TICKET_ENGLISH_MAIL", ""),
+        "donation_ticket_id" => env("TICKET_DONATION_ID", "")
     ],
     "civicrm" => [
         "url" => env("CIVICRM_URL", "https://metager.de"),

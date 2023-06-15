@@ -10,8 +10,6 @@ return [
         5          => 'OPEN ANONYMOUSLY',
         6          => 'OPEN IN NEW TAB',
         7          => 'OPEN',
-        'more'     => 'MORE',
-        'less'     => 'LESS',
         'direct'   => 'Direct Open',
         8          => 'REMOVE ADVERTISING',
     ],

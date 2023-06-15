@@ -34,5 +34,4 @@ return [
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
     "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
-    'new-default-setting' => 'Neue Standardeinstellung für die werbefreie Suche - MetaGer'
 ];

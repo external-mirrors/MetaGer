@@ -26,7 +26,19 @@ return [
     ],
     "key"    => [
         "title" => "MetaGer Schlüssel hinzufügen",
-        "1" => 'Placeholder',
+        "1" => 'Der MetaGer Schlüssel wird automatisch im Browser eingerichtet und verwendet. Sie müssen also nichts weiter tun. Wenn Sie den MetaGer Schlüssel auf weiteren Geräten nutzen möchten, gibt es mehrere Möglichkeiten, den MetaGer-Schlüssel einzurichten:',
+        "2"=>'URL kopieren <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine URL zu kopieren. Mit dieser URL lassen sich alle Einstellungen von MetaGer, sowie der MetaGer Schlüssel auf einem weiteren Gerät speichern.',
+        '3'=>'Datei sichern <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine Datei zu sichern. Damit speichern Sie Ihren MetaGer-Schlüssel als Datei ab. Diese Datei können Sie dann auf einem anderen Gerät verwenden, um sich dort mit Ihrem Schlüssel einzuloggen.',
+        '4'=>'QR Code scannen <br>Alternativ können Sie außerdem den QR Code, der auf der Verwaltungsseite angezeigt wird, scannen um sich bei einem weiteren Gerät einzuloggen',
+        '5'=>'MetaGer Schlüssel manuell eingeben <br>Sie können natürlich auch den Schlüssel manuell auf einem weiteren Gerät eingeben.',
+        'colors'=> [
+            'title'=>'Farbiger MetaGer Schlüssel',
+            '1'=>'Um auf einem Blick erkennen zu können, ob Sie werbefrei Suchen, haben wir unserem Schlüssel-Symbol Farben verpasst. Im Folgenden finden Sie die Erläuterungen für die entsprechenden Farben:',
+            'grey'=>'Grau: Sie haben keinen Schlüssel eingerichtet. Sie nutzen die kostenlose Suche.',
+            'red'=>'Rot: Wenn Ihr Schlüsselsymbol rot ist, ist dieser Schlüssel leer. Sie haben alle werbefreien Suchen aufgebraucht. Den Schlüssel können Sie auf der Verwaltungsseite des Schlüssels aufladen.',
+            'green'=>'Grün: Wenn Ihr Schlüsselsymbol grün ist, dann verwenden Sie einen aufgeladenen Schlüssel.',
+            'yellow'=>'Gelb: Sollten Sie einen gelben Schlüssel sehen, dann haben Sie noch ein Guthaben von 30 Token. Ihre Suchen sind bald aufgebraucht. Es wird empfohlen den Schlüssel bald aufzuladen.',
+        ],
     ],
     "mehrwortsuche"     => [
         "title" => "Mehrwortsuche",

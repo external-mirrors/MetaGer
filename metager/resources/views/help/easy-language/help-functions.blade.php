@@ -47,7 +47,6 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.exactsearch.example.2') !!}</div></li>
 			</ul>
 		</div>
-</section>
 	<section id="bangs">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
@@ -78,4 +77,5 @@
 		<img class="help-easy-language-mainpages-image dm-only" src="/img/help-install-metager-dm.png"/>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
+</section>
 @endsection

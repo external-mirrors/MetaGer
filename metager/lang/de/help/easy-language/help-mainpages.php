@@ -57,7 +57,7 @@ return [
                 "title" => 'Öffnen:',
                 "0"=>'Es gibt mehrere Möglichkeiten das Ergebnis anzuschauen:',
                 "1" => 'Sie können auf die Überschrift klicken.', 
-                "2"=> 'Sie können auf den blauen Link unter der Überschrift klicken. <br> Dieser Link nennt sich URL<a title="Wort erklärung" href="/hilfe/easy-language/glossary#url" ><img class=" lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
+                "2"=> 'Sie können auf den blauen Link unter der Überschrift klicken. <br> Dieser Link nennt sich URL<a title="Wort erklärung" href="/hilfe/easy-language/glossary#url" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
                 "3"=>'Sie klicken auf <strong>ÖFFNEN</strong>.',
             ],
             "newtab"  => [
@@ -66,7 +66,7 @@ return [
             ],
             "anonym"  => [
                 "title" => 'Anonym öffnen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#anonymoeffnen" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/datensicherheit#proxy/">Anonym öffnen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#anonymoeffnen" ><img class=" lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
+                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/datensicherheit#proxy/">Anonym öffnen<a title="Wort erklärung" href="/hilfe/easy-language/glossary#anonymoeffnen" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
             ],
             "more"  => [
                 "title" => 'Mehr:',

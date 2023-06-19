@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\TTSController;
@@ -85,6 +86,10 @@ Route::get('kontakt/{url?}', function ($url = "") {
 })->name("contact");
 
 Route::post('kontakt', 'MailController@contactMail');
+
+Route::group(["prefix" => "membership"], function () {
+    Route::get("/", [MembershipController::class, "contactData"]);
+});
 
 Route::get('tor', function () {
     return view('tor')

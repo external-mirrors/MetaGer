@@ -80,7 +80,6 @@ class MailController extends Controller
 
         $returnMessage = trans('kontakt.success.1', ["email" => $email]);
         $messageType = "success";
-        $test = LaravelLocalization::getNonLocalizedURL(mix("/css/contact.css"));
         return response(view('kontakt.kontakt')
             ->with('title', 'Kontakt')
             ->with($messageType, $returnMessage)

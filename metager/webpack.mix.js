@@ -138,6 +138,7 @@ mix
   .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
   .js("resources/js/verify.js", "public/js/index.js")
+  .js("resources/js/membership.js", "public/js/membership.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

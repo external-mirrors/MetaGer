@@ -12,7 +12,7 @@
         <h3>@lang('membership.contact.title')</h3>
         <div class="input-group">
         <label for="name">@lang('membership.contact.name.label')</label>
-        <input type="text" name="name" id="name" size="25" placeholder="@lang('membership.contact.name.placeholder')" required autofocus/>
+        <input type="text" name="name" id="name" size="25" placeholder="@lang('membership.contact.name.placeholder')" autofocus/>
         </div>
         <div class="input-group">
         <label for="email">@lang('membership.contact.email.label')</label>

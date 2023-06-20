@@ -89,6 +89,7 @@ Route::post('kontakt', 'MailController@contactMail');
 
 Route::group(["prefix" => "membership"], function () {
     Route::get("/", [MembershipController::class, "contactData"]);
+    Route::post("/", [MembershipController::class, "submitMembershipForm"]);
 });
 
 Route::get('tor', function () {

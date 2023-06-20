@@ -34,4 +34,5 @@ return [
     'search-engine'           => 'Motores de búsqueda - MetaGer',
     'assosearch'              => 'Asociaciones para ":q" - MetaGer',
     'prevention'              => 'Ayuda con los pensamientos suicidas - MetaGer',
+    'membership'              => 'Su afiliación a SUMA-EV',
 ];

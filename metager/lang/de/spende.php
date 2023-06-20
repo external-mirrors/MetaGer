@@ -2,7 +2,7 @@
 
 return [
     'headline.1' => 'Ihre Spende',
-    'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a> und <a href=":beitrittlink" target="_blank" rel="noopener">Mitglied werden.</a>.',
+    'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a>.',
 
     'headline.3' => 'Welchen Betrag möchten Sie spenden?',
 

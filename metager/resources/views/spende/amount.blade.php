@@ -8,7 +8,7 @@
 <h1 class="page-title">@lang('spende.headline.1')</h1>
 <div id="donation">
     <div class="section">
-        @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about'), 'beitrittlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('membership_form'))])
+        @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about')])
     </div>
     <ul id="breadcrumps">
         <li class="current"><a href="#">@lang('spende.breadcrumps.amount')</a></li>

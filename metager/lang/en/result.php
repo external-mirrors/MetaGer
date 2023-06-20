@@ -6,7 +6,7 @@ return [
         1          => 'Start a new search on this domain',
         2          => 'Hide :host',
         3          => 'hide *.:domain',
-        4          => 'partnershop',
+        4          => 'Partner',
         5          => 'OPEN ANONYMOUSLY',
         6          => 'OPEN IN NEW TAB',
         7          => 'OPEN',

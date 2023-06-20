@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
             DB::disconnect('mysql');
         })->monthlyOn(1, '00:00');
         $schedule->command('queue:work --queue=donations --stop-when-empty');
-        $schedule->command('queue:work --queue=contact --stop-when-empty');
+        $schedule->command('queue:work --queue=general --stop-when-empty');
     }
 
     /**

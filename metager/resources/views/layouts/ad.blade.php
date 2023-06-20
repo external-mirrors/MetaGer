@@ -11,7 +11,11 @@
 			</div>
 			<div class="result-subheadline">
 				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
-					<span class="mark">@lang('result.advertisement')</span>
+					@if(\App\Localization::getLanguage() === "de")
+					<img src="/img/mark-de.svg" alt="Mark">
+					@else
+					<img src="/img/mark-en.svg" alt="Mark">
+					@endif
 					<span>{{ $ad->anzeigeLink }}</span>
 				</a>
 			</div>

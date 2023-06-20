@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ContactMail;
+use App\Rules\IBANValidator;
 use Illuminate\Http\Request;
+use LaravelLocalization;
 use Validator;
 
 class MembershipController extends Controller
@@ -13,25 +16,58 @@ class MembershipController extends Controller
      */
     public function contactData(Request $request)
     {
-        return response(view("membership", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "js" => [mix("/js/membership.js")]]));
+        return response(view("membership.form", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
     }
 
     public function submitMembershipForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "name" => 'required'
+            "name" => 'required',
+            "email" => "required|email",
+            "amount" => 'required|in:5.00,10.00,15.00,custom',
+            "custom-amount" => 'exclude_unless:amount,custom|numeric|required|min:2.5',
+            "interval" => 'required|in:annual,six-monthly,quarterly,monthly',
+            "payment-method" => 'required|in:directdebit,banktransfer',
+            "iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()]
         ]);
         if ($validator->fails()) {
             return response(
                 view(
-                    "membership",
+                    "membership.form",
                     [
                         "title" => __("titles.membership"),
                         "css" => [mix("/css/membership.css")],
-                        "js" => [mix("/js/membership.js")]
+                        "darkcss" => [mix("/css/membership-dark.css")],
+                        "js" => [mix("/js/membership.js")],
+                        "errors" => $validator->errors()
                     ]
                 )
             );
         }
+        $formData = $validator->getData();
+        if ($formData["amount"] === "custom") {
+            $formData["amount"] = $formData["custom-amount"];
+        }
+        $formData["amount"] = number_format(round(floatval($formData["amount"]), 2), 2, ",", ".") . "€";
+
+        $message = <<<MESSAGE
+        Name: ${formData["name"]}
+        Email: ${formData["email"]}
+        Betrag: ${formData["amount"]}
+        Intervall: ${formData["interval"]}
+        Zahlungsart: ${formData["payment-method"]}
+        MESSAGE;
+
+        if ($formData["payment-method"] === "directdebit") {
+            if (!empty($formData["accountholder"])) {
+                $message .= PHP_EOL . "Kontoinhaber: " . $formData["accountholder"];
+            }
+            $message .= PHP_EOL . "IBAN: " . $formData["iban"];
+        }
+
+        // Create Notification
+        ContactMail::dispatch("verein@metager.de", "Mitglieder", $formData["name"], $formData["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
+
+        return redirect(LaravelLocalization::getLocalizedUrl(null, route("membership_success")));
     }
 }

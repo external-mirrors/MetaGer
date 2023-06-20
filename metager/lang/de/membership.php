@@ -4,6 +4,8 @@ return [
     "title" => "Ihre Mitgliedschaft im SUMA-EV",
     "description" => "Vielen Dank, dass Sie eine <a href='https://suma-ev.de/mitglieder/' target='_blank'>Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.",
     "submit" => "Abschicken",
+    "success" => "Herzlichen Dank für die Übermittlung Ihres Aufnahmeantrags. Wir werden diesen möglichst schnell bearbeiten. Anschließend erhalten Sie eine Mail mit weiteren Informationen von uns an die angegebene Addresse.",
+    "startpage" => "Zurück zur Startseite",
     "contact" => [
         "title" => "1. Ihre Kontaktdaten",
         "name" => [

@@ -9,6 +9,10 @@
     margin: 0;
     border-bottom: 1px solid @metager-orange;
   }
+  .error {
+    font-size: 0.8rem;
+    color: red;
+  }
   input {
     padding: 0.5rem 1rem;
   }
@@ -47,8 +51,18 @@
       grid-template-columns: repeat(4, 1fr);
       gap: 1rem 0.5rem;
       > h3,
+      > div.error,
       div:nth-child(2) {
         grid-column: span 4;
+      }
+
+      @media (max-width: 375px) {
+        grid-template-columns: 1fr 1fr;
+        > h3,
+        > div.error,
+        div:nth-child(2) {
+          grid-column: span 2;
+        }
       }
       > div.input-group {
         display: grid;
@@ -134,10 +148,17 @@
           display: none;
           grid-column: span 2;
           grid-template-columns: 1fr 1fr;
+          > div.error {
+            grid-column: span 2;
+          }
           @media (max-width: 500px) {
             grid-template-columns: 1fr;
+            > div.error {
+              grid-column: auto;
+            }
           }
           gap: 0.5rem;
+
           > div.input-group {
             display: flex;
             flex-direction: column;

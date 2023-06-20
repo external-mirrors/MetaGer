@@ -12,6 +12,6 @@ class MembershipController extends Controller
      */
     public function contactData(Request $request)
     {
-        return response(view("membership.contact", ["title" => __("titles.membership")]));
+        return response(view("membership.contact", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")]]));
     }
 }

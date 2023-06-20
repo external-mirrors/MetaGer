@@ -2,9 +2,10 @@
 
 return [
     "title" => "Ihre Mitgliedschaft im SUMA-EV",
-    "description" => "Vielen Dank, dass Sie eine Mitgliedschaft in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.",
+    "description" => "Vielen Dank, dass Sie eine <a href='https://suma-ev.de/mitglieder/' target='_blank'>Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.",
+    "submit" => "Abschicken",
     "contact" => [
-        "title" => "Wie können wir Sie kontaktieren?",
+        "title" => "1. Ihre Kontaktdaten",
         "name" => [
             "label" => "Ihr Name",
             "placeholder" => "Max Mustermann / Muster GmbH"
@@ -15,10 +16,33 @@ return [
         ]
     ],
     "fee" => [
-        "title" => "Ihr Mitgliedsbeitrag",
+        "title" => "2. Ihr Mitgliedsbeitrag",
+        "description" => "Wählen Sie nachfolgend bitte Ihren gewünschten Mitgliedsbeitrag (mtl.) aus.",
         "amount" => [
-            "label" => "Als monatlichen Mitgliedsbeitrag (€) wähle ich:",
-            "placeholder" => "5,00€"
+            "custom" => [
+                "label" => "Wunschbetrag",
+                "placeholder" => "5,00€"
+            ]
+        ]
+    ],
+    "payment" => [
+        "interval" => [
+            "title" => "3. Ihr Zahlungsinterval",
+            "annual" => "jährlich",
+            "six-monthly" => "halbjährlich",
+            "quarterly" => "vierteljährlich",
+            "monthly" => "monatlich"
+        ],
+        "method" => [
+            "title" => "4. Ihre Zahlungsmethode",
+            "directdebit" => [
+                "label" => "SEPA Lastschrift",
+                "accountholder" => [
+                    "label" => "Kontoinhaber (falls abweichend)",
+                    "placeholder" => "Max Mustermann"
+                ]
+            ],
+            "banktransfer" => "Banküberweisung"
         ]
     ]
 ];

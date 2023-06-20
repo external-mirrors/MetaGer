@@ -89,6 +89,14 @@ mix
     "public/css/spende-dark.css"
   )
   .less(
+    "resources/less/metager/pages/membership/base.less",
+    "public/css/membership.css"
+  )
+  .less(
+    "resources/less/metager/pages/membership/base-dark.less",
+    "public/css/membership-dark.css"
+  )
+  .less(
     "resources/less/metager/pages/prevention-information.less",
     "public/css/prevention-information.css"
   )

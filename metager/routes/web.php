@@ -90,7 +90,7 @@ Route::post('kontakt', 'MailController@contactMail');
 Route::group(["prefix" => "membership"], function () {
     Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");
     Route::post("/", [MembershipController::class, "submitMembershipForm"]);
-    Route::view("/success", "membership.success", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")]])->name("membership_success");
+    Route::get("/success", [MembershipController::class, "success"])->name("membership_success");
 });
 
 Route::get('tor', function () {

@@ -19,6 +19,11 @@ class MembershipController extends Controller
         return response(view("membership.form", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
     }
 
+    public function success(Request $request)
+    {
+        return response(view("membership.success", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")]]));
+    }
+
     public function submitMembershipForm(Request $request)
     {
         $validator = Validator::make($request->all(), [

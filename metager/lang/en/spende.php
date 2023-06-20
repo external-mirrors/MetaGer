@@ -2,7 +2,7 @@
 return [
     'headline'        => [
         1   => 'Your Donation',
-        2   => 'With your donation: you support maintenance and development of the independent search engine metager.org and its supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Read more</a> and <a href=":beitrittlink" target="_blank" rel="noopener">become a member.</a>',
+        2   => 'With your donation you support the preservation and further development of the independent search engine metager.de and the work of the non-profit supporting association SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Learn more</a>.',
         3   => 'How much would you like to donate?',
     ],
     'breadcrumps'     => [
@@ -20,7 +20,7 @@ return [
         ],
         'membershiphint' => [
             'title'       => 'Or maybe become a member?',
-            'description' => 'As a member of <a href="https://suma-ev">SUMA-EV</a> you can use MetaGer ad-free and get access to all paid search engines.',
+            'description' => 'As a member of <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> you can use MetaGer ad-free and get access to all paid search engines.',
         ],
         'qr'             => [
             'alt' => 'Photo transfer',

@@ -12,7 +12,7 @@ return [
     'searchfield' => [
         'title'         => 'The search field',
         'info'          => 'The search field contains:',
-        'memberkey'     => 'the key symbol: Here members of the SUMA-EV can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "/beitritt/">membership form</a> or <a href = "/spende/">donate to</a> SUMA-EV.',
+        'memberkey'     => 'the key symbol: Here members of the SUMA-EV can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "/membership/">membership form</a> or <a href = "/spende/">donate to</a> SUMA-EV.',
         'slot'          => 'The search field: Enter your words here. Upper case will not be distinguished from lower case.',
         'search'        => 'The magnifier: Start your search.',
         'morefunctions' => 'More information on other functions are available under "<a href = "/hilfe/funktionen">search functions</a>"',

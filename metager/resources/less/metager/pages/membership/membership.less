@@ -1,0 +1,193 @@
+#main-content {
+  padding-inline: 0.5rem;
+  display: grid;
+  gap: 2rem;
+  > h1 {
+    font-size: clamp(1.2em, 6vw, 2.5em);
+  }
+  h3 {
+    margin: 0;
+    border-bottom: 1px solid @metager-orange;
+  }
+  .error {
+    font-size: 0.8rem;
+    color: red;
+  }
+  input {
+    padding: 0.5rem 1rem;
+  }
+  > form#membership-form {
+    display: grid;
+    gap: 2rem;
+    > div#contact-data {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 0.5rem;
+      > h3 {
+        grid-column: span 2;
+      }
+      > div.input-group {
+        display: flex;
+        flex-direction: column;
+        place-items: center;
+        > label {
+          font-size: 0.8rem;
+          font-weight: normal;
+          color: @color-light-grey;
+        }
+      }
+      @media (max-width: 490px) {
+        grid-template-columns: 1fr;
+        > h3 {
+          grid-column: auto;
+        }
+        > div.input-group > input {
+          width: 100%;
+        }
+      }
+    }
+    > div#membership-fee {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem 0.5rem;
+      > h3,
+      > div.error,
+      div:nth-child(2) {
+        grid-column: span 4;
+      }
+
+      @media (max-width: 375px) {
+        grid-template-columns: 1fr 1fr;
+        > h3,
+        > div.error,
+        div:nth-child(2) {
+          grid-column: span 2;
+        }
+      }
+      > div.input-group {
+        display: grid;
+        > input[type="radio"] {
+          display: none;
+          &:checked + label {
+            border-color: @metager-orange;
+          }
+        }
+        &.custom {
+          > input#amount-custom-value {
+            display: none;
+            min-width: 6rem;
+          }
+          > input#amount-custom {
+            &:checked {
+              + label {
+                display: none;
+              }
+              + label + input {
+                display: block;
+                border: 1px solid @metager-orange;
+                &:focus {
+                  outline: 0;
+                }
+              }
+            }
+          }
+        }
+        > label {
+          cursor: pointer;
+          font-weight: normal;
+          margin: 0;
+          padding: 0.5rem 1rem;
+          display: grid;
+          place-content: center;
+          border: 1px solid @border-color;
+        }
+      }
+    }
+    > div#membership-payment {
+      display: grid;
+      gap: 1rem;
+      > div#membership-interval {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        @media (max-width: 500px) {
+          grid-template-columns: 1fr 1fr;
+        }
+        gap: 0.5rem;
+        > div.input-group {
+          display: grid;
+          > label {
+            display: grid;
+            font-weight: normal;
+            place-content: center;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border: 1px solid @border-color;
+          }
+          > input {
+            display: none;
+            &:checked + label {
+              border-color: @metager-orange;
+            }
+          }
+        }
+      }
+      > div#membership-payment-method {
+        display: grid;
+        gap: 0.5rem;
+        grid-template-columns: 1fr 1fr;
+        > label {
+          display: grid;
+          font-weight: normal;
+          place-content: center;
+          cursor: pointer;
+          padding: 0.5rem 1rem;
+          border: 1px solid @border-color;
+        }
+        > div#directdebit-data {
+          display: none;
+          grid-column: span 2;
+          grid-template-columns: 1fr 1fr;
+          > div.error {
+            grid-column: span 2;
+          }
+          @media (max-width: 500px) {
+            grid-template-columns: 1fr;
+            > div.error {
+              grid-column: auto;
+            }
+          }
+          gap: 0.5rem;
+
+          > div.input-group {
+            display: flex;
+            flex-direction: column;
+            > label {
+              text-align: center;
+              font-weight: normal;
+              font-size: 0.8rem;
+              color: @color-light-grey;
+            }
+          }
+        }
+        > input {
+          display: none;
+          &:checked {
+            + label {
+              border-color: @metager-orange;
+            }
+            &#payment-method-directdebit ~ div#directdebit-data {
+              display: grid;
+            }
+          }
+        }
+        @media (max-width: 380px) {
+          grid-template-columns: 1fr;
+          > div#directdebit-data {
+            grid-column: auto;
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@
     {{-- <span>~ Hier grafik mit benötigten Mitgliedern / Spenden für Werbefreiheit einfügen ~</span> --}}
     {{-- <p>Helfen Sie uns jetzt dieses Ziel zu erreichen:<p> --}}
     <ul>
-        <li><a href="http://www.suma-ev.de/unterstuetzung/beitrittsformular.html">Mitglied im SUMA-EV werden</a> (<a href="http://www.suma-ev.de/mitglieder/index.html">Liste der Mitglieder</a>)</li>
+        <li><a href="/membership">Mitglied im SUMA-EV werden</a> (<a href="http://www.suma-ev.de/mitglieder/index.html">Liste der Mitglieder</a>)</li>
         <li><a href="http://www.suma-ev.de/unterstuetzung/index.html">MetaGer fördern</a></li>
     </ul>
 </div>

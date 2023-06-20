@@ -64,7 +64,7 @@
     </li>
     @if (App\Localization::getLanguage() === "de")
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/membership/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('membership_form')) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>

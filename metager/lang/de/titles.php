@@ -34,4 +34,5 @@ return [
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
     "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
 ];

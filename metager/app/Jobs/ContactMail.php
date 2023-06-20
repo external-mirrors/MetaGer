@@ -27,6 +27,8 @@ class ContactMail implements ShouldQueue
     private $message;
     /** @var array $attachments */
     private $attachments = [];
+    /** @var string $contentType */
+    private $contentType;
     /**
      * Create a new job instance.
      *
@@ -36,10 +38,11 @@ class ContactMail implements ShouldQueue
      * @param string $subject
      * @param string $message
      * @param array $message
+     * @param string $contentType
      *
      * @return void
      */
-    public function __construct($to, $group, $name, $email, $subject, $message, $attachments = [])
+    public function __construct($to, $group, $name, $email, $subject, $message, $attachments = [], $contentType = "text/html")
     {
         $this->to = $to;
         $this->group = $group;
@@ -48,6 +51,7 @@ class ContactMail implements ShouldQueue
         $this->subject = $subject;
         $this->message = $message;
         $this->attachments = $attachments;
+        $this->contentType = $contentType;
     }
 
     /**
@@ -77,7 +81,7 @@ class ContactMail implements ShouldQueue
                         "to" => $this->to,
                         "subject" => $this->subject,
                         "body" => $this->message,
-                        "content_type" => "text/html",
+                        "content_type" => $this->contentType,
                         "internal" => false,
                         "attachments" => $this->attachments
                     ]

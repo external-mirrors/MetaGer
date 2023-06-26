@@ -49,13 +49,15 @@
 			</div>
         <h3 id="einstellungen">{!! trans('help/help-mainpages.settings.title') !!}</h3>
             <ul>
+				<li>{!! trans('help/help-mainpages.settings.1') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.2') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.3') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.4') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.5') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.6') !!}</li>
                 <li>{!! trans('help/help-mainpages.settings.7') !!}</li>
-    </section>
+				<li>{!! trans('help/help-mainpages.settings.8') !!}</li>
+			</section>
 
 
 

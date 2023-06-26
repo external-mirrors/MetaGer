@@ -45,7 +45,7 @@ abstract class Searchengine
     public $connection_time = 0; # Wird eventuell für Artefakte benötigt
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
     public $new = true; # Important for loading results by JS
-    private $failed = false; # Used to check if Overture search has failed
+    protected $failed = false; # Used to check if Overture search has failed
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
@@ -188,6 +188,7 @@ abstract class Searchengine
         if ($body !== null) {
             $this->loadResults($body);
             if ($this instanceof Overture && !$this->failed && sizeof($this->results) === 0) {
+                $this->failed = true;
                 return false;
             }
             $this->getNext($metager, $body);

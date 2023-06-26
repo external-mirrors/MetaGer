@@ -78,7 +78,7 @@ class Overture extends Searchengine
                     []
                 );
             }
-            if (sizeof($this->results) === 0 && sizeof($this->ads) === 0) {
+            if (sizeof($this->results) === 0 && sizeof($this->ads) === 0 && !$this->failed) {
                 $this->log_failed_yahoo_search();
                 $this->configuration->getParameter->Keywords .= " -qwertzy";
                 $this->cached = false;

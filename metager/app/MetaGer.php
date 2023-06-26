@@ -795,16 +795,6 @@ class MetaGer
         }
     }
 
-    public function yahoo_failed()
-    {
-        foreach ($this->engines as $engine) {
-            if ($engine->name === "yahoo" && $engine->loaded && $engine->failed_results) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /*
      * Ende Suchmaschinenerstellung und Ergebniserhalt
      */

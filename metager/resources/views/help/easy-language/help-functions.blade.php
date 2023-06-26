@@ -53,19 +53,27 @@
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
 			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.example') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
-			<img class="help-easy-language-mainpages-image lm-only" src="/img/help-bangs-lm.png"/>
-			<img class="help-easy-language-mainpages-image dm-only" src="/img/help-bangs-dm.png"/>
+			<img class="help-easy-language-image lm-only" src="/img/help-bangs-lm.png"/>
+			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm.png"/>
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
 
 		</div>
 	</section>
 	<section id="keyexplain">
-		<h3>{!! trans('help/easy-language/help-functions.key.title') !!}</h3>
+		<h3>{!! trans('help/easy-language/help-functions.key.maintitle') !!}</h3>
 		<div>
+			<h4>{!! trans('help/easy-language/help-functions.key.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.1') !!}</p>
-			<p>{!! trans('help/easy-language/help-functions.key.2') !!}</p>
-			<p>{!! trans('help/easy-language/help-functions.key.3') !!}</p>
-			<p>{!! trans('help/easy-language/help-functions.key.4') !!}</p>
+			<ul>
+				<li>{!! trans('help/easy-language/help-functions.key.2') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.key.3') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.key.4') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.key.5') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.key.6') !!}</li>
+			</ul>
+			<p>{!! trans('help/easy-language/help-functions.key.7') !!}</p>
+			<p>{!! trans('help/easy-language/help-functions.key.8') !!}</p>
+			<p>{!! trans('help/easy-language/help-functions.key.9') !!}</p>
 
 		</div>
 	</section>
@@ -73,8 +81,8 @@
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
-		<img class="help-easy-language-mainpages-image lm-only" src="/img/help-install-metager-lm.png"/>
-		<img class="help-easy-language-mainpages-image dm-only" src="/img/help-install-metager-dm.png"/>
+		<img class="help-easy-language-image lm-only" src="/img/help-install-metager-lm.png"/>
+		<img class="help-easy-language-image dm-only" src="/img/help-install-metager-dm.png"/>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
 </section>

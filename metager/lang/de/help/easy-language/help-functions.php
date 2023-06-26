@@ -47,11 +47,19 @@ return [
         "3" => "Man kann auf den blauen Knopf drücken. <br> Dann öffnet sich die Web-Seite von Twitter mit der Suche nach Katzen. <br> Diese Funktion funktioniert bei kleinen Bild-Schirmen wie Handys nicht.",
     ],
     "key"  => [
+        "maintitle" => 'MetaGer Schlüssel',
         "title" => "MetaGer Schlüssel hinzufügen",
-        "1" => 'Placeholder',
-        "2" => 'Placeholder', 
-        "3" => 'Placeholder',   
-        "4" => 'Placeholder',   
+        "1" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Wenn Sie bezahlt haben, bekommen Sie ein Passwort. <br> Das Passwort heißt bei uns Schlüssel. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Dort gibt es diese Möglichkeiten:',
+        "2" => 'Log-in Code <br> Ein weiteres Gerät mit dem Log-in Code zu registrieren geht so: <br> Sie klicken auf den Knopf <strong>Login Code erzeugen</strong>. <br> So sieht der Knopf aus: <br> <img class="help-easy-language-image " src="/img/help-key-login-button.png"/> <br> Dann werden 6 Zahlen angezeigt. <br> So sehen die Zahlen zum Beispiel aus: <br><img class="help-easy-language-image " src="/img/help-key-login-code.png"/> <br> Diese Zahlen geben Sie dann bei dem Gerät ein, was Sie hin-zu-fügen wollen. <br> Die 6 Zahlen sind nur einmal gültig. <br> Wenn Sie also mehrere Geräte einrichten wollen, macht man das jedes Mal neu.', 
+        "3" => 'URL kopieren <br> Sie können auch die Internet-Adresse kopieren lassen. <br> Dafür klicken Sie auf den Knopf <strong>URL Kopieren</strong> <br> So sieht der Knopf aus: <br> <img class="help-easy-language-image " src="/img/help-key-url-button.png"/> <br>Jetzt haben Sie den Link kopiert. <br> Den Link können Sie benutzen um mit dem MetaGer Schlüssel zu suchen. ',   
+        "4" => 'Datei sichern',
+        "5" => 'QR-Code scannen',   
+        "6" => 'Manuell eingeben',   
+        "7" => 'Placeholder',   
+        "8" => 'Placeholder',   
+        "9" => 'Placeholder',   
+
+   
     ],
     "selist"  => [
         "title"  => [

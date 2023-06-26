@@ -20,17 +20,10 @@ return [
         ],
         "title" => 'Ergebnisse',
     ],
-<<<<<<< HEAD
     "resultpage"        => [
         "choice"     => 'Darunter sehen Sie zwei Punkte: gegebenenfalls „Filter“ sowie „Einstellungen“',
         "filter"     => 'Filter: Hier können Sie Filtermöglichkeiten ein- und ausblenden und Filter anwenden. In jedem Suchfokus haben Sie hier andere Auswahlmöglichkeiten. Einige Funktionen sind nur mit Nutzung eines MetaGer Schlüssels möglich.',
         "foci"       => 'Unter dem Suchfeld sind 6 verschiedene Suchfokusse (drei im englischsprachigen Bereich) (Web, Bilder…...) abgebildet, bei denen intern auch spezifische Suchmaschinen zugeordnet sind.',
-=======
-    "resultpage" => [
-        "choice" => 'Darunter sehen Sie zwei Punkte: gegebenenfalls „Filter“ sowie „Einstellungen“',
-        "filter" => 'Filter: Hier können Sie Filtermöglichkeiten ein- und ausblenden und Filter anwenden. In jedem Suchfokus haben Sie hier andere Auswahlmöglichkeiten.',
-        "foci" => 'Unter dem Suchfeld sind 6 verschiedene Suchfokusse (drei im englischsprachigen Bereich) (Web, Bilder…...) abgebildet, bei denen intern auch spezifische Suchmaschinen zugeordnet sind.',
->>>>>>> e25b4d6d9818d14cdd040e4f4bada0662d9d2e76
         "settings" => 'Einstellungen: Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im aktuellen Fokus vornehmen. Sie können auch Suchmaschinen, die dem Fokus zugeordnet sind, an- und abwählen. Ihre Einstellungen werden mithilfe eines nicht personenbeziehbaren Klartextcookies gespeichert. Die Einstellungsseite erreichen Sie auch über das Menu oben rechts.',
         "title" => 'Die Ergebnisseite',
     ],
@@ -42,12 +35,8 @@ return [
         "slot" => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',
         "title" => 'Das Suchfeld',
     ],
-<<<<<<< HEAD
     "settings"      => [
         "1" => 'Werbefreie Suche <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',
-=======
-    "settings" => [
->>>>>>> e25b4d6d9818d14cdd040e4f4bada0662d9d2e76
         "2" => 'Verwendete Suchmaschinen <br> Hier können Sie Ihre verwendeten Suchmaschinen einsehen und gegebenenfalls anpassen. Durch einen Klick auf den entsprechenden Namen kann diese entsprechend ein- oder ausgeschaltet werden.',
         "3" => 'Suchfilter <br> Durch Suchfilter können Sie Ihre Suche dauerhaft filtern.',
         "4" => 'Blacklist <br> Hier können Sie sich eine persönliche Blacklist zusammenzustellen. Sie können damit spezielle Domains ausfiltern und damit eigene Sucheinstellungen produzieren. Mit einem Klick auf "Hinzufügen" werden diese Einstellungen an den Link im Abschnitt "Hinweis" angehängt.',

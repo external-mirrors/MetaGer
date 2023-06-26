@@ -3,6 +3,8 @@ require("fetch-ie8");
 import resultSaver from "./result-saver.js";
 
 let mutationCheckerInterval;
+let mutationCheckerIntervalDuration = 25;
+let start = null;
 
 document.addEventListener("DOMContentLoaded", (event) => {
   if (document.readyState == "complete") {
@@ -23,7 +25,6 @@ function initialize() {
   loadMoreResults();
   enableResultSaver();
   enablePagination();
-  mutationCheckerInterval = setInterval(mutationChecker, 2000);
 }
 
 let link, newtab, top;
@@ -160,16 +161,15 @@ function loadMoreResults() {
             let new_source = container.querySelector("#results").innerHTML;
             document.querySelector("#results").innerHTML = new_source;
             botProtection();
-            if (!mutationCheckerInterval) {
-              mutationCheckerInterval = setInterval(mutationChecker, 2000);
-            }
           }
 
           if ("quicktips" in data) {
             let container = document.createElement("div");
             container.innerHTML = data.quicktips;
             let new_quicktips = container.querySelector("#additions-container");
-            document.getElementById("resultpage-container").append(new_quicktips);
+            document
+              .getElementById("resultpage-container")
+              .append(new_quicktips);
           }
 
           currentlyLoading = false;
@@ -205,28 +205,19 @@ function enablePagination() {
   }
 }
 
-function mutationChecker() {
-  let validAttributes = ["class", "id", "data-count", "data-index"];
-  let elements = document.querySelectorAll("#results > .result");
-  let attributeRemoved = false;
-  for (let i = 0; i < elements.length; i++) {
-    for (let j = 0; j < elements[i].attributes.length; j++) {
-      if (!validAttributes.includes(elements[i].attributes[j].name)) {
-        elements[i].attributes.removeNamedItem(elements[i].attributes[j].name);
-        attributeRemoved = true;
-      }
-    }
-  }
-  if (!attributeRemoved && mutationCheckerInterval) {
-    clearInterval(mutationCheckerInterval);
-    mutationCheckerInterval = null;
-  }
-}
-
 function initQueryInputField() {
-  document.querySelector(".search-input").classList.remove("search-delete-js-only");
+  document
+    .querySelector(".search-input")
+    .classList.remove("search-delete-js-only");
   let field = document.querySelector("input[name=eingabe]");
   let value = field.value;
   field.attributes.removeNamedItem("value");
   field.value = value;
+
+  let delete_button = document.querySelector("#search-delete-btn");
+  delete_button.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    field.value = "";
+    return false;
+  });
 }

@@ -1,0 +1,33 @@
+&.paymentMethod {
+  > ul#payment-methods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style-type: none;
+    padding: 0;
+    align-items: center;
+    > li {
+      height: 5rem;
+      flex-grow: 1;
+      > a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid darken(@highlightcolor, 10%);
+        height: 100%;
+        padding: 1rem;
+        border-radius: 5px;
+        background-color: @highlightcolor;
+        color: inherit;
+        gap: 1rem;
+
+        > div.image {
+          display: grid;
+          place-content: center;
+          height: 100%;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+}

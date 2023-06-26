@@ -66,7 +66,7 @@ return [
     |
      */
     'failed' => [
-        'database' => 'mysql',
+        'database' => config("database.default"),
         'table' => 'failed_jobs',
     ],
 ];

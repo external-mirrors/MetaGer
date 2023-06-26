@@ -23,7 +23,6 @@
 			<div id="foki-box">
 				@include('parts.foki')
 			</div>
-			<div class="scrollfade-right"></div>
 		</div>
 	</div>
 	@include('parts.filter')

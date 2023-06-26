@@ -25,7 +25,7 @@ return [
     'btn-more' => 'Mehr dazu',
     'eco.p' => 'Wir achten auf die Nachhaltigkeit und den Ressourcenverbrauch unserer Dienste. Wir verwenden nur Strom aus regenerativen Energiequellen.<br>Vom Server bis zur Kaffeemaschine.',
     'plugin.title' => 'Jetzt MetaGer installieren',
-    'plugin.btn-add' => 'MetaGer-Plugin hinzufügen',
+    'plugin.btn-add' => 'Plugin hinzufügen',
     'plugin.btn-app' => 'MetaGer-App',
     'plugin.image.alt' => 'Metager-Apps',
     'plugin.p' => 'Mit unserem Plugin können Sie MetaGer als Standardsuchmaschine festlegen. Und mit der App nutzen Sie MetaGer ganz bequem auf Ihrem Smartphone.',

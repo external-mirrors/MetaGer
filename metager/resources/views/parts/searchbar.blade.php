@@ -12,7 +12,7 @@
 					</a>
 				</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
-					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" tabindex="0">
+					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" >
 					<button id="search-delete-btn" name="delete-search-input" type="reset" tabindex="-1">
 						&#xd7;
 					</button>

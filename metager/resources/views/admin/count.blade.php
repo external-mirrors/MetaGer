@@ -13,8 +13,14 @@
 		<form method="GET" style="display: flex; align-items: center;">
 			<div id="daterange" class="form-group" style="max-width: 100px; margin-right: 8px;">
 				<label for="days">Zeitraum (von/bis)</label>
-				<input class="form-control" type="date" id="start" name="start" value="{{$start->format("Y-m-d")}}" max="{{$end->format("Y-m-d")}}"/>
-				<input class="form-control" type="date" id="end" name="end" value="{{$end->format("Y-m-d")}}" min="{{$start->format("Y-m-d")}}" max="{{Carbon::createMidnightDate()->format("Y-m-d")}}"/>
+				<input class="form-control" type="date" id="start" name="start" value="{{$start->format("Y-m-d")}}" max="{{$end->format('Y-m-d')}}"
+				@if((clone $start)->addDays(28)->isToday())
+				form="unused"
+				@endif/>
+				<input class="form-control" type="date" id="end" name="end" value="{{$end->format("Y-m-d")}}" min="{{$start->format("Y-m-d")}}" max="{{Carbon::createMidnightDate()->format('Y-m-d')}}" 
+				@if($end->isToday())
+				form="unused"
+				@endif/>
 			</div>
 			<div class="form-group" style="max-width: 100px; margin-right: 8px;">
 				<label for="interface">Sprache</label>

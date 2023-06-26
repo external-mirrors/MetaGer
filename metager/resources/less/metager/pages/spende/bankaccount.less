@@ -1,0 +1,21 @@
+&.banktransfer {
+  > #bank-info {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2rem;
+    background-color: @highlightcolor;
+    > #bank-account {
+      white-space: nowrap;
+    }
+    > #bank-qr {
+      max-width: 100%;
+      display: grid;
+      > a:hover {
+        color: inherit;
+      }
+    }
+  }
+}

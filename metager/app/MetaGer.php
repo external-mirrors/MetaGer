@@ -306,8 +306,7 @@ class MetaGer
         foreach ($this->ads as $ad) {
             if (
                 ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLink, $this->adUrlsBlacklisted))) || ($ad->strippedHostAnzeige !== "" && (in_array($ad->strippedHostAnzeige, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLinkAnzeige, $this->adUrlsBlacklisted)))
+                    in_array($ad->strippedLink, $this->adUrlsBlacklisted)))
             ) {
                 continue;
             }
@@ -387,6 +386,17 @@ class MetaGer
                 $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
 
+                if (!empty($this->results[$i]->image)) {
+                    $arr[$link]->image = $this->results[$i]->image;
+                }
+
+                if (!empty($this->results[$i]->inheritedResults)) {
+                    $arr[$link]->inheritedResults = $this->results[$i]->inheritedResults;
+                }
+
+                if (!empty($this->results[$i]->deepResults)) {
+                    $arr[$link]->deepResults = $this->results[$i]->deepResults;
+                }
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {
                     # Den Link hinzufügen:
@@ -395,6 +405,8 @@ class MetaGer
                     $arr[$link]->link = $this->results[$i]->link;
                     $arr[$link]->partnershop = $this->results[$i]->partnershop;
                 }
+
+
 
                 array_splice($this->results, $i, 1);
                 $i--;

@@ -1,0 +1,94 @@
+.highlight {
+  background-color: @highlightcolor;
+}
+.hidden {
+  display: none;
+}
+
+#donation {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  > #breadcrumps {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    text-align: center;
+    background-color: @highlightcolor;
+    @checked-color: @hightlighttextcolorcurrent;
+    > li {
+      &:nth-child(2) {
+        border-right: 1px solid darken(@highlightcolor, 10%);
+        border-left: 1px solid darken(@highlightcolor, 10%);
+      }
+      &.done > a {
+        background-color: @highlightbackgroundcolorcurrent;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        &::after {
+          content: "";
+          background-image: url("/img/edit.svg");
+          background-repeat: no-repeat;
+          display: block;
+          width: 10px;
+          height: 10px;
+          background-size: contain;
+          position: relative;
+          top: -5px;
+          filter: brightness(0) invert(1);
+        }
+      }
+      &.current {
+        color: @checked-color;
+      }
+      &.next {
+        color: @highlighttextcolor;
+      }
+      > a {
+        display: block;
+        color: inherit;
+        padding: 1rem;
+        white-space: nowrap;
+      }
+    }
+    @media (max-width: 590px) {
+      grid-template-columns: 1fr 1fr;
+      > li {
+        &:nth-last-child(1) {
+          grid-column: span 2;
+          border-top: 1px solid darken(@highlightcolor, 10%);
+        }
+        > a {
+          padding: 0.5rem;
+        }
+      }
+    }
+    @media (max-width: 390px) {
+      grid-template-columns: 1fr;
+      > li:nth-last-child(1) {
+        grid-column: auto;
+        border: 0;
+      }
+      > li:nth-child(2) {
+        border: 0;
+        border-top: 1px solid darken(@highlightcolor, 10%);
+        border-bottom: 1px solid darken(@highlightcolor, 10%);
+      }
+    }
+  }
+  > #content-container {
+    display: grid;
+    gap: 1rem;
+    @import "./amount.less";
+    @import "./interval.less";
+    @import "./paymentMethod.less";
+    @import "./paypal.less";
+    @import "./bankaccount.less";
+    @import "./directdebit.less";
+  }
+}

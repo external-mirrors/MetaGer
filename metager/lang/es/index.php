@@ -4,7 +4,12 @@ return [
     'plugin-title' => 'Añadir MetaGer a su navegador',
     'key'          => [
         'placeholder' => 'Introducir la clave para la búsqueda sin publicidad',
-        'tooltip'     => 'Introducir la clave para la búsqueda sin publicidad',
+        'tooltip'     => [
+            'nokey' => 'Configurar una búsqueda sin anuncios',
+            'empty' => 'Ficha agotada. Recarga ahora.',
+            'low'   => 'Ficha a punto de agotarse. Recarga ahora.',
+            'full'  => 'Búsqueda sin publicidad activada.',
+        ],
     ],
     'placeholder'  => 'MetaGer: Buscar & encontrar de forma segura',
     'searchbutton' => 'MetaGer - Búsqueda',

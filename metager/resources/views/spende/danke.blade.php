@@ -5,59 +5,21 @@
 @section('navbarFocus.donate', 'class="dropdown active"')
 
 @section('content')
-<div id="donation-data" class="card">
-	<h2>{{ trans('spende.danke.title') }}</h2>
-	<p style="width:100%;" class="text-muted">{{ trans('spende.danke.nachricht') }}</p>
-	<h3>{{ trans('spende.danke.kontrolle') }}</h3>
-	<div>
-		@if($data["person"] === "private")
-		<div class="data-element">
-			<label for="firstname" style="margin-right: 16px;">{{ trans('spende.lastschrift.3f.placeholder')}}</label>
-			<input type="text" name="firstname" id="firstname" value="{{ $data['firstname'] }}" readonly>
-		</div>
-		<div class="data-element">
-			<label for="lastname" style="margin-right: 16px;">{{ trans('spende.lastschrift.3l.placeholder')}}</label>
-			<input type="text" name="lastname" id="lastname" value="{{ $data['lastname'] }}" readonly>
-		</div>
-		@else
-		<div class="data-element">
-			<label for="company" style="margin-right: 16px;">{{ trans('spende.lastschrift.3c.placeholder')}}</label>
-			<input type="text" name="company" id="company" value="{{ $data['company'] }}" readonly>
-		</div>
-		@endif
-		@if(!empty($data['email']))
-		<div class="data-element">
-			<label for="email" style="margin-right: 16px;">Email</label>
-			<input type="text" name="email" id="email" value="{{ $data['email'] }}" readonly>
-		</div>
-		@endif
-		@if(!empty($data['iban']))
-		<div class="data-element">
-			<label for="iban" style="margin-right: 16px;">{{ trans('spende.iban') }}</label>
-			<input type="text" name="iban" id="iban" value="{{ $data['iban'] }}" readonly>
-		</div>
-		@endif
-		@if(!empty($data["bic"]))
-		<div class="data-element">
-			<label for="bic" style="margin-right: 16px;">{{ trans('spende.bic') }}</label>
-			<input type="text" name="bic" id="bic" value="{{ $data['bic'] }}" readonly>
-		</div>
-		@endif
-		<div class="data-element">
-			<label for="betrag" style="margin-right: 16px;">{{ trans('spende.betrag') }}</label>
-			<input type="text" name="betrag" id="betrag" value="{{ $data['betrag'] }} €" readonly>
-		</div>
-		@if(!empty($data['frequency']))
-		<div class="data-element">
-			<label for="frequency" style="margin-right: 16px;">{{ trans('spende.frequency.name') }}</label>
-			<input type="text" name="frequency" id="frequency" value="{{ trans('spende.frequency.' . $data['frequency']) }}" readonly>
-		</div>
-		@endif
-		<div class="data-element">
-			<label for="nachricht" style="margin-right: 16px;">{{ trans('spende.danke.message') }}</label>
-			<textarea name="nachricht" id="nachricht" readonly>{{ $data['nachricht'] }}</textarea>
-		</div>
-	</div>
-	<button type="button" style="margin-top: 16px; margin-bottom: 16px;" class="btn btn-primary noprint print-button js-only">{{ trans('spende.drucken') }}</button>
+<h1 class="page-title">@lang('spende.headline.1')</h1>
+<div id="donation">
+    <div class="section">
+        @lang('spende.headline.2', ['aboutlink' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/about')])
+    </div>
+    <ul id="breadcrumps">
+        <li class="done"><a href="#">{{ number_format($donation["amount"], 2, ",", ".") }}€</a></li>
+        <li class="done"><a href="#">@lang('spende.interval.frequency.' . $donation["interval"])</a></li>
+        <li class="done"><a href="#">@lang('spende.payment-method.methods.' . $donation["funding_source"])</a></li>
+    </ul>
+    <div id="content-container" class="banktransfer">
+        <h2>@lang('spende.thankyou.heading')</h2>
+        <div>@lang('spende.thankyou.description')</div>
+		<div>@lang('spende.thankyou.taxes', ["kontakt" => LaravelLocalization::getLocalizedUrl(null, "/kontakt")])</div>
+		<a class="btn btn-default" href="{{ LaravelLocalization::getLocalizedUrl(null, '/') }}">@lang('spende.thankyou.button')</a>
+    </div>
 </div>
 @endsection

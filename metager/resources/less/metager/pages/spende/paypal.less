@@ -1,0 +1,66 @@
+&.paypal {
+  max-width: 700px;
+  margin: 0 auto;
+  width: 100%;
+
+  > h3 {
+    margin: 0;
+  }
+
+  > form#card-form {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr;
+    gap: 0.5rem;
+    row-gap: 1rem;
+    > div {
+      &#card-errors {
+        grid-column: span 3;
+        > .error {
+          color: #ff5a34;
+        }
+      }
+      &.card-name {
+        grid-column: span 3;
+        display: grid;
+        > input {
+          padding: 0.5rem 1rem;
+        }
+      }
+      &.input-group {
+        > label {
+          white-space: nowrap;
+        }
+        > div {
+          height: 3rem;
+          border: 1px solid @color-light-grey;
+        }
+      }
+    }
+    > button {
+      grid-column: span 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      &:disabled::before {
+        content: "";
+        background-image: url("/img/ajax-loader.gif");
+        width: 20px;
+        display: block;
+        height: 100%;
+        background-repeat: no-repeat;
+      }
+    }
+  }
+
+  #payment-pending {
+    display: flex;
+    gap: 1rem;
+    border-radius: 5px;
+    background-color: @highlightcolor;
+    color: @text-color;
+    &:not([open]) {
+      display: none;
+    }
+  }
+}

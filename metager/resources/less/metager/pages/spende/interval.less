@@ -1,0 +1,25 @@
+&.interval {
+  > ul {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    text-align: center;
+    gap: 0.5rem;
+    > li {
+      border: 1px solid @color-light-grey;
+      border-radius: 5px;
+      &:nth-child(1) {
+        grid-column: span 2;
+      }
+      > a {
+        display: block;
+        color: inherit;
+        padding: 1rem;
+        &:hover {
+          color: inherit;
+        }
+      }
+    }
+  }
+}

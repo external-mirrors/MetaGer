@@ -44,7 +44,6 @@
 	@endif
 	@if(isset($page) && $page === 'startpage')
 	<meta http-equiv="onion-location" content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/{{LaravelLocalization::getCurrentLocale()}}" />
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}" />
 	@endif
 	@if(Cookie::get('dark_mode') === "2")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
@@ -55,9 +54,6 @@
 	@endif
 	@elseif(Cookie::get('dark_mode') === "1")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-	@if(isset($page) && $page === 'startpage')
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/startpage-only-light.css') }}" />
-	@endif
 	@else
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@if(!empty($darkcss) && is_array($darkcss))
@@ -71,7 +67,7 @@
 	<script src="{{ mix('js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 	@foreach($js as $jsFile)
-	<script src="{{$jsFile}}" async></script>
+	<script src="{{$jsFile}}" defer></script>
 	@endforeach
 	@endif
 </head>

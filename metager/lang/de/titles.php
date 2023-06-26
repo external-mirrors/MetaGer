@@ -15,7 +15,6 @@ return [
     'help-privacy-protection' => 'Hilfe - MetaGer',
     'help-glossary'=>'Glossar - MetaGer',
     'widget' => 'MetaGer Widget',
-    'settings' => 'Einstellungen',
     'websearch' => 'Websuche-Widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
     'faq' => 'FAQ - MetaGer',
@@ -35,5 +34,6 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
-    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer'
+    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
 ];

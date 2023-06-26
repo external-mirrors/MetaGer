@@ -19,12 +19,12 @@ mix
   .styles(["resources/css/noheader.css"], "public/css/noheader.css")
   .less("resources/less/metager/metager.less", "public/css/themes/metager.css")
   .less(
-    "resources/less/metager/startpage-only-light.less",
-    "public/css/themes/startpage-only-light.css"
+    "resources/less/metager/pages/startpage/light.less",
+    "public/css/themes/startpage/light.css"
   )
   .less(
-    "resources/less/metager/startpage-only-dark.less",
-    "public/css/themes/startpage-only-dark.css"
+    "resources/less/metager/pages/startpage/dark.less",
+    "public/css/themes/startpage/dark.css"
   )
   .less(
     "resources/less/metager/pages/admin/spam/style.less",
@@ -85,8 +85,20 @@ mix
     "public/css/asso/style.css"
   )
   .less(
-    "resources/less/metager/pages/spende/danke.less",
-    "public/css/spende/danke.css"
+    "resources/less/metager/pages/spende/base.less",
+    "public/css/spende.css"
+  )
+  .less(
+    "resources/less/metager/pages/spende/base-dark.less",
+    "public/css/spende-dark.css"
+  )
+  .less(
+    "resources/less/metager/pages/membership/base.less",
+    "public/css/membership.css"
+  )
+  .less(
+    "resources/less/metager/pages/membership/base-dark.less",
+    "public/css/membership-dark.css"
   )
   .less(
     "resources/less/metager/pages/prevention-information.less",
@@ -112,9 +124,10 @@ mix
     ["resources/js/scriptResultPage.js", "resources/js/keyboardNavigation.js"],
     "public/js/scriptResultPage.js"
   )
+  .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .js("resources/js/donation.js", "public/js/donation.js")
+  .js(["resources/js/donation/base.js", "resources/js/donation/paypal-options.js", "resources/js/donation/paypal-card.js", "resources/js/donation/paypal-subscription.js"], "public/js/donation.js")
   // utility
   .js(
     ["resources/js/utility.js", "resources/js/translations.js"],
@@ -129,6 +142,7 @@ mix
   .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
   .js("resources/js/verify.js", "public/js/index.js")
+  .js("resources/js/membership.js", "public/js/membership.js")
   .polyfill({
     enabled: true,
     useBuiltIns: "usage",

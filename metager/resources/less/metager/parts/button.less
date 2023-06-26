@@ -1,56 +1,56 @@
 .btn {
-    display: inline-block;
-    margin-bottom: 0; //for input.btn
-    font-weight: normal;
-    text-align: center;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
-    border: 1px solid transparent;
-    border-radius: 4px;
-    white-space: nowrap;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.428571429;
-    .user-select(none);
-
+  display: inline-block;
+  margin-bottom: 0; //for input.btn
+  font-weight: normal;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+  border: 1px solid transparent;
+  border-radius: 4px;
+  white-space: nowrap;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.428571429;
+  .user-select(none);
+  color: inherit;
+  &:hover,
+  &:visited {
+    color: inherit;
+  }
 }
-
-
 
 // Alternative buttons
 
 .btn-default {
-color: @input-text;
-background-color: @input-bg;
-border-color: #ccc;
+  color: @input-text;
+  background-color: @input-bg;
+  border-color: #ccc;
 }
 
 .btn-primary {
-color: #fff;
-background-color: #337ab7;
-border-color: #2e6da4;
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
 }
 
 .btn-success {
-color: #fff;
-background-color: #5cb85c;
-border-color: #4cae4c;
+  color: #fff;
+  background-color: #5cb85c;
+  border-color: #4cae4c;
 }
 
-.btn-danger{
-color: #fff;
-background-color: #d9534f;
-border-color: #d43f3a;
+.btn-danger {
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
 }
-
 
 //Button Size
 .btn-sm {
-    padding: 4px 10px;
-    font-size: 12px;
-    line-height: 1.5;
-    border-radius: 3px;
-  
-  }
+  padding: 4px 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}

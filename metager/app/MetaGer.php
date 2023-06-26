@@ -1396,7 +1396,7 @@ class MetaGer
 
     public function generateSearchLink($fokus, $results = true)
     {
-        $except = ['page', 'next', 'out', 'submit-query', 'mgv'];
+        $except = ['page', 'next', 'out', 'submit-query', 'mgv', 'ua'];
         # Remove every Filter
         foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
             $except[] = $filter->{"get-parameter"};
@@ -1410,7 +1410,7 @@ class MetaGer
 
     public function generateEingabeLink($eingabe)
     {
-        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv'];
+        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
         $requestData = $this->request->except($except);
 
         $requestData['eingabe'] = $eingabe;
@@ -1429,7 +1429,7 @@ class MetaGer
     public function generateSiteSearchLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " site:$host";
         $requestData['focus'] = "web";
         $link = action('MetaGerSearch@search', $requestData);
@@ -1439,7 +1439,7 @@ class MetaGer
     public function generateRemovedHostLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:$host";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;
@@ -1448,7 +1448,7 @@ class MetaGer
     public function generateRemovedDomainLink($domain)
     {
         $domain = urlencode($domain);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:*.$domain";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;

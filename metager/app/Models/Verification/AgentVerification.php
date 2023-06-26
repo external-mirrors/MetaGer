@@ -13,8 +13,21 @@ class AgentVerification extends Verification
         if (empty($id) || empty($uid)) {
             $request = \request();
             $ip = $request->ip();
-            $id = hash("sha1", $_SERVER["AGENT"]);
-            $uid = hash("sha1", $_SERVER["AGENT"] . $ip . "uid");
+            $agent = $_SERVER["AGENT"];
+            if ($request->hasHeader("Sec-Ch-Ua-Full-Version-List")) {
+                $agent .= $request->header("Sec-Ch-Ua-Full-Version-List");
+            }
+            if ($request->hasHeader("Sec-CH-UA-Platform")) {
+                $agent .= $request->header("Sec-CH-UA-Platform");
+            }
+            if ($request->hasHeader("Sec-CH-UA-Model")) {
+                $agent .= $request->header("Sec-CH-UA-Model");
+            }
+            if ($request->hasHeader("Sec-CH-UA-Platform-Version")) {
+                $agent .= $request->header("Sec-CH-UA-Platform-Version");
+            }
+            $id = hash("sha1", $agent);
+            $uid = hash("sha1", $agent . $ip . "uid");
         }
 
         parent::__construct($id, $uid);

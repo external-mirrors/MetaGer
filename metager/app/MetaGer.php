@@ -45,6 +45,7 @@ class MetaGer
     protected $queryFilter = [];
     protected $parameterFilter = [];
     protected $ads = [];
+    public $news = [];
     protected $infos = [];
     public $warnings = [];
     public $htmlwarnings = [];
@@ -358,6 +359,9 @@ class MetaGer
             }
             foreach ($engine->ads as $ad) {
                 $this->ads[] = clone $ad;
+            }
+            foreach ($engine->news as $news) {
+                $this->news[] = clone $news;
             }
         }
     }
@@ -776,7 +780,7 @@ class MetaGer
     public function retrieveResults()
     {
         $engines = app(Searchengines::class)->getEnabledSearchengines();
-        # Von geladenen Engines die Ergebnisse holen
+        // Von geladenen Engines die Ergebnisse holen
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
                 try {

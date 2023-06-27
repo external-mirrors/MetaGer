@@ -9,7 +9,7 @@ return [
     'breadcrumps' => [
         'amount' => 'Betrag wählen',
         'payment_method' => 'Zahlungsart wählen',
-        'payment_interval' => 'Zahlungsinterval wählen'
+        'payment_interval' => 'Zahlungsintervall wählen'
     ],
 
     'amount' => [

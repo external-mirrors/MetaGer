@@ -18,4 +18,6 @@ return [
     'providers'      => 'providers',
     'proxytext'      => 'Result link is opened anonymously. Your data will not be transferred to destination servers. Some webpages may not work as usual.',
     'metagerkeytext' => 'Use MetaGer ad-free',
+    'news'           => 'Relevant news',
+    'videos'         => 'Videos',
 ];

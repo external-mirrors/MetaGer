@@ -29,7 +29,7 @@ return [
     ],
     "payment" => [
         "interval" => [
-            "title" => "3. Ihr Zahlungsinterval",
+            "title" => "3. Ihr Zahlungsintervall",
             "annual" => "jährlich",
             "six-monthly" => "halbjährlich",
             "quarterly" => "vierteljährlich",

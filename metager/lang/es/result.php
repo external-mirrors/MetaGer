@@ -18,4 +18,6 @@ return [
     'advertisement'  => 'Mostrar',
     'providers'      => 'Proveedores',
     'metagerkeytext' => 'Utiliza MetaGer sin publicidad',
+    'news'           => 'Noticias de interés',
+    'videos'         => 'Vídeos',
 ];

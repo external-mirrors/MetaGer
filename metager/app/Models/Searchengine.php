@@ -14,6 +14,8 @@ abstract class Searchengine
 {
     public $getString = ""; # Der String für die Get-Anfrage
     public $query = ""; # The search query
+    public $alteredQuery = ""; // If the query was modified by the searchengine
+    public $alterationOverrideQuery = ""; // The Override to remove the altered query
 
     /** @var SearchEngineConfiguration */
     public $configuration;
@@ -22,6 +24,10 @@ abstract class Searchengine
     public $results = []; # Die geladenen Ergebnisse
     public $ads = []; # Die geladenen Werbungen
     public $products = []; # Die geladenen Produkte
+    /** @var Result[] */
+    public $news = [];
+    /** @var Result[] */
+    public $videos = [];
     public $loaded = false; # wahr, sobald die Ergebnisse geladen wurden
     public $cached = false;
 

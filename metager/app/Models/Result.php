@@ -18,6 +18,7 @@ class Result
     public $longDescr; # Die ungekürzte Beschreibung des Suchergebnisses
     public $gefVon = []; # Die Suchmaschine von der dieses Ergebnis stammt
     public $gefVonLink = [];
+    public $age;
     public $sourceRank; # Das Ranking für dieses Suchergebnis von der Seite, die es geliefert hat (implizit durch Ergebnisreihenfolge: 20 - Position in Ergebnisliste)
     public $partnershop; # Ist das Ergebnis von einem Partnershop? (bool)
     public $image; # Ein Vorschaubild für das Suchergebnis (als URL)

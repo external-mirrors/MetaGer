@@ -26,6 +26,8 @@ abstract class Searchengine
     public $products = []; # Die geladenen Produkte
     /** @var Result[] */
     public $news = [];
+    /** @var Result[] */
+    public $videos = [];
     public $loaded = false; # wahr, sobald die Ergebnisse geladen wurden
     public $cached = false;
 

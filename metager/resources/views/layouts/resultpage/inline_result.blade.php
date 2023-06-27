@@ -1,4 +1,4 @@
-<div class="news-result" data-count="{{ $result->hash }}" data-index="{{$index}}">  
+<div class="inline-result" data-count="{{ $result->hash }}" data-index="{{$index}}">  
 	<a class="result-image" href="{{ $result->link }}" @if($metager->isFramed())target="_top"@endif>
         @if( $result->image !== "" )
 		<img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt="" />

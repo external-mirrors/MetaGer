@@ -21,6 +21,10 @@
 		@if($index === 2)
 		@include("layouts.resultpage.news", ['news' => $metager->news])
 		@endif
+
+		@if($index === 5)
+		@include("layouts.resultpage.videos", ['videos' => $metager->videos])
+		@endif
 		@include('layouts.result', ['result' => $result, 'index' => $index + 1])
 	@endforeach
 	@include('parts.pager')

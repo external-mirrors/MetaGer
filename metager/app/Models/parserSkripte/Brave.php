@@ -142,6 +142,30 @@ class Brave extends Searchengine
                 }
             }
 
+            // Check if videos are relevant to this query
+            if (property_exists($results, "videos") && property_exists($results->videos, "results") && is_array($results->videos->results)) {
+                foreach ($results->videos->results as $index => $video_result) {
+                    $new_video_result = new Result(
+                        1,
+                        $video_result->title,
+                        $video_result->url,
+                        $video_result->meta_url->netloc . " " . $video_result->meta_url->path,
+                        $video_result->description,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
+                        $index + 1,
+                        []
+                    );
+                    if (property_exists($video_result, "thumbnail")) {
+                        $new_video_result->image = $video_result->thumbnail->src;
+                    }
+                    if (property_exists($video_result, "age")) {
+                        $new_video_result->age = $video_result->age;
+                    }
+                    $this->videos[] = $new_video_result;
+                }
+            }
+
 
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

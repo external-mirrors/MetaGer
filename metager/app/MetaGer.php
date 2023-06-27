@@ -46,6 +46,7 @@ class MetaGer
     protected $parameterFilter = [];
     protected $ads = [];
     public $news = [];
+    public $videos = [];
     protected $infos = [];
     public $warnings = [];
     public $htmlwarnings = [];
@@ -362,6 +363,9 @@ class MetaGer
             }
             foreach ($engine->news as $news) {
                 $this->news[] = clone $news;
+            }
+            foreach ($engine->videos as $video) {
+                $this->videos[] = clone $video;
             }
         }
     }

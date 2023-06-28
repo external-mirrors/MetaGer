@@ -50,7 +50,7 @@ return [
         //'en-CA'       => ['name' => 'Canadian English',       'script' => 'Latn', 'native' => 'Canadian English', 'regional' => 'en_CA'],
         'en-US' => ['name' => 'English (US)', 'script' => 'Latn', 'native' => 'English (USA)', 'regional' => 'en_US'],
         'en-IE' => ['name' => 'English (Ireland)', 'script' => 'Latn', 'native' => 'English (Ireland)', 'regional' => 'en_IE'],
-        //'es-ES'          => ['name' => 'Spanish (Spain)',                'script' => 'Latn', 'native' => 'Español (España)', 'regional' => 'es_ES'],
+        'es-ES' => ['name' => 'Spanish (Spain)', 'script' => 'Latn', 'native' => 'Español (España)', 'regional' => 'es_ES'],
         //'eo'          => ['name' => 'Esperanto',              'script' => 'Latn', 'native' => 'esperanto', 'regional' => ''],
         //'eu'          => ['name' => 'Basque',                 'script' => 'Latn', 'native' => 'euskara', 'regional' => 'eu_ES'],
         //'ewo'         => ['name' => 'Ewondo',                 'script' => 'Latn', 'native' => 'ewondo', 'regional' => ''],

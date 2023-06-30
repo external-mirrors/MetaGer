@@ -18,8 +18,15 @@ class Overture extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
+
+    }
+
+    public function applySettings()
+    {
+        parent::applySettings();
         $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
+
 
     public function loadResults($result)
     {
@@ -154,7 +161,7 @@ class Overture extends Searchengine
         $affil_data .= '&ua=' . $this->useragent;
 
         $serve_domain = "https://metager.de/";
-        if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
+        if ($this->configuration->getParameter->mkt !== "de") {
             $serve_domain = "https://metager.org/";
         }
 

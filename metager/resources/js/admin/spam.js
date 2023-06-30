@@ -51,8 +51,8 @@ function loadQueries() {
       let dark =
         current_queries.length > 0
           ? !current_queries[current_queries.length - 1].classList.contains(
-              "dark"
-            )
+            "dark"
+          )
           : false;
       for (let key in queries) {
         let tr_element = document.createElement("tr");
@@ -83,7 +83,7 @@ function loadQueries() {
         tr_element.append(focus_element);
 
         let interface_element = document.createElement("td");
-        interface_element.innerHTML = queries[key].interface;
+        interface_element.innerHTML = queries[key].locale;
         tr_element.append(interface_element);
 
         let query_element = document.createElement("td");

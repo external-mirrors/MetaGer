@@ -29,7 +29,9 @@ class Team extends Page
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
-
+            if (!file_exists(lang_path($lang))) {
+                $lang = "en";
+            }
             $browser->visit($url)
                 ->waitForText(trans("team.role.0", [], $lang))
                 ->assertTitle(trans("titles.team", [], $lang));

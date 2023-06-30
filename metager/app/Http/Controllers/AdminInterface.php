@@ -68,7 +68,11 @@ class AdminInterface extends Controller
             ->table("logs")
             ->select(DB::raw('to_timestamp(floor(EXTRACT(epoch FROM time) / EXTRACT(epoch FROM interval \'5 min\')) * EXTRACT(epoch FROM interval \'5 min\')) as timestamp, count(*)'))
             ->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'");
-        if ($interface !== "all") {
+        if ($interface === "none-german") {
+            $log_summary = $log_summary->where("locale", "!=", "de");
+        } else if ($interface == "none-german-english") {
+            $log_summary = $log_summary->whereNotIn("locale", ["de", "en"]);
+        } else if ($interface !== "all") {
             $log_summary = $log_summary->where("locale", "=", $interface);
         }
         $log_summary = $log_summary->groupBy("timestamp")

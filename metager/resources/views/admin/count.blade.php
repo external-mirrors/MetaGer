@@ -26,7 +26,11 @@
 				<label for="interface">Sprache</label>
 				<select class="form-control" name="interface" id="interface">
 					<option value="all" {{ (Request::input('interface', 'all') == "all" ? "selected" : "")}}>Alle</option>
+					<option value="none-german" {{ (Request::input('interface', 'all') == "none-german" ? "selected" : "")}}>Nicht Deutsch</option>
+					<option value="none-german-english" {{ (Request::input('interface', 'all') == "none-german-english" ? "selected" : "")}}>Nicht Deutsch oder Englisch</option>
 					<option value="de" {{ (Request::input('interface', 'all') == "de" ? "selected" : "")}}>DE</option>
+					<option value="at" {{ (Request::input('interface', 'all') == "at" ? "selected" : "")}}>AT</option>
+					<option value="ch" {{ (Request::input('interface', 'all') == "ch" ? "selected" : "")}}>CH</option>
 					<option value="en" {{ (Request::input('interface', 'all') == "en" ? "selected" : "")}}>EN</option>
 					<option value="es" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>ES</option>
 					<option value="da" {{ (Request::input('interface', 'all') == "da" ? "selected" : "")}}>DA</option>
@@ -34,7 +38,7 @@
 					<option value="it" {{ (Request::input('interface', 'all') == "it" ? "selected" : "")}}>IT</option>
 					<option value="nl" {{ (Request::input('interface', 'all') == "nl" ? "selected" : "")}}>NL</option>
 					<option value="no" {{ (Request::input('interface', 'all') == "no" ? "selected" : "")}}>NO</option>
-					<option value="se" {{ (Request::input('interface', 'all') == "se" ? "selected" : "")}}>SE</option>
+					<option value="sv" {{ (Request::input('interface', 'all') == "sv" ? "selected" : "")}}>SV</option>
 				</select>
 			</div>
 			<div id="refresh" style="margin-top: 11px; margin-right: 8px;">

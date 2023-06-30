@@ -47,7 +47,7 @@ class LocalizationRedirect
         $required_hostname = "metager.de";
         if (\stripos($locale, "de") === 0) {
             $allowed_hostnames[] = "metager.de";
-        } elseif (\stripos($locale, "en") === 0) {
+        } else {
             $allowed_hostnames[] = "metager.org";
             $required_hostname = "metager.org";
         }

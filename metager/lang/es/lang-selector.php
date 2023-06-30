@@ -13,8 +13,8 @@ return [
         'nl' => 'Holandés',
         'fi' => 'En finés',
         'no' => 'Noruega',
-        'se' => 'Sueco',
         'it' => 'Italiano',
         'da' => 'Danés',
+        'sv' => 'Sueco',
     ],
 ];

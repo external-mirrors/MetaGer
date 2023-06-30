@@ -55,7 +55,7 @@ return [
         'es-ES' => ['name' => 'Spanish (Spain)', 'script' => 'Latn', 'native' => 'Español (España)', 'regional' => 'es_ES'],
         'fi-FI' => ['name' => 'Finnish (Finland)', 'script' => 'Latn', 'native' => 'Finnish (Finland)', 'regional' => 'fi_FI'],
         'no-NO' => ['name' => 'Norwegian (Norway)', 'script' => 'Latn', 'native' => 'Norsk (Norge)', 'regional' => 'no_NO'],
-        'se-SE' => ['name' => 'Swedish (Sweden)', 'script' => 'Latn', 'native' => 'Svenska (Sverige)', 'regional' => 'se_SE'],
+        'sv-SE' => ['name' => 'Swedish (Sweden)', 'script' => 'Latn', 'native' => 'Svenska (Sverige)', 'regional' => 'sv_SE'],
         'it-IT' => ['name' => 'Italian (Italy)', 'script' => 'Latn', 'native' => 'Italiano (Italia)', 'regional' => 'it_IT'],
         //'eo'          => ['name' => 'Esperanto',              'script' => 'Latn', 'native' => 'esperanto', 'regional' => ''],
         //'eu'          => ['name' => 'Basque',                 'script' => 'Latn', 'native' => 'euskara', 'regional' => 'eu_ES'],

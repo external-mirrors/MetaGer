@@ -7,9 +7,9 @@ return [
         'nl' => 'Dutch',
         'fi' => 'Finnish',
         'no' => 'Norwegian',
-        'se' => 'Swedish',
         'it' => 'Italian',
         'da' => 'Danish',
+        'sv' => 'Swedish',
     ],
     'h1'   => [
         1   => 'Language selection',

@@ -13,7 +13,7 @@ return [
         "es" => "Spanisch",
         "fi" => "Finnisch",
         "no" => "Norwegisch",
-        "se" => "Schwedisch",
+        "sv" => "Schwedisch",
         "it" => "Italienisch",
     ],
 ];

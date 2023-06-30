@@ -8,16 +8,18 @@
 <p>{{ __("lang-selector.p.1") }}</p>
 <div id="languages">
     @foreach(App\Localization::getLanguageSelectorLocales() as $language => $locales)
-    <h2>{{ trans("lang-selector.lang.$language", [], $language) }}</h2>
-    <ul>
-        @foreach($locales as $locale => $locale_native)
-        @if(LaravelLocalization::getCurrentLocale() === $locale)
-        <li class="active">{{ $locale_native }}</li>
-        @else
-        <li><a rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, route("lang-selector", ["previous_url" => $previous_url]), true) }}">{{ $locale_native }}</a></li>
-        @endif
-        @endforeach
-    </ul>
+    <div class="language">
+        <h2>{{ trans("lang-selector.lang.$language", [], $language) }}</h2>
+        <ul>
+            @foreach($locales as $locale => $locale_native)
+            @if(LaravelLocalization::getCurrentLocale() === $locale)
+            <li class="active">{{ $locale_native }}</li>
+            @else
+            <li><a rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, route("lang-selector", ["previous_url" => $previous_url]), true) }}">{{ $locale_native }}</a></li>
+            @endif
+            @endforeach
+        </ul>
+    </div>
     @endforeach
 </div>
 @endsection

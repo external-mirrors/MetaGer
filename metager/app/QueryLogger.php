@@ -43,6 +43,9 @@ class QueryLogger
         $this->focus = $request->input('focus', "");
         $this->referer = $request->header('Referer');
         $this->interface = Localization::getLanguage();
+        if ($this->interface == "de" && Localization::getRegion() !== "DE") {
+            $this->interface = strtolower(Localization::getRegion());
+        }
         $this->query_string = $request->input("eingabe", "");
     }
 

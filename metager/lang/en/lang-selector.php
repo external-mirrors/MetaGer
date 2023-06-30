@@ -4,6 +4,12 @@ return [
         'de' => 'German',
         'en' => 'English',
         'es' => 'Spanish',
+        'nl' => 'Dutch',
+        'fi' => 'Finnish',
+        'no' => 'Norwegian',
+        'se' => 'Swedish',
+        'it' => 'Italian',
+        'da' => 'Danish',
     ],
     'h1'   => [
         1   => 'Language selection',

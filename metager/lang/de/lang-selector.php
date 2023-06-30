@@ -7,7 +7,13 @@ return [
 
     "lang" => [
         "de" => "Deutsch",
+        "da" => "Dänisch",
         "en" => "Englisch",
-        "es" => "Spanisch"
+        "nl" => "Niederländisch",
+        "es" => "Spanisch",
+        "fi" => "Finnisch",
+        "no" => "Norwegisch",
+        "se" => "Schwedisch",
+        "it" => "Italienisch",
     ],
 ];

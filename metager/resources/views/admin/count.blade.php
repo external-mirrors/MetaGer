@@ -29,6 +29,12 @@
 					<option value="de" {{ (Request::input('interface', 'all') == "de" ? "selected" : "")}}>DE</option>
 					<option value="en" {{ (Request::input('interface', 'all') == "en" ? "selected" : "")}}>EN</option>
 					<option value="es" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>ES</option>
+					<option value="da" {{ (Request::input('interface', 'all') == "da" ? "selected" : "")}}>DA</option>
+					<option value="fi" {{ (Request::input('interface', 'all') == "fi" ? "selected" : "")}}>FI</option>
+					<option value="it" {{ (Request::input('interface', 'all') == "it" ? "selected" : "")}}>IT</option>
+					<option value="nl" {{ (Request::input('interface', 'all') == "nl" ? "selected" : "")}}>NL</option>
+					<option value="no" {{ (Request::input('interface', 'all') == "no" ? "selected" : "")}}>NO</option>
+					<option value="se" {{ (Request::input('interface', 'all') == "se" ? "selected" : "")}}>SE</option>
 				</select>
 			</div>
 			<div id="refresh" style="margin-top: 11px; margin-right: 8px;">

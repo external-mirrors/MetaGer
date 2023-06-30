@@ -4,16 +4,13 @@
 @section('content')
   <div id="search-content">
     <ul id="foki-switcher">
-    @foreach(app(\App\SearchSettings::class)->sumasJson->foki as $name => $fokus)
-    @if(\App\Localization::getLanguage() === "en" && $name === "science")
-    @continue
-    @endif
+    @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('startpage', ['focus' => $name])) }}"
-        @if(app(\App\SearchSettings::class)->fokus === $name)
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('startpage', ['focus' => $fokus])) }}"
+        @if(app(\App\SearchSettings::class)->fokus === $fokus)
         class="active"
         @endif
-      >@lang($fokus->{"display-name"})</a>
+      >@lang("index.foki.$fokus")</a>
     </li>
     @endforeach
     </ul>

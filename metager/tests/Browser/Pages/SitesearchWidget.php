@@ -29,7 +29,9 @@ class SitesearchWidget extends Page
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
-
+            if (!file_exists(lang_path($lang))) {
+                $lang = "en";
+            }
             $browser->visit($url)
                 ->waitForText(trans("sitesearch.head.2", [], $lang))
                 ->assertTitle(trans("titles.sitesearch", [], $lang))

@@ -36,7 +36,13 @@ class Localization
         // Our locale includes the requested region however our translated strings are not differentiating regions
         // We need to define a fallback locale for each regional locale to just use the language part stripping the region
         if (\preg_match("/^([a-zA-Z]{2,5})-[a-zA-Z]{2,5}$/", $locale, $matches)) {
-            App::setFallbackLocale($matches[1]);
+            // Check if translations exist
+            $path = lang_path($matches[1]);
+            if (file_exists($path)) {
+                App::setFallbackLocale($matches[1]);
+            } else {
+                App::setFallbackLocale("en");
+            }
         }
 
         return $locale_path;

@@ -10,5 +10,11 @@ return [
         'de' => 'Alemán',
         'en' => 'Inglés',
         'es' => 'Español',
+        'nl' => 'Holandés',
+        'fi' => 'En finés',
+        'no' => 'Noruega',
+        'it' => 'Italiano',
+        'da' => 'Danés',
+        'sv' => 'Sueco',
     ],
 ];

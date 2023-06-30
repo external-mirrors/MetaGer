@@ -29,6 +29,9 @@ class Datenschutz extends Page
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
+            if (!file_exists(lang_path($lang))) {
+                $lang = "en";
+            }
             $text = $lang === "de" ? "Datenschutzerklärung" : "Data protection";
             $browser->visit($url)
                 ->waitForText($text)

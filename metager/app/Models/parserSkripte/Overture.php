@@ -158,9 +158,8 @@ class Overture extends Searchengine
             $serve_domain = "https://metager.org/";
         }
 
-        if (\preg_match("/https:\/\/[^\/]+\//", $url)) {
-
-            $url = \preg_replace("/https:\/\/[^\/]+\//", $serve_domain, $url);
+        if (\preg_match("/https?:\/\/[^\/]+\/.*/", $url)) {
+            $url = \preg_replace("/https?:\/\/[^\/]+\//", $serve_domain, $url);
         }
 
         $this->configuration->getParameter->affilData = $affil_data;

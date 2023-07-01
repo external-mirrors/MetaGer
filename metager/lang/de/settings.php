@@ -62,7 +62,7 @@ return [
     'save' => 'Speichern',
     'system' => 'Systemstandard',
     "enable-engine" => "Suchmaschine einschalten",
-    "disable-engine" => "Suchmaschine ausscahlten",
+    "disable-engine" => "Suchmaschine ausschalten",
     "filtered-engine" => "Suchmaschine durch Filter deaktiviert",
     "payment-engine" => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
     'text' => [

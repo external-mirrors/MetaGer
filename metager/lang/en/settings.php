@@ -69,7 +69,7 @@ return [
     'cost-free'                      => 'Your searches are <strong>free</strong> with the current settings.',
     'free'                           => 'free',
     'enable-engine'                  => 'Switch on search engine',
-    'disable-engine'                 => 'Select search engine',
+    'disable-engine'                 => 'Turn off search engine',
     'filtered-engine'                => 'Search engine disabled by filter',
     'payment-engine'                 => 'Search engine requires MetaGer key set up',
 ];

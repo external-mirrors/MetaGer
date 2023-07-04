@@ -17,12 +17,28 @@ class LocalizationRedirect
      */
     public function handle($request, Closure $next)
     {
+        // Ignore healthchecks
+        if ($request->is(['metrics', 'health-check/*'])) {
+            return $next($request);
+        }
+
+        // Check for Localization in form of the old two letter country code and redirect to correct URL in that case
+        // This can be removed at some point
+        if (($redirect = $this->redirectTwoLetterCountryCode($request)) !== null) {
+            return $redirect;
+        }
+
+
         $locale = LaravelLocalization::getCurrentLocale();
+
+        // If we're on the root domain (i.e. no localization in query string) we'll detect the users prefered language
+        $preferredLanguage = $request->getPreferredLanguage();
+
         $host = $request->getHost();
 
         // We only redirect to the TLDs in the production version and exclude our onion domain
-        if ($host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" || $request->is(['metrics', 'health-check/*'])) {
-            return $next($request);
+        if ($host === "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion") {
+
         }
 
         // Redirect from v2 onion to v3 onion
@@ -99,5 +115,28 @@ class LocalizationRedirect
         }
 
         return $next($request);
+    }
+
+    /**
+     * Some Localizations were set to two letter country codes in the past
+     * we switched to 4 letters at some point and created this legacy redirection
+     * so old URLs remain working
+     *
+     * 04.07.2023 Dominik
+     */
+    private function redirectTwoLetterCountryCode($request)
+    {
+        $path_locale = $request->segment(1);
+        $legacy_country_codes = [
+            "uk" => "en-UK",
+            "ie" => "en-IE",
+            "es" => "es-ES",
+            "at" => "de-AT"
+        ];
+        if (array_key_exists($path_locale, $legacy_country_codes)) {
+            $old_url = str_replace("/" . $path_locale, "", url()->full());
+            $new_url = LaravelLocalization::getLocalizedUrl($legacy_country_codes[$path_locale], $old_url);
+            return redirect($new_url);
+        }
     }
 }

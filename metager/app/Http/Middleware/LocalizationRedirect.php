@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Localization;
 use Closure;
 use LaravelLocalization;
 use URL;
+use Illuminate\Http\Request;
 
 class LocalizationRedirect
 {
@@ -26,6 +28,12 @@ class LocalizationRedirect
         // This can be removed at some point
         if (($redirect = $this->redirectTwoLetterCountryCode($request)) !== null) {
             return $redirect;
+        }
+
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
+            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
+                return $redirect;
+            }
         }
 
 
@@ -138,5 +146,29 @@ class LocalizationRedirect
             $new_url = LaravelLocalization::getLocalizedUrl($legacy_country_codes[$path_locale], $old_url);
             return redirect($new_url);
         }
+        return null;
     }
+
+    /**
+     * When the user supplies a locale in path (i.e. en-US)
+     * We'll verify that the browsers preferred language is not also en-US
+     * if it is the user can use a path without a locale since his configured
+     * language already is the default language
+     * 
+     * @param Request $request
+     * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    private function verifyPathLocaleNeeded(Request $request)
+    {
+        $path_locale = $request->segment(1); // We already verified that this is indeed a locale within the path
+
+        $preferred_locale = Localization::GET_PREFERRED_LOCALE();
+
+        if ($preferred_locale === $path_locale) {
+            return redirect(LaravelLocalization::getNonLocalizedURL(url()->full()));
+        }
+
+        return null;
+    }
+
 }

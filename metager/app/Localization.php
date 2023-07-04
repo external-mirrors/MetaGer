@@ -13,25 +13,32 @@ class Localization
 {
     public static function setLocale(string $locale = null)
     {
+        // Ignore healthchecks
+        if (request()->is(['metrics', 'health-check/*'])) {
+            return;
+        }
         /**
          * metager.org is our english Domain
          * We will change the Locale to en
          */
-        $host = request()->header("X_Forwarded_Host", "");
-        if (empty($host)) {
-            $host = request()->header("Host", "");
+        $host = request()->getHost();
+        $locale = "de-DE";
+        $language = "de";
+        if ($host === "metager.org") {
+            $locale = "en-US";
+            $language = "en";
         }
 
-        if (stripos($host, "metager.org") !== false) {
-            App::setLocale("en-US");
-            App::setFallbackLocale("en");
+        $path_locale = request()->segment(1);
+
+        if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
+            // There is no locale set in the path: Guess a good locale
+            $locale = self::GET_PREFERRED_LOCALE($locale);
+            $path_locale = ""; // There will be no prefix for the routes
         } else {
-            App::setLocale("de-DE");
-            App::setFallbackLocale("de");
+            $locale = $path_locale;
         }
-
-        $locale_path = LaravelLocalization::setLocale();
-        $locale = LaravelLocalization::getCurrentLocale();
+        App::setLocale($locale);
 
         // Our locale includes the requested region however our translated strings are not differentiating regions
         // We need to define a fallback locale for each regional locale to just use the language part stripping the region
@@ -41,11 +48,12 @@ class Localization
             if (file_exists($path)) {
                 App::setFallbackLocale($matches[1]);
             } else {
-                App::setFallbackLocale("en");
+                App::setFallbackLocale($language);
             }
         }
+        LaravelLocalization::setLocale($locale);
 
-        return $locale_path;
+        return $path_locale;
     }
 
     /**
@@ -98,5 +106,47 @@ class Localization
         }
 
         return $locales;
+    }
+
+    /**
+     * Returns an array of available Locales in the format xx_XX
+     *
+     * @param string $default Default Locale if no matches were found
+     *
+     * @return string
+     */
+    public static function GET_PREFERRED_LOCALE($default = null)
+    {
+        $default = str_replace("-", "_", $default);
+        $regional_locales = [];
+        $available_locales = LaravelLocalization::getSupportedLocales();
+        foreach ($available_locales as $locale => $locale_data) {
+            $regional_locales[] = $locale_data["regional"];
+        }
+
+        // Add some two letter country codes to the list
+        $two_letter_locales = [
+            "de" => "de_DE",
+            "en" => "en_US",
+            "es" => "es_ES",
+            "en_GB" => "en_UK",
+        ];
+        $regional_locales = array_merge($regional_locales, array_keys($two_letter_locales));
+
+        // Make sure default locale is at array index 0 of available locales
+        if ($default !== null) {
+            if (in_array($default, $regional_locales)) {
+                $regional_locales = array_diff($regional_locales, [$default]);
+            }
+            array_unshift($regional_locales, $default);
+        }
+
+        $preferred_locale = request()->getPreferredLanguage($regional_locales);
+
+        if (in_array($preferred_locale, array_keys($two_letter_locales))) {
+            $preferred_locale = $two_letter_locales[$preferred_locale];
+        }
+
+        return str_replace("_", "-", $preferred_locale);
     }
 }

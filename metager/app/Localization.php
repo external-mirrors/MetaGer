@@ -35,6 +35,8 @@ class Localization
             // There is no locale set in the path: Guess a good locale
             $locale = self::GET_PREFERRED_LOCALE($locale);
             $path_locale = ""; // There will be no prefix for the routes
+            // Update default Locale so it can be stripped from the path
+            config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "de-DE"]]);
         } else {
             $locale = $path_locale;
         }

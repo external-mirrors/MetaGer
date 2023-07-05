@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Localization;
 use Closure;
+use Cookie;
 use LaravelLocalization;
 use Illuminate\Http\Request;
 
@@ -29,13 +30,6 @@ class LocalizationRedirect
             return $redirect;
         }
 
-        // Check if the locale present in the path is optional
-        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
-            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
-                return $redirect;
-            }
-        }
-
         // Check if the current domain matches the language
         // It's metager.de for everything german and metager.org for everything else
         $lang = Localization::getLanguage();
@@ -43,6 +37,28 @@ class LocalizationRedirect
         if ($lang === "de" && $host === "metager.org") {
             $new_uri = "https://metager.de" . request()->getRequestUri();
             return redirect($new_uri);
+        }
+
+        if (Cookie::has("web_setting_m") && !$request->routeIs("lang-selector")) {
+            // No locale defined in the path
+            // Check if the user defined a permanent language setting matching one of our supported locales
+            $setting_locale = str_replace("_", "-", Cookie::get("web_setting_m"));
+            $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
+
+            if (config("app.default_locale", $setting_locale) !== $setting_locale && in_array($setting_locale, $availableLocales)) {
+                $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, url()->full());
+                if ($host === "metager.de" && $lang === "en") {
+                    $new_url = str_replace("https://metager.de", "https://metager.org", $new_url);
+                }
+                return redirect($new_url);
+            }
+        }
+
+        // Check if the locale present in the path is optional
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
+            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
+                return $redirect;
+            }
         }
 
         // Redirect from v2 onion to v3 onion
@@ -92,7 +108,7 @@ class LocalizationRedirect
 
         $preferred_locale = Localization::GET_PREFERRED_LOCALE();
 
-        if ($preferred_locale === $path_locale) {
+        if ($preferred_locale === $path_locale && in_array(str_replace("_", "-", Cookie::get("web_setting_m", "")), ["", $preferred_locale])) {
             return redirect(LaravelLocalization::getNonLocalizedURL(url()->full()));
         }
 

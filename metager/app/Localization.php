@@ -3,6 +3,7 @@
 namespace App;
 
 use App;
+use Cookie;
 use LaravelLocalization;
 
 /**
@@ -30,22 +31,30 @@ class Localization
         }
 
         $path_locale = request()->segment(1);
-
-        if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
-            // There is no locale set in the path: Guess a good locale
-            $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
-
-            // We will guess a locale only for metager.org or if the guessed locale is a german language
-            // There is a lot of traffic on metager.de with a en_US agent and I don't know yet if that's
-            // a misconfigured useragent or indeed the correct language setting
-            if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
-                $locale = $guessed_locale;
-                $path_locale = ""; // There will be no prefix for the routes
-                // Update default Locale so it can be stripped from the path
-                config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "default"]]);
+        $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
+        $supported_languages = LaravelLocalization::getSupportedLanguagesKeys();
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
+            $locale = $path_locale;
+            if (str_replace("_", "-", Cookie::get("web_setting_m")) !== $locale) {
+                Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $locale), "/", null, false, true));
             }
         } else {
-            $locale = $path_locale;
+            $path_locale = "";
+            $default_locale = $locale;
+            if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
+                // We will guess a locale only for metager.org or if the guessed locale is a german language
+                // There is a lot of traffic on metager.de with a en_US agent and I don't know yet if that's
+                // a misconfigured useragent or indeed the correct language setting
+                if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
+                    $locale = $guessed_locale;
+                    $default_locale = $locale;
+                }
+            }
+            if (in_array(str_replace("_", "-", Cookie::get("web_setting_m", "")), $supported_languages)) {
+                $locale = str_replace("_", "-", Cookie::get("web_setting_m"));
+            }
+            // Update default Locale so it can be stripped from the path
+            config(["app.locale" => $locale, "app.default_locale" => $default_locale, "laravellocalization.localesMapping" => [$default_locale => "default"]]);
         }
         App::setLocale($locale);
 

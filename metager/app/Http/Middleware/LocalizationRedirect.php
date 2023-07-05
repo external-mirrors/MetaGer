@@ -43,9 +43,6 @@ class LocalizationRedirect
         if ($lang === "de" && $host === "metager.org") {
             $new_uri = "https://metager.de" . request()->getRequestUri();
             return redirect($new_uri);
-        } else if ($lang !== "de" && $host === "metager.de") {
-            $new_uri = "https://metager.org" . request()->getRequestUri();
-            return redirect($new_uri);
         }
 
         // Redirect from v2 onion to v3 onion

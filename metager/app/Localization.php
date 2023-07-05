@@ -33,10 +33,17 @@ class Localization
 
         if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             // There is no locale set in the path: Guess a good locale
-            $locale = self::GET_PREFERRED_LOCALE($locale);
-            $path_locale = ""; // There will be no prefix for the routes
-            // Update default Locale so it can be stripped from the path
-            config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "de-DE"]]);
+            $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
+
+            // We will guess a locale only for metager.org or if the guessed locale is a german language
+            // There is a lot of traffic on metager.de with a en_US agent and I don't know yet if that's
+            // a misconfigured useragent or indeed the correct language setting
+            if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
+                $locale = $guessed_locale;
+                $path_locale = ""; // There will be no prefix for the routes
+                // Update default Locale so it can be stripped from the path
+                config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "de-DE"]]);
+            }
         } else {
             $locale = $path_locale;
         }

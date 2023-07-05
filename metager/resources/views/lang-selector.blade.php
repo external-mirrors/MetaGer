@@ -5,7 +5,7 @@
 @section('content')
 <h1>{{ __("lang-selector.h1.1") }}</h1>
 @if($previous_url !== null)<div><a  class=back-button href="{{$previous_url}}"><img class="back-arrow" src=/img/back-arrow.svg>{{__("results.zurueck")}}</a></div>@endif
-<p>{{ __("lang-selector.p.1") }}</p>
+<div>{{ __("lang-selector.description") }}</div>
 <div id="languages">
     @foreach(App\Localization::getLanguageSelectorLocales() as $language => $locales)
     <div class="language">
@@ -22,4 +22,6 @@
     </div>
     @endforeach
 </div>
+<div>@lang("lang-selector.detection")</div>
+<div>@lang("lang-selector.storage", ["pluginlink" => LaravelLocalization::getLocalizedUrl(null, route("plugin"))])</div>
 @endsection

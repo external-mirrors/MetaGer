@@ -246,7 +246,7 @@ Route::get('plugin', function (Request $request) {
         ->with('css', [
             mix('/css/plugin-page.css'),
         ]);
-});
+})->name("plugin");
 
 Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));

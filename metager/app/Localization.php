@@ -42,7 +42,7 @@ class Localization
                 $locale = $guessed_locale;
                 $path_locale = ""; // There will be no prefix for the routes
                 // Update default Locale so it can be stripped from the path
-                config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "de-DE"]]);
+                config(["app.locale" => $locale, "laravellocalization.localesMapping" => [$locale => "default"]]);
             }
         } else {
             $locale = $path_locale;

@@ -22,6 +22,10 @@
     </div>
     @endforeach
 </div>
-<div>@lang("lang-selector.detection")</div>
-<div>@lang("lang-selector.storage", ["pluginlink" => LaravelLocalization::getLocalizedUrl(null, route("plugin"))])</div>
+<div id="faq">
+    <details>
+        <summary>@lang("lang-selector.detection.title")</summary>
+        <p>@lang("lang-selector.detection.description")</p>
+    </details>    
+</div>
 @endsection

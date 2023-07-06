@@ -3,7 +3,7 @@
 return [
     "h1.1" => "Sprachauswahl",
 
-    "description" => "Nachfolgend finden Sie eine Liste aller derzeit von der MetaGer-Suche unterstützten Sprachen/Regionen. Ihre Suchergebnisse werden für die ausgewählte Region optimiert. Wir arbeiten daran auch in weiteren Regionen verfügbar zu sein.",
+    "description" => "Nachfolgend finden Sie eine Liste aller derzeit von der MetaGer-Suche unterstützten Sprachen/Regionen. Ihre Suchergebnisse werden für die ausgewählte Region optimiert.",
 
     "lang" => [
         "de" => "Deutsch",
@@ -16,6 +16,8 @@ return [
         "sv" => "Schwedisch",
         "it" => "Italienisch",
     ],
-    "detection" => "Wir verwenden die in Ihren Browsereinstellungen hinterlegte Spracheinstellung, um eine möglichst passende Region für Sie vorauszuwählen. Sie können die Einstellung dort ändern um auch hier eine andere Standardeinstellung zu erhalten.",
-    "storage" => "Wenn Sie die Einstellung auf dieser Seite ändern werden Sie auf eine neue URL weitergeleitet, welche die neue Spracheinstellung wiederspiegelt. Bitte ändern Sie anschließend Ihre <a href=\":pluginlink\" target=\"_blank\">Startseite bzw. Standardsuchmaschine</a> im Browser auf die neue URL, damit die Einstellung nicht verloren geht. Wir setzen aber auch zusätzlich einen Cookie im Browser, damit die Spracheinstellung automatisch ohne weitere Änderungen erhalten bleibt."
+    "detection" => [
+        "title" => "Welche Standardeinstellung wird für die Sprache verwendet?",
+        "description" => "Wir verwenden für die jeweilige Sprache angepasste URLs, die direkt verwendet werden können. Wenn in der URL keine Sprache definiert ist, verwenden wir die in Ihren Browsereinstellungen hinterlegte Spracheinstellung um eine möglichst passende Region für Sie vorauszuwählen. In den meisten Fällen erhalten Sie so automatisch Suchergebnisse für die korrekte Region. Alternativ können Sie die Einstellung oben ändern. Wir verwenden in dem Fall einen Cookie, damit die neue Einstellung auch künftig automatisch angewendet wird. Sie können MetaGer, aber auch direkt mit der neuen URL verwenden. Ein Cookie ist dann nicht notwendig.",
+    ],
 ];

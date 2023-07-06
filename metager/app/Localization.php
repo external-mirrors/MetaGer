@@ -41,7 +41,6 @@ class Localization
 
         $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
         $default_locale = $locale;
-        $supported_languages = LaravelLocalization::getSupportedLanguagesKeys();
         if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             $locale = $path_locale;
         } else {

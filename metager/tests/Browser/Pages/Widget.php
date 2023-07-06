@@ -27,13 +27,10 @@ class Widget extends Page
     public function assert(Browser $browser)
     {
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
-            if ($locale === "default") {
-                continue;
-            }
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
             if (!file_exists(lang_path($lang))) {
-                $lang = "de";
+                continue;
             }
             $browser->visit($url)
                 ->waitForText(trans("widget.body.1", [], $lang))

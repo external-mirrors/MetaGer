@@ -52,6 +52,9 @@
     </div>
       </div>
     </div>
+    <div id="language">
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
+    </div>
     <div id="scroll-links">
       <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
       <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>

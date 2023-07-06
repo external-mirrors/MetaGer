@@ -1,14 +1,12 @@
 @if ($type === 'startpage' || $type === 'subpage' || $type === 'resultpage')
 <footer class="{{ $id }} noprint">
-  <div>
+  <div id="language-footer">
+    <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
+  </div>
+  <div id="footer-links">
     <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "kontakt") }}" @if(!empty($metager) && $metager->isFramed())target="_top"@endif>{{ trans('sidebar.nav5') }}</a>
     <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}" @if(!empty($metager) && $metager->isFramed())target="_top"@endif>{{ trans('sidebar.nav8') }}</a>
     <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "datenschutz") }}" @if(!empty($metager) && $metager->isFramed())target="_top"@endif>{{ trans('sidebar.nav3') }}</a>
   </div>
-  @if($type !== 'startpage')
-  <div>
-    <span class="hidden-xs">{{ trans('footer.sumaev.1') }} <a href="{{ trans('footer.sumaev.link') }}" @if(!empty($metager) && $metager->isFramed())target="_top"@endif>{{ trans('footer.sumaev.2') }}</a></span>
-  </div>
-  @endif
 </footer>
 @endif

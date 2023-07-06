@@ -27,10 +27,13 @@ class Kontakt extends Page
     public function assert(Browser $browser)
     {
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            if ($locale === "default") {
+                continue;
+            }
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
             if (!file_exists(lang_path($lang))) {
-                $lang = "en";
+                $lang = "de";
             }
             $browser->visit($url)
                 ->waitForText(trans("kontakt.form.1", [], $lang))

@@ -137,7 +137,6 @@ Route::get('bform1.htm', function () {
 
 Route::get('datenschutz', function () {
     return view('datenschutz/datenschutz')
-        ->with('title', trans('titles.datenschutz'))
         ->with('navbarFocus', 'datenschutz');
 });
 

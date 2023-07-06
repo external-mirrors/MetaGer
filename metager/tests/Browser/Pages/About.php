@@ -27,17 +27,20 @@ class About extends Page
      */
     public function assert(Browser $browser)
     {
-        $browser->visit("/")
+        $browser->visit("/de-DE")
             ->waitFor("label.sidebar-opener[for=sidebarToggle]")
             ->click("label.sidebar-opener[for=sidebarToggle]")
             ->click("label#navigationKontakt")
             ->clickLink("Über uns")
-            ->waitForLocation("/about");
+            ->waitForLocation("/de-DE/about");
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {
+            if ($locale === "default") {
+                continue;
+            }
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
             if (!file_exists(lang_path($lang))) {
-                $lang = "en";
+                $lang = "de";
             }
             $browser->visit($url)
                 ->waitForText(trans("about.head.3", [], $lang))

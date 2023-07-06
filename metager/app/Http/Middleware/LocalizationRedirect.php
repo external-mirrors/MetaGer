@@ -7,6 +7,7 @@ use Closure;
 use Cookie;
 use LaravelLocalization;
 use Illuminate\Http\Request;
+use URL;
 
 class LocalizationRedirect
 {
@@ -23,6 +24,12 @@ class LocalizationRedirect
         if ($request->is(['metrics', 'health-check/*'])) {
             return $next($request);
         }
+        if ($request->routeIs('loadSettings')) {
+            return $next($request);
+        }
+        if ($request->routeIs("lang-selector") && filter_var($request->input("switch", false), FILTER_VALIDATE_BOOL)) {
+            return $next($request);
+        }
 
         // Check for Localization in form of the old two letter country code and redirect to correct URL in that case
         // This can be removed at some point
@@ -30,34 +37,47 @@ class LocalizationRedirect
             return $redirect;
         }
 
+        // Check if the locale present in the path is optional
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
+            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
+                return $redirect;
+            }
+        }
+
         // Check if the current domain matches the language
         // It's metager.de for everything german and metager.org for everything else
         $lang = Localization::getLanguage();
         $host = $request->getHost();
         if ($lang === "de" && $host === "metager.org") {
-            $new_uri = "https://metager.de" . request()->getRequestUri();
+            $new_uri = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", url()->full());
+            $new_uri = $this->migrateSettingsLink($new_uri);
             return redirect($new_uri);
         }
 
-        if (Cookie::has("web_setting_m") && !$request->routeIs("lang-selector")) {
+        if (Cookie::has("web_setting_m")) {
             // No locale defined in the path
             // Check if the user defined a permanent language setting matching one of our supported locales
             $setting_locale = str_replace("_", "-", Cookie::get("web_setting_m"));
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
-
-            if (config("app.default_locale", $setting_locale) !== $setting_locale && in_array($setting_locale, $availableLocales)) {
-                $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, url()->full());
-                if ($host === "metager.de" && $lang === "en") {
-                    $new_url = str_replace("https://metager.de", "https://metager.org", $new_url);
-                }
-                return redirect($new_url);
+            $current_locale = LaravelLocalization::getCurrentLocale();
+            $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, url()->full());
+            $redirect_necessary = false;
+            if ($current_locale !== $setting_locale && in_array($setting_locale, $availableLocales)) {
+                $redirect_necessary = true;
             }
-        }
 
-        // Check if the locale present in the path is optional
-        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
-            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
-                return $redirect;
+            // Also redirect if the user is on the wrong URL for the defined setting locale
+            if ($host === "metager.de" && strpos($setting_locale, "de") !== 0) {
+                $redirect_necessary = true;
+                $new_url = preg_replace("/^(https?:\/\/)metager.de/", "$1metager.org", $new_url);
+            } else if ($host === "metager.org" && strpos($setting_locale, "de") === 0) {
+                $redirect_necessary = true;
+                $new_url = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $new_url);
+            }
+
+            if ($redirect_necessary) {
+                $new_url = $this->migrateSettingsLink($new_url);
+                return redirect($new_url);
             }
         }
 
@@ -80,7 +100,7 @@ class LocalizationRedirect
     {
         $path_locale = $request->segment(1);
         $legacy_country_codes = [
-            "uk" => "en-UK",
+            "uk" => "en-GB",
             "ie" => "en-IE",
             "es" => "es-ES",
             "at" => "de-AT"
@@ -106,13 +126,50 @@ class LocalizationRedirect
     {
         $path_locale = $request->segment(1); // We already verified that this is indeed a locale within the path
 
-        $preferred_locale = Localization::GET_PREFERRED_LOCALE();
+        $default_locale = config("app.default_locale");
 
-        if ($preferred_locale === $path_locale && in_array(str_replace("_", "-", Cookie::get("web_setting_m", "")), ["", $preferred_locale])) {
-            return redirect(LaravelLocalization::getNonLocalizedURL(url()->full()));
+        if ($default_locale === $path_locale) {
+            // The user landed on a URL with path locale although it's his default language
+            $path = $request->getRequestUri();
+            $new_path = preg_replace("/^\/$path_locale/", "", $path);
+            if ($path !== $new_path) {
+                return redirect($new_path);
+            }
         }
 
         return null;
+    }
+
+    /**
+     * Generates a URL which migrates all the current settings to the new URL
+     * using load-settings and redirecting to target url afterwards
+     *
+     * @return string
+     */
+    private function migrateSettingsLink($url)
+    {
+        $old_host = request()->getHost();
+        $new_host = parse_url($url, PHP_URL_HOST);
+        if ($old_host === $new_host) {
+            return $url;
+        }
+
+        // We can include all current cookies in the URL since the load-settings script will filter out the valid ones
+        $settings = [
+            "redirect_url" => $url
+        ];
+        // Read out all current settings
+        foreach (Cookie::get() as $key => $value) {
+            $settings[$key] = $value;
+        }
+        if (!array_key_exists("web_setting_m", $settings)) {
+            $settings["web_setting_m"] = str_replace("-", "_", LaravelLocalization::getCurrentLocale());
+        }
+
+        $settings_restore_url = URL::temporarySignedRoute('loadSettings', now()->addMinutes(5), $settings);
+        $settings_restore_url = str_replace($old_host, $new_host, $settings_restore_url);
+
+        return $settings_restore_url;
     }
 
 }

@@ -141,11 +141,12 @@ class SettingsController extends Controller
 
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        $secure = app()->environment("local") ? false : true;
         if (!$engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
                 Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
             } else {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, true, true));
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, $secure, true));
             }
         }
 
@@ -163,9 +164,10 @@ class SettingsController extends Controller
 
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
+        $secure = app()->environment("local") ? false : true;
         if ($engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, true, true));
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, $secure, true));
             } else {
                 Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
             }
@@ -209,7 +211,8 @@ class SettingsController extends Controller
                     if ($key === $filter->{"get-parameter"} && !empty($filter->values->$value)) {
                         $path = \Request::path();
                         $cookiePath = "/";
-                        Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, true, true));
+                        $secure = app()->environment("local") ? false : true;
+                        Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, $secure, true));
                         break;
                     }
                 }
@@ -223,23 +226,24 @@ class SettingsController extends Controller
     {
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
+        $secure = app()->environment("local") ? false : true;
         // Currently only the setting for quotes is supported
 
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
-                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, true, true));
+                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, true));
             } elseif ($quotes === "on") {
-                Cookie::queue('zitate', '', 5256000, '/', null, true, true);
+                Cookie::queue('zitate', '', 5256000, '/', null, $secure, true);
             }
         }
 
         $darkmode = $request->input('dm');
         if (!empty($darkmode)) {
             if ($darkmode === "off") {
-                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, true, true));
+                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, true));
             } elseif ($darkmode === "on") {
-                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, true, true));
+                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, true));
             } elseif ($darkmode === "system") {
                 Cookie::queue(Cookie::forget('dark_mode', '/'));
             }
@@ -250,7 +254,7 @@ class SettingsController extends Controller
             if ($newTab === "off") {
                 Cookie::queue(Cookie::forget('new_tab', '/'));
             } elseif ($newTab === "on") {
-                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, true, true));
+                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, true));
             }
         }
 
@@ -382,7 +386,8 @@ class SettingsController extends Controller
         sort($valid_blacklist_entries);
 
         $cookieName = $fokus . '_blpage';
-        Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, true, true));
+        $secure = app()->environment("local") ? false : true;
+        Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
 
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $fokus, "url" => $url])) . "#bl");
     }
@@ -421,25 +426,26 @@ class SettingsController extends Controller
 
         $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
 
-        $settings = $request->all();
+        $settings = $request->query();
+        $secure = app()->environment("local") ? false : true;
         foreach ($settings as $key => $value) {
             if ($key === 'key') {
-                Cookie::queue(Cookie::forever("key", $value, '/', null, true, true));
+                Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, true));
             } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
-                Cookie::queue(Cookie::forever($key, $value, '/', null, true, true));
+                Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, true));
             } elseif ($key === 'new_tab' && $value === 'on') {
-                Cookie::queue(Cookie::forever($key, 'on', '/', null, true, true));
+                Cookie::queue(Cookie::forever($key, 'on', '/', null, $secure, true));
             } elseif ($key === 'zitate' && $value === 'off') {
-                Cookie::queue(Cookie::forever($key, 'off', '/', null, true, true));
+                Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, true));
             } else {
                 foreach ($langFile->foki as $fokus => $fokusInfo) {
                     if (strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1) {
-                        Cookie::queue(Cookie::forever($key, $value, "/", null, true, true));
+                        Cookie::queue(Cookie::forever($key, $value, "/", null, $secure, true));
                     } elseif (strpos($key, $fokus . '_setting_') === 0) {
                         foreach ($langFile->filter->{'parameter-filter'} as $parameter) {
                             foreach ($parameter->values as $p => $v) {
                                 if ($key === $fokus . '_setting_' . $parameter->{'get-parameter'} && $value === $p) {
-                                    Cookie::queue(Cookie::forever($key, $value, "/", null, true, true));
+                                    Cookie::queue(Cookie::forever($key, $value, "/", null, $secure, true));
                                 }
                             }
                         }
@@ -457,7 +463,15 @@ class SettingsController extends Controller
                 }
             }
         }
-        return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/')));
+
+        // Check if a redirect url is defined
+        if ($request->filled("redirect_url")) {
+            $url = $request->input("redirect_url");
+        } else {
+            $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/'));
+        }
+
+        return redirect($url);
     }
 
     private function loadBlacklist(Request $request)

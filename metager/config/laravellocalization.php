@@ -48,7 +48,7 @@ return [
         //'guz'         => ['name' => 'Ekegusii',               'script' => 'Latn', 'native' => 'Ekegusii', 'regional' => ''],
         //'en'          => ['name' => 'English',                'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
         //'en-AU' => ['name' => 'English (AU)', 'script' => 'Latn', 'native' => 'English (Australia)', 'regional' => 'en_AU'],
-        'en-UK' => ['name' => 'English (UK)', 'script' => 'Latn', 'native' => 'English (United Kingdom)', 'regional' => 'en_UK'],
+        'en-GB' => ['name' => 'English (Great Britain)', 'script' => 'Latn', 'native' => 'English (Great Britain)', 'regional' => 'en_GB'],
         //'en-CA'       => ['name' => 'Canadian English',       'script' => 'Latn', 'native' => 'Canadian English', 'regional' => 'en_CA'],
         'en-US' => ['name' => 'English (US)', 'script' => 'Latn', 'native' => 'English (USA)', 'regional' => 'en_US'],
         'en-IE' => ['name' => 'English (Ireland)', 'script' => 'Latn', 'native' => 'English (Ireland)', 'regional' => 'en_IE'],

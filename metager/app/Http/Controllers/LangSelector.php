@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
 use URL;
@@ -36,9 +37,46 @@ class LangSelector extends Controller
             }
         }
 
+        if ($redirect = $this->checkUserSwitchingLanguage($request)) {
+            return $redirect;
+        }
+
+
         return view('lang-selector')
             ->with("previous_url", $previous_url)
             ->with("title", trans("titles.lang-selector"))
             ->with('css', [mix('css/lang-selector.css')]);
+    }
+
+    /**
+     * Checks if the user is switching language with this request
+     * Will update a language setting cookie to persist the setting in the browser
+     *
+     * @return null|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     **/
+    private function checkUserSwitchingLanguage(Request $request)
+    {
+        // User is not switching the language
+        if (!filter_var($request->input("switch", false), FILTER_VALIDATE_BOOL)) {
+            return;
+        }
+
+        // Parse the new locale from the request
+        $path_locale = $request->segment(1);
+        if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
+            $path_locale = null;
+        }
+        if (empty($path_locale)) {
+            // Path locale might not be present if the user is switching to the default language
+            // of the browser
+            Cookie::queue(Cookie::forget("web_setting_m", "/", null));
+            $new_locale = LaravelLocalization::getDefaultLocale();
+        } else {
+            $secure = !app()->environment("local");
+            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, true));
+            $new_locale = $path_locale;
+        }
+        $url = LaravelLocalization::getLocalizedUrl($new_locale, route("lang-selector", $request->except("switch")));
+        return redirect($url);
     }
 }

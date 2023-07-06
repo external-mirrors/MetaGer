@@ -30,18 +30,30 @@ class Localization
             $language = "en";
         }
 
+        $legacy_path_locales = [
+            "uk" => "en-GB",
+            "ie" => "en-IE",
+            "es" => "es-ES",
+            "at" => "de-AT"
+        ];
+
         $path_locale = request()->segment(1);
+
         $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
         $default_locale = $locale;
         $supported_languages = LaravelLocalization::getSupportedLanguagesKeys();
         if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             $locale = $path_locale;
         } else {
-            $path_locale = "";
+            if (array_key_exists($path_locale, $legacy_path_locales)) {
+                $locale = $legacy_path_locales[$path_locale];
+            } else {
+                $path_locale = "";
+            }
             // We will guess a locale only for metager.org or if the guessed locale is a german language
             // There is a lot of traffic on metager.de with a en_US agent and I don't know yet if that's
             // a misconfigured useragent or indeed the correct language setting
-            if (empty($path_locale) && request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
+            if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
                 $locale = $guessed_locale;
             }
         }

@@ -5,7 +5,7 @@
 @section('content')
 <h1>{{ __("lang-selector.h1.1") }}</h1>
 @if($previous_url !== null)<div><a  class=back-button href="{{$previous_url}}"><img class="back-arrow" src=/img/back-arrow.svg>{{__("results.zurueck")}}</a></div>@endif
-<p>{{ __("lang-selector.p.1") }}</p>
+<div>{{ __("lang-selector.description") }}</div>
 <div id="languages">
     @foreach(App\Localization::getLanguageSelectorLocales() as $language => $locales)
     <div class="language">
@@ -15,11 +15,17 @@
             @if(LaravelLocalization::getCurrentLocale() === $locale)
             <li class="active">{{ $locale_native }}</li>
             @else
-            <li><a rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, route("lang-selector", ["previous_url" => $previous_url]), true) }}">{{ $locale_native }}</a></li>
+            <li><a rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedURL($locale, '/lang?' . http_build_query(['previous_url' => $previous_url, 'switch' => 1]), true) }}">{{ $locale_native }}</a></li>
             @endif
             @endforeach
         </ul>
     </div>
     @endforeach
+</div>
+<div id="faq">
+    <details>
+        <summary>@lang("lang-selector.detection.title")</summary>
+        <p>@lang("lang-selector.detection.description")</p>
+    </details>    
 </div>
 @endsection

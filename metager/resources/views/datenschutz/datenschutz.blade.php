@@ -1,11 +1,11 @@
 @extends('layouts.subPages', ['page' => 'privacy'])
 
-@section('title', $title )
+@section('title', trans('titles.datenschutz') )
 
 @section('navbarFocus.datenschutz', 'class="active"')
 
 @section('content')
-    @if (App\Localization::getLanguage() == "de")
+    @if (config("app.fallback_locale") == "de")
         @include('datenschutz.german')
 	@else
         @include('datenschutz.english')

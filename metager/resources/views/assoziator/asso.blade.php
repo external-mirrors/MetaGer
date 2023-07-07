@@ -8,7 +8,7 @@
     <p>{{ trans('asso.1.1') }} <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/datenschutz') }}" target="_blank">{{ trans('asso.1.2') }}</a>.</p>
 
 
-    <form method="get" class="form-inline" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('assoresults')) }}">
+    <form method="get" class="form-inline" action="{{ route('assoresults') }}">
         <input type="text" class="form-control search-input-mini" placeholder="{{ trans('asso.search.placeholder') }}" @if (isset($keywords)) value="{{ $keywords }}" @endif name="q" required autofocus /><button type="submit" class="search-btn-mini"><img id="asso-search-icon" class="mg-icon" src="/img/icon-lupe.svg" alt="{{ trans('icon-lupe.alt') }}"></button>
     </form>
 </div>

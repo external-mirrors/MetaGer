@@ -33,10 +33,6 @@ class AdgoalController extends Controller
      */
     public function forward(Request $request)
     {
-        // $link = "https://metager.de";
-        // $affillink = "https://test.de";
-        // $password = self::generatePassword($affillink, $link);
-        // dd(route('adgoal-redirect', ["link" => $link, "affillink" => $affillink, "password" => $password]));
         /**
          * Get Parameters (Result informations)
          * 1. affillink (With Affiliate Redirect)
@@ -108,10 +104,7 @@ class AdgoalController extends Controller
     public static function generateRedirectUrl($affillink, $link)
     {
         $password = self::generatePassword($affillink, $link);
-        return LaravelLocalization::getLocalizedURL(
-            LaravelLocalization::getCurrentLocale(),
-            route('adgoal-redirect', ["link" => $link, "affillink" => $affillink, "password" => $password])
-        );
+        return route('adgoal-redirect', ["link" => $link, "affillink" => $affillink, "password" => $password]);
     }
 
     /**

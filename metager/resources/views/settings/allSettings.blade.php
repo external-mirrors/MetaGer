@@ -41,7 +41,7 @@
                             @endif
                         </td>
                         <td>
-                            <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeOneSetting')) }}" method="post">
+                            <form action="{{ route('removeOneSetting') }}" method="post">
                                 <input type="hidden" name="key" value="{{ $key }}">
                                 <input type="hidden" name="url" value="{{ url()->full() }}">
                                 <button type="submit" title="@lang('settings.removeCookie')">
@@ -60,7 +60,7 @@
         <div id="actions">
             <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
             @if(sizeof(Cookie::get()) > 0)
-            <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('removeAllSettings'))}}" method="post">
+            <form action="{{ route('removeAllSettings')}}" method="post">
                 <input type="hidden" name="url" value="{{ url()->full() }}">
                 <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
             </form>

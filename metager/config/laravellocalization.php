@@ -6,6 +6,7 @@ return [
     // These are sorted by the native name, which is the order you might show them in a language selector.
     // Regional languages are sorted by their base language, so "British English" sorts as "English, British"
     'supportedLocales' => [
+        'default' => ['name' => 'Default Locale', 'script' => 'Latn', 'native' => 'Default', 'regional' => ''],
         //'ace'         => ['name' => 'Achinese',               'script' => 'Latn', 'native' => 'Aceh', 'regional' => ''],
         //'af'          => ['name' => 'Afrikaans',              'script' => 'Latn', 'native' => 'Afrikaans', 'regional' => 'af_ZA'],
         //'agq'         => ['name' => 'Aghem',                  'script' => 'Latn', 'native' => 'Aghem', 'regional' => ''],
@@ -47,7 +48,7 @@ return [
         //'guz'         => ['name' => 'Ekegusii',               'script' => 'Latn', 'native' => 'Ekegusii', 'regional' => ''],
         //'en'          => ['name' => 'English',                'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
         //'en-AU' => ['name' => 'English (AU)', 'script' => 'Latn', 'native' => 'English (Australia)', 'regional' => 'en_AU'],
-        'en-UK' => ['name' => 'English (UK)', 'script' => 'Latn', 'native' => 'English (United Kingdom)', 'regional' => 'en_UK'],
+        'en-GB' => ['name' => 'English (Great Britain)', 'script' => 'Latn', 'native' => 'English (Great Britain)', 'regional' => 'en_GB'],
         //'en-CA'       => ['name' => 'Canadian English',       'script' => 'Latn', 'native' => 'Canadian English', 'regional' => 'en_CA'],
         'en-US' => ['name' => 'English (US)', 'script' => 'Latn', 'native' => 'English (USA)', 'regional' => 'en_US'],
         'en-IE' => ['name' => 'English (Ireland)', 'script' => 'Latn', 'native' => 'English (Ireland)', 'regional' => 'en_IE'],
@@ -344,10 +345,6 @@ return [
 
     //  If you want to use custom lang url segments like 'at' instead of 'de-AT', you can use the mapping to tallow the LanguageNegotiator to assign the descired locales based on HTTP Accept Language Header. For example you want ot use 'at', so map HTTP Accept Language Header 'de-AT' to 'at' (['de-AT' => 'at']).
     'localesMapping' => [
-        'en-UK' => 'uk',
-        'en-IE' => 'ie',
-        'es-ES' => 'es',
-        'de-AT' => 'at',
     ],
 
     // Locale suffix for LC_TIME and LC_MONETARY

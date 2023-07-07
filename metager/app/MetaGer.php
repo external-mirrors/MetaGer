@@ -476,8 +476,8 @@ class MetaGer
         $donationAd = new \App\Models\Result(
             "MetaGer",
             __("metaGer.ads.own.title"),
-            LaravelLocalization::getLocalizedURL(null, route("spende")),
-            LaravelLocalization::getLocalizedURL(null, route("spende")),
+            route("spende"),
+            route("spende"),
             __("metaGer.ads.own.description"),
             "MetaGer",
             "https://metager.de",

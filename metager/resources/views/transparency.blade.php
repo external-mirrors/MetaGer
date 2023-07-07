@@ -40,7 +40,7 @@
 		</table> 
 	</div>
 	<div class="card">
-		<p>{!! trans('transparency.text.5', ["contact" => LaravelLocalization::getLocalizedUrl(LaravelLocalization::getCurrentLocale(), route('contact'))]) !!}</p>
+		<p>{!! trans('transparency.text.5', ["contact" => route('contact')]) !!}</p>
 	</div>
 </div>
 @endsection

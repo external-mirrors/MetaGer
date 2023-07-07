@@ -16,14 +16,13 @@ class Kernel extends HttpKernel
          * @var array
          */
         protected $middleware = [
-                        \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
-                        \Illuminate\Http\Middleware\HandleCors::class,
-                        \App\Http\Middleware\TrustProxies::class,
-                        \App\Http\Middleware\LocalizationRedirect::class,
-                        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-                        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-                        \App\Http\Middleware\TrimStrings::class,
-                        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+                \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+                \Illuminate\Http\Middleware\HandleCors::class,
+                \App\Http\Middleware\TrustProxies::class,
+                \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+                \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+                \App\Http\Middleware\TrimStrings::class,
+                \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         ];
 
         /**
@@ -33,30 +32,34 @@ class Kernel extends HttpKernel
          */
         protected $middlewareGroups = [
                 'web' => [
-                                \Illuminate\Routing\Middleware\SubstituteBindings::class,
-                                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \App\Http\Middleware\LocalizationRedirect::class,
                 ],
 
                 'humanverification_routes' => [
-                                \Illuminate\Routing\Middleware\SubstituteBindings::class,
-                                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \App\Http\Middleware\LocalizationRedirect::class,
                 ],
 
                 'api' => [
                         'throttle:api',
-                                \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \Illuminate\Routing\Middleware\SubstituteBindings::class,
                 ],
 
                 'enableCookies' => [
-                                \Illuminate\Routing\Middleware\SubstituteBindings::class,
-                                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \App\Http\Middleware\LocalizationRedirect::class,
                 ],
 
                 'session' => [
-                                \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                                \Illuminate\Session\Middleware\StartSession::class,
-                                \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                                \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                        \Illuminate\Session\Middleware\StartSession::class,
+                        \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+                        \App\Http\Middleware\LocalizationRedirect::class,
                 ],
         ];
 

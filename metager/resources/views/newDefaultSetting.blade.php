@@ -7,5 +7,5 @@
 <div>@lang("newDefaultSetting.brave")</div>
 <div>@lang("newDefaultSetting.bing")</div>
 <div>@lang("newDefaultSetting.advantages")</div>
-<div>@lang("newDefaultSetting.settings", ["settingslink" => LaravelLocalization::getLocalizedUrl(null, route('settings', ["focus" => "web"]))])</div>
+<div>@lang("newDefaultSetting.settings", ["settingslink" => route('settings', ["focus" => "web"])])</div>
 @endsection

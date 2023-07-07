@@ -70,13 +70,14 @@ class LangSelector extends Controller
             // Path locale might not be present if the user is switching to the default language
             // of the browser
             Cookie::queue(Cookie::forget("web_setting_m", "/", null));
-            $new_locale = LaravelLocalization::getDefaultLocale();
+            $new_locale = config("app.default_locale");
         } else {
             $secure = !app()->environment("local");
             Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, true));
             $new_locale = $path_locale;
         }
-        $url = LaravelLocalization::getLocalizedUrl($new_locale, route("lang-selector", $request->except("switch")));
+
+        $url = LaravelLocalization::getLocalizedUrl($new_locale, "/lang?" . http_build_query($request->except("switch")), [], true);
         return redirect($url);
     }
 }

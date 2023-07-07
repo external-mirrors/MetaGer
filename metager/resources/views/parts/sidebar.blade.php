@@ -64,7 +64,7 @@
     </li>
     @if (App\Localization::getLanguage() === "de")
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('membership_form')) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <a href="{{ route('membership_form') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
@@ -123,7 +123,7 @@
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/zitat-suche/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav22') }}</a>
         </li>
         <li>
-          <a href="{{ LaravelLocalization::getLocalizedURL(null, route("asso")) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav11') }}</a>
+          <a href="{{ route("asso") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav11') }}</a>
         </li>
         <li>
           <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/tor/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav14') }}</a>
@@ -149,14 +149,14 @@
       <ul class="metager-dropdown-content">
           @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
             <li>
-              <a href="{{ LaravelLocalization::getLocalizedURL(null, route("settings", ["focus" => $fokus, "url" => url()->full()])) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
+              <a href="{{ route("settings", ["focus" => $fokus, "url" => url()->full()]) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
             </li>
           @endforeach
       </ul>
     </li>
     <hr>
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <a href="{{ route('lang-selector') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
         <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
       </a>

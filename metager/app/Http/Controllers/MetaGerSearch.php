@@ -81,7 +81,7 @@ class MetaGerSearch extends Controller
                     return redirect(url()->full());
                 }
             }
-            return redirect(LaravelLocalization::getLocalizedUrl(null, route("settings", ["focus" => $settings->fokus])) . "#engines");
+            return redirect(route("settings", ["focus" => $settings->fokus]) . "#engines");
         }
 
         app(Searchengines::class)->checkPagination();

@@ -1,7 +1,7 @@
 @if ($type === 'startpage' || $type === 'subpage' || $type === 'resultpage')
 <footer class="{{ $id }} noprint">
   <div id="language-footer">
-    <a href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
+    <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
   </div>
   <div id="footer-links">
     <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "kontakt") }}" @if(!empty($metager) && $metager->isFramed())target="_top"@endif>{{ trans('sidebar.nav5') }}</a>

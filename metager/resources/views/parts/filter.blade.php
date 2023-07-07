@@ -1,7 +1,7 @@
 <div id="options">
 	<div id="toggle-box">
 		<div id="settings">
-			<a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('settings', ["focus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())])) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
+			<a href="{{ route('settings', ["focus" => $metager->getFokus(), "url" => $metager->generateSearchLink($metager->getFokus())]) }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
 			<img src="/img/icon-settings.svg"alt="" aria-hidden="true"id="result-img-settings">
 				@if($metager->getSavedSettingCount() > 0) <span class="badge badge-primary"></span>{{ $metager->getSavedSettingCount() }}@endif
 				@lang('metaGer.settings.name')&hellip;

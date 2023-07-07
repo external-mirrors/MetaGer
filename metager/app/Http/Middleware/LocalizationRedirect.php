@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Localization;
 use Closure;
 use Cookie;
+use Faker\Provider\UserAgent;
 use LaravelLocalization;
 use Illuminate\Http\Request;
 use URL;
@@ -127,13 +128,13 @@ class LocalizationRedirect
         $path_locale = $request->segment(1); // We already verified that this is indeed a locale within the path
 
         $default_locale = config("app.default_locale");
-
-        if ($default_locale === $path_locale) {
+        $crawler = preg_match('/bot|crawl|slurp|spider|mediapartners/i', $request->header("User-Agent"));
+        if ($default_locale === $path_locale && !$crawler) {
             // The user landed on a URL with path locale although it's his default language
             $path = $request->getRequestUri();
             $new_path = preg_replace("/^\/$path_locale/", "", $path);
             if ($path !== $new_path) {
-                return redirect($new_path);
+                return redirect($new_path, 302, ["Vary" => "Accept-Language"]);
             }
         }
 

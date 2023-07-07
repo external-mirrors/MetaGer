@@ -3,6 +3,7 @@
 namespace App;
 
 use App;
+use Config;
 use Cookie;
 use LaravelLocalization;
 
@@ -62,7 +63,7 @@ class Localization
         }
 
         // Update default Locale so it can be stripped from the path
-        config(["app.locale" => $locale, "app.default_locale" => $default_locale, "laravellocalization.localesMapping" => [$default_locale => "default"]]);
+        config(["app.locale" => $locale, "app.default_locale" => $default_locale, "laravellocalization.localesMapping" => [$default_locale => ""]]);
         App::setLocale($locale);
 
         // Our locale includes the requested region however our translated strings are not differentiating regions

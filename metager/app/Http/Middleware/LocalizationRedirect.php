@@ -167,7 +167,8 @@ class LocalizationRedirect
 
         // We can include all current cookies in the URL since the load-settings script will filter out the valid ones
         $settings = [
-            "redirect_url" => $url
+            "redirect_url" => $url,
+            "expires" => "" . now()->addMinutes(5)->unix(),
         ];
         // Read out all current settings
         foreach (Cookie::get() as $key => $value) {
@@ -177,8 +178,10 @@ class LocalizationRedirect
             $settings["web_setting_m"] = str_replace("-", "_", LaravelLocalization::getCurrentLocale());
         }
 
-        $settings_restore_url = URL::temporarySignedRoute('loadSettings', now()->addMinutes(5), $settings);
-        $settings_restore_url = str_replace($old_host, $new_host, $settings_restore_url);
+        $settings["signature"] = hash_hmac("sha256", $settings["redirect_url"] . $settings["expires"], config("app.key"));
+
+        $settings_restore_url = route('loadSettings', $settings, true);
+        $settings_restore_url = preg_replace("/^(https?:\/\/)$old_host/", "$1$new_host", $settings_restore_url);
 
         return $settings_restore_url;
     }

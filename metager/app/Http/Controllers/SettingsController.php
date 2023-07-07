@@ -465,8 +465,15 @@ class SettingsController extends Controller
         }
 
         // Check if a redirect url is defined
-        if ($request->filled("redirect_url")) {
-            $url = $request->input("redirect_url");
+        if ($request->filled("redirect_url") && $request->filled("signature") && $request->filled("expires")) {
+            $signature = $request->input("signature");
+            $expires = filter_var($request->input("expires"), FILTER_VALIDATE_INT);
+            $redirect_url = $request->input("redirect_url");
+            if (now()->unix() <= $expires && hash_equals(hash_hmac("sha256", $redirect_url . $request->input("expires"), config("app.key")), $signature)) {
+                $url = $redirect_url;
+            } else {
+                $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/'));
+            }
         } else {
             $url = LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), url('/'));
         }

@@ -62,7 +62,7 @@
 	<section id="keyexplain">
 		<h3>{!! trans('help/easy-language/help-functions.key.maintitle') !!}</h3>
 		<div>
-			<h4>{!! trans('help/easy-language/help-functions.key.title') !!}</h4>
+			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.1') !!}</p>
 			<ul>
 				<li>{!! trans('help/easy-language/help-functions.key.2') !!}</li>
@@ -71,10 +71,16 @@
 				<li>{!! trans('help/easy-language/help-functions.key.5') !!}</li>
 				<li>{!! trans('help/easy-language/help-functions.key.6') !!}</li>
 			</ul>
+			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.7') !!}</p>
+			<img src="/img/key-icon.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.none') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.8') !!}</p>
+			<img src="/img/key-empty.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.empty') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.9') !!}</p>
-
+			<img src="/img/key-full.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.full') !!}" aria-hidden="true" id="searchbar-img-key">
+			<p>{!! trans('help/easy-language/help-functions.key.10') !!}</p>
+			<img src="/img/key-low.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.low') !!}" aria-hidden="true" id="searchbar-img-key">
+			<p>{!! trans('help/easy-language/help-functions.key.11') !!}</p>
 		</div>
 	</section>
 	<section id="selist">

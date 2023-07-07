@@ -39,10 +39,8 @@ class LocalizationRedirect
         }
 
         // Check if the locale present in the path is optional
-        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
-            if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
-                return $redirect;
-            }
+        if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
+            return $redirect;
         }
 
         // Check if the current domain matches the language
@@ -125,14 +123,25 @@ class LocalizationRedirect
      */
     private function verifyPathLocaleNeeded(Request $request)
     {
-        $path_locale = $request->segment(1); // We already verified that this is indeed a locale within the path
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
+            $path_locale = $request->segment(1);
+        } else {
+            $path_locale = "";
+        }
+
 
         $default_locale = config("app.default_locale");
         $crawler = preg_match('/bot|crawl|slurp|spider|mediapartners/i', $request->header("User-Agent"));
-        if ($default_locale === $path_locale && !$crawler) {
+        if (!empty($path_locale) && $default_locale === $path_locale && !$crawler) {
             // The user landed on a URL with path locale although it's his default language
             $path = $request->getRequestUri();
             $new_path = preg_replace("/^\/$path_locale/", "", $path);
+            if ($path !== $new_path) {
+                return redirect($new_path, 302, ["Vary" => "Accept-Language"]);
+            }
+        } else if ($crawler && empty($path_locale)) {
+            $path = $request->getRequestUri();
+            $new_path = "/$default_locale" . $path;
             if ($path !== $new_path) {
                 return redirect($new_path, 302, ["Vary" => "Accept-Language"]);
             }

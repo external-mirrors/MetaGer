@@ -59,7 +59,8 @@ class LocalizationRedirect
             $setting_locale = str_replace("_", "-", Cookie::get("web_setting_m"));
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
             $current_locale = LaravelLocalization::getCurrentLocale();
-            $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, url()->full());
+            $new_url = preg_replace("/^\/$current_locale\/?/", "/", $request->getRequestUri());
+            $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $new_url);
             $redirect_necessary = false;
             if ($current_locale !== $setting_locale && in_array($setting_locale, $availableLocales)) {
                 $redirect_necessary = true;

@@ -60,22 +60,15 @@ class LocalizationRedirect
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
             $current_locale = LaravelLocalization::getCurrentLocale();
             $new_url = preg_replace("/^\/$current_locale\/?/", "/", $request->getRequestUri());
-            $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $new_url);
-            $redirect_necessary = false;
+
             if ($current_locale !== $setting_locale && in_array($setting_locale, $availableLocales)) {
-                $redirect_necessary = true;
-            }
-
-            // Also redirect if the user is on the wrong URL for the defined setting locale
-            if ($host === "metager.de" && strpos($setting_locale, "de") !== 0) {
-                $redirect_necessary = true;
-                $new_url = preg_replace("/^(https?:\/\/)metager.de/", "$1metager.org", $new_url);
-            } else if ($host === "metager.org" && strpos($setting_locale, "de") === 0) {
-                $redirect_necessary = true;
-                $new_url = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $new_url);
-            }
-
-            if ($redirect_necessary) {
+                $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $new_url);
+                // Also redirect if the user is on the wrong URL for the defined setting locale
+                if ($host === "metager.de" && strpos($setting_locale, "de") !== 0) {
+                    $new_url = preg_replace("/^(https?:\/\/)metager.de/", "$1metager.org", $new_url);
+                } else if ($host === "metager.org" && strpos($setting_locale, "de") === 0) {
+                    $new_url = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $new_url);
+                }
                 $new_url = $this->migrateSettingsLink($new_url);
                 return redirect($new_url);
             }

@@ -18,6 +18,6 @@ return [
     ],
     "detection" => [
         "title" => "Welche Standardeinstellung wird für die Sprache verwendet?",
-        "description" => "Wir verwenden sprachspezifische URLs, die direkt verwendet werden können. Wenn in der URL keine Sprache definiert ist, verwenden wir die in Ihren Browsereinstellungen hinterlegte Spracheinstellung, um eine möglichst passende Region für Sie vorauszuwählen. In den meisten Fällen erhalten Sie so automatisch Suchergebnisse für die richtige Region. Alternativ können Sie die obige Einstellung ändern. Ein Cookie ist dann nicht erforderlich.",
+        "description" => "Wir verwenden sprachspezifische URLs, die direkt verwendet werden können. Wenn in der URL keine Sprache definiert ist, verwenden wir die in Ihren Browsereinstellungen hinterlegte Spracheinstellung, um eine möglichst passende Region für Sie vorauszuwählen. In den meisten Fällen erhalten Sie so automatisch Suchergebnisse für die richtige Region. Alternativ können Sie die obige Einstellung ändern.",
     ],
 ];

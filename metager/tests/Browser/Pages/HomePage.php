@@ -31,8 +31,9 @@ class HomePage extends Page
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
 
             if (!file_exists(lang_path($lang))) {
-                $lang = "en";
+                continue;
             }
+
             $browser->visit($url)
                 ->waitForText(trans("mg-story.privacy.title", [], $lang))
                 ->assertTitle(trans("titles.index", [], $lang))

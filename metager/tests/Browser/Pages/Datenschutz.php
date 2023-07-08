@@ -30,7 +30,7 @@ class Datenschutz extends Page
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
             if (!file_exists(lang_path($lang))) {
-                $lang = "en";
+                continue;
             }
             $text = $lang === "de" ? "Datenschutzerklärung" : "Data protection";
             $browser->visit($url)

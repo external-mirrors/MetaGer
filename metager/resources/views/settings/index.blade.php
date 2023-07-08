@@ -39,7 +39,7 @@
             @foreach($sumas as $name => $suma)
             @if($suma->configuration->disabled === false)
             <div class="suma">
-                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('disableEngine')) }}" method="post" title="@lang("settings.disable-engine")">
+                <form action="{{ route('disableEngine') }}" method="post" title="@lang("settings.disable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
@@ -55,7 +55,7 @@
             @foreach($sumas as $name => $suma)
             @if( $suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::USER_CONFIGURATION)
             <div class="suma disabled-engine">
-                <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableEngine')) }}" method="post" title="@lang("settings.enable-engine")">
+                <form action="{{ route('enableEngine') }}" method="post" title="@lang("settings.enable-engine")">
                     <input type="hidden" name="suma" value="{{ $name }}">
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
@@ -109,7 +109,7 @@
     <div class="card" id="filter">
         <h1>@lang('settings.header.3')</h1>
         <p>@lang('settings.text.3')</p>
-        <form id="filter-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableFilter')) }}" method="post" class="form">
+        <form id="filter-form" action="{{ route('enableFilter') }}" method="post" class="form">
             <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
             <div id="filter-options">
@@ -144,7 +144,7 @@
     <div class="card" id="blacklist-container">
         <h1 id="bl">@lang('settings.header.4')</h1>
         <p>@lang('settings.text.4')</p>
-        <form id="newentry" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('newBlacklist', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+        <form id="newentry" action="{{ route('newBlacklist', ["fokus" => $fokus, "url" => $url]) }}" method="post">
             <input type="hidden" name="url" value="{{ $url }}">
             <input type="hidden" name="focus" value="{{ $fokus }}">
             <label for="blacklist">@lang('settings.address') ({{ sizeof($blacklist) }}) </label>
@@ -158,7 +158,7 @@
     <div class="card" id="more-settings">
         <h1>@lang('settings.more')</h1>
         <p>@lang('settings.hint.hint')</p>
-        <form id="setting-form" action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('enableSetting')) }}" method="post" class="form">
+        <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
             <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
             <div class="form-group">
@@ -191,7 +191,7 @@
     <div class="card" id="actions">
         @if($settingActive)
         <div id="reset">
-            <form action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('deleteSettings', ["fokus" => $fokus, "url" => $url])) }}" method="post">
+            <form action="{{ route('deleteSettings', ["fokus" => $fokus, "url" => $url]) }}" method="post">
                 <input type="hidden" name="url" value="{{ $url }}">
                 <input type="hidden" name="focus" value="{{ $fokus }}">
                 <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>

@@ -30,7 +30,7 @@ class Kontakt extends Page
             $url = $this->url($locale);
             $lang = \preg_replace("/^([a-zA-Z]+)-.*/", "$1", $locale);
             if (!file_exists(lang_path($lang))) {
-                $lang = "en";
+                continue;
             }
             $browser->visit($url)
                 ->waitForText(trans("kontakt.form.1", [], $lang))

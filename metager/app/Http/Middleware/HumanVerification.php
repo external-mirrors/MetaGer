@@ -78,7 +78,7 @@ class HumanVerification
         foreach ($user->getVerificators() as $verificator) {
             if ($verificator instanceof AgentVerification) {
                 if (!$request->hasHeader("Sec-CH-UA-Full-Version-List") && !$request->has("ua")) {
-                    $url = LaravelLocalization::getLocalizedUrl(null, route("resultpage", array_merge($request->all(), ["ua" => 1])));
+                    $url = route("resultpage", array_merge($request->all(), ["ua" => 1]));
                     return redirect($url, 302, ["Accept-CH" => "Sec-CH-UA-Full-Version-List, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version"]);
                 }
             }

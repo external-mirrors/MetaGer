@@ -20,7 +20,7 @@ $settings = app(\App\SearchSettings::class);
             @foreach(app(\App\Models\Configuration\Searchengines::class)->sumas as $sumaName => $suma)
             @if($suma->configuration->disabled && $suma->configuration->disabledReason === \App\Models\DisabledReason::USER_CONFIGURATION)
             <div class="engine disabled-by-configuration">
-                <a href="{{ LaravelLocalization::getLocalizedURL(null, route('resultpage', array_merge(Request::all(), [$settings->fokus . '_engine_' . $sumaName => 'on']))) }}">
+                <a href="{{ route('resultpage', array_merge(Request::all(), [$settings->fokus . '_engine_' . $sumaName => 'on'])) }}">
                     {{ $suma->configuration->infos->displayName }} {{ $suma->configuration->cost > 0 ? "(" . $suma->configuration->cost . " Token)" : "" }}
                 </a>
             </div>

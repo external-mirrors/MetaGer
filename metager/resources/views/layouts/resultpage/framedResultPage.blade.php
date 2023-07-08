@@ -34,7 +34,7 @@
                     <a class="screen-small" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif>
                         <h1><img src="/img/metager-schloss-orange.svg" alt="MetaGer" /></h1>
                     </a>
-                    <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route("lang-selector")) }}">
+                    <a class="lang" href="{{ route("lang-selector") }}">
                         <span>{{ App\Localization::getRegion() }}</span>
                     </a>
                 </div>

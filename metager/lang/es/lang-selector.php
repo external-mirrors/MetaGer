@@ -13,6 +13,8 @@ return [
         'it' => 'Italiano',
         'da' => 'Danés',
         'sv' => 'Sueco',
+        'pl' => 'Polaco',
+        'fr' => 'Francés',
     ],
     'description' => 'A continuación encontrará una lista de todos los idiomas/regiones actualmente soportados por MetaGer Search. Los resultados de su búsqueda se optimizarán para la región seleccionada. Utilizamos una cookie para guardar la configuración modificada.',
     'detection'   => [

@@ -19,7 +19,7 @@
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
     <script src="{{ mix('js/index.js') }}"></script>
-    <link rel="stylesheet" href="/index.css?id={{ $mgv }}">
+    <link rel="stylesheet" href="{{ LaravelLocalization::getLocalizedURL(null, '/index.css?id=' . $mgv) }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <meta http-equiv="refresh" content="1">
 </head>

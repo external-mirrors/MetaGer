@@ -10,6 +10,8 @@ return [
         'it' => 'Italian',
         'da' => 'Danish',
         'sv' => 'Swedish',
+        'pl' => 'Polish',
+        'fr' => 'French',
     ],
     'h1'          => [
         1   => 'Language selection',

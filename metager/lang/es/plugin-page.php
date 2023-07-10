@@ -1,11 +1,8 @@
 <?php
 return [
     'head' => [
-        2 => 'Añadir MetaGer a Chrome',
         4 => 'Añadir MetaGer a Internet Explorer',
-        6 => 'Añadir MetaGer a Safari',
         8 => 'Añadir MetaGer a Firefox Klar',
-        10 => 'Añadir MetaGer a Samsung Internet',
         'Instala Firefox y añade MetaGer',
     ],
     'open-modal' => [

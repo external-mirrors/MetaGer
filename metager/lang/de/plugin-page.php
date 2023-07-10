@@ -1,12 +1,8 @@
 <?php
 return [
-    'open-modal.title' => 'MetaGer zu Ihrem Browser hinzufügen',
     'head.1' => 'MetaGer zu Firefox hinzufügen',
-    'head.3' => 'MetaGer zu Opera hinzufügen',
     'head.5' => 'MetaGer zu Microsoft Edge hinzufügen',
-    'head.7' => 'MetaGer zu Vivaldi hinzufügen',
     'head.9' => 'MetaGer zu UCBrowser hinzufügen',
-    'search-engine.1' => 'Was macht eine Standardsuchmaschine?',
     'browser-download' => 'Firefox herunterladen',
     'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
     'firefox-default-search' => 'MetaGer als Standardsuchmaschine ohne Add-on einrichten',

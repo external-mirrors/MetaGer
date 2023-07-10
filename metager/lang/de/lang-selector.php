@@ -15,6 +15,7 @@ return [
         "no" => "Norwegisch",
         "sv" => "Schwedisch",
         "it" => "Italienisch",
+        "pl" => "Polnisch"
     ],
     "detection" => [
         "title" => "Welche Standardeinstellung wird für die Sprache verwendet?",

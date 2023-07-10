@@ -20,6 +20,7 @@ return [
         'fi-FI' => ['name' => 'Finnish (Finland)', 'script' => 'Latn', 'native' => 'Finnish (Finland)', 'regional' => 'fi_FI'],
         'sv-SE' => ['name' => 'Swedish (Sweden)', 'script' => 'Latn', 'native' => 'Svenska (Sverige)', 'regional' => 'sv_SE'],
         'it-IT' => ['name' => 'Italian (Italy)', 'script' => 'Latn', 'native' => 'Italiano (Italia)', 'regional' => 'it_IT'],
+        'fr-FR' => ['name' => 'French (France)', 'script' => 'Latn', 'native' => 'Français (France)', 'regional' => 'fr_FR'],
     ],
 
     // Requires middleware `LaravelSessionRedirect.php`.

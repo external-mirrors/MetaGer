@@ -10,7 +10,7 @@ return [
         2 => 'MetaGer es diferente de otros motores de búsqueda. Esto se refleja no sólo en nuestra orientación hacia el bien público y el enfoque en la privacidad, sino también a través de algunas características únicas:',
         3 => 'Posibilidad de crear una lista negra personal',
         4 => 'Función de la búsqueda en la búsqueda',
-        5 => 'Posibilidad de búsqueda sin publicidad (para los afiliados)',
+        5 => 'Posibilidad de búsqueda sin publicidad',
         6 => 'Integración de proyectos de motores de búsqueda como YaCy',
         7 => 'Único motor de búsqueda alemán que combina resultados de varios grandes índices web',
         8 => 'Y mucho más..',
@@ -18,7 +18,7 @@ return [
     'timeline' => [
         1 => [
             1 => 'Marzo de 1996: Cebit Hanover',
-            2 => 'La idea de MetaGer se le ocurrió al ingeniero alemán Dr. Wolfgang Sander-Beuermann durante la feria de informática CeBIT mientras almorzaba en una servilleta de papel. Esa misma tarde se empieza a trabajar en el primer prototipo.',
+            2 => 'La idea de MetaGer se le ocurrió al ingeniero alemán Wolfgang Sander-Beuermann durante la feria de informática CeBIT, mientras almorzaba. Inmediatamente empezó a esbozarla en una servilleta de papel. Esa misma tarde comienza a trabajar en el primer prototipo.',
         ],
         2 => [
             1 => 'Finales de 1996: MetaGer entra en funcionamiento',
@@ -46,7 +46,7 @@ return [
         ],
         8 => [
             1 => 'Marzo de 2014: Implementación de la función "Abrir anónimamente"',
-            2 => 'Con la nueva función "Abrir anónimamente", se ofrece un servicio de proxy. De este modo, los usuarios de MetaGer permanecen protegidos incluso después de la búsqueda ',
+            2 => 'Con la nueva función "Abrir anónimamente", se ofrece un servicio de proxy. De este modo, los usuarios de MetaGer permanecen protegidos incluso después de la búsqueda',
         ],
         9 => [
             1 => '2015-2016: Página de inicio de MetaGer',
@@ -58,7 +58,7 @@ return [
         ],
         11 => [
             1 => '2016-2019: Página de inicio de MetaGer',
-            2 => 'Otros pequeños ajustes consolidan gradualmente el naranja como el color de MetaGer ',
+            2 => 'Otros pequeños ajustes consolidan gradualmente el naranja como el color de MetaGer',
         ],
         12 => [
             1 => '16.08.2016: Publicación del código fuente',
@@ -85,8 +85,8 @@ return [
             2 => 'Como parte de un amplio rediseño de la página de inicio, se retoman los cuatro puntos de venta únicos de MetaGer y se presentan de forma ampliada. Para no sobrecargar la función central de la búsqueda web, se puede llegar a las descripciones desplazándose. <br> Otra característica de la nueva revisión es el modo oscuro en toda la página. Esto permite utilizar MetaGer en todas las páginas con un diseño oscuro.</br> ',
         ],
         18 => [
-            1 => 'Hoy',
-            2 => 'Aún hoy, MetaGer sigue desarrollándose.',
+            1 => '14.02.2022: Renovación de la página de ayuda',
+            2 => 'La página de ayuda de MetaGer recibe una nueva vista general. Esto estructura y visualiza las páginas de ayuda con iconos fáciles de reconocer.',
         ],
         19 => [
             1 => 'Hoy',

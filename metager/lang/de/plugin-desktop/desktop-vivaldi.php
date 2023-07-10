@@ -1,6 +1,5 @@
 <?php
 return [
-    'default-search-v3-3.2' => 'Wählen Sie im Kontextmenü "Suche erstellen..."',
     'default-page-v3-3.1' => 'Klicken Sie oben links auf das Vivaldi-Symbol und wählen Sie unter "Extras" den Menüpunkt "<img class= "mg-icon" src="/img/icon-settings.svg"> Einstellungen"',
     'default-search-v3-3' => [
         3 => 'Aktivieren Sie das Kontrollkästchen "Als Standardsuche festlegen" und klicken Sie im Popup-Fenster auf "Hinzufügen".',

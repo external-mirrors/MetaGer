@@ -33,11 +33,11 @@
 					<option value="ch" {{ (Request::input('interface', 'all') == "ch" ? "selected" : "")}}>CH</option>
 					<option value="en" {{ (Request::input('interface', 'all') == "en" ? "selected" : "")}}>EN</option>
 					<option value="es" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>ES</option>
+					<option value="fr" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>FR</option>
 					<option value="da" {{ (Request::input('interface', 'all') == "da" ? "selected" : "")}}>DA</option>
 					<option value="fi" {{ (Request::input('interface', 'all') == "fi" ? "selected" : "")}}>FI</option>
 					<option value="it" {{ (Request::input('interface', 'all') == "it" ? "selected" : "")}}>IT</option>
 					<option value="nl" {{ (Request::input('interface', 'all') == "nl" ? "selected" : "")}}>NL</option>
-					<option value="no" {{ (Request::input('interface', 'all') == "no" ? "selected" : "")}}>NO</option>
 					<option value="sv" {{ (Request::input('interface', 'all') == "sv" ? "selected" : "")}}>SV</option>
 				</select>
 			</div>

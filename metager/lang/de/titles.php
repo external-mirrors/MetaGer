@@ -1,5 +1,4 @@
 <?php
-
 return [
     'index' => 'MetaGer - Mehr als eine Suchmaschine',
     'impressum' => 'Impressum - MetaGer',
@@ -19,7 +18,6 @@ return [
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Partnershops - MetaGer',
     'lang-selector' => 'Sprachauswahl',
-    'languages' => 'Übersetzungstool - MetaGer',
     'languages.edit' => 'Sprachdateien bearbeiten - MetaGer',
     'app' => 'Apps - MetaGer',
     'faktencheck' => 'Fakten-Prüfung contra Fake-News',
@@ -33,6 +31,6 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
-    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'prevention' => 'Hilfe bei Selbstmordgedanken - MetaGer',
     'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
 ];

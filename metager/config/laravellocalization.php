@@ -21,6 +21,7 @@ return [
         'sv-SE' => ['name' => 'Swedish (Sweden)', 'script' => 'Latn', 'native' => 'Svenska (Sverige)', 'regional' => 'sv_SE'],
         'it-IT' => ['name' => 'Italian (Italy)', 'script' => 'Latn', 'native' => 'Italiano (Italia)', 'regional' => 'it_IT'],
         'fr-FR' => ['name' => 'French (France)', 'script' => 'Latn', 'native' => 'Français (France)', 'regional' => 'fr_FR'],
+        'fr-CA' => ['name' => 'French (Canada)', 'script' => 'Latn', 'native' => 'Français (Canada)', 'regional' => 'fr_CA'],
     ],
 
     // Requires middleware `LaravelSessionRedirect.php`.

@@ -1,5 +1,10 @@
 <?php
 return [
+    'headline' => [
+        '1' => 'Ihre Spende',
+        '2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a>.',
+        '3' => 'Welchen Betrag möchten Sie spenden?',
+    ],
     'breadcrumps' => [
         'amount' => 'Betrag wählen',
         'payment_method' => 'Zahlungsart wählen',
@@ -74,15 +79,15 @@ return [
             'submit' => 'Jetzt Spenden',
             'recurring-hint' => 'Hinweis: Eine direkte Kreditkartenzahlung ohne Address-/Namensvalidierung ist nur für einmalige Spenden möglich.',
             'error' => [
-                9500 => 'Kreditkarte als betrügerisch abgelehnt',
-                5100 => 'Die Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '9500' => 'Kreditkarte als betrügerisch abgelehnt',
+                '5100' => 'Die Kreditkarte wurde vom Kreditinstitut abgelehnt',
                 '00N7' => 'Falsche CVV. Bitte Eingabe überprüfen',
-                5400 => 'Kreditkarte abgelaufen',
-                5180 => 'Luhn Überprüfung fehlgeschlagen',
-                5120 => 'Kreditkarte wurde wegen nicht ausreichender Deckung abgelehnt.',
-                9520 => 'Kreditkarte als verloren/gestohlen abgelehnt',
+                '5400' => 'Kreditkarte abgelaufen',
+                '5180' => 'Luhn Überprüfung fehlgeschlagen',
+                '5120' => 'Kreditkarte wurde wegen nicht ausreichender Deckung abgelehnt.',
+                '9520' => 'Kreditkarte als verloren/gestohlen abgelehnt',
                 '0500' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
-                1330 => 'Kreditkarte ungültig. Bitte überprüfen Sie Ihre Eingabe',
+                '1330' => 'Kreditkarte ungültig. Bitte überprüfen Sie Ihre Eingabe',
                 'generic' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
             ],
         ],

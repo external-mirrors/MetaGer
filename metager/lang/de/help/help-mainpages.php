@@ -3,7 +3,6 @@ return [
     'backarrow' => 'Zurück',
     'result' => [
         'info' => [
-            '2' => 'Die neuen Optionen sind:',
             'anonym' => '"ANONYM ÖFFNEN" bewirkt, dass das Ergebnis unter dem Schutz unseres Proxys geöffnet wird. Einige Infos dazu finden Sie im Bereich <a href = "/hilfe/datensicherheit#proxy/">Anonymisierender MetaGer Proxyserver.</a>',
             'domainnewsearch' => '"Auf dieser Domain neu suchen": Auf der Domain des Ergebnisses wird "genauer nachgesehen".',
             'hideresult' => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',
@@ -30,16 +29,11 @@ return [
         'title' => 'Das Suchfeld',
     ],
     'settings' => [
-        '3' => 'Suchfilter <br> Durch Suchfilter können Sie Ihre Suche dauerhaft filtern.',
         '5' => 'Dunklen Modus umschalten <br>Schalten Sie hier ganz einfach in den Dark Mode um.',
-        '7' => 'Zitate <br> Sie können hier die Anzeige der Zitate an- und ausschalten.',
         'title' => 'Einstellungen',
     ],
     'startpage' => [
         'info' => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld einen Link, mit dem Sie MetaGer zu Ihrem Browser hinzufügen können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',
         'title' => 'Die Startseite',
-    ],
-    'title' => [
-        '2' => 'Die Benutzung der Hauptseiten',
     ],
 ];

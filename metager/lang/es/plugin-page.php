@@ -1,15 +1,24 @@
 <?php
 return [
     'head' => [
-        8 => 'Añadir MetaGer a Firefox Klar',
-        'Instala Firefox y añade MetaGer',
+        'Instalar Firefox y añadir MetaGer',
+        'Añadir MetaGer a Firefox',
+        'Añadir MetaGer a Chrome',
+        'Añadir MetaGer a Opera',
+        'Añadir MetaGer a Internet Explorer',
+        'Añadir MetaGer a Microsoft Edge',
+        'Añadir MetaGer a Safari',
+        'Añadir MetaGer a Vivaldi',
+        'Añadir MetaGer a Firefox Klar',
+        'Añadir MetaGer a UCBrowser',
+        'Añadir MetaGer a Samsung Internet',
     ],
     'open-modal' => [
         'title' => 'Añadir MetaGer a su navegador',
     ],
     'search-engine' => [
-        1 => '¿Qué hace un motor de búsqueda estándar?',
-        2 => 'Con MetaGer como motor de búsqueda por defecto, puedes indicar a tu navegador que permita a MetaGer responder automáticamente a las búsquedas que se realicen a través de la barra de direcciones, por ejemplo.',
+        '1' => '¿Qué hace un motor de búsqueda estándar?',
+        '2' => 'Con MetaGer como motor de búsqueda por defecto, puedes indicar a tu navegador que permita a MetaGer responder automáticamente a las búsquedas que se realicen a través de la barra de direcciones, por ejemplo.',
     ],
     'browser-download' => 'Descargar Firefox',
     'firefox-plugin' => 'Establecer MetaGer como motor de búsqueda por defecto con el complemento',

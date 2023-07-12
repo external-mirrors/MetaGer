@@ -6,6 +6,24 @@ return [
         '3' => 'Lo que representamos',
         '4' => '¿Qué hace especial a MetaGer?',
     ],
+    'points' => [
+        'privacy' => [
+            'heading' => 'Privacidad garantizada',
+            'text' => 'La protección de datos y la privacidad son importantes para nosotros. Por lo tanto, no rastreamos ni almacenamos los perfiles de los usuarios. También ofrecemos servicios para proteger su privacidad, por ejemplo, nuestro proxy de anonimización (función "abrir anónimo")',
+        ],
+        'association' => [
+            'heading' => 'Asociación sin ánimo de lucro',
+            'text' => 'MetaGer es un proyecto de la asociación sin ánimo de lucro SUMA-EV, Asociación para el Libre Acceso al Conocimiento. SUMA-EV se compromete principalmente a promover la alfabetización mediática',
+        ],
+        'diverse' => [
+            'heading' => 'Diversos y libres',
+            'text' => 'MetaGer produce una variedad de resultados porque es un metabuscador. Hemos explicado exactamente lo que esto significa en nuestra <a href=":transparenz">declaración de transparencia</a>. Al publicar nuestro código fuente, demostramos que el libre acceso al conocimiento es importante para nosotros. Nuestro código fuente es gratuito y de código abierto.',
+        ],
+        'renewable' => [
+            'heading' => 'electricidad 100% verde',
+            'text' => 'La sostenibilidad y el consumo de recursos también es un tema importante para nosotros. Por ello, prestamos atención al consumo energético de nuestros servicios y sólo utilizamos electricidad procedente de fuentes de energía renovables.',
+        ]
+    ],
     'text' => [
         '2' => 'MetaGer es diferente de otros motores de búsqueda. Esto se refleja no sólo en nuestra orientación hacia el bien público y el enfoque en la privacidad, sino también a través de algunas características únicas:',
         '3' => 'Posibilidad de crear una lista negra personal',

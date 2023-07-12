@@ -1,7 +1,7 @@
 <?php
 return [
     'heading' => [
-        'heading.1' => 'Fakten-Prüfung contra Fake-News:',
+        '1' => 'Fakten-Prüfung contra Fake-News:',
     ],
     'paragraph' => [
         '1' => 'Fake News werden oft in Form eines journalistischen Beitrages präsentiert. Die Aussage des Artikels oder die Darstellung entspricht jedoch nicht der Faktenlage. Oft werden Aussagen bei Fake News bewusst erfunden oder verfälscht um politische oder kommerzielle Ziele zu erreichen. (siehe <a href="https://link.springer.com/book/10.1007/978-3-662-58695-2"> Appel 2020</a>) Was kann man also tun, um herauszufinden, ob es sich um Fake-News handelt?',

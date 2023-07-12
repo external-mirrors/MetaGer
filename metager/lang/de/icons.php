@@ -1,14 +1,10 @@
 <?php
-
 return [
     'angle-double-right' => [
         'alt' => 'Doppelter Pfeil nach rechts',
     ],
     'icon-lupe' => [
         'alt' => 'Suchen',
-    ],
-    'chevron-down' => [
-        'alt' => '',
     ],
     'menu' => [
         'alt' => 'Menü',
@@ -34,5 +30,5 @@ return [
     'floppy' => [
         'alt' => 'floppy',
     ],
-    'Icon-settings' => 'Zahnrad'
+    'Icon-settings' => 'Zahnrad',
 ];

@@ -1,9 +1,7 @@
 <?php
 return [
     'four-reasons' => 'Warum MetaGer?',
-    'privacy.title' => 'Garantierte Privatsphäre',
     'ngo.image.alt' => 'Herz',
-    'diversity.image.alt' => 'Regenbogen',
     'eco.image.alt' => 'grünes Blatt',
     'btn-about-us' => 'Über uns',
     'btn-data-protection' => 'Datenschutzerklärung',
@@ -14,8 +12,6 @@ return [
     'btn-mg-code' => 'MetaGer-Quellcode',
     'btn-mg-algorithm' => 'Unser Algorithmus',
     'btn-more' => 'Mehr dazu',
-    'plugin.title' => 'Jetzt MetaGer installieren',
     'plugin.btn-app' => 'MetaGer-App',
-    'plugin.p' => 'Mit unserem Plugin können Sie MetaGer als Standardsuchmaschine festlegen. Und mit der App nutzen Sie MetaGer ganz bequem auf Ihrem Smartphone.',
     'btn-about-us' => 'Über uns',
 ];

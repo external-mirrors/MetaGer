@@ -1,10 +1,7 @@
 <?php
 return [
-    'options.savetab' => 'Ergebnis speichern',
     'options.2' => ':host ausblenden',
-    'options.4' => 'Partner',
     'options.6' => 'IN NEUEM TAB ÖFFNEN',
-    'options.8' => 'WERBUNG ENTFERNEN',
     'gefVon' => 'von',
     'advertisement' => 'Anzeige',
     'providers' => 'Anbietern',

@@ -22,7 +22,7 @@ return [
     ],
     'belgium' => [
         'name' => 'Belgien 🇧🇪',
-        '.text' => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: <a href="tel:+32 800 32 123">+32 800 32 123</a><br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: <a href="tel:+32 2 648 40 14"> +32 2 648 40 14</a> <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: <a href="tel: +32 1813"> +32 1813</a>',
+        'text' => '<strong>Centre de Prévention du Suicide:</strong> <a href="https://www.preventionsuicide.be" target="_blank"> https://www.preventionsuicide.be</a> <br> Téléphone: <a href="tel:+32 800 32 123">+32 800 32 123</a><br> <strong>CHS Helpline:</strong> <a href="https://www.chsbelgium.org" target="_blank"> https://www.chsbelgium.org</a> <br> Phone: <a href="tel:+32 2 648 40 14"> +32 2 648 40 14</a> <br> <strong>Centrum Ter Preventie Van Zelfdoding:</strong> <a href="https://www.zelfmoord1813.be" target="_blank"> https://www.zelfmoord1813.be</a> <br> Telefoon: <a href="tel: +32 1813"> +32 1813</a>',
     ],
     'germany' => [
         'name' => 'Deutschland 🇩🇪',
@@ -196,8 +196,8 @@ return [
             "text" => '<strong>Korea Foundation for Suicide Prevention (한국생명존중희망재단):</strong> <a href="https://kfsp.org" target="_blank"> https://kfsp.org</a> <br> 핸드폰: <a href="tel:+65 2 3706 0500"> +65 2 3706 0500</a> <br> <stong>보건복지부 보건복지콜센터 (Callcenter des Ministeriums für Gesundheit und Soziales): </strong> <br> 핸드폰: <a href="tel:129"> 129</a> (24시간 위기상담 / 24-Stunden-Hotline) <br> <strong>정신건강증진센터 정신건강위기상담전화 (Krisenzentrum und Beratung für mentale Gesundheit):</strong> <br> 핸드폰: <a href="tel:+65 1577-0199"> +65 1577-0199</a> (24시간 위기상담 / 24-Stunden-Hotline)',
         ],
         'africa' => [
-            "south.africa.name" => "Südafrika 🇿🇦",
-            'south.africa.text' => '<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: <a href="tel:+27 800 567 567"> +27 800 567 567</a>; SMS: +27 31393 ',
+            "name" => "Südafrika 🇿🇦",
+            'text' => '<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: <a href="tel:+27 800 567 567"> +27 800 567 567</a>; SMS: +27 31393 ',
         ],
     ],
     'taiwan' => [

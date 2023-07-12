@@ -1,6 +1,5 @@
 <?php
 return [
-    'default-page-v3-3.1' => 'Klicken Sie oben links auf das Vivaldi-Symbol und wählen Sie unter "Extras" den Menüpunkt "<img class= "mg-icon" src="/img/icon-settings.svg"> Einstellungen"',
     'default-search-v3-3' => [
         3 => 'Aktivieren Sie das Kontrollkästchen "Als Standardsuche festlegen" und klicken Sie im Popup-Fenster auf "Hinzufügen".',
         1 => 'Klicken Sie mit der rechten Maustaste auf die Suchleiste am Ende dieser Anweisung',

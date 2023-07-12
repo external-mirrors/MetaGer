@@ -1,8 +1,6 @@
 <?php
 return [
-    'head.1' => 'MetaGer zu Firefox hinzufügen',
     'head.5' => 'MetaGer zu Microsoft Edge hinzufügen',
-    'head.9' => 'MetaGer zu UCBrowser hinzufügen',
     'browser-download' => 'Firefox herunterladen',
     'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
     'firefox-default-search' => 'MetaGer als Standardsuchmaschine ohne Add-on einrichten',

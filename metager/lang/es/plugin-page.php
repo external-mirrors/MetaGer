@@ -1,7 +1,6 @@
 <?php
 return [
     'head' => [
-        4 => 'Añadir MetaGer a Internet Explorer',
         8 => 'Añadir MetaGer a Firefox Klar',
         'Instala Firefox y añade MetaGer',
     ],

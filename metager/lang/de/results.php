@@ -1,8 +1,13 @@
 <?php
+
 return [
-    'redirect' => '(mit redirect)',
     'weiter' => 'Weitersuchen',
     'zurueck' => 'Zurück',
     'backtotop' => 'Zum Anfang der Seite',
-    'produktanzeigen' => 'Produktanzeigen:',
+    'query' => [
+        'alteration' => [
+            'new' => 'Enthält Ergebnisse für <a href=":link">:alteration <img class= "mg-icon" src="/img/icon-lupe.svg"></a>',
+            'original' => 'Stattdessen nach <a href=":link">:original <img class= "mg-icon" src="/img/icon-lupe.svg"></a> suchen',
+        ],
+    ],
 ];

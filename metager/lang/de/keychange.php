@@ -5,7 +5,6 @@ return [
     'p2' => 'Außerdem können Sie mit diesem Tool einen Schlüssel erstellen, der leichter zu merken ist. Bitte heben Sie sich den ursprünglichen Schlüssel dennoch auf. Dadurch, dass der neue Schlüssel nicht mehr automatisch erneuert werden kann, wird dieser irgendwann ungültig. In dem Fall müssen Sie diesen Prozess wiederholen, indem Sie Ihren ursprünglichen Mitgliederschlüssel (:key) bei MetaGer eingeben und dieses Tool erneut aufrufen.',
     'p3' => 'Heben Sie sich deshalb beide Schlüssel gut auf und beachten Sie insbesondere, dass wir nicht in der Lage sind Ihnen den neuen, durch diesen Wechsel entstandenen, Schlüssel bei Verlust mitzuteilen oder wiederherzustellen.',
     'p4' => 'Dieses Tool führt Sie durch folgende Schritte um einen neuen anonymen Wunsch Schlüssel zu erstellen:',
-    'ol1.li2' => 'Erzeugen einer URL mit der ein neuer Schlüssel erstellt werden kann. Diese URL enthält keine Informationen mehr über den Mitgliederschlüssel.',
     'ol1.li4' => 'Speichern des neuen Wunsch Schlüssels im Browser',
     'a1' => 'Gelesen - Wunsch Schlüssel erstellen',
     'p5' => 'Ihr bisheriger Mitgliederschlüssel wurde nun aus dem Browser gelöscht. Außerdem haben wir eine URL erzeugt, mit der Sie sich Ihren Wunschschlüssel erstellen können. Dies ist innerhalb von :validUntil jederzeit und von jedem Gerät aus möglich indem Sie folgende URL im Browser aufrufen, oder direkt das Formular auf dieser Seite verwenden.',

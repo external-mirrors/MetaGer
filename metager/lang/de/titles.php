@@ -1,4 +1,5 @@
 <?php
+
 return [
     'index' => 'MetaGer - Mehr als eine Suchmaschine',
     'impressum' => 'Impressum - MetaGer',
@@ -30,6 +31,6 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
-    'prevention' => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
     'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
 ];

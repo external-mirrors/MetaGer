@@ -94,12 +94,12 @@ return [
             '2' => 'Umfangreiche Modernisierungen im Kern von MetaGer reduzieren die durchschnittliche Antwortzeit der Suchmaschine auf weniger als 1,3 Sekunden. In den nächsten Jahren wird diese Zeitspanne weiter auf fast die Hälfte sinken.',
         ],
         '11' => [
-            1 => '2016-2019: MetaGer Startseite',
-            2 => 'Andere kleine Anpassungen verfestigen Orange allmählich als die MetaGer-Farbe',
+            '1' => '2016-2019: MetaGer Startseite',
+            '2' => 'Andere kleine Anpassungen verfestigen Orange allmählich als die MetaGer-Farbe',
         ],
         '18' => [
-            1 => '14.02.2022: Erneuerung der Hilfeseite',
-            2 => 'Die MetaGer-Hilfeseite erhält eine neue Übersicht. Diese strukturiert und visualisiert die Hilfeseiten mit leicht zu erkennenden Symbolen.',
+            '1' => '14.02.2022: Erneuerung der Hilfeseite',
+            '2' => 'Die MetaGer-Hilfeseite erhält eine neue Übersicht. Diese strukturiert und visualisiert die Hilfeseiten mit leicht zu erkennenden Symbolen.',
         ],
     ],
     'text' => [

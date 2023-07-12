@@ -1,6 +1,5 @@
 <?php
 return [
-    'foki.bilder' => 'Bilder',
     'foki.science' => 'Wissenschaft',
     'plugin' => 'MetaGer installieren',
     'adfree' => 'MetaGer werbefrei nutzen',

@@ -1,5 +1,4 @@
 <?php
-
 return [
     'actions' => 'Aktionen',
     'add' => 'Hinzufügen',
@@ -7,10 +6,6 @@ return [
     'allSettings' => [
         'header' => 'Auf :root gesetzte Einstellungen',
         'text' => 'Hier finden Sie eine Übersicht aller von Ihnen gesetzten Einstellungen und Cookies. Sie können einzelne Einträge löschen, oder alle entfernen. Bedenken Sie, dass die zugehörigen Einstellungen dann nicht mehr verwendet werden.',
-    ],
-    'aria.label' => [
-        '1' => 'aktiviert',
-        '2' => 'deaktiviert',
     ],
     'metager-key' => [
         'header' => 'Werbefreie Suche',
@@ -21,8 +16,8 @@ return [
         'actions' => [
             'info' => 'Was ist das?',
             'login' => 'Vorhandenen Schlüssel einrichten',
-            'create' => 'Neuen Schlüssel erstellen'
-        ]
+            'create' => 'Neuen Schlüssel erstellen',
+        ],
     ],
     'back' => 'Zurück zur letzten Seite',
     'blentry' => 'Blacklisteintrag',
@@ -35,9 +30,6 @@ return [
     'no-engines' => "Mit den aktuellen Sucheinstellungen wird keine Suchmaschine abgefragt.",
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
     'header' => [
-        '1' => 'Sucheinstellungen',
-        '2' => 'Verwendete Suchmaschinen',
-        '3' => 'Suchfilter',
         '4' => 'Blacklist',
     ],
     'hint' => [
@@ -61,14 +53,11 @@ return [
     'reset' => 'Alle Einstellungen löschen',
     'save' => 'Speichern',
     'system' => 'Systemstandard',
-    "enable-engine" => "Suchmaschine einschalten",
-    "disable-engine" => "Suchmaschine ausschalten",
-    "filtered-engine" => "Suchmaschine durch Filter deaktiviert",
-    "payment-engine" => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
+    'enable-engine' => "Suchmaschine einschalten",
+    'disable-engine' => "Suchmaschine ausschalten",
+    'filtered-engine' => "Suchmaschine durch Filter deaktiviert",
+    'payment-engine' => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
     'text' => [
-        '1' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert.',
-        '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden.',
-        '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
     ],
 ];

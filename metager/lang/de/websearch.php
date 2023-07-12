@@ -1,15 +1,5 @@
 <?php
-
 return [
-    'head.1'        => 'MetaGer Websuche-Widget',
-    'head.2'        => 'Hier finden Sie ein Metager-Widget für Ihre Webseite.',
-    'head.3'        => 'Vorschau',
-    'head.4'        => 'Sicher suchen & finden mit MetaGer',
-    'head.5'        => 'Suche mit MetaGer...',
-    'head.6'        => 'all',
-    'head.7'        => 'Code',
-    'head.8'        => 'Suchen',
-    'head.copy'     => 'Kopieren',
-    'alert.success' => 'Kopieren erfolgreich!',
-    'alert.failure' => 'Kopieren fehlgeschlagen!',
+    'head.4' => 'Sicher suchen & finden mit MetaGer',
+    'head.8' => 'Suchen',
 ];

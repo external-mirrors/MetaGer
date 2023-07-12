@@ -1,29 +1,8 @@
 <?php
-
 return [
     'title' => 'Impressum',
-
-    'headline.1' => '<a href="http://suma-ev.de/" target="_blank" rel="noopener">SUMA-EV - Verein für freien Wissenszugang (e.V.)</a>
-in Kooperation mit der <a href="http://www.uni-hannover.de/" target="_blank" rel="noopener">Leibniz Universität Hannover</a>',
-
-    'info.1' => 'Wikipedia-Eintrag zum <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
-    'info.2' => 'SUMA-EV
-Röselerstr. 3
-D-30159 Hannover
-Deutschland/Germany',
     'info.3' => 'Kontakt:
 Tel.: +4951134000070
 EMail: <a href="/kontakt">Kontaktformular</a>',
-    'info.4' => 'Vorstand: Dominik Hebeler, Carsten Riel, Manuela Branz',
-    'info.6' => 'Jugendschutzbeauftragte: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
-    'info.8' => '"SUMA-EV - Verein für freien Wissenszugang" ist ein gemeinnütziger
-Verein, eingetragen in das Vereinsregister beim Amtsgericht Hannover
-unter VR200033.
-
-Umsatzsteueridentifikationsnummer: DE 300 464 091
-
-Die "Gottfried Wilhelm Leibniz Universität Hannover" ist eine
-Körperschaft des öffentlichen Rechts.',
     'info.9' => 'Haftungshinweis:',
-    'info.10' => 'Trotz sorgfältiger inhaltlicher Kontrolle übernehmen wir keine Haftung für die Inhalte externer Links. Für den Inhalt der verlinkten Seiten sind ausschließlich deren Betreiber verantwortlich.',
 ];

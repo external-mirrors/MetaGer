@@ -1,5 +1,8 @@
 <?php
 return [
+    "h1." => [
+        "1" => "Sprachauswahl",
+    ],
     'description' => "Nachfolgend finden Sie eine Liste aller Sprachen/Regionen, die derzeit von der MetaGer-Suche unterstützt werden. Ihre Suchergebnisse werden für die ausgewählte Region optimiert. Wir verwenden ein Cookie, um eine geänderte Einstellung zu speichern.",
     'lang' => [
         'de' => "Deutsch",

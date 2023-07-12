@@ -7,9 +7,6 @@ return [
         'header' => 'Auf :root gesetzte Einstellungen',
         'text' => 'Hier finden Sie eine Übersicht aller von Ihnen gesetzten Einstellungen und Cookies. Sie können einzelne Einträge löschen, oder alle entfernen. Bedenken Sie, dass die zugehörigen Einstellungen dann nicht mehr verwendet werden.',
     ],
-    'aria.label' => [
-        '2' => 'deaktiviert',
-    ],
     'metager-key' => [
         'header' => 'Werbefreie Suche',
         'charge' => 'Guthaben: :token Token',
@@ -33,7 +30,6 @@ return [
     'no-engines' => "Mit den aktuellen Sucheinstellungen wird keine Suchmaschine abgefragt.",
     'engineDisabled' => 'Die Suchmaschine :engine wird im Fokus :focus nicht abgefragt.',
     'header' => [
-        '2' => 'Verwendete Suchmaschinen',
         '4' => 'Blacklist',
     ],
     'hint' => [
@@ -62,7 +58,6 @@ return [
     'filtered-engine' => "Suchmaschine durch Filter deaktiviert",
     'payment-engine' => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
     'text' => [
-        '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
     ],
 ];

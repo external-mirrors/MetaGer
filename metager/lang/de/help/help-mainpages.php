@@ -1,11 +1,6 @@
 <?php
 
 return [
-
-
-
-
-
     "backarrow" => 'Zurück',
     "result" => [
         "info" => [

@@ -5,7 +5,7 @@
 @section('navbarFocus.datenschutz', 'class="active"')
 
 @section('content')
-    @if (config("app.fallback_locale") == "de")
+    @if (\App\Localization::getLanguage() == "de")
         @include('datenschutz.german')
 	@else
         @include('datenschutz.english')

@@ -11,7 +11,7 @@
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
   before_script:
     - kubectl config get-contexts
-    - kubectl config use-context open-source/MetaGer:metager
+    - kubectl config use-context $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:metager
   script:
     - .gitlab/deployment_scripts/update_secret.sh
     - .gitlab/deployment_scripts/update_deployment.sh
@@ -76,7 +76,7 @@ stop_review:
     REDIS_REPOSITORY_ID: 425
   before_script:
     - kubectl config get-contexts
-    - kubectl config use-context open-source/MetaGer:metager
+    - kubectl config use-context $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:metager
   script:
     - .gitlab/deployment_scripts/delete_deployment.sh
   when: manual

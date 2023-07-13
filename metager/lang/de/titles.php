@@ -19,8 +19,6 @@ return [
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Partnershops - MetaGer',
     'lang-selector' => 'Sprachauswahl',
-    'languages' => 'Übersetzungstool - MetaGer',
-    'languages.edit' => 'Sprachdateien bearbeiten - MetaGer',
     'app' => 'Apps - MetaGer',
     'faktencheck' => 'Fakten-Prüfung contra Fake-News',
     'jugendschutz' => 'Jugendschutz',

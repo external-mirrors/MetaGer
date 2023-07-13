@@ -1,5 +1,4 @@
 <?php
-
 return [
     'nav1' => 'Suche',
     'nav2' => 'Spenden',
@@ -7,7 +6,6 @@ return [
     'nav4' => 'Forum',
     'nav5' => 'Kontakt',
     'nav6' => 'Team',
-    'nav7' => 'Über uns',
     'nav8' => 'Impressum',
     'nav9' => 'Hilfe',
     'nav10' => 'Widget',
@@ -30,6 +28,8 @@ return [
     'nav31' => 'Weitere Infos',
     'navFactcheck' => 'Faktencheck',
     'navigationToggle' => 'Navigation anzeigen',
-    'titles.tips' => 'Tipps',
+    'titles' => [
+        'tips' => 'Tipps',
+    ],
     'plugin' => 'MetaGer Plugin',
 ];

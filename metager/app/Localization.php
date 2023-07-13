@@ -24,7 +24,7 @@ class Localization
          * We will change the Locale to en
          */
         $host = request()->getHost();
-        $locale = "en-EN";
+        $locale = "en-US";
         $language = "en";
         if ($host === "metager.de") {
             $locale = "de-DE";

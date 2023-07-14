@@ -5,8 +5,10 @@ namespace app\Models\parserSkripte;
 use App\MetaGer;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use App\PrometheusExporter;
 use LaravelLocalization;
 use Log;
+use Illuminate\Support\Facades\Redis;
 
 class Overture extends Searchengine
 {
@@ -16,8 +18,15 @@ class Overture extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
+
+    }
+
+    public function applySettings()
+    {
+        parent::applySettings();
         $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
+
 
     public function loadResults($result)
     {
@@ -37,14 +46,6 @@ class Overture extends Searchengine
             $this->totalResults = $resultCount;
             $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
             $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
-
-            if (sizeof($results) === 0 && sizeof($ads) === 0) {
-                // There are cases where Yahoo will return empty responses
-                // when search terms are not monetized although websearch results should exist
-                $this->failed_results = true;
-                $this->log_failed_yahoo_search();
-                return;
-            }
 
             foreach ($results as $result) {
                 $title = html_entity_decode($result["title"]);
@@ -83,6 +84,13 @@ class Overture extends Searchengine
                     $this->counter,
                     []
                 );
+            }
+            if (sizeof($this->results) === 0 && sizeof($this->ads) === 0 && !$this->failed) {
+                $this->log_failed_yahoo_search();
+                $this->configuration->getParameter->Keywords .= " -qwertzy";
+                $this->cached = false;
+                Redis::del($this->getHash());
+                $this->startSearch();
             }
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -153,17 +161,12 @@ class Overture extends Searchengine
         $affil_data .= '&ua=' . $this->useragent;
 
         $serve_domain = "https://metager.de/";
-        if (LaravelLocalization::getCurrentLocale() !== "de-DE") {
+        if ($this->configuration->getParameter->mkt !== "de") {
             $serve_domain = "https://metager.org/";
         }
 
-        if (\preg_match("/https:\/\/.*\.review\.metager\.de\//", $url)) {
-
-            $url = \preg_replace("/https:\/\/.*\.review\.metager\.de\//", $serve_domain, $url);
-        }
-
-        if (\strpos($url, "https://metager3.de") === 0) {
-            $url = str_replace("https://metager3.de", $serve_domain, $url);
+        if (\preg_match("/https?:\/\/[^\/]+\/.*/", $url)) {
+            $url = \preg_replace("/https?:\/\/[^\/]+\//", $serve_domain, $url);
         }
 
         $this->configuration->getParameter->affilData = $affil_data;
@@ -172,11 +175,12 @@ class Overture extends Searchengine
 
     private function log_failed_yahoo_search()
     {
+        PrometheusExporter::OvertureFail();
         $log_file = storage_path("logs/metager/yahoo_fail.csv");
 
         $data = [
             "time" => now()->format("Y-m-d H:i:s"),
-            "query" => $this->query
+            "query" => $this->configuration->getParameter->Keywords
         ];
         $fh = fopen($log_file, "a");
         try {

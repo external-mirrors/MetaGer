@@ -1,0 +1,49 @@
+> h3.inline-heading {
+  margin: 0;
+}
+> div.inline-results {
+  display: flex;
+  gap: 1rem;
+  overflow: auto;
+  padding-bottom: 0.7rem;
+  > .inline-result {
+    display: grid;
+    grid-template-columns: min-content;
+    grid-template-rows: auto auto auto 1fr;
+    > .result-image {
+      display: block;
+      background-color: #b2b2b24d;
+      height: 6.5rem;
+      overflow: hidden;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      > img {
+        height: 100%;
+        display: block;
+        margin-inline: auto;
+      }
+    }
+    > .result-headline {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.2;
+      max-height: 3.6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: inherit;
+    }
+    > .result-link {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 11em;
+    }
+    > .age {
+      color: #777;
+      font-size: 0.9em;
+      display: grid;
+      align-content: end;
+    }
+  }
+}

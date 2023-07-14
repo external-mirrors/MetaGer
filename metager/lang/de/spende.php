@@ -1,32 +1,30 @@
 <?php
-
 return [
-    'headline.1' => 'Ihre Spende',
-    'headline.2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a>.',
-
-    'headline.3' => 'Welchen Betrag möchten Sie spenden?',
-
+    'headline' => [
+        '1' => 'Ihre Spende',
+        '2' => 'Mit Ihrer Spende unterstützen Sie den Erhalt und die Weiterentwicklung der unabhängigen Suchmaschine metager.de und die Arbeit des gemeinnützigen Trägervereins SUMA-EV. <a href=":aboutlink" rel="noopener" target=_blank>Mehr erfahren</a>.',
+        '3' => 'Welchen Betrag möchten Sie spenden?',
+    ],
     'breadcrumps' => [
         'amount' => 'Betrag wählen',
         'payment_method' => 'Zahlungsart wählen',
-        'payment_interval' => 'Zahlungsinterval wählen'
+        'payment_interval' => 'Zahlungsintervall wählen',
     ],
-
     'amount' => [
         'description' => 'Wählen Sie bitte zunächst den Betrag aus, welchen Sie spenden möchten. Anschließend können Sie Ihre gewünschte Zahlungsmethode auswählen.',
         'custom' => 'Wunschbetrag',
         'taxes' => 'Spenden an den <a href="https://suma-ev.de">SUMA-EV</a> sind steuerlich absetzbar, da der Verein vom Finanzamt Hannover Nord als gemeinnützig anerkannt ist, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033.',
         'banktransfer' => [
-            'title' => "Unsere Kontoverbindung",
-            'description' => 'Möchten Sie Ihre Spende direkt mit einer Banküberweisung durchführen? Sie können auch den QR-Code für eine Fotoüberweisung verwenden um unsere Daten automatisch zu übernehmen.'
+            'title' => 'Unsere Kontoverbindung',
+            'description' => 'Möchten Sie Ihre Spende direkt mit einer Banküberweisung durchführen? Sie können auch den QR-Code für eine Fotoüberweisung verwenden um unsere Daten automatisch zu übernehmen.',
         ],
         'membershiphint' => [
             'title' => 'Oder vielleicht Mitglied werden?',
-            'description' => 'Als Mitglied im <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> können Sie MetaGer werbefrei verwenden und erhalten Zugriff auf alle kostenpflichtigen Suchmaschinen.'
+            'description' => 'Als Mitglied im <a href="https://suma-ev.de" target="_blank">SUMA-EV</a> können Sie MetaGer werbefrei verwenden und erhalten Zugriff auf alle kostenpflichtigen Suchmaschinen.',
         ],
         'qr' => [
-            'alt' => 'Fotoüberweisung'
-        ]
+            'alt' => 'Fotoüberweisung',
+        ],
     ],
     'interval' => [
         'heading' => 'Darf es eine regelmäßige Spende sein?',
@@ -35,10 +33,9 @@ return [
             'monthly' => 'Monatlich',
             'quarterly' => 'Vierteljährlich',
             'six-monthly' => 'Halbjährlich',
-            'annual' => 'Jährlich'
-        ]
+            'annual' => 'Jährlich',
+        ],
     ],
-
     'payment-method' => [
         'heading' => 'Wie möchten Sie die Zahlung durchführen?',
         'methods' => [
@@ -69,10 +66,9 @@ return [
             'mulitbanco' => 'Multibanco',
             'satispay' => 'Satispay',
             'paidy' => 'Paidy',
-            'card' => 'Kredit-/Debitkarte'
-        ]
+            'card' => 'Kredit-/Debitkarte',
+        ],
     ],
-
     'execute-payment' => [
         'heading' => 'Zahlung abschließen',
         'item-name' => 'Spende an den SUMA-EV',
@@ -80,7 +76,7 @@ return [
             'number' => 'Kartennummer',
             'expiration' => 'Gültig bis',
             'cvv' => 'CVV',
-            'submit' => "Jetzt Spenden",
+            'submit' => 'Jetzt Spenden',
             'recurring-hint' => 'Hinweis: Eine direkte Kreditkartenzahlung ohne Address-/Namensvalidierung ist nur für einmalige Spenden möglich.',
             'error' => [
                 '9500' => 'Kreditkarte als betrügerisch abgelehnt',
@@ -93,7 +89,7 @@ return [
                 '0500' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
                 '1330' => 'Kreditkarte ungültig. Bitte überprüfen Sie Ihre Eingabe',
                 'generic' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
-            ]
+            ],
         ],
         'banktransfer' => [
             'description' => [
@@ -101,28 +97,27 @@ return [
                 'recurring' => 'Bitte erstellen Sie bei Ihrer Hausbank einen Dauerauftrag auf folgende Bankverbindung (z.B. über Onlinebanking). Sie können auch alternativ den QR Code für eine Fotoüberweisung verwenden, um die Daten automatisch zu übernehmen.',
             ],
             'qr-remittance' => 'Spende vom :date',
-            'qrdownload' => 'Herunterladen'
+            'qrdownload' => 'Herunterladen',
         ],
         'directdebit' => [
             'description' => 'Bitte tragen Sie nachfolgend die Informationen zu Ihrem Bankkonto ein von dem wir die Spende im Lastschriftverfahren einziehen dürfen. Es kann 1-2 Wochen dauern bis der Betrag eingezogen wird.',
             'name' => [
                 'label' => 'Kontoinhaber',
-                'placeholder' => 'Max Mustermann'
+                'placeholder' => 'Max Mustermann',
             ],
             'iban' => [
                 'label' => 'IBAN',
                 'placeholder' => 'DE89 3704 0044 0532 0130 00',
-                'error' => 'Die eingegebene IBAN ist ungültig.'
+                'error' => 'Die eingegebene IBAN ist ungültig.',
             ],
-            'submit' => 'Zahlung durchführen'
+            'submit' => 'Zahlung durchführen',
         ],
-        'processing' => 'Zahlung wird verarbeitet'
+        'processing' => 'Zahlung wird verarbeitet',
     ],
-
     'thankyou' => [
         'heading' => 'Herzlichen Dank!',
         'description' => 'Ihre Spende trägt wesentlich dazu bei, dass wir MetaGer dauerhaft betreiben und weiterentwickeln können.',
         'taxes' => 'Hinweis: Der SUMA-EV ist als gemeinnütziger Verein anerkannt. Das bedeutet, dass Sie Ihre Spende steuerlich geltend machen können. Bis zu einer Spendenhöhe von 300€ genügt Ihrem Finanzamt als Nachweis der Spende ein Kontoauszug. Wünschen Sie dennoch eine Spendenbescheinigung, teilen Sie uns bitte noch Ihre vollständige Addresse über unser <a href=":kontakt">Kontaktformular</a> mit.',
-        'button' => 'Zurück zur MetaGer Suche'
+        'button' => 'Zurück zur MetaGer Suche',
     ],
 ];

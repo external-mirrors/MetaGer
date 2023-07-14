@@ -73,6 +73,6 @@ class MembershipController extends Controller
         // Create Notification
         ContactMail::dispatch("verein@metager.de", "Mitglieder", $formData["name"], $formData["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
 
-        return redirect(LaravelLocalization::getLocalizedUrl(null, route("membership_success")));
+        return redirect(route("membership_success"));
     }
 }

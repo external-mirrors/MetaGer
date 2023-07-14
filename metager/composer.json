@@ -21,7 +21,6 @@
         "promphp/prometheus_client_php": "^2.6.0",
         "smhg/sepa-qr-data": "^1.2",
         "symfony/dom-crawler": "^6.0",
-        "tio/laravel": "^1.20",
         "vizir/laravel-keycloak-web-guard": "^3.0"
     },
     "require-dev": {

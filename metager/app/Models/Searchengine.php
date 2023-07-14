@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
+use app\Models\parserSkripte\Overture;
 use App\SearchSettings;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
@@ -13,6 +14,8 @@ abstract class Searchengine
 {
     public $getString = ""; # Der String für die Get-Anfrage
     public $query = ""; # The search query
+    public $alteredQuery = ""; // If the query was modified by the searchengine
+    public $alterationOverrideQuery = ""; // The Override to remove the altered query
 
     /** @var SearchEngineConfiguration */
     public $configuration;
@@ -21,6 +24,10 @@ abstract class Searchengine
     public $results = []; # Die geladenen Ergebnisse
     public $ads = []; # Die geladenen Werbungen
     public $products = []; # Die geladenen Produkte
+    /** @var Result[] */
+    public $news = [];
+    /** @var Result[] */
+    public $videos = [];
     public $loaded = false; # wahr, sobald die Ergebnisse geladen wurden
     public $cached = false;
 
@@ -44,6 +51,7 @@ abstract class Searchengine
     public $connection_time = 0; # Wird eventuell für Artefakte benötigt
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
     public $new = true; # Important for loading results by JS
+    protected $failed = false; # Used to check if Overture search has failed
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
@@ -185,6 +193,10 @@ abstract class Searchengine
 
         if ($body !== null) {
             $this->loadResults($body);
+            if ($this instanceof Overture && !$this->failed && sizeof($this->results) === 0) {
+                $this->failed = true;
+                return false;
+            }
             $this->getNext($metager, $body);
             // Pay for the searchengine if cost > 0 and returned results
             if (!$this->cached && $this->configuration->cost > 0 && sizeof($this->results) > 0) {

@@ -4,16 +4,13 @@
 @section('content')
   <div id="search-content">
     <ul id="foki-switcher">
-    @foreach(app(\App\SearchSettings::class)->sumasJson->foki as $name => $fokus)
-    @if(\App\Localization::getLanguage() === "en" && $name === "science")
-    @continue
-    @endif
+    @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
     <li>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, route('startpage', ['focus' => $name])) }}"
-        @if(app(\App\SearchSettings::class)->fokus === $name)
+      <a href="{{ route('startpage', ['focus' => $fokus]) }}"
+        @if(app(\App\SearchSettings::class)->fokus === $fokus)
         class="active"
         @endif
-      >@lang($fokus->{"display-name"})</a>
+      >@lang("index.foki.$fokus")</a>
     </li>
     @endforeach
     </ul>
@@ -23,7 +20,7 @@
           <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
             <img src="/img/metager.svg" alt="MetaGer" />
           </a>
-          <a class="lang" href="{{ LaravelLocalization::getLocalizedURL(null, route('lang-selector')) }}">
+          <a class="lang" href="{{ route('lang-selector') }}">
             <span>{{ App\Localization::getRegion() }}</span>
           </a>
         </h1>
@@ -55,6 +52,9 @@
     </div>
       </div>
     </div>
+    <div id="language">
+      <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
+    </div>
     <div id="scroll-links">
       <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
       <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
@@ -70,7 +70,7 @@
         </figure>
         <p>{!! trans('mg-story.privacy.p') !!}</p>
         <ul class="story-links">
-          <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+          <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('about.head.1') }}</a></li>
           <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "datenschutz") }}">{{ trans('mg-story.btn-data-protection') }}</a></li>
         </ul>
       </section>
@@ -83,7 +83,7 @@
         <ul class="story-links">
           <li><a class="story-button" href="https://suma-ev.de/" target="_blank">{{ trans('mg-story.btn-SUMA-EV') }}</a></li>
           <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "spende") }}">{{ trans('mg-story.btn-donate') }}</a></li>
-          <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), route('membership_form')) }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
+          <li><a class="story-button" href="{{ route('membership_form') }}" target="_blank">{{ trans('mg-story.btn-member') }}</a></li>
           <li><a class="story-button" href="https://suma-ev.de/mitglieder/" target="_blank"> {{ trans('mg-story.btn-member-advantage') }}</a></li>
         </ul>
       </section>
@@ -94,7 +94,7 @@
         </figure>
         <p>{!! trans('mg-story.diversity.p') !!}</p>
         <ul class="story-links">
-        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('mg-story.btn-about-us') }}</a></li>
+        <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "about") }}">{{ trans('about.head.1') }}</a></li>
         <li><a class="story-button" href="https://gitlab.metager.de/open-source/MetaGer" target="_blank">{{ trans('mg-story.btn-mg-code') }}</a></li>
         <li><a class="story-button" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency") }}">{{ trans('mg-story.btn-mg-algorithm') }}</a></li>
         </ul>

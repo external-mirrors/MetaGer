@@ -45,6 +45,8 @@ class MetaGer
     protected $queryFilter = [];
     protected $parameterFilter = [];
     protected $ads = [];
+    public $news = [];
+    public $videos = [];
     protected $infos = [];
     public $warnings = [];
     public $htmlwarnings = [];
@@ -359,6 +361,12 @@ class MetaGer
             foreach ($engine->ads as $ad) {
                 $this->ads[] = clone $ad;
             }
+            foreach ($engine->news as $news) {
+                $this->news[] = clone $news;
+            }
+            foreach ($engine->videos as $video) {
+                $this->videos[] = clone $video;
+            }
         }
     }
 
@@ -468,8 +476,8 @@ class MetaGer
         $donationAd = new \App\Models\Result(
             "MetaGer",
             __("metaGer.ads.own.title"),
-            LaravelLocalization::getLocalizedURL(null, route("spende")),
-            LaravelLocalization::getLocalizedURL(null, route("spende")),
+            route("spende"),
+            route("spende"),
             __("metaGer.ads.own.description"),
             "MetaGer",
             "https://metager.de",
@@ -776,7 +784,7 @@ class MetaGer
     public function retrieveResults()
     {
         $engines = app(Searchengines::class)->getEnabledSearchengines();
-        # Von geladenen Engines die Ergebnisse holen
+        // Von geladenen Engines die Ergebnisse holen
         foreach ($engines as $engine) {
             if (!$engine->loaded) {
                 try {
@@ -793,16 +801,6 @@ class MetaGer
                 $this->alterationOverrideQuery = $engine->alterationOverrideQuery;
             }
         }
-    }
-
-    public function yahoo_failed()
-    {
-        foreach ($this->engines as $engine) {
-            if ($engine->name === "yahoo" && $engine->loaded && $engine->failed_results) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /*
@@ -1396,7 +1394,7 @@ class MetaGer
 
     public function generateSearchLink($fokus, $results = true)
     {
-        $except = ['page', 'next', 'out', 'submit-query', 'mgv'];
+        $except = ['page', 'next', 'out', 'submit-query', 'mgv', 'ua'];
         # Remove every Filter
         foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
             $except[] = $filter->{"get-parameter"};
@@ -1410,7 +1408,7 @@ class MetaGer
 
     public function generateEingabeLink($eingabe)
     {
-        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv'];
+        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
         $requestData = $this->request->except($except);
 
         $requestData['eingabe'] = $eingabe;
@@ -1429,7 +1427,7 @@ class MetaGer
     public function generateSiteSearchLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " site:$host";
         $requestData['focus'] = "web";
         $link = action('MetaGerSearch@search', $requestData);
@@ -1439,7 +1437,7 @@ class MetaGer
     public function generateRemovedHostLink($host)
     {
         $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:$host";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;
@@ -1448,7 +1446,7 @@ class MetaGer
     public function generateRemovedDomainLink($domain)
     {
         $domain = urlencode($domain);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv']);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:*.$domain";
         $link = action('MetaGerSearch@search', $requestData);
         return $link;

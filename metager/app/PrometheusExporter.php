@@ -59,4 +59,11 @@ class PrometheusExporter
         $counter = $registry->getOrRegisterCounter("metager", $language, 'counts preferred language usages', ['type']);
         $counter->inc($type);
     }
+
+    public static function OvertureFail()
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "overture_failed", "counts how often overture failed a response");
+        $counter->inc();
+    }
 }

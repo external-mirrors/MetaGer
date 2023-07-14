@@ -8,9 +8,11 @@ return [
         'header' => 'Auf :root gesetzte Einstellungen',
         'text' => 'Hier finden Sie eine Übersicht aller von Ihnen gesetzten Einstellungen und Cookies. Sie können einzelne Einträge löschen, oder alle entfernen. Bedenken Sie, dass die zugehörigen Einstellungen dann nicht mehr verwendet werden.',
     ],
-    'aria.label' => [
-        '1' => 'aktiviert',
-        '2' => 'deaktiviert',
+    'aria' => [
+        'label' => [
+            '1' => 'aktiviert',
+            '2' => 'deaktiviert',
+        ],
     ],
     'metager-key' => [
         'header' => 'Werbefreie Suche',
@@ -62,7 +64,7 @@ return [
     'save' => 'Speichern',
     'system' => 'Systemstandard',
     "enable-engine" => "Suchmaschine einschalten",
-    "disable-engine" => "Suchmaschine ausscahlten",
+    "disable-engine" => "Suchmaschine ausschalten",
     "filtered-engine" => "Suchmaschine durch Filter deaktiviert",
     "payment-engine" => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
     'text' => [

@@ -4,8 +4,10 @@ namespace app\Models\parserSkripte;
 
 use App\Localization;
 use App\Models\DeepResults\Button;
+use App\Models\Result;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use LaravelLocalization;
 use Log;
 use Request;
 
@@ -22,6 +24,9 @@ class Brave extends Searchengine
     {
         parent::applySettings();
 
+        // Setup UI Lang to match users language
+        $locale = LaravelLocalization::getCurrentLocale();
+        $this->configuration->getParameter->ui_lang = $locale;
         // Brave has divided country search setting and language search setting
         // MetaGer will configure something like de_DE
         // We need to seperate both parameters and put them into their respective get parameters
@@ -40,7 +45,7 @@ class Brave extends Searchengine
         try {
             $results = json_decode($result);
 
-            # Check if the query got altered
+            // Check if the query got altered
             if (!empty($results->{"query"}) && !empty($results->{"query"}->{"altered"}) && $results->query->altered !== $results->query->original) {
                 $this->alteredQuery = $results->{"query"}->{"altered"};
                 $override = "";
@@ -74,7 +79,7 @@ class Brave extends Searchengine
                 $anzeigeLink = $result->meta_url->netloc . " " . $result->meta_url->path;
                 $descr = html_entity_decode($result->description);
                 $this->counter++;
-                $newResult = new \App\Models\Result(
+                $newResult = new Result(
                     $this->configuration->engineBoost,
                     $title,
                     $link,
@@ -111,6 +116,54 @@ class Brave extends Searchengine
                 }
 
                 $this->results[] = $newResult;
+            }
+
+            // Check if news are relevant to this query
+            if (property_exists($results, "news") && property_exists($results->news, "results") && is_array($results->news->results)) {
+                foreach ($results->news->results as $index => $news_result) {
+                    $new_news_result = new Result(
+                        1,
+                        $news_result->title,
+                        $news_result->url,
+                        $news_result->meta_url->netloc . " " . $news_result->meta_url->path,
+                        $news_result->description,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
+                        $index + 1,
+                        []
+                    );
+                    if (property_exists($news_result, "thumbnail")) {
+                        $new_news_result->image = $news_result->thumbnail->src;
+                    }
+                    if (property_exists($news_result, "age")) {
+                        $new_news_result->age = $news_result->age;
+                    }
+                    $this->news[] = $new_news_result;
+                }
+            }
+
+            // Check if videos are relevant to this query
+            if (property_exists($results, "videos") && property_exists($results->videos, "results") && is_array($results->videos->results)) {
+                foreach ($results->videos->results as $index => $video_result) {
+                    $new_video_result = new Result(
+                        1,
+                        $video_result->title,
+                        $video_result->url,
+                        $video_result->meta_url->netloc . " " . $video_result->meta_url->path,
+                        $video_result->description,
+                        $this->configuration->infos->displayName,
+                        $this->configuration->infos->homepage,
+                        $index + 1,
+                        []
+                    );
+                    if (property_exists($video_result, "thumbnail")) {
+                        $new_video_result->image = $video_result->thumbnail->src;
+                    }
+                    if (property_exists($video_result, "age")) {
+                        $new_video_result->age = $video_result->age;
+                    }
+                    $this->videos[] = $new_video_result;
+                }
             }
 
 

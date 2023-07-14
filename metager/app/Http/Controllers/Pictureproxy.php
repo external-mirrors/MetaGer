@@ -76,6 +76,6 @@ class Pictureproxy extends Controller
         ];
 
         $params = Crypt::encrypt($params);
-        return LaravelLocalization::getLocalizedUrl(null, route("imageproxy", ["data" => $params]));
+        return route("imageproxy", ["data" => $params]);
     }
 }

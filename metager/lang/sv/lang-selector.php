@@ -23,6 +23,6 @@ return [
     ],
     'translate' => [
         'title' => 'Hittade du något misstag i våra översättningar?',
-        'description' => 'Om du har hittat ett fel i våra översättningar tar vi gärna emot dina förslag direkt via vår weblate-instans <a href="https://translate.metager.de"></a> (inget konto behövs). Alternativt kan du maila oss dina fynd via vårt <a href=":contactlink">kontaktformulär</a>.',
+        'description' => 'Om du har hittat ett fel i våra översättningar tar vi gärna emot dina förslag direkt via vår <a href="https://translate.metager.de">weblate-instans</a> (inget konto behövs). Alternativt kan du maila oss dina fynd via vårt <a href=":contactlink">kontaktformulär</a>.',
     ],
 ];

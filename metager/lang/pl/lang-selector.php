@@ -23,6 +23,6 @@ return [
     ],
     'translate' => [
         'title' => 'Czy znalazłeś błąd w naszych tłumaczeniach?',
-        'description' => 'Jeśli znalazłeś błąd w naszych tłumaczeniach, z przyjemnością przyjmiemy Twoje sugestie bezpośrednio za pośrednictwem naszej instancji <a href="https://translate.metager.de">weblate</a> (konto nie jest wymagane). Alternatywnie możesz przesłać nam swoje spostrzeżenia za pośrednictwem formularza kontaktowego <a href=":contactlink"></a> .',
+        'description' => 'Jeśli znalazłeś błąd w naszych tłumaczeniach, z przyjemnością przyjmiemy Twoje sugestie bezpośrednio za pośrednictwem naszej instancji <a href="https://translate.metager.de">weblate</a> (konto nie jest wymagane). Alternatywnie możesz przesłać nam swoje spostrzeżenia za pośrednictwem <a href=":contactlink">formularza kontaktowego</a> .',
     ],
 ];

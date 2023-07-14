@@ -26,6 +26,10 @@
     <details>
         <summary>@lang("lang-selector.detection.title")</summary>
         <p>@lang("lang-selector.detection.description")</p>
-    </details>    
+    </details>
+    <details>
+        <summary>@lang("lang-selector.translate.title")</summary>
+        <p>@lang("lang-selector.translate.description", ["contactlink" => route("contact")])</p>
+    </details>  
 </div>
 @endsection

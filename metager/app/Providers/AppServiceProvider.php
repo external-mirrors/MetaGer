@@ -14,12 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (app()->routesAreCached()) {
-            // Apply the correct locale configuration
-            // This is also done in RouteServiceProvider if routes are not cached
-            Localization::setLocale();
-        }
-
+        config(["app.locale" => "default"]);
+        $test = app()->getLocale();
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
                 'host' => config("database.redis.default.host"),

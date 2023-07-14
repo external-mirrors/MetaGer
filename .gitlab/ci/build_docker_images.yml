@@ -60,7 +60,7 @@ redis:
     KEEP_N: 9 # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
   before_script:
     - kubectl config get-contexts
-    - kubectl config use-context open-source/MetaGer:metager
+    - kubectl config use-context $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:metager
     - kubectl config view
   script:
     - .gitlab/deployment_scripts/cleanup_tags_revision.sh

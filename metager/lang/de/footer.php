@@ -1,7 +1,9 @@
 <?php
 
 return [
-    'sumaev.1' => 'Ein Projekt des',
-    'sumaev.2' => 'SUMA-EV',
-    'sumaev.link' => 'https://suma-ev.de',
+    'sumaev' => [
+        '1' => 'Ein Projekt des',
+        '2' => 'SUMA-EV',
+        'link' => 'https://suma-ev.de',
+    ],
 ];

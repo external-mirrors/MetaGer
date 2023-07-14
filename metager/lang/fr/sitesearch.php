@@ -1,14 +1,18 @@
 <?php
-
 return [
-    "head.1"    	=>	"MetaGer Sitesearch-Widget",
-    "head.2"    	=>	"Ici vous trouvez un MetaGer-Widget pour votre site Web.",
-    "head.3"    	=>	"Site Web à parcourir",
-    "head.4"    	=>	"Entrer le site Web...",
-    "head.5"    	=>	"Générer",
-    "generated.1"	=>	"Aperçu",
-    "generated.3"	=>	"Recherche avec MetaGer",
-    "generated.4"	=>	"Rechercher",
-    "generated.5"	=>	"Code",
-    "generated.6"	=>	"tout"
+    'head' => [
+        '5' => 'Générer',
+        '1' => 'MetaGer Sitesearch-Widget',
+        '2' => 'Vous trouverez ici un Metager-Widget pour votre site web.',
+        '3' => 'Site web sur lequel effectuer la recherche',
+        '4' => 'Entrer dans le site web...',
+    ],
+    'generated' => [
+        '2' => 'Cherchez et trouvez en toute sécurité avec MetaGer',
+        '3' => 'Recherche avec MetaGer...',
+        '4' => 'Recherche',
+        '5' => 'Code',
+        '6' => 'fr',
+        '1' => 'Avant-première',
+    ],
 ];

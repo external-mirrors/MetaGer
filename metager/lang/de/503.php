@@ -1,7 +1,5 @@
 <?php
-
 return [
     'title' => 'Service nicht verfügbar',
-
-    'text'  => 'Sind gleich zurück.',
+    'text' => 'Sind gleich zurück',
 ];

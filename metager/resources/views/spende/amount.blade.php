@@ -57,7 +57,7 @@
             <div id="membership-hint">
                 <h3>@lang('spende.amount.membershiphint.title')</h3>
                 <div>@lang('spende.amount.membershiphint.description')</div>
-                <a href="{{ LaravelLocalization::getLocalizedUrl(null, route('membership_form')) }}" class="btn btn-default">Beitrittsformular</a>
+                <a href="{{ route('membership_form') }}" class="btn btn-default">Beitrittsformular</a>
             </div>
             @endif
         </div>

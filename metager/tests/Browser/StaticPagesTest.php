@@ -45,11 +45,11 @@ class StaticPagesTest extends DuskTestCase
     {
         // App
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->clickLink("MetaGer App")
-                ->waitForLocation("/app")
+                ->waitForLocation("/de-DE/app")
                 ->on(new App);
         });
     }
@@ -58,10 +58,10 @@ class StaticPagesTest extends DuskTestCase
     {
         // Datenschutz
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->clickLink("Datenschutz")
-                ->waitForLocation("/datenschutz")
+                ->waitForLocation("/de-DE/datenschutz")
                 ->on(new Datenschutz);
         });
     }
@@ -70,11 +70,11 @@ class StaticPagesTest extends DuskTestCase
     {
         // Hilfe
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->clickLink("Hilfe")
-                ->waitForLocation("/hilfe")
+                ->waitForLocation("/de-DE/hilfe")
                 ->on(new Hilfe);
         });
     }
@@ -83,12 +83,12 @@ class StaticPagesTest extends DuskTestCase
     {
         // Impressum
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label#navigationKontakt")
                 ->clickLink("Impressum")
-                ->waitForLocation("/impressum")
+                ->waitForLocation("/de-DE/impressum")
                 ->on(new Impress);
         });
     }
@@ -97,12 +97,12 @@ class StaticPagesTest extends DuskTestCase
     {
         // Kontakt
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label#navigationKontakt")
                 ->clickLink("Kontakt")
-                ->waitForLocation("/kontakt")
+                ->waitForLocation("/de-DE/kontakt")
                 ->on(new Kontakt);
         });
     }
@@ -111,12 +111,12 @@ class StaticPagesTest extends DuskTestCase
     {
         // Plugin
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label[for=servicesToggle]")
                 ->clickLink("MetaGer Plugin")
-                ->waitForLocation("/plugin")
+                ->waitForLocation("/de-DE/plugin")
                 ->on(new Plugin);
         });
     }
@@ -125,25 +125,25 @@ class StaticPagesTest extends DuskTestCase
     {
         //Spenden
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->clickLink("Spenden")
-                ->waitForLocation("/spende")
+                ->waitForLocation("/de-DE/spende")
                 ->on(new Spende);
         });
     }
-    
+
     public function testTeam()
     {
         // Team
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label#navigationKontakt")
                 ->clickLink("Team")
-                ->waitForLocation("/team")
+                ->waitForLocation("/de-DE/team")
                 ->on(new Team);
         });
     }
@@ -152,28 +152,29 @@ class StaticPagesTest extends DuskTestCase
     {
         // Widget
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label[for=servicesToggle]")
                 ->clickLink("Widget")
-                ->waitForLocation("/widget")
+                ->waitForLocation("/de-DE/widget")
                 ->on(new Widget);
         });
     }
+
 
     public function testWebsearchWidget()
     {
         // Websearch Widget
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label[for=servicesToggle]")
                 ->clickLink("Widget")
-                ->waitForLocation("/widget")
+                ->waitForLocation("/de-DE/widget")
                 ->clickLink("Suche im Web")
-                ->waitForLocation("\/websearch\/")
+                ->waitForLocation("/de-DE/websearch/")
                 ->on(new WebsearchWidget);
         });
     }
@@ -182,15 +183,16 @@ class StaticPagesTest extends DuskTestCase
     {
         // Sitesearch Widget
         $this->browse(function (Browser $browser) {
-            $browser->visit("/")
+            $browser->visit("/de-DE")
                 ->waitFor("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label.sidebar-opener[for=sidebarToggle]")
                 ->click("label[for=servicesToggle]")
                 ->clickLink("Widget")
-                ->waitForLocation("/widget")
+                ->waitForLocation("/de-DE/widget")
                 ->clickLink("Suche nur auf einer Domain")
-                ->waitForLocation("/sitesearch/")
+                ->waitForLocation("/de-DE/sitesearch/")
                 ->on(new SitesearchWidget);
         });
     }
+
 }

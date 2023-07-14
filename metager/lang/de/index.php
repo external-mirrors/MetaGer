@@ -1,16 +1,7 @@
 <?php
-
 return [
-    'foki.web' => 'Web',
-    'foki.bilder' => 'Bilder',
-    'foki.nachrichten' => 'News',
-    'foki.science' => 'Wissenschaft',
-    'foki.produkte' => 'Produkte',
-
     'plugin' => 'MetaGer installieren',
-    'adfree' => 'MetaGer werbefrei nutzen',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
-
     'key' => [
         'placeholder' => 'Schlüssel für werbefreie Suche eingeben',
         'tooltip' => [
@@ -22,4 +13,12 @@ return [
     ],
     'placeholder' => 'MetaGer: Sicher suchen & finden',
     'searchbutton' => 'MetaGer-Suche',
+    'foki' => [
+        'web' => 'Web',
+        'bilder' => 'Bilder',
+        'nachrichten' => 'Nachrichten',
+        'science' => 'Wissenschaft',
+        'produkte' => 'Produkte',
+    ],
+    'adfree' => 'MetaGer werbefrei nutzen',
 ];

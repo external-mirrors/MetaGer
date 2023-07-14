@@ -4,11 +4,13 @@ namespace App\Http\Middleware;
 
 use App;
 use App\Models\Authorization\Authorization;
+use App\Models\Verification\AgentVerification;
 use App\Models\Verification\HumanVerification as ModelsHumanVerification;
 use App\QueryTimer;
 use App\SearchSettings;
 use Cache;
 use Closure;
+use LaravelLocalization;
 use URL;
 
 class HumanVerification
@@ -70,6 +72,16 @@ class HumanVerification
         if ($request->has("admin_bot")) {
             echo redirect(route("admin_bot", ["key" => $user->key]));
             return;
+        }
+
+        // Verify that we requested all necessary UA headers to base validation on that
+        foreach ($user->getVerificators() as $verificator) {
+            if ($verificator instanceof AgentVerification) {
+                if (!$request->hasHeader("Sec-CH-UA-Full-Version-List") && !$request->has("ua")) {
+                    $url = route("resultpage", array_merge($request->all(), ["ua" => 1]));
+                    return redirect($url, 302, ["Accept-CH" => "Sec-CH-UA-Full-Version-List, Sec-CH-UA-Model, Sec-CH-UA-Platform-Version"]);
+                }
+            }
         }
 
         /**

@@ -1,16 +1,20 @@
 <?php
 
 return [
-    'head.1'      => 'MetaGer Sitesearch-Widget',
-    'head.2'      => 'Hier finden Sie ein Metager-Widget für Ihre Webseite.',
-    'head.3'      => 'Website auf der gesucht werden soll',
-    'head.4'      => 'Website eingeben...',
-    'head.5'      => 'Generieren',
+    'head' => [
+        '1' => 'MetaGer Sitesearch-Widget',
+        '2' => 'Hier finden Sie ein Metager-Widget für Ihre Webseite.',
+        '3' => 'Website auf der gesucht werden soll',
+        '4' => 'Website eingeben...',
+        '5' => 'Generieren',
+    ],
 
-    'generated.1' => 'Vorschau',
-    'generated.2' => 'Sicher suchen & finden mit MetaGer',
-    'generated.3' => 'Suche mit MetaGer...',
-    'generated.4' => 'Suchen',
-    'generated.5' => 'Code',
-    'generated.6' => 'all',
+    'generated' => [
+        '1' => 'Vorschau',
+        '2' => 'Sicher suchen & finden mit MetaGer',
+        '3' => 'Suche mit MetaGer...',
+        '4' => 'Suchen',
+        '5' => 'Code',
+        '6' => 'all',
+    ],
 ];

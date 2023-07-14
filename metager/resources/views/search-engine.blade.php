@@ -12,7 +12,7 @@
 		<p>{!! trans('search-engine.text.1.1',["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")]) !!}</p>
 		<h2>{{ trans('search-engine.head.3') }}</h2>
 		<p>{{ trans('search-engine.text.1.2') }}</p>
-		<p>{!! trans('search-engine.text.1.3', ["contact" => LaravelLocalization::getLocalizedUrl(LaravelLocalization::getCurrentLocale(), route('contact'))]) !!}</p>
+		<p>{!! trans('search-engine.text.1.3', ["contact" => route('contact')]) !!}</p>
 
 	</div>
 	@foreach($suma_infos as $fokus_name => $suma_list)

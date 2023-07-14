@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
@@ -136,7 +137,6 @@ Route::get('bform1.htm', function () {
 
 Route::get('datenschutz', function () {
     return view('datenschutz/datenschutz')
-        ->with('title', trans('titles.datenschutz'))
         ->with('navbarFocus', 'datenschutz');
 });
 
@@ -325,7 +325,7 @@ Route::get('plugin', function (Request $request) {
         ->with('css', [
             mix('/css/plugin-page.css'),
         ]);
-});
+})->name("plugin");
 
 Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
@@ -352,43 +352,7 @@ Route::get('MG20', function () {
 Route::get('databund', function () {
     return redirect('https://metager.de/klassik/databund');
 });
-Route::get("lang", function () {
-    // Check if a previous URL is given that we can offer a back button for
-    $previous = request()->input("previous_url", URL::previous());
-
-    $allowed_hosts = [
-        "metager.de",
-        "metager.org"
-    ];
-
-    $components = parse_url($previous);
-    $previous_url = null; // URL for the back button
-    if (is_array($components) && array_key_exists("host", $components)) {
-        $host = $components["host"];
-        $current_host = request()->getHost();
-
-        $path = "/";
-        if (array_key_exists("path", $components)) {
-            $path = $components["path"];
-        }
-        if (array_key_exists("query", $components)) {
-            $path .= "?" . $components["query"];
-        }
-        if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) { // only if the host of that URL matches the current host
-            $previous_url = LaravelLocalization::getLocalizedUrl(null, $path);
-        }
-    }
-
-    return view('lang-selector')
-        ->with("previous_url", $previous_url)
-        ->with("title", trans("titles.lang-selector"))
-        ->with('css', [mix('css/lang-selector.css')]);
-})->name("lang-selector");
-Route::get('languages', 'LanguageController@createOverview');
-Route::get('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@createSynopticEditPage');
-Route::post('synoptic/{exclude?}/{chosenFile?}', 'LanguageController@processSynopticPageInput');
-Route::get('languages/edit/{from}/{to}/{exclude?}/{email?}', 'LanguageController@createEditPage');
-Route::post('languages/edit/{from}/{to}/{exclude?}/{email?}', 'MailController@sendLanguageFile');
+Route::get("lang", [LangSelector::class, "index"])->name("lang-selector");
 
 Route::group(['prefix' => 'app'], function () {
     Route::get(

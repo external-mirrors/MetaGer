@@ -1,2 +1,5 @@
 <?php
-return [];
+return [
+    'previous' => '&laquo; Poprzedni',
+    'next' => 'Następny &raquo;',
+];

@@ -1,2 +1,5 @@
 <?php
-return [];
+return [
+    'text' => 'Zaraz wracamy',
+    'title' => 'Usługa niedostępna',
+];

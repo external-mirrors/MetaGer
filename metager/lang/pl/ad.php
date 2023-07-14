@@ -1,2 +1,5 @@
 <?php
-return [];
+return [
+    'werbung' => 'Reklama',
+    'von' => 'przez',
+];

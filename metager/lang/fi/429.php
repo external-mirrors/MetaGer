@@ -1,2 +1,4 @@
 <?php
-return [];
+return [
+    'title' => '429 - Liian monta pyyntöä',
+];

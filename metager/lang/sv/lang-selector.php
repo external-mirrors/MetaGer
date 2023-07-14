@@ -21,4 +21,8 @@ return [
         'title' => 'Vilken är standardinställningen för språk?',
         'description' => 'Vi använder språkspecifika URL-adresser som kan användas direkt. Om inget språk anges i webbadressen använder vi den språkinställning som finns lagrad i din webbläsares inställningar för att välja den lämpligaste regionen för dig. I de flesta fall kommer detta automatiskt att ge dig sökresultat för rätt region. Alternativt kan du ändra ovanstående inställning.',
     ],
+    'translate' => [
+        'title' => 'Hittade du något misstag i våra översättningar?',
+        'description' => 'Om du har hittat ett fel i våra översättningar tar vi gärna emot dina förslag direkt via vår weblate-instans <a href="https://translate.metager.de"></a> (inget konto behövs). Alternativt kan du maila oss dina fynd via vårt <a href=":contactlink">kontaktformulär</a>.',
+    ],
 ];

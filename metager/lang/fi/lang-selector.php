@@ -21,4 +21,8 @@ return [
         '1' => 'Kielen valinta',
     ],
     'description' => 'Alla on luettelo kaikista kielistä/alueista, joita MetaGer-haku tällä hetkellä tukee. Hakutulokset optimoidaan valitulle alueelle. Käytämme evästettä muuttuneen asetuksen tallentamiseen.',
+    'translate' => [
+        'title' => 'Löysitkö virheitä käännöksissämme?',
+        'description' => 'Jos olet löytänyt virheen käännöksissämme, otamme mielellämme vastaan ehdotuksesi suoraan <a href="https://translate.metager.de">weblate-instanssin</a> kautta (tiliä ei tarvita). Vaihtoehtoisesti voit lähettää meille havaintosi sähköpostitse <a href=":contactlink">yhteydenottolomakkeemme</a> kautta.',
+    ],
 ];

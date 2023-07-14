@@ -24,8 +24,9 @@ class LangSelector extends Controller
         if (is_array($components) && array_key_exists("host", $components)) {
             $host = $components["host"];
             $current_host = request()->getHost();
-
-            $path = preg_replace("/^\/[a-z]{2}-[A-Z]{2}/", "", $request->getRequestUri());
+            $path = isset($components["path"]) ? $components["path"] : "/";
+            $path .= isset($components["query"]) ? "?" . $components["query"] : "";
+            $path = preg_replace("/^\/[a-z]{2}-[A-Z]{2}/", "", $path);
             if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) { // only if the host of that URL matches the current host
                 $previous_url = LaravelLocalization::getLocalizedUrl(null, $path);
             }

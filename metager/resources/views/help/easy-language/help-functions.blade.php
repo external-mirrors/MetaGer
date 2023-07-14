@@ -53,7 +53,7 @@
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
 			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.example') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
-			<img class="help-easy-language-image lm-only" src="/img/help-bangs-lm.png"/>
+			<img id="help-easy-language-bang-image" class="help-easy-language-image lm-only" src="/img/help-bangs-lm.png"/>
 			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm.png"/>
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
 
@@ -87,7 +87,7 @@
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
-		<img class="help-easy-language-image lm-only" src="/img/help-install-metager-lm.png"/>
+		<img id="help-easy-language-install-metager-image" class="help-easy-language-image lm-only" src="/img/help-install-metager-lm.png"/>
 		<img class="help-easy-language-image dm-only" src="/img/help-install-metager-dm.png"/>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>

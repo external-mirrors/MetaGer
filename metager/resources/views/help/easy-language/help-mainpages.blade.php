@@ -103,31 +103,31 @@
 
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.searchengine.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.searchengine.1') !!}</p>
-			<img class="help-easy-language-image lm-only" src="/img/help-settings-search-engines-lm.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-settings-search-engines-dm.png"/>
+			<img id="help-easy-language-used-search-engines-image" class="help-easy-language-image lm-only" src="/img/help-settings-search-engines-lm.png"/>
+			<img id="help-easy-language-used-search-engines-image" class="help-easy-language-image dm-only" src="/img/help-settings-search-engines-dm.png"/>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.searchengine.2') !!}</p>
 
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.filter.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.0') !!}</p>
-			<img class="help-easy-language-image lm-only help-easy-language-searchfilter-and-blacklist" src="/img/help-settings-search-filter-lm.png"/>
-			<img class="help-easy-language-image dm-only help-easy-language-searchfilter-and-blacklist" src="/img/help-settings-search-filter-dm.png"/>
+			<img id="help-easy-language-searchfilter-image" class="help-easy-language-image lm-only" src="/img/help-settings-search-filter-lm.png"/>
+			<img id="help-easy-language-searchfilter-image" class="help-easy-language-image dm-only" src="/img/help-settings-search-filter-dm.png"/>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.2') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.3') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.1.4') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.2') !!}</p>
-			<img class="help-easy-language-image lm-only" src="/img/help-settings-safesearch-lm.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-settings-safesearch-dm.png"/>
+			<img id="help-easy-language-safesearch-image" class="help-easy-language-image lm-only" src="/img/help-settings-safesearch-lm.png"/>
+			<img id="help-easy-language-safesearch-image" class="help-easy-language-image dm-only" src="/img/help-settings-safesearch-dm.png"/>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.filter.3') !!}</p>
 
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.blacklist.title') !!}</h4>
-			<img class="help-easy-language-image lm-only help-easy-language-searchfilter-and-blacklist" src="/img/help-settings-blacklist-lm.png"/>
-			<img class="help-easy-language-image dm-only help-easy-language-searchfilter-and-blacklist" src="/img/help-settings-blacklist-dm.png"/>
+			<img class="help-easy-language-image lm-only" id="easy-help-mainpage-blacklist-image" src="/img/help-settings-blacklist-lm.png"/>
+			<img class="help-easy-language-image dm-only" id="easy-help-mainpage-blacklist-image" src="/img/help-settings-blacklist-dm.png"/>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.blacklist.2') !!}</p>
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.moresettings') !!}</h4>
-			<img class="help-easy-language-image lm-only" src="/img/help-more-settings-lm.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-more-settings-dm.png"/>
+			<img id="help-easy-language-more-settings" class="help-easy-language-image lm-only" src="/img/help-more-settings-lm.png"/>
+			<img id="help-easy-language-more-settings" class="help-easy-language-image dm-only" src="/img/help-more-settings-dm.png"/>
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.darkmode.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.settings.darkmode.1') !!}</p>
 			<h4>{!! trans('help/easy-language/help-mainpages.settings.newtab.title') !!}</h4>

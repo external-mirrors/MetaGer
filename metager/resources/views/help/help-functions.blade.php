@@ -63,6 +63,8 @@
 				<li>{!! trans('help/help-functions.key.3') !!}</li>
 				<li>{!! trans('help/help-functions.key.4') !!}</li>
 				<li>{!! trans('help/help-functions.key.5') !!}</li>
+				<li>{!! trans('help/help-functions.key.6') !!}</li>
+
 			</ul>
 			<h4>{!! trans('help/help-functions.key.colors.title') !!}</h4>
 			<p>{!! trans('help/help-functions.key.colors.1') !!}</p>

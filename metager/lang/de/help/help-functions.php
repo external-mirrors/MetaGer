@@ -27,10 +27,11 @@ return [
     "key"    => [
         "title" => "MetaGer Schlüssel hinzufügen",
         "1" => 'Der MetaGer Schlüssel wird automatisch im Browser eingerichtet und verwendet. Sie müssen also nichts weiter tun. Wenn Sie den MetaGer Schlüssel auf weiteren Geräten nutzen möchten, gibt es mehrere Möglichkeiten, den MetaGer-Schlüssel einzurichten:',
-        "2"=>'URL kopieren <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine URL zu kopieren. Mit dieser URL lassen sich alle Einstellungen von MetaGer, sowie der MetaGer Schlüssel auf einem weiteren Gerät speichern.',
-        '3'=>'Datei sichern <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine Datei zu sichern. Damit speichern Sie Ihren MetaGer-Schlüssel als Datei ab. Diese Datei können Sie dann auf einem anderen Gerät verwenden, um sich dort mit Ihrem Schlüssel einzuloggen.',
-        '4'=>'QR Code scannen <br>Alternativ können Sie außerdem den QR Code, der auf der Verwaltungsseite angezeigt wird, scannen um sich bei einem weiteren Gerät einzuloggen',
-        '5'=>'MetaGer Schlüssel manuell eingeben <br>Sie können natürlich auch den Schlüssel manuell auf einem weiteren Gerät eingeben.',
+        "2"=>'Login Code <br>Auf der Verwaltungsseite des MetaGer Schlüssels können Sie den Login-Code verwenden, um Ihren Schlüssel zu einem weiteren Gerät hinzuzufügen. Dafür geben Sie den sechsstelligen Zahlencode ganz einfach beim Login ein. Der Login Code ist nur einmalig nutzbar und nur so lange gültig, wie das Fenster geöffnet ist.',
+        "3"=>'URL kopieren <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine URL zu kopieren. Mit dieser URL lassen sich alle Einstellungen von MetaGer, sowie der MetaGer Schlüssel auf einem weiteren Gerät speichern.',
+        '4'=>'Datei sichern <br>Wenn Sie auf der Verwaltungsseite des MetaGer Schlüssels sind, gibt es die Möglichkeit eine Datei zu sichern. Damit speichern Sie Ihren MetaGer-Schlüssel als Datei ab. Diese Datei können Sie dann auf einem anderen Gerät verwenden, um sich dort mit Ihrem Schlüssel einzuloggen.',
+        '5'=>'QR Code scannen <br>Alternativ können Sie außerdem den QR Code, der auf der Verwaltungsseite angezeigt wird, scannen um sich bei einem weiteren Gerät einzuloggen',
+        '6'=>'MetaGer Schlüssel manuell eingeben <br>Sie können natürlich auch den Schlüssel manuell auf einem weiteren Gerät eingeben.',
         'colors'=> [
             'title'=>'Farbiger MetaGer Schlüssel',
             '1'=>'Um auf einem Blick erkennen zu können, ob Sie werbefrei Suchen, haben wir unserem Schlüssel-Symbol Farben verpasst. Im Folgenden finden Sie die Erläuterungen für die entsprechenden Farben:',

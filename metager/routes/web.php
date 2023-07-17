@@ -251,7 +251,7 @@ Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
 });
 
-Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('httpcache', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
 Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
 

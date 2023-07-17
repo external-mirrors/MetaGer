@@ -316,12 +316,14 @@ a {
           font-size: clamp(1.2rem, 6vw, 1.3rem);
         }
         > div.external-links {
-          display: flex;
+          display: grid;
+          grid-template-columns: repeat(3, max-content);
           gap: 0.5rem;
           justify-content: space-between;
           place-items: center;
-          @media (max-width: 640px) {
-            flex-direction: column;
+          > a.btn.btn-primary {
+            background-color: inherit;
+            border-color: #ff8000;
           }
           > .divider {
             display: flex;
@@ -331,38 +333,47 @@ a {
               content: "-";
             }
           }
+          > .spacer {
+            grid-column: span 2;
+          }
           > .external-engines {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.5rem;
-            > div.input-group {
-              grid-column: span 2;
-              text-align: center;
+          }
+          > div.input-group {
+            text-align: center;
+            position: relative;
+            > label {
+              font-weight: normal;
+              font-size: 0.8rem;
+            }
+            > button.hover {
               position: relative;
-              > label {
-                font-weight: normal;
-                font-size: 0.8rem;
-              }
-              > button.hover {
-                position: relative;
-                top: -5px;
-                color: orange;
-                font-weight: bold;
-                cursor: pointer;
-              }
-              > div.hint {
-                display: none;
-                position: absolute;
-                max-width: 25rem;
-                top: -390%;
-                background-color: @background-color;
-                border: 1px solid @border-color;
-                border-radius: 3px;
-                padding: 0.5rem;
-              }
-              > button.hover:focus + div.hint {
-                display: blocK;
-              }
+              top: -5px;
+              color: orange;
+              font-weight: bold;
+              cursor: pointer;
+            }
+            > div.hint {
+              display: none;
+              position: absolute;
+              max-width: 25rem;
+              top: -10rem;
+              background-color: @background-color;
+              border: 1px solid @border-color;
+              border-radius: 3px;
+              padding: 0.5rem;
+            }
+            > button.hover:focus + div.hint {
+              display: blocK;
+            }
+          }
+          @media (max-width: 600px) {
+            grid-template-columns: 1fr;
+            > .spacer {
+              display: none;
+              grid-column: initial;
             }
           }
         }

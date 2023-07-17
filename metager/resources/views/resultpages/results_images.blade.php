@@ -4,6 +4,7 @@
 	@endforeach
 </div>
 @include('parts.pager')
+@if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
 <div id="external-search">
 	<h3>@lang("results.images.external.heading")</h3>
 	<div class="texts">
@@ -28,3 +29,4 @@
 		</div>
 	</div>
 </div>
+@endif

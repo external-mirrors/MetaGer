@@ -282,9 +282,9 @@ a {
     }
 
     #results-container {
+      width: @results-width-max;
       max-width: 100%;
-      padding: 8px;
-
+      gap: 2rem;
       .image-container {
         display: flex;
         align-items: center;
@@ -302,6 +302,66 @@ a {
                 width: 100%;
                 max-width: 300px;
                 max-height: 250px;
+              }
+            }
+          }
+        }
+      }
+      > #external-search {
+        display: grid;
+        gap: 1rem;
+        > h3 {
+          margin: 0;
+          line-height: 1;
+          font-size: clamp(1.2rem, 6vw, 1.3rem);
+        }
+        > div.external-links {
+          display: flex;
+          gap: 0.5rem;
+          justify-content: space-between;
+          place-items: center;
+          @media (max-width: 640px) {
+            flex-direction: column;
+          }
+          > .divider {
+            display: flex;
+            gap: 0.5rem;
+            &::before,
+            &::after {
+              content: "-";
+            }
+          }
+          > .external-engines {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            > div.input-group {
+              grid-column: span 2;
+              text-align: center;
+              position: relative;
+              > label {
+                font-weight: normal;
+                font-size: 0.8rem;
+              }
+              > button.hover {
+                position: relative;
+                top: -5px;
+                color: orange;
+                font-weight: bold;
+                cursor: pointer;
+              }
+              > div.hint {
+                display: none;
+                position: absolute;
+                max-width: 25rem;
+                top: -390%;
+                background-color: @background-color;
+                border: 1px solid @border-color;
+                border-radius: 3px;
+                padding: 0.5rem;
+              }
+              > button.hover:focus + div.hint {
+                display: blocK;
               }
             }
           }

@@ -72,4 +72,8 @@ return [
     'enable-engine' => 'Activer le moteur de recherche',
     'disable-engine' => 'Désactiver le moteur de recherche',
     'filtered-engine' => 'Moteur de recherche désactivé par le filtre',
+    'externalservice' => [
+        'heading' => 'Utiliser un service de recherche externe',
+        'description' => 'Vous pouvez configurer l\'utilisation de l\'un des moteurs de recherche externes suivants au lieu de notre solution intégrée. Nous redirigerons vos recherches vers le fournisseur configuré.',
+    ],
 ];

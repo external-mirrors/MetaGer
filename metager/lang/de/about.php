@@ -9,7 +9,7 @@ return [
     'points' => [
         'privacy' => [
             'heading' => 'Garantierte Privatsphäre',
-            'text' => 'Uns sind Datenschutz und Privatsphäre wichtig. Daher tracken und speichern wir keine Nutzerprofile. Außerdem bieten wir Dienste zum Schutz Ihrer Privatsphäre an, zum Beispiel unseren anonymisierenden Proxy („Anonym öffnen“-Funktion). ',
+            'text' => 'Uns sind Datenschutz und Privatsphäre wichtig. Daher tracken und speichern wir keine Nutzerprofile. Außerdem bieten wir Dienste zum Schutz Ihrer Privatsphäre an, zum Beispiel unseren anonymisierenden Proxy („Anonym öffnen“-Funktion).',
         ],
         'association' => [
             'heading' => 'Gemeinnütziger Verein',
@@ -22,7 +22,7 @@ return [
         'renewable' => [
             'heading' => '100% Ökostrom',
             'text' => 'Nachhaltigkeit und Ressourcenverbrauch ist auch für uns ein großes Thema. Daher achten wir auf den Energieverbrauch unserer Dienste und verwenden nur Strom aus erneuerbaren Energiequellen.',
-        ]
+        ],
     ],
     'timeline' => [
         '12' => [

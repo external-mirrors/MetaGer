@@ -222,6 +222,28 @@ class SettingsController extends Controller
         return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#filter");
     }
 
+    /**
+     * Will enable the use of an external search provider. Currently
+     * supported for the imagesearch as we do not currently have
+     * access to a viable and free alternative
+     */
+    public function enableExternalSearchProvider(Request $request)
+    {
+        $fokus = $request->input('focus', '');
+        $url = $request->input('url', '');
+        $secure = app()->environment("local") ? false : true;
+
+        $external_setting = $request->input('bilder_setting_external', '');
+        if (!empty($external_setting) && in_array($external_setting, ["google", "bing", "metager"])) {
+            if ($external_setting === "metager") {
+                Cookie::queue(Cookie::forget("bilder_setting_external", "/"));
+            } else {
+                Cookie::queue(Cookie::forever("bilder_setting_external", $external_setting, "/", null, $secure));
+            }
+        }
+        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#external-search-service");
+    }
+
     public function enableSetting(Request $request)
     {
         $fokus = $request->input('focus', '');

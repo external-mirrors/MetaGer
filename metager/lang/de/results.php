@@ -10,4 +10,15 @@ return [
             'original' => 'Stattdessen nach <a href=":link">:original <img class= "mg-icon" src="/img/icon-lupe.svg"></a> suchen',
         ],
     ],
+    "images" => [
+        "external" => [
+            "heading" => "Hier fehlen einige Suchergebnisse",
+            "description" => "Sie haben lediglich die Datenbank von Pixabay durchsucht. Besser suchen Sie mit einem MetaGer Schlüssel.",
+            "buy" => "MetaGer Schlüssel kaufen",
+            "or" => "oder",
+            "google" => "Suchen auf Google",
+            "bing" => "Suchen auf Bing",
+            "save" => "Entscheidung merken (mit Cookie)"
+        ]
+    ]
 ];

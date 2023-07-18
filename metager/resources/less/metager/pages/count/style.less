@@ -11,14 +11,25 @@ table {
   width: 100%;
 }
 
-table.table-striped > tbody > tr:nth-child(odd) {
-  background-color: lightgrey;
+table.table-striped > tbody {
+  > tr {
+    &:nth-child(odd):not(.same-weekday) {
+      background-color: lightgrey;
+    }
+    &.same-weekday {
+      background-color: #e0ffe0;
+    }
+  }
 }
 
 tr.loading td:not(.date) {
   background-image: url("/img/ajax-loader.gif");
   background-repeat: no-repeat;
   background-position: center;
+}
+
+tr.loading:nth-child(1) td.total {
+  background-image: initial;
 }
 
 .total-median .loading,

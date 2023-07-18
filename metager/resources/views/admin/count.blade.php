@@ -65,10 +65,10 @@
 		$date_iterator = clone $end;
 		@endphp
 		@while($date_iterator->isBetween($start, $end))
-		<tr class="same-day loading" data-date="{{$date_iterator->format("Y-m-d")}}">
+		<tr class="@if($date_iterator->weekday() === now()->weekday())same-weekday @endif loading" data-date="{{$date_iterator->format("Y-m-d")}}">
 			<td class="date" data-date="{{ $date_iterator->format("Y-m-d") }}" data-date_formatted="{{ $date_iterator->format("d.m.Y")}}">{{ $date_iterator->locale("de_DE")->translatedFormat("d.m.Y - l") }}</td>
 			<td class="same-time" data-same_time="0"></td>
-			<td class="total" data-total="0"></td>
+			<td class="total"></td>
 			<td class="median"></td>
 		</tr>
 		@php

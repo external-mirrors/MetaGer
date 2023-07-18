@@ -3,6 +3,7 @@
 namespace App\Http;
 
 use App\Http\Middleware\AllowLocalOnly;
+use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
@@ -87,5 +88,6 @@ class Kernel extends HttpKernel
                 'keyvalidation' => \App\Http\Middleware\KeyValidation::class,
                 'allow-local-only' => AllowLocalOnly::class,
                 'httpcache' => HttpCache::class,
+                'externalimagesearch' => ExternalImagesearch::class,
         ];
 }

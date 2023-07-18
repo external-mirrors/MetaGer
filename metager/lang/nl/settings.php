@@ -72,4 +72,8 @@ return [
     'disable-engine' => 'Zoekmachine uitschakelen',
     'filtered-engine' => 'Zoekmachine uitgeschakeld door filter',
     'payment-engine' => 'Zoekmachine vereist instellen MetaGer-sleutel',
+    'externalservice' => [
+        'heading' => 'Een externe zoekservice gebruiken',
+        'description' => 'Je kunt configureren om een van de volgende externe zoekmachines te gebruiken in plaats van onze geïntegreerde oplossing. We zullen je zoekopdrachten omleiden naar de geconfigureerde leverancier.',
+    ],
 ];

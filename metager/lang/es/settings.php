@@ -72,4 +72,8 @@ return [
     'disable-engine' => 'Seleccionar motor de búsqueda',
     'filtered-engine' => 'Buscador desactivado por filtro',
     'payment-engine' => 'El motor de búsqueda requiere la configuración de la clave MetaGer',
+    'externalservice' => [
+        'heading' => 'Utilizar un servicio de búsqueda externo',
+        'description' => 'Puede configurar el uso de cualquiera de los siguientes motores de búsqueda externos en lugar de nuestra solución integrada. Redirigiremos sus búsquedas al proveedor configurado.',
+    ],
 ];

@@ -72,4 +72,8 @@ return [
     'disable-engine' => 'Sammuta hakukone',
     'filtered-engine' => 'Hakukone poistettu käytöstä suodattimen avulla',
     'payment-engine' => 'Hakukone vaatii MetaGer-avaimen perustamisen',
+    'externalservice' => [
+        'heading' => 'Käytä ulkoista hakupalvelua',
+        'description' => 'Voit määrittää käyttämään mitä tahansa seuraavista ulkoisista hakukoneista integroidun ratkaisumme sijaan. Ohjaamme hakusi määritettyyn palveluntarjoajaan.',
+    ],
 ];

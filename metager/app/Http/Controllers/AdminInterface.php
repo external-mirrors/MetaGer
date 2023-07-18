@@ -94,6 +94,10 @@ class AdminInterface extends Controller
             }
         }
 
+        if ($date->isToday()) {
+            $result["total"] = null;
+        }
+
         $result = [
             "status" => 200,
             "error" => false,

@@ -1,13 +1,20 @@
 text {
-    fill: white;
+  fill: white;
 }
 
-table.table-striped>tbody>tr:nth-child(odd) {
-    background-color: #404040;
+table.table-striped > tbody {
+  > tr {
+    &:nth-child(odd):not(.same-weekday) {
+      background-color: #404040;
+    }
+    &.same-weekday {
+      background-color: #050;
+    }
+  }
 }
 
 #graph {
-    --chart-font-color: #ffffff;
-    --grid-axis-color: white;
-    --grid-color: #444;
+  --chart-font-color: #ffffff;
+  --grid-axis-color: white;
+  --grid-color: #444;
 }

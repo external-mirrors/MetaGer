@@ -283,6 +283,7 @@ a {
 
     #results-container {
       width: @results-width-max;
+      width: max(@results-width-max, 100%);
       max-width: 100%;
       gap: 2rem;
       .image-container {
@@ -308,6 +309,9 @@ a {
         }
       }
       > #external-search {
+        width: @results-width-max;
+        max-width: 100%;
+        margin: 0 auto;
         display: grid;
         gap: 1rem;
         > h3 {
@@ -324,6 +328,7 @@ a {
           > a.btn.btn-primary {
             background-color: inherit;
             border-color: #ff8000;
+            color: @text-color;
           }
           > .divider {
             display: flex;

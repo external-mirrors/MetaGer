@@ -4,7 +4,15 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+    - host: www.metager.de
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
     - host: metager.org
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: www.metager.org
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -12,7 +20,15 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+    - host: www.metager.es
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
     - host: metager.nl
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: www.metager.nl
       paths:
         - path: /
           pathType: ImplementationSpecific
@@ -20,15 +36,24 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+    - host: www.metager.co.uk
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls:
     - hosts:
         - metager.de
         - metager.org
+        - www.metager.org
       secretName: metager-tls-2022
     - hosts:
+        - www.metager.de
         - metager.es
+        - www.metager.es
         - metager.nl
+        - www.metager.nl
         - metager.co.uk
+        - www.metager.co.uk
       secretName: metager-tls-otherdomains
 
 autoscaling:

@@ -13,6 +13,13 @@ class DonationNotification implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries = 30;
+
     /** @var float */
     private $amount;
     /** @var string */

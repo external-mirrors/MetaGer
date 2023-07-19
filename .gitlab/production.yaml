@@ -12,12 +12,24 @@ ingress:
       paths:
         - path: /
           pathType: ImplementationSpecific
+    - host: metager.nl
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: metager.co.uk
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
   tls:
     - hosts:
         - metager.de
         - metager.org
-        - metager.es
       secretName: metager-tls-2022
+    - hosts:
+        - metager.es
+        - metager.nl
+        - metager.co.uk
+      secretName: metager-tls-otherdomains
 
 autoscaling:
   maxReplicas: 100

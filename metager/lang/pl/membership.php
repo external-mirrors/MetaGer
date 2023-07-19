@@ -1,18 +1,13 @@
 <?php
 return [
     'title' => 'Twoje członkostwo w SUMA-EV',
-    'submit' => 'Darowizna',
     'startpage' => 'Powrót do strony głównej',
     'contact' => [
-        'name' => [
-            'label' => 'Imię i nazwisko',
-        ],
         'email' => [
             'label' => 'Twój adres e-mail',
         ],
     ],
     'fee' => [
-        'title' => '2. Opłata członkowska',
         'amount' => [
             'custom' => [
                 'label' => 'Kwota niestandardowa',
@@ -21,17 +16,14 @@ return [
     ],
     'payment' => [
         'interval' => [
-            'title' => '3. Interwał płatności',
             'six-monthly' => 'półroczny',
-            'monthly' => 'miesięcznik',
         ],
         'method' => [
             'directdebit' => [
                 'label' => 'Polecenie zapłaty SEPA',
-                'accountholder' => [
-                    'placeholder' => 'John Smith',
-                ],
             ],
         ],
     ],
+    'back' => 'Powrót do strony startowej',
+    'non-de' => 'Niestety, obecnie możemy przyjmować tylko wnioski o przyjęcie z krajów niemieckojęzycznych. Zachęcamy do wsparcia nas darowizną <a href=":donationlink"></a> .',
 ];

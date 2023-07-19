@@ -1,11 +1,6 @@
 <?php
 return [
     'title' => 'Jouw lidmaatschap bij SUMA-EV',
-    'contact' => [
-        'email' => [
-            'label' => 'Uw e-mailadres',
-        ],
-    ],
     'payment' => [
         'method' => [
             'directdebit' => [

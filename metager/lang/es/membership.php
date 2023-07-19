@@ -1,11 +1,6 @@
 <?php
 return [
     'title' => 'Su afiliación a SUMA-EV',
-    'contact' => [
-        'email' => [
-            'label' => 'Su dirección de correo electrónico',
-        ],
-    ],
     'payment' => [
         'interval' => [
             'six-monthly' => 'semestral',

@@ -1,11 +1,6 @@
 <?php
 return [
     'title' => 'Jäsenyytesi SUMA-EV:ssä',
-    'contact' => [
-        'email' => [
-            'label' => 'Sähköpostiosoitteesi',
-        ],
-    ],
     'payment' => [
         'interval' => [
             'six-monthly' => 'puolivuosittain',

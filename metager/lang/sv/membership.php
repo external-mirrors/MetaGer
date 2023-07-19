@@ -1,11 +1,6 @@
 <?php
 return [
     'title' => 'Ditt medlemskap i SUMA-EV',
-    'contact' => [
-        'email' => [
-            'label' => 'Din e-postadress',
-        ],
-    ],
     'payment' => [
         'interval' => [
             'six-monthly' => 'halvårsvis',

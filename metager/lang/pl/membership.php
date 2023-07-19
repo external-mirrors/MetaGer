@@ -1,11 +1,6 @@
 <?php
 return [
     'title' => 'Twoje członkostwo w SUMA-EV',
-    'contact' => [
-        'email' => [
-            'label' => 'Twój adres e-mail',
-        ],
-    ],
     'payment' => [
         'interval' => [
             'six-monthly' => 'półroczny',

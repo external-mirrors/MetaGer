@@ -1,19 +1,12 @@
 <?php
 return [
-    'fee' => [
-        'description' => 'Selecteer hieronder het gewenste lidmaatschapsbedrag (maandelijks).',
-    ],
     'title' => 'Jouw lidmaatschap bij SUMA-EV',
-    'startpage' => 'Terug naar de startpagina',
     'contact' => [
         'email' => [
             'label' => 'Uw e-mailadres',
         ],
     ],
     'payment' => [
-        'interval' => [
-            'six-monthly' => 'halfjaarlijks',
-        ],
         'method' => [
             'directdebit' => [
                 'label' => 'SEPA-incasso',

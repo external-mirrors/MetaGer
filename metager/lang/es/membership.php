@@ -1,27 +1,14 @@
 <?php
 return [
     'title' => 'Su afiliación a SUMA-EV',
-    'startpage' => 'Volver a la página de inicio',
     'contact' => [
         'email' => [
             'label' => 'Su dirección de correo electrónico',
         ],
     ],
-    'fee' => [
-        'amount' => [
-            'custom' => [
-                'label' => 'Cantidad deseada',
-            ],
-        ],
-    ],
     'payment' => [
         'interval' => [
             'six-monthly' => 'semestral',
-        ],
-        'method' => [
-            'directdebit' => [
-                'label' => 'Adeudo directo SEPA',
-            ],
         ],
     ],
     'back' => 'Volver a la página de inicio',

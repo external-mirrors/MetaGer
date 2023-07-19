@@ -1,7 +1,7 @@
 <?php
 return [
     'head' => [
-        '1' => 'Metager-appar',
+        '1' => 'Metager Appar',
         '2' => 'MetaGer-app',
         '3' => 'Appen MetaGer Maps',
         '4' => 'Installation',

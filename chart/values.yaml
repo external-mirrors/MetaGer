@@ -63,6 +63,34 @@ ingress:
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
       }
+      if ($host = "www.metager.de") {
+          return 301 https://metager.de$request_uri;
+      }
+      if ($host = "www.metager.org") {
+          return 301 https://metager.org$request_uri;
+      }
+      if ($host = "metager.es") {
+          return 301 https://metager.org/es-ES$request_uri;
+      }
+      if ($host = "www.metager.es") {
+          return 301 https://metager.org/es-ES$request_uri;
+      }
+      if ($host = "metager.nl") {
+          return 301 https://metager.org/nl-NL$request_uri;
+      }
+      if ($host = "www.metager.nl") {
+          return 301 https://metager.org/nl-NL$request_uri;
+      }
+      if ($host = "metager.co.uk") {
+          return 301 https://metager.org/en-GB$request_uri;
+      }
+      if ($host = "www.metager.co.uk") {
+          return 301 https://metager.org/en-GB$request_uri;
+      }
+      if ($host = "www.metager3.de") {
+          return 301 https://metager3.de$request_uri;
+      }
+
     nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
     nginx.ingress.kubernetes.io/client-header-buffer-size: 256k
     nginx.ingress.kubernetes.io/proxy-body-size: 30m

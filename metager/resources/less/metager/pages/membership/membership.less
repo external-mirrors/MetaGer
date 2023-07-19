@@ -4,10 +4,11 @@
   gap: 2rem;
   > h1 {
     font-size: clamp(1.2em, 6vw, 2.5em);
+    margin: 0;
   }
   h3 {
     margin: 0;
-    border-bottom: 1px solid @metager-orange;
+    border-bottom: 1px solid @border-color;
   }
   .error {
     font-size: 0.8rem;
@@ -19,6 +20,9 @@
   > form#membership-form {
     display: grid;
     gap: 2rem;
+    border: 1px solid @border-color;
+    padding: 1rem;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.4);
     > div#contact-data {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -36,7 +40,7 @@
           color: @color-light-grey;
         }
       }
-      @media (max-width: 490px) {
+      @media (max-width: 530px) {
         grid-template-columns: 1fr;
         > h3 {
           grid-column: auto;
@@ -56,7 +60,7 @@
         grid-column: span 4;
       }
 
-      @media (max-width: 375px) {
+      @media (max-width: 385px) {
         grid-template-columns: 1fr 1fr;
         > h3,
         > div.error,
@@ -110,7 +114,7 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
 
-        @media (max-width: 500px) {
+        @media (max-width: 520px) {
           grid-template-columns: 1fr 1fr;
         }
         gap: 0.5rem;
@@ -188,6 +192,15 @@
           }
         }
       }
+    }
+  }
+
+  > #membership-advantages {
+    display: grid;
+    gap: 1rem;
+    > div {
+      display: grid;
+      gap: 0.5rem;
     }
   }
 }

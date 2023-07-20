@@ -1,4 +1,4 @@
-FROM php:8.1.6-fpm as composer
+FROM php:8.2.8-fpm as composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
@@ -26,7 +26,7 @@ RUN apt update && apt install -y \
     libpq-dev && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql&& \
-    yes 'y' | pecl install xdebug-3.1.4 igbinary-3.2.7 redis-5.3.7 && \
+    yes 'y' | pecl install xdebug-3.2.2 igbinary-3.2.14 redis-5.3.7 && \
     docker-php-ext-enable igbinary redis && \
     docker-php-ext-enable --ini-name=xdebug.ini xdebug
 

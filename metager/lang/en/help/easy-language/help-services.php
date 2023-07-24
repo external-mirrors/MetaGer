@@ -1,24 +1,27 @@
 <?php
 return [
-    "title"                 => "MetaGer - Help",
-    "backarrow"             => ' back',
-
-    "dienste" => "Services",
-    "dienste.kostenlos" => "All our services are cost free. You do not pay with your data.",
-
-    "app.title" => "Android-App",
-    "app.1" => "You can use MetaGer within an app, too. To do so just download the <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> on your Android smartphone.",
-    
-    "suchwortassoziator.title" => "MetaGer-Web-Associator",
-    "suchwortassoziator.1" => 'Ask the <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) to find connotations in a subject area. The service doesn&apos;t append upon any language because it uses webdocuments as a source. Therefore, you find any connotations to your used language and vice-versa.',
-    "suchwortassoziator.2" => "Example: you want to know more about \"tick bites\" and its dangers but you forgot the technical terms around this issue. The \"Assoziator\" presents \"Borreliose\" and \"fsme\" among others.",
-    "suchwortassoziator.3" => "Please let us know if something unsuitable appears. Please use our <a href=\"/en/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>.",
-
-    "widget.title" => "MetaGer widget",
-    "widget.1" => "Provide full MetaGer functionality to your own website! Just select Tools / widget on our startpage, decide whether you want a powerful websearch or a sitesearch -which may be useful on your own pages. Enter the domainname and let the script do the rest. Questions to: <a href=\"/en/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>",
-
-    "maps.title" => "MetaGer maps",
-    "maps.1" => "MetaGer provides a map function (not on metager.org, please use <a href=\"https://www.metager.de/\" target=\"_blank\" rel=\"noopener\">MetaGer.de</a>) : On a result page you see a new focus on the upper right, called \"Maps\". You receive a map according to your search by click.",
-    "maps.2" => "After loading the map shows POIs according to the MetaGer results. You see them in the right column too. Mouseover a POI highlights its counterpart. Click \"Details\" to get further information (Nominatim data base) to this POI.",
-    "maps.3" => "The maps are rendered before (except for the last three ones) and fast available. Affect the zoom level by mouse-wheel or the \"+ / -\" buttons in the upper left corner of the map.",
-    ];
+    "title" => 'MetaGer - Help',
+    "backarrow" => 'Back',
+    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/help/easy-language/glossary"><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access the explanation of difficult words.',
+    "dienste" => [
+        "1" => "Additional Services around the Search",
+    ],
+    "app" => [
+        "title" => "Android App",
+        "1" => "You can also get MetaGer as an app for your mobile phone. <br> The MetaGer app is available for Android devices. <br> You can easily download it to your Android smartphone. <br> Here you can download the MetaGer app: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>",
+    ],
+    "suchwortassoziator" => [
+        "title" => "Search Term Associator",
+        "1" => 'With the Search Term Associator, you can find similar terms. <br> You can enter a term into the Associator, and it will suggest other relevant terms.',
+        "2" => "Example: <br> If you want to learn more about tick bites and the dangers associated with them, <br> but you are not familiar with the technical terms, <br> simply enter <strong>tick bites</strong>. <br> The Associator will then show you terms like <strong>Lyme disease</strong> and <strong>tick-borne encephalitis</strong>.",
+    ],
+    "widget" => [
+        "title" => "MetaGer Widget",
+        "1" => "With the MetaGer Widget, you can embed our search on other websites. <br> If you have your own website, you can add MetaGer to it. <br> This way, visitors to your site can use MetaGer for searching on your own page or the internet. <br> You can also search for content on your own website. <br> If you have any questions, you can use our <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>.",
+    ],
+    "maps" => [
+        "title" => "MetaGer Maps",
+        "1" => '<a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> is a map service developed by MetaGer. <br> MetaGer Maps is also available for mobile devices. <br> Here you can download the app: <a href="/app" target="_blank">Download App</a>. <br> When you search with MetaGer, you can also use MetaGer Maps. <br> Simply click on the new search focus <strong>Maps</strong>. <br> This is what the search focus looks like:',
+        "2" => "Once you click on it, you will be taken to the map you searched for. <br> On the right side, you will see a column displaying points found on the map. <br> These points are relevant to your search. <br> This is what the column looks like:",
+    ],
+];

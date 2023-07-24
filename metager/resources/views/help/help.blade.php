@@ -4,9 +4,7 @@
 
 @section('content')
 <h1>{!! trans('help/help.title') !!}</h1>
-@if (App\Localization::getLanguage() == "de")
 <a id=help-easy-language-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img id="easy-language-image" src=/img/icon-leichte-sprache.svg>{!! trans('help/help.easy.language') !!} </a>
-@endif
 <h2>{!! trans('help/help.tableofcontents.1.0') !!}</h2>
 <div class="help-topic-row">
 	<a id=help-topic-mainpage href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/hauptseiten#h-startpage") }}" class="help-topic">

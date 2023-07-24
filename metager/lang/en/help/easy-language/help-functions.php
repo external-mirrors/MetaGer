@@ -1,38 +1,84 @@
 <?php
 return [
-    "title"                 => "MetaGer - Help",
-    "backarrow"             => ' back',
+    'title' => 'MetaGer - Help',
+    "backarrow" => 'Back',
+    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/help/easy-language/glossary" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access explanations for difficult words.',
+    "suchfunktion" => [
+        "title" => "Search Functions",
+    ],
+    "stopworte" => [
+        "title" => 'Stop Words',
+        "1" => "Stop words are words you don't want to see. <br> If you don't want to see a word, do this:",
+        "2" => "Example: <br> You want to search for a new car. <br> You don't want to see the word <strong>BMW</strong>. <br> So write:",
+        "3" => "car new -bmw",
+        "4" => "Put a minus sign in front of the word. <br> It will no longer appear in the search results.",
+    ],
+    "mehrwortsuche" => [
+        "title" => "Multi-Word Search",
+        "1" => "The multi-word search has 2 types.",
+        "2" => "One word should be present in the results. <br> Then write it in quotation marks. <br> It looks like this:",
+        "3" => [
+            "0" => "Example: <br> You are searching for <strong>the round table</strong>. <br> You want to find the word <strong>round</strong> in the results. <br> So write the word like this:",
+            "example" => 'the "round" table',
+        ],
+        "4" => 'There is another type of multi-word search. <br> You can also search for complete sentences. <br> You want to see a sentence exactly as written in the results. <br> Then do it like this:',
+        "5" => [
+            "0" => "Example: <br> You are searching for <strong>the round table</strong>.<br> You want to see it in exactly that order. <br> Write it like this:",
+            "example" => '"the round table"',
+        ],
+    ],
+    "exactsearch" => [
+        "title" => "Exact Search",
+        "1" => "With the exact search, what you write is exactly what is searched. <br> A word should appear exactly as written in the results. <br> Then write it with a plus sign before the word. <br> It looks like this: ",
+        "2" => "Example: You are searching for the word 'example'. <br> You want the word to appear exactly as written in the results. <br> So write the word like this: ",
+        "3" => "You can also search for complete sentences exactly as written in the results.",
+        "4" => "Example: You are searching for an example sentence. <br> Write it like this:",
+        "example" => [
+            "1" => "+exampleword",
+            "2" => '+"example phrase"',
+        ],
+    ],
+    "bang" => [
+        "title" => "!Bangs",
+        "1" => "MetaGer supports a writing style called '!bang syntax'. <br> If you want to use it, it looks like this: <br> <strong>!twitter</strong> or <strong>!facebook</strong><br> Example:<br> You want to search for cats on Twitter. <br> So enter it like this:",
+        "example" => "!twitter cat",
+        "2" => "This will display a field on the right side while searching. <br> It looks like this:",
+        "3" => "You can click the blue button. <br> Then the web page of Twitter with the search for cats will open. <br> This feature does not work on small screens like mobile phones.",
+    ],
+    "key" => [
+        "maintitle" => 'MetaGer Key',
 
-    "suchfunktion.title" => "Search functions",
-    "stopworte.title" => "Exclude single words",
-    "stopworte.1" => "If you want to exclude words within the search result, you have to put a \"-\" in front of that word",
-    "stopworte.2" => "Example: You are looking for a new car, but no BMW. Then your search should be <div class=\"well well-sm\">new car -bmw</div>",
-    "stopworte.3" => "car new -bmw",
+        "title" => [
+            "1" => "Adding MetaGer Key",
+            "2" => "Colored MetaGer Key",
+        ],
+        "alt" => [
+            "empty" => 'Image of a red/orange key',
+            "low" => 'Image of a yellow key',
+            "full" => 'Image of a green key',
+            "none" => 'Image of a gray key',
+        ],
 
-    "mehrwortsuche.title" => "Searching for more than one word",
-    "mehrwortsuche.1" => "Without quotation you will get results containing one or some of the words of your search entry. Use quotes for the search for exact phrases, citations....",
-    "mehrwortsuche.2" => "Example: search for Shakespears <div class=\"well well-sm\">to be or not to be</div> will deliver many results, but the exact phrase will only be found using <div class=\"well well-sm\">\"to be or nor to be\"</div>",
-    "mehrwortsuche.3" => "Please use quotes to make sure to get your search words in the results list.",
-    "mehrwortsuche.3.example" => '"round-table" "decision"',
-    "mehrwortsuche.4" => "Put words or phrases in quotation marks to search for exact combinations.",
-    "mehrwortsuche.4.example" => '"round-table decision"',
-
-    "urls.title" => "Exclude URLs",
-    "urls.explanation" => "Use \"-url:\" to exclude search results containing specified words.",
-    "urls.example.1" => "Example: You don' t want the word \"dog\" in the results:",
-    "urls.example.2" => "Type <i>my search words</i> -url:dog",
-
-    "bang.title" => "!bangs",
-    "bang.1" => "MetaGer uses a little a special spelling called \"!bang syntax\". A !bang starts with the \"!\" and doesn't contain blanks (\"!twitter\", \"!facebook\" for example). If you use a !bang supported by MetaGer you will see a new entry in the \"Quicktips\". We direct then to the specified service (click the button). Read more about our method departing from others:  <a href=\"/en/hilfe/#bangs\" target=\"_blank\" rel=\"noopener\"> FAQ</a>",
-    "faq.18.h" => "Why are the !bangs not opended directly?",
-    "faq.18.b" => "The !bang -\\\"redirections\\\" are part of our quicktips and they need an additional click. We had to decide between easy-to-use and keep-control-of-data. We find it necessary to show that the links are third party property (DuckDuckGo). So there is a two way protection: first we do not transfer your searchwords but only the !bang to DuckDuckGo. On the other hand the user confirms the !bang-target explicit. We don't have the ressources to maintain all this !bangs, we are sorry.",
-
-    "searchinsearch.title" => "Search in search",
-    "searchinsearch.1" => "The result will be stored in a new TAB appearing at the right side of the screen. It is called \"Saved results\". You can store here single results from several searches. The TAB persists. Entering this TAB you get your personal result list with tools to filter and sort the results. Click another TAB to go back for further searches. You won´t have this if the screen is too small. More info (only german so far): <a href=\"http://blog.suma-ev.de/node/225\" target=\"_blank\" rel=\"noopener\"> SUMA blog</a>.",
-
-    'selist.title' => 'I want to add metager.de to the search engines list of my browser.',
-    'selist.explanation.1' => 'Please try first to install the newest available plugin. Just use the link below the searchfield, it has an automatic browserdetection.',
-    'selist.explanation.2' => 'Some browser need an URL. Please use "https://metager.de/meta/meta.ger3?eingabe=%s" without qoutation marks. If there are still problems, please <a href="/en/kontakt" target="_blank" rel="noopener">write an email.</a>',
-
-
+        "1" => 'You can search with us without seeing ads. <br> For this, you need a MetaGer Key. <br> You can buy it from us. <br> After payment, you will receive a password. <br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the administration page of the MetaGer Key. <br> There you have these options:',
+        "2" => 'Login Code <br> To register another device with the login code, do the following: <br> Click the button <strong>Generate Login Code</strong>. <br> The button looks like this: <br> <img class="help-easy-language-image " src="/img/help-key-login-button.png"/> <br> Then, 6 numbers will be displayed. <br> They look like this, for example: <br><img class="help-easy-language-image " src="/img/help-key-login-code.png"/> <br> Enter these numbers on the device you want to add. <br> The 6 numbers are only valid once. <br> So, if you want to set up multiple devices, you need to do it each time anew.', 
+        "3" => 'Copy URL <br> You can also copy the internet address. <br> To do this, click the button <strong>Copy URL</strong>. <br> The button looks like this: <br> <img class="help-easy-language-image " src="/img/help-key-url-button.png"/> <br> Now you have copied the link. <br> You can use the link to search with the MetaGer Key. ',   
+        "4" => 'Save File <br> You can also save your MetaGer Key as a file. <br> To do this, click the button <strong>Save to File</strong>. <br> Now you have saved your key as a file. <br> Next, open the page for setting up the key on the new device. <br> It looks like this: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add.png"/> <br> Then click the button <strong>Upload Backup File</strong>. <br> The button looks like this: <br><img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add-file.png"/> <br> Now, select the file with the MetaGer Key. <br> Then you can use the MetaGer Key.', 
+        "5" => 'Scan QR Code <br> To register another device with the QR code, do the following: <br> Open the page for setting up the key on the new device. <br> It looks like this: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add.png"/> <br> Then click the button <strong>Scan QR Code</strong>. <br> The button looks like this: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-qr-code.png"/> <br> Now scan the QR code. <br> After that, you can search without ads on your device. ',   
+        "6" => 'Enter Manually <br> Of course, you can also enter the key manually. <br> To do this, type the long sequence of numbers and letters. ',   
+        "7" => 'Sometimes you will see a colored key. <br> There is a reason for this. <br> The colors indicate how many searches without ads you have left. <br> There are the following colors: ',   
+        "8" => 'Gray Key: <br> You see a gray key. <br> Then you have not set up a key yet.',   
+        "9" => 'Red Key: <br> You see a red/orange key. <br> Then your balance is empty. <br> You can no longer search without ads. <br> We recommend recharging the key. <br> Then you can search without ads again.', 
+        "10" => 'Green Key: <br> You see a green key. <br> Then you are currently searching without ads. <br> So, you can continue to search without ads.',   
+        "11" => 'Yellow Key: <br> You see a yellow key. <br> Then you have almost used up your balance. <br> You currently have less than 30 tokens for use. <br> We recommend recharging the key soon. ',   
+    ],
+    "selist" => [
+        "title" => [
+            '0' => 'Adding MetaGer to the Browser\'s Search Engine List',
+            '1' => 'Installing MetaGer',
+        ],
+        "explanation" => [
+            '1' => 'On the homepage, there is a field <strong>Install MetaGer</strong>. <br> The field is below the search field. <br> It looks like this: <br>',
+            '2' => 'Sometimes you may need to enter a URL. <br> It looks like this: <br> https://metager.de/meta/meta.ger3?eingabe=%s <br> If you encounter any problems, contact us using the <a href="/contact" target="_blank" rel="noopener">contact form</a>.',
+        ],
+    ],
 ];

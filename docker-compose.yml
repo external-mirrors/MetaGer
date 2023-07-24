@@ -8,8 +8,7 @@ volumes:
 # Services
 services:
   fpm:
-    build:
-      &fpm_build
+    build: &fpm_build
       context: ./
       dockerfile: build/fpm/Dockerfile
       target: ${APP_ENV}
@@ -35,7 +34,7 @@ services:
     volumes:
       - ./metager/public:/metager/metager_app/public
     ports:
-      - 8080:8080
+      - 80:8080
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/nginx"
   scheduler:

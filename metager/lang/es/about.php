@@ -13,7 +13,7 @@ return [
         ],
         'association' => [
             'heading' => 'Asociación sin ánimo de lucro',
-            'text' => 'MetaGer es un proyecto de la asociación sin ánimo de lucro SUMA-EV, Asociación para el Libre Acceso al Conocimiento. SUMA-EV se compromete principalmente a promover la alfabetización mediática',
+            'text' => 'MetaGer es un proyecto de la asociación sin ánimo de lucro SUMA-EV, Asociación para el Libre Acceso al Conocimiento. SUMA-EV se compromete principalmente a promover la alfabetización mediática.',
         ],
         'diverse' => [
             'heading' => 'Diversos y libres',
@@ -22,7 +22,7 @@ return [
         'renewable' => [
             'heading' => 'electricidad 100% verde',
             'text' => 'La sostenibilidad y el consumo de recursos también es un tema importante para nosotros. Por ello, prestamos atención al consumo energético de nuestros servicios y sólo utilizamos electricidad procedente de fuentes de energía renovables.',
-        ]
+        ],
     ],
     'text' => [
         '2' => 'MetaGer es diferente de otros motores de búsqueda. Esto se refleja no sólo en nuestra orientación hacia el bien público y el enfoque en la privacidad, sino también a través de algunas características únicas:',

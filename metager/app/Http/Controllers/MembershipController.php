@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\ContactMail;
+use App\Localization;
 use App\Rules\IBANValidator;
 use Illuminate\Http\Request;
 use LaravelLocalization;
@@ -16,7 +17,11 @@ class MembershipController extends Controller
      */
     public function contactData(Request $request)
     {
-        return response(view("membership.form", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+        if (Localization::getLanguage() === "de") {
+            return response(view("membership.form", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+        } else {
+            return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+        }
     }
 
     public function success(Request $request)

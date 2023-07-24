@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\SettingsController;
 
 
 Route::get('meta/key', function () {
@@ -13,6 +14,7 @@ Route::group(
         Route::get('/', 'SettingsController@index')->name('settings');
         Route::post('de', 'SettingsController@disableSearchEngine')->name('disableEngine');
         Route::post('ee', 'SettingsController@enableSearchEngine')->name('enableEngine');
+        Route::post('ex', [SettingsController::class, 'enableExternalSearchProvider'])->name('enableExternalProvider');
         Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');
         Route::post('es', 'SettingsController@enableSetting')->name('enableSetting');
         Route::post('ds', 'SettingsController@deleteSettings')->name('deleteSettings');

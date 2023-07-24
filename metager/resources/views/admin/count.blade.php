@@ -30,10 +30,11 @@
 					<option value="none-german-english" {{ (Request::input('interface', 'all') == "none-german-english" ? "selected" : "")}}>Nicht Deutsch oder Englisch</option>
 					<option value="de" {{ (Request::input('interface', 'all') == "de" ? "selected" : "")}}>DE</option>
 					<option value="at" {{ (Request::input('interface', 'all') == "at" ? "selected" : "")}}>AT</option>
+					<option value="pl" {{ (Request::input('interface', 'all') == "pl" ? "selected" : "")}}>PL</option>
 					<option value="ch" {{ (Request::input('interface', 'all') == "ch" ? "selected" : "")}}>CH</option>
 					<option value="en" {{ (Request::input('interface', 'all') == "en" ? "selected" : "")}}>EN</option>
 					<option value="es" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>ES</option>
-					<option value="fr" {{ (Request::input('interface', 'all') == "es" ? "selected" : "")}}>FR</option>
+					<option value="fr" {{ (Request::input('interface', 'all') == "fr" ? "selected" : "")}}>FR</option>
 					<option value="da" {{ (Request::input('interface', 'all') == "da" ? "selected" : "")}}>DA</option>
 					<option value="fi" {{ (Request::input('interface', 'all') == "fi" ? "selected" : "")}}>FI</option>
 					<option value="it" {{ (Request::input('interface', 'all') == "it" ? "selected" : "")}}>IT</option>
@@ -64,10 +65,10 @@
 		$date_iterator = clone $end;
 		@endphp
 		@while($date_iterator->isBetween($start, $end))
-		<tr class="same-day loading" data-date="{{$date_iterator->format("Y-m-d")}}">
+		<tr class="@if($date_iterator->weekday() === now()->weekday())same-weekday @endif loading" data-date="{{$date_iterator->format("Y-m-d")}}">
 			<td class="date" data-date="{{ $date_iterator->format("Y-m-d") }}" data-date_formatted="{{ $date_iterator->format("d.m.Y")}}">{{ $date_iterator->locale("de_DE")->translatedFormat("d.m.Y - l") }}</td>
 			<td class="same-time" data-same_time="0"></td>
-			<td class="total" data-total="0"></td>
+			<td class="total"></td>
 			<td class="median"></td>
 		</tr>
 		@php

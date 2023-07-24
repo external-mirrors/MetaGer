@@ -32,6 +32,7 @@
         </div>
         @endif
     </div>
+    @if($fokus !== "bilder" || Cookie::get("bilder_setting_external", "metager") === "metager")
     <div class="card" id="engines">
         <h1>@lang('settings.header.2')</h1>
         <p>@lang('settings.text.2')</p>
@@ -106,6 +107,8 @@
         <p>@lang('settings.cost-free')</p>        
         @endif
     </div>
+    @endif
+    @if($fokus !== "bilder" || Cookie::get("bilder_setting_external", "metager") === "metager")
     <div class="card" id="filter">
         <h1>@lang('settings.header.3')</h1>
         <p>@lang('settings.text.3')</p>
@@ -154,7 +157,23 @@
             </div>
         </form>
     </div>
-
+    @endif
+    @if($fokus === "bilder")
+    <div id="external-search-service" class="card">
+        <h1>@lang('settings.externalservice.heading')</h1>
+        <div>@lang('settings.externalservice.description')</div>
+        <form action="{{ route('enableExternalProvider') }}" method="POST">
+            <input type="hidden" name="focus" value="{{ $fokus }}">
+            <input type="hidden" name="url" value="{{ $url }}">
+            <select name="bilder_setting_external" id="bilder_setting_external" class="form-control">
+                <option value="metager" @if(Cookie::get('bilder_setting_external', 'metager') === 'metager')selected @endif>MetaGer</option>
+                <option value="google" @if(Cookie::get('bilder_setting_external', 'metager') === 'google')selected @endif>Google</option>
+                <option value="bing" @if(Cookie::get('bilder_setting_external', 'metager') === 'bing')selected @endif>Bing</option>
+            </select>
+            <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
+        </form>
+    </div>
+    @endif
     <div class="card" id="more-settings">
         <h1>@lang('settings.more')</h1>
         <p>@lang('settings.hint.hint')</p>

@@ -106,11 +106,13 @@ function loadData(parallel) {
               maximumFractionDigits: 0,
             });
 
-            let total_element = element.querySelector("td.total");
-            total_element.dataset.total = total_requests;
-            total_element.textContent = total_requests.toLocaleString("de-DE", {
-              maximumFractionDigits: 0,
-            });
+            if (!isNaN(total_requests)) {
+              let total_element = element.querySelector("td.total");
+              total_element.dataset.total = total_requests;
+              total_element.textContent = total_requests.toLocaleString("de-DE", {
+                maximumFractionDigits: 0,
+              });
+            }
 
             // Update total sums
             let elements = document.querySelectorAll("tbody tr");
@@ -119,13 +121,14 @@ function loadData(parallel) {
               let total = parseInt(
                 elements[j].querySelector(".total").dataset.total
               );
-              sum += total;
-              if (j === 0 || total === 0) {
+
+              if (j === 0 || total === 0 || isNaN(total)) {
                 continue;
               }
+              sum += total;
               let median_element = elements[j].querySelector(".median");
               let median = new Number(
-                (sum / (j + 1)).toFixed(0)
+                (sum / j).toFixed(0)
               ).toLocaleString("de-DE", {
                 maximumFractionDigits: 0,
               });
@@ -155,6 +158,10 @@ function updateChart() {
   if (chart == undefined) {
     createChart();
   } else {
+    let backgroundColor_total = "rgb(255, 127, 0)";
+    let backgroundColor_until_now = "rgb(67, 134, 221)";
+    let backgroundColor_highlight = "#30b330";
+
     let totals = [];
     let until_nows = [];
     let labels = [];
@@ -165,29 +172,72 @@ function updateChart() {
         elements[i].querySelector(".same-time").dataset.same_time
       );
       let formatted_date = elements[i].dataset.date;
-      if (total > record.count) {
-        record.count = total;
-        record.same_time = until_now;
-        record.date = formatted_date;
-        updateRecord();
-      }
+      if (!isNaN(total)) {
+        if (total > record.count) {
+          record.count = total;
+          record.same_time = until_now;
+          record.date = formatted_date;
+          updateRecord();
+        }
 
-      totals.unshift(total);
+        totals.unshift(total);
+      } else {
+        totals.unshift(null);
+      }
       until_nows.unshift(until_now);
       labels.unshift(formatted_date);
     }
 
     chart.data.datasets[0].data = totals;
+    chart.data.datasets[0].backgroundColor = el => {
+      if (shouldHighlight(el, labels)) {
+        return backgroundColor_highlight;
+      } else {
+        return backgroundColor_total;
+      }
+    }
+    chart.data.datasets[0].borderColor = el => {
+      if (shouldHighlight(el, labels)) {
+        return backgroundColor_highlight;
+      } else {
+        return backgroundColor_total;
+      }
+    }
     chart.data.datasets[1].data = until_nows;
+    chart.data.datasets[1].backgroundColor = el => {
+      if (shouldHighlight(el, labels)) {
+        return backgroundColor_highlight;
+      } else {
+        return backgroundColor_until_now;
+      }
+    }
+    chart.data.datasets[1].borderColor = el => {
+      if (shouldHighlight(el, labels)) {
+        return backgroundColor_highlight;
+      } else {
+        return backgroundColor_until_now;
+      }
+    }
     chart.data.labels = labels;
 
     chart.update();
   }
 }
 
+function shouldHighlight(el, labels) {
+  let currentWeekday = new Date().toLocaleString('en-us', { weekday: 'long' });
+  let elementWeekday = new Date(labels[el.dataIndex]).toLocaleString('en-us', { weekday: 'long' });
+  if (currentWeekday == elementWeekday) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 function createChart() {
   let backgroundColor_total = "rgb(255, 127, 0)";
   let backgroundColor_until_now = "rgb(67, 134, 221)";
+  let backgroundColor_highlight = "rgb(0,0,0)";
   let labels = [];
   let data_points_total = [];
   let data_points_until_now = [];

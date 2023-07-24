@@ -21,4 +21,8 @@ return [
     'h1' => [
         '1' => 'Sélection de la langue',
     ],
+    'translate' => [
+        'title' => 'Avez-vous trouvé une erreur dans nos traductions ?',
+        'description' => 'Si vous avez trouvé une erreur dans nos traductions, nous serons heureux de recevoir vos suggestions directement via <a href="https://translate.metager.de">notre instance weblate</a> (aucun compte n\'est nécessaire). Vous pouvez également nous faire part de vos observations par l\'intermédiaire de <a href=":contactlink">notre formulaire de contact</a> .',
+    ],
 ];

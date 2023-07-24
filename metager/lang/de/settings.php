@@ -1,5 +1,4 @@
 <?php
-
 return [
     'actions' => 'Aktionen',
     'add' => 'Hinzufügen',
@@ -23,8 +22,8 @@ return [
         'actions' => [
             'info' => 'Was ist das?',
             'login' => 'Vorhandenen Schlüssel einrichten',
-            'create' => 'Neuen Schlüssel erstellen'
-        ]
+            'create' => 'Neuen Schlüssel erstellen',
+        ],
     ],
     'back' => 'Zurück zur letzten Seite',
     'blentry' => 'Blacklisteintrag',
@@ -63,14 +62,18 @@ return [
     'reset' => 'Alle Einstellungen löschen',
     'save' => 'Speichern',
     'system' => 'Systemstandard',
-    "enable-engine" => "Suchmaschine einschalten",
-    "disable-engine" => "Suchmaschine ausschalten",
-    "filtered-engine" => "Suchmaschine durch Filter deaktiviert",
-    "payment-engine" => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
+    'enable-engine' => "Suchmaschine einschalten",
+    'disable-engine' => "Suchmaschine ausschalten",
+    'filtered-engine' => "Suchmaschine durch Filter deaktiviert",
+    'payment-engine' => "Suchmaschine erfordert eingerichteten MetaGer Schlüssel",
     'text' => [
         '1' => 'Um Ihre Sucheinstellungen zu speichern, verwenden wir nicht-personenbeziehbare Cookies. Diese werden im Klartext in Ihrem Browser gespeichert.',
         '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden.',
         '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
+    ],
+    'externalservice' => [
+        'heading' => 'Nutzung eines externen Suchdienstes',
+        'description' => 'Sie können konfigurieren, dass eine der folgenden externen Suchmaschinen anstelle unserer integrierten Lösung verwendet wird. Wir leiten Ihre Suchanfragen an den konfigurierten Anbieter weiter.',
     ],
 ];

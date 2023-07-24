@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App;
-use App\Localization;
-use Cookie;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
-use LaravelLocalization;
-use Illuminate\Support\Facades\Redis;
 use Response;
-use Cache;
 
 class StartpageController extends Controller
 {
@@ -33,9 +27,6 @@ class StartpageController extends Controller
             $eingabe = $request->input("q");
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
-
-        $focusPages = [];
-        $theme = "default";
 
         $optionParams = ['param_sprueche', 'param_newtab', 'param_maps', 'param_autocomplete', 'param_lang', 'param_key'];
         $option_values = [];

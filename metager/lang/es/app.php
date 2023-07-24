@@ -17,7 +17,7 @@ return [
         'manuell' => 'Instalación manual',
     ],
     'maps' => [
-        '1' => 'Esta aplicación ofrece una integración nativa de <a href="https://maps.metager.de" target="_blank">  MetaGer Maps</a>(con tecnología de <a href = "https: //www.openstreetmap.de/" target =" _ blank"> Openstreetmap</a>) en su dispositivo móvil Android.',
+        '1' => 'Esta aplicación proporciona una integración nativa de <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (impulsado por <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) en su dispositivo móvil Android.',
         '2' => 'De este modo el servicio de mapas y navegación también funciona de manera óptima y rápida en su smartphone. La aplicación aumenta el rendimiento en comparación con el uso en el navegador móvil y ofrece algunas otras ventajas. ¡Intentalo!',
         '3' => 'Después del primer inicio, la aplicación solicita los siguientes permisos:',
         'list' => [

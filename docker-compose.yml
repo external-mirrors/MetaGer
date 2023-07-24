@@ -8,8 +8,7 @@ volumes:
 # Services
 services:
   fpm:
-    build:
-      &fpm_build
+    build: &fpm_build
       context: ./
       dockerfile: build/fpm/Dockerfile
       target: ${APP_ENV}

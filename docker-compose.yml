@@ -34,7 +34,7 @@ services:
     volumes:
       - ./metager/public:/metager/metager_app/public
     ports:
-      - 80:8080
+      - 8080:8080
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/nginx"
   scheduler:

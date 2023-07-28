@@ -24,17 +24,35 @@
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.info') !!}</p>
 		<h4>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.2') !!}</p>
+		@if (App\Localization::getLanguage() == "de")
 		<img class="help-easy-language-image lm-only" src="/img/help-left-searchfield-lm.png"/>
 		<img class="help-easy-language-image dm-only" src="/img/help-left-searchfield-dm.png"/>
+		@else
+		<img class="help-easy-language-image lm-only" src="/img/help-left-searchfield-lm-en.png"/>
+		<img class="help-easy-language-image dm-only" src="/img/help-left-searchfield-dm-en.png"/>
+		@endif
+
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.memberkey.3') !!}</p>
 		<h4>{!! trans('help/easy-language/help-mainpages.searchfield.slot.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.slot.2') !!}</p>
+		@if (App\Localization::getLanguage() == "de")
+
 		<img class="help-easy-language-image lm-only" src="/img/help-middle-searchfield-lm.png"/>
 		<img class="help-easy-language-image dm-only" src="/img/help-middle-searchfield-dm.png"/>
+		@else
+		<img class="help-easy-language-image lm-only" src="/img/help-middle-searchfield-lm-en.png"/>
+		<img class="help-easy-language-image dm-only" src="/img/help-middle-searchfield-dm-en.png"/>
+		@endif
 		<h4>{!! trans('help/easy-language/help-mainpages.searchfield.search.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.search.2') !!}<p>
+		@if (App\Localization::getLanguage() == "de")
+
 		<img class="help-easy-language-image lm-only" src="/img/help-right-searchfield-lm.png"/>
 		<img class="help-easy-language-image dm-only" src="/img/help-right-searchfield-dm.png"/>
+		@else
+		<img class="help-easy-language-image lm-only" src="/img/help-right-searchfield-lm-en.png"/>
+		<img class="help-easy-language-image dm-only" src="/img/help-right-searchfield-dm-en.png"/>
+		@endif
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.search.3') !!}</p>
 		<p>{!! trans('help/easy-language/help-mainpages.searchfield.morefunctions') !!}</p>
 	</div>
@@ -61,8 +79,14 @@
 		<div>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.1') !!}</p>
 			<div class="image-container">
-				<img class="lm-only" src="/img/help-php-resultpic-01.png" alt="Bildschirmfoto eines Suchergebnisses"/>
-				<img class="dm-only" src="/img/help-php-resultpic-01-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="lm-only" src="/img/help-resultpic-01-lm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				<img class="dm-only" src="/img/help-resultpic-01-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				@else
+				<img class="lm-only" src="/img/help-result-en-lm-01.png" alt="Screenshot of a result"/>
+				<img class="dm-only" src="/img/help-result-en-dm-01.png" alt="Screenshot of a result"/>
+				@endif
+
 			</div>
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.open.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.open.0') !!}</p>
@@ -78,8 +102,13 @@
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.more.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.more.1') !!}</p>
 			<div class="image-container">
-				<img class="lm-only" src="/img/help-php-resultpic-02.png" alt="Bildschirmfoto eines Suchergebnisses"/>
-				<img class="dm-only" src="/img/help-php-resultpic-02-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+			@if (App\Localization::getLanguage() == "de")
+				<img class="lm-only" src="/img/help-resultpic-02-lm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				<img class="dm-only" src="/img/help-resultpic-02-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				@else
+				<img class="lm-only" src="/img/help-result-en-lm-02.png" alt="Screenshot of a result"/>
+				<img class="dm-only" src="/img/help-result-en-dm-02.png" alt="Screenshot of a result"/>
+				@endif
 			</div>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.2') !!}</p>
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.domainnewsearch.title') !!}</h4>

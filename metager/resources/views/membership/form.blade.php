@@ -6,7 +6,7 @@
 
 @section('content')
 <h1 class="page-title">@lang('membership.title')</h1>
-<div class="page-description">Vielen Dank, dass Sie eine <a href=\'https://suma-ev.de/mitglieder/\' target=\'_blank\'>Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
+<div class="page-description">Vielen Dank, dass Sie eine <a href="https://suma-ev.de/mitglieder/" target="_blank">Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
 <form id="membership-form" method="POST">
     <div id="contact-data">
         <h3>1. Ihre Kontaktdaten</h3>

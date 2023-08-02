@@ -13,9 +13,9 @@
 				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
 					<span>{{ $ad->anzeigeLink }}</span>
 					@if(\App\Localization::getLanguage() === "de")
-					<img src="/img/mark-de.svg" alt="Mark">
+					<img src="/img/100-de.svg" alt="Mark">
 					@else
-					<img src="/img/mark-en.svg" alt="Mark">
+					<img src="/img/100-en.svg" alt="Mark">
 					@endif
 				</a>
 			</div>
@@ -32,7 +32,7 @@
 		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
 			{!! trans('result.options.6') !!}
 		</a>
-		<a class="result-open-metagerkey" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
+		<a class="result-open-key" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
 			@lang('result.options.8')
 		</a>
 	</div>

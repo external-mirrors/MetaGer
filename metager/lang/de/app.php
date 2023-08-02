@@ -17,7 +17,7 @@ return [
         'manuell' => 'Manual Installation',
     ],
     'maps' => [
-        '1' => 'Diese App bietet eine native Integration von <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) auf ihrem Android Mobilgerät.',
+        '1' => 'Diese App bietet eine native Integration von <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) auf Ihrem mobilen Android-Gerät.',
         '2' => 'Dadurch läuft der Karten- und Navigationsdienst auch auf Ihrem Smartphone optimal und schnell. Die App steigert die Performance im Vergleich zur Verwendung im mobilen Browser und bietet einige weitere Vorteile. Probieren Sie es aus!',
         '3' => 'Die App fragt nach dem ersten Start nach folgenden Berechtigungen:',
         'list' => [

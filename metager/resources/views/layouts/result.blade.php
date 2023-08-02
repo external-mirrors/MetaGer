@@ -133,4 +133,4 @@
 	</div>
 	@endif
 </div>
-<div class="ab-hint result" data-target="{{$index}}">Ein Suchergebnis von <code>{{$result->host}}</code> wurde hier durch Ihren Werbeblocker entfernt. <a href="#">Mehr erfahren</a></div>
+<div class="ab-hint result" data-target="{{$index}}">Ein Suchergebnis von <code>{{$result->host}}</code> wurde hier durch Ihren Werbeblocker entfernt. <a href="{{ route('adblocker') }}">Mehr erfahren</a></div>

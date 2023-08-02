@@ -20,4 +20,5 @@ return [
     'advertisement' => 'Annonce',
     'providers' => 'fournisseurs',
     'proxytext' => 'Le lien vers le résultat est ouvert de manière anonyme. Vos données ne seront pas transférées aux serveurs de destination. Certaines pages web peuvent ne pas fonctionner comme d\'habitude.',
+    'adblocker' => 'Un <a href=":resultlink">résultat de recherche</a> from <code>:host</code> a été supprimé ici par votre bloqueur de publicité. <a href=":infolink">En savoir plus</a>',
 ];

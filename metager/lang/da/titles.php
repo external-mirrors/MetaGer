@@ -32,4 +32,5 @@ return [
     'assosearch' => 'Associationer for ":q" - MetaGer',
     'prevention' => 'Hjælp til selvmordstanker - MetaGer',
     'membership' => 'Dit medlemskab af SUMA-EV',
+    'adblocker' => 'Adblockere - MetaGer',
 ];

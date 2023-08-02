@@ -38,6 +38,7 @@ mix
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
   )
+  .less('resources/less/metager/pages/adblocker.less', 'public/css/adblocker.css')
   .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(

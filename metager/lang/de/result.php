@@ -20,5 +20,6 @@ return [
     'proxytext' => 'Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt.',
     'metagerkeytext' => 'MetaGer werbefrei nutzen',
     'news' => 'Relevante Nachrichten',
-    'videos' => "Videos"
+    'videos' => "Videos",
+    'adblocker' => 'Ein <a href=":resultlink">Suchergebnis</a> von <code>:host</code> wurde hier durch Ihren Werbeblocker entfernt. <a href=":infolink">Mehr erfahren</a>'
 ];

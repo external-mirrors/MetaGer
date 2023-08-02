@@ -10,7 +10,7 @@ return [
     'head' => [
         '1' => 'Application MetaGer',
         '2' => 'Application MetaGer',
-        '3' => 'MetaGer Maps App',
+        '3' => 'Application MetaGer Maps',
         '4' => 'Installation',
     ],
     'disclaimer' => [

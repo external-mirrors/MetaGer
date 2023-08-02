@@ -87,6 +87,9 @@ Route::get('kontakt/{url?}', function ($url = "") {
 })->name("contact");
 
 Route::post('kontakt', 'MailController@contactMail');
+Route::get('adblocker', function () {
+    return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
+})->name("adblocker");
 
 Route::group(["prefix" => "membership"], function () {
     Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");

@@ -133,3 +133,4 @@
 	</div>
 	@endif
 </div>
+<div class="ab-hint result" data-target="{{$index}}">@lang('result.adblocker', ['resultlink' => $result->originalLink, 'infolink' => route('adblocker'), 'host' => $result->host])</div>

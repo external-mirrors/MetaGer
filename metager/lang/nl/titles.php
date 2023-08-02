@@ -32,4 +32,5 @@ return [
     'kontakt' => 'Contact - MetaGer',
     'spende' => 'Donatie - MetaGer',
     'membership' => 'Jouw lidmaatschap bij SUMA-EV',
+    'adblocker' => 'Adblockers - MetaGer',
 ];

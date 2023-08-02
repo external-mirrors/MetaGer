@@ -17,7 +17,7 @@ return [
         'manuell' => 'Manual Installation',
     ],
     'maps' => [
-        '1' => 'This App provides a native integration of  <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) on your mobile Android device.',
+        '1' => 'This App provides a native integration of <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) on your mobile Android device.',
         '2' => 'Therefore, the route planner and the navigation service is running very fast on your smartphone. The app is faster compared against the use in a mobile web browser. And there are some more advantages- check it out!',
         '3' => 'After the first start you will be asked for the following permissions:',
         'list' => [

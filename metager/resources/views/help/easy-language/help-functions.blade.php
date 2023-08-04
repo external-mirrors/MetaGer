@@ -53,8 +53,13 @@
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
 			<p class = "search-example">{!! trans('help/easy-language/help-functions.bang.example') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.bang.2') !!}</p>
+			@if (App\Localization::getLanguage() == "de")
 			<img id="help-easy-language-bang-image" class="help-easy-language-image lm-only" src="/img/help-bangs-lm.png"/>
 			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm.png"/>
+			@else
+			<img id="help-easy-language-bang-image" class="help-easy-language-image lm-only" src="/img/help-bangs-lm-en.png"/>
+			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm-eb.png"/>
+			@endif
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
 
 		</div>

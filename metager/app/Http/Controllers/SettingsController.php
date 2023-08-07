@@ -446,8 +446,6 @@ class SettingsController extends Controller
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
-        $regexUrl = '#^(\*\.)?[a-z0-9]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
-
         $settings = $request->query();
         $secure = app()->environment("local") ? false : true;
         foreach ($settings as $key => $value) {
@@ -461,7 +459,7 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, true));
             } else {
                 foreach ($langFile->foki as $fokus => $fokusInfo) {
-                    if (strpos($key, $fokus . '_blpage') === 0 && preg_match($regexUrl, $value) === 1) {
+                    if (strpos($key, $fokus . '_blpage') === 0) {
                         Cookie::queue(Cookie::forever($key, $value, "/", null, $secure, true));
                     } elseif (strpos($key, $fokus . '_setting_') === 0) {
                         foreach ($langFile->filter->{'parameter-filter'} as $parameter) {

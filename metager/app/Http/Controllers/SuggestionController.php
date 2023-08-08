@@ -38,16 +38,22 @@ class SuggestionController extends Controller
                     "Authorization: Bearer $public_key"
                 ],
                 "user_agent" => "MetaGer",
-                "content" => json_encode($request_data)
+                "content" => json_encode($request_data),
+                "ignore_errors" => true
             ]
         ]);
         $response = file_get_contents("https://apisuggests.com/api/v1/resolve", false, $context);
         $response = json_decode($response, true);
         if (array_key_exists("resolutions", $response) && is_array($response["resolutions"])) {
+            $result = [];
             for ($i = 0; $i < sizeof($response["resolutions"]); $i++) {
+                if ($response["resolutions"][$i]["data"] === null) {
+                    continue;
+                }
                 $response["resolutions"][$i]["data"]["imageUrl"] = Pictureproxy::generateUrl($response["resolutions"][$i]["data"]["imageUrl"]);
+                $result[] = $response["resolutions"][$i];
             }
-            return response()->json($response["resolutions"]);
+            return response()->json($result);
         } else {
             return response()->json([]);
         }
@@ -69,7 +75,7 @@ class SuggestionController extends Controller
         $request_data = [
             "query" => $query,
             "market" => $region,
-            "provider" => "bing-search"
+            "provider" => "bing-suggest"
         ];
         $context = stream_context_create([
             "http" => [
@@ -79,7 +85,8 @@ class SuggestionController extends Controller
                     "Authorization: Bearer $public_key"
                 ],
                 "user_agent" => "MetaGer",
-                "content" => null
+                "content" => null,
+                "ignore_errors" => true
             ]
         ]);
         $url = "https://apisuggests.com/api/v1/suggest?" . http_build_query($request_data);

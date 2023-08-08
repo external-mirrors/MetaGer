@@ -136,7 +136,7 @@
       background-color: var(--highlight-color);
       padding-inline: 0.5rem;
       > .partner {
-        display: flex;
+        display: none;
         gap: 0.5rem;
         align-items: center;
         justify-content: center;
@@ -169,7 +169,7 @@
       }
     }
     > .suggestion {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
@@ -183,7 +183,7 @@
       }
     }
     > .partner {
-      display: flex;
+      display: none;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
@@ -217,6 +217,17 @@
 }
 
 .startpage-searchbar {
+  &[data-suggest="active"]:focus-within {
+    @media (max-height: 680px) {
+      z-index: 21;
+      position: absolute;
+      top: 0;
+      max-width: 100%;
+      width: 100%;
+      grid-template-rows: max-content 1fr;
+      height: 100dvh;
+    }
+  }
   > * {
     border: 1px solid @searchbar-border-color;
 

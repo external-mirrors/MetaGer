@@ -53,7 +53,16 @@ div.startpage {
       > div#search-wrapper {
         flex-grow: 1;
         display: grid;
-        grid-template-rows: 10dvh max-content max-content max-content 1fr;
+        grid-template-rows: 20dvh max-content max-content max-content 1fr;
+        @media (max-height: 820px) {
+          grid-template-rows: 15dvh max-content max-content max-content 1fr;
+        }
+        @media (max-height: 775px) {
+          grid-template-rows: 10dvh max-content max-content max-content 1fr;
+        }
+        @media (max-height: 725px) {
+          grid-template-rows: 5dvh max-content max-content max-content 1fr;
+        }
         grid-template-areas: "." "logo" "search" "quicklinks" ".";
         grid-template-columns: 1fr;
         place-content: center;

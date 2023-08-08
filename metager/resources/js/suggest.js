@@ -31,6 +31,12 @@ let query = "";
     suggest();
   });
   search_input.addEventListener("focusin", suggest);
+  search_input.addEventListener("change", (e) => {
+    if (search_input.value.trim() == "") {
+      query = "";
+      searchbar_container.dataset.suggest = "inactive";
+    }
+  });
 
   function suggest() {
     if (search_input.value.trim().length == 0) {

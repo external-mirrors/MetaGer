@@ -10,6 +10,10 @@ use Illuminate\Http\Request;
 
 class SuggestionController extends Controller
 {
+    private $markets = [
+        "us" => "us(en)",
+        "ch" => "ch(de)",
+    ];
     public function partner(Request $request)
     {
         if (!$this->verifySignature($request) && 1 == 0) {
@@ -21,6 +25,9 @@ class SuggestionController extends Controller
         }
 
         $region = strtolower(Localization::getRegion());
+        if (array_key_exists($region, $this->markets)) {
+            $region = $this->markets[$region];
+        }
         $public_key = config("metager.metager.admitad.suggest_public_key");
 
         $request_data = [
@@ -70,6 +77,9 @@ class SuggestionController extends Controller
         }
 
         $region = strtolower(Localization::getRegion());
+        if (array_key_exists($region, $this->markets)) {
+            $region = $this->markets[$region];
+        }
         $public_key = config("metager.metager.admitad.suggest_public_key");
 
         $request_data = [

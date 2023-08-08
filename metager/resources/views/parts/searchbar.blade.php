@@ -23,7 +23,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="suggestions" data-suggest="{{Crypt::encrypt(now()->addMinutes(2))}}">
+			<div class="suggestions" data-suggest="{{Crypt::encrypt(now()->addMinutes(2))}}" data-partners="{{ route('suggest_partner') }}" data-suggestions="{{ route('suggest_suggest') }}">
 					<div class="partners">
 						<a href="" class="partner">
 							<img src="" alt="">
@@ -106,3 +106,4 @@
 		</div>
 	</form>
 </fieldset>
+<script src="{{ mix('/js/suggest.js') }}"></script>

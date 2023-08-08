@@ -5,6 +5,7 @@ use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
+use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TTSController;
 use App\Localization;
 use Jenssegers\Agent\Agent;
@@ -59,6 +60,11 @@ Route::get('impressum', function () {
 });
 Route::get('impressum.html', function () {
     return redirect(url('impressum'));
+});
+
+Route::group(["prefix" => 'suggest'], function () {
+    Route::post("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
+    Route::post("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
 });
 
 Route::get('about', function () {

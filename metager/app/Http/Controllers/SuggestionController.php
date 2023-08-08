@@ -60,7 +60,7 @@ class SuggestionController extends Controller
                 $response["resolutions"][$i]["data"]["imageUrl"] = Pictureproxy::generateUrl($response["resolutions"][$i]["data"]["imageUrl"]);
                 $result[] = $response["resolutions"][$i];
             }
-            return response()->json($result);
+            return response()->json($result, 200, ["Cache-Control" => "max-age=7200"]);
         } else {
             return response()->json([]);
         }
@@ -103,7 +103,7 @@ class SuggestionController extends Controller
         $response = file_get_contents($url, false, $context);
         $response = json_decode($response, true);
         if (array_key_exists("suggestions", $response) && is_array($response["suggestions"]) && array_key_exists("items", $response["suggestions"]) && is_array($response["suggestions"]["items"])) {
-            return response()->json($response["suggestions"]["items"]);
+            return response()->json($response["suggestions"]["items"], 200, ["Cache-Control" => "max-age=7200"]);
         } else {
             return response()->json([]);
         }
@@ -111,7 +111,7 @@ class SuggestionController extends Controller
 
     private function verifySignature(Request $request): bool
     {
-        $key = $request->input("key", "");
+        $key = $request->header("MetaGer-Key", "");
         try {
             $expiration = Crypt::decrypt($key);
             if (now()->isAfter($expiration)) {

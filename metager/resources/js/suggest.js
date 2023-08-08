@@ -42,15 +42,12 @@ let query = "";
       query = search_input.value.trim();
     }
 
-    fetch(suggestion_url_partner, {
-      method: "POST",
+    fetch(suggestion_url_partner + "?query=" + encodeURIComponent(query), {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "MetaGer-Key": key,
       },
-      body: JSON.stringify({
-        query: query,
-        key: key,
-      }),
     })
       .then((response) => response.json())
       .then((response) => {
@@ -59,15 +56,11 @@ let query = "";
         console.log(response);
       });
 
-    fetch(suggestion_url, {
-      method: "POST",
+    fetch(suggestion_url + "?query=" + encodeURIComponent(query), {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
+        "MetaGer-Key": key,
       },
-      body: JSON.stringify({
-        query: query,
-        key: key,
-      }),
     })
       .then((response) => response.json())
       .then((response) => {

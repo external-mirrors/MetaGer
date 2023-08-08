@@ -63,8 +63,8 @@ Route::get('impressum.html', function () {
 });
 
 Route::group(["prefix" => 'suggest'], function () {
-    Route::post("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
-    Route::post("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
+    Route::get("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
+    Route::get("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
 });
 
 Route::get('about', function () {

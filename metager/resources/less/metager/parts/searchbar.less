@@ -147,7 +147,10 @@
           height: 1em;
         }
         > div {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
           > .description {
+            grid-column: span 2;
             font-size: 0.7rem;
           }
         }

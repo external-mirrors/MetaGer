@@ -29,6 +29,7 @@
 							<img src="" alt="">
 							<div>
 								<div class="title"></div>
+								<div class="mark">@lang('result.options.4')</div>
 								<div class="description"></div>
 							</div>
 						</a>
@@ -36,6 +37,7 @@
 							<img src="" alt="">
 							<div>
 								<div class="title"></div>
+								<div class="mark">@lang('result.options.4')</div>
 								<div class="description"></div>
 							</div>
 						</a>

@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\Models\Result;
+use Cache;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
 
 class SuggestionController extends Controller
 {
+    const CACHE_DURATION_HOURS = 6;
     private $markets = [
         "us" => "us(en)",
         "ch" => "ch(de)",
@@ -37,20 +39,28 @@ class SuggestionController extends Controller
             "market" => $region,
             "provider" => "bing-search"
         ];
-        $context = stream_context_create([
-            "http" => [
-                "method" => "POST",
-                "header" => [
-                    "Content-Type: application/json",
-                    "Authorization: Bearer $public_key"
-                ],
-                "user_agent" => "MetaGer",
-                "content" => json_encode($request_data),
-                "ignore_errors" => true
-            ]
-        ]);
-        $response = file_get_contents("https://apisuggests.com/api/v1/resolve", false, $context);
-        $response = json_decode($response, true);
+
+        $cache_key = md5(json_encode($request_data));
+        $response = Cache::get($cache_key);
+        if ($response === null) {
+            $context = stream_context_create([
+                "http" => [
+                    "method" => "POST",
+                    "header" => [
+                        "Content-Type: application/json",
+                        "Authorization: Bearer $public_key"
+                    ],
+                    "user_agent" => "MetaGer",
+                    "content" => json_encode($request_data),
+                    "ignore_errors" => true
+                ]
+            ]);
+            $response = file_get_contents("https://apisuggests.com/api/v1/resolve", false, $context);
+            $response = json_decode($response, true);
+            if (array_key_exists("resolutions", $response) && is_array($response["resolutions"])) {
+                Cache::put($cache_key, $response, now()->addHours(self::CACHE_DURATION_HOURS));
+            }
+        }
         if (array_key_exists("resolutions", $response) && is_array($response["resolutions"])) {
             $result = [];
             for ($i = 0; $i < sizeof($response["resolutions"]); $i++) {
@@ -87,21 +97,29 @@ class SuggestionController extends Controller
             "market" => $region,
             "provider" => "bing-suggest"
         ];
-        $context = stream_context_create([
-            "http" => [
-                "method" => "GET",
-                "header" => [
-                    "Content-Type: application/json",
-                    "Authorization: Bearer $public_key"
-                ],
-                "user_agent" => "MetaGer",
-                "content" => null,
-                "ignore_errors" => true
-            ]
-        ]);
-        $url = "https://apisuggests.com/api/v1/suggest?" . http_build_query($request_data);
-        $response = file_get_contents($url, false, $context);
-        $response = json_decode($response, true);
+
+        $cache_key = md5(json_encode($request_data));
+        $response = Cache::get($cache_key);
+        if ($response === null) {
+            $context = stream_context_create([
+                "http" => [
+                    "method" => "GET",
+                    "header" => [
+                        "Content-Type: application/json",
+                        "Authorization: Bearer $public_key"
+                    ],
+                    "user_agent" => "MetaGer",
+                    "content" => null,
+                    "ignore_errors" => true
+                ]
+            ]);
+            $url = "https://apisuggests.com/api/v1/suggest?" . http_build_query($request_data);
+            $response = file_get_contents($url, false, $context);
+            $response = json_decode($response, true);
+            if (array_key_exists("suggestions", $response) && is_array($response["suggestions"]) && array_key_exists("items", $response["suggestions"]) && is_array($response["suggestions"]["items"])) {
+                Cache::put($cache_key, $response, now()->addHours(self::CACHE_DURATION_HOURS));
+            }
+        }
         if (array_key_exists("suggestions", $response) && is_array($response["suggestions"]) && array_key_exists("items", $response["suggestions"]) && is_array($response["suggestions"]["items"])) {
             return response()->json($response["suggestions"]["items"], 200, ["Cache-Control" => "max-age=7200"]);
         } else {

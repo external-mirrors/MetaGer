@@ -25,6 +25,7 @@ let query = "";
   }
 
   search_input.addEventListener("keyup", suggest);
+  search_input.addEventListener("focusin", suggest);
 
   function suggest() {
     if (search_input.value.trim().length == 0) {

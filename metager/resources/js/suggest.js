@@ -53,7 +53,6 @@ let query = "";
       .then((response) => {
         partners = response;
         updateSuggestions();
-        console.log(response);
       });
 
     fetch(suggestion_url + "?query=" + encodeURIComponent(query), {
@@ -66,7 +65,6 @@ let query = "";
       .then((response) => {
         suggestions = response;
         updateSuggestions();
-        console.log(response);
       });
   }
 

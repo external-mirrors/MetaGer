@@ -24,7 +24,12 @@ let query = "";
     return;
   }
 
-  search_input.addEventListener("keyup", suggest);
+  search_input.addEventListener("keyup", (e) => {
+    if (e.key == "Escape") {
+      e.target.blur();
+    }
+    suggest();
+  });
   search_input.addEventListener("focusin", suggest);
 
   function suggest() {

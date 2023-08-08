@@ -219,7 +219,6 @@ function initQueryInputField() {
   delete_button.addEventListener("mousedown", (e) => {
     e.preventDefault();
     field.value = "";
-    console.log("test");
     return false;
   });
 }

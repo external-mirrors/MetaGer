@@ -29,7 +29,7 @@
 							<img src="" alt="">
 							<div>
 								<div class="title"></div>
-								<div class="mark">@lang('result.options.4')</div>
+								<div><div class="mark">@lang('result.options.4')</div></div>
 								<div class="description"></div>
 							</div>
 						</a>
@@ -37,7 +37,7 @@
 							<img src="" alt="">
 							<div>
 								<div class="title"></div>
-								<div class="mark">@lang('result.options.4')</div>
+								<div><div class="mark">@lang('result.options.4')</div></div>
 								<div class="description"></div>
 							</div>
 						</a>
@@ -61,6 +61,7 @@
 					<a href="" class="partner">
 						<img src="" alt="">
 						<div class="title"></div>
+						<div><div class="mark">@lang('result.options.4')</div></div>
 					</a>
 					<a href="" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
@@ -81,6 +82,7 @@
 					<a href="" class="partner">
 						<img src="" alt="">
 						<div class="title"></div>
+						<div><div class="mark">@lang('result.options.4')</div></div>
 					</a>
 					<a href="" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">

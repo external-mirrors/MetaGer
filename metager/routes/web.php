@@ -128,7 +128,7 @@ Route::get('partnershops', function () {
     return view('spende.partnershops')
         ->with('title', trans('titles.partnershops'))
         ->with('navbarFocus', 'foerdern');
-});
+})->name("partnershops");
 
 Route::get('beitritt', function () {
     if (Localization::getLanguage() === "de") {

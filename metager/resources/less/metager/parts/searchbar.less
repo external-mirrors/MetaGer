@@ -148,10 +148,22 @@
         }
         > div {
           display: grid;
-          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          grid-template-columns: max-content 1fr;
+          column-gap: 0.5rem;
           > .description {
             grid-column: span 2;
             font-size: 0.7rem;
+          }
+          > div {
+            > .mark {
+              color: limegreen;
+              font-size: 0.5rem;
+              width: max-content;
+              border: 1px solid limegreen;
+              padding: 0.1rem 0.25rem;
+              border-radius: 5px;
+            }
           }
         }
       }
@@ -178,6 +190,16 @@
       color: inherit;
       > img {
         width: 16px;
+      }
+      > div {
+        > .mark {
+          color: limegreen;
+          font-size: 0.5rem;
+          width: max-content;
+          border: 1px solid limegreen;
+          padding: 0.1rem 0.25rem;
+          border-radius: 5px;
+        }
       }
       &:hover {
         background-color: var(--highlight-color);

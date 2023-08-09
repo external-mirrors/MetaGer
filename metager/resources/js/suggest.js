@@ -59,6 +59,9 @@ let query = "";
       .then((response) => {
         partners = response;
         updateSuggestions();
+      }).catch(reason => {
+        partners = [];
+        updateSuggestions();
       });
 
     fetch(suggestion_url + "?query=" + encodeURIComponent(query), {
@@ -70,6 +73,9 @@ let query = "";
       .then((response) => response.json())
       .then((response) => {
         suggestions = response;
+        updateSuggestions();
+      }).catch(reason => {
+        suggestions = [];
         updateSuggestions();
       });
   }

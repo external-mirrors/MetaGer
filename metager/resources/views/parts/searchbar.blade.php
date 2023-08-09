@@ -12,7 +12,7 @@
 					</a>
 				</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
-					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}" >
+					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
 					<button id="search-delete-btn" name="delete-search-input" type="reset" tabindex="-1">
 						&#xd7;
 					</button>
@@ -23,6 +23,76 @@
 					</button>
 				</div>
 			</div>
+			<div class="suggestions" data-suggest="{{Crypt::encrypt(now()->addMinutes(2))}}" data-partners="{{ route('suggest_partner') }}" data-suggestions="{{ route('suggest_suggest') }}">
+					<div class="partners">
+						<a href="" class="partner">
+							<img src="" alt="">
+							<div>
+								<div class="title"></div>
+								<div><div class="mark">@lang('result.options.4')</div></div>
+								<div class="description"></div>
+							</div>
+						</a>
+						<a href="" class="partner">
+							<img src="" alt="">
+							<div>
+								<div class="title"></div>
+								<div><div class="mark">@lang('result.options.4')</div></div>
+								<div class="description"></div>
+							</div>
+						</a>
+					</div>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="partner">
+						<img src="" alt="">
+						<div class="title"></div>
+						<div><div class="mark">@lang('result.options.4')</div></div>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="partner">
+						<img src="" alt="">
+						<div class="title"></div>
+						<div><div class="mark">@lang('result.options.4')</div></div>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+					<a href="" class="suggestion">
+						<img src="/img/icon-lupe.svg" alt="search">
+						<span></span>
+					</a>
+				</div>
 			<div class="search-hidden">
 				@if(Request::filled("token"))
 				<input type="hidden" name="token" value={{ Request::input("token") }}>
@@ -40,3 +110,4 @@
 		</div>
 	</form>
 </fieldset>
+<script src="{{ mix('/js/suggest.js') }}"></script>

@@ -1,4 +1,4 @@
-FROM php:8.2.8-fpm as composer
+FROM php:8.2.8-fpm-bullseye as composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer

@@ -42,56 +42,56 @@
 							</div>
 						</a>
 					</div>
-					<a href="" class="suggestion">
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
+					</button>
 					<a href="" class="partner">
 						<img src="" alt="">
 						<div class="title"></div>
 						<div><div class="mark">@lang('result.options.4')</div></div>
 					</a>
-					<a href="" class="suggestion">
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
+					</button>
 					<a href="" class="partner">
 						<img src="" alt="">
 						<div class="title"></div>
 						<div><div class="mark">@lang('result.options.4')</div></div>
 					</a>
-					<a href="" class="suggestion">
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
-					<a href="" class="suggestion">
+					</button>
+					<button type="submit" name="eingabe" class="suggestion">
 						<img src="/img/icon-lupe.svg" alt="search">
 						<span></span>
-					</a>
+					</button>
 				</div>
 			<div class="search-hidden">
 				@if(Request::filled("token"))
@@ -110,4 +110,4 @@
 		</div>
 	</form>
 </fieldset>
-<script src="{{ mix('/js/suggest.js') }}"></script>
+<!--<script src="{{ mix('/js/suggest.js') }}"></script>-->

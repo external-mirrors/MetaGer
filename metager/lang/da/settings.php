@@ -76,4 +76,9 @@ return [
         'heading' => 'Brug en ekstern søgetjeneste',
         'description' => 'Du kan konfigurere til at bruge en af følgende eksterne søgemaskiner i stedet for vores integrerede løsning. Vi omdirigerer dine søgninger til den konfigurerede udbyder.',
     ],
+    'suggestions' => [
+        'label' => 'Forslag til søgning',
+        'off' => "Deaktiveret",
+        'on' => "Aktiveret",
+    ],
 ];

@@ -86,7 +86,7 @@ class SuggestionController extends Controller
 
     public function suggest(Request $request)
     {
-        if (!$this->verifySignature($request) && 1 == 0) {
+        if (!$this->verifySignature($request)) {
             abort(401);
         }
         $query = $request->input("query");

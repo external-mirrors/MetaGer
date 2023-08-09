@@ -20,4 +20,5 @@ return [
     'metagerkeytext' => 'Use MetaGer ad-free',
     'news' => 'Relevant news',
     'videos' => 'Videos',
+    'adblocker' => 'A <a href=":resultlink">search result</a> from <code>:host</code> was removed here by your ad blocker. <a href=":infolink">Learn more</a>'
 ];

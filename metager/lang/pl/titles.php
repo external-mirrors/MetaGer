@@ -32,4 +32,5 @@ return [
     'assosearch' => 'Asocjacje dla ":q" - MetaGer',
     'prevention' => 'Pomoc z myślami samobójczymi - MetaGer',
     'membership' => 'Twoje członkostwo w SUMA-EV',
+    'adblocker' => 'Adblockery - MetaGer',
 ];

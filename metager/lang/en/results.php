@@ -20,5 +20,4 @@ return [
             "save" => "Remember decision (with cookie)"
         ]
     ],
-    'adblocker' => 'Ein <a href=":resultlink">Suchergebnis</a> von <code>:host</code> wurde hier durch Ihren Werbeblocker entfernt. <a href=":infolink">Mehr erfahren</a>'
 ];

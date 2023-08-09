@@ -32,4 +32,5 @@ return [
     'assosearch' => 'Assosiaatioita sanalle ":q" - MetaGer',
     'prevention' => 'Apua itsemurha-ajatuksiin - MetaGer',
     'membership' => 'Jäsenyytesi SUMA-EV:ssä',
+    'adblocker' => 'Mainostenestimet - MetaGer',
 ];

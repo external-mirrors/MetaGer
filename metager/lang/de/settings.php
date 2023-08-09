@@ -31,6 +31,11 @@ return [
     'copy' => 'Kopieren',
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
+    'suggestions' => [
+        "label" => 'Suchvorschläge',
+        "off" => "Aus",
+        "on" => "An"
+    ],
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
     'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",
     'no-engines' => "Mit den aktuellen Sucheinstellungen wird keine Suchmaschine abgefragt.",

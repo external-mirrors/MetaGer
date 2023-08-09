@@ -15,7 +15,6 @@
     @endforeach
     </ul>
     <div id="search-wrapper">
-      <div id="search-block">
         <h1 id="startpage-logo">
           <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
             <img src="/img/metager.svg" alt="MetaGer" />
@@ -49,7 +48,6 @@
         @else
         <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
         @endif
-    </div>
       </div>
     </div>
     <div id="language">

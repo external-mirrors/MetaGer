@@ -1,6 +1,6 @@
 variables:
   DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
-  BUILD_DOCKER_IMAGE: docker:24.0.1
+  BUILD_DOCKER_IMAGE: docker:24.0.5
   DEPLOY_KUBERNETES_IMAGE: alpine/k8s:1.22.6
   DOCKER_FPM_IMAGE_NAME: fpm
   DOCKER_NGINX_IMAGE_NAME: nginx

@@ -8,10 +8,12 @@ volumes:
 # Services
 services:
   fpm:
-    build: &fpm_build
+    image: metager:latest
+    build:
       context: ./
       dockerfile: build/fpm/Dockerfile
       target: ${APP_ENV}
+    pull_policy: never
     restart: unless-stopped
     networks:
       - metager
@@ -22,6 +24,7 @@ services:
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/liveness"
   nginx:
+    image: metager_nginx:latest
     build:
       context: ./
       dockerfile: build/nginx/Dockerfile
@@ -38,8 +41,8 @@ services:
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/nginx"
   scheduler:
-    build:
-      <<: *fpm_build
+    image: metager:latest
+    pull_policy: never
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan schedule:work-mg
@@ -52,8 +55,8 @@ services:
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/liveness-scheduler"
   worker:
-    build:
-      <<: *fpm_build
+    image: metager:latest
+    pull_policy: never
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan requests:fetcher
@@ -74,8 +77,8 @@ services:
     ports:
       - "7900:7900"
   composer:
-    build:
-      <<: *fpm_build
+    image: metager:latest
+    pull_policy: never
     entrypoint: /usr/bin/composer
     command: install
     environment:

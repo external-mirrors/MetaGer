@@ -76,4 +76,9 @@ return [
         'heading' => 'Utilizzare un servizio di ricerca esterno',
         'description' => 'È possibile configurare l\'utilizzo di uno dei seguenti motori di ricerca esterni al posto della nostra soluzione integrata. Le ricerche verranno reindirizzate al provider configurato.',
     ],
+    'suggestions' => [
+        'label' => 'Suggerimenti per la ricerca',
+        'off' => "Disabili",
+        'on' => "Abilitato",
+    ],
 ];

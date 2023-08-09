@@ -109,6 +109,7 @@ mix
     "resources/less/metager/pages/widget/widget.less",
     "public/css/widget/widget.css"
   )
+  .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")
   .js(
     [

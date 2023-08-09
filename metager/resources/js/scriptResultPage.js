@@ -225,9 +225,11 @@ function initQueryInputField() {
 
 function enableABHints() {
   setTimeout(() => {
-    document.querySelectorAll("#results > .ab-hint").forEach(element => {
+    document.querySelectorAll("#results > .ab-hint").forEach((element) => {
       let target = element.dataset.target;
-      let targetContainer = document.querySelector("#results > .result[data-index=\"" + target + "\"]");
+      let targetContainer = document.querySelector(
+        '#results > .result[data-index="' + target + '"]'
+      );
       // Element is hidden by display value if `offsetParent` is null
       // according to https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetParent
       if (!targetContainer || targetContainer.offsetParent == null) {

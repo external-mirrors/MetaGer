@@ -127,7 +127,8 @@ let query = "";
   }
   suggestions_container.querySelectorAll(".suggestion").forEach((element) => {
     element.addEventListener("click", (e) => {
-      search_input.value = e.target.dataset.query;
+      e.preventDefault();
+      search_input.value = e.target.closest("a").dataset.query;
       search_input.form.submit();
     });
   });

@@ -110,4 +110,4 @@
 		</div>
 	</form>
 </fieldset>
-<script src="{{ mix('/js/suggest.js') }}"></script>
+<!--<script src="{{ mix('/js/suggest.js') }}"></script>-->

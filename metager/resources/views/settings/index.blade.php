@@ -181,6 +181,14 @@
             <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
             <div class="form-group">
+                <label for="sg">@lang('settings.suggestions.label')</label>
+                <select name="sg" id="sg" class="form-control">
+                    <option value="off" {{ Cookie::get('suggestions') === "off" ? "disabled selected" : "" }}>@lang('settings.suggestions.off')</option>
+                    <option value="bing" {{ !Cookie::has('suggestions') ? "disabled selected" : "" }}>Bing</option>
+                    <option value="google" {{ Cookie::get('suggestions') === "google" ? "disabled selected" : "" }}>Google</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="dm">@lang('settings.darkmode')</label>
                 <select name="dm" id="dm" class="form-control">
                     <option value="system" {{ !Cookie::has('dark_mode') ? "disabled selected" : "" }}>@lang('settings.system')</option>

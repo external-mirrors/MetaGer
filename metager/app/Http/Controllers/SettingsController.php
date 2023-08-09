@@ -45,7 +45,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate') {
+            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate' || $key === 'suggestions') {
                 $settingActive = true;
             }
         }
@@ -251,6 +251,17 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
         // Currently only the setting for quotes is supported
 
+        $suggestions = $request->input('sg', '');
+        if (!empty($suggestions)) {
+            if ($suggestions === "off") {
+                Cookie::queue(Cookie::forever('suggestions', 'off', '/', null, $secure, true));
+            } elseif ($suggestions === "google") {
+                Cookie::queue(Cookie::forever('suggestions', 'google', '/', null, $secure, true));
+            } elseif ($suggestions === "bing") {
+                Cookie::queue(Cookie::forget("suggestions", "/"));
+            }
+        }
+
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
@@ -296,16 +307,13 @@ class SettingsController extends Controller
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }
-            if ($key === 'dark_mode') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            }
-            if ($key === 'new_tab') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            }
-            if ($key === 'key') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            }
-            if ($key === 'zitate') {
+            $global_settings = [
+                "dark_mode",
+                "new_tab",
+                "zitate",
+                "suggestions"
+            ];
+            if (in_array($key, $global_settings)) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }
         }

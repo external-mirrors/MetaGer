@@ -26,6 +26,10 @@ return [
     'clear' => 'Clear black list',
     'copy' => 'Copy',
     'darkmode' => 'Toggle dark mode',
+    'suggestions' => [
+        "label" => 'Search suggestions',
+        "off" => "Disabled"
+    ],
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',

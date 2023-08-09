@@ -58,6 +58,7 @@ class SuggestionController extends Controller
                         "Authorization: Bearer $public_key"
                     ],
                     "user_agent" => "MetaGer",
+                    "timeout" => 2.0,
                     "content" => json_encode($request_data),
                     "ignore_errors" => true
                 ]
@@ -122,6 +123,7 @@ class SuggestionController extends Controller
                         "Authorization: Bearer $public_key"
                     ],
                     "user_agent" => "MetaGer",
+                    "timeout" => 2.0,
                     "content" => null,
                     "ignore_errors" => true
                 ]

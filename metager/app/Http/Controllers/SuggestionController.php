@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Models\Authorization\Authorization;
 use App\Models\Result;
+use App\SearchSettings;
 use Cache;
 use Crypt;
 use Exception;
@@ -24,6 +26,11 @@ class SuggestionController extends Controller
         $query = $request->input("query");
         if (empty($query)) {
             abort(404);
+        }
+
+        // Disable Partnershops for authorized searches
+        if (app(Authorization::class)->canDoAuthenticatedSearch()) {
+            return response()->json([], 200, ["Cache-Control" => "no-cache, private"]);
         }
 
         $region = strtolower(Localization::getRegion());
@@ -72,7 +79,7 @@ class SuggestionController extends Controller
             }
             return response()->json($result, 200, ["Cache-Control" => "max-age=7200"]);
         } else {
-            return response()->json([]);
+            return response()->json([], 200, ["Cache-Control" => "no-cache, private"]);
         }
     }
 
@@ -86,6 +93,12 @@ class SuggestionController extends Controller
             abort(404);
         }
 
+        // Do not generate Suggestions if User turned them off
+        $settings = app(SearchSettings::class);
+        if ($settings->suggestions === "off") {
+            return response()->json([], 200, ["Cache-Control" => "no-cache, private"]);
+        }
+        $suggestion_provider = $settings->suggestions;
         $region = strtolower(Localization::getRegion());
         if (array_key_exists($region, $this->markets)) {
             $region = $this->markets[$region];
@@ -95,7 +108,7 @@ class SuggestionController extends Controller
         $request_data = [
             "query" => $query,
             "market" => $region,
-            "provider" => "bing-suggest"
+            "provider" => $suggestion_provider . "-suggest"
         ];
 
         $cache_key = md5(json_encode($request_data));
@@ -123,7 +136,7 @@ class SuggestionController extends Controller
         if (array_key_exists("suggestions", $response) && is_array($response["suggestions"]) && array_key_exists("items", $response["suggestions"]) && is_array($response["suggestions"]["items"])) {
             return response()->json($response["suggestions"]["items"], 200, ["Cache-Control" => "max-age=7200"]);
         } else {
-            return response()->json([]);
+            return response()->json([], 200, ["Cache-Control" => "no-cache, private"]);
         }
     }
 

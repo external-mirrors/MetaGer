@@ -45,7 +45,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'key' || $key === 'zitate' || $key === 'suggestions') {
+            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'suggestions') {
                 $settingActive = true;
             }
         }
@@ -255,9 +255,7 @@ class SettingsController extends Controller
         if (!empty($suggestions)) {
             if ($suggestions === "off") {
                 Cookie::queue(Cookie::forever('suggestions', 'off', '/', null, $secure, true));
-            } elseif ($suggestions === "google") {
-                Cookie::queue(Cookie::forever('suggestions', 'google', '/', null, $secure, true));
-            } elseif ($suggestions === "bing") {
+            } elseif ($suggestions === "on") {
                 Cookie::queue(Cookie::forget("suggestions", "/"));
             }
         }

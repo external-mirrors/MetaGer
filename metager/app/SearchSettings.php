@@ -48,9 +48,8 @@ class SearchSettings
         }
 
         $suggestions = Cookie::get("suggestions", "bing");
-        $valid_suggestion_settings = ["off", "bing", "google"];
-        if (in_array($suggestions, $valid_suggestion_settings)) {
-            $this->suggestions = $suggestions;
+        if ($suggestions === "off") {
+            $this->suggestions = "off";
         }
 
         if (Request::filled('quicktips')) {

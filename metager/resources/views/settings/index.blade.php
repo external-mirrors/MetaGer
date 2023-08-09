@@ -184,8 +184,7 @@
                 <label for="sg">@lang('settings.suggestions.label')</label>
                 <select name="sg" id="sg" class="form-control">
                     <option value="off" {{ Cookie::get('suggestions') === "off" ? "disabled selected" : "" }}>@lang('settings.suggestions.off')</option>
-                    <option value="bing" {{ !Cookie::has('suggestions') ? "disabled selected" : "" }}>Bing</option>
-                    <option value="google" {{ Cookie::get('suggestions') === "google" ? "disabled selected" : "" }}>Google</option>
+                    <option value="on" {{ !Cookie::has('suggestions') ? "disabled selected" : "" }}>@lang('settings.suggestions.on')</option>
                 </select>
             </div>
             <div class="form-group">

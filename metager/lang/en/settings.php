@@ -28,7 +28,8 @@ return [
     'darkmode' => 'Toggle dark mode',
     'suggestions' => [
         "label" => 'Search suggestions',
-        "off" => "Disabled"
+        "off" => "Disabled",
+        "on" => "Enabled"
     ],
     'system' => 'System Default',
     'dark' => 'Dark',

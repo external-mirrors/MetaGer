@@ -20,7 +20,7 @@ class SuggestionController extends Controller
     ];
     public function partner(Request $request)
     {
-        if (!$this->verifySignature($request) || 1 == 1) {
+        if (!$this->verifySignature($request)) {
             abort(401);
         }
         $query = $request->input("query");
@@ -86,7 +86,7 @@ class SuggestionController extends Controller
 
     public function suggest(Request $request)
     {
-        if (!$this->verifySignature($request) || 1 == 1) {
+        if (!$this->verifySignature($request)) {
             abort(401);
         }
         $query = $request->input("query");

@@ -4,6 +4,8 @@
 let suggestions = [];
 let partners = [];
 let query = "";
+
+let suggest_timeout = null;
 (() => {
   let searchbar_container = document.querySelector(".searchbar");
   if (!searchbar_container) {
@@ -24,11 +26,17 @@ let query = "";
     return;
   }
 
+  search_input.addEventListener("keydown", (e) => {
+    if (suggest_timeout != null) {
+      clearTimeout(suggest_timeout);
+    }
+  });
   search_input.addEventListener("keyup", (e) => {
     if (e.key == "Escape") {
       e.target.blur();
+    } else {
+      suggest_timeout = setTimeout(suggest, 800);
     }
-    suggest();
   });
   search_input.addEventListener("focusin", suggest);
   search_input.addEventListener("change", (e) => {

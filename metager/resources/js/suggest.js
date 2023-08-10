@@ -51,7 +51,10 @@ let suggest_timeout = null;
   }
 
   function suggest() {
-    if (search_input.value.trim().length == 0 || navigator.webdriver) {
+    if (search_input.value.trim().length <= 3 || navigator.webdriver) {
+      suggestions = [];
+      partners = [];
+      updateSuggestions();
       return;
     }
     if (search_input.value.trim() == query) {

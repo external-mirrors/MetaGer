@@ -31,6 +31,9 @@ return [
         "off" => "Disabled",
         "on" => "Enabled"
     ],
+    'self_advertisements' => [
+        "label" => "Subtle advertisements for our own service"
+    ],
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',

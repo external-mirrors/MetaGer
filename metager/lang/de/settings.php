@@ -32,9 +32,9 @@ return [
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'suggestions' => [
-        "label" => 'Suchvorschläge',
-        "off" => "Aus",
-        "on" => "An"
+        'label' => 'Suchvorschläge',
+        'off' => "Aus",
+        'on' => "An",
     ],
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
     'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",
@@ -80,5 +80,8 @@ return [
     'externalservice' => [
         'heading' => 'Nutzung eines externen Suchdienstes',
         'description' => 'Sie können konfigurieren, dass eine der folgenden externen Suchmaschinen anstelle unserer integrierten Lösung verwendet wird. Wir leiten Ihre Suchanfragen an den konfigurierten Anbieter weiter.',
+    ],
+    'self_advertisements' => [
+        'label' => "Subtile Werbung für unseren eigenen Service",
     ],
 ];

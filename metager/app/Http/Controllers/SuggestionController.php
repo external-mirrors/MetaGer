@@ -20,11 +20,11 @@ class SuggestionController extends Controller
     ];
     public function partner(Request $request)
     {
-        if (!$this->verifySignature($request) || 1 == 1) {
+        if (!$this->verifySignature($request)) {
             abort(401);
         }
         $query = $request->input("query");
-        if (empty($query)) {
+        if (!config("metager.metager.admitad.suggestions_enabled") || empty($query)) {
             abort(404);
         }
 
@@ -86,11 +86,11 @@ class SuggestionController extends Controller
 
     public function suggest(Request $request)
     {
-        if (!$this->verifySignature($request) || 1 == 1) {
+        if (!$this->verifySignature($request)) {
             abort(401);
         }
         $query = $request->input("query");
-        if (empty($query)) {
+        if (!config("metager.metager.admitad.suggestions_enabled") || empty($query)) {
             abort(404);
         }
 

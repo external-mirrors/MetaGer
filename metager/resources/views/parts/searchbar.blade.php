@@ -110,4 +110,6 @@
 		</div>
 	</form>
 </fieldset>
-<!--<script src="{{ mix('/js/suggest.js') }}"></script>-->
+@if(config("metager.metager.admitad.suggestions_enabled") && app(\App\SearchSettings::class)->suggestions !== "off")
+<script src="{{ mix('/js/suggest.js') }}"></script>
+@endif

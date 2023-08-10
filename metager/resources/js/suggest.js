@@ -4,6 +4,8 @@
 let suggestions = [];
 let partners = [];
 let query = "";
+
+let suggest_timeout = null;
 (() => {
   let searchbar_container = document.querySelector(".searchbar");
   if (!searchbar_container) {
@@ -24,11 +26,14 @@ let query = "";
     return;
   }
 
+  search_input.addEventListener("keydown", clearSuggestTimeout);
   search_input.addEventListener("keyup", (e) => {
     if (e.key == "Escape") {
       e.target.blur();
+    } else {
+      clearSuggestTimeout();
+      suggest_timeout = setTimeout(suggest, 800);
     }
-    suggest();
   });
   search_input.addEventListener("focusin", suggest);
   search_input.addEventListener("change", (e) => {
@@ -37,9 +42,19 @@ let query = "";
       searchbar_container.dataset.suggest = "inactive";
     }
   });
+  search_input.form.addEventListener("submit", clearSuggestTimeout);
+
+  function clearSuggestTimeout(e) {
+    if (suggest_timeout != null) {
+      clearTimeout(suggest_timeout);
+    }
+  }
 
   function suggest() {
-    if (search_input.value.trim().length == 0) {
+    if (search_input.value.trim().length <= 3 || navigator.webdriver) {
+      suggestions = [];
+      partners = [];
+      updateSuggestions();
       return;
     }
     if (search_input.value.trim() == query) {

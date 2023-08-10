@@ -47,7 +47,7 @@ let suggest_timeout = null;
   });
 
   function suggest() {
-    if (search_input.value.trim().length == 0) {
+    if (search_input.value.trim().length == 0 || navigator.webdriver) {
       return;
     }
     if (search_input.value.trim() == query) {

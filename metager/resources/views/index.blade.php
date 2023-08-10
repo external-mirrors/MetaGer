@@ -27,6 +27,7 @@
         @if(Request::filled('key'))
         <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
         @endif
+        @if(app(\App\SearchSettings::class)->self_advertisements)
         <div id="startpage-quicklinks">
         @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
         <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
@@ -49,6 +50,7 @@
         <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
         @endif
       </div>
+      @endif
     </div>
     <div id="language">
       <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>

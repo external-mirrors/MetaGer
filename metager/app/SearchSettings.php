@@ -50,9 +50,7 @@ class SearchSettings
         }
 
         $self_advertisements = Cookie::get("self_advertisements", true);
-        if ($self_advertisements === "off") {
-            $this->suggestions = false;
-        }
+        $this->self_advertisements = $self_advertisements !== "off" ? true : false;
 
         $suggestions = Cookie::get("suggestions", "bing");
         if ($suggestions === "off") {

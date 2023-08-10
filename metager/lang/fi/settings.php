@@ -81,4 +81,7 @@ return [
         'off' => "Vammaiset",
         'on' => "Käytössä",
     ],
+    'self_advertisements' => [
+        'label' => "Oman palvelumme hienovarainen mainonta",
+    ],
 ];

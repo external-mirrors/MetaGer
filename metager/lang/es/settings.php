@@ -81,4 +81,7 @@ return [
         'off' => "Discapacitados",
         'on' => "Activado",
     ],
+    'self_advertisements' => [
+        'label' => "Publicidad sutil de nuestro propio servicio",
+    ],
 ];

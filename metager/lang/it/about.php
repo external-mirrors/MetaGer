@@ -3,7 +3,7 @@ return [
     'head' => [
         '4' => 'Cosa rende speciale MetaGer?',
         '1' => 'Chi siamo',
-        '2' => 'Linea temporale',
+        '2' => 'Cronaca',
         '3' => 'Cosa rappresentiamo',
     ],
     'timeline' => [

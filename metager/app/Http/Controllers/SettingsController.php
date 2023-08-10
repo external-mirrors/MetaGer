@@ -45,7 +45,7 @@ class SettingsController extends Controller
         $cookies = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
-            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'suggestions') {
+            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'self_advertisements' || $key === 'suggestions') {
                 $settingActive = true;
             }
         }
@@ -260,6 +260,15 @@ class SettingsController extends Controller
             }
         }
 
+        $self_advertisements = $request->input('self_advertisements', '');
+        if (!empty($self_advertisements)) {
+            if ($self_advertisements === "off") {
+                Cookie::queue(Cookie::forever('self_advertisements', 'off', '/', null, $secure, true));
+            } elseif ($self_advertisements === "on") {
+                Cookie::queue(Cookie::forget("self_advertisements", "/"));
+            }
+        }
+
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
@@ -309,6 +318,7 @@ class SettingsController extends Controller
                 "dark_mode",
                 "new_tab",
                 "zitate",
+                "self_advertisements",
                 "suggestions"
             ];
             if (in_array($key, $global_settings)) {

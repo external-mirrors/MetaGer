@@ -190,6 +190,13 @@
             </div>
             @endif
             <div class="form-group">
+                <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
+                <select name="self_advertisements" id="self_advertisements" class="form-control">
+                    <option value="off" {{ Cookie::get('self_advertisements') === "off" ? "disabled selected" : "" }}>@lang('settings.suggestions.off')</option>
+                    <option value="on" {{ !Cookie::has('self_advertisements') ? "disabled selected" : "" }}>@lang('settings.suggestions.on')</option>
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="dm">@lang('settings.darkmode')</label>
                 <select name="dm" id="dm" class="form-control">
                     <option value="system" {{ !Cookie::has('dark_mode') ? "disabled selected" : "" }}>@lang('settings.system')</option>

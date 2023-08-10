@@ -81,4 +81,7 @@ return [
         'off' => "Deaktiveret",
         'on' => "Aktiveret",
     ],
+    'self_advertisements' => [
+        'label' => "Subtile reklamer for vores egen service",
+    ],
 ];

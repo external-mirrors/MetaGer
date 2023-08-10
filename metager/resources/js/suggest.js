@@ -46,7 +46,6 @@ let suggest_timeout = null;
 
   function clearSuggestTimeout(e) {
     if (suggest_timeout != null) {
-      console.log("cancel");
       clearTimeout(suggest_timeout);
     }
   }

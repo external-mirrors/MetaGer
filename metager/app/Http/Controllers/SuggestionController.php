@@ -24,7 +24,7 @@ class SuggestionController extends Controller
             abort(401);
         }
         $query = $request->input("query");
-        if (empty($query)) {
+        if (!config("metager.metager.admitad.suggestions_enabled") || empty($query)) {
             abort(404);
         }
 
@@ -90,7 +90,7 @@ class SuggestionController extends Controller
             abort(401);
         }
         $query = $request->input("query");
-        if (empty($query)) {
+        if (!config("metager.metager.admitad.suggestions_enabled") || empty($query)) {
             abort(404);
         }
 

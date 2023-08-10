@@ -26,15 +26,12 @@ let suggest_timeout = null;
     return;
   }
 
-  search_input.addEventListener("keydown", (e) => {
-    if (suggest_timeout != null) {
-      clearTimeout(suggest_timeout);
-    }
-  });
+  search_input.addEventListener("keydown", clearSuggestTimeout);
   search_input.addEventListener("keyup", (e) => {
     if (e.key == "Escape") {
       e.target.blur();
     } else {
+      clearSuggestTimeout();
       suggest_timeout = setTimeout(suggest, 800);
     }
   });
@@ -45,6 +42,14 @@ let suggest_timeout = null;
       searchbar_container.dataset.suggest = "inactive";
     }
   });
+  search_input.form.addEventListener("submit", clearSuggestTimeout);
+
+  function clearSuggestTimeout(e) {
+    if (suggest_timeout != null) {
+      console.log("cancel");
+      clearTimeout(suggest_timeout);
+    }
+  }
 
   function suggest() {
     if (search_input.value.trim().length == 0 || navigator.webdriver) {

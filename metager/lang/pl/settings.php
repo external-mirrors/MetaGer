@@ -76,4 +76,9 @@ return [
         'heading' => 'Korzystanie z zewnętrznej usługi wyszukiwania',
         'description' => 'Możesz skonfigurować korzystanie z dowolnej z poniższych zewnętrznych wyszukiwarek zamiast naszego zintegrowanego rozwiązania. Przekierujemy wyszukiwanie do skonfigurowanego dostawcy.',
     ],
+    'suggestions' => [
+        'label' => 'Propozycje wyszukiwania',
+        'off' => "Wyłączony",
+        'on' => "Włączone",
+    ],
 ];

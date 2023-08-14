@@ -183,7 +183,7 @@ Route::get('hilfe/hauptseiten', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
-Route::get('hilfe/easy-language/hauptseiten', function () {
+Route::get('hilfe/easy-language/mainpages', function () {
     return view('help/easy-language/help-mainpages')
         ->with('title', trans('titles.help-mainpages'))
         ->with('navbarFocus', 'hilfe')
@@ -198,7 +198,7 @@ Route::get('hilfe/funktionen', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
-Route::get('hilfe/easy-language/funktionen', function () {
+Route::get('hilfe/easy-language/functions', function () {
     return view('help/easy-language/help-functions')
         ->with('title', trans('titles.help-functions'))
         ->with('navbarFocus', 'hilfe')
@@ -213,7 +213,7 @@ Route::get('hilfe/dienste', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
-Route::get('hilfe/easy-language/dienste', function () {
+Route::get('hilfe/easy-language/services', function () {
     return view('help/easy-language/help-services')
         ->with('title', trans('titles.help-services'))
         ->with('navbarFocus', 'hilfe')
@@ -228,7 +228,7 @@ Route::get('hilfe/datensicherheit', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
-Route::get('hilfe/easy-language/datensicherheit', function () {
+Route::get('hilfe/easy-language/privacy-protection', function () {
     return view('help/easy-language/help-privacy-protection')
         ->with('title', trans('titles.help-privacy-protection'))
         ->with('navbarFocus', 'hilfe')

@@ -31,7 +31,7 @@ return [
             "2"    => 'The right field shows a magnifying glass.',
             "3"    => 'If you click on the field, you start the search. <br> You can also press the ENTER key on your keyboard.',
         ],
-        "morefunctions" => 'With <a href = "/hilfe/easy-language/funktionen">search functions</a>, you can find out more about the <strong>search</strong> topic.',
+        "morefunctions" => 'With <a href = "/hilfe/easy-language/functions">search functions</a>, you can find out more about the <strong>search</strong> topic.',
     ], 
     "resultpage"  => [
         "title"      => 'The results page',
@@ -46,7 +46,7 @@ return [
         ],
         "settings" => [
             "title" => 'Settings:',
-            "1" => 'When you click on Settings, you will see the settings. <br> There you can adjust the settings for the selected search category<a title="Results are sorted to make them easier to find. Click here for more information" href="/help/easy-language/glossary#search-categories" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
+            "1" => 'When you click on Settings, you will see the settings. <br> There you can adjust the settings for the selected search category<a title="Results are sorted to make them easier to find. Click here for more information" href="/hilfe/easy-language/glossary#search-categories" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
         ],
     ],
     "result" => [
@@ -57,16 +57,16 @@ return [
                 "title" => 'Open:',
                 "0" => 'There are several ways to view the result:',
                 "1" => 'You can click on the heading.',
-                "2" => 'You can click on the blue link below the heading. <br> This link is called URL<a title="A URL is a web address. Click here for more information" href="/help/easy-language/glossary#url" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
+                "2" => 'You can click on the blue link below the heading. <br> This link is called URL<a title="A URL is a web address. Click here for more information" href="/hilfe/easy-language/glossary#url" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
                 "3" => 'Click on <strong>OPEN</strong>.',
             ],
             "newtab" => [
                 "title" => 'Open in new tab:',
-                "1" => 'This button opens the result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/help/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> You can also open a result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/help/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> by using the CTRL key and left-click. <br> Alternatively, you can press the middle mouse button. <br> You can permanently open the result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/help/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> as well. <br> To do this, open our settings: <br> Under <strong>More settings</strong>, you will find the option to open results in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/help/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> There you can enable it by switching it to <strong>on</strong>. <br> Then the results will always open in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/help/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
+                "1" => 'This button opens the result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> You can also open a result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> by using the CTRL key and left-click. <br> Alternatively, you can press the middle mouse button. <br> You can permanently open the result in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> as well. <br> To do this, open our settings: <br> Under <strong>More settings</strong>, you will find the option to open results in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> There you can enable it by switching it to <strong>on</strong>. <br> Then the results will always open in a new tab<a title="A browser can display multiple pages simultaneously. Each page is in a tab. Click here for more information" href="/hilfe/easy-language/glossary#tab" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
             ],
             "anonym" => [
-                "title" => 'Open Anonymously<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/help/easy-language/glossary#anonymous-open" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/help/easy-language/data-security#proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/help/easy-language/glossary#anonymous-open" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
+                "title" => 'Open Anonymously<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/hilfe/easy-language/glossary#anonymous-open" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
+                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#anonymous-open" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
             ],
             "more" => [
                 "title" => 'More:',
@@ -74,10 +74,10 @@ return [
             ],
             "2" => 'There are new options:',
             "domainnewsearch" => [
-                "title" => 'Start a new search on this domain<a title="Word explanation" href="/help/easy-language/glossary#domain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
+                "title" => 'Start a new search on this domain<a title="Word explanation" href="/hilfe/easy-language/glossary#domain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
                 "1" => 'By pressing this button, you search only on this page.',
                 "2" => 'Example:',
-                "3" => 'You find a result from the Duden website. <br> You click on <strong>MORE</strong> for that result. <br> Then you click on the button <strong>start a new search on this domain<a title="Word explanation" href="/help/easy-language/glossary#domain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></strong>. <br> Then you search again, but only on the Duden website.',
+                "3" => 'You find a result from the Duden website. <br> You click on <strong>MORE</strong> for that result. <br> Then you click on the button <strong>start a new search on this domain<a title="Word explanation" href="/hilfe/easy-language/glossary#domain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></strong>. <br> Then you search again, but only on the Duden website.',
             ],
             "hideresult" => [
                 "title" => 'Hide:',
@@ -89,7 +89,7 @@ return [
         "title" => 'Settings',
         "metagerkey" => [
             "title" => "Ad-Free Search",
-            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Load Key</strong> to load the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/funktionen#keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
+            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Load Key</strong> to load the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
             '2'=> "Three buttons are displayed. <br> You can click the left button with the text <strong>What is it?</strong>. <br> This will take you to the information page about the MetaGer Key. <br> You can click the middle button with the text <strong>Set up existing key</strong>. <br> If you already have a MetaGer Key, you can enter it there. <br> If you don't have a key, you can click the right button <strong>Create new Key</strong> to purchase a new key.",
         ],
         "cookies" => [
@@ -98,7 +98,7 @@ return [
         ],
         "searchengine" => [
             "title" => 'Used Search Engines:',
-            "1" => 'Here you can see all the search engines that MetaGer uses. <br> You can select which search engines you want to use. <br> You can click on the individual buttons. <br> If the buttons are crossed out, it means you are not using the search engines. <br> Some search engines can only be used with a <a href = "/hilfe/easy-language/funktionen#keyexplain">MetaGer Key</a>.',
+            "1" => 'Here you can see all the search engines that MetaGer uses. <br> You can select which search engines you want to use. <br> You can click on the individual buttons. <br> If the buttons are crossed out, it means you are not using the search engines. <br> Some search engines can only be used with a <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Key</a>.',
             "2" => 'Search engines that can only be used with a MetaGer Key are grayed out.',
         ],
         "filter" => [

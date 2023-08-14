@@ -2,13 +2,13 @@
 return [
     "title" => 'MetaGer - Help',
     "backarrow" => 'Back',
-    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/help/easy-language/glossary"><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access the explanation of difficult words.',
+    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/hilfe/easy-language/glossary"><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access the explanation of difficult words.',
 
     "datenschutz" => [
         "title" => "Anonymity and Data Security",
         "1" => 'Tracking Cookies, Session IDs, and IP Addresses',
         "2" => 'At MetaGer, you are anonymous. <br> That means you remain unrecognized. <br> We do not store any data that could identify anyone. <br> We offer 2 features for this purpose: <br> Tor Hidden Service and <br> open anonymously',
-        "3" => 'Find more about the topic at <a href="/help/easy-language/datasecurity#torhidden">Tor Hidden Service</a>. <br> To learn more about <strong>open anonymously</strong>, check out <a href="/help/easy-language/datasecurity#proxy">MetaGer-Proxy</a>. <br> You can access these features under <strong>Services</strong> in the navigation bar.',
+        "3" => 'Find more about the topic at <a href="/hilfe/easy-language/privacy-protection#torhidden">Tor Hidden Service</a>. <br> To learn more about <strong>open anonymously</strong>, check out <a href="/hilfe/easy-language/privacy-protection#proxy">MetaGer-Proxy</a>. <br> You can access these features under <strong>Services</strong> in the navigation bar.',
     ],
     "tor" => [
         "title" => "Tor Hidden Service",

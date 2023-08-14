@@ -2,7 +2,7 @@
 return [
     'title' => 'MetaGer - Help',
     "backarrow" => 'Back',
-    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/help/easy-language/glossary" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access explanations for difficult words.',
+    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/hilfe/easy-language/glossary" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access explanations for difficult words.',
     "suchfunktion" => [
         "title" => "Search Functions",
     ],

@@ -16,11 +16,11 @@
       @include('layouts.atom10ad', ['ad' => $metager->popAd()])
     @endif
     <entry>
-      <title>{!! htmlspecialchars($result->titel, ENT_XML1, 'UTF-8'); !!}</title>
-      <link href="{!! htmlspecialchars($result->link, ENT_XML1, 'UTF-8'); !!}" />
-      <mg:anzeigeLink>{!! htmlspecialchars($result->anzeigeLink, ENT_XML1, 'UTF-8'); !!}</mg:anzeigeLink>
+      <title>{!! htmlspecialchars($result->titel, ENT_XML1, 'UTF-8') !!}</title>
+      <link href="{!! htmlspecialchars($result->link, ENT_XML1, 'UTF-8') !!}" />
+      <mg:anzeigeLink>{!! htmlspecialchars($result->anzeigeLink, ENT_XML1, 'UTF-8') !!}</mg:anzeigeLink>
       <content type="text">
-        {!! htmlspecialchars($result->descr, ENT_XML1, 'UTF-8'); !!}
+        {!! htmlspecialchars($result->descr, ENT_XML1, 'UTF-8') !!}
       </content>
     </entry>
   @endforeach

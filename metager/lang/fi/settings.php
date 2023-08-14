@@ -76,4 +76,12 @@ return [
         'heading' => 'Käytä ulkoista hakupalvelua',
         'description' => 'Voit määrittää käyttämään mitä tahansa seuraavista ulkoisista hakukoneista integroidun ratkaisumme sijaan. Ohjaamme hakusi määritettyyn palveluntarjoajaan.',
     ],
+    'suggestions' => [
+        'label' => 'Hakuehdotukset',
+        'off' => "Vammaiset",
+        'on' => "Käytössä",
+    ],
+    'self_advertisements' => [
+        'label' => "Oman palvelumme hienovarainen mainonta",
+    ],
 ];

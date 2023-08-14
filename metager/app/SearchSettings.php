@@ -23,6 +23,10 @@ class SearchSettings
     public $sumasJson;
     public $quicktips = true;
     public $enableQuotes = true;
+    /** @var bool */
+    public $self_advertisements;
+    /** @var string */
+    public $suggestions = "bing";
 
     public function __construct()
     {
@@ -43,6 +47,14 @@ class SearchSettings
 
         if (Cookie::has("zitate") && Cookie::get("zitate") === "off") {
             $this->enableQuotes = false;
+        }
+
+        $self_advertisements = Cookie::get("self_advertisements", true);
+        $this->self_advertisements = $self_advertisements !== "off" ? true : false;
+
+        $suggestions = Cookie::get("suggestions", "bing");
+        if ($suggestions === "off") {
+            $this->suggestions = "off";
         }
 
         if (Request::filled('quicktips')) {

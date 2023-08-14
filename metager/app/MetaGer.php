@@ -464,12 +464,15 @@ class MetaGer
      */
     public function addDonationAdvertisement()
     {
+        if (!app(\App\SearchSettings::class)->self_advertisements) {
+            return;
+        }
         /**
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case
          * ToDo set back to 5 once we do not want to advertise donations as much anymore
          */
-        if ( /*sizeof($this->ads) === 0 &&*/rand(1, 100) >= 34) {
+        if (rand(1, 100) >= 34) {
             return;
         }
 

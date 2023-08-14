@@ -1,7 +1,7 @@
 <?php
 return [
     'head' => [
-        '1' => 'Metager-sovellukset',
+        '1' => 'Metager sovellukset',
         '2' => 'MetaGer-sovellus',
         '3' => 'MetaGer-karttasovellus',
         '4' => 'Asennus',

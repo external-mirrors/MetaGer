@@ -26,6 +26,14 @@ return [
     'clear' => 'Clear black list',
     'copy' => 'Copy',
     'darkmode' => 'Toggle dark mode',
+    'suggestions' => [
+        "label" => 'Search suggestions',
+        "off" => "Disabled",
+        "on" => "Enabled"
+    ],
+    'self_advertisements' => [
+        "label" => "Subtle advertisements for our own service"
+    ],
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',

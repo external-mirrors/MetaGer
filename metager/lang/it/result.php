@@ -20,4 +20,5 @@ return [
     'metagerkeytext' => 'Utilizzare MetaGer senza pubblicità',
     'news' => 'Notizie rilevanti',
     'videos' => 'Video',
+    'adblocker' => 'Un <a href=":resultlink">risultato di ricerca</a> da <code>:host</code> è stato rimosso qui dal tuo blocco degli annunci. <a href=":infolink">Per saperne di più</a>',
 ];

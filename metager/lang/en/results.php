@@ -19,5 +19,5 @@ return [
             "bing" => "Search on Bing",
             "save" => "Remember decision (with cookie)"
         ]
-    ]
+    ],
 ];

@@ -50,8 +50,10 @@ return [
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
     ],
     "admitad" => [
+        "suggestions_enabled" => false,
         "germany_public_key" => env("admitad_germany_public", ""),
-        "international_public_key" => env("admitad_international_public", "")
+        "international_public_key" => env("admitad_international_public", ""),
+        "suggest_public_key" => env("admitad_suggest_public", "")
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

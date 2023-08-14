@@ -20,4 +20,5 @@ return [
     'metagerkeytext' => 'Käytä MetaGeria mainosvapaasti',
     'news' => 'Asiaankuuluvat uutiset',
     'videos' => 'Videot',
+    'adblocker' => 'Mainostenestimesi poisti täältä <a href=":resultlink">hakutuloksen</a> osoitteesta <code>:host</code>. <a href=":infolink">Lue lisää</a>',
 ];

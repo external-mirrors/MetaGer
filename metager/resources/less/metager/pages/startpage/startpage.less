@@ -36,7 +36,9 @@ div.startpage {
         width: 100%;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem;
+        padding-block: 1.5rem;
+        padding: 2dvh 1.5rem;
+        margin: 0;
         font-size: clamp(0.7rem, 3vw, 1rem);
         > li {
           > a {
@@ -51,62 +53,74 @@ div.startpage {
       > div#search-wrapper {
         flex-grow: 1;
         display: grid;
+        grid-template-rows: 20dvh max-content max-content max-content 1fr;
+        @media (max-height: 820px) {
+          grid-template-rows: 15dvh max-content max-content max-content 1fr;
+        }
+        @media (max-height: 775px) {
+          grid-template-rows: 10dvh max-content max-content max-content 1fr;
+        }
+        @media (max-height: 725px) {
+          grid-template-rows: 5dvh max-content max-content max-content 1fr;
+        }
+        grid-template-areas: "." "logo" "search" "quicklinks" ".";
         grid-template-columns: 1fr;
         place-content: center;
 
-        > #search-block {
-          padding-bottom: 15vh;
-          @media (max-height: 500px) {
-            padding-bottom: 0;
+        > #startpage-quicklinks {
+          grid-area: quicklinks;
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          @supports not (selector(:first-child)) {
+            gap: 0;
+            > *:not(:nth-child(1)) {
+              padding: 0 0.5rem;
+            }
           }
-          > #startpage-quicklinks {
+          flex-wrap: wrap;
+          padding: 1rem;
+          > .metager-key {
+            color: inherit;
             display: flex;
-            justify-content: center;
-            gap: 1rem;
+            align-items: center;
+            gap: 0.5rem;
             @supports not (selector(:first-child)) {
               gap: 0;
-              > *:not(:nth-child(1)) {
+              > * {
                 padding: 0 0.5rem;
               }
             }
-            flex-wrap: wrap;
-            padding: 1rem;
-            > .metager-key {
-              color: inherit;
-              display: flex;
-              align-items: center;
-              gap: 0.5rem;
-              @supports not (selector(:first-child)) {
-                gap: 0;
-                > * {
-                  padding: 0 0.5rem;
-                }
-              }
-              > img {
-                height: 1em;
-                rotate: -90deg;
-                filter: brightness(@searchbar-key-brightness);
-              }
-
-              &.no-key {
-                > img {
-                  rotate: 0deg;
-                }
-              }
+            > img {
+              height: 1em;
+              rotate: -90deg;
+              filter: brightness(@searchbar-key-brightness);
             }
-            #plugin-btn {
-              color: @text-color;
-              display: flex;
-              align-items: center;
 
+            &.no-key {
               > img {
-                // sets the size for the plugin button
-                max-width: 15px;
-                max-height: 15px;
-                margin-right: 8px;
+                rotate: 0deg;
               }
             }
           }
+          #plugin-btn {
+            color: @text-color;
+            display: flex;
+            align-items: center;
+
+            > img {
+              // sets the size for the plugin button
+              max-width: 15px;
+              max-height: 15px;
+              margin-right: 8px;
+            }
+          }
+        }
+        > #startpage-logo {
+          grid-area: logo;
+        }
+        > fieldset {
+          grid-area: search;
         }
       }
 

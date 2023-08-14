@@ -38,6 +38,7 @@ mix
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
   )
+  .less('resources/less/metager/pages/adblocker.less', 'public/css/adblocker.css')
   .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(
@@ -112,6 +113,7 @@ mix
     "resources/less/metager/pages/widget/widget.less",
     "public/css/widget/widget.css"
   )
+  .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")
   .js(
     [

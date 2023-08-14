@@ -180,6 +180,22 @@
         <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
             <input type="hidden" name="focus" value="{{ $fokus }}">
             <input type="hidden" name="url" value="{{ $url }}">
+            @if(config("metager.metager.admitad.suggestions_enabled"))
+            <div class="form-group">
+                <label for="sg">@lang('settings.suggestions.label')</label>
+                <select name="sg" id="sg" class="form-control">
+                    <option value="off" {{ Cookie::get('suggestions') === "off" ? "disabled selected" : "" }}>@lang('settings.suggestions.off')</option>
+                    <option value="on" {{ !Cookie::has('suggestions') ? "disabled selected" : "" }}>@lang('settings.suggestions.on')</option>
+                </select>
+            </div>
+            @endif
+            <div class="form-group">
+                <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
+                <select name="self_advertisements" id="self_advertisements" class="form-control">
+                    <option value="off" {{ Cookie::get('self_advertisements') === "off" ? "disabled selected" : "" }}>@lang('settings.suggestions.off')</option>
+                    <option value="on" {{ !Cookie::has('self_advertisements') ? "disabled selected" : "" }}>@lang('settings.suggestions.on')</option>
+                </select>
+            </div>
             <div class="form-group">
                 <label for="dm">@lang('settings.darkmode')</label>
                 <select name="dm" id="dm" class="form-control">

@@ -8,7 +8,7 @@
     </div>
     <div class="section">
         <h1>Person responsible and contact person</h1>
-        MetaGer and related services are operated by <a href="https://suma-ev.de/impressum.html">SUMA-EV</a>, which is
+        MetaGer and related services are operated by <a href="https://suma-ev.de/en">SUMA-EV</a>, which is
         also the author of this statement. By "we" in this statement usually SUMA-EV is meant.
         <br />Our contact details can be found in our <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "impressum") }}">site
             notice</a>. We can be reached by e-mail via our <a href="/en/kontakt">contact form</a>.

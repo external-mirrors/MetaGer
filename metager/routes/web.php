@@ -5,6 +5,7 @@ use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
+use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TTSController;
 use App\Localization;
 use Jenssegers\Agent\Agent;
@@ -61,6 +62,11 @@ Route::get('impressum.html', function () {
     return redirect(url('impressum'));
 });
 
+Route::group(["prefix" => 'suggest'], function () {
+    Route::get("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
+    Route::get("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
+});
+
 Route::get('about', function () {
     return view('about')
         ->with('title', trans('titles.about'))
@@ -87,6 +93,9 @@ Route::get('kontakt/{url?}', function ($url = "") {
 })->name("contact");
 
 Route::post('kontakt', 'MailController@contactMail');
+Route::get('adblocker', function () {
+    return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
+})->name("adblocker");
 
 Route::group(["prefix" => "membership"], function () {
     Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");
@@ -119,7 +128,7 @@ Route::get('partnershops', function () {
     return view('spende.partnershops')
         ->with('title', trans('titles.partnershops'))
         ->with('navbarFocus', 'foerdern');
-});
+})->name("partnershops");
 
 Route::get('beitritt', function () {
     if (Localization::getLanguage() === "de") {

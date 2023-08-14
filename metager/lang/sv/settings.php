@@ -76,4 +76,12 @@ return [
         'heading' => 'Använda en extern söktjänst',
         'description' => 'Du kan konfigurera att använda någon av följande externa sökmotorer istället för vår integrerade lösning. Vi kommer att omdirigera dina sökningar till den konfigurerade leverantören.',
     ],
+    'suggestions' => [
+        'label' => 'Sökförslag',
+        'off' => "Inaktiverad",
+        'on' => "Aktiverad",
+    ],
+    'self_advertisements' => [
+        'label' => "Subtila annonser för vår egen tjänst",
+    ],
 ];

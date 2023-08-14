@@ -8,6 +8,7 @@
 	<div id="navigationsticky">
 		<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
 	</div>
+	<section id="help-searchfunctions" class="help-section card">
 	<p>{!! trans('help/easy-language/help-functions.glossary') !!}</p>
 
 		<h2 id="searchfunctions">{!! trans('help/easy-language/help-functions.suchfunktion.title') !!}</h2>
@@ -47,7 +48,8 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.exactsearch.example.2') !!}</div></li>
 			</ul>
 		</div>
-	<section id="bangs">
+	</section>
+	<section id="bangs" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
@@ -64,7 +66,7 @@
 
 		</div>
 	</section>
-	<section id="keyexplain">
+	<section id="keyexplain" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.key.maintitle') !!}</h3>
 		<div>
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
@@ -88,7 +90,7 @@
 			<p>{!! trans('help/easy-language/help-functions.key.11') !!}</p>
 		</div>
 	</section>
-	<section id="selist">
+	<section id="selist" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>

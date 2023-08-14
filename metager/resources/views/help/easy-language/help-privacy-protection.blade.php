@@ -8,23 +8,23 @@
 <div id="navigationsticky">
 	<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-privacy-protection.backarrow') !!}</a>
 </div>
+	<section id="tracking" class="help-section card">
 	<p>{!! trans('help/easy-language/help-privacy-protection.glossary') !!}</p>
 	<h2>{!! trans('help/easy-language/help-privacy-protection.datenschutz.title') !!}</h2>
-	<section id="tracking">
 		<h3>{!! trans('help/easy-language/help-privacy-protection.datenschutz.1') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.datenschutz.2') !!}</p>
 			<p>{!! trans('help/easy-language/help-privacy-protection.datenschutz.3') !!}</p>
 		</div>
 	</section>
-	<section id="torhidden">
+	<section id="torhidden" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-privacy-protection.tor.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.tor.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-privacy-protection.tor.2') !!}</p>
 		</div>
 	</section>
-	<section id="proxy">
+	<section id="proxy" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-privacy-protection.proxy.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.1') !!}</p>
@@ -36,7 +36,7 @@
 		</div>
 	</section>
 
-	<section id="content">
+	<section id="content" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-privacy-protection.content.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.content.explanation.1') !!}</p>

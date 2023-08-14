@@ -94,8 +94,13 @@
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>
+		@if (App\Localization::getLanguage() == "de")
 		<img id="help-easy-language-install-metager-image" class="help-easy-language-image lm-only" src="/img/help-install-metager-lm.png"/>
 		<img class="help-easy-language-image dm-only" src="/img/help-install-metager-dm.png"/>
+		@else
+		<img id="help-easy-language-install-metager-image" class="help-easy-language-image lm-only" src="/img/help-install-metager-lm-en.png"/>
+		<img class="help-easy-language-image dm-only" src="/img/help-install-metager-dm-en.png"/>
+		@endif
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.2') !!}</p>
 	</section>
 </section>

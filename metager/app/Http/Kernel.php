@@ -90,6 +90,5 @@ class Kernel extends HttpKernel
                 'allow-local-only' => AllowLocalOnly::class,
                 'httpcache' => HttpCache::class,
                 'externalimagesearch' => ExternalImagesearch::class,
-                'csrf' => VerifyCsrfToken::class,
         ];
 }

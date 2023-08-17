@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Jobs\ContactMail;
 use App\Localization;
 use App\Rules\IBANValidator;
+use Closure;
+use Crypt;
+use Exception;
 use Illuminate\Http\Request;
 use LaravelLocalization;
 use Validator;
@@ -18,7 +21,8 @@ class MembershipController extends Controller
     public function contactData(Request $request)
     {
         if (Localization::getLanguage() === "de") {
-            return response(view("membership.form", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+            $csrf_token = Crypt::encrypt(now()->addHour(1));
+            return response(view("membership.form", ["title" => __("titles.membership"), 'csrf_token' => $csrf_token, "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         }
@@ -32,6 +36,19 @@ class MembershipController extends Controller
     public function submitMembershipForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            "token" => [
+                'required',
+                function (string $attribute, mixed $value, Closure $fail) {
+                    try {
+                        $expiration = Crypt::decrypt($value);
+                        if (now()->isAfter($expiration)) {
+                            $fail("Please try again.");
+                        }
+                    } catch (Exception $e) {
+                        $fail("Please try again.");
+                    }
+                },
+            ],
             "name" => 'required',
             "email" => "required|email",
             "amount" => 'required|in:5.00,10.00,15.00,custom',

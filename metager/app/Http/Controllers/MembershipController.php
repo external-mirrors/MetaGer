@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\ContactMail;
 use App\Localization;
 use App\Rules\IBANValidator;
+use Cache;
 use Closure;
 use Crypt;
 use Exception;
@@ -41,8 +42,10 @@ class MembershipController extends Controller
                 function (string $attribute, mixed $value, Closure $fail) {
                     try {
                         $expiration = Crypt::decrypt($value);
-                        if (now()->isAfter($expiration)) {
+                        if (now()->isAfter($expiration) || Cache::has("membership_" . $expiration->unix())) {
                             $fail("Please try again.");
+                        } else {
+                            Cache::put("membership_" . $expiration->unix(), true, now()->addHour());
                         }
                     } catch (Exception $e) {
                         $fail("Please try again.");

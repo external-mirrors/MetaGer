@@ -36,7 +36,7 @@ class MembershipController extends Controller
     public function submitMembershipForm(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "token" => [
+            "_token" => [
                 'required',
                 function (string $attribute, mixed $value, Closure $fail) {
                     try {

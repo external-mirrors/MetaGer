@@ -21,7 +21,7 @@ class MembershipController extends Controller
     public function contactData(Request $request)
     {
         if (Localization::getLanguage() === "de") {
-            $csrf_token = Crypt::encrypt(now()->addHour(1));
+            $csrf_token = Crypt::encrypt(now()->addHour());
             return response(view("membership.form", ["title" => __("titles.membership"), 'csrf_token' => $csrf_token, "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
@@ -58,10 +58,12 @@ class MembershipController extends Controller
             "iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()]
         ]);
         if ($validator->fails()) {
+            $csrf_token = Crypt::encrypt(now()->addHour());
             return response(
                 view(
                     "membership.form",
                     [
+                        'csrf_token' => $csrf_token,
                         "title" => __("titles.membership"),
                         "css" => [mix("/css/membership.css")],
                         "darkcss" => [mix("/css/membership-dark.css")],

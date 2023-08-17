@@ -99,7 +99,7 @@ Route::get('adblocker', function () {
 
 Route::group(["prefix" => "membership"], function () {
     Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");
-    Route::post("/", [MembershipController::class, "submitMembershipForm"]);
+    Route::post("/", [MembershipController::class, "submitMembershipForm"])->middleware('csrf');
     Route::get("/success", [MembershipController::class, "success"])->name("membership_success");
 });
 

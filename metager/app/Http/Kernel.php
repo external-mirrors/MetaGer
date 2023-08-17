@@ -5,6 +5,7 @@ namespace App\Http;
 use App\Http\Middleware\AllowLocalOnly;
 use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -89,5 +90,6 @@ class Kernel extends HttpKernel
                 'allow-local-only' => AllowLocalOnly::class,
                 'httpcache' => HttpCache::class,
                 'externalimagesearch' => ExternalImagesearch::class,
+                'csrf' => VerifyCsrfToken::class,
         ];
 }

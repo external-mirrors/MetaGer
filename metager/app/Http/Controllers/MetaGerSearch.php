@@ -136,8 +136,9 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_Affiliates");
 
         // Add Advertisement for Donations
+        $donation_advertisement_position = null;
         if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $metager->addDonationAdvertisement();
+            $donation_advertisement_position = $metager->addDonationAdvertisement();
         }
         $query_timer->observeEnd("Search_Affiliates");
 
@@ -159,6 +160,7 @@ class MetaGerSearch extends Controller
                     "settings" => $settings,
                     "quicktips" => $quicktips
                 ],
+                "donation_advertisement_position" => $donation_advertisement_position,
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
@@ -285,8 +287,8 @@ class MetaGerSearch extends Controller
         $metager->prepareResults();
 
         // Add Advertisement for Donations
-        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $metager->addDonationAdvertisement();
+        if (!app(Authorization::class)->canDoAuthenticatedSearch() && array_key_exists("donation_advertisement_position", $cached) && $cached["donation_advertisement_position"] !== null) {
+            $metager->addDonationAdvertisement($cached["donation_advertisement_position"]);
         }
 
         $result = [

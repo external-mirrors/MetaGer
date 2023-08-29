@@ -1,5 +1,12 @@
 @if(isset($ad)  && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
-	<div class="result">
+	<div class="result" 
+	@if(array_key_exists('ad_data', $ad->additionalInformation))
+	data-yiid="{{ $ad->additionalInformation['ad_data']['yiid'] }}" 
+	@if(array_key_exists('appns', $ad->additionalInformation['ad_data']) && array_key_exists('k', $ad->additionalInformation['ad_data'])) 
+	data-appns="{{ $ad->additionalInformation['ad_data']['appns'] }}" 
+	data-k="{{ $ad->additionalInformation['ad_data']['k'] }}" 
+	@endif
+	@endif>
 		<div class="result-header">
 			<div class="result-headline">
 				<h2 class="result-title">

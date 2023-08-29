@@ -6,19 +6,33 @@ use App\MetaGer;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use App\PrometheusExporter;
-use LaravelLocalization;
 use Log;
 use Illuminate\Support\Facades\Redis;
+use SimpleXMLElement;
 
 class Overture extends Searchengine
 {
     public $failed_results = false;
     public $results = [];
 
+    /** Advertisement Data */
+    /** @var string SearchID */
+    public $search_id = null;
+    /** @var string ClientID */
+    public $client_id = null;
+    /** @var string ImpressionGUID */
+    public $impression_guid = null;
+    /** @var string RGUId */
+    public $rguid = null;
+    /** @var string When true prints information about configuration in browser console */
+    public $test_mode = "false";
+
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-
+        if (app()->environment("local")) {
+            $this->test_mode = "true";
+        }
     }
 
     public function applySettings()
@@ -36,7 +50,7 @@ class Overture extends Searchengine
             if (!$content) {
                 return;
             }
-            # Yahoo gives us the total Result Count
+            // Yahoo gives us the total Result Count
             $resultCount = $content->xpath('//Results/ResultSet[@id="inktomi"]/MetaData/TotalHits');
             if (sizeof($resultCount) > 0) {
                 $resultCount = intval($resultCount[0]->__toString());
@@ -45,7 +59,14 @@ class Overture extends Searchengine
             }
             $this->totalResults = $resultCount;
             $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+            if (!is_array($results)) {
+                $results = [];
+            }
+            /** @var SimpleXMLElement[] */
             $ads = $content->xpath('//Results/ResultSet[@id="searchResults"]/Listing');
+            if (!is_array($ads)) {
+                $ads = [];
+            }
 
             foreach ($results as $result) {
                 $title = html_entity_decode($result["title"]);
@@ -66,13 +87,61 @@ class Overture extends Searchengine
                 );
             }
 
-            # Nun noch die Werbeergebnisse:
+            // Parse Advertisement Data
+            $this->search_id = $content->xpath("//Results/SearchID");
+            if (is_array($this->search_id)) {
+                if (sizeof($this->search_id) > 0) {
+                    $this->search_id = $this->search_id[0]->__toString();
+                } else {
+                    $this->search_id = null;
+                }
+            }
+            $this->client_id = $content->xpath("//Results/ClientID");
+            if (is_array($this->client_id)) {
+                if (sizeof($this->client_id) > 0) {
+                    $this->client_id = $this->client_id[0]->__toString();
+                } else {
+                    $this->client_id = null;
+                }
+            }
+            $this->impression_guid = $content->xpath("//Results/ImpressionGUID");
+            if (is_array($this->impression_guid)) {
+                if (sizeof($this->impression_guid) > 0) {
+                    $this->impression_guid = $this->impression_guid[0]->__toString();
+                } else {
+                    $this->impression_guid = null;
+                }
+            }
+            $this->rguid = $content->xpath("//Results/RGUId");
+            if (is_array($this->rguid)) {
+                if (sizeof($this->rguid) > 0) {
+                    $this->rguid = $this->rguid[0]->__toString();
+                } else {
+                    $this->rguid = null;
+                }
+            }
+
+            // Nun noch die Werbeergebnisse:
+            /** @var SimpleXMLElement $ad */
             foreach ($ads as $ad) {
                 $title = html_entity_decode($ad["title"]);
                 $link = $ad->{"ClickUrl"}->__toString();
                 $anzeigeLink = $ad["siteHost"];
                 $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
+
+                // Advertisement Data of result
+                $yiid = "";
+                if (isset($ad["ImpressionId"])) {
+                    $yiid = $ad["ImpressionId"]->__toString();
+                }
+                $appns = null;
+                $k = null;
+                if (isset($ad["appNs"]) && isset($ad["k"])) {
+                    $appns = $ad["appNs"]->__toString();
+                    $k = $ad["k"]->__toString();
+                }
+
                 $this->ads[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
                     $title,
@@ -82,7 +151,13 @@ class Overture extends Searchengine
                     $this->configuration->infos->displayName,
                     $this->configuration->infos->homepage,
                     $this->counter,
-                    []
+                    [
+                        "ad_data" => [
+                            "yiid" => $yiid,
+                            "appns" => $appns,
+                            "k" => $k
+                        ]
+                    ]
                 );
             }
             if (sizeof($this->results) === 0 && sizeof($this->ads) === 0 && !$this->failed) {

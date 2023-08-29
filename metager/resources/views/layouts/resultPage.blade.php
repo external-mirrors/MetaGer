@@ -54,6 +54,16 @@
 	<meta name="searchkey" content="{{ $metager->getSearchUid() }}" />
 	<meta name="referrer" content="origin-when-cross-origin">
 	<meta name="age-meta-label" content="age=18" />
+	{{-- Add Advertisement Scripts if Yahoo is enabled --}}
+	@if(app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine("yahoo") !== null)
+	<meta name="source_tag" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->configuration->getParameter->Partner }}" />
+	<meta name="ysid" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->search_id }}" />
+	<meta name="cid" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->client_id }}" />
+	<meta name="ig" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->impression_guid }}" />
+	<meta name="clarityId" content="iiolvwkqcy" />
+	<meta name="rguid" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->rguid }}" />
+	<meta name="test_mode" content="{{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->test_mode }}" />
+	@endif
 	@include('parts.utility')
 </head>
 
@@ -81,6 +91,10 @@
 	@endif
 	@include('parts.sidebar', ['id' => 'resultPageSideBar'])
 	@include('parts.sidebar-opener', ['class' => 'fixed'])
+	{{-- Add Advertisement Scripts if Yahoo is enabled --}}
+	@if(app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine("yahoo") !== null)
+	<img height=”1” width=”1” src="https://search.yahoo.com/beacon/geop/p?s=1197774733&ysid={{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->search_id }}&traffic_source={{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->configuration->getParameter->Partner }}" />
+	@endif
 </body>
 
 </html>

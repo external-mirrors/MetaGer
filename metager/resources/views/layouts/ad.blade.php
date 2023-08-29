@@ -2,7 +2,7 @@
 	<div class="result" 
 	@if(array_key_exists('ad_data', $ad->additionalInformation))
 	data-yiid="{{ $ad->additionalInformation['ad_data']['yiid'] }}" 
-	@if(array_key_exists('appns', $ad->additionalInformation['ad_data']) && array_key_exists('k', $ad->additionalInformation['ad_data'])) 
+	@if($ad->additionalInformation['ad_data']['appns'] !== null && $ad->additionalInformation['ad_data']['k'] !== null) 
 	data-appns="{{ $ad->additionalInformation['ad_data']['appns'] }}" 
 	data-k="{{ $ad->additionalInformation['ad_data']['k'] }}" 
 	@endif
@@ -10,14 +10,14 @@
 		<div class="result-header">
 			<div class="result-headline">
 				<h2 class="result-title">
-					<a href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade">
+					<a href="{{ $ad->link }}" target="_blank" referrerpolicy="no-referrer-when-downgrade">
 						{{ $ad->titel }}
 					</a>
 				</h2>
 				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
 			</div>
 			<div class="result-subheadline">
-				<a class="result-link" href="{{ $ad->link }}" target="{{ $metager->getNewtab() }}" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
+				<a class="result-link" href="{{ $ad->link }}" target="_blank" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
 					<span>{{ $ad->anzeigeLink }}</span>
 					@if(\App\Localization::getLanguage() === "de")
 					<img src="/img/100-de.svg" alt="Mark">
@@ -33,9 +33,6 @@
 			</div>
 		</div>
 		<div class="result-footer">
-		<a class="result-open" href="{{ $ad->link }}" target="_self" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
-			{!! trans('result.options.7') !!}
-		</a>
 		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
 			{!! trans('result.options.6') !!}
 		</a>

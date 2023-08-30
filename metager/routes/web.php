@@ -57,7 +57,7 @@ Route::get('impressum', function () {
     return view('impressum')
         ->with('title', trans('titles.impressum'))
         ->with('navbarFocus', 'kontakt');
-});
+})->name('impress');
 Route::get('impressum.html', function () {
     return redirect(url('impressum'));
 });
@@ -145,7 +145,8 @@ Route::get('bform1.htm', function () {
 
 
 Route::get('datenschutz', function () {
-    return view('datenschutz/datenschutz')
+    return view('privacy')
+        ->with('css', [mix('/css/privacy.css')])
         ->with('navbarFocus', 'datenschutz');
 });
 

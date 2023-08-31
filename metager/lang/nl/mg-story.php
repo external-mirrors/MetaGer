@@ -44,6 +44,6 @@ return [
             'alt' => 'slot',
         ],
         'title' => 'Gegarandeerde privacy',
-        'p' => 'Door MetaGer te gebruiken behoud je de volledige controle over je gegevens. Onze anonimiserende proxy houdt je beschermd, zelfs wanneer je verder surft. We traceren niet.',
+        'p' => 'Door gebruik te maken van onze advertentievrije zoekfunctie behoudt u de volledige controle over uw gegevens. Onze anonimiserende proxy houdt je beschermd, zelfs als je verder surft. We traceren niet.',
     ],
 ];

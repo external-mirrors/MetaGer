@@ -6,7 +6,7 @@ return [
             'alt' => 'cerradura de seguridad',
         ],
         'title' => 'Privacidad garantizada',
-        'p' => 'Con nosotros, usted conserva el control total sobre sus datos. Con la función de apertura anónima, permanece protegido incluso cuando continúa navegando. <br> No rastreamos.',
+        'p' => 'Al utilizar nuestra búsqueda sin anuncios, conservas el control total sobre tus datos. Nuestro proxy anonimizador te mantiene protegido incluso cuando sigues navegando. No rastreamos.',
     ],
     'ngo' => [
         'title' => 'Organización sin ánimo de lucro',

@@ -13,7 +13,7 @@ return [
             'alt' => 'serrure',
         ],
         'title' => 'Confidentialité garantie',
-        'p' => 'En utilisant MetaGer, vous gardez le contrôle total de vos données. Notre proxy anonyme vous protège même lorsque vous continuez à surfer. Nous ne suivons pas.',
+        'p' => 'En utilisant notre recherche sans publicité, vous gardez le contrôle total de vos données. Notre proxy anonyme vous protège même lorsque vous continuez à surfer. Nous ne suivons pas.',
     ],
     'ngo' => [
         'title' => 'Géré par une organisation à but non lucratif',

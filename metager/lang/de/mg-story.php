@@ -6,7 +6,7 @@ return [
             'alt' => 'Sicherheitsschloss',
         ],
         'title' => 'Garantierte Privatsphäre',
-        'p' => 'Mit uns behalten Sie die volle Kontrolle über Ihre Daten. Mit der Anonym-Öffnen-Funktion bleiben Sie auch beim Weitersurfen geschützt. <br> Wir tracken nicht. Wir speichern nicht.',
+        'p' => 'Wenn Sie unsere werbefreie Suche nutzen, behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
     ],
     'ngo' => [
         'title' => 'Gemeinnütziger Verein',

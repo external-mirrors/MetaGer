@@ -21,7 +21,7 @@ return [
             'additionally' => 'Folgende Daten fallen außerdem an, falls Sie unsere werbefinanzierte Version verwenden:',
             'botprotection' => 'Um unseren Dienst vor Überlastung zu schützen, müssen wir die Anzahl der Suchanfragen pro Internetanschluss begrenzen. Allein für diesen Zweck speichern wir die vollständige IP-Adresse und einen Zeitstempel für maximal 96 Stunden. Werden auffällig viele Suchen von einer IP durchgeführt, wird diese IP vorübergehend (maximal 96 Stunden nach der letzen Suche) in einer Sperrliste gespeichert. Anschließend wird die IP gelöscht.',
             'advertisers' => 'Neben Spenden und Mitgliedsbeiträgen müssen wir unseren Betrieb durch nicht-personalisierte Werbung auf der Ergebnisseite finanzieren. Um diese Werbung zu erhalten, geben wir die ersten beiden Blöcke der IP in Verbindung mit Teilen vom sog. User-Agent an unsere Werbepartner.',
-            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Suchergebnisse und Werbung von Yahoo anzeigen zu können. Zu diesem Zweck werden auf der MetaGer Ergebnisseite Nutzungsdaten erfasst und an Microsoft zurück gesendet. Es werden ausschließlich Daten mit Bezug auf die Werbung und deren Einbindung erfasst. Nutzerdaten werden nicht übermittelt.',
+            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Suchergebnisse und Werbung von Yahoo anzeigen zu können. Zu diesem Zweck werden auf der MetaGer Ergebnisseite Nutzungsdaten für statistische Zwecke erfasst.',
         ],
         'contact' => [
             'title' => 'Nutzung des Kontaktformulars',

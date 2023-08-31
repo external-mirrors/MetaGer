@@ -188,7 +188,7 @@ class MetaGerSearch extends Controller
         if (app(Searchengines::class)->getEnabledSearchengine("yahoo") !== null) {
             $script_src_elem .= " https://s.yimg.com https://msadsscale.azureedge.net https://www.clarity.ms";
             $img_src .= " https://search.yahoo.com https://xmlp.search.yahoo.com";
-            $connect_src .= " https://search.yahoo.com https://s.clarity.ms https://browser.pipe.aria.microsoft.com";
+            $connect_src .= " https://search.yahoo.com https://s.clarity.ms https://p.clarity.ms https://browser.pipe.aria.microsoft.com";
         }
 
         return response($metager->createView($quicktip_results), 200, [

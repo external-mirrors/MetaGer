@@ -174,7 +174,7 @@ class Searchengines
 
     public function getEnabledSearchengine(string $name): Searchengine|null
     {
-        if (array_key_exists($name, $this->sumas) && $this->sumas[$name]->disabled === false) {
+        if (array_key_exists($name, $this->sumas) && $this->sumas[$name]->configuration->disabled === false) {
             return $this->sumas[$name];
         } else {
             return null;

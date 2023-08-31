@@ -6,7 +6,7 @@ return [
             'alt' => 'lås',
         ],
         'title' => 'Garanterad integritet',
-        'p' => 'Genom att använda MetaGer behåller du full kontroll över dina data. Vår anonymiserande proxy håller dig skyddad även när du fortsätter att surfa. Vi spårar inte.',
+        'p' => 'Genom att använda vår annonsfria sökning behåller du full kontroll över dina data. Vår anonymiserande proxy håller dig skyddad även när du fortsätter att surfa. Vi spårar inte.',
     ],
     'ngo' => [
         'title' => 'Drivs av en ideell organisation',

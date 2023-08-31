@@ -32,9 +32,8 @@ class Datenschutz extends Page
             if (!file_exists(lang_path($lang))) {
                 continue;
             }
-            $text = $lang === "de" ? "Datenschutzerklärung" : "Data protection";
             $browser->visit($url)
-                ->waitForText($text)
+                ->waitForText(trans("privacy.title", [], $lang))
                 ->assertTitle(trans("titles.datenschutz", [], $lang));
         }
     }

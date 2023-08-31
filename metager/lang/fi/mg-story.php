@@ -6,7 +6,7 @@ return [
             'alt' => 'lukko',
         ],
         'title' => 'Taattu yksityisyys',
-        'p' => 'Käyttämällä MetaGeriä säilytät täyden määräysvallan tietoihin. Anonymisoiva välityspalvelimemme pitää sinut suojattuna, vaikka jatkaisitkin surffailua. Emme seuraa.',
+        'p' => 'Käyttämällä mainoksetonta hakuamme säilytät täyden määräysvallan tietoihin. Anonymisoiva välityspalvelimemme pitää sinut suojattuna, vaikka jatkaisitkin surffailua. Emme seuraa.',
     ],
     'ngo' => [
         'title' => 'Voittoa tavoittelematon organisaatio',

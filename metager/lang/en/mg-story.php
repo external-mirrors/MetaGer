@@ -6,7 +6,7 @@ return [
             'alt' => 'lock',
         ],
         'title' => 'Guaranteed Privacy',
-        'p' => 'By using MetaGer you retain full control over your data. Our anonymizing proxy keeps you protected even when you continue surfing. We don\'t track.',
+        'p' => 'By using our ad-free search you retain full control over your data. Our anonymizing proxy keeps you protected even when you continue surfing. We don\'t track.',
     ],
     'ngo' => [
         'title' => 'Run by a Nonprofit Organization',

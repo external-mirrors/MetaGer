@@ -7,7 +7,7 @@ return [
             'alt' => 'blokada',
         ],
         'title' => 'Gwarantowana prywatność',
-        'p' => 'Korzystając z MetaGer zachowujesz pełną kontrolę nad swoimi danymi. Nasz anonimizujący serwer proxy zapewnia ochronę nawet podczas surfowania. Nie śledzimy.',
+        'p' => 'Korzystając z naszego wyszukiwania bez reklam, zachowujesz pełną kontrolę nad swoimi danymi. Nasz anonimizujący serwer proxy zapewnia ochronę nawet podczas dalszego surfowania. Nie śledzimy.',
     ],
     'ngo' => [
         'title' => 'Prowadzony przez organizację non-profit',

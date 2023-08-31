@@ -6,7 +6,7 @@ return [
             'alt' => 'Sicherheitsschloss',
         ],
         'title' => 'Garantierte Privatsphäre',
-        'p' => 'Wenn Sie unsere werbefreie Suche nutzen, behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
+        'p' => 'Mit unserer werbefreien Suche, behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
     ],
     'ngo' => [
         'title' => 'Gemeinnütziger Verein',

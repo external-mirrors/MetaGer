@@ -78,7 +78,7 @@ return [
         ],
         "explanation" => [
             '1' => 'On the homepage, there is a field <strong>Install MetaGer</strong>. <br> The field is below the search field. <br> It looks like this: <br>',
-            '2' => 'Sometimes you may need to enter a URL. <br> It looks like this: <br> https://metager.de/meta/meta.ger3?eingabe=%s <br> If you encounter any problems, contact us using the <a href="/contact" target="_blank" rel="noopener">contact form</a>.',
+            '2' => 'Sometimes you may need to enter a URL. <br> It looks like this: <br> https://metager.de/meta/meta.ger3?eingabe=%s <br> If you encounter any problems, contact us using the <a href="/kontakt" target="_blank" rel="noopener">contact form</a>.',
         ],
     ],
 ];

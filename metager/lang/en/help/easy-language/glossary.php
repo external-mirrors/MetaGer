@@ -12,7 +12,7 @@ return [
         "4" => "Filter",
         "5" => "URL",
         "6" => "Tab",
-        "7" => "Anonymous Opening",
+        "7" => "Open anonymously",
         "8" => "Safesearch",
         "9" => "!Bangs",
         "10" => "Cookies",
@@ -47,7 +47,7 @@ return [
         ],
         "entry7" => [
             '0' => 'What is anonymity?',
-            '1' => 'You can open a page on the internet anonymously. <br> Click on the button <strong>ANONYMOUS OPENING</strong> in MetaGer. <br> Then nobody knows that you have viewed the page.',
+            '1' => 'You can open a page on the internet anonymously. <br> Click on the button <strong>open anonymously</strong> in MetaGer. <br> Then nobody knows that you have viewed the page.',
             '2' => 'The requested page is passed on to the proxy service at MetaGer.<br> Proxies prevent your own address from being visible.',
             '3' => 'A person is anonymous. <br> So, nobody knows: Who is this person? <br> There are no clues about who a person is.',
             '4' => 'On the internet, it is usually about not transmitting your own IP address.',

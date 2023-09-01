@@ -15,7 +15,7 @@ return [
             'alt' => 'serratura',
         ],
         'title' => 'Privacy garantita',
-        'p' => 'Utilizzando MetaGer mantenete il pieno controllo sui vostri dati. Il nostro proxy di anonimizzazione vi protegge anche quando continuate a navigare. Non tracciamo.',
+        'p' => 'Utilizzando la nostra ricerca senza pubblicità, mantenete il pieno controllo sui vostri dati. Il nostro proxy di anonimizzazione vi protegge anche quando continuate a navigare. Non tracciamo.',
     ],
     'ngo' => [
         'title' => 'Gestito da un\'organizzazione non profit',

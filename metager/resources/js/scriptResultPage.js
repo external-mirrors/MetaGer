@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 function initialize() {
+  initSelectTier();
   initQueryInputField();
   submitFilterOnChange();
   botProtection();
@@ -237,4 +238,74 @@ function enableABHints() {
       }
     });
   }, 1000);
+}
+
+function initSelectTier() {
+  let source_tag = document.querySelector("meta[name=source_tag]");
+  if (source_tag) {
+    source_tag = source_tag.content;
+  } else {
+    return;
+  }
+  let ysid = document.querySelector("meta[name=ysid]");
+  if (ysid) {
+    ysid = ysid.content;
+  } else {
+    return;
+  }
+  let cid = document.querySelector("meta[name=cid]");
+  if (cid) {
+    cid = cid.content;
+  } else {
+    return;
+  }
+  let ig = document.querySelector("meta[name=ig]");
+  if (ig) {
+    ig = ig.content;
+  } else {
+    return;
+  }
+  let clarityId = document.querySelector("meta[name=clarityId]");
+  if (clarityId) {
+    clarityId = clarityId.content;
+  } else {
+    return;
+  }
+  let rguid = document.querySelector("meta[name=rguid]");
+  if (rguid) {
+    rguid = rguid.content;
+  } else {
+    return;
+  }
+  let test_mode = document.querySelector("meta[name=test_mode]");
+  if (test_mode) {
+    test_mode = test_mode.content;
+  } else {
+    return;
+  }
+  (function (w, d, t, x, m, l, p) {
+    w['XMLPlusSTObject'] = m;
+    w[m] = w[m] || function () {
+      (w[m].q = w[m].q || []).push(arguments)
+    };
+    w[m].l = 1 * new Date();
+    l = d.createElement(t);
+    p = d.getElementsByTagName(t)[0];
+    l.type = "text/javascript";
+    l.async = 1;
+    l.defer = 1;
+    l.src = x;
+    p.parentNode.insertBefore(l, p)
+  })(window, document, 'script', 'https://s.yimg.com/ds/scripts/selectTier.js', 'selectTier');
+  selectTier('init', {
+    source_tag: source_tag,
+    ysid: ysid,
+    cid: cid,
+    ig: ig,
+    select_tier: {
+      clarityId: clarityId,
+      rguid: rguid
+    },
+    test_mode: test_mode
+  });
 }

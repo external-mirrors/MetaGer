@@ -172,6 +172,15 @@ class Searchengines
         return $sumas;
     }
 
+    public function getEnabledSearchengine(string $name): Searchengine|null
+    {
+        if (array_key_exists($name, $this->sumas) && $this->sumas[$name]->configuration->disabled === false) {
+            return $this->sumas[$name];
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Is there a disabled searchengine with given reason
      *

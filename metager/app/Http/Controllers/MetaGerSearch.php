@@ -136,8 +136,9 @@ class MetaGerSearch extends Controller
         $query_timer->observeStart("Search_Affiliates");
 
         // Add Advertisement for Donations
+        $donation_advertisement_position = null;
         if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $metager->addDonationAdvertisement();
+            $donation_advertisement_position = $metager->addDonationAdvertisement();
         }
         $query_timer->observeEnd("Search_Affiliates");
 
@@ -159,6 +160,7 @@ class MetaGerSearch extends Controller
                     "settings" => $settings,
                     "quicktips" => $quicktips
                 ],
+                "donation_advertisement_position" => $donation_advertisement_position,
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
@@ -179,8 +181,19 @@ class MetaGerSearch extends Controller
         } else {
             $quicktip_results = null;
         }
+
+        $script_src_elem = "'self'";
+        $img_src = "'self' data:";
+        $connect_src = "'self'";
+        if (app(Searchengines::class)->getEnabledSearchengine("yahoo") !== null) {
+            $script_src_elem .= " https://s.yimg.com https://msadsscale.azureedge.net https://www.clarity.ms";
+            $img_src .= " https://search.yahoo.com https://xmlp.search.yahoo.com";
+            $connect_src .= " https://search.yahoo.com https://s.clarity.ms https://p.clarity.ms https://browser.pipe.aria.microsoft.com";
+        }
+
         return response($metager->createView($quicktip_results), 200, [
             "Cache-Control" => "max-age=3600, must-revalidate, public",
+            "Content-Security-Policy" => "default-src 'self'; script-src 'self'; script-src-elem $script_src_elem; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src $img_src; font-src 'self'; connect-src $connect_src; frame-src 'self'; frame-ancestors 'self'; form-action 'self' metager.org metager.de",
             "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);
     }
@@ -285,8 +298,8 @@ class MetaGerSearch extends Controller
         $metager->prepareResults();
 
         // Add Advertisement for Donations
-        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $metager->addDonationAdvertisement();
+        if (!app(Authorization::class)->canDoAuthenticatedSearch() && array_key_exists("donation_advertisement_position", $cached) && $cached["donation_advertisement_position"] !== null) {
+            $metager->addDonationAdvertisement($cached["donation_advertisement_position"]);
         }
 
         $result = [

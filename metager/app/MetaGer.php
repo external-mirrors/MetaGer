@@ -461,8 +461,12 @@ class MetaGer
      * The Position at which our advertisement is placed is random within the other
      * advertisements. In some cases it will be the first ad and in other cases in some
      * other place.
+     *
+     * @param int $position Position to ad advertisement at or null if random
+     *
+     * @return int | null Position where advertisement was added
      */
-    public function addDonationAdvertisement()
+    public function addDonationAdvertisement($position = null)
     {
         if (!app(\App\SearchSettings::class)->self_advertisements) {
             return;
@@ -472,8 +476,8 @@ class MetaGer
          * every so often. ~33% in this case
          * ToDo set back to 5 once we do not want to advertise donations as much anymore
          */
-        if (rand(1, 100) >= 34) {
-            return;
+        if ($position === null && rand(1, 100) >= 34) {
+            return null;
         }
 
         $donationAd = new \App\Models\Result(
@@ -488,9 +492,10 @@ class MetaGer
         );
         $adCount = sizeof($this->ads);
         // Put Donation Advertisement to random position
-        $position = random_int(0, $adCount);
+        $position = $position !== null ? $position : random_int(0, $adCount);
 
         array_splice($this->ads, $position, 0, [$donationAd]);
+        return $position;
     }
 
     public function humanVerification(&$results)

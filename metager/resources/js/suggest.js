@@ -14,6 +14,8 @@ let suggest_timeout = null;
   let suggestions_container = searchbar_container.querySelector(".suggestions");
   if (!suggestions_container) {
     return;
+  } else {
+    suggestions_container.style.display = "grid";
   }
   let suggestion_url_partner = suggestions_container.dataset.partners;
   let suggestion_url = suggestions_container.dataset.suggestions;

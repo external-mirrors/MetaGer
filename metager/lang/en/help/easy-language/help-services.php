@@ -21,7 +21,7 @@ return [
     ],
     "maps" => [
         "title" => "MetaGer Maps",
-        "1" => '<a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> is a map service developed by MetaGer. <br> MetaGer Maps is also available for mobile devices. <br> Here you can download the app: <a href="/app" target="_blank">Download App</a>. <br> When you search with MetaGer, you can also use MetaGer Maps. <br> Simply click on the new search focus <strong>Maps</strong>. <br> This is what the search focus looks like:',
-        "2" => "Once you click on it, you will be taken to the map you searched for. <br> On the right side, you will see a column displaying points found on the map. <br> These points are relevant to your search. <br> This is what the column looks like:",
+        "1" => '<a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> is a map service developed by MetaGer. <br> MetaGer Maps is also available for mobile devices. <br> Here you can download the app: <a href="/app" target="_blank">Download App</a>. ',
+        "2" => "Once you open MetaGer Maps, you can enter what you are looking for. <br> On the right side, you will see a column displaying points found on the map. <br> These points are relevant to your search. <br> This is what the column looks like:",
     ],
 ];

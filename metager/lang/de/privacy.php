@@ -19,7 +19,7 @@ return [
             'preferences' => 'Wir verwenden diese Daten (z.B. Spracheinstellungen), um die jeweilige Suchanfrage zu beantworten. Einige dieser Daten speichern wir nicht-personenbezogen zu statistischen Zwecken.',
             'additionally' => 'Folgende Daten fallen außerdem an, falls Sie unsere werbefinanzierte Version verwenden:',
             'botprotection' => 'Um unseren Dienst vor Überlastung zu schützen, müssen wir die Anzahl der Suchanfragen pro Internetanschluss begrenzen. Allein für diesen Zweck speichern wir die vollständige IP-Adresse und einen Zeitstempel für maximal 96 Stunden. Werden auffällig viele Suchen von einer IP durchgeführt, wird diese IP vorübergehend (maximal 96 Stunden nach der letzen Suche) in einer Sperrliste gespeichert. Anschließend wird die IP gelöscht.',
-            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Yahoo-Suchergebnisse und Werbung anbieten zu können. Zu diesem Zweck werden auf der MetaGer-Ergebnisseite Nutzungsdaten zu statistischen Zwecken einschließlich Ihrer IP-Adresse aufgezeichnet.',
+            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Yahoo-Suchergebnisse und Werbung anbieten zu können. Zu diesem Zweck werden auf der MetaGer-Ergebnisseite Nutzungsdaten einschließlich Ihrer IP-Adresse zu statistischen Zwecken aufgezeichnet.',
         ],
         'contact' => [
             'title' => 'Nutzung des Kontaktformulars',

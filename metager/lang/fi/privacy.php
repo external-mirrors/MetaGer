@@ -20,8 +20,7 @@ return [
             'preferences' => 'Käytämme näitä tietoja (esim. kieliasetuksia) vastataksemme vastaavaan hakukyselyyn. Säilytämme osan näistä tiedoista ei-henkilökohtaisesti tilastollisia tarkoituksia varten.',
             'additionally' => 'Seuraavia tietoja kerätään myös, jos käytät mainosversiotamme:',
             'botprotection' => 'Suojellaksemme palvelua ylikuormitukselta meidän on rajoitettava hakujen määrää internetyhteyttä kohden. Pelkästään tätä tarkoitusta varten tallennamme täydellisen IP-osoitteen ja aikaleiman enintään 96 tunnin ajan. Jos IP-osoitteesta tehdään huomattavan paljon hakuja, kyseinen IP-osoite tallennetaan väliaikaisesti (enintään 96 tuntia viimeisen haun jälkeen) mustalle listalle. Tämän jälkeen IP-osoite poistetaan.',
-            'advertisers' => 'Lahjoitusten ja jäsenmaksujen lisäksi meidän on rahoitettava toimintamme ei-henkilökohtaisella mainonnalla tulossivulla. Jotta voimme vastaanottaa tätä mainontaa, annamme IP-osoitteen kaksi ensimmäistä lohkoa niin sanotun käyttäjäagentin osien yhteydessä mainoskumppaneillemme.',
-            'clarity' => 'Teemme yhteistyötä Microsoft Clarityn ja Microsoft Advertisingin kanssa tarjotaksemme sinulle ilmaisia Yahoo-hakutuloksia ja -mainontaa. Tätä tarkoitusta varten MetaGer-tulossivulle tallennetaan tilastotietoja käyttöä varten.',
+            'clarity' => 'Teemme yhteistyötä Microsoft Clarityn ja Microsoft Advertisingin kanssa tarjotaksemme sinulle ilmaisia Yahoo-hakutuloksia ja -mainontaa. Tätä tarkoitusta varten MetaGer-tulossivulla tallennetaan tilastotietoja, mukaan lukien IP-osoitteesi.',
         ],
         'donate' => [
             'title' => 'Lahjoituslomakkeen käyttö',

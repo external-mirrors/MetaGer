@@ -4,7 +4,7 @@ return [
     "title"=>"Glossar",
     "tableofcontents"=>"Inhaltsverzeichnis",
     "backarrow"=>"Zurück",
-    "uparrow"=>"Nach Oben",
+    "uparrow"=>"Hoch",
 
     "entry" => [
         "1"=>"Such-Maschine",

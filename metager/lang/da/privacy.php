@@ -12,8 +12,7 @@ return [
             'preferences' => 'Vi bruger disse data (f.eks. sprogindstillinger) til at besvare den pågældende søgeforespørgsel. Vi gemmer nogle af disse data på et ikke-personligt grundlag til statistiske formål.',
             'additionally' => 'Følgende data indsamles også, hvis du bruger vores annonceunderstøttede version:',
             'botprotection' => 'For at beskytte vores tjeneste mod overbelastning er vi nødt til at begrænse antallet af søgninger pr. internetforbindelse. Alene til dette formål gemmer vi den fulde IP-adresse og et tidsstempel i maksimalt 96 timer. Hvis der udføres et bemærkelsesværdigt stort antal søgninger fra en IP, gemmes denne IP midlertidigt (maksimalt 96 timer efter den sidste søgning) på en sortliste. Derefter slettes IP\'en.',
-            'advertisers' => 'Ud over donationer og medlemskontingenter skal vi finansiere vores drift gennem ikke-personliggjort reklame på resultatsiden. For at modtage denne reklame giver vi de to første blokke af IP\'en i forbindelse med dele af den såkaldte brugeragent til vores reklamepartnere.',
-            'clarity' => 'Vi samarbejder med Microsoft Clarity og Microsoft Advertising om at give dig gratis Yahoo-søgeresultater og -reklamer. Til dette formål registreres brugsdata til statistiske formål på MetaGers resultatside.',
+            'clarity' => 'Vi samarbejder med Microsoft Clarity og Microsoft Advertising om at give dig gratis Yahoo-søgeresultater og -reklamer. Til dette formål registreres brugsdata til statistiske formål, herunder din IP-adresse, på MetaGers resultatside.',
         ],
         'newsletter' => [
             'title' => 'Tilmeld dig SUMA-EV\'s nyhedsbrev',

@@ -16,8 +16,7 @@ return [
             'preferences' => 'Vi använder dessa uppgifter (t.ex. språkinställningar) för att besvara respektive sökfråga. Vi lagrar en del av dessa uppgifter på en icke-personlig basis för statistiska ändamål.',
             'additionally' => 'Följande uppgifter samlas också in om du använder vår annonsstödda version:',
             'botprotection' => 'För att skydda vår tjänst från överbelastning måste vi begränsa antalet sökningar per internetanslutning. Enbart för detta ändamål lagrar vi den fullständiga IP-adressen och en tidsstämpel i högst 96 timmar. Om ett märkbart stort antal sökningar görs från ett IP sparas detta IP tillfälligt (max 96 timmar efter den sista sökningen) i en svart lista. Därefter raderas IP:t.',
-            'advertisers' => 'Förutom donationer och medlemsavgifter måste vi finansiera vår verksamhet genom icke-personanpassad reklam på resultatsidan. För att kunna ta emot denna reklam ger vi de två första blocken av IP i samband med delar av den så kallade användaragenten till våra reklampartners.',
-            'clarity' => 'Vi arbetar med Microsoft Clarity och Microsoft Advertising för att ge dig gratis Yahoo-sökresultat och reklam. För detta ändamål registreras användningsdata för statistiska ändamål på MetaGers resultatsida.',
+            'clarity' => 'Vi arbetar med Microsoft Clarity och Microsoft Advertising för att ge dig gratis Yahoo-sökresultat och reklam. För detta ändamål registreras användningsdata för statistiska ändamål inklusive din IP-adress på MetaGers resultatsida.',
         ],
         'contact' => [
             'title' => 'Användning av kontaktformuläret',

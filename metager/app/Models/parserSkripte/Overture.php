@@ -229,11 +229,11 @@ class Overture extends Searchengine
         $this->next = $next;
     }
 
-    # Liefert Sonderdaten für Yahoo
+    // Liefert Sonderdaten für Yahoo
     private function setOvertureAffilData($url)
     {
-        $affil_data = 'ip=' . $this->ip;
-        $affil_data .= '&ua=' . $this->useragent;
+        $affil_data = 'ip=' . request()->ip();
+        $affil_data .= '&ua=' . request()->useragent();
 
         $serve_domain = "https://metager.de/";
         if ($this->configuration->getParameter->mkt !== "de") {

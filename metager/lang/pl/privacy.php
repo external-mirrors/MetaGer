@@ -49,8 +49,7 @@ return [
             'preferences' => 'Używamy tych danych (np. ustawień językowych), aby odpowiedzieć na odpowiednie zapytanie wyszukiwania. Niektóre z tych danych przechowujemy w celach statystycznych.',
             'additionally' => 'Następujące dane są również gromadzone w przypadku korzystania z naszej wersji z reklamami:',
             'botprotection' => 'Aby chronić naszą usługę przed przeciążeniem, musimy ograniczyć liczbę wyszukiwań na połączenie internetowe. Tylko w tym celu przechowujemy pełny adres IP i znacznik czasu przez maksymalnie 96 godzin. Jeśli z danego adresu IP przeprowadzana jest zauważalnie duża liczba wyszukiwań, adres ten jest tymczasowo (maksymalnie 96 godzin po ostatnim wyszukiwaniu) zapisywany na czarnej liście. Następnie adres IP jest usuwany.',
-            'advertisers' => 'Oprócz darowizn i opłat członkowskich musimy finansować naszą działalność poprzez niespersonalizowane reklamy na stronie wyników. Aby otrzymywać te reklamy, przekazujemy naszym partnerom reklamowym dwa pierwsze bloki adresu IP w połączeniu z częściami tak zwanego agenta użytkownika.',
-            'clarity' => 'Współpracujemy z Microsoft Clarity i Microsoft Advertising, aby dostarczać bezpłatne wyniki wyszukiwania i reklamy Yahoo. W tym celu na stronie wyników MetaGer rejestrowane są dane dotyczące użytkowania do celów statystycznych.',
+            'clarity' => 'Współpracujemy z Microsoft Clarity i Microsoft Advertising, aby dostarczać bezpłatne wyniki wyszukiwania i reklamy Yahoo. W tym celu na stronie wyników MetaGer rejestrowane są dane o użytkowaniu do celów statystycznych, w tym adres IP użytkownika.',
         ],
         'contact' => [
             'title' => 'Korzystanie z formularza kontaktowego',

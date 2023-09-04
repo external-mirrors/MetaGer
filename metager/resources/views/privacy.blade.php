@@ -36,7 +36,6 @@
                         <li>
                             <div><a href="#ip-address">@lang('privacy.data.ip')</a>, <a href="#user-agent">@lang('privacy.data.useragent')</a>:</div>
                             <div>@lang('privacy.contexts.metager.botprotection')</div>
-                            <div>@lang('privacy.contexts.metager.advertisers')</div>
                         </li>
                         <li>
                             <div><a href="https://privacy.microsoft.com/privacystatement">Microsoft Clarity & Yahoo</a></div>
@@ -257,6 +256,6 @@
     <div class="section">
         <h1>@lang('privacy.changes.title')</h1>
         <div>@lang('privacy.changes.description')</div>
-        <div>@lang('privacy.changes.date', ['date' => '2023-08-31'])</div>
+        <div>@lang('privacy.changes.date', ['date' => '2023-09-04'])</div>
     </div>
 @endsection

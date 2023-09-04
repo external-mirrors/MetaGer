@@ -1,7 +1,7 @@
 <?php
 return [
     "achtung" => 'Attention, as our search engine is constantly being developed and improved, there may be changes to its structure and functionality from time to time. While we strive to adapt the help section to these changes as quickly as possible, we cannot guarantee that there won\'t be temporary discrepancies in some explanations.',
-    "title" => 'MetaGer - Help in Simple Language',
+    "title" => 'MetaGer - Easy Help',
     "easy.language.back" => "Back",
     
     "tableofcontents" => [

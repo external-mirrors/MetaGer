@@ -1,7 +1,7 @@
 <?php
 
 return [
-    "title"                 => 'MetaGer - Hilfe in leichter Sprache',
+    "title"                 => 'MetaGer - Einfache Hilfe',
     "backarrow"             => 'Zurück',
     'glossary'              => 'Durch Klicken auf das Symbol<a title="Dieses Symbol führt zum Glossar" href="/hilfe/easy-language/glossary" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>  kommen Sie zur Erklärung von den schwierigen Wörtern.',
     "title.2"               => 'Die Benutzung von den Haupt-Seiten',

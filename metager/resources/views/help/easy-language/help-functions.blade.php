@@ -6,7 +6,7 @@
 <section class="help-section">
 	<h1 class="page-title">{!! trans('help/easy-language/help-functions.title') !!}</h1>
 	<div id="navigationsticky">
-		<a  class=back-button href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language") }}"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
 	</div>
 	<section id="help-searchfunctions" class="help-section card">
 	<p>{!! trans('help/easy-language/help-functions.glossary') !!}</p>

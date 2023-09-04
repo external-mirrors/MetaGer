@@ -34,6 +34,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+
+  backButtons();
 });
 
 reportJSAvailabilityForAuthenticatedSearch();
@@ -43,4 +45,16 @@ function reportJSAvailabilityForAuthenticatedSearch() {
   if (key_cookie !== undefined) {
     Cookies.set("js_available", "true", { sameSite: 'Lax' });
   }
+}
+
+// Implement Back button functionality
+function backButtons() {
+  document.querySelectorAll(".back-button").forEach(button => {
+    button.style.display = "block";
+    console.log(button);
+    button.addEventListener("click", e => {
+      e.preventDefault();
+      history.back();
+    });
+  });
 }

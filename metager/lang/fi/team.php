@@ -15,7 +15,7 @@ return [
         '9' => 'harjoittelija',
     ],
     'contact' => [
-        '1' => 'Ilmoita MetaGeriä koskevista kysymyksistä/ongelmista jne. käyttämällä <a href="/en/kontakt/">yhteydenottolomaketta, jossa on salaus</a>.',
+        '1' => 'Ilmoita MetaGeriä koskevista kysymyksistä/ongelmista jne. käyttämällä <a href=":link_contact">-yhteydenottolomaketta</a>.',
         '2' => 'Jos saat meiltä outoa sisältöä sisältäviä sähköpostiviestejä, lue lisää tästä: <a href="https://metager.de/wsb/fakemail/">https://metager.de/wsb/fakemail/</a>',
         '3' => 'Vain perustelluissa poikkeustapauksissa, jos haluat tavoittaa jonkun suoraan, lähetä hänelle postia. Koska tiimin jäsenet saattavat olla lomalla, sairaana jne.',
     ],

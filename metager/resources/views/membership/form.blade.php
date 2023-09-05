@@ -32,7 +32,7 @@
     </div>
     <div id="membership-fee">
         <h3>2. Ihr Mitgliedsbeitrag</h3>
-        <div>Wählen Sie nachfolgend bitte Ihren gewünschten Mitgliedsbeitrag (mtl.) aus.</div>
+        <div>Wählen Sie nachfolgend bitte Ihren gewünschten monatlichen Mitgliedsbeitrag aus.</div>
         @if(isset($errors) && $errors->has("amount"))
         @foreach($errors->get("amount") as $error)
         <div class="error">{{ $error }}</div>

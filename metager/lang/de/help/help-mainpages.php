@@ -5,7 +5,7 @@ return [
 
 
 
-
+    "easy-help"=> 'Durch Klicken auf das Symbol <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#bangs" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> kommen Sie zu einer einfacheren Version der Hilfe.',
     "backarrow"             => 'Zurück',
     "result"        => [
         "info"       => [

@@ -7,7 +7,8 @@
 <section>
 	<div id="navigationsticky">
 		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-functions.backarrow') !!}</a>
-	</div>	
+	</div>
+	<p>{!! trans('help/help-functions.easy-help') !!}</p>
 	<section id="h-searchfunctions" class="card">
 		<h2>{!! trans('help/help-functions.suchfunktion.title') !!}</h2>
 		<h3 id="h-stopwordsearch">{!! trans('help/help-functions.stopworte.title') !!}</h3>

@@ -8,6 +8,7 @@
 	<div id="navigationsticky">
 		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-services.backarrow') !!}</a>
 	</div>
+	<p>{!! trans('help/help-functions.easy-help') !!}</p>
 	<h2 id="h-dienste">{!! trans('help/help-services.dienste.text') !!}</h2>
 	<section id="app" class="card">
 			<h3>{!! trans('help/help-services.app.title') !!}</h3>

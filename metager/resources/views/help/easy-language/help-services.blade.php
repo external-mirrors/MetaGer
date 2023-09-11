@@ -12,7 +12,7 @@
 		<p>{!! trans('help/easy-language/help-services.glossary') !!}</p>
 		<h2>{!! trans('help/easy-language/help-services.dienste.1') !!}</h2>
 	</section>
-	<section id="app" class="help-section card">
+	<section id="help-app" class="help-section card">
 		<div id="mg-app" style="margin-top: -100px"></div>
 		<div style="margin-top: 100px"></div>
 		<h3>{!! trans('help/easy-language/help-services.app.title') !!}</h3>

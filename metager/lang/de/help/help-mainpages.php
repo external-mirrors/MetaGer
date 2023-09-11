@@ -18,14 +18,14 @@ return [
             "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab. Alternativ können Sie auch ein neues Tab öffnen, indem Sie STRG und Linksklick oder die mittlere Maustaste verwenden.',
             "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
         ],
-        "title" => 'Ergebnisse',
+        "title" => 'Ergebnisse <a title="Zur leichten Hilfe" href="/hilfe/easy-language/mainpages#help-results" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "resultpage"        => [
         "choice"     => 'Darunter sehen Sie zwei Punkte: gegebenenfalls „Filter“ sowie „Einstellungen“',
         "filter"     => 'Filter: Hier können Sie Filtermöglichkeiten ein- und ausblenden und Filter anwenden. In jedem Suchfokus haben Sie hier andere Auswahlmöglichkeiten. Einige Funktionen sind nur mit Nutzung eines MetaGer Schlüssels möglich.',
         "foci"       => 'Unter dem Suchfeld sind 6 verschiedene Suchfokusse (drei im englischsprachigen Bereich) (Web, Bilder…...) abgebildet, bei denen intern auch spezifische Suchmaschinen zugeordnet sind.',
         "settings" => 'Einstellungen: Hier können Sie dauerhafte Sucheinstellungen für Ihre MetaGer-Suche im aktuellen Fokus vornehmen. Sie können auch Suchmaschinen, die dem Fokus zugeordnet sind, an- und abwählen. Ihre Einstellungen werden mithilfe eines nicht personenbeziehbaren Klartextcookies gespeichert. Die Einstellungsseite erreichen Sie auch über das Menu oben rechts.',
-        "title" => 'Die Ergebnisseite',
+        "title" => 'Die Ergebnisseite <a title="Zur leichten Hilfe" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "searchfield"       => [
         "info"      => 'Das Suchfeld besteht aus mehreren Teilen:',
@@ -33,7 +33,7 @@ return [
         "morefunctions" => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>"',
         "search" => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
         "slot" => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',
-        "title" => 'Das Suchfeld',
+        "title" => 'Das Suchfeld <a title="Zur leichten Hilfe" href="/hilfe/easy-language/mainpages#suchfeld" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "settings"      => [
         "1" => 'Werbefreie Suche <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',
@@ -44,11 +44,11 @@ return [
         "6" => 'Ergebnisse in neuem Tab öffnen <br> Hier können Sie die Funktion, Ergebnisse im neuen Tab zu öffnen, dauerhaft einschalten.',
         "7" => 'Zitate <br> Sie können hier die Anzeige der Zitate an- und ausschalten.',
         "8" => 'Wiederherstellen aller aktuellen Einstellungen <br> Es wird Ihnen ein Link angezeigt, den Sie als Startseite oder Lesezeichen einrichten können, um Ihre aktuell gesetzen Einstellungen beizubehalten.',
-        "title" => 'Einstellungen',
+        "title" => 'Einstellungen <a title="Zur leichten Hilfe" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "startpage" => [
         "info" => 'Die Startseite beinhaltet das Suchfeld, oben rechts einen Button zum Aufrufen des Menus und unter dem Suchfeld einen Link, mit dem Sie MetaGer zu Ihrem Browser hinzufügen können. Im unteren Bereich finden Sie Informationen zu MetaGer und dem Trägerverein SUMA-EV. Zusätzlich werden unten unsere Schwerpunkte <i>Garantierte Privatsphäre, Gemeinnütziger Verein, Vielfältig & Frei</i> und <i>100% Ökostrom</i> angezeigt. Durch einen Klick auf die entsprechenden Bereiche oder durch Scrollen können mehr Informationen gefunden werden. ',
-        "title" => 'Die Startseite',
+        "title" => 'Die Startseite <a title="Zur leichten Hilfe" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "title" => [
         "1" => 'MetaGer - Hilfe',

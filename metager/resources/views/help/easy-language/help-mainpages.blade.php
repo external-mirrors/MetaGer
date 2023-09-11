@@ -84,7 +84,7 @@
 			<p>{!! trans('help/easy-language/help-mainpages.resultpage.settings.1') !!}</p>
 
 		</div>
-		<h3>{!! trans('help/easy-language/help-mainpages.result.title') !!}</h3>
+		<h3 id="help-results">{!! trans('help/easy-language/help-mainpages.result.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.1') !!}</p>
 			<div class="image-container">

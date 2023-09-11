@@ -120,6 +120,10 @@ return [
             "2" => 'Wenn Sie eine Seite doch wieder sehen wollen, können Sie die Web-Seite aus dem Feld löschen.',
         ],
         "moresettings" => 'Weitere Einstellungen:',
+        "advertisement" =>[
+            "title" =>'Subtile Werbung für unseren eigenen Service',
+            "1" => 'Wir zeigen Ihnen Werbung von MetaGer. <br> Diese Werbung ist nicht sehr auffällig. <br> Sie können unsere Eigen-Werbung ausschalten. <br> Dafür benötigen Sie aber einen <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Schlüssel</a>.',
+        ],
         "darkmode"  => [
             "title" => 'Dunklen Modus umschalten',
             "1" => 'Hier können Sie den dunklen Modus einschalten. <br> Oder ausschalten. <br> Bei dem dunklen Modus wird der Hintergrund dunkel und die Schrift hell.',

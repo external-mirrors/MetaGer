@@ -119,6 +119,10 @@ return [
             "2" => 'If you want to see a page again, you can delete the web page from the field.',
         ],
         "moresettings" => 'More Settings:',
+        "advertisement" => [
+            "title" => 'Subtle Advertising for Our Own Service',
+            "1" => 'We show you advertisements for MetaGer. <br> This advertising is not very prominent. <br> You can turn off our own advertising. <br> However, you will need a <a href="/hilfe/easy-language/functions#keyexplain">MetaGer Key</a> to do so.',
+        ],        
         "darkmode" => [
             "title" => 'Toggle Dark Mode',
             "1" => 'Here you can turn on or off the dark mode. <br> In dark mode, the background is dark and the text is light.',

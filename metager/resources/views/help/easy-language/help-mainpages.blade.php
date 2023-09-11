@@ -200,6 +200,8 @@
 		<img id="help-easy-language-more-settings" class="help-easy-language-image lm-only" src="/img/help-more-settings-lm-en.png"/>
 		<img id="help-easy-language-more-settings" class="help-easy-language-image dm-only" src="/img/help-more-settings-dm-en.png"/>
 		@endif
+		<h4>{!! trans('help/easy-language/help-mainpages.settings.advertisement.title') !!}</h4>
+		<p>{!! trans('help/easy-language/help-mainpages.settings.advertisement.1') !!}</p>
 		<h4>{!! trans('help/easy-language/help-mainpages.settings.darkmode.title') !!}</h4>
 		<p>{!! trans('help/easy-language/help-mainpages.settings.darkmode.1') !!}</p>
 		<h4>{!! trans('help/easy-language/help-mainpages.settings.newtab.title') !!}</h4>

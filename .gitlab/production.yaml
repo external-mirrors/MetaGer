@@ -44,11 +44,11 @@ ingress:
     - hosts:
         - metager.de
         - metager.org
+        - metager.es
         - www.metager.org
-      secretName: metager-tls-2022
+      secretName: metager-tls-2023
     - hosts:
         - www.metager.de
-        - metager.es
         - www.metager.es
         - metager.nl
         - www.metager.nl

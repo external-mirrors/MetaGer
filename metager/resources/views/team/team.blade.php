@@ -34,7 +34,7 @@
 		</ul>
 	</div>
 	<div class="card">
-		<p>{!! trans('team.contact.1') !!}</p>
+		<p>@lang('team.contact.1', ['link_contact' => route('contact')])</p>
 		<p>{!! trans('team.contact.2') !!}</p>
 		<p>{!! trans('team.contact.3') !!}</p>
 	</div>

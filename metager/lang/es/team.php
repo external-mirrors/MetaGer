@@ -15,7 +15,7 @@ return [
         '9' => 'Aprendiz',
     ],
     'contact' => [
-        '1' => 'Preguntas, propuestas.... usan <a href="/kontakt/">formulario contacto cifrado</a>.',
+        '1' => 'Por favor, notifique sus preguntas/problemas sobre MetaGer etc. utilizando el formulario de contacto <a href=":link_contact"></a> .',
         '3' => 'Solo en caso de emergencia: escribir un e-mail a una persona determinada.',
         '2' => 'Si alguna vez recibe un correo electrónico con un contenido extraño, en el que se mencionan nuestros nombres y/o nuestras direcciones de correo electrónico como remitentes, siga leyendo aquí: <a href="https://metager.de/wsb/fakemail/">https://metager.de/wsb/fakemail/</a>',
     ],

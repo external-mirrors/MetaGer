@@ -163,7 +163,7 @@ return [
     'ads' => [
         'own' => [
             'title' => 'Tuki MetaGer',
-            'description' => 'Lahjoituksellasi tuet riippumattoman hakukoneen metager.de ylläpitoa ja jatkokehitystä sekä voittoa tavoittelemattoman yhdistyksen SUMA-EV:n työtä.',
+            'description' => 'Lahjoituksellasi tuet riippumattoman hakukoneen metager.orgin ylläpitoa ja jatkokehitystä sekä voittoa tavoittelemattoman yhdistyksen SUMA-EV:n työtä.',
         ],
     ],
     'prevention' => [

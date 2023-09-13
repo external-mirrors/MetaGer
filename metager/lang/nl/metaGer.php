@@ -163,7 +163,7 @@ return [
     'ads' => [
         'own' => [
             'title' => 'Ondersteuning voor MetaGer',
-            'description' => 'Met je donatie steun je het onderhoud en de verdere ontwikkeling van de onafhankelijke zoekmachine metager.de en het werk van de vereniging zonder winstoogmerk SUMA-EV.',
+            'description' => 'Met je donatie steun je het onderhoud en de verdere ontwikkeling van de onafhankelijke zoekmachine metager.org en het werk van de non-profit vereniging SUMA-EV.',
         ],
     ],
     'prevention' => [

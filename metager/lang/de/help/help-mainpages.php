@@ -44,6 +44,7 @@ return [
         "6" => 'Ergebnisse in neuem Tab öffnen <br> Hier können Sie die Funktion, Ergebnisse im neuen Tab zu öffnen, dauerhaft einschalten.',
         "7" => 'Zitate <br> Sie können hier die Anzeige der Zitate an- und ausschalten.',
         "8" => 'Wiederherstellen aller aktuellen Einstellungen <br> Es wird Ihnen ein Link angezeigt, den Sie als Startseite oder Lesezeichen einrichten können, um Ihre aktuell gesetzen Einstellungen beizubehalten.',
+        '9' =>'Subtile Werbung für unseren eigenen Service <br> Wir zeigen Ihnen subtile Werbung für unsere eigenen Dienste. Hier können Sie unsere Eigenwerbung austellen.',
         "title" => 'Einstellungen <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "startpage" => [

@@ -54,6 +54,7 @@
 			<li>{!! trans('help/help-mainpages.settings.2') !!}</li>
 			<li>{!! trans('help/help-mainpages.settings.3') !!}</li>
 			<li>{!! trans('help/help-mainpages.settings.4') !!}</li>
+			<li>{!! trans('help/help-mainpages.settings.9') !!}</li>
 			<li>{!! trans('help/help-mainpages.settings.5') !!}</li>
 			<li>{!! trans('help/help-mainpages.settings.6') !!}</li>
 			<li>{!! trans('help/help-mainpages.settings.7') !!}</li>

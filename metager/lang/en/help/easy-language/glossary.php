@@ -57,7 +57,7 @@ return [
             '2' => 'Safesearch follows US law. <br> What is not suitable for minors according to US law determines the search results. <br> Several categories between "off" and "strict" are offered.',
         ],
         "entry9" => [
-
+            '1' => '"!Bangs" refers to a shortcut for faster searching. <br> With !bangs, you can perform specific searches more quickly.',
         ],
         "entry10" => [
             '1' => 'Cookies are software. <br> The computer writes them itself. <br> With the cookie, the computer can remember things. <br> So, the computer remembers settings like the dark mode.',

@@ -58,6 +58,7 @@ return [
             '2'=>'Safesearch richtet sich nach US Recht. Was dort nicht jugendfrei ist, bestimmt die Ergebnisausgabe. Es werden mehrere Kategorien zwischen "off" und "strict" angeboten.',
         ],
         "entry9"=> [
+            '1'=>'!bangs bezeichnet eine Abkürzung um schneller zu suchen. <br> Mit !bangs kann man also bestimmte Suchen schneller durchführen.',
         
         ],
         "entry10"=> [

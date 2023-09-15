@@ -115,6 +115,7 @@
 	</div>
 	<div class="card" id="bangs">
 		<h2>{!! trans('help/easy-language/glossary.entry.9') !!}</h2>
+		<p>{!! trans('help/easy-language/glossary.explanation.entry9.1') !!}</p>
 
 
 	</div>

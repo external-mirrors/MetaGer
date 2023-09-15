@@ -20,8 +20,7 @@ return [
             'preferences' => 'We use this data (e.g. language settings) to answer the respective search query. We store some of this data on a non-personal basis for statistical purposes.',
             'additionally' => 'The following data is also collected if you use our ad-supported version:',
             'botprotection' => 'To protect our service from overload, we need to limit the number of searches per internet connection. For this purpose alone, we store the full IP address and a timestamp for a maximum of 96 hours. If a noticeably large number of searches are carried out from an IP, this IP is temporarily (maximum 96 hours after the last search) saved in a blacklist. The IP is then deleted.',
-            'advertisers' => 'In addition to donations and membership fees, we must fund our operations through non-personalized advertising on the results page. In order to receive this advertising, we give the first two blocks of the IP in connection with parts of the so-called user agent to our advertising partners.',
-            'clarity' => 'We work with Microsoft Clarity and Microsoft Advertising to bring you free Yahoo search results and advertising. For this purpose, usage data for statistical purposes is recorded on the MetaGer results page.',
+            'clarity' => 'We work with Microsoft Clarity and Microsoft Advertising to bring you free Yahoo search results and advertising. For this purpose, usage data for statistical purposes including your IP address is recorded on the MetaGer results page.',
         ],
         'contact' => [
             'title' => 'Use of the contact form',

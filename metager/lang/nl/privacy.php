@@ -28,8 +28,7 @@ return [
             'preferences' => 'We gebruiken deze gegevens (bijv. taalinstellingen) om de betreffende zoekopdracht te beantwoorden. Sommige van deze gegevens slaan we op niet-persoonlijke basis op voor statistische doeleinden.',
             'additionally' => 'De volgende gegevens worden ook verzameld als je onze advertentie-ondersteunde versie gebruikt:',
             'botprotection' => 'Om onze service te beschermen tegen overbelasting, moeten we het aantal zoekopdrachten per internetverbinding beperken. Alleen al voor dit doel slaan we het volledige IP-adres en een tijdstempel op gedurende maximaal 96 uur. Als er opvallend veel zoekopdrachten worden uitgevoerd vanaf een IP-adres, wordt dit IP-adres tijdelijk (maximaal 96 uur na de laatste zoekopdracht) opgeslagen in een zwarte lijst. Daarna wordt het IP verwijderd.',
-            'advertisers' => 'Naast donaties en lidmaatschapsgelden moeten we onze activiteiten financieren met niet-gepersonaliseerde reclame op de resultatenpagina. Om deze reclame te ontvangen, geven we de eerste twee blokken van het IP-adres in verband met delen van de zogenaamde gebruikersagent aan onze reclamepartners.',
-            'clarity' => 'We werken samen met Microsoft Clarity en Microsoft Advertising om je gratis Yahoo zoekresultaten en advertenties te bieden. Voor dit doel worden gebruiksgegevens voor statistische doeleinden vastgelegd op de resultatenpagina van MetaGer.',
+            'clarity' => 'We werken samen met Microsoft Clarity en Microsoft Advertising om je gratis Yahoo zoekresultaten en advertenties te bieden. Voor dit doel worden gebruiksgegevens voor statistische doeleinden, inclusief uw IP-adres, vastgelegd op de resultatenpagina van MetaGer.',
         ],
         'contact' => [
             'title' => 'Gebruik van het contactformulier',

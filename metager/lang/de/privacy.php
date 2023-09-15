@@ -1,15 +1,14 @@
 <?php
-
 return [
     'title' => 'Datenschutzerklärung',
     'introduction' => 'Für maximale Transparenz listen wir auf, welche Daten wir von Ihnen erheben und wie wir sie verwenden. Der Schutz Ihrer Daten ist uns wichtig und Ihnen sollte er das auch sein. <strong>Lesen Sie diese Erklärung bitte gründlich; es ist in Ihrem Interesse.</strong>',
     'responsible_party' => [
         'title' => 'Verantwortliche und Ansprechpartner',
-        'description' => 'MetaGer und verwandte Dienste werden betrieben vom <a href="https://suma-ev.de">SUMA-EV</a>, der auch Verfasser dieser Erklärung ist. Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint. Unsere Kontaktdaten finden Sie in unserem <a href=":link_impress">Impressum</a>. Per E-Mail sind wir über unser <a href=":link_contact">Kontaktformular</a> zu erreichen.'
+        'description' => 'MetaGer und verwandte Dienste werden betrieben vom <a href="https://suma-ev.de">SUMA-EV</a>, der auch Verfasser dieser Erklärung ist. Mit „Wir“ ist in dieser Erklärung in der Regel der SUMA-EV gemeint. Unsere Kontaktdaten finden Sie in unserem <a href=":link_impress">Impressum</a>. Per E-Mail sind wir über unser <a href=":link_contact">Kontaktformular</a> zu erreichen.',
     ],
     'principles' => [
         'title' => 'Grundsätze',
-        'description' => 'Wir haben uns als gemeinnütziger Verein dem freien Wissenszugang verschrieben. Da wir wissen, dass freie Recherche nicht mit Massenüberwachung vereinbar ist, nehmen wir auch Datenschutz sehr ernst. Wir verarbeiten schon immer nur die Daten, die zum Betrieb unserer Dienste unbedingt nötig sind. Datenschutz ist bei uns immer der Standard. Profiling – also die automatische Erstellung von Nutzerprofilen – betreiben wir nicht.'
+        'description' => 'Wir haben uns als gemeinnütziger Verein dem freien Wissenszugang verschrieben. Da wir wissen, dass freie Recherche nicht mit Massenüberwachung vereinbar ist, nehmen wir auch Datenschutz sehr ernst. Wir verarbeiten schon immer nur die Daten, die zum Betrieb unserer Dienste unbedingt nötig sind. Datenschutz ist bei uns immer der Standard. Profiling – also die automatische Erstellung von Nutzerprofilen – betreiben wir nicht.',
     ],
     'contexts' => [
         'title' => 'Anfallende Daten nach Kontext',
@@ -20,8 +19,7 @@ return [
             'preferences' => 'Wir verwenden diese Daten (z.B. Spracheinstellungen), um die jeweilige Suchanfrage zu beantworten. Einige dieser Daten speichern wir nicht-personenbezogen zu statistischen Zwecken.',
             'additionally' => 'Folgende Daten fallen außerdem an, falls Sie unsere werbefinanzierte Version verwenden:',
             'botprotection' => 'Um unseren Dienst vor Überlastung zu schützen, müssen wir die Anzahl der Suchanfragen pro Internetanschluss begrenzen. Allein für diesen Zweck speichern wir die vollständige IP-Adresse und einen Zeitstempel für maximal 96 Stunden. Werden auffällig viele Suchen von einer IP durchgeführt, wird diese IP vorübergehend (maximal 96 Stunden nach der letzen Suche) in einer Sperrliste gespeichert. Anschließend wird die IP gelöscht.',
-            'advertisers' => 'Neben Spenden und Mitgliedsbeiträgen müssen wir unseren Betrieb durch nicht-personalisierte Werbung auf der Ergebnisseite finanzieren. Um diese Werbung zu erhalten, geben wir die ersten beiden Blöcke der IP in Verbindung mit Teilen vom sog. User-Agent an unsere Werbepartner.',
-            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Suchergebnisse und Werbung von Yahoo anzeigen zu können. Zu diesem Zweck werden auf der MetaGer Ergebnisseite Nutzungsdaten für statistische Zwecke erfasst.',
+            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Yahoo-Suchergebnisse und Werbung anbieten zu können. Zu diesem Zweck werden auf der MetaGer-Ergebnisseite Nutzungsdaten einschließlich Ihrer IP-Adresse zu statistischen Zwecken aufgezeichnet.',
         ],
         'contact' => [
             'title' => 'Nutzung des Kontaktformulars',
@@ -75,7 +73,7 @@ return [
         'plugin' => [
             'title' => 'Nutzung des MetaGer-Plugin',
             'description' => 'Bei der Nutzung des MetaGer-Plugin fallen folgende Daten an:',
-        ]
+        ],
     ],
     'hosting' => [
         'title' => 'Hosting',
@@ -87,12 +85,12 @@ return [
             'title' => 'Internet-Protokoll-Adresse',
             'description' => 'Die Internet-Protokoll-Adresse (nachfolgend kurz IP) wird zwingend benötigt, um Webdienste wie MetaGer zu nutzen. Diese IP identifiziert in Kombination mit einem Datum – ähnlich einer Telefonnummer – einen Internetzugang sowie dessen Inhaber eindeutig. Im Allgemeinen sind die ersten drei (von insgesamt vier) Blöcken einer IP nicht personenbezogen. Werden hintere Blöcke der IP gekürzt, identifiziert die gekürzte Adresse den ungefähren geografischen Bereich um den Internet-Anschluss.',
             'example_full' => 'Beispiele (vollständige IP-Adresse)',
-            'example_partial' => 'Beispiele (nur die ersten zwei Blöcke)'
+            'example_partial' => 'Beispiele (nur die ersten zwei Blöcke)',
         ],
         'useragent' => [
             'title' => 'User-Agent-Bezeichner',
             'description' => 'Beim Aufruf einer Webseite sendet ihr Browser automatisch eine Kennung, in der Regel mit Daten über den verwendeten Browser und das verwendete Betriebssystem. Diese Browser-Kennung (der sog. User-Agent) kann von Webseiten zum Beispiel verwendet werden, um Mobilgeräte zu erkennen und diesen eine angepasste Ausgabe zu präsentieren.',
-            'example' => 'Beispiel'
+            'example' => 'Beispiel',
         ],
         'payment' => [
             'title' => 'Zahlungsdaten',
@@ -114,12 +112,12 @@ return [
         ],
         'contact' => [
             'title' => 'Kontaktdaten',
-            'description' => 'Hierunter fällt der von Ihnen angegebene Name (Vor- und Nachname), sowie Ihre E-Mail Adresse. Diese Daten nutzen wir ausschließlich, um Ihnen zu antworten und geben Sie unter keinen Umständen weiter an Dritte.'
+            'description' => 'Hierunter fällt der von Ihnen angegebene Name (Vor- und Nachname), sowie Ihre E-Mail Adresse. Diese Daten nutzen wir ausschließlich, um Ihnen zu antworten und geben Sie unter keinen Umständen weiter an Dritte.',
         ],
         'message' => [
             'title' => 'Nachricht',
             'description' => 'Die hier eingegebene Nachricht wird an uns übertragen und zur Bearbeitung Ihres Anliegens genutzt.',
-        ]
+        ],
     ],
     'base' => [
         'title' => 'Rechtsgrundlage zur Verarbeitung',
@@ -178,6 +176,6 @@ return [
         'referrer' => 'der von Ihnen gesendete Referrer',
         'gps' => 'Ortungsdaten',
         'optional' => 'optional',
-        'unused' => 'Wird nicht gespeichert, oder weitergegeben.'
-    ]
+        'unused' => 'Wird nicht gespeichert, oder weitergegeben.',
+    ],
 ];

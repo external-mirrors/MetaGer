@@ -15,7 +15,7 @@ return [
         '9' => 'tirocinante',
     ],
     'contact' => [
-        '1' => 'Vi preghiamo di segnalare le vostre domande/problemi su MetaGer ecc. utilizzando il modulo di contatto <a href="/en/kontakt/">con crittografia</a>.',
+        '1' => 'Segnalate le vostre domande/problemi su MetaGer ecc. utilizzando il modulo di contatto <a href=":link_contact"></a> .',
         '2' => 'Se ricevete delle e-mail con contenuti strani da parte nostra, leggete di più su questo argomento: <a href="https://metager.de/wsb/fakemail/">https://metager.de/wsb/fakemail/</a>',
         '3' => 'Solo in caso di eccezioni motivate, se si desidera raggiungere direttamente qualcuno, è necessario inviargli una mail. Perché i membri del team potrebbero essere in vacanza, ammalati ecc.',
     ],

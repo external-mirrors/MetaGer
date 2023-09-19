@@ -163,7 +163,7 @@ return [
     'ads' => [
         'own' => [
             'title' => 'Soutenir MetaGer',
-            'description' => 'Par votre don, vous soutenez le maintien et le développement du moteur de recherche indépendant metager.de et le travail de l\'association à but non lucratif SUMA-EV.',
+            'description' => 'Par votre don, vous soutenez le maintien et le développement du moteur de recherche indépendant metager.org et le travail de l\'association sans but lucratif SUMA-EV.',
         ],
     ],
     'prevention' => [

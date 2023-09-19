@@ -4,7 +4,6 @@ namespace App\Models\Authorization;
 
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Redis;
-use Prometheus\CollectorRegistry;
 
 class KeyAuthorization extends Authorization
 {

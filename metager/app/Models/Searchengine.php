@@ -6,6 +6,7 @@ use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
 use app\Models\parserSkripte\Overture;
+use App\PrometheusExporter;
 use App\SearchSettings;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
@@ -199,8 +200,11 @@ abstract class Searchengine
             }
             $this->getNext($metager, $body);
             // Pay for the searchengine if cost > 0 and returned results
-            if (!$this->cached && $this->configuration->cost > 0 && sizeof($this->results) > 0) {
-                app(Authorization::class)->makePayment($this->configuration->cost);
+            if ($this->configuration->cost > 0 && sizeof($this->results) > 0) {
+                PrometheusExporter::KeyUsed(preg_replace("/^.*\\\/", "", get_class($this)), $this->cached);
+                if (!$this->cached) {
+                    app(Authorization::class)->makePayment($this->configuration->cost);
+                }
             }
             $this->markNew();
             $this->loaded = true;

@@ -66,4 +66,11 @@ class PrometheusExporter
         $counter = $registry->getOrRegisterCounter("metager", "overture_failed", "counts how often overture failed a response");
         $counter->inc();
     }
+
+    public static function KeyUsed(string $engine, bool $cached)
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["searchengine", "cached"]);
+        $counter->inc([$engine, json_encode($cached)]);
+    }
 }

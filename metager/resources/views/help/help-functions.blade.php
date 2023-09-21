@@ -32,6 +32,7 @@
 			<li>{!! trans('help/help-functions.mehrwortsuche.4.text') !!}</li>
 			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.4.example') !!}</div></li>
 		</ul>
+		{{--
 		<h3 id="h-exactsearch">{!! trans('help/help-functions.exactsearch.title') !!}</h3>
 		<p>{!! trans('help/help-functions.exactsearch.1') !!}</p>
 		<ul class="dotlist">
@@ -40,6 +41,7 @@
 			<li>{!! trans('help/help-functions.exactsearch.3') !!}</li>
 			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.exactsearch.example.2') !!}</div></li>
 		</ul>
+		--}}
 	</section>
 	<section id="h-bangs" class="card">
 		<h3>{!! trans('help/help-functions.bang.title') !!}</h3>

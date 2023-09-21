@@ -37,6 +37,7 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.mehrwortsuche.5.example') !!}</div></li>
 			</ul>
 		</div>
+		{{--
 		<h3 id="exactsearch">{!! trans('help/easy-language/help-functions.exactsearch.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.exactsearch.1') !!}</p>
@@ -48,6 +49,7 @@
 				<li class="nodot"><div class = "search-example">{!! trans('help/easy-language/help-functions.exactsearch.example.2') !!}</div></li>
 			</ul>
 		</div>
+		--}}
 	</section>
 	<section id="bangs" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>

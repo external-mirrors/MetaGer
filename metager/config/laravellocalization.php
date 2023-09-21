@@ -14,6 +14,7 @@ return [
         'en-GB' => ['name' => 'English (Great Britain)', 'script' => 'Latn', 'native' => 'English (Great Britain)', 'regional' => 'en_GB'],
         'en-US' => ['name' => 'English (US)', 'script' => 'Latn', 'native' => 'English (USA)', 'regional' => 'en_US'],
         'en-IE' => ['name' => 'English (Ireland)', 'script' => 'Latn', 'native' => 'English (Ireland)', 'regional' => 'en_IE'],
+        'en-MY' => ['name' => 'English (Malaysia)', 'script' => 'Latn', 'native' => 'English (Malaysia)', 'regional' => 'en_MY'],
         'nl-NL' => ['name' => 'Dutch (Netherlands)', 'script' => 'Latn', 'native' => 'Nederlands (Nederland)', 'regional' => 'nl_NL'],
         'es-ES' => ['name' => 'Spanish (Spain)', 'script' => 'Latn', 'native' => 'Español (España)', 'regional' => 'es_ES'],
         'es-MX' => ['name' => 'Spanish (Mexico)', 'script' => 'Latn', 'native' => 'Español (México)', 'regional' => 'es_MX'],

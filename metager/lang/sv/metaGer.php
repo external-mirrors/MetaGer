@@ -163,7 +163,7 @@ return [
     'ads' => [
         'own' => [
             'title' => 'Stöd MetaGer',
-            'description' => 'Med din donation stöder du underhållet och vidareutvecklingen av den oberoende sökmotorn metager.de och arbetet i den ideella föreningen SUMA-EV.',
+            'description' => 'Med din donation stöder du underhållet och vidareutvecklingen av den oberoende sökmotorn metager.org och arbetet i den ideella föreningen SUMA-EV.',
         ],
     ],
     'prevention' => [

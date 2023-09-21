@@ -163,7 +163,7 @@ return [
     'ads' => [
         'own' => [
             'title' => 'Wsparcie dla MetaGer',
-            'description' => 'Przekazując darowiznę, wspierasz utrzymanie i dalszy rozwój niezależnej wyszukiwarki metager.de oraz pracę stowarzyszenia non-profit SUMA-EV.',
+            'description' => 'Przekazując darowiznę, wspierasz utrzymanie i dalszy rozwój niezależnej wyszukiwarki metager.org oraz pracę stowarzyszenia non-profit SUMA-EV.',
         ],
     ],
     'prevention' => [

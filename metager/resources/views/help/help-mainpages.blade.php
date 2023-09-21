@@ -35,12 +35,34 @@
 			</ul>
 		<h3>{!! trans('help/help-mainpages.result.title') !!}</h3>
 			<p>{!! trans('help/help-mainpages.result.info.1') !!}</p>
+			@if (App\Localization::getLanguage() == "de")
+			<div class="image-container">
+				<img class="image-container lm-only" src="/img/help-resultpic-01-lm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				<img class=" image-container dm-only" src="/img/help-resultpic-01-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+			</div>
+				@else
+				<div class="image-container">
+				<img class="image-container lm-only" src="/img/help-result-en-lm-01.png" alt="Screenshot of a result"/>
+				<img class="image-container dm-only" src="/img/help-result-en-dm-01.png" alt="Screenshot of a result"/>
+			</div>
+				@endif
 			<ul class = "dotlist">
 				<li>{!! trans('help/help-mainpages.result.info.open') !!}</li>
 				<li>{!! trans('help/help-mainpages.result.info.newtab') !!}</li>
 				<li>{!! trans('help/help-mainpages.result.info.anonym') !!}</li>
 				<li>{!! trans('help/help-mainpages.result.info.more') !!}</li>
 			</ul>
+			@if (App\Localization::getLanguage() == "de")
+			<div class="image-container">
+				<img class="lm-only" src="/img/help-resultpic-02-lm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+				<img class="dm-only" src="/img/help-resultpic-02-dm.png" alt="Bildschirmfoto eines Suchergebnisses"/>
+			</div>
+				@else
+			<div class="image-container">
+				<img class="lm-only" src="/img/help-result-en-lm-02.png" alt="Screenshot of a result"/>
+				<img class="dm-only" src="/img/help-result-en-dm-02.png" alt="Screenshot of a result"/>
+			</div>
+				@endif
 			<p>{!! trans('help/help-mainpages.result.info.2') !!}</p>
 			<ul class = "dotlist">
 				<li>{!! trans('help/help-mainpages.result.info.domainnewsearch') !!}</li>

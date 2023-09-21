@@ -60,7 +60,7 @@
 			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm.png"/>
 			@else
 			<img id="help-easy-language-bang-image" class="help-easy-language-image lm-only" src="/img/help-bangs-lm-en.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm-eb.png"/>
+			<img class="help-easy-language-image dm-only" src="/img/help-bangs-dm-en.png"/>
 			@endif
 			<p>{!! trans('help/easy-language/help-functions.bang.3') !!}</p>
 
@@ -72,10 +72,67 @@
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.1') !!}</p>
 			<ul>
-				<li>{!! trans('help/easy-language/help-functions.key.2') !!}</li>
-				<li>{!! trans('help/easy-language/help-functions.key.3') !!}</li>
-				<li>{!! trans('help/easy-language/help-functions.key.4') !!}</li>
-				<li>{!! trans('help/easy-language/help-functions.key.5') !!}</li>
+				<li>{!! trans('help/easy-language/help-functions.key.2.1') !!}</li>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image lm-only" src="/img/help-key-login-button-lm.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-login-button-dm.png"/> 
+				@else
+				<img class="help-easy-language-image lm-only" src="/img/help-key-login-button-lm-en.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-login-button-dm-en.png"/> 
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.2.2') !!}</p>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image lm-only" src="/img/help-key-login-code-lm.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-login-code-dm.png"/>
+				@else
+				<img class="help-easy-language-image lm-only" src="/img/help-key-login-code-lm-en.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-login-code-dm-en.png"/>
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.2.3') !!}</p>
+				<br>
+				<li>{!! trans('help/easy-language/help-functions.key.3.1') !!}</li>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image lm-only" src="/img/help-key-url-button-lm.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-url-button-dm.png"/>
+				@else
+				<img class="help-easy-language-image lm-only" src="/img/help-key-url-button-lm-en.png"/>
+				<img class="help-easy-language-image dm-only" src="/img/help-key-url-button-dm-en.png"/>
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.3.2') !!}</p>
+				<li>{!! trans('help/easy-language/help-functions.key.4.1') !!}</li>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-lm.png"/> 
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-dm.png"/> 
+				@else
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-lm-en.png"/> 
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-dm-en.png"/> 
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.4.2') !!}</p>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-file-lm.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-file-dm.png"/>
+				@else
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-file-lm-en.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-file-dm-en.png"/>
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.4.3') !!}</p>
+				<li>{!! trans('help/easy-language/help-functions.key.5.1') !!}</li>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-lm.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-dm.png"/>
+				@else
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-add-lm-en.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-add-dm-en.png"/>
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.5.2') !!}</p>
+				@if (App\Localization::getLanguage() == "de")
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-qr-code-lm.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-qr-code-dm.png"/>
+				@else
+				<img class="help-easy-language-image help-easy-language-key-image lm-only" src="/img/help-key-qr-code-lm-en.png"/>
+				<img class="help-easy-language-image help-easy-language-key-image dm-only" src="/img/help-key-qr-code-dm-en.png"/>
+				@endif
+				<p>{!! trans('help/easy-language/help-functions.key.5.3') !!}</p>
 				<li>{!! trans('help/easy-language/help-functions.key.6') !!}</li>
 			</ul>
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>

@@ -63,10 +63,25 @@ return [
         ],
 
         "1" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Wenn Sie bezahlt haben, bekommen Sie ein Passwort. <br> Das Passwort heißt bei uns Schlüssel. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Dort gibt es diese Möglichkeiten:',
-        "2" => 'Log-in Code <br> Ein weiteres Gerät mit dem Log-in Code zu registrieren geht so: <br> Sie klicken auf den Knopf <strong>Login Code erzeugen</strong>. <br> So sieht der Knopf aus: <br> <img class="help-easy-language-image " src="/img/help-key-login-button.png"/> <br> Dann werden 6 Zahlen angezeigt. <br> So sehen die Zahlen zum Beispiel aus: <br><img class="help-easy-language-image " src="/img/help-key-login-code.png"/> <br> Diese Zahlen geben Sie dann bei dem Gerät ein, was Sie hin-zu-fügen wollen. <br> Die 6 Zahlen sind nur einmal gültig. <br> Wenn Sie also mehrere Geräte einrichten wollen, macht man das jedes Mal neu.', 
-        "3" => 'URL kopieren <br> Sie können auch die Internet-Adresse kopieren lassen. <br> Dafür klicken Sie auf den Knopf <strong>URL Kopieren</strong> <br> So sieht der Knopf aus: <br> <img class="help-easy-language-image " src="/img/help-key-url-button.png"/> <br>Jetzt haben Sie den Link kopiert. <br> Den Link können Sie benutzen um mit dem MetaGer Schlüssel zu suchen. ',   
-        "4" => 'Datei sichern <br> Sie können Ihren MetaGer Schlüssel auch als Datei speichern. <br> Dafür klicken Sie auf den Knopf <strong>In Datei sichern</strong>. <br> Nun haben Sie Ihren Schlüssel als Datei gespeichert. <br> Jetzt öffnen Sie die Seite zum Einrichten vom Schlüssel auf dem neuen Gerät. <br> So sieht die Seite aus: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add.png"/> <br> Dann klicken Sie auf den Knopf <strong>Sicherungsdatei hochladen</strong>. <br> So sieht der Knopf aus: <br><img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add-file.png"/> <br> Nun wählen Sie die Datei mit dem MetaGer Schlüssel aus. <br> Dann können den MetaGer Schlüssel nutzen.',
-        "5" => 'QR-Code scannen <br> Ein weiteres Gerät mit dem QR-Code zu registieren geht so: <br> Sie öffnen die Seite zum Einrichten vom Schlüssel auf dem neuen Gerät. <br> So sieht die Seite aus: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-add.png"/> <br> Dann klicken Sie auf den Knopf <strong>QR Code scannen</strong>. <br> So sieht dieser Knopf aus: <br> <img class="help-easy-language-image help-easy-language-key-image" src="/img/help-key-qr-code.png"/> <br> Nun scannen Sie den QR-Code ein. <br> Danach können Sie werbefrei auf Ihrem Gerät suchen. ',   
+        "2" => [
+            '1' => 'Log-in Code <br> Ein weiteres Gerät mit dem Log-in Code zu registrieren geht so: <br> Sie klicken auf den Knopf <strong>Login Code erzeugen</strong>. <br> So sieht der Knopf aus:',   
+            '2' => 'Dann werden 6 Zahlen angezeigt. <br> So sehen die Zahlen zum Beispiel aus:',
+            '3' => 'Diese Zahlen geben Sie dann bei dem Gerät ein, was Sie hin-zu-fügen wollen. <br> Die 6 Zahlen sind nur einmal gültig. <br> Wenn Sie also mehrere Geräte einrichten wollen, macht man das jedes Mal neu.', 
+        ],
+        "3" => [
+            '1' => 'URL kopieren <br> Sie können auch die Internet-Adresse kopieren lassen. <br> Dafür klicken Sie auf den Knopf <strong>URL Kopieren</strong> <br> So sieht der Knopf aus:',
+            '2' => 'Jetzt haben Sie den Link kopiert. <br> Den Link können Sie benutzen um mit dem MetaGer Schlüssel zu suchen.',   
+        ],
+        "4" => [
+            '1' => 'Datei sichern <br> Sie können Ihren MetaGer Schlüssel auch als Datei speichern. <br> Dafür klicken Sie auf den Knopf <strong>In Datei sichern</strong>. <br> Nun haben Sie Ihren Schlüssel als Datei gespeichert. <br> Jetzt öffnen Sie die Seite zum Einrichten vom Schlüssel auf dem neuen Gerät. <br> So sieht die Seite aus:',
+            '2' => 'Dann klicken Sie auf den Knopf <strong>Sicherungsdatei hochladen</strong>. <br> So sieht der Knopf aus:',
+            '3' => 'Nun wählen Sie die Datei mit dem MetaGer Schlüssel aus. <br> Dann können den MetaGer Schlüssel nutzen.',
+        ],
+        "5" => [
+            '1' =>'QR-Code scannen <br> Ein weiteres Gerät mit dem QR-Code zu registieren geht so: <br> Sie öffnen die Seite zum Einrichten vom Schlüssel auf dem neuen Gerät. <br> So sieht die Seite aus:',
+            '2' => 'Dann klicken Sie auf den Knopf <strong>QR Code scannen</strong>. <br> So sieht dieser Knopf aus:',
+            '3' => 'Nun scannen Sie den QR-Code ein. <br> Danach können Sie werbefrei auf Ihrem Gerät suchen.',   
+        ],
         "6" => 'Manuell eingeben <br> Es geht natürlich auch, den Schlüssel manuell einzugeben. <br> Dafür tippen Sie die lange Folge von Zahlen und Buchstaben ab. ',   
         "7" => 'Manchmal sehen Sie bei uns einen bunten Schlüssel. <br> Das hat einen Grund. <br> Die Farben sagen, wie oft man noch ohne Werbung suchen kann. <br> Es gibt folgende Farben: ',   
         "8" => 'Grauer Schlüssel: <br> Sie sehen einen grauen Schlüssel. <br> Dann haben Sie keinen Schlüssel eingerichtet.',   

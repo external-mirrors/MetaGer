@@ -14,10 +14,10 @@ return [
         'explanation_a' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',
     ],
     
-    "suchfunktion" => [
+    "searchfunction" => [
         "title" => "Suchfunktionen"
     ],
-    "stopworte" => [
+    "stopwords" => [
         "title" => 'Stoppworte <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#stopwordsearch" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "3" => "auto neu -bmw",
         "2" => "Beispiel: Sie suchen ein neues Auto, aber auf keinen Fall einen BMW. Ihre Eingabe lautet also:",
@@ -40,7 +40,7 @@ return [
             'yellow'=>'Gelb: Sollten Sie einen gelben Schlüssel sehen, dann haben Sie noch ein Guthaben von 30 Token. Ihre Suchen sind bald aufgebraucht. Es wird empfohlen den Schlüssel bald aufzuladen.',
         ],
     ],
-    "mehrwortsuche" => [
+    "multiwordsearch" => [
         "title" => 'Mehrwortsuche <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#severalwords" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "4" => [
             "example" => '"der runde tisch"',

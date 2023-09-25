@@ -10,12 +10,12 @@
 	</div>
 	<p>{!! trans('help/help-functions.easy-help') !!}</p>
 	<section id="h-searchfunctions" class="card">
-		<h2>{!! trans('help/help-functions.suchfunktion.title') !!}</h2>
-		<h3 id="h-stopwordsearch">{!! trans('help/help-functions.stopworte.title') !!}</h3>
-		<p>{!! trans('help/help-functions.stopworte.1') !!}</p>
+		<h2>{!! trans('help/help-functions.searchfunction.title') !!}</h2>
+		<h3 id="h-stopwordsearch">{!! trans('help/help-functions.stopwords.title') !!}</h3>
+		<p>{!! trans('help/help-functions.stopwords.1') !!}</p>
 		<ul class="dotlist">
-			<li>{!! trans('help/help-functions.stopworte.2') !!}</li>
-			<li class="nodot"><div class="search-example">{!! trans('help/help-functions.stopworte.3') !!}</div></li>
+			<li>{!! trans('help/help-functions.stopwords.2') !!}</li>
+			<li class="nodot"><div class="search-example">{!! trans('help/help-functions.stopwords.3') !!}</div></li>
 		</ul>
 		<h3 id="h-urls">{!! trans('help/help-functions.urls.title') !!}</h3>
 		<p>{!! trans('help/help-functions.urls.explanation') !!}</p>
@@ -23,14 +23,14 @@
 			<li>{!! trans('help/help-functions.urls.example_a') !!}</li>
 			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.urls.example_b') !!}</div></li>
 		</ul>
-		<h3 id="h-severalwords">{!! trans('help/help-functions.mehrwortsuche.title') !!}</h3>
-		<p>{!! trans('help/help-functions.mehrwortsuche.1') !!}</p>
-		<p>{!! trans('help/help-functions.mehrwortsuche.2') !!}</p>
+		<h3 id="h-severalwords">{!! trans('help/help-functions.multiwordsearch.title') !!}</h3>
+		<p>{!! trans('help/help-functions.multiwordsearch.1') !!}</p>
+		<p>{!! trans('help/help-functions.multiwordsearch.2') !!}</p>
 		<ul class="dotlist">
-			<li>{!! trans('help/help-functions.mehrwortsuche.3.text') !!}</li>
-			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.3.example') !!}</div></li>
-			<li>{!! trans('help/help-functions.mehrwortsuche.4.text') !!}</li>
-			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.mehrwortsuche.4.example') !!}</div></li>
+			<li>{!! trans('help/help-functions.multiwordsearch.3.text') !!}</li>
+			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.multiwordsearch.3.example') !!}</div></li>
+			<li>{!! trans('help/help-functions.multiwordsearch.4.text') !!}</li>
+			<li class="nodot"><div class = "search-example">{!! trans('help/help-functions.multiwordsearch.4.example') !!}</div></li>
 		</ul>
 		{{--
 		<h3 id="h-exactsearch">{!! trans('help/help-functions.exactsearch.title') !!}</h3>

@@ -8,7 +8,7 @@ return [
     "backarrow"             => 'Zurück',
     "easy-help"=> 'Durch Klicken auf das Symbol <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#bangs" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> kommen Sie zu einer einfacheren Version der Hilfe.',
 
-    "dienste"   => [
+    "services"   => [
         "text" => "Weitere Dienste um die Suche herum",
     ],
     "maps" => [
@@ -17,7 +17,7 @@ return [
         "3" => "Die Karte zeigt nach dem Aufrufen die auch in der Spalte rechts wiedergegebenen von MetaGer gefundenen Punkte (POIs = Points of Interest). Beim Zoomen passt sich diese Liste an den Kartenausschnitt an.  Wenn Sie die Maus über eine Markierung in der Karte oder in der Liste halten, wird das jeweilige Gegenstück hervorgehoben.  Klicken Sie auf \"Details\", um genauere Informationen zu diesem Punkt aus der darunter liegenden Datenbank zu erhalten.",
         "title" => 'MetaGer Maps <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/services#maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
-    "suchwortassoziator" => [
+    "searchword-associator" => [
         "1" => 'Als Hilfe für die Erschließung eines Begriffsumfelds haben wir den <a href="/asso" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> entwickelt. Sie finden das Tool auch direkt unter dem Reiter "Dienste". Gibt man in diesen ein Suchwort ein, welches dem zu untersuchenden Fachgebiet irgendwie nahe kommt, dann wird versucht, typische Fachbegriffe dieses Gebietes aus dem WWW zu extrahieren.',
         "2" => "Beispiel: Sie möchten mehr über Zeckenbisse und deren Gefahren wissen, aber ihnen fallen die medizinischen Fachbegriffe für Erkrankungen aus diesem Bereich nicht mehr ein. Die Eingabe des Wortes \"Zeckenbisse\" in den Web-Assoziator liefert dann u.a. die Begriffe \"Borreliose\" und \"fsme\".",
         "3" => "Da diese Assoziationsanalyse u.a. aus Web-Dokumenten selber gewonnen wird, ist sie sprachunabhängig; d.h. Sie können bei Eingabe deutscher Wörter Fachbegriffe aus beliebigen Sprachen gewinnen (und umgekehrt).",

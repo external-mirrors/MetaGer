@@ -9,7 +9,7 @@ return [
         "title" => "Anonymität und Daten-Sicherheit",
         "1" => 'Cookies',
         "2" => 'Bei MetaGer ist man anonym. <br> Das heißt man ist unerkannt. <br> Wir speichern keine Daten mit denen man jemanden erkennen kann. <br> Wir bieten 2 Funktionen dafür an: <br> Tor-Hidden-Service und <br> Anonym öffnen',
-        "3" => "Bei <a href = \"/hilfe/easy-language/privacy-protection#torhidden\">Tor-Hidden-Service</a> finden sie mehr über das Thema. <br> Bei <a href = \"/hilfe/easy-language/privacy-protection#proxy\">Anonym öffnen</a> finden Sie mehr über das Thema. <br> Die Funktionen sind unter <strong>Dienste</strong> in der Navigations-leiste erreichbar.",
+        "3" => "Bei <a href = \"/hilfe/easy-language/privacy-protection#eh-torhidden\">Tor-Hidden-Service</a> finden sie mehr über das Thema. <br> Bei <a href = \"/hilfe/easy-language/privacy-protection#eh-proxy\">Anonym öffnen</a> finden Sie mehr über das Thema. <br> Die Funktionen sind unter <strong>Dienste</strong> in der Navigations-leiste erreichbar.",
     ],
     "tor"  => [
         "title" => "Tor-Hidden-Service",

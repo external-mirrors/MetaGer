@@ -66,7 +66,7 @@ return [
             ],
             "anonym" => [
                 "title" => 'Open Anonymously<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
+                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#eh-proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
             ],
             "more" => [
                 "title" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>:',
@@ -81,7 +81,7 @@ return [
             ],
             "hideresult" => [
                 "title" => 'Hide:',
-                "1" => 'By clicking on the button, you hide all results from the page. <br> Then they are invisible. <br> If you always want it this way, check the <a href="#settings">Settings</a>. <br> There you can adjust it.',
+                "1" => 'By clicking on the button, you hide all results from the page. <br> Then they are invisible. <br> If you always want it this way, check the <a href="#eh-settings">Settings</a>. <br> There you can adjust it.',
             ],
         ],
     ],
@@ -89,7 +89,7 @@ return [
         "title" => 'Settings',
         "metagerkey" => [
             "title" => "Ad-Free Search",
-            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Load Key</strong> to load the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
+            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Load Key</strong> to load the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
             '2'=> "Three buttons are displayed. <br> You can click the left button with the text <strong>What is it?</strong>. <br> This will take you to the information page about the MetaGer Key. <br> You can click the middle button with the text <strong>Set up existing key</strong>. <br> If you already have a MetaGer Key, you can enter it there. <br> If you don't have a key, you can click the right button <strong>Create new Key</strong> to purchase a new key.",
         ],
         "cookies" => [
@@ -98,7 +98,7 @@ return [
         ],
         "searchengine" => [
             "title" => 'Used Search Engines:',
-            "1" => 'Here you can see all the search engines that MetaGer uses. <br> You can select which search engines you want to use. <br> You can click on the individual buttons. <br> If the buttons are crossed out, it means you are not using the search engines. <br> Some search engines can only be used with a <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Key</a>.',
+            "1" => 'Here you can see all the search engines that MetaGer uses. <br> You can select which search engines you want to use. <br> You can click on the individual buttons. <br> If the buttons are crossed out, it means you are not using the search engines. <br> Some search engines can only be used with a <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a>.',
             "2" => 'Search engines that can only be used with a MetaGer Key are grayed out.',
         ],
         "filter" => [
@@ -121,7 +121,7 @@ return [
         "moresettings" => 'More Settings:',
         "advertisement" => [
             "title" => 'Subtle Advertising for Our Own Service',
-            "1" => 'We show you advertisements for MetaGer. <br> This advertising is not very prominent. <br> You can turn off our own advertising. <br> However, you will need a <a href="/hilfe/easy-language/functions#keyexplain">MetaGer Key</a> to do so.',
+            "1" => 'We show you advertisements for MetaGer. <br> This advertising is not very prominent. <br> You can turn off our own advertising. <br> However, you will need a <a href="/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> to do so.',
         ],        
         "darkmode" => [
             "title" => 'Toggle Dark Mode',

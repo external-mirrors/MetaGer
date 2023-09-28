@@ -7,7 +7,7 @@ return [
         "info"       => [
             "1" => 'All results are presented in the following format:',
             "2" => 'The new options are:',
-            "anonym" => '"OPEN ANONYMOUSLY" means that the result is opened under the protection of our proxy. Some information about this can be found in the <a href = "/hilfe/datensicherheit#h-proxy/">Anonymizing MetaGer Proxy Server</a> section.',
+            "anonym" => '"OPEN ANONYMOUSLY" means that the result is opened under the protection of our proxy. Some information about this can be found in the <a href = "/hilfe/datensicherheit#h-proxy">Anonymizing MetaGer Proxy Server</a> section.',
             "domainnewsearch" => '"Search on this domain again": A more detailed search is performed on the domain of the result.',
             "hideresult" => '"hide": This allows you to hide results from this domain. You can also write this switch directly after your search term and concatenate it; a "*" wildcard is also allowed. See also <a href="#h-settings"> "Settings"</a> for a permanent solution.',
             "more" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>: When you click on<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>, you will get new options; the appearance of the result changes:',
@@ -29,7 +29,7 @@ return [
         "morefunctions" => 'Additional functions can be found under the menu item "<a href = "/hilfe/funktionen">Search Functions</a>"',
         "search" => 'the magnifying glass: Start your search by clicking here or pressing "Enter".',
         "slot" => 'the search field: Enter your search term here. Uppercase and lowercase letters are not distinguished.',
-        "title" => 'The Search Field <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#h-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        "title" => 'The Search Field <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "settings"      => [
         "1" => 'Ad-Free Search <br> Here, you can view the balance of your key and your key. You also have the options to top up or remove your key.',

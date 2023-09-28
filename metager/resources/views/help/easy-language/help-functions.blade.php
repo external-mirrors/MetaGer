@@ -11,8 +11,8 @@
 	<section id="help-searchfunctions" class="help-section card">
 	<p>{!! trans('help/easy-language/help-functions.glossary') !!}</p>
 
-		<h2 id="searchfunctions">{!! trans('help/easy-language/help-functions.suchfunktion.title') !!}</h2>
-		<h3 id="stopwordsearch">{!! trans('help/easy-language/help-functions.stopworte.title') !!}</h3>
+		<h2 id="eh-searchfunctions">{!! trans('help/easy-language/help-functions.suchfunktion.title') !!}</h2>
+		<h3 id="eh-stopwordsearch">{!! trans('help/easy-language/help-functions.stopworte.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.stopworte.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.stopworte.2') !!}</p>
@@ -23,7 +23,7 @@
 			<p>{!! trans('help/easy-language/help-functions.stopworte.4') !!}</p>
 
 		</div>
-		<h3 id="severalwords">{!! trans('help/easy-language/help-functions.mehrwortsuche.title') !!}</h3>
+		<h3 id="eh-severalwords">{!! trans('help/easy-language/help-functions.mehrwortsuche.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-functions.mehrwortsuche.2') !!}</p>
@@ -38,7 +38,7 @@
 			</ul>
 		</div>
 		{{--
-		<h3 id="exactsearch">{!! trans('help/easy-language/help-functions.exactsearch.title') !!}</h3>
+		<h3 id="eh-exactsearch">{!! trans('help/easy-language/help-functions.exactsearch.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.exactsearch.1') !!}</p>
 			<ul class="dotlist">
@@ -51,7 +51,7 @@
 		</div>
 		--}}
 	</section>
-	<section id="bangs" class="help-section card">
+	<section id="eh-bangs" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.bang.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-functions.bang.1') !!}</p>
@@ -68,7 +68,7 @@
 
 		</div>
 	</section>
-	<section id="keyexplain" class="help-section card">
+	<section id="eh-keyexplain" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.key.maintitle') !!}</h3>
 		<div>
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
@@ -149,7 +149,7 @@
 			<p>{!! trans('help/easy-language/help-functions.key.11') !!}</p>
 		</div>
 	</section>
-	<section id="selist" class="help-section card">
+	<section id="eh-selist" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-functions.selist.title.0') !!}</h3>
 		<h4>{!! trans('help/easy-language/help-functions.selist.title.1') !!}</h4>
 		<p>{!! trans('help/easy-language/help-functions.selist.explanation.1') !!}</p>

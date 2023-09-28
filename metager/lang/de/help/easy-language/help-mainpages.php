@@ -66,7 +66,7 @@ return [
             ],
             "anonym"  => [
                 "title" => 'Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/privacy-protection#proxy/">Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
+                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/privacy-protection#eh-proxy">Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
             ],
             "more"  => [
                 "title" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>:',
@@ -81,7 +81,7 @@ return [
             ],
             "hideresult"  => [
                 "title" => 'Ausblenden:',
-                "1" => 'Wenn Sie auf den Knopf drücken, blenden Sie alle Ergebnisse von der Seite aus. <br> Dann ist es unsichtbar. <br> Wenn Sie das immer so haben wollen, schauen Sie unter <a href="#einstellungen">Einstellungen</a> nach. <br> Da können Sie das einstellen.',
+                "1" => 'Wenn Sie auf den Knopf drücken, blenden Sie alle Ergebnisse von der Seite aus. <br> Dann ist es unsichtbar. <br> Wenn Sie das immer so haben wollen, schauen Sie unter <a href="#eh-settings">Einstellungen</a> nach. <br> Da können Sie das einstellen.',
             ],
         ],
     ],
@@ -90,7 +90,7 @@ return [
         "title" => 'Einstellungen',
         "metagerkey" => [
             "title" => "Werbefreie Suche",
-            "1"=> 'Hier kann man das Guthaben für die werbe-freie Suche sehen. <br> Die werbe-freie Suche kann man mit einem MetaGer Schlüssel nutzen. <br>Unter dem Guthaben kann man den MetaGer Schlüssel sehen. <br> Darunter findet man zwei Knöpfe. <br> Man kann auf den linken Knopf <strong>Schlüssel aufladen</strong> drücken. <br> Dann kann man den Schlüssel aufladen. <br> Man auf den rechten Knopf <strong>Schlüssel entfernen</strong> drücken. <br> Dann wird der Schlüssel aus dem Browser<a title="Mit dem Browser kann man Seiten im Internet anschauen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> gelöscht. <br> Mehr Informationen über den MetaGer Schlüssel findet man hier:  <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Schlüssel</a> <br> Wenn man keinen Schlüssel hat, sieht das so aus:',
+            "1"=> 'Hier kann man das Guthaben für die werbe-freie Suche sehen. <br> Die werbe-freie Suche kann man mit einem MetaGer Schlüssel nutzen. <br>Unter dem Guthaben kann man den MetaGer Schlüssel sehen. <br> Darunter findet man zwei Knöpfe. <br> Man kann auf den linken Knopf <strong>Schlüssel aufladen</strong> drücken. <br> Dann kann man den Schlüssel aufladen. <br> Man auf den rechten Knopf <strong>Schlüssel entfernen</strong> drücken. <br> Dann wird der Schlüssel aus dem Browser<a title="Mit dem Browser kann man Seiten im Internet anschauen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> gelöscht. <br> Mehr Informationen über den MetaGer Schlüssel findet man hier:  <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Schlüssel</a> <br> Wenn man keinen Schlüssel hat, sieht das so aus:',
             "2"=> "Es werden 3 Knöpfe angezeigt. <br> Man kann auf den linken Knopf mit dem Text <strong>Was ist das?</strong> drücken. <br> Dann kommt man auf die Informations-seite vom MetaGer Schlüssel. <br> Man kann auf den mittleren Knopf mit dem Text <strong>Vorhandenen Schlüssel einrichten</strong> drücken. <br> Wenn man schon einen MetaGer Schlüssel hat, kann man den da eingeben. <br> Wenn man keinen Schlüssel hat, kann man auf den rechten Knopf <strong>Neuen Schlüssel einrichten</strong> drücken um einen neuen Schlüssel zu kaufen.",
         ],
         "cookies"  => [
@@ -99,7 +99,7 @@ return [
         ],
         "searchengine"  => [
             "title" => 'Verwendete Such-Maschinen:',
-            "1" => 'Hier sehen Sie alle Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe durchgestrichen sind, dann nutzen Sie die Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> nicht. <br> Einige Such-Maschinen sind nur mit einem <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer-Schlüssel</a> nutzbar.',
+            "1" => 'Hier sehen Sie alle Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> die MetaGer nutzt. <br> Sie können auswählen welche Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> Sie nutzen wollen. <br> Sie können auf die einzelnen Knöpfe klicken. <br> Wenn die Knöpfe durchgestrichen sind, dann nutzen Sie die Such-Maschinen<a title="Mit einer Such-Maschine können Sie nach Informationen im Internet suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glsearchengine" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> nicht. <br> Einige Such-Maschinen sind nur mit einem <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer-Schlüssel</a> nutzbar.',
             "2" => 'Such-Maschinen die man nur mit MetaGer Schlüssel verwenden kann, sind ausgegraut.',
         ],
         "filter"  => [
@@ -122,7 +122,7 @@ return [
         "moresettings" => 'Weitere Einstellungen:',
         "advertisement" =>[
             "title" =>'Subtile Werbung für unseren eigenen Service',
-            "1" => 'Wir zeigen Ihnen Werbung von MetaGer. <br> Diese Werbung ist nicht sehr auffällig. <br> Sie können unsere Eigen-Werbung ausschalten. <br> Dafür benötigen Sie aber einen <a href = "/hilfe/easy-language/functions#keyexplain">MetaGer Schlüssel</a>.',
+            "1" => 'Wir zeigen Ihnen Werbung von MetaGer. <br> Diese Werbung ist nicht sehr auffällig. <br> Sie können unsere Eigen-Werbung ausschalten. <br> Dafür benötigen Sie aber einen <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Schlüssel</a>.',
         ],
         "darkmode"  => [
             "title" => 'Dunklen Modus umschalten',

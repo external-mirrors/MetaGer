@@ -13,27 +13,27 @@
 		<h2>{!! trans('help/easy-language/help-services.dienste.1') !!}</h2>
 	</section>
 	<section id="help-app" class="help-section card">
-		<div id="mg-app" style="margin-top: -100px"></div>
+		<div id="eh-mg-app" style="margin-top: -100px"></div>
 		<div style="margin-top: 100px"></div>
 		<h3>{!! trans('help/easy-language/help-services.app.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-services.app.1') !!}</p>
 		</div>
 	</section>
-	<section id="asso" class="help-section card">
+	<section id="eh-asso" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-services.suchwortassoziator.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.1') !!}</p>
 			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.2') !!}</p>
 		</div>
 	</section>
-	<section id="widget" class="help-section card">
+	<section id="eh-widget" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-services.widget.title') !!}</h3>
 		<div>
 			<p>{!! trans('help/easy-language/help-services.widget.1') !!}</p>
 		</div>
 	</section>
-	<section id="maps" class="help-section card">
+	<section id="eh-maps" class="help-section card">
 	<h3>{!! trans('help/easy-language/help-services.maps.title') !!}</h3>
 	<div>
 		<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>

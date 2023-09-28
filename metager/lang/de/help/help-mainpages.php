@@ -29,7 +29,7 @@ return [
         "morefunctions" => 'Weitere Funktionen finden sie unter dem Menüpunkt "<a href = "/hilfe/funktionen">Suchfunktionen</a>"',
         "search" => 'der Lupe: Starten Sie hier die Suche mit einem Klick oder drücken Sie "Enter".',
         "slot" => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Groß- und Kleinschreibung wird nicht unterschieden.',
-        "title" => 'Das Suchfeld <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#suchfeld" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        "title" => 'Das Suchfeld <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "settings"      => [
         "1" => 'Werbefreie Suche <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',

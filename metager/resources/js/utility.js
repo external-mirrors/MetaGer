@@ -56,7 +56,6 @@ function backButtons() {
       let href = button.href;
       // Use the defined URL on the button if there is one
       if(href && href.trim().length !== 0 && href.trim() != "#"){
-        console.log(href);
         return;
       }
       e.preventDefault();

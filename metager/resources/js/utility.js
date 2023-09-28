@@ -53,6 +53,12 @@ function backButtons() {
     button.style.display = "block";
     console.log(button);
     button.addEventListener("click", e => {
+      let href = button.href;
+      // Use the defined URL on the button if there is one
+      if(href && href.trim().length !== 0 && href.trim() != "#"){
+        console.log(href);
+        return;
+      }
       e.preventDefault();
       history.back();
     });

@@ -8,12 +8,12 @@
 	<div id="navigationsticky">
 		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-privacy-protection.backarrow') !!}</a>
 	</div>
-	<p>{!! trans('help/help-functions.easy-help') !!}</p>
-	<h2>{!! trans('help/help-privacy-protection.datenschutz.title') !!}</h2>
+	<p>{!! trans('help/help-privacy-protection.easy-help') !!}</p>
+	<h2>{!! trans('help/help-privacy-protection.privacy.title') !!}</h2>
 	<section id="h-tracking" class="card">
-		<h3>{!! trans('help/help-privacy-protection.datenschutz.1') !!}</h3>
-		<p>{!! trans('help/help-privacy-protection.datenschutz.2') !!}</p>
-		<p>{!! trans('help/help-privacy-protection.datenschutz.3') !!}</p>
+		<h3>{!! trans('help/help-privacy-protection.privacy.1') !!}</h3>
+		<p>{!! trans('help/help-privacy-protection.privacy.2') !!}</p>
+		<p>{!! trans('help/help-privacy-protection.privacy.3') !!}</p>
 	</section>
 	<section id="h-torhidden" class="card">
 		<h3>{!! trans('help/help-privacy-protection.tor.title') !!}</h3>

@@ -3,9 +3,9 @@
 return [
     "title"                 => 'MetaGer - Hilfe',
     "backarrow"             => 'Zurück',
-    "easy-help"=> 'Durch Klicken auf das Symbol <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#bangs" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> kommen Sie zu einer einfacheren Version der Hilfe.',
+    "easy-help"=> 'Durch Klicken auf das Symbol <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/privacy-protection" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> kommen Sie zu einer einfacheren Version der Hilfe.',
 
-    "datenschutz" =>    [
+    "privacy" =>    [
         "title" => "Anonymität und Datensicherheit",
         "1" => 'Tracking-Cookies, Session-IDs und IP-Adressen <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/privacy-protection#tracking" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "2" => 'Nichts von alldem wird hier bei MetaGer verwendet, gespeichert, aufgehoben oder sonst irgendwie verarbeitet (Ausnahme: Kurzfristige Speicherung gegen Hacking- und Bot-Attacken). Weil wir diese Thematik für extrem wichtig halten, haben wir auch Möglichkeiten geschaffen, die Ihnen helfen können, hier ein Höchstmaß an Sicherheit zu erreichen: den MetaGer-TOR-Hidden-Service und unseren anonymisierenden Proxyserver.',

@@ -1,50 +1,54 @@
 <?php
+
 return [
-    'backarrow' => 'Back',
-    'title' => [
-        '2' => 'Use of the search engine',
-        '1' => 'MetaGer - Help',
-    ],
-    'startpage' => [
-        'title' => 'The start page',
-        'info' => 'The start page contains the search field and a menu button in the upper right corner. There is a link below the search field which let you add MetaGer to your web browser. At last, at the bottom of the page there is some information about MetaGer and its supporting association, the SUMA-EV.',
-    ],
-    'searchfield' => [
-        'title' => 'The search field',
-        'info' => 'The search field contains:',
-        'memberkey' => 'the key symbol: Here members of the SUMA-EV can enter their key to use the ad-free search. You want this too? Become a member via our <a href = "/membership/">membership form</a> or <a href = "/spende/">donate to</a> SUMA-EV.',
-        'slot' => 'The search field: Enter your words here. Upper case will not be distinguished from lower case.',
-        'search' => 'The magnifier: Start your search.',
-        'morefunctions' => 'More information on other functions are available under "<a href = "/hilfe/funktionen">search functions</a>"',
-    ],
-    'resultpage' => [
-        'title' => 'The result page',
-        'foci' => 'There are three (six for the german branch) different search focuses below the search field (Web, Pictures and Shopping). We assigned specific search engines to these focuses.',
-        'choice' => 'Below these you have two links:',
-        'filter' => 'Filter: Toggle filters on / off and apply settings here. Each focus has its own assortment.',
-        'settings' => 'Settings: Apply here your permanent settings for the current focus. You can select / unselect search engines here, too. Your settings are stored as non-personally identifiable cookies. Click "Overview" to see your settings. If settings have been stored you find a deletion button at the end of the page. There is also a menu entry to access the settings page.',
-    ],
-    'result' => [
-        'title' => 'Results',
-        'info'  => [
-            1                 => 'All results will look like this:<div class="image-container"><img class="lm-only" src="/img/help-result-en-lm-01.png" alt="Screenshot of a search result"/> <img class="dm-only" src="/img/help-result-en-dm-01.png" alt="Screenshot of a search result"/></div>',
-            'open'            => '"OPEN": Click the headline, the link below (URL) or the "OPEN" button to open the result in the same TAB.',
-            'newtab'          => '"OPEN IN NEW TAB" will open the result in a new TAB.',
-            'anonym'          => '"OPEN ANONYMOUSLY": the page will be opened under the proxy protection.You can find some info about this in the <a href = "/hilfe/datensicherheit#proxy/">MetaGer proxy server</a> section.',
-            'more'            => '"MORE": you will get more options, the result changes its appearance to:<div class="image-container"><img class="lm-only" src="/img/help-result-en-lm-02.png" alt="Screenshot of a search result"/> <img class="dm-only" src="/img/help-result-en-dm-02.png" alt="Screenshot of a search result"/></div>',
-            2                 => 'The new options are:',
-            'saveresult'      => '"Save result in TAB" (Only desktop): The result will be stored in a new TAB. It´ s used for collecting results out of several searches. This TAB appears on the right side of your screen. (info: <a href="/hilfe/funktionen#searchinsearch"> Search in search</a>)',
-            'domainnewsearch' => '"Start a new search on this domain": search only on this domain.',
-            'hideresult' => '"Hide": hide results from this domain. You can use this filter directly after your search words (e.g. my search words -site:*.wikipedia.org), filters can be concatenated and the wildcard "*" is allowed. See also <a href="#einstellungen"> "Settings"</a> to apply a permanent solution.',
+    "easy-help"=> 'By clicking on the symbol <a title="For easy help, click here" href="/help/easy-language/functions#bangs" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>, you will access a simplified version of the help.',
+    "backarrow"             => 'Back',
+    "result"        => [
+        "info"       => [
+            "1" => 'All results are presented in the following format:',
+            "2" => 'The new options are:',
+            "anonym" => '"OPEN ANONYMOUSLY" means that the result is opened under the protection of our proxy. Some information about this can be found in the <a href = "/help/datasecurity#proxy/">Anonymizing MetaGer Proxy Server</a> section.',
+            "domainnewsearch" => '"Search on this domain again": A more detailed search is performed on the domain of the result.',
+            "hideresult" => '"hide": This allows you to hide results from this domain. You can also write this switch directly after your search term and concatenate it; a "*" wildcard is also allowed. See also <a href="#settings"> "Settings"</a> for a permanent solution.',
+            "more" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>: When you click on<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>, you will get new options; the appearance of the result changes:',
+            "newtab" => '"OPEN IN NEW TAB" opens the result in a new tab. Alternatively, you can also open a new tab by using CTRL and left-click or the middle mouse button.',
+            "open" => '"OPEN": Click on the headline, the link below (the URL), or the "OPEN" button to open the result in the same tab.',
         ],
+        "title" => 'Results <a title="For easy help, click here" href="/help/easy-language/mainpages#help-results" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
-    'settings' => [
-        'title' => 'Settings',
-        '2' => 'Used search engines <br> Here you can view your used search engines and adjust them if necessary. By clicking on the corresponding name you can switch it on or off accordingly.',
-        '3' => 'Search filters <br> With search filters you can filter your search permanently.',
-        '4' => 'Blacklist <br> Here you can compile your personal blacklist. You can filter out domains here. Therfore you can produce your own search settings. With a click on "Add" these settings will be attached to the link in the "Note" section.',
-        '5' => 'Toggle dark mode <br> Simply switch to dark mode here.',
-        '6' => 'Open results in new tab <br> Here you can permanently switch on the function to open results in a new tab.',
-        '7' => 'Citations <br> Here you can switch on/off the display of citations.',
+    "resultpage"        => [
+        "choice"     => 'Below, you will see two items: "Filter" and "Settings" if applicable.',
+        "filter"     => 'Filter: Here, you can show and hide filter options and apply filters. In each search focus, you have different selection options. Some functions are only available when using a MetaGer key.',
+        "foci"       => 'Under the search field, there are 6 different search foci (three in the English-language area) (Web, Images, etc.), each of which is associated with specific search engines.',
+        "settings" => 'Settings: Here, you can make permanent search settings for your MetaGer search in the current focus. You can also select and deselect search engines associated with the focus. Your settings are saved using a non-personally identifiable plaintext cookie. You can also access the settings page via the menu in the upper right corner.',
+        "title" => 'The Results Page <a title="For easy help, click here" href="/help/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+    ],
+    "searchfield"       => [
+        "info"      => 'The search field consists of several parts:',
+        "memberkey" => 'the key symbol: Here, you can enter your key to use ad-free search. You can also view your token balance and manage your key.',
+        "morefunctions" => 'Additional functions can be found under the menu item "<a href = "/help/functions">Search Functions</a>"',
+        "search" => 'the magnifying glass: Start your search by clicking here or pressing "Enter".',
+        "slot" => 'the search field: Enter your search term here. Uppercase and lowercase letters are not distinguished.',
+        "title" => 'The Search Field <a title="For easy help, click here" href="/help/easy-language/mainpages#searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+    ],
+    "settings"      => [
+        "1" => 'Ad-Free Search <br> Here, you can view the balance of your key and your key. You also have the options to top up or remove your key.',
+        "2" => 'Used Search Engines <br> Here, you can view and adjust the search engines you are using. By clicking on the corresponding name, you can enable or disable it accordingly.',
+        "3" => 'Search Filters <br> Search filters allow you to filter your search permanently.',
+        "4" => 'Blacklist <br> Here, you can create a personal blacklist. You can use it to filter out specific domains and create your own search settings. By clicking on "Add", these settings will be appended to the link in the "Note" section.',
+        "5" => 'Toggle Dark Mode <br> Switch to Dark Mode easily here.',
+        "6" => 'Open Results in New Tab <br> Here, you can permanently enable the function to open results in a new tab.',
+        "7" => 'Quotes <br> You can toggle the display of quotes on and off here.',
+        "8" => 'Restore All Current Settings <br> A link will be displayed that you can set as your homepage or bookmark to keep your currently set settings.',
+        '9' =>'Subtle Advertising for Our Own Service <br> We show you subtle advertising for our own services. You can turn off our self-promotion here.',
+        "title" => 'Settings <a title="For easy help, click here" href="/help/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+    ],
+    "startpage" => [
+        "info" => 'The start page includes the search field, a button in the upper right corner to access the menu, and a link below the search field to add MetaGer to your browser. In the lower section, you will find information about MetaGer and the SUMA-EV association. Additionally, our focus areas <i>Guaranteed Privacy, Nonprofit Association, Diverse & Free</i>, and <i>100% Green Energy</i> are displayed at the bottom. By clicking on the respective sections or by scrolling, you can find more information. ',
+        "title" => 'The Start Page <a title="For easy help, click here" href="/help/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+    ],
+    "title" => [
+        "1" => 'MetaGer - Help',
+        "2" => 'Using the Main Pages',
     ],
 ];

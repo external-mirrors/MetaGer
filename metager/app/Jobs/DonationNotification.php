@@ -54,7 +54,7 @@ class DonationNotification implements ShouldQueue
                 "method" => "POST",
                 "header" => [
                     "Content-Type: application/json",
-                    "Authorization: Token " . config("metager.metager.ticketsystem.apikey")
+                    "Authorization: Token token=" . config("metager.metager.ticketsystem.apikey")
                 ],
                 "content" => json_encode([
                     "ticket_id" => config("metager.metager.ticketsystem.donation_ticket_id"),

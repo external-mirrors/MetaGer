@@ -73,7 +73,7 @@ class ContactMail implements ShouldQueue
                 "method" => "POST",
                 "header" => [
                     "Content-Type: application/json",
-                    "Authorization: Token " . config("metager.metager.ticketsystem.apikey")
+                    "Authorization: Token token=" . config("metager.metager.ticketsystem.apikey")
                 ],
                 "content" => json_encode([
                     "title" => $this->subject,

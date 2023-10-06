@@ -9,7 +9,7 @@ return [
     ],
     "app"  => [
         "title" => "Android-App",
-        "1" => "MetaGer gibt es auch als App für ihr Handy. <br> Es gibt die MetaGer App für Android-Geräte. <br> Diese können Sie einfach auf ihr Android Smartphone laden. <br> Hier können Sie die MetaGer App runter-laden: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>",
+        "1" => 'MetaGer gibt es auch als App<a title="Ein Programm für Handys und Tablets. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> für ihr Handy. <br> Es gibt die MetaGer App<a title="Ein Programm für Handys und Tablets. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> für Android-Geräte. <br> Diese können Sie einfach auf ihr Android Smartphone laden. <br> Hier können Sie die MetaGer App<a title="Ein Programm für Handys und Tablets. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> runter-laden: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>',
     ],
     "suchwortassoziator"  => [
         "title" => "Such-Wort-Assoziator",
@@ -18,7 +18,7 @@ return [
     ],
         "widget"  => [
         "title" => "MetaGer Widget",
-        "1" => "Mit dem MetaGer Widget kann man unsere Suche auf andere Webseiten packen. <br> Sie haben eine eigene Webseite. <br> Dann können Sie MetaGer auf ihrer Seite hinzufügen. <br> Sie können dann auf ihrer eigenen Seite mit MetaGer suchen. <br> Sie können nach Inhalten auf ihrer eigenen Seite suchen. <br> Oder Sie können im Internet suchen. <br> Bei Fragen können Sie unser <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">Kontakt-Formular</a> nutzen.",
+        "1" => "Mit dem MetaGer Widget kann man unsere Suche auf andere Web-seiten packen. <br> Sie haben eine eigene Web-seite. <br> Dann können Sie MetaGer auf ihrer Seite hinzufügen. <br> Sie können dann auf ihrer eigenen Seite mit MetaGer suchen. <br> Sie können nach Inhalten auf ihrer eigenen Seite suchen. <br> Oder Sie können im Internet suchen. <br> Bei Fragen können Sie unser <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">Kontakt-Formular</a> nutzen.",
     ],
     "maps"  => [
         "title" => "MetaGer Maps",

@@ -8,7 +8,7 @@ return [
     ],
     "app" => [
         "title" => "Android App",
-        "1" => "You can also get MetaGer as an app for your mobile phone. <br> The MetaGer app is available for Android devices. <br> You can easily download it to your Android smartphone. <br> Here you can download the MetaGer app: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>",
+        "1" => 'You can also get MetaGer as an app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> for your mobile phone. <br> The MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> is available for Android devices. <br> You can easily download it to your Android smartphone. <br> Here you can download the MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>',
     ],
     "suchwortassoziator" => [
         "title" => "Search Term Associator",

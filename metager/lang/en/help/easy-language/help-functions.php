@@ -40,7 +40,7 @@ return [
     ],
     "bang" => [
         "title" => "!Bangs",
-        "1" => "MetaGer supports a writing style called '!bang syntax'. <br> If you want to use it, it looks like this: <br> <strong>!twitter</strong> or <strong>!facebook</strong><br> Example:<br> You want to search for cats on Twitter. <br> So enter it like this:",
+        "1" => 'MetaGer supports a writing style called \'!bang syntax\'<a title="A shortcut to search faster. Click for more information-" href="/hilfe/easy-language/glossary#glbangs" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> If you want to use it, it looks like this: <br> <strong>!twitter</strong> or <strong>!facebook</strong><br> Example:<br> You want to search for cats on Twitter. <br> So enter it like this:',
         "example" => "!twitter cat",
         "2" => "This will display a field on the right side while searching. <br> It looks like this:",
         "3" => "You can click the blue button. <br> Then the web page of Twitter with the search for cats will open. <br> This feature does not work on small screens like mobile phones.",

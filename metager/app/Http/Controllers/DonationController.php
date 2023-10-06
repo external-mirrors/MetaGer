@@ -438,7 +438,9 @@ class DonationController extends Controller
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
 
-        DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+        if ($responsecode === 201) {
+            #DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+        }
 
         $response = json_decode($response);
         $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);

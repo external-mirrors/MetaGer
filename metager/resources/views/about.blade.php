@@ -14,8 +14,8 @@
 	<h3><img id= "about-heart" src="/img/heart.svg"> @lang('about.points.association.heading')</h3>
 	<p>@lang('about.points.association.text')</p>
 
-	<h3><img id= "about-rainbow" src="/img/rainbow.svg"> @lang('about.points.diverse.heading', ["transparenz" => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "transparency")])</h3>
-	<p>@lang('about.points.diverse.text')</p>
+	<h3><img id= "about-rainbow" src="/img/rainbow.svg"> @lang('about.points.diverse.heading')</h3>
+	<p>@lang('about.points.diverse.text', ["transparenz" => route('transparency')])</p>
 
 	<h3><img id="about-leaf" src="/img/leaf.svg"> @lang('about.points.renewable.heading')</h3>
 	<p>@lang('about.points.renewable.text')</p>

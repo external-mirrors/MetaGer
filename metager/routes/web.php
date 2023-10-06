@@ -154,7 +154,7 @@ Route::get('transparency', function () {
     return view('transparency')
         ->with('title', trans('titles.transparency'))
         ->with('navbarFocus', 'info');
-});
+})->name('transparency');
 
 Route::get('search-engine', [SearchEngineList::class, 'index']);
 Route::get('hilfe', function () {

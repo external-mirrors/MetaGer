@@ -12,7 +12,7 @@ return [
             "hideresult" => '"ausblenden": Hiermit blenden Sie Ergebnisse dieser Domain aus. Sie können diesen Schalter auch direkt hinter Ihr Suchwort schreiben und auch verketten; ebenso ist ein "*" als Wildcard erlaubt. Siehe auch <a href="#einstellungen"> "Einstellungen"</a> für eine dauerhafte Lösung.',
             "more" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>: Wenn Sie auf<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>klicken, dann erhalten Sie neue Optionen; das Aussehen des Ergebnisses ändert sich:',
             "newtab" => '"IN NEUEM TAB ÖFFNEN" öffnet das Ergebnis in einem neuen Tab. Alternativ können Sie auch ein neues Tab öffnen, indem Sie STRG und Linksklick oder die mittlere Maustaste verwenden.',
-            "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift, den darunter stehenden Link (die URL) oder auch auf den Button "ÖFFNEN", um das Ergebnis im selben Tab zu öffnen.',
+            "open" => '"ÖFFNEN": Klicken Sie auf die Überschrift oder den darunter stehenden Link (die URL), um das Ergebnis im selben Tab zu öffnen.',
         ],
         "title" => 'Ergebnisse <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#help-results" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],

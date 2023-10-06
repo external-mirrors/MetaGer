@@ -58,7 +58,6 @@ return [
                 "0"=>'Es gibt mehrere Möglichkeiten das Ergebnis anzuschauen:',
                 "1" => 'Sie können auf die Überschrift klicken.', 
                 "2"=> 'Sie können auf den blauen Link unter der Überschrift klicken. <br> Dieser Link nennt sich URL<a title="Eine URL ist eine Internet-Adresse. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glurl" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
-                "3"=>'Sie klicken auf <strong>ÖFFNEN</strong>.',
             ],
             "newtab"  => [
                 "title" => 'In neuem Tab öffnen:',

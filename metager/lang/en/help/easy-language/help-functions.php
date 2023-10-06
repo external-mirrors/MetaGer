@@ -56,7 +56,7 @@ return [
             "empty" => 'Image of a red/orange key',
             "low" => 'Image of a yellow key',
             "full" => 'Image of a green key',
-            "none" => 'Image of a gray key',
+            "none" => 'Image of a grey key',
         ],
 
         "1" => 'You can search with us without seeing ads. <br> For this, you need a MetaGer Key. <br> You can buy it from us. <br> After payment, you will receive a password. <br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the administration page of the MetaGer Key. <br> There you have these options:',
@@ -81,7 +81,7 @@ return [
         ],
         "6" => 'Enter Manually <br> Of course, you can also enter the key manually. <br> To do this, type the long sequence of numbers and letters. ',   
         "7" => 'Sometimes you will see a colored key. <br> There is a reason for this. <br> The colors indicate how many searches without ads you have left. <br> There are the following colors: ',   
-        "8" => 'Gray Key: <br> You see a gray key. <br> Then you have not set up a key yet.',   
+        "8" => 'Grey Key: <br> You see a grey key. <br> Then you have not set up a key yet.',   
         "9" => 'Red Key: <br> You see a red/orange key. <br> Then your balance is empty. <br> You can no longer search without ads. <br> We recommend recharging the key. <br> Then you can search without ads again.', 
         "10" => 'Green Key: <br> You see a green key. <br> Then you are currently searching without ads. <br> So, you can continue to search without ads.',   
         "11" => 'Yellow Key: <br> You see a yellow key. <br> Then you have almost used up your balance. <br> You currently have less than 30 tokens for use. <br> We recommend recharging the key soon. ',   

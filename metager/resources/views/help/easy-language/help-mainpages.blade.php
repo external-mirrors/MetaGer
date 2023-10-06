@@ -102,7 +102,6 @@
 			<ul>
 				<li>{!! trans('help/easy-language/help-mainpages.result.info.open.1') !!}</li>
 				<li>{!! trans('help/easy-language/help-mainpages.result.info.open.2') !!}</li>
-				<li>{!! trans('help/easy-language/help-mainpages.result.info.open.3') !!}</li>
 			</ul>				
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.newtab.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.newtab.1') !!}</p>

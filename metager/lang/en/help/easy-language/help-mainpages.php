@@ -10,7 +10,7 @@ return [
         "info"  => [
             "1"        => 'The start page has many functions. <br>At the top right of the page, there is a button. <br>This is what the button looks like.',
             "2"      => 'You can press this button.<br> Then you will see a menu. <br> In this menu, you can choose many different things.',
-            "3"      => 'In the middle of the start page is the search field.<br> Below the search field, it says <strong>Install MetaGer.</strong>. <br> You can click on it.<br> That way, you can download MetaGer.<br>Then you can set MetaGer as your default search engine<a title="The standard search engine is the search engine you always use. Click here for more information here" href="/hilfe/easy-language/glossary#glstandardsearch" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
+            "3"      => 'In the middle of the start page is the search field.<br> Below the search field, it says <strong>Install MetaGer</strong>. <br> You can click on it.<br> That way, you can download MetaGer.<br>Then you can set MetaGer as your default search engine<a title="The standard search engine is the search engine you always use. Click here for more information here" href="/hilfe/easy-language/glossary#glstandardsearch" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
             "4"      => 'At the bottom of the home page, there are colorful boxes. <br> You can click on these boxes. <br>There, you can learn more about MetaGer.',
         ]
     ], 
@@ -42,7 +42,7 @@ return [
         "choice"     => 'Below the row with the multiple buttons, there are 2 other buttons. <br> These buttons are Settings and Filter.',
         "filter"  => [
             "title"     => 'Filter:',
-            "1"     => 'If you click on Filter<a title="With this, you can determine what the search engine should display. Click here for more information" href="/hilfe/easy-language/glossary#glfilter" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can filter your search. <br> Hier können Sie ihre Such-Ergebnisse filtern. <br> Each search category has different filtering options.<br> For example, you can search for results from the last 30 days.<br>Then you will only see results from the past 30 days.<br>You can set the filter in our settings.',
+            "1"     => 'If you click on Filter<a title="With this, you can determine what the search engine should display. Click here for more information" href="/hilfe/easy-language/glossary#glfilter" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can filter your search. <br> Each search category has different filtering options.<br> For example, you can search for results from the last 30 days.<br>Then you will only see results from the past 30 days.<br>You can set the filter in our settings.',
         ],
         "settings" => [
             "title" => 'Settings:',
@@ -58,7 +58,6 @@ return [
                 "0" => 'There are several ways to view the result:',
                 "1" => 'You can click on the heading.',
                 "2" => 'You can click on the blue link below the heading. <br> This link is called URL<a title="A URL is a web address. Click here for more information" href="/hilfe/easy-language/glossary#glurl" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>.',
-                "3" => 'Click on <strong>OPEN</strong>.',
             ],
             "newtab" => [
                 "title" => 'Open in new tab:',
@@ -89,7 +88,7 @@ return [
         "title" => 'Settings',
         "metagerkey" => [
             "title" => "Ad-Free Search",
-            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Load Key</strong> to load the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
+            '1'=> 'Here you can see the credit for the ad-free search. <br> You can use the ad-free search with a MetaGer Key. <br> You can find the MetaGer Key under the credit. <br> Below that, you will find two buttons. <br> You can click the left button <strong>Charge Key</strong> to charge the key. <br> You can click the right button <strong>Remove Key</strong> to delete the key from the browser. <br> You can find more information about the MetaGer Key here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a> <br> If you don\'t have a key, it will look like this:',
             '2'=> "Three buttons are displayed. <br> You can click the left button with the text <strong>What is it?</strong>. <br> This will take you to the information page about the MetaGer Key. <br> You can click the middle button with the text <strong>Set up existing key</strong>. <br> If you already have a MetaGer Key, you can enter it there. <br> If you don't have a key, you can click the right button <strong>Create new Key</strong> to purchase a new key.",
         ],
         "cookies" => [

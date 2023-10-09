@@ -63,8 +63,7 @@ class DonationNotification implements ShouldQueue
                     "content_type" => "text/plain",
                     "type" => "web",
                     "internal" => false,
-                    "sender" => "Agent",
-                    "time_unit" => "15"
+                    "sender" => "Agent"
                 ])
             ]
         ]);

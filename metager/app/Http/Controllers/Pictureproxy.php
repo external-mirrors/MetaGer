@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use Cache;
 use Carbon;
 use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -38,32 +39,39 @@ class Pictureproxy extends Controller
             abort(404);
         }
 
-        try {
-            $url = $input_data["url"];
+        $image_hash = md5($input_data["url"]);
+        if (Cache::has($image_hash)) {
+            $response = Cache::get($image_hash);
+        } else {
+            try {
+                $url = $input_data["url"];
 
-            $file = file_get_contents($url, false);
-            $responseCode = explode(" ", $http_response_header[0])[1];
-            $contentType = "";
-            foreach ($http_response_header as $header) {
-                if (strpos($header, "Content-Type:") === 0) {
-                    $tmp = explode(": ", $header);
-                    $contentType = $tmp[1];
+                $file = file_get_contents($url, false);
+                $responseCode = explode(" ", $http_response_header[0])[1];
+                $contentType = "";
+                foreach ($http_response_header as $header) {
+                    if (strpos($header, "Content-Type:") === 0) {
+                        $tmp = explode(": ", $header);
+                        $contentType = $tmp[1];
+                    }
                 }
+                if (stripos($contentType, "image/") === false) {
+                    $finfo = new \finfo(FILEINFO_MIME_TYPE);
+                    $contentType = $finfo->buffer($file);
+                }
+                if (stripos($contentType, "image/") === false) {
+                    abort(404);
+                }
+                
+                $response = Response::make($file, $responseCode, [
+                    'Content-Type' => $contentType,
+                    "Cache-Control" => "max-age=3600, must-revalidate, public",
+                    "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+                ]);
+                Cache::put($image_hash, $response, now()->addMinutes(15));
+            } catch (\ErrorException $e) {
+                $response = Response::make("", 404);
             }
-            if (stripos($contentType, "image/") === false) {
-                $finfo = new \finfo(FILEINFO_MIME_TYPE);
-                $contentType = $finfo->buffer($file);
-            }
-            if (stripos($contentType, "image/") === false) {
-                abort(404);
-            }
-            $response = Response::make($file, $responseCode, [
-                'Content-Type' => $contentType,
-                "Cache-Control" => "max-age=3600, must-revalidate, public",
-                "Last-Modified" => gmdate("D, d M Y H:i:s T"),
-            ]);
-        } catch (\ErrorException $e) {
-            $response = Response::make("", 404);
         }
         return $response;
     }

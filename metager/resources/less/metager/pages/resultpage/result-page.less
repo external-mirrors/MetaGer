@@ -235,8 +235,9 @@ a {
 }
 
 /* Hier der Style für die Bilder */
-
 .imagesearch {
+  @full-screen-details-breakpoint: 780px;
+
   #resultpage-container {
     grid-template-areas:
       "searchbar"
@@ -388,7 +389,7 @@ a {
           @media(max-width: @full-screen-details-breakpoint) {
             background-color: @background-color;
             border-radius: 0;
-            grid-template-rows: max-content 1fr;
+            grid-template-rows: minmax(auto, 75dvh) 1fr;
             grid-template-columns: 100vw;
             grid-template-columns: 100dvw;
             gap: 1rem;
@@ -528,6 +529,18 @@ a {
           }
         }
       }
+    }
+  }
+
+  --supports-selector-has: 0;
+
+  @supports selector(:has(input:checked)) {
+    --supports-selector-has: 1;
+  }
+
+  @media(max-width: @full-screen-details-breakpoint) {
+    body:has(input[name=result]:checked) {
+      overflow: hidden;
     }
   }
 }

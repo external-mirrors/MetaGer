@@ -237,6 +237,7 @@ a {
 /* Hier der Style für die Bilder */
 .imagesearch {
   @full-screen-details-breakpoint: 780px;
+  --full-screen-details-breakpoint: @full-screen-details-breakpoint;
 
   #resultpage-container {
     grid-template-areas:
@@ -283,7 +284,6 @@ a {
       max-width: 100%;
       display: grid;
       grid-template-columns: 2fr 1fr;
-      @full-screen-details-breakpoint: 780px;
 
       @media(max-width: @full-screen-details-breakpoint) {
         grid-template-columns: 1fr;

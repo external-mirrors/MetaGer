@@ -9,12 +9,16 @@
 </div>
 
 <div class="image-details">
+    <form id="details"></form>
     @for ($i = sizeof($metager->getResults()) - 1; $i >= 0; $i--)
         @php
             $result = $metager->getResults()[$i];
         @endphp
+        <input type="radio" name="result" id="result-checkbox-{{ $i }}" form="details">
         <div class="details @if ($i === 0) default @endif" id="result-{{ $i }}">
-            <img src="{{ $result->image->image_proxy }}" alt="{{ $result->titel }}" fetchpriority="high">
+            <div class="image-container">
+                <img src="{{ $result->image->image_proxy }}" alt="{{ $result->titel }}" fetchpriority="high">
+            </div>
             <div class="details">
                 <h3 class="title">{{ $result->titel }}</h3>
                 <a class="link" href="{{ $result->link }}" target="{{ $metager->getNewtab() }}"
@@ -28,8 +32,11 @@
                             @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
                             tabindex="-1">{{ trans('result.gefVon') . ' ' . $result->gefVon[0] }} </a>
                     @else
-                        <span title="{{ implode(', ', $result->gefVon) }}" class="result-hoster" tabindex="0">
-                            {{ trans('result.gefVon') . ' ' . sizeof($result->gefVon) . ' ' . trans('result.providers') }}
+                        <details class="result-hoster" title="{{ implode(', ', $result->gefVon) }}"
+                            class="result-hoster" tabindex="0">
+                            <summary>
+                                {{ trans('result.gefVon') . ' ' . sizeof($result->gefVon) . ' ' . trans('result.providers') }}
+                            </summary>
                             <ul class="card">
                                 @foreach ($result->gefVon as $index => $gefVon)
                                     <li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}"
@@ -38,10 +45,11 @@
                                         </a></li>
                                 @endforeach
                             </ul>
-                        </span>
+                        </details>
                     @endif
                 </div>
                 <div class="copyright">@lang('result.image.copyright')</div>
+                <button form="details" type="reset" class="btn btn-default">Schließen</label>
             </div>
         </div>
     @endfor

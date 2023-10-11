@@ -1,4 +1,6 @@
-<link rel="preload" as="image" href="{{ $metager->getResults()[0]->image->image_proxy }}">
+@if (sizeof($metager->getResults()) > 0)
+    <link rel="preload" as="image" href="{{ $metager->getResults()[0]->image->image_proxy }}">
+@endif
 <div class="image-container">
     @foreach ($metager->getResults() as $index => $result)
         @include('layouts.image_result', [

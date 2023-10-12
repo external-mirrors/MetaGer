@@ -76,9 +76,8 @@
     // Provide a fallback if the detailed image cannot be loaded (i.e. 404 because website deleted it)
     let detail_images = document.querySelectorAll("#results-container > .image-details img");
     detail_images.forEach(image => {
-        console.log(image);
         image.addEventListener("error", e => {
-            console.log("Error loading image");
+            console.log("Error loading image. Fallback to thumbnail.");
             let thumbnail_url = image.dataset.thumbnail;
             image.srcset = "";
             image.src = thumbnail_url;

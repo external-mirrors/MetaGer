@@ -19,7 +19,8 @@
         <input type="radio" name="result" id="result-checkbox-{{ $i }}" form="details">
         <div class="details @if ($i === 0) default @endif" id="result-{{ $i }}">
             <div class="image-container">
-                <img src="{{ $result->image->image_proxy }}" alt="{{ $result->titel }}" fetchpriority="high">
+                <img src="{{ $result->image->image_proxy }}" alt="{{ $result->titel }}" fetchpriority="high"
+                    loading="lazy">
             </div>
             <div class="details">
                 <h3 class="title">{{ $result->titel }}</h3>

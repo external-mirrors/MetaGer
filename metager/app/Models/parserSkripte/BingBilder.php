@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Http\Controllers\Pictureproxy;
+use App\Models\DeepResults\Imagesearchdata;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use Crypt;
@@ -27,11 +28,10 @@ class BingBilder extends Searchengine
             $results = $results->value;
 
             foreach ($results as $result) {
-                $title = $result->name;
-                $link = $result->hostPageUrl;
-                $anzeigeLink = $link;
-                $descr = "";
-                $image = $this->generateThumbnailUrl($result->thumbnailUrl);
+                $title       = $result->name;
+                $link        = $result->hostPageUrl;
+                $anzeigeLink = $result->hostPageDisplayUrl;
+                $descr       = "";
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -43,11 +43,7 @@ class BingBilder extends Searchengine
                     $this->configuration->infos->homepage,
                     $this->counter,
                     [
-                        'image' => $image,
-                        'imagedimensions' => [
-                            "width" => $result->width,
-                            "height" => $result->height
-                        ]
+                        'image' => new Imagesearchdata($result->thumbnailUrl, $result->thumbnail->width, $result->thumbnail->height, $result->contentUrl, $result->width, $result->height),
                     ]
                 );
             }
@@ -67,7 +63,7 @@ class BingBilder extends Searchengine
                 return;
             }
             $totalMatches = $results->totalEstimatedMatches;
-            $nextOffset = $results->nextOffset;
+            $nextOffset   = $results->nextOffset;
 
             if ($nextOffset >= $totalMatches) {
                 return;
@@ -77,27 +73,12 @@ class BingBilder extends Searchengine
             $newConfiguration = unserialize(serialize($this->configuration));
 
             $newConfiguration->getParameter->offset = $nextOffset;
-            $next = new BingBilder($this->name, $newConfiguration);
-            $this->next = $next;
+            $next                                   = new BingBilder($this->name, $newConfiguration);
+            $this->next                             = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
         }
-    }
-
-    public static function generateThumbnailUrl(string $url)
-    {
-
-        $newHeight = 150;
-
-        $requestDataBing = [
-            "h" => $newHeight,
-        ];
-
-        $requestDataBing = http_build_query($requestDataBing, "", "&", PHP_QUERY_RFC3986);
-        $url .= "&" . $requestDataBing;
-
-        return Pictureproxy::generateUrl($url);
     }
 }

@@ -3,6 +3,7 @@
 namespace app\Models\parserSkripte;
 
 use App\Http\Controllers\Pictureproxy;
+use App\Models\DeepResults\Imagesearchdata;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use Log;
@@ -30,11 +31,11 @@ class Pixabay extends Searchengine
 
             $results = $content->hits;
             foreach ($results as $result) {
-                $title = $result->tags;
-                $link = $result->pageURL;
+                $title       = $result->tags;
+                $link        = $result->pageURL;
                 $anzeigeLink = $link;
-                $descr = "";
-                $image = Pictureproxy::generateUrl($result->previewURL);
+                $descr       = "";
+                $image       = Pictureproxy::generateUrl($result->previewURL);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -46,11 +47,7 @@ class Pixabay extends Searchengine
                     $this->configuration->infos->homepage,
                     $this->counter,
                     [
-                        'image' => $image,
-                        'imagedimensions' => [
-                            "width" => $result->previewWidth,
-                            "height" => $result->previewHeight
-                        ]
+                        'image' => new Imagesearchdata($result->previewURL, $result->previewWidth, $result->previewHeight, $result->largeImageURL, $result->imageWidth, $result->imageHeight),
                     ]
                 );
             }

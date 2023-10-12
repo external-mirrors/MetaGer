@@ -12,15 +12,13 @@
 @background-color: @color-white;
 @background-color-mobile: #fafafa;
 @sidebar-list-hover-color: @color-almost-white;
-@invert-state: invert(
-  0%
-); // Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
+@invert-state: invert(0%); // Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
 // Default Font
 @metager-font: "Liberation Sans", "Helvetica Neue", "Helvetica", "Arial",
   sans-serif;
 // General text color.
 @text-color: @color-black;
-@highlight-color: #f7f7fa;
+@highlight-color: #ececec;
 // Default textual link color.
 @link-color: #06c;
 // Default Mini-Padding
@@ -54,20 +52,13 @@
 @additions-width-min: 500px;
 @additions-width-max: 500px;
 // Breakpoints for the 2 resultpage columns
-@resultpage-breakpoint-max: (
-  @results-width-max + @additions-width-max + @padding-small-default * 2 +
-    @padding-small-default * 4 + 6
-);
-@resultpage-breakpoint-min: (
-  @results-width-min + @additions-width-min + @padding-small-default * 4
-);
+@resultpage-breakpoint-max: (@results-width-max + @additions-width-max + @padding-small-default * 2 + @padding-small-default * 4 + 6);
+@resultpage-breakpoint-min: (@results-width-min + @additions-width-min + @padding-small-default * 4);
 @product-shop-color: green;
 // The point upon which a .screen-large logo is displayed
 @logo-size-breakpoint: (@results-width-min + @padding-small-default * 2);
 // The point upon which the sidebar opener switches place
-@sidebar-opener-breakpoint: (
-  @results-width-max + @padding-small-default * 2 + 60px
-);
+@sidebar-opener-breakpoint: (@results-width-max + @padding-small-default * 2 + 60px);
 // Quicktip background color
 @quicktip-background-color: @color-white;
 // Color of the Spruch author

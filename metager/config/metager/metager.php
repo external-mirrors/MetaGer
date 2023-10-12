@@ -12,8 +12,8 @@ return [
         "password" => env("PROXY_PASSWORD", "secure_password"),
     ],
     "keymanager" => [
-        "server" => env("KEY_SERVER", null),
-        "access_token" => env("KEY_ACCESS_TOKEN")
+        "server" => env("KEY_SERVER", config("app.url") . "/keys"),
+        "access_token" => env("KEY_ACCESS_TOKEN", "no-auth")
     ],
     "keys" => [
         "uni_mainz" => env("mainz_key"),

@@ -21,8 +21,9 @@
         <input type="radio" name="result" id="result-checkbox-{{ $i }}" form="details">
         <div class="details @if ($i === 0) default @endif" id="result-{{ $i }}">
             <div class="image-container">
-                <img srcset="{{ $result->image->image_proxy }}&thumbnail_width=300 300w, {{ $result->image->image_proxy }}&thumbnail_width=400 400w, {{ $result->image->image_proxy }}&thumbnail_width=500 500w, {{ $result->image->image_proxy }}&thumbnail_width=600 600w, {{ $result->image->image_proxy }}&thumbnail_width=700 700w, {{ $result->image->image_proxy }}&thumbnail_width=800 800w, {{ $result->image->image_proxy }}&thumbnail_width=900 900w, {{ $result->image->image_proxy }}&thumbnail_width=1000 1000w,"
-                    sizes="33vw" src="{{ $result->image->image_proxy }}" alt="{{ $result->titel }}"
+                <img srcset="{{ $result->image->image_proxy }}&thumbnail_width=300 300w, {{ $result->image->image_proxy }}&thumbnail_width=400 400w, {{ $result->image->image_proxy }}&thumbnail_width=500 500w, {{ $result->image->image_proxy }}&thumbnail_width=600 600w, {{ $result->image->image_proxy }}&thumbnail_width=700 700w, {{ $result->image->image_proxy }}&thumbnail_width=800 800w, {{ $result->image->image_proxy }}&thumbnail_width=900 900w, {{ $result->image->image_proxy }}&thumbnail_width=1000 1000w"
+                    sizes="(min-width:782px) 33vw, 100vw" src="{{ $result->image->image_proxy }}"
+                    data-thumbnail="{{ $result->image->thumbnail_proxy }}" alt="{{ $result->titel }}"
                     fetchpriority="high" loading="lazy">
             </div>
             <div class="details">

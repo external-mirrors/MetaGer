@@ -52,7 +52,7 @@
         let macy_layout = Macy({
             container: gridContainer,
             columns: 6,
-            margin: 10,
+            margin: 20,
             waitForImages: false,
             breakAt: {
                 1450: 5,
@@ -69,11 +69,24 @@
         window.addEventListener("resize", e => {
             macy_layout.recalculate(true);
         });
-
-        /*
-        gridContainer.classList.add("js-masonry");
-        const Masonry = require("masonry-layout");
-        let masonry = new Masonry(gridContainer, { gutter: 10 });
-        console.log(masonry);*/
     }
+})();
+
+(() => {
+    // Provide a fallback if the detailed image cannot be loaded (i.e. 404 because website deleted it)
+    let detail_images = document.querySelectorAll("#results-container > .image-details img");
+    detail_images.forEach(image => {
+        console.log(image);
+        image.addEventListener("error", e => {
+            console.log("Error loading image");
+            let thumbnail_url = image.dataset.thumbnail;
+            image.srcset = "";
+            image.src = thumbnail_url;
+
+            let download_button = image.parentNode.parentNode.querySelector(".details .actions > a.btn");
+            if (download_button) {
+                download_button.remove();
+            }
+        });
+    });
 })();

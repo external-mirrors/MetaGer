@@ -21,4 +21,8 @@ return [
     'news' => 'Relevante nyheder',
     'videos' => 'Videoer',
     'adblocker' => 'Et <a href=":resultlink">søgeresultat</a> fra <code>:host</code> blev fjernet her af din ad blocker. <a href=":infolink">Læs mere</a>',
+    'image' => [
+        'download' => 'Download billede',
+        'copyright' => 'Billeder kan være ophavsretligt beskyttet.',
+    ],
 ];

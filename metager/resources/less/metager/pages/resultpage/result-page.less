@@ -281,6 +281,11 @@ a {
 
     #results-container {
       width: 100%;
+
+      &.no-results {
+        width: initial;
+      }
+
       max-width: 100%;
       display: grid;
       grid-template-columns: 2fr 1fr;
@@ -484,6 +489,10 @@ a {
         gap: 1rem;
         grid-column: span 2;
 
+        @media(max-width: @full-screen-details-breakpoint) {
+          grid-column: auto;
+        }
+
         >h3 {
           margin: 0;
           line-height: 1;
@@ -547,10 +556,18 @@ a {
 
       >#engine-footer {
         grid-column: span 2;
+
+        @media(max-width: @full-screen-details-breakpoint) {
+          grid-column: auto;
+        }
       }
 
-      >#backtoptop {
+      >#backtotop {
         grid-column: span 2;
+
+        @media(max-width: @full-screen-details-breakpoint) {
+          grid-column: auto;
+        }
       }
     }
   }

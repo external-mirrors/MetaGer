@@ -8,6 +8,8 @@ use App\Models\Authorization\Authorization;
 use app\Models\parserSkripte\Overture;
 use App\PrometheusExporter;
 use App\SearchSettings;
+use Cache;
+use Carbon;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 
@@ -53,21 +55,29 @@ abstract class Searchengine
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
     public $new = true; # Important for loading results by JS
     protected $failed = false; # Used to check if Overture search has failed
+    protected $ratelimitKey = null;
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         $this->configuration = $configuration;
-        $this->name = $name;
+        $this->name          = $name;
+        $this->ratelimitKey  = "searchengine.ratelimit." . now()->format("Y-m") . "." . $this->name;
 
 
         $metager = app(MetaGer::class);
         // Thanks to our Middleware this is a almost completely random useragent
         // which matches the correct device type
         $this->useragent = $metager->getUserAgent();
-        $this->ip = $metager->getIp();
+        $this->ip        = $metager->getIp();
         $this->startTime = microtime(true);
 
         $this->canCache = $metager->canCache();
+
+        // Check ratelimit status
+        if ($this->isRateLimited() && !app(Authorization::class)->canDoAuthenticatedSearch()) {
+            $this->configuration->disabled          = true;
+            $this->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
+        }
     }
 
     /**
@@ -77,15 +87,15 @@ abstract class Searchengine
     public function applySettings()
     {
         $settings = app(SearchSettings::class);
-        $query = $settings->q;
-        $filters = $settings->sumasJson->filter;
+        $query    = $settings->q;
+        $filters  = $settings->sumasJson->filter;
         foreach (app(SearchSettings::class)->queryFilter as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
             if (!$filterOptions->sumas->{$this->name}) {
                 continue;
             }
             $filterOptionsEngine = $filterOptions->sumas->{$this->name};
-            $query_part = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
+            $query_part          = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
             $query .= " " . $query_part;
         }
         $this->configuration->applyQuery($query);
@@ -97,10 +107,10 @@ abstract class Searchengine
             if (empty($inputParameter) || empty($filter->sumas->{$this->name}->values->{$inputParameter})) {
                 continue;
             }
-            $engineParameterKey = $filter->sumas->{$this->name}->{"get-parameter"};
+            $engineParameterKey   = $filter->sumas->{$this->name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$this->name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
-                $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
+                $functionname         = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
                 $engineParameterValue = \App\DynamicEngineParameters::$functionname();
             }
             $this->configuration->getParameter->{$engineParameterKey} = $engineParameterValue;
@@ -137,14 +147,14 @@ abstract class Searchengine
             $url .= $this->generateGetString();
 
             $mission = [
-                "resulthash" => $this->getHash(),
-                "url" => $url,
-                "useragent" => $this->useragent,
-                "username" => $this->configuration->httpAuthUsername,
-                "password" => $this->configuration->httpAuthPassword,
-                "headers" => (array) $this->configuration->requestHeader,
+                "resulthash"    => $this->getHash(),
+                "url"           => $url,
+                "useragent"     => $this->useragent,
+                "username"      => $this->configuration->httpAuthUsername,
+                "password"      => $this->configuration->httpAuthPassword,
+                "headers"       => (array) $this->configuration->requestHeader,
                 "cacheDuration" => $this->configuration->cacheDuration,
-                "name" => $this->name
+                "name"          => $this->name,
             ];
 
             $mission = json_encode($mission);
@@ -172,6 +182,29 @@ abstract class Searchengine
     public function getHash()
     {
         return md5(serialize($this->configuration));
+    }
+
+    public function getDisplayName(bool $includeCost = false)
+    {
+        // Generates the public visible Label
+        $displayName = $this->configuration->infos->displayName;
+
+        if (!$includeCost) {
+            return $displayName;
+        }
+        $costLabel = "";
+        if ($this->configuration->cost > 0) {
+            $costLabel = $this->configuration->cost . " Token";
+        } else if ($this->configuration->monthlyRequests !== null) {
+            if (app(Authorization::class)->canDoAuthenticatedSearch() || $this->isRateLimited()) {
+                $costLabel = __("settings.free");
+            } else {
+                $costLabel = __("settings.limited");
+            }
+        } else {
+            $costLabel = __("settings.free");
+        }
+        return $displayName . " ($costLabel)";
     }
 
     # Fragt die Ergebnisse von Redis ab und lädt Sie
@@ -206,6 +239,11 @@ abstract class Searchengine
                 if (!$this->cached) {
                     app(Authorization::class)->makePayment($this->configuration->cost);
                 }
+            }
+            if (!$this->cached && $this->configuration->monthlyRequests !== null) {
+                // Increment counter for monthly searchengine usage
+                Cache::add($this->ratelimitKey, 0, (new Carbon("first day of next month")));
+                Cache::increment($this->ratelimitKey);
             }
             $this->markNew();
             $this->loaded = true;
@@ -251,6 +289,25 @@ abstract class Searchengine
         $getString .= \http_build_query($parameters, "", "&", \PHP_QUERY_RFC3986);
 
         return $getString;
+    }
+
+    private function isRateLimited(): bool
+    {
+        if ($this->configuration->monthlyRequests !== null) {
+            $requests_this_month      = intval(Cache::get($this->ratelimitKey, 0));
+            $request_limit_this_month = $this->configuration->monthlyRequests;
+            $seconds_this_month       = date('t') * 86400;
+
+            $seconds_this_month_until_now = (new Carbon("first day of this month"))->hour(0)->minute(0)->second(0)->microsecond(0)->diffInSeconds(now());
+            $allowed_requests_until_now   = round(($seconds_this_month_until_now / $seconds_this_month) * $request_limit_this_month);
+            if ($allowed_requests_until_now <= $requests_this_month) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     # Wandelt einen String nach aktuell gesetztem inputEncoding dieser Searchengine in URL-Format um

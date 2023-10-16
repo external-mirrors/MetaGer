@@ -84,4 +84,5 @@ return [
     'self_advertisements' => [
         'label' => "Subtila annonser för vår egen tjänst",
     ],
+    'limited' => 'begränsad',
 ];

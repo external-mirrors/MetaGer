@@ -34,7 +34,7 @@ class SearchSettings
         if ($this->sumasJson === null) {
             throw new \Exception("Cannot load sumas.json file");
         }
-        $this->q = trim(Request::input('eingabe', ''));
+        $this->q     = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
 
         if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
@@ -49,7 +49,7 @@ class SearchSettings
             $this->enableQuotes = false;
         }
 
-        $self_advertisements = Cookie::get("self_advertisements", true);
+        $self_advertisements       = Cookie::get("self_advertisements", true);
         $this->self_advertisements = $self_advertisements !== "off" ? true : false;
 
         $suggestions = Cookie::get("suggestions", "bing");
@@ -93,7 +93,7 @@ class SearchSettings
             $this->parameterFilter[$filterName] = $filter;
             if ($filterName === "language") {
                 // Update default Parameter for language
-                $current_locale = LaravelLocalization::getCurrentLocaleRegional();
+                $current_locale                                       = LaravelLocalization::getCurrentLocaleRegional();
                 $this->parameterFilter["language"]->{"default-value"} = $current_locale;
             }
             if (!property_exists($filter, "default-value")) {
@@ -122,8 +122,8 @@ class SearchSettings
             }
             // Check if any options will be disabled
             $this->parameterFilter[$filterName]->{"disabled-values"} = [];
-            $enabledValues = [];
-            $disabledValues = [];
+            $enabledValues                                           = [];
+            $disabledValues                                          = [];
             foreach ($this->parameterFilter[$filterName]->sumas as $name => $options) {
                 if (!in_array($name, (array) $this->sumasJson->foki->{$this->fokus}->sumas)) {
                     continue;
@@ -133,7 +133,7 @@ class SearchSettings
                         if (!array_key_exists($value, $disabledValues)) {
                             $disabledValues[$value] = [];
                         }
-                        $disabledValues[$value][] = $searchengines->sumas[$name]->configuration->disabledReason;
+                        $disabledValues[$value] = array_merge($searchengines->sumas[$name]->configuration->disabledReasons, $disabledValues[$value]);
                     }
                     if (!$searchengines->sumas[$name]->configuration->disabled && !in_array($value, $enabledValues)) {
                         $enabledValues[] = $value;

@@ -235,7 +235,7 @@ a {
 }
 
 /* Hier der Style für die Bilder */
-.imagesearch {
+.bilder {
   @full-screen-details-breakpoint: 780px;
   --full-screen-details-breakpoint: @full-screen-details-breakpoint;
 
@@ -582,6 +582,15 @@ a {
   @media(max-width: @full-screen-details-breakpoint) {
     body:has(input[name=result]:checked) {
       overflow: hidden;
+    }
+  }
+}
+
+.nachrichten {
+  #results-container>#results {
+    >.result[data-index]>.result-header {
+      display: flex;
+      flex-flow: column-reverse;
     }
   }
 }

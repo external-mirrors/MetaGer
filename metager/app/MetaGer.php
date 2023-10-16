@@ -272,25 +272,13 @@ class MetaGer
         // combine
         $this->combineResults();
 
-        // misc (WiP)
-        if (app(SearchSettings::class)->fokus == "nachrichten") {
-            $this->results = array_filter($this->results, function ($v, $k) {
-                return !is_null($v->getRank());
-            }, ARRAY_FILTER_USE_BOTH);
-            uasort($this->results, function ($a, $b) {
-                $datea = $a->getDate();
-                $dateb = $b->getDate();
-                return $dateb - $datea;
-            });
-        } else {
-            uasort($this->results, function ($a, $b) {
-                if ($a->getRank() == $b->getRank()) {
-                    return 0;
-                }
+        uasort($this->results, function ($a, $b) {
+            if ($a->getRank() == $b->getRank()) {
+                return 0;
+            }
 
-                return ($a->getRank() < $b->getRank()) ? 1 : -1;
-            });
-        }
+            return ($a->getRank() < $b->getRank()) ? 1 : -1;
+        });
 
         # Validate Results
         $newResults = [];

@@ -16,9 +16,9 @@ class SettingsController extends Controller
 {
     public function index(Request $request)
     {
-        $settings = app(SearchSettings::class);
-        $sumas = app(Searchengines::class)->getSearchEnginesForFokus();
-        $fokus = $settings->fokus;
+        $settings  = app(SearchSettings::class);
+        $sumas     = app(Searchengines::class)->getSearchEnginesForFokus();
+        $fokus     = $settings->fokus;
         $fokusName = trans('index.foki.' . $fokus);
 
         $langFile = MetaGer::getLanguageFile();
@@ -32,17 +32,17 @@ class SettingsController extends Controller
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
             $values = $filter->values;
             foreach ($sumas as $name => $suma) {
-                if ($suma->configuration->disabled && $suma->configuration->disabledReason === DisabledReason::INCOMPATIBLE_FILTER) {
+                if ($suma->configuration->disabled && in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
                     $filteredSumas = true;
                 }
             }
         }
 
         $authorization = app(Authorization::class);
-        $url = $request->input('url', '');
+        $url           = $request->input('url', '');
 
         // Check if any setting is active
-        $cookies = Cookie::get();
+        $cookies       = Cookie::get();
         $settingActive = false;
         foreach ($cookies as $key => $value) {
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'self_advertisements' || $key === 'suggestions') {
@@ -95,9 +95,9 @@ class SettingsController extends Controller
 
         $sumasFoki = $langFile->foki->{$fokus}->sumas;
 
-        $sumas = [];
+        $sumas  = [];
         $locale = LaravelLocalization::getCurrentLocaleRegional();
-        $lang = Localization::getLanguage();
+        $lang   = Localization::getLanguage();
         foreach ($sumasFoki as $suma) {
             if (
                 (!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
@@ -110,7 +110,7 @@ class SettingsController extends Controller
                 continue;
             }
             $sumas[$suma]["display-name"] = $langFile->sumas->{$suma}->infos->display_name;
-            $sumas[$suma]["filtered"] = false;
+            $sumas[$suma]["filtered"]     = false;
             if (Cookie::get($fokus . "_engine_" . $suma) === "off") {
                 $sumas[$suma]["enabled"] = false;
             } else {
@@ -133,15 +133,15 @@ class SettingsController extends Controller
     public function disableSearchEngine(Request $request)
     {
         $sumaName = $request->input('suma', '');
-        $url = $request->input('url', '');
+        $url      = $request->input('url', '');
 
         if (empty($sumaName)) {
             abort(404);
         }
 
         $settings = app(SearchSettings::class);
-        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
-        $secure = app()->environment("local") ? false : true;
+        $engines  = app(Searchengines::class)->getSearchEnginesForFokus();
+        $secure   = app()->environment("local") ? false : true;
         if (!$engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
                 Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
@@ -156,15 +156,15 @@ class SettingsController extends Controller
     public function enableSearchEngine(Request $request)
     {
         $sumaName = $request->input('suma', '');
-        $url = $request->input('url', '');
+        $url      = $request->input('url', '');
 
         if (empty($sumaName)) {
             abort(404);
         }
 
         $settings = app(SearchSettings::class);
-        $engines = app(Searchengines::class)->getSearchEnginesForFokus();
-        $secure = app()->environment("local") ? false : true;
+        $engines  = app(Searchengines::class)->getSearchEnginesForFokus();
+        $secure   = app()->environment("local") ? false : true;
         if ($engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
                 Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, $secure, true));
@@ -179,7 +179,7 @@ class SettingsController extends Controller
     public function enableFilter(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url   = $request->input('url', '');
         if (empty($fokus)) {
             abort(404);
         }
@@ -202,16 +202,16 @@ class SettingsController extends Controller
                 }
             }
             if (empty($value)) {
-                $path = \Request::path();
+                $path       = \Request::path();
                 $cookiePath = "/";
                 Cookie::queue(Cookie::forget($fokus . "_setting_" . $key, "/"));
             } else {
                 # Check if this filter and its value exists:
                 foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
                     if ($key === $filter->{"get-parameter"} && !empty($filter->values->$value)) {
-                        $path = \Request::path();
+                        $path       = \Request::path();
                         $cookiePath = "/";
-                        $secure = app()->environment("local") ? false : true;
+                        $secure     = app()->environment("local") ? false : true;
                         Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, $secure, true));
                         break;
                     }
@@ -229,8 +229,8 @@ class SettingsController extends Controller
      */
     public function enableExternalSearchProvider(Request $request)
     {
-        $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $fokus  = $request->input('focus', '');
+        $url    = $request->input('url', '');
         $secure = app()->environment("local") ? false : true;
 
         $external_setting = $request->input('bilder_setting_external', '');
@@ -246,8 +246,8 @@ class SettingsController extends Controller
 
     public function enableSetting(Request $request)
     {
-        $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $fokus  = $request->input('focus', '');
+        $url    = $request->input('url', '');
         $secure = app()->environment("local") ? false : true;
         // Currently only the setting for quotes is supported
 
@@ -304,7 +304,7 @@ class SettingsController extends Controller
     public function deleteSettings(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url   = $request->input('url', '');
         if (empty($fokus)) {
             abort(404);
         }
@@ -319,7 +319,7 @@ class SettingsController extends Controller
                 "new_tab",
                 "zitate",
                 "self_advertisements",
-                "suggestions"
+                "suggestions",
             ];
             if (in_array($key, $global_settings)) {
                 Cookie::queue(Cookie::forget($key, "/"));
@@ -343,8 +343,8 @@ class SettingsController extends Controller
 
     public function removeOneSetting(Request $request)
     {
-        $key = $request->input('key', '');
-        $path = \Request::path();
+        $key        = $request->input('key', '');
+        $path       = \Request::path();
         $cookiePath = "/";
         if ($key === 'dark_mode') {
             Cookie::queue(Cookie::forget($key, "/"));
@@ -381,7 +381,7 @@ class SettingsController extends Controller
     public function newBlacklist(Request $request)
     {
         $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $url   = $request->input('url', '');
 
         $blacklist = $request->input('blacklist');
         $blacklist = substr($blacklist, 0, 2048);
@@ -392,7 +392,7 @@ class SettingsController extends Controller
         $valid_blacklist_entries = [];
 
         foreach ($blacklist as $blacklist_entry) {
-            $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
+            $regexProtocol   = '#^([a-z]{0,5}://)?(www.)?#';
             $blacklist_entry = preg_filter($regexProtocol, '', $blacklist_entry);
 
             # Allow Only Domains without path
@@ -424,7 +424,7 @@ class SettingsController extends Controller
         sort($valid_blacklist_entries);
 
         $cookieName = $fokus . '_blpage';
-        $secure = app()->environment("local") ? false : true;
+        $secure     = app()->environment("local") ? false : true;
         Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
 
         return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#bl");
@@ -432,8 +432,8 @@ class SettingsController extends Controller
 
     public function deleteBlacklist(Request $request)
     {
-        $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $fokus     = $request->input('focus', '');
+        $url       = $request->input('url', '');
         $cookieKey = $request->input('cookieKey');
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
@@ -444,8 +444,8 @@ class SettingsController extends Controller
     public function clearBlacklist(Request $request)
     {
         //function to clear the whole black list
-        $fokus = $request->input('focus', '');
-        $url = $request->input('url', '');
+        $fokus   = $request->input('focus', '');
+        $url     = $request->input('url', '');
         $cookies = Cookie::get();
 
         foreach ($cookies as $key => $value) {
@@ -463,7 +463,7 @@ class SettingsController extends Controller
         $langFile = json_decode(file_get_contents($langFile));
 
         $settings = $request->query();
-        $secure = app()->environment("local") ? false : true;
+        $secure   = app()->environment("local") ? false : true;
         foreach ($settings as $key => $value) {
             if ($key === 'key') {
                 Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, true));
@@ -502,8 +502,8 @@ class SettingsController extends Controller
 
         // Check if a redirect url is defined
         if ($request->filled("redirect_url") && $request->filled("signature") && $request->filled("expires")) {
-            $signature = $request->input("signature");
-            $expires = filter_var($request->input("expires"), FILTER_VALIDATE_INT);
+            $signature    = $request->input("signature");
+            $expires      = filter_var($request->input("expires"), FILTER_VALIDATE_INT);
             $redirect_url = $request->input("redirect_url");
             if (now()->unix() <= $expires && hash_equals(hash_hmac("sha256", $redirect_url . $request->input("expires"), config("app.key")), $signature)) {
                 $url = $redirect_url;

@@ -163,6 +163,12 @@ abstract class Searchengine
             // Since each Searcher is dedicated to one specific search engine
             // each Searcher has it's own queue lying under the redis key <name>.queue
             Redis::rpush(MetaGer::FETCHQUEUE_KEY, $mission);
+
+            // Increase ratelimit counter
+            if (!$this->cached && $this->configuration->monthlyRequests !== null) {
+                // Increment counter for monthly searchengine usage
+                Cache::increment($this->ratelimitKey);
+            }
         }
     }
 
@@ -240,11 +246,7 @@ abstract class Searchengine
                     app(Authorization::class)->makePayment($this->configuration->cost);
                 }
             }
-            if (!$this->cached && $this->configuration->monthlyRequests !== null) {
-                // Increment counter for monthly searchengine usage
-                Cache::add($this->ratelimitKey, 0, (new Carbon("first day of next month")));
-                Cache::increment($this->ratelimitKey);
-            }
+
             $this->markNew();
             $this->loaded = true;
             return true;
@@ -294,12 +296,15 @@ abstract class Searchengine
     private function isRateLimited(): bool
     {
         if ($this->configuration->monthlyRequests !== null) {
-            $requests_this_month      = intval(Cache::get($this->ratelimitKey, 0));
             $request_limit_this_month = $this->configuration->monthlyRequests;
             $seconds_this_month       = date('t') * 86400;
 
             $seconds_this_month_until_now = (new Carbon("first day of this month"))->hour(0)->minute(0)->second(0)->microsecond(0)->diffInSeconds(now());
             $allowed_requests_until_now   = round(($seconds_this_month_until_now / $seconds_this_month) * $request_limit_this_month);
+            $requests_this_month          = intval(Cache::get($this->ratelimitKey, $allowed_requests_until_now));
+
+            // Initialize if not set yet
+            Cache::add($this->ratelimitKey, $requests_this_month, (new Carbon("first day of next month"))->hour(0)->minute(0)->second(0)->microsecond(0));
             if ($allowed_requests_until_now <= $requests_this_month) {
                 return true;
             } else {

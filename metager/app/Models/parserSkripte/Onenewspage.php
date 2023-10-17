@@ -2,8 +2,10 @@
 
 namespace app\Models\parserSkripte;
 
+use App\Models\Result;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use Carbon;
 
 class Onenewspage extends Searchengine
 {
@@ -25,12 +27,13 @@ class Onenewspage extends Searchengine
             if (sizeof($res) < 3) {
                 continue;
             }
-            $title = $res[0];
-            $link = $res[2];
-            $anzeigeLink = $link;
-            $descr = $res[1];
-            $additionalInformation = sizeof($res) > 3 ? ['date' => intval($res[3])] : [];
-
+            $title                                = $res[0];
+            $link                                 = $res[2];
+            $anzeigeLink                          = $link;
+            $descr                                = $res[1];
+            $additionalInformation                = sizeof($res) > 3 ? ['date' => Carbon::createFromTimestamp(intval($res[3]))] : [];
+            $faviconUrl                           = parse_url($link, PHP_URL_SCHEME) . "://" . parse_url($link, PHP_URL_HOST) . "/favicon.ico";
+            $additionalInformation["favicon_url"] = $faviconUrl;
             $this->counter++;
             $this->results[] = new \App\Models\Result(
                 $this->configuration->engineBoost,
@@ -44,6 +47,16 @@ class Onenewspage extends Searchengine
                 $additionalInformation
             );
         }
+
+        uasort($this->results, function (Result $a, Result $b) {
+            $diff = $a->getDate()->diffInSeconds($b->getDate(), false);
+            return $diff;
+        });
+
+        foreach ($this->results as $index => $result) {
+            $this->results[$index]->sourceRank = 20 - $index;
+        }
+
         if (count($this->results) > $this->resultCount) {
             $this->resultCount += count($this->results);
         }
@@ -62,7 +75,7 @@ class Onenewspage extends Searchengine
         } else {
             $newConfiguration->getParameter->o = count($this->results);
         }
-        $next = new Onenewspage($this->name, $newConfiguration);
+        $next       = new Onenewspage($this->name, $newConfiguration);
         $this->next = $next;
     }
 }

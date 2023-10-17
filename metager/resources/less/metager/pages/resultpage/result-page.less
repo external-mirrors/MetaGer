@@ -591,6 +591,28 @@ a {
     >.result[data-index]>.result-header {
       display: flex;
       flex-flow: column-reverse;
+      row-gap: .25rem;
+
+      >.result-subheadline {
+        >img.favicon {
+          height: 1em;
+          background-color: white;
+        }
+
+        >a.result-link {
+          color: fade(@text-color, 70%);
+        }
+
+        >span.date,
+        >span.date-string {
+          color: fade(@text-color, 70%);
+          font-size: .8em;
+        }
+      }
+
+      >.result-headline>.result-title>a {
+        color: @link-color;
+      }
     }
   }
 }

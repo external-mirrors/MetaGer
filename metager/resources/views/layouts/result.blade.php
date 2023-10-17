@@ -31,13 +31,20 @@
         </div>
         <div class="result-subheadline">
             @if (app(\App\SearchSettings::class)->fokus === 'nachrichten')
+                @if (array_key_exists('favicon_url', $result->additionalInformation))
+                    <img class="favicon"
+                        src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->additionalInformation['favicon_url']) }}"
+                        alt="" loading="lazy">
+                @endif
                 <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}"
                     tabindex="-1">
                     {{ $result->strippedHost }}
                 </a>
                 @if (array_key_exists('date', $result->additionalInformation))
-                    <span>{{ $result->additionalInformation['date']->format('d.m.Y H:i:s') }}</span>
+                    <span class="date">{{ $result->additionalInformation['date']->format('d.m.Y H:i:s') }}</span>
+                @elseif(array_key_exists('date_string', $result->additionalInformation))
+                    <span class="date-string">{{ $result->additionalInformation['date_string'] }}</span>
                 @endif
             @else
                 <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
@@ -74,14 +81,16 @@
         @if (isset($result->logo))
             <div class="result-logo">
                 <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
-                    <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt="" />
+                    <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt=""
+                        loading="lazy" />
                 </a>
             </div>
         @endif
         @if ($result->image !== '')
             <div class="result-image">
                 <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
-                    <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt="" />
+                    <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt=""
+                        loading="lazy" />
                 </a>
             </div>
         @endif
@@ -110,11 +119,11 @@
             @endif
             <label class="open-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 tabindex='0'>
-                <img src="/img/ellipsis.svg" alt="settings" height="100%" />
+                <img src="/img/ellipsis.svg" alt="settings" height="100%" loading="lazy" />
             </label>
             <label class="close-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 tabindex='0'>
-                <img src="/img/ellipsis.svg" alt="settings" height="100%" />
+                <img src="/img/ellipsis.svg" alt="settings" height="100%" loading="lazy" />
             </label>
         </div>
         <div class="result-options">

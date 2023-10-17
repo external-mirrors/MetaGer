@@ -2,6 +2,7 @@
 
 namespace app\Models\parserSkripte;
 
+use App\Http\Controllers\Pictureproxy;
 use App\Models\Result;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
@@ -46,6 +47,9 @@ class Onenewspagegermany extends Searchengine
                 $anzeigeLink           = $link;
                 $descr                 = $result[1];
                 $additionalInformation = sizeof($result) > 3 ? ['date' => Carbon::createFromTimestamp(intval($result[3]))] : [];
+
+                $faviconUrl                           = parse_url($link, PHP_URL_SCHEME) . "://" . parse_url($link, PHP_URL_HOST) . "/favicon.ico";
+                $additionalInformation["favicon_url"] = $faviconUrl;
 
                 $counter++;
                 $this->results[] = new Result(

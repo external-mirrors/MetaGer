@@ -42,7 +42,13 @@
                     {{ $result->strippedHost }}
                 </a>
                 @if (array_key_exists('date', $result->additionalInformation))
-                    <span class="date">{{ $result->additionalInformation['date']->format('d.m.Y H:i:s') }}</span>
+                    <span class="date" data-timestamp="{{ $result->getDate()->unix() }}">
+                        @if ($result->getDate()->isToday())
+                            {{ $result->additionalInformation['date']->format('H:i:s') }}
+                        @else
+                            {{ $result->additionalInformation['date']->isoFormat('lll') }}
+                        @endif
+                    </span>
                 @elseif(array_key_exists('date_string', $result->additionalInformation))
                     <span class="date-string">{{ $result->additionalInformation['date_string'] }}</span>
                 @endif

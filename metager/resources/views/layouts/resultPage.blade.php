@@ -86,7 +86,7 @@
     @include('parts.utility')
 </head>
 
-<body id="resultpage-body" @if (!empty($imagesearch) && $imagesearch) class="imagesearch" @endif>
+<body id="resultpage-body" class="{{ app(\App\SearchSettings::class)->fokus }}">
     @if (Request::getHttpHost() === 'metager3.de')
         <div class="alert alert-info metager3-unstable-warning-resultpage">
             {!! @trans('resultPage.metager3') !!}

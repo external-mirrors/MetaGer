@@ -235,7 +235,7 @@ a {
 }
 
 /* Hier der Style für die Bilder */
-.imagesearch {
+.bilder {
   @full-screen-details-breakpoint: 780px;
   --full-screen-details-breakpoint: @full-screen-details-breakpoint;
 
@@ -582,6 +582,41 @@ a {
   @media(max-width: @full-screen-details-breakpoint) {
     body:has(input[name=result]:checked) {
       overflow: hidden;
+    }
+  }
+}
+
+.nachrichten {
+  #results-container>#results {
+    >.result[data-index]>.result-header {
+      display: flex;
+      flex-flow: column-reverse;
+      align-items: center;
+      row-gap: .25rem;
+
+      >.result-subheadline {
+        line-height: 1;
+
+        >img.favicon {
+          height: 1em;
+          background-color: white;
+        }
+
+        >a.result-link {
+          color: fade(@text-color, 70%);
+        }
+
+        >span.date,
+        >span.date-string {
+          line-height: 0.8;
+          color: fade(@text-color, 70%);
+          font-size: .8em;
+        }
+      }
+
+      >.result-headline>.result-title>a {
+        color: @link-color;
+      }
     }
   }
 }

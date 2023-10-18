@@ -48,7 +48,16 @@ class Pictureproxy extends Controller
             try {
                 $url = $input_data["url"];
 
-                $file         = file_get_contents($url, false);
+                $context = stream_context_create([
+                    "http" => [
+                        "method" => "GET",
+                        "header" => [
+                            "User-Agent: " . $request->userAgent(),
+                        ],
+                    ],
+                ]);
+
+                $file         = file_get_contents($url, false, $context);
                 $responseCode = explode(" ", $http_response_header[0])[1];
                 $contentType  = "";
                 foreach ($http_response_header as $header) {

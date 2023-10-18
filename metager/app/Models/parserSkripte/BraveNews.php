@@ -3,23 +3,19 @@
 namespace app\Models\parserSkripte;
 
 use App\Localization;
-use App\Models\DeepResults\Button;
-use App\Models\DeepResults\Imagesearchdata;
 use App\Models\Result;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use LaravelLocalization;
 use Log;
-use Request;
 
-class BraveImages extends Searchengine
+class BraveNews extends Searchengine
 {
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        $this->configuration->disabledByDefault = true;
     }
 
     public function applySettings()
@@ -78,8 +74,15 @@ class BraveImages extends Searchengine
                 $title       = html_entity_decode($result->title);
                 $link        = $result->url;
                 $anzeigeLink = $result->meta_url->netloc . " " . $result->meta_url->path;
-                $descr       = null;
+                $descr       = html_entity_decode($result->description);
                 $this->counter++;
+                $additionalInformation = [];
+                if (property_exists($result, "age")) {
+                    $additionalInformation["date_string"] = $result->age;
+                }
+                if (property_exists($result, "meta_url") && property_exists($result->meta_url, "favicon")) {
+                    $additionalInformation["favicon_url"] = $result->meta_url->favicon;
+                }
                 $newResult = new Result(
                     $this->configuration->engineBoost,
                     $title,
@@ -89,14 +92,15 @@ class BraveImages extends Searchengine
                     $this->configuration->infos->displayName,
                     $this->configuration->infos->homepage,
                     $this->counter,
-                    [
-                        "image" => new Imagesearchdata($result->thumbnail->src, 0, 0, $result->properties->url, 0, 0),
-                    ]
+                    $additionalInformation
                 );
+
+                if (property_exists($result, "thumbnail")) {
+                    $newResult->image = $result->thumbnail->src;
+                }
 
                 $this->results[] = $newResult;
             }
-
 
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
@@ -118,7 +122,7 @@ class BraveImages extends Searchengine
             $newConfiguration                       = unserialize(serialize($this->configuration));
             $newConfiguration->getParameter->offset += 1;
 
-            $next       = new BraveImages($this->name, $newConfiguration);
+            $next       = new BraveNews($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

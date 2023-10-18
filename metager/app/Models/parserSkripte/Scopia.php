@@ -4,6 +4,7 @@ namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use Carbon;
 use Log;
 
 class Scopia extends Searchengine
@@ -12,7 +13,11 @@ class Scopia extends Searchengine
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
-        $configuration->monthlyRequests = 3000000; // Rate Limit Scopia searches
+        $configuration->monthlyRequests = 3000000; // Rate Limit Scopia searches to 3 Mio
+        // Scopia gratefully donated 1 Mio request per month for the next year
+        if (Carbon::createMidnightDate(2024, 6, 10)->isFuture()) {
+            $configuration->monthlyRequests += 1000000;
+        }
         parent::__construct($name, $configuration);
     }
 

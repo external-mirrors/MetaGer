@@ -25,4 +25,5 @@ return [
         'download' => 'Descargar imagen',
         'copyright' => 'Las imágenes pueden estar protegidas por derechos de autor.',
     ],
+    'more-news' => 'Continuar',
 ];

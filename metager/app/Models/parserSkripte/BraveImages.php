@@ -118,7 +118,7 @@ class BraveImages extends Searchengine
             $newConfiguration                       = unserialize(serialize($this->configuration));
             $newConfiguration->getParameter->offset += 1;
 
-            $next       = new Brave($this->name, $newConfiguration);
+            $next       = new BraveImages($this->name, $newConfiguration);
             $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");

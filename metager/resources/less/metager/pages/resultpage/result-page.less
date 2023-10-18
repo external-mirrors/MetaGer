@@ -591,9 +591,12 @@ a {
     >.result[data-index]>.result-header {
       display: flex;
       flex-flow: column-reverse;
+      align-items: center;
       row-gap: .25rem;
 
       >.result-subheadline {
+        line-height: 1;
+
         >img.favicon {
           height: 1em;
           background-color: white;
@@ -605,6 +608,7 @@ a {
 
         >span.date,
         >span.date-string {
+          line-height: 0.8;
           color: fade(@text-color, 70%);
           font-size: .8em;
         }

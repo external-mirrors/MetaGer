@@ -19,6 +19,7 @@ return [
     'proxytext'      => 'Result link is opened anonymously. Your data will not be transferred to destination servers. Some webpages may not work as usual.',
     'metagerkeytext' => 'Use MetaGer ad-free',
     'news'           => 'Relevant news',
+    'more-news'      => 'more',
     'videos'         => 'Videos',
     'adblocker'      => 'A <a href=":resultlink">search result</a> from <code>:host</code> was removed here by your ad blocker. <a href=":infolink">Learn more</a>',
     'image'          => [

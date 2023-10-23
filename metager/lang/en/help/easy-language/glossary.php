@@ -18,6 +18,12 @@ return [
         "10" => "Cookies",
         "11" => "Domain",
         "12" => "Browser",
+        "13"=>"Tor-Hidden-Service",
+        "14"=>"Tor-Browser",
+        "15"=>"App",
+        "16"=>"Associator",
+        "17"=>"Widget",
+
     ],
 
     "explanation" => [
@@ -70,6 +76,27 @@ return [
         "entry12" => [
             '1' => 'A browser is a computer program. <br> With the browser, you can view pages on the internet. <br> Browser is an English word. <br> Pronounced like: "Brauser".',
             '2' => 'There are different browsers. <br> The differences are small. <br> There are browsers for the Onion web, also known as the Dark web.',
+        ],
+
+        "entry13"=> [
+            '1' => 'Placeholder',
+            '2'=>'Placeholder',
+        ],
+        "entry14"=> [
+            '1' => 'Placeholder',
+            '2'=>'Placeholder',
+        ],
+        "entry15"=> [
+            '1' => 'Placeholder',
+            '2'=>'Placeholder',
+        ],
+        "entry16"=> [
+            '1' => 'Placeholder',
+            '2'=>'Placeholder',
+        ],
+        "entry17"=> [
+            '1' => 'Placeholder',
+            '2'=>'Placeholder',
         ],
     ],
 ];

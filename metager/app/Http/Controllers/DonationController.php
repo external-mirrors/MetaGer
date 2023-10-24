@@ -439,7 +439,7 @@ class DonationController extends Controller
         $responsecode = intval($matches[0]);
 
         if ($responsecode === 201) {
-            #DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
         }
 
         $response = json_decode($response);

@@ -84,4 +84,5 @@ return [
     'self_advertisements' => [
         'label' => "Oman palvelumme hienovarainen mainonta",
     ],
+    'limited' => 'rajoitettu',
 ];

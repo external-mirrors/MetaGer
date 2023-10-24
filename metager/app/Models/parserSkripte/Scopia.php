@@ -4,6 +4,7 @@ namespace app\Models\parserSkripte;
 
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use Carbon;
 use Log;
 
 class Scopia extends Searchengine
@@ -12,6 +13,11 @@ class Scopia extends Searchengine
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
+        $configuration->monthlyRequests = 3000000; // Rate Limit Scopia searches to 3 Mio
+        // Scopia gratefully donated 1 Mio request per month for the next year
+        if (Carbon::createMidnightDate(2024, 6, 10)->isFuture()) {
+            $configuration->monthlyRequests += 1000000;
+        }
         parent::__construct($name, $configuration);
     }
 
@@ -32,10 +38,10 @@ class Scopia extends Searchengine
             $results = $content->xpath('//results/result');
             foreach ($results as $result) {
 
-                $title = $result->title->__toString();
-                $link = $result->url->__toString();
+                $title       = $result->title->__toString();
+                $link        = $result->url->__toString();
                 $anzeigeLink = $link;
-                $descr = $result->description->__toString();
+                $descr       = $result->description->__toString();
 
                 $this->counter++;
                 if (!$this->containsPornContent($title . $descr) && !$this->filterScopia($link)) { //see note at filtering method
@@ -72,9 +78,9 @@ class Scopia extends Searchengine
          */
         $filtered_domains = [
             "rt.com",
-            "sputniknews.com"
+            "sputniknews.com",
         ];
-        $target_domain = parse_url($link, PHP_URL_HOST);
+        $target_domain    = parse_url($link, PHP_URL_HOST);
         if ($target_domain !== false) {
             foreach ($filtered_domains as $filtered_domain) {
                 if (preg_match("/(^|\b|\.){1}" . preg_quote($filtered_domain, "/") . "$/", $target_domain)) {
@@ -91,52 +97,52 @@ class Scopia extends Searchengine
         // We noticed scopia often serving pornographic results for non-pornographic queries. After much deliberation we decided to filter pornographic results from scopia. Those will have to be supplied by other search engines.
 
         $words = [
-            "fisting" => 60,
-            "live cam" => 60,
-            "telefonsex" => 60,
-            "fick" => 60,
-            "anal" => 60,
-            "dildo" => 60,
-            "masturbat" => 60,
-            "gangbang" => 60,
-            "fotze" => 60,
-            "porn" => 50,
-            "anus" => 50,
+            "fisting"     => 60,
+            "live cam"    => 60,
+            "telefonsex"  => 60,
+            "fick"        => 60,
+            "anal"        => 60,
+            "dildo"       => 60,
+            "masturbat"   => 60,
+            "gangbang"    => 60,
+            "fotze"       => 60,
+            "porn"        => 50,
+            "anus"        => 50,
             "penetration" => 50,
-            "cuckold" => 50,
-            "orgasmus" => 50,
-            "milf" => 50,
-            "dilf" => 50,
-            "voyeur" => 40,
-            "fuck" => 40,
-            "nude" => 40,
-            "muschi" => 40,
-            "sex" => 40,
-            "nackt" => 40,
-            "amateur" => 30,
-            "webcam" => 30,
-            "schlampe" => 30,
-            "eroti" => 30,
-            "dick" => 30,
-            "teen" => 30,
-            "hardcore" => 30,
-            "fetisch" => 30,
-            "pussy" => 30,
-            "pussies" => 30,
-            "cheat" => 20,
-            "gratis" => 20,
-            "geil" => 20,
-            "video" => 10,
-            "girl" => 10,
-            "boy" => 10,
-            "weib" => 10,
-            "titt" => 10,
-            "bikini" => 10,
-            "hot " => 10,
-            "pics" => 10,
-            "free" => 10,
+            "cuckold"     => 50,
+            "orgasmus"    => 50,
+            "milf"        => 50,
+            "dilf"        => 50,
+            "voyeur"      => 40,
+            "fuck"        => 40,
+            "nude"        => 40,
+            "muschi"      => 40,
+            "sex"         => 40,
+            "nackt"       => 40,
+            "amateur"     => 30,
+            "webcam"      => 30,
+            "schlampe"    => 30,
+            "eroti"       => 30,
+            "dick"        => 30,
+            "teen"        => 30,
+            "hardcore"    => 30,
+            "fetisch"     => 30,
+            "pussy"       => 30,
+            "pussies"     => 30,
+            "cheat"       => 20,
+            "gratis"      => 20,
+            "geil"        => 20,
+            "video"       => 10,
+            "girl"        => 10,
+            "boy"         => 10,
+            "weib"        => 10,
+            "titt"        => 10,
+            "bikini"      => 10,
+            "hot "        => 10,
+            "pics"        => 10,
+            "free"        => 10,
         ];
-        $acc = 0;
+        $acc   = 0;
         foreach ($words as $word => $score) {
             if (stristr($text, $word)) {
                 $acc += $score;
@@ -165,10 +171,10 @@ class Scopia extends Searchengine
 
         if ($more) {
             $results = $content->xpath('//results/result');
-            $number = $results[sizeof($results) - 1]->number->__toString();
+            $number  = $results[sizeof($results) - 1]->number->__toString();
             // Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
             /** @var SearchEngineConfiguration */
-            $newConfiguration = unserialize(serialize($this->configuration));
+            $newConfiguration                  = unserialize(serialize($this->configuration));
             $newConfiguration->getParameter->s = $number;
 
             $this->next = new Scopia($this->name, $newConfiguration);

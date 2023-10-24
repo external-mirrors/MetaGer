@@ -21,4 +21,8 @@ return [
         '8' => 'RECLAME VERWIJDEREN',
     ],
     'adblocker' => 'Een <a href=":resultlink">zoekresultaat</a> van <code>:host</code> werd hier verwijderd door uw advertentieblokker. <a href=":infolink">Lees meer</a>',
+    'image' => [
+        'download' => 'Afbeelding downloaden',
+        'copyright' => 'Afbeeldingen kunnen auteursrechtelijk beschermd zijn.',
+    ],
 ];

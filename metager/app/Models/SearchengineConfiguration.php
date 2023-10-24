@@ -40,7 +40,7 @@ class SearchengineConfiguration
     /** @var bool */
     public $disabled;
     /** @var DisabledReason */
-    public $disabledReason;
+    public $disabledReasons = [];
     /** @var bool */
     public $disabledByDefault = false;
     /** @var bool */
@@ -57,11 +57,11 @@ class SearchengineConfiguration
     public function __construct($engineConfigurationJson)
     {
         try {
-            $this->host = $engineConfigurationJson->host;
-            $this->path = $engineConfigurationJson->path;
-            $this->port = $engineConfigurationJson->port;
+            $this->host           = $engineConfigurationJson->host;
+            $this->path           = $engineConfigurationJson->path;
+            $this->port           = $engineConfigurationJson->port;
             $this->queryParameter = $engineConfigurationJson->{"query-parameter"};
-            $this->inputEncoding = $engineConfigurationJson->{"input-encoding"};
+            $this->inputEncoding  = $engineConfigurationJson->{"input-encoding"};
             $this->outputEncoding = $engineConfigurationJson->{"output-encoding"};
             if (
                 is_object($engineConfigurationJson->{"http-auth-credentials"}) &&
@@ -71,16 +71,16 @@ class SearchengineConfiguration
                 $this->httpAuthUsername = $engineConfigurationJson->{"http-auth-credentials"}->username;
                 $this->httpAuthPassword = $engineConfigurationJson->{"http-auth-credentials"}->password;
             }
-            $this->getParameter = $engineConfigurationJson->{"get-parameter"};
-            $this->languages = new SearchEngineLanguages($engineConfigurationJson->lang);
+            $this->getParameter  = $engineConfigurationJson->{"get-parameter"};
+            $this->languages     = new SearchEngineLanguages($engineConfigurationJson->lang);
             $this->requestHeader = $engineConfigurationJson->{"request-header"};
-            $this->engineBoost = $engineConfigurationJson->{"engine-boost"};
+            $this->engineBoost   = $engineConfigurationJson->{"engine-boost"};
             if ($engineConfigurationJson->{"cache-duration"} > -1) {
                 $this->cacheDuration = max($engineConfigurationJson->{"cache-duration"}, 5);
             }
             $this->disabled = $engineConfigurationJson->disabled;
             if ($this->disabled) {
-                $this->disabledReason = DisabledReason::SUMAS_CONFIGURATION;
+                $this->disabledReasons[] = DisabledReason::SUMAS_CONFIGURATION;
             }
             $this->filterOptIn = $engineConfigurationJson->{"filter-opt-in"};
             if (property_exists($engineConfigurationJson, "monthly-requests")) {
@@ -90,7 +90,7 @@ class SearchengineConfiguration
                 $this->ads = $engineConfigurationJson->ads;
             }
             $this->infos = new SearchEngineInfos($engineConfigurationJson->infos);
-            $this->cost = $engineConfigurationJson->cost;
+            $this->cost  = $engineConfigurationJson->cost;
 
         } catch (\Exception $e) {
             Log::error($e->getTraceAsString());
@@ -99,13 +99,13 @@ class SearchengineConfiguration
 
     public function applyLocale()
     {
-        $key = $this->languages->getParameter;
+        $key   = $this->languages->getParameter;
         $value = $this->languages->getParameterForLocale();
         if ($value !== null) {
             $this->getParameter->{$key} = $value;
         } else {
-            $this->disabled = true;
-            $this->disabledReason = DisabledReason::INCOMPATIBLE_LOCALE;
+            $this->disabled          = true;
+            $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_LOCALE;
         }
     }
 
@@ -128,13 +128,13 @@ class SearchEngineLanguages
     public function __construct(object $langJson)
     {
         $this->getParameter = $langJson->parameter;
-        $this->languages = $langJson->languages;
-        $this->regions = $langJson->regions;
+        $this->languages    = $langJson->languages;
+        $this->regions      = $langJson->regions;
     }
 
     public function getParameterForLocale()
     {
-        $locale = LaravelLocalization::getCurrentLocaleRegional();
+        $locale   = LaravelLocalization::getCurrentLocaleRegional();
         $language = Localization::getLanguage();
         if (\property_exists($this->regions, $locale)) {
             return $this->regions->{$locale};
@@ -165,12 +165,12 @@ class SearchEngineInfos
 
     public function __construct(object $langJson)
     {
-        $this->homepage = $langJson->homepage;
-        $this->indexName = $langJson->index_name;
+        $this->homepage    = $langJson->homepage;
+        $this->indexName   = $langJson->index_name;
         $this->displayName = $langJson->display_name;
-        $this->founded = $langJson->founded;
+        $this->founded     = $langJson->founded;
         $this->headquarter = $langJson->headquarter;
-        $this->operator = $langJson->operator;
-        $this->indexSize = $langJson->index_size;
+        $this->operator    = $langJson->operator;
+        $this->indexSize   = $langJson->index_size;
     }
 }

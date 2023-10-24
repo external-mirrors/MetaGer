@@ -21,4 +21,8 @@ return [
     'news' => 'Istotne wiadomości',
     'videos' => 'Filmy',
     'adblocker' => '<a href=":resultlink">Wynik wyszukiwania</a> z <code>:host</code> został tutaj usunięty przez blokadę reklam. <a href=":infolink">Dowiedz się więcej</a>',
+    'image' => [
+        'download' => 'Pobierz obraz',
+        'copyright' => 'Obrazy mogą być chronione prawami autorskimi.',
+    ],
 ];

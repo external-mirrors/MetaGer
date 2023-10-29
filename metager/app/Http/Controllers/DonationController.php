@@ -441,16 +441,35 @@ class DonationController extends Controller
 
         $response = json_decode($response);
 
-        # Debugging can be removed later
-        $filename = date('Y-m-d') . "-" . $response->id . ".json";
-        $file = storage_path("logs/metager/$filename");
-        file_put_contents($file, json_encode($response, JSON_PRETTY_PRINT));
-
+        // Validate that the payment is completed
+        // $response->status === "COMPLETED"
+        // $response->purchase_units->payments-captures contains final_capture = true AND status is completed
+        $payment_successfull = false;
         if ($responsecode === 201 && $response->status === "COMPLETED") {
-            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+            foreach ($response->purchase_units as $purchase_units) {
+                $final_capture = false;
+                foreach ($purchase_units->payments->captures as $capture) {
+                    if ($capture->status !== "COMPLETED") {
+                        break;
+                    }
+                    if ($capture->final_capture === true) {
+                        $final_capture = true;
+                    }
+                }
+                $payment_successfull = $final_capture;
+                if (!$payment_successfull) {
+                    break;
+                }
+            }
+
         }
 
-        $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
+        if (!$payment_successfull) {
+            $response->redirect_to = route("paypalPayment", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
+        } else {
+            //DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+            $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
+        }
 
         return response()->json($response, $responsecode);
     }

@@ -401,6 +401,7 @@ class DonationController extends Controller
         $response = file_get_contents($url, false, $opts);
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
+
         return response()->json(json_decode($response), $responsecode);
     }
 
@@ -438,11 +439,17 @@ class DonationController extends Controller
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
 
-        if ($responsecode === 201) {
+        $response = json_decode($response);
+
+        # Debugging can be removed later
+        $filename = date('Y-m-d') . "-" . $response->id . ".json";
+        $file = storage_path("logs/metager/$filename");
+        file_put_contents($file, json_encode($response, JSON_PRETTY_PRINT));
+
+        if ($responsecode === 201 && $response->status === "COMPLETED") {
             DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
         }
 
-        $response = json_decode($response);
         $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
 
         return response()->json($response, $responsecode);

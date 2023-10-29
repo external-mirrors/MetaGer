@@ -467,7 +467,7 @@ class DonationController extends Controller
         if (!$payment_successfull) {
             $response->redirect_to = route("paypalPayment", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
         } else {
-            //DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
             $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
         }
 

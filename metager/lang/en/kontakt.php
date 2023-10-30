@@ -17,7 +17,7 @@ return [
         '1'    => 'Anonymous Contact Form',
         '2'    => 'You can send us an anonymous message by using this form. If you chose to not include your email address you will however of course receive no answer.',
         'name' => 'Name',
-        '5'    => 'Your e-mail-adress (optional)',
+        '5'    => 'Your e-mail-address (optional)',
         '6'    => 'Your message',
         '7'    => 'Subject',
         '8'    => 'Send',

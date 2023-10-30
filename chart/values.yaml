@@ -96,9 +96,6 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-body-size: 30m
     nginx.ingress.kubernetes.io/proxy-buffer-size: 256k
     nginx.ingress.kubernetes.io/proxy-buffers: 32 256k
-    nginx.ingress.kubernetes.io/server-snippet: |
-      client_header_buffer_size 256k;
-      large_client_header_buffers 32 256k;
   hosts: []
   tls: []
   #  - secretName: chart-example-tls

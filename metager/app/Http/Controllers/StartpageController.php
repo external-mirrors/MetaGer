@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ParameterFilters\Safesearch;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Response;
@@ -28,7 +29,7 @@ class StartpageController extends Controller
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
 
-        $optionParams = ['param_sprueche', 'param_newtab', 'param_maps', 'param_autocomplete', 'param_lang', 'param_key'];
+        $optionParams  = ['param_sprueche', 'param_newtab', 'param_maps', 'param_autocomplete', 'param_lang', 'param_key'];
         $option_values = [];
 
         foreach ($optionParams as $param) {
@@ -78,7 +79,7 @@ class StartpageController extends Controller
         $link = action('MetaGerSearch@search', []);
         $link .= "?";
         $link .= "eingabe={searchTerms}";
-        $key = $request->input('key', '');
+        $key  = $request->input('key', '');
         if (!empty($key)) {
             $link .= "&key=" . urlencode($key);
         }
@@ -93,12 +94,12 @@ class StartpageController extends Controller
 
     public function berlin(Request $request)
     {
-        $link = "";
+        $link     = "";
         $password = "";
         if ($request->filled('eingabe')) {
             $password = config("metager.metager.keys.berlin");
             $password = md5($request->input('eingabe') . " -host:userpage.fu-berlin.de" . $password);
-            $link = "/meta/meta.ger3?eingabe=" . $request->input('eingabe') . " -host:userpage.fu-berlin.de&focus=web&password=" . $password . "&encoding=utf8&lang=all&site=fu-berlin.de&quicktips=off&out=results-with-style";
+            $link     = "/meta/meta.ger3?eingabe=" . $request->input('eingabe') . " -host:userpage.fu-berlin.de&focus=web&password=" . $password . "&encoding=utf8&lang=all&site=fu-berlin.de&quicktips=off&out=results-with-style";
         }
         return view('berlin')
             ->with('title', 'Testseite für die FU-Berlin')

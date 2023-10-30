@@ -3,8 +3,8 @@
 namespace App;
 
 use App\Models\Configuration\Searchengines;
+use App\Models\ParameterFilters\Safesearch;
 use Cookie;
-use LaravelLocalization;
 use \Request;
 
 class SearchSettings
@@ -85,66 +85,7 @@ class SearchSettings
 
     public function loadParameterFilter(Searchengines $searchengines)
     {
-        foreach ($this->sumasJson->filter->{"parameter-filter"} as $filterName => $filter) {
-            // Do not add filter if not available for current focus
-            if (sizeof(array_intersect(array_keys((array) $filter->sumas), $this->sumasJson->foki->{$this->fokus}->sumas)) === 0) {
-                continue;
-            }
-            $this->parameterFilter[$filterName] = $filter;
-            if ($filterName === "language") {
-                // Update default Parameter for language
-                $current_locale                                       = LaravelLocalization::getCurrentLocaleRegional();
-                $this->parameterFilter["language"]->{"default-value"} = $current_locale;
-            }
-            if (!property_exists($filter, "default-value")) {
-                $this->parameterFilter[$filterName]->{"default-value"} = "nofilter";
-            }
-            if (
-                (Request::filled($filter->{"get-parameter"}) && Request::input($filter->{"get-parameter"}) !== "off") ||
-                Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"}) !== null
-            ) {
-                $this->parameterFilter[$filterName]->value = Request::input($filter->{"get-parameter"}, null);
-
-                if (empty($this->parameterFilter[$filterName]->value)) {
-                    $this->parameterFilter[$filterName]->value = Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"});
-                }
-                if (
-                    $this->parameterFilter[$filterName]->value === "off"
-                ) {
-                    $this->parameterFilter[$filterName]->value = null;
-                }
-                if ($this->parameterFilter[$filterName]->value === $this->parameterFilter[$filterName]->{"default-value"}) {
-                    $this->parameterFilter[$filterName]->value = null;
-                    unset(app(\Illuminate\Http\Request::class)[$filter->{"get-parameter"}]);
-                }
-            } else {
-                $this->parameterFilter[$filterName]->value = null;
-            }
-            // Check if any options will be disabled
-            $this->parameterFilter[$filterName]->{"disabled-values"} = [];
-            $enabledValues                                           = [];
-            $disabledValues                                          = [];
-            foreach ($this->parameterFilter[$filterName]->sumas as $name => $options) {
-                if (!in_array($name, (array) $this->sumasJson->foki->{$this->fokus}->sumas)) {
-                    continue;
-                }
-                foreach ($options->values as $value => $sumaValue) {
-                    if ($searchengines->sumas[$name]->configuration->disabled === true && !in_array($value, $enabledValues)) {
-                        if (!array_key_exists($value, $disabledValues)) {
-                            $disabledValues[$value] = [];
-                        }
-                        $disabledValues[$value] = array_merge($searchengines->sumas[$name]->configuration->disabledReasons, $disabledValues[$value]);
-                    }
-                    if (!$searchengines->sumas[$name]->configuration->disabled && !in_array($value, $enabledValues)) {
-                        $enabledValues[] = $value;
-                        if (array_key_exists($value, $disabledValues)) {
-                            unset($disabledValues[$value]);
-                        }
-                    }
-                }
-            }
-            $this->parameterFilter[$filterName]->{"disabled-values"} = $disabledValues;
-        }
+        $this->parameterFilter[Safesearch::class] = new Safesearch();
     }
     public function isParameterFilterSet()
     {

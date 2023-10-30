@@ -137,25 +137,9 @@
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <div id="filter-options">
-                        @foreach ($filter as $name => $filterInfo)
-                            @if (empty($filterInfo->hidden) || $filterInfo->hidden === false)
-                                <div class="form-group">
-                                    <label for="{{ $filterInfo->{"get-parameter"} }}">@lang($filterInfo->name)</label>
-                                    <select name="{{ $filterInfo->{"get-parameter"} }}"
-                                        id="{{ $filterInfo->{"get-parameter"} }}" class="form-control">
-                                        @foreach ($filterInfo->values as $key => $value)
-                                            @if (!empty($key))
-                                                <option
-                                                    value="@if ($key !== 'nofilter') {{ $key }} @endif"
-                                                    @if (
-                                                        (!empty($filterInfo->value) && $filterInfo->value === $key) ||
-                                                            (empty($filterInfo->value) && $filterInfo->{"default-value"} === $key)) selected @endif
-                                                    @if (array_key_exists($key, $filterInfo->{"disabled-values"}) && sizeof($filterInfo->{"disabled-values"}[$key]) > 0) disabled @endif>@lang($value)
-                                                </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
+                        @foreach ($filter as $name => $parameterFilter)
+                            @if ($parameterFilter->isAvailable())
+                                <h1>Test</h1>
                             @endif
                         @endforeach
                     </div>

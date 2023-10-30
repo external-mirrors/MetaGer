@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
+use App\Models\ParameterFilters\ParameterFilter;
 use app\Models\parserSkripte\Overture;
 use App\PrometheusExporter;
 use App\SearchSettings;
@@ -19,7 +20,8 @@ abstract class Searchengine
     public $query = ""; # The search query
     public $alteredQuery = ""; // If the query was modified by the searchengine
     public $alterationOverrideQuery = ""; // The Override to remove the altered query
-
+    /** @var \App\Models\ParameterFilters\ParameterFilter[] */
+    public $parameterFilters = [];
     /** @var SearchEngineConfiguration */
     public $configuration;
 

@@ -51,12 +51,12 @@ class ContactMail implements ShouldQueue
      */
     public function __construct($to, $group, $name, $email, $subject, $message, $attachments = [], $contentType = "text/html")
     {
-        $this->to = $to;
-        $this->group = $group;
-        $this->name = $name;
-        $this->email = $email;
-        $this->subject = $subject;
-        $this->message = $message;
+        $this->to          = $to;
+        $this->group       = $group;
+        $this->name        = $name;
+        $this->email       = $email;
+        $this->subject     = $subject;
+        $this->message     = $message;
         $this->attachments = $attachments;
         $this->contentType = $contentType;
     }
@@ -68,34 +68,47 @@ class ContactMail implements ShouldQueue
      */
     public function handle()
     {
+        $message = [
+            "type"         => "note",
+            "sender"       => "Agent",
+            "subject"      => $this->subject,
+            "body"         => $this->message,
+            "content_type" => $this->contentType,
+            "internal"     => true,
+            "attachments"  => $this->attachments,
+        ];
+        if (!is_null($this->email)) {
+            $message["type"]     = "email";
+            $message["sender"]   = "Customer";
+            $message["from"]     = sprintf('%s <%s>', $this->name, $this->email);
+            $message["reply_to"] = $this->email;
+            $message["to"]       = $this->to;
+            $message["internal"] = false;
+        }
+
+        $article = [
+            "title"       => $this->subject,
+            "group"       => $this->group,
+            "customer_id" => "guess:noreply@metager.de",
+            "preferences" => ["channel_id" => 3],
+            "article"     => $message,
+        ];
+
+        if (!is_null($this->email)) {
+            $article["customer_id"] = "guess:" . $this->email;
+        }
+
         $context = stream_context_create([
             "http" => [
-                "method" => "POST",
-                "header" => [
+                "method"  => "POST",
+                "header"  => [
                     "Content-Type: application/json",
                     "Authorization: Token token=" . config("metager.metager.ticketsystem.apikey")
                 ],
-                "content" => json_encode([
-                    "title" => $this->subject,
-                    "group" => $this->group,
-                    "customer_id" => "guess:" . $this->email,
-                    "preferences" => ["channel_id" => 3],
-                    "article" => [
-                        "type" => "email",
-                        "sender" => "Customer",
-                        "from" => sprintf('%s <%s>', $this->name, $this->email),
-                        "reply_to" => $this->email,
-                        "to" => $this->to,
-                        "subject" => $this->subject,
-                        "body" => $this->message,
-                        "content_type" => $this->contentType,
-                        "internal" => false,
-                        "attachments" => $this->attachments
-                    ]
-                ])
-            ]
+                "content" => json_encode($article),
+            ],
         ]);
-        $url = config("metager.metager.ticketsystem.url") . "/api/v1/tickets";
+        $url     = config("metager.metager.ticketsystem.url") . "/api/v1/tickets";
         file_get_contents($url, false, $context); // Will throw an error when statuscode is 4xx or 5xx
     }
 }

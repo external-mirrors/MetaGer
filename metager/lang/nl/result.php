@@ -25,4 +25,5 @@ return [
         'download' => 'Afbeelding downloaden',
         'copyright' => 'Afbeeldingen kunnen auteursrechtelijk beschermd zijn.',
     ],
+    'more-news' => 'meer',
 ];

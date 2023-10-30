@@ -25,4 +25,5 @@ return [
         'download' => 'Lataa kuva',
         'copyright' => 'Kuvat voivat olla tekijänoikeudellisesti suojattuja.',
     ],
+    'more-news' => 'lisää',
 ];

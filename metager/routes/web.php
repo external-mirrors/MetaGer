@@ -84,8 +84,10 @@ Route::get('team/pubkey-wsb', function () {
 });
 
 Route::get('kontakt/{url?}', function ($url = "") {
+    $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
     return view('kontakt.kontakt')
         ->with('title', trans('titles.kontakt'))
+        ->with('to_mail', $to_mail)
         ->with('navbarFocus', 'kontakt')
         ->with('url', $url)
         ->with('js', [mix('js/contact.js')])
@@ -347,7 +349,7 @@ Route::group(['prefix' => 'app'], function () {
     Route::get(
         'maps/version',
         function () {
-            $filePath = config("metager.metager.maps.version");
+            $filePath     = config("metager.metager.maps.version");
             $fileContents = file_get_contents($filePath);
             return response($fileContents, 200)
                 ->header('Content-Type', 'text/plain');

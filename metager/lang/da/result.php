@@ -25,4 +25,5 @@ return [
         'download' => 'Download billede',
         'copyright' => 'Billeder kan være ophavsretligt beskyttet.',
     ],
+    'more-news' => 'mere',
 ];

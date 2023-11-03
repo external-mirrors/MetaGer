@@ -19,6 +19,7 @@ return [
         "10"=>"Cookies",
         "11"=>"Domain",
         "12"=>"Browser",
+        "18"=> "Tor",
         "13"=>"Tor-Hidden-Service",
         "14"=>"Tor-Browser",
         "15"=>"App",
@@ -78,6 +79,19 @@ return [
         "entry12"=> [
             '1' => 'Ein Browser ist ein Computer-Programm. <br> Mit dem Browser kann man Seiten im Internet anschauen. <br> Browser ist ein englisches Wort. <br> So spricht man das Wort: Brauser.',
             '2'=>'Es gibt verschiedene Browser. <br> Die Unterschiede sind gering. <br> Es gibt Browser für das Onionweb das auch Darkweb genannt wird.',
+        ],
+        "entry18"=> [
+            '1' => 'Was ist Tor?',
+            '2'=>'Tor lässt sich anhand eines vereinfachten Beispiels leichter erklären. <br> Peter möchte gerne wissen, wann Birgit Geburtstag hat. <br> Birgit soll aber nicht erfahren, dass Peter dies wissen will. <br> Was kann Peter tun? <br> Er fragt Lena, ob sie Birgit nach ihrem Geburtstag fragt. <br> Es gibt hierbei jedoch ein Problem. <br> Lena weiß, wer Birgit nach ihrem Geburtstag gefragt hat. <br> Um zu verhindern, dass man erkannt wird tut Peter folgendes:',
+            '3' =>'Peter gibt Lena einen verschlossenen Brief. <br> In diesem Brief fragt er nach dem Geburtstag von Birgit.',
+            '4'=> 'Lena öffnet diesen Brief nicht. <br> Also weiß Lena nicht was Peter wissen will. <br> Lena gibt diesen Brief weiter an Martin.',
+            '5'=> 'Martin kennt weder Peter noch Birgit. <br> Auch Martin öffnet den Brief nicht. <br> Er gibt den Brief an Sophie weiter.',
+            '6'=> 'Sophie weiß nicht, dass dieser Brief von Peter ist. <br> Sie öffnet den Brief. <br> Sie sieht, dass jemand wissen möchte, wann Birgit Geburtstag hat. <br> Sophie fragt Birgit nach ihrem Geburtstag. <br> Diese Info schreibt sie auf einen Zettel und verschließt diesen in einen Brief. <br> Diesen Brief gibt Sie an Martin.',
+            '7'=> 'Martin gibt den verschlossenen Brief weiter an Lena',
+            '8'=> 'Lena gibt den verschlossenen Brief an Peter zurück. <br> Auch hier weiß Lena nicht, was in dem Brief steht.',
+            '9'=> 'Peter kann diesen Brief nun öffnen und kennt jetzt den Geburtstag von Birgit.',
+
+
         ],
         "entry13"=> [
             '1' => 'Placeholder',

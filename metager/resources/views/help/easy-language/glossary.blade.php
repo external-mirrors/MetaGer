@@ -62,9 +62,7 @@
 			</li>
 
 			<li>
-			<a href="#gltorhidden" >{!! trans('help/easy-language/glossary.entry.13') !!}</a>
-			</li><li>
-			<a href="#gltorbrowser" >{!! trans('help/easy-language/glossary.entry.14') !!}</a>
+			<a href="#gltor" >{!! trans('help/easy-language/glossary.entry.18') !!}</a>
 			</li><li>
 			<a href="#glapp" >{!! trans('help/easy-language/glossary.entry.15') !!}</a>
 			</li><li>
@@ -147,16 +145,31 @@
 		<p>{!! trans('help/easy-language/glossary.explanation.entry12.1') !!}</p>
 		<p>{!! trans('help/easy-language/glossary.explanation.entry12.2') !!}</p>
 	</div>
-	<div class="card" id="gltorhidden">
+	<div class="card" id ="gltor">
+			<h2>{!! trans('help/easy-language/glossary.entry.18') !!}</h2>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry18.1') !!}</p>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry18.2') !!}</p>
+			<ol>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.3') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.4') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.5') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.6') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.7') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.8') !!}</li>
+				<li>{!! trans('help/easy-language/glossary.explanation.entry18.9') !!}</li>
+			</ol>
+		<div class="card" id="gltorhidden">
 		<h2>{!! trans('help/easy-language/glossary.entry.13') !!}</h2>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry13.1') !!}</p>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry13.2') !!}</p>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry13.1') !!}</p>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry13.2') !!}</p>
+		</div>
+		<div class="card" id="gltorbrowser">
+			<h2>{!! trans('help/easy-language/glossary.entry.14') !!}</h2>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry14.1') !!}</p>
+			<p>{!! trans('help/easy-language/glossary.explanation.entry14.2') !!}</p>
+		</div>
 	</div>
-	<div class="card" id="gltorbrowser">
-		<h2>{!! trans('help/easy-language/glossary.entry.14') !!}</h2>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry14.1') !!}</p>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry14.2') !!}</p>
-	</div>
+
 	<div class="card" id="glapp">
 		<h2>{!! trans('help/easy-language/glossary.entry.15') !!}</h2>
 		<p>{!! trans('help/easy-language/glossary.explanation.entry15.1') !!}</p>

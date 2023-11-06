@@ -23,6 +23,7 @@ return [
         "15"=>"App",
         "16"=>"Associator",
         "17"=>"Widget",
+        "18"=>"Tor",
 
     ],
 
@@ -78,13 +79,24 @@ return [
             '2' => 'There are different browsers. <br> The differences are small. <br> There are browsers for the Onion web, also known as the Dark web.',
         ],
 
-        "entry13"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+        "entry18" => [
+            '1' => 'What is Tor?',
+            '2' => 'Tor can be explained more easily with a simplified example. <br> Peter wants to know when Birgit\'s birthday is. <br> However, he doesn\'t want Birgit to know that he wants to know. <br> What can Peter do? <br> He asks Lena to inquire about Birgit\'s birthday. <br> However, there is a problem. <br> Lena knows who asked her to find out about Birgit\'s birthday. <br> To prevent being identified, Peter does the following:',
+            '3' => 'Peter gives Lena a sealed envelope. <br> In this envelope, he asks about Birgit\'s birthday.',
+            '4' => 'Lena does not open this envelope. <br> So, Lena does not know what Peter wants to know. <br> Lena passes this envelope on to Martin.',
+            '5' => 'Martin doesn\'t know Peter or Birgit. <br> Martin also does not open the envelope. <br> He passes the envelope on to Sophie.',
+            '6' => 'Sophie does not know that this envelope is from Peter. <br> She opens the envelope. <br> She sees that someone wants to know when Birgit\'s birthday is. <br> Sophie asks Birgit about her birthday. <br> She writes this information on a piece of paper and seals it in an envelope. <br> She gives this envelope to Martin.',
+            '7' => 'Martin passes the sealed envelope on to Lena.',
+            '8' => 'Lena returns the sealed envelope to Peter. <br> Again, Lena does not know what is written in the envelope.',
+            '9' => 'Peter can now open this envelope and knows Birgit\'s birthday.',
         ],
-        "entry14"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+        "entry13" => [
+            '1' => 'With the Tor Hidden Service, you can use MetaGer over the Tor network.',
+            '2' => 'A simplified explanation of the Tor network can be found on this page under <a href="/help/easy-language/glossary#gltor">Tor</a>. <br> For more information about Tor, visit the Tor website: <a href="https://www.torproject.org/">https://www.torproject.org</a>',
+        ],
+        "entry14" => [
+            '1' => 'The Tor Browser provides a fully pre-configured way to use Tor.',
+            '2' => 'A simplified explanation of the Tor network can be found on this page under <a href="/help/easy-language/glossary#gltor">Tor</a>. <br> For more information about Tor, visit the Tor website: <a href="https://www.torproject.org/">https://www.torproject.org</a>',
         ],
         "entry15"=> [
             '1' => 'Placeholder',

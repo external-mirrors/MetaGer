@@ -94,12 +94,12 @@ return [
 
         ],
         "entry13"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+            '1' => 'Mit dem Tor-Hidden-Service kann man MetaGer über das Tor-Netzwerk nutzen.',
+            '2'=>'Eine vereinfachte Erklärung des Tor-Netzwerks finden Sie auf dieser Seite unter <a href = "/hilfe/easy-language/glossary#gltor">Tor</a>.<br> Weitere Informationen zu Tor finden Sie auf der Webseite von Tor: <a href =https://www.torproject.org/>https://www.torproject.org</a>',
         ],
         "entry14"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+            '1' => 'Der Tor-Browser bietet eine vollständig voreingestellte Möglichkeit Tor zu nutzen.',
+            '2'=>'Eine vereinfachte Erklärung des Tor-Netzwerks finden Sie auf dieser Seite unter <a href = "/hilfe/easy-language/glossary#gltor">Tor</a>.<br> Weitere Informationen zu Tor finden Sie auf der Webseite von Tor: <a href =https://www.torproject.org/>https://www.torproject.org</a>',
         ],
         "entry15"=> [
             '1' => 'Placeholder',

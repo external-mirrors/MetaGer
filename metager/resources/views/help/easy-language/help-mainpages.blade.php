@@ -108,6 +108,15 @@
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.anonym.title') !!}</h4>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.anonym.1') !!}</p>
 			<h4>{!! trans('help/easy-language/help-mainpages.result.info.more.title') !!}</h4>
+			<div class="image-container">
+				@if (App\Localization::getLanguage() == "de")
+					<img class="lm-only" src="/img/help-result-open-lm.png"/>
+					<img class="dm-only" src="/img/help-result-open-dm.png"/>
+					@else
+					<img class="lm-only" src="/img/help-result-open-en-lm.png"/>
+					<img class="dm-only" src="/img/help-result-open-en-dm.png"/>
+					@endif
+			</div>
 			<p>{!! trans('help/easy-language/help-mainpages.result.info.more.1') !!}</p>
 			<div class="image-container">
 			@if (App\Localization::getLanguage() == "de")

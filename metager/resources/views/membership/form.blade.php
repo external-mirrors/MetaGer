@@ -44,11 +44,11 @@
         @endforeach
         @endif
         <div class="input-group">
-            <input type="radio" name="amount" id="amount-5" value="5.00" @if(!Request::has('amount') || Request::input('amount') === "5.00")checked @endif required />
+            <input type="radio" name="amount" id="amount-5" value="5.00" @if(Request::input('amount', '') === "5.00")checked @endif required />
             <label for="amount-5">5€</label>
         </div>
         <div class="input-group">
-            <input type="radio" name="amount" id="amount-10" value="10.00" @if(Request::input('amount', '') === "10.00")checked @endif required />
+            <input type="radio" name="amount" id="amount-10" value="10.00" @if(!Request::has('amount') || Request::input('amount') === "10.00")checked @endif required/>
             <label for="amount-10">10€</label>
         </div>
         <div class="input-group">
@@ -69,21 +69,21 @@
         @endforeach
         @endif
         <div id="membership-interval">
-            <div class="input-group annual">
-                <input type="radio" name="interval" id="interval-annual" value="annual" @if(!Request::has('interval') || Request::input('interval') === "annual")checked @endif required>
-                <label for="interval-annual">jährlich</label>
-            </div>
-            <div class="input-group six-monthly">
-                <input type="radio" name="interval" id="interval-six-monthly" value="six-monthly" @if(Request::input('interval', '') === "six-monthly")checked @endif required>
-                <label for="interval-six-monthly">halbjährlich</label>
+            <div class="input-group monthly">
+                <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval') || Request::input('interval') === "annual")checked @endif required>
+                <label for="interval-monthly">monatlich</label>
             </div>
             <div class="input-group quarterly">
                 <input type="radio" name="interval" id="interval-quarterly" value="quarterly" @if(Request::input('interval', '') === "quarterly")checked @endif required>
                 <label for="interval-quarterly">vierteljährlich</label>
             </div>
-            <div class="input-group monthly">
-                <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(Request::input('interval', '') === "monthly")checked @endif required>
-                <label for="interval-monthly">monatlich</label>
+            <div class="input-group six-monthly">
+                <input type="radio" name="interval" id="interval-six-monthly" value="six-monthly" @if(Request::input('interval', '') === "six-monthly")checked @endif required>
+                <label for="interval-six-monthly">halbjährlich</label>
+            </div>
+            <div class="input-group annual">
+                <input type="radio" name="interval" id="interval-annual" value="annual" @if(Request::input('interval', '') === "quarterly")checked @endif required>
+                <label for="interval-annual">jährlich</label>
             </div>
         </div>
         <h3>4. Ihre Zahlungsmethode</h3>

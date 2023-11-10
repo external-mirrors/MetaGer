@@ -68,15 +68,15 @@ return [
                 "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/privacy-protection#eh-proxy">Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
             ],
             "more"  => [
-                "title" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>:',
-                "1" => 'Wenn Sie auf <img id="help-ellipsis-image" src="/img/ellipsis.svg"/> klicken, gibt es neue Möglichkeiten. <br> Das Ergebnis sieht dann anders aus. <br> So sieht das Ergebnis dann aus:',
+                "title" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>:',
+                "1" => 'Wenn Sie auf <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/> klicken, gibt es neue Möglichkeiten. <br> Das Ergebnis sieht dann anders aus. <br> So sieht das Ergebnis dann aus:',
             ],
             "2" => 'Es gibt neue Möglichkeiten:',           
             "domainnewsearch"  => [
                 "title" => 'Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> neu suchen:',
                 "1" => 'Wenn Sie darauf drücken, suchen Sie nur auf dieser Seite.',
                 "2" => 'Beispiel:',
-                "3" => 'Sie finden ein Ergebnis von der Seite Duden. <br> Sie klicken bei dem Ergebnis auf <img id="help-ellipsis-image" src="/img/ellipsis.svg"/>. <br> Dann klicken Sie auf den Knopf <strong>Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> suchen</strong>. <br> Dann sucht man nochmal, aber nur auf der Seite Duden.',
+                "3" => 'Sie finden ein Ergebnis von der Seite Duden. <br> Sie klicken bei dem Ergebnis auf <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>. <br> Dann klicken Sie auf den Knopf <strong>Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> suchen</strong>. <br> Dann sucht man nochmal, aber nur auf der Seite Duden.',
             ],
             "hideresult"  => [
                 "title" => 'Ausblenden:',

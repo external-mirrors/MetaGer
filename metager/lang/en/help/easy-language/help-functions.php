@@ -59,7 +59,7 @@ return [
             "none" => 'Image of a grey key',
         ],
 
-        "1" => 'You can search with us without seeing ads. <br> For this, you need a MetaGer Key. <br> You can buy it from us. <br> After payment, you will receive a password. <br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the administration page of the MetaGer Key. <br> There you have these options:',
+        "1" => 'You can search with us without seeing ads. <br> For this, you need a MetaGer Key. <br> You can buy it from us.<br> We call this password a key. <br> You can use the key on multiple devices simultaneously. <br> To do this, you need to set up the key. <br> First, open the administration page of the MetaGer Key. <br> There you have these options:',
         "2" => [
             '1' => 'Login Code <br> To register another device with the login code, follow these steps: <br> Click the button <strong>Generate Login Code</strong>. <br> The button looks like this:',
             '2' => 'Then, 6 numbers will be displayed. <br> They look like this, for example:',

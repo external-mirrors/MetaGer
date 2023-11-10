@@ -20,7 +20,7 @@ return [
         "memberkey"  => [
             "1" => 'Das linke Feld:', 
             "2" => 'Das linke Feld zeigt einen Schlüssel.<br> So sieht das linke Feld aus:',
-            "3" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Wenn Sie bezahlt haben bekommen Sie ein Passwort. <br> Das Passwort nennt man Schüssel. <br> Dieses können Sie in dem linken Feld eintragen. <br> Dann können Sie ohne Werbung suchen.',
+            "3" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür klicken Sie auf den Schlüssel. <br> Dann klicken Sie auf den Knopf <strong>Werbefreie Suche neu einrichten</strong>.<br> Danach klicken Sie auf den Button <strong>Schlüssel jetzt erstellen</strong>.<br> Dann bekommen Sie ein Passwort. <br> Das Passwort nennt man Schüssel. <br> Nun können Sie den Schlüssel für Geld mit Guthaben aufladen<br> Diesen Schlüssel können Sie in dem linken Feld eintragen. <br> Dann können Sie ohne Werbung suchen. <br> Mehr Infos finden sie hier: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Schlüssel</a>',
         ],
         "slot"  => [
             "1"      => 'Das mittlere Feld:',
@@ -65,7 +65,7 @@ return [
             ],
             "anonym"  => [
                 "title" => 'Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihren Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/privacy-protection#eh-proxy">Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
+                "1" => 'Wenn Sie hier klicken, öffnen Sie das Ergebnis geschützt. <br>Das ist wie ein Schutz-Schild. <br>Der Schutz-Schild versteckt Ihre Identität und den Standort vor den Webseiten, die Sie anschauen.<br> Bei <a href = "/hilfe/easy-language/privacy-protection#eh-proxy">Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a> finden Sie mehr über das Thema.',
             ],
             "more"  => [
                 "title" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>:',

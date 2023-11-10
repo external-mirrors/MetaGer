@@ -20,7 +20,7 @@ return [
         "memberkey"  => [
             "1" => 'The left field:', 
             "2" => 'The left field shows a key.<br> This is what the left field looks like:',
-            "3" => 'You can search with us without seeing ads.<br> If you have paid, you will receive a password.<br> The password is called a key.<br> You can enter your key in the left field. <br> Then you can search without ads.',
+            "3" => 'You can search with us without seeing ads. <br> To do this, click on the key. <br> Then click on the button <strong>Set Up Ad-Free Search</strong>.<br> After that, click on the button <strong>Create Key Now</strong>.<br> Then you will receive a password. <br> This password is called the key. <br> Now you can recharge the key with token for money.<br> Enter this key in the left field. <br> Then you can search without ads. <br> You can find more information here: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Key</a>',
         ],
         "slot"  => [
             "1"      => 'The middle field:',
@@ -65,7 +65,7 @@ return [
             ],
             "anonym" => [
                 "title" => 'Open Anonymously<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
-                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#eh-proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
+                "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your identity and location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#eh-proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
             ],
             "more" => [
                 "title" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>:',

@@ -1,13 +1,13 @@
 <?php
 return [
     'form' => [
-        '2' => 'Za pomocą tego formularza można skontaktować się z nami za pośrednictwem poczty elektronicznej.',
-        'name' => 'Imię, Nazwisko',
-        '5' => 'Twój adres e-mail',
+        '2' => 'Możesz wysłać nam anonimową wiadomość za pomocą tego formularza. Jeśli zdecydujesz się nie podawać swojego adresu e-mail, oczywiście nie otrzymasz odpowiedzi.',
+        'name' => 'Nazwa',
+        '5' => 'Twój adres e-mail (opcjonalnie)',
         '6' => 'Twoja wiadomość',
         '7' => 'Przedmiot',
         '9' => 'Do 5 załączników (rozmiar pliku < 5 MB)',
-        '1' => 'Bezpieczny formularz kontaktowy',
+        '1' => 'Anonimowy formularz kontaktowy',
         '8' => 'Wyślij',
     ],
     'letter' => [
@@ -27,5 +27,15 @@ Niemcy",
     ],
     'headline' => [
         '1' => 'Kontakt',
+        '2' => 'E-mail',
+        'pgp' => 'Szyfrowanie',
+    ],
+    'email' => [
+        'text' => 'Możesz skontaktować się z nami wysyłając wiadomość na adres: <a href="mailto::mail">:mail</a>',
+        'pgp' => [
+            'description' => 'Nasze wiadomości e-mail są podpisywane kryptograficznie. Jeśli chcesz zweryfikować podpis lub wysłać zaszyfrowaną wiadomość, użyj poniższego klucza publicznego. Jeśli chcesz otrzymać zaszyfrowaną odpowiedź, dołącz swój klucz publiczny do zaszyfrowanej i podpisanej wiadomości.',
+            'pubkey' => 'PGP Publickey: <a href="/download/pubkey.asc" download="0x2185CC8F3CA782EC.asc">0x2185CC8F3CA782EC</a> lub na <a href=":keyserver" target="_blank" rel="noopener">keys.openpgp.org</a>',
+            'fingerprint' => 'PGP Fingerprint: 5FA5 2398 C382 B498 B14A B7F6 2185 CC8F 3CA7 82EC',
+        ],
     ],
 ];

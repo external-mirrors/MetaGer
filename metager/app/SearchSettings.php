@@ -45,7 +45,7 @@ class SearchSettings
             $this->javascript_enabled = true;
         }
 
-        if (Cookie::has("zitate") && Cookie::get("zitate") === "off") {
+        if (Localization::getLanguage() !== "de" || Cookie::get("zitate", "on") === "off") {
             $this->enableQuotes = false;
         }
 

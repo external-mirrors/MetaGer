@@ -1,31 +1,31 @@
 <div id="results">
-	@include('parts.alteration')
-	@if($mobile)
-		@include('layouts.ad', ['ad' => $metager->popAd()])
-	@else
-		@for($i = 0; $i < 2; $i++)
-			@include('layouts.ad', ['ad' => $metager->popAd()])
-		@endfor
-	@endif
-	{{-- Create results and ongoing ads --}}
-	@foreach($metager->getResults() as $index => $result)
-		@if($mobile)
-			@if($index % 4 === 0)
-				@include('layouts.ad', ['ad' => $metager->popAd()])
-			@endif
-		@else
-			@if($index % 7 === 0)
-				@include('layouts.ad', ['ad' => $metager->popAd()])
-			@endif
-		@endif
-		@if($index === 2)
-		@include("layouts.resultpage.news", ['news' => $metager->news])
-		@endif
+    @include('parts.alteration')
+    @if ($mobile)
+        @include('layouts.ad', ['ad' => $metager->popAd()])
+    @else
+        @for ($i = 0; $i < 2; $i++)
+            @include('layouts.ad', ['ad' => $metager->popAd()])
+        @endfor
+    @endif
+    {{-- Create results and ongoing ads --}}
+    @foreach ($metager->getResults() as $index => $result)
+        @if ($mobile)
+            @if ($index % 4 === 0)
+                @include('layouts.ad', ['ad' => $metager->popAd()])
+            @endif
+        @else
+            @if ($index % 7 === 0)
+                @include('layouts.ad', ['ad' => $metager->popAd()])
+            @endif
+        @endif
+        @if ($index === 2)
+            @include('layouts.resultpage.news', ['news' => $metager->news])
+        @endif
 
-		@if($index === 5)
-		@include("layouts.resultpage.videos", ['videos' => $metager->videos])
-		@endif
-		@include('layouts.result', ['result' => $result, 'index' => $index + 1])
-	@endforeach
-	@include('parts.pager')
+        @if ($index === 5)
+            @include('layouts.resultpage.videos', ['videos' => $metager->videos])
+        @endif
+        @include('layouts.result', ['result' => $result, 'index' => $index + 1])
+    @endforeach
+    @include('parts.pager')
 </div>

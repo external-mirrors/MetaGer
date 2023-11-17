@@ -166,7 +166,7 @@ function initialize() {
               document.dispatchEvent(resultLoaderEvent);
             }
 
-            if ("quicktips" in data) {
+            if ("quicktips" in data && data.quicktips !== "") {
               let container = document.createElement("div");
               container.innerHTML = data.quicktips;
               let new_quicktips = container.querySelector("#additions-container");

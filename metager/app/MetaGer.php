@@ -214,7 +214,6 @@ class MetaGer
                         ->with('metager', $this)
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', app(SearchSettings::class)->fokus);
-                    break;
                 case 'results-with-style':
                     return view('resultpages.resultpage')
                         ->with('results', $viewResults)
@@ -228,7 +227,6 @@ class MetaGer
                         ->with('suspendheader', "yes")
                         ->with('browser', (new Agent())->browser())
                         ->with('fokus', app(SearchSettings::class)->fokus);
-                    break;
                 case 'rss20':
                     return view('resultpages.metager3resultsrss20')
                         ->with('results', $viewResults)
@@ -237,17 +235,13 @@ class MetaGer
                         ->with('metager', $this)
                         ->with('resultcount', sizeof($viewResults))
                         ->with('fokus', app(SearchSettings::class)->fokus);
-                    break;
                 case 'api':
                     return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                    break;
                 case 'atom10':
                     return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                    break;
                 case 'result-count':
                     # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
                     return sizeof($viewResults) . ";" . round((microtime(true) - $this->starttime), 2);
-                    break;
                 default:
                     return view('resultpages.resultpage')
                         ->with('eingabe', $this->eingabe)
@@ -262,7 +256,6 @@ class MetaGer
                         ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
                         ->with('focus', app(SearchSettings::class)->fokus);
-                    break;
             }
         }
     }

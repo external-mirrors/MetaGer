@@ -84,8 +84,10 @@ Route::get('team/pubkey-wsb', function () {
 });
 
 Route::get('kontakt/{url?}', function ($url = "") {
+    $to_mail = Localization::getLanguage() === "de" ? config("metager.metager.ticketsystem.germanmail") : config("metager.metager.ticketsystem.englishmail");
     return view('kontakt.kontakt')
         ->with('title', trans('titles.kontakt'))
+        ->with('to_mail', $to_mail)
         ->with('navbarFocus', 'kontakt')
         ->with('url', $url)
         ->with('js', [mix('js/contact.js')])
@@ -119,7 +121,7 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebit']);
     Route::post('/{amount}/{interval}/directdebit', [DonationController::class, 'directdebitExecute']);
     Route::get('/{amount}/{interval}/banktransfer/qr', [DonationController::class, 'banktransferQr']);
-    Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment']);
+    Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment'])->name("paypalPayment");
     Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
     Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
 });
@@ -417,7 +419,7 @@ Route::group(['prefix' => 'app'], function () {
     Route::get(
         'maps/version',
         function () {
-            $filePath = config("metager.metager.maps.version");
+            $filePath     = config("metager.metager.maps.version");
             $fileContents = file_get_contents($filePath);
             return response($fileContents, 200)
                 ->header('Content-Type', 'text/plain');

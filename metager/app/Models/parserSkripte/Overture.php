@@ -6,6 +6,7 @@ use App\MetaGer;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use App\PrometheusExporter;
+use LaravelLocalization;
 use Log;
 use Illuminate\Support\Facades\Redis;
 use SimpleXMLElement;
@@ -58,7 +59,7 @@ class Overture extends Searchengine
                 $resultCount = 0;
             }
             $this->totalResults = $resultCount;
-            $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+            $results            = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
             if (!is_array($results)) {
                 $results = [];
             }
@@ -69,10 +70,10 @@ class Overture extends Searchengine
             }
 
             foreach ($results as $result) {
-                $title = html_entity_decode($result["title"]);
-                $link = $result->{"ClickUrl"}->__toString();
+                $title       = html_entity_decode($result["title"]);
+                $link        = $result->{"ClickUrl"}->__toString();
                 $anzeigeLink = $result["siteHost"];
-                $descr = html_entity_decode($result["description"]);
+                $descr       = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -124,10 +125,10 @@ class Overture extends Searchengine
             // Nun noch die Werbeergebnisse:
             /** @var SimpleXMLElement $ad */
             foreach ($ads as $ad) {
-                $title = html_entity_decode($ad["title"]);
-                $link = $ad->{"ClickUrl"}->__toString();
+                $title       = html_entity_decode($ad["title"]);
+                $link        = $ad->{"ClickUrl"}->__toString();
                 $anzeigeLink = $ad["siteHost"];
-                $descr = html_entity_decode($ad["description"]);
+                $descr       = html_entity_decode($ad["description"]);
                 $this->counter++;
 
                 // Advertisement Data of result
@@ -136,10 +137,10 @@ class Overture extends Searchengine
                     $yiid = $ad["ImpressionId"]->__toString();
                 }
                 $appns = null;
-                $k = null;
+                $k     = null;
                 if (isset($ad["appNs"]) && isset($ad["k"])) {
                     $appns = $ad["appNs"]->__toString();
-                    $k = $ad["k"]->__toString();
+                    $k     = $ad["k"]->__toString();
                 }
 
                 $this->ads[] = new \App\Models\Result(
@@ -153,21 +154,22 @@ class Overture extends Searchengine
                     $this->counter,
                     [
                         "ad_data" => [
-                            "yiid" => $yiid,
+                            "yiid"  => $yiid,
                             "appns" => $appns,
-                            "k" => $k
-                        ]
+                            "k"     => $k,
+                        ],
                     ]
                 );
             }
             if (sizeof($this->results) === 0 && sizeof($this->ads) === 0 && !$this->failed) {
                 $this->log_failed_yahoo_search();
                 $this->configuration->getParameter->Keywords .= " -qwertzy";
-                $this->cached = false;
+                $this->cached                                = false;
                 Redis::del($this->getHash());
                 $this->startSearch();
             }
         } catch (\Exception $e) {
+            $this->log_failed_yahoo_search();
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());
             return;
@@ -195,9 +197,9 @@ class Overture extends Searchengine
         // Yahoo liefert, wenn es keine weiteren Ergebnisse hat immer wieder die gleichen Ergebnisse
         // Wir müssen also überprüfen, ob wir am Ende der Ergebnisse sind
         $resultCount = $content->xpath('//Results/ResultSet[@id="inktomi"]/MetaData/TotalHits');
-        $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+        $results     = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
         if (isset($resultCount[0]) && sizeof($results) > 0) {
-            $resultCount = intval($resultCount[0]->__toString());
+            $resultCount      = intval($resultCount[0]->__toString());
             $lastResultOnPage = intval($results[sizeof($results) - 1]["rank"]);
             if ($resultCount <= $lastResultOnPage) {
                 return;
@@ -225,7 +227,7 @@ class Overture extends Searchengine
             $newConfiguration->getParameter->$key = $value;
         }
         # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next = new Overture($this->name, $newConfiguration);
+        $next       = new Overture($this->name, $newConfiguration);
         $this->next = $next;
     }
 
@@ -245,7 +247,7 @@ class Overture extends Searchengine
         }
 
         $this->configuration->getParameter->affilData = $affil_data;
-        $this->configuration->getParameter->serveUrl = $url;
+        $this->configuration->getParameter->serveUrl  = $url;
     }
 
     private function log_failed_yahoo_search()
@@ -254,10 +256,12 @@ class Overture extends Searchengine
         $log_file = storage_path("logs/metager/yahoo_fail.csv");
 
         $data = [
-            "time" => now()->format("Y-m-d H:i:s"),
-            "query" => $this->configuration->getParameter->Keywords
+            "time"   => now()->format("Y-m-d H:i:s"),
+            "locale" => LaravelLocalization::getCurrentLocale(),
+            "ip"     => request()->ip(),
+            "query"  => $this->configuration->getParameter->Keywords,
         ];
-        $fh = fopen($log_file, "a");
+        $fh   = fopen($log_file, "a");
         try {
             fputcsv($fh, $data);
         } finally {

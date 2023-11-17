@@ -401,6 +401,7 @@ class DonationController extends Controller
         $response = file_get_contents($url, false, $opts);
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
+
         return response()->json(json_decode($response), $responsecode);
     }
 
@@ -438,12 +439,37 @@ class DonationController extends Controller
         preg_match('/([0-9])\d+/', $http_response_header[0], $matches);
         $responsecode = intval($matches[0]);
 
-        if ($responsecode === 201) {
-            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+        $response = json_decode($response);
+
+        // Validate that the payment is completed
+        // $response->status === "COMPLETED"
+        // $response->purchase_units->payments-captures contains final_capture = true AND status is completed
+        $payment_successfull = false;
+        if ($responsecode === 201 && $response->status === "COMPLETED") {
+            foreach ($response->purchase_units as $purchase_units) {
+                $final_capture = false;
+                foreach ($purchase_units->payments->captures as $capture) {
+                    if ($capture->status !== "COMPLETED") {
+                        break;
+                    }
+                    if ($capture->final_capture === true) {
+                        $final_capture = true;
+                    }
+                }
+                $payment_successfull = $final_capture;
+                if (!$payment_successfull) {
+                    break;
+                }
+            }
+
         }
 
-        $response = json_decode($response);
-        $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
+        if (!$payment_successfull) {
+            $response->redirect_to = route("paypalPayment", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
+        } else {
+            DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
+            $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
+        }
 
         return response()->json($response, $responsecode);
     }

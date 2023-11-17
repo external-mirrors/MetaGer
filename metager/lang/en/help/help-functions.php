@@ -26,10 +26,10 @@ return [
     "key"    => [
         "title" => 'Add MetaGer Key <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         "1" => 'The MetaGer key is automatically set up in your browser and used. You don\'t need to do anything else. If you want to use the MetaGer key on other devices, there are several ways to set up the MetaGer key:',
-        "2"=>'Login Code <br>On the management page of the MetaGer key, you can use the login code to add your key to another device. Simply enter the six-digit number code when logging in. The login code can only be used once and is only valid as long as the window is open.',
-        "3"=>'Copy URL <br>When you are on the management page of the MetaGer key, there is an option to copy a URL. This URL can be used to save all MetaGer settings, including the MetaGer key, on another device.',
-        '4'=>'Save File <br>When you are on the management page of the MetaGer key, there is an option to save a file. This saves your MetaGer key as a file. You can then use this file on another device to log in with your key.',
-        '5'=>'Scan QR Code <br>Alternatively, you can also scan the QR code displayed on the management page to log in with another device.',
+        "2"=>'Login Code <br>On the <a href = "/keys/key/enter">management page</a> of the MetaGer key, you can use the login code to add your key to another device. Simply enter the six-digit number code when logging in. The login code can only be used once and is only valid as long as the window is open.',
+        "3"=>'Copy URL <br>When you are on the <a href = "/keys/key/enter">management page</a> of the MetaGer key, there is an option to copy a URL. This URL can be used to save all MetaGer settings, including the MetaGer key, on another device.',
+        '4'=>'Save File <br>When you are on the <a href = "/keys/key/enter">management page</a> of the MetaGer key, there is an option to save a file. This saves your MetaGer key as a file. You can then use this file on another device to log in with your key.',
+        '5'=>'Scan QR Code <br>Alternatively, you can also scan the QR code displayed on the <a href = "/keys/key/enter">management page</a> to log in with another device.',
         '6'=>'Manually Enter MetaGer Key <br>You can also manually enter the key on another device.',
         'colors'=> [
             'title'=>'Colored MetaGer Key',

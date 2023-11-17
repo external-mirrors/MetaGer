@@ -62,7 +62,7 @@ return [
 
         ],
 
-        "1" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Dort gibt es diese Möglichkeiten:',
+        "1" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür braucht man einen MetaGer Schlüssel. <br> Den kann man bei uns kaufen. <br> Sie können den Schlüssel auf mehreren Geräten gleich-zeitig benutzen. <br> Dafür muss man den Schlüssel einrichten. <br> Als Erstes öffnet man die Verwaltungs-Seite vom MetaGer Schlüssel. <br> Hier kommt man zur Verwaltungs-Seite: <br> <a href = "/keys/key/enter">Verwaltungs-Seite</a> <br> Dort gibt es diese Möglichkeiten:',
         "2" => [
             '1' => 'Log-in Code <br> Ein weiteres Gerät mit dem Log-in Code zu registrieren geht so: <br> Sie klicken auf den Knopf <strong>Login Code erzeugen</strong>. <br> So sieht der Knopf aus:',   
             '2' => 'Dann werden 6 Zahlen angezeigt. <br> So sehen die Zahlen zum Beispiel aus:',

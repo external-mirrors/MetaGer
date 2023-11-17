@@ -9,7 +9,7 @@ return [
             "2" => 'The new options are:',
             "anonym" => '"OPEN ANONYMOUSLY" means that the result is opened under the protection of our proxy. Some information about this can be found in the <a href = "/hilfe/datensicherheit#h-proxy">Anonymizing MetaGer Proxy Server</a> section.',
             "domainnewsearch" => '"Start a new searc on this domain": A more detailed search is performed on the domain of the result.',
-            "hideresult" => '"hide": This allows you to hide results from this domain. You can also write this switch directly after your search term and concatenate it; a "*" wildcard is also allowed. See also <a href="#h-settings"> "Settings"</a> for a permanent solution.',
+            "hideresult" => '"hide": This allows you to hide results from this domain. You can also write this switch directly after your search term and concatenate it; a "*" wildcard is also allowed. See also Settings for a permanent solution.',
             "more" => '<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>: When you click on<img id="help-ellipsis-image" src="/img/ellipsis.svg"/>, you will get new options; the appearance of the result changes:',
             "newtab" => '"OPEN IN NEW TAB" opens the result in a new tab. Alternatively, you can also open a new tab by using CTRL and left-click or the middle mouse button.',
             "open" => '"OPEN": Click on the headline or the link below (the URL) to open the result in the same tab.',
@@ -44,7 +44,7 @@ return [
         "title" => 'Settings <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-settings" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "startpage" => [
-        "info" => 'The start page includes the search field, a button in the upper right corner to access the menu, and a link below the search field to add MetaGer to your browser. In the lower section, you will find information about MetaGer and the SUMA-EV association. Additionally, our focus areas <i>Guaranteed Privacy, Nonprofit Association, Diverse & Free</i>, and <i>100% Green Energy</i> are displayed at the bottom. By clicking on the respective sections or by scrolling, you can find more information. ',
+        "info" => 'The start page includes the search field, a button in the upper right corner to access the menu, and two links below the search field to add MetaGer to your browser and search ad free. In the lower section, you will find information about MetaGer and the SUMA-EV association. Additionally, our focus areas <i>Guaranteed Privacy, Nonprofit Association, Diverse & Free</i>, and <i>100% Green Energy</i> are displayed at the bottom. By clicking on the respective sections or by scrolling, you can find more information. ',
         "title" => 'The Start Page <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-startpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
     "title" => [

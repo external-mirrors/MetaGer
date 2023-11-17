@@ -43,14 +43,14 @@ return [
             '2'=>'Bei MetaGer gibt es für manche Such-Kategorien passende Such-Maschinen. <br>Beispiel: spezialisierte Produktsuchmaschinen.',
         ],
         "entry4"=> [
-            '1'=>'Ein Filter ist eine Software. <br> Damit kann man bestimmen, was die Such-Maschine anzeigen soll.<br> Zum Beispiel nur neue Sachen.<br> Oder nur eune bestimmte Sprache.',
+            '1'=>'Ein Filter ist eine Software. <br> Damit kann man bestimmen, was die Such-Maschine anzeigen soll.<br> Zum Beispiel nur neue Sachen.<br> Oder nur eine bestimmte Sprache.',
             '2'=>'Bei MetaGer gibt es verschiedene Filter-Möglichkeiten. <br> Man kann sortieren nach: Datum, Größe, Dokumentenart oder Safesearch.',
         ],
         "entry5"=> [
             '1'=>'Eine URL ist eine Internet-Adresse. <br> Damit kann der Browser eine Seite im Internet finden. <br> Suchmaschinen können also URLs finden. <br> Die URL wird im Adress-Feld eines Browsers angezeigt.',
         ],
         "entry6"=> [
-            '1'=>'Ein Browser kann mehrere Seiten gleichzeitig anzeigen. <br> Jede Seite ist dann in einem Tab. <br> Ein Tab kann man anklicken.',
+            '1'=>'Ein Browser kann mehrere Seiten gleichzeitig anzeigen. <br> Jede Seite ist dann in einem Tab. <br> Einen Tab kann man anklicken.',
             '2'=>'Die meisten Browser nutzen Tabs.<br> Tabs können gruppiert werden. <br> Manche Browser bieten anonyme Tabs an.',
         ],
         "entry7"=> [

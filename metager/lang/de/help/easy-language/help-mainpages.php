@@ -19,7 +19,7 @@ return [
         "info"      => 'Das Such-Feld hat 3 Teile: ',
         "memberkey"  => [
             "1" => 'Das linke Feld:', 
-            "2" => 'Das linke Feld zeigt einen Schlüssel.<br> So sieht das linke Feld aus:',
+            "2" => 'Links ist ein Schlüssel.<br> So sieht das linke Feld aus:',
             "3" => 'Sie können bei uns suchen, ohne Werbung zu sehen. <br> Dafür klicken Sie auf den Schlüssel. <br> Dann klicken Sie auf den Knopf <strong>Werbefreie Suche neu einrichten</strong>.<br> Danach klicken Sie auf den Button <strong>Schlüssel jetzt erstellen</strong>.<br> Dann bekommen Sie ein Passwort. <br> Das Passwort nennt man Schüssel. <br> Nun können Sie den Schlüssel für Geld mit Guthaben aufladen<br> Diesen Schlüssel können Sie in dem linken Feld eintragen. <br> Dann können Sie ohne Werbung suchen. <br> Mehr Infos finden sie hier: <a href = "/hilfe/easy-language/functions#eh-keyexplain">MetaGer Schlüssel</a>',
         ],
         "slot"  => [

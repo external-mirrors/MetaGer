@@ -10,7 +10,7 @@ return [
     'title' => 'MetaGer - Hilfe',
     "selist" => [
         'title' => 'MetaGer zur Suchmaschinenliste des Browsers hinzufügen <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#eh-selist" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        'explanation_b' => 'Manche Browser erwarten die Eingabe einer URL; diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" ohne Gänsefüßchen eintragen. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>',
+        'explanation_b' => 'Manche Browser erwarten die Eingabe einer URL. Diese lautet "https://metager.de/meta/meta.ger3?eingabe=%s" und muss ohne Gänsefüßchen eingetragen werden. Die URL können Sie selbst erzeugen, wenn Sie mit metager.de nach irgendetwas suchen und dann das, was oben im Adressfeld hinter "eingabe=" steht, mit %s ersetzen. Wenn Sie dann noch Probleme haben sollten, wenden Sie sich bitte an uns: <a href="/kontakt" target="_blank" rel="noopener">Kontaktformular</a>',
         'explanation_a' => 'Versuchen Sie bitte zuerst, das aktuelle Plugin zu installieren. Zum Installieren einfach auf den Link direkt unter dem Suchfeld klicken. Dort sollte Ihr Browser schon erkannt worden sein.',
     ],
     
@@ -33,7 +33,7 @@ return [
         '6'=>'MetaGer Schlüssel manuell eingeben <br>Sie können natürlich auch den Schlüssel manuell auf einem weiteren Gerät eingeben.',
         'colors'=> [
             'title'=>'Farbiger MetaGer Schlüssel',
-            '1'=>'Um auf einem Blick erkennen zu können, ob Sie werbefrei Suchen, haben wir unserem Schlüssel-Symbol Farben verpasst. Im Folgenden finden Sie die Erläuterungen für die entsprechenden Farben:',
+            '1'=>'Um auf einem Blick erkennen zu können, ob Sie werbefrei suchen, haben wir unserem Schlüsselsymbol Farben verpasst. Im Folgenden finden Sie die Erläuterungen für die entsprechenden Farben:',
             'grey'=>'Grau: Sie haben keinen Schlüssel eingerichtet. Sie nutzen die kostenlose Suche.',
             'red'=>'Rot: Wenn Ihr Schlüsselsymbol rot ist, ist dieser Schlüssel leer. Sie haben alle werbefreien Suchen aufgebraucht. Den Schlüssel können Sie auf der Verwaltungsseite des Schlüssels aufladen.',
             'green'=>'Grün: Wenn Ihr Schlüsselsymbol grün ist, dann verwenden Sie einen aufgeladenen Schlüssel.',

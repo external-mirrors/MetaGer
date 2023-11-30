@@ -50,7 +50,7 @@ function processPaypalCard() {
                 hideErrors();
                 lockForm(true);
                 let params = {
-                    contingencies: ["SCA_WHEN_REQUIRED"],
+                    contingencies: ["SCA_ALWAYS"],
                 };
                 if (document.getElementById("card-name") && document.getElementById("card-name").value.length > 0) {
                     params.cardholderName = document.getElementById("card-name").value;

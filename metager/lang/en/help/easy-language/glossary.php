@@ -99,8 +99,7 @@ return [
             '2' => 'A simplified explanation of the Tor network can be found on this page under <a href="/help/easy-language/glossary#gltor">Tor</a>. <br> For more information about Tor, visit the Tor website: <a href="https://www.torproject.org/">https://www.torproject.org</a>',
         ],
         "entry15"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+            '1' => 'An app is a program for mobile phones. <br>To use an app, you need a special type of mobile phone.<br>These phones are also called smartphones.<br>Apps require the internet.<br>Smartphones have internet.<br>So, you can use apps with smartphones.',
         ],
         "entry16"=> [
             '1' => 'Placeholder',

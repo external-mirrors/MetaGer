@@ -102,10 +102,10 @@ return [
             '2'=>'Eine vereinfachte Erklärung des Tor-Netzwerks finden Sie auf dieser Seite unter <a href = "/hilfe/easy-language/glossary#gltor">Tor</a>.<br> Weitere Informationen zu Tor finden Sie auf der Webseite von Tor: <a href =https://www.torproject.org/>https://www.torproject.org</a>',
         ],
         "entry15"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
+            '1' => 'Eine App ist ein Programm für Handys. <br>Um eine App nutzen zu können braucht man eine besondere Art von Handys.<br>Diese Handys heißen auch Smart-Phones.<br>Apps brauchen Internet.<br>Smart-Phones haben Internet.<br>Also kann man mit Smart-Phones Apps benutzen.',
         ],
-        "entry16"=> [
+        
+            "entry16"=> [
             '1' => 'Placeholder',
             '2'=>'Placeholder',
         ],

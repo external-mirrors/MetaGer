@@ -173,7 +173,6 @@
 	<div class="card" id="glapp">
 		<h2>{!! trans('help/easy-language/glossary.entry.15') !!}</h2>
 		<p>{!! trans('help/easy-language/glossary.explanation.entry15.1') !!}</p>
-		<p>{!! trans('help/easy-language/glossary.explanation.entry15.2') !!}</p>
 	</div>
 	<div class="card" id="glassoziator">
 		<h2>{!! trans('help/easy-language/glossary.entry.16') !!}</h2>

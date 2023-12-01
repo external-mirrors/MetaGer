@@ -14,12 +14,6 @@
 			<h3>{!! trans('help/help-services.app.title') !!}</h3>
 			<p>{!! trans('help/help-services.app.1') !!}</p>
 	</section>
-	<section id="h-asso" class="card">
-		<h3>{!! trans('help/help-services.searchword-associator.title') !!}</h3>
-		<p>{!! trans('help/help-services.searchword-associator.1') !!}</p>
-		<p>{!! trans('help/help-services.searchword-associator.2') !!}</p>
-		<p>{!! trans('help/help-services.searchword-associator.3') !!}</p>
-	</section>
 	<section id="h-widget" class="card">
 		<h3>{!! trans('help/help-services.widget.title') !!}</h3>
 		<p>{!! trans('help/help-services.widget.1') !!}</p>

@@ -17,12 +17,6 @@ return [
         "3" => "Die Karte zeigt nach dem Aufrufen die auch in der Spalte rechts wiedergegebenen von MetaGer gefundenen Punkte (POIs = Points of Interest). Beim Zoomen passt sich diese Liste an den Kartenausschnitt an.  Wenn Sie die Maus über eine Markierung in der Karte oder in der Liste halten, wird das jeweilige Gegenstück hervorgehoben.  Klicken Sie auf \"Details\", um genauere Informationen zu diesem Punkt aus der darunter liegenden Datenbank zu erhalten.",
         "title" => 'MetaGer Maps <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
-    "searchword-associator" => [
-        "1" => 'Als Hilfe für die Erschließung eines Begriffsumfelds haben wir den <a href="/asso" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> entwickelt. Sie finden das Tool auch direkt unter dem Reiter "Dienste". Gibt man in diesen ein Suchwort ein, welches dem zu untersuchenden Fachgebiet irgendwie nahe kommt, dann wird versucht, typische Fachbegriffe dieses Gebietes aus dem WWW zu extrahieren.',
-        "2" => "Beispiel: Sie möchten mehr über Zeckenbisse und deren Gefahren wissen, aber ihnen fallen die medizinischen Fachbegriffe für Erkrankungen aus diesem Bereich nicht mehr ein. Die Eingabe des Wortes \"Zeckenbisse\" in den Web-Assoziator liefert dann u.a. die Begriffe \"Borreliose\" und \"fsme\".",
-        "3" => "Da diese Assoziationsanalyse u.a. aus Web-Dokumenten selber gewonnen wird, ist sie sprachunabhängig; d.h. Sie können bei Eingabe deutscher Wörter Fachbegriffe aus beliebigen Sprachen gewinnen (und umgekehrt).",
-        "title" => 'Suchwortassoziator <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/services#eh-asso" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-    ],
     "title" => 'MetaGer - Hilfe',
     "widget" => [
         "1" => "Hierbei handelt es sich um einen Codegenerator, der es Ihnen ermöglicht, MetaGer in Ihre Webseite einzubinden. Sie können damit dann nach Belieben auf Ihrer eigenen Seite oder im Internet suchen lassen. Bei allen Fragen: <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">unser Kontaktformular</a>",

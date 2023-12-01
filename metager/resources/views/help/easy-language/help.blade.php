@@ -30,7 +30,7 @@
 	<a id=help-topic-bangs href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/functions#eh-bangs") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.2.2') !!}<br></p>
 	</a>
-	<a id=help-topic-searchinsearch href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/functions#eh-keyexplain") }}" class="help-topic">
+	<a id=help-topic-key href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/functions#eh-keyexplain") }}" class="help-topic">
 		<p>{!! trans('help/easy-language/help.tableofcontents.2.3') !!}<br></p>
 	</a>
 	<a id=help-topic-addmetager href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/functions#eh-selist") }}" class="help-topic">
@@ -55,9 +55,6 @@
 	<div class="help-topic-row">
 		<a id=help-topic-app href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/services") }}" class="help-topic">
 			<p>{!! trans('help/easy-language/help.tableofcontents.4.1') !!}<br></p>
-		</a>
-		<a id=help-topic-asso href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/services#eh-asso") }}" class="help-topic">
-			<p>{!! trans('help/easy-language/help.tableofcontents.4.3') !!}<br></p>
 		</a>
 		<a id=help-topic-widget href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/easy-language/services#eh-widget") }}" class="help-topic">
 			<p>{!! trans('help/easy-language/help.tableofcontents.4.4') !!}<br></p>

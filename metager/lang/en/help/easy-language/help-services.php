@@ -10,11 +10,6 @@ return [
         "title" => "Android App",
         "1" => 'You can also get MetaGer as an app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> for your mobile phone. <br> The MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> is available for Android devices. <br> You can easily download it to your Android smartphone. <br> Here you can download the MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>',
     ],
-    "suchwortassoziator" => [
-        "title" => "Search Term Associator",
-        "1" => 'With the Search Term Associator, you can find similar terms. <br> You can enter a term into the Associator, and it will suggest other relevant terms.',
-        "2" => "Example: <br> If you want to learn more about tick bites and the dangers associated with them, <br> but you are not familiar with the technical terms, <br> simply enter <strong>tick bites</strong>. <br> The Associator will then show you terms like <strong>Lyme disease</strong> and <strong>tick-borne encephalitis</strong>.",
-    ],
     "widget" => [
         "title" => "MetaGer Widget",
         "1" => "With the MetaGer Widget, you can embed our search on other websites. <br> If you have your own website, you can add MetaGer to it. <br> This way, visitors to your site can use MetaGer for searching on your own page or the internet. <br> You can also search for content on your own website. <br> If you have any questions, you can use our <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>.",

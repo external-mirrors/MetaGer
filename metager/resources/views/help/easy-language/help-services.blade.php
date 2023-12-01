@@ -20,13 +20,6 @@
 			<p>{!! trans('help/easy-language/help-services.app.1') !!}</p>
 		</div>
 	</section>
-	<section id="eh-asso" class="help-section card">
-		<h3>{!! trans('help/easy-language/help-services.suchwortassoziator.title') !!}</h3>
-		<div>
-			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.1') !!}</p>
-			<p>{!! trans('help/easy-language/help-services.suchwortassoziator.2') !!}</p>
-		</div>
-	</section>
 	<section id="eh-widget" class="help-section card">
 		<h3>{!! trans('help/easy-language/help-services.widget.title') !!}</h3>
 		<div>

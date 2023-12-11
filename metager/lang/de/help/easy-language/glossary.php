@@ -23,8 +23,6 @@ return [
         "13"=>"Tor-Hidden-Service",
         "14"=>"Tor-Browser",
         "15"=>"App",
-        "16"=>"Assoziator",
-        "17"=>"Widget",
 
     ],
 
@@ -62,7 +60,6 @@ return [
         ],
         "entry8"=> [
             '1'=>'Safesearch ist ein englisches Wort. <br> Safesearch ist ein Filter. <br>Damit kann man einstellen ob die Suchmaschine auch Sachen mit Sex anzeigen soll.',
-            '2'=>'Safesearch richtet sich nach US Recht. Was dort nicht jugendfrei ist, bestimmt die Ergebnisausgabe. Es werden mehrere Kategorien zwischen "off" und "strict" angeboten.',
         ],
         "entry9"=> [
             '1'=>'!bangs bezeichnet eine Abkürzung um schneller zu suchen. <br> Mit !bangs kann man also bestimmte Suchen schneller durchführen.',
@@ -103,15 +100,6 @@ return [
         ],
         "entry15"=> [
             '1' => 'Eine App ist ein Programm für Handys. <br>Um eine App nutzen zu können braucht man eine besondere Art von Handys.<br>Diese Handys heißen auch Smart-Phones.<br>Apps brauchen Internet.<br>Smart-Phones haben Internet.<br>Also kann man mit Smart-Phones Apps benutzen.',
-        ],
-        
-            "entry16"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
-        ],
-        "entry17"=> [
-            '1' => 'Placeholder',
-            '2'=>'Placeholder',
         ],
 
     ],

@@ -21,7 +21,7 @@ return [
     ],
    "proxy" => [
         "title" => 'Anonymisierender MetaGer-Proxyserver <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        "1" => "Um ihn zu verwenden, müssen Sie auf der MetaGer-Ergebnisseite nur auf \"ANONYM ÖFFNEN\" am unteren Rand des Ergebnisses klicken. Dann wird Ihre Anfrage an die Zielwebseite über unseren anonymisierenden Proxy-Server geleitet und Ihre persönlichen Daten bleiben weiterhin völlig geschützt. Wichtig: wenn Sie ab dieser Stelle den Links auf den Seiten folgen, bleiben Sie durch den Proxy geschützt. Sie können aber oben im Adressfeld keine neue Adresse ansteuern. In diesem Fall verlieren Sie den Schutz. Ob Sie noch geschützt sind, sehen Sie ebenfalls im Adressfeld. Es zeigt: https://proxy.suma-ev.de/?url=hier steht die eigentlich Adresse.",
+        "1" => "Um ihn zu verwenden, müssen Sie auf der MetaGer-Ergebnisseite nur auf \"ANONYM ÖFFNEN\" am unteren Rand des Ergebnisses klicken. Dann wird Ihre Anfrage an die Zielwebseite über unseren anonymisierenden Proxy-Server geleitet und Ihre persönlichen Daten bleiben weiterhin völlig geschützt. Wichtig: wenn Sie ab dieser Stelle den Links auf den Seiten folgen, bleiben Sie durch den Proxy geschützt. Sie können aber oben im Adressfeld keine neue Adresse ansteuern. Ob Sie noch geschützt sind, sehen Sie ebenfalls im Adressfeld. Es zeigt: https://proxy.suma-ev.de/?url=hier steht die eigentliche Adresse.",
 
    ],
    "maps" => [

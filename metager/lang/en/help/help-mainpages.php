@@ -19,7 +19,7 @@ return [
     "resultpage"        => [
         "choice"     => 'Below, you will see two items: "Filter" and "Settings" if applicable.',
         "filter"     => 'Filter: Here, you can show and hide filter options and apply filters. In each search focus, you have different selection options. Some functions are only available when using a MetaGer key.',
-        "foci"       => 'Under the search field, there are 6 different search foci (three in the English-language area) (Web, Images, etc.), each of which is associated with specific search engines.',
+        "foci"       => 'Under the search field, there are 3 different search foci (Web, Images, News), each of which is associated with specific search engines.',
         "settings" => 'Settings: Here, you can make permanent search settings for your MetaGer search in the current focus. You can also select and deselect search engines associated with the focus. Your settings are saved using a non-personally identifiable plaintext cookie. You can also access the settings page via the menu in the upper right corner.',
         "title" => 'The Results Page <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],

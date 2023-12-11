@@ -73,10 +73,10 @@ return [
             ],
             "2" => 'Es gibt neue Möglichkeiten:',           
             "domainnewsearch"  => [
-                "title" => 'Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> neu suchen:',
+                "title" => 'Auf dieser Domain<a title="In einer Domain sind alle Internetseiten die einer hat. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> neu suchen:',
                 "1" => 'Wenn Sie darauf drücken, suchen Sie nur auf dieser Seite.',
                 "2" => 'Beispiel:',
-                "3" => 'Sie finden ein Ergebnis von der Seite Duden. <br> Sie klicken bei dem Ergebnis auf <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg" alt="Mehr"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg" alt="Mehr"/>. <br> Dann klicken Sie auf den Knopf <strong>Auf dieser Domain<a title="Wort erklärung" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> suchen</strong>. <br> Dann sucht man nochmal, aber nur auf der Seite Duden.',
+                "3" => 'Sie finden ein Ergebnis von der Seite Duden. <br> Sie klicken bei dem Ergebnis auf <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg" alt="Mehr"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg" alt="Mehr"/>. <br> Dann klicken Sie auf den Knopf <strong>Auf dieser Domain<a title="In einer Domain sind alle Internetseiten die einer hat. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> suchen</strong>. <br> Dann sucht man nochmal, aber nur auf der Seite Duden.',
             ],
             "hideresult"  => [
                 "title" => 'Ausblenden:',

@@ -68,15 +68,15 @@ return [
                 "1" => 'By clicking here, you open the result in a protected manner. <br> It is like a shield of protection. <br> The shield hides your identity and location from the websites you visit.<br> You can find more information about Open Anonymously <a href = "/hilfe/easy-language/privacy-protection#eh-proxy/">here<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></a>.',
             ],
             "more" => [
-                "title" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>:',
-                "1" => 'When you click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>, there are new options. <br> The result will look different. <br> It will look like this:',
+                "title" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"  alt="More"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg" alt="More"/>:',
+                "1" => 'When you click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg" alt="More"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg alt="More""/>, there are new options. <br> The result will look different. <br> It will look like this:',
             ],
             "2" => 'There are new options:',
             "domainnewsearch" => [
                 "title" => 'Start a new search on this domain<a title="Word explanation" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>:',
                 "1" => 'By pressing this button, you search only on this page.',
                 "2" => 'Example:',
-                "3" => 'You find a result from the Duden website. <br> You click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/> for that result. <br> Then you click on the button <strong>start a new search on this domain<a title="Word explanation" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></strong>. <br> Then you search again, but only on the Duden website.',
+                "3" => 'You find a result from the Duden website. <br> You click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg alt="More""/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg alt="More""/> for that result. <br> Then you click on the button <strong>start a new search on this domain<a title="Word explanation" href="/hilfe/easy-language/glossary#gldomain" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a></strong>. <br> Then you search again, but only on the Duden website.',
             ],
             "hideresult" => [
                 "title" => 'Hide:',

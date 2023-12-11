@@ -10,7 +10,7 @@ return [
             "anonym" => '"OPEN ANONYMOUSLY" means that the result is opened under the protection of our proxy. Some information about this can be found in the <a href = "/hilfe/datensicherheit#h-proxy">Anonymizing MetaGer Proxy Server</a> section.',
             "domainnewsearch" => '"Start a new searc on this domain": A more detailed search is performed on the domain of the result.',
             "hideresult" => '"hide": This allows you to hide results from this domain. You can also write this switch directly after your search term and concatenate it; a "*" wildcard is also allowed. See also Settings for a permanent solution.',
-            "more" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>: When you click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg"/>, you will get new options; the appearance of the result changes:',
+            "more" => '<img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg" alt="More"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg" alt="More"/>: When you click on <img class="help-ellipsis-image lm-only" src="/img/ellipsis.svg" alt="More"/> <img class="help-ellipsis-image dm-only" src="/img/ellipsis-dm.svg" alt="More"/>, you will get new options; the appearance of the result changes:',
             "newtab" => '"OPEN IN NEW TAB" opens the result in a new tab. Alternatively, you can also open a new tab by using CTRL and left-click or the middle mouse button.',
             "open" => '"OPEN": Click on the headline or the link below (the URL) to open the result in the same tab.',
         ],

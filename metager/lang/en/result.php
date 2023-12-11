@@ -26,4 +26,7 @@ return [
         'download'  => 'Download Image',
         'copyright' => 'Images may be copyrighted.',
     ],
+    'alt' =>[
+        'more' => 'More'
+    ]
 ];

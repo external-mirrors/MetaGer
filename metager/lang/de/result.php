@@ -27,4 +27,7 @@ return [
         'download'  => 'Bild herunterladen',
         'copyright' => 'Bilder können urheberrechtlich geschützt sein.',
     ],
+    'alt' =>[
+        'more' => 'Mehr'
+    ]
 ];

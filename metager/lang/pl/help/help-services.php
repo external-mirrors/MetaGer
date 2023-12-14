@@ -2,25 +2,25 @@
 return [
     'title' => 'MetaGer - Pomoc',
     'backarrow' => 'Powrót',
-    'dienste' => [
-        'text' => 'Usługi',
-    ],
     'app' => [
-        'title' => 'Android-App',
-        '1' => 'Z aplikacji MetaGer można również korzystać w aplikacji. W tym celu wystarczy pobrać aplikację <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> na smartfon z systemem Android.',
+        'title' => 'Aplikacja na Androida <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Możesz również używać MetaGer jako aplikacji. Wystarczy pobrać aplikację <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> na smartfon z systemem Android.',
     ],
     'suchwortassoziator' => [
-        '1' => 'Zapytaj <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Narzędzia / Asocjator), aby znaleźć skojarzenia w danym obszarze tematycznym. Usługa&apos;nie dołącza się do żadnego języka, ponieważ wykorzystuje dokumenty internetowe jako źródło. W związku z tym można znaleźć wszelkie skojarzenia z używanym językiem i odwrotnie.',
         '3' => 'Prosimy o poinformowanie nas, jeśli pojawi się coś nieodpowiedniego. Prosimy o skorzystanie z naszego formularza kontaktowego <a href="/en/kontakt/" target="_blank" rel="noopener"></a> .',
     ],
     'widget' => [
-        'title' => 'Widżet MetaGer',
-        '1' => 'Zapewnij pełną funkcjonalność MetaGer na swojej stronie internetowej! Po prostu wybierz Narzędzia / widżet na naszej stronie startowej, zdecyduj, czy chcesz potężną wyszukiwarkę internetową, czy wyszukiwarkę witryn - która może być przydatna na twoich własnych stronach. Wprowadź nazwę domeny i pozwól skryptowi zrobić resztę. Pytania na: <a href="/en/kontakt/" target="_blank" rel="noopener">formularz kontaktowy</a>',
+        'title' => 'MetaGer Widget <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Jest to generator kodu, który umożliwia osadzenie MetaGer na swojej stronie internetowej. Można go używać do wyszukiwania na własnej stronie lub w Internecie. W przypadku jakichkolwiek pytań, prosimy o skorzystanie z <a href="/kontakt/" target="_blank" rel="noopener">naszego formularza kontaktowego</a>.',
     ],
     'maps' => [
-        'title' => 'MetaGer Maps',
-        '1' => 'MetaGer udostępnia funkcję mapy (nie na metager.org, użyj <a href="https://www.metager.de/" target="_blank" rel="noopener">MetaGer.de</a>): Na stronie wyników w prawym górnym rogu znajduje się nowy obszar o nazwie "Mapy". Po kliknięciu otrzymasz mapę zgodną z wyszukiwaniem.',
-        '2' => 'Po załadowaniu mapa pokazuje punkty POI zgodnie z wynikami MetaGer. Widoczne są one również w prawej kolumnie. Najechanie myszką na punkt POI podświetla jego odpowiednik. Kliknij "Szczegóły", aby uzyskać dodatkowe informacje (baza danych Nominatim) na temat tego punktu POI.',
-        '3' => 'Mapy są renderowane wcześniej (z wyjątkiem trzech ostatnich) i szybko dostępne. Poziom powiększenia można zmieniać za pomocą kółka myszy lub przycisków "+ / -" w lewym górnym rogu mapy.',
+        'title' => 'MetaGer Maps <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Zachowanie prywatności w dobie globalnych gigantów danych doprowadziło nas również do opracowania <a href="https://maps.metager.de" target="_blank">https://maps.metager.de</a>: (według naszej wiedzy) jedynego narzędzia do planowania tras, które oferuje pełną funkcjonalność za pośrednictwem przeglądarki i aplikacji bez przechowywania lokalizacji użytkownika. Wszystko to można zweryfikować, ponieważ nasze oprogramowanie jest open source. Do korzystania z maps.metager.de zalecamy naszą szybką wersję aplikacji. Nasze aplikacje można pobrać ze strony <a href="/app" target="_blank">tutaj</a> (lub oczywiście również ze Sklepu Play).',
+        '2' => 'Ta funkcja mapy może być również dostępna z wyszukiwarki MetaGer (i odwrotnie). Po wyszukaniu terminu w MetaGer, w prawym górnym rogu pojawi się nowe pole wyszukiwania "Mapy". Kliknięcie go spowoduje przejście do odpowiedniej mapy.',
+        '3' => 'Po załadowaniu mapa wyświetla punkty (POI = Points of Interest) znalezione przez MetaGer, które są również wymienione w prawej kolumnie. Podczas powiększania lista ta dostosowuje się do sekcji mapy. Najechanie kursorem myszy na znacznik na mapie lub na liście powoduje podświetlenie odpowiedniego elementu. Kliknij "Szczegóły", aby uzyskać więcej informacji o tym punkcie z poniższej bazy danych.',
+    ],
+    'easy-help' => 'Klikając na symbol <a title="For easy help, click here" href="/hilfe/easy-language/services" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> , można uzyskać dostęp do uproszczonej wersji pomocy.',
+    'services' => [
+        'text' => "Dodatkowe usługi związane z wyszukiwaniem",
     ],
 ];

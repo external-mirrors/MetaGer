@@ -26,4 +26,7 @@ return [
         'copyright' => 'Les images peuvent être protégées par des droits d\'auteur.',
     ],
     'more-news' => 'plus',
+    'alt' => [
+        'more' => 'Plus d\'informations',
+    ],
 ];

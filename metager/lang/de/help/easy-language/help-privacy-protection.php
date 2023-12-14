@@ -1,0 +1,31 @@
+<?php
+
+return [
+    "title"                 => 'MetaGer - Einfache Hilfe',
+    "backarrow"             => 'Zurück',
+    'glossary'              => 'Durch Klicken auf das Symbol<a title="Dieses Symbol führt zum Glossar" href="/hilfe/easy-language/glossary" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>  kommen Sie zur Erklärung von den schwierigen Wörtern.',
+    
+    "datenschutz"  => [
+        "title" => "Anonymität und Daten-Sicherheit",
+        "1" => 'Cookies',
+        "2" => 'Bei MetaGer ist man anonym. <br> Das heißt man ist unerkannt. <br> Wir speichern keine Daten mit denen man jemanden erkennen kann. <br> Wir bieten 2 Funktionen dafür an: <br> Tor-Hidden-Service<a title="Damit kann man sicher suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorhidden" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> und <br> Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>',
+        "3" => "Bei <a href = \"/hilfe/easy-language/privacy-protection#eh-torhidden\">Tor-Hidden-Service</a> finden sie mehr über das Thema. <br> Bei <a href = \"/hilfe/easy-language/privacy-protection#eh-proxy\">Anonym öffnen</a> finden Sie mehr über das Thema. <br> Die Funktionen sind unter <strong>Dienste</strong> in der Navigations-leiste erreichbar.",
+    ],
+    "tor"  => [
+        "title" => "Tor-Hidden-Service",
+        "1" => 'Tor-Hidden-Service<a title="Damit kann man sicher suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorhidden" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> ist die sicherste Art MetaGer zu nutzen. <br> Aber man braucht den Tor-Browser<a title="Ein Browser für das Darkweb. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> dafür. <br> Hier kann man den Tor-Browser<a title="Ein Browser für das Darkweb. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> runter-laden: <br><a href=\"https://www.torproject.org/\" target=\"_blank\" rel=\"noopener\">https://www.torproject.org</a> <br> Wenn der Tor-Browser<a title="Ein Browser für das Darkweb. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> runter-geladen ist, kann man den Tor-Hidden-Service<a title="Damit kann man sicher suchen. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorhidden" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> hier nutzen: <br><a href=\"https://metager.de/tor/\" target=\"_blank\" rel=\"noopener\">https://metager.de/tor</a>',
+        "2" => 'MetaGer erreichen Sie im Tor-Browser<a title="Ein Browser für das Darkweb. Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#gltorbrowser" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> dann unter: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion',    
+    ],
+    "proxy"  => [
+        "title" => "Anonym öffnen",
+        "1" => 'Mit unserer Anonym-öffnen-Funktion kann man Web-Seiten anonym öffnen. <br> Das heißt, dass man unerkannt bleibt. <br> Anonym öffnen<a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> ist also wie ein Schutz-Schild. <br> Wenn Sie unerkannt suchen wollen geht das so: <br> Bei den Ergebnissen gibt es den Knopf <strong>Anonym öffnen</strong><a title="Eine Person ist anonym. Also weiß niemand: Wer ist diese Person? Für mehr Informationen klicken." href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> So sieht der Knopf aus:',
+        "2" => "Wenn man auf den Knopf drückt sucht man unerkannt. <br> Wenn Sie oben in der Such-Leiste eine neue Web-Seite eingeben, <br> suchen Sie nicht mehr unerkannt.",
+    ],
+    "content"  => [
+        'title' => 'Fragwürdige Inhalte / Jugend-Schutz',
+        "explanation"  => [
+            '1' => 'Wenn Sie im Internet Inhalte finden, die verboten aussehen, kann man diese melden. <br> Sie können eine E-Mail an <a href="mailto:hotline@jugendschutz.net" target="_blank" rel="noopener">hotline@jugendschutz.net</a> schicken. <br> Oder Sie gehen auf <a href="http://www.jugendschutz.net/" target="_blank" rel="noopener">www.jugendschutz.net</a> und füllen das Beschwerde-Formular aus. ',
+            '2' => 'Wenn Sie auf MetaGer verbotene Inhalte finden, schreiben Sie uns. <br> Sie können eine E-Mail an <a href="mailto:jugendschutz@metager.de" target="_blank" rel="noopener">jugendschutz@metager.de</a> schicken.',
+        ],
+    ],
+];

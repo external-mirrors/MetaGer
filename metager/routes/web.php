@@ -165,6 +165,15 @@ Route::get('hilfe', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
+Route::get('hilfe/easy-language', function () {
+    return view('help/easy-language/help')
+        ->with('title', trans('titles.help'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
+});
+
 Route::get('hilfe/faktencheck', function () {
     return view('help/faktencheck')
         ->with('title', trans('titles.faktencheck'))
@@ -177,10 +186,28 @@ Route::get('hilfe/hauptseiten', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
+Route::get('hilfe/easy-language/mainpages', function () {
+    return view('help/easy-language/help-mainpages')
+        ->with('title', trans('titles.help-mainpages'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
+});
+
 Route::get('hilfe/funktionen', function () {
     return view('help/help-functions')
         ->with('title', trans('titles.help-functions'))
         ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/easy-language/functions', function () {
+    return view('help/easy-language/help-functions')
+        ->with('title', trans('titles.help-functions'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
 });
 
 Route::get('hilfe/dienste', function () {
@@ -189,10 +216,53 @@ Route::get('hilfe/dienste', function () {
         ->with('navbarFocus', 'hilfe');
 });
 
+Route::get('hilfe/easy-language/services', function () {
+    return view('help/easy-language/help-services')
+        ->with('title', trans('titles.help-services'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
+});
+
 Route::get('hilfe/datensicherheit', function () {
     return view('help/help-privacy-protection')
         ->with('title', trans('titles.help-privacy-protection'))
         ->with('navbarFocus', 'hilfe');
+});
+
+Route::get('hilfe/easy-language/privacy-protection', function () {
+    return view('help/easy-language/help-privacy-protection')
+        ->with('title', trans('titles.help-privacy-protection'))
+        ->with('navbarFocus', 'hilfe')
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
+});
+
+Route::get('hilfe/easy-language/glossary', function () {
+    // Check if a previous URL is given that we can offer a back button for
+    $previous = request()->input("previous_url", URL::previous());
+
+    $allowed_hosts = [
+        "metager.de",
+        "metager.org"
+    ];
+
+    $host = parse_url($previous, PHP_URL_HOST);
+    $current_host = request()->getHost();
+    $previous_url = null; // URL for the back button
+
+    if (($host === $current_host || in_array($current_host, $allowed_hosts)) && preg_match("/^http(s)?:\/\//", $previous)) { // only if the host of that URL matches the current host
+        $previous_url = $previous;
+    }
+    return view('help/easy-language/glossary')
+        ->with('title', trans('titles.help-glossary'))
+        ->with('navbarFocus', 'hilfe')
+        ->with("previous_url", $previous_url)
+        ->with('css', [
+            mix('/css/help-easy-language.css'),
+        ]);
 });
 
 Route::get('faq', function () {

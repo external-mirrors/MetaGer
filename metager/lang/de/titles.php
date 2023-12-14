@@ -13,6 +13,7 @@ return [
     'help-functions' => 'Hilfe - MetaGer',
     'help-services' => 'Hilfe - MetaGer',
     'help-privacy-protection' => 'Hilfe - MetaGer',
+    'help-glossary'=>'Glossar - MetaGer',
     'widget' => 'MetaGer Widget',
     'websearch' => 'Websuche-Widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',

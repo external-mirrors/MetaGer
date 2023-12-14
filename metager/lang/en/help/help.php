@@ -2,6 +2,7 @@
 return [
     'achtung' => 'Warning! Structure and functionality of our website are subject to constant development and changes. We try to update our help pages as quickly as possible, but can not prevent temporary mistakes.',
     'title' => 'MetaGer - Help',
+    "easy.language" => "for easy help",
     'tableofcontents' => [
         '1' => [
             '1' => 'The start page',

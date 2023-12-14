@@ -1,0 +1,22 @@
+<?php
+return [
+    "title" => 'MetaGer - Easy Help',
+    "backarrow" => 'Back',
+    'glossary' => 'By clicking on the symbol<a title="This symbol leads to the glossary" href="/hilfe/easy-language/glossary"><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>, you can access the explanation of difficult words.',
+    "dienste" => [
+        "1" => "Additional Services around the Search",
+    ],
+    "app" => [
+        "title" => "Android App",
+        "1" => 'You can also get MetaGer as an app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> for your mobile phone. <br> The MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> is available for Android devices. <br> You can easily download it to your Android smartphone. <br> Here you can download the MetaGer app<a title="A program for cell phones and tablets. Click for more information." href="/hilfe/easy-language/glossary#glapp" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>: <a href=\"https://play.google.com/store/apps/details?id=de.metager.metagerapp\" target=\"_blank\" rel=\"noopener\">MetaGer App</a>',
+    ],
+    "widget" => [
+        "title" => "MetaGer Widget",
+        "1" => "With the MetaGer Widget, you can embed our search on other websites. <br> If you have your own website, you can add MetaGer to it. <br> This way, visitors to your site can use MetaGer for searching on your own page or the internet. <br> You can also search for content on your own website. <br> If you have any questions, you can use our <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">contact form</a>.",
+    ],
+    "maps" => [
+        "title" => "MetaGer Maps",
+        "1" => '<a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> is a map service developed by MetaGer. <br> MetaGer Maps is also available for mobile devices. <br> Here you can download the app: <a href="/app" target="_blank">Download App</a>. ',
+        "2" => "Once you open MetaGer Maps, you can enter what you are looking for. <br> On the right side, you will see a column displaying points found on the map. <br> These points are relevant to your search. <br> This is what the column looks like:",
+    ],
+];

@@ -2,25 +2,17 @@
 return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
-    'suchfunktion' => [
-        'title' => 'Funciones de búsqueda',
-    ],
     'stopworte' => [
         'title' => 'Palabras clave',
-        '1' => 'Si quiere excluir de los resultados de búsqueda de MetaGer aquellos en los que aparecen determinadas palabras (palabras de exclusión / stop words), puede conseguirlo marcando estas palabras con un signo de menos.',
         '2' => 'Ejemplo: Usted está buscando un coche nuevo, pero definitivamente no un BMW. Así que tu aportación es:',
-        '3' => 'coche nuevo -bmw',
     ],
     'mehrwortsuche' => [
         'title' => 'Búsqueda de varias palabras',
-        '1' => 'Cuando busca en MetaGer más de una palabra, intentamos automáticamente ofrecerle resultados que contengan todas las palabras, o que se aproximen lo más posible a ellas.',
         '2' => 'Si esto no es suficiente para usted, tiene 2 opciones para hacer su búsqueda más precisa:',
         '3' => [
-            'example' => '"la" "mesa" "redonda"',
             'text' => 'Si quiere estar seguro de que las palabras de su búsqueda también aparecen en los resultados, debe ponerlas entre comillas.',
         ],
         '4' => [
-            'example' => '"la mesa redonda"',
             'text' => 'Con la búsqueda de frases, también puede buscar combinaciones de palabras en lugar de palabras individuales. Para ello, basta con colocar las palabras que deben aparecer juntas entre comillas.',
         ],
     ],
@@ -36,12 +28,10 @@ return [
     ],
     'faq' => [
         '18' => [
-            'h' => '¿Por qué no se abren directamente los flequillos?',
             'b' => 'Los "redireccionamientos" de !bang forman parte de nuestros Quicktips y requieren un "clic" adicional. Esta fue una decisión difícil para nosotros, ya que hace que el !bang sea menos útil. Sin embargo, lamentablemente es necesario porque los enlaces a los que se redirige no provienen de nosotros, sino de un proveedor externo, DuckDuckGo.<p>Siempre nos aseguramos de que nuestros usuarios tengan el control en todo momento. Por lo tanto, protegemos de dos maneras: en primer lugar, el término de búsqueda introducido nunca se transmite a DuckDuckGo, sólo el !bang. En segundo lugar, el usuario confirma explícitamente la visita al destino de !bang. Desgraciadamente, por razones de personal, no podemos comprobar todos estos "bangs" ni mantenerlos nosotros mismos.</p>',
         ],
     ],
     'searchinsearch' => [
-        'title' => 'Buscar en la búsqueda',
         '1' => 'Se puede acceder a la función de búsqueda en el buscador mediante el botón "MÁS" situado en la parte inferior derecha del cuadro de resultados. Al hacer clic se abre un menú en el que "Guardar resultado" está en primer lugar. Con esta opción, el resultado respectivo se almacena en una memoria separada. El contenido de esta memoria se muestra a la derecha de los resultados, bajo los consejos rápidos (en las pantallas demasiado pequeñas, los resultados guardados no se muestran por falta de espacio). Allí puede filtrar o reordenar los resultados guardados por palabra clave. Puede encontrar más información sobre el tema "Búsqueda en la búsqueda" en el <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> blog de SUMA</a>.',
     ],
     'selist' => [

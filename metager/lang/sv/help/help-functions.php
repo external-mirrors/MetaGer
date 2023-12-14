@@ -2,25 +2,17 @@
 return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => ' Tillbaka',
-    'suchfunktion' => [
-        'title' => 'Sökfunktioner',
-    ],
     'stopworte' => [
         'title' => 'Utesluta enstaka ord',
-        '1' => 'Om du vill utesluta ord i sökresultatet måste du sätta ett "-" framför ordet',
         '2' => 'Exempel: Du letar efter en ny bil, men ingen BMW. Då ska din sökning vara <div class="well well-sm">ny bil -bmw</div>',
-        '3' => 'bil ny -bmw',
     ],
     'mehrwortsuche' => [
         'title' => 'Söker efter mer än ett ord',
-        '1' => 'Utan citationstecken får du resultat som innehåller ett eller några av orden i din sökning. Använd citattecken för att söka efter exakta fraser, citat....',
         '2' => 'Exempel: sökning efter Shakespears <div class="well well-sm">to be or not to be</div> kommer att ge många resultat, men den exakta frasen kommer endast att hittas med <div class="well well-sm">"to be or nor to be"</div>',
         '3' => [
-            'example' => '"rundabordssamtal" "beslut"',
             'text' => 'Använd citationstecken för att vara säker på att få med dina sökord i resultatlistan.',
         ],
         '4' => [
-            'example' => '"beslut vid rundabordssamtal"',
             'text' => 'Sätt ord eller fraser inom citattecken för att söka efter exakta kombinationer.',
         ],
     ],
@@ -36,12 +28,10 @@ return [
     ],
     'faq' => [
         '18' => [
-            'h' => 'Varför öppnas inte !bangs direkt?',
             'b' => '!bang -\"redirections\" är en del av våra snabbtips och de behöver ett extra klick. Vi var tvungna att välja mellan enkel användning och kontroll över data. Vi anser att det är nödvändigt att visa att länkarna tillhör tredje part (DuckDuckGo). Så det finns ett tvåvägsskydd: för det första överför vi inte dina sökord utan bara !bang till DuckDuckGo. Å andra sidan bekräftar användaren uttryckligen !bang-målet. Vi har inte resurser att underhålla alla dessa !bangs, vi är ledsna.',
         ],
     ],
     'searchinsearch' => [
-        'title' => 'Sök i sök',
         '1' => 'Resultatet sparas i en ny TAB som visas på höger sida av skärmen. Den kallas "Sparade resultat". Här kan du spara enstaka resultat från flera sökningar. TAB:et finns kvar. Om du går in i detta TAB får du din personliga resultatlista med verktyg för att filtrera och sortera resultaten. Klicka på ett annat TAB för att gå tillbaka för ytterligare sökningar. Du kommer inte att ha detta om skärmen är för liten. Mer info (endast på tyska än så länge): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blogg</a>.',
     ],
     'selist' => [

@@ -2,27 +2,18 @@
 return [
     'mehrwortsuche' => [
         '4' => [
-            'example' => '"decyzja okrągłego stołu"',
             'text' => 'Umieść słowa lub frazy w cudzysłowach, aby wyszukać dokładne kombinacje.',
         ],
-        'title' => 'Wyszukiwanie więcej niż jednego słowa',
         '1' => 'Bez cudzysłowu otrzymasz wyniki zawierające jedno lub kilka słów z wyszukiwanego hasła. Użyj cudzysłowów do wyszukiwania dokładnych fraz, cytatów....',
-        '2' => 'Przykład: wyszukiwanie Shakespears <div class="well well-sm">to be or not to be</div> przyniesie wiele wyników, ale dokładna fraza zostanie znaleziona tylko przy użyciu <div class="well well-sm">"to be or nor to be".</div>',
         '3' => [
             'example' => '"okrągły stół" "decyzja"',
-            'text' => 'Użyj cudzysłowu, aby upewnić się, że wyszukiwane słowa znajdą się na liście wyników.',
         ],
     ],
     'title' => 'MetaGer - Pomoc',
     'backarrow' => ' Powrót',
-    'suchfunktion' => [
-        'title' => 'Funkcje wyszukiwania',
-    ],
     'stopworte' => [
         'title' => 'Wyklucz pojedyncze słowa',
-        '1' => 'Jeśli chcesz wykluczyć słowa w wynikach wyszukiwania, musisz umieścić znak "-" przed tym słowem',
         '2' => 'Przykład: Szukasz nowego samochodu, ale nie BMW. W takim przypadku wyszukiwanie powinno wyglądać następująco: <div class="well well-sm">nowy samochód -bmw</div>',
-        '3' => 'samochód nowy -bmw',
     ],
     'urls' => [
         'title' => 'Wyklucz adresy URL',
@@ -36,12 +27,10 @@ return [
     ],
     'faq' => [
         '18' => [
-            'h' => 'Dlaczego !bangs nie są otwierane bezpośrednio?',
             'b' => 'Bang -\"redirections\" są częścią naszych szybkich wskazówek i wymagają dodatkowego kliknięcia. Musieliśmy wybrać między łatwością użycia a zachowaniem kontroli nad danymi. Uważamy za konieczne pokazanie, że linki są własnością strony trzeciej (DuckDuckGo). Istnieje więc dwukierunkowa ochrona: po pierwsze nie przekazujemy wyszukiwanych haseł, a jedynie !bang do DuckDuckGo. Z drugiej strony użytkownik wyraźnie potwierdza cel !bang. Nie mamy zasobów, aby utrzymać wszystkie te !bangs, przykro nam.',
         ],
     ],
     'searchinsearch' => [
-        'title' => 'Wyszukiwanie w wyszukiwaniu',
         '1' => 'Wynik zostanie zapisany w nowej zakładce po prawej stronie ekranu. Nosi ona nazwę "Zapisane wyniki". Można tu zapisywać pojedyncze wyniki z kilku wyszukiwań. Zakładka ta pozostaje niezmieniona. Wchodząc do tej zakładki, otrzymasz osobistą listę wyników z narzędziami do filtrowania i sortowania wyników. Kliknij inną zakładkę, aby wrócić do dalszych wyszukiwań. Nie będzie to możliwe, jeśli ekran jest zbyt mały. Więcej informacji (na razie tylko w języku niemieckim): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> Blog SUMA</a>.',
     ],
     'selist' => [

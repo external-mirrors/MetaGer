@@ -33,4 +33,5 @@ return [
     'spende' => 'Donatie - MetaGer',
     'membership' => 'Jouw lidmaatschap bij SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
+    'help-glossary' => 'Woordenlijst - MetaGer',
 ];

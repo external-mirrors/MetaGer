@@ -32,4 +32,5 @@ return [
             '0' => 'La privacy',
         ],
     ],
+    'easy.language' => "per un aiuto semplice",
 ];

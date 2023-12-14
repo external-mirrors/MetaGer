@@ -31,7 +31,6 @@ return [
             'anonym' => '"OPEN ANONYMOUSLY": de pagina wordt geopend onder de proxybeveiliging. Je kunt hierover meer informatie vinden in de <a href = "/hilfe/datensicherheit#proxy/">MetaGer proxyserver</a> sectie.',
             'more' => '"MORE": u krijgt meer opties, het resultaat verandert van uiterlijk:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
             '2' => 'De nieuwe opties zijn:',
-            'saveresult' => '"Bewaar resultaat in TAB" (Alleen desktop): Het resultaat wordt opgeslagen in een nieuwe TAB. Het wordt gebruikt om resultaten van verschillende zoekopdrachten te verzamelen. Deze TAB verschijnt aan de rechterkant van je scherm. (info: <a href="/hilfe/funktionen#searchinsearch"> Zoeken in zoeken</a>)',
             'domainnewsearch' => '"Start een nieuwe zoekopdracht op dit domein": zoek alleen op dit domein.',
             'hideresult' => '"Verbergen": resultaten van dit domein verbergen. U kunt dit filter direct na uw zoekwoorden gebruiken (bijv. mijn zoekwoorden -site:*.wikipedia.org), filters kunnen aan elkaar worden gekoppeld en het jokerteken "*" is toegestaan. Zie ook <a href="#einstellungen"> "Instellingen"</a> om een permanente oplossing toe te passen.',
             '1' => 'Alle resultaten zien er als volgt uit:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-01.png"></div></p>',

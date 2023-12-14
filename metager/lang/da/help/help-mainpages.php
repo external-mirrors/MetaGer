@@ -33,7 +33,6 @@ return [
             'anonym' => '"OPEN ANONYMOUSLY": siden åbnes under proxybeskyttelse, og du kan finde oplysninger om dette i afsnittet <a href = "/hilfe/datensicherheit#proxy/">MetaGer proxy server</a>.',
             'more' => '"MORE": du får flere muligheder, resultatet ændrer udseende til:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
             '2' => 'De nye muligheder er:',
-            'saveresult' => '"Gem resultat i TAB" (kun desktop): Resultatet gemmes i et nyt TAB. Det bruges til at samle resultater fra flere søgninger. Dette TAB vises i højre side af din skærm. (info: <a href="/hilfe/funktionen#searchinsearch"> Søg i søgning</a>)',
             'domainnewsearch' => '"Start en ny søgning på dette domæne": søg kun på dette domæne.',
             'hideresult' => '"Skjul": skjul resultater fra dette domæne. Du kan bruge dette filter direkte efter dine søgeord (f.eks. mine søgeord -site:*.wikipedia.org), filtre kan sammenkædes, og wildcardet "*" er tilladt. Se også <a href="#einstellungen"> "Indstillinger"</a> for at anvende en permanent løsning.',
         ],

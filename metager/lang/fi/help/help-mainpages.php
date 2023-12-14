@@ -33,7 +33,6 @@ return [
             'anonym' => '"OPEN ANONYMOUSLY": sivu avataan välityspalvelinsuojauksen alaisena.Löydät lisätietoja tästä <a href = "/hilfe/datensicherheit#proxy/">MetaGer-välityspalvelimen</a> -osiosta.',
             'more' => '"LISÄÄ": saat lisää vaihtoehtoja, tulos muuttaa ulkoasunsa:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
             '2' => 'Uudet vaihtoehdot ovat:',
-            'saveresult' => '"Tallenna tulos TAB:iin" (Vain työpöytä): Tulos tallennetaan uuteen TAB:iin. Sitä käytetään useiden hakujen tulosten keräämiseen. Tämä TAB näkyy näytön oikeassa reunassa. (info: <a href="/hilfe/funktionen#searchinsearch"> Haku haulla</a>)',
             'domainnewsearch' => '"Aloita uusi haku tällä verkkotunnuksella": tee haku vain tällä verkkotunnuksella.',
             'hideresult' => '"Piilota": piilota tämän verkkotunnuksen tulokset. Voit käyttää tätä suodatinta suoraan hakusanojen jälkeen (esim. hakusanani -site:*.wikipedia.org), suodattimia voi ketjuttaa ja jokerimerkki "*" on sallittu. Katso myös <a href="#einstellungen"> "Asetukset"</a> pysyvän ratkaisun soveltamiseksi.',
         ],

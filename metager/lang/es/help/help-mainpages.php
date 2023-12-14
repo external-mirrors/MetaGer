@@ -33,7 +33,6 @@ return [
             'anonym' => '"OPEN ANONYM" hace que el resultado se abra bajo la protección de nuestro proxy. Puedes encontrar información al respecto en la sección <a href = "/hilfe/datensicherheit#proxy/">Anonimizar el servidor proxy de MetaGer</a>.',
             'more' => 'MÁS: Si hace clic en "MÁS", obtendrá nuevas opciones; el aspecto del resultado cambia:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-02.png" alt="Bildschirmfoto eines ausgeklappten Suchergebnisses"></div></p>',
             '2' => 'Las nuevas opciones son:',
-            'saveresult' => '"Guardar resultado" (sólo en la versión de escritorio): Este resultado se guarda en una ficha colectiva. La pestaña aparece a la derecha y permanece activa para cualquier número de búsquedas. (ver <a href="/hilfe/funktionen#searchinsearch"> Búsqueda en la búsqueda</a>)',
             'domainnewsearch' => '"Buscar de nuevo en este dominio": Se realiza una "búsqueda más detallada" en el dominio del resultado.',
             'hideresult' => '"ocultar": Aquí puede ocultar los resultados de este dominio. También puede escribir este conmutador directamente después de su palabra de búsqueda y también concatenarla; también se permite un "*" como comodín. Véase también <a href="#einstellungen"> "Ajustes"</a> para una solución permanente.',
         ],

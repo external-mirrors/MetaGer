@@ -33,7 +33,6 @@ return [
             'anonym' => '"OPEN ANONYMOUSLY" : la page sera ouverte sous la protection du proxy. Vous pouvez trouver des informations à ce sujet dans la section <a href = "/hilfe/datensicherheit#proxy/">MetaGer proxy server</a>.',
             'more' => '"MORE" : vous obtiendrez plus d\'options, le résultat change d\'apparence:<p><div class="image-container"><img src="/img/hilfe-php-resultpic-en-02.png"></div></p>',
             '2' => 'Les nouvelles options sont les suivantes :',
-            'saveresult' => '"Sauvegarder le résultat dans l\'onglet (uniquement pour le bureau) : Le résultat sera stocké dans un nouvel onglet. Il est utilisé pour rassembler les résultats de plusieurs recherches. Cet onglet apparaît à droite de l\'écran. (info : <a href="/hilfe/funktionen#searchinsearch"> Recherche dans la recherche</a>)',
             'domainnewsearch' => '"Démarrer une nouvelle recherche sur ce domaine" : recherche uniquement sur ce domaine.',
             'hideresult' => '"Cacher" : masquer les résultats de ce domaine. Vous pouvez utiliser ce filtre directement après vos mots de recherche (par exemple, mes mots de recherche -site:*.wikipedia.org), les filtres peuvent être concaténés et le caractère générique "*" est autorisé. Voir aussi <a href="#einstellungen"> "Settings"</a> pour appliquer une solution permanente.',
         ],

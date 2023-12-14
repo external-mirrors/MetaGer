@@ -3,9 +3,7 @@ return [
     'title' => 'MetaGer - Pomoc',
     'backarrow' => 'Powrót',
     'datenschutz' => [
-        'title' => 'Prywatność',
         '1' => 'Pliki cookie śledzenia, identyfikatory sesji, adresy IP',
-        '2' => 'Nie przechowujemy ani nie wykorzystujemy żadnych danych osobowych (w celu zabezpieczenia naszych serwerów przed atakami hakerskimi i botami musimy przechowywać te informacje przez krótki czas. Następnie zostaną one automatycznie usunięte). Zapewniamy dalsze usługi w zakresie bezpieczeństwa prywatności. Więcej informacji można znaleźć poniżej:',
         '3' => 'Kliknij / dotknij menu hamburgera, aby użyć narzędzi.',
     ],
     'tor' => [

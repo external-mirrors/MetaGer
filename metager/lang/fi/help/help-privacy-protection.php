@@ -3,9 +3,7 @@ return [
     'title' => 'MetaGer - Apua',
     'backarrow' => 'Takaisin',
     'datenschutz' => [
-        'title' => 'Yksityisyys',
         '1' => 'Seuranta-evästeet, istuntotunnisteet, IP-osoitteet',
-        '2' => 'Emme säilytä emmekä käytä henkilökohtaisia tietoja (palvelimien suojaamiseksi hakkerointi- ja bot-hyökkäyksiltä meidän on säilytettävä näitä tietoja lyhyen aikaa.). Ne poistetaan sen jälkeen automaattisesti). Tarjoamme muita yksityisyyden suojaa koskevia palveluja. Lisätietoja on jäljempänä:',
         '3' => 'Käytä työkaluja napsauttamalla/koskettamalla hampurilaisvalikkoa.',
     ],
     'tor' => [

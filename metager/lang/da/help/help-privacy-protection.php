@@ -3,9 +3,7 @@ return [
     'title' => 'MetaGer - Hjælp',
     'backarrow' => 'Tilbage',
     'datenschutz' => [
-        'title' => 'Privatlivets fred',
         '1' => 'Sporingscookies, sessions-ID\'er, IP-adresser',
-        '2' => 'Vi gemmer eller arbejder ikke med nogen personlige oplysninger (for at sikre vores servere mod hacking- og bot-angreb er vi nødt til at gemme disse oplysninger i en kort periode. De vil automatisk blive slettet bagefter). Vi tilbyder yderligere sikkerhedstjenester til beskyttelse af personlige oplysninger. For flere detaljer se nedenfor:',
         '3' => 'Klik/tryk på burgermenuen for at bruge værktøjerne.',
     ],
     'tor' => [

@@ -3,9 +3,7 @@ return [
     'title' => 'MetaGer - Hulp',
     'backarrow' => 'Terug',
     'datenschutz' => [
-        'title' => 'Privacy',
         '1' => 'Tracking-cookies, sessie-ID\'s, IP-adressen',
-        '2' => 'We slaan geen persoonlijke informatie op en werken hier ook niet mee (om onze servers te beveiligen tegen Hacking- en Bot-aanvallen, moeten we deze informatie voor een korte periode opslaan. Daarna worden ze automatisch verwijderd). We bieden nog meer diensten voor privacybeveiliging. Zie hieronder voor meer informatie:',
         '3' => 'Klik / raak het hamburgermenu aan om de hulpmiddelen te gebruiken.',
     ],
     'tor' => [

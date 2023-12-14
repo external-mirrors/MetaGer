@@ -9,9 +9,7 @@ return [
     ],
     'backarrow' => 'Retour',
     'datenschutz' => [
-        'title' => 'Vie privée',
         '1' => 'Cookies de suivi, identifiants de session, adresses IP',
-        '2' => 'Nous ne stockons ni ne travaillons avec aucune information personnelle (pour sécuriser nos serveurs contre les attaques de pirates et de robots, nous avons besoin de stocker ces informations pendant une courte période. Elles seront ensuite automatiquement supprimées). Nous proposons d\'autres services de protection de la vie privée. Pour plus de détails, voir ci-dessous :',
         '3' => 'Cliquez / touchez le menu des hamburgers pour utiliser les outils.',
     ],
     'tor' => [

@@ -3,9 +3,7 @@ return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
     'datenschutz' => [
-        'title' => 'Integritet',
         '1' => 'Spårningscookies, sessions-ID, IP-adresser',
-        '2' => 'Vi lagrar eller arbetar inte med någon personlig information (I syfte att säkra våra servrar mot hacking- och botattacker måste vi lagra denna information under en kort tidsperiod. Den raderas automatiskt efteråt). Vi tillhandahåller ytterligare tjänster för integritetsskydd. För mer information se nedan:',
         '3' => 'Klicka / tryck på hamburgermenyn för att använda verktygen.',
     ],
     'tor' => [

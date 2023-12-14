@@ -3,9 +3,7 @@ return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
     'datenschutz' => [
-        'title' => 'Anonimato y seguridad de los datos',
         '1' => 'Cookies de seguimiento, identificadores de sesión y direcciones IP',
-        '2' => 'Nada de esto se utiliza, almacena, retiene o procesa de alguna manera aquí en MetaGer (excepción: almacenamiento a corto plazo contra ataques de hackers y bots). Como consideramos que este tema es extremadamente importante, también hemos creado opciones que pueden ayudarte a conseguir el máximo nivel de seguridad: el servicio oculto TOR de MetaGer y nuestro servidor proxy anonimizador.',
         '3' => 'Encontrará más información a continuación. Se puede acceder a las funciones en "Servicios" en la barra de navegación.',
     ],
     'tor' => [

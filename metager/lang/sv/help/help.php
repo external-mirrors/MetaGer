@@ -32,4 +32,5 @@ return [
             '0' => 'Integritet',
         ],
     ],
+    'easy.language' => "för enkel hjälp",
 ];

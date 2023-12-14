@@ -33,4 +33,5 @@ return [
     'prevention' => 'Ayuda con los pensamientos suicidas - MetaGer',
     'membership' => 'Su afiliación a SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
+    'help-glossary' => 'Glosario - MetaGer',
 ];

@@ -3,7 +3,6 @@ return [
     'title' => 'MetaGer - Hulp',
     'backarrow' => 'Terug',
     'dienste' => [
-        'kostenlos' => 'Al onze services zijn gratis. U betaalt niet met uw gegevens.',
         'text' => 'Diensten',
     ],
     'app' => [
@@ -11,9 +10,7 @@ return [
         '1' => 'Je kunt MetaGer ook binnen een app gebruiken. Download hiervoor de <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> op je Android smartphone.',
     ],
     'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
         '1' => 'Vraag de <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) om connotaties in een onderwerp te vinden. De service&apos;gebruikt geen enkele taal omdat het webdocumenten als bron gebruikt. Daarom vind je connotaties in de taal die je gebruikt en vice versa.',
-        '2' => 'Voorbeeld: je wilt meer weten over "tekenbeten" en de gevaren ervan, maar je bent de technische termen rond dit onderwerp vergeten. De "Assoziator" presenteert onder andere "Borreliose" en "fsme".',
         '3' => 'Laat het ons weten als er iets ongeschikts verschijnt. Gebruik hiervoor ons <a href="/en/kontakt/" target="_blank" rel="noopener">contactformulier</a>.',
     ],
     'widget' => [

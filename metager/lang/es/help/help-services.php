@@ -3,7 +3,6 @@ return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
     'dienste' => [
-        'kostenlos' => 'Por supuesto, todos nuestros servicios son gratuitos',
         'text' => 'Otros servicios en torno a la búsqueda',
     ],
     'app' => [
@@ -11,9 +10,7 @@ return [
         '1' => 'También puedes utilizar MetaGer como aplicación. Sólo tienes que descargar la <a href="https://metager.de/app" target="_blank" rel="noopener">aplicación MetaGer</a> en tu smartphone Android.',
     ],
     'suchwortassoziator' => [
-        'title' => 'Buscar palabra asociada',
         '1' => 'Como ayuda para indexar un entorno de términos, hemos desarrollado el <a href="/asso" target="_blank" rel="noopener">Asociador Web MetaGer</a>. También puede encontrar la herramienta directamente en la pestaña "Servicios". Si introduces en él un término de búsqueda que se acerque de alguna manera al área temática que quieres investigar, intentará extraer de la WWW los términos técnicos típicos de esta área.',
-        '2' => 'Ejemplo: Quiere saber más sobre las picaduras de garrapata y sus peligros, pero no puede pensar en los términos médicos de las enfermedades de este ámbito. Al introducir la palabra "picaduras de garrapata" en el asociador web, aparecen los términos "enfermedad de Lyme" y "fsme", entre otros.',
         '3' => 'Dado que este análisis de asociación se obtiene, entre otras cosas, de los propios documentos web, es independiente del idioma; es decir, se pueden obtener términos técnicos de cualquier idioma al introducir palabras en alemán (y viceversa).',
     ],
     'widget' => [

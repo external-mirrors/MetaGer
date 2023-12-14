@@ -3,7 +3,6 @@ return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
     'dienste' => [
-        'kostenlos' => 'Alla våra tjänster är kostnadsfria. Du betalar inte med dina data.',
         'text' => 'Tjänster',
     ],
     'app' => [
@@ -11,9 +10,7 @@ return [
         '1' => 'Du kan också använda MetaGer i en app. Ladda bara ner <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> på din Android-smartphone.',
     ],
     'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
         '2' => 'Exempel: du vill veta mer om "fästingbett" och dess faror men du har glömt de tekniska termerna kring denna fråga. "Assoziator" presenterar bland annat "Borreliose" och "fsme".',
-        '3' => 'Vänligen meddela oss om något olämpligt visas. Använd vårt kontaktformulär <a href="/en/kontakt/" target="_blank" rel="noopener"></a> .',
         '1' => 'Be <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) att hitta konnotationer inom ett ämnesområde. Tjänsten&apos;lägger inte till något språk eftersom den använder webbdokument som källa. Därför hittar du alla konnotationer till ditt använda språk och vice versa.',
     ],
     'widget' => [

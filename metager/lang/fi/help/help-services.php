@@ -3,7 +3,6 @@ return [
     'title' => 'MetaGer - Apua',
     'backarrow' => 'Takaisin',
     'dienste' => [
-        'kostenlos' => 'Kaikki palvelumme ovat maksuttomia. Et maksa tiedoillasi.',
         'text' => 'Palvelut',
     ],
     'app' => [
@@ -11,9 +10,7 @@ return [
         '1' => 'Voit käyttää MetaGeriä myös sovelluksen sisällä. Lataa vain <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> Android-älypuhelimeesi.',
     ],
     'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
         '1' => 'Pyydä <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Työkalut / Associator) löytämään konnotaatioita aihealueelta. Palvelu&apos;ei liitä mihinkään kieleen, koska se käyttää lähteenä verkkodokumentteja. Siksi löydät kaikki konnotaatiot käyttämääsi kieleen ja päinvastoin.',
-        '2' => 'Esimerkki: haluat tietää enemmän "punkin puremista" ja niiden vaaroista, mutta olet unohtanut asiaan liittyvät tekniset termit. "Assoziator" esittelee muun muassa "Borreliose" ja "fsme".',
         '3' => 'Ilmoita meille, jos jotain sopimatonta näkyy. Käytä <a href="/en/kontakt/" target="_blank" rel="noopener">yhteydenottolomakettamme</a>.',
     ],
     'widget' => [

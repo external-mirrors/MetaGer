@@ -2,7 +2,6 @@
 return [
     'backarrow' => 'Retour',
     'dienste' => [
-        'kostenlos' => 'Tous nos services sont gratuits. Vous ne payez pas avec vos données.',
         'text' => 'Services',
     ],
     'app' => [
@@ -10,9 +9,7 @@ return [
         '1' => 'Vous pouvez également utiliser MetaGer dans une application. Pour ce faire, il vous suffit de télécharger l\'application <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> sur votre smartphone Android.',
     ],
     'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
         '1' => 'Demandez à <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Outils / Associateur) de trouver des connotations dans un domaine. Le service&apos;ne s\'appuie sur aucune langue car il utilise des documents web comme source. Par conséquent, vous trouverez toutes les connotations dans la langue que vous utilisez et vice-versa.',
-        '2' => 'Exemple : vous voulez en savoir plus sur les "piqûres de tiques" et leurs dangers, mais vous avez oublié les termes techniques qui s\'y rapportent. L\'Assoziator vous présente entre autres "Borreliose" et "fsme".',
         '3' => 'Veuillez nous informer si quelque chose d\'inapproprié apparaît. Veuillez utiliser notre formulaire de contact <a href="/en/kontakt/" target="_blank" rel="noopener"></a> .',
     ],
     'widget' => [

@@ -7,9 +7,6 @@ return [
     ],
     'title' => 'MetaGer - Aide',
     'backarrow' => 'Retour',
-    'mehrwortsuche' => [
-        '2' => 'Exemple : la recherche de Shakespears <div class="well well-sm">to be or not to be</div> donnera de nombreux résultats, mais la phrase exacte ne sera trouvée qu\'en utilisant <div class="well well-sm">"to be or nor to be".</div>',
-    ],
     'urls' => [
         'title' => 'Exclure des URL',
         'explanation' => 'Vous pouvez exclure les résultats de recherche qui contiennent des mots spécifiques dans leurs liens de résultats en utilisant "-url :" dans votre recherche.',

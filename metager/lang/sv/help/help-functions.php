@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
-    'mehrwortsuche' => [
-        '2' => 'Exempel: sökning efter Shakespears <div class="well well-sm">to be or not to be</div> kommer att ge många resultat, men den exakta frasen kommer endast att hittas med <div class="well well-sm">"to be or nor to be"</div>',
-    ],
     'urls' => [
         'title' => 'Utesluta URL-adresser',
         'explanation' => 'Du kan utesluta sökresultat som innehåller specifika ord i sina resultatlänkar genom att använda "-url:" i din sökning.',

@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Apua',
     'backarrow' => 'Takaisin',
-    'mehrwortsuche' => [
-        '2' => 'Esimerkki: haku Shakespears <div class="well well-sm">to be or not to be</div> antaa monia tuloksia, mutta tarkka lause löytyy vain käyttämällä <div class="well well-sm">"to be or nor to be".</div>',
-    ],
     'urls' => [
         'title' => 'Sulje pois URL-osoitteet',
         'explanation' => 'Voit sulkea pois hakutulokset, joiden tuloslinkit sisältävät tiettyjä sanoja, käyttämällä hakusanaa "-url:".',

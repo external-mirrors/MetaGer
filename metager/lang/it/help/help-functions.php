@@ -13,11 +13,6 @@ return [
     ],
     'title' => 'MetaGer - Aiuto',
     'backarrow' => 'Indietro',
-    'mehrwortsuche' => [
-        '4' => [
-            'text' => 'Mettete le parole o le frasi tra virgolette per cercare le combinazioni esatte.',
-        ],
-    ],
     'urls' => [
         'title' => 'Escludere gli URL',
         'explanation' => 'È possibile escludere i risultati della ricerca che contengono parole specifiche nei link dei risultati utilizzando "-url:" nella ricerca.',

@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Hulp',
     'backarrow' => 'Terug',
-    'mehrwortsuche' => [
-        '2' => 'Voorbeeld: zoeken op Shakespears <div class="well well-sm">to be or not to be</div> levert veel resultaten op, maar de exacte zin wordt alleen gevonden met <div class="well well-sm">"to be or nor to be".</div>',
-    ],
     'urls' => [
         'explanation' => 'Je kunt zoekresultaten uitsluiten die specifieke woorden bevatten in hun resultaatlinks door "-url:" te gebruiken in je zoekopdracht.',
         'example_b' => '<i>mijn zoekopdracht</i> -url:hond',

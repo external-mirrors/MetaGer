@@ -1,15 +1,7 @@
 <?php
 return [
-    'stopworte' => [
-        '2' => 'Et eksempel: Du leder efter en ny bil, men ingen BMW. Så skal din søgning være <div class="well well-sm">new car -bmw</div>',
-    ],
     'title' => 'MetaGer - Hjælp',
     'backarrow' => 'Tilbage',
-    'mehrwortsuche' => [
-        '3' => [
-            'example' => '"rundbordssamtale" "beslutning"',
-        ],
-    ],
     'urls' => [
         'title' => 'Ekskluder URL\'er',
         'explanation' => 'Du kan ekskludere søgeresultater, der indeholder specifikke ord i deres resultatlinks, ved at bruge "-url:" i din søgning.',
@@ -21,9 +13,6 @@ return [
         '1' => 'MetaGer understøtter i begrænset omfang en skrivestil, der ofte kaldes \'!bang\'-syntaks.<br>Et \'!bang\' starter altid med et udråbstegn og indeholder ikke mellemrum. Eksempler er \'!twitter\' eller \'!facebook\'.<br>Når en understøttet !bang bruges i søgeforespørgslen, vises en post i vores hurtige tips, så du kan fortsætte søgningen med den respektive tjeneste (Twitter eller Facebook) ved at trykke på en knap.',
         '2' => 'Hvorfor åbnes !bangs ikke direkte?',
         '3' => '!bang-"omdirigeringerne" er en del af vores hurtige tips og kræver et ekstra "klik." Det var en svær beslutning for os, da det gør !bangs mindre brugbare. Men det er desværre nødvendigt, fordi de links, der omdirigeres til, ikke kommer fra os, men fra en tredjepart, DuckDuckGo.<p>Vi sørger altid for, at vores brugere til enhver tid bevarer kontrollen. Derfor beskytter vi på to måder: For det første overføres det indtastede søgeord aldrig til DuckDuckGo, kun !bang. For det andet bekræfter brugeren udtrykkeligt besøget på !bang-målet. Desværre kan vi af personalemæssige årsager i øjeblikket ikke selv kontrollere eller vedligeholde alle disse !bangs.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Resultatet gemmes i et nyt TAB, der vises i højre side af skærmen. Det kaldes "Gemte resultater". Her kan du gemme enkeltresultater fra flere søgninger. TAB\'et bliver ved med at eksistere. Når du går ind i dette TAB, får du din personlige resultatliste med værktøjer til at filtrere og sortere resultaterne. Klik på et andet TAB for at gå tilbage til yderligere søgninger. Dette har du ikke, hvis skærmen er for lille. Mere info (indtil videre kun på tysk): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blog</a>.',
     ],
     'selist' => [
         'title' => 'Tilføj MetaGer til din browsers søgemaskineliste <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

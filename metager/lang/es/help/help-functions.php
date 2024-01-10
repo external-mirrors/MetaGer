@@ -2,14 +2,8 @@
 return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
-    'stopworte' => [
-        '2' => 'Ejemplo: Usted está buscando un coche nuevo, pero definitivamente no un BMW. Así que tu aportación es:',
-    ],
     'mehrwortsuche' => [
         '2' => 'Si esto no es suficiente para usted, tiene 2 opciones para hacer su búsqueda más precisa:',
-        '4' => [
-            'text' => 'Con la búsqueda de frases, también puede buscar combinaciones de palabras en lugar de palabras individuales. Para ello, basta con colocar las palabras que deben aparecer juntas entre comillas.',
-        ],
     ],
     'urls' => [
         'title' => 'Excluir URLs',
@@ -22,9 +16,6 @@ return [
         '1' => 'MetaGer admite de forma limitada un estilo de escritura conocido como sintaxis "bang". <br>Un "bang" siempre empieza con un signo de exclamación y no contiene espacios. Los ejemplos incluyen \'!twitter\' o \'!facebook\'.<br>Cuando se utiliza un !bang compatible en la consulta de búsqueda, aparece una entrada en nuestros consejos rápidos, lo que le permite continuar la búsqueda con el servicio respectivo (Twitter o Facebook) con sólo pulsar un botón.',
         '2' => '¿Por qué no se abre directamente?',
         '3' => 'Los "redireccionamientos" de !bang forman parte de nuestros consejos rápidos y requieren un "clic" adicional. Ésta fue una decisión difícil para nosotros, ya que hace que !bangs sea menos útil. Sin embargo, lamentablemente es necesario porque los enlaces a los que se produce la redirección no proceden de nosotros, sino de un tercero, DuckDuckGo.<p>Siempre nos aseguramos de que nuestros usuarios mantengan el control en todo momento. Por lo tanto, protegemos de dos maneras: En primer lugar, el término de búsqueda introducido nunca se transmite a DuckDuckGo, sólo el !bang. En segundo lugar, el usuario confirma explícitamente la visita al objetivo !bang. Lamentablemente, por motivos de personal, no podemos comprobar ni mantener todos estos !bangs nosotros mismos.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Se puede acceder a la función de búsqueda en el buscador mediante el botón "MÁS" situado en la parte inferior derecha del cuadro de resultados. Al hacer clic se abre un menú en el que "Guardar resultado" está en primer lugar. Con esta opción, el resultado respectivo se almacena en una memoria separada. El contenido de esta memoria se muestra a la derecha de los resultados, bajo los consejos rápidos (en las pantallas demasiado pequeñas, los resultados guardados no se muestran por falta de espacio). Allí puede filtrar o reordenar los resultados guardados por palabra clave. Puede encontrar más información sobre el tema "Búsqueda en la búsqueda" en el <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> blog de SUMA</a>.',
     ],
     'selist' => [
         'title' => 'Añade MetaGer a la lista de motores de búsqueda de tu navegador <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

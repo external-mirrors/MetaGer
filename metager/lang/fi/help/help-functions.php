@@ -2,14 +2,8 @@
 return [
     'title' => 'MetaGer - Apua',
     'backarrow' => 'Takaisin',
-    'stopworte' => [
-        '2' => 'Esimerkki: Etsit uutta autoa, mutta et BMW:tä. Silloin hakusi pitäisi olla <div class="well well-sm">uusi auto -bmw.</div>',
-    ],
     'mehrwortsuche' => [
         '2' => 'Esimerkki: haku Shakespears <div class="well well-sm">to be or not to be</div> antaa monia tuloksia, mutta tarkka lause löytyy vain käyttämällä <div class="well well-sm">"to be or nor to be".</div>',
-        '4' => [
-            'text' => 'Laita sanat tai lausekkeet lainausmerkkeihin etsiäksesi tarkkoja yhdistelmiä.',
-        ],
     ],
     'urls' => [
         'title' => 'Sulje pois URL-osoitteet',
@@ -22,9 +16,6 @@ return [
         '1' => 'MetaGer tukee rajoitetusti kirjoitustyyliä, jota kutsutaan usein \'!bang\' -syntaksiksi.<br> \'!bang\' alkaa aina huutomerkillä eikä sisällä välilyöntejä. Esimerkkejä ovat \'!twitter\' tai \'!facebook\'.<br>Kun hakukyselyssä käytetään tuettua !bang-merkintää, pikavihjeissämme näkyy merkintä, jonka avulla voit jatkaa hakua kyseisessä palvelussa (Twitter tai Facebook) napin painalluksella.',
         '2' => 'Miksi !paukkuja ei avata suoraan?',
         '3' => '!bangin "uudelleenohjaukset" ovat osa pikavinkkejä ja vaativat ylimääräisen "klikkauksen". Tämä oli meille vaikea päätös, sillä se tekee !bangista vähemmän hyödyllisen. Se on kuitenkin valitettavasti välttämätöntä, koska linkit, joihin uudelleenohjaus tapahtuu, eivät ole peräisin meiltä vaan kolmannelta osapuolelta, DuckDuckGolta. <p>Varmennamme aina, että käyttäjillämme säilyy aina kontrolli. Siksi suojaamme kahdella tavalla: Ensinnäkin, syötettyä hakusanaa ei koskaan välitetä DuckDuckGolle, ainoastaan !bang. Toiseksi käyttäjä vahvistaa nimenomaisesti käynnin !bang-kohteessa. Valitettavasti henkilöstösyistä emme voi tällä hetkellä itse tarkistaa tai ylläpitää kaikkia näitä !bangeja.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Tulos tallennetaan uuteen välilehteen, joka ilmestyy näytön oikeaan reunaan. Sen nimi on "Tallennetut tulokset". Voit tallentaa tänne yksittäisiä tuloksia useista hauista. TAB säilyy. Syöttämällä tähän välilehteen saat henkilökohtaisen tulosluettelon, jossa on työkaluja tulosten suodattamiseen ja lajitteluun. Napsauttamalla toista TAB:ia voit palata takaisin lisähakuja varten. Tämä ei onnistu, jos näyttö on liian pieni. Lisätietoja (toistaiseksi vain saksaksi): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA-blogi</a>.',
     ],
     'selist' => [
         'title' => 'Lisää MetaGer selaimesi hakukoneluetteloon <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

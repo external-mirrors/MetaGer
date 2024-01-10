@@ -7,14 +7,8 @@ return [
     ],
     'title' => 'MetaGer - Aide',
     'backarrow' => 'Retour',
-    'stopworte' => [
-        '2' => 'Exemple : Vous cherchez une nouvelle voiture, mais pas de BMW. Dans ce cas, votre recherche devrait être la suivante : <div class="well well-sm">nouvelle voiture -bmw</div>',
-    ],
     'mehrwortsuche' => [
         '2' => 'Exemple : la recherche de Shakespears <div class="well well-sm">to be or not to be</div> donnera de nombreux résultats, mais la phrase exacte ne sera trouvée qu\'en utilisant <div class="well well-sm">"to be or nor to be".</div>',
-        '4' => [
-            'text' => 'Mettez des mots ou des phrases entre guillemets pour rechercher des combinaisons exactes.',
-        ],
     ],
     'urls' => [
         'title' => 'Exclure des URL',
@@ -27,9 +21,6 @@ return [
         '1' => 'MetaGer supporte dans une certaine mesure un style d\'écriture souvent appelé syntaxe "!bang".<br>Un "bang" commence toujours par un point d\'exclamation et ne contient pas d\'espaces. Lorsqu\'un !bang pris en charge est utilisé dans la requête de recherche, une entrée apparaît dans nos conseils rapides, vous permettant de poursuivre la recherche avec le service concerné (Twitter ou Facebook) en appuyant sur un bouton.',
         '2' => 'Pourquoi les !bangs ne sont-ils pas ouverts directement ?',
         '3' => 'Les "redirections" de !bang font partie de nos conseils rapides et nécessitent un "clic" supplémentaire, ce qui a été une décision difficile à prendre pour nous, car cela rend !bangs moins utile. Cependant, elle est malheureusement nécessaire car les liens vers lesquels la redirection se produit ne proviennent pas de nous mais d\'un tiers, DuckDuckGo. Nous veillons toujours à ce que nos utilisateurs gardent le contrôle : Premièrement, le terme de recherche saisi n\'est jamais transmis à DuckDuckGo, seulement le !bang. Deuxièmement, l\'utilisateur confirme explicitement la visite de la cible !bang. Malheureusement, pour des raisons de personnel, nous ne pouvons pas actuellement vérifier ou maintenir tous ces !bangs nous-mêmes.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Le résultat sera stocké dans un nouvel onglet apparaissant à droite de l\'écran. Il s\'appelle "Résultats enregistrés". Vous pouvez y enregistrer les résultats de plusieurs recherches. L\'onglet persiste. En entrant dans cet onglet, vous obtenez votre liste de résultats personnelle avec des outils pour filtrer et trier les résultats. Cliquez sur un autre onglet pour revenir en arrière et effectuer d\'autres recherches. Vous n\'aurez pas cette possibilité si l\'écran est trop petit. Plus d\'informations (seulement en allemand pour l\'instant) : <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> Blog SUMA</a>.',
     ],
     'searchfunction' => [
         'title' => "Fonctions de recherche",

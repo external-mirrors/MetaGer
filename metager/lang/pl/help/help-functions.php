@@ -1,13 +1,7 @@
 <?php
 return [
-    'mehrwortsuche' => [
-        '1' => 'Bez cudzysłowu otrzymasz wyniki zawierające jedno lub kilka słów z wyszukiwanego hasła. Użyj cudzysłowów do wyszukiwania dokładnych fraz, cytatów....',
-    ],
     'title' => 'MetaGer - Pomoc',
     'backarrow' => 'Powrót',
-    'stopworte' => [
-        '2' => 'Przykład: Szukasz nowego samochodu, ale nie BMW. W takim przypadku wyszukiwanie powinno wyglądać następująco: <div class="well well-sm">nowy samochód -bmw</div>',
-    ],
     'urls' => [
         'title' => 'Wyklucz adresy URL',
         'explanation' => 'Możesz wykluczyć wyniki wyszukiwania, które zawierają określone słowa w linkach do wyników, używając "-url:" w wyszukiwaniu.',
@@ -19,9 +13,6 @@ return [
         '1' => 'MetaGer obsługuje w ograniczonym zakresie styl pisania często określany jako składnia \'!bang\'.<br>Składnia \'!bang\' zawsze zaczyna się od wykrzyknika i nie zawiera spacji. Przykłady obejmują \'!twitter\' lub \'!facebook\'.<br>Kiedy w zapytaniu wyszukiwawczym zostanie użyty obsługiwany !bang, w naszych szybkich wskazówkach pojawi się wpis, umożliwiający kontynuowanie wyszukiwania w odpowiedniej usłudze (Twitter lub Facebook) za naciśnięciem przycisku.',
         '2' => 'Dlaczego !bangs nie są otwierane bezpośrednio?',
         '3' => 'Przekierowania !bang są częścią naszych szybkich wskazówek i wymagają dodatkowego "kliknięcia". Była to dla nas trudna decyzja, ponieważ sprawia, że !bangi są mniej użyteczne. Jest to jednak niestety konieczne, ponieważ linki, do których następuje przekierowanie, nie pochodzą od nas, ale od strony trzeciej, DuckDuckGo.<p>Zawsze zapewniamy, że nasi użytkownicy zachowują kontrolę przez cały czas. Dlatego chronimy na dwa sposoby: Po pierwsze, wprowadzony termin wyszukiwania nigdy nie jest przesyłany do DuckDuckGo, a jedynie !bang. Po drugie, użytkownik wyraźnie potwierdza wizytę w miejscu docelowym !bang. Niestety, ze względów kadrowych nie możemy obecnie samodzielnie sprawdzać ani utrzymywać wszystkich tych !bangów.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Wynik zostanie zapisany w nowej zakładce po prawej stronie ekranu. Nosi ona nazwę "Zapisane wyniki". Można tu zapisywać pojedyncze wyniki z kilku wyszukiwań. Zakładka ta pozostaje niezmieniona. Wchodząc do tej zakładki, otrzymasz osobistą listę wyników z narzędziami do filtrowania i sortowania wyników. Kliknij inną zakładkę, aby wrócić do dalszych wyszukiwań. Nie będzie to możliwe, jeśli ekran jest zbyt mały. Więcej informacji (na razie tylko w języku niemieckim): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> Blog SUMA</a>.',
     ],
     'selist' => [
         'title' => 'Dodaj MetaGer do listy wyszukiwarek w przeglądarce <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

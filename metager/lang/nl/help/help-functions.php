@@ -2,14 +2,8 @@
 return [
     'title' => 'MetaGer - Hulp',
     'backarrow' => 'Terug',
-    'stopworte' => [
-        '2' => 'Voorbeeld: Je bent op zoek naar een nieuwe auto, maar geen BMW. Dan moet uw zoekopdracht <div class="well well-sm">nieuwe auto -bmw zijn.</div>',
-    ],
     'mehrwortsuche' => [
         '2' => 'Voorbeeld: zoeken op Shakespears <div class="well well-sm">to be or not to be</div> levert veel resultaten op, maar de exacte zin wordt alleen gevonden met <div class="well well-sm">"to be or nor to be".</div>',
-        '4' => [
-            'text' => 'Zet woorden of zinnen tussen aanhalingstekens om exacte combinaties te zoeken.',
-        ],
     ],
     'urls' => [
         'explanation' => 'Je kunt zoekresultaten uitsluiten die specifieke woorden bevatten in hun resultaatlinks door "-url:" te gebruiken in je zoekopdracht.',
@@ -22,9 +16,6 @@ return [
         '1' => 'MetaGer ondersteunt in beperkte mate een schrijfstijl die vaak \'!bang\' syntax wordt genoemd.<br>Een \'!bang\' begint altijd met een uitroepteken en bevat geen spaties. Voorbeelden zijn \'!twitter\' of \'!facebook\'.<br>Wanneer een ondersteunde \'!bang\' wordt gebruikt in de zoekopdracht, verschijnt er een vermelding in onze sneltips, zodat u met een druk op de knop verder kunt zoeken bij de betreffende service (Twitter of Facebook).',
         '2' => 'Waarom worden !bangs niet direct geopend?',
         '3' => 'De !bang "redirects" maken deel uit van onze snelle tips en vereisen een extra "klik". Dit was een moeilijke beslissing voor ons, omdat het de !bangs minder nuttig maakt. Het is echter helaas noodzakelijk omdat de links waarnaar wordt omgeleid niet van ons afkomstig zijn, maar van een derde partij, DuckDuckGo.<p>We zorgen er altijd voor dat onze gebruikers de controle behouden. Daarom beschermen we op twee manieren: Ten eerste wordt de ingevoerde zoekterm nooit doorgegeven aan DuckDuckGo, alleen de !bang. Ten tweede bevestigt de gebruiker expliciet het bezoek aan het !bang-doel. Helaas kunnen we momenteel om personeelsredenen niet al deze !bangs zelf controleren of onderhouden.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Het resultaat wordt opgeslagen in een nieuwe TAB aan de rechterkant van het scherm. Deze heet "Opgeslagen resultaten". Je kunt hier afzonderlijke resultaten van meerdere zoekopdrachten opslaan. De TAB blijft bewaard. Als je deze TAB invoert, krijg je je persoonlijke resultatenlijst met hulpmiddelen om de resultaten te filteren en sorteren. Klik op een andere TAB om terug te gaan voor verdere zoekopdrachten. Dit is niet mogelijk als het scherm te klein is. Meer informatie (tot nu toe alleen in het Duits): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blog</a>.',
     ],
     'selist' => [
         'title' => 'MetaGer toevoegen aan de zoekmachinelijst van je browser <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

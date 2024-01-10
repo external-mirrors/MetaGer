@@ -1,8 +1,5 @@
 <?php
 return [
-    'stopworte' => [
-        '2' => 'Esempio: State cercando un\'auto nuova, ma non una BMW. Allora la ricerca dovrebbe essere <div class="well well-sm">auto nuova -bmw</div>',
-    ],
     'bang' => [
         'title' => 'Mappe MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'MetaGer supporta in misura limitata uno stile di scrittura spesso definito sintassi "bang".<br>Un "bang" inizia sempre con un punto esclamativo e non contiene spazi. Quando nella query di ricerca viene utilizzato un \'\'bang\'\' supportato, nei nostri suggerimenti rapidi compare una voce che consente di continuare la ricerca con il rispettivo servizio (Twitter o Facebook) premendo un pulsante.',
@@ -17,7 +14,6 @@ return [
     'title' => 'MetaGer - Aiuto',
     'backarrow' => 'Indietro',
     'mehrwortsuche' => [
-        '2' => 'Esempio: la ricerca di Shakespears <div class="well well-sm">to be or not to be</div> fornirà molti risultati, ma la frase esatta sarà trovata solo utilizzando <div class="well well-sm">"to be or nor to be".</div>',
         '4' => [
             'text' => 'Mettete le parole o le frasi tra virgolette per cercare le combinazioni esatte.',
         ],

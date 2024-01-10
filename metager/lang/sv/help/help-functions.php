@@ -2,14 +2,8 @@
 return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
-    'stopworte' => [
-        '2' => 'Exempel: Du letar efter en ny bil, men ingen BMW. Då ska din sökning vara <div class="well well-sm">ny bil -bmw</div>',
-    ],
     'mehrwortsuche' => [
         '2' => 'Exempel: sökning efter Shakespears <div class="well well-sm">to be or not to be</div> kommer att ge många resultat, men den exakta frasen kommer endast att hittas med <div class="well well-sm">"to be or nor to be"</div>',
-        '4' => [
-            'text' => 'Sätt ord eller fraser inom citattecken för att söka efter exakta kombinationer.',
-        ],
     ],
     'urls' => [
         'title' => 'Utesluta URL-adresser',
@@ -22,9 +16,6 @@ return [
         'title' => 'MetaGer Kartor <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '2' => 'Varför öppnas inte !bangs direkt?',
         '3' => '!bang-"omdirigeringarna" är en del av våra snabbtips och kräver ytterligare ett "klick." Detta var ett svårt beslut för oss, eftersom det gör !bangs mindre användbara. Men det är tyvärr nödvändigt eftersom de länkar som omdirigeringen sker till inte kommer från oss utan från en tredje part, DuckDuckGo.<p>Vi ser alltid till att våra användare behåller kontrollen i alla lägen. Därför skyddar vi på två sätt: För det första överförs aldrig den inmatade söktermen till DuckDuckGo, utan endast !bang. För det andra bekräftar användaren uttryckligen besöket på !bang-målet. Tyvärr kan vi på grund av personalskäl för närvarande inte kontrollera eller underhålla alla dessa !bangs själva.',
-    ],
-    'searchinsearch' => [
-        '1' => 'Resultatet sparas i en ny TAB som visas på höger sida av skärmen. Den kallas "Sparade resultat". Här kan du spara enstaka resultat från flera sökningar. TAB:et finns kvar. Om du går in i detta TAB får du din personliga resultatlista med verktyg för att filtrera och sortera resultaten. Klicka på ett annat TAB för att gå tillbaka för ytterligare sökningar. Du kommer inte att ha detta om skärmen är för liten. Mer info (endast på tyska än så länge): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blogg</a>.',
     ],
     'selist' => [
         'title' => 'Lägg till MetaGer i din webbläsares lista över sökmotorer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

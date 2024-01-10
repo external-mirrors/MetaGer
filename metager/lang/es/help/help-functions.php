@@ -2,9 +2,6 @@
 return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
-    'mehrwortsuche' => [
-        '2' => 'Si esto no es suficiente para usted, tiene 2 opciones para hacer su búsqueda más precisa:',
-    ],
     'urls' => [
         'title' => 'Excluir URLs',
         'explanation' => 'Puede excluir los resultados de búsqueda que contengan palabras específicas en sus enlaces de resultados utilizando "-url:" en su búsqueda.',

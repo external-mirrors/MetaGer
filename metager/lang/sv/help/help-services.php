@@ -6,9 +6,6 @@ return [
         'title' => 'Android-app <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Du kan också använda MetaGer som en app. Ladda helt enkelt ner <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> på din Android-smartphone.',
     ],
-    'suchwortassoziator' => [
-        '1' => 'Be <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) att hitta konnotationer inom ett ämnesområde. Tjänsten&apos;lägger inte till något språk eftersom den använder webbdokument som källa. Därför hittar du alla konnotationer till ditt använda språk och vice versa.',
-    ],
     'widget' => [
         'title' => 'Widget för MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Detta är en kodgenerator som gör att du kan bädda in MetaGer på din webbplats. Du kan använda den för att utföra sökningar på din egen webbplats eller på internet efter önskemål. Om du har några frågor kan du använda <a href="/kontakt/" target="_blank" rel="noopener">vårt kontaktformulär</a>.',

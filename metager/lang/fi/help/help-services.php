@@ -6,9 +6,6 @@ return [
         'title' => 'Android-sovellus <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Voit käyttää MetaGeriä myös sovelluksena. Lataa yksinkertaisesti <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> Android-älypuhelimeesi.',
     ],
-    'suchwortassoziator' => [
-        '3' => 'Ilmoita meille, jos jotain sopimatonta näkyy. Käytä <a href="/en/kontakt/" target="_blank" rel="noopener">yhteydenottolomakettamme</a>.',
-    ],
     'widget' => [
         'title' => 'MetaGer Widget <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Tämä on koodigeneraattori, jonka avulla voit upottaa MetaGerin verkkosivuillesi. Voit käyttää sitä hakujen tekemiseen omalla sivustollasi tai internetissä halutessasi. Jos sinulla on kysyttävää, käytä <a href="/kontakt/" target="_blank" rel="noopener">yhteydenottolomakettamme</a>.',

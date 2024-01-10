@@ -6,9 +6,6 @@ return [
         'title' => 'Android-app <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Du kan også bruge MetaGer som en app. Du skal blot downloade <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> på din Android-smartphone.',
     ],
-    'suchwortassoziator' => [
-        '3' => 'Giv os venligst besked, hvis der vises noget upassende. Brug venligst vores <a href="/en/kontakt/" target="_blank" rel="noopener">kontaktformular</a>.',
-    ],
     'widget' => [
         'title' => 'MetaGer Widget <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Dette er en kodegenerator, der giver dig mulighed for at integrere MetaGer på din hjemmeside. Du kan bruge den til at udføre søgninger på din egen side eller på internettet efter ønske. Hvis du har spørgsmål, bedes du bruge <a href="/kontakt/" target="_blank" rel="noopener">vores kontaktformular</a>.',

@@ -6,9 +6,6 @@ return [
         'title' => 'Aplicación Android <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'También puedes utilizar MetaGer como aplicación. Solo tienes que descargar la aplicación <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> en tu smartphone Android.',
     ],
-    'suchwortassoziator' => [
-        '3' => 'Dado que este análisis de asociación se obtiene, entre otras cosas, de los propios documentos web, es independiente del idioma; es decir, se pueden obtener términos técnicos de cualquier idioma al introducir palabras en alemán (y viceversa).',
-    ],
     'widget' => [
         'title' => 'Widget MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Este es un generador de código que le permite incrustar MetaGer en su sitio web. Puede utilizarlo para realizar búsquedas en su propio sitio o en Internet, según desee. Para cualquier consulta, utilice <a href="/kontakt/" target="_blank" rel="noopener">nuestro formulario de contacto</a>.',

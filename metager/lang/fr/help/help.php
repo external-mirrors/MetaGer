@@ -32,4 +32,5 @@ return [
     ],
     'achtung' => 'Avertissement ! La structure et la fonctionnalité de notre site web sont soumises à un développement et à des changements constants. Nous nous efforçons de mettre à jour nos pages d\'aide aussi rapidement que possible, mais nous ne pouvons pas empêcher les erreurs temporaires.',
     'title' => 'MetaGer - Aide',
+    'easy.language' => "pour une aide facile",
 ];

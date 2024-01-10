@@ -1,15 +1,6 @@
 .hilfe,
 .faq {
     section {
-        .card;
-
-        @media(max-width: @screen-medium) {
-            .card;
-        }
-
-        @media(max-width: @screen-small) {
-            .card;
-        }
 
         margin: 4px 0;
 
@@ -21,18 +12,50 @@
         }
 
         div.image-container {
-            align-items: center;
-            justify-content: center;
-
             img {
+                max-width: 90vw;
                 margin: 10px 0;
                 padding: 8px;
                 border: 1px solid @border-color;
                 border-radius: 3px;
+                width: 470px;
             }
         }
     }
 
+    #help-easy-language-button {
+        padding: 5px 10px;
+        border-color: #5b5b5b8f;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 5px;
+        width: 16em;
+        font-size: medium;
+        color: @text-color;
+        text-decoration: none;
+    }
+    #help-easy-language-button:hover {
+        border-color:#f47216;
+    }
+    #easy-language-image-back {
+        width:9px;
+        margin-right: 5px;
+        margin-bottom: 6px;
+    }
+    #help-easy-language-button-back {
+        padding: 5px 5px;
+        border-color: #5b5b5b8f;
+        border-width: 2px;
+        border-style: solid;
+        border-radius: 5px;
+        width: 5em;
+        font-size: medium;
+        color: @text-color;    
+    }
+
+    #help-easy-language-button-back:hover {
+        border-color:#f47216;
+    }
     .fake-result {
         *:hover {
             overflow: visible !important;
@@ -54,17 +77,66 @@
         }
     }
 }
+@media(max-width: @screen-lg-min){
+    .back-button, .up-button {
+        visibility: hidden;
+    }
+}
 .back-button, .back-button:visited {
     font-size: medium;
     color: @text-color;
+    display: block;
+    top: 5px;
+    background-color: @background-color;
+    padding: 5px;
+    width: 4.9em;
+    border-color: #5b5b5b8f;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: -80px;
+    text-decoration: none;
 }
 .back-button .back-arrow {
     width:10px ;
+    padding-bottom: 3px;
+}
+
+.up-button, .up-button:visited {
+    font-size: medium;
+    color: @text-color;
+    display: block;
+    top: 5px;
+    background-color: @background-color;
+    padding: 5px;
+    margin-top: 0.5em;
+    width: 4.3em;
+    border-color: #5b5b5b8f;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: -80px;
+    text-decoration: none;
+}
+.up-button .up-arrow {
+    width:12px ;
+    padding-bottom: 3px;
+    margin-right: 0.5em;
+}
+
+#navigationsticky{
+    position: sticky;
+    display: block;
+    top:5px;
+}
+#easy-language-image {
+    width:20px;
+    margin-right: 5px;
 }
 .help-topic-row {
     display: flex;
     gap:1rem;
-    justify-content: space-evenly;
+    justify-content: flex-start;
     flex-wrap:wrap;
 }
 .back-arrow{
@@ -141,11 +213,11 @@ background-position: 35% 20%;
     background-position: 55% 35%;
         
 }
-#help-topic-searchinsearch {
-    background-image: url("/img/searchinsearch-icon-help.svg");
-    background-size: 50px;
+#help-topic-key {
+    background-image: url("/img/key-icon-help.svg");
+    background-size: 60px;
     background-repeat: no-repeat;
-    background-position: 50% 20%;
+    background-position: 60% 20%;
         
 }
 #help-topic-addmetager {
@@ -185,12 +257,6 @@ background-position: 35% 20%;
     background-repeat: no-repeat;
     background-position: 50% 20%;
 }
-#help-topic-asso {
-    background-image: url("/img/suchwortasso.svg");
-    background-size: 50px;
-    background-repeat: no-repeat;
-    background-position: 50% 20%;      
-}
 #help-topic-proxy {
     background-image: url("/img/proxy.svg");
     background-size: 40px;
@@ -202,4 +268,14 @@ background-position: 35% 20%;
     background-size: 90px;
     background-repeat: no-repeat;
     background-position: 50% 25%;      
+}
+.help-ellipsis-image {
+    max-height: 23px;
+}
+.easy-help-icon {
+    max-height: 20px;
+}
+.easy-help-icon-button {
+    padding-right: 0.3em;
+    margin-bottom: 0.2em;
 }

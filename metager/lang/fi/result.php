@@ -26,4 +26,7 @@ return [
         'copyright' => 'Kuvat voivat olla tekijänoikeudellisesti suojattuja.',
     ],
     'more-news' => 'lisää',
+    'alt' => [
+        'more' => 'Lisää',
+    ],
 ];

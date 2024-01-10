@@ -1,21 +1,21 @@
 <?php
 return [
     'detection' => [
-        'description' => 'Käytämme kielikohtaisia URL-osoitteita, joita voidaan käyttää suoraan. Jos URL-osoitteessa ei ole määritetty kieltä, käytämme selaimesi asetuksiin tallennettua kieliasetusta esivalitakseen sinulle sopivimman alueen. Useimmissa tapauksissa tämä antaa automaattisesti oikean alueen hakutulokset. Vaihtoehtoisesti voit muuttaa edellä mainittua asetusta.',
+        'description' => 'Käytämme kielikohtaisia URL-osoitteita, joita voidaan käyttää suoraan. Jos URL-osoitteessa ei ole määritetty kieltä, käytämme selaimesi asetuksiin tallennettua kieliasetusta esivalitaksemme sinulle sopivimman alueen. Useimmissa tapauksissa tämä antaa automaattisesti oikean alueen hakutulokset. Vaihtoehtoisesti voit muuttaa edellä mainittua asetusta.',
         'title' => 'Mikä on oletuskieliasetus?',
     ],
     'lang' => [
-        'de' => 'Saksan',
-        'en' => 'Englanti',
-        'es' => 'Espanjan',
-        'nl' => 'Hollantilainen',
-        'fi' => 'Suomalainen',
-        'no' => 'Norjalainen',
-        'it' => 'Italian',
-        'da' => 'Tanskalainen',
-        'sv' => 'Ruotsalainen',
-        'pl' => 'Puolan',
-        'fr' => 'Ranskan',
+        'de' => 'saksa',
+        'en' => 'englanti',
+        'es' => 'espanja',
+        'nl' => 'hollanti',
+        'fi' => 'suomi',
+        'no' => 'norja',
+        'it' => 'italia',
+        'da' => 'tanska',
+        'sv' => 'ruotsi',
+        'pl' => 'puola',
+        'fr' => 'ranska',
     ],
     'h1' => [
         '1' => 'Kielen valinta',

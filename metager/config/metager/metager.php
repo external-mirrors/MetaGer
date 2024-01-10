@@ -25,10 +25,10 @@ return [
     ],
     "fetcher" => [
         "proxy" => [
-            "host" => env("PROXY_HOST", ""),
-            "port" => env("PROXY_PORT", ""),
-            "user" => env("PROXY_USER", ""),
-            "password" => env("PROXY_PASSWORD", ""),
+            "host" => env("FETCHER_PROXY_HOST", ""),
+            "port" => env("FETCHER_PROXY_PORT", ""),
+            "user" => env("FETCHER_PROXY_USER", ""),
+            "password" => env("FETCHER_PROXY_PASSWORD", ""),
         ],
     ],
     "fail2ban" => [

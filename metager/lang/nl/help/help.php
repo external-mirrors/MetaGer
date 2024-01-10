@@ -32,4 +32,5 @@ return [
             '0' => 'Privacy',
         ],
     ],
+    'easy.language' => "voor eenvoudige hulp",
 ];

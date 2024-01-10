@@ -125,11 +125,11 @@
             @endif
             <label class="open-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 tabindex='0'>
-                <img src="/img/ellipsis.svg" alt="settings" height="100%" loading="lazy" />
+                <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
             <label class="close-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 tabindex='0'>
-                <img src="/img/ellipsis.svg" alt="settings" height="100%" loading="lazy" />
+                <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
         </div>
         <div class="result-options">

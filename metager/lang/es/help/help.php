@@ -33,4 +33,5 @@ Dado que desarrollamos y mejoramos nuestro motor de búsqueda  constantemente, p
             '0' => 'Funciones de anonimato y seguridad de los datos',
         ],
     ],
+    'easy.language' => "para una ayuda fácil",
 ];

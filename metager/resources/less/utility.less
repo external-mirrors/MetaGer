@@ -4,6 +4,11 @@
   display: none !important;
 }
 
+.back-button {
+  display: none;
+  cursor: pointer;
+}
+
 .hide {
   display: none !important;
 }
@@ -21,7 +26,8 @@
   border-radius: 5px;
 }
 
-.dropdown-opener:focus+.dropdown-content, .dropdown-content:hover {
+.dropdown-opener:focus + .dropdown-content,
+.dropdown-content:hover {
   display: initial;
   animation-name: dropdown-open-contents;
   animation-fill-mode: forwards;
@@ -36,5 +42,3 @@
     max-height: 1000px;
   }
 }
-
-

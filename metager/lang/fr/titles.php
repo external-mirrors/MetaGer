@@ -33,4 +33,5 @@ return [
     'search-engine' => 'Moteurs de recherche - MetaGer',
     'lang-selector' => 'Sélection de la langue',
     'adblocker' => 'Bloqueurs de publicité - MetaGer',
+    'help-glossary' => 'Glossaire - MetaGer',
 ];

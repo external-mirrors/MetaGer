@@ -1,29 +1,25 @@
 <?php
+
 return [
-    'title' => 'MetaGer - Help',
-    'backarrow' => 'Back',
-    'dienste' => [
-        'kostenlos' => 'All our services are cost free. You do not pay with your data.',
-        'text' => 'Services',
+    "app" => [
+        "1" => "You can also use MetaGer as an app. Simply download the <a href=\"https://metager.de/app\" target=\"_blank\" rel=\"noopener\">MetaGer App</a> on your Android smartphone.",
+        "title" => 'Android App <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
-    'app' => [
-        'title' => 'Android-App',
-        '1' => 'You can use MetaGer within an app, too. To do so just download the <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> on your Android smartphone.',
+    "backarrow" => 'Back',
+    "easy-help" => 'By clicking on the symbol <a title="For easy help, click here" href="/hilfe/easy-language/services" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>, you will access a simplified version of the help.',
+
+    "services" => [
+        "text" => "Additional services around the search",
     ],
-    'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
-        '1' => 'Ask the <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) to find connotations in a subject area. The service doesn&apos;t append upon any language because it uses webdocuments as a source. Therefore, you find any connotations to your used language and vice-versa.',
-        '2' => 'Example: you want to know more about "tick bites" and its dangers but you forgot the technical terms around this issue. The "Assoziator" presents "Borreliose" and "fsme" among others.',
-        '3' => 'Please let us know if something unsuitable appears. Please use our <a href="/en/kontakt/" target="_blank" rel="noopener">contact form</a>.',
+    "maps" => [
+        "1" => 'Preserving privacy in the age of global data giants has also led us to develop <a href="https://maps.metager.de" target="_blank">https://maps.metager.de</a>: the (to our knowledge) only route planner that offers full functionality via a browser and app without storing user locations. All of this is verifiable because our software is open source. For using maps.metager.de, we recommend our fast app version. You can download our apps from <a href="/app" target="_blank">here</a> (or of course also from the Play Store).',
+        "2" => "This map function can also be accessed from the MetaGer search (and vice versa). Once you have searched for a term in MetaGer, you will see a new search focus 'Maps' in the upper right corner. Clicking on it will take you to a corresponding map.",
+        "3" => "Upon loading, the map displays the points (POIs = Points of Interest) found by MetaGer, which are also listed in the right column. When zooming, this list adapts to the map section. Hovering your mouse over a marker on the map or in the list highlights the corresponding item. Click 'Details' to get more information about that point from the database below.",
+        "title" => 'MetaGer Maps <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
-    'widget' => [
-        'title' => 'MetaGer widget',
-        '1' => 'Provide full MetaGer functionality to your own website! Just select Tools / widget on our startpage, decide whether you want a powerful websearch or a sitesearch -which may be useful on your own pages. Enter the domainname and let the script do the rest. Questions to: <a href="/en/kontakt/" target="_blank" rel="noopener">contact form</a>',
-    ],
-    'maps' => [
-        'title' => 'MetaGer maps',
-        '1' => 'MetaGer provides a map function (not on metager.org, please use <a href="https://www.metager.de/" target="_blank" rel="noopener">MetaGer.de</a>) : On a result page you see a new focus on the upper right, called "Maps". You receive a map according to your search by click.',
-        '2' => 'After loading the map shows POIs according to the MetaGer results. You see them in the right column too. Mouseover a POI highlights its counterpart. Click "Details" to get further information (Nominatim data base) to this POI.',
-        '3' => 'The maps are rendered before (except for the last three ones) and fast available. Affect the zoom level by mouse-wheel or the "+ / -" buttons in the upper left corner of the map.',
+    "title" => 'MetaGer - Help',
+    "widget" => [
+        "1" => "This is a code generator that allows you to embed MetaGer into your website. You can use it to perform searches on your own site or on the internet as desired. For any questions, please use <a href=\"/kontakt/\" target=\"_blank\" rel=\"noopener\">our contact form</a>.",
+        "title" => 'MetaGer Widget <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
     ],
 ];

@@ -32,4 +32,5 @@ return [
             '0' => 'Privatlivets fred',
         ],
     ],
+    'easy.language' => "for nem hjælp",
 ];

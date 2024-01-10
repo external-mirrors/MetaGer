@@ -32,4 +32,5 @@ return [
             '0' => 'Yksityisyys',
         ],
     ],
+    'easy.language' => "helppoa apua varten",
 ];

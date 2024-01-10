@@ -26,4 +26,7 @@ return [
         'copyright' => 'Billeder kan være ophavsretligt beskyttet.',
     ],
     'more-news' => 'mere',
+    'alt' => [
+        'more' => 'Mere',
+    ],
 ];

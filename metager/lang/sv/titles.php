@@ -33,4 +33,5 @@ return [
     'prevention' => 'Hjälp med självmordstankar - MetaGer',
     'membership' => 'Ditt medlemskap i SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
+    'help-glossary' => 'Ordlista - MetaGer',
 ];

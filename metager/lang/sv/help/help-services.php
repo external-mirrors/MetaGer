@@ -2,28 +2,22 @@
 return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
-    'dienste' => [
-        'kostenlos' => 'Alla våra tjänster är kostnadsfria. Du betalar inte med dina data.',
-        'text' => 'Tjänster',
-    ],
     'app' => [
-        'title' => 'Android-app',
-        '1' => 'Du kan också använda MetaGer i en app. Ladda bara ner <a href="https://metager.org/app" target="_blank" rel="noopener">MetaGer App</a> på din Android-smartphone.',
-    ],
-    'suchwortassoziator' => [
-        'title' => 'MetaGer-Web-Associator',
-        '2' => 'Exempel: du vill veta mer om "fästingbett" och dess faror men du har glömt de tekniska termerna kring denna fråga. "Assoziator" presenterar bland annat "Borreliose" och "fsme".',
-        '3' => 'Vänligen meddela oss om något olämpligt visas. Använd vårt kontaktformulär <a href="/en/kontakt/" target="_blank" rel="noopener"></a> .',
-        '1' => 'Be <a href="/en/asso/" target="_blank" rel="noopener">MetaGer-Web-Assoziator</a> (Tools / Associator) att hitta konnotationer inom ett ämnesområde. Tjänsten&apos;lägger inte till något språk eftersom den använder webbdokument som källa. Därför hittar du alla konnotationer till ditt använda språk och vice versa.',
+        'title' => 'Android-app <a title="For easy help, click here" href="/hilfe/easy-language/services#help-app" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Du kan också använda MetaGer som en app. Ladda helt enkelt ner <a href="https://metager.de/app" target="_blank" rel="noopener">MetaGer App</a> på din Android-smartphone.',
     ],
     'widget' => [
-        'title' => 'MetaGer-widget',
-        '1' => 'Ge full MetaGer-funktionalitet till din egen webbplats! Välj bara Verktyg / widget på vår startsida, bestäm om du vill ha en kraftfull webbsökning eller en sitesearch - som kan vara användbar på dina egna sidor. Ange domännamnet och låt skriptet göra resten. Frågor till: <a href="/en/kontakt/" target="_blank" rel="noopener">kontaktformulär</a>',
+        'title' => 'Widget för MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-widget" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Detta är en kodgenerator som gör att du kan bädda in MetaGer på din webbplats. Du kan använda den för att utföra sökningar på din egen webbplats eller på internet efter önskemål. Om du har några frågor kan du använda <a href="/kontakt/" target="_blank" rel="noopener">vårt kontaktformulär</a>.',
     ],
     'maps' => [
-        'title' => 'MetaGer Kartor',
-        '1' => 'MetaGer tillhandahåller en kartfunktion (inte på metager.org, använd <a href="https://www.metager.de/" target="_blank" rel="noopener">MetaGer.de</a>) : På en resultatsida ser du ett nytt fokus längst upp till höger, kallat "Kartor". Du får en karta enligt din sökning genom att klicka.',
-        '2' => 'Efter laddning visar kartan intressepunkter enligt MetaGer-resultaten. Du ser dem också i den högra kolumnen. Om du håller muspekaren över en POI visas dess motsvarighet. Klicka på "Detaljer" för att få ytterligare information (Nominatim-databasen) till denna POI.',
-        '3' => 'Kartorna renderas innan (förutom de tre sista) och är snabbt tillgängliga. Påverka zoomnivån med mushjulet eller knapparna "+ / -" i det övre vänstra hörnet av kartan.',
+        'title' => 'MetaGer Kartor <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'Att värna om integriteten i en tid av globala datajättar har också lett oss till att utveckla <a href="https://maps.metager.de" target="_blank">https://maps.metager.de</a>: den (såvitt vi vet) enda ruttplaneraren som erbjuder full funktionalitet via en webbläsare och app utan att lagra användarens position. Allt detta är verifierbart eftersom vår programvara är öppen källkod. För att använda maps.metager.de rekommenderar vi vår snabba appversion. Du kan ladda ner våra appar från <a href="/app" target="_blank">här</a> (eller naturligtvis också från Play Store).',
+        '2' => 'Denna kartfunktion kan också nås från MetaGer-sökningen (och vice versa). När du har sökt efter en term i MetaGer kommer du att se ett nytt sökfokus "Maps" i det övre högra hörnet. Om du klickar på den kommer du till en motsvarande karta.',
+        '3' => 'När kartan laddas visas de punkter (POI = Points of Interest) som MetaGer har hittat och som också listas i den högra kolumnen. Vid zoomning anpassar sig denna lista till kartutsnittet. Om du håller muspekaren över en markör på kartan eller i listan markeras motsvarande objekt. Klicka på "Detaljer" för att få mer information om den punkten från databasen nedan.',
+    ],
+    'easy-help' => 'Genom att klicka på symbolen <a title="For easy help, click here" href="/hilfe/easy-language/services" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> , kommer du till en förenklad version av hjälpen.',
+    'services' => [
+        'text' => "Ytterligare tjänster kring sökningen",
     ],
 ];

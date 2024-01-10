@@ -33,4 +33,5 @@ return [
     'prevention' => 'Apua itsemurha-ajatuksiin - MetaGer',
     'membership' => 'Jäsenyytesi SUMA-EV:ssä',
     'adblocker' => 'Mainostenestimet - MetaGer',
+    'help-glossary' => 'Sanasto - MetaGer',
 ];

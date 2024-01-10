@@ -1,52 +1,75 @@
 <?php
 return [
     'title' => 'MetaGer - Hjälp',
-    'backarrow' => ' Tillbaka',
-    'suchfunktion' => [
-        'title' => 'Sökfunktioner',
-    ],
-    'stopworte' => [
-        'title' => 'Utesluta enstaka ord',
-        '1' => 'Om du vill utesluta ord i sökresultatet måste du sätta ett "-" framför ordet',
-        '2' => 'Exempel: Du letar efter en ny bil, men ingen BMW. Då ska din sökning vara <div class="well well-sm">ny bil -bmw</div>',
-        '3' => 'bil ny -bmw',
-    ],
+    'backarrow' => 'Tillbaka',
     'mehrwortsuche' => [
-        'title' => 'Söker efter mer än ett ord',
-        '1' => 'Utan citationstecken får du resultat som innehåller ett eller några av orden i din sökning. Använd citattecken för att söka efter exakta fraser, citat....',
         '2' => 'Exempel: sökning efter Shakespears <div class="well well-sm">to be or not to be</div> kommer att ge många resultat, men den exakta frasen kommer endast att hittas med <div class="well well-sm">"to be or nor to be"</div>',
-        '3' => [
-            'example' => '"rundabordssamtal" "beslut"',
-            'text' => 'Använd citationstecken för att vara säker på att få med dina sökord i resultatlistan.',
-        ],
-        '4' => [
-            'example' => '"beslut vid rundabordssamtal"',
-            'text' => 'Sätt ord eller fraser inom citattecken för att söka efter exakta kombinationer.',
-        ],
     ],
     'urls' => [
         'title' => 'Utesluta URL-adresser',
-        'explanation' => 'Använd "-url:" för att utesluta sökresultat som innehåller angivna ord.',
-        'example_b' => 'Skriv <i>mina sökord</i> -url:dog',
-        'example_a' => 'Exempel: Du vill inte ha ordet "hund" i resultaten:',
+        'explanation' => 'Du kan utesluta sökresultat som innehåller specifika ord i sina resultatlänkar genom att använda "-url:" i din sökning.',
+        'example_b' => '<i>min sökning</i> -url:dog',
+        'example_a' => 'Exempel: Du vill exkludera resultat där ordet "hund" förekommer i resultatlänken:',
     ],
     'bang' => [
-        '1' => 'MetaGer använder en speciell stavning som kallas "!bang syntax". En !bang börjar med "!" och innehåller inga blanktecken ("!twitter", "!facebook" till exempel). Om du använder en !bang som stöds av MetaGer kommer du att se en ny post i "Snabbtips". Vi hänvisar sedan till den angivna tjänsten (klicka på knappen).',
-        'title' => '!smällar',
-    ],
-    'faq' => [
-        '18' => [
-            'h' => 'Varför öppnas inte !bangs direkt?',
-            'b' => '!bang -\"redirections\" är en del av våra snabbtips och de behöver ett extra klick. Vi var tvungna att välja mellan enkel användning och kontroll över data. Vi anser att det är nödvändigt att visa att länkarna tillhör tredje part (DuckDuckGo). Så det finns ett tvåvägsskydd: för det första överför vi inte dina sökord utan bara !bang till DuckDuckGo. Å andra sidan bekräftar användaren uttryckligen !bang-målet. Vi har inte resurser att underhålla alla dessa !bangs, vi är ledsna.',
-        ],
-    ],
-    'searchinsearch' => [
-        'title' => 'Sök i sök',
-        '1' => 'Resultatet sparas i en ny TAB som visas på höger sida av skärmen. Den kallas "Sparade resultat". Här kan du spara enstaka resultat från flera sökningar. TAB:et finns kvar. Om du går in i detta TAB får du din personliga resultatlista med verktyg för att filtrera och sortera resultaten. Klicka på ett annat TAB för att gå tillbaka för ytterligare sökningar. Du kommer inte att ha detta om skärmen är för liten. Mer info (endast på tyska än så länge): <a href="http://blog.suma-ev.de/node/225" target="_blank" rel="noopener"> SUMA blogg</a>.',
+        '1' => 'MetaGer stöder i begränsad utsträckning en skrivstil som ofta kallas \'!bang\' syntax.<br>En \'!bang\' börjar alltid med ett utropstecken och innehåller inga mellanslag. Exempel är \'!twitter\' eller \'!facebook\'.<br>När en stödd !bang används i sökfrågan, visas en post i våra snabbtips, så att du kan fortsätta sökningen med respektive tjänst (Twitter eller Facebook) genom att trycka på en knapp.',
+        'title' => 'MetaGer Kartor <a title="For easy help, click here" href="/hilfe/easy-language/services#eh-maps" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '2' => 'Varför öppnas inte !bangs direkt?',
+        '3' => '!bang-"omdirigeringarna" är en del av våra snabbtips och kräver ytterligare ett "klick." Detta var ett svårt beslut för oss, eftersom det gör !bangs mindre användbara. Men det är tyvärr nödvändigt eftersom de länkar som omdirigeringen sker till inte kommer från oss utan från en tredje part, DuckDuckGo.<p>Vi ser alltid till att våra användare behåller kontrollen i alla lägen. Därför skyddar vi på två sätt: För det första överförs aldrig den inmatade söktermen till DuckDuckGo, utan endast !bang. För det andra bekräftar användaren uttryckligen besöket på !bang-målet. Tyvärr kan vi på grund av personalskäl för närvarande inte kontrollera eller underhålla alla dessa !bangs själva.',
     ],
     'selist' => [
-        'title' => 'Jag vill lägga till metager.de i listan över sökmotorer i min webbläsare.',
-        'explanation_b' => 'Vissa webbläsare behöver en URL. Använd "https://metager.org/meta/meta.ger3?eingabe=%s" utan qoutationstecken. Om det fortfarande finns problem, vänligen <a href="/en/kontakt" target="_blank" rel="noopener">skriv ett e-postmeddelande.</a>',
-        'explanation_a' => 'Försök först att installera det senaste tillgängliga pluginet. Använd bara länken under sökfältet, den har en automatisk webbläsardetektering.',
+        'title' => 'Lägg till MetaGer i din webbläsares lista över sökmotorer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-selist"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'explanation_b' => 'Vissa webbläsare kräver att du anger en URL; den ska vara "https://metager.de/meta/meta.ger3?input=%s" utan citattecken. Du kan generera URL:en själv genom att söka efter något på metager.de och sedan ersätta det som står bakom "input=" i adressfältet med %s. Om du fortfarande har några problem, vänligen kontakta oss: <a href="/kontalt" target="_blank" rel="noopener">Kontaktformulär</a>',
+        'explanation_a' => 'Försök först att installera det aktuella pluginet. För att installera klickar du bara på länken direkt under sökrutan. Din webbläsare bör redan ha upptäckts där.',
     ],
+    'searchfunction' => [
+        'title' => "Sökfunktioner",
+    ],
+    'stopwords' => [
+        '3' => "bil ny -bmw",
+        '2' => "Exempel: Du letar efter en ny bil, men definitivt inte en BMW. Din input skulle vara:",
+        'title' => 'Stoppord <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-stopwordsearch"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => "Om du vill utesluta sökresultat i MetaGer som innehåller specifika ord (uteslutningsord / stoppord), kan du göra det genom att prefixa dessa ord med ett minustecken.",
+    ],
+    'multiwordsearch' => [
+        '4' => [
+            'example' => '"det runda bordet"',
+            'text' => "Med en frassökning kan du söka efter ordkombinationer istället för enskilda ord. Ange helt enkelt de ord som ska visas tillsammans inom citationstecken.",
+        ],
+        'title' => 'Flerordssökning <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '3' => [
+            'example' => '"den" "runda" "bord"',
+            'text' => "Om du vill se till att ord från din sökning också visas i resultaten måste du sätta dem inom citattecken.",
+        ],
+        '2' => "Om detta inte räcker för dig har du två alternativ för att göra din sökning mer exakt:",
+        '1' => "När du söker efter mer än ett ord i MetaGer försöker vi automatiskt ge resultat där alla ord visas eller kommer så nära som möjligt.",
+    ],
+    'key' => [
+        'title' => 'Lägg till MetaGer-nyckel <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => 'MetaGer-nyckeln installeras automatiskt i din webbläsare och används. Du behöver inte göra något annat. Om du vill använda MetaGer-nyckeln på andra enheter finns det flera sätt att konfigurera MetaGer-nyckeln:',
+        '2' => 'Inloggningskod <br>På <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln kan du använda inloggningskoden för att lägga till din nyckel till en annan enhet. Ange helt enkelt den sexsiffriga koden när du loggar in. Inloggningskoden kan bara användas en gång och är bara giltig så länge fönstret är öppet.',
+        '3' => 'Kopiera URL <br> När du är på <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln finns det ett alternativ att kopiera en URL. Denna URL kan användas för att spara alla MetaGer-inställningar, inklusive MetaGer-nyckeln, på en annan enhet.',
+        '4' => 'Spara fil <br> När du är på <a href = "/keys/key/enter">hanteringssidan</a> för MetaGer-nyckeln, finns det ett alternativ för att spara en fil. Detta sparar din MetaGer-nyckel som en fil. Du kan sedan använda den här filen på en annan enhet för att logga in med din nyckel.',
+        '5' => 'Skanna QR-kod <br>Alternativt kan du också skanna QR-koden som visas på <a href = "/keys/key/enter">hanteringssidan</a> för att logga in med en annan enhet.',
+        '6' => 'Ange MetaGer-nyckel manuellt <br>Du kan också ange nyckeln manuellt på en annan enhet.',
+        'colors' => [
+            'title' => 'Färgad MetaGer-nyckel',
+            '1' => 'För att du enkelt ska kunna se om du söker annonsfritt har vi gett våra nyckelsymboler färger. Nedan finns förklaringar till motsvarande färger:',
+            'grey' => 'Grå: Du har inte ställt in en nyckel. Du använder den fria sökningen.',
+            'red' => 'Röd: Om din nyckelsymbol är röd betyder det att nyckeln är tom. Du har använt upp alla annonsfria sökningar. Du kan ladda nyckeln på sidan för nyckelhantering.',
+            'green' => 'Grön: Om nyckelsymbolen är grön använder du en laddad nyckel.',
+            'yellow' => 'Gul: Om du ser en gul nyckel har du fortfarande ett saldo på 30 tokens. Dina sökningar håller på att ta slut. Vi rekommenderar att du laddar upp nyckeln snart.',
+        ],
+    ],
+    'exactsearch' => [
+        'title' => 'Exakt sökning <a title="For easy help, click here" href="/hilfe/easy-language/functions#exactsearch"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        '1' => "Om du vill hitta ett visst ord i MetaGers sökresultat kan du sätta ett plustecken framför ordet. När du använder ett plustecken och citattecken söks en fras exakt som du angav den.",
+        '2' => "Exempel: S",
+        '3' => 'Exempel: ',
+        'example' => [
+            '1' => "+exempelord",
+            '2' => '+"exempel på fras"',
+        ],
+    ],
+    'easy-help' => 'Genom att klicka på symbolen <a title="For easy help, click here" href="/hilfe/easy-language/services" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> , kommer du till en förenklad version av hjälpen.',
 ];

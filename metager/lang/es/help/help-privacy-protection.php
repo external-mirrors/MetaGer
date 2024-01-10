@@ -2,9 +2,6 @@
 return [
     'title' => 'Ayuda de MetaGer',
     'backarrow' => 'Devolver',
-    'datenschutz' => [
-        '3' => 'Encontrará más información a continuación. Se puede acceder a las funciones en "Servicios" en la barra de navegación.',
-    ],
     'tor' => [
         'title' => 'Servicio oculto TOR <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Desde hace muchos años, MetaGer oculta y no almacena las direcciones IP. Sin embargo, estas direcciones son temporalmente visibles en el servidor de MetaGer mientras se ejecuta una búsqueda: si MetaGer se viera comprometida, un atacante podría leer y almacenar sus direcciones. Para cumplir con los más altos requisitos de seguridad, operamos una instancia de MetaGer en la red Tor: el Servicio Oculto MetaGer TOR - accesible a través de: <a href="/tor/" target="_blank" rel="noopener">https://metager.de/tor/</a>. Para utilizarlo, necesita un navegador especial, que puede descargar de <a href="https://www.torproject.org/" target="_blank" rel="noopener">https://www.torproject.org/</a>.',

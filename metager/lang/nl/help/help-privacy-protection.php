@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Hulp',
     'backarrow' => 'Terug',
-    'datenschutz' => [
-        '3' => 'Klik / raak het hamburgermenu aan om de hulpmiddelen te gebruiken.',
-    ],
     'tor' => [
         'title' => 'Verborgen TOR-service <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Al vele jaren verbergt MetaGer IP-adressen en slaat ze niet op. Deze adressen zijn echter tijdelijk zichtbaar op de MetaGer server terwijl een zoekopdracht wordt uitgevoerd: als MetaGer in gevaar zou komen, zou een aanvaller je adressen kunnen lezen en opslaan. Om aan de hoogste veiligheidseisen te voldoen, hebben we een MetaGer-instantie op het Tor-netwerk: de MetaGer TOR Hidden Service - toegankelijk via: <a href="/tor/" target="_blank" rel="noopener">https://metager.de/tor/</a>. Om het te gebruiken heb je een speciale browser nodig, die je kunt downloaden van <a href="https://www.torproject.org/" target="_blank" rel="noopener">https://www.torproject.org/</a>.',

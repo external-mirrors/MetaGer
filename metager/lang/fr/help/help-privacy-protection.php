@@ -8,9 +8,6 @@ return [
         '2' => 'Cette fonction cartographique est également accessible à partir de la recherche MetaGer (et vice versa). Une fois que vous avez recherché un terme dans MetaGer, vous verrez apparaître un nouvel axe de recherche "Cartes" dans le coin supérieur droit. En cliquant dessus, vous accéderez à la carte correspondante.',
     ],
     'backarrow' => 'Retour',
-    'datenschutz' => [
-        '3' => 'Cliquez / touchez le menu des hamburgers pour utiliser les outils.',
-    ],
     'tor' => [
         'title' => 'Service caché TOR <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Depuis de nombreuses années, MetaGer cache et ne stocke pas les adresses IP. Cependant, ces adresses sont temporairement visibles sur le serveur MetaGer pendant qu\'une recherche est en cours : si MetaGer était compromis, un attaquant pourrait lire et stocker vos adresses. Pour répondre aux exigences de sécurité les plus élevées, nous exploitons une instance de MetaGer sur le réseau Tor : le service caché MetaGer TOR - accessible via : <a href="/tor/" target="_blank" rel="noopener">https://metager.de/tor/</a>. Pour l\'utiliser, vous avez besoin d\'un navigateur spécial, que vous pouvez télécharger à partir de <a href="https://www.torproject.org/" target="_blank" rel="noopener">https://www.torproject.org/</a>.',

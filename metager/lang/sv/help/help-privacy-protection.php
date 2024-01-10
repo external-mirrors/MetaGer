@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Hjälp',
     'backarrow' => 'Tillbaka',
-    'datenschutz' => [
-        '3' => 'Klicka / tryck på hamburgermenyn för att använda verktygen.',
-    ],
     'tor' => [
         'title' => 'Dold tjänst för TOR <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '2' => 'Du kan komma åt MetaGer i Tor-webbläsaren på: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',

@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Aiuto',
     'backarrow' => 'Indietro',
-    'datenschutz' => [
-        '3' => 'Fare clic / toccare il menu hamburger per utilizzare gli strumenti.',
-    ],
     'tor' => [
         'title' => 'Servizio nascosto TOR <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '2' => 'È possibile accedere a MetaGer nel browser Tor all\'indirizzo: http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion .',

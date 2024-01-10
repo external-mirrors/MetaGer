@@ -2,9 +2,6 @@
 return [
     'title' => 'MetaGer - Apua',
     'backarrow' => 'Takaisin',
-    'datenschutz' => [
-        '3' => 'Käytä työkaluja napsauttamalla/koskettamalla hampurilaisvalikkoa.',
-    ],
     'tor' => [
         'title' => 'TOR Piilotettu palvelu <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-torhidden" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'MetaGer on piilottanut IP-osoitteet ja jättänyt ne tallentamatta jo vuosien ajan. Osoitteet ovat kuitenkin tilapäisesti näkyvissä MetaGer-palvelimella haun ollessa käynnissä: jos MetaGer vaarantuu, hyökkääjä voi lukea ja tallentaa osoitteesi. Täyttääkseen korkeimmat turvallisuusvaatimukset käytämme MetaGer-instanssia Tor-verkossa: MetaGer TOR Hidden Service -palvelu, johon pääsee osoitteesta: <a href="/tor/" target="_blank" rel="noopener">https://metager.de/tor/</a>. Sen käyttämiseen tarvitset erityisen selaimen, jonka voit ladata osoitteesta <a href="https://www.torproject.org/" target="_blank" rel="noopener">https://www.torproject.org/</a>.',

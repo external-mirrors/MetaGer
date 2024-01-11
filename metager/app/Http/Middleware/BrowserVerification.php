@@ -11,7 +11,6 @@ use Cache;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use Jenssegers\Agent\Agent;
 
 class BrowserVerification
 {
@@ -24,23 +23,14 @@ class BrowserVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next, $route = "resultpage")
+    public function handle(Request $request, Closure $next, $route = "resultpage")
     {
         \app()->make(QueryTimer::class)->observeStart(self::class);
 
-        $bvEnabled = config("metager.metager.browserverification_enabled");
-        if (empty($bvEnabled) || !$bvEnabled) {
+        $bvEnabled = config("metager.metager.browserverification.enabled");
+        if (empty($bvEnabled) || !$bvEnabled || $this->isWhiteListed($request->ip())) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
-        } else {
-            $whitelist = config("metager.metager.browserverification_whitelist");
-            $agent = new Agent();
-            foreach ($whitelist as $browser) {
-                if ($agent->match($browser)) {
-                    \app()->make(QueryTimer::class)->observeEnd(self::class);
-                    return $next($request);
-                }
-            }
         }
 
         if ($request->filled("out") && in_array($request->input("out", ""), ["rss20", "api", "atom10"])) {
@@ -301,5 +291,32 @@ class BrowserVerification
         } finally {
             fclose($fh);
         }
+    }
+
+    private function isWhiteListed(string $ip): bool
+    {
+        $parsed_ip = \IPLib\Factory::parseAddressString($ip);
+        if ($parsed_ip == null)
+            return false;
+
+        $whitelisted_ips = config("metager.metager.browserverification.whitelist");
+        foreach ($whitelisted_ips as $whitelisted_ip) {
+            if (empty($whitelisted_ip))
+                continue;
+            // Check if this is a cidr range or regular IP
+            if (str_contains($whitelisted_ip, "/")) {
+                $whitelisted_parsed_ip = \IPLib\Factory::parseRangeString($whitelisted_ip);
+                if ($whitelisted_parsed_ip == null)
+                    continue;
+                if ($parsed_ip->matches($whitelisted_parsed_ip))
+                    return true;
+            } else {
+                // This should be a regular IP 
+                $whitelisted_parsed_ip = \IPLib\Factory::parseAddressString($whitelisted_ip);
+                if ($whitelisted_parsed_ip == $parsed_ip)
+                    return true;
+            }
+        }
+        return false;
     }
 }

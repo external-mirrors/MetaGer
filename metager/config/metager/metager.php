@@ -1,12 +1,14 @@
 <?php
 
 return [
-    "browserverification_enabled" => true,
-    "browserverification_whitelist" => [
+    "browserverification" => [
+        "enabled" => env("BROWSERVERIFICATION_PROTECTION", false),
+        "whitelist" => explode(",", env("BROWSERVERIFICATION_PROTECTION_WHITELIST")),
     ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
+        "whitelist" => explode(",", env("BOT_PROTECTION_WHITELIST")),
     ],
     "proxy" => [
         "password" => env("PROXY_PASSWORD", "secure_password"),

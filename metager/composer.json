@@ -20,7 +20,8 @@
         "promphp/prometheus_client_php": "^2.7.1",
         "smhg/sepa-qr-data": "^1.2",
         "symfony/dom-crawler": "^6.0",
-        "vizir/laravel-keycloak-web-guard": "^3.0"
+        "vizir/laravel-keycloak-web-guard": "^3.0",
+        "mlocati/ip-lib": "^1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.13",

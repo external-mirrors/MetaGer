@@ -10,7 +10,7 @@ use App\QueryTimer;
 use App\SearchSettings;
 use Cache;
 use Closure;
-use LaravelLocalization;
+use Illuminate\Http\Request;
 use URL;
 
 class HumanVerification
@@ -22,7 +22,7 @@ class HumanVerification
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next)
     {
         \app()->make(QueryTimer::class)->observeStart(self::class);
 
@@ -54,7 +54,7 @@ class HumanVerification
             }
         }
 
-        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app(Authorization::class)->canDoAuthenticatedSearch()) {
+        if (!$should_skip && !config("metager.metager.botprotection.enabled") || app(Authorization::class)->canDoAuthenticatedSearch() || $this->isWhiteListed($request->ip())) {
             $should_skip = true;
         }
 
@@ -106,6 +106,33 @@ class HumanVerification
         \App\PrometheusExporter::HumanVerificationSuccessfull();
         \app()->make(QueryTimer::class)->observeEnd(self::class);
         return $next($request);
+    }
+
+    private function isWhiteListed(string $ip): bool
+    {
+        $parsed_ip = \IPLib\Factory::parseAddressString($ip);
+        if ($parsed_ip == null)
+            return false;
+
+        $whitelisted_ips = config("metager.metager.botprotection.whitelist");
+        foreach ($whitelisted_ips as $whitelisted_ip) {
+            if (empty($whitelisted_ip))
+                continue;
+            // Check if this is a cidr range or regular IP
+            if (str_contains($whitelisted_ip, "/")) {
+                $whitelisted_parsed_ip = \IPLib\Factory::parseRangeString($whitelisted_ip);
+                if ($whitelisted_parsed_ip == null)
+                    continue;
+                if ($parsed_ip->matches($whitelisted_parsed_ip))
+                    return true;
+            } else {
+                // This should be a regular IP 
+                $whitelisted_parsed_ip = \IPLib\Factory::parseAddressString($whitelisted_ip);
+                if ($whitelisted_parsed_ip == $parsed_ip)
+                    return true;
+            }
+        }
+        return false;
     }
 
     private function logCaptcha(\Illuminate\Http\Request $request, ModelsHumanVerification $user)

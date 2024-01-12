@@ -135,8 +135,17 @@
 			<h2>{{ trans('about.timeline.18.1') }}</h2>
 			<p>{{ trans('about.timeline.18.2') }}</p>
 			<picture>
+			@if (App\Localization::getLanguage() == "de")
 				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
-				<img src="/img/help-page_2022.png" alt="MetaGer Hilfe Seite">
+				<img class="lm-only" src="/img/help-page_2022-lm.png" alt="MetaGer Hilfe Seite">
+				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
+				<img class="dm-only" src="/img/help-page_2022-dm.png" alt="MetaGer Hilfe Seite">
+				@else
+				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
+				<img class="lm-only" src="/img/help-page_2022-lm-en.png" alt="MetaGer help page">
+				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
+				<img class="dm-only" src="/img/help-page_2022-dm-en.png" alt="MetaGer help page">
+				@endif
 			</picture>
 		</div>
 		<div>

@@ -107,6 +107,14 @@ return [
             '2' => 'MetaGer\'s help page gets a new overview. This structures and visualizes the help pages with easy-to-recognize icons.',
         ],
         '19' => [
+            '1' => '26.04.2023: The new ad-free search',
+            '2' => 'Placeholder',
+        ],
+        '20' => [
+            '1' => 'Placeholder Easy language Help',
+            '2' => 'Placeholder.',
+        ],
+        '21' => [
             '1' => 'Today',
             '2' => 'Even today, MetaGer is constantly evolving.',
         ],

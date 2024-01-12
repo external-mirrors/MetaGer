@@ -135,7 +135,7 @@
 			<h2>{{ trans('about.timeline.18.1') }}</h2>
 			<p>{{ trans('about.timeline.18.2') }}</p>
 			<picture>
-			@if (App\Localization::getLanguage() == "de")
+				@if (App\Localization::getLanguage() == "de")
 				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
 				<img class="lm-only" src="/img/help-page_2022-lm.png" alt="MetaGer Hilfe Seite">
 				<source media="(max-width:465px)" srcset="/img/help-page_2022.avif" type="image/avif">
@@ -148,9 +148,33 @@
 				@endif
 			</picture>
 		</div>
-		<div>
+		<div class="timeline-item-alternate" >
 			<h2>{{ trans('about.timeline.19.1') }}</h2>
 			<p>{{ trans('about.timeline.19.2') }}</p>
+			<picture>
+				@if (App\Localization::getLanguage() == "de")
+				<source media="(max-width:465px)" srcset="/img/about-keys-2023-lm.avif" type="image/avif">
+				<img class="lm-only" src="/img/about-keys-2023-lm.png" alt="MetaGer Schlüssel Seite">
+				<source media="(max-width:465px)" srcset="/img/about-keys-2023-dm.avif" type="image/avif">
+				<img class="dm-only" src="/img/about-keys-2023-dm.png" alt="MetaGer Schlüssel Seite">
+				@else
+				<source media="(max-width:465px)" srcset="/img/about-keys-2023-lm-en.avif" type="image/avif">
+				<img class="lm-only" src="/img/about-keys-2023-lm-en.png" alt="MetaGer key page">
+				<source media="(max-width:465px)" srcset="/img/about-keys-2023-dm-en.avif" type="image/avif">
+				<img class="dm-only" src="/img/about-keys-2023-dm-en.png" alt="MetaGer key page">
+				@endif
+			</picture>
+		</div>
+		<div class="timeline-item-alternate" >
+			<h2>{{ trans('about.timeline.20.1') }}</h2>
+			<p>{{ trans('about.timeline.20.2') }}</p>
+			<picture>
+
+			</picture>
+		</div>
+		<div>
+			<h2>{{ trans('about.timeline.21.1') }}</h2>
+			<p>{{ trans('about.timeline.21.2') }}</p>
 		</div>
 	</div>
 </div>

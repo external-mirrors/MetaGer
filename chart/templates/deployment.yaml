@@ -182,7 +182,7 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 500m
+              cpu: 1
               memory: 100M
             limits:
         - name: nginx

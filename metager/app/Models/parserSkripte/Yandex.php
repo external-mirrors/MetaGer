@@ -12,6 +12,8 @@ class Yandex extends Searchengine
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
+        $configuration->monthlyRequests = 6000000; // Rate Limit Yandex searches to 6 Mio
+
         parent::__construct($name, $configuration);
     }
 

@@ -113,7 +113,7 @@ return [
         ],
         '19' => [
             '1' => '26.04.2023: The new ad-free search',
-            '2' => 'Placeholder',
+            '2' => 'MetaGer releases the ad-free search for everyone using a key-based system. It features a bigger selection of search engines, an improved image search and the option to search provably tracking-free using the new anonymous token system.',
         ],
         '20' => [
             '1' => 'Placeholder Easy language Help',

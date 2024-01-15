@@ -94,6 +94,11 @@ return [
             '1' => 'September 2017: Revision of the Quicktips',
             '2' => 'Quicktips, which offer hints beyond normal search results, are expanded in functionality and spun off into a separate project. Instead of being above the results, they are now located in a sidebar.',
         ],
+        
+        '22'=>[
+            '1'=>'December 2017: New ad-free search for SUMA-EV members',
+            '2'=>'MetaGer introduced their new ad-free search. Members of the SUMA-EV are now able to search ad-free using a key based system.',
+        ],
         '16' => [
             '1' => '2016-2019: MetaGer Homepage',
             '2' => 'On the new home page, four charakeristic features of MetaGer are highlighted and promoted for the first time.',

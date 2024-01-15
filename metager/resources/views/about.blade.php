@@ -115,6 +115,10 @@
 			<h2>{{ trans('about.timeline.15.1') }}</h2>
 			<p>{{ trans('about.timeline.15.2') }}</p>
 		</div>
+		<div>
+			<h2>{{ trans('about.timeline.22.1') }}</h2>
+			<p>{{ trans('about.timeline.22.2') }}</p>
+		</div>
 		<div class="timeline-item-alternate">
 			<h2>{{ trans('about.timeline.16.1') }}</h2>
 			<p>{{ trans('about.timeline.16.2') }}</p>

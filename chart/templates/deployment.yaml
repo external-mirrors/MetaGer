@@ -101,7 +101,7 @@ spec:
             periodSeconds: 1
           resources:
             requests:
-              cpu: 500m
+              cpu: 1
               memory: 500M
             limits:
         - name: scheduler

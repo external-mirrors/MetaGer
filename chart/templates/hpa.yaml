@@ -38,12 +38,12 @@ spec:
       selectPolicy: Max
     scaleUp:
       policies:
-      - periodSeconds: 15
+      - periodSeconds: 30
         type: Pods
         value: 4
-      - periodSeconds: 15
+      - periodSeconds: 30
         type: Percent
         value: 100
       selectPolicy: Max
-      stabilizationWindowSeconds: 60
+      stabilizationWindowSeconds: 30
 {{- end }}

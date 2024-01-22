@@ -57,7 +57,7 @@ ingress:
       secretName: metager-tls-otherdomains
 
 autoscaling:
-  maxReplicas: 100
+  maxReplicas: 5
 
 podAnnotations:
   prometheus.io/scrape: "true"

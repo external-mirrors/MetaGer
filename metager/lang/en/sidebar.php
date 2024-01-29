@@ -32,4 +32,6 @@ return [
         'tips' => 'Tips',
     ],
     'plugin' => 'MetaGer Plugin',
+    'close' => 'Jump to navigation bar toggle button',
+    'toggle' => 'open/close navigation bar'
 ];

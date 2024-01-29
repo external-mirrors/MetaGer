@@ -1,4 +1,4 @@
-<input id="sidebarToggle" class="hidden" type="checkbox">
+<input id="sidebarToggle" type="checkbox" aria-label="@lang('sidebar.toggle')">
 <div class="sidebar">
   <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>
@@ -162,4 +162,5 @@
       </a>
     </li>
   </ul>
+  <a id="skip-to-nav-toggle" href="#sidebarToggle">@lang('sidebar.close')</a>
 </div>

@@ -29,4 +29,21 @@ spec:
           type: Utilization
           averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 30
+        type: Percent
+        value: 50
+      selectPolicy: Max
+    scaleUp:
+      policies:
+      - periodSeconds: 30
+        type: Pods
+        value: 4
+      - periodSeconds: 30
+        type: Percent
+        value: 100
+      selectPolicy: Max
+      stabilizationWindowSeconds: 30
 {{- end }}

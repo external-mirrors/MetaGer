@@ -57,8 +57,26 @@ ingress:
       secretName: metager-tls-otherdomains
 
 autoscaling:
-  maxReplicas: 100
+  minReplicas: 2
 
 podAnnotations:
   prometheus.io/scrape: "true"
   prometheus.io/port: "8080"
+
+resources:
+  requests:
+    fpm:
+      cpu: 1
+      memory: 500M
+    scheduler:
+      cpu: 100m
+      memory: 100M
+    worker:
+      cpu: 1
+      memory: 100M
+    nginx:
+      cpu: 100m
+      memory: 100M
+    redis:
+      cpu: 100m
+      memory: 1Gi

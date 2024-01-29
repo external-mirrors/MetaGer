@@ -12,13 +12,13 @@
 					</a>
 				</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
-					<input type="search" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
-					<button id="search-delete-btn" name="delete-search-input" type="reset" tabindex="-1">
+					<input type="search" id="eingabe" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
+					<button id="search-delete-btn" name="delete-search-input" type="reset" title="@lang('index.searchreset')">
 						&#xd7;
 					</button>
 				</div>
 				<div class="search-submit" id="submit-inputgroup">
-					<button type="submit" tabindex="-1" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
+					<button type="submit" title="@lang('index.searchbutton')" aria-label="@lang('index.searchbutton')">
 						<img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
 					</button>
 				</div>

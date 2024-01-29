@@ -116,7 +116,7 @@ return [
             '2' => 'MetaGer releases the ad-free search for everyone using a key-based system. It features a bigger selection of search engines, an improved image search and the option to search provably tracking-free using the new anonymous token system.',
         ],
         '20' => [
-            '1' => '11.01.2024: Easy Help and Glossary',
+            '1' => '11.01.2024: Easy help and glossary',
             '2' => 'MetaGer implemented a simpler version of the help page. It features a more detailed explanation on how to use the search engine. In addition there is now a glossary that explains certain words that might be hard to understand. ',
         ],
         '21' => [

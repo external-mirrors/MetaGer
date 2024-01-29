@@ -10,3 +10,6 @@ ingress:
     - hosts:
         - "*.review.metager.de"
       secretName: review-tls
+
+autoscaling:
+  enabled: false

@@ -31,12 +31,12 @@
 	<div>
 		<p>{!! trans('help/easy-language/help-services.maps.1') !!}</p>
 		@if (App\Localization::getLanguage() == "de")
-		<img id="easy-help-services-maps" class="help-easy-language-image lm-only" src="/img/help-maps-01-lm.png"/>
-		<img id="easy-help-services-maps"class="help-easy-language-image dm-only" src="/img/help-maps-01-dm.png"/>
+		<img id="easy-help-services-maps" class="help-easy-language-image lm-only" src="/img/help/help-maps-01-lm.png"/>
+		<img id="easy-help-services-maps"class="help-easy-language-image dm-only" src="/img/help/help-maps-01-dm.png"/>
 		@else
 		@endif
 		<p>{!! trans('help/easy-language/help-services.maps.2') !!}</p>
-		<img id="easy-help-services-maps-right-list" src="/img/help-easy-lang-maps-right-list.png"/>
+		<img id="easy-help-services-maps-right-list" src="/img/help/help-easy-lang-maps-right-list.png"/>
 	</div>
 	</section>
 </section>

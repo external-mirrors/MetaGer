@@ -32,4 +32,6 @@ return [
         'tips' => 'Conseils',
     ],
     'plugin' => 'Plugin MetaGer',
+    'close' => 'Bouton d\'accès à la barre de navigation',
+    'toggle' => 'ouvrir/fermer la barre de navigation',
 ];

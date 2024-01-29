@@ -175,7 +175,7 @@
 				@endif
 			</picture>
 		</div>
-		<div class="timeline-item-alternate" >
+		<div>
 			<h2>{{ trans('about.timeline.20.1') }}</h2>
 			<p>{{ trans('about.timeline.20.2') }}</p>
 			<picture>

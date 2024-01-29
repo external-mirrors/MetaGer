@@ -27,7 +27,7 @@
     </li>
     <li>
       <details>
-        <summary aria-label="@lang('sidebar.nav31')">
+        <summary aria-label="@lang('sidebar.nav31')" id="navigationInfo">
           <img src="/img/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
           <span>{{ trans('sidebar.nav31') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
@@ -86,7 +86,7 @@
     <hr>
     <li>
       <details>
-        <summary aria-label="@lang('sidebar.nav18')">
+        <summary aria-label="@lang('sidebar.nav18')" id="navigationKontakt">
           <img src="/img/icon-contact.svg" alt="" aria-hidden="true" id="sidebar-img-contact"> 
           <span>{{ trans('sidebar.nav18') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
@@ -105,7 +105,7 @@
     </li>
     <li>
       <details>
-        <summary aria-label="@lang('sidebar.nav15')">
+        <summary aria-label="@lang('sidebar.nav15')" id="navigationServices">
           <img src="/img/icon-services.svg" alt="" aria-hidden="true" id="sidebar-img-services"> 
           <span>{{ trans('sidebar.nav15') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>
@@ -139,7 +139,7 @@
     </li>
     <li>
       <details>
-        <summary aria-label="@lang('sidebar.nav28')">
+        <summary aria-label="@lang('sidebar.nav28')" id="navigationEinstellung">
           <img src="/img/icon-settings.svg" alt="" aria-hidden="true" id="sidebar-img-settings"> 
           <span>{{ trans('sidebar.nav28') }}</span><span class="caret" aria-hidden="true"></span>
         </summary>

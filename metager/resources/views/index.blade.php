@@ -12,6 +12,7 @@
       <a href="{{ route('startpage', ['focus' => $fokus]) }}"
         @if(app(\App\SearchSettings::class)->fokus === $fokus)
         class="active"
+        aria-current="page"
         @endif
       >@lang("index.foki.$fokus")</a>
     </li>

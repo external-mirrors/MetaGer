@@ -8,3 +8,21 @@ ingress:
     - hosts:
         - metager3.de
       secretName: metager-tls-2023
+
+resources:
+  requests:
+    fpm:
+      cpu: 1
+      memory: 500M
+    scheduler:
+      cpu: 100m
+      memory: 100M
+    worker:
+      cpu: 1
+      memory: 100M
+    nginx:
+      cpu: 100m
+      memory: 100M
+    redis:
+      cpu: 100m
+      memory: 1Gi

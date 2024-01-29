@@ -101,9 +101,8 @@ spec:
             periodSeconds: 1
           resources:
             requests:
-              cpu: 1
-              memory: 500M
-            limits:
+              {{- toYaml .Values.resources.requests.fpm | nindent 14 }}
+            limits: {}
         - name: scheduler
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -146,9 +145,8 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 100m
-              memory: 100M
-            limits:
+              {{- toYaml .Values.resources.requests.scheduler | nindent 14 }}
+            limits: {}
         - name: worker
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
@@ -182,8 +180,7 @@ spec:
               port: http
           resources:
             requests:
-              cpu: 1
-              memory: 100M
+              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
             limits:
         - name: nginx
           securityContext:
@@ -210,9 +207,8 @@ spec:
             periodSeconds: 1
           resources:
             requests:
-              cpu: 100m
-              memory: 100M
-            limits:
+              {{- toYaml .Values.resources.requests.nginx | nindent 14 }}
+            limits: {}
         - name: redis
           image: "{{ template "redis_image" . }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -236,8 +232,7 @@ spec:
             initialDelaySeconds: 2
           resources:
             requests:
-              cpu: 100m
-              memory: 1Gi
+              {{- toYaml .Values.resources.requests.redis | nindent 14 }}
             limits:
           securityContext:
             runAsUser: 999

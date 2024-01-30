@@ -19,6 +19,13 @@ return [
         'produkte' => 'Producten',
     ],
     'placeholder' => 'MetaGer: Beschermd zoeken en vinden',
-    'searchbutton' => 'MetaGer-zoekopdracht',
+    'searchbutton' => 'MetaGer zoeken starten',
     'adfree' => 'Gebruik MetaGer reclamevrij',
+    'skip' => [
+        'search' => 'Doorgaan naar invoer zoekopdracht',
+        'navigation' => 'Ga naar navigatie',
+        'fokus' => 'Doorgaan naar selectie van zoekfocus',
+    ],
+    'lang' => 'Witch-taal',
+    'searchreset' => 'invoer zoekopdracht verwijderen',
 ];

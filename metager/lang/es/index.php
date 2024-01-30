@@ -1,24 +1,31 @@
 <?php
 return [
-    'plugin'       => 'Instalar MetaGer',
+    'plugin' => 'Instalar MetaGer',
     'plugin-title' => 'Añadir MetaGer a su navegador',
-    'key'          => [
+    'key' => [
         'placeholder' => 'Introducir la clave para la búsqueda sin publicidad',
-        'tooltip'     => [
+        'tooltip' => [
             'nokey' => 'Configurar una búsqueda sin anuncios',
             'empty' => 'Ficha agotada. Recarga ahora.',
-            'low'   => 'Ficha a punto de agotarse. Recarga ahora.',
-            'full'  => 'Búsqueda sin publicidad activada.',
+            'low' => 'Ficha a punto de agotarse. Recarga ahora.',
+            'full' => 'Búsqueda sin publicidad activada.',
         ],
     ],
-    'placeholder'  => 'MetaGer: Buscar & encontrar de forma segura',
-    'searchbutton' => 'MetaGer - Búsqueda',
-    'foki'         => [
-        'web'         => 'Web',
-        'bilder'      => 'Imágenes',
+    'placeholder' => 'MetaGer: Buscar & encontrar de forma segura',
+    'searchbutton' => 'Iniciar MetaGer-Search',
+    'foki' => [
+        'web' => 'Web',
+        'bilder' => 'Imágenes',
         'nachrichten' => 'Noticias/Política',
-        'science'     => 'Ciencia',
-        'produkte'    => 'Productos',
+        'science' => 'Ciencia',
+        'produkte' => 'Productos',
     ],
-    'adfree'       => 'Utiliza MetaGer sin publicidad',
+    'adfree' => 'Utiliza MetaGer sin publicidad',
+    'skip' => [
+        'search' => 'Saltar a la consulta de búsqueda',
+        'navigation' => 'Saltar a la navegación',
+        'fokus' => 'Saltar a la selección del foco de búsqueda',
+    ],
+    'lang' => 'lenguaje wwitch',
+    'searchreset' => 'eliminar la entrada de consulta de búsqueda',
 ];

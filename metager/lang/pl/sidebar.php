@@ -32,4 +32,6 @@ return [
     'nav1' => 'Wyszukiwanie',
     'nav2' => 'Darowizna',
     'nav3' => 'Prywatność',
+    'close' => 'Przycisk przełączania do paska nawigacji',
+    'toggle' => 'Otwórz/zamknij pasek nawigacji',
 ];

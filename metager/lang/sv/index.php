@@ -12,7 +12,7 @@ return [
         ],
     ],
     'placeholder' => 'MetaGer: Integritetsskyddad sökning och sökning',
-    'searchbutton' => 'MetaGer-Sökning',
+    'searchbutton' => 'Starta MetaGer-sökning',
     'foki' => [
         'web' => 'Webb',
         'bilder' => 'Bilder',
@@ -21,4 +21,11 @@ return [
         'produkte' => 'Produkter',
     ],
     'adfree' => 'Använd MetaGer annonsfritt',
+    'skip' => [
+        'search' => 'Hoppa till inmatning av sökfråga',
+        'navigation' => 'Hoppa till navigering',
+        'fokus' => 'Hoppa till val av sökfokus',
+    ],
+    'lang' => 'wwitch språk',
+    'searchreset' => 'radera sökfråga inmatning',
 ];

@@ -80,6 +80,7 @@ return [
             ],
             'expiration' => 'Geldig tot',
             'cvv' => 'CVV',
+            'name' => 'Naam kaarthouder (optioneel)',
         ],
         'banktransfer' => [
             'description' => [

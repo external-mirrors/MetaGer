@@ -14,7 +14,6 @@ export function processPaypalSubscription() {
                 method: "POST"
             }).then(response => response.json()).then(response => {
                 redirect_url = response.redirect_url;
-                debugger;
                 return response.id;
             });
         },

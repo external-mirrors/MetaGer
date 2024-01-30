@@ -317,9 +317,6 @@ class DonationController extends Controller
             } else if ($funding_source != "paypal") {
                 $components = array_merge($components, ["funding-eligibility", "payment-fields"]);
             }
-        } else {
-            $components = array_merge($components, ["vault"]);
-            $script_params["intent"] = "subscription";
         }
         $script_params["components"] = implode(",", $components);
 

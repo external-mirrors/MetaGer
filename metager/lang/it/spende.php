@@ -43,6 +43,7 @@ return [
                 '1330' => 'Carta di credito non valida. Si prega di controllare l\'iscrizione',
                 'generic' => 'Carta di credito rifiutata dall\'istituto di credito',
             ],
+            'name' => 'Nome del titolare della carta (facoltativo)',
         ],
     ],
     'amount' => [

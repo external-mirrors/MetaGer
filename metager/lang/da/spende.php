@@ -90,6 +90,7 @@ return [
                 '1330' => 'Kreditkortet er ugyldigt. Tjek venligst din tilmelding',
                 'generic' => 'Kreditkort afvist af kreditinstitut',
             ],
+            'name' => 'Kortholders navn (valgfrit)',
         ],
         'banktransfer' => [
             'description' => [

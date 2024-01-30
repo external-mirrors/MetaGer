@@ -90,6 +90,7 @@ return [
                 '1330' => 'Carte de crédit invalide. Veuillez vérifier votre inscription',
                 'generic' => 'Carte de crédit refusée par l\'établissement de crédit',
             ],
+            'name' => 'Nom du titulaire de la carte (facultatif)',
         ],
         'banktransfer' => [
             'description' => [

@@ -90,6 +90,7 @@ return [
                 '1330' => 'Karta kredytowa jest nieważna. Sprawdź swoje zgłoszenie',
                 'generic' => 'Karta kredytowa odrzucona przez instytucję kredytową',
             ],
+            'name' => 'Nazwa posiadacza karty (opcjonalnie)',
         ],
         'banktransfer' => [
             'description' => [

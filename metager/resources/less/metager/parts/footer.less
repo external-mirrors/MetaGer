@@ -9,6 +9,7 @@ footer {
   justify-content: space-around;
   white-space: pre-line;
   align-items: center;
+
   div {
     &#language-footer {
       text-align: center;
@@ -16,31 +17,39 @@ footer {
       line-height: 1;
       line-height: 0.8;
       font-size: 0.8em;
-      > a {
-        color: fade(@text-color, 50%);
+
+      >a {
+        color: fade(@text-color, 60%);
       }
     }
+
     &#footer-links {
       display: flex;
       flex-direction: row;
-      & > * {
+
+      &>* {
         padding: 0px 10px;
         border-left: 1px solid #aaa;
       }
-      & > :first-child {
+
+      &> :first-child {
         border-left: none;
       }
     }
   }
+
   img {
     max-width: 100%;
   }
+
   &.footer-resultpage {
     justify-content: center;
+
     a {
       color: @color-black;
     }
   }
+
   @media (max-width: @screen-mobile) {
     img {
       display: none;

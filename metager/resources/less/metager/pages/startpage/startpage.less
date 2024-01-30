@@ -2,37 +2,46 @@
 @scrollLinkHeight: 40px;
 @scrollLinkHeightMedium: 50px;
 @scrollLinkHeightMax: 70px;
+
 html {
   scroll-behavior: smooth;
 }
+
 div.startpage {
   margin: 0;
   padding: 0;
 
-  > main#main-content {
+  >main#main-content {
     width: 100%;
     max-width: 100%;
-    > div#search-content {
+
+    >div#search-content {
       height: 100vh;
+
       @supports (height: 100dvh) {
         height: 100dvh;
       }
+
       @media (max-height: 400px) {
         height: auto;
       }
+
       display: flex;
       flex-direction: column;
 
-      > ul#foki-switcher {
+      >ul#foki-switcher {
         list-style-type: none;
         display: flex;
         gap: 1rem;
+
         @supports not (selector(:first-child)) {
           gap: 0;
-          > * {
+
+          >* {
             padding: 0 1rem;
           }
         }
+
         width: 100%;
         align-items: center;
         justify-content: center;
@@ -40,9 +49,11 @@ div.startpage {
         padding: 2dvh 1.5rem;
         margin: 0;
         font-size: clamp(0.7rem, 3vw, 1rem);
-        > li {
-          > a {
-            color: fade(@text-color, 50%);
+
+        >li {
+          >a {
+            color: fade(@text-color, 60%);
+
             &.active {
               text-decoration: underline;
             }
@@ -50,65 +61,76 @@ div.startpage {
         }
       }
 
-      > div#search-wrapper {
+      >div#search-wrapper {
         flex-grow: 1;
         display: grid;
         grid-template-rows: 20dvh max-content max-content max-content 1fr;
+
         @media (max-height: 820px) {
           grid-template-rows: 15dvh max-content max-content max-content 1fr;
         }
+
         @media (max-height: 775px) {
           grid-template-rows: 10dvh max-content max-content max-content 1fr;
         }
+
         @media (max-height: 725px) {
           grid-template-rows: 5dvh max-content max-content max-content 1fr;
         }
+
         grid-template-areas: "." "logo" "search" "quicklinks" ".";
         grid-template-columns: 1fr;
         place-content: center;
 
-        > #startpage-quicklinks {
+        >#startpage-quicklinks {
           grid-area: quicklinks;
           display: flex;
           justify-content: center;
           gap: 1rem;
+
           @supports not (selector(:first-child)) {
             gap: 0;
-            > *:not(:nth-child(1)) {
+
+            >*:not(:nth-child(1)) {
               padding: 0 0.5rem;
             }
           }
+
           flex-wrap: wrap;
           padding: 1rem;
-          > .metager-key {
+
+          >.metager-key {
             color: inherit;
             display: flex;
             align-items: center;
             gap: 0.5rem;
+
             @supports not (selector(:first-child)) {
               gap: 0;
-              > * {
+
+              >* {
                 padding: 0 0.5rem;
               }
             }
-            > img {
+
+            >img {
               height: 1em;
               rotate: -90deg;
-              filter: brightness(@searchbar-key-brightness);
             }
 
             &.no-key {
-              > img {
+              >img {
                 rotate: 0deg;
               }
             }
           }
+
           #plugin-btn {
             color: @text-color;
             display: flex;
             align-items: center;
 
-            > img {
+            >img {
               // sets the size for the plugin button
               max-width: 15px;
               max-height: 15px;
@@ -116,24 +138,27 @@ div.startpage {
             }
           }
         }
-        > #startpage-logo {
+
+        >#startpage-logo {
           grid-area: logo;
         }
-        > fieldset {
+
+        >fieldset {
           grid-area: search;
         }
       }
 
-      > #language {
+      >#language {
         text-align: center;
         padding-block: 0.5rem;
-        > a {
+
+        >a {
           font-size: 0.8em;
-          color: fade(@text-color, 50%);
+          color: fade(@text-color, 60%);
         }
       }
 
-      > #scroll-links {
+      >#scroll-links {
         // creates a grid for the story-icons
         min-width: 100%;
         display: flex;
@@ -145,44 +170,48 @@ div.startpage {
           display: none;
         }
 
-        & > :nth-child(1) {
+        &> :nth-child(1) {
           background-color: @story-privacy-background;
         }
 
-        & > :nth-child(2) {
+        &> :nth-child(2) {
           background-color: @story-ngo-background;
           color: @story-ngo-color;
         }
 
-        & > :nth-child(3) {
+        &> :nth-child(3) {
           background-color: @story-diversity-background;
           color: @story-diversity-color;
         }
 
-        & > :nth-child(4) {
+        &> :nth-child(4) {
           background-color: @story-eco-background;
           color: @story-eco-color;
         }
 
-        & > a {
+        &>a {
           display: flex;
           justify-content: center;
           align-items: center;
           color: inherit;
           padding: 8px;
           gap: 8px;
+
           @supports not (selector(:first-child)) {
             gap: 0;
-            > * {
+
+            >* {
               padding: 0 4px;
             }
           }
+
           width: 25%;
+
           @media (max-width: 420px) {
             flex-direction: column;
           }
 
-          > div {
+          >div {
             font-size: clamp(0.6rem, 2vw, 0.8rem);
           }
 
@@ -193,7 +222,7 @@ div.startpage {
             max-width: 250px;
             align-self: center;
 
-            & > i {
+            &>i {
               font-style: normal;
               display: inline-block;
               padding: 8px 0;
@@ -201,7 +230,7 @@ div.startpage {
             }
           }
 
-          & > img {
+          &>img {
             width: 20px;
             height: 20px;
             min-width: 20px;
@@ -209,14 +238,15 @@ div.startpage {
             object-fit: contain;
           }
 
-          & > span {
+          &>span {
             display: block;
           }
         }
       }
     }
-    > div#story-container {
-      > section {
+
+    >div#story-container {
+      >section {
         // creates the grid for the story sections
         display: grid;
         grid-template-columns: 1fr 3fr;
@@ -225,6 +255,7 @@ div.startpage {
           "story-icon heading"
           ". paragraph"
           ". story-links";
+
         @media (max-width: 725px) {
           grid-template-columns: 1fr;
           grid-template-areas:
@@ -233,24 +264,18 @@ div.startpage {
             "paragraph"
             "story-links";
         }
+
         gap: 2rem;
         position: relative;
         align-items: center;
         padding: 8rem 0.5rem;
 
         &:not(:nth-child(1)) {
-          @supports (
-              clip-path:
-                polygon(0 0, 30% 0, 50% 30px, 70% 0, 100% 0, 100% 100%, 0 100%)
-            )
-            or
-            (
-              -webkit-clip-path: polygon(0 0, 40% 0, 50% 30px, 60% 0, 100% 0, 100%
-                    100%, 0 100%)
-            ) {
+          @supports (clip-path: polygon(0 0, 30% 0, 50% 30px, 70% 0, 100% 0, 100% 100%, 0 100%)) or (-webkit-clip-path: polygon(0 0, 40% 0, 50% 30px, 60% 0, 100% 0, 100% 100%, 0 100%)) {
             margin-top: -@clippathHeight;
           }
         }
+
         &#story-privacy {
           margin-bottom: 0;
           background-color: @story-privacy-background;
@@ -258,146 +283,164 @@ div.startpage {
           .story-icon {
             filter: invert(@icon-color);
           }
+
           .story-button {
             background-color: #535353;
             color: #ffffff;
           }
         }
+
         &#story-ngo {
           grid-area: "icn-ngo";
           background-color: @story-ngo-background;
-          clip-path: polygon(
-            0 0,
-            40% 0,
-            50% @clippathHeight,
-            60% 0,
-            100% 0,
-            100% 100%,
-            0 100%
-          );
-          > h1 {
+          clip-path: polygon(0 0,
+              40% 0,
+              50% @clippathHeight,
+              60% 0,
+              100% 0,
+              100% 100%,
+              0 100%);
+
+          >h1 {
             color: @story-ngo-color;
           }
+
           .story-button {
             background-color: #ad1a00;
             color: #ffffff;
           }
         }
+
         &#story-diversity {
           grid-area: "icn-diversity";
           background-color: @story-diversity-background;
-          clip-path: polygon(
-            0 0,
-            40% 0,
-            50% @clippathHeight,
-            60% 0,
-            100% 0,
-            100% 100%,
-            0 100%
-          );
-          > h1 {
+          clip-path: polygon(0 0,
+              40% 0,
+              50% @clippathHeight,
+              60% 0,
+              100% 0,
+              100% 100%,
+              0 100%);
+
+          >h1 {
             color: @story-diversity-color;
           }
+
           .story-button {
             background-color: #0c4690;
             color: #ffffff;
           }
         }
+
         &#story-eco {
           grid-area: "icn-eco";
           background-color: @story-eco-background;
-          clip-path: polygon(
-            0 0,
-            40% 0,
-            50% @clippathHeight,
-            60% 0,
-            100% 0,
-            100% 100%,
-            0 100%
-          );
-          > h1 {
+          clip-path: polygon(0 0,
+              40% 0,
+              50% @clippathHeight,
+              60% 0,
+              100% 0,
+              100% 100%,
+              0 100%);
+
+          >h1 {
             color: @story-eco-color;
           }
+
           .story-button {
             background-color: #0c621a;
             color: #ffffff;
           }
         }
+
         &#story-plugin {
           min-height: 60vh;
           background-color: @story-plugin-background;
-          clip-path: polygon(
-            0 0,
-            40% 0,
-            50% @clippathHeight,
-            60% 0,
-            100% 0,
-            100% 100%,
-            0 100%
-          );
+          clip-path: polygon(0 0,
+              40% 0,
+              50% @clippathHeight,
+              60% 0,
+              100% 0,
+              100% 100%,
+              0 100%);
+
           .story-button {
             background-color: #535353;
             color: #ffffff;
           }
         }
-        > h1 {
+
+        >h1 {
           grid-area: heading;
           font-size: clamp(15px, 3.5vw, 80px);
           margin: 0;
           white-space: nowrap;
+
           @media (max-width: 725px) {
             text-align: center;
             font-size: clamp(15px, 4.5vw, 80px);
           }
         }
-        > p {
+
+        >p {
           // sets all paragraphs for all sections
           grid-area: paragraph;
           font-size: clamp(18px, 5vw, 30px);
           color: @story-font-color;
           max-width: 1100px;
         }
-        > figure.story-icon {
+
+        >figure.story-icon {
           // sets all icons for all sections
           grid-area: story-icon;
           text-align: center;
           padding-inline: 3vw;
-          > img {
+
+          >img {
             // defines the story-icons in the sections
             height: 100%;
             max-height: 300px;
             max-width: 150px;
             width: 10vw;
+
             @media (max-width: 725px) {
               width: 25vw;
             }
+
             object-fit: contain;
           }
         }
-        > ul.story-links {
+
+        >ul.story-links {
           grid-area: story-links;
           display: flex;
           flex-wrap: wrap;
           padding: 0px;
           list-style: none;
           gap: 2em;
+
           @supports not (selector(:first-child)) {
             gap: 0;
-            > * {
+
+            >* {
               padding: 1em;
             }
           }
+
           max-width: 700px;
           width: 100%;
+
           @media (max-width: 500px) {
             justify-content: center;
             gap: 1rem;
           }
-          & > li {
+
+          &>li {
             flex-basis: 0;
             flex-grow: 1;
             white-space: nowrap;
-            & > a {
+
+            &>a {
               display: block;
               text-align: center;
               // sets the story-button for all sections

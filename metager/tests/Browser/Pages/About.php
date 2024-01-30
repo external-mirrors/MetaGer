@@ -30,7 +30,7 @@ class About extends Page
         $browser->visit("/de-DE")
             ->waitFor("label.sidebar-opener[for=sidebarToggle]")
             ->click("label.sidebar-opener[for=sidebarToggle]")
-            ->click("label#navigationKontakt")
+            ->click("summary#navigationKontakt")
             ->clickLink("Über uns")
             ->waitForLocation("/de-DE/about");
         foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data) {

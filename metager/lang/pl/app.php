@@ -19,19 +19,11 @@ return [
     'maps' => [
         '1' => 'Ta aplikacja zapewnia natywną integrację <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (obsługiwanej przez <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) na urządzeniu mobilnym z systemem Android.',
         '2' => 'Dzięki temu usługa planowania trasy i nawigacji działa bardzo szybko na smartfonie. Aplikacja jest szybsza w porównaniu do korzystania z mobilnej przeglądarki internetowej. Jest jeszcze kilka innych zalet - sprawdź!',
-        '3' => 'Po pierwszym uruchomieniu zostaniesz poproszony o następujące uprawnienia:',
+        '3' => 'APK do ręcznej instalacji ma około 4x większy rozmiar niż instalacja ze sklepu Playstore (~250 MB), ponieważ zawiera biblioteki dla wszystkich popularnych architektur procesorów. Zintegrowany aktualizator będzie znał architekturę procesora urządzenia i zainstaluje poprawną (małą) wersję aplikacji przy pierwszej aktualizacji. Jeśli znasz architekturę swojego urządzenia, możesz również <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">bezpośrednio zainstalować mały pakiet</a>.',
         'list' => [
             '1' => 'Dostęp do danych pozycjonowania => Dzięki aktywacji GPS możemy zapewnić lepsze wyniki wyszukiwania. Dzięki temu uzyskujesz dostęp do nawigacji krok po kroku. <b> Oczywiście nie przechowujemy żadnych danych użytkownika i nie udostępniamy ich osobom trzecim.</b>',
-            '2' => 'Dostęp do obrazów, multimediów i plików na urządzeniu => Zezwolenie to jest niezbędne do automatycznej aktualizacji aplikacji. Jeśli pojawi się nowsza wersja, może być przechowywana w archiwum pobierania i zostanie zainstalowana automatycznie. Bez tego uprawnienia musisz wykonać ręczną instalację za każdym razem, gdy pojawi się aktualizacja.',
+            '2' => 'APK do ręcznej instalacji ma zintegrowany aktualizator. Aby aktualizator działał, aplikacja poprosi o pozwolenie na publikowanie powiadomień w celu powiadamiania o dostępnej aktualizacji i korzysta z uprawnienia Androida REQUEST_INSTALL_PACKAGES, dzięki czemu może poprosić o zainstalowanie aktualizacji aplikacji',
         ],
-    ],
-    'installation' => [
-        '1' => 'Wystarczy kliknąć Google Playstore, aby zostać przekierowanym do sklepu, a następnie wybrać "zainstaluj" w celu instalacji.',
-        '2' => 'Aby przeprowadzić ręczną instalację, wykonaj poniższe czynności:',
-    ],
-    'list' => [
-        '1' => 'Otwórz menu ustawień, aby zezwolić na instalację: Ustawienia => System => Bezpieczeństwo. Zaznacz tam opcję "Nieznane źródła".',
-        '2' => 'Aby pobrać plik, skorzystaj z opcji "Instalacja ręczna" tutaj.',
-        '3' => 'Teraz otwórz plik na swoim urządzeniu. Spowoduje to zainstalowanie aplikacji.',
+        '4' => 'Po pierwszym uruchomieniu zostaniesz poproszony o następujące uprawnienia:',
     ],
 ];

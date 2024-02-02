@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Efter den första starten kommer du att bli tillfrågad om följande behörigheter:',
     ],
-    'list' => [
-        '2' => 'Använd "Manuell installation" här för att ladda ner filen.',
-    ],
 ];

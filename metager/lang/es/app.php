@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Tras el primer inicio se le pedirán los siguientes permisos:',
     ],
-    'list' => [
-        '2' => 'Seleccione el enlace "Instalación manual" en esta página para descargar el archivo de instalación en su dispositivo móvil.',
-    ],
 ];

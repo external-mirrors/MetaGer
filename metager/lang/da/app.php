@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Efter den første start vil du blive bedt om følgende tilladelser:',
     ],
-    'list' => [
-        '2' => 'Brug venligst "Manuel installation" her til at downloade filen.',
-    ],
 ];

@@ -17,9 +17,6 @@ return [
         ],
         '4' => 'Na de eerste start wordt om de volgende rechten gevraagd:',
     ],
-    'list' => [
-        '2' => 'Gebruik hier "Handmatige installatie" om het bestand te downloaden.',
-    ],
     'head' => [
         '1' => 'Metager Apps',
         '2' => 'MetaGer-app',

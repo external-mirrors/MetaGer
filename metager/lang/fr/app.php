@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Après le premier démarrage, les autorisations suivantes vous seront demandées :',
     ],
-    'list' => [
-        '2' => 'Veuillez utiliser "Manual Installation" ici pour télécharger le fichier.',
-    ],
 ];

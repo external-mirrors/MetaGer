@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Ensimmäisen käynnistyksen jälkeen sinulta kysytään seuraavat oikeudet:',
     ],
-    'list' => [
-        '2' => 'Lataa tiedosto tästä "Manuaalinen asennus" -toiminnolla.',
-    ],
 ];

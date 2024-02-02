@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Po pierwszym uruchomieniu zostaniesz poproszony o następujące uprawnienia:',
     ],
-    'list' => [
-        '2' => 'Aby pobrać plik, skorzystaj z opcji "Instalacja ręczna" tutaj.',
-    ],
 ];

@@ -26,7 +26,4 @@ return [
         ],
         '4' => 'Nach dem ersten Start werden Sie nach den folgenden Berechtigungen gefragt:',
     ],
-    'list' => [
-        '2' => 'Wählen Sie auf dieser Seite den Link "Manuelle Installation" aus, um die Installationsdatei auf ihr Mobilgerät herunter zu laden.',
-    ],
 ];

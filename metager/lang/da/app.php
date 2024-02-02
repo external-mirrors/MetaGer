@@ -19,14 +19,12 @@ return [
     'maps' => [
         '1' => 'Denne app giver en indbygget integration af <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (drevet af <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) på din mobile Android-enhed.',
         '2' => 'Derfor kører ruteplanlæggeren og navigationstjenesten meget hurtigt på din smartphone. Appen er hurtigere sammenlignet med brugen i en mobil webbrowser. Og der er flere fordele - tjek det ud!',
-        '3' => 'Efter den første start vil du blive bedt om følgende tilladelser:',
+        '3' => 'APK\'en til manuel installation er omkring 4 gange så stor som playstore-installationen (~250 MB), fordi den indeholder biblioteker til alle almindelige CPU-arkitekturer. Den integrerede updater kender din enheds CPU-arkitektur og installerer den korrekte (lille) version af appen ved den første opdatering. Hvis du selv kender din enheds arkitektur, kan du også <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">installere den lille pakke direkte</a>.',
         'list' => [
             '1' => 'Adgang til positioneringsdata => Med GPS aktiveret kan vi levere bedre søgeresultater. Med dette får du adgang til trin-for-trin-navigation. <b> Vi gemmer naturligvis ikke dine data, og vi videregiver dem ikke til tredjeparter.</b>',
-            '2' => 'Adgang til billeder, medier og filer på enheden => Denne tilladelse er nødvendig for den automatiske opdatering af appen. Hvis der er en nyere version, kan den gemmes i dit downloadarkiv og vil blive installeret automatisk. Uden denne tilladelse er du nødt til at foretage en manuel installation, hver gang der kommer en opdatering.',
+            '2' => 'APK\'en til manuel installation har en integreret updater. For at updateren kan fungere, beder appen om tilladelse til at sende notifikationer for at underrette dig om en tilgængelig opdatering og bruger Android-tilladelsen REQUEST_INSTALL_PACKAGES, så den kan bede dig om at installere app-opdateringen.',
         ],
-    ],
-    'installation' => [
-        '2' => 'Følg disse trin for en manuel installation:',
+        '4' => 'Efter den første start vil du blive bedt om følgende tilladelser:',
     ],
     'list' => [
         '2' => 'Brug venligst "Manuel installation" her til at downloade filen.',

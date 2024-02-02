@@ -19,14 +19,12 @@ return [
     'maps' => [
         '1' => 'Cette application offre une intégration native de <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) sur votre appareil mobile Android.',
         '2' => 'Le calculateur d\'itinéraires et le service de navigation fonctionnent donc très rapidement sur votre smartphone. L\'application est plus rapide que l\'utilisation dans un navigateur web mobile. Et il y a encore d\'autres avantages - jetez-y un coup d\'œil !',
-        '3' => 'Après le premier démarrage, les autorisations suivantes vous seront demandées :',
+        '3' => 'L\'APK pour l\'installation manuelle est environ 4x la taille de l\'installation Playstore (~250MB) parce qu\'il contient des librairies pour toutes les architectures CPU courantes. L\'outil de mise à jour intégré connaîtra l\'architecture du processeur de votre appareil et installera la version correcte (petite) de l\'application lors de la première mise à jour. Si vous connaissez vous-même l\'architecture de votre appareil, vous pouvez également <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">installer directement le petit paquet</a>.',
         'list' => [
             '1' => 'Accès aux données de positionnement => Si le GPS est activé, nous pouvons fournir de meilleurs résultats de recherche. Vous avez ainsi accès à la navigation pas à pas. <b> Bien entendu, nous ne stockons aucune de vos données et nous ne les transmettons pas à des tiers.</b>',
-            '2' => 'Accès aux images, médias et fichiers sur l\'appareil => Ce permis est nécessaire pour la mise à jour automatique de l\'application. S\'il existe une version plus récente, elle peut être stockée dans votre archive de téléchargement et sera installée automatiquement. Sans cette autorisation, vous devez procéder à une installation manuelle à chaque mise à jour.',
+            '2' => 'L\'APK pour l\'installation manuelle dispose d\'un outil de mise à jour intégré. Pour que l\'updater fonctionne, l\'application demandera la permission de poster des notifications afin de vous avertir de la disponibilité d\'une mise à jour et utilisera la permission Android REQUEST_INSTALL_PACKAGES afin de vous demander d\'installer la mise à jour de l\'application.',
         ],
-    ],
-    'installation' => [
-        '2' => 'Veuillez suivre les étapes suivantes pour une installation manuelle :',
+        '4' => 'Après le premier démarrage, les autorisations suivantes vous seront demandées :',
     ],
     'list' => [
         '2' => 'Veuillez utiliser "Manual Installation" ici pour télécharger le fichier.',

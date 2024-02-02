@@ -19,14 +19,12 @@ return [
     'maps' => [
         '1' => 'Diese App bietet eine native Integration von <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) auf Ihrem mobilen Android-Gerät.',
         '2' => 'Dadurch läuft der Karten- und Navigationsdienst auch auf Ihrem Smartphone optimal und schnell. Die App steigert die Performance im Vergleich zur Verwendung im mobilen Browser und bietet einige weitere Vorteile. Probieren Sie es aus!',
-        '3' => 'Die App fragt nach dem ersten Start nach folgenden Berechtigungen:',
+        '3' => 'Die APK für die manuelle Installation ist etwa 4x so groß wie die Playstore-Installation (~250MB), da sie Bibliotheken für alle gängigen CPU-Architekturen enthält. Der integrierte Updater kennt die CPU-Architektur Ihres Geräts und installiert die richtige (kleine) Version der App beim ersten Update. Wenn Sie Ihre Gerätearchitektur selbst kennen, können Sie auch <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">das kleine Paket</a> direkt installieren.',
         'list' => [
             '1' => 'Zugriff auf Positionsdaten  => Falls GPS an ihrem Mobiltelefon aktiviert ist, können wir dadurch Ihre Suchergebnisse verbessern. Außerdem schalten Sie damit die Funktion Schritt-für-Schritt Navigation frei. <b>Selbstverständlich werden diese Daten nirgendwo gespeichert und erst recht nicht an Dritte weiter gegeben!</b>',
-            '2' => 'Zugriff auf Fotos, Medien und Dateien auf dem Gerät => Diese Berechtigung ist notwendig, damit sich diese App selbst updaten kann. Steht eine neue Version der App zur Verfügung, kann diese in Ihrem Downloadverzeichnis gespeichert und dann von dort aus automatisch installiert werden. Wenn Sie diese Berechtigung nicht geben möchten, müssen Sie die App jedes Mal manuell neu installieren, wenn ein Update zur Verfügung steht.',
+            '2' => 'Die APK für die manuelle Installation hat einen integrierten Updater. Damit der Updater funktioniert, bittet die App um die Erlaubnis, Benachrichtigungen zu versenden, um Sie über ein verfügbares Update zu informieren, und verwendet die Android-Erlaubnis REQUEST_INSTALL_PACKAGES, damit sie Sie bitten kann, das App-Update zu installieren',
         ],
-    ],
-    'installation' => [
-        '2' => 'Wenn Sie unsere App manuell (ohne App-Store) installieren möchten, gehen Sie wie folgt vor:',
+        '4' => 'Nach dem ersten Start werden Sie nach den folgenden Berechtigungen gefragt:',
     ],
     'list' => [
         '2' => 'Wählen Sie auf dieser Seite den Link "Manuelle Installation" aus, um die Installationsdatei auf ihr Mobilgerät herunter zu laden.',

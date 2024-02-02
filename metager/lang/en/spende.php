@@ -73,6 +73,7 @@ return [
         'heading' => 'Complete payment',
         'item-name' => 'Donation to the SUMA-EV',
         'card' => [
+            'name' => 'Cardholder Name (optional)',
             'number' => 'Card number',
             'expiration' => 'Valid until',
             'cvv' => 'CVV',

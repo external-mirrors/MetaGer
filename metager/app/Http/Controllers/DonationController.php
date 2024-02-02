@@ -308,8 +308,19 @@ class DonationController extends Controller
         $script_params = [
             "client-id" => config("metager.metager.paypal.client_id"),
             "currency" => "EUR",
-            "components" => "buttons,funding-eligibility,hosted-fields,payment-fields,marks"
+            //"components" => "buttons,funding-eligibility,card-fields,payment-fields,marks"
         ];
+        $components = ["buttons"];
+        if ($interval === "once") {
+            if ($funding_source === "card") {
+                $components = array_merge($components, ["card-fields"]);
+            } else if ($funding_source != "paypal") {
+                $components = array_merge($components, ["funding-eligibility", "payment-fields"]);
+            }
+        }
+        $script_params["components"] = implode(",", $components);
+
+
 
         if ($interval !== "once") {
             $script_params["vault"] = "true";
@@ -336,6 +347,67 @@ class DonationController extends Controller
             ->with('css', [mix('/css/spende.css')])
             ->with('darkcss', [mix('/css/spende-dark.css')])
             ->with('js', [mix('/js/donation.js')]), 200, ["Content-Security-Policy" => $csp]);
+    }
+
+    function paypalCreateSubscription(Request $request, $amount, $interval, $funding_source)
+    {
+        $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
+            'amount' => 'required|numeric|min:1',
+            'interval' => Rule::in(["monthly", "quarterly", "six-monthly", "annual"])
+        ]);
+        if ($validator->fails()) {
+            abort(400);
+        }
+
+        $subscription_plan_locale = Localization::getLanguage() === "de" ? "de" : "en";
+
+        $subscription_data = [
+            "plan_id" => config("metager.metager.paypal.subscription_plans.$subscription_plan_locale.$interval"),
+            "application_context" => [
+                "shipping_preference" => "NO_SHIPPING",
+            ],
+            "plan" => [
+                "billing_cycles" => [
+                    [
+                        "sequence" => 1,
+                        "total_cycles" => 0,
+                        "pricing_scheme" => [
+                            "fixed_price" => [
+                                "currency_code" => "EUR",
+                                "value" => $amount,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        $base_url = config("metager.metager.paypal.base_url");
+        $access_token = $this->generatePayPalAccessToken();
+
+        $url = $base_url . "/v1/billing/subscriptions";
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer $access_token",
+                "Content-Type: application/json"
+            ],
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POSTFIELDS => json_encode($subscription_data)
+        ]);
+        $response = curl_exec($ch);
+        $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($responseCode === 201) {
+            $response = json_decode($response);
+            $response_body = [
+                "id" => $response->id,
+                "redirect_url" => URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()])
+            ];
+            return response()->json($response_body);
+        } else {
+            return response($response, 400, ["Content-Type" => "application/json"]);
+        }
     }
 
     function paypalCreateOrder(Request $request, $amount, $interval, $funding_source)
@@ -382,6 +454,21 @@ class DonationController extends Controller
             ]
         ];
 
+        if ($funding_source === "card") {
+            $order_data["payment_source"] = [
+                "card" => [
+                    "attributes" => [
+                        "verification" => [
+                            "method" => "SCA_ALWAYS"
+                        ]
+                    ],
+                    "experience_context" => [
+                        "shipping_preference" => "NO_SHIPPING",
+                    ]
+                ]
+            ];
+        }
+
         $base_url = config("metager.metager.paypal.base_url");
         $access_token = $this->generatePayPalAccessToken();
 
@@ -423,6 +510,12 @@ class DonationController extends Controller
         $base_url = config("metager.metager.paypal.base_url");
         $access_token = $this->generatePayPalAccessToken();
 
+        if ($funding_source === "card") {
+            $order_details = $this->getOrderDetails($access_token, $orderId);
+            if (property_exists($order_details->payment_source->card, "authentication_result") && !$this->cardAuthenticated($order_details->payment_source->card->authentication_result)) {
+                return response()->json(["error" => "card not authenticated"], 400);
+            }
+        }
         $url = $base_url . "/v2/checkout/orders/$orderId/capture";
         $opts = [
             "http" => [
@@ -472,6 +565,99 @@ class DonationController extends Controller
         }
 
         return response()->json($response, $responsecode);
+    }
+
+    /**
+     * Parses PayPals authentication result for card payments and acts according to
+     * https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/#link-recommendedaction
+     */
+    private function cardAuthenticated($authentication_result)
+    {
+        $liability_shift = $authentication_result->liability_shift;
+        $authentication_status = null;
+        if (property_exists($authentication_result->three_d_secure, "authentication_status")) {
+            $authentication_status = $authentication_result->three_d_secure->authentication_status;
+        }
+        $enrollment_status = $authentication_result->three_d_secure->enrollment_status;
+        if ($enrollment_status === "Y") {
+            switch ($authentication_status) {
+                case "Y":
+                    if (in_array($liability_shift, ["POSSIBLE", "YES"])) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case "N":
+                    if ($liability_shift === "NO") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                case "R":
+                    if ($liability_shift === "NO") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                case "A":
+                    if ($liability_shift === "POSSIBLE") {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case "U":
+                    if (in_array($liability_shift, ["UNKNOWN", "NO"])) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                case "C":
+                    if ($liability_shift === "UNKNOWN") {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                default:
+                    return false;
+            }
+        } else if ($enrollment_status === "N") {
+            if ($liability_shift === "NO") {
+                return true;
+            } else {
+                return false;
+            }
+        } else if ($enrollment_status === "U") {
+            switch ($liability_shift) {
+                case "NO":
+                    return true;
+                case "UNKNOWN":
+                    return false;
+                default:
+                    return false;
+            }
+        } else if ($enrollment_status === "B") {
+            if ($liability_shift === "NO") {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    private function getOrderDetails($access_token, $orderId)
+    {
+        $paypal_url = config("metager.metager.paypal.base_url") . "/v2/checkout/orders/$orderId";
+        $ch = curl_init($paypal_url);
+
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => ["Authorization: Bearer $access_token"],
+        ]);
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+        return json_decode($response);
     }
 
     public function donationFinished(Request $request, $amount, $interval, $funding_source)

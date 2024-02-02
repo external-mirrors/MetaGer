@@ -91,6 +91,7 @@ return [
                 '1330' => 'Tarjeta de crédito inválida. Por favor, compruebe su entrada',
                 'generic' => 'Tarjeta de crédito rechazada por la entidad de crédito',
             ],
+            'name' => 'Nombre del titular de la tarjeta (opcional)',
         ],
         'banktransfer' => [
             'description' => [

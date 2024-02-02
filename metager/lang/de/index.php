@@ -8,11 +8,11 @@ return [
             'nokey' => 'Werbefreie Suche einrichten',
             'empty' => 'Token aufgebraucht. Jetzt aufladen.',
             'low' => 'Token bald aufgebraucht. Jetzt aufladen.',
-            'full' => 'Werbefreie Suche aktiviert.'
-        ]
+            'full' => 'Werbefreie Suche aktiviert.',
+        ],
     ],
     'placeholder' => 'MetaGer: Sicher suchen & finden',
-    'searchbutton' => 'MetaGer-Suche',
+    'searchbutton' => 'MetaGer-Suche starten',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Bilder',
@@ -21,4 +21,11 @@ return [
         'produkte' => 'Produkte',
     ],
     'adfree' => 'MetaGer werbefrei nutzen',
+    'skip' => [
+        'search' => 'Weiter zur Eingabe der Suchanfrage',
+        'navigation' => 'Zur Navigation springen',
+        'fokus' => 'Zur Auswahl des Suchfokus springen',
+    ],
+    'lang' => 'Hexensprache',
+    'searchreset' => 'Eingabe der Suchanfrage löschen',
 ];

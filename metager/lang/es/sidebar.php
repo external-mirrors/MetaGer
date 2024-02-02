@@ -32,4 +32,6 @@ return [
     'nav30' => 'Motores de búsqueda',
     'nav31' => 'Más información',
     'navFactcheck' => 'Comprobación de hechos',
+    'close' => 'Botón de salto a la barra de navegación',
+    'toggle' => 'abrir/cerrar la barra de navegación',
 ];

@@ -32,4 +32,6 @@ return [
     'nav15' => 'Työkalut',
     'nav16' => 'Tue meitä',
     'nav17' => 'Osto affiliate-kaupoista',
+    'close' => 'Siirry navigointipalkin vaihtopainike',
+    'toggle' => 'avaa/sulje navigointipalkki',
 ];

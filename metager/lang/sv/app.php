@@ -19,14 +19,12 @@ return [
     'maps' => [
         '1' => 'Denna app ger en inbyggd integration av <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (drivs av <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) på din mobila Android-enhet.',
         '2' => 'Därför körs ruttplaneraren och navigeringstjänsten mycket snabbt på din smartphone. Appen är snabbare jämfört med användningen i en mobil webbläsare. Och det finns många fler fördelar - kolla in dem!',
-        '3' => 'Efter den första starten kommer du att bli tillfrågad om följande behörigheter:',
+        '3' => 'APK:n för manuell installation är ungefär 4x så stor som playstore-installationen (~250MB) eftersom den innehåller bibliotek för alla vanliga CPU-arkitekturer. Den integrerade uppdateraren känner till din enhets CPU-arkitektur och installerar rätt (liten) version av appen vid den första uppdateringen. Om du själv känner till din enhets arkitektur kan du också <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">direkt installera det lilla paketet</a>.',
         'list' => [
             '1' => 'Tillgång till positionsdata => Med GPS aktiverad kan vi erbjuda bättre sökresultat. Med detta får du tillgång till steg-för-steg-navigering. <b> Naturligtvis lagrar vi inga av dina data och vi lämnar inte ut några av dina data till tredje part.</b>',
-            '2' => 'Åtkomst till bilder, media och filer på enheten => Detta tillstånd är nödvändigt för den automatiska uppdateringen av appen. Om det finns en nyare version kan den lagras i ditt nedladdningsarkiv och installeras automatiskt. Utan detta tillstånd måste du göra en manuell installation varje gång det finns en uppdatering.',
+            '2' => 'APK för manuell installation har en integrerad uppdaterare. För att uppdateraren ska fungera kommer appen att be om tillstånd att skicka meddelanden för att meddela dig om en tillgänglig uppdatering och använder Android-behörigheten REQUEST_INSTALL_PACKAGES så att den kan be dig att installera appuppdateringen',
         ],
-    ],
-    'installation' => [
-        '1' => 'Klicka bara på Google Playstore för att dirigeras till butiken och välj sedan "installera" för installationen.',
+        '4' => 'Efter den första starten kommer du att bli tillfrågad om följande behörigheter:',
     ],
     'list' => [
         '2' => 'Använd "Manuell installation" här för att ladda ner filen.',

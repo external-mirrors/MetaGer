@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Bare klik på Google Playstore for at blive dirigeret til butikken, og vælg derefter "installer" for installationen.',
         '2' => 'Følg disse trin for en manuel installation:',
     ],
     'list' => [
-        '1' => 'Åbn indstillingsmenuen for at tillade installationen: Indstillinger => System => Sikkerhed. Sæt kryds i "Ukendte kilder" der.',
         '2' => 'Brug venligst "Manuel installation" her til at downloade filen.',
-        '3' => 'Åbn nu filen på din enhed. Dette vil installere appen.',
     ],
 ];

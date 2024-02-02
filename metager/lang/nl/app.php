@@ -17,13 +17,10 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Klik gewoon op Google Playstore om naar de winkel te worden geleid en kies vervolgens "installeren" voor de installatie.',
         '2' => 'Volg deze stappen voor een handmatige installatie:',
     ],
     'list' => [
-        '1' => 'Open het instellingenmenu om de installatie toe te staan: Instellingen => Systeem => Beveiliging. Vink daar "Onbekende bronnen" aan.',
         '2' => 'Gebruik hier "Handmatige installatie" om het bestand te downloaden.',
-        '3' => 'Open nu het bestand op je apparaat. Hierdoor wordt de app geïnstalleerd.',
     ],
     'head' => [
         '1' => 'Metager Apps',

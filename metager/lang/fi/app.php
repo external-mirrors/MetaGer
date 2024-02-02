@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Napsauta Google Playstorea, jolloin sinut ohjataan kauppaan, ja valitse asennusta varten "Asenna".',
         '2' => 'Noudata seuraavia ohjeita manuaalista asennusta varten:',
     ],
     'list' => [
-        '1' => 'Avaa asetusvalikko salliaksesi asennuksen: Asetukset => Järjestelmä => Suojaus. Tarkista siellä "Tuntemattomat lähteet".',
         '2' => 'Lataa tiedosto tästä "Manuaalinen asennus" -toiminnolla.',
-        '3' => 'Avaa nyt tiedosto laitteellasi. Tämä asentaa sovelluksen.',
     ],
 ];

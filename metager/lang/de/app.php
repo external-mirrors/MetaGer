@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Falls Sie unsere App direkt aus dem Google Playstore heraus installieren möchten, brauchen Sie nichts weiter beachten. Klicken Sie einfach auf den Link "Google Playstore", um zum App Store weiter geleitet zu werden und klicken dort auf "Installieren".',
         '2' => 'Wenn Sie unsere App manuell (ohne App-Store) installieren möchten, gehen Sie wie folgt vor:',
     ],
     'list' => [
-        '1' => 'Öffnen Sie das Einstellungsmenü, um die Installation zu erlauben: Einstellungen => System => Sicherheit. Setzen Sie einen Haken bei "Unbekannte Quellen"',
         '2' => 'Wählen Sie auf dieser Seite den Link "Manuelle Installation" aus, um die Installationsdatei auf ihr Mobilgerät herunter zu laden.',
-        '3' => 'Öffnen Sie die heruntergeladene Datei auf ihrem Mobilgerät. Dies startet den Installationsprozess.',
     ],
 ];

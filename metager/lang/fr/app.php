@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Cliquez simplement sur Google Playstore pour être dirigé vers le magasin, puis choisissez "installer" pour l\'installation.',
         '2' => 'Veuillez suivre les étapes suivantes pour une installation manuelle :',
     ],
     'list' => [
-        '1' => 'Ouvrez le menu des paramètres pour autoriser l\'installation : Paramètres => Système => Sécurité. Cochez la case "Sources inconnues".',
         '2' => 'Veuillez utiliser "Manual Installation" ici pour télécharger le fichier.',
-        '3' => 'Ouvrez ensuite le fichier sur votre appareil. Cela installera l\'application.',
     ],
 ];

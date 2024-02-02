@@ -16,9 +16,7 @@ return [
         ],
     ],
     'list' => [
-        '2' => 'Per scaricare il file, utilizzare "Installazione manuale" qui.',
         '3' => 'Ora aprite il file sul vostro dispositivo. In questo modo verrà installata l\'applicazione.',
-        '1' => 'Aprire il menu delle impostazioni per consentire l\'installazione: Impostazioni => Sistema => Sicurezza. Selezionare "Sorgenti sconosciute".',
     ],
     'disclaimer' => [
         '1' => 'Al momento disponiamo solo di una versione Android della nostra applicazione.',
@@ -31,7 +29,6 @@ return [
         'manuell' => 'Installazione manuale',
     ],
     'installation' => [
-        '1' => 'Basta fare clic su Google Playstore per essere indirizzati al negozio e poi scegliere "installa" per l\'installazione.',
         '2' => 'Per l\'installazione manuale, attenersi alla seguente procedura:',
     ],
 ];

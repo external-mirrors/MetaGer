@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '2' => 'Följ dessa steg för en manuell installation:',
         '1' => 'Klicka bara på Google Playstore för att dirigeras till butiken och välj sedan "installera" för installationen.',
     ],
     'list' => [
-        '1' => 'Öppna inställningsmenyn för att tillåta installationen: Inställningar => System => Säkerhet. Markera "Okända källor" där.',
         '2' => 'Använd "Manuell installation" här för att ladda ner filen.',
-        '3' => 'Öppna nu filen på din enhet. Detta kommer att installera appen.',
     ],
 ];

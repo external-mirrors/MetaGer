@@ -26,12 +26,9 @@ return [
         ],
     ],
     'installation' => [
-        '1' => 'Wystarczy kliknąć Google Playstore, aby zostać przekierowanym do sklepu, a następnie wybrać "zainstaluj" w celu instalacji.',
         '2' => 'Aby przeprowadzić ręczną instalację, wykonaj poniższe czynności:',
     ],
     'list' => [
-        '1' => 'Otwórz menu ustawień, aby zezwolić na instalację: Ustawienia => System => Bezpieczeństwo. Zaznacz tam opcję "Nieznane źródła".',
         '2' => 'Aby pobrać plik, skorzystaj z opcji "Instalacja ręczna" tutaj.',
-        '3' => 'Teraz otwórz plik na swoim urządzeniu. Spowoduje to zainstalowanie aplikacji.',
     ],
 ];

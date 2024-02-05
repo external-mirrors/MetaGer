@@ -6,7 +6,7 @@
 <h1 class="page-title">{!! trans('help/help-functions.title') !!}</h1>
 <section>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-functions.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/help-functions.backarrow') !!}</a>
 	</div>
 	<p>{!! trans('help/help-functions.easy-help') !!}</p>
 	<section id="h-searchfunctions" class="card">

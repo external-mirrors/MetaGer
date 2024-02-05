@@ -21,7 +21,7 @@
 
 			@foreach($suma_list as $suma_name => $suma_infos)
 			<div class="card">
-				<h2><a href="{{$suma_infos->homepage}}" rel="noopener" target="_blank">{{ $suma_infos->display_name }}<img src="/img/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a></h2>
+				<h2><a href="{{$suma_infos->homepage}}" rel="noopener" target="_blank">{{ $suma_infos->display_name }}<img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a></h2>
 				@if($suma_infos->index_name !== null)
 				<p><span class="search-engine-dt">{{ trans('search-engine.text.2.2') }}</span>{{ $suma_infos->index_name }}</p>
 				@endif

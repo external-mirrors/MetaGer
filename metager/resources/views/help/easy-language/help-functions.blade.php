@@ -6,7 +6,7 @@
 <section class="help-section">
 	<h1 class="page-title">{!! trans('help/easy-language/help-functions.title') !!}</h1>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/easy-language/help-functions.backarrow') !!}</a>
 	</div>
 	<section id="help-searchfunctions" class="help-section card">
 	<p>{!! trans('help/easy-language/help-functions.glossary') !!}</p>
@@ -139,13 +139,13 @@
 			</ul>
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.7') !!}</p>
-			<img src="/img/key-icon.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.none') !!}" aria-hidden="true" id="searchbar-img-key">
+			<img src="/img/svg-icons/key-icon.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.none') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.8') !!}</p>
-			<img src="/img/key-empty.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.empty') !!}" aria-hidden="true" id="searchbar-img-key">
+			<img src="/img/svg-icons/key-empty.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.empty') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.9') !!}</p>
-			<img src="/img/key-full.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.full') !!}" aria-hidden="true" id="searchbar-img-key">
+			<img src="/img/svg-icons/key-full.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.full') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.10') !!}</p>
-			<img src="/img/key-low.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.low') !!}" aria-hidden="true" id="searchbar-img-key">
+			<img src="/img/svg-icons/key-low.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.low') !!}" aria-hidden="true" id="searchbar-img-key">
 			<p>{!! trans('help/easy-language/help-functions.key.11') !!}</p>
 		</div>
 	</section>

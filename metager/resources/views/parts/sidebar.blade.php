@@ -21,14 +21,14 @@
     </li>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/hilfe/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/help-icon.svg" alt="" aria-hidden="true" id="sidebar-img-help"> 
+      <img src="/img/svg-icons/help-icon.svg" alt="" aria-hidden="true" id="sidebar-img-help"> 
         <span>{{ trans('sidebar.nav20') }}</span>
       </a>
     </li>
     <li class="metager-dropdown">
       <input id="infoToggle" class="sidebarCheckbox" type="checkbox">
       <label for="infoToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationInfo" tabindex=0>
-      <img src="/img/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
+      <img src="/img/svg-icons/icon-more-information.svg" alt="" aria-hidden="true" id="sidebar-img-info"> 
         <span>{{ trans('sidebar.nav31') }}</span>
         <span class="caret"></span>
       </label>
@@ -58,7 +58,7 @@
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
+      <img src="/img/svg-icons/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
@@ -73,14 +73,14 @@
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
+      <img src="/img/svg-icons/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
         <span>@lang('sidebar.nav25')</span>
       </a>
     </li>
     @if (App\Localization::getLanguage() === "de")
     <li>
       <a  href="https://maps.metager.de" target="_blank" >
-      <img src="/img/icon-map.svg" alt="" aria-hidden="true" id="sidebar-img-map"> 
+      <img src="/img/svg-icons/icon-map.svg" alt="" aria-hidden="true" id="sidebar-img-map"> 
         <span>{{ trans('sidebar.nav27') }}</span> 
       </a>
     </li>
@@ -89,7 +89,7 @@
     <li class="metager-dropdown">
       <input id="contactToggle" class="sidebarCheckbox" type="checkbox">
       <label for="contactToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" id="navigationKontakt" tabindex=0>
-      <img src="/img/icon-contact.svg" alt="" aria-hidden="true" id="sidebar-img-contact"> 
+      <img src="/img/svg-icons/icon-contact.svg" alt="" aria-hidden="true" id="sidebar-img-contact"> 
         <span>{{ trans('sidebar.nav18') }}</span>
         <span class="caret"></span>
       </label>
@@ -108,7 +108,7 @@
     <li class="metager-dropdown">
       <input id="servicesToggle" class="sidebarCheckbox" type="checkbox">
         <label for="servicesToggle" class="metager-dropdown-toggle navigation-element" aria-haspopup="true" tabindex=0>
-        <img src="/img/icon-services.svg" alt="" aria-hidden="true" id="sidebar-img-services"> 
+        <img src="/img/svg-icons/icon-services.svg" alt="" aria-hidden="true" id="sidebar-img-services"> 
           <span>{{ trans('sidebar.nav15') }}</span>
           <span class="caret"></span>
         </label>
@@ -130,11 +130,11 @@
         </li>
         @if(App\Localization::getLanguage() == "de")
           <li>
-            <a href="https://shop.spreadshirt.de/metager/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
+            <a href="https://shop.spreadshirt.de/metager/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
           </li>
         @endif
         <li>
-          <a href="https://www.wecanhelp.de/430159004" target="_blank">{{ trans('sidebar.nav17') }} <img src="/img/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a>
+          <a href="https://www.wecanhelp.de/430159004" target="_blank">{{ trans('sidebar.nav17') }} <img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a>
          
         </li>
       </ul>
@@ -157,7 +157,7 @@
     <hr>
     <li>
       <a href="{{ route('lang-selector') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
+      <img src="/img/svg-icons/icon-language.svg" alt="" aria-hidden="true" id="sidebar-img-language"> 
         <span>{{ LaravelLocalization::getSupportedLocales()[LaravelLocalization::getCurrentLocale()]['native'] }}</span> 
       </a>
     </li>

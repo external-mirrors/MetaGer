@@ -91,22 +91,22 @@ abstract class Authorization
     {
         $keyIcon = "";
         if ($this->availableTokens < 0) {
-            $keyIcon = "/img/key-icon.svg";
+            $keyIcon = "/img/svg-icons/key-icon.svg";
         } else if ($this->availableTokens < $this->cost) {
-            $keyIcon = "/img/key-empty.svg";
+            $keyIcon = "/img/svg-icons/key-empty.svg";
         } else if ($this->availableTokens <= 30) {
-            $keyIcon = "/img/key-low.svg";
+            $keyIcon = "/img/svg-icons/key-low.svg";
         } else {
-            $keyIcon = "/img/key-full.svg";
+            $keyIcon = "/img/svg-icons/key-full.svg";
         }
 
         if (Cookie::has("tokenauthorization")) {
             switch (Cookie::get("tokenauthorization")) {
                 case "full":
-                    $keyIcon = "/img/key-full.svg";
+                    $keyIcon = "/img/svg-icons/key-full.svg";
                     break;
                 case "low":
-                    $keyIcon = "/img/key-low.svg";
+                    $keyIcon = "/img/svg-icons/key-low.svg";
                     break;
                 case "empty":
                     $keyIcon = "/img/key-empty.svg";

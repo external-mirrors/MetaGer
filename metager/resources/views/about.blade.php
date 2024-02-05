@@ -11,7 +11,7 @@
 	<h3><img id="about-lock" src="/img/lock.svg"> @lang('about.points.privacy.heading')</h3>
 	<p>@lang('about.points.privacy.text')</p>
 
-	<h3><img id= "about-heart" src="/img/heart.svg"> @lang('about.points.association.heading')</h3>
+	<h3><img id= "about-heart" src="/img/svg-icons/heart.svg"> @lang('about.points.association.heading')</h3>
 	<p>@lang('about.points.association.text')</p>
 
 	<h3><img id= "about-rainbow" src="/img/rainbow.svg"> @lang('about.points.diverse.heading')</h3>

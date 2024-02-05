@@ -7,7 +7,7 @@
 
 <section>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-mainpages.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/help-mainpages.backarrow') !!}</a>
 	</div>
 	<p>{!! trans('help/help-mainpages.easy-help') !!}</p>
 	<section id="h-startpage" class="card">

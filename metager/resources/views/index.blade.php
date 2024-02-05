@@ -38,7 +38,7 @@
         </a>
         @elseif(app(\App\Models\Authorization\Authorization::class)->availableTokens < app(\App\Models\Authorization\Authorization::class)->cost && Cookie::get("tokenauthorization", "empty") === "empty")
         <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-          <img src="/img/key-empty.svg" alt="Key Icon" />
+          <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
           <span>
             @lang("index.key.tooltip.empty")
           </span>
@@ -57,7 +57,7 @@
     </div>
     <div id="scroll-links">
       <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
-      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
+      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/svg-icons/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
       <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <div>@lang("mg-story.diversity.title")</div></a>
       <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <div>@lang("mg-story.eco.title")</div></a>
     </div>
@@ -77,7 +77,7 @@
       <section id="story-ngo">
         <h1>{{ trans('mg-story.ngo.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
+          <img src="/img/svg-icons/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
         </figure>
         <p>{!!trans('mg-story.ngo.p') !!}</p>
         <ul class="story-links">

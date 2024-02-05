@@ -6,7 +6,7 @@
 <h1 class="page-title">{!! trans('help/help-services.title') !!}</h1>
 <section>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-services.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/help-services.backarrow') !!}</a>
 	</div>
 	<p>{!! trans('help/help-services.easy-help') !!}</p>
 	<h2 id="h-dienste">{!! trans('help/help-services.services.text') !!}</h2>

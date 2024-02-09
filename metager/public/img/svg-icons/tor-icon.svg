@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="150.8125mm"
+   height="81.726486mm"
+   viewBox="0 0 150.8125 81.726486"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="Tor-Logo.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.73228114"
+     inkscape:cx="356.85039"
+     inkscape:cy="181.25983"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1015"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid847"
+       originx="-10.583333"
+       originy="-100.54167" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-10.583333,-100.54167)">
+    <path
+       style="fill:#969696;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 10.583333,100.54167 h 58.208333 v 23.8125 H 51.878 v 55.56249 H 28.031 V 124.35417 H 10.583333 Z"
+       id="path849"
+       sodipodi:nodetypes="ccccccccc" />
+    <path
+       style="fill:#969696;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 129.64583,179.91666 0.11212,-32.88903 c -0.2719,-15.67372 7.84476,-20.95323 13.11705,-22.67346 12.23641,-3.99246 18.52083,0 18.52083,0 v 21.16666 c 0,0 -6.97965,-3.89003 -9.47139,3.04079 -2.00157,5.5674 -1.11194,31.35504 -1.11194,31.35504 z"
+       id="path851"
+       sodipodi:nodetypes="ccsccscc" />
+    <circle
+       style="opacity:0.729;fill:#969696;fill-opacity:1;stroke:none;stroke-width:1.465"
+       id="path853"
+       cx="93.55249"
+       cy="152.12317"
+       r="30.144991" />
+  </g>
+</svg>

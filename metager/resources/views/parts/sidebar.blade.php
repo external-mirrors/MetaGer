@@ -15,7 +15,7 @@
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/lock.svg" alt="" aria-hidden="true" id="sidebar-img-lock"> 
+      <img src="/img/svg-icons/lock.svg" alt="" aria-hidden="true" id="sidebar-img-lock"> 
         <span>{{ trans('sidebar.nav3') }}</span>
       </a>
     </li>
@@ -63,7 +63,7 @@
     @if (App\Localization::getLanguage() === "de")
     <li>
       <a href="{{ route('membership_form') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
+      <img src="/img/svg-icons/member-icon.svg" alt="" aria-hidden="true" id="sidebar-img-member"> 
         <span>{{ trans('sidebar.nav23') }}</span>
       </a>
     </li>

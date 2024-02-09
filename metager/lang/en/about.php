@@ -94,6 +94,11 @@ return [
             '1' => 'September 2017: Revision of the Quicktips',
             '2' => 'Quicktips, which offer hints beyond normal search results, are expanded in functionality and spun off into a separate project. Instead of being above the results, they are now located in a sidebar.',
         ],
+        
+        '22'=>[
+            '1'=>'December 2017: New ad-free search for SUMA-EV members',
+            '2'=>'MetaGer introduced their new ad-free search. Members of the SUMA-EV are now able to search ad-free using a key based system.',
+        ],
         '16' => [
             '1' => '2016-2019: MetaGer Homepage',
             '2' => 'On the new home page, four charakeristic features of MetaGer are highlighted and promoted for the first time.',
@@ -107,6 +112,14 @@ return [
             '2' => 'MetaGer\'s help page gets a new overview. This structures and visualizes the help pages with easy-to-recognize icons.',
         ],
         '19' => [
+            '1' => '26.04.2023: The new ad-free search',
+            '2' => 'MetaGer releases the ad-free search for everyone using a key-based system. It features a bigger selection of search engines, an improved image search and the option to search provably tracking-free using the new anonymous token system.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Easy help and glossary',
+            '2' => 'MetaGer implemented a simpler version of the help page. It features a more detailed explanation on how to use the search engine. In addition there is now a glossary that explains certain words that might be hard to understand. ',
+        ],
+        '21' => [
             '1' => 'Today',
             '2' => 'Even today, MetaGer is constantly evolving.',
         ],

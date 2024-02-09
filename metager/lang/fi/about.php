@@ -74,6 +74,18 @@ return [
             '2' => 'MetaGerin ohjesivu saa uuden yleiskatsauksen. Tämä jäsentää ja visualisoi ohjesivut helposti tunnistettavilla kuvakkeilla.',
         ],
         '19' => [
+            '1' => '26.04.2023: Uusi mainokseton haku',
+            '2' => 'MetaGer julkaisee mainosvapaan haun kaikille avainpohjaisen järjestelmän avulla. Se sisältää suuremman valikoiman hakukoneita, parannetun kuvahaun ja mahdollisuuden etsiä todistetusti jäljittämätöntä hakua uuden anonyymin tunnistejärjestelmän avulla.',
+        ],
+        '22' => [
+            '1' => 'Joulukuu 2017: Uusi mainokseton haku SUMA-EV:n jäsenille.',
+            '2' => 'MetaGer esitteli uuden mainoksettoman hakunsa. SUMA-EV:n jäsenet voivat nyt tehdä mainosvapaita hakuja avainpohjaisen järjestelmän avulla.',
+        ],
+        '20' => [
+            '2' => 'MetaGer toteutti yksinkertaisemman version ohjesivusta. Siinä on yksityiskohtaisempi selitys hakukoneen käytöstä. Lisäksi sivulla on nyt sanasto, jossa selitetään tiettyjä sanoja, joita voi olla vaikea ymmärtää. ',
+            '1' => '11.01.2024: Helppo apu ja sanasto',
+        ],
+        '21' => [
             '1' => 'Tänään',
             '2' => 'Vielä nykyäänkin MetaGer kehittyy jatkuvasti.',
         ],

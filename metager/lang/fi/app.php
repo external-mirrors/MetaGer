@@ -19,19 +19,11 @@ return [
     'maps' => [
         '1' => 'Tämä sovellus tarjoaa <a href="https://maps.metager.de" target="_blank">MetaGer Maps</a> (powered by <a href="https://www.openstreetmap.de/" target="_blank">Openstreetmap</a>) natiivin integroinnin Android-mobiililaitteeseesi.',
         '2' => 'Siksi reittisuunnittelija ja navigointipalvelu toimivat älypuhelimessasi erittäin nopeasti. Sovellus on nopeampi verrattuna mobiililaitteen verkkoselaimessa tapahtuvaan käyttöön. Ja on vielä muitakin etuja - tutustu siihen!',
-        '3' => 'Ensimmäisen käynnistyksen jälkeen sinulta kysytään seuraavat oikeudet:',
+        '3' => 'Manuaalisen asennuksen APK on noin nelinkertainen Playstore-asennukseen verrattuna (~250MB), koska se sisältää kirjastot kaikille yleisimmille suorittimen arkkitehtuureille. Integroitu päivitysohjelma tuntee laitteesi suorittimen arkkitehtuurin ja asentaa sovelluksen oikean (pienen) version ensimmäisen päivityksen yhteydessä. Jos tiedät itse laitteesi arkkitehtuurin, voit myös <a href="https://gitlab.metager.de/metagermaps/android/-/releases/permalink/latest" target="_blank">asentaa suoraan pienen paketin</a>.',
         'list' => [
             '1' => 'Pääsy paikannustietoihin => Kun GPS on aktivoitu, voimme tarjota parempia hakutuloksia. Tämän avulla saat pääsyn vaiheittaiseen navigointiin. <b> Emme tietenkään säilytä mitään tietojasi emmekä anna mitään tietojasi kolmansille henkilöille.</b>',
-            '2' => 'Pääsy laitteessa oleviin kuviin, medioihin ja tiedostoihin => Tämä lupa on tarpeen sovelluksen automaattista päivittämistä varten. Jos on olemassa uudempi versio, se voidaan tallentaa latausarkistoon ja asentaa automaattisesti. Ilman tätä lupaa sinun on tehtävä manuaalinen asennus joka kerta, kun päivitys tulee.',
+            '2' => 'Manuaalisen asennuksen APK:ssa on integroitu päivitin. Jotta päivitin toimisi, sovellus pyytää lupaa lähettää ilmoituksia ilmoittaakseen sinulle saatavilla olevasta päivityksestä ja käyttää Androidin lupaa REQUEST_INSTALL_PACKAGES, jotta se voi pyytää sinua asentamaan sovelluksen päivityksen.',
         ],
-    ],
-    'installation' => [
-        '1' => 'Napsauta Google Playstorea, jolloin sinut ohjataan kauppaan, ja valitse asennusta varten "Asenna".',
-        '2' => 'Noudata seuraavia ohjeita manuaalista asennusta varten:',
-    ],
-    'list' => [
-        '1' => 'Avaa asetusvalikko salliaksesi asennuksen: Asetukset => Järjestelmä => Suojaus. Tarkista siellä "Tuntemattomat lähteet".',
-        '2' => 'Lataa tiedosto tästä "Manuaalinen asennus" -toiminnolla.',
-        '3' => 'Avaa nyt tiedosto laitteellasi. Tämä asentaa sovelluksen.',
+        '4' => 'Ensimmäisen käynnistyksen jälkeen sinulta kysytään seuraavat oikeudet:',
     ],
 ];

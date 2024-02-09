@@ -12,7 +12,7 @@ return [
         ],
     ],
     'placeholder' => 'MetaGer: Ricerca e ricerca protetta dalla privacy',
-    'searchbutton' => 'Ricerca MetaGer',
+    'searchbutton' => 'Avviare la ricerca MetaGer',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Immagini',
@@ -21,4 +21,11 @@ return [
         'produkte' => 'Prodotti',
     ],
     'adfree' => 'Utilizzare MetaGer senza pubblicità',
+    'skip' => [
+        'search' => 'Passa all\'inserimento della query di ricerca',
+        'navigation' => 'Vai alla navigazione',
+        'fokus' => 'Passa alla selezione del focus di ricerca',
+    ],
+    'lang' => 'linguaggio wwitch',
+    'searchreset' => 'eliminare l\'input della query di ricerca',
 ];

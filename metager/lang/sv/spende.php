@@ -101,6 +101,7 @@ return [
                 '1330' => 'Kreditkortet är ogiltigt. Vänligen kontrollera din post',
                 'generic' => 'Kreditkort nekat av kreditinstitut',
             ],
+            'name' => 'Kortinnehavarens namn (valfritt)',
         ],
         'processing' => 'Betalningen är genomförd',
     ],

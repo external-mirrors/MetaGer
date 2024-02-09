@@ -15,81 +15,68 @@ function processPaypalCard() {
     document.getElementById("card-form-skeleton").remove();
     container.appendChild(card_form);
 
-    let paypal_options = paypalOptions();
-    let fontColor = window.getComputedStyle(
-        document.querySelector("body")
-    ).color;
-    paypal.HostedFields.render({
-        createOrder: paypal_options.createOrder,
-        fields: {
-            number: {
-                selector: "#card-number",
-                placeholder: "4111 1111 1111 1111",
-            },
-            cvv: {
-                selector: "#card-cvv",
-                placeholder: "123",
-            },
-            expirationDate: {
-                selector: "#card-expiration",
-                placeholder: "MM/YY",
-            },
+    let amount = document.querySelector("input[name=amount]").value;
+    let interval = document.querySelector("input[name=interval]").value;
+
+
+    let cardFields = paypal.CardFields({
+        ...paypalOptions(),
+        onError: err => {
         },
-        styles: {
+        style: {
             input: {
-                color: fontColor,
-                padding: "0.5rem 1rem",
-                fontSize: "1.2rem",
+                "font-size": "16px",
+                "padding": "0.4rem 0.75rem",
             },
-        },
-    }).then((cardFields) => {
+        }
+    }
+    );
+
+    if (cardFields.isEligible()) {
+        const nameField = cardFields.NameField({ placeholder: "John Doe" });
+        nameField.render("#card-name");
+
+        const numberField = cardFields.NumberField({ placeholder: "4111 1111 1111 1111" });
+        numberField.render("#card-number");
+
+        const expiryField = cardFields.ExpiryField({ placeholder: "123" });
+        expiryField.render("#card-expiration");
+
+        const cvvField = cardFields.CVVField();
+        cvvField.render("#card-cvv");
+
         document
             .getElementById("card-form")
             .addEventListener("submit", (event) => {
                 event.preventDefault();
                 hideErrors();
                 lockForm(true);
-                let params = {
-                    contingencies: ["SCA_ALWAYS"],
-                };
-                if (document.getElementById("card-name") && document.getElementById("card-name").value.length > 0) {
-                    params.cardholderName = document.getElementById("card-name").value;
-                }
+                cardFields.submit().then(() => {
+                }).catch((error) => {
+                    console.error(error);
+                    lockForm(false);
+                    try {
+                        let processor_response_code =
+                            error.purchase_units[0].payments.captures[0]
+                                .processor_response.response_code;
+                        showError(`error-${processor_response_code}`);
+                    } catch (e) { }
 
-                cardFields
-                    .submit(params)
-                    .then((response) => {
-                        if (typeof response.liabilityShift != "undefined" && response.liabilityShift != "POSSIBLE") {
-                            return Promise.reject({ details: [{ description: "3D Authentication failed" }] });
+                    try {
+                        let card_errors_container = document.querySelector("#card-errors");
+                        if (card_errors_container.classList.contains("hidden")) {
+                            card_errors_container.classList.remove("hidden");
                         }
-                        // Check if card was declined
-                        return paypal_options.onApprove();
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                        lockForm(false);
-                        try {
-                            let processor_response_code =
-                                error.purchase_units[0].payments.captures[0]
-                                    .processor_response.response_code;
-                            showError(`error-${processor_response_code}`);
-                        } catch (e) { }
-
-                        try {
-                            let card_errors_container = document.querySelector("#card-errors");
-                            if (card_errors_container.classList.contains("hidden")) {
-                                card_errors_container.classList.remove("hidden");
-                            }
-                            for (let i = 0; i < error.details.length; i++) {
-                                let error_container = document.createElement("div");
-                                error_container.classList.add("error");
-                                error_container.textContent = error.details[i].description;
-                                card_errors_container.appendChild(error_container);
-                            }
-                        } catch (e) { }
-                    });
+                        for (let i = 0; i < error.details.length; i++) {
+                            let error_container = document.createElement("div");
+                            error_container.classList.add("error");
+                            error_container.textContent = error.details[i].description;
+                            card_errors_container.appendChild(error_container);
+                        }
+                    } catch (e) { }
+                });
             });
-    });
+    }
 }
 
 function showError(errorId) {

@@ -3,45 +3,44 @@
   margin: 0 auto;
   width: 100%;
 
-  > h3 {
+  >h3 {
     margin: 0;
   }
 
-  > form#card-form {
+  >form#card-form {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr;
     gap: 0.5rem;
     row-gap: 1rem;
-    > div {
+
+    >div {
       &#card-errors {
         grid-column: span 3;
-        > .error {
+
+        >.error {
           color: #ff5a34;
         }
       }
-      &.card-name {
+
+      &.card-name-group {
         grid-column: span 3;
         display: grid;
-        > input {
-          padding: 0.5rem 1rem;
-        }
       }
+
       &.input-group {
-        > label {
+        >label {
           white-space: nowrap;
-        }
-        > div {
-          height: 3rem;
-          border: 1px solid @color-light-grey;
         }
       }
     }
-    > button {
+
+    >button {
       grid-column: span 3;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: 1rem;
+
       &:disabled::before {
         content: "";
         background-image: url("/img/ajax-loader.gif");
@@ -59,6 +58,7 @@
     border-radius: 5px;
     background-color: @highlightcolor;
     color: @text-color;
+
     &:not([open]) {
       display: none;
     }

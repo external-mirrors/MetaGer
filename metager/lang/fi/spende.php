@@ -90,6 +90,7 @@ return [
                 '1330' => 'Luottokortti ei ole voimassa. Tarkista osallistumisesi',
                 'generic' => 'Luottolaitos hylkäsi luottokortin',
             ],
+            'name' => 'Kortinhaltijan nimi (valinnainen)',
         ],
         'banktransfer' => [
             'description' => [

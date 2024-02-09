@@ -15,7 +15,8 @@
 
   &[data-suggest="active"]:focus-within {
     grid-template-rows: max-content 1fr;
-    > .suggestions {
+
+    >.suggestions {
       border: 1px solid @searchbar-border-color;
       border-top: 0;
     }
@@ -28,23 +29,28 @@
     align-items: center;
     padding: 0.7rem 1rem;
     gap: 1rem;
+
     #search-key {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 1.25rem;
+
       @supports not (selector(:first-child)) {
         padding-right: 1rem;
       }
-      > a {
+
+      >a {
         color: #585858;
         display: block;
         height: 100%;
-        > img {
+
+        >img {
           height: 100%;
           display: block;
           transform: rotate(-90deg);
         }
+
         &.authorized {
           color: green;
         }
@@ -55,6 +61,7 @@
       flex-grow: 1;
       height: 1.5rem;
       position: relative;
+
       input {
         border: none;
         height: 100%;
@@ -65,14 +72,17 @@
         padding: 0;
         line-height: 100%;
         font-size: 100%;
+
         &:focus {
           outline: 0;
         }
+
         &::-webkit-clear-button,
         &::-webkit-search-cancel-button {
           display: none;
         }
       }
+
       #search-delete-btn {
         position: absolute;
         cursor: pointer;
@@ -94,10 +104,10 @@
         }
       }
 
-      &:focus-within:not(.search-delete-js-only)
-        > input:not(:placeholder-shown) {
+      &:focus-within:not(.search-delete-js-only)>input:not(:placeholder-shown) {
         padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
-        + #search-delete-btn {
+
+        +#search-delete-btn {
           display: grid;
         }
       }
@@ -105,6 +115,7 @@
 
     .search-submit {
       height: 1.25rem;
+
       button {
         height: 100%;
         line-height: 100%;
@@ -113,7 +124,8 @@
         padding: 0;
         color: #585858;
         filter: invert(@icon-color);
-        > img#searchbar-img-lupe {
+
+        >img#searchbar-img-lupe {
           height: 100%;
           display: block;
         }
@@ -121,7 +133,7 @@
     }
   }
 
-  > .suggestions {
+  >.suggestions {
     --highlight-color: @highlight-color;
     display: grid;
     display: none;
@@ -131,12 +143,14 @@
     border: 0;
     color: @text-color;
     background-color: @body-background-color;
-    > .partners {
+
+    >.partners {
       display: flex;
       gap: 1rem;
       background-color: var(--highlight-color);
       padding-inline: 0.5rem;
-      > .partner {
+
+      >.partner {
         display: none;
         gap: 0.5rem;
         align-items: center;
@@ -144,20 +158,23 @@
         padding-block: 1rem;
         color: inherit;
 
-        > img {
+        >img {
           height: 1em;
         }
-        > div {
+
+        >div {
           display: grid;
           align-items: center;
           grid-template-columns: max-content 1fr;
           column-gap: 0.5rem;
-          > .description {
+
+          >.description {
             grid-column: span 2;
             font-size: 0.7rem;
           }
-          > div {
-            > .mark {
+
+          >div {
+            >.mark {
               color: limegreen;
               font-size: 0.5rem;
               width: max-content;
@@ -169,32 +186,38 @@
         }
       }
     }
-    > .suggestion {
+
+    >.suggestion {
       display: none;
       cursor: pointer;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
       color: inherit;
-      > img {
+
+      >img {
         height: 1rem;
         filter: invert(@icon-color);
       }
+
       &:hover {
         background-color: var(--highlight-color);
       }
     }
-    > .partner {
+
+    >.partner {
       display: none;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
       color: inherit;
-      > img {
+
+      >img {
         width: 16px;
       }
-      > div {
-        > .mark {
+
+      >div {
+        >.mark {
           color: limegreen;
           font-size: 0.5rem;
           width: max-content;
@@ -203,6 +226,7 @@
           border-radius: 5px;
         }
       }
+
       &:hover {
         background-color: var(--highlight-color);
       }
@@ -230,7 +254,8 @@
       height: 100dvh;
     }
   }
-  > * {
+
+  >* {
     border: 1px solid @searchbar-border-color;
 
     &:not(:first-child):not(.suggestions) {
@@ -258,7 +283,7 @@
       border-radius: 5px;
     }
 
-    > * {
+    >* {
       border: 1px solid #aaa;
       border-radius: 5px;
       min-height: 40px;
@@ -272,17 +297,21 @@
 
 .resultpage-searchbar {
   grid-template-rows: max-content;
+
   .search-input-submit {
     padding: 0 0.5rem;
     margin-right: 2rem;
+
     .search-input {
       height: 1.9rem;
-      > input {
+
+      >input {
         padding: 0 0.5rem;
       }
     }
   }
-  > .suggestions {
+
+  >.suggestions {
     display: none;
     position: absolute;
     top: 3.8rem;
@@ -292,7 +321,7 @@
   }
 
   &[data-suggest="active"]:focus-within {
-    > .suggestions {
+    >.suggestions {
       display: grid;
     }
   }
@@ -308,8 +337,12 @@
   margin: 0;
 }
 
-#searchbar-img-key {
-  filter: brightness(@searchbar-key-brightness);
+#key-link {
+  &.unauthorized {
+    #searchbar-img-key {
+      filter: invert(1) brightness(@searchbar-key-brightness);
+    }
+  }
 }
 
 #searchbar-img-lupe {

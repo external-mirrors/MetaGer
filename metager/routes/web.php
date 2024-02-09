@@ -124,6 +124,7 @@ Route::group(['prefix' => 'spende'], function () {
     Route::get('/{amount}/{interval}/paypal/{funding_source}', [DonationController::class, 'paypalPayment'])->name("paypalPayment");
     Route::get('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCreateOrder']);
     Route::post('/{amount}/{interval}/paypal/{funding_source}/order', [DonationController::class, 'paypalCaptureOrder']);
+    Route::post('/{amount}/{interval}/paypal/{funding_source}/subscription', [DonationController::class, 'paypalCreateSubscription'])->name("paypal-subscription");
 });
 
 Route::get('partnershops', function () {
@@ -419,7 +420,7 @@ Route::group(['prefix' => 'app'], function () {
     Route::get(
         'maps/version',
         function () {
-            $filePath     = config("metager.metager.maps.version");
+            $filePath = config("metager.metager.maps.version");
             $fileContents = file_get_contents($filePath);
             return response($fileContents, 200)
                 ->header('Content-Type', 'text/plain');

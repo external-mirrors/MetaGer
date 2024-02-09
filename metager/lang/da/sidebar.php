@@ -32,4 +32,6 @@ return [
     'nav26' => 'MetaGer-Fanshop',
     'nav27' => 'MetaGer-kort',
     'nav28' => 'Indstillinger',
+    'close' => 'Spring til navigationsbjælkens skifteknap',
+    'toggle' => 'Åbn/luk navigationslinjen',
 ];

@@ -32,4 +32,6 @@ return [
     'nav3' => 'Privacy',
     'nav4' => 'Raad van bestuur',
     'nav5' => 'Neem contact op met',
+    'close' => 'Ga naar de navigatiebalk om te schakelen',
+    'toggle' => 'navigatiebalk openen/sluiten',
 ];

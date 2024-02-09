@@ -32,4 +32,6 @@ return [
     'navFactcheck' => 'fact checking',
     'navigationToggle' => 'mostra la navigazione',
     'plugin' => 'Plugin MetaGer',
+    'close' => 'Pulsante di commutazione della barra di navigazione',
+    'toggle' => 'aprire/chiudere la barra di navigazione',
 ];

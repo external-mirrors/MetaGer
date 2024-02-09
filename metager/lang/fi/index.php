@@ -12,7 +12,7 @@ return [
         ],
     ],
     'placeholder' => 'MetaGer: Etsi ja löydä yksityisyyden suojaa',
-    'searchbutton' => 'MetaGer-haku',
+    'searchbutton' => 'Aloita MetaGer-haku',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Kuvat',
@@ -21,4 +21,11 @@ return [
         'produkte' => 'Tuotteet',
     ],
     'adfree' => 'Käytä MetaGeria mainosvapaasti',
+    'skip' => [
+        'search' => 'Siirry hakukyselyn syöttöön',
+        'navigation' => 'Siirry navigointiin',
+        'fokus' => 'Siirry hakutarkennuksen valintaan',
+    ],
+    'lang' => 'wwitch kieli',
+    'searchreset' => 'poista hakukyselyn syöttö',
 ];

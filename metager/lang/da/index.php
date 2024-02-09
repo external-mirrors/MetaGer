@@ -12,7 +12,7 @@ return [
         ],
     ],
     'placeholder' => 'MetaGer: Privatlivsbeskyttet søgning og find',
-    'searchbutton' => 'MetaGer-søgning',
+    'searchbutton' => 'Start MetaGer-søgning',
     'foki' => [
         'web' => 'Web',
         'bilder' => 'Billeder',
@@ -21,4 +21,11 @@ return [
         'produkte' => 'Produkter',
     ],
     'adfree' => 'Brug MetaGer uden reklamer',
+    'skip' => [
+        'search' => 'Spring til indtastning af søgeforespørgsel',
+        'navigation' => 'Spring til navigation',
+        'fokus' => 'Spring til valg af søgefokus',
+    ],
+    'lang' => 'wwitch-sprog',
+    'searchreset' => 'Slet input til søgeforespørgsel',
 ];

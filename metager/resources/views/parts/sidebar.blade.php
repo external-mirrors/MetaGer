@@ -56,7 +56,7 @@
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/spende/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/svg-icons/svg-icons/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
+      <img src="/img/svg-icons/donate-icon.svg" alt="" aria-hidden="true" id="sidebar-img-donate"> 
         <span>{{ trans('sidebar.nav2') }}</span>
       </a>
     </li>
@@ -71,7 +71,7 @@
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
-      <img src="/img/svg-icons/svg-icons/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
+      <img src="/img/svg-icons/app-icon.svg" alt="" aria-hidden="true" id="sidebar-img-app"> 
         <span>@lang('sidebar.nav25')</span>
       </a>
     </li>

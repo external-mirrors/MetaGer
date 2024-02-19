@@ -73,7 +73,7 @@
       <section id="story-privacy">
         <h1>{{ trans('mg-story.privacy.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/svg-icons/svg-icons/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
+          <img src="/img/svg-icons/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
         </figure>
         <p>{!! trans('mg-story.privacy.p') !!}</p>
         <ul class="story-links">

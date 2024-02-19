@@ -11,7 +11,7 @@
 			@if(sizeof(app(\App\SearchSettings::class)->parameterFilter) > 0)
 			<div class="option-toggle">
 				<label class="navigation-element" for="options-toggle" tabindex="0">
-				<img src="/img/icon-filter.svg"alt="" aria-hidden="true"id="result-img-filter"> Filter&hellip;
+				<img src="/img/svg-icons/icon-filter.svg"alt="" aria-hidden="true"id="result-img-filter"> Filter&hellip;
 				</label>
 			</div>
 			@endif

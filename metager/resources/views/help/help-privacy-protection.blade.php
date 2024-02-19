@@ -6,7 +6,7 @@
 <h1 class="page-title">{!! trans('help/help-privacy-protection.title') !!}</h1>
 <section>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/help-privacy-protection.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/help-privacy-protection.backarrow') !!}</a>
 	</div>
 	<p>{!! trans('help/help-privacy-protection.easy-help') !!}</p>
 	<h2>{!! trans('help/help-privacy-protection.privacy.title') !!}</h2>

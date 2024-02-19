@@ -6,7 +6,7 @@
 <section class="help-section">
 	<h1 class="page-title">{!! trans('help/easy-language/help-privacy-protection.title') !!}</h1>
 	<div id="navigationsticky">
-		<a class="back-button"><img class="back-arrow" src=/img/back-arrow.svg>{!! trans('help/easy-language/help-privacy-protection.backarrow') !!}</a>
+		<a class="back-button"><img class="back-arrow" src=/img/svg-icons/back-arrow.svg>{!! trans('help/easy-language/help-privacy-protection.backarrow') !!}</a>
 	</div>
 	<section id="eh-tracking" class="help-section card">
 		<p>{!! trans('help/easy-language/help-privacy-protection.glossary') !!}</p>
@@ -29,11 +29,11 @@
 		<div>
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.1') !!}</p>
 			@if (App\Localization::getLanguage() == "de")
-			<img class="help-easy-language-image lm-only" src="/img/help-anonym-lm.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-anonym-dm.png"/>
+			<img class="help-easy-language-image lm-only" src="/img/help/help-anonym-lm.png"/>
+			<img class="help-easy-language-image dm-only" src="/img/help/help-anonym-dm.png"/>
 			@else
-			<img class="help-easy-language-image lm-only" src="/img/help-anonym-lm-en.png"/>
-			<img class="help-easy-language-image dm-only" src="/img/help-anonym-dm-en.png"/>
+			<img class="help-easy-language-image lm-only" src="/img/help/help-anonym-lm-en.png"/>
+			<img class="help-easy-language-image dm-only" src="/img/help/help-anonym-dm-en.png"/>
 			@endif
 			<p>{!! trans('help/easy-language/help-privacy-protection.proxy.2') !!}</p>
 		</div>

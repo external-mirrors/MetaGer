@@ -15,7 +15,7 @@ function initialize() {
 
 // Submit search form when filters change
 (() => {
-  document.addEventListener("boot", e => {
+  document.addEventListener("boot", (e) => {
     // All normal select fields
     document
       .querySelectorAll("#options #options-box select")
@@ -169,7 +169,9 @@ function initialize() {
             if ("quicktips" in data && data.quicktips !== "") {
               let container = document.createElement("div");
               container.innerHTML = data.quicktips;
-              let new_quicktips = container.querySelector("#additions-container");
+              let new_quicktips = container.querySelector(
+                "#additions-container"
+              );
               document
                 .getElementById("resultpage-container")
                 .append(new_quicktips);
@@ -208,15 +210,19 @@ function initialize() {
       .querySelector(".search-input")
       .classList.remove("search-delete-js-only");
     let field = document.querySelector("input[name=eingabe]");
-    let value = field.value;
-    field.attributes.removeNamedItem("value");
-    field.value = value;
-
+    let old_value = null;
     let delete_button = document.querySelector("#search-delete-btn");
     delete_button.addEventListener("mousedown", (e) => {
       e.preventDefault();
+      old_value = field.value;
       field.value = "";
       return false;
+    });
+    field.addEventListener("focusout", (e) => {
+      if (old_value != null && field.value.length == 0) {
+        field.value = old_value;
+        old_value = null;
+      }
     });
   }
 })();
@@ -246,10 +252,12 @@ function initialize() {
   document.addEventListener("resultsChanged", initSelectTier);
   function loadSelectTier() {
     (function (w, d, t, x, m, l, p) {
-      w['XMLPlusSTObject'] = m;
-      w[m] = w[m] || function () {
-        (w[m].q = w[m].q || []).push(arguments)
-      };
+      w["XMLPlusSTObject"] = m;
+      w[m] =
+        w[m] ||
+        function () {
+          (w[m].q = w[m].q || []).push(arguments);
+        };
       w[m].l = 1 * new Date();
       l = d.createElement(t);
       p = d.getElementsByTagName(t)[0];
@@ -257,8 +265,14 @@ function initialize() {
       l.async = 1;
       l.defer = 1;
       l.src = x;
-      p.parentNode.insertBefore(l, p)
-    })(window, document, 'script', 'https://s.yimg.com/ds/scripts/selectTier.js', 'selectTier');
+      p.parentNode.insertBefore(l, p);
+    })(
+      window,
+      document,
+      "script",
+      "https://s.yimg.com/ds/scripts/selectTier.js",
+      "selectTier"
+    );
     initSelectTier();
   }
   function initSelectTier() {
@@ -304,16 +318,16 @@ function initialize() {
     } else {
       return;
     }
-    selectTier('init', {
+    selectTier("init", {
       source_tag: source_tag,
       ysid: ysid,
       cid: cid,
       ig: ig,
       select_tier: {
         clarityId: clarityId,
-        rguid: rguid
+        rguid: rguid,
       },
-      test_mode: test_mode
+      test_mode: test_mode,
     });
   }
 })();
@@ -329,19 +343,18 @@ function initialize() {
       let htmlContainer = document.querySelector("html");
       currentLocale = htmlContainer.getAttribute("lang");
       currentLocale = currentLocale.split("-")[0].toLowerCase();
-    } catch (error) { }
+    } catch (error) {}
     moment.locale(currentLocale);
 
-    document.querySelectorAll("span.date").forEach(element => {
+    document.querySelectorAll("span.date").forEach((element) => {
       try {
         let timestamp = element.dataset.timestamp;
         let moment_instance = moment.unix(timestamp);
         element.textContent = moment_instance.fromNow();
-      } catch (error) { }
+      } catch (error) {}
     });
   }
 })();
-
 
 if (document.readyState == "loading") {
   document.addEventListener("DOMContentLoaded", (e) => {

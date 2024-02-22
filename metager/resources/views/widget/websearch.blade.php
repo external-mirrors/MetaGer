@@ -11,7 +11,7 @@
 	{!! $template_preview !!}
 </div>
 <div class="card">
-	<h1>{{ trans('websearch.head.7') }} <button id="copyButton" class="btn btn-default" type="button"><img class="widget-mg-icon mg-icon" src="/img/icon-paperclip.svg"> {{ trans('websearch.head.copy') }}</button></h1>
+	<h1>{{ trans('websearch.head.7') }} <button id="copyButton" class="btn btn-default" type="button"><img class="widget-mg-icon mg-icon" src="/img/svg-icons/icon-paperclip.svg"> {{ trans('websearch.head.copy') }}</button></h1>
 	<textarea id="codesnippet" readonly>
 	{{ $template_webpage }}
 	</textarea>

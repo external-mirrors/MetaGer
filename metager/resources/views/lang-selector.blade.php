@@ -4,7 +4,7 @@
 
 @section('content')
 <h1>{{ __("lang-selector.h1.1") }}</h1>
-@if($previous_url !== null)<div><a  class=back-button href="{{$previous_url}}"><img class="back-arrow" src=/img/back-arrow.svg>{{__("results.zurueck")}}</a></div>@endif
+@if($previous_url !== null)<div><a  class=back-button href="{{$previous_url}}"><img class="back-arrow" src=/img/svg-icons/svg-icons/back-arrow.svg>{{__("results.zurueck")}}</a></div>@endif
 <div>{{ __("lang-selector.description") }}</div>
 <div id="languages">
     @foreach(App\Localization::getLanguageSelectorLocales() as $language => $locales)

@@ -70,8 +70,8 @@ return [
             '2' => 'Die ursprüngliche MetaGer-Homepage erfuhr in den folgenden Jahren viele kleine Änderungen.',
         ],
         '19' => [
-            '1' => 'Heute',
-            '2' => 'Auch heute noch entwickelt sich MetaGer ständig weiter.',
+            '1' => '26.04.2023: Die neue werbefreie Suche',
+            '2' => 'MetaGer veröffentlicht die werbefreie Suche für jedermann mit einem schlüsselbasierten System. Sie bietet eine größere Auswahl an Suchmaschinen, eine verbesserte Bildersuche und die Möglichkeit, mit dem neuen anonymen Token-System nachweislich trackingfrei zu suchen.',
         ],
         '6' => [
             '1' => '29.08.2013 Englische Version gestartet',
@@ -100,6 +100,18 @@ return [
         '18' => [
             '1' => '14.02.2022: Erneuerung der Hilfeseite',
             '2' => 'Die MetaGer-Hilfeseite erhält eine neue Übersicht. Diese strukturiert und visualisiert die Hilfeseiten mit leicht zu erkennenden Symbolen.',
+        ],
+        '22' => [
+            '1' => 'Dezember 2017: Neue werbefreie Suche für SUMA-EV-Mitglieder',
+            '2' => 'MetaGer hat seine neue werbefreie Suche eingeführt. Mitglieder des SUMA-EV können nun mit Hilfe eines schlüsselbasierten Systems werbefrei suchen.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Einfache Hilfe und Glossar',
+            '2' => 'MetaGer hat eine einfachere Version der Hilfeseite implementiert. Sie enthält eine ausführlichere Erklärung, wie die Suchmaschine zu benutzen ist. Außerdem gibt es jetzt ein Glossar, in dem bestimmte Wörter erklärt werden, die schwer zu verstehen sind. ',
+        ],
+        '21' => [
+            '1' => 'Heute',
+            '2' => 'Auch heute noch entwickelt sich MetaGer ständig weiter.',
         ],
     ],
     'text' => [

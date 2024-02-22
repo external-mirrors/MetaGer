@@ -35,23 +35,23 @@
         <div id="startpage-quicklinks">
         @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
         <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-          <img src="/img/metager-schloss.svg" alt="Key Icon" />
+          <img src="/img/svg-icons/metager-lock.svg" alt="Key Icon" />
           <span>
             @lang("index.adfree")
           </span>
         </a>
         @elseif(app(\App\Models\Authorization\Authorization::class)->availableTokens < app(\App\Models\Authorization\Authorization::class)->cost && Cookie::get("tokenauthorization", "empty") === "empty")
         <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-          <img src="/img/key-empty.svg" alt="Key Icon" />
+          <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
           <span>
             @lang("index.key.tooltip.empty")
           </span>
         </a>
         @endif
         @if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-        <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
+        <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}" name="chrome-plugin" value="true"><img src="/img/svg-icons/svg-icons/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
         @else
-        <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}" title="{{ trans('index.plugin-title') }}"><img src="/img/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
+        <a id="plugin-btn" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}" title="{{ trans('index.plugin-title') }}"><img src="/img/svg-icons/plug-in.svg" alt="+"> {{ trans('index.plugin') }}</a>
         @endif
       </div>
       @endif
@@ -63,17 +63,17 @@
       <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
     </div>
     <div id="scroll-links">
-      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
-      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
-      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <div>@lang("mg-story.diversity.title")</div></a>
-      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <div>@lang("mg-story.eco.title")</div></a>
+      <a href="#story-privacy" title="{{ trans('mg-story.privacy.title') }}"><img src="/img/svg-icons/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}"> <div>@lang("mg-story.privacy.title")</div></a>
+      <a href="#story-ngo" title="{{ trans('mg-story.ngo.title') }}"><img src="/img/svg-icons/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}"> <div>@lang("mg-story.ngo.title")</div></a>
+      <a href="#story-diversity" title="{{ trans('mg-story.diversity.title') }}"><img src="/img/svg-icons/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}"> <div>@lang("mg-story.diversity.title")</div></a>
+      <a href="#story-eco" title="{{ trans('mg-story.eco.title') }}"><img src="/img/svg-icons/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}"> <div>@lang("mg-story.eco.title")</div></a>
     </div>
   </div>
     <div id="story-container">
       <section id="story-privacy">
         <h1>{{ trans('mg-story.privacy.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
+          <img src="/img/svg-icons/lock.svg" alt="{{ trans('mg-story.privacy.image.alt') }}">
         </figure>
         <p>{!! trans('mg-story.privacy.p') !!}</p>
         <ul class="story-links">
@@ -84,7 +84,7 @@
       <section id="story-ngo">
         <h1>{{ trans('mg-story.ngo.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
+          <img src="/img/svg-icons/heart.svg" alt="{{ trans('mg-story.ngo.image.alt') }}">
         </figure>
         <p>{!!trans('mg-story.ngo.p') !!}</p>
         <ul class="story-links">
@@ -97,7 +97,7 @@
       <section id="story-diversity">
         <h1>{{ trans('mg-story.diversity.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}">
+          <img src="/img/svg-icons/rainbow.svg" alt="{{ trans('mg-story.diversity.image.alt') }}">
         </figure>
         <p>{!! trans('mg-story.diversity.p') !!}</p>
         <ul class="story-links">
@@ -110,7 +110,7 @@
       <section id="story-eco">
         <h1>{{ trans('mg-story.eco.title') }}</h1>
         <figure class="story-icon">
-          <img src="/img/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}">
+          <img src="/img/svg-icons/leaf.svg" alt="{{ trans('mg-story.eco.image.alt') }}">
         </figure>
         <p>{!! trans('mg-story.eco.p')!!}</p>
         <ul class="story-links">

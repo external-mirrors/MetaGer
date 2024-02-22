@@ -22,7 +22,7 @@
         @endif
       </a>
       @endif
-      <img class="mg-icon mg-icon-rot180" src="/img/chevron-down.svg" alt="{{ trans('chevron-down.alt') }}">
+      <img class="mg-icon mg-icon-rot180" src="/img/svg-icons/chevron-down.svg" alt="{{ trans('chevron-down.alt') }}">
     </div>
     <p class="quicktip-description">{!! $quicktip->descr !!}</p>
     @if ($quicktip->author != "")

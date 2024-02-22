@@ -107,8 +107,20 @@ return [
             '2' => 'La página de ayuda de MetaGer recibe una nueva vista general. Esto estructura y visualiza las páginas de ayuda con iconos fáciles de reconocer.',
         ],
         '19' => [
+            '1' => '26.04.2023: La nueva búsqueda sin publicidad',
+            '2' => 'MetaGer lanza la búsqueda sin publicidad para todos mediante un sistema basado en claves. Cuenta con una mayor selección de motores de búsqueda, una búsqueda de imágenes mejorada y la opción de buscar sin rastreo demostrable mediante el nuevo sistema de tokens anónimos.',
+        ],
+        '22' => [
+            '1' => 'Diciembre de 2017: Nueva búsqueda sin anuncios para los miembros de SUMA-EV.',
+            '2' => 'MetaGer ha presentado su nueva búsqueda sin publicidad. Los miembros de SUMA-EV ya pueden realizar búsquedas sin anuncios mediante un sistema basado en claves.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Ayuda fácil y glosario',
+            '2' => 'MetaGer ha implementado una versión más sencilla de la página de ayuda. Presenta una explicación más detallada sobre cómo utilizar el motor de búsqueda. Además, ahora hay un glosario que explica ciertas palabras que pueden resultar difíciles de entender. ',
+        ],
+        '21' => [
             '1' => 'Hoy',
-            '2' => 'Aún hoy, MetaGer sigue desarrollándose.',
+            '2' => 'Incluso hoy, MetaGer está en constante evolución.',
         ],
     ],
 ];

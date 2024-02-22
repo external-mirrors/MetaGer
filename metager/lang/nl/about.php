@@ -89,8 +89,8 @@ return [
             '2' => 'De helppagina van MetaGer krijgt een nieuw overzicht. Dit structureert en visualiseert de hulppagina\'s met makkelijk te herkennen iconen.',
         ],
         '19' => [
-            '2' => 'Zelfs vandaag de dag is MetaGer voortdurend in ontwikkeling.',
-            '1' => 'Vandaag',
+            '2' => 'MetaGer lanceert het advertentievrij zoeken voor iedereen met behulp van een op sleutels gebaseerd systeem. Het beschikt over een grotere selectie zoekmachines, een verbeterde zoekfunctie voor afbeeldingen en de optie om aantoonbaar trackingvrij te zoeken met behulp van het nieuwe anonieme tokensysteem.',
+            '1' => '26.04.2023: De nieuwe advertentievrije zoekopdracht',
         ],
         '12' => [
             '1' => '16.08.2016: Vrijgave van de broncode',
@@ -103,6 +103,18 @@ return [
         '14' => [
             '1' => '2017: Herlancering van Engelse MetaGer-versie',
             '2' => 'Uitgebreide fijnafstelling en aangepaste resultaatbronnen verbeteren de Engelse MetaGer-versie aanzienlijk.',
+        ],
+        '22' => [
+            '1' => 'December 2017: Nieuwe advertentievrije zoekfunctie voor SUMA-EV leden',
+            '2' => 'MetaGer heeft hun nieuwe advertentievrije zoekfunctie geïntroduceerd. Leden van de SUMA-EV kunnen nu advertentievrij zoeken met behulp van een op sleutels gebaseerd systeem.',
+        ],
+        '21' => [
+            '1' => 'Vandaag',
+            '2' => 'Zelfs vandaag de dag is MetaGer voortdurend in ontwikkeling.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Eenvoudige hulp en woordenlijst',
+            '2' => 'MetaGer heeft een eenvoudigere versie van de helppagina geïmplementeerd. Deze bevat een meer gedetailleerde uitleg over het gebruik van de zoekmachine. Daarnaast is er nu een verklarende woordenlijst die bepaalde woorden uitlegt die misschien moeilijk te begrijpen zijn. ',
         ],
     ],
     'head' => [

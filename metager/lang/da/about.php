@@ -74,6 +74,18 @@ return [
             '2' => 'MetaGers hjælpeside har fået en ny oversigt. Det strukturerer og visualiserer hjælpesiderne med ikoner, der er lette at genkende.',
         ],
         '19' => [
+            '1' => '26.04.2023: Den nye reklamefri søgning',
+            '2' => 'MetaGer lancerer den reklamefri søgning for alle ved hjælp af et nøglebaseret system. Den har et større udvalg af søgemaskiner, en forbedret billedsøgning og mulighed for at søge beviseligt sporingsfrit ved hjælp af det nye anonyme token-system.',
+        ],
+        '22' => [
+            '1' => 'December 2017: Ny annoncefri søgning for SUMA-EV-medlemmer',
+            '2' => 'MetaGer introducerede deres nye reklamefri søgning. Medlemmer af SUMA-EV kan nu søge reklamefrit ved hjælp af et nøglebaseret system.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Nem hjælp og ordliste',
+            '2' => 'MetaGer har implementeret en enklere version af hjælpesiden. Den indeholder en mere detaljeret forklaring på, hvordan man bruger søgemaskinen. Derudover er der nu en ordliste, som forklarer visse ord, der kan være svære at forstå. ',
+        ],
+        '21' => [
             '1' => 'I dag',
             '2' => 'Selv i dag er MetaGer i konstant udvikling.',
         ],

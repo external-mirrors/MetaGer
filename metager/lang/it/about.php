@@ -28,8 +28,8 @@ return [
             '2' => 'La pagina di aiuto di MetaGer riceve una nuova panoramica. Questa struttura e visualizza le pagine di aiuto con icone facili da riconoscere.',
         ],
         '19' => [
-            '1' => 'Oggi',
-            '2' => 'Ancora oggi, MetaGer è in continua evoluzione.',
+            '1' => '26.04.2023: La nuova ricerca senza pubblicità',
+            '2' => 'MetaGer rilascia la ricerca senza pubblicità per tutti utilizzando un sistema basato su chiavi. Il sito offre una selezione più ampia di motori di ricerca, una ricerca di immagini migliorata e la possibilità di effettuare ricerche prive di tracciamento grazie al nuovo sistema di token anonimi.',
         ],
         '1' => [
             '1' => 'Marzo 1996: Cebit Hannover',
@@ -82,6 +82,18 @@ return [
         '15' => [
             '1' => 'Settembre 2017: Revisione dei consigli rapidi',
             '2' => 'I suggerimenti rapidi, che offrono indicazioni che vanno oltre i normali risultati di ricerca, sono stati ampliati in termini di funzionalità e trasformati in un progetto separato. Invece di trovarsi sopra i risultati, sono ora collocati in una barra laterale.',
+        ],
+        '22' => [
+            '1' => 'Dicembre 2017: Nuova ricerca senza pubblicità per i membri del SUMA-EV.',
+            '2' => 'MetaGer ha presentato la sua nuova ricerca senza pubblicità. I membri del SUMA-EV possono ora effettuare ricerche senza pubblicità utilizzando un sistema basato su chiavi.',
+        ],
+        '20' => [
+            '1' => '11.01.2024: Aiuto semplice e glossario',
+            '2' => 'MetaGer ha implementato una versione più semplice della pagina di aiuto. Essa contiene una spiegazione più dettagliata su come utilizzare il motore di ricerca. Inoltre, ora è presente un glossario che spiega alcune parole che potrebbero essere difficili da capire. ',
+        ],
+        '21' => [
+            '1' => 'Oggi',
+            '2' => 'Ancora oggi, MetaGer è in continua evoluzione.',
         ],
     ],
     'points' => [

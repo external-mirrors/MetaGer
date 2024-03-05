@@ -51,7 +51,7 @@
 				<button type="submit" class="btn btn-sm btn-default">Aktualisieren</button>
 			</div>
 			<div id="reset" 
-				@if((clone $start)->addDays(28)->isToday() && $end->isToday() && Request::input("interface", "") === "all")
+				@if((clone $start)->addDays(28)->isToday() && $end->isToday() && Request::input("interface", "all") === "all")
 				class="hidden" 
 				@endif
 			>

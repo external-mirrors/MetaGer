@@ -1,4 +1,5 @@
 .sidebar {
+  visibility: hidden;
   border-left: 1px solid @border-color;
   box-shadow: 0px 1px 1.5px 1px #c0c0c0;
   position: fixed;
@@ -13,18 +14,18 @@
   z-index: 10;
   background-color: @background-color;
   color: @text-color;
-  transition: 0.5s;
+  transition: right 0.5s, visibility 0s 0.5s;
   border-left: none;
 
   .sidebar-logo {
-    >span {
+    > span {
       display: block;
       margin: 20px;
       padding: 10px 0;
       text-align: center;
       border-radius: 10px;
 
-      >img {
+      > img {
         width: 10em;
       }
     }
@@ -35,34 +36,34 @@
     list-style: none;
     margin-left: -5px;
 
-    &>li {
+    & > li {
       width: 100%;
 
       &:hover {
         background-color: @sidebar-list-hover-color;
       }
 
-      &>label,
-      &>a {
+      & > label,
+      & > a {
         padding: 10px 0px;
 
         &:focus {
           outline: none;
         }
 
-        &>i.fa {
+        & > i.fa {
           width: 30px;
           text-align: center;
           margin-right: 7px;
         }
 
-        &>img {
+        & > img {
           filter: invert(@icon-color);
         }
       }
 
-      >details {
-        >summary {
+      > details {
+        > summary {
           display: block;
           padding: 10px 0px;
 
@@ -71,16 +72,16 @@
             color: red;
           }
 
-          >img {
+          > img {
             filter: invert(@icon-color);
           }
         }
 
-        >ul {
+        > ul {
           list-style-type: none;
           padding: 0;
 
-          >li>a {
+          > li > a {
             display: block;
             font-size: 0.9em;
             padding: 6px 20px;
@@ -93,8 +94,8 @@
         }
 
         &[open] {
-          >summary {
-            >span.caret {
+          > summary {
+            > span.caret {
               border-top: 0 solid;
               border-bottom: 4px solid;
               transition: border-top 0.1s, border-bottom 0.1s 0.1s;
@@ -103,7 +104,7 @@
         }
       }
 
-      &>label {
+      & > label {
         font-size: 1.1em;
         font-weight: normal;
         text-decoration: none;
@@ -131,7 +132,7 @@
     overflow: hidden;
     transition: 0.5s ease;
 
-    &>li>a {
+    & > li > a {
       display: block;
       font-size: 0.9em;
       padding: 6px 20px;
@@ -193,13 +194,13 @@
     display: none;
 
     &:checked {
-      &~.metager-dropdown-content {
+      & ~ .metager-dropdown-content {
         display: initial;
         max-height: 1000px;
         padding: 0px 0px 0px 0px;
       }
 
-      &~label>.caret {
+      & ~ label > .caret {
         border-top: 0 solid;
         border-bottom: 4px solid;
         transition: border-top 0.1s, border-bottom 0.1s 0.1s;
@@ -207,13 +208,13 @@
     }
 
     &:not(:checked) {
-      &~.metager-dropdown-content {
+      & ~ .metager-dropdown-content {
         padding: 0px 0;
       }
     }
   }
 
-  input#nav0:checked~& {
+  input#nav0:checked ~ & {
     border-left: 1px solid LightGray;
   }
 
@@ -251,7 +252,9 @@
     @sidebar-opener-mobile-magnification: 10px;
     margin: @sidebar-opener-mobile-magnification;
     top: (@sidebar-opener-position-top - @sidebar-opener-mobile-magnification);
-    right: (@sidebar-opener-position-right - @sidebar-opener-mobile-magnification );
+    right: (
+      @sidebar-opener-position-right - @sidebar-opener-mobile-magnification
+    );
   }
 
   .sidebar-opener-placeholder {
@@ -298,15 +301,17 @@
 }
 
 #sidebarToggle:checked {
-  &~.sidebar {
+  & ~ .sidebar {
+    visibility: visible;
+    transition: right 0.5s, visibility 0s 0s;
     right: 0px;
   }
 
-  &~.sidebar-opener {
+  & ~ .sidebar-opener {
     display: none;
   }
 
-  &~.sidebar-opener.close {
+  & ~ .sidebar-opener.close {
     display: initial;
   }
 }

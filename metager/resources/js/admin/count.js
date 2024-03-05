@@ -293,8 +293,10 @@ function createChart() {
 document.querySelector("#start").addEventListener("change", (e) => {
   let min = e.target.value;
   document.querySelector("#end").min = min;
+  document.querySelector("#start").removeAttribute("form");
 });
 document.querySelector("#end").addEventListener("change", (e) => {
   let max = e.target.value;
   document.querySelector("#start").max = max;
+  document.querySelector("#end").removeAttribute("form");
 });

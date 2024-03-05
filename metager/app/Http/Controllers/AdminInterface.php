@@ -65,9 +65,14 @@ class AdminInterface extends Controller
 
         $connection = DB::connection("logs");
         $log_summary = $connection
-            ->table("logs")
-            ->select(DB::raw('to_timestamp(floor(EXTRACT(epoch FROM time) / EXTRACT(epoch FROM interval \'5 min\')) * EXTRACT(epoch FROM interval \'5 min\')) as timestamp, count(*)'))
-            ->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'");
+            ->table(
+                $connection->table("logs")->select(["*"])->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'"),
+                "data"
+            )
+            ->select(DB::raw("date_trunc('hour', data.time) AS timestamp, count(*)"))
+
+            #DB::raw("(select * from logs l where (l.time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59') as data"))
+            ->groupByRaw("1");
         if ($interface === "none-german") {
             $log_summary = $log_summary->where("locale", "!=", "de");
         } else if ($interface == "none-german-english") {
@@ -75,8 +80,8 @@ class AdminInterface extends Controller
         } else if ($interface !== "all") {
             $log_summary = $log_summary->where("locale", "=", $interface);
         }
-        $log_summary = $log_summary->groupBy("timestamp")
-            ->orderBy("timestamp")
+        $log_summary = $log_summary
+            ->orderByRaw("1")
             ->get();
 
         $result = [

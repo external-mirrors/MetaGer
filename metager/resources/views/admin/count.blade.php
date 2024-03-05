@@ -3,6 +3,11 @@
 @section('title', $title )
 
 @section('content')
+<style>
+	.hidden {
+		display: none;
+	}
+</style>
 <div id="graph">
 	<canvas id="chart" width="100%" ></canvas>
 </div>
@@ -10,8 +15,8 @@
 <p class="total-median">Mittelwert der letzten <span class="median-days loading"></span> Tage: <span class="median-value loading"></span></p>
 <table id="data-table" class="table table-striped" data-interface="{{ $interface }}">
 	<caption>
-		<form method="GET" style="display: flex; align-items: center;">
-			<div id="daterange" class="form-group" style="max-width: 100px; margin-right: 8px;">
+		<form method="GET" style="display: flex; align-items: center; flex-wrap: wrap; justify-content: center; gap: 1rem; align-items: flex-end; margin: 1rem 0;">
+			<div id="daterange" class="form-group" style="margin: 0;">
 				<label for="days">Zeitraum (von/bis)</label>
 				<input class="form-control" type="date" id="start" name="start" value="{{$start->format("Y-m-d")}}" max="{{$end->format('Y-m-d')}}"
 				@if((clone $start)->addDays(28)->isToday())
@@ -22,7 +27,7 @@
 				form="unused"
 				@endif/>
 			</div>
-			<div class="form-group" style="max-width: 100px; margin-right: 8px;">
+			<div class="form-group" style="margin: 0;">
 				<label for="interface">Sprache</label>
 				<select class="form-control" name="interface" id="interface">
 					<option value="all" {{ (Request::input('interface', 'all') == "all" ? "selected" : "")}}>Alle</option>
@@ -42,8 +47,15 @@
 					<option value="sv" {{ (Request::input('interface', 'all') == "sv" ? "selected" : "")}}>SV</option>
 				</select>
 			</div>
-			<div id="refresh" style="margin-top: 11px; margin-right: 8px;">
+			<div id="refresh">
 				<button type="submit" class="btn btn-sm btn-default">Aktualisieren</button>
+			</div>
+			<div id="reset" 
+				@if((clone $start)->addDays(28)->isToday() && $end->isToday() && Request::input("interface", "") === "all")
+				class="hidden" 
+				@endif
+			>
+				<a class="btn btn-default btn-sm" href="{{ url("/admin/count") }}">Zurücksetzen</a>
 			</div>
 			<!--
 			<div id="export" style="margin-top: 11px;">

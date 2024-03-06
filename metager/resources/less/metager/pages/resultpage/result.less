@@ -86,7 +86,8 @@
           }
         }
 
-        &:focus>ul {
+        &:focus>ul,
+        &:focus-within>ul {
           display: block;
         }
       }
@@ -312,7 +313,8 @@
 
     /* CSS Rules for the result options */
     .result-toggle {
-      display: none;
+      position: absolute;
+      left: -300%;
 
       &:checked+.result-footer>.open-result-options {
         display: none;

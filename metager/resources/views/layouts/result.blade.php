@@ -13,15 +13,14 @@
             @if (sizeof($result->gefVon) === 1)
                 <a class="result-hoster" href="{{ $result->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}"
                     @if ($metager->getNewtab() === '_blank') rel="noopener" @endif
-                    tabindex="-1">{{ trans('result.gefVon') . ' ' . $result->gefVon[0] }} </a>
+                    >{{ trans('result.gefVon') . ' ' . $result->gefVon[0] }} </a>
             @else
                 <span title="{{ implode(', ', $result->gefVon) }}" class="result-hoster" tabindex="0">
                     {{ trans('result.gefVon') . ' ' . sizeof($result->gefVon) . ' ' . trans('result.providers') }}
                     <ul class="card">
                         @foreach ($result->gefVon as $index => $gefVon)
                             <li><a class="result-hoster" href="{{ $result->gefVonLink[$index] }}"
-                                    target="{{ $metager->getNewtab() }}" rel="noopener"
-                                    tabindex="-1">{{ trans('result.gefVon') . ' ' . $result->gefVon[$index] }} </a>
+                                    target="{{ $metager->getNewtab() }}" rel="noopener">{{ trans('result.gefVon') . ' ' . $result->gefVon[$index] }} </a>
                             </li>
                         @endforeach
                     </ul>
@@ -81,11 +80,11 @@
         @endif
     </div>
     <div class="result-body {{ !empty($result->logo) || !empty($result->image) ? 'with-image' : '' }}">
-        <div class="result-description">
+        <div class="result-description" tabindex="0">
             {{ $result->descr }}
         </div>
         @if (isset($result->logo))
-            <div class="result-logo">
+            <div class="result-logo" aria-hidden="true">
                 <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->logo) }}" alt=""
                         loading="lazy" />
@@ -93,7 +92,7 @@
             </div>
         @endif
         @if ($result->image !== '')
-            <div class="result-image">
+            <div class="result-image" aria-hidden="true">
                 <a href="{{ $result->link }}" @if ($metager->isFramed()) target="_top" @endif>
                     <img src="{{ \App\Http\Controllers\Pictureproxy::generateUrl($result->image) }}" alt=""
                         loading="lazy" />
@@ -103,12 +102,12 @@
         <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle">
         <div class="result-footer">
             @if ($metager->getNewtab() === '_blank')
-                <a class="result-open" href="{{ $result->link }}"
+                <a class="result-open" href="{{ $result->link }}" aria-hidden="true" tabindex="-1"
                     @if ($metager->isFramed()) target="_top"@else target="_self" @endif>
                     {!! trans('result.options.7') !!}
                 </a>
             @else
-                <a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener">
+                <a class="result-open-newtab" href="{{ $result->link }}" target="_blank" rel="noopener" aria-hidden="true" tabindex="-1">
                     {!! trans('result.options.6') !!}
                 </a>
             @endif
@@ -128,7 +127,7 @@
                 <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
             <label class="close-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
-                tabindex='0'>
+                >
                 <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
         </div>

@@ -14,7 +14,7 @@
 						{{ $ad->titel }}
 					</a>
 				</h2>
-				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
+				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" referrerpolicy="no-referrer-when-downgrade">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
 			</div>
 			<div class="result-subheadline">
 				<a class="result-link" href="{{ $ad->link }}" target="_blank" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
@@ -28,12 +28,12 @@
 			</div>
 		</div>
 		<div class="result-body">
-			<div class="result-description">
+			<div class="result-description" tabindex="0">
 				{{ $ad->descr }}
 			</div>
 		</div>
 		<div class="result-footer">
-		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade">
+		<a class="result-open-newtab" href="{{ $ad->link }}" target="_blank" rel="noopener" referrerpolicy="no-referrer-when-downgrade" aria-hidden="true" tabindex="-1">
 			{!! trans('result.options.6') !!}
 		</a>
 		<a class="result-open-key" title="@lang('result.metagerkeytext')" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">

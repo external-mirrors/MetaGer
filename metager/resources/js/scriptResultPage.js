@@ -360,7 +360,12 @@ function initialize() {
   document.addEventListener("boot", () => {
     document.addEventListener("keyup", (e) => {
       if (e.key == "Escape") {
-        document.querySelector(".skiplinks > a").focus();
+        let skip_links = document.querySelector(".skiplinks");
+        if (skip_links.contains(document.activeElement)) {
+          document.activeElement.blur();
+        } else {
+          document.querySelector(".skiplinks > a").focus();
+        }
       }
     });
   });

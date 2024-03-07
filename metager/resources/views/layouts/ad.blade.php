@@ -17,7 +17,7 @@
 				<a class="result-hoster" href="{{ $ad->gefVonLink[0] }}" target="{{ $metager->getNewtab() }}" rel="noopener" referrerpolicy="no-referrer-when-downgrade">{{ trans('result.gefVon') . " " . $ad->gefVon[0] }} </a>
 			</div>
 			<div class="result-subheadline">
-				<a class="result-link" href="{{ $ad->link }}" target="_blank" referrerpolicy="no-referrer-when-downgrade" tabindex="-1">
+				<a class="result-link" href="{{ $ad->link }}" target="_blank" referrerpolicy="no-referrer-when-downgrade">
 					<span>{{ $ad->anzeigeLink }}</span>
 					@if(\App\Localization::getLanguage() === "de")
 					<img src="/img/100-de.svg" alt="Mark">

@@ -1,4 +1,4 @@
-<div class="result" data-count="{{ $result->hash }}" data-index="{{ $index }}">
+<div class="result" data-count="{{ $result->hash }}" data-index="{{ $index }}" aria-role="list-item">
     <div class="result-header">
         <div class="result-headline">
             <h2 class="result-title" title="{{ $result->titel }}">
@@ -36,8 +36,7 @@
                         alt="" loading="lazy">
                 @endif
                 <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
-                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}"
-                    tabindex="-1">
+                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->strippedHost }}
                 </a>
                 @if (array_key_exists('date', $result->additionalInformation))
@@ -53,8 +52,7 @@
                 @endif
             @else
                 <a class=" result-link" href="{{ $result->link }}" title="{{ $result->anzeigeLink }}"
-                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}"
-                    tabindex="-1">
+                    @if ($metager->getNewtab() === '_blank') rel="noopener" @endif target="{{ $metager->getNewtab() }}">
                     {{ $result->anzeigeLink }}
                 </a>
             @endif
@@ -99,7 +97,6 @@
                 </a>
             </div>
         @endif
-        <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle">
         <div class="result-footer">
             @if ($metager->getNewtab() === '_blank')
                 <a class="result-open" href="{{ $result->link }}" aria-hidden="true" tabindex="-1"
@@ -122,15 +119,13 @@
                     {!! trans('result.options.5') !!}
                 </a>
             @endif
-            <label class="open-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
-                tabindex='0'>
-                <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
-            </label>
-            <label class="close-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
+            <label class="toggle-result-options navigation-element" for="result-toggle-{{ $result->hash }}"
                 >
                 <img src="/img/ellipsis.svg" alt="{{ trans('result.alt.more') }}" height="100%" loading="lazy" />
             </label>
         </div>
+        <input type="checkbox" id="result-toggle-{{ $result->hash }}" class="result-toggle" aria-labelledby="result-toggle-{{ $result->hash }}-label">
+        <div id="result-toggle-{{ $result->hash }}-label" class="result-options-label">@lang('result.options.togglelabel')</div>
         <div class="result-options">
             <div class="options">
                 <ul class="option-list list-unstyled small">

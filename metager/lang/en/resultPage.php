@@ -4,6 +4,10 @@ return [
     'skiplinks' => [
         'heading' => 'Quickly jump to content',
         'results' => 'Jump to search results',
+        'query' => 'Jump to search query input field',
+        'settings' => 'Jump to search settings',
+        'navigation' => 'Jump to navigation',
+        'return' => 'You can return to this menu any time by pressing the escape key'
     ],
     'startseite' => 'MetaGer start page',
     'impressum' => 'site notice',

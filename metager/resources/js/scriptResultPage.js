@@ -356,6 +356,16 @@ function initialize() {
   }
 })();
 
+(() => {
+  document.addEventListener("boot", () => {
+    document.addEventListener("keyup", (e) => {
+      if (e.key == "Escape") {
+        document.querySelector(".skiplinks > a").focus();
+      }
+    });
+  });
+})();
+
 if (document.readyState == "loading") {
   document.addEventListener("DOMContentLoaded", (e) => {
     document.dispatchEvent(bootEvent);

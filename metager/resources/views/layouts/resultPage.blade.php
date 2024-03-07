@@ -90,6 +90,10 @@
     <div class="skiplinks">
         <div>@lang('resultPage.skiplinks.heading')</div>
         <a href="#results">@lang('resultPage.skiplinks.results')</a>
+        <a href="#eingabe">@lang('resultPage.skiplinks.query')</a>
+        <a href="#settings">@lang('resultPage.skiplinks.settings')</a>
+        <a href="#sidebarToggle">@lang('resultPage.skiplinks.navigation')</a>
+        <div>@lang('resultPage.skiplinks.return')</div>
     </div>
     @if (Request::getHttpHost() === 'metager3.de')
         <div class="alert alert-info metager3-unstable-warning-resultpage">

@@ -56,7 +56,6 @@ body {
     padding: 0px 8px;
   }
 
-
   main {
     width: 100%;
     max-width: 1000px;
@@ -176,7 +175,7 @@ i.fa {
     margin-bottom: 25px;
   }
 
-  >a.logo {
+  > a.logo {
     .logo;
     display: block;
     width: fit-content;
@@ -188,12 +187,12 @@ i.fa {
       font-size: 2em;
     }
 
-    >img {
+    > img {
       width: 4.6em;
     }
   }
 
-  >a.lang {
+  > a.lang {
     display: block;
     height: min-content;
     align-self: flex-end;
@@ -204,7 +203,7 @@ i.fa {
     bottom: 2px;
     font-weight: normal;
 
-    &>span {
+    & > span {
       font-size: 1rem;
       display: block;
       padding: 0.3rem;
@@ -233,7 +232,7 @@ i.fa {
       line-height: 1;
       padding-bottom: 0;
 
-      >img {
+      > img {
         width: 4.8em;
       }
     }
@@ -249,7 +248,7 @@ i.fa {
     color: @metager-orange;
     font-weight: bold;
 
-    &>span {
+    & > span {
       font-size: 0.7rem;
       display: block;
       padding: 0.1rem;
@@ -260,7 +259,6 @@ i.fa {
 /* Links that look like text */
 
 .mutelink {
-
   &,
   &:hover,
   &:active,
@@ -317,7 +315,8 @@ summary {
 *[data-tooltip] {
   position: relative;
 
-  &:hover {
+  &:hover,
+  &:focus {
     &:after {
       opacity: 1;
     }
@@ -347,7 +346,6 @@ summary {
   }
 
   &.hide-tooltip-on-resultpage:after {
-
     /* Auf kleinen Bildschirmen wird der Tooltip nicht angezeigt */
     @media (max-width: 700px) {
       display: none;
@@ -372,7 +370,7 @@ summary {
 /* For Containers that are supposed to split their content up into two columns */
 
 .two-col {
-  >* {
+  > * {
     width: 50%;
     margin: 0;
     padding: 0;
@@ -480,7 +478,7 @@ label a {
 
 // Copy button
 .copyLink {
-  >button.success {
+  > button.success {
     background-color: green;
     color: white;
 
@@ -491,7 +489,7 @@ label a {
     }
   }
 
-  >button.failure {
+  > button.failure {
     background-color: #820000;
     color: white;
 

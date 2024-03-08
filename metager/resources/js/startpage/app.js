@@ -4,7 +4,7 @@
     document.addEventListener("keyup", e => {
         if (e.key == "Escape") {
             // Disable sidebar if opened
-            if (sidebar_toggle.checked) {
+            if (sidebar_toggle && sidebar_toggle.checked) {
                 sidebar_toggle.checked = false;
             }
             let skip_links_container = document.querySelector(".skiplinks");

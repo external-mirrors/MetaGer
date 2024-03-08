@@ -12,6 +12,7 @@ return [
         '7' => 'APERTO',
         'direct' => 'Apertura diretta',
         '8' => 'RIMUOVERE LA PUBBLICITÀ',
+        'togglelabel' => 'per attivare le opzioni dei risultati',
     ],
     'gefVon' => 'da',
     'advertisement' => 'Annuncio',

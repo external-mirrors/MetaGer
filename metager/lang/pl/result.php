@@ -12,6 +12,7 @@ return [
         '6' => 'OTWÓRZ W NOWEJ KARCIE',
         'direct' => 'Bezpośrednie otwarcie',
         '8' => 'USUWANIE REKLAM',
+        'togglelabel' => 'przełączanie opcji wyników',
     ],
     'gefVon' => 'przez',
     'advertisement' => 'Ad',

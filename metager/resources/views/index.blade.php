@@ -7,7 +7,7 @@
     <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
     <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
     <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
-    <div>@lang('resultPage.skiplinks.return')</div>
+    <div class="escape">@lang('resultPage.skiplinks.return')</div>
   </div>
   <div id="search-content">
     <ul id="foki-switcher">

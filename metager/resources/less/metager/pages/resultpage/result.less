@@ -13,7 +13,7 @@
   @supports not (selector(:first-child)) {
     gap: 0;
 
-    >*:not(:nth-child(1)) {
+    > *:not(:nth-child(1)) {
       padding: 0.125rem 0;
     }
   }
@@ -39,6 +39,9 @@
         font-size: 1.1em;
         margin: 0px;
         line-height: 1;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
 
         .result-price {
           padding: 0px 10px;
@@ -48,7 +51,6 @@
         }
 
         a {
-
           &,
           &:hover,
           &:visited {
@@ -62,10 +64,10 @@
         cursor: pointer;
         font-size: 0.9em;
         margin-left: 20px;
-        color: rgba(230, 230, 230, 0.6);
+        color: fade(@text-color, 60%);
         white-space: nowrap;
 
-        >ul {
+        > ul {
           list-style-type: none;
           padding-left: 20px;
           position: absolute;
@@ -84,8 +86,8 @@
           }
         }
 
-        &:focus>ul,
-        &:focus-within>ul {
+        &:focus > ul,
+        &:focus-within > ul {
           display: block;
         }
       }
@@ -101,7 +103,7 @@
       @supports not (selector(:first-child)) {
         gap: 0;
 
-        >*:not(:nth-child(1)) {
+        > *:not(:nth-child(1)) {
           padding: 0 4px;
         }
       }
@@ -178,7 +180,7 @@
       }
     }
 
-    >.result-deep-buttons {
+    > .result-deep-buttons {
       display: flex;
       overflow-x: auto;
       gap: 1.5rem;
@@ -186,7 +188,7 @@
       @supports not (selector(:first-child)) {
         gap: 0;
 
-        >*:not(:nth-child(1)) {
+        > *:not(:nth-child(1)) {
           padding: 0 0.75rem;
         }
       }
@@ -196,12 +198,12 @@
       margin-bottom: -0.25rem;
       font-size: 0.8rem;
 
-      >li {
+      > li {
         &:nth-child(1) {
           list-style-type: none;
         }
 
-        >a {
+        > a {
           white-space: nowrap;
           display: block;
           padding-bottom: 0.5rem;
@@ -219,7 +221,7 @@
     @supports not (selector(:first-child)) {
       gap: 0;
 
-      >*:not(:nth-child(1)) {
+      > *:not(:nth-child(1)) {
         padding: 0.25rem 0;
       }
     }
@@ -257,7 +259,7 @@
         grid-template-rows: repeat(3, auto);
         grid-template-areas: "description image" "footer footer" "options options";
 
-        >.result-image img {
+        > .result-image img {
           max-width: 120px;
         }
       }
@@ -266,10 +268,10 @@
     .result-image {
       max-width: 160px;
 
-      >a {
+      > a {
         display: block;
 
-        >img {
+        > img {
           display: block;
           max-width: 160px;
           max-height: 100px;
@@ -314,10 +316,10 @@
       position: absolute;
       left: -300%;
 
-      &:checked~.result-options {
+      &:checked ~ .result-options {
         display: block;
 
-        >.options {
+        > .options {
           max-height: 150px;
           overflow: initial;
           overflow-x: auto;
@@ -326,7 +328,7 @@
         }
       }
 
-      &:focus+.result-options-label {
+      &:focus + .result-options-label {
         display: block;
       }
     }
@@ -343,7 +345,6 @@
     }
 
     &.ad .ad-hoster {
-
       &,
       & a,
       & a:active,
@@ -355,18 +356,18 @@
       }
     }
 
-    &>.remover {
+    & > .remover {
       cursor: pointer;
       text-align: right;
       color: #777;
     }
 
-    &>.result-options {
+    & > .result-options {
       display: none;
       max-width: 100%;
       overflow-x: auto;
 
-      &>.options {
+      & > .options {
         width: 100%;
         text-align: right;
         overflow: hidden;
@@ -385,7 +386,7 @@
         @supports not (selector(:first-child)) {
           gap: 0;
 
-          >*:not(:nth-child(1)) {
+          > *:not(:nth-child(1)) {
             padding: 0 0.5rem 0;
           }
         }
@@ -401,7 +402,7 @@
           }
         }
 
-        li>a {
+        li > a {
           color: @link-color;
           white-space: nowrap;
         }
@@ -409,7 +410,7 @@
     }
   }
 
-  >.result-inherited-results {
+  > .result-inherited-results {
     display: flex;
     flex-wrap: wrap;
     font-size: 0.9rem;
@@ -417,7 +418,7 @@
     padding: 0 1rem 0 1rem;
 
     @media (min-width: 500px) {
-      >.inherited-result {
+      > .inherited-result {
         max-width: calc(50% - 0.5rem);
       }
     }
@@ -432,7 +433,7 @@
     @supports not (selector(:first-child)) {
       gap: 0;
 
-      >*:not(:nth-child(1)) {
+      > *:not(:nth-child(1)) {
         padding: 0 0.5rem;
       }
     }
@@ -443,7 +444,6 @@
     .result-open,
     .result-open-newtab,
     .result-open-key {
-
       &,
       &:active,
       &:hover,
@@ -456,7 +456,6 @@
     }
 
     .result-open-proxy {
-
       &,
       &:active,
       &:hover,
@@ -483,7 +482,7 @@
       height: 12px;
       display: flex;
 
-      >img {
+      > img {
         filter: invert(1) brightness(0.7);
       }
     }

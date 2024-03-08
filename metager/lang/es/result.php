@@ -12,6 +12,7 @@ return [
         '7' => 'ABRIR',
         'direct' => 'Abrir directamente',
         '8' => 'ELIMINAR LA PUBLICIDAD',
+        'togglelabel' => 'alternar opciones de resultados',
     ],
     'gefVon' => 'Encontrado de',
     'proxytext' => 'Abrirá el link anonimizado.',

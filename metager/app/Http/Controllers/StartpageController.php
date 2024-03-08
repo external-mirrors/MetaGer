@@ -55,6 +55,7 @@ class StartpageController extends Controller
             ->with('autocomplete', $autocomplete)
             ->with('pluginmodal', $request->input('plugin-modal', 'off'))
             ->with('css', [mix('css/themes/startpage/light.css')])
+            ->with('js', [mix('js/startpage/app.js')])
             ->with('darkcss', [mix('css/themes/startpage/dark.css')]);
     }
 

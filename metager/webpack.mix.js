@@ -117,6 +117,7 @@ mix
     "public/css/widget/widget.css"
   )
   .less("resources/less/metager/pages/privacy.less", "public/css/privacy.css")
+  .js(["resources/js/startpage/app.js"], "public/js/startpage/app.js")
   .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")
   .js(["resources/js/imagesearch.js"], "public/js/imagesearch.js")

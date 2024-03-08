@@ -12,6 +12,7 @@ return [
         '7' => 'OUVERTURE',
         'direct' => 'Ouverture directe',
         '8' => 'SUPPRIMER LA PUBLICITÉ',
+        'togglelabel' => 'changer les options de résultat',
     ],
     'metagerkeytext' => 'Utiliser MetaGer sans publicité',
     'news' => 'Actualités pertinentes',

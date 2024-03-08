@@ -768,6 +768,7 @@ a {
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+      scroll-margin-top: 80px;
 
       @supports not (selector(:first-child)) {
         gap: 0;
@@ -1161,11 +1162,11 @@ a {
 
   #settings {
     text-align: center;
-
     a {
       display: flex;
       align-items: center;
       color: @text-color;
+      scroll-margin-top: 80px;
 
       &:hover {
         color: red;

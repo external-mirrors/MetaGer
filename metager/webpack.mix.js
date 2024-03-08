@@ -38,7 +38,10 @@ mix
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
   )
-  .less('resources/less/metager/pages/adblocker.less', 'public/css/adblocker.css')
+  .less(
+    "resources/less/metager/pages/adblocker.less",
+    "public/css/adblocker.css"
+  )
   .less("resources/less/metager/pages/contact.less", "public/css/contact.css")
   .less("resources/less/utility.less", "public/css/utility.css")
   .less(
@@ -113,10 +116,8 @@ mix
     "resources/less/metager/pages/widget/widget.less",
     "public/css/widget/widget.css"
   )
-  .less(
-    "resources/less/metager/pages/privacy.less",
-    "public/css/privacy.css"
-  )
+  .less("resources/less/metager/pages/privacy.less", "public/css/privacy.css")
+  .js(["resources/js/startpage/app.js"], "public/js/startpage/app.js")
   .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")
   .js(["resources/js/imagesearch.js"], "public/js/imagesearch.js")
@@ -127,14 +128,19 @@ mix
     ],
     "public/js/admin/count.js"
   )
-  .js(
-    ["resources/js/scriptResultPage.js", "resources/js/keyboardNavigation.js"],
-    "public/js/scriptResultPage.js"
-  )
+  .js(["resources/js/scriptResultPage.js"], "public/js/scriptResultPage.js")
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")
-  .js(["resources/js/donation/base.js", "resources/js/donation/paypal-options.js", "resources/js/donation/paypal-card.js", "resources/js/donation/paypal-subscription.js"], "public/js/donation.js")
+  .js(
+    [
+      "resources/js/donation/base.js",
+      "resources/js/donation/paypal-options.js",
+      "resources/js/donation/paypal-card.js",
+      "resources/js/donation/paypal-subscription.js",
+    ],
+    "public/js/donation.js"
+  )
   // utility
   .js(
     ["resources/js/utility.js", "resources/js/translations.js"],

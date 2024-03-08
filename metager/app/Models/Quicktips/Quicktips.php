@@ -195,6 +195,7 @@ class Quicktips
                         );
                     }
                 }
+
                 $this->quicktips[] = new \App\Models\Quicktips\Quicktip(
                     $type,
                     $title,
@@ -209,6 +210,13 @@ class Quicktips
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing quicktips");
         }
+        // Sort by order
+        usort($this->quicktips, function ($a, $b) {
+            if ($a->order === $b->order) {
+                return 0;
+            }
+            return ($a->order > $b->order) ? 1 : -1;
+        });
     }
 
     public function normalize_search($search)

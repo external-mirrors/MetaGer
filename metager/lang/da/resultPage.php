@@ -10,4 +10,12 @@ return [
         'disabled' => 'Tilføj søgetjenester til forespørgslen',
         'payment_required' => 'Søgetjenester tilgængelige med <a href=\':link\'>MetaGer-nøgle</a>',
     ],
+    'skiplinks' => [
+        'heading' => 'Hop hurtigt til indhold',
+        'results' => 'Spring til søgeresultater',
+        'query' => 'Spring til inputfeltet for søgeforespørgslen',
+        'settings' => 'Spring til søgeindstillinger',
+        'navigation' => 'Spring til navigation',
+        'return' => 'Du kan til enhver tid vende tilbage til denne menu ved at trykke på escape-tasten.',
+    ],
 ];

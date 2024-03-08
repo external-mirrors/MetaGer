@@ -343,7 +343,7 @@ function initialize() {
       let htmlContainer = document.querySelector("html");
       currentLocale = htmlContainer.getAttribute("lang");
       currentLocale = currentLocale.split("-")[0].toLowerCase();
-    } catch (error) {}
+    } catch (error) { }
     moment.locale(currentLocale);
 
     document.querySelectorAll("span.date").forEach((element) => {
@@ -351,9 +351,29 @@ function initialize() {
         let timestamp = element.dataset.timestamp;
         let moment_instance = moment.unix(timestamp);
         element.textContent = moment_instance.fromNow();
-      } catch (error) {}
+      } catch (error) { }
     });
   }
+})();
+
+(() => {
+  let sidebar_toggle = document.querySelector("#sidebarToggle");
+  document.addEventListener("boot", () => {
+    document.addEventListener("keyup", (e) => {
+      if (e.key == "Escape") {
+        // Disable sidebar if opened
+        if (sidebar_toggle && sidebar_toggle.checked) {
+          sidebar_toggle.checked = false;
+        }
+        let skip_links = document.querySelector(".skiplinks");
+        if (skip_links.contains(document.activeElement)) {
+          document.activeElement.blur();
+        } else {
+          document.querySelector(".skiplinks > a").focus();
+        }
+      }
+    });
+  });
 })();
 
 if (document.readyState == "loading") {

@@ -20,4 +20,7 @@ return [
             'google' => "Haku Googlessa",
         ],
     ],
+    'results' => [
+        'summary' => 'Näytetään :resultcount noin :totalresults hakutuloksesta :resultcount hakutulokset',
+    ],
 ];

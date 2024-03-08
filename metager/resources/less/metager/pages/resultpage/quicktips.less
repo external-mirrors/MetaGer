@@ -108,7 +108,7 @@
           font-size: @quicktip-font-large;
         }
 
-        > * {
+        >* {
           margin: 0px 5px;
 
           &:first-child {
@@ -148,7 +148,6 @@
     }
 
     &[type="spendenaufruf"] {
-      order: 100;
       border: none;
       box-shadow: none;
       background-color: inherit;
@@ -176,8 +175,6 @@
     }
 
     &[type="spruch"] {
-      order: 1;
-
       .quicktip-summary {
         display: flex;
         flex-direction: column;
@@ -205,8 +202,6 @@
     }
 
     &[type="duckDuckGo-bang"] {
-      order: 2;
-
       .bang-btn {
         width: 100%;
         margin-top: 5px;
@@ -214,22 +209,6 @@
         background-color: #286992;
         font-size: 16px;
       }
-    }
-
-    &[type="wikipedia"] {
-      order: 3;
-    }
-
-    &[type="dictCC"] {
-      order: 4;
-    }
-
-    &[type="tip"] {
-      order: 5;
-    }
-
-    &[type="ad"] {
-      order: 6;
     }
   }
 

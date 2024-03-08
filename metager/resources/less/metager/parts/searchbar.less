@@ -16,7 +16,7 @@
   &[data-suggest="active"]:focus-within {
     grid-template-rows: max-content 1fr;
 
-    >.suggestions {
+    > .suggestions {
       border: 1px solid @searchbar-border-color;
       border-top: 0;
     }
@@ -40,12 +40,12 @@
         padding-right: 1rem;
       }
 
-      >a {
+      > a {
         color: #585858;
         display: block;
         height: 100%;
 
-        >img {
+        > img {
           height: 100%;
           display: block;
           transform: rotate(-90deg);
@@ -104,10 +104,11 @@
         }
       }
 
-      &:focus-within:not(.search-delete-js-only)>input:not(:placeholder-shown) {
+      &:focus-within:not(.search-delete-js-only)
+        > input:not(:placeholder-shown) {
         padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
 
-        +#search-delete-btn {
+        + #search-delete-btn {
           display: grid;
         }
       }
@@ -125,7 +126,7 @@
         color: #585858;
         filter: invert(@icon-color);
 
-        >img#searchbar-img-lupe {
+        > img#searchbar-img-lupe {
           height: 100%;
           display: block;
         }
@@ -133,7 +134,7 @@
     }
   }
 
-  >.suggestions {
+  > .suggestions {
     --highlight-color: @highlight-color;
     display: grid;
     display: none;
@@ -144,13 +145,13 @@
     color: @text-color;
     background-color: @body-background-color;
 
-    >.partners {
+    > .partners {
       display: flex;
       gap: 1rem;
       background-color: var(--highlight-color);
       padding-inline: 0.5rem;
 
-      >.partner {
+      > .partner {
         display: none;
         gap: 0.5rem;
         align-items: center;
@@ -158,23 +159,23 @@
         padding-block: 1rem;
         color: inherit;
 
-        >img {
+        > img {
           height: 1em;
         }
 
-        >div {
+        > div {
           display: grid;
           align-items: center;
           grid-template-columns: max-content 1fr;
           column-gap: 0.5rem;
 
-          >.description {
+          > .description {
             grid-column: span 2;
             font-size: 0.7rem;
           }
 
-          >div {
-            >.mark {
+          > div {
+            > .mark {
               color: limegreen;
               font-size: 0.5rem;
               width: max-content;
@@ -187,7 +188,7 @@
       }
     }
 
-    >.suggestion {
+    > .suggestion {
       display: none;
       cursor: pointer;
       align-items: center;
@@ -195,7 +196,7 @@
       padding: 0.25rem 0.5rem;
       color: inherit;
 
-      >img {
+      > img {
         height: 1rem;
         filter: invert(@icon-color);
       }
@@ -205,19 +206,19 @@
       }
     }
 
-    >.partner {
+    > .partner {
       display: none;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
       color: inherit;
 
-      >img {
+      > img {
         width: 16px;
       }
 
-      >div {
-        >.mark {
+      > div {
+        > .mark {
           color: limegreen;
           font-size: 0.5rem;
           width: max-content;
@@ -255,7 +256,7 @@
     }
   }
 
-  >* {
+  > * {
     border: 1px solid @searchbar-border-color;
 
     &:not(:first-child):not(.suggestions) {
@@ -283,7 +284,7 @@
       border-radius: 5px;
     }
 
-    >* {
+    > * {
       border: 1px solid #aaa;
       border-radius: 5px;
       min-height: 40px;
@@ -305,13 +306,14 @@
     .search-input {
       height: 1.9rem;
 
-      >input {
+      > input {
+        scroll-margin-top: 80px;
         padding: 0 0.5rem;
       }
     }
   }
 
-  >.suggestions {
+  > .suggestions {
     display: none;
     position: absolute;
     top: 3.8rem;
@@ -321,7 +323,7 @@
   }
 
   &[data-suggest="active"]:focus-within {
-    >.suggestions {
+    > .suggestions {
       display: grid;
     }
   }

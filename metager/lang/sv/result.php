@@ -12,6 +12,7 @@ return [
         '7' => 'ÖPPEN',
         'direct' => 'Direkt öppning',
         '8' => 'TA BORT REKLAM',
+        'togglelabel' => 'växla resultatalternativ',
     ],
     'gefVon' => 'av',
     'advertisement' => 'Annons',

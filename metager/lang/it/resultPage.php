@@ -10,4 +10,12 @@ return [
         'disabled' => 'Aggiungere servizi di ricerca alla query',
         'payment_required' => 'Servizi di ricerca disponibili con la chiave <a href=\':link\'>MetaGer</a>',
     ],
+    'skiplinks' => [
+        'heading' => 'Saltare rapidamente al contenuto',
+        'results' => 'Vai ai risultati della ricerca',
+        'query' => 'Vai al campo di immissione della query di ricerca',
+        'settings' => 'Vai alle impostazioni di ricerca',
+        'navigation' => 'Vai alla navigazione',
+        'return' => 'È possibile tornare a questo menu in qualsiasi momento premendo il tasto di escape.',
+    ],
 ];

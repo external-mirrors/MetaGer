@@ -16,7 +16,7 @@
             @continue
         @endif
         @php
-            preg_match("/(\d+)\.png$/", $file, $matches);
+    preg_match("/(\d+)\.png$/", $file, $matches);
         @endphp
         @if ($matches)
             <link rel="icon" sizes="{{ $matches[1] }}x{{ $matches[1] }}" href="/img/favicon/{{ $file }}"
@@ -87,6 +87,14 @@
 </head>
 
 <body id="resultpage-body" class="{{ app(\App\SearchSettings::class)->fokus }}">
+    <div class="skiplinks">
+        <div>@lang('resultPage.skiplinks.heading')</div>
+        <a href="#results">@lang('resultPage.skiplinks.results')</a>
+        <a href="#eingabe">@lang('resultPage.skiplinks.query')</a>
+        <a href="#settings-link">@lang('resultPage.skiplinks.settings')</a>
+        <a href="#sidebarToggle">@lang('resultPage.skiplinks.navigation')</a>
+        <div>@lang('resultPage.skiplinks.return')</div>
+    </div>
     @if (Request::getHttpHost() === 'metager3.de')
         <div class="alert alert-info metager3-unstable-warning-resultpage">
             {!! @trans('resultPage.metager3') !!}

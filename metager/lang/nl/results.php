@@ -20,4 +20,7 @@ return [
             'bing' => "Zoeken op Bing",
         ],
     ],
+    'results' => [
+        'summary' => 'Het tonen van :resultcount van rond :totalresults zoekresultaten',
+    ],
 ];

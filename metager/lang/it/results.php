@@ -20,4 +20,7 @@ return [
             'buy' => "Acquista una chiave MetaGer",
         ],
     ],
+    'results' => [
+        'summary' => 'Mostra :resultcount di circa :totalresults risultati della ricerca',
+    ],
 ];

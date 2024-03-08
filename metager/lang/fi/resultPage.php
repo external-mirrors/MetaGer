@@ -10,4 +10,12 @@ return [
         'disabled' => 'Hakupalvelujen lisääminen kyselyyn',
         'payment_required' => 'Hakupalvelut saatavilla <a href=\':link\'>MetaGer-avaimella.</a>',
     ],
+    'skiplinks' => [
+        'heading' => 'Nopea siirtyminen sisältöön',
+        'results' => 'Hyppää hakutuloksiin',
+        'query' => 'Siirry hakukyselyn syöttökenttään',
+        'settings' => 'Siirry hakuasetuksiin',
+        'navigation' => 'Hyppää navigointiin',
+        'return' => 'Voit palata tähän valikkoon milloin tahansa painamalla escape-näppäintä.',
+    ],
 ];

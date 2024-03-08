@@ -1,4 +1,5 @@
-<input id="sidebarToggle" type="checkbox" aria-label="@lang('sidebar.toggle')">
+<input id="sidebarToggle" type="checkbox" aria-labelledby="sidebarToggle-label">
+<div id="sidebarToggle-label">@lang('sidebar.toggle')</div>
 <div class="sidebar">
   <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>

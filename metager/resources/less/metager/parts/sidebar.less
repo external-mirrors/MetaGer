@@ -1,4 +1,5 @@
 .sidebar {
+  visibility: hidden;
   border-left: 1px solid @border-color;
   box-shadow: 0px 1px 1.5px 1px #c0c0c0;
   position: fixed;
@@ -13,7 +14,7 @@
   z-index: 10;
   background-color: @background-color;
   color: @text-color;
-  transition: 0.5s;
+  transition: right 0.5s, visibility 0s 0.5s;
   border-left: none;
 
   .sidebar-logo {
@@ -291,6 +292,12 @@
 #sidebarToggle {
   position: absolute;
   right: 300%;
+
+  &:focus {
+    &~#sidebarToggle-label {
+      top: 8px;
+    }
+  }
 }
 
 .sidebar-opener.close {
@@ -299,6 +306,8 @@
 
 #sidebarToggle:checked {
   &~.sidebar {
+    visibility: visible;
+    transition: right 0.5s, visibility 0s 0s;
     right: 0px;
   }
 
@@ -309,6 +318,18 @@
   &~.sidebar-opener.close {
     display: initial;
   }
+}
+
+#sidebarToggle-label {
+  position: fixed;
+  top: -100%;
+  transition: top 0.25s ease-in-out;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.5rem;
+  outline: 1px auto;
+  z-index: 9;
+  background-color: inherit;
 }
 
 #sidebar-img-app {

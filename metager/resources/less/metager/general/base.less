@@ -56,7 +56,6 @@ body {
     padding: 0px 8px;
   }
 
-
   main {
     width: 100%;
     max-width: 1000px;
@@ -270,16 +269,6 @@ i.fa {
   }
 }
 
-/* Summary Elements */
-.skip-link {
-  position: absolute;
-  left: -100%;
-
-  &:focus {
-    left: 0;
-  }
-}
-
 summary {
   cursor: pointer;
 
@@ -317,7 +306,8 @@ summary {
 *[data-tooltip] {
   position: relative;
 
-  &:hover {
+  &:hover,
+  &:focus {
     &:after {
       opacity: 1;
     }

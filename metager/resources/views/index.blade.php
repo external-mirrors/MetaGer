@@ -1,10 +1,14 @@
 @extends('layouts.staticPages', ['page' => 'startpage'])
-@section('title', $title )
+@section('title', $title)
 
 @section('content')
-  <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
-  <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
-  <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
+  <div class="skiplinks">
+    <div>@lang('resultPage.skiplinks.heading')</div>
+    <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
+    <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
+    <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
+    <div>@lang('resultPage.skiplinks.return')</div>
+  </div>
   <div id="search-content">
     <ul id="foki-switcher">
     @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
@@ -29,7 +33,7 @@
         </h1>
         @include('parts.searchbar', ['class' => 'startpage-searchbar'])
         @if(Request::filled('key'))
-        <input type="hidden" name="key" value="{{ Request::input('key','') }}" form="searchForm">
+        <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
         @endif
         @if(app(\App\SearchSettings::class)->self_advertisements)
         <div id="startpage-quicklinks">
@@ -56,9 +60,6 @@
       </div>
       @endif
     </div>
-    <a href="#eingabe" class="skip-link">@lang('index.skip.search')</a>
-    <a href="#sidebarToggle" class="skip-link">@lang('index.skip.navigation')</a>
-    <a href="#foki-switcher" class="skip-link">@lang('index.skip.fokus')</a>
     <div id="language">
       <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>
     </div>

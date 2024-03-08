@@ -20,4 +20,7 @@ return [
             'bing' => "Recherche sur Bing",
         ],
     ],
+    'results' => [
+        'summary' => 'Affichage de :resultcount d\'environ :totalresults résultats de recherche',
+    ],
 ];

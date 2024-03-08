@@ -20,4 +20,7 @@ return [
             'bing' => "Sök på Bing",
         ],
     ],
+    'results' => [
+        'summary' => 'Visar :resultcount av cirka :totalresults sökresultat',
+    ],
 ];

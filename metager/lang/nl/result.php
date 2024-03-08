@@ -19,6 +19,7 @@ return [
         '7' => 'OPEN',
         'direct' => 'Direct Open',
         '8' => 'RECLAME VERWIJDEREN',
+        'togglelabel' => 'resultatenopties omschakelen',
     ],
     'adblocker' => 'Een <a href=":resultlink">zoekresultaat</a> van <code>:host</code> werd hier verwijderd door uw advertentieblokker. <a href=":infolink">Lees meer</a>',
     'image' => [

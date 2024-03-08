@@ -13,6 +13,7 @@ return [
         '6' => 'AVAA UUDESSA VÄLILEHDESSÄ',
         '7' => 'AVOIN',
         'direct' => 'Suoraan auki',
+        'togglelabel' => 'Tulosvaihtoehtojen vaihtaminen',
     ],
     'gefVon' => 'by',
     'advertisement' => 'Mainos',

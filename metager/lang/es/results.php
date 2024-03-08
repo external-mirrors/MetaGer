@@ -20,4 +20,7 @@ return [
             'save' => "Recordar decisión (con cookie)",
         ],
     ],
+    'results' => [
+        'summary' => 'Mostrando :resultcount de alrededor de :totalresults resultados de búsqueda',
+    ],
 ];

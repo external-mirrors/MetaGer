@@ -12,6 +12,7 @@ return [
         '7' => 'ÅBEN',
         'direct' => 'Direkte åben',
         '8' => 'FJERN REKLAMER',
+        'togglelabel' => 'Skift mellem resultatindstillinger',
     ],
     'gefVon' => 'af',
     'advertisement' => 'Annonce',

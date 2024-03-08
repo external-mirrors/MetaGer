@@ -10,4 +10,12 @@ return [
     'startseite' => 'MetaGer startpagina',
     'impressum' => 'site mededeling',
     'search-placeholder' => 'Uw zoekopdracht...',
+    'skiplinks' => [
+        'heading' => 'Spring snel naar inhoud',
+        'results' => 'Ga naar zoekresultaten',
+        'query' => 'Spring naar invoerveld zoekopdracht',
+        'settings' => 'Spring naar zoekinstellingen',
+        'navigation' => 'Spring naar navigatie',
+        'return' => 'U kunt op elk moment terugkeren naar dit menu door op de escapetoets te drukken.',
+    ],
 ];

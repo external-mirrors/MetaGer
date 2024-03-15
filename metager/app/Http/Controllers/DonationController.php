@@ -14,6 +14,7 @@ use Illuminate\Validation\Rule;
 use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
 use PHP_IBAN\IBAN;
+use Illuminate\Support\Facades\RateLimiter;
 use SepaQr\Data;
 use URL;
 
@@ -420,6 +421,14 @@ class DonationController extends Controller
         if ($validator->fails()) {
             abort(400);
         }
+
+        $ratelimit_key = 'create-order:' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($ratelimit_key, 2)) {
+            abort(400);
+        }
+        RateLimiter::hit($ratelimit_key, 60);
+
 
         $amount = round(floatval($amount), 2);
 

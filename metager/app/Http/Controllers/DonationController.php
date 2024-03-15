@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\CreateDirectDebit;
 use App\Jobs\DonationNotification;
 use App\Localization;
+use App\PrometheusExporter;
 use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
@@ -455,6 +456,7 @@ class DonationController extends Controller
         ];
 
         if ($funding_source === "card") {
+            PrometheusExporter::CreditcardDonation("started");
             $order_data["payment_source"] = [
                 "card" => [
                     "attributes" => [
@@ -504,7 +506,7 @@ class DonationController extends Controller
 
         $amount = round(floatval($amount), 2);
         $orderId = $request->input("orderID", "");
-        if (empty($orderId)) {
+        if (empty ($orderId)) {
             abort(400);
         }
         $base_url = config("metager.metager.paypal.base_url");
@@ -558,8 +560,10 @@ class DonationController extends Controller
         }
 
         if (!$payment_successfull) {
+            PrometheusExporter::CreditcardDonation("rejected");
             $response->redirect_to = route("paypalPayment", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source]);
         } else {
+            PrometheusExporter::CreditcardDonation("successfull");
             DonationNotification::dispatch($amount, $interval, "PayPal")->onQueue("general");
             $response->redirect_to = URL::signedRoute("thankyou", ["amount" => $amount, "interval" => $interval, "funding_source" => $funding_source, "timestamp" => time()]);
         }

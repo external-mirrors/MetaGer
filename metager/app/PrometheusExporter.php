@@ -79,4 +79,10 @@ class PrometheusExporter
         $gauge = $registry->getOrRegisterGauge("metager", "key", "Tracks status of the Mainz Key", ["owner"]);
         $gauge->set($tokens, ["mainz"]);
     }
+    public static function CreditcardDonation(string $status)
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "donation_card", "Card Payment started", ["status"]);
+        $counter->inc([$status]);
+    }
 }

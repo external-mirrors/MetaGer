@@ -1,6 +1,6 @@
-import processPaypalCard from './paypal-card';
-import { processPaypalSubscription } from './paypal-subscription';
-import { paypalOptions, funding_source } from './paypal-options';
+import processPaypalCard from "./paypal-card";
+import { processPaypalSubscription } from "./paypal-subscription";
+import { paypalOptions, funding_source } from "./paypal-options";
 let customAmountSwitch = document.querySelector(
   "#content-container.amount #custom-amount-switch"
 );
@@ -17,7 +17,10 @@ if (customAmountSwitch) {
   });
 }
 
-if (document.querySelector("#content-container.paymentMethod")) {
+if (
+  document.querySelector("#content-container.paymentMethod") &&
+  !navigator.webdriver
+) {
   let base_url = document.querySelector("input[name=baseurl]").value;
   paypal.getFundingSources().forEach(function (fundingSource) {
     let mark = paypal.Marks({ fundingSource: fundingSource });
@@ -37,7 +40,18 @@ if (document.querySelector("#content-container.paymentMethod")) {
       let imagetag = document.createElement("img");
       imagetag.setAttribute("src", `/img/funding_source/${fundingSource}.svg`);
       imagecontainer.appendChild(imagetag);
-      let invertLightImages = ["p24", "applepay", "bancontact", "boleto", "eps", "mercadopago", "multibanco", "oxxo", "paidy", "satispay"];
+      let invertLightImages = [
+        "p24",
+        "applepay",
+        "bancontact",
+        "boleto",
+        "eps",
+        "mercadopago",
+        "multibanco",
+        "oxxo",
+        "paidy",
+        "satispay",
+      ];
       if (invertLightImages.includes(fundingSource)) {
         imagetag.classList.add("invert-light");
       }
@@ -48,8 +62,13 @@ if (document.querySelector("#content-container.paymentMethod")) {
   });
 }
 
-if (document.querySelector("#content-container.paypal")) {
-  let interval = document.querySelector("#content-container.paypal input[name=interval]").value;
+if (
+  document.querySelector("#content-container.paypal") &&
+  !navigator.webdriver
+) {
+  let interval = document.querySelector(
+    "#content-container.paypal input[name=interval]"
+  ).value;
   if (interval == "once") {
     if (funding_source == "card") {
       processPaypalCard();
@@ -67,7 +86,7 @@ if (document.querySelector("#content-container.paypal")) {
             styles: {
               base: {
                 color: "white",
-              }
+              },
             },
             fields: {},
           })

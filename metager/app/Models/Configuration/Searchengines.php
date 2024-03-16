@@ -31,7 +31,7 @@ class Searchengines
             $path = "App\\Models\\parserSkripte\\" . $info->{"parser-class"};
             // Check if parser exists
             try {
-                $configuration      = new SearchengineConfiguration($info);
+                $configuration = new SearchengineConfiguration($info);
                 $this->sumas[$name] = new $path($name, $configuration);
             } catch (\ErrorException $e) {
                 Log::error("Konnte " . $info->infos->display_name . " nicht abfragen. " . $e);
@@ -45,9 +45,9 @@ class Searchengines
             // Parse user configuration
             // Default mode for this searchengine. Can be overriden by the user configuration
             if ($suma->configuration->disabledByDefault) {
-                $suma->configuration->disabled          = true;
+                $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
-                $this->disabledReasons[]                = DisabledReason::USER_CONFIGURATION;
+                $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
             }
             // User setting defined via permanent cookie in browser
             $engine_user_setting = Cookie::get($settings->fokus . "_engine_" . $name, null);
@@ -57,9 +57,9 @@ class Searchengines
             }
             if ($engine_user_setting !== null) {
                 if ($engine_user_setting === "off" && $suma->configuration->disabled === false) {
-                    $suma->configuration->disabled          = true;
+                    $suma->configuration->disabled = true;
                     $suma->configuration->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
-                    $this->disabledReasons[]                = DisabledReason::USER_CONFIGURATION;
+                    $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
                 }
                 if ($engine_user_setting === "on" && $suma->configuration->disabled === true) {
                     $suma->configuration->disabled = false;
@@ -69,21 +69,21 @@ class Searchengines
 
         foreach ($this->sumas as $suma) {
             if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
-                $suma->configuration->disabled          = true;
+                $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
-                $this->disabledReasons[]                = DisabledReason::PAYMENT_REQUIRED;
+                $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
             }
             // Disable searchengine if it serves ads and this request is authorized
             if ($suma->configuration->ads && app(Authorization::class)->canDoAuthenticatedSearch()) {
-                $suma->configuration->disabled          = true;
+                $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
-                $this->disabledReasons[]                = DisabledReason::SERVES_ADVERTISEMENTS;
+                $this->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
             }
             // Disable all searchengines not supported by this fokus
             if (!in_array($suma->name, $engines_in_fokus)) {
-                $suma->configuration->disabled          = true;
+                $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::INCOMPATIBLE_FOKUS;
-                $this->disabledReasons[]                = DisabledReason::INCOMPATIBLE_FOKUS;
+                $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FOKUS;
             }
             // Disable all searchengines not supporting the current locale
             $suma->configuration->applyLocale();
@@ -107,10 +107,10 @@ class Searchengines
             }
             // Disable searchengine if it does not support a possibly defined query filter
             foreach ($settings->queryFilter as $filterName => $filter) {
-                if (empty($settings->sumasJson->filter->{"query-filter"}->$filterName->sumas->{$suma->name})) {
-                    $suma->configuration->disabled          = true;
+                if (empty ($settings->sumasJson->filter->{"query-filter"}->$filterName->sumas->{$suma->name})) {
+                    $suma->configuration->disabled = true;
                     $suma->configuration->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
-                    $this->disabledReasons[]                = DisabledReason::INCOMPATIBLE_FILTER;
+                    $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
                     continue 2;
                 }
             }
@@ -122,10 +122,10 @@ class Searchengines
                     continue;
                 }
                 // We need to check if the searchengine supports the parameter value, too
-                if ($filter->value !== null && (empty($filter->sumas->{$suma->name}) || empty($filter->sumas->{$suma->name}->values->{$filter->value}))) {
-                    $suma->configuration->disabled          = true;
+                if ($filter->value !== null && (empty ($filter->sumas->{$suma->name}) || empty ($filter->sumas->{$suma->name}->values->{$filter->value}))) {
+                    $suma->configuration->disabled = true;
                     $suma->configuration->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
-                    $this->disabledReasons[]                = DisabledReason::INCOMPATIBLE_FILTER;
+                    $this->disabledReasons[] = DisabledReason::INCOMPATIBLE_FILTER;
                     continue 2;
                 }
             }
@@ -135,7 +135,7 @@ class Searchengines
                 $authorization->cost += $suma->configuration->cost;
             }
         }
-        $authorization->cost = max($authorization->cost, 3);
+        $authorization->cost = max($authorization->cost, 1);
 
         uasort($this->sumas, function ($a, $b) {
             if ($a->configuration->engineBoost === $b->configuration->engineBoost) {
@@ -147,9 +147,9 @@ class Searchengines
 
     public function getSearchEnginesForFokus()
     {
-        $settings         = app(SearchSettings::class);
+        $settings = app(SearchSettings::class);
         $engines_in_fokus = $settings->sumasJson->foki->{$settings->fokus}->sumas;
-        $sumas            = [];
+        $sumas = [];
         foreach ($this->sumas as $name => $suma) {
             if (in_array($name, $engines_in_fokus)) {
                 $sumas[$name] = $suma;
@@ -212,7 +212,7 @@ class Searchengines
         $next = unserialize(\Cache::get(\Request::input("next")));
         // Pagination call detected. Disable all Searchengines and replace the searchengines with the cached ones
         foreach ($this->sumas as $suma) {
-            $suma->configuration->disabled          = true;
+            $suma->configuration->disabled = true;
             $suma->configuration->disabledReasons[] = DisabledReason::SUMAS_CONFIGURATION;
         }
         foreach ($next["engines"] as $engine) {
@@ -222,7 +222,7 @@ class Searchengines
                 }
             }
         }
-        $settings       = app(SearchSettings::class);
+        $settings = app(SearchSettings::class);
         $settings->page = $next["page"];
     }
 }

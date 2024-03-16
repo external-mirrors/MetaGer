@@ -15,7 +15,7 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    public int $cost = 3;
+    public int $cost = 1;
 
     /**
      * How many Tokens are available to the user
@@ -77,7 +77,7 @@ abstract class Authorization
      */
     public function getAdfreeLink()
     {
-        if (!empty($this->getToken()) && is_string($this->getToken())) {
+        if (!empty ($this->getToken()) && is_string($this->getToken())) {
             return LaravelLocalization::getLocalizedUrl(null, "/keys/key/" . urlencode($this->getToken()));
         } else {
             return LaravelLocalization::getLocalizedUrl(null, "/keys");

@@ -251,6 +251,10 @@ function initialize() {
   document.addEventListener("boot", loadSelectTier);
   document.addEventListener("resultsChanged", initSelectTier);
   function loadSelectTier() {
+    // Don't try to load select Tier for authenticated searches
+    let key_element = document.querySelector("#key-link");
+    if (key_element && key_element.classList.contains("authorized")) return;
+
     (function (w, d, t, x, m, l, p) {
       w["XMLPlusSTObject"] = m;
       w[m] =
@@ -343,7 +347,7 @@ function initialize() {
       let htmlContainer = document.querySelector("html");
       currentLocale = htmlContainer.getAttribute("lang");
       currentLocale = currentLocale.split("-")[0].toLowerCase();
-    } catch (error) {}
+    } catch (error) { }
     moment.locale(currentLocale);
 
     document.querySelectorAll("span.date").forEach((element) => {
@@ -351,7 +355,7 @@ function initialize() {
         let timestamp = element.dataset.timestamp;
         let moment_instance = moment.unix(timestamp);
         element.textContent = moment_instance.fromNow();
-      } catch (error) {}
+      } catch (error) { }
     });
   }
 })();

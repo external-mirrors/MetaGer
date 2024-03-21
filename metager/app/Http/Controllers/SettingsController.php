@@ -150,7 +150,14 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines");
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines";
+
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function enableSearchEngine(Request $request)
@@ -173,7 +180,13 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines");
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function enableFilter(Request $request)
@@ -219,7 +232,13 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#filter");
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#filter";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     /**
@@ -241,7 +260,14 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forever("bilder_setting_external", $external_setting, "/", null, $secure, false));
             }
         }
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#external-search-service");
+
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#external-search-service";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function enableSetting(Request $request)
@@ -298,7 +324,13 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings");
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function deleteSettings(Request $request)
@@ -327,7 +359,13 @@ class SettingsController extends Controller
         }
         $this->clearBlacklist($request);
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]));
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]);
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function allSettingsIndex(Request $request)
@@ -357,7 +395,14 @@ class SettingsController extends Controller
         } else {
             Cookie::queue(Cookie::forget($key, "/"));
         }
-        return redirect($request->input('url', 'https://metager.de'));
+
+        $redirect_url = $request->input('url', 'https://metager.de');
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function removeAllSettings(Request $request)
@@ -375,7 +420,13 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forget($key, "/"));
             }
         }
-        return redirect($request->input('url', 'https://metager.de'));
+        $redirect_url = $request->input('url', 'https://metager.de');
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($request->input('url', 'https://metager.de'));
+        }
     }
 
     public function newBlacklist(Request $request)
@@ -427,7 +478,14 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
         Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, false));
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#bl");
+
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#bl";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function deleteBlacklist(Request $request)
@@ -438,7 +496,13 @@ class SettingsController extends Controller
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]) . "#bl");
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#bl";
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function clearBlacklist(Request $request)
@@ -454,7 +518,13 @@ class SettingsController extends Controller
             }
         }
 
-        return redirect(route('settings', ["focus" => $fokus, "url" => $url]));
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]);
+        if ($request->wantsJson()) {
+            $response = $this->cookiesToJsonResponse($redirect_url);
+            return response()->json($response);
+        } else {
+            return redirect($redirect_url);
+        }
     }
 
     public function loadSettings(Request $request)
@@ -521,6 +591,30 @@ class SettingsController extends Controller
         return redirect($url);
     }
 
+    /**
+     * The webextension calls settings manually
+     * and expects a json response instead of
+     * set cookies.
+     * We will loop through all queued cookies and 
+     * create a JSON response object from that
+     */
+    private function cookiesToJsonResponse($redirect_url)
+    {
+        $cookies = Cookie::getQueuedCookies();
+        $response = [
+            "remove" => [],
+            "set" => [],
+            "redirect" => $redirect_url
+        ];
+        foreach ($cookies as $cookie) {
+            if ($cookie->isCleared()) {
+                $response["remove"][] = $cookie->getName();
+            } else {
+                $response["set"][$cookie->getName()] = $cookie->getValue();
+            }
+        }
+        return $response;
+    }
     private function loadBlacklist(Request $request)
     {
     }

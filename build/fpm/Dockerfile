@@ -28,8 +28,8 @@ RUN apt update && apt install --no-install-recommends -y \
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql
-RUN yes 'y' | pecl install xdebug-3.2.2 igbinary-3.2.14 redis-5.3.7 imagick
-RUN docker-php-ext-enable igbinary redis imagick
+RUN yes 'y' | pecl install xdebug-3.2.2 igbinary-3.2.14 imagick
+RUN docker-php-ext-enable igbinary imagick
 RUN docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
 # Add working dir for the code base

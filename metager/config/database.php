@@ -123,13 +123,14 @@ return [
     'redis' => [
 
         'client' => env('REDIS_CLIENT', 'predis'),
-
+        'cluster' => false,
         'default' => [
             'read_write_timeout' => -1,
             'host' => env('REDIS_HOST', 'localhost'),
             'password' => env('REDIS_PASSWORD', null),
             'port' => env('REDIS_PORT', 6379),
             'database' => 0,
+            'cluster' => false,
         ],
 
         'cache' => [
@@ -137,6 +138,7 @@ return [
             'password' => env('REDIS_CACHE_PASSWORD', null),
             'port' => env('REDIS_CACHE_PORT', 6379),
             'database' => 0,
+            'cluster' => false,
         ],
 
         'sentinel' => [

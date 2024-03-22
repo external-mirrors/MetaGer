@@ -158,9 +158,9 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: 127.0.0.1
+            value: "127.0.0.1"
           - name: REDIS_PORT
-            value: 6379
+            value: "6379"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

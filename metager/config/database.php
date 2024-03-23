@@ -163,7 +163,7 @@ return [
                 [
                     'host' => env('REDIS_CACHE_HOST', 'localhost'),
                     'port' => env('REDIS_CACHE_PORT', 6379),
-                    'password' => env('REDIS_SENTINEL_PASSWORD', ''),
+                    'password' => env('REDIS_CACHE_PASSWORD', ''),
 
                 ]
             ],

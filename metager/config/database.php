@@ -163,11 +163,16 @@ return [
                 [
                     'host' => env('REDIS_CACHE_HOST', 'localhost'),
                     'port' => env('REDIS_CACHE_PORT', 6379),
+                    'password' => env('REDIS_SENTINEL_PASSWORD', ''),
+
                 ]
             ],
             'options' => [
                 'cluster' => 'redis',
-                'password' => env('REDIS_CACHE_PASSWORD', null),
+                'parameters' => [
+                    'database' => 0,
+                    'password' => env('REDIS_CACHE_PASSWORD', null),
+                ]
             ],
         ]
 

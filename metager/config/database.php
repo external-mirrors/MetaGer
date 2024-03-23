@@ -165,6 +165,7 @@ return [
                     'port' => env('REDIS_CACHE_PORT', 6379),
                 ]
             ],
+            'cluster' => 'redis',
             'options' => [
                 'password' => env('REDIS_CACHE_PASSWORD', null),
             ],

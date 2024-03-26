@@ -95,6 +95,9 @@ class BrowserVerification
                     app(Authorization::class)->availableTokens = 100;
                     app(Searchengines::class);  // Is needed so we know the cost of a search
                     $cost = app(Authorization::class)->cost;
+                    if (\Cookie::get("tokensource", "app") === "webextension") {
+                        return view("resultpages.tokenauthorization", ["title" => "MetaGer", "cost" => $cost, "resultpage" => $url]);
+                    }
                     \Cookie::queue("cost", $cost, 0);
                 }
                 return redirect($url);

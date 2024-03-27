@@ -28,7 +28,7 @@ class BrowserVerification
         \app()->make(QueryTimer::class)->observeStart(self::class);
 
         $bvEnabled = config("metager.metager.browserverification.enabled");
-        if (empty ($bvEnabled) || !$bvEnabled || $this->isWhiteListed($request->ip())) {
+        if (empty($bvEnabled) || !$bvEnabled || $this->isWhiteListed($request->ip())) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
             return $next($request);
         }
@@ -48,13 +48,13 @@ class BrowserVerification
         }
         // Make sure MGV Parameter is defined
         $mgv = $request->input("mgv", "");
-        if (!empty ($mgv) && preg_match("/^[a-z0-9]{32}$/", $request->input("mgv")) !== 1) {
+        if (!empty($mgv) && preg_match("/^[a-z0-9]{32}$/", $request->input("mgv")) !== 1) {
             $mgv = "";
         }
 
         if (
             $request->filled("loadMore") ||
-            (!empty ($mgv) && app(Authorization::class)->canDoAuthenticatedSearch()) ||
+            (!empty($mgv) && app(Authorization::class)->canDoAuthenticatedSearch()) ||
             ($request->filled("key") && $request->input('key') === config("metager.metager.keys.uni_mainz"))
         ) {
             \app()->make(QueryTimer::class)->observeEnd(self::class);
@@ -62,7 +62,7 @@ class BrowserVerification
         }
 
         $bvData = null;
-        if (empty ($mgv) || !Cache::has($request->input("mgv"))) {
+        if (empty($mgv) || !Cache::has($request->input("mgv"))) {
             $framed = false;
             if ($request->header("Sec-Fetch-Dest") === "iframe") {
                 $framed = true;
@@ -96,7 +96,7 @@ class BrowserVerification
                     app(Searchengines::class);  // Is needed so we know the cost of a search
                     $cost = app(Authorization::class)->cost;
                     if (\Cookie::get("tokensource", "app") === "webextension") {
-                        return view("resultpages.tokenauthorization", ["title" => "MetaGer", "cost" => $cost, "resultpage" => $url]);
+                        return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer", "cost" => $cost, "resultpage" => $url]);
                     }
                     \Cookie::queue("cost", $cost, 0);
                 }
@@ -279,17 +279,17 @@ class BrowserVerification
         try {
             while (true) {
                 $entry = Redis::lpop(self::LOG_KEY);
-                if (!empty ($entry)) {
+                if (!empty($entry)) {
                     $logs[] = $entry;
                 }
-                if (sizeof($logs) >= $max_entries || empty ($entry)) {
+                if (sizeof($logs) >= $max_entries || empty($entry)) {
                     if (sizeof($logs) > 0) {
                         foreach ($logs as $log) {
                             \fputcsv($fh, $log);
                             $logs = [];
                         }
                     }
-                    if (empty ($entry)) {
+                    if (empty($entry)) {
                         break;
                     }
                 }
@@ -307,7 +307,7 @@ class BrowserVerification
 
         $whitelisted_ips = config("metager.metager.browserverification.whitelist");
         foreach ($whitelisted_ips as $whitelisted_ip) {
-            if (empty ($whitelisted_ip))
+            if (empty($whitelisted_ip))
                 continue;
             // Check if this is a cidr range or regular IP
             if (str_contains($whitelisted_ip, "/")) {

@@ -50,9 +50,7 @@ class TokenAuthorization extends Authorization
             $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
         }
         $this->checkTokens();
-        if (sizeof($this->tokens) > 0) {
-            $this->availableTokens = sizeof($this->tokens);
-        }
+        $this->availableTokens = sizeof($this->tokens);
         $this->updateCookie();
     }
 

@@ -53,6 +53,7 @@ class TokenAuthorization extends Authorization
         if (sizeof($this->tokens) > 0) {
             $this->availableTokens = sizeof($this->tokens);
         }
+        $this->updateCookie();
     }
 
     function makePayment(int $cost)
@@ -128,11 +129,12 @@ class TokenAuthorization extends Authorization
         if ($response_code === 200) {
             return true;
         } elseif ($response_code === 422) {
+            $this->tokens = [];
             $result = json_decode($result);
             if ($result === null) {
                 return false;
             }
-            $this->parseError($result);
+            $this->tokens = $this->parseError($result);
         }
         return false;
     }
@@ -148,18 +150,18 @@ class TokenAuthorization extends Authorization
 
     private function parseError($result)
     {
+        $new_tokens = [];
         foreach ($result->errors as $error) {
             if ($error->msg === "Invalid Signatures") {
                 // One or more tokens are invalid. Remove the invalid tokens
-                $new_tokens = [];
                 foreach ($error->value as $error_token) {
                     if ($error_token->status === "ok") {
                         $new_tokens[] = new Token($error_token->token, $error_token->signature, $error_token->date);
                     }
                 }
-                return $new_tokens;
             }
         }
+        return $new_tokens;
     }
 }
 

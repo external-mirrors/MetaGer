@@ -123,7 +123,7 @@ function initialize() {
 
 (() => {
   let resultLoaderFinished = false;
-  document.addEventListener("boot", loadMoreResults);
+  // document.addEventListener("boot", loadMoreResults);
   function loadMoreResults() {
     if (resultLoaderFinished) {
       return;

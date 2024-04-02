@@ -59,8 +59,8 @@ function initialize() {
   let link, newtab, top;
   let verifying = false;
 
-  document.addEventListener("boot", botProtection);
-  document.addEventListener("resultsChanged", botProtection);
+  //document.addEventListener("boot", botProtection);
+  //document.addEventListener("resultsChanged", botProtection);
 
   function botProtection() {
     document.querySelectorAll(".result a").forEach((element) => {

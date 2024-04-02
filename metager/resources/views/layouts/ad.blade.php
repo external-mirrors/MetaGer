@@ -1,5 +1,6 @@
 @if(isset($ad)  && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
 	<div class="result" 
+		role="listitem"
 	@if(array_key_exists('ad_data', $ad->additionalInformation))
 	data-yiid="{{ $ad->additionalInformation['ad_data']['yiid'] }}" 
 	@if($ad->additionalInformation['ad_data']['appns'] !== null && $ad->additionalInformation['ad_data']['k'] !== null) 

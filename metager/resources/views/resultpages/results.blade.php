@@ -1,4 +1,4 @@
-<div id="results" tabindex="0" aria-role="list" aria-label="@lang('results.results.summary', ['resultcount' => sizeof($metager->getResults()), 'totalresults' => $metager->getTotalResultCount()])">
+<div id="results" role="list" aria-label="@lang('results.results.summary', ['resultcount' => sizeof($metager->getResults()), 'totalresults' => $metager->getTotalResultCount()])">
     @include('parts.alteration')
     @if ($mobile)
         @include('layouts.ad', ['ad' => $metager->popAd()])

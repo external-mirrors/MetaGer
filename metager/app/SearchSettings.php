@@ -16,17 +16,21 @@ class SearchSettings
     public $q;
     /** @var string */
     public $fokus;
+    public $newtab = false;
+    public $zitate = true;
     public $page = 1;
     public $queryFilter = [];
     public $parameterFilter = [];
     /** @var object */
     public $sumasJson;
     public $quicktips = true;
+    public $theme = "system";    // Darkmode setting currently either one of 'system', 'light', 'dark'
     public $enableQuotes = true;
     /** @var bool */
     public $self_advertisements;
     /** @var string */
     public $suggestions = "bing";
+    public $external_image_search = "metager";
 
     public function __construct()
     {
@@ -57,6 +61,33 @@ class SearchSettings
 
         if ($this->getSettingValue("quicktips") !== null) {
             $this->quicktips = false;
+        }
+        $this->theme = $this->getSettingValue("dark_mode", "system");
+        if ($this->theme === "1")
+            $this->theme = "light";
+        else if ($this->theme === "2")
+            $this->theme = "dark";
+        else
+            $this->theme = "system";
+        $newtab = $this->getSettingValue("new_tab", false);
+        switch ($newtab) {
+            case "on":
+                $this->newtab = true;
+                break;
+            default:
+                $this->newtab = false;
+        }
+        $zitate = $this->getSettingValue("zitate", Localization::getLanguage() === "de" ? "on" : "off");
+        if ($zitate === "on")
+            $this->zitate = true;
+        else
+            $this->zitate = false;
+
+        $external_image_search = $this->getSettingValue("bilder_setting_external", "metager");
+        if (in_array($external_image_search, ["metager", "bing", "google"])) {
+            $this->external_image_search = $external_image_search;
+        } else {
+            $this->external_image_search = "metager";
         }
     }
 

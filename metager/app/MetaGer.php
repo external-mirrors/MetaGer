@@ -93,25 +93,25 @@ class MetaGer
         $this->starttime = microtime(true);
         # Versuchen Blacklists einzulesen
         if (file_exists(config_path() . "/blacklistDomains.txt") && file_exists(config_path() . "/blacklistUrl.txt")) {
-            $tmp                      = file_get_contents(config_path() . "/blacklistDomains.txt");
+            $tmp = file_get_contents(config_path() . "/blacklistDomains.txt");
             $this->domainsBlacklisted = explode("\n", $tmp);
-            $tmp                      = file_get_contents(config_path() . "/blacklistUrl.txt");
-            $this->urlsBlacklisted    = explode("\n", $tmp);
+            $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
+            $this->urlsBlacklisted = explode("\n", $tmp);
         }
 
         # Versuchen Blacklists einzulesen
         if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
-            $tmp                        = file_get_contents(config_path() . "/adBlacklistDomains.txt");
+            $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
             $this->adDomainsBlacklisted = explode("\n", $tmp);
         }
 
         if (file_exists(config_path() . "/adBlacklistUrl.txt")) {
-            $tmp                     = file_get_contents(config_path() . "/adBlacklistUrl.txt");
+            $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
             $this->adUrlsBlacklisted = explode("\n", $tmp);
         }
 
         if (file_exists(config_path() . "/blacklistDescriptionUrl.txt")) {
-            $tmp                           = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
+            $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
             $this->blacklistDescriptionUrl = explode("\n", $tmp);
         }
 
@@ -310,16 +310,16 @@ class MetaGer
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
                 $no_sitesearch_query = str_replace(urlencode("site:" . $this->site), "", $this->fullUrl);
-                $this->errors[]      = trans('metaGer.results.failedSitesearch', ['altSearch' => $no_sitesearch_query]);
+                $this->errors[] = trans('metaGer.results.failedSitesearch', ['altSearch' => $no_sitesearch_query]);
             } else {
                 $this->errors[] = trans('metaGer.results.failed');
             }
         }
 
         if ($this->canCache() && isset($this->next) && count($this->next) > 0 && count($this->results) > 0) {
-            $page       = app(SearchSettings::class)->page + 1;
+            $page = app(SearchSettings::class)->page + 1;
             $this->next = [
-                'page'    => $page,
+                'page' => $page,
                 'engines' => $this->next,
             ];
             Cache::put($this->getSearchUid(), serialize($this->next), 60 * 60);
@@ -379,7 +379,7 @@ class MetaGer
             $link = trim($link, "/");
 
             if (isset($arr[$link])) {
-                $arr[$link]->gefVon[]     = $this->results[$i]->gefVon[0];
+                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
                 $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
 
                 if (!empty($this->results[$i]->image)) {
@@ -396,9 +396,9 @@ class MetaGer
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {
                     # Den Link hinzufügen:
-                    $arr[$link]->logo        = $this->results[$i]->logo;
-                    $arr[$link]->image       = $this->results[$i]->image;
-                    $arr[$link]->link        = $this->results[$i]->link;
+                    $arr[$link]->logo = $this->results[$i]->logo;
+                    $arr[$link]->image = $this->results[$i]->image;
+                    $arr[$link]->link = $this->results[$i]->link;
                     $arr[$link]->partnershop = $this->results[$i]->partnershop;
                 }
 
@@ -421,7 +421,7 @@ class MetaGer
      */
     public function parseAffiliates($affiliates)
     {
-        $wait     = false;
+        $wait = false;
         $finished = true;
         if (!\app()->make(SearchSettings::class)->javascript_enabled) {
             $wait = true;
@@ -478,7 +478,7 @@ class MetaGer
             "https://metager.de",
             1
         );
-        $adCount    = sizeof($this->ads);
+        $adCount = sizeof($this->ads);
         // Put Donation Advertisement to random position
         $position = $position !== null ? $position : random_int(0, $adCount);
 
@@ -493,21 +493,21 @@ class MetaGer
         if (max($human_verification->getVerificationCount()) > 10) {
             foreach ($results as $result) {
                 $link = $result->link;
-                $day  = Carbon::now()->day;
-                $pw   = md5($day . $link . config("metager.metager.proxy.password"));
+                $day = Carbon::now()->day;
+                $pw = md5($day . $link . config("metager.metager.proxy.password"));
 
                 $params = [
-                    'hv'  => $human_verification->key,
-                    'pw'  => $pw,
+                    'hv' => $human_verification->key,
+                    'pw' => $pw,
                     "url" => \bin2hex($link),
                 ];
 
-                $url               = route('humanverification', $params);
-                $proxyPw           = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $params["pw"]      = $proxyPw;
-                $params["url"]     = \bin2hex($result->proxyLink);
-                $proxyUrl          = route('humanverification', $params);
-                $result->link      = $url;
+                $url = route('humanverification', $params);
+                $proxyPw = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
+                $params["pw"] = $proxyPw;
+                $params["url"] = \bin2hex($result->proxyLink);
+                $proxyUrl = route('humanverification', $params);
+                $result->link = $url;
                 $result->proxyLink = $proxyUrl;
             }
         }
@@ -586,7 +586,7 @@ class MetaGer
 
     public function getAvailableParameterFilter()
     {
-        $request         = App::make(Request::class);
+        $request = App::make(Request::class);
         $parameterFilter = $this->sumaFile->filter->{"parameter-filter"};
 
         $availableFilter = [];
@@ -656,7 +656,7 @@ class MetaGer
         }
 
         if (\array_key_exists("language", $availableFilter)) {
-            $current_locale         = LaravelLocalization::getCurrentLocaleRegional();
+            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
             $default_language_value = "";
             # Set default Value for language selector to current locale
             foreach ($this->enabledSearchengines as $name => $engine) {
@@ -721,9 +721,9 @@ class MetaGer
 
     public function waitForMainResults()
     {
-        $engines          = app(Searchengines::class)->getEnabledSearchengines();
+        $engines = app(Searchengines::class)->getEnabledSearchengines();
         $enginesToWaitFor = [];
-        $mainEngines      = $this->sumaFile->foki->{app(SearchSettings::class)->fokus}->main;
+        $mainEngines = $this->sumaFile->foki->{app(SearchSettings::class)->fokus}->main;
         foreach ($mainEngines as $mainEngine) {
             foreach ($engines as $engine) {
                 if ($engine->name === $mainEngine) {
@@ -793,7 +793,7 @@ class MetaGer
                 $this->totalResults = $engine->totalResults;
             }
             if (!empty($engine->alteredQuery) && !empty($engine->alterationOverrideQuery)) {
-                $this->alteredQuery            = $engine->alteredQuery;
+                $this->alteredQuery = $engine->alteredQuery;
                 $this->alterationOverrideQuery = $engine->alterationOverrideQuery;
             }
         }
@@ -815,7 +815,7 @@ class MetaGer
             \Request::replace($input);
         }
 
-        $this->url     = \Request::url();
+        $this->url = \Request::url();
         $this->fullUrl = \Request::fullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
 
@@ -833,7 +833,7 @@ class MetaGer
         }
         # Sucheingabe
         $this->eingabe = trim(\Request::input('eingabe', ''));
-        $this->q       = $this->eingabe;
+        $this->q = $this->eingabe;
 
         $this->out = \Request::input("out", "");
 
@@ -868,20 +868,17 @@ class MetaGer
             $this->lang = "all";
         }
 
-        $this->agent  = new Agent();
+        $this->agent = new Agent();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
-        if (Localization::getLanguage() !== "de" || (Cookie::has('zitate') && Cookie::get('zitate') === 'off')) {
-            $this->sprueche = 'off';
-        } else {
+        if (app(\App\SearchSettings::class)->zitate) {
             $this->sprueche = 'on';
-        }
-        if (\Request::filled('zitate') && \Request::input('zitate') === 'on' || \Request::input('zitate') === 'off') {
-            $this->sprueche = \Request::input('quotes');
+        } else {
+            $this->sprueche = 'off';
         }
 
-        $this->newtab = \Request::input('new_tab', Cookie::get('new_tab'));
-        if ($this->newtab === "on") {
+        $this->newtab = app(\App\SearchSettings::class)->newtab;
+        if ($this->newtab === true) {
             $this->newtab = "_blank";
         } elseif ($this->framed) {
             $this->newtab = "_top";
@@ -897,7 +894,7 @@ class MetaGer
         $this->resultCount = \Request::input('resultCount', '20');
 
         if (\Request::filled('minism') && (\Request::filled('fportal') || \Request::filled('harvest'))) {
-            $input    = \Request::all();
+            $input = \Request::all();
             $newInput = [];
             foreach ($input as $key => $value) {
                 if ($key !== "fportal" && $key !== "harvest") {
@@ -911,7 +908,7 @@ class MetaGer
             $this->resultCount = 1000;
         }
         if (\Request::filled('onenewspageAll') || \Request::filled('onenewspageGermanyAll')) {
-            $this->time  = 5000;
+            $this->time = 5000;
             $this->cache = "cache";
         }
         if (\Request::filled('password')) {
@@ -938,24 +935,24 @@ class MetaGer
                     $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
                 } else {
                     // Now Check if there is something wrong with the dates
-                    $from    = $this->request->input("ff");
-                    $to      = $this->request->input("ft");
+                    $from = $this->request->input("ff");
+                    $to = $this->request->input("ft");
                     $changed = false;
-                    $from    = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
-                    $to      = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
+                    $from = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
+                    $to = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
 
                     if ($from > Carbon::now()) {
-                        $from    = Carbon::now();
+                        $from = Carbon::now();
                         $changed = true;
                     }
                     if ($to > Carbon::now()) {
-                        $to      = Carbon::now();
+                        $to = Carbon::now();
                         $changed = true;
                     }
                     if ($from > $to) {
-                        $tmp     = $to;
-                        $to      = $from;
-                        $from    = $tmp;
+                        $tmp = $to;
+                        $to = $from;
+                        $from = $tmp;
                         $changed = true;
                     }
 
@@ -963,19 +960,19 @@ class MetaGer
                     # Verify the parameters
                     $yearAgo = Carbon::now()->subYear();
                     if ($from < $yearAgo) {
-                        $from    = clone $yearAgo;
+                        $from = clone $yearAgo;
                         $changed = true;
                     }
                     if ($to < $yearAgo) {
-                        $to      = clone $yearAgo;
+                        $to = clone $yearAgo;
                         $changed = true;
                     }
 
                     if ($changed) {
-                        $oldParameters       = $this->request->all();
+                        $oldParameters = $this->request->all();
                         $oldParameters["ff"] = $from->format("Y-m-d");
                         $oldParameters["ft"] = $to->format("Y-m-d");
-                        $this->request       = $this->request->replace($oldParameters);
+                        $this->request = $this->request->replace($oldParameters);
                     }
                 }
             }
@@ -995,7 +992,7 @@ class MetaGer
         # ob MetaGer funktioniert (bzw. die Fetcher laufen)
         # Auch ein Log sollte nicht geschrieben werden, da es am Ende ziemlich viele Logs werden könnten.
         if ($this->out === "result-count") {
-            $this->canCache  = false;
+            $this->canCache = false;
             $this->shouldLog = false;
         } else {
             $this->shouldLog = true;
@@ -1021,7 +1018,7 @@ class MetaGer
             # IPv6
             # Check if IP contains "::"
             if (str_contains($ip, "::")) {
-                $ipAr  = explode("::", $ip);
+                $ipAr = explode("::", $ip);
                 $count = 0;
                 if (!empty($ipAr[0])) {
                     $ipLAr = explode(":", $ipAr[0]);
@@ -1087,11 +1084,11 @@ class MetaGer
 
     private function searchCheckPhrase()
     {
-        $p   = "";
+        $p = "";
         $tmp = $this->q;
         // matches '[... ]"test satz"[ ...]'
         while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
-            $tmp             = $match[1] . $match[3];
+            $tmp = $match[1] . $match[3];
             $this->phrases[] = $match[2];
         }
 
@@ -1109,12 +1106,12 @@ class MetaGer
         // matches '[... ]-site:test.de[ ...]'
         while (preg_match("/(^|.*?\s)-site:([^\*\s]\S*)(\s.*|$)/si", $this->q, $match)) {
             $this->hostBlacklist[] = $match[2];
-            $this->q               = $match[1] . $match[3];
+            $this->q = $match[1] . $match[3];
         }
         # Overwrite Setting if it's submitted via Parameter
         if ($request->has('blacklist')) {
             $this->hostBlacklist = [];
-            $blacklistString     = trim($request->input('blacklist'));
+            $blacklistString = trim($request->input('blacklist'));
             if (strpos($blacklistString, ",") !== false) {
                 $blacklistArray = explode(',', $blacklistString);
                 foreach ($blacklistArray as $blacklistElement) {
@@ -1137,7 +1134,7 @@ class MetaGer
                 foreach ($this->hostBlacklist as $host) {
                     $hostString .= $host . ", ";
                 }
-                $hostString       = rtrim($hostString, ", ");
+                $hostString = rtrim($hostString, ", ");
                 $this->warnings[] = trans('metaGer.formdata.hostBlacklist', ['host' => $hostString]);
             } else {
                 $this->warnings[] = trans('metaGer.formdata.hostBlacklistCount', ['count' => sizeof($this->hostBlacklist)]);
@@ -1150,12 +1147,12 @@ class MetaGer
         // matches '[... ]-site:*.test.de[ ...]'
         while (preg_match("/(^|.*?\s)-site:\*\.(\S+)(\s.*|$)/si", $this->q, $match)) {
             $this->domainBlacklist[] = $match[2];
-            $this->q                 = $match[1] . $match[3];
+            $this->q = $match[1] . $match[3];
         }
         # Overwrite Setting if it's submitted via Parameter
         if ($request->has('blacklist')) {
             $this->domainBlacklist = [];
-            $blacklistString       = trim($request->input('blacklist'));
+            $blacklistString = trim($request->input('blacklist'));
             if (strpos($blacklistString, ",") !== false) {
                 $blacklistArray = explode(',', $blacklistString);
                 foreach ($blacklistArray as $blacklistElement) {
@@ -1192,7 +1189,7 @@ class MetaGer
                 foreach ($this->domainBlacklist as $domain) {
                     $domainString .= $domain . ", ";
                 }
-                $domainString     = rtrim($domainString, ", ");
+                $domainString = rtrim($domainString, ", ");
                 $this->warnings[] = trans('metaGer.formdata.domainBlacklist', ['domain' => $domainString]);
             } else {
                 $this->warnings[] = trans('metaGer.formdata.domainBlacklistCount', ['count' => sizeof($this->domainBlacklist)]);
@@ -1205,7 +1202,7 @@ class MetaGer
         // matches '[... ]-site:*.test.de[ ...]'
         while (preg_match("/(^|.*?\s)-url:(\S+)(\s.*|$)/si", $this->q, $match)) {
             $this->urlBlacklist[] = $match[2];
-            $this->q              = $match[1] . $match[3];
+            $this->q = $match[1] . $match[3];
         }
         // print the url blacklist as a user warning
         if (sizeof($this->urlBlacklist) > 0) {
@@ -1213,7 +1210,7 @@ class MetaGer
             foreach ($this->urlBlacklist as $url) {
                 $urlString .= $url . ", ";
             }
-            $urlString        = rtrim($urlString, ", ");
+            $urlString = rtrim($urlString, ", ");
             $this->warnings[] = trans('metaGer.formdata.urlBlacklist', ['url' => $urlString]);
         }
     }
@@ -1231,23 +1228,23 @@ class MetaGer
 
         // matches '[... ]-test[ ...]'
         $words = preg_split("/\s+/si", $tmp);
-        $newQ  = $this->q;
+        $newQ = $this->q;
         foreach ($words as $word) {
             if (preg_match("/^-[a-zA-Z0-9]/", $word)) {
                 $this->stopWords[] = substr($word, 1);
-                $newQ              = str_ireplace($word, "", $newQ);
+                $newQ = str_ireplace($word, "", $newQ);
             }
         }
-        $newQ    = preg_replace("/(\s)\s+/", "$1", $newQ);
+        $newQ = preg_replace("/(\s)\s+/", "$1", $newQ);
         $this->q = trim($newQ);
         # Overwrite Setting if submitted via Parameter
         if ($request->has('stop')) {
             $this->stopWords = [];
-            $stop            = trim($request->input('stop'));
+            $stop = trim($request->input('stop'));
             if (strpos($stop, ',') !== false) {
                 $stopArray = explode(',', $stop);
                 foreach ($stopArray as $stopElement) {
-                    $stopElement       = trim($stopElement);
+                    $stopElement = trim($stopElement);
                     $this->stopWords[] = $stopElement;
                 }
             } else {
@@ -1261,7 +1258,7 @@ class MetaGer
             foreach ($this->stopWords as $stopword) {
                 $stopwordsString .= $stopword . ", ";
             }
-            $stopwordsString  = rtrim($stopwordsString, ", ");
+            $stopwordsString = rtrim($stopwordsString, ", ");
             $this->warnings[] = trans('metaGer.formdata.stopwords', ['stopwords' => $stopwordsString]);
         }
     }
@@ -1281,7 +1278,7 @@ class MetaGer
                 $requestData["out"] = $this->request->input('out');
             }
             $requestData['next'] = $this->getSearchUid();
-            $link                = action('MetaGerSearch@search', $requestData);
+            $link = action('MetaGerSearch@search', $requestData);
         } else {
             $link = "#";
         }
@@ -1395,7 +1392,7 @@ class MetaGer
         foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
             $except[] = $filter->{"get-parameter"};
         }
-        $requestData          = $this->request->except($except);
+        $requestData = $this->request->except($except);
         $requestData['focus'] = $fokus;
 
         $link = action('MetaGerSearch@search', $requestData);
@@ -1404,7 +1401,7 @@ class MetaGer
 
     public function generateEingabeLink($eingabe)
     {
-        $except      = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
+        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
         $requestData = $this->request->except($except);
 
         $requestData['eingabe'] = $eingabe;
@@ -1422,37 +1419,37 @@ class MetaGer
 
     public function generateSiteSearchLink($host)
     {
-        $host                   = urlencode($host);
-        $requestData            = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
+        $host = urlencode($host);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " site:$host";
-        $requestData['focus']   = "web";
-        $link                   = action('MetaGerSearch@search', $requestData);
+        $requestData['focus'] = "web";
+        $link = action('MetaGerSearch@search', $requestData);
         return $link;
     }
 
     public function generateRemovedHostLink($host)
     {
-        $host                   = urlencode($host);
-        $requestData            = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
+        $host = urlencode($host);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:$host";
-        $link                   = action('MetaGerSearch@search', $requestData);
+        $link = action('MetaGerSearch@search', $requestData);
         return $link;
     }
 
     public function generateRemovedDomainLink($domain)
     {
-        $domain                 = urlencode($domain);
-        $requestData            = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
+        $domain = urlencode($domain);
+        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
         $requestData['eingabe'] .= " -site:*.$domain";
-        $link                   = action('MetaGerSearch@search', $requestData);
+        $link = action('MetaGerSearch@search', $requestData);
         return $link;
     }
 
     public function getUnFilteredLink()
     {
-        $requestData         = $this->request->except(['lang']);
+        $requestData = $this->request->except(['lang']);
         $requestData['lang'] = "all";
-        $link                = action('MetaGerSearch@search', $requestData);
+        $link = action('MetaGerSearch@search', $requestData);
         return $link;
     }
 
@@ -1476,7 +1473,7 @@ class MetaGer
     public function getSavedSettingCount()
     {
         $cookies = Cookie::get();
-        $count   = 0;
+        $count = 0;
 
         $sumaFile = MetaGer::getLanguageFile();
         $sumaFile = json_decode(file_get_contents($sumaFile), true);

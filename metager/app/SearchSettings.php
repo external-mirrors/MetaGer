@@ -34,30 +34,28 @@ class SearchSettings
         if ($this->sumasJson === null) {
             throw new \Exception("Cannot load sumas.json file");
         }
-        $this->q     = trim(Request::input('eingabe', ''));
+        $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
 
         if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
             $this->fokus = "web";
         }
 
-        if (Cookie::has("js_available") && Cookie::get("js_available") === "true") {
-            $this->javascript_enabled = true;
-        }
+        $this->javascript_enabled = filter_var($this->getSettingValue("js_available", false), FILTER_VALIDATE_BOOLEAN);
 
-        if (Localization::getLanguage() !== "de" || Cookie::get("zitate", "on") === "off") {
+        if (Localization::getLanguage() !== "de" || $this->getSettingValue("zitate", "on") === "off") {
             $this->enableQuotes = false;
         }
 
-        $self_advertisements       = Cookie::get("self_advertisements", true);
-        $this->self_advertisements = $self_advertisements !== "off" ? true : false;
+        $this->self_advertisements = $this->getSettingValue("self_advertisements", true);
+        $this->self_advertisements = $this->self_advertisements !== "off" ? true : false;
 
-        $suggestions = Cookie::get("suggestions", "bing");
+        $suggestions = $this->getSettingValue("suggestions", "bing");
         if ($suggestions === "off") {
             $this->suggestions = "off";
         }
 
-        if (Request::filled('quicktips')) {
+        if ($this->getSettingValue("quicktips") !== null) {
             $this->quicktips = false;
         }
     }
@@ -93,37 +91,25 @@ class SearchSettings
             $this->parameterFilter[$filterName] = $filter;
             if ($filterName === "language") {
                 // Update default Parameter for language
-                $current_locale                                       = LaravelLocalization::getCurrentLocaleRegional();
+                $current_locale = LaravelLocalization::getCurrentLocaleRegional();
                 $this->parameterFilter["language"]->{"default-value"} = $current_locale;
             }
             if (!property_exists($filter, "default-value")) {
                 $this->parameterFilter[$filterName]->{"default-value"} = "nofilter";
             }
-            if (
-                (Request::filled($filter->{"get-parameter"}) && Request::input($filter->{"get-parameter"}) !== "off") ||
-                Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"}) !== null
-            ) {
-                $this->parameterFilter[$filterName]->value = Request::input($filter->{"get-parameter"}, null);
-
-                if (empty($this->parameterFilter[$filterName]->value)) {
-                    $this->parameterFilter[$filterName]->value = Cookie::get($this->fokus . "_setting_" . $filter->{"get-parameter"});
-                }
-                if (
-                    $this->parameterFilter[$filterName]->value === "off"
-                ) {
-                    $this->parameterFilter[$filterName]->value = null;
-                }
-                if ($this->parameterFilter[$filterName]->value === $this->parameterFilter[$filterName]->{"default-value"}) {
-                    $this->parameterFilter[$filterName]->value = null;
-                    unset(app(\Illuminate\Http\Request::class)[$filter->{"get-parameter"}]);
-                }
-            } else {
-                $this->parameterFilter[$filterName]->value = null;
+            $parameter_filter_value = $this->getSettingValue($filter->{"get-parameter"});
+            if ($parameter_filter_value === "off")
+                $parameter_filter_value = null;
+            if ($parameter_filter_value === $this->parameterFilter[$filterName]->{"default-value"}) {
+                $parameter_filter_value = null;
+                unset(app(\Illuminate\Http\Request::class)[$filter->{"get-parameter"}]);
             }
+            $this->parameterFilter[$filterName]->value = $parameter_filter_value;
+
             // Check if any options will be disabled
             $this->parameterFilter[$filterName]->{"disabled-values"} = [];
-            $enabledValues                                           = [];
-            $disabledValues                                          = [];
+            $enabledValues = [];
+            $disabledValues = [];
             foreach ($this->parameterFilter[$filterName]->sumas as $name => $options) {
                 if (!in_array($name, (array) $this->sumasJson->foki->{$this->fokus}->sumas)) {
                     continue;
@@ -166,5 +152,69 @@ class SearchSettings
             }
         }
         return false;
+    }
+
+    /**
+     * Parses the current request and checks if the specified setting is defined in the following order:
+     * 1. GET-Parameter
+     * 2. HTTP Header with that name
+     * 3. Cookie 
+     * 
+     * @param string $setting_name The name of the setting
+     * @param bool $global (Optional) Is this setting global or specific to a focus
+     * @param bool|string|null $default (Optional) Default value to return if setting is not defined anywhere
+     * @return string|null
+     */
+    private function getSettingValue(string $setting_name, $default = null): string|null
+    {
+        /**
+         * Check GET-Parameter in all variations
+         */
+        // Setting defined directly in GET Parameters
+        if (Request::filled($setting_name)) {
+            return Request::input($setting_name, $default);
+        }
+        // Setting defined without fokus prefix which will be handled as matching all foki
+        if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::filled(str_replace($this->fokus . "_setting_", "", $setting_name))) {
+            return Request::input(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+        }
+        // Setting defined with fokus prefix in request parameters and fokus matches currently used one
+        if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::filled($this->fokus . "_setting_" . $setting_name)) {
+            return Request::input($this->fokus . "_setting_" . $setting_name, $default);
+        }
+
+        /**
+         * Check Request HTTP Header in all variations
+         */
+        // Setting defined directly in GET Parameters
+        if (Request::hasHeader($setting_name)) {
+            return Request::header($setting_name, $default);
+        }
+        // Setting defined without fokus prefix which will be handled as matching all foki
+        if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::hasHeader(str_replace($this->fokus . "_setting_", "", $setting_name))) {
+            return Request::header(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+        }
+        // Setting defined with fokus prefix in request parameters and fokus matches currently used one
+        if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::hasHeader($this->fokus . "_setting_" . $setting_name)) {
+            return Request::header($this->fokus . "_setting_" . $setting_name, $default);
+        }
+
+        /**
+         * Check Cookies in all variations
+         */
+        // Setting defined directly in GET Parameters
+        if (Cookie::has($setting_name)) {
+            return Cookie::get($setting_name, $default);
+        }
+        // Setting defined without fokus prefix which will be handled as matching all foki
+        if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Cookie::has(str_replace($this->fokus . "_setting_", "", $setting_name))) {
+            return Cookie::get(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+        }
+        // Setting defined with fokus prefix in request parameters and fokus matches currently used one
+        if (stripos($setting_name, $this->fokus . "_setting_") === false && Cookie::has($this->fokus . "_setting_" . $setting_name)) {
+            return Cookie::get($this->fokus . "_setting_" . $setting_name, $default);
+        }
+
+        return $default;
     }
 }

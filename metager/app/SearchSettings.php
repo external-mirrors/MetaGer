@@ -18,6 +18,7 @@ class SearchSettings
     public $fokus;
     public $newtab = false;
     public $zitate = true;
+    public $blacklist = [];
     public $page = 1;
     public $queryFilter = [];
     public $parameterFilter = [];
@@ -89,6 +90,30 @@ class SearchSettings
         } else {
             $this->external_image_search = "metager";
         }
+
+        // Parse the blacklist
+        $blacklist_string = $this->getSettingValue($this->fokus . "_blpage");
+        if ($blacklist_string !== null) {
+            $blacklist_string = substr($blacklist_string, 0, 2048);
+
+            // Split the blacklist by all sorts of newlines
+            $blacklist = preg_split('/\r\n|[\r\n]/', $blacklist_string);
+
+            foreach ($blacklist as $blacklist_entry) {
+                if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
+                    $blacklist_entry = "https://" . $blacklist_entry;
+                }
+                // Only use hostname from url
+                $blacklist_entry = parse_url($blacklist_entry, PHP_URL_HOST);
+                if ($blacklist_entry === null || $blacklist_entry === false)
+                    continue;
+                $blacklist_entry = substr($blacklist_entry, 0, 255);
+
+                $this->blacklist[] = $blacklist_entry;
+            }
+        }
+        $this->blacklist = array_unique($this->blacklist);
+        sort($this->blacklist);
     }
 
     public function loadQueryFilter()

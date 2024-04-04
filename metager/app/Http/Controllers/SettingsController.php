@@ -51,17 +51,7 @@ class SettingsController extends Controller
         }
 
         # Reading cookies for black list entries
-        $blacklist = [];
-        foreach ($cookies as $key => $value) {
-            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
-                $blacklist[] = $value;
-            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, $fokus) !== false) {
-                $blacklist = array_merge($blacklist, explode(",", $value));
-            }
-        }
-
-        $blacklist = array_unique($blacklist);
-        sort($blacklist);
+        $blacklist = app(SearchSettings::class)->blacklist;
 
         # Generating link with set cookies
         $cookieLink = route('loadSettings', $cookies);
@@ -450,9 +440,12 @@ class SettingsController extends Controller
             $blacklist_entry = parse_url($blacklist_entry, PHP_URL_HOST);
             if ($blacklist_entry === null || $blacklist_entry === false)
                 continue;
+            $blacklist_entry = substr($blacklist_entry, 0, 255);
 
             $valid_blacklist_entries[] = $blacklist_entry;
         }
+        $valid_blacklist_entries = array_unique($valid_blacklist_entries);
+        sort($valid_blacklist_entries);
 
         # Check if any setting is active
         $cookies = Cookie::get();

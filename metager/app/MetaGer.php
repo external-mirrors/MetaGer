@@ -1165,20 +1165,7 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
-        foreach (Cookie::get() as $key => $value) {
-            $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
-            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, app(SearchSettings::class)->fokus) !== false && preg_match($regexUrl, $value) === 1) {
-                $this->domainBlacklist[] = substr($value, 0, 255);
-            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, app(SearchSettings::class)->fokus) !== false) {
-                $blacklistItems = explode(",", $value);
-                foreach ($blacklistItems as $blacklistItem) {
-
-                    if (preg_match($regexUrl, $blacklistItem) === 1) {
-                        $this->domainBlacklist[] = substr($blacklistItem, 0, 255);
-                    }
-                }
-            }
-        }
+        $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist);
 
         $this->domainBlacklist = array_unique($this->domainBlacklist);
 

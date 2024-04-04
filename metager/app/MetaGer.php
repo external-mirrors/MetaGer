@@ -1459,18 +1459,7 @@ class MetaGer
 
     public function getSavedSettingCount()
     {
-        $cookies = Cookie::get();
-        $count = 0;
-
-        $sumaFile = MetaGer::getLanguageFile();
-        $sumaFile = json_decode(file_get_contents($sumaFile), true);
-
-        foreach ($cookies as $key => $value) {
-            if (in_array($key, [$this->getFokus() . "_setting_", $this->getFokus() . "_engine_", $this->getFokus() . "_blpage"])) {
-                $count++;
-                continue;
-            }
-        }
+        $count = sizeof(app(SearchSettings::class)->user_settings) + sizeof(app(Searchengines::class)->user_settings);
         return $count;
     }
 

@@ -33,6 +33,7 @@ class SearchSettings
     public $suggestions = "bing";
     public $external_image_search = "metager";
 
+    public $user_settings = []; // Stores user settings that are parsed
     public function __construct()
     {
         $this->sumasJson = json_decode(file_get_contents(config_path("sumas.json")));
@@ -41,6 +42,8 @@ class SearchSettings
         }
         $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
+
+        $this->user_settings = [];
 
         if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
             $this->fokus = "web";
@@ -228,15 +231,21 @@ class SearchSettings
          */
         // Setting defined directly in GET Parameters
         if (Request::filled($setting_name)) {
-            return Request::input($setting_name, $default);
+            $value = Request::input($setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::filled(str_replace($this->fokus . "_setting_", "", $setting_name))) {
-            return Request::input(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $value = Request::input(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::filled($this->fokus . "_setting_" . $setting_name)) {
-            return Request::input($this->fokus . "_setting_" . $setting_name, $default);
+            $value = Request::input($this->fokus . "_setting_" . $setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
 
         /**
@@ -244,15 +253,21 @@ class SearchSettings
          */
         // Setting defined directly in GET Parameters
         if (Request::hasHeader($setting_name)) {
-            return Request::header($setting_name, $default);
+            $value = Request::header($setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::hasHeader(str_replace($this->fokus . "_setting_", "", $setting_name))) {
-            return Request::header(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $value = Request::header(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::hasHeader($this->fokus . "_setting_" . $setting_name)) {
-            return Request::header($this->fokus . "_setting_" . $setting_name, $default);
+            $value = Request::header($this->fokus . "_setting_" . $setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
 
         /**
@@ -260,15 +275,21 @@ class SearchSettings
          */
         // Setting defined directly in GET Parameters
         if (Cookie::has($setting_name)) {
-            return Cookie::get($setting_name, $default);
+            $value = Cookie::get($setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Cookie::has(str_replace($this->fokus . "_setting_", "", $setting_name))) {
-            return Cookie::get(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $value = Cookie::get(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($setting_name, $this->fokus . "_setting_") === false && Cookie::has($this->fokus . "_setting_" . $setting_name)) {
-            return Cookie::get($this->fokus . "_setting_" . $setting_name, $default);
+            $value = Cookie::get($this->fokus . "_setting_" . $setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
         }
 
         return $default;

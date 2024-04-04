@@ -22,11 +22,12 @@ class Searchengines
 
     /** @var DisabledReason[] */
     public $disabledReasons = [];
+    public $user_settings = [];
 
     public function __construct()
     {
         $settings = app(SearchSettings::class);
-
+        $this->user_settings = [];
         foreach ($settings->sumasJson->sumas as $name => $info) {
             $path = "App\\Models\\parserSkripte\\" . $info->{"parser-class"};
             // Check if parser exists
@@ -244,20 +245,26 @@ class Searchengines
         // Setting defined directly in GET Parameters
         if (Request::filled($engine_name)) {
             $value = Request::input($engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($engine_name, $settings->fokus . "_engine_") === 0 && Request::filled(str_replace($settings->fokus . "_engine_", "", $engine_name))) {
             $value = Request::input(str_replace($settings->fokus . "_engine_", "", $engine_name), $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($engine_name, $settings->fokus . "_engine_") === false && Request::filled($settings->fokus . "_engine_" . $engine_name)) {
             $value = Request::input($settings->fokus . "_engine_" . $engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
 
         /**
@@ -266,20 +273,26 @@ class Searchengines
         // Setting defined directly in GET Parameters
         if (Request::hasHeader($engine_name)) {
             $value = Request::header($engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($engine_name, $settings->fokus . "_engine_") === 0 && Request::hasHeader(str_replace($settings->fokus . "_engine_", "", $engine_name))) {
             $value = Request::header(str_replace($settings->fokus . "_engine_", "", $engine_name), $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($engine_name, $settings->fokus . "_engine_") === false && Request::hasHeader($settings->fokus . "_engine_" . $engine_name)) {
             $value = Request::header($settings->fokus . "_engine_" . $engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
 
         /**
@@ -288,20 +301,26 @@ class Searchengines
         // Setting defined directly in GET Parameters
         if (Cookie::has($engine_name)) {
             $value = Cookie::get($engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined without fokus prefix which will be handled as matching all foki
         if (stripos($engine_name, $settings->fokus . "_engine_") === 0 && Cookie::has(str_replace($settings->fokus . "_engine_", "", $engine_name))) {
             $value = Cookie::get(str_replace($settings->fokus . "_engine_", "", $engine_name), $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($engine_name, $settings->fokus . "_engine_") === false && Cookie::has($settings->fokus . "_engine_" . $engine_name)) {
             $value = Cookie::get($settings->fokus . "_engine_" . $engine_name, $default);
-            if (in_array($value, $valid_values))
+            if (in_array($value, $valid_values)) {
+                $this->user_settings[$engine_name] = $value;
                 return $value;
+            }
         }
 
         return $default;

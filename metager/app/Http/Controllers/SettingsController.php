@@ -17,7 +17,8 @@ class SettingsController extends Controller
     public function index(Request $request)
     {
         $settings = app(SearchSettings::class);
-        $sumas = app(Searchengines::class)->getSearchEnginesForFokus();
+        $searchengines = app(Searchengines::class);
+        $sumas = $searchengines->getSearchEnginesForFokus();
         $fokus = $settings->fokus;
         $fokusName = trans('index.foki.' . $fokus);
 
@@ -30,7 +31,6 @@ class SettingsController extends Controller
 
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
-            $values = $filter->values;
             foreach ($sumas as $name => $suma) {
                 if ($suma->configuration->disabled && in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
                     $filteredSumas = true;
@@ -42,19 +42,16 @@ class SettingsController extends Controller
         $url = $request->input('url', '');
 
         // Check if any setting is active
-        $cookies = Cookie::get();
         $settingActive = false;
-        foreach ($cookies as $key => $value) {
-            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'self_advertisements' || $key === 'suggestions') {
-                $settingActive = true;
-            }
+        if (sizeof($settings->user_settings) > 0 || sizeof($searchengines->user_settings) > 0) {
+            $settingActive = true;
         }
 
         # Reading cookies for black list entries
         $blacklist = app(SearchSettings::class)->blacklist;
 
         # Generating link with set cookies
-        $cookieLink = route('loadSettings', $cookies);
+        $cookieLink = route('loadSettings', array_merge($settings->user_settings, $searchengines->user_settings));
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))

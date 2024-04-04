@@ -49,8 +49,8 @@ class ExternalImagesearch
             Log::debug($e->__toString());
         }
 
-        if (empty($external_provider) && Cookie::has("bilder_setting_external")) {
-            $setting_cookie = Cookie::get("bilder_setting_external");
+        if (empty($external_provider)) {
+            $setting_cookie = app(\App\SearchSettings::class)->external_image_search;
             if (in_array($setting_cookie, ["google", "bing"])) {
                 $external_provider = $setting_cookie;
             }

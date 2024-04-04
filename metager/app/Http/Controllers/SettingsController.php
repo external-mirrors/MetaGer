@@ -17,7 +17,8 @@ class SettingsController extends Controller
     public function index(Request $request)
     {
         $settings = app(SearchSettings::class);
-        $sumas = app(Searchengines::class)->getSearchEnginesForFokus();
+        $searchengines = app(Searchengines::class);
+        $sumas = $searchengines->getSearchEnginesForFokus();
         $fokus = $settings->fokus;
         $fokusName = trans('index.foki.' . $fokus);
 
@@ -30,7 +31,6 @@ class SettingsController extends Controller
 
         $filteredSumas = false;
         foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
-            $values = $filter->values;
             foreach ($sumas as $name => $suma) {
                 if ($suma->configuration->disabled && in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
                     $filteredSumas = true;
@@ -42,29 +42,16 @@ class SettingsController extends Controller
         $url = $request->input('url', '');
 
         // Check if any setting is active
-        $cookies = Cookie::get();
         $settingActive = false;
-        foreach ($cookies as $key => $value) {
-            if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0 || strpos($key, $fokus . '_blpage') === 0 || $key === 'dark_mode' || $key === 'new_tab' || $key === 'zitate' || $key === 'self_advertisements' || $key === 'suggestions') {
-                $settingActive = true;
-            }
+        if (sizeof($settings->user_settings) > 0 || sizeof($searchengines->user_settings) > 0) {
+            $settingActive = true;
         }
 
         # Reading cookies for black list entries
-        $blacklist = [];
-        foreach ($cookies as $key => $value) {
-            if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
-                $blacklist[] = $value;
-            } elseif (preg_match('/_blpage$/', $key) === 1 && stripos($key, $fokus) !== false) {
-                $blacklist = array_merge($blacklist, explode(",", $value));
-            }
-        }
-
-        $blacklist = array_unique($blacklist);
-        sort($blacklist);
+        $blacklist = app(SearchSettings::class)->blacklist;
 
         # Generating link with set cookies
-        $cookieLink = route('loadSettings', $cookies);
+        $cookieLink = route('loadSettings', array_merge($settings->user_settings, $searchengines->user_settings));
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -88,7 +75,7 @@ class SettingsController extends Controller
         $langFile = MetaGer::getLanguageFile();
         $langFile = json_decode(file_get_contents($langFile));
 
-        if (empty ($langFile->foki->{$fokus})) {
+        if (empty($langFile->foki->{$fokus})) {
             // Fokus does not exist in this suma file
             return [];
         }
@@ -100,8 +87,8 @@ class SettingsController extends Controller
         $lang = Localization::getLanguage();
         foreach ($sumasFoki as $suma) {
             if (
-                (!empty ($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
-                (!empty ($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"}) ||
+                (!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
+                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"}) ||
                     ## Lang support is not defined
                 (!\property_exists($langFile->sumas->{$suma}, "lang") || !\property_exists($langFile->sumas->{$suma}->lang, "languages") || !\property_exists($langFile->sumas->{$suma}->lang, "regions")) ||
                     ## Current Locale/Lang is not supported by this engine
@@ -122,7 +109,7 @@ class SettingsController extends Controller
             $values = $filter->values;
             $cookie = Cookie::get($fokus . "_setting_" . $filter->{"get-parameter"});
             foreach ($sumas as $suma => $sumaInfo) {
-                if ($cookie !== null && (empty ($filter->sumas->{$suma}) || (!empty ($filter->sumas->{$suma}) && empty ($filter->sumas->{$suma}->values->$cookie)))) {
+                if ($cookie !== null && (empty($filter->sumas->{$suma}) || (!empty($filter->sumas->{$suma}) && empty($filter->sumas->{$suma}->values->$cookie)))) {
                     $sumas[$suma]["filtered"] = true;
                 }
             }
@@ -135,7 +122,7 @@ class SettingsController extends Controller
         $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty ($sumaName)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
@@ -165,7 +152,7 @@ class SettingsController extends Controller
         $sumaName = $request->input('suma', '');
         $url = $request->input('url', '');
 
-        if (empty ($sumaName)) {
+        if (empty($sumaName)) {
             abort(404);
         }
 
@@ -193,7 +180,7 @@ class SettingsController extends Controller
     {
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
-        if (empty ($fokus)) {
+        if (empty($fokus)) {
             abort(404);
         }
 
@@ -206,7 +193,7 @@ class SettingsController extends Controller
         app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated
 
         foreach ($newFilters as $key => $value) {
-            if (!empty ($value)) {
+            if (!empty($value)) {
                 // Check if the new value is the default value for this filter
                 foreach ($settings->parameterFilter as $name => $filter) {
                     if ($filter->{"get-parameter"} === $key && $filter->{"default-value"} === $value) {
@@ -214,14 +201,14 @@ class SettingsController extends Controller
                     }
                 }
             }
-            if (empty ($value)) {
+            if (empty($value)) {
                 $path = \Request::path();
                 $cookiePath = "/";
                 Cookie::queue(Cookie::forget($fokus . "_setting_" . $key, "/"));
             } else {
                 # Check if this filter and its value exists:
                 foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
-                    if ($key === $filter->{"get-parameter"} && !empty ($filter->values->$value)) {
+                    if ($key === $filter->{"get-parameter"} && !empty($filter->values->$value)) {
                         $path = \Request::path();
                         $cookiePath = "/";
                         $secure = app()->environment("local") ? false : true;
@@ -253,7 +240,7 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
 
         $external_setting = $request->input('bilder_setting_external', '');
-        if (!empty ($external_setting) && in_array($external_setting, ["google", "bing", "metager"])) {
+        if (!empty($external_setting) && in_array($external_setting, ["google", "bing", "metager"])) {
             if ($external_setting === "metager") {
                 Cookie::queue(Cookie::forget("bilder_setting_external", "/"));
             } else {
@@ -278,7 +265,7 @@ class SettingsController extends Controller
         // Currently only the setting for quotes is supported
 
         $suggestions = $request->input('sg', '');
-        if (!empty ($suggestions)) {
+        if (!empty($suggestions)) {
             if ($suggestions === "off") {
                 Cookie::queue(Cookie::forever('suggestions', 'off', '/', null, $secure, false));
             } elseif ($suggestions === "on") {
@@ -287,7 +274,7 @@ class SettingsController extends Controller
         }
 
         $self_advertisements = $request->input('self_advertisements', '');
-        if (!empty ($self_advertisements)) {
+        if (!empty($self_advertisements)) {
             if ($self_advertisements === "off") {
                 Cookie::queue(Cookie::forever('self_advertisements', 'off', '/', null, $secure, false));
             } elseif ($self_advertisements === "on") {
@@ -296,7 +283,7 @@ class SettingsController extends Controller
         }
 
         $quotes = $request->input('zitate', '');
-        if (!empty ($quotes)) {
+        if (!empty($quotes)) {
             if ($quotes === "off") {
                 Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, false));
             } elseif ($quotes === "on") {
@@ -305,7 +292,7 @@ class SettingsController extends Controller
         }
 
         $darkmode = $request->input('dm');
-        if (!empty ($darkmode)) {
+        if (!empty($darkmode)) {
             if ($darkmode === "off") {
                 Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, false));
             } elseif ($darkmode === "on") {
@@ -316,7 +303,7 @@ class SettingsController extends Controller
         }
 
         $newTab = $request->input('nt');
-        if (!empty ($newTab)) {
+        if (!empty($newTab)) {
             if ($newTab === "off") {
                 Cookie::queue(Cookie::forget('new_tab', '/'));
             } elseif ($newTab === "on") {
@@ -337,7 +324,7 @@ class SettingsController extends Controller
     {
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
-        if (empty ($fokus)) {
+        if (empty($fokus)) {
             abort(404);
         }
 
@@ -443,21 +430,19 @@ class SettingsController extends Controller
         $valid_blacklist_entries = [];
 
         foreach ($blacklist as $blacklist_entry) {
-            $regexProtocol = '#^([a-z]{0,5}://)?(www.)?#';
-            $blacklist_entry = preg_filter($regexProtocol, '', $blacklist_entry);
-
-            # Allow Only Domains without path
-            if (stripos($blacklist_entry, '/') !== false) {
-                $blacklist_entry = substr($blacklist_entry, 0, stripos($blacklist_entry, '/'));
+            if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
+                $blacklist_entry = "https://" . $blacklist_entry;
             }
+            // Only use hostname from url
+            $blacklist_entry = parse_url($blacklist_entry, PHP_URL_HOST);
+            if ($blacklist_entry === null || $blacklist_entry === false)
+                continue;
+            $blacklist_entry = substr($blacklist_entry, 0, 255);
 
-            #fixme: this doesn't match all valid URLs
-            $regexUrl = '#^(\*\.)?[a-z0-9-]+(\.[a-z0-9]+)?(\.[a-z0-9]{2,})$#';
-
-            if (preg_match($regexUrl, $blacklist_entry) === 1) {
-                $valid_blacklist_entries[] = $blacklist_entry;
-            }
+            $valid_blacklist_entries[] = $blacklist_entry;
         }
+        $valid_blacklist_entries = array_unique($valid_blacklist_entries);
+        sort($valid_blacklist_entries);
 
         # Check if any setting is active
         $cookies = Cookie::get();

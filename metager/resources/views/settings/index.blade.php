@@ -38,7 +38,7 @@
                 </div>
             @endif
         </div>
-        @if ($fokus !== 'bilder' || Cookie::get('bilder_setting_external', 'metager') === 'metager')
+        @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')
             <div class="card" id="engines">
                 <h1>@lang('settings.header.2')</h1>
                 <p>@lang('settings.text.2')</p>
@@ -129,7 +129,7 @@
                 @endif
             </div>
         @endif
-        @if ($fokus !== 'bilder' || Cookie::get('bilder_setting_external', 'metager') === 'metager')
+        @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')
             <div class="card" id="filter">
                 <h1>@lang('settings.header.3')</h1>
                 <p>@lang('settings.text.3')</p>
@@ -187,9 +187,9 @@
                     <input type="hidden" name="focus" value="{{ $fokus }}">
                     <input type="hidden" name="url" value="{{ $url }}">
                     <select name="bilder_setting_external" id="bilder_setting_external" class="form-control">
-                        <option value="metager" @if (Cookie::get('bilder_setting_external', 'metager') === 'metager') selected @endif>MetaGer</option>
-                        <option value="google" @if (Cookie::get('bilder_setting_external', 'metager') === 'google') selected @endif>Google</option>
-                        <option value="bing" @if (Cookie::get('bilder_setting_external', 'metager') === 'bing') selected @endif>Bing</option>
+                        <option value="metager" @if (app(App\SearchSettings::class)->external_image_search === 'metager') selected @endif>MetaGer</option>
+                        <option value="google" @if (app(App\SearchSettings::class)->external_image_search === 'google') selected @endif>Google</option>
+                        <option value="bing" @if (app(App\SearchSettings::class)->external_image_search === 'bing') selected @endif>Bing</option>
                     </select>
                     <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
                 </form>
@@ -205,9 +205,9 @@
                     <div class="form-group">
                         <label for="sg">@lang('settings.suggestions.label')</label>
                         <select name="sg" id="sg" class="form-control">
-                            <option value="off" {{ Cookie::get('suggestions') === 'off' ? 'disabled selected' : '' }}>
+                            <option value="off" {{ app(App\SearchSettings::class)->suggestions === 'off' ? 'disabled selected' : '' }}>
                                 @lang('settings.suggestions.off')</option>
-                            <option value="on" {{ !Cookie::has('suggestions') ? 'disabled selected' : '' }}>
+                            <option value="on" {{ app(App\SearchSettings::class)->suggestions !== 'off' ? 'disabled selected' : '' }}>
                                 @lang('settings.suggestions.on')</option>
                         </select>
                     </div>
@@ -216,29 +216,29 @@
                     <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
                     <select name="self_advertisements" id="self_advertisements" class="form-control">
                         <option value="off"
-                            {{ Cookie::get('self_advertisements') === 'off' ? 'disabled selected' : '' }}>
+                            {{ app(App\SearchSettings::class)->self_advertisements === false ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.off')</option>
-                        <option value="on" {{ !Cookie::has('self_advertisements') ? 'disabled selected' : '' }}>
+                        <option value="on" {{ app(App\SearchSettings::class)->self_advertisements === true ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.on')</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="dm">@lang('settings.darkmode')</label>
                     <select name="dm" id="dm" class="form-control">
-                        <option value="system" {{ !Cookie::has('dark_mode') ? 'disabled selected' : '' }}>
+                        <option value="system" {{ app(App\SearchSettings::class)->theme === "system" ? 'disabled selected' : '' }}>
                             @lang('settings.system')</option>
-                        <option value="off" {{ Cookie::get('dark_mode') === '1' ? 'disabled selected' : '' }}>
+                        <option value="off" {{ app(App\SearchSettings::class)->theme === "light" ? 'disabled selected' : '' }}>
                             @lang('settings.light')</option>
-                        <option value="on" {{ Cookie::get('dark_mode') === '2' ? 'disabled selected' : '' }}>
+                        <option value="on" {{ app(App\SearchSettings::class)->theme === "dark" ? 'disabled selected' : '' }}>
                             @lang('settings.dark')</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="nt">@lang('settings.newTab')</label>
                     <select name="nt" id="nt" class="form-control">
-                        <option value="off" {{ !Cookie::has('new_tab') ? 'disabled selected' : '' }}>@lang('settings.off')
+                        <option value="off" {{ app(App\SearchSettings::class)->newtab === false ? 'disabled selected' : '' }}>@lang('settings.off')
                         </option>
-                        <option value="on" {{ Cookie::get('new_tab') === 'on' ? 'disabled selected' : '' }}>
+                        <option value="on" {{ app(App\SearchSettings::class)->newtab === true ? 'disabled selected' : '' }}>
                             @lang('settings.on')</option>
                     </select>
                 </div>
@@ -246,9 +246,9 @@
                     <div class="form-group">
                         <label for="zitate">Zitate</label>
                         <select name="zitate" id="zitate" class="form-control">
-                            <option value="on" @if (Cookie::get('zitate') === null) disabled selected @endif>Anzeigen
+                            <option value="on" @if (app(App\SearchSettings::class)->zitate === true) disabled selected @endif>Anzeigen
                             </option>
-                            <option value="off" {{ Cookie::get('zitate') === 'off' ? 'disabled selected' : '' }}>Nicht
+                            <option value="off" {{ app(App\SearchSettings::class)->zitate === false ? 'disabled selected' : '' }}>Nicht
                                 Anzeigen</option>
                         </select>
                     </div>

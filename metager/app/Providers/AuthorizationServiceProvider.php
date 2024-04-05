@@ -35,6 +35,9 @@ class AuthorizationServiceProvider extends ServiceProvider
             if (Cookie::has('key')) {
                 $key = Cookie::get('key');
             }
+            if (Request::hasHeader("key")) {
+                $key = Request::header("key");
+            }
             if (Request::filled('key')) {
                 $key = Request::input('key');
             }

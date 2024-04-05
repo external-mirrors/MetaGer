@@ -394,19 +394,10 @@ class SettingsController extends Controller
 
     public function removeAllSettings(Request $request)
     {
-        foreach (Cookie::get() as $key => $value) {
-            if ($key === 'dark_mode') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            } elseif ($key === 'new_tab') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            } elseif ($key === 'key') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            } elseif ($key === 'zitate') {
-                Cookie::queue(Cookie::forget($key, "/"));
-            } else {
-                Cookie::queue(Cookie::forget($key, "/"));
-            }
+        foreach (app(SearchSettings::class)->user_settings as $key => $value) {
+            Cookie::queue(Cookie::forget($key, "/"));
         }
+
         $redirect_url = $request->input('url', 'https://metager.de');
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);

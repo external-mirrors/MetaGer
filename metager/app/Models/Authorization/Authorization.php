@@ -6,6 +6,7 @@ use App\Models\Configuration\Searchengines;
 use App\SearchSettings;
 use Cookie;
 use LaravelLocalization;
+use Request;
 
 /**
  * Summary of Authorization
@@ -77,7 +78,7 @@ abstract class Authorization
      */
     public function getAdfreeLink()
     {
-        if (!empty ($this->getToken()) && is_string($this->getToken())) {
+        if (!empty($this->getToken()) && is_string($this->getToken())) {
             return LaravelLocalization::getLocalizedUrl(null, "/keys/key/" . urlencode($this->getToken()));
         } else {
             return LaravelLocalization::getLocalizedUrl(null, "/keys");
@@ -102,6 +103,19 @@ abstract class Authorization
 
         if (Cookie::has("tokenauthorization")) {
             switch (Cookie::get("tokenauthorization")) {
+                case "full":
+                    $keyIcon = "/img/svg-icons/key-full.svg";
+                    break;
+                case "low":
+                    $keyIcon = "/img/svg-icons/key-low.svg";
+                    break;
+                case "empty":
+                    $keyIcon = "/img/key-empty.svg";
+                    break;
+            }
+        }
+        if (Request::hasHeader("tokenauthorization")) {
+            switch (Request::header("tokenauthorization")) {
                 case "full":
                     $keyIcon = "/img/svg-icons/key-full.svg";
                     break;

@@ -34,6 +34,7 @@ class SearchSettings
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
+    private $ignore_user_settings = ["js_available"];
     public function __construct()
     {
         $this->sumasJson = json_decode(file_get_contents(config_path("sumas.json")));
@@ -117,6 +118,8 @@ class SearchSettings
         }
         $this->blacklist = array_unique($this->blacklist);
         sort($this->blacklist);
+
+        $this->user_settings = array_diff($this->user_settings, $this->ignore_user_settings);
     }
 
     public function loadQueryFilter()

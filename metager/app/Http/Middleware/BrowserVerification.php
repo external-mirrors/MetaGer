@@ -87,7 +87,7 @@ class BrowserVerification
                 $params["mgv"] = $mgv;
                 $url = route("resultpage", $params);
 
-                if (\Cookie::has("tokenauthorization")) {
+                if (\Cookie::has("tokenauthorization") || \Request::hasHeader("tokenauthorization")) {
                     // When Token Authorization is used we will tell the App/Extension the
                     // cost of the upcoming search by setting a Cookie
                     // We do not know if there are anough tokens
@@ -95,7 +95,7 @@ class BrowserVerification
                     app(Authorization::class)->availableTokens = 100;
                     app(Searchengines::class);  // Is needed so we know the cost of a search
                     $cost = app(Authorization::class)->cost;
-                    if (\Cookie::get("tokensource", "app") === "webextension") {
+                    if (\Request::header("tokensource", "app") === "webextension") {
                         return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer", "cost" => $cost, "resultpage" => $url]);
                     }
                     \Cookie::queue("cost", $cost, 0);

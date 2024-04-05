@@ -99,6 +99,7 @@ ingress:
     nginx.ingress.kubernetes.io/server-snippet: |
       client_header_buffer_size 256k;
       large_client_header_buffers 32 256k;
+      underscores_in_headers on;
   hosts: []
   tls: []
   #  - secretName: chart-example-tls

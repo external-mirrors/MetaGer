@@ -45,14 +45,14 @@
 	@if(isset($page) && $page === 'startpage')
 	<meta http-equiv="onion-location" content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/{{LaravelLocalization::getCurrentLocale()}}" />
 	@endif
-	@if(Cookie::get('dark_mode') === "2")
+	@if(app(App\SearchSettings::class)->theme === "dark")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@if(!empty($darkcss) && is_array($darkcss))
 	@foreach($darkcss as $cssFile)
 	<link rel="stylesheet" type="text/css" href="{{ $cssFile }}" />
 	@endforeach
 	@endif
-	@elseif(Cookie::get('dark_mode') === "1")
+	@elseif(app(App\SearchSettings::class)->theme === "light")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
 	@else
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />

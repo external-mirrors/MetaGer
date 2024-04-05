@@ -11,11 +11,11 @@
 	@endif
 	@endforeach
     <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-	@if(Cookie::get('dark_mode') === "2")
+	@if(app(App\SearchSettings::class)->theme === "dark")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
-	@elseif(Cookie::get('dark_mode') === "1")
+	@elseif(app(App\SearchSettings::class)->theme === "light")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-	@elseif(Request::input('out', '') !== "results-with-style" )
+	@elseif(Request::input('out', '') !== "results-with-style")
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
 	@endif
     <script src="{{ mix('js/index.js') }}"></script>

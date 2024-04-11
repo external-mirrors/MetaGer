@@ -35,6 +35,16 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
   });
 
+  let sidebarToggle = document.getElementById("sidebarToggle");
+  if (sidebarToggle) {
+    document.querySelectorAll("label[for=sidebarToggle]").forEach(label => {
+      label.addEventListener("click", e => {
+        e.preventDefault();
+        sidebarToggle.checked = !sidebarToggle.checked;
+      });
+    });
+  }
+
   backButtons();
 });
 
@@ -55,7 +65,7 @@ function backButtons() {
     button.addEventListener("click", e => {
       let href = button.href;
       // Use the defined URL on the button if there is one
-      if(href && href.trim().length !== 0 && href.trim() != "#"){
+      if (href && href.trim().length !== 0 && href.trim() != "#") {
         return;
       }
       e.preventDefault();

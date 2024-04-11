@@ -51,7 +51,11 @@ class SettingsController extends Controller
         $blacklist = app(SearchSettings::class)->blacklist;
 
         # Generating link with set cookies
-        $cookieLink = route('loadSettings', array_merge($settings->user_settings, $searchengines->user_settings));
+        $settings_params = array_merge($settings->user_settings, $searchengines->user_settings);
+        if (is_string($authorization->getToken()) && !empty($authorization->getToken())) {
+            $settings_params["key"] = $authorization->getToken();
+        }
+        $cookieLink = route('loadSettings', $settings_params);
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))

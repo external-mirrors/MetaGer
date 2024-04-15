@@ -4,7 +4,7 @@ return [
         '3' => "Contact :\r
 Tél : +4951134000070\r
 Courriel : <a href=\"/en/kontakt\">Formulaire de contact crypté</a>",
-        '4' => 'Conseil d\'administration : Dominik Hebeler, Carsten Riel, Manuela Branz',
+        '4' => 'Conseil d\'administration : Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Commissaire à la protection de la jeunesse : Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
         '8' => '"SUMA-EV - Verein für freien Wissenszugang" est une association caritative, inscrite au registre des associations de l\'Amtsgericht Hannover sous le numéro VR200033. Numéro d\'identification de la taxe sur les ventes : DE 300 464 091. La "Gottfried Wilhelm Leibniz Universität Hannover" est un organisme statutaire.',
         '9' => 'Note sur la responsabilité :',

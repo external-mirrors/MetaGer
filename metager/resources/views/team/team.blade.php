@@ -8,16 +8,16 @@
 	<div class="card">
 		<ul class="dotlist">
 			<li>
-				<p>Hebeler, Dominik - {!! trans('team.role.0') !!}
+				<p>Hebeler, Dominik - {!! trans('team.role.1.0') !!} & {!! trans('team.role.5') !!}
+			</li>
+			<li>
+				<p>Höfer, Phil - {!! trans('team.role.1.0') !!} & {!! trans('team.role.5') !!}
 			</li>
 			<li>
 				<p>Riel, Carsten - {!! trans('team.role.1.0') !!} & {!! trans('team.role.7') !!}
 			</li>
 			<li>
 				<p>Branz, Manuela - {!! trans('team.role.1.1') !!} & {!! trans('team.role.3') !!}
-			</li>
-			<li>
-				<p>Höfer, Phil - {!! trans('team.role.5') !!}
 			</li>
 			<li>
 				<p>Höfer, Kim - {!! trans('team.role.6') !!}

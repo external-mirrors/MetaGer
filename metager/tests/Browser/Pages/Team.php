@@ -33,7 +33,7 @@ class Team extends Page
                 continue;
             }
             $browser->visit($url)
-                ->waitForText(trans("team.role.0", [], $lang))
+                ->waitForText(trans("team.role.1.0", [], $lang))
                 ->assertTitle(trans("titles.team", [], $lang));
         }
     }

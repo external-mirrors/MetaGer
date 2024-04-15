@@ -11,7 +11,7 @@ Deutschland/Tyskland",
         '3' => "Kontakt:\r
 Tfn: +4951134000070\r
 E-post: <a href=\"/en/kontakt\">Krypterat kontaktformulär</a>",
-        '4' => 'Styrelsen: Dominik Hebeler, Carsten Riel, Manuela Branz',
+        '4' => 'Styrelsen: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Kommissionär för ungdomsskydd: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
         '9' => 'Ansvarsförbindelse:',
     ],

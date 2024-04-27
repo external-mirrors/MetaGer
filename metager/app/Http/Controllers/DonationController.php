@@ -422,13 +422,14 @@ class DonationController extends Controller
             abort(400);
         }
 
-        $ratelimit_key = 'create-order:' . $request->ip();
+        if ($funding_source === "card") {
+            $ratelimit_key = 'create-order-cc';
 
-        if (RateLimiter::tooManyAttempts($ratelimit_key, 2)) {
-            abort(400);
+            if (RateLimiter::tooManyAttempts($ratelimit_key, 2)) {
+                abort(400);
+            }
+            RateLimiter::hit($ratelimit_key, 60);
         }
-        RateLimiter::hit($ratelimit_key, 60);
-
 
         $amount = round(floatval($amount), 2);
 
@@ -515,7 +516,7 @@ class DonationController extends Controller
 
         $amount = round(floatval($amount), 2);
         $orderId = $request->input("orderID", "");
-        if (empty ($orderId)) {
+        if (empty($orderId)) {
             abort(400);
         }
         $base_url = config("metager.metager.paypal.base_url");

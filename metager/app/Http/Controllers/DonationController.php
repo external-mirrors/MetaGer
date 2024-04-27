@@ -425,10 +425,12 @@ class DonationController extends Controller
         if ($funding_source === "card") {
             $ratelimit_key = 'create-order-cc';
 
-            if (RateLimiter::tooManyAttempts($ratelimit_key, 2)) {
+            RateLimiter::hit($ratelimit_key, 60);
+            RateLimiter::hit($ratelimit_key . "-user-" . $request->ip(), 86400);
+
+            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 10)) {
                 abort(400);
             }
-            RateLimiter::hit($ratelimit_key, 60);
         }
 
         $amount = round(floatval($amount), 2);

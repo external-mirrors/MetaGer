@@ -1,6 +1,6 @@
 @extends('layouts.subPages')
 
-@section('title', $title )
+@section('title', $title)
 
 @section('navbarFocus.donate', 'class="dropdown active"')
 
@@ -30,12 +30,14 @@
                     <div class="image"><img src="/img/funding_source/sepa.svg" alt="SEPA"></div>
                 </a>
             </li>
+            @if($donation["amount"] >= 5)
             <li class="paypal">
                 <a href="{{ LaravelLocalization::getLocalizedUrl(null, '/spende/' . $donation['amount'] . '/' . $donation['interval'] . '/paypal/card') }}">
                     <div class="image"><img class="invert-dark" src="/img/funding_source/card.svg" alt="Credit-/Debitcard"></div>
                     <div class="text">@lang('spende.payment-method.methods.card')</div>
                 </a>
             </li>
+            @endif
         </ul>
     </div>
 </div>

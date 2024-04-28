@@ -286,7 +286,7 @@ class DonationController extends Controller
     function paypalPayment(Request $request, $amount, $interval, $funding_source)
     {
         $validator = Validator::make(["amount" => $amount, "interval" => $interval], [
-            'amount' => 'required|numeric|min:1',
+            'amount' => ['required', 'numeric', 'min:1', Rule::when($funding_source === "card", 'min:5')],
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
         if ($validator->fails()) {

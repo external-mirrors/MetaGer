@@ -37,6 +37,15 @@ class SearchSettings
     private $ignore_user_settings = ["js_available"];
     public function __construct()
     {
+
+    }
+
+    /**
+     * Initializes Settings that depend on Localization which
+     * needs to be deferred as Localization is done in another ServiceProvider
+     */
+    public function boot()
+    {
         $this->sumasJson = json_decode(file_get_contents(config_path("sumas.json")));
         if ($this->sumasJson === null) {
             throw new \Exception("Cannot load sumas.json file");

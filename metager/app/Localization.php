@@ -3,8 +3,6 @@
 namespace App;
 
 use App;
-use Config;
-use Cookie;
 use LaravelLocalization;
 
 /**

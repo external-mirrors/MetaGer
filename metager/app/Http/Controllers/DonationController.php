@@ -8,7 +8,7 @@ use App\Localization;
 use App\PrometheusExporter;
 use App\Rules\IBANValidator;
 use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\ErrorCorrectionLevel;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use LaravelLocalization;
@@ -35,7 +35,7 @@ class DonationController extends Controller
             ->setRemittanceText(__('spende.execute-payment.banktransfer.qr-remittance', ["date" => now()->format("d.m.Y")]));
         $qr_uri = Builder::create()
             ->data($payment_data)
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->build()
             ->getDataUri();
 
@@ -60,7 +60,7 @@ class DonationController extends Controller
             ->setAmount(10);
         $qr = Builder::create()
             ->data($payment_data)
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->build();
 
         return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);
@@ -163,7 +163,7 @@ class DonationController extends Controller
             ->setAmount($amount);
         $qr_uri = Builder::create()
             ->data($payment_data)
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->build()
             ->getDataUri();
         $donation["qr_uri"] = $qr_uri;
@@ -277,7 +277,7 @@ class DonationController extends Controller
             ->setAmount($amount);
         $qr = Builder::create()
             ->data($payment_data)
-            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
             ->build();
 
         return response($qr->getString(), 200, ["Content-Type" => $qr->getMimeType(), "Content-Disposition" => "attachment; filename=suma_donation.png"]);

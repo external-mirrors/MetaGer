@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Inspiring;
+use Illuminate\Support\Facades\Schedule;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +13,17 @@ use Illuminate\Foundation\Inspiring;
 |
 */
 
-Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->describe('Display an inspiring quote');
+Schedule::command("heartbeat")->everyMinute();
+Schedule::command("requests:gather")->everyFifteenMinutes();
+Schedule::command("requests:useragents")->everyFiveMinutes();
+Schedule::command("logs:gather")->everyMinute();
+Schedule::command("logs:truncate")->daily()->onOneServer();
+Schedule::command("spam:load")->everyMinute();
+Schedule::command("load:affiliate-blacklist")->everyMinute();
+Schedule::command("affilliates:store")->everyMinute()->onOneServer();
+Schedule::call(function () {
+    DB::table('monthlyrequests')->truncate();
+    DB::disconnect('mysql');
+})->monthlyOn(1, '00:00');
+Schedule::command('queue:work --queue=donations --stop-when-empty');
+Schedule::command('queue:work --queue=general --stop-when-empty');

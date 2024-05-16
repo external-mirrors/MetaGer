@@ -43,7 +43,7 @@ class AdminInterface extends Controller
                 ->with('title', 'Suchanfragen - MetaGer')
                 ->with('start', $start)
                 ->with('end', $end)
-                ->with("days", $start->diffInDays($end))
+                ->with("days", $start->diffInDays($end, true))
                 ->with('interface', $interface)
                 ->with('css', [mix('/css/count/style.css')])
                 ->with('darkcss', [mix('/css/count/dark.css')])

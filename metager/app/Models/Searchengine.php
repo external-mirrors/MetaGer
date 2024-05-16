@@ -60,22 +60,22 @@ abstract class Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         $this->configuration = $configuration;
-        $this->name          = $name;
-        $this->ratelimitKey  = "searchengine.ratelimit." . now()->format("Y-m") . "." . $this->name;
+        $this->name = $name;
+        $this->ratelimitKey = "searchengine.ratelimit." . now()->format("Y-m") . "." . $this->name;
 
 
         $metager = app(MetaGer::class);
         // Thanks to our Middleware this is a almost completely random useragent
         // which matches the correct device type
         $this->useragent = $metager->getUserAgent();
-        $this->ip        = $metager->getIp();
+        $this->ip = $metager->getIp();
         $this->startTime = microtime(true);
 
         $this->canCache = $metager->canCache();
 
         // Check ratelimit status
         if ($this->isRateLimited() && !app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $this->configuration->disabled          = true;
+            $this->configuration->disabled = true;
             $this->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
         }
     }
@@ -87,15 +87,15 @@ abstract class Searchengine
     public function applySettings()
     {
         $settings = app(SearchSettings::class);
-        $query    = $settings->q;
-        $filters  = $settings->sumasJson->filter;
+        $query = $settings->q;
+        $filters = $settings->sumasJson->filter;
         foreach (app(SearchSettings::class)->queryFilter as $queryFilter => $filter) {
             $filterOptions = $filters->{"query-filter"}->$queryFilter;
             if (!$filterOptions->sumas->{$this->name}) {
                 continue;
             }
             $filterOptionsEngine = $filterOptions->sumas->{$this->name};
-            $query_part          = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
+            $query_part = $filterOptionsEngine->prefix . $filter . $filterOptionsEngine->suffix;
             $query .= " " . $query_part;
         }
         $this->configuration->applyQuery($query);
@@ -107,10 +107,10 @@ abstract class Searchengine
             if (empty($inputParameter) || empty($filter->sumas->{$this->name}->values->{$inputParameter})) {
                 continue;
             }
-            $engineParameterKey   = $filter->sumas->{$this->name}->{"get-parameter"};
+            $engineParameterKey = $filter->sumas->{$this->name}->{"get-parameter"};
             $engineParameterValue = $filter->sumas->{$this->name}->values->{$inputParameter};
             if (stripos($engineParameterValue, "dyn-") === 0) {
-                $functionname         = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
+                $functionname = substr($engineParameterValue, stripos($engineParameterValue, "dyn-") + 4);
                 $engineParameterValue = \App\DynamicEngineParameters::$functionname();
             }
             $this->configuration->getParameter->{$engineParameterKey} = $engineParameterValue;
@@ -147,14 +147,14 @@ abstract class Searchengine
             $url .= $this->generateGetString();
 
             $mission = [
-                "resulthash"    => $this->getHash(),
-                "url"           => $url,
-                "useragent"     => $this->useragent,
-                "username"      => $this->configuration->httpAuthUsername,
-                "password"      => $this->configuration->httpAuthPassword,
-                "headers"       => (array) $this->configuration->requestHeader,
+                "resulthash" => $this->getHash(),
+                "url" => $url,
+                "useragent" => $this->useragent,
+                "username" => $this->configuration->httpAuthUsername,
+                "password" => $this->configuration->httpAuthPassword,
+                "headers" => (array) $this->configuration->requestHeader,
                 "cacheDuration" => $this->configuration->cacheDuration,
-                "name"          => $this->name,
+                "name" => $this->name,
             ];
 
             $mission = json_encode($mission);
@@ -297,11 +297,11 @@ abstract class Searchengine
     {
         if ($this->configuration->monthlyRequests !== null) {
             $request_limit_this_month = $this->configuration->monthlyRequests;
-            $seconds_this_month       = date('t') * 86400;
+            $seconds_this_month = date('t') * 86400;
 
-            $seconds_this_month_until_now = (new Carbon("first day of this month"))->hour(0)->minute(0)->second(0)->microsecond(0)->diffInSeconds(now());
-            $allowed_requests_until_now   = round(($seconds_this_month_until_now / $seconds_this_month) * $request_limit_this_month);
-            $requests_this_month          = intval(Cache::get($this->ratelimitKey, $allowed_requests_until_now));
+            $seconds_this_month_until_now = (new Carbon("first day of this month"))->hour(0)->minute(0)->second(0)->microsecond(0)->diffInSeconds(now(), true);
+            $allowed_requests_until_now = round(($seconds_this_month_until_now / $seconds_this_month) * $request_limit_this_month);
+            $requests_this_month = intval(Cache::get($this->ratelimitKey, $allowed_requests_until_now));
 
             // Initialize if not set yet
             Cache::add($this->ratelimitKey, $requests_this_month, (new Carbon("first day of next month"))->hour(0)->minute(0)->second(0)->microsecond(0));

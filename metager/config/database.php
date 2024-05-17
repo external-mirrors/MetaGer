@@ -133,7 +133,7 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'predis'),
+        'client' => env('REDIS_CLIENT', 'phpredis'),
         'cluster' => false,
         'default' => [
             'read_write_timeout' => -1,

@@ -18,7 +18,6 @@
         "mcamara/laravel-localization": "2.0.1",
         "mews/captcha": "^3.3.3",
         "mlocati/ip-lib": "^1.18",
-        "predis/predis": "^2.2",
         "promphp/prometheus_client_php": "^2.10",
         "smhg/sepa-qr-data": "^2.0",
         "vizir/laravel-keycloak-web-guard": "^4.0"

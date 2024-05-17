@@ -1,12 +1,21 @@
 <?php
 
+use App\Http\Controllers\AdgoalController;
+use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\LangSelector;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\MetaGerSearch;
+use App\Http\Controllers\Pictureproxy;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
+use App\Http\Controllers\SitesearchController;
+use App\Http\Controllers\StartpageController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TTSController;
+use App\Http\Controllers\ZitatController;
 use App\Localization;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
@@ -39,7 +48,7 @@ Route::get("robots.txt", function (Request $request) {
 
 /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
-Route::get('/', 'StartpageController@loadStartPage')->name("startpage");
+Route::get('/', [StartpageController::class, "loadStartPage"])->name("startpage");
 
 Route::get('asso', function () {
     return view('assoziator.asso')
@@ -51,7 +60,7 @@ Route::get('asso', function () {
 
 Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
-Route::get('asso/meta.ger3', 'Assoziator@asso')->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
+Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
 
 Route::get('impressum', function () {
     return view('impressum')
@@ -94,7 +103,7 @@ Route::get('kontakt/{url?}', function ($url = "") {
         ->with("css", [mix("css/contact.css")]);
 })->name("contact");
 
-Route::post('kontakt', 'MailController@contactMail');
+Route::post('kontakt', [MailController::class, 'contactMail']);
 Route::get('adblocker', function () {
     return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
 })->name("adblocker");
@@ -276,7 +285,7 @@ Route::get('widget', function () {
         ->with('navbarFocus', 'dienste');
 });
 
-Route::get('sitesearch', 'SitesearchController@loadPage');
+Route::get('sitesearch', [SitesearchController::class, 'loadPage']);
 
 Route::get('websearch', function () {
     $css = file_get_contents(public_path("css/widget/widget-template.css"));
@@ -288,7 +297,7 @@ Route::get('websearch', function () {
         ->with('template_webpage', view('widget.websearch-template', ["css" => $css])->render());
 });
 
-Route::get('zitat-suche', 'ZitatController@zitatSuche');
+Route::get('zitat-suche', [ZitatController::class, 'zitatSuche']);
 
 Route::get('jugendschutz', function () {
     return view('jugendschutz')
@@ -334,18 +343,15 @@ Route::get('settings', function () {
     return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
 });
 
-Route::match(['get', 'post'], 'meta/meta.ger3', 'MetaGerSearch@search')->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
-Route::get('meta/loadMore', 'MetaGerSearch@loadMore');
+Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
 
 
-Route::get('meta/picture', 'Pictureproxy@get')->name("imageproxy");
-Route::get('clickstats', 'LogController@clicklog');
-Route::get('pluginClose', 'LogController@pluginClose');
-Route::get('pluginInstall', 'LogController@pluginInstall');
+Route::get('meta/picture', [Pictureproxy::class, 'get'])->name("imageproxy");
 
-Route::get('tips', 'MetaGerSearch@tips');
-Route::get('/plugins/opensearch.xml', 'StartpageController@loadPlugin');
+Route::get('tips', [MetaGerSearch::class, 'tips']);
+Route::get('/plugins/opensearch.xml', [StartpageController::class, 'loadPlugin']);
 Route::get('owi', function () {
     return redirect('https://metager.de/klassik/en/owi/');
 });
@@ -434,11 +440,11 @@ Route::group(["prefix" => "metrics", "middleware" => "allow-local-only"], functi
 
 
 Route::group(['prefix' => 'partner'], function () {
-    Route::get('r', 'AdgoalController@forward')->name('adgoal-redirect');
+    Route::get('r', [AdgoalController::class, 'forward'])->name('adgoal-redirect');
 });
 
 Route::group(['prefix' => 'health-check'], function () {
-    Route::get('liveness', 'HealthcheckController@liveness');
-    Route::get('liveness-scheduler', 'HealthcheckController@livenessScheduler');
-    Route::get('liveness-worker', 'HealthcheckController@livenessWorker');
+    Route::get('liveness', [HealthcheckController::class, 'liveness']);
+    Route::get('liveness-scheduler', [HealthcheckController::class, 'livenessScheduler']);
+    Route::get('liveness-worker', [HealthcheckController::class, 'livenessWorker']);
 });

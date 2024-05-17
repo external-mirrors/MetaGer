@@ -33,7 +33,9 @@ class SearchSettingsProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->resolving(SearchSettings::class, function (SearchSettings $settings, Application $app) {
+            $settings->boot();
+        });
     }
 
     /**

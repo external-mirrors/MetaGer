@@ -134,7 +134,12 @@ return [
     'redis' => [
 
         'client' => env('REDIS_CLIENT', 'phpredis'),
-        'cluster' => false,
+
+        'options' => [
+            'serializer' => Redis::SERIALIZER_IGBINARY,
+            'compression' => Redis::COMPRESSION_ZSTD,
+        ],
+
         'default' => [
             'read_write_timeout' => -1,
             'host' => env('REDIS_HOST', 'localhost'),
@@ -152,42 +157,17 @@ return [
             'cluster' => false,
         ],
 
-        'sentinel' => [
-            [
-                'host' => env('REDIS_SENTINEL_HOST', 'localhost'),
-                'port' => env('REDIS_SENTINEL_PORT', 26379),
-                'password' => env('REDIS_SENTINEL_PASSWORD', ''),
-            ],
-            'options' => [
-                'service' => env('REDIS_SENTINEL_SERVICE', 'metager'),
-                'replication' => 'sentinel',
-
-                'parameters' => [
-                    'password' => env('REDIS_SENTINEL_PASSWORD', ''),
-                    'database' => 0,
-                ]
-            ]
-        ],
-
         "clusters" => [
             'clustercache' => [
                 [
                     'host' => env('REDIS_CACHE_HOST', 'localhost'),
                     'port' => env('REDIS_CACHE_PORT', 6379),
-                    'password' => env('REDIS_CACHE_PASSWORD', ''),
-
                 ]
             ],
             'options' => [
-                'cluster' => 'redis',
-                'parameters' => [
-                    'database' => 0,
-                    'password' => env('REDIS_CACHE_PASSWORD', null),
-                ]
+                'password' => env('REDIS_CACHE_PASSWORD', null),
             ],
         ]
-
-
     ],
 
 ];

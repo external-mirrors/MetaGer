@@ -1,4 +1,4 @@
-FROM node:20 as development
+FROM node:21.7.3 as development
 
 VOLUME [ "/home/node/.npm", "/home/node/metager" ]
 RUN mkdir -p /home/node/.npm /home/node/metager && \

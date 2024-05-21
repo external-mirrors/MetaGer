@@ -1,4 +1,4 @@
-FROM redis:6
+FROM redis:7.2.4
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint-mg.sh
 

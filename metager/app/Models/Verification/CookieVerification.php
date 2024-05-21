@@ -73,6 +73,6 @@ class CookieVerification extends Verification
             "key" => $key,
             "verification" => \hash_hmac("sha256", $expiration->format(self::EXPIRATION_FORMAT) . $key, config("metager.metager.proxy.password")),
         ];
-        Cookie::queue("hv_key", base64_encode(json_encode($hv_data)), $expiration->diffInMinutes(now()), "/", null, true, true);
+        Cookie::queue("hv_key", base64_encode(json_encode($hv_data)), $expiration->diffInMinutes(now(), true), "/", null, true, true);
     }
 }

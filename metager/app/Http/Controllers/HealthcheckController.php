@@ -25,7 +25,7 @@ class HealthcheckController extends Controller
         }
         $lastSchedule = Carbon::createFromFormat('Y-m-d H:i:s', $lastSchedule);
 
-        if (Carbon::now()->diffInMinutes($lastSchedule) > 1) {
+        if (Carbon::now()->diffInMinutes($lastSchedule, true) > 1) {
             abort(500, "Last heartbeat too long ago");
         } else {
             return response('ok', 200);
@@ -40,7 +40,7 @@ class HealthcheckController extends Controller
         }
         $lastSchedule = Carbon::createFromFormat(\App\Console\Commands\RequestFetcher::HEALTHCHECK_FORMAT, $lastSchedule);
 
-        if (Carbon::now()->diffInMinutes($lastSchedule) > 1) {
+        if (Carbon::now()->diffInMinutes($lastSchedule, true) > 1) {
             abort(500, "Last heartbeat too long ago");
         } else {
             return response('ok', 200);

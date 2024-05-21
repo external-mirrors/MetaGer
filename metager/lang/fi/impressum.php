@@ -13,7 +13,7 @@ Deutschland/Saksa",
         '3' => "Yhteystiedot:\r
 Puh: +4951134000070\r
 EMail: <a href=\"/en/kontakt\">Yhteydenottolomake: Salattu yhteydenottolomake</a>",
-        '4' => 'Hallitus: Dominik Hebeler, Carsten Riel, Manuela Branz.',
+        '4' => 'Hallitus: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz.',
         '6' => 'Nuorisonsuojeluvaltuutettu: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de jugendschutz@metager.de</a>',
         '8' => '"SUMA-EV - Verein für freien Wissenszugang" on yleishyödyllinen yhdistys, joka on rekisteröity Hannoverin Amtsgerichtin yhdistysrekisteriin numerolla VR200033. Liikevaihtoverotunniste: DE 300 464 091. Gottfried Wilhelm Leibniz Universität Hannover on lakisääteinen yhteisö.',
         '9' => 'Vastuu Huomautus:',

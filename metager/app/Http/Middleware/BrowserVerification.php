@@ -132,7 +132,7 @@ class BrowserVerification
             // The css key has to be present in order to continue
             if (!array_key_exists("css", $bvData)) {
                 if (sizeof($bvData["tries"]) < 15) {
-                    $time_since_last_try = now()->diffInMilliseconds($bvData["tries"][sizeof($bvData["tries"]) - 1]);
+                    $time_since_last_try = now()->diffInMilliseconds($bvData["tries"][sizeof($bvData["tries"]) - 1], true);
                     $time_between_requests = sizeof($bvData["tries"]) < 5 ? 100 : 500;
 
                     Cache::lock($mgv . "_lock", 10)->block(5, function () use ($mgv) {
@@ -221,7 +221,7 @@ class BrowserVerification
 
             if ($csp_loaded !== true) {
                 if (\array_key_exists("csp", $bvData) && \array_key_exists("loaded", $bvData["csp"])) {
-                    if (now()->diffInMilliseconds($bvData["csp"]["loaded"]) > $wait_time_ms) {
+                    if (now()->diffInMilliseconds($bvData["csp"]["loaded"], true) > $wait_time_ms) {
                         $csp_loaded = true;
                     } else {
                         $csp_loaded = false;
@@ -249,11 +249,11 @@ class BrowserVerification
             // Calculate Sleep Time
             // Sleeptime gradually increases with the current wait time
             // Min 10ms and max 1s
-            $sleep_time_milliseconds = round(now()->diffInMilliseconds($wait_start) / 10);
+            $sleep_time_milliseconds = round(now()->diffInMilliseconds($wait_start, true) / 10);
             $sleep_time_milliseconds = max(10, $sleep_time_milliseconds);
             $sleep_time_milliseconds = min(1000, $sleep_time_milliseconds);
             usleep($sleep_time_milliseconds * 1000);
-        } while (now()->diffInMilliseconds($wait_start) < $max_wait_time_ms);
+        } while (now()->diffInMilliseconds($wait_start, true) < $max_wait_time_ms);
         return false;
     }
 

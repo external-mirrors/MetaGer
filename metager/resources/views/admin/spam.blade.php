@@ -27,7 +27,7 @@
             @foreach($bans as $ban)
             <tr>
                 <td>{{ $ban["regexp"] }}</td>
-                <td>{{ Carbon::createFromFormat("Y-m-d H:i:s", $ban["banned-until"])->format("d.m.Y H:i:s")}} ({{ Carbon::createFromFormat("Y-m-d H:i:s", $ban["banned-until"])->diffInDays(Carbon::now()) }} Days)</td>
+                <td>{{ Carbon::createFromFormat("Y-m-d H:i:s", $ban["banned-until"])->format("d.m.Y H:i:s")}} ({{ Carbon::createFromFormat("Y-m-d H:i:s", $ban["banned-until"])->diffInDays(Carbon::now(), true) }} Days)</td>
                 <td>
                     <form action="{{ url("admin/spam/deleteRegexp") }}" method="post">
                         <input type="hidden" name="regexp" value="{{ $ban["regexp"] }}">

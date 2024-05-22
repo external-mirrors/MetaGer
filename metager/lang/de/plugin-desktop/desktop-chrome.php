@@ -1,5 +1,6 @@
 <?php
 return [
+    'plugin' => 'Mit der Installation unserer <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener">Browsererweiterung</a> wird MetaGer automatisch als Standardsuchmaschine installiert.',
     'default-search-v49' => [
         '1' => 'Klicken Sie in Ihrem Chrome oben rechts auf <img class= "mg-icon" src="/img/menu.svg"> und im folgenden Menü auf "Einstellungen", um die Einstellungen Ihres Chromes zu öffnen.',
         '2' => 'Im Bereich "Suche" klicken Sie auf "Suchmaschinen verwalten...".',

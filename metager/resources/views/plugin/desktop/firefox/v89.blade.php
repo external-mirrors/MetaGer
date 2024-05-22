@@ -1,5 +1,5 @@
 <div class="card">
-	<h1>{!! trans('plugin-page.firefox-plugin') !!}</h1>
+	<h1>{!! trans('plugin-page.plugin') !!}</h1>
 	<p>
 		{!! trans('plugin-desktop/desktop-firefox.plugin') !!}
 	</p>
@@ -18,6 +18,7 @@
 		<li>{!! trans('plugin-desktop/desktop-firefox.default-page-v61.1') !!}</li>
 		<li>{{ trans('plugin-desktop/desktop-firefox.default-page-v61.2') }}</li>
 		<li>{{ trans('plugin-desktop/desktop-firefox.default-page-v61.3') }}</li>
-		<li>{{ trans('plugin-desktop/desktop-firefox.default-page-v61.4', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}</li>
+		<li>{{ trans('plugin-desktop/desktop-firefox.default-page-v61.4', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}
+		</li>
 	</ol>
 </div>

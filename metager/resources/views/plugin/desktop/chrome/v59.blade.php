@@ -1,3 +1,11 @@
+@if(!$agent->is('Linux'))
+	<div class="card">
+		<h1>{!! trans('plugin-page.plugin') !!}</h1>
+		<p>
+			{!! trans('plugin-desktop/desktop-chrome.plugin') !!}
+		</p>
+	</div>
+@endif
 <div class="card">
 	<h1>{!! trans('plugin-page.default-search') !!}</h1>
 	<ol>
@@ -11,7 +19,8 @@
 	<ol>
 		<li>{!! trans('plugin-desktop/desktop-chrome.default-page-v49.1') !!}</li>
 		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.2') }}</li>
-		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.3', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}</li>
+		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.3', ['link' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/")]) }}
+		</li>
 		<li>{{ trans('plugin-desktop/desktop-chrome.default-page-v49.4') }}</li>
 	</ol>
 </div>

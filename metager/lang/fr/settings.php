@@ -19,6 +19,8 @@ return [
         'header' => 'Rétablir tous les paramètres actuels',
         'loadSettings' => 'Vous y trouverez un lien que vous pouvez définir comme page d\'accueil ou comme signet pour restaurer vos paramètres actuels.',
         'hint' => 'Ces paramètres s\'appliquent à tous les foyers et à toutes les sous-pages !',
+        'addon' => 'En installant notre <a href=":link" target="_blank" rel="noopener">extension de navigateur</a>, vous pouvez éviter que les paramètres de MetaGer soient accidentellement réinitialisés lorsque vous supprimez les données de votre navigateur. ',
+        'no-settings' => '- Aucun réglage n\'a encore été effectué -',
     ],
     'disabledByFilter' => 'Désactivé par le filtre de recherche :',
     'address' => 'Adresse',

@@ -18,4 +18,5 @@ return [
     ],
     'browser-download' => 'Firefox downloaden',
     'firefox-default-search' => 'MetaGer instellen als standaard zoekmachine zonder add-on',
+    'plugin' => 'MetaGer instellen als standaard zoekmachine zonder add-on',
 ];

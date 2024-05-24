@@ -13,7 +13,7 @@ return [
         '4' => 'I den nya menyn klickar du på "Lägg till MetaGer ..."',
         '5' => 'Gå tillbaka till fliken Inställningar. Välj "MetaGer" i rullgardinsmenyn under "Standardsökmotor".',
     ],
-    'plugin' => 'Du kan ladda ner vårt plugin <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">här</a>.',
+    'plugin' => 'Med installationen av vårt <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener">webbläsartillägg</a> installeras MetaGer automatiskt som standardsökmotor efter godkännande.',
     'default-search-v61' => [
         '1' => 'Alternativt klickar du på "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" till höger i adressfältet och väljer "Lägg till sökmotor".',
         '2' => 'Skriv "about:preferences#search" i adressfältet. Välj MetaGer i rullgardinsmenyn under "Standardsökmotor".',

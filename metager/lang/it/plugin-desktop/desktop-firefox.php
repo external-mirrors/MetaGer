@@ -18,7 +18,7 @@ return [
         '4' => 'Nel nuovo menu fare clic su "Aggiungi MetaGer ...".',
         '5' => 'Tornare alla scheda Impostazioni. Scegliere "MetaGer" dal menu a discesa sotto "Motore di ricerca predefinito".',
     ],
-    'plugin' => 'Con l\'installazione della nostra estensione per il browser <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener"></a> , MetaGer viene installato automaticamente come motore di ricerca predefinito dopo l\'approvazione.',
+    'plugin' => 'Con l\'installazione della nostra estensione per il browser <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener"></a> , MetaGer viene installato automaticamente come motore di ricerca predefinito dopo l\'approvazione.',
     'default-search-v61' => [
         '1' => 'In alternativa, cliccate su "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" a destra nella barra degli indirizzi e scegliete "Aggiungi motore di ricerca".',
         '2' => 'Digitare "about:preferences#search" nella barra degli indirizzi. Scegliere MetaGer dal menu a discesa alla voce "Motore di ricerca predefinito".',

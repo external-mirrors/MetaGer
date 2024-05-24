@@ -20,6 +20,8 @@ return [
         'header' => 'Ripristinare tutte le impostazioni correnti',
         'loadSettings' => 'Qui si trova un link che si può impostare come pagina iniziale o come segnalibro per ripristinare le impostazioni correnti.',
         'hint' => 'Queste impostazioni hanno effetto su tutti i foci e le sottopagine!',
+        'addon' => 'Installando la nostra <a href=":link" target="_blank" rel="noopener">estensione del browser</a>, è possibile evitare che le impostazioni di MetaGer vengano accidentalmente ripristinate quando si cancellano i dati del browser. ',
+        'no-settings' => '- Non sono ancora state impostate le impostazioni.',
     ],
     'disabledByFilter' => 'Disabilitato dal filtro di ricerca:',
     'address' => 'Indirizzo',

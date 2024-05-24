@@ -21,4 +21,5 @@ return [
         '3' => 'Escriba ":link" como URL de la página web en el cuadro "Agregar nueva página".',
         '4' => 'NOTA: Todas las páginas web que aparecen en la lista actual se abriràn cuando se inicie el navegador. Para eliminar una página web de la lista, mueva el mouse sobre la página web y haga clic en el botón "X" a la derecha.',
     ],
+    'plugin' => 'Al instalar nuestra extensión de navegador <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener"></a> , MetaGer se instala automáticamente como motor de búsqueda predeterminado.',
 ];

@@ -21,4 +21,5 @@ return [
         '3' => 'Voer ":link" in als URL en klik op OK.',
         '4' => 'Tip: Elke vermelde pagina in dit venster wordt geopend bij het opstarten. Je kunt items verwijderen door er met je muis overheen te gaan en op "x" te klikken.',
     ],
+    'plugin' => 'Als je onze <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener">browserextensie</a> installeert, wordt MetaGer automatisch geïnstalleerd als de standaard zoekmachine.',
 ];

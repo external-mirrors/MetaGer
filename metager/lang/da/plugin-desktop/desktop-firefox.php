@@ -13,7 +13,7 @@ return [
         '3' => 'Indtast "about:preferences#search" i din adresselinje for at få adgang til søgeindstillingerne.',
         '4' => 'Vælg MetaGer fra dropdown-menuen under "Standard søgemaskine".',
     ],
-    'plugin' => 'Du kan downloade vores plugin <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">her</a>.',
+    'plugin' => 'Med installationen af vores <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener">browserudvidelse</a> bliver MetaGer automatisk installeret som standardsøgemaskine efter godkendelse.',
     'default-search-v61' => [
         '1' => 'Alternativt kan du klikke på "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" i højre side af din adresselinje og vælge "Tilføj søgemaskine".',
         '2' => 'Indtast "about:preferences#search" i adresselinjen. Vælg MetaGer i dropdown-menuen under "Default Search Engine".',

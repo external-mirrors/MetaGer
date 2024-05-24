@@ -13,7 +13,7 @@ return [
         '4' => 'Klikkaa uudessa valikossa "Lisää MetaGer ...".',
         '5' => 'Palaa takaisin Asetukset-välilehdelle. Valitse "MetaGer" pudotusvalikosta kohdasta "Oletushakukone".',
     ],
-    'plugin' => 'Voit ladata lisäosamme <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">täältä</a>.',
+    'plugin' => 'Kun asennat <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener">-selainlaajennuksemme</a>, MetaGer asennetaan automaattisesti oletushakukoneeksi hyväksynnän jälkeen.',
     'default-search-v61' => [
         '1' => 'Vaihtoehtoisesti voit klikata "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" osoitepalkin oikealla puolella ja valita "Lisää hakukone".',
         '2' => 'Kirjoita osoiteriville "about:preferences#search". Valitse MetaGer pudotusvalikosta kohdassa "Default Search Engine".',

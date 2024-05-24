@@ -21,4 +21,5 @@ return [
         '2' => 'Under "Vid start" väljer du "Öppna en specifik sida eller en uppsättning sidor." och klickar på "Ange sidor".',
         '4' => 'Tips: Varje listad sida i detta fönster kommer att öppnas vid start. Du kan ta bort poster genom att flytta musen över dem och klicka på "x".',
     ],
+    'plugin' => 'När du installerar vårt webbläsartillägg <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener"></a> installeras MetaGer automatiskt som standardsökmotor.',
 ];

@@ -18,4 +18,5 @@ return [
     'mobile-unable' => 'Den browser, du bruger, tilbyder ikke at tilføje MetaGer som (standard) søgemaskine, men du kan downloade Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">her</a>, en open source-browser, som tilbyder funktionen.',
     'desktop-notlisted' => 'Vi er ikke klar over, om den browser, du bruger, tilbyder at tilføje MetaGer som (standard) søgemaskine, men du kan downloade Firefox <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">her</a>, en open source-browser, der tilbyder funktionen.',
     'mobile-notlisted' => 'Vi er ikke klar over, om den browser, du bruger, tilbyder at tilføje MetaGer som (standard) søgemaskine, men du kan downloade Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">her</a>, en open source-browser, der tilbyder funktionen.',
+    'plugin' => 'Sæt MetaGer som standardsøgemaskine uden add-on',
 ];

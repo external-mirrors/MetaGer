@@ -273,7 +273,7 @@
         <div class="card">
             <h1>@lang('settings.hint.header')</h1>
             @if($agent->is("Firefox"))
-            <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/de/firefox/addon/metager-suche/"])</p>
+            <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
             @elseif($agent->is('Chrome') && !$agent->isMobile())
             <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
             @endif

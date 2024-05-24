@@ -3,12 +3,6 @@
 <div role="dialog">
 	<h1 class="page-title">{{ trans('plugin-page.head.1') }}</h1>
 	<div class="card">
-		<h1>{!! trans('plugin-page.plugin') !!}</h1>
-		<p>
-			{!! trans('plugin-desktop/desktop-firefox.plugin') !!}
-		</p>
-	</div>
-	<div class="card">
 		<h1>{!! trans('plugin-page.default-search') !!}</h1>
 		<ol>
 			<li>{!! trans('plugin-mobile/mobile-firefox.default-search-v80.1') !!}</li>

@@ -16,6 +16,8 @@ return [
         'header' => 'Configuración de las cookies',
         'loadSettings' => 'Aquí encontrarás un enlace que puedes establecer como página de inicio o marcador para llevarte tu configuración actual. El enlace crea cookies con la configuración correspondiente cuando se llama.',
         'hint' => 'Estos ajustes afectan a todos los focos y subpáginas en general',
+        'addon' => 'Instalando nuestra <a href=":link" target="_blank" rel="noopener">extensión de navegador</a>, puedes evitar que la configuración de MetaGer se restablezca accidentalmente al borrar los datos de tu navegador. ',
+        'no-settings' => '- Aún no se ha establecido ninguna configuración -',
     ],
     'disabledByFilter' => 'Desactivado por el filtro de búsqueda:',
     'address' => 'Introducción de la dirección',

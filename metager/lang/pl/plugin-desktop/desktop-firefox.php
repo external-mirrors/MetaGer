@@ -13,7 +13,7 @@ return [
         '4' => 'W nowym menu kliknij "Dodaj MetaGer ...".',
         '5' => 'Wróć do zakładki Ustawienia. Wybierz "MetaGer" z menu rozwijanego w sekcji "Domyślna wyszukiwarka".',
     ],
-    'plugin' => 'Możesz pobrać naszą wtyczkę <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">tutaj</a>.',
+    'plugin' => 'Po zainstalowaniu naszego rozszerzenia przeglądarki <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener"></a> , MetaGer jest automatycznie instalowany jako domyślna wyszukiwarka po zatwierdzeniu.',
     'default-search-v61' => [
         '1' => 'Ewentualnie kliknij "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" po prawej stronie paska adresu i wybierz "Dodaj wyszukiwarkę".',
         '2' => 'Wpisz "about:preferences#search" w pasku adresu. Wybierz MetaGer z rozwijanego menu w sekcji "Domyślna wyszukiwarka".',

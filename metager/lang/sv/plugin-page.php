@@ -18,4 +18,5 @@ return [
     'mobile-unable' => 'Den webbläsare du använder erbjuder inte möjligheten att lägga till MetaGer som (förvald) sökmotor, men du kan ladda ner Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">här</a>, en webbläsare med öppen källkod som erbjuder funktionen.',
     'desktop-notlisted' => 'Vi vet inte om den webbläsare du använder erbjuder möjligheten att lägga till MetaGer som (förvald) sökmotor, men du kan ladda ner Firefox <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">här</a>, en webbläsare med öppen källkod som tillhandahåller funktionen.',
     'mobile-notlisted' => 'Vi vet inte om den webbläsare du använder erbjuder möjligheten att lägga till MetaGer som (förvald) sökmotor, men du kan ladda ner Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">här</a>, en webbläsare med öppen källkod som tillhandahåller funktionen.',
+    'plugin' => 'Ange MetaGer som standardsökmotor utan tillägg',
 ];

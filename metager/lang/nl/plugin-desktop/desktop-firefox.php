@@ -13,7 +13,7 @@ return [
         '4' => 'Klik in het nieuwe menu op "MetaGer toevoegen ...".',
         '5' => 'Ga terug naar het tabblad Instellingen. Kies "MetaGer" uit het dropdownmenu onder "Standaardzoekmachine".',
     ],
-    'plugin' => 'Met de installatie van onze <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener">browserextensie</a> wordt MetaGer na goedkeuring automatisch geïnstalleerd als de standaard zoekmachine.',
+    'plugin' => 'Met de installatie van onze <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener">browserextensie</a> wordt MetaGer na goedkeuring automatisch geïnstalleerd als de standaard zoekmachine.',
     'default-page-v61' => [
         '3' => 'Klik onder "Nieuwe vensters en tabbladen" op het vervolgkeuzemenu naast "Homepage en nieuwe vensters" en kies "Aangepaste URL\'s...".',
         '4' => 'Voer in het nieuwe tekstveld ":link" in.',

@@ -21,7 +21,7 @@ return [
         '2' => 'With MetaGer as default searchengine you can instruct your browser to automatically use MetaGer when search queries are entered i.e. into the adress bar.',
     ],
     'browser-download' => 'Download Firefox',
-    'firefox-plugin' => 'Set MetaGer as default search engine with add-on',
+    'plugin' => 'Set MetaGer as default search engine with add-on',
     'firefox-default-search' => 'Set MetaGer as default search engine without add-on',
     'default-search' => 'Set MetaGer as default search engine',
     'default-page' => 'Set MetaGer as start page',

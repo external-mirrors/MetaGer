@@ -12,7 +12,7 @@
             <h1>@lang('settings.metager-key.header')</h1>
             @if (!empty($authorization->key))
                 <h2 class="charge">
-                    @lang('settings.metager-key.charge', ['token' => $authorization->availableTokens])
+                    @lang('settings.metager-key.charge', ['token' => max($authorization->availableTokens, 0)])
                 </h2>
                 <div class="copyLink">
                     <input type="text" name="key" id="key" readonly value="{{ $authorization->key }}"
@@ -272,11 +272,20 @@
         </div>
         <div class="card">
             <h1>@lang('settings.hint.header')</h1>
+            @if($agent->is("Firefox"))
+            <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/de/firefox/addon/metager-suche/"])</p>
+            @elseif($agent->is('Chrome') && !$agent->isMobile())
+            <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
+            @endif
             <p>@lang('settings.hint.loadSettings')</p>
+            @if(empty($cookieLink))
+            <code>@lang('settings.hint.no-settings')</code>
+            @else
             <div class="copyLink">
                 <input id="loadSettings" class="loadSettings" type="text" value="{{ $cookieLink }}">
                 <button class="js-only btn btn-default">@lang('settings.copy')</button>
             </div>
+            @endif
         </div>
     </div>
 @endsection

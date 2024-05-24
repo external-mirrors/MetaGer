@@ -19,7 +19,7 @@ return [
     ],
 
     //Instructions for Firefox version >= 61
-    'plugin' => 'Das Plugin für Firefox können Sie <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/?src=search" target="_blank">hier</a> herunterladen.',
+    'plugin' => 'Mit der Installation unserer <a href="https://addons.mozilla.org/de/firefox/addon/metager-suche/" target="_blank" rel="noopener">Browsererweiterung</a> wird MetaGer nach Zustimmung automatisch als Standardsuchmaschine installiert.',
     'default-search-v61' => [
         '1' => 'Alternativ klicken Sie in Ihrem Browser oben rechts in der Adressleiste auf <img class= "mg-icon" src="/img/ellipsis-horizontal.svg"> um das Menü der Seitenaktionen zu öffnen und dann auf "Suchmaschine hinzufügen"',
         '2' => 'Geben Sie "about:preferences#search" in der Adressleiste ein, um in die Sucheinstellungen zu gelangen. Im Bereich "Standardsuchmaschine" wählen Sie MetaGer aus.',

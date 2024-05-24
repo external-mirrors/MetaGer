@@ -11,7 +11,6 @@ return [
         '2' => 'Avec MetaGer comme moteur de recherche par défaut, vous pouvez demander à votre navigateur d\'utiliser automatiquement MetaGer lorsque vous saisissez des requêtes de recherche, c\'est-à-dire dans la barre d\'adresse.',
     ],
     'browser-download' => 'Télécharger Firefox',
-    'firefox-plugin' => 'Définir MetaGer comme moteur de recherche par défaut à l\'aide d\'un module complémentaire',
     'firefox-default-search' => 'Définir MetaGer comme moteur de recherche par défaut sans module complémentaire',
     'default-search' => 'Définir MetaGer comme moteur de recherche par défaut',
     'default-page' => 'Définir MetaGer comme page d\'accueil',

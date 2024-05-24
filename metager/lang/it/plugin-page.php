@@ -12,7 +12,6 @@ return [
         '2' => 'Con MetaGer come motore di ricerca predefinito è possibile indicare al browser di utilizzare automaticamente MetaGer quando si inseriscono le query di ricerca, ad esempio nella barra degli indirizzi.',
     ],
     'browser-download' => 'Scarica Firefox',
-    'firefox-plugin' => 'Impostare MetaGer come motore di ricerca predefinito con il componente aggiuntivo',
     'firefox-default-search' => 'Impostare MetaGer come motore di ricerca predefinito senza componente aggiuntivo',
     'default-search' => 'Impostare MetaGer come motore di ricerca predefinito',
     'default-page' => 'Impostare MetaGer come pagina iniziale',

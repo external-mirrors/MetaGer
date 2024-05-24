@@ -11,7 +11,6 @@ return [
         '2' => 'Med MetaGer som standardsøgemaskine kan du instruere din browser i automatisk at bruge MetaGer, når der indtastes søgeforespørgsler, f.eks. i adresselinjen.',
     ],
     'browser-download' => 'Download Firefox',
-    'firefox-plugin' => 'Sæt MetaGer som standardsøgemaskine med add-on',
     'firefox-default-search' => 'Sæt MetaGer som standardsøgemaskine uden add-on',
     'default-search' => 'Indstil MetaGer som standardsøgemaskine',
     'default-page' => 'Sæt MetaGer som startside',

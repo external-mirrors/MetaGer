@@ -11,7 +11,6 @@ return [
         '2' => 'Med MetaGer som standard sökmotor kan du instruera din webbläsare att automatiskt använda MetaGer när sökfrågor skrivs in t.ex. i adressfältet.',
     ],
     'browser-download' => 'Ladda ner Firefox',
-    'firefox-plugin' => 'Ange MetaGer som standardsökmotor med tillägg',
     'firefox-default-search' => 'Ange MetaGer som standardsökmotor utan tillägg',
     'default-search' => 'Ange MetaGer som standardsökmotor',
     'default-page' => 'Ange MetaGer som startsida',

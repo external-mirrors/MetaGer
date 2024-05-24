@@ -21,7 +21,6 @@ return [
         '2' => 'Con MetaGer como motor de búsqueda por defecto, puedes indicar a tu navegador que permita a MetaGer responder automáticamente a las búsquedas que se realicen a través de la barra de direcciones, por ejemplo.',
     ],
     'browser-download' => 'Descargar Firefox',
-    'firefox-plugin' => 'Establecer MetaGer como motor de búsqueda por defecto con el complemento',
     'firefox-default-search' => 'Establecer MetaGer como motor de búsqueda por defecto sin complemento',
     'default-search' => 'Establecer MetaGer como motor de búsqueda por defecto',
     'default-page' => 'Establecer MetaGer como página de inicio',

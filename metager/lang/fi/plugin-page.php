@@ -11,7 +11,6 @@ return [
         '2' => 'Kun MetaGer on oletushakukone, voit määrätä selaimesi käyttämään automaattisesti MetaGeria, kun hakukyselyitä syötetään esim. osoiteriville.',
     ],
     'browser-download' => 'Lataa Firefox',
-    'firefox-plugin' => 'Aseta MetaGer oletushakukoneeksi lisäosalla',
     'firefox-default-search' => 'Aseta MetaGer oletushakukoneeksi ilman lisäosaa',
     'default-search' => 'Aseta MetaGer oletushakukoneeksi',
     'default-page' => 'Aseta MetaGer aloitussivuksi',

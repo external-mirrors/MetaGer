@@ -28,4 +28,5 @@ return [
     'mobile-unable' => 'Lamentablemente, el navegador que estás utilizando no ofrece la opción de establecer MetaGer como motor de búsqueda (por defecto), pero <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">aquí</a> puedes instalar Firefox, un navegador de código abierto para el que tenemos instrucciones.',
     'desktop-notlisted' => 'Desgraciadamente, aún no sabemos cómo configurar el motor de búsqueda (por defecto) en el navegador que utilizas, pero <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">aquí</a> puedes instalar Firefox, un navegador de código abierto donde sí lo sabemos.',
     'mobile-notlisted' => 'Desgraciadamente, aún no sabemos cómo configurar el motor de búsqueda (por defecto) en el navegador que utilizas, pero <a href="https://www.mozilla.org/de/firefox/mobile/" target="_blank" rel="noopener">aquí</a> puedes instalar Firefox, un navegador de código abierto donde sí lo sabemos.',
+    'plugin' => 'Establecer MetaGer como motor de búsqueda por defecto sin complemento',
 ];

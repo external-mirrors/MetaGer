@@ -21,4 +21,5 @@ return [
         '3' => 'Indtast ":link" som URL, og klik på OK.',
         '4' => 'Tip: Alle sider i dette vindue vil blive åbnet ved opstart. Du kan fjerne poster ved at bevæge musen over dem og klikke på "x".',
     ],
+    'plugin' => 'Når du installerer vores <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener">browserudvidelse</a>, bliver MetaGer automatisk installeret som standardsøgemaskine.',
 ];

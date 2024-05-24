@@ -11,7 +11,6 @@ return [
         '2' => 'Z MetaGer jako domyślną wyszukiwarką można poinstruować przeglądarkę, aby automatycznie korzystała z MetaGer po wprowadzeniu zapytania do paska adresu.',
     ],
     'browser-download' => 'Pobierz Firefox',
-    'firefox-plugin' => 'Ustaw MetaGer jako domyślną wyszukiwarkę za pomocą dodatku',
     'firefox-default-search' => 'Ustaw MetaGer jako domyślną wyszukiwarkę bez dodatku',
     'default-search' => 'Ustaw MetaGer jako domyślną wyszukiwarkę',
     'default-page' => 'Ustaw MetaGer jako stronę startową',
@@ -19,4 +18,5 @@ return [
     'mobile-unable' => 'Przeglądarka, której używasz, nie oferuje dodania MetaGer jako (domyślnej) wyszukiwarki, ale możesz pobrać Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">tutaj</a>, przeglądarkę open-source, która zapewnia tę funkcję.',
     'desktop-notlisted' => 'Nie wiemy, czy przeglądarka, której używasz, oferuje dodanie MetaGer jako (domyślnej) wyszukiwarki, ale możesz pobrać Firefox <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">tutaj</a>, przeglądarkę open-source, która zapewnia tę funkcję.',
     'mobile-notlisted' => 'Nie wiemy, czy przeglądarka, której używasz, oferuje dodanie MetaGer jako (domyślnej) wyszukiwarki, ale możesz pobrać Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">tutaj</a>, przeglądarkę open-source, która zapewnia tę funkcję.',
+    'plugin' => 'Ustaw MetaGer jako domyślną wyszukiwarkę bez dodatku',
 ];

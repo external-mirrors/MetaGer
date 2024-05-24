@@ -24,6 +24,8 @@ return [
         'header' => 'Gendan alle aktuelle indstillinger',
         'loadSettings' => 'Her finder du et link, som du kan sætte som startside eller bogmærke for at gendanne dine nuværende indstillinger.',
         'hint' => 'Disse indstillinger påvirker alle foci og undersider!',
+        'addon' => 'Ved at installere vores <a href=":link" target="_blank" rel="noopener">browserudvidelse</a> kan du forhindre, at MetaGer-indstillingerne ved et uheld bliver nulstillet, når du sletter dine browserdata. ',
+        'no-settings' => '- Der er ikke foretaget nogen indstillinger endnu.',
     ],
     'darkmode' => 'Skift til mørk tilstand',
     'system' => 'Systemstandard',

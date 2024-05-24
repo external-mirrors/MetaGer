@@ -17,6 +17,6 @@ return [
         '2' => 'Met MetaGer als standaard zoekmachine kun je je browser opdracht geven om automatisch MetaGer te gebruiken wanneer zoekopdrachten worden ingevoerd in de adresbalk.',
     ],
     'browser-download' => 'Firefox downloaden',
-    'firefox-plugin' => 'MetaGer instellen als standaard zoekmachine met add-on',
     'firefox-default-search' => 'MetaGer instellen als standaard zoekmachine zonder add-on',
+    'plugin' => 'MetaGer instellen als standaard zoekmachine zonder add-on',
 ];

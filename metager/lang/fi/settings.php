@@ -28,6 +28,8 @@ return [
         'header' => 'Palauta kaikki nykyiset asetukset',
         'loadSettings' => 'Täältä löydät linkin, jonka voit asettaa etusivuksi tai kirjanmerkiksi, jotta voit palauttaa nykyiset asetukset.',
         'hint' => 'Nämä asetukset vaikuttavat kaikkiin polttopisteisiin ja alasivuihin!',
+        'no-settings' => '- Asetuksia ei ole vielä asetettu -',
+        'addon' => 'Asentamalla <a href=":link" target="_blank" rel="noopener">selainlaajennuksemme</a> voit estää MetaGer-asetusten palautumisen vahingossa, kun poistat selaimen tiedot. ',
     ],
     'disabledByFilter' => 'Ei käytössä hakusuodattimella:',
     'address' => 'Osoite',

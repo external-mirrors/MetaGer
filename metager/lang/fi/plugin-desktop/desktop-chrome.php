@@ -21,4 +21,5 @@ return [
         '3' => 'Kirjoita URL-osoitteeksi ":link" ja napsauta OK.',
         '4' => 'Vihje: Jokainen tässä ikkunassa lueteltu sivu avataan käynnistyksen yhteydessä. Voit poistaa merkintöjä siirtämällä hiiren niiden päälle ja napsauttamalla "x".',
     ],
+    'plugin' => 'Kun asennat <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener">-selainlaajennuksemme</a>, MetaGer asennetaan automaattisesti oletushakukoneeksi.',
 ];

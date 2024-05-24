@@ -21,4 +21,5 @@ return [
         '3' => 'Inserire ":link" come URL e fare clic su OK.',
         '4' => 'Suggerimento: Ogni pagina elencata in questa finestra verrà aperta all\'avvio. È possibile rimuovere le voci spostando il mouse su di esse e facendo clic su "x".',
     ],
+    'plugin' => 'Quando si installa l\'estensione del browser <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener"></a> , MetaGer viene automaticamente installato come motore di ricerca predefinito.',
 ];

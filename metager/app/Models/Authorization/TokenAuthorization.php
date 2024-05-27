@@ -15,10 +15,10 @@ class TokenAuthorization extends Authorization
     private $keyserver = "";
     private $tokenauthorization_header;
 
-    public function __construct($tokenString)
+    public function __construct(string $tokenString, string $tokenauthorization)
     {
         parent::__construct();
-        $this->tokenauthorization_header = $tokenString;
+        $this->tokenauthorization_header = $tokenauthorization;
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";
 

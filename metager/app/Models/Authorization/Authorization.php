@@ -36,8 +36,10 @@ abstract class Authorization
     /**
      * Checks whether the user is allowed to do the current
      * search in an authorized environment
+     * 
+     * @param bool $current_request Tokenauthorization does not always send valid tokens but expects interface elements as if the request is authorized
      */
-    public function canDoAuthenticatedSearch()
+    public function canDoAuthenticatedSearch(bool $current_request = true)
     {
         return $this->availableTokens >= $this->cost;
     }
@@ -53,13 +55,9 @@ abstract class Authorization
     public abstract function makePayment(int $cost);
 
     /**
-     * Checks whether the user has already paid for his
-     * authenticated search
+     * Checks whether the user has given any kind of authentication
      */
-    public function isAuthenticated()
-    {
-        return $this->usedTokens >= $this->cost;
-    }
+    public abstract function isAuthenticated(): bool;
 
     /**
      * Calculates the cost of the current search 
@@ -100,33 +98,6 @@ abstract class Authorization
         } else {
             $keyIcon = "/img/svg-icons/key-full.svg";
         }
-
-        if (Cookie::has("tokenauthorization")) {
-            switch (Cookie::get("tokenauthorization")) {
-                case "full":
-                    $keyIcon = "/img/svg-icons/key-full.svg";
-                    break;
-                case "low":
-                    $keyIcon = "/img/svg-icons/key-low.svg";
-                    break;
-                case "empty":
-                    $keyIcon = "/img/key-empty.svg";
-                    break;
-            }
-        }
-        if (Request::hasHeader("tokenauthorization")) {
-            switch (Request::header("tokenauthorization")) {
-                case "full":
-                    $keyIcon = "/img/svg-icons/key-full.svg";
-                    break;
-                case "low":
-                    $keyIcon = "/img/svg-icons/key-low.svg";
-                    break;
-                case "empty":
-                    $keyIcon = "/img/key-empty.svg";
-                    break;
-            }
-        }
         return $keyIcon;
     }
 
@@ -144,19 +115,6 @@ abstract class Authorization
             $tooltip = __("index.key.tooltip.low");
         } else {
             $tooltip = __("index.key.tooltip.full");
-        }
-        if (Cookie::has("tokenauthorization")) {
-            switch (Cookie::get("tokenauthorization")) {
-                case "full":
-                    $tooltip = __("index.key.tooltip.full");
-                    break;
-                case "low":
-                    $tooltip = __("index.key.tooltip.low");
-                    break;
-                case "empty":
-                    $tooltip = __("index.key.tooltip.empty");
-                    break;
-            }
         }
         return $tooltip;
     }

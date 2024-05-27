@@ -88,7 +88,7 @@ class Searchengines
         }
 
         // Enable Yahoo Ads if query is unauthorized and yahoo is disabled
-        if (!app(Authorization::class)->canDoAuthenticatedSearch() && $settings->fokus !== "bilder") {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch() && $settings->fokus !== "bilder" && array_key_exists("yahoo", $this->sumas) && array_key_exists("yahoo-ads", $this->sumas)) {
             if ($this->sumas["yahoo"]->configuration->disabled === true) {
                 $this->sumas["yahoo-ads"]->configuration->disabled = false;
             }

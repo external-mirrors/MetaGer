@@ -13,7 +13,7 @@ return [
         '4' => 'In the new menu click "Add MetaGer ..."',
         '5' => 'Go back to the Settings tab. Choose "MetaGer" from the dropdown menu under "Default Search Engine".',
     ],
-    'plugin' => 'You can download our plugin <a href="https://addons.mozilla.org/en-US/firefox/addon/metager-searchengine/" target="_blank">here</a>.',
+    'plugin' => 'With the installation of our <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener">browser extension</a>, MetaGer is automatically installed as the default search engine after approval.',
     'default-search-v61' => [
         '1' => 'Alternatively click "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" on the right side in your address bar and choose "Add Search Engine".',
         '2' => 'Enter "about:preferences#search" in the address bar. Choose MetaGer from the dropdown menu under "Default Search Engine".',

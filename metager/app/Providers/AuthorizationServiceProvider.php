@@ -18,33 +18,42 @@ class AuthorizationServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $key = $this->parseKey();
         // Check if Authorization is done through Token or through Key
         $tokens = Request::header(("tokens"));
+        $tokenauthorization = null;
         if ($tokens === null) {
             $tokens = Cookie::get("tokens");
         }
-        if ($tokens === null && Cookie::has("tokenauthorization") && !Cookie::has("key")) {
-            $tokens = Cookie::get("tokenauthorization");
+        if (Request::hasHeader("tokenauthorization")) {
+            $tokenauthorization = Request::header("tokenauthorization");
+        } else if (Cookie::has("tokenauthorization")) {
+            $tokenauthorization = Cookie::get("tokenauthorization");
         }
-        if ($tokens !== null) {
-            $this->app->singleton(Authorization::class, function ($app) use ($tokens) {
-                return new TokenAuthorization($tokens);
+        if ($key === "" && ($tokens !== null || $tokenauthorization !== null)) {
+            $this->app->singleton(Authorization::class, function ($app) use ($tokens, $tokenauthorization) {
+                return new TokenAuthorization(tokenString: $tokens, tokenauthorization: $tokenauthorization);
             });
         } else {
-            $key = "";
-            if (Cookie::has('key')) {
-                $key = Cookie::get('key');
-            }
-            if (Request::hasHeader("key")) {
-                $key = Request::header("key");
-            }
-            if (Request::filled('key')) {
-                $key = Request::input('key');
-            }
             $this->app->singleton(Authorization::class, function ($app) use ($key) {
                 return new KeyAuthorization($key);
             });
         }
+    }
+
+    private function parseKey(): string
+    {
+        $key = "";
+        if (Cookie::has('key')) {
+            $key = Cookie::get('key');
+        }
+        if (Request::hasHeader("key")) {
+            $key = Request::header("key");
+        }
+        if (Request::filled('key')) {
+            $key = Request::input('key');
+        }
+        return $key;
     }
 
 

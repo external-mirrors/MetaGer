@@ -24,7 +24,7 @@ return [
     ],
 
     'browser-download' => 'Firefox herunterladen',
-    'firefox-plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
+    'plugin' => 'MetaGer als Standardsuchmaschine mit Add-on einrichten',
     'firefox-default-search' => 'MetaGer als Standardsuchmaschine ohne Add-on einrichten',
     'default-search' => 'MetaGer als Standardsuchmaschine einrichten',
     'default-page' => 'MetaGer als Startseite einrichten',

@@ -13,10 +13,12 @@ class TokenAuthorization extends Authorization
      */
     private $tokens = [];
     private $keyserver = "";
+    private $tokenauthorization_header;
 
-    public function __construct($tokenString)
+    public function __construct(string|null $tokenString, string $tokenauthorization)
     {
         parent::__construct();
+        $this->tokenauthorization_header = $tokenauthorization;
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";
 
@@ -90,6 +92,81 @@ class TokenAuthorization extends Authorization
         $this->usedTokens += sizeof($tokens_to_use);
         $this->updateCookie();
 
+        return true;
+    }
+
+    /**
+     * Checks whether the user is allowed to do the current
+     * search in an authorized environment
+     * 
+     * @param bool $current_request Tokenauthorization does not always send valid tokens but expects interface elements as if the request is authorized
+     */
+    public function canDoAuthenticatedSearch(bool $current_request = true)
+    {
+        if ($current_request === true || empty($this->tokenauthorization_header)) {
+            return parent::canDoAuthenticatedSearch($current_request);
+        } else {
+            switch ($this->tokenauthorization_header) {
+                case "full":
+                case "low":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+    }
+
+    /**
+     * Returns a link to the correct key icon corresponding to the current key charge
+     */
+    public function getKeyIcon()
+    {
+        $keyIcon = parent::getKeyIcon();
+
+        if (!empty($this->tokenauthorization_header)) {
+            switch ($this->tokenauthorization_header) {
+                case "full":
+                    $keyIcon = "/img/svg-icons/key-full.svg";
+                    break;
+                case "low":
+                    $keyIcon = "/img/svg-icons/key-low.svg";
+                    break;
+                case "empty":
+                    $keyIcon = "/img/svg-icons/key-empty.svg";
+                    break;
+            }
+        }
+        return $keyIcon;
+    }
+
+    /**
+     * Returns a tooltip text corresponding to the current key charge
+     */
+    public function getKeyTooltip()
+    {
+        $tooltip = parent::getKeyTooltip();
+
+        if (!empty($this->tokenauthorization_header)) {
+            switch ($this->tokenauthorization_header) {
+                case "full":
+                    $tooltip = __("index.key.tooltip.full");
+                    break;
+                case "low":
+                    $tooltip = __("index.key.tooltip.low");
+                    break;
+                case "empty":
+                    $tooltip = __("index.key.tooltip.empty");
+                    break;
+            }
+        }
+        return $tooltip;
+    }
+
+    /**
+     * Tokenauthorization is always authenticated
+     */
+    public function isAuthenticated(): bool
+    {
         return true;
     }
 

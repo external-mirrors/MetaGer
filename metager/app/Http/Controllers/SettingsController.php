@@ -10,6 +10,7 @@ use App\Models\DisabledReason;
 use App\SearchSettings;
 use Cookie;
 use \Illuminate\Http\Request;
+use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 
 class SettingsController extends Controller
@@ -52,10 +53,16 @@ class SettingsController extends Controller
 
         # Generating link with set cookies
         $settings_params = array_merge($settings->user_settings, $searchengines->user_settings);
+        unset($settings_params["js_available"]);
         if (is_string($authorization->getToken()) && !empty($authorization->getToken())) {
             $settings_params["key"] = $authorization->getToken();
         }
-        $cookieLink = route('loadSettings', $settings_params);
+        $cookieLink = null;
+        if (sizeof($settings_params) > 0) {
+            $cookieLink = route('loadSettings', $settings_params);
+        }
+
+        $agent = new Agent();
 
         return view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -71,6 +78,8 @@ class SettingsController extends Controller
             ->with('url', $url)
             ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
+            ->with('agent', $agent)
+            ->with('browser', $agent->browser())
             ->with('js', [mix('js/scriptSettings.js')]);
     }
 

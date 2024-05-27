@@ -62,6 +62,8 @@ return [
         'header' => 'Återställ alla aktuella inställningar',
         'loadSettings' => 'Här hittar du en länk som du kan använda som startsida eller bokmärke för att återställa dina nuvarande inställningar.',
         'hint' => 'Dessa inställningar påverkar alla foci och undersidor!',
+        'no-settings' => '- Inga inställningar har gjorts ännu -',
+        'addon' => 'Genom att installera vårt <a href=":link" target="_blank" rel="noopener">webbläsartillägg</a> kan du förhindra att MetaGer-inställningarna av misstag återställs när du raderar dina webbläsardata. ',
     ],
     'disabledByFilter' => 'Inaktiverad av sökfilter:',
     'address' => 'Adress',

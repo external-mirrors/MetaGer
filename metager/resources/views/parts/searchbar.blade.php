@@ -3,7 +3,7 @@
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
+					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->isAuthenticated())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
 						data-tooltip="{{ app('App\Models\Authorization\Authorization')->getKeyTooltip() }}" tabindex="0">
 						<img 
 							src="{{ app('App\Models\Authorization\Authorization')->getKeyIcon() }}"

@@ -21,4 +21,5 @@ return [
         '3' => 'Wprowadź ":link" jako adres URL i kliknij OK.',
         '4' => 'Wskazówka: Każda strona wymieniona w tym oknie zostanie otwarta podczas uruchamiania. Wpisy można usunąć, przesuwając nad nimi kursor myszy i klikając "x".',
     ],
+    'plugin' => 'Po zainstalowaniu naszego rozszerzenia przeglądarki <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener"></a> , MetaGer jest automatycznie instalowany jako domyślna wyszukiwarka.',
 ];

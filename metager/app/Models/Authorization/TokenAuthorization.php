@@ -15,7 +15,7 @@ class TokenAuthorization extends Authorization
     private $keyserver = "";
     private $tokenauthorization_header;
 
-    public function __construct(string $tokenString, string $tokenauthorization)
+    public function __construct(string|null $tokenString, string $tokenauthorization)
     {
         parent::__construct();
         $this->tokenauthorization_header = $tokenauthorization;

@@ -20,7 +20,7 @@
 * redis-server
 
 ---
-[<img src="public/img/Browserstack-logo_2x.png" width="250px" alt="Browserstack Logo" />](https://www.browserstack.com) <br /> 
+[<img src="metager/public/img/Browserstack-logo_2x.png" width="250px" alt="Browserstack Logo" />](https://www.browserstack.com) <br /> 
 We use the awesome project [Browserstack](https://www.browserstack.com) for cross browser testing.
 
 ## Offizielle Dokumentation

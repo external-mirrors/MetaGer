@@ -49,7 +49,7 @@ return [
     'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
         'header' => 'Wiederherstellen aller aktuellen Einstellungen',
-        'addon' => 'Mit der Installation unserer <a href=":link" target="_blank" rel="noopener">Browsererweiterung</a> können Sie verhindern, dass die MetaGer Einstellungen ausversehen beim Löschen der Browserdaten zurückgesetzt werden. ',
+        'addon' => 'Durch die Installation unserer <a href=":link" target="_blank" rel="noopener">Browsererweiterung</a> können Sie verhindern, dass die MetaGer-Einstellungen versehentlich zurückgesetzt werden, wenn Sie Ihre Browserdaten löschen. ',
         'no-settings' => '- Bislang noch keine Einstellungen gesetzt -',
         'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen wiederherzustellen.',
     ],

@@ -26,4 +26,5 @@ return [
         '2' => 'Välj "Öppna en eller flera specifika sidor" och ange ":länk" som URL i "Lägg till en ny sida". Klicka på "Lägg till".',
         '3' => 'Tips: Varje listad sida i detta fönster kommer att öppnas vid start. Du kan ta bort poster genom att föra muspekaren över dem, klicka på "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" och välja "Ta bort".',
     ],
+    'plugin' => 'När du installerar vårt webbläsartillägg <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener"></a> installeras MetaGer automatiskt som standardsökmotor. Du kommer förmodligen att behöva aktivera tillägget manuellt i webbläsarinställningarna efter installationen.',
 ];

@@ -26,4 +26,5 @@ return [
         '2' => 'Kies "Een specifieke pagina of pagina\'s openen" en voer ":link" in als URL in "Een nieuwe pagina toevoegen" ein. Klik op "Toevoegen".',
         '3' => 'Tip: Elke vermelde pagina in dit venster wordt geopend bij het opstarten. Je kunt vermeldingen verwijderen door er met je muis overheen te gaan, op "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" te klikken en "Verwijderen" te kiezen.',
     ],
+    'plugin' => 'Wanneer je onze <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener">browserextensie</a> installeert, wordt MetaGer automatisch geïnstalleerd als de standaard zoekmachine. Waarschijnlijk moet je de extensie na de installatie handmatig inschakelen in de browserinstellingen.',
 ];

@@ -1,5 +1,6 @@
 <?php
 return [
+    'plugin' => 'When you install our <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener">browser extension</a>, MetaGer is automatically installed as the default search engine. You will probably have to manually enable the extension in the browser settings after installation.',
     'default-search-v15' => [
         '1' => 'Navigate to the top right corner of your browser, click "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" and choose "Settings".',
         '2' => 'Scroll down and click "Advanced settings".',

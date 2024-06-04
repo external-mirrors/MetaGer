@@ -21,7 +21,7 @@ return [
         'header' => 'Alle huidige instellingen herstellen',
         'loadSettings' => 'Hier vind je een link die je als startpagina of bladwijzer kunt instellen om je huidige instellingen te herstellen.',
         'hint' => 'Deze instellingen hebben invloed op alle brandpunten en subpagina\'s!',
-        'addon' => 'Door onze <a href=":link" target="_blank" rel="noopener">browseruitbreiding</a> te installeren, kun je voorkomen dat de MetaGer-instellingen per ongeluk worden gereset wanneer je je browsergegevens verwijdert. ',
+        'addon' => 'Door onze <a href=":link" target="_blank" rel="noopener">browserextensie</a> te installeren, kun je voorkomen dat de MetaGer-instellingen per ongeluk worden gereset wanneer je je browsergegevens verwijdert. ',
         'no-settings' => '- Er zijn nog geen instellingen ingesteld -',
     ],
     'disabledByFilter' => 'Uitgeschakeld door zoekfilter:',

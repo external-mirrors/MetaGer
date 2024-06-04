@@ -26,4 +26,5 @@ return [
         '2' => 'Valitse "Avaa tietty sivu tai tietyt sivut" ja kirjoita ":linkki" URL-osoitteeksi "Lisää uusi sivu" ein. Napsauta "Lisää".',
         '3' => 'Vihje: Jokainen tässä ikkunassa lueteltu sivu avataan käynnistettäessä. Voit poistaa merkintöjä siirtämällä hiiren niiden päälle, napsauttamalla "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" ja valitsemalla "Poista".',
     ],
+    'plugin' => 'Kun asennat <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener">-selainlaajennuksemme</a>, MetaGer asennetaan automaattisesti oletushakukoneeksi. Sinun on todennäköisesti otettava laajennus käyttöön manuaalisesti selaimen asetuksissa asennuksen jälkeen.',
 ];

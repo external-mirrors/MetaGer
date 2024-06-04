@@ -16,7 +16,7 @@ return [
         'header' => 'Restore all current settings',
         'loadSettings' => 'Here you will find a link that you can set as a home page or bookmark to restore your current settings.',
         'hint' => 'These settings affect all foci and sub-pages!',
-        'addon' => 'By installing our <a href=“:link” target=“_blank” rel=“noopener”>browser extension</a>, you can prevent the MetaGer settings from being accidentally reset when you delete your browser data. ',
+        'addon' => 'By installing our <a href=":link" target="_blank" rel="noopener">browser extension</a>, you can prevent the MetaGer settings from being accidentally reset when you delete your browser data. ',
         'no-settings' => '- No settings have been set yet -',
     ],
     'disabledByFilter' => 'Disabled by Search Filter:',

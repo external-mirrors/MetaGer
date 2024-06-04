@@ -26,4 +26,5 @@ return [
         '2' => 'Wybierz opcję "Otwórz określoną stronę lub strony" i wprowadź ":link" jako adres URL w polu "Dodaj nową stronę". Kliknij "Dodaj".',
         '3' => 'Wskazówka: Każda strona wymieniona w tym oknie zostanie otwarta podczas uruchamiania. Możesz usunąć wpisy, najeżdżając na nie myszką, klikając "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" i wybierając "Usuń".',
     ],
+    'plugin' => 'Po zainstalowaniu naszego rozszerzenia przeglądarki <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener"></a> , MetaGer jest automatycznie instalowany jako domyślna wyszukiwarka. Po instalacji prawdopodobnie konieczne będzie ręczne włączenie rozszerzenia w ustawieniach przeglądarki.',
 ];

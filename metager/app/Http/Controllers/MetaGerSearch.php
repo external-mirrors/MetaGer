@@ -27,7 +27,7 @@ class MetaGerSearch extends Controller
     public function search(Request $request, MetaGer $metager, $timing = false)
     {
         $query_timer = \app()->make(QueryTimer::class);
-        $language    = Localization::getLanguage();
+        $language = Localization::getLanguage();
 
         $preferredLanguage = array($request->getPreferredLanguage());
         if (!empty($preferredLanguage) && !empty($language)) {
@@ -66,7 +66,7 @@ class MetaGerSearch extends Controller
              * had now invalid settings saved when we updated.
              */
             if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-                $settings        = app(SearchSettings::class);
+                $settings = app(SearchSettings::class);
                 $setting_removed = false;
                 foreach ($settings->parameterFilter as $filterName => $filter) {
                     // Check if the user has an option enabled that is only available with metager key
@@ -152,17 +152,17 @@ class MetaGerSearch extends Controller
         try {
             $authorization = app(Authorization::class);
             $searchengines = app(Searchengines::class);
-            $settings      = app(SearchSettings::class);
+            $settings = app(SearchSettings::class);
             Cache::put("loader_" . $metager->getSearchUid(), [
-                "metager"                         => [
+                "metager" => [
                     "authorization" => $authorization,
                     "searchengines" => $searchengines,
-                    "settings"      => $settings,
-                    "quicktips"     => $quicktips,
+                    "settings" => $settings,
+                    "quicktips" => $quicktips,
                 ],
                 "donation_advertisement_position" => $donation_advertisement_position,
-                "admitad"                         => $admitad,
-                "engines"                         => $metager->getEngines(),
+                "admitad" => $admitad,
+                "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
@@ -170,7 +170,7 @@ class MetaGerSearch extends Controller
         $query_timer->observeEnd("Search_CacheFiller");
 
         $registry = CollectorRegistry::getDefault();
-        $counter  = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
+        $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
         $counter->incBy(sizeof($metager->getResults()));
         $counter = $registry->getOrRegisterCounter('metager', 'query_counter', 'counts total number of search queries', []);
         $counter->inc();
@@ -185,19 +185,14 @@ class MetaGerSearch extends Controller
             $quicktip_results = [];
         }
 
-        $script_src_elem = "'self'";
-        $img_src         = "'self' data:";
-        $connect_src     = "'self'";
         if (app(Searchengines::class)->getEnabledSearchengine("yahoo") !== null) {
-            $script_src_elem .= " https://s.yimg.com https://msadsscale.azureedge.net https://www.clarity.ms";
-            $img_src .= " https://search.yahoo.com https://xmlp.search.yahoo.com";
-            $connect_src .= " https://search.yahoo.com https://*.clarity.ms https://browser.pipe.aria.microsoft.com";
+            $csp = "'self' https://*.clarity.ms https://c.bing.com https://*.microsoft.com https://*.yimg.com https://*.azureedge.net https://*.yahoo.com 'unsafe-inline'";
         }
 
         return response($metager->createView($quicktip_results), 200, [
-            "Cache-Control"           => "max-age=3600, must-revalidate, public",
-            "Content-Security-Policy" => "default-src 'self'; script-src 'self'; script-src-elem $script_src_elem; script-src-attr 'self'; style-src 'self'; style-src-elem 'self'; style-src-attr 'self'; img-src $img_src; font-src 'self'; connect-src $connect_src; frame-src 'self'; frame-ancestors 'self'; form-action 'self' metager.org metager.de",
-            "Last-Modified"           => gmdate("D, d M Y H:i:s T"),
+            "Cache-Control" => "max-age=3600, must-revalidate, public",
+            "Content-Security-Policy" => "default-src $csp",
+            "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ]);
     }
 
@@ -253,9 +248,9 @@ class MetaGerSearch extends Controller
 
         $engines = $cached["engines"];
         $admitad = $cached["admitad"];
-        $mg      = $cached["metager"];
+        $mg = $cached["metager"];
 
-        $metager       = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
+        $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
         $authorization = $mg["authorization"];
         app()->singleton(Authorization::class, function ($app) use ($authorization) {
             return $authorization;
@@ -277,7 +272,7 @@ class MetaGerSearch extends Controller
         $metager->checkSpecialSearches($request);
 
         $admitadCountBefore = sizeof($admitad);
-        $engineCountBefore  = 0;
+        $engineCountBefore = 0;
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
                 $engineCountBefore++;
@@ -292,7 +287,7 @@ class MetaGerSearch extends Controller
             $newAdmitad = new \App\Models\Admitad($metager);
             if (!empty($newAdmitad->hash)) {
                 $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
-                $admitad[]          = $newAdmitad;
+                $admitad[] = $newAdmitad;
             }
         }
         $admitad = $metager->parseAffiliates($admitad);
@@ -306,17 +301,17 @@ class MetaGerSearch extends Controller
         }
 
         $result = [
-            'finished'       => true,
-            'results'        => "",
+            'finished' => true,
+            'results' => "",
             'nextSearchLink' => $metager->nextSearchLink(),
-            'imagesearch'    => false,
+            'imagesearch' => false,
         ];
 
         if ($quicktips->new) {
             $result["quicktips"] = Blade::render("parts.quicktips", ["quicktips" => $quicktips->quicktips]);
         }
 
-        $newResults  = 0;
+        $newResults = 0;
         $viewResults = [];
         foreach ($metager->getResults() as $index => $resultTmp) {
             $viewResults[] = get_object_vars($resultTmp);
@@ -328,13 +323,13 @@ class MetaGerSearch extends Controller
             }
         }
 
-        $finished           = true;
-        $enginesLoaded      = [];
+        $finished = true;
+        $enginesLoaded = [];
         $enginesLoadedAfter = 0;
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (!$engine->loaded) {
                 $enginesLoaded[$engine->name] = false;
-                $finished                     = false;
+                $finished = false;
             } else {
                 $enginesLoaded[$engine->name] = true;
                 $engine->setNew(false);
@@ -353,17 +348,17 @@ class MetaGerSearch extends Controller
         }
 
         $result["finished"] = $finished;
-        $result["engines"]  = $enginesLoaded;
+        $result["engines"] = $enginesLoaded;
 
         if ($newResults > 0) {
             $registry = CollectorRegistry::getDefault();
-            $counter  = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
+            $counter = $registry->getOrRegisterCounter('metager', 'result_counter', 'counts total number of returned results', []);
             $counter->incBy($newResults);
         }
         // Update new Engines
         $authorization = app(Authorization::class);
         $searchengines = app(Searchengines::class);
-        $cacheControl  = "no-cache, must-revalidate, public";
+        $cacheControl = "no-cache, must-revalidate, public";
         if ($finished) {
             Cache::forget("loader_" . $metager->getSearchUid());
             $cacheControl = "max-age=3600, must-revalidate, public";
@@ -372,8 +367,8 @@ class MetaGerSearch extends Controller
                 "metager" => [
                     "authorization" => $authorization,
                     "searchengines" => $searchengines,
-                    "settings"      => $settings,
-                    "quicktips"     => $quicktips,
+                    "settings" => $settings,
+                    "quicktips" => $quicktips,
                 ],
                 "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
@@ -432,7 +427,7 @@ class MetaGerSearch extends Controller
             $tipserver .= "?locale=en";
         }
         $tips_text = file_get_contents($tipserver);
-        $tips      = [];
+        $tips = [];
         try {
             $tips_xml = \simplexml_load_string($tips_text);
 

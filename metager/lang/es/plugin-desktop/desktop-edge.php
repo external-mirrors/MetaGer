@@ -26,4 +26,5 @@ return [
         '2' => 'Seleccione "Abrir página o páginas específicas" e introduzca ":link" como URL para "Añadir nueva página".',
         '3' => 'Nota: Todas las páginas web visibles aquí se abrirán ahora cuando se inicie el navegador. Puede eliminar las entradas moviendo el ratón sobre ellas y<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">haciendo clic en</img>"<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">"</img> a la derecha.',
     ],
+    'plugin' => 'Al instalar nuestra extensión de navegador <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener"></a> , MetaGer se instala automáticamente como motor de búsqueda predeterminado. Es probable que tenga que activar manualmente la extensión en la configuración del navegador después de la instalación.',
 ];

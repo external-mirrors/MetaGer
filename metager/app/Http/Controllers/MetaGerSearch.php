@@ -185,6 +185,7 @@ class MetaGerSearch extends Controller
             $quicktip_results = [];
         }
 
+        $csp = "'self'";
         if (app(Searchengines::class)->getEnabledSearchengine("yahoo") !== null) {
             $csp = "'self' https://*.clarity.ms https://c.bing.com https://*.microsoft.com https://*.yimg.com https://*.azureedge.net https://*.yahoo.com 'unsafe-inline'";
         }

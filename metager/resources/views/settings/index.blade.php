@@ -276,6 +276,8 @@
             <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
             @elseif($agent->is('Chrome') && !$agent->isMobile())
             <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
+            @elseif($agent->is('Edge'))
+            <p>@lang('settings.hint.addon', ["link" => "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog"])</p>
             @endif
             <p>@lang('settings.hint.loadSettings')</p>
             @if(empty($cookieLink))

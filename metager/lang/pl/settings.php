@@ -16,7 +16,7 @@ return [
         'header' => 'Przywróć wszystkie bieżące ustawienia',
         'loadSettings' => 'Tutaj znajdziesz link, który możesz ustawić jako stronę główną lub zakładkę, aby przywrócić bieżące ustawienia.',
         'hint' => 'Ustawienia te mają wpływ na wszystkie ogniska i podstrony!',
-        'addon' => 'Instalując nasze <a href=":link" target="_blank" rel="noopener">rozszerzenie przeglądarki</a>, można zapobiec przypadkowemu zresetowaniu ustawień MetaGer podczas usuwania danych przeglądarki. ',
+        'addon' => 'Instalując nasze rozszerzenie przeglądarki <a href=":link" target="_blank" rel="noopener"></a> , można zapobiec przypadkowemu zresetowaniu ustawień MetaGer podczas usuwania danych przeglądarki. ',
         'no-settings' => '- Nie wprowadzono jeszcze żadnych ustawień -',
     ],
     'disabledByFilter' => 'Wyłączone przez filtr wyszukiwania:',

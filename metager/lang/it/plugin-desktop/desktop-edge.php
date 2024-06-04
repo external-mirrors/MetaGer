@@ -26,4 +26,5 @@ return [
         '2' => 'Scegliere "Apri una o più pagine specifiche" e inserire ":link" come URL in "Aggiungi una nuova pagina". Fare clic su "Aggiungi".',
         '3' => 'Suggerimento: ogni pagina elencata in questa finestra verrà aperta all\'avvio. È possibile rimuovere le voci spostando il mouse su di esse, facendo clic su "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" e scegliendo "Elimina".',
     ],
+    'plugin' => 'Quando si installa l\'estensione del browser <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener"></a> , MetaGer viene automaticamente installato come motore di ricerca predefinito. Probabilmente, dopo l\'installazione, sarà necessario abilitare manualmente l\'estensione nelle impostazioni del browser.',
 ];

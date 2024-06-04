@@ -26,4 +26,5 @@ return [
         '2' => 'Vælg "Åbn en specifik side eller sider", og indtast ":link" som URL i "Tilføj en ny side". Klik på "Tilføj".',
         '3' => 'Tip: Alle sider i dette vindue vil blive åbnet ved opstart. Du kan fjerne poster ved at flytte musen over dem, klikke på "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" og vælge "Delete".',
     ],
+    'plugin' => 'Når du installerer vores <a href="https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog" target="_blank" rel="noopener">browserudvidelse</a>, bliver MetaGer automatisk installeret som standardsøgemaskine. Du bliver sandsynligvis nødt til at aktivere udvidelsen manuelt i browserindstillingerne efter installationen.',
 ];

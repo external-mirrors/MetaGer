@@ -9,6 +9,7 @@ return [
         'maps' => [
             'title' => 'Korzystanie z Maps.MetaGer.de',
             'description' => 'Podczas korzystania z usługi mapy MetaGer generowane są następujące dane:',
+            'ip' => 'Używamy Twojego adresu IP, aby oszacować dobrą lokalizację początkową, na której początkowo skupimy mapę. W tym celu adres IP użytkownika jest przetwarzany lokalnie. Wyniki nie są nigdzie przechowywane i zostaną natychmiast usunięte po zgłoszeniu żądania.',
         ],
         'proxy' => [
             'title' => 'Korzystanie z anonimizującego serwera proxy',

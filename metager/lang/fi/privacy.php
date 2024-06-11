@@ -49,6 +49,7 @@ return [
         'maps' => [
             'title' => 'Maps.MetaGer.de käyttö',
             'description' => 'MetaGer-karttapalvelua käytettäessä luodaan seuraavat tiedot:',
+            'ip' => 'Käytämme IP-osoitettasi arvioidaksemme hyvän aloituspaikan, johon kartta aluksi kohdistetaan. Tätä varten IP-osoitteesi käsitellään paikallisesti. Tuloksia ei tallenneta mihinkään, ja ne poistetaan välittömästi pyyntösi jälkeen.',
         ],
         'proxy' => [
             'title' => 'Anonymisoivan välityspalvelimen käyttö',

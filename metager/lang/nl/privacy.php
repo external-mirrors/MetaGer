@@ -55,6 +55,7 @@ return [
         'maps' => [
             'title' => 'Gebruik van Maps.MetaGer.de',
             'description' => 'Bij gebruik van de MetaGer-kaartservice worden de volgende gegevens gegenereerd:',
+            'ip' => 'We gebruiken je IP-adres om een goede startlocatie in te schatten waar we de kaart in eerste instantie op richten. Hiervoor wordt je IP-adres lokaal verwerkt. De resultaten worden nergens opgeslagen en worden na je verzoek onmiddellijk verwijderd.',
         ],
         'proxy' => [
             'title' => 'Gebruik van de anonimiserende proxy',

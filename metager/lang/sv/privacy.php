@@ -43,6 +43,7 @@ return [
         'maps' => [
             'title' => 'Användning av Maps.MetaGer.de',
             'description' => 'Vid användning av karttjänsten MetaGer genereras följande data:',
+            'ip' => 'Vi använder din IP-adress för att uppskatta en bra startplats att fokusera kartan på inledningsvis. För att göra detta behandlas din IP-adress lokalt. Resultaten lagras inte någonstans och kommer att raderas omedelbart efter din begäran.',
         ],
         'proxy' => [
             'title' => 'Användning av anonymiserande proxy',

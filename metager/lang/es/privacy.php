@@ -49,6 +49,7 @@ return [
         'maps' => [
             'title' => 'Uso de Maps.MetaGer.de',
             'description' => 'Cuando se utiliza el servicio de mapas MetaGer, se generan los siguientes datos:',
+            'ip' => 'Utilizamos su dirección IP para estimar una buena ubicación de partida en la que centrar inicialmente el mapa. Para ello, su dirección IP se procesa localmente. Los resultados no se almacenan en ninguna parte y se eliminarán inmediatamente después de su solicitud.',
         ],
         'proxy' => [
             'title' => 'Uso del proxy de anonimización',

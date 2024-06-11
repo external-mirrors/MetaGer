@@ -151,6 +151,7 @@ return [
         'maps' => [
             'title' => 'Utilisation de Maps.MetaGer.de',
             'description' => 'Lors de l\'utilisation du service de cartographie MetaGer, les données suivantes sont générées :',
+            'ip' => 'Nous utilisons votre adresse IP pour estimer un bon emplacement de départ sur lequel concentrer la carte dans un premier temps. Pour ce faire, votre adresse IP est traitée localement. Les résultats ne sont stockés nulle part et seront immédiatement effacés après votre demande.',
         ],
         'proxy' => [
             'title' => 'Utilisation du proxy d\'anonymisation',

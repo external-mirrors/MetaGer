@@ -19,6 +19,7 @@ class SearchSettings
     public $newtab = false;
     public $zitate = true;
     public $blacklist = [];
+    public $blacklist_tld = [];
     public $page = 1;
     public $queryFilter = [];
     public $parameterFilter = [];
@@ -110,7 +111,7 @@ class SearchSettings
             $blacklist_string = substr($blacklist_string, 0, 2048);
 
             // Split the blacklist by all sorts of newlines
-            $blacklist = preg_split('/\r\n|[\r\n]/', $blacklist_string);
+            $blacklist = preg_split('/,/', $blacklist_string);
 
             foreach ($blacklist as $blacklist_entry) {
                 if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
@@ -122,11 +123,19 @@ class SearchSettings
                     continue;
                 $blacklist_entry = substr($blacklist_entry, 0, 255);
 
-                $this->blacklist[] = $blacklist_entry;
+                if (stripos($blacklist_entry, "*.") === 0) {
+                    $this->blacklist_tld[] = str_replace("*.", "", $blacklist_entry);
+                } else {
+                    $this->blacklist[] = $blacklist_entry;
+                }
             }
         }
+
         $this->blacklist = array_unique($this->blacklist);
         sort($this->blacklist);
+
+        $this->blacklist_tld = array_unique($this->blacklist_tld);
+        sort($this->blacklist_tld);
 
         $this->user_settings = array_diff($this->user_settings, $this->ignore_user_settings);
     }

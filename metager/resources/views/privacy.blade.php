@@ -100,6 +100,7 @@
                         <li><a href="#search-request">@lang('privacy.data.query')</a>: @lang('privacy.data.unused')</li>
                         <li>@lang('privacy.data.gps'): @lang('privacy.data.unused')</li>
                     </ol>
+                    <div>@lang('privacy.contexts.maps.ip')</div>
                 </article>
                 <article class="kontext">
                     <h1>@lang('privacy.contexts.proxy.title')</h1>
@@ -256,6 +257,6 @@
     <div class="section">
         <h1>@lang('privacy.changes.title')</h1>
         <div>@lang('privacy.changes.description')</div>
-        <div>@lang('privacy.changes.date', ['date' => '2023-09-04'])</div>
+        <div>@lang('privacy.changes.date', ['date' => '2024-06-11'])</div>
     </div>
 @endsection

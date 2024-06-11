@@ -54,6 +54,7 @@ return [
         'maps' => [
             'title' => 'Use of Maps.MetaGer.de',
             'description' => 'When using the MetaGer map service, the following data is generated:',
+            'ip' => 'We are using your IP address to estimate a good starting location to focus the map on initially. To do so your IP address is processed locally. The results are not stored anywhere and will be immediately deleted after your request.'
         ],
         'proxy' => [
             'title' => 'Use of the anonymizing proxy',

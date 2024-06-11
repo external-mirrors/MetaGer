@@ -49,7 +49,10 @@ class SettingsController extends Controller
         }
 
         # Reading cookies for black list entries
-        $blacklist = app(SearchSettings::class)->blacklist;
+        $blacklist_tld = array_map(function ($value) {
+            return "*." . $value;
+        }, app(SearchSettings::class)->blacklist_tld);
+        $blacklist = array_merge($blacklist_tld, app(SearchSettings::class)->blacklist);
 
         # Generating link with set cookies
         $settings_params = array_merge($settings->user_settings, $searchengines->user_settings);

@@ -1125,6 +1125,7 @@ class MetaGer
             }
         }
 
+        $this->hostBlacklist = array_merge($this->hostBlacklist, app(SearchSettings::class)->blacklist);
         $this->hostBlacklist = array_unique($this->hostBlacklist);
 
         // print the host blacklist as a user warning
@@ -1165,8 +1166,7 @@ class MetaGer
                 $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
             }
         }
-        $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist);
-
+        $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist_tld);
         $this->domainBlacklist = array_unique($this->domainBlacklist);
 
         // print the domain blacklist as a user warning

@@ -145,6 +145,7 @@ return [
         'maps' => [
             'title' => 'Utilizzo di Maps.MetaGer.de',
             'description' => 'Quando si utilizza il servizio di mappe MetaGer, vengono generati i seguenti dati:',
+            'ip' => 'Utilizziamo il vostro indirizzo IP per stimare una buona posizione di partenza su cui concentrare inizialmente la mappa. A tal fine il vostro indirizzo IP viene elaborato localmente. I risultati non vengono memorizzati da nessuna parte e vengono immediatamente cancellati dopo la richiesta dell\'utente.',
         ],
         'proxy' => [
             'title' => 'Utilizzo del proxy di anonimizzazione',

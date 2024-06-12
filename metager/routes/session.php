@@ -27,7 +27,7 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
     Route::get(
         'ip',
         function (Request $request) {
-            dd($request->ip(), $_SERVER["AGENT"]);
+            dd($request->ip(), $_SERVER["AGENT"], $request->headers);
         }
     );
     Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");

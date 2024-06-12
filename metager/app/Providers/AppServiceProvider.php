@@ -13,7 +13,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         config(["app.locale" => "default"]);
-        if (app()->environment("production")) {
+        if (app()->environment("production") || app()->environment("development")) {
             \URL::forceScheme("https");
         }
         \Prometheus\Storage\Redis::setDefaultOptions(

@@ -13,7 +13,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         config(["app.locale" => "default"]);
-        $test = app()->getLocale();
+        if (app()->environment("production")) {
+            \URL::forceScheme("https");
+        }
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
                 'host' => config("database.redis.default.host"),

@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Localization;
 use Illuminate\Support\ServiceProvider;
+use Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         config(["app.locale" => "default"]);
-        if (app()->environment("production") || app()->environment("development")) {
+        if (Request::getHost() !== "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" && (app()->environment("production") || app()->environment("development"))) {
             \URL::forceScheme("https");
         }
         \Prometheus\Storage\Redis::setDefaultOptions(

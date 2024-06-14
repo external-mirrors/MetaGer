@@ -163,17 +163,17 @@
 			<h4>{!! trans('help/easy-language/help-functions.key.title.1') !!}</h4>
 			<p>{!! trans('help/easy-language/help-functions.key.7') !!}</p>
 			<img src="/img/svg-icons/key-icon.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.none') !!}"
-				aria-hidden="true" id="searchbar-img-key">
+				aria-hidden="true" id="searchbar-img-key" class="help-easy-language-key">
 			<p>{!! trans('help/easy-language/help-functions.key.8') !!}</p>
 			<img src="/img/svg-icons/key-empty.svg"
 				alt="{!! trans('help/easy-language/help-functions.key.alt.empty') !!}" aria-hidden="true"
-				id="searchbar-img-key">
+				id="searchbar-img-key" class="help-easy-language-key">
 			<p>{!! trans('help/easy-language/help-functions.key.9') !!}</p>
 			<img src="/img/svg-icons/key-full.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.full') !!}"
-				aria-hidden="true" id="searchbar-img-key">
+				aria-hidden="true" id="searchbar-img-key" class="help-easy-language-key">
 			<p>{!! trans('help/easy-language/help-functions.key.10') !!}</p>
 			<img src="/img/svg-icons/key-low.svg" alt="{!! trans('help/easy-language/help-functions.key.alt.low') !!}"
-				aria-hidden="true" id="searchbar-img-key">
+				aria-hidden="true" id="searchbar-img-key" class="help-easy-language-key">
 			<p>{!! trans('help/easy-language/help-functions.key.11') !!}</p>
 		</div>
 	</section>

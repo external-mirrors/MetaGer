@@ -19,7 +19,7 @@ return [
         'nachrichten' => 'Nachrichten',
         'science' => 'Wissenschaft',
         'produkte' => 'Produkte',
-        'maps' => 'Karten',
+        'maps' => 'Maps',
     ],
     'adfree' => 'MetaGer werbefrei nutzen',
     'skip' => [

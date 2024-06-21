@@ -6,26 +6,27 @@ return [
         'fokus' => 'Skip to search focus selection',
     ],
     'lang' => 'wwitch language',
-    'plugin'       => 'Install MetaGer',
+    'plugin' => 'Install MetaGer',
     'plugin-title' => 'Add MetaGer to your browser',
-    'key'          => [
+    'key' => [
         'placeholder' => 'Enter member key',
-        'tooltip'     => [
+        'tooltip' => [
             'nokey' => 'Set up ad-free search',
             'empty' => 'Token used up. Recharge now.',
-            'low'   => 'Token soon used up. Recharge now.',
-            'full'  => 'Ad-free search enabled.',
+            'low' => 'Token soon used up. Recharge now.',
+            'full' => 'Ad-free search enabled.',
         ],
     ],
-    'placeholder'  => 'MetaGer: Privacy Protected Search & Find',
+    'placeholder' => 'MetaGer: Privacy Protected Search & Find',
     'searchbutton' => 'Start MetaGer-Search',
     'searchreset' => 'delete search query input',
-    'foki'         => [
-        'web'         => 'Web',
-        'bilder'      => 'Images',
+    'foki' => [
+        'web' => 'Web',
+        'bilder' => 'Images',
         'nachrichten' => 'News',
-        'science'     => 'Science',
-        'produkte'    => 'Products',
+        'science' => 'Science',
+        'produkte' => 'Products',
+        'maps' => 'Maps'
     ],
-    'adfree'       => 'Use MetaGer ad-free',
+    'adfree' => 'Use MetaGer ad-free',
 ];

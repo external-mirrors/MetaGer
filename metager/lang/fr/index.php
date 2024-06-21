@@ -17,6 +17,7 @@ return [
         'nachrichten' => 'Actualités',
         'science' => 'La science',
         'produkte' => 'Produits',
+        'maps' => 'Cartes',
     ],
     'plugin' => 'Installer MetaGer',
     'plugin-title' => 'Ajouter MetaGer à votre navigateur',

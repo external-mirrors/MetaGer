@@ -19,6 +19,7 @@ return [
         'nachrichten' => 'Aktualności',
         'science' => 'Nauka',
         'produkte' => 'Produkty',
+        'maps' => 'Mapy',
     ],
     'adfree' => 'Korzystaj z MetaGer bez reklam',
     'skip' => [

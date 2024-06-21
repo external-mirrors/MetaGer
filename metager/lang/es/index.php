@@ -19,6 +19,7 @@ return [
         'nachrichten' => 'Noticias/Política',
         'science' => 'Ciencia',
         'produkte' => 'Productos',
+        'maps' => 'Mapas',
     ],
     'adfree' => 'Utiliza MetaGer sin publicidad',
     'skip' => [

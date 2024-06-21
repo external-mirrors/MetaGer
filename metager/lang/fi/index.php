@@ -19,6 +19,7 @@ return [
         'nachrichten' => 'Uutiset',
         'science' => 'Tiede',
         'produkte' => 'Tuotteet',
+        'maps' => 'Kartat',
     ],
     'adfree' => 'Käytä MetaGeria mainosvapaasti',
     'skip' => [

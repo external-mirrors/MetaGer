@@ -19,6 +19,7 @@ return [
         'nachrichten' => 'Nyheder',
         'science' => 'Videnskab',
         'produkte' => 'Produkter',
+        'maps' => 'Kort',
     ],
     'adfree' => 'Brug MetaGer uden reklamer',
     'skip' => [

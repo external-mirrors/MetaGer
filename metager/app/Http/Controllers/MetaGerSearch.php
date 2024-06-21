@@ -41,7 +41,7 @@ class MetaGerSearch extends Controller
         $settings = app(SearchSettings::class);
 
         if ($settings->fokus === "maps") {
-            return redirect()->to('https://maps.metager.de/' . urlencode($settings->q) . '/guess?locale=' . Localization::getLanguage());
+            return redirect()->to('https://maps.metager.de/' . rawurlencode($settings->q) . '/guess?locale=' . Localization::getLanguage());
         }
 
         # If there is no query parameter we redirect to the startpage

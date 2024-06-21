@@ -4,7 +4,7 @@
 </div>
 @endforeach
 <div id="maps">
-	<a href="https://maps.metager.de/{{ urlencode($metager->getQ()) }}/guess?locale={{ App\Localization::getLanguage() }}" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_blank"@endif>
+	<a href="https://maps.metager.de/{{ rawurlencode(app(\App\SearchSettings::class)->q) }}/guess?locale={{ App\Localization::getLanguage() }}" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_blank"@endif>
 		Maps
 	</a>
 </div>

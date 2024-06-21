@@ -22,12 +22,19 @@ fieldset input[type=text] {
     overflow: visible;
 }
 
-.copyLink{
-    display:flex;
-    .loadSettings{
-        flex-grow:1;
-        width:100%;
-        background-color:@input-bg;
-        color:@input-text;
+.copyLink {
+    display: flex;
+
+    .loadSettings {
+        flex-grow: 1;
+        width: 100%;
+        background-color: @input-bg;
+        color: @input-text;
+    }
+}
+
+@media(max-width: 350px) {
+    .hide-xs {
+        display: none;
     }
 }

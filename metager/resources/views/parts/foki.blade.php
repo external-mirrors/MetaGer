@@ -3,10 +3,8 @@
 	<a href="@if($metager->getFokus() === $fokus)#@else{!!$metager->generateSearchLink($fokus)!!}@endif" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_self"@endif @if($metager->getFokus() === $fokus)aria-current="page"@endif>{{ trans("index.foki.$fokus") }}</a>
 </div>
 @endforeach
-@if (App\Localization::getLanguage() == "de")
 <div id="maps">
-	<a href="https://maps.metager.de/map/{{ urlencode($metager->getQ()) }}/9.7380161,52.37119740000003,12" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_blank"@endif>
+	<a href="https://maps.metager.de/{{ urlencode($metager->getQ()) }}/guess?locale={{ App\Localization::getLanguage() }}" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_blank"@endif>
 		Maps
 	</a>
 </div>
-@endif

@@ -56,7 +56,7 @@ class SearchSettings
 
         $this->user_settings = [];
 
-        if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
+        if (!in_array($this->fokus, array_merge(array_keys((array) $this->sumasJson->foki), ["maps"]))) {
             $this->fokus = "web";
         }
 

@@ -77,7 +77,7 @@
       </a>
     </li>
     <li>
-      <a  href="https://maps.metager.de" target="_blank" >
+      <a  href="https://maps.metager.de?locale={{ App\Localization::getLanguage() }}" target="_blank" >
       <img src="/img/svg-icons/icon-map.svg" alt="" aria-hidden="true" id="sidebar-img-map"> 
         <span>{{ trans('sidebar.nav27') }}</span> 
       </a>

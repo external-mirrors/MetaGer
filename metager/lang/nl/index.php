@@ -17,6 +17,7 @@ return [
         'nachrichten' => 'Nieuws',
         'science' => 'Wetenschap',
         'produkte' => 'Producten',
+        'maps' => 'Kaarten',
     ],
     'placeholder' => 'MetaGer: Beschermd zoeken en vinden',
     'searchbutton' => 'MetaGer zoeken starten',

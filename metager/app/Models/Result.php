@@ -295,7 +295,7 @@ class Result
         if (
             ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLink, $metager->getUrlBlacklist()) ||
-                in_array($this->strippedLink . "|" . app(SearchSettings::class)->q, $metager->getUrlBlacklist())
+                in_array($this->strippedLink . "|" . strtolower(app(SearchSettings::class)->q), $metager->getUrlBlacklist())
                 )
             ) 
         ) {

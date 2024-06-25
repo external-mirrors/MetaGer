@@ -54,16 +54,17 @@ class SearchSettings
         $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
 
+        if (!in_array($this->fokus, array_merge(array_keys((array) $this->sumasJson->foki), ["maps"]))) {
+            $this->fokus = "web";
+        }
+
         // Make sure sumas definition for current fokus exists
         if (!property_exists($this->sumasJson->foki, $this->fokus)) {
             $this->sumasJson->foki->{$this->fokus} = new \stdClass;
             $this->sumasJson->foki->{$this->fokus}->sumas = [];
         }
-        $this->user_settings = [];
 
-        if (!in_array($this->fokus, array_merge(array_keys((array) $this->sumasJson->foki), ["maps"]))) {
-            $this->fokus = "web";
-        }
+        $this->user_settings = [];
 
         $this->javascript_enabled = filter_var($this->getSettingValue("js_available", false), FILTER_VALIDATE_BOOLEAN);
 

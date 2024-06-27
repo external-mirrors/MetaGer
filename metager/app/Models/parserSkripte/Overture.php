@@ -5,6 +5,8 @@ namespace app\Models\parserSkripte;
 use App\MetaGer;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use App\Models\SearchEngineInfos;
+use App\Models\SearchEngineLanguages;
 use App\PrometheusExporter;
 use LaravelLocalization;
 use Log;
@@ -34,6 +36,53 @@ class Overture extends Searchengine
         if (app()->environment("local")) {
             $this->test_mode = "true";
         }
+
+        $this->configuration->cacheDuration = 0;    // No caching allowed for Yahoo
+        $this->configuration->ads = true;
+        $this->configuration->engineBoost = 1.2;
+
+        // Apply default get parameters
+        $this->configuration->addQueryParameters([
+            "Partner" => "tripledoubleu_xml_de_searchbox_metager",
+            "on" => "6",
+            "in" => "20",
+            "adEnableActionExt" => "1",
+            "enableFavicon" => "1",
+            "siteLink" => "1",
+            "adultFilter" => "any",
+            "keywordCharEnc" => "utf8"
+        ]);
+
+        // Apply languages
+        $this->configuration->setLanguages("mkt", [], [
+            "de_DE" => "de",
+            "de_AT" => "at",
+            "de_CH" => "ch",
+            "da_DK" => "dk",
+            "en_US" => "us",
+            "en_GB" => "uk",
+            "en_IE" => "ie",
+            "en_MY" => "my",
+            "es_ES" => "es",
+            "es_MX" => "mx",
+            "fi_FI" => "fi",
+            "sv_SE" => "se",
+            "it_IT" => "it",
+            "nl_NL" => "nl",
+            "pl_PL" => "pl",
+            "fr_FR" => "fr",
+            "fr_CA" => "ca"
+        ]);
+
+        $this->configuration->infos = new SearchEngineInfos(
+            homepage: "https://de.yahoo.com/",
+            index_name: "Microsoft Bing",
+            display_name: "Yahoo",
+            founded: "2. März 1995",
+            headquarter: "New York City, USA",
+            operator: "Altaba Inc. (ehemals Yahoo Inc.)",
+            index_size: "vermutlich 8-14 Milliarden"
+        );
     }
 
     public function applySettings()
@@ -59,7 +108,7 @@ class Overture extends Searchengine
                 $resultCount = 0;
             }
             $this->totalResults = $resultCount;
-            $results            = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+            $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
             if (!is_array($results)) {
                 $results = [];
             }
@@ -70,10 +119,10 @@ class Overture extends Searchengine
             }
 
             foreach ($results as $result) {
-                $title       = html_entity_decode($result["title"]);
-                $link        = $result->{"ClickUrl"}->__toString();
+                $title = html_entity_decode($result["title"]);
+                $link = $result->{"ClickUrl"}->__toString();
                 $anzeigeLink = $result["siteHost"];
-                $descr       = html_entity_decode($result["description"]);
+                $descr = html_entity_decode($result["description"]);
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -125,10 +174,10 @@ class Overture extends Searchengine
             // Nun noch die Werbeergebnisse:
             /** @var SimpleXMLElement $ad */
             foreach ($ads as $ad) {
-                $title       = html_entity_decode($ad["title"]);
-                $link        = $ad->{"ClickUrl"}->__toString();
+                $title = html_entity_decode($ad["title"]);
+                $link = $ad->{"ClickUrl"}->__toString();
                 $anzeigeLink = $ad["siteHost"];
-                $descr       = html_entity_decode($ad["description"]);
+                $descr = html_entity_decode($ad["description"]);
                 $this->counter++;
 
                 // Advertisement Data of result
@@ -137,10 +186,10 @@ class Overture extends Searchengine
                     $yiid = $ad["ImpressionId"]->__toString();
                 }
                 $appns = null;
-                $k     = null;
+                $k = null;
                 if (isset($ad["appNs"]) && isset($ad["k"])) {
                     $appns = $ad["appNs"]->__toString();
-                    $k     = $ad["k"]->__toString();
+                    $k = $ad["k"]->__toString();
                 }
 
                 $this->ads[] = new \App\Models\Result(
@@ -154,9 +203,9 @@ class Overture extends Searchengine
                     $this->counter,
                     [
                         "ad_data" => [
-                            "yiid"  => $yiid,
+                            "yiid" => $yiid,
                             "appns" => $appns,
-                            "k"     => $k,
+                            "k" => $k,
                         ],
                     ]
                 );
@@ -164,7 +213,7 @@ class Overture extends Searchengine
             if (sizeof($this->results) === 0 && sizeof($this->ads) === 0 && !$this->failed) {
                 $this->log_failed_yahoo_search();
                 $this->configuration->getParameter->Keywords .= " -qwertzy";
-                $this->cached                                = false;
+                $this->cached = false;
                 Redis::del($this->getHash());
                 $this->startSearch();
             }
@@ -197,9 +246,9 @@ class Overture extends Searchengine
         // Yahoo liefert, wenn es keine weiteren Ergebnisse hat immer wieder die gleichen Ergebnisse
         // Wir müssen also überprüfen, ob wir am Ende der Ergebnisse sind
         $resultCount = $content->xpath('//Results/ResultSet[@id="inktomi"]/MetaData/TotalHits');
-        $results     = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
+        $results = $content->xpath('//Results/ResultSet[@id="inktomi"]/Listing');
         if (isset($resultCount[0]) && sizeof($results) > 0) {
-            $resultCount      = intval($resultCount[0]->__toString());
+            $resultCount = intval($resultCount[0]->__toString());
             $lastResultOnPage = intval($results[sizeof($results) - 1]["rank"]);
             if ($resultCount <= $lastResultOnPage) {
                 return;
@@ -227,7 +276,7 @@ class Overture extends Searchengine
             $newConfiguration->getParameter->$key = $value;
         }
         # Erstellen des neuen Suchmaschinenobjekts und anpassen des GetStrings:
-        $next       = new Overture($this->name, $newConfiguration);
+        $next = new Overture($this->name, $newConfiguration);
         $this->next = $next;
     }
 
@@ -247,7 +296,7 @@ class Overture extends Searchengine
         }
 
         $this->configuration->getParameter->affilData = $affil_data;
-        $this->configuration->getParameter->serveUrl  = $url;
+        $this->configuration->getParameter->serveUrl = $url;
     }
 
     private function log_failed_yahoo_search()
@@ -256,12 +305,12 @@ class Overture extends Searchengine
         $log_file = storage_path("logs/metager/yahoo_fail.csv");
 
         $data = [
-            "time"   => now()->format("Y-m-d H:i:s"),
+            "time" => now()->format("Y-m-d H:i:s"),
             "locale" => LaravelLocalization::getCurrentLocale(),
-            "ip"     => request()->ip(),
-            "query"  => $this->configuration->getParameter->Keywords,
+            "ip" => request()->ip(),
+            "query" => $this->configuration->getParameter->Keywords,
         ];
-        $fh   = fopen($log_file, "a");
+        $fh = fopen($log_file, "a");
         try {
             fputcsv($fh, $data);
         } finally {

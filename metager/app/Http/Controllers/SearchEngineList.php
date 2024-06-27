@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Models\Configuration\Searchengines;
+use App\Models\DisabledReason;
 use LaravelLocalization;
 
 class SearchEngineList extends Controller
@@ -23,30 +25,24 @@ class SearchEngineList extends Controller
         $locale = LaravelLocalization::getCurrentLocaleRegional();
         $lang = Localization::getLanguage();
         $sumas = [];
+
+        $search_engines = app(Searchengines::class);
+
         foreach ($suma_file->foki as $fokus_name => $fokus) {
             foreach ($fokus->sumas as $suma_name) {
-                if (
-                    ## Lang support is not defined
-                    (\property_exists($suma_file->sumas->{$suma_name}, "lang") && \property_exists($suma_file->sumas->{$suma_name}->lang, "languages") && \property_exists($suma_file->sumas->{$suma_name}->lang, "regions")) &&
-                    ## Current Locale/Lang is not supported by this engine
-                    (\property_exists($suma_file->sumas->{$suma_name}->lang->languages, $lang) || \property_exists($suma_file->sumas->{$suma_name}->lang->regions, $locale))
-                ) {
-                    $sumas[$fokus_name][] = $suma_name;
-                }
+                if (!array_key_exists($suma_name, $search_engines->sumas))
+                    continue;
+                if ($search_engines->sumas[$suma_name]->configuration->disabled && in_array(DisabledReason::SUMAS_CONFIGURATION, $search_engines->sumas[$suma_name]->configuration->disabledReasons))
+                    continue;
+                if (!array_key_exists($fokus_name, $sumas))
+                    $sumas[$fokus_name] = [];
+                $sumas[$fokus_name][$suma_name] = $search_engines->sumas[$suma_name]->configuration->infos;
             }
         }
-        $suma_infos = [];
-        foreach ($sumas as $fokus_name => $suma_list) {
-            foreach ($suma_list as $index => $suma_name) {
-                if (!$suma_file->sumas->{$suma_name}->disabled) {
-                    $infos = $suma_file->sumas->{$suma_name}->infos;
-                    $suma_infos[$fokus_name][$suma_name] = clone $infos;
-                }
-            }
-        }
+
         return view('search-engine')
             ->with('title', trans('titles.search-engine'))
             ->with('navbarFocus', 'info')
-            ->with('suma_infos', $suma_infos);
+            ->with('suma_infos', $sumas);
     }
 }

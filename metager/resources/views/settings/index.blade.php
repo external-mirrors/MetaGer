@@ -127,6 +127,9 @@
                 @else
                     <p>@lang('settings.cost-free')</p>
                 @endif
+                @if(array_key_exists("yahoo", $sumas) && $sumas["yahoo"]->configuration->disabled === false)
+                    <p>@lang('settings.hint.yahoo')</p>
+                @endif
             </div>
         @endif
         @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')

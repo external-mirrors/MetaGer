@@ -23,6 +23,7 @@ return [
         'hint' => 'Deze instellingen hebben invloed op alle brandpunten en subpagina\'s!',
         'addon' => 'Door onze <a href=":link" target="_blank" rel="noopener">browserextensie</a> te installeren, kun je voorkomen dat de MetaGer-instellingen per ongeluk worden gereset wanneer je je browsergegevens verwijdert. ',
         'no-settings' => '- Er zijn nog geen instellingen ingesteld -',
+        'yahoo' => '<b>Opmerking</b>: Helaas mogen we de zoekresultaten van Yahoo niet langer samen met die van andere zoekmachines weergeven. Daarom zijn alle andere zoekmachines nu uitgeschakeld zolang Yahoo is ingeschakeld.',
     ],
     'disabledByFilter' => 'Uitgeschakeld door zoekfilter:',
     'address' => 'Adres',

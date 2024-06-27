@@ -22,6 +22,7 @@ return [
         'hint' => 'Queste impostazioni hanno effetto su tutti i foci e le sottopagine!',
         'addon' => 'Installando la nostra estensione per il browser <a href=":link" target="_blank" rel="noopener"></a> , è possibile evitare che le impostazioni di MetaGer vengano accidentalmente ripristinate quando si cancellano i dati del browser. ',
         'no-settings' => '- Non sono ancora state impostate le impostazioni.',
+        'yahoo' => '<b>Nota</b>: Purtroppo non ci è più consentito visualizzare i risultati di ricerca di Yahoo insieme a quelli di altri motori di ricerca. Pertanto, tutti gli altri motori di ricerca sono ora disattivati finché Yahoo è attivo.',
     ],
     'disabledByFilter' => 'Disabilitato dal filtro di ricerca:',
     'address' => 'Indirizzo',

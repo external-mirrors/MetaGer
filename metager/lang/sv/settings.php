@@ -64,6 +64,7 @@ return [
         'hint' => 'Dessa inställningar påverkar alla foci och undersidor!',
         'no-settings' => '- Inga inställningar har gjorts ännu -',
         'addon' => 'Genom att installera vårt webbläsartillägg <a href=":link" target="_blank" rel="noopener"></a> kan du förhindra att MetaGer-inställningarna återställs av misstag när du tar bort dina webbläsardata. ',
+        'yahoo' => '<b>Obs</b>: Tyvärr får vi inte längre visa sökresultaten från Yahoo tillsammans med resultaten från andra sökmotorer. Därför är alla andra sökmotorer nu inaktiverade så länge Yahoo är aktiverat.',
     ],
     'disabledByFilter' => 'Inaktiverad av sökfilter:',
     'address' => 'Adress',

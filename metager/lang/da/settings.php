@@ -26,6 +26,7 @@ return [
         'hint' => 'Disse indstillinger påvirker alle foci og undersider!',
         'addon' => 'Ved at installere vores <a href=":link" target="_blank" rel="noopener">browserudvidelse</a> kan du forhindre, at MetaGer-indstillingerne ved et uheld bliver nulstillet, når du sletter dine browserdata. ',
         'no-settings' => '- Der er ikke foretaget nogen indstillinger endnu.',
+        'yahoo' => '<b>Bemærk</b>: Vi har desværre ikke længere lov til at vise Yahoo-søgeresultater sammen med resultater fra andre søgemaskiner. Derfor er alle andre søgemaskiner nu deaktiveret, så længe Yahoo er aktiveret.',
     ],
     'darkmode' => 'Skift til mørk tilstand',
     'system' => 'Systemstandard',

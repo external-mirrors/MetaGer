@@ -30,6 +30,7 @@ return [
         'hint' => 'Nämä asetukset vaikuttavat kaikkiin polttopisteisiin ja alasivuihin!',
         'no-settings' => '- Asetuksia ei ole vielä asetettu -',
         'addon' => 'Asentamalla <a href=":link" target="_blank" rel="noopener">selainlaajennuksen</a> voit estää MetaGerin asetusten palautumisen vahingossa, kun poistat selaimen tietoja. ',
+        'yahoo' => '<b>Huomautus</b>: Valitettavasti emme saa enää näyttää Yahoon hakutuloksia yhdessä muiden hakukoneiden tulosten kanssa. Siksi kaikki muut hakukoneet ovat nyt pois käytöstä niin kauan kuin Yahoo on käytössä.',
     ],
     'disabledByFilter' => 'Ei käytössä hakusuodattimella:',
     'address' => 'Osoite',

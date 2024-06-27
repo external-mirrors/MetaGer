@@ -18,6 +18,7 @@ return [
         'hint' => 'Estos ajustes afectan a todos los focos y subpáginas en general',
         'addon' => 'Instalando nuestra extensión de navegador <a href=":link" target="_blank" rel="noopener"></a> , puedes evitar que la configuración de MetaGer se restablezca accidentalmente cuando borres los datos de tu navegador. ',
         'no-settings' => '- Aún no se ha establecido ninguna configuración -',
+        'yahoo' => '<b>Nota</b>: Lamentablemente, ya no se nos permite mostrar los resultados de búsqueda de Yahoo junto con los de otros motores de búsqueda. Por lo tanto, todos los demás motores de búsqueda están ahora desactivados mientras Yahoo esté activado.',
     ],
     'disabledByFilter' => 'Desactivado por el filtro de búsqueda:',
     'address' => 'Introducción de la dirección',

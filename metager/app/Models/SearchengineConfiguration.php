@@ -177,7 +177,7 @@ class SearchengineConfiguration
         if ($this->requestHeader === null) {
             $this->requestHeader = new \stdClass;
         }
-        $this->requestHeader = (object) array_merge((array) $this->requestHeader, (array) $requestHeader);
+        $this->requestHeader = (object) array_merge((array) $requestHeader, (array) $this->requestHeader);
     }
 
     public function addQueryParameters(object|array $queryParameters)
@@ -188,7 +188,7 @@ class SearchengineConfiguration
         if ($this->getParameter === null) {
             $this->getParameter = new \stdClass;
         }
-        $this->getParameter = (object) array_merge((array) $this->getParameter, (array) $queryParameters);
+        $this->getParameter = (object) array_merge((array) $queryParameters, (array) $this->getParameter);
     }
 
     public function applyQuery(string $query)

@@ -145,7 +145,7 @@ class BraveNews extends Searchengine
         try {
             $results = json_decode($result);
 
-            if (!$results->query->more_results_available) {
+            if (sizeof($results->results) === 0) {
                 return;
             }
 

@@ -21,6 +21,7 @@ return [
         'hint' => 'Ces paramètres s\'appliquent à tous les foyers et à toutes les sous-pages !',
         'addon' => 'En installant notre extension de navigateur <a href=":link" target="_blank" rel="noopener"></a> , vous pouvez éviter que les paramètres de MetaGer soient accidentellement réinitialisés lorsque vous effacez les données de votre navigateur. ',
         'no-settings' => '- Aucun réglage n\'a encore été effectué -',
+        'yahoo' => '<b>Note</b>: Malheureusement, nous ne sommes plus autorisés à afficher les résultats de recherche de Yahoo avec ceux d\'autres moteurs de recherche. Par conséquent, tous les autres moteurs de recherche sont désormais désactivés tant que Yahoo est activé.',
     ],
     'disabledByFilter' => 'Désactivé par le filtre de recherche :',
     'address' => 'Adresse',

@@ -5,6 +5,8 @@ namespace App\Models\parserSkripte;
 use App\MetaGer;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use App\Models\SearchEngineInfos;
+use App\Models\SearchEngineLanguages;
 use Log;
 
 class OvertureAds extends Searchengine
@@ -13,7 +15,50 @@ class OvertureAds extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        # We need some Affil-Data for the advertisements
+
+        $this->configuration->cacheDuration = 0;    // No caching allowed for Yahoo
+        $this->configuration->ads = true;
+        $this->configuration->engineBoost = 1.2;
+
+        // Apply default get parameters
+        $this->configuration->addQueryParameters([
+            "Partner" => "tripledoubleu_xml_de_searchbox_metager",
+            "on" => "6",
+            "in" => "20",
+            "adEnableActionExt" => "1",
+            "enableFavicon" => "1",
+            "siteLink" => "1",
+            "adultFilter" => "any",
+            "keywordCharEnc" => "utf8"
+        ]);
+
+        // Apply languages
+        $this->configuration->setLanguages("mkt", [], [
+            "de_DE" => "de",
+            "de_AT" => "at",
+            "de_CH" => "ch",
+            "da_DK" => "dk",
+            "en_US" => "us",
+            "en_GB" => "uk",
+            "en_IE" => "ie",
+            "en_MY" => "my",
+            "es_ES" => "es",
+            "es_MX" => "mx",
+            "fi_FI" => "fi",
+            "sv_SE" => "se",
+            "it_IT" => "it",
+            "nl_NL" => "nl",
+            "pl_PL" => "pl",
+            "fr_FR" => "fr",
+            "fr_CA" => "ca"
+        ]);
+
+        $this->configuration->infos = new SearchEngineInfos("https://de.yahoo.com/", "Microsoft Bing", "Yahoo", "2. März 1995", "New York City, USA", "Altaba Inc. (ehemals Yahoo Inc.)", "vermutlich 8-14 Milliarden");
+    }
+
+    public function applySettings()
+    {
+        parent::applySettings();
         $this->setOvertureAffilData(app(MetaGer::class)->getUrl());
     }
 

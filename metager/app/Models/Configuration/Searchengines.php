@@ -94,6 +94,19 @@ class Searchengines
             }
         }
 
+        // If user manuall
+
+        // Disable other searchengines if yahoo is enabled
+        if ($this->sumas["yahoo"]->configuration->disabled === false) {
+            foreach ($this->sumas as $suma_name => $suma) {
+                if ($suma_name === "yahoo")
+                    continue;
+                $suma->configuration->disabled = true;
+                $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
+                $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
+            }
+        }
+
         $settings->loadQueryFilter();
         $settings->loadParameterFilter($this);
         $authorization = app(Authorization::class);

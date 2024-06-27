@@ -7,6 +7,8 @@ use App\Models\DeepResults\Button;
 use App\Models\Result;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use App\Models\SearchEngineInfos;
+use App\Models\SearchEngineLanguages;
 use LaravelLocalization;
 use Log;
 use Request;
@@ -18,6 +20,35 @@ class Brave extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
+
+        $this->configuration->engineBoost = 1.2;
+        $this->configuration->cost = 1;
+
+        $this->configuration->addQueryParameters([
+            "count" => 20,
+            "offset" => 0
+        ]);
+
+        $this->configuration->setLanguages("country", [], [
+            "de_DE" => "DE",
+            "de_AT" => "AT",
+            "en_US" => "US",
+            "en_GB" => "GB",
+            "es_ES" => "ES",
+            "es_MX" => "MX",
+            "da_DK" => "DK",
+            "at_AT" => "AT",
+            "de_CH" => "CH",
+            "fi_FI" => "FI",
+            "it_IT" => "IT",
+            "nl_NL" => "NL",
+            "sv_SE" => "SE",
+            "fr_FR" => "FR",
+            "fr_CA" => "CA",
+            "pl_PL" => "PL"
+        ]);
+
+        $this->configuration->infos = new SearchEngineInfos("https://search.brave.com/", "Brave Search", "Brave", "Juni 2021", "San Francisco", "Brave San Francisco", "einige Milliarden");
     }
 
     public function applySettings()

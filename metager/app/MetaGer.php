@@ -97,7 +97,7 @@ class MetaGer
             $this->domainsBlacklisted = explode("\n", $tmp);
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
             $lines = explode("\n", $tmp);
-            $filtered_lines = array_filter($lines, function($line) {
+            $filtered_lines = array_filter($lines, function ($line) {
                 return strpos(trim($line), '#') !== 0;
             });
             # Re-index the array (array_filter preserves keys by default)
@@ -1315,7 +1315,7 @@ class MetaGer
 
     public function popAd()
     {
-        if (count($this->ads) > 0) {
+        if (count($this->results) > 0 && count($this->ads) > 0) {
             return array_shift($this->ads);
         } else {
             return null;

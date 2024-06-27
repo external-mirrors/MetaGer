@@ -19,16 +19,8 @@ class Onenewspagegermany extends Searchengine
     {
         parent::__construct($name, $configuration);
 
-        $this->configuration->cost  = 0;
-        $this->configuration->infos = new SearchEngineInfos((object) [
-            "homepage"     => "http://www.newsdeutschland.com/",
-            "index_name"   => null,
-            "display_name" => "OneNewspage",
-            "founded"      => "2008",
-            "headquarter"  => "Wales, England",
-            "operator"     => "One News Page Ltd.",
-            "index_size"   => null,
-        ]);
+        $this->configuration->cost = 0;
+        $this->configuration->infos = new SearchEngineInfos("http://www.newsdeutschland.com/", null, "OneNewspage", "2008", "Wales, England", "One News Page Ltd.", null, );
     }
 
     public function loadResults($result)
@@ -42,13 +34,13 @@ class Onenewspagegermany extends Searchengine
                 if (sizeof($result) < 3) {
                     continue;
                 }
-                $title                 = $result[0];
-                $link                  = $result[2];
-                $anzeigeLink           = $link;
-                $descr                 = $result[1];
+                $title = $result[0];
+                $link = $result[2];
+                $anzeigeLink = $link;
+                $descr = $result[1];
                 $additionalInformation = sizeof($result) > 3 ? ['date' => Carbon::createFromTimestamp(intval($result[3]))] : [];
 
-                $faviconUrl                           = parse_url($link, PHP_URL_SCHEME) . "://" . parse_url($link, PHP_URL_HOST) . "/favicon.ico";
+                $faviconUrl = parse_url($link, PHP_URL_SCHEME) . "://" . parse_url($link, PHP_URL_HOST) . "/favicon.ico";
                 $additionalInformation["favicon_url"] = $faviconUrl;
 
                 $counter++;
@@ -93,7 +85,7 @@ class Onenewspagegermany extends Searchengine
         } else {
             $newConfiguration->getParameter->o = count($this->results);
         }
-        $next       = new Onenewspagegermany($this->name, $newConfiguration);
+        $next = new Onenewspagegermany($this->name, $newConfiguration);
         $this->next = $next;
     }
 }

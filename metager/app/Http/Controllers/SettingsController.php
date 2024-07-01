@@ -344,18 +344,21 @@ class SettingsController extends Controller
             abort(404);
         }
 
-        $cookies = Cookie::get();
-        foreach ($cookies as $key => $value) {
+        $global_settings = [
+            "dark_mode",
+            "new_tab",
+            "zitate",
+            "self_advertisements",
+            "suggestions",
+        ];
+
+        $settings = Cookie::get();
+        $settings = array_merge($settings, $request->header());
+        foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }
-            $global_settings = [
-                "dark_mode",
-                "new_tab",
-                "zitate",
-                "self_advertisements",
-                "suggestions",
-            ];
+
             if (in_array($key, $global_settings)) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }

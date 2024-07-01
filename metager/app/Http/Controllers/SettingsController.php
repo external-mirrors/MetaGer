@@ -353,7 +353,11 @@ class SettingsController extends Controller
         ];
 
         $settings = Cookie::get();
-        $settings = array_merge($settings, $request->header());
+        if ($request->wantsJson()) {
+            foreach ($request->header() as $key => $value) {
+                $settings[str_replace("-", "_", $key)] = $value;
+            }
+        }
         foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));

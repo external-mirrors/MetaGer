@@ -143,7 +143,9 @@ class SearchSettings
         $this->blacklist_tld = array_unique($this->blacklist_tld);
         sort($this->blacklist_tld);
 
-        $this->user_settings = array_diff($this->user_settings, $this->ignore_user_settings);
+        foreach ($this->ignore_user_settings as $ignored_key) {
+            unset($this->user_settings[$ignored_key]);
+        }
     }
 
     public function loadQueryFilter()

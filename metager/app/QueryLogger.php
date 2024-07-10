@@ -61,7 +61,7 @@ class QueryLogger
         /** @var MetaGer */
         $metager = App::make(MetaGer::class);
         $log_entry = [
-            "time" => (new DateTime('now', new DateTimeZone("UTC")))->format("Y-m-d H:i:s"),
+            "time" => (new DateTime('now', new DateTimeZone("UTC")))->format("Y-m-d H:i:s.u"),
             "referer" => $this->referer,
             "request_time" => $this->end_time - $this->start_time,
             "focus" => $metager->getFokus(),

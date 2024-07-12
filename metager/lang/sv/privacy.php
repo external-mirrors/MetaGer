@@ -179,4 +179,8 @@ return [
         'title' => 'Värdskap',
         'description' => 'Våra tjänster administreras av oss, SUMA-EV, och drivs på hårdvara som hyrs av Hetzner Online GmbH.',
     ],
+    'stats' => [
+        'title' => 'Anonym statistik',
+        'description' => 'Vi arbetar ständigt med att förbättra våra tjänster. För att kunna göra detta behöver vi veta vilka av våra funktioner som används. Av denna anledning samlar vi in helt anonyma uppgifter om frekvensen av sidvisningar och användningen av enskilda funktioner på våra webbplatser. Vi samlar också in anonymiserade uppgifter om fördelningen av webbläsartyper och versioner. Denna statistik är inte baserad på individuella användarprofiler och skapas utan cookies eller liknande teknik. Den innehåller inte några personuppgifter.',
+    ],
 ];

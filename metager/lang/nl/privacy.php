@@ -179,4 +179,8 @@ return [
         'description' => 'Net als onze aanbiedingen is ook deze gegevensbeschermingsverklaring voortdurend aan verandering onderhevig. Lees ze daarom regelmatig opnieuw.',
         'date' => 'Deze versie van ons privacybeleid is gedateerd: :date',
     ],
+    'stats' => [
+        'title' => 'Anonieme statistieken',
+        'description' => 'We zijn altijd bezig met het verbeteren van onze diensten. Om dit te kunnen doen, moeten we weten welke van onze functies worden gebruikt. Daarom verzamelen we volledig anonieme gegevens over de frequentie van het bekijken van pagina\'s en het gebruik van afzonderlijke functies op onze websites. We verzamelen ook geanonimiseerde gegevens over de verspreiding van browsertypes en -versies. Deze statistieken zijn niet gebaseerd op individuele gebruikersprofielen en worden gemaakt zonder cookies of soortgelijke technologieën. Ze bevatten geen persoonlijke gegevens.',
+    ],
 ];

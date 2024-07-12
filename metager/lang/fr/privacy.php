@@ -179,4 +179,8 @@ return [
         'title' => 'Hébergement',
         'description' => 'Nos services sont administrés par nous, la SUMA-EV, et exploités sur du matériel loué à Hetzner Online GmbH.',
     ],
+    'stats' => [
+        'title' => 'Statistiques anonymes',
+        'description' => 'Nous travaillons en permanence à l\'amélioration de nos services. Pour ce faire, nous devons savoir quelles fonctions sont utilisées. C\'est pourquoi nous recueillons des données totalement anonymes sur la fréquence de consultation des pages et l\'utilisation des différentes fonctions de nos sites web. Nous recueillons également des données anonymes sur la répartition des types et versions de navigateurs. Ces statistiques ne sont pas basées sur des profils d\'utilisateurs individuels et sont créées sans cookies ou technologies similaires. Elles ne contiennent aucune donnée personnelle.',
+    ],
 ];

@@ -3,7 +3,7 @@ return [
     'plugin' => 'When you install our <a href="https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd" target="_blank" rel="noopener">browser extension</a>, MetaGer is automatically installed as the default search engine.',
     'default-search-v49' => [
         '1' => 'Navigate to the top right corner of your browser, click "<img class= "mg-icon" src="/img/menu.svg">" and choose "Settings".',
-        '2' => 'Under "Search" click the button "Manage search engines...".',
+        '2' => 'Under the "Search" button click the "Manage search engines..." button.',
         '3' => 'Move your mouse over the "MetaGer" entry and click on "Make Default".',
     ],
     'default-search-v53' => [

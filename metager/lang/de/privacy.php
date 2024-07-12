@@ -10,6 +10,10 @@ return [
         'title' => 'Grundsätze',
         'description' => 'Wir haben uns als gemeinnütziger Verein dem freien Wissenszugang verschrieben. Da wir wissen, dass freie Recherche nicht mit Massenüberwachung vereinbar ist, nehmen wir auch Datenschutz sehr ernst. Wir verarbeiten schon immer nur die Daten, die zum Betrieb unserer Dienste unbedingt nötig sind. Datenschutz ist bei uns immer der Standard. Profiling – also die automatische Erstellung von Nutzerprofilen – betreiben wir nicht.',
     ],
+    'stats' => [
+        'title' => 'Anonyme Statistiken',
+        'description' => 'Wir arbeiten stets daran unsere Dienste zu verbessern. Um dazu in der Lage zu sein, müssen wir wissen, welche unserer Funktionen verwendet werden. Aus diesem Grund erfassen wir vollkommen anonyme Daten über die Häufigkeit von Seitenaufrufen und die Verwendung einzelner Funktionen unserer Webseiten. Ebenfalls erfassen wir anonymisierte Daten über die Verteilung von Browserarten und Versionen. Diese Statistiken basieren nicht auf einzelnen Nutzerprofilen und werden ohne Cookies oder ähnlichem erstellt. Sie beinhalten keine personenbezogenen Daten.'
+    ],
     'contexts' => [
         'title' => 'Anfallende Daten nach Kontext',
         'metager' => [

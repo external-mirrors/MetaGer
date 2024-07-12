@@ -3,6 +3,7 @@
 use App\Http\Middleware\AllowLocalOnly;
 use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
+use App\Http\Middleware\Statistics;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+            Statistics::class,
             TrustProxies::class,
         ]);
         $middleware->trustProxies(at: [

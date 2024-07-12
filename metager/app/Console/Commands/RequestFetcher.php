@@ -156,7 +156,7 @@ class RequestFetcher extends Command
                     Log::error($error);
                 }
 
-                if ($responseCode !== 200 && $responseCode !== 201) {
+                if ($responseCode < 200 || $responseCode > 299) {
                     Log::debug($resulthash);
                     Log::debug("Got responsecode " . $responseCode . " fetching \"" . curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL) . "\n");
                     Log::debug(\curl_multi_getcontent($info["handle"]));

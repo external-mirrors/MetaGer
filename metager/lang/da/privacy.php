@@ -179,4 +179,8 @@ return [
         'optional' => 'valgfri',
         'unused' => 'Vil ikke blive gemt eller delt.',
     ],
+    'stats' => [
+        'title' => 'Anonyme statistikker',
+        'description' => 'Vi arbejder altid på at forbedre vores tjenester. For at kunne gøre det har vi brug for at vide, hvilke af vores funktioner der bliver brugt. Derfor indsamler vi helt anonyme data om hyppigheden af sidevisninger og brugen af de enkelte funktioner på vores hjemmesider. Vi indsamler også anonymiserede data om fordelingen af browsertyper og -versioner. Disse statistikker er ikke baseret på individuelle brugerprofiler og oprettes uden cookies eller lignende teknologier. De indeholder ingen personlige data.',
+    ],
 ];

@@ -179,4 +179,8 @@ return [
         'optional' => 'opcjonalny',
         'unused' => 'Nie będą zapisywane ani udostępniane.',
     ],
+    'stats' => [
+        'title' => 'Anonimowe statystyki',
+        'description' => 'Nieustannie pracujemy nad ulepszaniem naszych usług. Aby móc to robić, musimy wiedzieć, które z naszych funkcji są używane. Z tego powodu zbieramy całkowicie anonimowe dane dotyczące częstotliwości odwiedzin stron i korzystania z poszczególnych funkcji na naszych stronach internetowych. Gromadzimy również zanonimizowane dane dotyczące dystrybucji typów i wersji przeglądarek. Statystyki te nie są oparte na indywidualnych profilach użytkowników i są tworzone bez plików cookie lub podobnych technologii. Nie zawierają one żadnych danych osobowych.',
+    ],
 ];

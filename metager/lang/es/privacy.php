@@ -179,4 +179,8 @@ return [
         'description' => 'Al igual que nuestras ofertas, esta declaración de protección de datos también está sujeta a cambios constantes. Por ello, le recomendamos que vuelva a leerla con regularidad.',
         'date' => 'Esta versión de nuestra política de privacidad tiene fecha: :date',
     ],
+    'stats' => [
+        'title' => 'Estadísticas anónimas',
+        'description' => 'Siempre estamos trabajando para mejorar nuestros servicios. Para poder hacerlo, necesitamos saber cuáles de nuestras funciones se utilizan. Por este motivo, recopilamos datos totalmente anónimos sobre la frecuencia de las visitas a las páginas y el uso de las distintas funciones de nuestros sitios web. También recopilamos datos anónimos sobre la distribución de tipos y versiones de navegadores. Estas estadísticas no se basan en perfiles de usuario individuales y se crean sin cookies ni tecnologías similares. No contienen datos personales.',
+    ],
 ];

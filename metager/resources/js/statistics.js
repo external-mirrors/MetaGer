@@ -8,6 +8,10 @@ class Statistics {
 
     constructor() {
         let performance = window.performance.getEntriesByType('navigation')[0];
+        try {
+            let statistics_enabled = document.querySelector("meta[name=statistics-enabled]").content;
+            if (statistics_enabled != 1) return;    // Disable statistics if those are not enabled
+        } catch (error) { }
         if (performance.loadEventEnd != 0) {
             this.#init();
         } else {
@@ -24,6 +28,7 @@ class Statistics {
 
     #init() {
         setTimeout(this.pageLoad.bind(this), 60000);
+        document.addEventListener("visibilitychange", this.pageLoad.bind(this));
         document.querySelectorAll("a").forEach(anchor => {
             anchor.addEventListener("click", e => this.pageLeave(e.target.closest("a").href));
         });

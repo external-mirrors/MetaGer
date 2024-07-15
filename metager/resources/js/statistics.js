@@ -4,6 +4,7 @@
  */
 class Statistics {
     #load_complete = false;
+    #load_time = new Date();
 
     constructor() {
         let performance = window.performance.getEntriesByType('navigation')[0];
@@ -14,7 +15,6 @@ class Statistics {
                 let readyStateCheckInterval = setInterval(() => {
                     performance = window.performance.getEntriesByType('navigation')[0];
                     if (performance.loadEventEnd == 0) return;
-                    console.log("load end");
                     clearInterval(readyStateCheckInterval);
                     this.#init();
                 }, 100);
@@ -23,29 +23,34 @@ class Statistics {
     }
 
     #init() {
-        this.pageLoad();
+        setTimeout(this.pageLoad.bind(this), 60000);
         document.querySelectorAll("a").forEach(anchor => {
-            anchor.addEventListener("click", e => this.pageLeave(e.target.href).bind(this));
+            anchor.addEventListener("click", e => this.pageLeave(e.target.closest("a").href));
         });
     }
 
     pageLeave(target) {
         let params = {};
-        params.url = target;
-        params.link = target;
+
         try {
+            this.pageLoad();    // Make sure to track the initial page load
             let url = new URL(target);
-            if (url.host == document.location.host) return;
-            this.pageLoad(params);
-            navigator.sendBeacon("/stats/pl", new URLSearchParams(params));
-        } catch (error) { }
+            if (url.host != document.location.host) {
+                params.link = target;
+                params.url = target;
+                this.pageLoad(params);
+            }
+
+        } catch (error) { console.error(error) }
     }
 
     pageLoad(overwrite_params = {}) {
-        if (this.#load_complete) return;
-        this.#load_complete = true;
-
         let params = {};
+        if (this.#load_complete && !overwrite_params.hasOwnProperty("link")) return;
+        if (!this.#load_complete) {
+            params.cdt = this.#load_time.getTime();
+            this.#load_complete = true;
+        }
 
         // Page performance
         try {

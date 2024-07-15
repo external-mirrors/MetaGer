@@ -10,6 +10,7 @@ integrationtest:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
     SELENIUM_HOST: selenium-standalone-firefox
+    MATOMO_ENABLED: false
   dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer

@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
-use Request;
 
-class Matomo
+
+class StatisticsController extends Controller
 {
-    static function PAGE_VISIT()
+    public function pageLoad(Request $request)
     {
-        if (!config("metager.matomo.enabled") || config("metager.matomo.url") === null || request()->is("health-check/*"))
+        if (!config("metager.matomo.enabled") || config("metager.matomo.url") === null)
             return;
 
         $params = [
@@ -18,18 +19,16 @@ class Matomo
             "rand" => md5(microtime(true)),
             "rec" => "1",
             "send_image" => "0",
-            "cip" => request()->ip(),
+            "cip" => $request->ip(),
+            "_id" => substr(md5($request->ip() . now()->format("Y-m-d")), 0, 16)
         ];
-        // Page URL
-        $url = request()->getPathInfo();
-        if (stripos($url, "/img") === 0 || stripos($url, "/meta/meta.ger3") === 0 || stripos($url, "/meta/loadMore") === 0 || preg_match("/\.(gif|png|jpg|jpeg|css)$/", $url) || preg_match("/csp-report$/", $url))
-            return;
-        $url = request()->schemeAndHttpHost() . preg_replace("/^\/[a-z]{2}-[A-Z]{2}/", "", $url);
-        $params["url"] = $url;
-        // Referer
-        $params["urlref"] = request()->headers->get("referer");
+        $http_params = $request->all();
+
         // Useragent
-        $params["ua"] = request()->userAgent();
+        $params["ua"] = $request->userAgent();
+        // Accept-Language
+        $params["lang"] = $request->header("Accept-Language");
+        $params = array_merge($http_params, $params);   // Merge arrays keeping our serverside defined options if key is set multiple times
 
         $url = config("metager.matomo.url") . "/matomo.php?" . http_build_query($params);
 

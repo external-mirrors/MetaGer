@@ -1,3 +1,5 @@
+import { statistics } from "./statistics";
+
 document.addEventListener("DOMContentLoaded", (event) => {
   document
     .querySelectorAll(".js-only")

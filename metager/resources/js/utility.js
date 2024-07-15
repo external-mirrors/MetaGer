@@ -1,3 +1,5 @@
+import { statistics } from "./statistics";
+
 document.addEventListener("DOMContentLoaded", (event) => {
   document
     .querySelectorAll(".js-only")
@@ -61,7 +63,6 @@ function reportJSAvailabilityForAuthenticatedSearch() {
 function backButtons() {
   document.querySelectorAll(".back-button").forEach(button => {
     button.style.display = "block";
-    console.log(button);
     button.addEventListener("click", e => {
       let href = button.href;
       // Use the defined URL on the button if there is one

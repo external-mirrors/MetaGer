@@ -85,7 +85,6 @@ function initialize() {
 
     let promise_fetch = verify();
     if (typeof promise_fetch !== "undefined" && link !== "#") {
-      console.log(link);
       promise_fetch.then((response) => {
         if (!newtab) {
           if (top) {

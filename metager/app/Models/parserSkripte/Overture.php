@@ -43,7 +43,6 @@ class Overture extends Searchengine
 
         // Apply default get parameters
         $this->configuration->addQueryParameters([
-            "Partner" => "tripledoubleu_xml_de_searchbox_metager",
             "on" => "6",
             "in" => "20",
             "adEnableActionExt" => "1",

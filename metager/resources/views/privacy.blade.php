@@ -1,6 +1,6 @@
 @extends('layouts.subPages', ['page' => 'privacy'])
 
-@section('title', trans('titles.datenschutz') )
+@section('title', trans('titles.datenschutz'))
 
 @section('navbarFocus.datenschutz', 'class="active"')
 
@@ -12,11 +12,17 @@
     </div class="section">
     <div class="section">
         <h1>@lang('privacy.responsible_party.title')</h1>
-        <div>@lang('privacy.responsible_party.description', ['link_impress' => route('impress'), 'link_contact' => route('contact')])</div>
+        <div>
+            @lang('privacy.responsible_party.description', ['link_impress' => route('impress'), 'link_contact' => route('contact')])
+        </div>
     </div>
     <div class="section">
         <h1>@lang('privacy.principles.title')</h1>
         <div>@lang('privacy.principles.description')</div>
+    </div>
+    <div class="section">
+        <h1>@lang('privacy.stats.title')</h1>
+        <div>@lang('privacy.stats.description')</div>
     </div>
     <div class="section">
         <h1>@lang('privacy.contexts.title')</h1>
@@ -28,18 +34,23 @@
                     <ol class="datum-list">
                         <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
                         <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
-                        <li><a href="#search-request">@lang('privacy.data.query'):</a>  @lang('privacy.contexts.metager.query')</li>
-                        <li><a href="#preferences">@lang('privacy.data.preferences'):</a> @lang('privacy.contexts.metager.preferences')</li>
+                        <li><a href="#search-request">@lang('privacy.data.query'):</a>
+                            @lang('privacy.contexts.metager.query')</li>
+                        <li><a href="#preferences">@lang('privacy.data.preferences'):</a>
+                            @lang('privacy.contexts.metager.preferences')</li>
                     </ol>
                     <h3>@lang('privacy.contexts.metager.additionally')</h3>
                     <ol class="datum-list">
                         <li>
-                            <div><a href="#ip-address">@lang('privacy.data.ip')</a>, <a href="#user-agent">@lang('privacy.data.useragent')</a>:</div>
+                            <div><a href="#ip-address">@lang('privacy.data.ip')</a>, <a
+                                    href="#user-agent">@lang('privacy.data.useragent')</a>:</div>
                             <div>@lang('privacy.contexts.metager.botprotection')</div>
                         </li>
                         <li>
-                            <div><a href="https://privacy.microsoft.com/privacystatement">Microsoft Clarity & Yahoo</a></div>
-                            <div>@lang('privacy.contexts.metager.clarity')</div></li>
+                            <div><a href="https://privacy.microsoft.com/privacystatement">Microsoft Clarity & Yahoo</a>
+                            </div>
+                            <div>@lang('privacy.contexts.metager.clarity')</div>
+                        </li>
                     </ol>
                 </article>
                 <article class="kontext">
@@ -48,8 +59,10 @@
                     <ol class="datum-list">
                         <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
                         <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
-                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a> @lang('privacy.contexts.contact.contact')</li>
-                        <li><a href="#message">@lang('privacy.data.message'):</a> @lang('privacy.contexts.contact.contact')</li>
+                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                            @lang('privacy.contexts.contact.contact')</li>
+                        <li><a href="#message">@lang('privacy.data.message'):</a>
+                            @lang('privacy.contexts.contact.contact')</li>
                     </ol>
                 </article>
                 <article class="kontext">
@@ -58,9 +71,12 @@
                     <ol class="datum-list">
                         <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
                         <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
-                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a> @lang('privacy.contexts.donate.contact')</li>
-                        <li><a href="#payment-data">@lang('privacy.data.payment'):</a> @lang('privacy.contexts.donate.payment')</li>
-                        <li><a href="#message">@lang('privacy.data.message') (@lang('privacy.data.optional')):</a> @lang('privacy.contexts.donate.message')</li>
+                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                            @lang('privacy.contexts.donate.contact')</li>
+                        <li><a href="#payment-data">@lang('privacy.data.payment'):</a>
+                            @lang('privacy.contexts.donate.payment')</li>
+                        <li><a href="#message">@lang('privacy.data.message') (@lang('privacy.data.optional')):</a>
+                            @lang('privacy.contexts.donate.message')</li>
                     </ol>
                 </article>
                 <article class="kontext">
@@ -68,8 +84,10 @@
                     <ol class="datum-list">
                         <li><a href="#ip-address">@lang('privacy.data.ip'):</a> @lang('privacy.data.unused')</li>
                         <li><a href="#user-agent">@lang('privacy.data.useragent'):</a> @lang('privacy.data.unused')</li>
-                        <li><a href="#contact-data">@lang('privacy.data.contact') (@lang('privacy.data.optional')):</a> @lang('privacy.contexts.key.contact')</li>
-                        <li><a href="#payment-data">@lang('privacy.data.payment'):</a> @lang('privacy.contexts.key.payment')</li>
+                        <li><a href="#contact-data">@lang('privacy.data.contact') (@lang('privacy.data.optional')):</a>
+                            @lang('privacy.contexts.key.contact')</li>
+                        <li><a href="#payment-data">@lang('privacy.data.payment'):</a>
+                            @lang('privacy.contexts.key.payment')</li>
                     </ol>
                 </article>
                 <article class="kontext">
@@ -88,7 +106,8 @@
                     <h1>@lang('privacy.contexts.newsletter.title')</h1>
                     <div>@lang('privacy.contexts.newsletter.description')</div>
                     <ol class="datum-list">
-                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a> @lang('privacy.contexts.newsletter.contact')</li>
+                        <li><a href="#contact-data">@lang('privacy.data.contact'):</a>
+                            @lang('privacy.contexts.newsletter.contact')</li>
                     </ol>
                 </article>
                 <article class="kontext">
@@ -218,7 +237,7 @@
         <ol>
             <li><b>@lang('privacy.rights.information.title'):</b></li>
             <article class="kontext">
-            @lang('privacy.rights.information.description')
+                @lang('privacy.rights.information.description')
             </article>
             <li><b>@lang('privacy.rights.correction.title'):</b></li>
             <article class="kontext">
@@ -257,6 +276,6 @@
     <div class="section">
         <h1>@lang('privacy.changes.title')</h1>
         <div>@lang('privacy.changes.description')</div>
-        <div>@lang('privacy.changes.date', ['date' => '2024-06-11'])</div>
+        <div>@lang('privacy.changes.date', ['date' => '2024-07-24'])</div>
     </div>
-@endsection
+    @endsection

@@ -24,7 +24,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             TrustProxies::class,
-            Statistics::class,
         ]);
         $middleware->trustProxies(at: [
             '10.0.0.0/8',

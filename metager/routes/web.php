@@ -13,6 +13,7 @@ use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
 use App\Http\Controllers\SitesearchController;
 use App\Http\Controllers\StartpageController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
@@ -344,7 +345,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
-    Route::match (['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
 
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
 
@@ -448,5 +449,9 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::get('liveness', [HealthcheckController::class, 'liveness']);
         Route::get('liveness-scheduler', [HealthcheckController::class, 'livenessScheduler']);
         Route::get('liveness-worker', [HealthcheckController::class, 'livenessWorker']);
+    });
+
+    Route::group(['prefix' => 'stats'], function () {
+        Route::post('pl', [StatisticsController::class, 'pageLoad']);
     });
 });

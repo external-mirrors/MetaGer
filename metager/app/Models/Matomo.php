@@ -11,8 +11,7 @@ class Matomo
     {
         if (!config("metager.matomo.enabled") || config("metager.matomo.url") === null || request()->is("health-check/*"))
             return;
-        if (request()->is("meta/meta.ger3") && request()->filled("mgv"))
-            return;
+
         $params = [
             "idsite" => config("metager.matomo.site_id"),
             "token_auth" => config("metager.matomo.token_auth"),
@@ -23,7 +22,7 @@ class Matomo
         ];
         // Page URL
         $url = request()->getPathInfo();
-        if (stripos($url, "/img") === 0 || stripos($url, "/meta/meta.ger3") === 0 || stripos($url, "/meta/loadMore") === 0 || preg_match("/\.css$/", $url) || preg_match("/csp-report$/", $url))
+        if (stripos($url, "/img") === 0 || stripos($url, "/meta/meta.ger3") === 0 || stripos($url, "/meta/loadMore") === 0 || preg_match("/\.(gif|png|jpg|jpeg|css)$/", $url) || preg_match("/csp-report$/", $url))
             return;
         $url = request()->schemeAndHttpHost() . preg_replace("/^\/[a-z]{2}-[A-Z]{2}/", "", $url);
         $params["url"] = $url;

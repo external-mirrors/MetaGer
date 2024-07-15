@@ -23,8 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-            Statistics::class,
             TrustProxies::class,
+            Statistics::class,
         ]);
         $middleware->trustProxies(at: [
             '10.0.0.0/8',

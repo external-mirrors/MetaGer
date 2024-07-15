@@ -74,7 +74,7 @@ class Statistics {
 
         // Page URL
         try {
-            params.url = document.location.protocol + "//" + document.location.pathname.replace(/^\/[a-z]{2}-[A-Z]{2}/, "") + document.location.search + document.location.hash;
+            params.url = document.location.protocol + "//" + document.location.host + document.location.pathname.replace(/^\/[a-z]{2}-[A-Z]{2}/, "") + document.location.search + document.location.hash;
         } catch (error) { }
 
         // Page Title

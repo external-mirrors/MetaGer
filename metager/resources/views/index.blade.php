@@ -35,35 +35,15 @@
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif
-    @if(app(\App\SearchSettings::class)->self_advertisements)
-    <div id="startpage-quicklinks">
-      @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
-      <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-      <img src="/img/svg-icons/metager-lock.svg" alt="Key Icon" />
-      <span>
-      @lang("index.adfree")
-      </span>
-      </a>
-    @elseif(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
-      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-      <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
-      <span>
-      @lang("index.key.tooltip.empty")
-      </span>
-      </a>
-    @endif
-      @if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-      <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}"
-      name="chrome-plugin" value="true"><img src="/img/svg-icons/svg-icons/plug-in.svg" alt="+">
-      {{ trans('index.plugin') }}</a>
-    @else
-      <a id="plugin-btn"
-      href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}"
-      title="{{ trans('index.plugin-title') }}"><img src="/img/svg-icons/plug-in.svg" alt="+">
-      {{ trans('index.plugin') }}</a>
-    @endif
+
+  </div>
+  <div id="tiles-container">
+    <div id="tiles">
+      @include("parts.tile", ["url" => "https://suma-ev.de", "image" => "/img/tiles/sumaev.png", "image_alt" => "SUMA-EV Logo", "title" => "SUMA-EV"])
+      @include("parts.tile", ["url" => "https://maps.metager.de", "image" => "/img/tiles/maps.png", "image_alt" => "MetaGer Maps Logo", "title" => "Maps"])
+      @include("parts.tile", ["url" => route("settings", ["focus" => $focus, "url" => url()->full()]), "image" => "/img/icon-settings.svg", "image_alt" => "SUMA-EV Logo", "title" => __('sidebar.nav28'), "options" => ["img_class" => "invert-dm"]])
+      @include("parts.tile", ["url" => route("plugin"), "image" => "/img/svg-icons/plug-in.svg", "image_alt" => "MetaGer Plugin Logo", "title" => __("index.plugin")])
     </div>
-  @endif
   </div>
   <div id="language">
     <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>

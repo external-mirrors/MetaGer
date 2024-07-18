@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Navigera till det övre högra hörnet av din webbläsare, klicka på "<img class="mg-icon" src="/img/menu.svg">" och välj "Inställningar".',
-        '2' => 'Under "Sök" klickar du på knappen "Hantera sökmotorer...".',
+        '2' => 'Under knappen "Sök" klickar du på knappen "Hantera sökmotorer...".',
         '3' => 'Flytta muspekaren till posten "MetaGer" och klicka på "Make Default".',
     ],
     'default-search-v53' => [

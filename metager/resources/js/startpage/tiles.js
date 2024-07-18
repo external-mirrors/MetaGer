@@ -8,6 +8,7 @@
     async function fetchAdvertisements() {
         let desired_tile_count = calculateDesiredTileCount();
         let regular_tile_count = getRegularTileCount();
+        console.log(desired_tile_count, advertisements.length)
         if (advertisements.length >= desired_tile_count - regular_tile_count) return;
         let update_url = document.querySelector("meta[name=tiles-update-url]").content;
         update_url += "&count=" + (desired_tile_count - tile_count);

@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Pictureproxy;
+use Exception;
+use Request;
+
 /**
  * Model to hold data which represents a tile as visible on the startpage
  */
@@ -25,6 +29,13 @@ class Tile implements \JsonSerializable
     public function __construct(string $title, string $image, string $image_alt, string $url, string $classes = "", string $image_classes = "")
     {
         $this->title = $title;
+        try {
+            $host = parse_url($image, PHP_URL_HOST);
+            if ($host !== null && Request::host() !== $host) {
+                $image = Pictureproxy::generateUrl($image);
+            }
+        } catch (Exception $e) {
+        }
         $this->image = $image;
         $this->image_alt = $image_alt;
         $this->url = $url;

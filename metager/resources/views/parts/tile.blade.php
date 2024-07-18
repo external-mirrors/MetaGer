@@ -1,6 +1,6 @@
-<a href="{{$url}}">
+<a href="{{$tile->url}}" class="{{ $tile->classes }}">
     <div class="image">
-        <img src="{{$image}}" alt="{{$image_alt}}" @if(isset($options) && array_key_exists("img_class",$options))class="{{$options["img_class"]}}"@endif>
+        <img src="{{$tile->image}}" alt="{{$tile->image_alt}}" class="{{$tile->image_classes}}">
     </div>
-    <div class="title">{{$title}}</div>
+    <div class="title">{{$tile->title}}</div>
 </a>

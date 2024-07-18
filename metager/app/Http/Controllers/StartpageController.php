@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Cache;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Response;
@@ -28,32 +29,17 @@ class StartpageController extends Controller
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
 
-        $optionParams = ['param_sprueche', 'param_newtab', 'param_maps', 'param_autocomplete', 'param_lang', 'param_key'];
-        $option_values = [];
-
-        foreach ($optionParams as $param) {
-            $value = $request->input($param);
-            if ($value) {
-                $option_values[$param] = $value;
-            }
-        }
-
-        $autocomplete = 'on';
-        if (in_array('autocomplete', array_keys($option_values))) {
-            $autocomplete = $option_values['autocomplete'];
-        }
+        $ckey = hash_hmac("sha256", $request->ip() . now()->format("Y-m-d"), config("metager.taketiles.secret"));
+        Cache::put($ckey, "1", now()->addSeconds(TilesController::CACHE_DURATION_SECONDS));
+        $tiles = TilesController::TILES($ckey);
+        $tiles_update_url = route('tiles', ["ckey" => $ckey]);
 
         return view('index')
             ->with('title', trans('titles.index'))
-            ->with('homeIcon')
-            ->with('agent', new Agent())
-            ->with('navbarFocus', 'suche')
             ->with('focus', $request->input('focus', 'web'))
-            ->with('time', $request->input('param_time', '1500'))
             ->with('request', $request->input('request', 'GET'))
-            ->with('option_values', $option_values)
-            ->with('autocomplete', $autocomplete)
-            ->with('pluginmodal', $request->input('plugin-modal', 'off'))
+            ->with('tiles_update_url', $tiles_update_url)
+            ->with('tiles', $tiles)
             ->with('css', [mix('css/themes/startpage/light.css')])
             ->with('js', [mix('js/startpage/app.js')])
             ->with('darkcss', [mix('css/themes/startpage/dark.css')]);

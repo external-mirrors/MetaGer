@@ -15,6 +15,7 @@ use App\Http\Controllers\SitesearchController;
 use App\Http\Controllers\StartpageController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\SuggestionController;
+use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
 use App\Localization;
@@ -340,6 +341,8 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
                 mix('/css/plugin-page.css'),
             ]);
     })->name("plugin");
+
+    Route::get('tiles', [TilesController::class, 'loadTakeTiles'])->name("tiles");
 
     Route::get('settings', function () {
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));

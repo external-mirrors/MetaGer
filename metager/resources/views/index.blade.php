@@ -39,10 +39,9 @@
   </div>
   <div id="tiles-container">
     <div id="tiles">
-      @include("parts.tile", ["url" => "https://suma-ev.de", "image" => "/img/tiles/sumaev.png", "image_alt" => "SUMA-EV Logo", "title" => "SUMA-EV"])
-      @include("parts.tile", ["url" => "https://maps.metager.de", "image" => "/img/tiles/maps.png", "image_alt" => "MetaGer Maps Logo", "title" => "Maps"])
-      @include("parts.tile", ["url" => route("settings", ["focus" => $focus, "url" => url()->full()]), "image" => "/img/icon-settings.svg", "image_alt" => "SUMA-EV Logo", "title" => __('sidebar.nav28'), "options" => ["img_class" => "invert-dm"]])
-      @include("parts.tile", ["url" => route("plugin"), "image" => "/img/svg-icons/plug-in.svg", "image_alt" => "MetaGer Plugin Logo", "title" => __("index.plugin")])
+      @foreach($tiles as $tile)
+      @include("parts.tile", ["tile" => $tile])
+    @endforeach
     </div>
   </div>
   <div id="language">

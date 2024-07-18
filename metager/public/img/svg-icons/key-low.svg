@@ -2,18 +2,23 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="101.92238mm"
-   height="113.50584mm"
-   viewBox="0 0 101.92238 113.50584"
+   width="140.47478mm"
+   height="140.47478mm"
+   viewBox="0 0 140.47478 140.47478"
    version="1.1"
    id="svg5"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs2" />
+  <path
+     id="rect869"
+     style="fill:none;fill-opacity:0.452355;stroke:#d8b100;stroke-width:5.28854;stroke-opacity:1"
+     d="M 8.5067374,4.7304442 H 131.96803 c 2.09207,0 3.77631,1.6842274 3.77631,3.7762948 V 131.96802 c 0,2.09207 -1.68424,3.77631 -3.77631,3.77631 H 8.5067374 c -2.0920674,0 -3.7762952,-1.68424 -3.7762952,-3.77631 V 8.506739 c 0,-2.0920674 1.6842278,-3.7762948 3.7762952,-3.7762948 z" />
   <g
      id="layer1"
-     transform="translate(-44.876639,-128.74685)">
+     transform="translate(-25.600439,-115.26238)"
+     style="fill:#d8b100;fill-opacity:1">
     <path
        id="rect972-3"
        style="fill:#d8b100;fill-opacity:1;stroke-width:0.264583"

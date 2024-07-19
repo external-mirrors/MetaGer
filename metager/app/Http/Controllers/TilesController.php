@@ -117,7 +117,7 @@ class TilesController extends Controller
             try {
                 $result = json_decode($result);
                 foreach ($result->data as $result_tile) {
-                    $tiles[] = new Tile(title: $result_tile->title, image: $result_tile->image, image_alt: $result_tile->title . " Image", url: $result_tile->url, classes: "advertisement");
+                    $tiles[] = new Tile(title: $result_tile->title, image: $result_tile->image, image_alt: $result_tile->title . " Image", url: $result_tile->url, advertisement: true);
                 }
             } catch (Exception $e) {
                 Log::error($e);

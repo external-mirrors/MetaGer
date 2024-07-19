@@ -3,6 +3,7 @@
     let tile_count = tile_container.querySelectorAll("a").length;
 
     let advertisements = [];
+    let fetch_timeout = null;
     fetchAdvertisements().then(() => udpateInterface());
 
     async function fetchAdvertisements() {
@@ -12,9 +13,15 @@
         if (advertisements.length >= desired_tile_count - regular_tile_count) return;
         let update_url = document.querySelector("meta[name=tiles-update-url]").content;
         update_url += "&count=" + (desired_tile_count - tile_count);
-
-        return fetch(update_url).then(response => response.json()).then(response => {
-            advertisements = response;
+        return new Promise((resolve, reject) => {
+            if (fetch_timeout != null) return resolve();
+            fetch_timeout = setTimeout(() => {
+                fetch(update_url).then(response => response.json()).then(response => {
+                    advertisements = response;
+                    fetch_timeout = null;
+                    resolve();
+                }).catch(e => reject(e));
+            }, 500);
         });
     }
     function udpateInterface() {
@@ -47,6 +54,7 @@
         let client_width = document.querySelector("html").clientWidth;
 
         let desired_tile_count = 8;
+
         if (client_width > 9 * tile_width + 8 * tile_gap) {
             // Largest Screen Size => Up to 8 Tiles in one row
             desired_tile_count = max_tiles;
@@ -61,9 +69,12 @@
             desired_tile_count = 2;
         }
 
+        console.log(client_width, tile_width, tile_gap, desired_tile_count);
+        console.log("Six Tiles", tile_width * 6 + 5 * tile_gap);
         if (native_tile_count + min_advertisements > desired_tile_count) {
             desired_tile_count *= 2;
         }
+
 
         return desired_tile_count;
     }

@@ -17,6 +17,7 @@ class Tile implements \JsonSerializable
     public string $url;
     public string $classes = "";
     public string $image_classes = "";
+    public bool $advertisement = false;
     /**
      * 
      * @param string $title Title to show for the Tile
@@ -26,7 +27,7 @@ class Tile implements \JsonSerializable
      * @param string $classes Additional css classes to append for the tile
      * @param string $image_classes Additional css classes to append to the image of the tile
      */
-    public function __construct(string $title, string $image, string $image_alt, string $url, string $classes = "", string $image_classes = "")
+    public function __construct(string $title, string $image, string $image_alt, string $url, string $classes = "", string $image_classes = "", bool $advertisement = false)
     {
         $this->title = $title;
         try {
@@ -41,6 +42,7 @@ class Tile implements \JsonSerializable
         $this->url = $url;
         $this->classes = $classes;
         $this->image_classes = $image_classes;
+        $this->advertisement = $advertisement;
     }
 
     public function jsonSerialize()

@@ -7,16 +7,17 @@ div#tiles-container {
     div#tiles {
         flex-grow: 0;
         width: 100%;
-        @tile_width: 13ch;
+        @tile_width: 115px;
+        @tile_gap: 16px;
 
-        @nine_row_width: calc(calc(9 * @tile_width) + calc(8 * 1rem));
-        @eight_row_width: calc(calc(8 * @tile_width) + calc(7 * 1rem));
-        @seven_row_width: calc(calc(7 * @tile_width) + calc(6 * 1rem));
-        @six_row_width: calc(calc(6 * @tile_width) + calc(5 * 1rem));
-        @five_row_width: calc(calc(5 * @tile_width) + calc(4 * 1rem));
-        @four_row_width: calc(calc(4 * @tile_width) + calc(3 * 1rem));
-        @three_row_width: calc(calc(3 * @tile_width) + calc(2 * 1rem));
-        @two_row_width: calc(calc(2 * @tile_width) + calc(1 * 1rem));
+        @nine_row_width: calc(calc(9 * @tile_width) + calc(8 * @tile_gap));
+        @eight_row_width: calc(calc(8 * @tile_width) + calc(7 * @tile_gap));
+        @seven_row_width: calc(calc(7 * @tile_width) + calc(6 * @tile_gap));
+        @six_row_width: calc(calc(6 * @tile_width) + calc(5 * @tile_gap));
+        @five_row_width: calc(calc(5 * @tile_width) + calc(4 * @tile_gap));
+        @four_row_width: calc(calc(4 * @tile_width) + calc(3 * @tile_gap));
+        @three_row_width: calc(calc(3 * @tile_width) + calc(2 * @tile_gap));
+        @two_row_width: calc(calc(2 * @tile_width) + calc(1 * @tile_gap));
 
         @media(max-width: @nine_row_width) {
             width: @seven_row_width;
@@ -39,7 +40,7 @@ div#tiles-container {
         justify-content: center;
 
         padding-top: 8dvh;
-        gap: 1rem;
+        gap: @tile_gap;
         margin-inline: auto;
         height: max-content;
 
@@ -77,13 +78,18 @@ div#tiles-container {
 
             >div.title {
                 font-size: .8rem;
-                color: fade(@text-color, 40%);
+                color: fade(@text-color, 60%);
                 transition: color 0.5s;
                 width: @tile_width;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
                 text-align: center;
+                line-height: 1;
+
+                >div.sub-title {
+                    height: 1em;
+                }
             }
 
             &:hover {
@@ -92,7 +98,11 @@ div#tiles-container {
                 }
 
                 >div.title {
-                    color: @text-color;
+                    >div.main-title {
+                        color: @text-color;
+                    }
+
+
                 }
             }
         }

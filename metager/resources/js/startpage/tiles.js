@@ -1,3 +1,5 @@
+import { statistics } from "../statistics";
+
 (async () => {
     let tile_container = document.querySelector("#tiles");
     let tile_count = tile_container.querySelectorAll("a").length;
@@ -37,6 +39,10 @@
             if (advertisements.length < i + 1) continue;
             let container = document.createElement("div");
             container.innerHTML = advertisements[i].html;
+
+            container.firstChild.addEventListener("click", e => {
+                statistics.takeTilesClick(e.target.closest("a").href);
+            });
 
             tile_container.appendChild(container.firstChild);
         }

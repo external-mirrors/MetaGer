@@ -25,6 +25,12 @@ class TilesController extends Controller
         $count = $request->input("count", 4);
         $tiles = [];
         $tiles = self::TAKE_TILES($ckey, $count);
+        StatisticsController::LOG_STATISTICS([
+            "e_c" => "Take Tiles",
+            "e_a" => "Load",
+            "e_n" => "Take Tiles",
+            "e_v" => sizeof($tiles),
+        ]);
         return response()->json($tiles);
     }
 

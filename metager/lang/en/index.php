@@ -6,7 +6,7 @@ return [
         'fokus' => 'Skip to search focus selection',
     ],
     'lang' => 'wwitch language',
-    'plugin' => 'Install',
+    'plugin' => 'Install MetaGer',
     'plugin-title' => 'Add MetaGer to your browser',
     'key' => [
         'placeholder' => 'Enter member key',

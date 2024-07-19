@@ -1,6 +1,6 @@
 <?php
 return [
-    'plugin' => 'Installieren',
+    'plugin' => 'MetaGer Installieren',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
     'key' => [
         'placeholder' => 'Schlüssel für werbefreie Suche eingeben',

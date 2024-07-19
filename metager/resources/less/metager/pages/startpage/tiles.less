@@ -82,6 +82,10 @@ div#tiles-container {
                 }
             }
 
+            &.orange>div.image {
+                background-color: fade(@metager-orange, 40%);
+            }
+
             >div.title {
                 font-size: .8rem;
                 color: fade(@text-color, 60%);
@@ -104,6 +108,10 @@ div#tiles-container {
             &:hover {
                 >div.image {
                     background-color: @highlight-color;
+                }
+
+                &.orange>div.image {
+                    background-color: fade(@metager-orange, 60%);
                 }
 
                 >div.title {

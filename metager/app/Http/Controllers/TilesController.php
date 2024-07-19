@@ -59,10 +59,10 @@ class TilesController extends Controller
     private static function STATIC_TILES(): array
     {
         $tiles = [];
-        $tiles[] = new Tile(title: "SUMA-EV", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
+        $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
         //$tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
         $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
-        $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: route("plugin"), image_alt: "MetaGer Plugin Logo");
+        $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: route("plugin"), image_alt: "MetaGer Plugin Logo", classes: "orange");
         return $tiles;
     }
 

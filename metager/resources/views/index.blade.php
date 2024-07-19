@@ -35,7 +35,16 @@
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif
-
+    @if(app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
+    <div id="startpage-quicklinks">
+      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+      <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
+      <span>
+        @lang("index.key.tooltip.empty")
+      </span>
+      </a>
+    </div>
+  @endif
   </div>
   <div id="tiles-container">
     <div id="tiles">

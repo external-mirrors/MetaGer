@@ -88,4 +88,7 @@ return [
         'label' => "Subtiele reclame voor onze eigen service",
     ],
     'limited' => 'beperkt',
+    'tiles_startpage' => [
+        'label' => "Tegels tonen op de startpagina",
+    ],
 ];

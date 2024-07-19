@@ -88,4 +88,7 @@ return [
         'label' => "Subtelne reklamy naszych własnych usług",
     ],
     'limited' => 'ograniczony',
+    'tiles_startpage' => [
+        'label' => "Wyświetlanie kafelków na stronie startowej",
+    ],
 ];

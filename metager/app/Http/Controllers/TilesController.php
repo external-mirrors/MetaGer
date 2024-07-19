@@ -85,7 +85,8 @@ class TilesController extends Controller
     private static function TAKE_TILES(string $ckey, int $count): array
     {
         $tiles = [];
-        $result_cache_key = "taketiles:fetch:$ckey:$count";
+        $cc = Localization::getRegion();
+        $result_cache_key = "taketiles:fetch:$ckey:$cc:$count";
 
         $result = Cache::get($result_cache_key);
         if ($result === null) {
@@ -100,7 +101,7 @@ class TilesController extends Controller
             $params = [
                 "count" => $count,
                 "deviceId" => $ckey,
-                "countryCode" => Localization::getLanguage()
+                "countryCode" => $cc
             ];
             $mission = [
                 "resulthash" => $result_cache_key,

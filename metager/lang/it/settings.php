@@ -88,4 +88,7 @@ return [
         'label' => "Pubblicità sottile per il nostro servizio",
     ],
     'limited' => 'limitato',
+    'tiles_startpage' => [
+        'label' => "Mostra le piastrelle nella pagina iniziale",
+    ],
 ];

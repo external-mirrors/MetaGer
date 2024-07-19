@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Navigeer naar de rechterbovenhoek van je browser, klik op "<img class= "mg-icon" src="/img/menu.svg">" en kies "Instellingen".',
-        '2' => 'Klik onder "Zoeken" op de knop "Zoekmachines beheren...".',
+        '2' => 'Klik onder de knop "Zoeken" op de knop "Zoekmachines beheren...".',
         '3' => 'Beweeg je muis over het item "MetaGer" en klik op "Standaard maken".',
     ],
     'default-search-v53' => [

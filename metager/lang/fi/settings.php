@@ -88,4 +88,7 @@ return [
         'label' => "Oman palvelumme hienovarainen mainonta",
     ],
     'limited' => 'rajoitettu',
+    'tiles_startpage' => [
+        'label' => "Näytä laatat aloitussivulla",
+    ],
 ];

@@ -88,4 +88,7 @@ return [
         'label' => "Publicidad sutil de nuestro propio servicio",
     ],
     'limited' => 'limitado',
+    'tiles_startpage' => [
+        'label' => "Mostrar mosaicos en la página de inicio",
+    ],
 ];

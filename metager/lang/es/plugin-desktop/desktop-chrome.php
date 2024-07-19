@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'En la parte superior derecha de la aplicación Chrome  haga clic en <img class= "mg-icon" src="/img/menu.svg"> y en el menú siguiente de opciones haga clic en "Configuración" para abrir las configuraciones de Chrome.',
-        '2' => 'En "Buscar", haga clic en "Administrar motores de búsqueda ...".',
+        '2' => 'Debajo del botón "Buscar", haga clic en el botón "Administrar motores de búsqueda...".',
         '3' => 'En la mitad inferior del menú que aparece, mueva el mouse sobre la página web de MetaGer y  haga clic en el botón azul "Establecer como predeterminado" que aparece en el lado derecho',
     ],
     'default-search-v53' => [

@@ -91,7 +91,7 @@ class TilesController extends Controller
         $result = Cache::get($result_cache_key);
         if ($result === null) {
             $supported_countries = ["US", "GB", "DE", "AT", "CH", "TR"];
-            if (!config("metager.taketiles.enabled") || !in_array(Localization::getRegion(), $supported_countries)) {
+            if (!config("metager.taketiles.enabled") || !in_array($cc, $supported_countries)) {
                 return $tiles;
             }
             if (app(Authorization::class)->canDoAuthenticatedSearch(false))

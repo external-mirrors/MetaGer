@@ -30,6 +30,8 @@ class SearchSettings
     public $enableQuotes = true;
     /** @var bool */
     public $self_advertisements;
+    /** @var bool */
+    public $tiles_startpage;
     /** @var string */
     public $suggestions = "bing";
     public $external_image_search = "metager";
@@ -74,6 +76,9 @@ class SearchSettings
 
         $this->self_advertisements = $this->getSettingValue("self_advertisements", true);
         $this->self_advertisements = $this->self_advertisements !== "off" ? true : false;
+
+        $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
+        $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
         $suggestions = $this->getSettingValue("suggestions", "bing");
         if ($suggestions === "off") {

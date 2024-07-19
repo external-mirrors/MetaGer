@@ -7,6 +7,18 @@ class Statistics {
     #load_time = new Date();
 
     constructor() {
+
+    }
+
+    #init() {
+        setTimeout(this.pageLoad.bind(this), 60000);
+        document.addEventListener("visibilitychange", this.pageLoad.bind(this));
+        document.querySelectorAll("a").forEach(anchor => {
+            anchor.addEventListener("click", e => this.pageLeave(e.target.closest("a").href));
+        });
+    }
+
+    registerPageLoadEvents() {
         let performance = window.performance.getEntriesByType('navigation')[0];
         try {
             let statistics_enabled = document.querySelector("meta[name=statistics-enabled]").content;
@@ -24,14 +36,6 @@ class Statistics {
                 }, 100);
             });
         }
-    }
-
-    #init() {
-        setTimeout(this.pageLoad.bind(this), 60000);
-        document.addEventListener("visibilitychange", this.pageLoad.bind(this));
-        document.querySelectorAll("a").forEach(anchor => {
-            anchor.addEventListener("click", e => this.pageLeave(e.target.closest("a").href));
-        });
     }
 
     pageLeave(target) {
@@ -93,6 +97,18 @@ class Statistics {
         } catch (error) { }
 
         params = { ...params, ...overwrite_params };
+
+        navigator.sendBeacon("/stats/pl", new URLSearchParams(params));
+    }
+
+    takeTilesClick(url) {
+        let params = {};
+        if (this.#load_complete && !overwrite_params.hasOwnProperty("link")) return;
+
+        params.e_c = "Take Tiles";
+        params.e_a = "Click";
+        params.e_n = "Take Tiles";
+        params.e_v = url;
 
         navigator.sendBeacon("/stats/pl", new URLSearchParams(params));
     }

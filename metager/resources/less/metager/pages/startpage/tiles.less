@@ -8,6 +8,7 @@ div#tiles-container {
         flex-grow: 0;
         width: 100%;
         @tile_width: 115px;
+        --tile-width: @tile_width; // Variable is used by JS
         @tile_gap: 16px;
 
         @nine_row_width: calc(calc(9 * @tile_width) + calc(8 * @tile_gap));

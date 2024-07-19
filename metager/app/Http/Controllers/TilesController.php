@@ -38,6 +38,9 @@ class TilesController extends Controller
      */
     public static function TILES(string $ckey): array
     {
+        // Check if the user has disabled tiles
+        if (!app(SearchSettings::class)->tiles_startpage)
+            return [];
         $tiles = self::STATIC_TILES();
         $tiles = array_merge($tiles, self::SUMA_TILES());
         return $tiles;

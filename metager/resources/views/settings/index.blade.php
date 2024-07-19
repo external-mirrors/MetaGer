@@ -226,6 +226,16 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="tiles_startpage">@lang('settings.tiles_startpage.label')</label>
+                    <select name="tiles_startpage" id="tiles_startpage" class="form-control">
+                        <option value="off"
+                            {{ app(App\SearchSettings::class)->tiles_startpage === false ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        <option value="on" {{ app(App\SearchSettings::class)->tiles_startpage === true ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.on')</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="dm">@lang('settings.darkmode')</label>
                     <select name="dm" id="dm" class="form-control">
                         <option value="system" {{ app(App\SearchSettings::class)->theme === "system" ? 'disabled selected' : '' }}>

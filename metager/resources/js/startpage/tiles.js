@@ -49,7 +49,7 @@
         let native_tile_count = getRegularTileCount();
         let min_advertisements = 2;
 
-        let tile_width = parseFloat(window.getComputedStyle(document.querySelector("#tiles > a")).width.replace("px", ""));
+        let tile_width = parseFloat(window.getComputedStyle(document.querySelector("#tiles")).getPropertyValue("--tile-width").replace("px", ""));
         let tile_gap = parseFloat(window.getComputedStyle(document.querySelector("#tiles"))["column-gap"].replace("px", ""));
         let client_width = document.querySelector("html").clientWidth;
         let client_height = document.querySelector("html").clientHeight;

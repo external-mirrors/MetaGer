@@ -88,4 +88,7 @@ return [
     'self_advertisements' => [
         'label' => "Subtile Werbung für unseren eigenen Service",
     ],
+    'tiles_startpage' => [
+        'label' => "Zeige Kacheln auf der Startseite",
+    ],
 ];

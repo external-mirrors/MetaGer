@@ -32,7 +32,7 @@ div#tiles-container {
         }
 
         @media(max-width: @four_row_width) {
-            width: @two_row_width;
+            width: 100%;
         }
 
         display: flex;
@@ -46,6 +46,11 @@ div#tiles-container {
 
         >a {
             width: @tile_width;
+
+            @media(max-width: @four_row_width) {
+                width: calc(50% - @tile_gap);
+            }
+
             display: flex;
             row-gap: .5rem;
             flex-direction: column;
@@ -62,7 +67,7 @@ div#tiles-container {
                 width: @image_size;
                 height: @image_size;
                 padding: 0.5rem;
-                background-color: @highlight-color;
+                background-color: fade(@highlight-color, 60%);
                 border-radius: 5px;
                 transition: background-color 0.5s;
 
@@ -79,13 +84,16 @@ div#tiles-container {
             >div.title {
                 font-size: .8rem;
                 color: fade(@text-color, 60%);
-                transition: color 0.5s;
                 width: @tile_width;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 white-space: nowrap;
                 text-align: center;
                 line-height: 1;
+
+                >div.main-title {
+                    transition: color 0.5s;
+                }
 
                 >div.sub-title {
                     height: 1em;
@@ -94,7 +102,7 @@ div#tiles-container {
 
             &:hover {
                 >div.image {
-                    background-color: lighten(@highlight-color, 10%);
+                    background-color: @highlight-color;
                 }
 
                 >div.title {

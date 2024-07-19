@@ -52,6 +52,7 @@
         let tile_width = parseFloat(window.getComputedStyle(document.querySelector("#tiles > a")).width.replace("px", ""));
         let tile_gap = parseFloat(window.getComputedStyle(document.querySelector("#tiles"))["column-gap"].replace("px", ""));
         let client_width = document.querySelector("html").clientWidth;
+        let client_height = document.querySelector("html").clientHeight;
 
         let desired_tile_count = 8;
 
@@ -72,7 +73,12 @@
         console.log(client_width, tile_width, tile_gap, desired_tile_count);
         console.log("Six Tiles", tile_width * 6 + 5 * tile_gap);
         if (native_tile_count + min_advertisements > desired_tile_count) {
-            desired_tile_count *= 2;
+            // Allow 2x3 Tiles on small displays
+            if (desired_tile_count == 2 && client_height > 850) {
+                desired_tile_count *= 3;
+            } else {
+                desired_tile_count *= 2;
+            }
         }
 
 

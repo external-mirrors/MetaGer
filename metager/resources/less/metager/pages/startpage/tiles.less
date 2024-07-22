@@ -83,7 +83,11 @@ div#tiles-container {
             }
 
             &.orange>div.image {
-                background-color: fade(@metager-orange, 60%);
+                @gradient-from: fade(@metager-orange, 80%);
+                @gradient-to: darken(fade(@metager-orange, 80%), 1%);
+
+                background-color: @metager-orange;
+                background: linear-gradient(0deg, @gradient-from 0%, @gradient-to 100%);
             }
 
             >div.title {

@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Przejdź do prawego górnego rogu przeglądarki, kliknij "<img class="mg-icon" src="/img/menu.svg">" i wybierz "Ustawienia".',
-        '2' => 'W sekcji "Wyszukiwanie" kliknij przycisk "Zarządzaj wyszukiwarkami...".',
+        '2' => 'Pod przyciskiem "Szukaj" kliknij przycisk "Zarządzaj wyszukiwarkami...".',
         '3' => 'Przesuń kursor myszy nad pozycję "MetaGer" i kliknij przycisk "Make Default".',
     ],
     'default-search-v53' => [

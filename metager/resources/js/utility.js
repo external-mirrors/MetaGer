@@ -74,3 +74,7 @@ function backButtons() {
     });
   });
 }
+
+(async () => {
+  statistics.registerPageLoadEvents();
+})();

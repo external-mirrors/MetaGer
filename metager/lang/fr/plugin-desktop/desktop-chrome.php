@@ -1,7 +1,7 @@
 <?php
 return [
     'default-search-v49' => [
-        '2' => 'Sous "Recherche", cliquez sur le bouton "Gérer les moteurs de recherche...".',
+        '2' => 'Sous le bouton "Recherche", cliquez sur le bouton "Gérer les moteurs de recherche...".',
         '3' => 'Déplacez votre souris sur l\'entrée "MetaGer" et cliquez sur "Make Default".',
         '1' => 'Allez dans le coin supérieur droit de votre navigateur, cliquez sur "<img class="mg-icon" src="/img/menu.svg">" et choisissez "Paramètres".',
     ],

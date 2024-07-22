@@ -35,35 +35,23 @@
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif
-    @if(app(\App\SearchSettings::class)->self_advertisements)
+    @if(app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
     <div id="startpage-quicklinks">
-      @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
-      <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-      <img src="/img/svg-icons/metager-lock.svg" alt="Key Icon" />
-      <span>
-      @lang("index.adfree")
-      </span>
-      </a>
-    @elseif(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
       <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
       <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
       <span>
-      @lang("index.key.tooltip.empty")
+        @lang("index.key.tooltip.empty")
       </span>
       </a>
-    @endif
-      @if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-      <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}"
-      name="chrome-plugin" value="true"><img src="/img/svg-icons/svg-icons/plug-in.svg" alt="+">
-      {{ trans('index.plugin') }}</a>
-    @else
-      <a id="plugin-btn"
-      href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}"
-      title="{{ trans('index.plugin-title') }}"><img src="/img/svg-icons/plug-in.svg" alt="+">
-      {{ trans('index.plugin') }}</a>
-    @endif
     </div>
   @endif
+  </div>
+  <div id="tiles-container">
+    <div id="tiles">
+      @foreach($tiles as $tile)
+      @include("parts.tile", ["tile" => $tile])
+    @endforeach
+    </div>
   </div>
   <div id="language">
     <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>

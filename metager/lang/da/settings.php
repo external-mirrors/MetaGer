@@ -88,4 +88,7 @@ return [
         'label' => "Subtile reklamer for vores egen service",
     ],
     'limited' => 'begrænset',
+    'tiles_startpage' => [
+        'label' => "Vis fliser på startsiden",
+    ],
 ];

@@ -10,9 +10,6 @@ class StatisticsController extends Controller
 {
     public function pageLoad(Request $request)
     {
-        if (!config("metager.matomo.enabled") || config("metager.matomo.url") === null)
-            return;
-
         $params = [
             "idsite" => config("metager.matomo.site_id"),
             "token_auth" => config("metager.matomo.token_auth"),
@@ -29,6 +26,24 @@ class StatisticsController extends Controller
         // Accept-Language
         $params["lang"] = $request->header("Accept-Language");
         $params = array_merge($http_params, $params);   // Merge arrays keeping our serverside defined options if key is set multiple times
+
+        self::LOG_STATISTICS($params);
+    }
+
+    public static function LOG_STATISTICS(array $params)
+    {
+        if (!config("metager.matomo.enabled") || config("metager.matomo.url") === null)
+            return;
+
+        $params = array_merge($params, [
+            "idsite" => config("metager.matomo.site_id"),
+            "token_auth" => config("metager.matomo.token_auth"),
+            "rand" => md5(microtime(true)),
+            "rec" => "1",
+            "send_image" => "0",
+            "cip" => \Request::ip(),
+            "_id" => substr(md5(\Request::ip() . now()->format("Y-m-d")), 0, 16)
+        ]);
 
         $url = config("metager.matomo.url") . "/matomo.php?" . http_build_query($params);
 
@@ -47,4 +62,5 @@ class StatisticsController extends Controller
 
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
     }
+
 }

@@ -37,6 +37,9 @@ return [
     'self_advertisements' => [
         "label" => "Subtle advertisements for our own service",
     ],
+    'tiles_startpage' => [
+        'label' => "Show tiles on the startpage",
+    ],
     'system' => 'System Default',
     'dark' => 'Dark',
     'light' => 'Light',

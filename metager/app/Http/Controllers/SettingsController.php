@@ -298,6 +298,15 @@ class SettingsController extends Controller
             }
         }
 
+        $tiles_startpage = $request->input('tiles_startpage', '');
+        if (!empty($tiles_startpage)) {
+            if ($tiles_startpage === "off") {
+                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, false));
+            } elseif ($tiles_startpage === "on") {
+                Cookie::queue(Cookie::forget("tiles_startpage", "/"));
+            }
+        }
+
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
@@ -349,6 +358,7 @@ class SettingsController extends Controller
             "new_tab",
             "zitate",
             "self_advertisements",
+            "tiles_startpage",
             "suggestions",
         ];
 

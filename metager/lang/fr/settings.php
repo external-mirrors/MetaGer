@@ -88,4 +88,7 @@ return [
         'label' => "Des publicités subtiles pour nos propres services",
     ],
     'limited' => 'limité',
+    'tiles_startpage' => [
+        'label' => "Afficher les tuiles sur la page d'accueil",
+    ],
 ];

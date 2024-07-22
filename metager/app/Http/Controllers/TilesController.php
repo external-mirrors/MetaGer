@@ -4,19 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\Models\Authorization\Authorization;
+use DeviceDetector\Cache\LaravelCache;
+use DeviceDetector\ClientHints;
+use DeviceDetector\DeviceDetector;
 use Exception;
 use Illuminate\Support\Facades\Redis;
 use App\Models\Tile;
 use App\SearchSettings;
 use Cache;
-use Illuminate\Http\Request;
 use Log;
+use Request;
 
 class TilesController extends Controller
 {
     const CACHE_DURATION_SECONDS = 300;
 
-    public function loadTakeTiles(Request $request)
+    public function loadTakeTiles(\Illuminate\Http\Request $request)
     {
         if (!$request->filled("ckey") || !Cache::has($request->input("ckey"))) {
             abort(404);
@@ -59,10 +62,34 @@ class TilesController extends Controller
     private static function STATIC_TILES(): array
     {
         $tiles = [];
+
+        $dd = new DeviceDetector(Request::header("user-agent"), ClientHints::factory($_SERVER));
+        $dd->setCache(new LaravelCache());
+        $dd->parse();
+        $plugin_url = route("plugin");
+        $browser = $dd->getClient("name");
+        $version = $dd->getClient("version");
+        $os = $dd->getOs("name");
+        $target = "__self";
+        $classes = "";
+        if (!$dd->isMobile() && $browser === "Firefox" && version_compare($version, "115.0", "ge")) {
+            $plugin_url = "https://addons.mozilla.org/firefox/downloads/latest/metager-suche";
+            $classes .= "orange";
+        } elseif (!$dd->isMobile() && $browser === "Chrome" && $os === "Windows") {
+            $plugin_url = "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd";
+            $target = "__BLANK";
+            $classes .= "orange";
+        } elseif ($browser === "Microsoft Edge") {
+            $plugin_url = "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog";
+            $target = "__BLANK";
+            $classes .= "orange";
+        }
+        $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: $plugin_url, image_alt: "MetaGer Plugin Logo", classes: $classes, target: $target);
+
         $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
         //$tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
         $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
-        $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: route("plugin"), image_alt: "MetaGer Plugin Logo", classes: "orange");
+
         return $tiles;
     }
 

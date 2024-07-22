@@ -1,4 +1,4 @@
-<a href="{{$tile->url}}" target="{{ $tile->target }}"
+<a id="{{ $tile->id }}" href="{{$tile->url}}" target="{{ $tile->target }}"
     class="{{ $tile->advertisement ? "advertisement " : "" }}{{ $tile->classes }}" {{ $tile->advertisement ? 'rel=nofollow target=_blank' : ''}}>
     <div class="image">
         <img src="{{$tile->image}}" alt="{{$tile->image_alt}}" class="{{$tile->image_classes}}">

@@ -11,7 +11,6 @@ import { statistics } from "../statistics";
     async function fetchAdvertisements() {
         let desired_tile_count = calculateDesiredTileCount();
         let regular_tile_count = getRegularTileCount();
-        console.log(desired_tile_count, advertisements.length)
         if (advertisements.length >= desired_tile_count - regular_tile_count) return;
         let update_url = document.querySelector("meta[name=tiles-update-url]").content;
         update_url += "&count=" + (desired_tile_count - tile_count);
@@ -32,7 +31,6 @@ import { statistics } from "../statistics";
 
         if (document.querySelectorAll("#tiles > a").length == desired_tile_count) return;
         document.querySelectorAll("#tiles >a.advertisement").forEach(element => {
-            console.log("remove");
             element.remove();
         });
         for (let i = 0; i < desired_tile_count - regular_tile_count; i++) {
@@ -76,8 +74,6 @@ import { statistics } from "../statistics";
             desired_tile_count = 2;
         }
 
-        console.log(client_width, tile_width, tile_gap, desired_tile_count);
-        console.log("Six Tiles", tile_width * 6 + 5 * tile_gap);
         if (native_tile_count + min_advertisements > desired_tile_count) {
             // Allow 2x3 Tiles on small displays
             if (desired_tile_count == 2 && client_height > 850) {

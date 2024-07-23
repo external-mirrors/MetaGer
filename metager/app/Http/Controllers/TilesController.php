@@ -112,6 +112,10 @@ class TilesController extends Controller
     private static function TAKE_TILES(string $ckey, int $count): array
     {
         $tiles = [];
+
+        // Check if the user has disabled tiles => Allow disabling the ads on the startpage for now aswell
+        if (!app(SearchSettings::class)->tiles_startpage)
+            return $tiles;
         $cc = Localization::getRegion();
         $result_cache_key = "taketiles:fetch:$ckey:$cc:$count";
 

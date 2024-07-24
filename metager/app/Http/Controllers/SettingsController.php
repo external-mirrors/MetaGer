@@ -298,6 +298,15 @@ class SettingsController extends Controller
             }
         }
 
+        $tiles_startpage = $request->input('tiles_startpage', '');
+        if (!empty($tiles_startpage)) {
+            if ($tiles_startpage === "off") {
+                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, false));
+            } elseif ($tiles_startpage === "on") {
+                Cookie::queue(Cookie::forget("tiles_startpage", "/"));
+            }
+        }
+
         $quotes = $request->input('zitate', '');
         if (!empty($quotes)) {
             if ($quotes === "off") {
@@ -344,18 +353,26 @@ class SettingsController extends Controller
             abort(404);
         }
 
-        $cookies = Cookie::get();
-        foreach ($cookies as $key => $value) {
+        $global_settings = [
+            "dark_mode",
+            "new_tab",
+            "zitate",
+            "self_advertisements",
+            "tiles_startpage",
+            "suggestions",
+        ];
+
+        $settings = Cookie::get();
+        if ($request->wantsJson()) {
+            foreach ($request->header() as $key => $value) {
+                $settings[str_replace("-", "_", $key)] = $value;
+            }
+        }
+        foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }
-            $global_settings = [
-                "dark_mode",
-                "new_tab",
-                "zitate",
-                "self_advertisements",
-                "suggestions",
-            ];
+
             if (in_array($key, $global_settings)) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }

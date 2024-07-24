@@ -56,7 +56,7 @@ class AdminInterface extends Controller
     public function getCountData(Request $request)
     {
         $date = $request->input('date', '');
-        $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00");
+        $date = Carbon::createFromFormat("Y-m-d H:i:s", "$date 00:00:00", 'UTC');
         if ($date === false) {
             abort(404);
         }
@@ -66,7 +66,7 @@ class AdminInterface extends Controller
         $connection = DB::connection("logs");
         $log_summary = $connection
             ->table(
-                $connection->table("logs")->select(["*"])->whereRaw("(time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'"),
+                $connection->table("logs_partitioned")->select(["*"])->whereRaw("time between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'"),
                 "data"
             )
             ->select(DB::raw("date_trunc('hour', data.time) AS timestamp, count(*)"))
@@ -89,9 +89,9 @@ class AdminInterface extends Controller
             "until_now" => 0
         ];
 
-        $now = Carbon::now();
+        $now = Carbon::now("UTC");
         foreach ($log_summary as $entry) {
-            $time = Carbon::createFromFormat("Y-m-d H:i:sO", $entry->timestamp);
+            $time = Carbon::createFromFormat("Y-m-d H:i:s", $entry->timestamp, "UTC");
             $time->day(1)->year($now->year)->month($now->month)->day($now->day);
             $result["total"] += $entry->count;
             if ($time->isBefore($now)) {

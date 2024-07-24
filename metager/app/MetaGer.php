@@ -89,17 +89,23 @@ class MetaGer
 
     public function __construct($hash = "")
     {
-        # Timer starten
+        # start timer
         $this->starttime = microtime(true);
-        # Versuchen Blacklists einzulesen
+        # Read blocklists
         if (file_exists(config_path() . "/blacklistDomains.txt") && file_exists(config_path() . "/blacklistUrl.txt")) {
             $tmp = file_get_contents(config_path() . "/blacklistDomains.txt");
             $this->domainsBlacklisted = explode("\n", $tmp);
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
-            $this->urlsBlacklisted = explode("\n", $tmp);
+            $lines = explode("\n", $tmp);
+            $filtered_lines = array_filter($lines, function ($line) {
+                return strpos(trim($line), '#') !== 0;
+            });
+            # Re-index the array (array_filter preserves keys by default)
+            $filtered_lines = array_values($filtered_lines);
+            $this->urlsBlacklisted = $filtered_lines;
         }
 
-        # Versuchen Blacklists einzulesen
+        # Read blocklists
         if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
             $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
             $this->adDomainsBlacklisted = explode("\n", $tmp);
@@ -1309,7 +1315,7 @@ class MetaGer
 
     public function popAd()
     {
-        if (count($this->ads) > 0) {
+        if (count($this->results) > 0 && count($this->ads) > 0) {
             return array_shift($this->ads);
         } else {
             return null;

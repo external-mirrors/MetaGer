@@ -18,6 +18,7 @@ return [
         'hint' => 'These settings affect all foci and sub-pages!',
         'addon' => 'By installing our <a href=":link" target="_blank" rel="noopener">browser extension</a>, you can prevent the MetaGer settings from being accidentally reset when you delete your browser data. ',
         'no-settings' => '- No settings have been set yet -',
+        'yahoo' => '<b>Note</b>: Unfortunately, we are no longer allowed to display Yahoo search results together with those of other search engines. Therefore, all other search engines are now disabled as long as Yahoo is enabled.'
     ],
     'disabledByFilter' => 'Disabled by Search Filter:',
     'address' => 'Address',
@@ -35,6 +36,9 @@ return [
     ],
     'self_advertisements' => [
         "label" => "Subtle advertisements for our own service",
+    ],
+    'tiles_startpage' => [
+        'label' => "Show tiles on the startpage",
     ],
     'system' => 'System Default',
     'dark' => 'Dark',

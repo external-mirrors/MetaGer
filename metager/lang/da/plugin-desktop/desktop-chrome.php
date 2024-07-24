@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Gå til øverste højre hjørne af din browser, klik på "<img class="mg-icon" src="/img/menu.svg">", og vælg "Indstillinger".',
-        '2' => 'Under "Søg" skal du klikke på knappen "Administrer søgemaskiner...".',
+        '2' => 'Under knappen "Søg" skal du klikke på knappen "Administrer søgemaskiner...".',
         '3' => 'Flyt musen hen over "MetaGer", og klik på "Make Default".',
     ],
     'default-search-v53' => [

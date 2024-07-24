@@ -11,12 +11,16 @@
 </div>
 <div id="search-content">
   <ul id="foki-switcher">
-    @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
-    <li>
+    @foreach(app()->make(\App\Searchengines::class)->available_foki as $index => $fokus)
+    <li @if($index > 4) class="hide-xs" @endif>
       <a href="{{ route('startpage', ['focus' => $fokus]) }}" @if(app(\App\SearchSettings::class)->fokus === $fokus)
-        class="active" aria-current="page" @endif>@lang("index.foki.$fokus")</a>
+    class="active" aria-current="page" @endif>@lang("index.foki.$fokus")</a>
     </li>
-    @endforeach
+  @endforeach
+    <li class="hide-xs">
+      <a href="{{ route('startpage', ['focus' => "maps"]) }}" @if(app(\App\SearchSettings::class)->fokus === "maps")
+  class="active" aria-current="page" @endif>@lang("index.foki.maps")</a>
+    </li>
   </ul>
   <div id="search-wrapper">
     <h1 id="startpage-logo">
@@ -31,35 +35,23 @@
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif
-    @if(app(\App\SearchSettings::class)->self_advertisements)
+    @if(app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
     <div id="startpage-quicklinks">
-    @if(app(\App\Models\Authorization\Authorization::class)->availableTokens < 0)
-    <a class="metager-key no-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-    <img src="/img/svg-icons/metager-lock.svg" alt="Key Icon" />
-    <span>
-    @lang("index.adfree")
-    </span>
-    </a>
-  @elseif(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
-  <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-  <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
-  <span>
-  @lang("index.key.tooltip.empty")
-  </span>
-  </a>
-@endif
-    @if($agent->isMobile() && ($agent->browser() === "Chrome" || $agent->browser() === "Edge"))
-    <button type="submit" id="plugin-btn" form="searchForm" title="{{ trans('index.plugin-title') }}"
-    name="chrome-plugin" value="true"><img src="/img/svg-icons/svg-icons/plug-in.svg" alt="+">
-    {{ trans('index.plugin') }}</a>
-  @else
-  <a id="plugin-btn"
-  href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/plugin') }}"
-  title="{{ trans('index.plugin-title') }}"><img src="/img/svg-icons/plug-in.svg" alt="+">
-  {{ trans('index.plugin') }}</a>
-@endif
+      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
+      <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
+      <span>
+        @lang("index.key.tooltip.empty")
+      </span>
+      </a>
     </div>
   @endif
+  </div>
+  <div id="tiles-container">
+    <div id="tiles">
+      @foreach($tiles as $tile)
+      @include("parts.tile", ["tile" => $tile])
+    @endforeach
+    </div>
   </div>
   <div id="language">
     <a href="{{ route('lang-selector') }}">{{ LaravelLocalization::getCurrentLocaleNative() }}</a>

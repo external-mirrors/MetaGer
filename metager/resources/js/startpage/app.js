@@ -1,5 +1,7 @@
+import "./tiles";
+
 // Register Keyboard listener for quicklinks on startpage
-(() => {
+(async () => {
   let sidebar_toggle = document.querySelector("#sidebarToggle");
   let skip_links_container = document.querySelector(".skiplinks");
 

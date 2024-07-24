@@ -52,6 +52,7 @@ return [
         'addon' => 'Durch die Installation unserer <a href=":link" target="_blank" rel="noopener">Browsererweiterung</a> können Sie verhindern, dass die MetaGer-Einstellungen versehentlich zurückgesetzt werden, wenn Sie Ihre Browserdaten löschen. ',
         'no-settings' => '- Bislang noch keine Einstellungen gesetzt -',
         'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite bzw. Lesezeichen einrichten können um Ihre aktuell gesetzen Einstellungen wiederherzustellen.',
+        'yahoo' => '<b>Hinweis</b>: Leider dürfen wir Suchergebnisse von Yahoo nicht mehr zusammen mit denen anderer Suchmaschinen einblenden. Deshalb sind alle anderen Suchmaschinen jetzt deaktiviert solange Yahoo eingeschaltet ist.'
     ],
     'cost' => 'Wir berechnen mit den aktuellen Einstellungen <strong>:cost Token</strong> pro Suchanfrage.',
     'cost-free' => 'Ihre Suchanfragen sind mit den aktuellen Einstellungen <strong>kostenlos</strong>.',
@@ -86,5 +87,8 @@ return [
     ],
     'self_advertisements' => [
         'label' => "Subtile Werbung für unseren eigenen Service",
+    ],
+    'tiles_startpage' => [
+        'label' => "Zeige Kacheln auf der Startseite",
     ],
 ];

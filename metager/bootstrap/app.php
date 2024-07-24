@@ -3,6 +3,7 @@
 use App\Http\Middleware\AllowLocalOnly;
 use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
+use App\Http\Middleware\Statistics;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;

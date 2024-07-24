@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Siirry selaimesi oikeaan yläkulmaan, napsauta "<img class="mg-icon" src="/img/menu.svg">" ja valitse "Settings".',
-        '2' => 'Napsauta kohdassa "Haku" painiketta "Hakukoneiden hallinta...".',
+        '2' => 'Napsauta "Haku"-painikkeen alta "Hakukoneiden hallinta..."-painiketta.',
         '3' => 'Siirrä hiiri "MetaGer"-merkinnän päälle ja napsauta "Make Default".',
     ],
     'default-search-v53' => [

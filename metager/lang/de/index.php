@@ -1,6 +1,6 @@
 <?php
 return [
-    'plugin' => 'MetaGer installieren',
+    'plugin' => 'MetaGer Installieren',
     'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
     'key' => [
         'placeholder' => 'Schlüssel für werbefreie Suche eingeben',
@@ -19,6 +19,7 @@ return [
         'nachrichten' => 'Nachrichten',
         'science' => 'Wissenschaft',
         'produkte' => 'Produkte',
+        'maps' => 'Maps',
     ],
     'adfree' => 'MetaGer werbefrei nutzen',
     'skip' => [

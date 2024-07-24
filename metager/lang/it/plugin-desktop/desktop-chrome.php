@@ -2,7 +2,7 @@
 return [
     'default-search-v49' => [
         '1' => 'Spostarsi nell\'angolo superiore destro del browser, fare clic su "<img class="mg-icon" src="/img/menu.svg">" e scegliere "Impostazioni".',
-        '2' => 'Alla voce "Ricerca" fare clic sul pulsante "Gestisci motori di ricerca...".',
+        '2' => 'Sotto il pulsante "Ricerca" fare clic sul pulsante "Gestisci motori di ricerca...".',
         '3' => 'Passare il mouse sulla voce "MetaGer" e fare clic su "Rendi predefinito".',
     ],
     'default-search-v53' => [

@@ -127,6 +127,9 @@
                 @else
                     <p>@lang('settings.cost-free')</p>
                 @endif
+                @if(array_key_exists("yahoo", $sumas) && $sumas["yahoo"]->configuration->disabled === false)
+                    <p>@lang('settings.hint.yahoo')</p>
+                @endif
             </div>
         @endif
         @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')
@@ -219,6 +222,16 @@
                             {{ app(App\SearchSettings::class)->self_advertisements === false ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.off')</option>
                         <option value="on" {{ app(App\SearchSettings::class)->self_advertisements === true ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.on')</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tiles_startpage">@lang('settings.tiles_startpage.label')</label>
+                    <select name="tiles_startpage" id="tiles_startpage" class="form-control">
+                        <option value="off"
+                            {{ app(App\SearchSettings::class)->tiles_startpage === false ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        <option value="on" {{ app(App\SearchSettings::class)->tiles_startpage === true ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.on')</option>
                     </select>
                 </div>

@@ -179,4 +179,8 @@ return [
         'title' => 'Persone responsabili e di contatto',
         'description' => 'MetaGer e i servizi correlati sono gestiti da <a href="https://suma-ev.de">SUMA-EV</a>, che è anche l\'autore di questa dichiarazione. In questa dichiarazione, per "noi" si intende generalmente SUMA-EV. I nostri dati di contatto sono riportati nel nostro <a href=":link_impress">Imprint</a>. Possiamo essere contattati via e-mail utilizzando il nostro modulo di contatto <a href=":link_contact"></a> .',
     ],
+    'stats' => [
+        'title' => 'Statistiche anonime',
+        'description' => 'Lavoriamo sempre per migliorare i nostri servizi. Per poterlo fare, abbiamo bisogno di sapere quali funzioni vengono utilizzate. Per questo motivo, raccogliamo dati completamente anonimi sulla frequenza di visualizzazione delle pagine e sull\'utilizzo delle singole funzioni dei nostri siti web. Raccogliamo anche dati anonimi sulla distribuzione dei tipi e delle versioni di browser. Queste statistiche non si basano su profili individuali di utenti e sono create senza cookie o tecnologie simili. Non contengono dati personali.',
+    ],
 ];

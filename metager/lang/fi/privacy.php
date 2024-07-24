@@ -179,4 +179,8 @@ return [
         'description' => 'Kuten tarjouksemme, myös tämä tietosuojaseloste muuttuu jatkuvasti. Siksi sinun on syytä lukea ne säännöllisesti uudelleen.',
         'date' => 'Tämä versio tietosuojakäytännöstämme on päivätty: :date',
     ],
+    'stats' => [
+        'title' => 'Anonyymit tilastot',
+        'description' => 'Pyrimme aina parantamaan palveluitamme. Jotta voimme tehdä tämän, meidän on tiedettävä, mitä toimintojamme käytetään. Tästä syystä keräämme täysin nimettömiä tietoja sivujen katselutiheydestä ja yksittäisten toimintojen käytöstä verkkosivustoillamme. Keräämme myös anonymisoituja tietoja selaintyyppien ja -versioiden jakautumisesta. Nämä tilastot eivät perustu yksittäisiin käyttäjäprofiileihin, ja ne luodaan ilman evästeitä tai vastaavia tekniikoita. Ne eivät sisällä henkilötietoja.',
+    ],
 ];

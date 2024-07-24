@@ -18,6 +18,7 @@ return [
         'hint' => 'Ustawienia te mają wpływ na wszystkie ogniska i podstrony!',
         'addon' => 'Instalując nasze rozszerzenie przeglądarki <a href=":link" target="_blank" rel="noopener"></a> , można zapobiec przypadkowemu zresetowaniu ustawień MetaGer podczas usuwania danych przeglądarki. ',
         'no-settings' => '- Nie wprowadzono jeszcze żadnych ustawień -',
+        'yahoo' => '<b>Uwaga</b>: Niestety, nie możemy już wyświetlać wyników wyszukiwania Yahoo razem z wynikami innych wyszukiwarek. Dlatego wszystkie inne wyszukiwarki są teraz wyłączone, dopóki Yahoo jest włączone.',
     ],
     'disabledByFilter' => 'Wyłączone przez filtr wyszukiwania:',
     'address' => 'Adres',
@@ -87,4 +88,7 @@ return [
         'label' => "Subtelne reklamy naszych własnych usług",
     ],
     'limited' => 'ograniczony',
+    'tiles_startpage' => [
+        'label' => "Wyświetlanie kafelków na stronie startowej",
+    ],
 ];

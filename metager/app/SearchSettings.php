@@ -30,6 +30,8 @@ class SearchSettings
     public $enableQuotes = true;
     /** @var bool */
     public $self_advertisements;
+    /** @var bool */
+    public $tiles_startpage;
     /** @var string */
     public $suggestions = "bing";
     public $external_image_search = "metager";
@@ -54,11 +56,17 @@ class SearchSettings
         $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
 
-        $this->user_settings = [];
-
-        if (!in_array($this->fokus, array_keys((array) $this->sumasJson->foki))) {
+        if (!in_array($this->fokus, array_merge(array_keys((array) $this->sumasJson->foki), ["maps"]))) {
             $this->fokus = "web";
         }
+
+        // Make sure sumas definition for current fokus exists
+        if (!property_exists($this->sumasJson->foki, $this->fokus)) {
+            $this->sumasJson->foki->{$this->fokus} = new \stdClass;
+            $this->sumasJson->foki->{$this->fokus}->sumas = [];
+        }
+
+        $this->user_settings = [];
 
         $this->javascript_enabled = filter_var($this->getSettingValue("js_available", false), FILTER_VALIDATE_BOOLEAN);
 
@@ -68,6 +76,9 @@ class SearchSettings
 
         $this->self_advertisements = $this->getSettingValue("self_advertisements", true);
         $this->self_advertisements = $this->self_advertisements !== "off" ? true : false;
+
+        $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
+        $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
         $suggestions = $this->getSettingValue("suggestions", "bing");
         if ($suggestions === "off") {
@@ -137,7 +148,9 @@ class SearchSettings
         $this->blacklist_tld = array_unique($this->blacklist_tld);
         sort($this->blacklist_tld);
 
-        $this->user_settings = array_diff($this->user_settings, $this->ignore_user_settings);
+        foreach ($this->ignore_user_settings as $ignored_key) {
+            unset($this->user_settings[$ignored_key]);
+        }
     }
 
     public function loadQueryFilter()

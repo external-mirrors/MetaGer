@@ -137,7 +137,7 @@ class TilesController extends Controller
             $mission = [
                 "resulthash" => $result_cache_key,
                 "url" => $endpoint . "?" . http_build_query($params),
-                "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
+                "useragent" => Request::useragent(),
                 "headers" => [
                     "Content-Type" => "application/json",
                     "Authorization" => "Bearer " . config("metager.taketiles.public_key"),

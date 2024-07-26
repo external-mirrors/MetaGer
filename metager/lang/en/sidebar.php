@@ -26,6 +26,7 @@ return [
     'nav29' => 'Transparency statement',
     'nav30' => 'Search engines',
     'nav31' => 'More information',
+    'nav_advertising' => 'Advertise on MetaGer',
     'navFactcheck' => 'fact checking',
     'navigationToggle' => 'show navigation',
     'titles' => [

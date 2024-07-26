@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdgoalController;
+use App\Http\Controllers\AdvertisingController;
 use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HealthcheckController;
@@ -456,5 +457,9 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::group(['prefix' => 'stats'], function () {
         Route::post('pl', [StatisticsController::class, 'pageLoad']);
+    });
+
+    Route::group(['prefix' => 'advertising'], function () {
+        Route::get("/", [AdvertisingController::class, "overview"])->name("advertising_index");
     });
 });

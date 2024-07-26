@@ -69,6 +69,12 @@
       </a>
     </li>
     @endif
+    <li>
+      <a href="{{ route('advertising_index') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+        <img src="/img/advertising/logo.svg" alt="Advertising on MetaGer Logo" aria-hidden="true" id="sidebar-img-advertising-on-metager">
+        <span>{{ __('sidebar.nav_advertising') }}</span>
+      </a>
+    </li>
     <hr>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/app/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>

@@ -119,6 +119,19 @@ class TokenAuthorization extends Authorization
     /**
      * Returns a link to the correct key icon corresponding to the current key charge
      */
+    public function getKeyStatus()
+    {
+        $status = parent::getKeyStatus();
+
+        if (!empty($this->tokenauthorization_header)) {
+            $status = $this->tokenauthorization_header;
+        }
+        return $keyIcon;
+    }
+
+    /**
+     * Returns a link to the correct key icon corresponding to the current key charge
+     */
     public function getKeyIcon()
     {
         $keyIcon = parent::getKeyIcon();

@@ -1,6 +1,73 @@
 @searchbar-border-color: #585858;
 @searchbar-border-color-light: #777777;
 
+.searchbar.full .search-input-submit #search-key {
+  height:1.25rem;
+  > a {
+      height:100%;
+  }
+}
+.searchbar.full .search-input-submit {
+  padding: 0.7rem 1rem;
+}
+.searchbar.full .search-submit {
+  >button {
+    padding: 0;
+  }
+}
+.searchbar.unauthorized .search-input-submit #search-key {
+  height:1.25rem;
+  > a {
+      height:100%;
+  }
+}
+.searchbar.unauthorized .search-input-submit {
+  padding: 0.7rem 1rem;
+}
+.searchbar.unauthorized .search-submit {
+  >button {
+    padding: 0;
+  }
+}
+
+.searchbar.empty .search-input-submit #search-key {
+  height:2.65rem;
+  border-right: transparent;
+  padding: 0,2rem 0.5rem;
+  width: 2.5rem;
+  background-color: #cd4708;
+  background-size: cover;
+  background-position: center;
+
+
+  > a {
+      height:60%;
+  }
+}
+.searchbar.empty .search-submit {
+  >button {
+    padding-right: 0.7rem;
+  }
+}
+
+
+.searchbar.low .search-input-submit #search-key {
+  height:2.65rem;
+  border: solid #d8b100;
+  border-radius: 0.3rem 0 0 0.3rem;
+  padding: 0,2rem 0.5rem;
+  width: 2.5rem;
+
+  > a {
+    height:60%;
+}
+}
+.searchbar.low .search-submit {
+  >button {
+    padding-right: 0.7rem;
+  }
+}
+
 .searchbar {
   display: grid;
   grid-template-rows: max-content 0fr;
@@ -27,14 +94,28 @@
     flex-grow: 1;
     display: flex;
     align-items: center;
-    padding: 0.7rem 1rem;
-    gap: 1rem;
+    &.full, &.unauthorized {
+      padding: 0.7rem 1rem;
+    }
+    gap: 1rem; 
+
 
     #search-key {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 1.25rem;
+      &.full, &.unauthorized {
+        height:1.25rem;
+      }
+      &.empty{
+        height: 2.65rem;
+        border-right: transparent;
+        padding: 0.2rem 0.5rem;
+        width:2.5rem;
+        background-color: #cd4708;
+        background-size: cover;
+        background-position: center;
+      }
 
       @supports not (selector(:first-child)) {
         padding-right: 1rem;
@@ -43,7 +124,12 @@
       > a {
         color: #585858;
         display: block;
-        height: 100%;
+        &.full, &.unauthorized {
+          height:100%;
+        }
+        &.empty {
+          height:60%;
+        }
 
         > img {
           height: 100%;
@@ -122,9 +208,15 @@
         line-height: 100%;
         border: 0;
         background-color: transparent;
-        padding: 0;
         color: #585858;
         filter: invert(@icon-color);
+        &.full, &.unauthorized {
+          padding: 0;
+        }
+        &.empty{
+          padding-right: 0.5rem;
+
+        }
 
         > img#searchbar-img-lupe {
           height: 100%;

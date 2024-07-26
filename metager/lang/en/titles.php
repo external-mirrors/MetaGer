@@ -39,4 +39,7 @@ return [
         "overview" => 'Logs - MetaGer',
         "login" => "Login - MetaGer",
     ],
+    'advertising' => [
+        'overview' => 'Advertise on MetaGer'
+    ]
 ];

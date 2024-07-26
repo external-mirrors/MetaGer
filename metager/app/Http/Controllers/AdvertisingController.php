@@ -8,6 +8,6 @@ class AdvertisingController extends Controller
 {
     public function overview(Request $request)
     {
-        return '';
+        return view("advertising.overview", ["title" => __("titles.advertising.overview")]);
     }
 }

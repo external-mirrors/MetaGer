@@ -126,7 +126,7 @@
           </li>
           @if(App\Localization::getLanguage() == "de")
             <li>
-              <a href="https://shop.spreadshirt.de/metager/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
+              <a href="https://shop.spreadshirt.de/suma-ev/" rel="noopener" target="_blank">{{ trans('sidebar.nav26') }}<img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a> 
             </li>
           @endif
           <li>

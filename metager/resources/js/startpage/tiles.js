@@ -2,29 +2,9 @@ import { statistics } from "../statistics";
 
 (async () => {
     let tile_container = document.querySelector("#tiles");
-    let tile_count = tile_container.querySelectorAll("a").length;
-
     let advertisements = [];
-    let fetch_timeout = null;
-    fetchAdvertisements().then(() => udpateInterface());
+    udpateInterface();
 
-    async function fetchAdvertisements() {
-        let desired_tile_count = calculateDesiredTileCount();
-        let regular_tile_count = getRegularTileCount();
-        if (advertisements.length >= desired_tile_count - regular_tile_count) return;
-        let update_url = document.querySelector("meta[name=tiles-update-url]").content;
-        update_url += "&count=" + (desired_tile_count - tile_count);
-        return new Promise((resolve, reject) => {
-            if (fetch_timeout != null) return resolve();
-            fetch_timeout = setTimeout(() => {
-                fetch(update_url).then(response => response.json()).then(response => {
-                    advertisements = response;
-                    fetch_timeout = null;
-                    resolve();
-                }).catch(e => reject(e));
-            }, 500);
-        });
-    }
     function udpateInterface() {
         let desired_tile_count = calculateDesiredTileCount();
         let regular_tile_count = getRegularTileCount();
@@ -87,7 +67,7 @@ import { statistics } from "../statistics";
         return desired_tile_count;
     }
     window.addEventListener("resize", e => {
-        fetchAdvertisements().then(() => udpateInterface());
+        udpateInterface();
     })
 })();
 

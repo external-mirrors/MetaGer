@@ -58,7 +58,7 @@
         <div class="input-group custom">
             <input type="radio" name="amount" id="amount-custom" value="custom" @if(Request::input('amount', '') === "custom")checked @endif required />
             <label for="amount-custom">Wunschbetrag</label>
-            <input type="number" name="custom-amount" id="amount-custom-value" step="0.01" min="2.5" value="{{ Request::input('custom-amount', '5,00') }}" placeholder="5,00€" />
+            <input type="number" name="custom-amount" id="amount-custom-value" step="0.01" min="2.5" value="{{ Request::input('custom-amount', '10,00') }}" placeholder="10,00€" />
         </div>
     </div>
     <div id="membership-payment">

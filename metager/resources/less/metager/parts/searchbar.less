@@ -1,6 +1,58 @@
 @searchbar-border-color: #585858;
 @searchbar-border-color-light: #777777;
 
+
+.searchbar.empty .search-input-submit #search-key {
+  height:3rem;
+  border-right: transparent;
+  border-radius: 0.3rem 0 0 0.3rem;
+  padding: 0,2rem 0.5rem;
+  background-color: #cd4708;
+  background-size: cover;
+  background-position: center;
+
+
+  > a {
+      height:60%;
+  }
+}
+.searchbar.empty .search-submit {
+  >button {
+    padding-right: 0.7rem;
+  }
+}
+
+
+.searchbar .search-input-submit #search-key {
+  height:3rem;
+  border: 1px solid #585858;
+  border-right: none;
+  border-radius: 0.3rem 0 0 0.3rem;
+  padding: 0,2rem 0.5rem;
+  width: 3rem;
+
+  > a {
+    height:50%;
+}
+}
+
+.searchbar.low .search-input-submit #search-key {
+  border: solid #d8b100;
+}
+
+.searchbar.low .search-submit {
+  >button {
+    padding-right: 0.7rem;
+  }
+}
+
+
+.searchbar .search-submit {
+  >button {
+    padding-left: 1rem;
+  }
+}
+
 .searchbar {
   display: grid;
   grid-template-rows: max-content 0fr;
@@ -22,20 +74,37 @@
     }
   }
 
+
+#border-search-input {
+  border: 1px solid @searchbar-border-color;
+  border-right: none;
+  border-left: none;
+  flex-grow: 1;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+
+  .search-input {
+    flex-grow: 1;
+  }
+}
+
   .search-input-submit {
     background-color: @searchbar-background-color;
-    flex-grow: 1;
     display: flex;
     align-items: center;
-    padding: 0.7rem 1rem;
-    gap: 1rem;
+    &.full, &.unauthorized {
+      padding: 0.7rem 1rem;
+    }
+     
+
 
     #search-key {
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 1.25rem;
-
+      
       @supports not (selector(:first-child)) {
         padding-right: 1rem;
       }
@@ -43,7 +112,12 @@
       > a {
         color: #585858;
         display: block;
-        height: 100%;
+        &.full, &.unauthorized {
+          height:100%;
+        }
+        &.empty {
+          height:60%;
+        }
 
         > img {
           height: 100%;
@@ -115,16 +189,22 @@
     }
 
     .search-submit {
-      height: 1.25rem;
+      height: 1.25rem; 
+      border: 1px solid @searchbar-border-color;
+      border-left: none;
+      border-radius: 0 0.3rem 0.3rem 0;
+      height: 3rem;
+      display: flex;
+      align-items: center;
 
       button {
-        height: 100%;
+        height: 50%;
         line-height: 100%;
         border: 0;
         background-color: transparent;
-        padding: 0;
         color: #585858;
         filter: invert(@icon-color);
+        padding-right: 1rem;
 
         > img#searchbar-img-lupe {
           height: 100%;
@@ -256,14 +336,6 @@
     }
   }
 
-  > * {
-    border: 1px solid @searchbar-border-color;
-
-    &:not(:first-child):not(.suggestions) {
-      border-left: none;
-    }
-  }
-
   .search-input-submit {
     border-radius: 5px;
 
@@ -279,11 +351,7 @@
       border-radius: 5px;
     }
 
-    .search-input-submit {
-      border: 1px solid #aaa;
-      border-radius: 5px;
-    }
-
+    
     > * {
       border: 1px solid #aaa;
       border-radius: 5px;

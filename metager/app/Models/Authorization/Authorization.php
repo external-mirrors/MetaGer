@@ -83,6 +83,20 @@ abstract class Authorization
         }
     }
 
+    public function getKeyStatus(){
+        $status = "";
+        if ($this->availableTokens < 0) {
+            $status = "unauthorized";
+        } else if ($this->availableTokens < $this->cost) {
+            $status = "empty";
+        } else if ($this->availableTokens <= 30) {
+            $status = "low";
+        } else {
+            $status = "full";
+        }
+        return $status;
+    }
+
     /**
      * Returns a link to the correct key icon corresponding to the current key charge
      */

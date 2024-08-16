@@ -21,6 +21,7 @@
     <script src="{{ mix('js/index.js') }}"></script>
     <link rel="stylesheet" href="{{ LaravelLocalization::getLocalizedURL(null, '/index.css?id=' . $mgv) }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <script src="{{mix('js/utility.js')}}"></script>
     <meta http-equiv="refresh" content="1">
 </head>
 <body>

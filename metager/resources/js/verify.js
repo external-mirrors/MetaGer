@@ -24,8 +24,29 @@ window.addEventListener("beforeunload", () => {
 })
 
 fetch(url).then(result => {
-  interval = setInterval(verify, 100);
+  webextensioncheck().then(() => {
+    interval = setInterval(verify, 100);
+    verify();
+  });
 });
+
+async function webextensioncheck() {
+  return new Promise(resolve => {
+    if (localStorage && localStorage.getItem("webextension") != null) {
+      return resolve();
+    } else if (window.webextension != undefined) {
+      return resolve();
+    } else {
+      let timeout = setTimeout(() => {
+        resolve();
+      }, 500);
+      window.addEventListener("webextension_status_update", e => {
+        clearTimeout(timeout);
+        resolve();
+      });
+    }
+  });
+}
 
 function getKey() {
   let nonce_element = document.querySelector("meta[name=nonce]");

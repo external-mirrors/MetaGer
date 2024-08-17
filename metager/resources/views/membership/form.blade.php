@@ -68,6 +68,9 @@
         <div class="error">{{ $error }}</div>
         @endforeach
         @endif
+        <div>
+        Wenn Sie ein anderes Intervall als monatlich angeben, wird ein entsprechendes Vielfaches Ihres monatlichen Beitrages im gewählten Intervall abgebucht.
+        </div>
         <div id="membership-interval">
             <div class="input-group monthly">
                 <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval') || Request::input('interval') === "annual")checked @endif required>

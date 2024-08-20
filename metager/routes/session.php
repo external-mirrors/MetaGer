@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\AdminInterface;
 use App\Http\Controllers\HumanVerification;
+use App\Http\Controllers\LogsApiController;
+use App\Mail\LogsLoginCode;
 use Illuminate\Http\Request;
 
 # In this File we collect all routes which require a session or other cookies to be active
@@ -18,6 +20,8 @@ if (in_array(App::environment(), ["development", "production"])) {
 }
 
 Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function () {
+    Route::match(["get", "post"], "logs", [LogsApiController::class, "admin"])->name("logs:admin");
+    Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);
     Route::get('fpm-status', [AdminInterface::class, "getFPMStatus"])->name("fpm-status");
     Route::get('count', 'AdminInterface@count');
     Route::get('count/count-data', [AdminInterface::class, 'getCountData']);

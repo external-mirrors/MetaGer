@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\LogsAuthentication;
 use App\Localization;
 use App\Models\Verification\HumanVerification;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -45,6 +49,8 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapEnableCookieRoutes();
 
         $this->mapHumanVerificationRoutes();
+
+        $this->mapLogRoutes();
     }
 
     /**
@@ -119,6 +125,22 @@ class RouteServiceProvider extends ServiceProvider
         });
     }
 
+    /**
+     * Define the "log" routes for the application.
+     *
+     * @return void
+     */
+    protected function mapLogRoutes()
+    {
+        Route::group([
+            'namespace' => $this->namespace,
+            'middleware' => [StartSession::class, ShareErrorsFromSession::class, VerifyCsrfToken::class],
+            'prefix' => "logs"
+        ], function ($router) {
+            require base_path('routes/logs.php');
+        });
+    }
+
 
     /**
      * Configure the rate limiters for the application.
@@ -133,6 +155,10 @@ class RouteServiceProvider extends ServiceProvider
 
         RateLimiter::for('humanverification', function (Request $request) {
             return Limit::perMinutes(5, 30)->by($request->input("key"));
+        });
+
+        RateLimiter::for('logs_login', function (Request $request) {
+            return Limit::perMinute(30, 30)->by($request->ip());
         });
     }
 }

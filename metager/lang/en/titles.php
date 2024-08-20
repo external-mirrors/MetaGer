@@ -33,5 +33,10 @@ return [
     'prevention' => 'Help with Suicidal Thoughts - MetaGer',
     'membership' => 'Your membership in SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
-    'help-glossary' => 'Glossary - MetaGer'
+    'help-glossary' => 'Glossary - MetaGer',
+    'logs' => [
+        "admin" => "Logs Admin - MetaGer",
+        "overview" => 'Logs - MetaGer',
+        "login" => "Login - MetaGer",
+    ],
 ];

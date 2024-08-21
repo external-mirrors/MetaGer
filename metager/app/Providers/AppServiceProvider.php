@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Auth::extend('logs', function (Application $app, string $name, array $config) {
-            return new LogsAuthGuard(Auth::createUserProvider($config['provider']), $app->make('request'));
+            return new LogsAuthGuard(Auth::createUserProvider($config['provider']), $app->make(\Illuminate\Http\Request::class));
         });
     }
 

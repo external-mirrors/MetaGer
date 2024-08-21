@@ -72,10 +72,14 @@ class LogsApiController extends Controller
 
     public function login(Request $request)
     {
-        if (!is_null(Auth::guard("logs")->user()->getAuthIdentifier())) {
+        if (!is_null(Auth::guard("logs")->user()) && !is_null(Auth::guard("logs")->user()->getAuthIdentifier())) {
             session()->flash("email", Auth::guard("logs")->user()->getAuthIdentifier());
         }
-        return view("logs.login", ['title' => __('titles.logs.login')]);
+        if ($request->filled("reset")) {
+            session()->flush();
+            return redirect(route("logs:login"));
+        }
+        return view("logs.login", ['title' => __('titles.logs.login')])->with(["css" => [mix("/css/logs.css")]]);
     }
     public function login_post(Request $request)
     {

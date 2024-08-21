@@ -8,14 +8,83 @@ use Auth;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use InvoiceNinja\Sdk\InvoiceNinja;
 use Mail;
+use Spatie\LaravelIgnition\Exceptions\InvalidConfig;
 use Validator;
 
 class LogsApiController extends Controller
 {
     public function overview(Request $request)
     {
-        return view('logs.overview', ['title' => __('titles.logs.overview')]);
+        if (empty(config("metager.invoiceninja.access_token"))) {
+            throw new InvalidConfig("Invoiceninja is not configured on this system", 500);
+        }
+        $invoice = [
+            "email" => Auth::guard("logs")->user()->getAuthIdentifier(),
+            "company" => "",
+            "first_name" => "",
+            "last_name" => "",
+            "street" => "",
+            "postal_code" => "",
+            "city" => "",
+        ];
+
+        $client = $this->getOrCreateClient($invoice["email"]);
+        $contact = $this->getContactFromClient($client, $invoice["email"]);
+
+        if (!empty($client["name"])) {
+            $invoice["company"] = $client["name"];
+        }
+        if (!empty($client["address1"])) {
+            $invoice["street"] = $client["address1"];
+        }
+        if (!empty($client["postal_code"])) {
+            $invoice["postal_code"] = $client["postal_code"];
+        }
+        if (!empty($client["city"])) {
+            $invoice["city"] = $client["city"];
+        }
+        if (!empty($contact["first_name"])) {
+            $invoice["first_name"] = $contact["first_name"];
+        }
+        if (!empty($contact["last_name"])) {
+            $invoice["last_name"] = $contact["last_name"];
+        }
+
+        $edit_invoice = $request->filled("edit_invoice");
+        if (empty($invoice["first_name"]) || empty($invoice["last_name"]) || empty($invoice["street"]) || empty($invoice["postal_code"]) || empty($invoice["city"])) {
+            $edit_invoice = true;
+        }
+
+        return view('logs.overview', ['title' => __('titles.logs.overview')])->with(["css" => [mix("/css/logs.css")], "invoice" => $invoice, "edit_invoice" => $edit_invoice]);
+    }
+
+    public function updateInvoiceData(Request $request)
+    {
+        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+        $client = $this->getOrCreateClient($email);
+
+        $client["name"] = $request->input("company") ?? "";
+        $client["address1"] = $request->input("street") ?? "";
+        $client["postal_code"] = $request->input("postal_code") ?? "";
+        $client["city"] = $request->input("city") ?? "";
+
+        for ($i = 0; $i < sizeof($client["contacts"]); $i++) {
+            if ($client["contacts"][$i]["email"] !== $email)
+                continue;
+            $client["contacts"][$i]["first_name"] = $request->input("first_name") ?? "";
+            $client["contacts"][$i]["last_name"] = $request->input("last_name") ?? "";
+        }
+        $invoice_client = $this->getInvoiceNinjaClient();
+        $invoice_client->clients->update($client["id"], [
+            "name" => $client["name"],
+            "address1" => $client["address1"],
+            "postal_code" => $client["postal_code"],
+            "city" => $client["city"],
+            "contacts" => $client["contacts"]
+        ]);
+        return redirect(route("logs:overview"));
     }
 
     public function admin(Request $request)
@@ -112,5 +181,51 @@ class LogsApiController extends Controller
             Auth::guard("logs")->init($validated["email"]);
         }
         return redirect(route("logs:login"))->with(["email" => $validated["email"]]);
+    }
+
+    private function getInvoiceNinjaClient()
+    {
+        $invoice_client = new InvoiceNinja(config("metager.invoiceninja.access_token"));
+        $invoice_client->setUrl(config("metager.invoiceninja.url"));
+        return $invoice_client;
+    }
+
+    private function getOrCreateClient(string $email)
+    {
+        // Check if there is already an Invoicing Account for this client
+        $invoice_client = $this->getInvoiceNinjaClient();
+
+        $client = null;
+        $clients = $invoice_client->clients->all([
+            "email" => $email
+        ]);
+        foreach ($clients["data"] as $tmp_client) {
+            if ($tmp_client["group_settings_id"] === config("metager.invoiceninja.logs_group_id")) {
+                $client = $tmp_client;
+            }
+        }
+
+        if (is_null($client)) {
+            $invoice_client->clients->create([
+                "group_settings_id" => config("metager.invoiceninja.logs_group_id"),
+                "contacts" => [
+                    [
+                        'send_email' => true,
+                        'email' => $email,
+                    ]
+                ]
+            ]);
+            return $this->getOrCreateClient($email);
+        }
+        return $client;
+    }
+
+    private function getContactFromClient($client, $email)
+    {
+        foreach ($client["contacts"] as $contact) {
+            if ($contact["email"] === $email) {
+                return $contact;
+            }
+        }
     }
 }

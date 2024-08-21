@@ -7,6 +7,7 @@ use App\Models\Authorization\LogsUser;
 use Auth;
 use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 use Mail;
 use Validator;
 
@@ -71,12 +72,19 @@ class LogsApiController extends Controller
 
     public function login(Request $request)
     {
+        if (!is_null(Auth::guard("logs")->user()->getAuthIdentifier())) {
+            session()->flash("email", Auth::guard("logs")->user()->getAuthIdentifier());
+        }
         return view("logs.login", ['title' => __('titles.logs.login')]);
     }
     public function login_post(Request $request)
     {
+        $email_validation = "email:rfc,dns";
+        if (!$request->filled("code")) {
+            $email_validation = "required|" . $email_validation;
+        }
         $validator = Validator::make($request->input(), [
-            "email" => "required|email:rfc,dns",
+            "email" => $email_validation,
             'code' => 'regex:/^\d{6}$/i'
         ]);
 
@@ -86,19 +94,18 @@ class LogsApiController extends Controller
         }
 
         $validated = $validator->validated();
-        $user = app(LogsUser::class)->fetchUserByMail($validated["email"]);
-
-        if (!is_null($user->getAuthIdentifier()) && !is_null($user->getAuthPassword())) {
-            if (!empty($validated["code"])) {
-                if (Auth::guard("logs")->attempt(["username" => $validated["email"], "password" => $validated["code"]])) {
-                    session(["logs_authenticated" => true]);
-                    $url = session("url.intended");
-                    return redirect($url);
-                }
+        if (isset($validated["code"])) {
+            if (Auth::guard("logs")->validate(["username" => $validated["email"], "password" => $validated["code"]])) {
+                $url = session("url.intended");
+                return redirect($url);
             } else {
-                // Send Email with login Code
-                Mail::to($validated["email"])->send(new LogsLoginCode($user->getAuthPassword()));
+                // Code wasn't correct
+                $errors = new MessageBag();
+                $errors->add("invalid_logincode", "Login Code was invalid");
+                return redirect(route("logs:login"))->withErrors($errors);
             }
+        } else {
+            Auth::guard("logs")->init($validated["email"]);
         }
         return redirect(route("logs:login"))->with(["email" => $validated["email"]]);
     }

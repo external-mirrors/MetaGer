@@ -16,6 +16,9 @@
 @endif
 <form action="{{ route("logs:login:post")}}" method="post">
     <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+    @if(session("email"))
+        <input type="hidden" name="email" value="{{session('email')}}">
+    @endif
     <div class="input-group">
         <label for="email">Email Addresse</label>
         @if(session("email"))

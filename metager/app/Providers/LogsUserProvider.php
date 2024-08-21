@@ -60,7 +60,7 @@ class LogsUserProvider implements UserProvider
         if (empty($credentials)) {
             return;
         }
-        return $this->user->fetchUserByMail($credentials["username"]);
+        return $this->user->fetchUserByCredentials($credentials);
     }
 
     /**

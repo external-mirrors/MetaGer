@@ -11,23 +11,25 @@ class LogsUser implements Authenticatable
     private int $discount;
 
 
-    public function fetchUserByMail(string $username)
+    public function fetchUserByCredentials(array $credentials)
     {
-        $user = DB::table("logs_users")->where("email", "=", $username)->first();
+        $user = DB::table("logs_users")->where("email", "=", $credentials["username"])->first();
+        $this->email = $credentials["username"];
         if (!is_null($user)) {
-            $this->email = $username;
-            if (!empty(session("login_token"))) {
-                $this->login_token = session("login_token");
+            if (isset($credentials["password"])) {
+                $this->login_token = $credentials["password"];
             } else {
                 $this->login_token = (string) rand(0, 999999);
                 while (strlen($this->login_token) < 6) {
                     $this->login_token = '0' . $this->login_token;
                 }
-                session(["login_token" => $this->login_token]);
             }
             $this->discount = $user->discount;
+        } else {
+            $this->login_token = "";
         }
         return $this;
+
     }
     /**
      * Get the name of the unique identifier for the user.

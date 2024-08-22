@@ -68,6 +68,10 @@ class TilesController extends Controller
         }
         $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: $plugin_url, image_alt: "MetaGer Plugin Logo", classes: $classes, target: $target, id: "plugin-btn");
 
+        if (!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)) {
+        $tiles[] = new Tile(title: __('index.adfree'), image: "/img/svg-icons/lock.svg", url: app(\App\Models\Authorization\Authorization::class)->getAdfreeLink(), image_alt: __('mg-story.privacy.image.alt'), image_classes: "invert-dm");
+        }
+
         if (Localization::getLanguage() === "de")
             $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
         $tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");

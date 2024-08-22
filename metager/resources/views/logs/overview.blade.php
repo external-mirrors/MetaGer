@@ -6,9 +6,11 @@
 <div id="overview">
     <h1>MetaGer Logs API</h1>
     <p>@lang('logs.overview.hint')</p>
-    @include("logs..parts.invoice-data")
-    @if(!$edit_invoice)
-
-    @endif
+    <div id="settings">
+        @include("logs.parts.invoice-data")
+        @if(!$edit_invoice)
+            @include("logs.parts.abo")
+        @endif
+    </div>
 </div>
 @endsection

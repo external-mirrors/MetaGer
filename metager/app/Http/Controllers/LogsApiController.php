@@ -57,7 +57,25 @@ class LogsApiController extends Controller
             $edit_invoice = true;
         }
 
-        return view('logs.overview', ['title' => __('titles.logs.overview')])->with(["css" => [mix("/css/logs.css")], "invoice" => $invoice, "edit_invoice" => $edit_invoice]);
+        // Populate Abo Settings
+        $abo = [
+            "interval" => "never",
+            "next_invoice" => null,
+            "last_invoice" => null,
+            "interval_price" => 0,
+            "monthly_price" => 0
+        ];
+        $edit_abo = $request->filled("edit_abo");
+
+        return view('logs.overview', ['title' => __('titles.logs.overview')])->with(
+            [
+                "css" => [mix("/css/logs.css")],
+                "invoice" => $invoice,
+                "edit_invoice" => $edit_invoice,
+                "abo" => $abo,
+                "edit_abo" => $edit_abo,
+            ]
+        );
     }
 
     public function updateInvoiceData(Request $request)
@@ -85,6 +103,23 @@ class LogsApiController extends Controller
             "contacts" => $client["contacts"]
         ]);
         return redirect(route("logs:overview"));
+    }
+
+    public function createAbo(Request $request)
+    {
+        return view('logs.abo_create', ['title' => __('titles.logs.overview')])->with(
+            [
+                "css" => [mix("/css/logs.css")],
+            ]
+        );
+    }
+    public function nda(Request $request)
+    {
+        $nda = file_get_contents(storage_path("app/logs_nda.pdf"));
+        return response()->make($nda, 200, [
+            "Content-Type" => "application/pdf",
+            "Content-Disposition" => "attachment; filename=\"metager_nda_" . now()->format("Y-m-d") . ".pdf\"",
+        ]);
     }
 
     public function admin(Request $request)

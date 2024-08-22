@@ -21,24 +21,70 @@
 }
 
 #overview {
-    >div#invoice-data {
+    >div#settings {
         display: grid;
-        row-gap: 0.5rem;
-        width: 50%;
-        min-width: 320px;
+        grid-template-columns: 1fr 1fr;
 
-        >.input-group {
+        @media(max-width: 610px) {
+            grid-template-columns: 1fr;
+        }
+
+        >div#invoice-data {
             display: grid;
+            row-gap: 0.5rem;
+            width: 50%;
+            min-width: 320px;
 
-            >label {
+            >h3 {
                 margin: 0;
-                font-weight: normal;
-                font-size: .8rem;
             }
         }
 
-        >h3 {
-            margin: 0;
+        >div#abo {
+            display: grid;
+            row-gap: 0.5rem;
+            place-content: baseline;
+
+            >p {
+                font-size: .8rem;
+            }
+
+            >h3 {
+                margin: 0;
+            }
         }
+    }
+
+    .input-group {
+        display: grid;
+
+        >label {
+            margin: 0;
+            font-weight: normal;
+            font-size: .8rem;
+        }
+    }
+}
+
+#abo-create {
+    >#interval {
+        display: flex;
+        column-gap: 0.5rem;
+        row-gap: 0.5rem;
+        flex-wrap: wrap;
+
+        >a {
+            &:not(.active) {
+                color: inherit;
+            }
+
+            display: block;
+            padding: 0.5rem 1rem;
+            border: 1px solid;
+        }
+    }
+
+    >a.nda-link {
+        margin-bottom: 0.5rem;
     }
 }

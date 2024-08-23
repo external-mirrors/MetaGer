@@ -14,6 +14,7 @@ Route::post("login", [LogsApiController::class, "login_post"])->middleware("thro
 Route::middleware(LogsAuthentication::class)->group(function () {
     Route::get("/", [LogsApiController::class, "overview"])->name("logs:overview");
     Route::post("update-invoice-data", [LogsApiController::class, "updateInvoiceData"])->name("logs:update_invoice_data");
-    Route::get("abo", [LogsApiController::class, "createAbo"])->name("logs:abo");
+    Route::get("abo", [LogsApiController::class, "showAbo"])->name("logs:abo");
     Route::get("nda", [LogsApiController::class, "nda"])->name("logs:nda");
+    Route::post("abo", [LogsApiController::class, "createAbo"]);
 });

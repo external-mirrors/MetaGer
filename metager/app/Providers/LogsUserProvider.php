@@ -22,7 +22,7 @@ class LogsUserProvider implements UserProvider
      */
     public function retrieveById($identifier)
     {
-        return $this->user->fetchUserByMail($identifier);
+        return $this->user->fetchUserByCredentials(["username" => $identifier]);
     }
 
     /**
@@ -34,7 +34,7 @@ class LogsUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token)
     {
-        return $this->user->fetchUserByMail($identifier);
+        return null;
     }
 
     /**

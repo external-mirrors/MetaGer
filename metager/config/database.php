@@ -39,6 +39,7 @@ return [
             'database' => database_path('databases/' . env('SQLITE_DATABASE', 'database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+            'engine' => 'InnoDB'
         ],
         'useragents' => [
             'driver' => 'sqlite',

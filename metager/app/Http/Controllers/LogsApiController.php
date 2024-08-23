@@ -105,13 +105,24 @@ class LogsApiController extends Controller
         return redirect(route("logs:overview"));
     }
 
-    public function createAbo(Request $request)
+    public function showAbo(Request $request)
     {
         return view('logs.abo_create', ['title' => __('titles.logs.overview')])->with(
             [
                 "css" => [mix("/css/logs.css")],
             ]
         );
+    }
+    public function createAbo(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "interval" => "required|in:never,monthly,quarterly,six-monthly,annual"
+        ]);
+        if ($validator->fails()) {
+            return redirect(route("logs:abo"))->withInput()->withErrors($validator);
+        }
+        $validated = $validator->validated();
+
     }
     public function nda(Request $request)
     {

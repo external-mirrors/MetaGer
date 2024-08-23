@@ -11,7 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('logs_users', function (Blueprint $table) {
-            $table->string("email")->unique();
+            $table->id();
+            $table->string("email")->unique("email_pk");
             $table->integer("discount")->default(0);
             $table->dateTime("last_activity")->nullable();
             $table->timestamps();

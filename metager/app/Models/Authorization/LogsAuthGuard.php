@@ -23,7 +23,7 @@ class LogsAuthGuard implements \Illuminate\Contracts\Auth\Guard
         $this->userProvider = $userProvider;
         $this->request = $request;
         $this->user = null;
-        if (!is_null(session(self::SESSION_LOGS_AUTHORIZED_KEY))) {
+        if (!is_null(session(self::SESSION_LOGS_AUTHORIZED_KEY)) && !is_null(session(self::SESSION_LOGS_USERNAME_KEY))) {
             $this->authorized = session(self::SESSION_LOGS_AUTHORIZED_KEY);
         }
         if (!is_null(session(self::SESSION_LOGS_USERNAME_KEY))) {
@@ -73,7 +73,10 @@ class LogsAuthGuard implements \Illuminate\Contracts\Auth\Guard
      */
     public function check(): bool
     {
-        return $this->authorized;
+        if (!$this->authorized || empty($this->user->getAuthPassword()))
+            return false;
+        else
+            return $this->authorized;
     }
 
     /**

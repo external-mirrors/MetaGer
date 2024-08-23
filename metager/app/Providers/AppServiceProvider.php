@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Localization;
 use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
+use App\Models\Logs\LogsAccountProvider;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
@@ -36,6 +37,9 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(LogsUser::class, function ($app) {
             return new LogsUser();
+        });
+        $this->app->singleton(LogsAccountProvider::class, function ($app) {
+            return new LogsAccountProvider();
         });
         Auth::provider("logs", function ($app, array $config) {
             return new LogsUserProvider($app->make(LogsUser::class));

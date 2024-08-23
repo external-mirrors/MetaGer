@@ -3,70 +3,77 @@
     <div class="input-group">
         <label for="email">@lang('logs.overview.invoice-data.email')</label>
         @if($edit_invoice)
-            <input type="email" name="email" id="email" placeholder="max@mustermann.de" value="{{ $invoice['email'] }}"
-                disabled>
+            <input type="email" name="email" id="email" placeholder="max@mustermann.de"
+                value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->email }}" disabled>
         @else
-            <span>{{ $invoice["email"] }}</span>
+            <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->email }}</span>
         @endif
     </div>
-    @if($edit_invoice || !empty($invoice["company"]))
+    @if($edit_invoice || !empty(app(App\Models\Logs\LogsAccountProvider::class)->client->name))
         <div class="input-group">
             <label for="company">@lang('logs.overview.invoice-data.company')</label>
             @if($edit_invoice)
-                <input type="text" name="company" id="company" value="{{ $invoice['company'] }}" placeholder="Musterfirma"
+                <input type="text" name="company" id="company"
+                    value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->name }}" placeholder="Musterfirma"
                     form="update-invoice-data">
             @else
-                <span>{{ $invoice["company"] }}</span>
+                <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->name }}</span>
             @endif
         </div>
     @endif
     @if($edit_invoice)
         <div class="input-group">
             <label for="first_name">@lang('logs.overview.invoice-data.first_name')</label>
-            <input type="text" name="first_name" id="first_name" value="{{ $invoice['first_name'] }}" placeholder="Max"
+            <input type="text" name="first_name" id="first_name"
+                value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->first_name }}" placeholder="Max"
                 form="update-invoice-data">
         </div>
         <div class="input-group">
             <label for="last_name">@lang('logs.overview.invoice-data.last_name')</label>
-            <input type="text" name="last_name" id="last_name" value="{{ $invoice['last_name'] }}" placeholder="Mustermann"
-                form="update-invoice-data">
+            <input type="text" name="last_name" id="last_name"
+                value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->last_name }}"
+                placeholder="Mustermann" form="update-invoice-data">
         </div>
-    @elseif(!empty($invoice["first_name"]) && !empty($invoice["last_name"]))
+    @elseif(!empty(app(App\Models\Logs\LogsAccountProvider::class)->client->contact->first_name) && !empty(app(App\Models\Logs\LogsAccountProvider::class)->client->contact->last_name))
         <div class="input-group">
             <label for="full_name">@lang('logs.overview.invoice-data.full_name')</label>
-            <span>{{ $invoice["first_name"] }} {{ $invoice["last_name"] }}</span>
+            <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->first_name }}
+                {{ app(App\Models\Logs\LogsAccountProvider::class)->client->contact->last_name }}</span>
         </div>
     @endif
-    @if($edit_invoice || !empty($invoice["street"]))
+    @if($edit_invoice || !empty(app(App\Models\Logs\LogsAccountProvider::class)->client->address1))
         <div class="input-group">
             <label for="street">@lang('logs.overview.invoice-data.street')</label>
             @if($edit_invoice)
-                <input type="text" name="street" id="street" value="{{ $invoice['street'] }}" placeholder="Musterstraße 3"
+                <input type="text" name="street" id="street"
+                    value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->address1 }}" placeholder="Musterstraße 3"
                     form="update-invoice-data">
             @else
-                <span>{{ $invoice["street"] }}</span>
+                <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->address1 }}</span>
             @endif
         </div>
     @endif
-    @if($edit_invoice || !empty($invoice["postal_code"]))
+    @if($edit_invoice || !empty(app(App\Models\Logs\LogsAccountProvider::class)->client->postal_code))
         <div class="input-group">
             <label for="postal_code">@lang('logs.overview.invoice-data.postal_code')</label>
             @if($edit_invoice)
-                <input type="text" name="postal_code" id="postal_code" value="{{ $invoice['postal_code'] }}" placeholder="12345"
+                <input type="text" name="postal_code" id="postal_code"
+                    value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->postal_code }}" placeholder="12345"
                     form="update-invoice-data">
             @else
-                <span>{{ $invoice["postal_code"] }}</span>
+                <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->postal_code }}</span>
             @endif
         </div>
     @endif
-    @if($edit_invoice || !empty($invoice["city"]))
+    @if($edit_invoice || !empty(app(App\Models\Logs\LogsAccountProvider::class)->client->city))
         <div class="input-group">
             <label for="city">@lang('logs.overview.invoice-data.city')</label>
             @if($edit_invoice)
-                <input type="text" name="city" id="city" value="{{ $invoice['city'] }}" placeholder="Musterstadt"
+                <input type="text" name="city" id="city"
+                    value="{{ app(App\Models\Logs\LogsAccountProvider::class)->client->city }}" placeholder="Musterstadt"
                     form="update-invoice-data">
             @else
-                <span>{{ $invoice["city"] }}</span>
+                <span>{{ app(App\Models\Logs\LogsAccountProvider::class)->client->city }}</span>
             @endif
         </div>
     @endif

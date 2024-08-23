@@ -7,15 +7,22 @@
     <h1>MetaGer Logs API - @lang("logs.create_abo.heading")</h1>
     <h3>@lang("logs.create_abo.interval")</h3>
     <div id="interval">
-        <a @if(request('interval') === 'monthly') class="active" @endif
+        <a @if(request('interval', app(App\Models\Logs\LogsAccountProvider::class)->abo->interval) === 'monthly') class="active" @endif
             href="{{ route('logs:abo', ['interval' => 'monthly']) }}">@lang('logs.overview.abo.interval.setting_values.monthly')</a>
-        <a @if(request('interval') === 'quarterly') class="active" @endif
+        <a @if(request('interval',app(App\Models\Logs\LogsAccountProvider::class)->abo->interval) === 'quarterly') class="active" @endif
             href="{{ route('logs:abo', ['interval' => 'quarterly']) }}">@lang('logs.overview.abo.interval.setting_values.quarterly')</a>
-        <a @if(request('interval') === 'six-monthly') class="active" @endif
+        <a @if(request('interval', app(App\Models\Logs\LogsAccountProvider::class)->abo->interval) === 'six-monthly') class="active" @endif
             href="{{ route('logs:abo', ['interval' => 'six-monthly']) }}">@lang('logs.overview.abo.interval.setting_values.six-monthly')</a>
-        <a @if(request('interval') === 'annual') class="active" @endif
+        <a @if(request('interval', app(App\Models\Logs\LogsAccountProvider::class)->abo->interval) === 'annual') class="active" @endif
             href="{{ route('logs:abo', ['interval' => 'annual']) }}">@lang('logs.overview.abo.interval.setting_values.annual')</a>
     </div>
+    @if(app(App\Models\Logs\LogsAccountProvider::class)->abo->interval !== "never")
+    <form id="cancel-form" action="{{ route('logs:abo') }}" method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="interval" value="never">
+        <button type="submit">@lang("logs.create_abo.cancel")</button>
+    </form>
+    @endif
     @if(request()->filled("interval") && in_array(request("interval"), ["monthly", "quarterly", "six-monthly", "annual"]))
         <h3>@lang("logs.create_abo.conditions")</h3>
         <div class="input-group">

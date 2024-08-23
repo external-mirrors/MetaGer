@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Mail\LogsLoginCode;
 use App\Models\Authorization\LogsUser;
+use App\Models\Logs\LogsAccountProvider;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -20,42 +22,11 @@ class LogsApiController extends Controller
         if (empty(config("metager.invoiceninja.access_token"))) {
             throw new InvalidConfig("Invoiceninja is not configured on this system", 500);
         }
-        $invoice = [
-            "email" => Auth::guard("logs")->user()->getAuthIdentifier(),
-            "company" => "",
-            "first_name" => "",
-            "last_name" => "",
-            "street" => "",
-            "postal_code" => "",
-            "city" => "",
-        ];
 
-        $client = $this->getOrCreateClient($invoice["email"]);
-        $contact = $this->getContactFromClient($client, $invoice["email"]);
+        $logs_account = app(LogsAccountProvider::class);
+        $logs_client = $logs_account->client;
 
-        if (!empty($client["name"])) {
-            $invoice["company"] = $client["name"];
-        }
-        if (!empty($client["address1"])) {
-            $invoice["street"] = $client["address1"];
-        }
-        if (!empty($client["postal_code"])) {
-            $invoice["postal_code"] = $client["postal_code"];
-        }
-        if (!empty($client["city"])) {
-            $invoice["city"] = $client["city"];
-        }
-        if (!empty($contact["first_name"])) {
-            $invoice["first_name"] = $contact["first_name"];
-        }
-        if (!empty($contact["last_name"])) {
-            $invoice["last_name"] = $contact["last_name"];
-        }
-
-        $edit_invoice = $request->filled("edit_invoice");
-        if (empty($invoice["first_name"]) || empty($invoice["last_name"]) || empty($invoice["street"]) || empty($invoice["postal_code"]) || empty($invoice["city"])) {
-            $edit_invoice = true;
-        }
+        $edit_invoice = $request->filled("edit_invoice") || !$logs_client->isDataComplete();
 
         // Populate Abo Settings
         $abo = [
@@ -65,43 +36,34 @@ class LogsApiController extends Controller
             "interval_price" => 0,
             "monthly_price" => 0
         ];
-        $edit_abo = $request->filled("edit_abo");
+        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+
+        $nda = null;
+        $nda_database = DB::table("logs_nda")->where("user_email", "=", $email);
+        if (!is_null($nda_database)) {
+            $nda = route("logs:nda", ["signed" => 1]);
+        }
 
         return view('logs.overview', ['title' => __('titles.logs.overview')])->with(
             [
                 "css" => [mix("/css/logs.css")],
-                "invoice" => $invoice,
                 "edit_invoice" => $edit_invoice,
-                "abo" => $abo,
-                "edit_abo" => $edit_abo,
+                "nda" => $nda
             ]
         );
     }
 
     public function updateInvoiceData(Request $request)
     {
-        $email = Auth::guard("logs")->user()->getAuthIdentifier();
-        $client = $this->getOrCreateClient($email);
+        app(LogsAccountProvider::class)->client->updateData(
+            name: $request->input("company") ?? "",
+            address1: $request->input("street") ?? "",
+            postal_code: $request->input("postal_code") ?? "",
+            city: $request->input("city") ?? "",
+            first_name: $request->input("first_name") ?? "",
+            last_name: $request->input("last_name") ?? "",
+        );
 
-        $client["name"] = $request->input("company") ?? "";
-        $client["address1"] = $request->input("street") ?? "";
-        $client["postal_code"] = $request->input("postal_code") ?? "";
-        $client["city"] = $request->input("city") ?? "";
-
-        for ($i = 0; $i < sizeof($client["contacts"]); $i++) {
-            if ($client["contacts"][$i]["email"] !== $email)
-                continue;
-            $client["contacts"][$i]["first_name"] = $request->input("first_name") ?? "";
-            $client["contacts"][$i]["last_name"] = $request->input("last_name") ?? "";
-        }
-        $invoice_client = $this->getInvoiceNinjaClient();
-        $invoice_client->clients->update($client["id"], [
-            "name" => $client["name"],
-            "address1" => $client["address1"],
-            "postal_code" => $client["postal_code"],
-            "city" => $client["city"],
-            "contacts" => $client["contacts"]
-        ]);
         return redirect(route("logs:overview"));
     }
 
@@ -123,13 +85,25 @@ class LogsApiController extends Controller
         }
         $validated = $validator->validated();
 
+        app(LogsAccountProvider::class)->abo->update($validated["interval"]);
+
+        return redirect(route("logs:overview"));
     }
     public function nda(Request $request)
     {
         $nda = file_get_contents(storage_path("app/logs_nda.pdf"));
+        $date = now("UTC");
+        if ($request->filled("signed")) {
+            $nda_database = DB::table("logs_nda")->where("user_email", "=", Auth::guard("logs")->user()->getAuthIdentifier())->first();
+            if (!is_null($nda_database)) {
+                $nda = $nda_database->nda;
+                $date = Carbon::createFromFormat("Y-m-d H:i:s", $nda_database->created_at);
+            }
+        }
         return response()->make($nda, 200, [
             "Content-Type" => "application/pdf",
-            "Content-Disposition" => "attachment; filename=\"metager_nda_" . now()->format("Y-m-d") . ".pdf\"",
+            "Content-Disposition" => "attachment; filename=\"metager_nda_" . $date . ".pdf\"",
+            "Last-Modified" => $date->format("U")
         ]);
     }
 
@@ -149,15 +123,15 @@ class LogsApiController extends Controller
                 DB::table("logs_users")->insert([
                     "email" => $validated["email"],
                     "discount" => $validated["discount"],
-                    "created_at" => now(),
-                    "updated_at" => now()
+                    "created_at" => now("UTC"),
+                    "updated_at" => now("UTC")
                 ]);
             } else {
                 DB::table("logs_users")
                     ->where("email", "=", $validated["email"])->update([
                             "email" => $validated["email"],
                             "discount" => $validated["discount"],
-                            "updated_at" => now()
+                            "updated_at" => now("UTC")
                         ]);
             }
             return redirect(route("logs:admin"));
@@ -227,51 +201,5 @@ class LogsApiController extends Controller
             Auth::guard("logs")->init($validated["email"]);
         }
         return redirect(route("logs:login"))->with(["email" => $validated["email"]]);
-    }
-
-    private function getInvoiceNinjaClient()
-    {
-        $invoice_client = new InvoiceNinja(config("metager.invoiceninja.access_token"));
-        $invoice_client->setUrl(config("metager.invoiceninja.url"));
-        return $invoice_client;
-    }
-
-    private function getOrCreateClient(string $email)
-    {
-        // Check if there is already an Invoicing Account for this client
-        $invoice_client = $this->getInvoiceNinjaClient();
-
-        $client = null;
-        $clients = $invoice_client->clients->all([
-            "email" => $email
-        ]);
-        foreach ($clients["data"] as $tmp_client) {
-            if ($tmp_client["group_settings_id"] === config("metager.invoiceninja.logs_group_id")) {
-                $client = $tmp_client;
-            }
-        }
-
-        if (is_null($client)) {
-            $invoice_client->clients->create([
-                "group_settings_id" => config("metager.invoiceninja.logs_group_id"),
-                "contacts" => [
-                    [
-                        'send_email' => true,
-                        'email' => $email,
-                    ]
-                ]
-            ]);
-            return $this->getOrCreateClient($email);
-        }
-        return $client;
-    }
-
-    private function getContactFromClient($client, $email)
-    {
-        foreach ($client["contacts"] as $contact) {
-            if ($contact["email"] === $email) {
-                return $contact;
-            }
-        }
     }
 }

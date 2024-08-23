@@ -13,11 +13,12 @@ return new class extends Migration {
         // timestamps, interval, user_email, monthly_price
 
         Schema::create('logs_abo', function (Blueprint $table) {
-            $table->id("user_id");
+            $table->string("user_email");
             $table->enum("interval", ["monthly", "quarterly", "six-monthly", "annual"]);
             $table->float("monthly_price", 2)->unsigned();
             $table->timestamps();
-            $table->foreign("user_id")->references("id")->on("logs_users")->onDelete("cascade");
+            $table->primary("user_email");
+            $table->foreign("user_email")->references("email")->on("logs_users")->onDelete("cascade");
         });
     }
 

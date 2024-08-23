@@ -11,11 +11,12 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('logs_users', function (Blueprint $table) {
-            $table->id();
-            $table->string("email")->unique("email_pk");
+            $table->string("email");
             $table->integer("discount")->default(0);
             $table->dateTime("last_activity")->nullable();
             $table->timestamps();
+
+            $table->primary("email");
         });
     }
 

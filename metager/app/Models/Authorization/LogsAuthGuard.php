@@ -59,7 +59,7 @@ class LogsAuthGuard implements \Illuminate\Contracts\Auth\Guard
     private function sendPassword()
     {
         // Store the password
-        if (!$this->authorized && !is_null($this->user->getAuthPassword()) && !Cache::has(self::CACHE_LOGS_PASSWORD_KEY . ":" . $this->user->getAuthIdentifier())) {
+        if (!$this->authorized && !empty($this->user->getAuthPassword()) && !Cache::has(self::CACHE_LOGS_PASSWORD_KEY . ":" . $this->user->getAuthIdentifier())) {
             Cache::put(self::CACHE_LOGS_PASSWORD_KEY . ":" . $this->user->getAuthIdentifier(), $this->user->getAuthPassword(), now()->addMinutes(5));
             // Send Email with login Code
             Mail::to($this->user->getAuthIdentifier())->send(new LogsLoginCode($this->user->getAuthPassword()));

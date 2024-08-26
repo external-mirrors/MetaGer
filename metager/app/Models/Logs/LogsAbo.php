@@ -4,9 +4,11 @@ namespace App\Models\Logs;
 
 use DB;
 use Carbon\Carbon;
+use Illuminate\Database\Query\JoinClause;
 
 class LogsAbo
 {
+    const LOGS_ORDER_DAYS_BEFORE_NEXT = 28;
     public readonly string $interval;
     public readonly float $monthly_price;
     public readonly Carbon $created_at;
@@ -27,7 +29,20 @@ class LogsAbo
 
     public function getLastInvoiceDate(): Carbon|null
     {
-        return null;
+        if ($this->interval === "never")
+            return null;
+
+        $email = app(LogsAccountProvider::class)->client->contact->email;
+
+        $latest_order = DB::table("logs_order")->where('user_email', $email)->whereNotNull("invoice_id")->orderBy("to", "desc")->first();
+        if (is_null($latest_order)) {
+            return null;
+        } else {
+            if (!is_null($latest_order->updated_at))
+                return new Carbon($latest_order->updated_at);
+            else
+                return null;
+        }
     }
 
     public function getNextInvoiceDate(): Carbon|null
@@ -36,16 +51,32 @@ class LogsAbo
             return null;
         }
         $email = app(LogsAccountProvider::class)->client->contact->email;
-        // Check if there is an order for this month
-        $order_db = DB::table("logs_order")->where("user_email", $email)->orderBy("to", "desc")->first();
-        if (!is_null($order_db)) {
-            $next_invoice = Carbon::createFromFormat("Y-m-d H:i:s", $order_db->to, "UTC");
-            $next_invoice->addSeconds(1);
-            return $next_invoice;
-        } else {
-            // There is no order for this month - next invoice will be now
-            return now("UTC");
+
+        $latest_order_for_abo = DB::table("logs_abo", "la")
+            ->select(['la.user_email', 'la.interval', 'la.monthly_price', 'lo.id AS latest_order_id', 'lo.from AS latest_order_from', 'lo.to AS latest_order_to'])
+            ->leftJoin('logs_order as lo', 'la.user_email', "=", "lo.user_email")
+            ->leftJoin('logs_order as lo2', function (JoinClause $join) {
+                $join->on('la.user_email', '=', 'lo2.user_email')
+                    ->on(function ($join) {
+                        $join->on('lo.to', '<', 'lo2.to')
+                            ->orOn(function ($join) {
+                                $join->on('lo.to', '=', 'lo2.to')
+                                    ->on('lo.id', '<', 'lo2.id');
+                            });
+                    });
+            })
+            ->whereNull('lo2.user_email')
+            ->where('la.user_email', '=', $email)
+            ->first();
+
+        $latest_order_date = new Carbon($latest_order_for_abo->latest_order_to, "UTC");
+        $this_month = Carbon::now("UTC")->startOfMonth();
+        $next_invoice = $latest_order_date->startOfMonth()->addMonth();
+        if (is_null($latest_order_for_abo->latest_order_to) || $next_invoice->isBefore($this_month)) {
+            $next_invoice = clone $this_month;
         }
+
+        return $next_invoice;
     }
 
     public function getIntervalPrice()
@@ -61,12 +92,12 @@ class LogsAbo
     public function update(string $interval)
     {
         $email = app(LogsAccountProvider::class)->client->contact->email;
-        if (!in_array($interval, ["monthly", "quarterly", "six-monthly", "annual"])) {
+        if (!in_array($interval, ["never", "monthly", "quarterly", "six-monthly", "annual"])) {
             throw new \InvalidArgumentException("Argument interval ($interval) is not a valid value.");
         }
         // Check if there already is a abo
         $abo = DB::table("logs_abo")->where("user_email", "=", $email)->first();
-        if ($abo === null) {
+        if ($abo === null && $interval !== "never") {
             DB::table("logs_abo")->insert([
                 "user_email" => $email,
                 "interval" => $interval,

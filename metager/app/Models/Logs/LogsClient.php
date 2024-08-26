@@ -16,6 +16,7 @@ class LogsClient
     {
         $client = $this->getOrCreateClient($email);
         $this->id = $client["id"];
+        $this->contact_id = $client["assigned_user_id"];
         $this->name = $client["name"];
         $this->address1 = $client["address1"];
         $this->postal_code = $client["postal_code"];
@@ -63,17 +64,19 @@ class LogsClient
         }
 
         if (is_null($client)) {
-            $invoice_client->clients->create([
+            $new_client = $invoice_client->clients->create([
                 "group_settings_id" => config("metager.invoiceninja.logs_group_id"),
                 "contacts" => [
                     [
                         'send_email' => true,
+                        "is_primary" => true,
                         'email' => $email,
                     ]
                 ]
             ]);
             return $this->getOrCreateClient($email);
         }
+
         return $client;
     }
 }

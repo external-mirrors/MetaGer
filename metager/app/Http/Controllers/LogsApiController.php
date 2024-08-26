@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\LogsLoginCode;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
+use Artisan;
 use Auth;
 use Carbon\Carbon;
 use DB;
@@ -86,6 +87,8 @@ class LogsApiController extends Controller
         $validated = $validator->validated();
 
         app(LogsAccountProvider::class)->abo->update($validated["interval"]);
+
+        Artisan::call("logs:create-order");
 
         return redirect(route("logs:overview"));
     }

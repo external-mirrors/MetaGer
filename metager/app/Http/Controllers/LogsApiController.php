@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Mail\LogsLoginCode;
-use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
 use Artisan;
 use Auth;
@@ -11,10 +10,10 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
-use InvoiceNinja\Sdk\InvoiceNinja;
-use Mail;
 use Spatie\LaravelIgnition\Exceptions\InvalidConfig;
 use Validator;
+use Str;
+use Hash;
 
 class LogsApiController extends Controller
 {
@@ -29,14 +28,6 @@ class LogsApiController extends Controller
 
         $edit_invoice = $request->filled("edit_invoice") || !$logs_client->isDataComplete();
 
-        // Populate Abo Settings
-        $abo = [
-            "interval" => "never",
-            "next_invoice" => null,
-            "last_invoice" => null,
-            "interval_price" => 0,
-            "monthly_price" => 0
-        ];
         $email = Auth::guard("logs")->user()->getAuthIdentifier();
 
         $nda = null;
@@ -108,6 +99,43 @@ class LogsApiController extends Controller
             "Content-Disposition" => "attachment; filename=\"metager_nda_" . $date . ".pdf\"",
             "Last-Modified" => $date->format("U")
         ]);
+    }
+
+    public function createAccessKey(Request $request)
+    {
+        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+        $max_keys = 10;
+        $existing_keys = DB::table("logs_access_key")->where("user_email", $email)->get() ?? [];
+        $validator = Validator::make(array_merge($request->all(), ["access_key_size" => sizeof($existing_keys)]), [
+            "name" => "required|max:25",
+            "access_key_size" => "required|numeric|max:" . $max_keys,
+        ]);
+        if ($validator->fails()) {
+            return redirect(route("logs:overview") . "#api-keys")->withInput()->withErrors($validator);
+        }
+        $validated = $validator->validated();
+        $new_key = Str::uuid();
+        DB::table("logs_access_key")->insert([
+            "user_email" => $email,
+            "name" => $validated["name"],
+            "key" => Hash::make(Str::uuid()),
+            "created_at" => now("UTC")
+        ]);
+        return redirect(route("logs:overview") . "#api-keys")->withInput([$validated["name"] => $new_key]);
+    }
+
+    public function deleteAccessKey(Request $request)
+    {
+        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+        $validator = Validator::make($request->all(), [
+            "id" => "required|numeric|max:1000000"
+        ]);
+        if ($validator->fails()) {
+            return redirect(route("logs:overview") . "#api-keys")->withInput()->withErrors($validator);
+        }
+        $validated = $validator->validated();
+        DB::table("logs_access_key")->where("user_email", $email)->delete($validated["id"]);
+        return redirect(route("logs:overview") . "#api-keys");
     }
 
     public function admin(Request $request)

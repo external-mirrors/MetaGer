@@ -75,5 +75,24 @@ return [
             "status" => "Rechnungsstatus",
             "invoice" => "Rechnung"
         ]
+    ],
+    "api_keys" => [
+        "heading" => "API Schlüssel",
+        "hint" => "Um die API abfragen zu können musst Du dich authentifizieren. Hier kannst du dir für deine Geräte API Schlüssel erstellen. <b>Hinweis</b>: Neu erstellte Schlüssel sind nur einmalig auslesbar. Bitte speichern Sie sich diese nach Erstellung ab.",
+        "thead" => [
+            "name" => "Gerät",
+            "key" => "Schlüssel",
+            "created_at" => "Erstellt",
+            "accessed_at" => "Letzter Zugriff",
+            "actions" => "Aktionen"
+        ],
+        "new" => [
+            "heading" => "Neuen Schlüssel erstellen",
+            "name" => "Gerätename",
+            "placeholder_name" => "Laptop",
+            "submit" => "Erstellen"
+        ],
+        "copy" => "Kopieren",
+        "delete" => "Löschen"
     ]
 ];

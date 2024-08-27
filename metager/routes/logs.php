@@ -17,4 +17,6 @@ Route::middleware(LogsAuthentication::class)->group(function () {
     Route::get("abo", [LogsApiController::class, "showAbo"])->name("logs:abo");
     Route::get("nda", [LogsApiController::class, "nda"])->name("logs:nda");
     Route::post("abo", [LogsApiController::class, "createAbo"]);
+    Route::post("access-key", [LogsApiController::class, "createAccessKey"])->name("logs:access-key");
+    Route::post("access-key-delete", [LogsApiController::class, "deleteAccessKey"])->name("logs:access-key-delete");
 });

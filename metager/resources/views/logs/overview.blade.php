@@ -14,6 +14,7 @@
     </div>
     @if(!$edit_invoice)
         @include("logs.parts.orders")
+        @include("logs.parts.api_keys")
     @endif
 </div>
 @endsection

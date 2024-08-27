@@ -15,6 +15,8 @@ class LogsClient
     public readonly string $city;
     /** @var LogsOrder[] $invoices */
     public readonly array $orders;
+    /** @var LogsAccessKey[] $access_keys */
+    public readonly array $access_keys;
 
     public function __construct(string $email)
     {
@@ -28,6 +30,7 @@ class LogsClient
         $this->city = $client["city"];
         $this->contact = new LogsContact($client["contacts"], $email);
         $this->orders = $this->fetchOrders(10);
+        $this->access_keys = $this->fetchAccessKeys();
     }
 
     public function isDataComplete(): bool
@@ -60,6 +63,20 @@ class LogsClient
             $orders[] = new LogsOrder($order);
         }
         return $orders;
+    }
+
+    /**
+     * Fetches Access Keys for the current user
+     * @return LogsAccessKey[]
+     */
+    private function fetchAccessKeys(): array
+    {
+        $access_keys = [];
+        $access_key_data = DB::table("logs_access_key")->where("user_email", $this->email)->orderBy("accessed_at", "DESC")->orderBy("created_at", "DESC")->get();
+        foreach ($access_key_data as $access_key) {
+            $access_keys[] = new LogsAccessKey($access_key);
+        }
+        return $access_keys;
     }
 
     public static function getInvoiceNinjaClient()

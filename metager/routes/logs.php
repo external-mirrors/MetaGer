@@ -10,6 +10,7 @@ use App\Mail\LogsLoginCode;
 
 Route::get("login", [LogsApiController::class, 'login'])->name("logs:login");
 Route::post("login", [LogsApiController::class, "login_post"])->middleware("throttle:logs_login")->name("logs:login:post");
+Route::get("api", [LogsApiController::class, "logsApi"])->name("logs:api");
 
 Route::middleware(LogsAuthentication::class)->group(function () {
     Route::get("/", [LogsApiController::class, "overview"])->name("logs:overview");

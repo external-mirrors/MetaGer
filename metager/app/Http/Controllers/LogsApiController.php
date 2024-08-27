@@ -233,4 +233,9 @@ class LogsApiController extends Controller
         }
         return redirect(route("logs:login"))->with(["email" => $validated["email"]]);
     }
+
+    public function logsApi(Request $request)
+    {
+
+    }
 }

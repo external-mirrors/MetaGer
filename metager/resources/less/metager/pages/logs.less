@@ -24,6 +24,7 @@
     >div#settings {
         display: grid;
         grid-template-columns: 1fr 1fr;
+        margin-bottom: 1rem;
 
         @media(max-width: 610px) {
             grid-template-columns: 1fr;
@@ -96,5 +97,11 @@
             color: inherit;
             cursor: pointer;
         }
+    }
+}
+
+#orders {
+    >table {
+        width: 100%;
     }
 }

@@ -54,5 +54,26 @@ return [
         "conditions_nda" => "Die zur Verfügung gestellten Daten können, wenn auch unsortiert, personenbeziehbare Daten enthalten. Aus diesem Grund dürfen die Daten in keiner Form von dir öffentlich zugänglich gemacht werden. Hierzu zählen insbesondere die Rohdaten selbst, aber auch hieraus angelernte Modelle aus dem Bereich des Machine Learnings. Ein öffentlicher Zugriff auf Antworten eines Modelles hingegen ist möglich. Lies dir bitte die nachfolgende NDA (Verschwiegenheitserklärung) genau durch und speicher sie für die eigenen Unetrlagen bevor du ihr durch Fortfahren zustimmst.",
         "accept" => "Ich stimme der NDA (Verschwiegenheitserklärung) und den Zahlungsbedingungen zu",
         "cancel" => "Aktuelles Abo kündigen"
+    ],
+    "orders" => [
+        "heading" => "Bestellungen",
+        "status" => [
+            "4" => "Abgeschlossen",
+            "5" => "Abgebrochen",
+            "6" => "Zurückgezahlt",
+            "3" => "teilweise bezahlt",
+            "2" => "Zugestellt",
+            "1" => "Entwurf",
+            "-1" => "Überfällig",
+            "-2" => "Zahlung Ausstehend",
+            "-3" => "Angesehen"
+        ],
+        "thead" => [
+            "from" => "Zugang von",
+            "to" => "Zugang bis",
+            "price" => "Rechnungsbetrag",
+            "status" => "Rechnungsstatus",
+            "invoice" => "Rechnung"
+        ]
     ]
 ];

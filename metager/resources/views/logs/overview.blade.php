@@ -12,5 +12,8 @@
             @include("logs.parts.abo")
         @endif
     </div>
+    @if(!$edit_invoice)
+        @include("logs.parts.orders")
+    @endif
 </div>
 @endsection

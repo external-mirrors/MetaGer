@@ -2,26 +2,32 @@
 
 namespace App\Models\Logs;
 use InvoiceNinja\Sdk\InvoiceNinja;
+use DB;
 
 class LogsClient
 {
     public readonly LogsContact $contact;
     public readonly string $id;
+    public readonly string $email;
     public readonly string $name;
     public readonly string $address1;
     public readonly string $postal_code;
     public readonly string $city;
+    /** @var LogsOrder[] $invoices */
+    public readonly array $orders;
 
     public function __construct(string $email)
     {
         $client = $this->getOrCreateClient($email);
         $this->id = $client["id"];
+        $this->email = $email;
         $this->contact_id = $client["assigned_user_id"];
         $this->name = $client["name"];
         $this->address1 = $client["address1"];
         $this->postal_code = $client["postal_code"];
         $this->city = $client["city"];
         $this->contact = new LogsContact($client["contacts"], $email);
+        $this->orders = $this->fetchOrders(10);
     }
 
     public function isDataComplete(): bool
@@ -31,7 +37,7 @@ class LogsClient
 
     public function updateData(string $name = null, string $address1 = null, string $postal_code = null, string $city = null, string $first_name = null, string $last_name = null)
     {
-        $invoice_client = $this->getInvoiceNinjaClient();
+        $invoice_client = self::getInvoiceNinjaClient();
         $invoice_client->clients->update($this->id, [
             "name" => $name,
             "address1" => $address1,
@@ -41,7 +47,22 @@ class LogsClient
         ]);
     }
 
-    private function getInvoiceNinjaClient()
+    /**
+     * Summary of fetchInvoices
+     * @param int $count
+     * @return LogsOrder[]
+     */
+    private function fetchOrders(int $count): array
+    {
+        $orders = [];
+        $order_data = DB::table("logs_order")->where("user_email", $this->email)->orderBy("created_at", "desc")->get();
+        foreach ($order_data as $order) {
+            $orders[] = new LogsOrder($order);
+        }
+        return $orders;
+    }
+
+    public static function getInvoiceNinjaClient()
     {
         $invoice_client = new InvoiceNinja(config("metager.invoiceninja.access_token"));
         $invoice_client->setUrl(config("metager.invoiceninja.url"));
@@ -51,7 +72,7 @@ class LogsClient
     private function getOrCreateClient(string $email)
     {
         // Check if there is already an Invoicing Account for this client
-        $invoice_client = $this->getInvoiceNinjaClient();
+        $invoice_client = self::getInvoiceNinjaClient();
 
         $client = null;
         $clients = $invoice_client->clients->all([

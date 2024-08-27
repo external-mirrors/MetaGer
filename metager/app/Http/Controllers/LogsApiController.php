@@ -236,6 +236,14 @@ class LogsApiController extends Controller
 
     public function logsApi(Request $request)
     {
-
+        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+        $validator = Validator::make($request->all(), [
+            "start_date" => "required|date|date_format:Y-m-d H:i:s",
+            "end_date" => "date|date_format:Y-m-d H:i:s|after:start_date"
+        ]);
+        if ($validator->fails()) {
+            return redirect(route("logs:overview") . "#api-keys")->withInput()->withErrors($validator);
+        }
+        $validated = $validator->validated();
     }
 }

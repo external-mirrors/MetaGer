@@ -2,6 +2,9 @@
 use App\Http\Controllers\LogsApiController;
 use App\Http\Middleware\LogsAuthentication;
 use App\Mail\LogsLoginCode;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 /**
  * Group of Routes to provide access
@@ -10,7 +13,7 @@ use App\Mail\LogsLoginCode;
 
 Route::get("login", [LogsApiController::class, 'login'])->name("logs:login");
 Route::post("login", [LogsApiController::class, "login_post"])->middleware("throttle:logs_login")->name("logs:login:post");
-Route::get("api", [LogsApiController::class, "logsApi"])->name("logs:api");
+Route::get("api", [LogsApiController::class, "logsApi"])->name("logs:api")->withoutMiddleware([StartSession::class, VerifyCsrfToken::class, ShareErrorsFromSession::class]);
 
 Route::middleware(LogsAuthentication::class)->group(function () {
     Route::get("/", [LogsApiController::class, "overview"])->name("logs:overview");

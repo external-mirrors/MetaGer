@@ -7,10 +7,16 @@ use App\Models\Logs\LogsAccountProvider;
 use Artisan;
 use Auth;
 use Carbon\Carbon;
+use Cookie;
 use DB;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
+use Illuminate\Validation\ValidationException;
+use RateLimiter;
 use Spatie\LaravelIgnition\Exceptions\InvalidConfig;
+use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Validator;
 use Str;
 use Hash;
@@ -116,12 +122,13 @@ class LogsApiController extends Controller
         }
         $validated = $validator->validated();
         $new_key = Str::uuid();
-        DB::table("logs_access_key")->insert([
+        $key_id = DB::table("logs_access_key")->insertGetId([
             "user_email" => $email,
             "name" => $validated["name"],
-            "key" => Hash::make(Str::uuid()),
+            "key" => Hash::make($new_key),
             "created_at" => now("UTC")
         ]);
+        $new_key .= "-" . $key_id;
         return redirect(route("logs:overview") . "#api-keys")->withInput([$validated["name"] => $new_key]);
     }
 
@@ -237,14 +244,105 @@ class LogsApiController extends Controller
 
     public function logsApi(Request $request)
     {
-        $email = Auth::guard("logs")->user()->getAuthIdentifier();
+        $request->headers->set('Accept', 'application/json'); // Force JSON responses
+        // Validate authorization
+        $email = null;
+        if ($request->hasHeader("authorization")) {
+            $submitted_token = trim(str_replace("Bearer ", "", $request->header("authorization")));
+            $token = "";
+            if (strrpos($submitted_token, "-")) {
+                $token = substr($submitted_token, 0, strrpos($submitted_token, "-"));
+                $id = substr($submitted_token, strrpos($submitted_token, "-") + 1);
+            }
+            // Validate Token
+            if (Str::isUuid($token) && is_numeric($id)) {
+                $key_entry = DB::table("logs_access_key")->where("id", $id)->first();
+                if (!is_null($key_entry) && Hash::check($token, $key_entry->key)) {
+                    $email = $key_entry->user_email;
+                }
+            }
+        }
+
+        if ($email == null) {
+            throw new AuthorizationException("You are not authorized to access this resource");
+        }
+
+
         $validator = Validator::make($request->all(), [
             "start_date" => "required|date|date_format:Y-m-d H:i:s",
-            "end_date" => "date|date_format:Y-m-d H:i:s|after:start_date"
+            "end_date" => "date|date_format:Y-m-d H:i:s|after:start_date",
+            "order" => "in:ascending,descending"
         ]);
         if ($validator->fails()) {
-            return redirect(route("logs:overview") . "#api-keys")->withInput()->withErrors($validator);
+            throw new ValidationException($validator);
         }
         $validated = $validator->validated();
+
+        // Request went through all checks. Now we can check the RateLimiting
+        $rl_key = "logs:rl:$email";
+        $rl_max_attempts = 60;
+        $rl_decay_seconds = 3600;
+        $rl_current_attempts = RateLimiter::attempts($rl_key);
+        $rl_available_in = RateLimiter::availableIn($rl_key);
+        if (RateLimiter::tooManyAttempts(key: $rl_key, maxAttempts: $rl_max_attempts)) {
+            throw new TooManyRequestsHttpException($rl_available_in, "Too many requests from this account", null, 0, [
+                "X-Rate-Limit-Max" => $rl_max_attempts,
+                "X-Rate-Limit-Current" => $rl_current_attempts,
+                "X-Rate-Limit-More-In" => $rl_available_in
+            ]);
+        } else {
+            RateLimiter::increment(key: $rl_key, decaySeconds: $rl_decay_seconds);
+            $rl_current_attempts = RateLimiter::attempts($rl_key);
+            $rl_available_in = RateLimiter::availableIn($rl_key);
+        }
+
+
+        $order = "asc";
+        if (isset($validated["order"]) && $validated["order"] === "descending") {
+            $order = "desc";
+        }
+
+        $start_date = new Carbon($validated["start_date"], "UTC");
+        $default_end_date = clone $start_date;
+        $default_end_date->addHours(23)->addMinutes(59)->addSeconds(59)->micros(999999);
+
+        // Make sure to leave some Minutes for logs to come into our DB
+        if ($default_end_date->isAfter(now("UTC")->subMinutes(5))) {
+            $default_end_date = now("UTC")->subMinutes(5);
+        }
+
+        // Check if we can use the end_date supplied by the user
+        $end_date = clone $default_end_date;
+        if (isset($validated["end_date"])) {
+            $end_date = (new Carbon($validated["end_date"], "UTC"))->micros(999999);
+            if ($end_date->isAfter($default_end_date)) {
+                $end_date = clone $default_end_date;
+            }
+        }
+
+        // Create CSV Response
+        return response()->streamDownload(
+            function () use ($start_date, $end_date, $order) {
+                // Fetch chunked DB entries
+                DB::connection("logs")->table("logs_partitioned")->select(["time", "query"])->whereBetween("time", [$start_date, $end_date])->orderBy("time", $order)->chunk(25000, function (Collection $log_entries) {
+                    $f = fopen("php://memory", "r+");
+                    foreach ($log_entries as $log_entry) {
+                        fputcsv($f, (array) $log_entry, ",", "\"", "\\", PHP_EOL);
+                    }
+                    rewind($f);
+                    echo stream_get_contents($f);
+                    fclose($f);
+                });
+            },
+            "mglogs_" . $start_date->getTimestamp() . "_" . $end_date->getTimestamp() . ".csv",
+            [
+                "Content-Type" => "text/csv",
+                "X-Rate-Limit-Max" => $rl_max_attempts,
+                "X-Rate-Limit-Current" => $rl_current_attempts,
+                "X-Rate-Limit-More-In" => $rl_available_in,
+                "X-End-Date-Used" => $end_date->format("Y-m-d H:i:s")
+            ]
+        );
+
     }
 }

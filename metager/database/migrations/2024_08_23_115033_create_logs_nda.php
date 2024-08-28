@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->timestamps();
 
             $table->primary("user_email");
-            $table->foreign("user_email")->references("email")->on("logs_users")->onDelete("cascade");
+            $table->foreign("user_email")->references("email")->on("logs_user");
         });
     }
 

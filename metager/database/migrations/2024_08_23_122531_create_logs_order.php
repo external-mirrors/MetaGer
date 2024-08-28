@@ -16,9 +16,10 @@ return new class extends Migration {
             $table->dateTime("from");
             $table->dateTime("to");
             $table->float("price", 2);
+            $table->integer("discount", false, true)->default(0);
             $table->string("invoice_id")->unique()->nullable();
             $table->timestamps();
-            $table->foreign("user_email")->references("email")->on("logs_users")->onDelete("cascade");
+            $table->foreign("user_email")->references("email")->on("logs_user");
         });
     }
 

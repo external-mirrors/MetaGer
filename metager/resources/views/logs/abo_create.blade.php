@@ -34,16 +34,16 @@
             <span>
                 @switch(request("interval"))
                 @case("monthly")
-                {{ config("metager.logs.monthly_cost") }}
+                {{ config("metager.logs.monthly_cost") * (app(App\Models\Logs\LogsAccountProvider::class)->client->discount / 100) }}
                 @break
                 @case("quarterly")
-                {{ config("metager.logs.monthly_cost") * 3 }}
+                {{ config("metager.logs.monthly_cost") * 3 * (app(App\Models\Logs\LogsAccountProvider::class)->client->discount / 100)}}
                 @break
                 @case("six-monthly")
-                {{ config("metager.logs.monthly_cost") * 6 }}
+                {{ config("metager.logs.monthly_cost") * 6 * (app(App\Models\Logs\LogsAccountProvider::class)->client->discount / 100)}}
                 @break
                 @case("annual")
-                {{ config("metager.logs.monthly_cost") * 12 }}
+                {{ config("metager.logs.monthly_cost") * 12 * (app(App\Models\Logs\LogsAccountProvider::class)->client->discount / 100)}}
                 @break
                 @endswitch
                 €

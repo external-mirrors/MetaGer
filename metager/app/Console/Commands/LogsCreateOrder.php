@@ -62,6 +62,7 @@ class LogsCreateOrder extends Command
             ->orWhereNull("latest_order_to")
             ->get();
 
+
         foreach ($abos as $abo) {
             $this_month = Carbon::now("UTC")->startOfMonth();
 
@@ -79,11 +80,15 @@ class LogsCreateOrder extends Command
             };
             $next_order_to = clone $next_order_from;
             $next_order_to->addMonths($months_to_add - 1)->endOfMonth();
+
+            $discount = DB::table("logs_user")->where("email", $abo->user_email)->first()->discount;
+
             DB::table("logs_order")->insert([
                 "user_email" => $abo->user_email,
                 "from" => $next_order_from,
                 "to" => $next_order_to,
                 "price" => $abo->monthly_price * $months_to_add,
+                "discount" => $discount,
                 "created_at" => now("UTC"),
                 "updated_at" => now("UTC")
             ]);

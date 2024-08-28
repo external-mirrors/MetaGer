@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->dateTime("created_at")->useCurrent();
             $table->dateTime("accessed_at")->nullable();
 
-            $table->foreign("user_email")->references("email")->on("logs_users");
+            $table->foreign("user_email")->references("email")->on("logs_user");
         });
     }
 

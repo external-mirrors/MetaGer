@@ -56,6 +56,7 @@ class LogsCreateInvoice extends Command
                 [
                     'client_id' => $logs_account->client->id,
                     'date' => now("UTC")->format("Y-m-d"),
+                    'discount' => round($order->price - ($order->price * ($order->discount / 100)), 2),
                     'due_date' => $due_date->format("Y-m-d"),
                     'tax_name1' => "Umsatzsteuer",
                     "tax_rate1" => 19,

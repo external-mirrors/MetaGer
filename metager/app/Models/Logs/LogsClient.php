@@ -13,6 +13,7 @@ class LogsClient
     public readonly string $address1;
     public readonly string $postal_code;
     public readonly string $city;
+    public readonly int $discount;
     /** @var LogsOrder[] $invoices */
     public readonly array $orders;
     /** @var LogsAccessKey[] $access_keys */
@@ -28,6 +29,7 @@ class LogsClient
         $this->address1 = $client["address1"];
         $this->postal_code = $client["postal_code"];
         $this->city = $client["city"];
+        $this->discount = DB::table("logs_user")->where("email", $email)->first()->discount;
         $this->contact = new LogsContact($client["contacts"], $email);
         $this->orders = $this->fetchOrders(10);
         $this->access_keys = $this->fetchAccessKeys();

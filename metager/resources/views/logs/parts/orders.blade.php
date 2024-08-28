@@ -16,13 +16,16 @@
                     <tr>
                         <td>{{ $order->from->format("d.m.Y H:i:s") }}</td>
                         <td>{{ $order->to->format("d.m.Y H:i:s") }}</td>
-                        <td>{{ $order->price }}€</td>
+                        <td>{{ $order->getDiscountedPrice() }}€</td>
                         <td>
                             @if(!is_null($order->invoice))
                                 @lang("logs.orders.status." . $order->invoice->status)
                             @endif
                         </td>
-                        <td><a href="{{ $order->invoice->invitation_link }}" target="_blanK">{{ $order->invoice->number }}</a>
+                        <td>
+                            @if(!is_null($order->invoice))
+                                <a href="{{ $order->invoice->invitation_link }}" target="_blanK">{{ $order->invoice->number }}</a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

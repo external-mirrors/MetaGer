@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Http\Request;
 use Mail;
+use DB;
 
 class LogsAuthGuard implements \Illuminate\Contracts\Auth\Guard
 {
@@ -128,6 +129,8 @@ class LogsAuthGuard implements \Illuminate\Contracts\Auth\Guard
         if (!is_null($this->user) && $this->userProvider->validateCredentials($this->user, $credentials)) {
             session([self::SESSION_LOGS_AUTHORIZED_KEY => true]);
             $this->authorized = true;
+            // Log the latest activity
+            DB::table("logs_user")->where("email", $this->user->getAuthIdentifier())->update(["last_activity" => now("UTC")]);
             return true;
         } else {
             session([self::SESSION_LOGS_AUTHORIZED_KEY => false]);

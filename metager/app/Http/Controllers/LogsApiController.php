@@ -80,6 +80,7 @@ class LogsApiController extends Controller
         app(LogsAccountProvider::class)->abo->update($validated["interval"]);
 
         Artisan::call("logs:create-order");
+        Artisan::call("logs:create-invoice");
 
         return redirect(route("logs:overview"));
     }
@@ -149,16 +150,16 @@ class LogsApiController extends Controller
                 return redirect(route("logs:admin"))->withInput()->withErrors($validator);
             }
             $validated = $validator->validated();
-            $user = DB::table("logs_users")->where("email", "=", $validated["email"])->first();
+            $user = DB::table("logs_user")->where("email", "=", $validated["email"])->first();
             if (is_null($user)) {
-                DB::table("logs_users")->insert([
+                DB::table("logs_user")->insert([
                     "email" => $validated["email"],
                     "discount" => $validated["discount"],
                     "created_at" => now("UTC"),
                     "updated_at" => now("UTC")
                 ]);
             } else {
-                DB::table("logs_users")
+                DB::table("logs_user")
                     ->where("email", "=", $validated["email"])->update([
                             "email" => $validated["email"],
                             "discount" => $validated["discount"],
@@ -167,14 +168,14 @@ class LogsApiController extends Controller
             }
             return redirect(route("logs:admin"));
         } else {
-            $users = DB::table("logs_users")->limit(20)->get();
+            $users = DB::table("logs_user")->limit(20)->get();
 
             if ($request->filled("action") && $request->filled("email")) {
                 if ($request->input("action") === "delete") {
-                    DB::table("logs_users")->where("email", "=", $request->input("email"))->delete();
+                    DB::table("logs_user")->where("email", "=", $request->input("email"))->delete();
                     return redirect(route("logs:admin"));
                 } else if ($request->input("action") === "update") {
-                    $user = DB::table("logs_users")->where("email", "=", $request->input("email"))->first();
+                    $user = DB::table("logs_user")->where("email", "=", $request->input("email"))->first();
                     if (!is_null($user)) {
                         return redirect(route("logs:admin"))->withInput((array) $user);
                     }

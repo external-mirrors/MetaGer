@@ -81,12 +81,14 @@ class LogsAbo
 
     public function getIntervalPrice()
     {
-        return match ($this->interval) {
+        $price = match ($this->interval) {
             "monthly" => $this->monthly_price,
             "quarterly" => $this->monthly_price * 3,
             "six-monthly" => $this->monthly_price * 6,
             "annual" => $this->monthly_price * 12,
         };
+        $price *= app(\App\Models\Logs\LogsAccountProvider::class)->client->discount / 100;
+        return $price;
     }
 
     public function update(string $interval)

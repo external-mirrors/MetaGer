@@ -13,7 +13,7 @@ class LogsUser implements Authenticatable
 
     public function fetchUserByCredentials(array $credentials)
     {
-        $user = DB::table("logs_users")->where("email", "=", $credentials["username"])->first();
+        $user = DB::table("logs_user")->where("email", "=", $credentials["username"])->first();
         $this->email = $credentials["username"];
         if (!is_null($user)) {
             if (isset($credentials["password"])) {

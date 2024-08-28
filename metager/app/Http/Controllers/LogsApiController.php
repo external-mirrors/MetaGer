@@ -277,6 +277,13 @@ class LogsApiController extends Controller
             throw new ValidationException($validator);
         }
         $validated = $validator->validated();
+        $start_date = new Carbon($validated["start_date"], "UTC");
+
+        // Validate access for this timerange
+        $order_access = DB::table("logs_order")->where("from", "<=", $start_date)->where("to", ">=", $start_date)->first();
+        if (is_null($order_access)) {
+            throw new AuthorizationException("There is no order linked to your account which includes the specified start_date");
+        }
 
         // Request went through all checks. Now we can check the RateLimiting
         $rl_key = "logs:rl:$email";
@@ -302,7 +309,7 @@ class LogsApiController extends Controller
             $order = "desc";
         }
 
-        $start_date = new Carbon($validated["start_date"], "UTC");
+
         $default_end_date = clone $start_date;
         $default_end_date->addHours(23)->addMinutes(59)->addSeconds(59)->micros(999999);
 

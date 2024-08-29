@@ -28,5 +28,5 @@ return [
         'produkte' => 'Products',
         'maps' => 'Maps'
     ],
-    'adfree' => 'Use MetaGer ad-free',
+    'adfree' => 'MetaGer ad-free',
 ];

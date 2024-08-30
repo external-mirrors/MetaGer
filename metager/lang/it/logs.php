@@ -39,6 +39,10 @@ return [
             'postal_code' => "Codice postale",
             'update' => "Aggiornare i dati della fattura",
             'street' => "Via e numero civico",
+            'email' => "Indirizzo e-mail",
+            'full_name' => "Nome",
+            'save' => "Risparmiare",
+            'heading' => "Data della fattura",
         ],
         'hint' => 'Qui troverete una panoramica dei vostri ordini e informazioni sull\'utilizzo dell\'API. Assicuratevi che i dati delle fatture siano aggiornati e corretti.',
     ],
@@ -49,6 +53,7 @@ return [
             'created_at' => "Creato",
             'accessed_at' => "Ultimo accesso",
             'name' => "Dispositivo",
+            'actions' => "Azioni",
         ],
         'new' => [
             'heading' => "Creare una nuova chiave",
@@ -57,6 +62,8 @@ return [
             'name' => "Nome del dispositivo",
         ],
         'heading' => "Chiave API",
+        'copy' => "Copia",
+        'delete' => "Cancellare",
     ],
     'orders' => [
         'status' => [
@@ -75,13 +82,17 @@ return [
             'from' => "Accesso da",
             'status' => "Stato della fattura",
             'price' => "Importo della fattura",
+            'invoice' => "Fattura",
         ],
+        'heading' => "Ordini",
     ],
     'login' => [
         'code' => 'Codice di accesso',
         'restart' => 'Nuovo accesso',
         'hint' => 'Effettuare il login per accedere al proprio account.',
         'email_sent' => 'Se questo account è già registrato, vi abbiamo inviato un codice di accesso via e-mail. Inserirlo per accedere.',
+        'submit' => 'Invia',
+        'email' => 'Indirizzo e-mail',
     ],
     'api-docs' => [
         'hint' => "Di seguito è riportata la documentazione dell'API, che può essere utilizzata per recuperare i log dal nostro server.",

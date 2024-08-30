@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::dropIfExists("password_reset_tokens");
         Schema::dropIfExists("personal_access_tokens");
         Schema::dropIfExists("password_reset_tokens");
+        Schema::dropIfExists("cache");
         Schema::dropIfExists("users");
     }
 

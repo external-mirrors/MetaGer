@@ -1,1 +1,90 @@
 <?php
+return [
+    'create_abo' => [
+        'conditions_hint' => "Emitimos automáticamente una factura por cada intervalo de pago. Su acceso incluye el acceso a los registros de MetaGer de todos los meses incluidos en el periodo de facturación (incluido el actual). La factura para el siguiente periodo se emitirá un mes antes del inicio, si es posible, para que sea posible un uso sin interrupciones.",
+        'nda' => "NDA (acuerdo de confidencialidad)",
+        'cancel' => "Cancelar la suscripción actual",
+        'interval' => "Intervalo de pago",
+        'amount' => "A efectuar con cada pago",
+        'heading' => "Establecer la suscripción",
+        'conditions' => "Condiciones generales",
+        'conditions_nda' => "Los datos facilitados pueden contener datos personales, aunque no estén clasificados. Por esta razón, los datos no pueden ser accesibles públicamente por usted en ninguna forma. Esto incluye, en particular, los propios datos brutos, pero también los modelos aprendidos a partir de ellos en el ámbito del aprendizaje automático. Sin embargo, es posible el acceso público a las respuestas de un modelo. Lea atentamente el siguiente acuerdo de confidencialidad y guárdelo para su propio archivo antes de aceptarlo.",
+        'accept' => "Acepto el acuerdo de confidencialidad y las condiciones de pago.",
+    ],
+    'orders' => [
+        'status' => [
+            '1' => "Borrador",
+            '-3' => "Visitado",
+            '-2' => "Pagos pendientes",
+            '4' => "Completado",
+            '-1' => "Atrasado",
+            '5' => "Cancelado",
+            '6' => "Reembolsado",
+            '2' => "Entregado",
+            '3' => "Pagado parcialmente",
+        ],
+        'thead' => [
+            'status' => "Estado de la factura",
+            'price' => "Importe de la factura",
+            'from' => "Acceso desde",
+            'to' => "Acceso hasta",
+        ],
+    ],
+    'api_keys' => [
+        'new' => [
+            'name' => "Nombre del dispositivo",
+            'heading' => "Crear nueva clave",
+            'submit' => "Cree",
+            'placeholder_name' => "Portátil",
+        ],
+        'thead' => [
+            'name' => "Dispositivo",
+            'key' => "clave",
+            'created_at' => "Creado",
+            'accessed_at' => "Último acceso",
+        ],
+        'heading' => "Clave API",
+        'hint' => "Para poder utilizar la API, debe autenticarse. Aquí puede crear una clave de API para sus equipos. <b>Nota:</b>: Las tarjetas recién instaladas sólo están disponibles de forma temporal. Por favor, especifíquelas después de la instalación.",
+    ],
+    'overview' => [
+        'invoice-data' => [
+            'update' => "Actualizar los datos de la factura",
+            'street' => "Calle y número",
+            'city' => "Ciudad",
+            'first_name' => "Nombre",
+            'last_name' => "Apellido",
+            'postal_code' => "Código postal",
+            'company' => "Empresa",
+        ],
+        'abo' => [
+            'interval' => [
+                'setting_values' => [
+                    'quarterly' => "trimestral",
+                    'annual' => "anual",
+                    'monthly' => "mensualmente",
+                    'six-monthly' => "semestralmente",
+                    'never' => "Nunca",
+                ],
+                'label' => "Intervalo de pago",
+            ],
+            'heading' => "Acceso a los datos actuales",
+            'next_invoice' => "Siguiente factura",
+            'never' => "Nunca",
+            'hint' => "Aquí puede configurar el acceso a los registros de consultas de búsqueda de MetaGer para los próximos meses. El acceso se renovará automáticamente en el intervalo de pago seleccionado.",
+            'create' => "Puesta en marcha",
+            'last_invoice' => "Última factura",
+            'update' => "Actualización",
+        ],
+        'hint' => 'Aquí encontrará un resumen de sus pedidos e información sobre el uso de la API. Asegúrese de que los siguientes datos de facturación están actualizados y son correctos',
+    ],
+    'login' => [
+        'hint' => 'Inicie sesión para acceder a su cuenta.',
+        'email_sent' => 'Si esta cuenta ya está registrada, le hemos enviado un código de acceso por correo electrónico. Por favor, introdúzcalo para iniciar sesión.',
+        'code' => 'Código de acceso',
+        'restart' => 'Nuevo acceso',
+    ],
+    'api-docs' => [
+        'hint' => "A continuación encontrará la documentación de nuestra API, que puede utilizar para recuperar registros de nuestro servidor.",
+        'link' => "Documentación API",
+    ],
+];

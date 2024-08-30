@@ -28,6 +28,10 @@ return [
             'postal_code' => "Postnummer",
             'update' => "Uppdatera fakturauppgifter",
             'street' => "Gatu- och husnummer",
+            'email' => "E-postadress",
+            'full_name' => "Namn",
+            'save' => "Spara",
+            'heading' => "Faktureringsdatum",
         ],
         'hint' => 'Här hittar du en översikt över dina beställningar och information om hur du använder API:et. Se till att följande fakturauppgifter är aktuella och korrekta',
     ],
@@ -48,7 +52,9 @@ return [
             'from' => "Åtkomst från",
             'to' => "Tillträde fram till",
             'price' => "Fakturans belopp",
+            'invoice' => "Faktura",
         ],
+        'heading' => "Beställningar",
     ],
     'api_keys' => [
         'thead' => [
@@ -56,6 +62,7 @@ return [
             'key' => "nyckel",
             'created_at' => "Skapad",
             'accessed_at' => "Senaste åtkomst",
+            'actions' => "Åtgärder",
         ],
         'new' => [
             'heading' => "Skapa ny nyckel",
@@ -65,6 +72,8 @@ return [
         ],
         'heading' => "API-nyckel",
         'hint' => "För att API:et ska kunna användas måste du autentisera dig. Här kan du skapa en API-nyckel för dina enheter. <b>Hänvisning</b>: Nytillverkade nycklar är endast en gång tillgängliga. Vänligen spara dessa efter skapandet.",
+        'delete' => "Radera",
+        'copy' => "Kopia",
     ],
     'create_abo' => [
         'conditions' => "Villkor och anvisningar",
@@ -82,6 +91,8 @@ return [
         'restart' => 'Ny inloggning',
         'hint' => 'Logga in för att få tillgång till ditt konto.',
         'email_sent' => 'Om detta konto redan är registrerat har vi skickat en inloggningskod till dig via e-post. Vänligen ange den för att logga in.',
+        'submit' => 'Skicka in',
+        'email' => 'E-postadress',
     ],
     'api-docs' => [
         'hint' => "Nedan hittar du vår API-dokumentation, som du kan använda för att hämta loggar från vår server.",

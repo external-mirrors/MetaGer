@@ -13,3 +13,15 @@ ingress:
 
 autoscaling:
   enabled: false
+
+env:
+  - name: DB_CONNECTION
+    value: sqlite
+  - name: REDIS_CACHE_CONNECTION
+    value: default
+  - name: REDIS_CACHE_LOCK_CONNECTION
+    value: default
+  - name: REDIS_SESSION_CONNECTION
+    value: default
+  - name: SESSION_CONNECTION
+    value: default

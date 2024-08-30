@@ -14,11 +14,6 @@ workflow:
       variables:
         APP_URL: "https://${DOCKER_IMAGE_TAG_PREFIX}.review.metager.de"
         APP_ENV: development
-        DB_CONNECTION: sqlite
-        REDIS_CACHE_CONNECTION: default
-        REDIS_CACHE_LOCK_CONNECTION: default
-        REDIS_SESSION_CONNECTION: default
-        SESSION_CONNECTION: default
         DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_REF_SLUG
         DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
@@ -41,11 +36,6 @@ workflow:
       variables:
         APP_URL: https://metager3.de
         APP_ENV: development
-        DB_CONNECTION: sqlite
-        REDIS_CACHE_CONNECTION: default
-        REDIS_CACHE_LOCK_CONNECTION: default
-        REDIS_SESSION_CONNECTION: default
-        SESSION_CONNECTION: default
         DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_BRANCH
         DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA

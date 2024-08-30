@@ -41,11 +41,6 @@ return [
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'engine' => 'InnoDB'
         ],
-        'useragents' => [
-            'driver' => 'sqlite',
-            'database' => database_path('databases/' . env('SQLITE_DATABASE', 'database.sqlite')),
-            'prefix' => '',
-        ],
         'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', 'localhost'),

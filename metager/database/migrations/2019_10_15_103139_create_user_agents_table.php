@@ -20,6 +20,7 @@ class CreateUserAgentsTable extends Migration
             $table->enum('device', ["desktop", "tablet", "mobile"]);
             $table->string('useragent', 300);
             $table->timestamps();
+            $table->index(["platform", "browser", "device"], "useragent_random_select_idx");
         });
     }
 

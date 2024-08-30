@@ -92,7 +92,7 @@ class LogsApiController extends Controller
     }
     public function nda(Request $request)
     {
-        $nda = file_get_contents(storage_path("app/logs_nda.pdf"));
+        $nda = file_get_contents(storage_path("app/public/logs_nda.pdf"));
         $date = now("UTC");
         if ($request->filled("signed")) {
             $nda_database = DB::table("logs_nda")->where("user_email", "=", Auth::guard("logs")->user()->getAuthIdentifier())->first();

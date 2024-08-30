@@ -111,13 +111,13 @@ class LogsAbo
             if (is_null($current_nda)) {
                 DB::table("logs_nda")->insert([
                     "user_email" => $email,
-                    "nda" => file_get_contents(storage_path("app/logs_nda.pdf")),
+                    "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                     "created_at" => now("UTC"),
                     "updated_at" => now("UTC"),
                 ]);
             } else {
                 DB::table("logs_nda")->where("user_email", $email)->update([
-                    "nda" => file_get_contents(storage_path("app/logs_nda.pdf")),
+                    "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                     "updated_at" => now("UTC"),
                 ]);
             }
@@ -131,7 +131,7 @@ class LogsAbo
                 "updated_at" => now("UTC"),
             ]);
             DB::table("logs_nda")->where("user_email", "=", $email)->update([
-                "nda" => file_get_contents(storage_path("app/logs_nda.pdf")),
+                "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                 "updated_at" => now("UTC"),
             ]);
         }

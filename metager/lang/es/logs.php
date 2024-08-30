@@ -28,7 +28,9 @@ return [
             'price' => "Importe de la factura",
             'from' => "Acceso desde",
             'to' => "Acceso hasta",
+            'invoice' => "Factura",
         ],
+        'heading' => "Pedidos",
     ],
     'api_keys' => [
         'new' => [
@@ -42,9 +44,12 @@ return [
             'key' => "clave",
             'created_at' => "Creado",
             'accessed_at' => "Último acceso",
+            'actions' => "Acciones",
         ],
         'heading' => "Clave API",
         'hint' => "Para poder utilizar la API, debe autenticarse. Aquí puede crear una clave de API para sus equipos. <b>Nota:</b>: Las tarjetas recién instaladas sólo están disponibles de forma temporal. Por favor, especifíquelas después de la instalación.",
+        'copy' => "Copiar",
+        'delete' => "Borrar",
     ],
     'overview' => [
         'invoice-data' => [
@@ -55,6 +60,10 @@ return [
             'last_name' => "Apellido",
             'postal_code' => "Código postal",
             'company' => "Empresa",
+            'heading' => "Fecha de la factura",
+            'email' => "Correo electrónico",
+            'full_name' => "Nombre",
+            'save' => "Guardar",
         ],
         'abo' => [
             'interval' => [
@@ -82,6 +91,8 @@ return [
         'email_sent' => 'Si esta cuenta ya está registrada, le hemos enviado un código de acceso por correo electrónico. Por favor, introdúzcalo para iniciar sesión.',
         'code' => 'Código de acceso',
         'restart' => 'Nuevo acceso',
+        'submit' => 'Enviar',
+        'email' => 'Correo electrónico',
     ],
     'api-docs' => [
         'hint' => "A continuación encontrará la documentación de nuestra API, que puede utilizar para recuperar registros de nuestro servidor.",

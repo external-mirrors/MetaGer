@@ -22,6 +22,13 @@ return new class extends Migration {
                 locale  varchar(5),
                 query   text not null
             ) PARTITION BY RANGE (time)");
+            // Create Indices
+            DB::statement("CREATE INDEX logs_partitioned_focus_idx ON logs_partitioned (focus)");
+            DB::statement("CREATE INDEX logs_partitioned_locale_idx ON logs_partitioned (locale)");
+            DB::statement("CREATE INDEX logs_partitioned_time_idx ON logs_partitioned (time)");
+            DB::statement("CREATE INDEX logs_partitioned_time_locale_focus_idx ON logs_partitioned (time, locale, focus)");
+            DB::statement("CREATE INDEX logs_partitioned_time_locale_idx ON logs_partitioned (time, locale)");
+
             // Default Partition
             DB::statement("CREATE TABLE logs_partitioned_default PARTITION OF logs_partitioned DEFAULT");
             // Create Partitions for this and the following year
@@ -38,6 +45,11 @@ return new class extends Migration {
                 $table->string("focus", 20)->nullable();
                 $table->string("locale", 5)->nullable();
                 $table->text("query");
+                $table->index("focus");
+                $table->index("locale");
+                $table->index("time");
+                $table->index(["time", "locale", "focus"]);
+                $table->index(["time", "locale"]);
             });
         }
     }

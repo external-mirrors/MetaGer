@@ -15,6 +15,11 @@
     @if(!$edit_invoice)
         @include("logs.parts.orders")
         @include("logs.parts.api_keys")
+        <div id="api-docs">
+            <div>@lang("logs.api-docs.hint")</div>
+            <a href="https://gitlab.metager.de/open-source/MetaGer/-/blob/master/metager/app/Models/Logs/logs.md?ref_type=heads"
+                target="_blank">@lang("logs.api-docs.link")</a>
+        </div>
     @endif
 </div>
 @endsection

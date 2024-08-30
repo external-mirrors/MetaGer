@@ -49,7 +49,7 @@ return [
         "interval" => "Zahlungsintervall",
         "conditions" => "Konditionen",
         "amount" => "Bei jeder Zahlung zu leisten",
-        "conditions_hint" => "Wir stellen automatisch je Zahlungsintervall eine Rechnung aus. Dein Zugang wird nach Zahlungseingang freigeschaltet und beinhaltet Zugriff auf die MetaGer Logs für alle im Rechnungszeitraum enthaltenen Monate (inklusive des Aktuellen). Die Rechnung für den folgenden Zeitraum wird jeweils wenn möglich einen Monat vor Beginn ausgestellt, sodass eine nahtlose Nutzung möglich ist.",
+        "conditions_hint" => "Wir stellen automatisch je Zahlungsintervall eine Rechnung aus. Dein Zugang beinhaltet Zugriff auf die MetaGer Logs für alle im Rechnungszeitraum enthaltenen Monate (inklusive des Aktuellen). Die Rechnung für den folgenden Zeitraum wird jeweils wenn möglich einen Monat vor Beginn ausgestellt, sodass eine nahtlose Nutzung möglich ist.",
         "nda" => "NDA (Verschwiegenheitserklärung)",
         "conditions_nda" => "Die zur Verfügung gestellten Daten können, wenn auch unsortiert, personenbeziehbare Daten enthalten. Aus diesem Grund dürfen die Daten in keiner Form von dir öffentlich zugänglich gemacht werden. Hierzu zählen insbesondere die Rohdaten selbst, aber auch hieraus angelernte Modelle aus dem Bereich des Machine Learnings. Ein öffentlicher Zugriff auf Antworten eines Modelles hingegen ist möglich. Lies dir bitte die nachfolgende NDA (Verschwiegenheitserklärung) genau durch und speicher sie für die eigenen Unetrlagen bevor du ihr durch Fortfahren zustimmst.",
         "accept" => "Ich stimme der NDA (Verschwiegenheitserklärung) und den Zahlungsbedingungen zu",
@@ -94,5 +94,9 @@ return [
         ],
         "copy" => "Kopieren",
         "delete" => "Löschen"
+    ],
+    "api-docs" => [
+        "hint" => "Nachfolgend findest du unsere API Dokumentation, welche du verwenden kannst um Logs von unserem Server abzurufen.",
+        "link" => "API Dokumentation",
     ]
 ];

@@ -26,7 +26,7 @@ return [
         ],
         "abo" => [
             "heading" => "Zugriff auf aktuelle Daten",
-            "hint" => "Hier kannst du dir einen Zugang für die MetaGer Suchanfrage Logs für die kommenden Monate einrichten. Der Zugang wird im gewählten Zahlungsintervall automatisch verlängert und jeweils nach Zahlungseingang freigeschaltet.",
+            "hint" => "Hier kannst du dir einen Zugang für die MetaGer Suchanfrage Logs für die kommenden Monate einrichten. Der Zugang wird im gewählten Zahlungsintervall automatisch verlängert.",
             "interval" => [
                 "label" => "Zahlungsintervall",
                 "setting_values" => [

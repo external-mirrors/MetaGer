@@ -331,7 +331,7 @@ class LogsApiController extends Controller
         return response()->streamDownload(
             function () use ($start_date, $end_date, $order) {
                 // Fetch chunked DB entries
-                DB::connection("logs")->table("logs_partitioned")->select(["time", "query"])->whereBetween("time", [$start_date, $end_date])->orderBy("time", $order)->chunk(25000, function (Collection $log_entries) {
+                DB::table("logs_partitioned")->select(["time", "query"])->whereBetween("time", [$start_date, $end_date])->orderBy("time", $order)->chunk(25000, function (Collection $log_entries) {
                     $f = fopen("php://memory", "r+");
                     foreach ($log_entries as $log_entry) {
                         fputcsv($f, (array) $log_entry, ",", "\"", "\\", PHP_EOL);

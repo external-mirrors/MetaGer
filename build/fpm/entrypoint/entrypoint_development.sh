@@ -19,6 +19,8 @@ then
 fi
 
 sed -i 's/^APP_ENV=.*/APP_ENV=local/g' .env; 
+sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/g' .env; 
+sed -i 's/^REDIS_CACHE_CONNECTION=.*/REDIS_CACHE_CONNECTION=default/g' .env; 
 
 # Make sure App Key is set
 php artisan key:generate

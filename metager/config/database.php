@@ -85,19 +85,6 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
-        'logs' => [
-            'driver' => 'pgsql',
-            'host' => env('LOGS_DB_HOST', 'localhost'),
-            'port' => env('LOGS_DB_PORT', '5432'),
-            'database' => env('LOGS_DB_DATABASE', 'forge'),
-            'username' => env('LOGS_DB_USERNAME', 'forge'),
-            'password' => env('LOGS_DB_PASSWORD', ''),
-            'charset' => 'utf8',
-            'prefix' => '',
-            'search_path' => 'public',
-            'sslmode' => 'prefer',
-        ],
-
     ],
 
     /*

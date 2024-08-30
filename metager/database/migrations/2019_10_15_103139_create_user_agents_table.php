@@ -13,13 +13,14 @@ class CreateUserAgentsTable extends Migration
      */
     public function up()
     {
-        Schema::connection('useragents')->create('user_agents', function (Blueprint $table) {
+        Schema::create('user_agents', function (Blueprint $table) {
             $table->increments('id');
             $table->string('platform');
             $table->string('browser');
             $table->enum('device', ["desktop", "tablet", "mobile"]);
             $table->string('useragent', 300);
             $table->timestamps();
+            $table->index(["platform", "browser", "device"], "useragent_random_select_idx");
         });
     }
 
@@ -30,6 +31,6 @@ class CreateUserAgentsTable extends Migration
      */
     public function down()
     {
-        Schema::connection('useragents')->dropIfExists('user_agents');
+        Schema::dropIfExists('user_agents');
     }
 }

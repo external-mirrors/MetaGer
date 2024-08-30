@@ -69,6 +69,14 @@ mix
     "public/css/admin/affilliates/index.css"
   )
   .less(
+    "resources/less/metager/pages/admin/logs.less",
+    "public/css/admin/logs.css"
+  )
+  .less(
+    "resources/less/metager/pages/logs.less",
+    "public/css/logs.css"
+  )
+  .less(
     "resources/less/metager/pages/help-easy-language.less",
     "public/css/help-easy-language.css"
   )

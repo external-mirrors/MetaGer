@@ -34,4 +34,9 @@ return [
     'lang-selector' => 'Sélection de la langue',
     'adblocker' => 'Bloqueurs de publicité - MetaGer',
     'help-glossary' => 'Glossaire - MetaGer',
+    'logs' => [
+        'admin' => "Logs Admin - MetaGer",
+        'overview' => 'Journaux - MetaGer',
+        'login' => "Logs Admin - MetaGer",
+    ],
 ];

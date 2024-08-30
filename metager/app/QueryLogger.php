@@ -139,7 +139,7 @@ class QueryLogger
         }
 
         if (sizeof($insert_array) > 0) {
-            return DB::connection("logs")->table("logs_partitioned")->insert($insert_array);
+            return DB::table("logs_partitioned")->insert($insert_array);
         }
         return false;
     }
@@ -153,10 +153,9 @@ class QueryLogger
      */
     public function getLogsSince(Carbon $since)
     {
-        $connection = DB::connection("logs");
         $since->setTimezone("UTC"); // We will query in UTC time
 
-        $queries = $connection->table("logs_partitioned")
+        $queries = DB::table("logs_partitioned")
             ->whereRaw("time > '" . $since->format("Y-m-d H:i:s") . "'")
             ->orderBy("time", "asc")
             ->get();

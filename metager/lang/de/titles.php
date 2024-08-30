@@ -1,5 +1,4 @@
 <?php
-
 return [
     'index' => 'MetaGer - Mehr als eine Suchmaschine',
     'impressum' => 'Impressum - MetaGer',
@@ -13,7 +12,7 @@ return [
     'help-functions' => 'Hilfe - MetaGer',
     'help-services' => 'Hilfe - MetaGer',
     'help-privacy-protection' => 'Hilfe - MetaGer',
-    'help-glossary'=>'Glossar - MetaGer',
+    'help-glossary' => 'Glossar - MetaGer',
     'widget' => 'MetaGer Widget',
     'websearch' => 'Websuche-Widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
@@ -32,7 +31,12 @@ return [
     'allSettings' => 'Alle Sucheinstellungen - MetaGer',
     'transparency' => 'Transparenzerklärung - MetaGer',
     'search-engine' => 'Suchmaschinen - MetaGer',
-    "prevention" => 'Hilfe bei Selbstmordgedanken - MetaGer',
+    'prevention' => 'Hilfe bei Selbstmordgedanken - MetaGer',
     'membership' => 'Ihre Mitgliedschaft im SUMA-EV',
-    'adblocker' => 'Werbeblocker - MetaGer'
+    'adblocker' => 'Werbeblocker - MetaGer',
+    'logs' => [
+        'admin' => "Protokolle Verwaltung - MetaGer",
+        'overview' => 'Protokolle - MetaGer',
+        'login' => "Protokolle Verwaltung - MetaGer",
+    ],
 ];

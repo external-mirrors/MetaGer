@@ -19,8 +19,9 @@ then
   cp /home/metager/.env .env
 fi
 
-# Create the useragents table in the sqlite database
-php artisan migrate:refresh --force --path=database/migrations/2019_10_15_103139_create_user_agents_table.php
+php artisan wait:db
+php artisan migrate
+php artisan db:seed
 
 php artisan optimize
 php artisan route:clear # Do not cache routes; Interferes with Localization

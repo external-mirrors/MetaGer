@@ -21,7 +21,6 @@ fi
 
 php artisan wait:db
 php artisan migrate --force
-php artisan db:seed
 
 php artisan optimize
 php artisan route:clear # Do not cache routes; Interferes with Localization

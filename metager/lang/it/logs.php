@@ -1,1 +1,90 @@
 <?php
+return [
+    'create_abo' => [
+        'conditions' => "Termini e condizioni",
+        'amount' => "Da effettuare con ogni pagamento",
+        'heading' => "Impostazione dell'abbonamento",
+        'conditions_nda' => "I dati forniti possono contenere dati personali, anche se non ordinati. Per questo motivo, i dati non possono essere resi pubblicamente accessibili dall'utente in nessuna forma. Ciò include in particolare i dati grezzi stessi, ma anche i modelli appresi da essi nel campo dell'apprendimento automatico. Tuttavia, l'accesso pubblico alle risposte di un modello è possibile. Si prega di leggere attentamente il seguente NDA (accordo di non divulgazione) e di conservarlo per i propri archivi prima di accettarlo.",
+        'accept' => "Accetto l'NDA (accordo di non divulgazione) e le condizioni di pagamento",
+        'conditions_hint' => "Emettiamo automaticamente una fattura per ogni intervallo di pagamento. L'accesso include l'accesso ai log di MetaGer per tutti i mesi compresi nel periodo di fatturazione (incluso quello in corso). La fattura per il periodo successivo sarà emessa, se possibile, un mese prima dell'inizio, in modo da consentire un utilizzo senza interruzioni.",
+        'nda' => "NDA (accordo di non divulgazione)",
+        'cancel' => "Annullamento dell'abbonamento corrente",
+        'interval' => "Intervallo di pagamento",
+    ],
+    'overview' => [
+        'abo' => [
+            'interval' => [
+                'label' => "Intervallo di pagamento",
+                'setting_values' => [
+                    'never' => "Mai",
+                    'monthly' => "mensile",
+                    'six-monthly' => "semestrale",
+                    'quarterly' => "trimestrale",
+                    'annual' => "annualmente",
+                ],
+            ],
+            'create' => "Impostazione",
+            'never' => "Mai",
+            'hint' => "Qui è possibile impostare l'accesso ai log delle query di ricerca di MetaGer per i prossimi mesi. L'accesso sarà rinnovato automaticamente all'intervallo di pagamento selezionato.",
+            'last_invoice' => "Ultima fattura",
+            'update' => "Aggiornamento",
+            'heading' => "Accesso ai dati attuali",
+            'next_invoice' => "Prossima fattura",
+        ],
+        'invoice-data' => [
+            'company' => "Azienda",
+            'city' => "Città",
+            'first_name' => "Nome",
+            'last_name' => "Cognome",
+            'postal_code' => "Codice postale",
+            'update' => "Aggiornare i dati della fattura",
+            'street' => "Via e numero civico",
+        ],
+        'hint' => 'Qui troverete una panoramica dei vostri ordini e informazioni sull\'utilizzo dell\'API. Assicuratevi che i dati delle fatture siano aggiornati e corretti.',
+    ],
+    'api_keys' => [
+        'hint' => "Per poter utilizzare l'API è necessario autenticarsi. In questo punto è possibile creare uno Schlüssel API per le proprie apparecchiature. <b>Hinweis</b>: I nuovi Schlüssel creati sono solo parzialmente ausiliari. Per favore, sceglieteli dopo l'installazione.",
+        'thead' => [
+            'key' => "chiave",
+            'created_at' => "Creato",
+            'accessed_at' => "Ultimo accesso",
+            'name' => "Dispositivo",
+        ],
+        'new' => [
+            'heading' => "Creare una nuova chiave",
+            'submit' => "Creare",
+            'placeholder_name' => "Computer portatile",
+            'name' => "Nome del dispositivo",
+        ],
+        'heading' => "Chiave API",
+    ],
+    'orders' => [
+        'status' => [
+            '6' => "Rimborsato",
+            '2' => "Consegnato",
+            '-3' => "Visualizzato",
+            '-2' => "Pagamento in sospeso",
+            '-1' => "In ritardo",
+            '3' => "Parzialmente pagato",
+            '1' => "Bozza",
+            '4' => "Completato",
+            '5' => "Annullato",
+        ],
+        'thead' => [
+            'to' => "Accesso fino a",
+            'from' => "Accesso da",
+            'status' => "Stato della fattura",
+            'price' => "Importo della fattura",
+        ],
+    ],
+    'login' => [
+        'code' => 'Codice di accesso',
+        'restart' => 'Nuovo accesso',
+        'hint' => 'Effettuare il login per accedere al proprio account.',
+        'email_sent' => 'Se questo account è già registrato, vi abbiamo inviato un codice di accesso via e-mail. Inserirlo per accedere.',
+    ],
+    'api-docs' => [
+        'hint' => "Di seguito è riportata la documentazione dell'API, che può essere utilizzata per recuperare i log dal nostro server.",
+        'link' => "Documentazione API",
+    ],
+];

@@ -28,6 +28,10 @@ return [
             'postal_code' => "Postinumero",
             'update' => "Päivitä laskun tiedot",
             'street' => "Katu ja talon numero",
+            'email' => "Sähköpostiosoite",
+            'full_name' => "Nimi",
+            'save' => "Tallenna",
+            'heading' => "Laskun päivämäärä",
         ],
         'hint' => 'Täältä löydät yleiskatsauksen tilauksistasi ja tietoa API:n käytöstä. Varmista, että seuraavat laskutustiedot ovat ajan tasalla ja oikein.',
     ],
@@ -48,7 +52,9 @@ return [
             'to' => "Pääsy kunnes",
             'status' => "Laskun tila",
             'price' => "Laskun määrä",
+            'invoice' => "Lasku",
         ],
+        'heading' => "Tilaukset",
     ],
     'create_abo' => [
         'amount' => "Jokaisen maksun yhteydessä suoritettava",
@@ -67,6 +73,7 @@ return [
             'created_at' => "Luotu",
             'accessed_at' => "Viimeinen pääsy",
             'name' => "Laite",
+            'actions' => "Toimet",
         ],
         'new' => [
             'heading' => "Luo uusi avain",
@@ -76,6 +83,8 @@ return [
         ],
         'heading' => "API-avain",
         'hint' => "Jotta voit käyttää API:ta, sinun on autentifioitava itsesi. Hier kann du dir für deine Geräte API Schlüssel erstellen. <b>Vihje</b>: Neu erstellte Schlüssel sind nur einmalig auslesbar. Bitte speichern Sie sich diese nach Erstellung ab.",
+        'delete' => "Poista",
+        'copy' => "Kopioi",
     ],
     'api-docs' => [
         'hint' => "Alta löydät API-dokumentaatiomme, jonka avulla voit hakea lokit palvelimeltamme.",
@@ -86,5 +95,7 @@ return [
         'hint' => 'Kirjaudu sisään päästäksesi tilillesi.',
         'email_sent' => 'Jos tämä tili on jo rekisteröity, olemme lähettäneet sinulle kirjautumiskoodin sähköpostitse. Syötä se kirjautuaksesi sisään.',
         'code' => 'Kirjautumiskoodi',
+        'email' => 'Sähköpostiosoite',
+        'submit' => 'Lähetä',
     ],
 ];

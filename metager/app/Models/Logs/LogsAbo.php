@@ -109,17 +109,17 @@ class LogsAbo
             ]);
             $current_nda = DB::table("logs_nda")->where("user_email", $email)->first();
             if (is_null($current_nda)) {
-                DB::table("logs_nda")->insert([
+                /*DB::table("logs_nda")->insert([
                     "user_email" => $email,
                     "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                     "created_at" => now("UTC"),
                     "updated_at" => now("UTC"),
-                ]);
+                ]);*/
             } else {
-                DB::table("logs_nda")->where("user_email", $email)->update([
+                /*DB::table("logs_nda")->where("user_email", $email)->update([
                     "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                     "updated_at" => now("UTC"),
-                ]);
+                ]);*/
             }
 
         } elseif ($interval === "never") {
@@ -130,10 +130,10 @@ class LogsAbo
                 "monthly_price" => config("metager.logs.monthly_cost"),
                 "updated_at" => now("UTC"),
             ]);
-            DB::table("logs_nda")->where("user_email", "=", $email)->update([
+            /*DB::table("logs_nda")->where("user_email", "=", $email)->update([
                 "nda" => file_get_contents(storage_path("app/public/logs_nda.pdf")),
                 "updated_at" => now("UTC"),
-            ]);
+            ]);*/
         }
     }
 }

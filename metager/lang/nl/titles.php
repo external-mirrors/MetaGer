@@ -34,4 +34,9 @@ return [
     'membership' => 'Jouw lidmaatschap bij SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
     'help-glossary' => 'Woordenlijst - MetaGer',
+    'logs' => [
+        'admin' => "Logboeken beheerder - MetaGer",
+        'overview' => 'Logboeken - MetaGer',
+        'login' => "Logboeken beheerder - MetaGer",
+    ],
 ];

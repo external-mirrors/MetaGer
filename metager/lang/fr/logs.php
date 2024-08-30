@@ -1,1 +1,90 @@
 <?php
+return [
+    'create_abo' => [
+        'conditions' => "Conditions d'utilisation",
+        'conditions_nda' => "Les données fournies peuvent contenir des données personnelles, même si elles ne sont pas triées. C'est pourquoi vous ne pouvez pas rendre ces données accessibles au public sous quelque forme que ce soit. Cela comprend en particulier les données brutes elles-mêmes, mais aussi les modèles appris à partir de ces données dans le domaine de l'apprentissage automatique. L'accès public aux réponses d'un modèle est toutefois possible. Veuillez lire attentivement le NDA (accord de non-divulgation) suivant et le conserver dans vos dossiers avant de l'accepter en continuant.",
+        'accept' => "J'accepte l'accord de non-divulgation (NDA) et les conditions de paiement.",
+        'conditions_hint' => "Nous émettons automatiquement une facture pour chaque intervalle de paiement. Votre accès comprend l'accès aux journaux MetaGer pour tous les mois inclus dans la période de facturation (y compris le mois en cours). La facture pour la période suivante sera émise un mois avant le début, si possible, afin de permettre une utilisation sans interruption.",
+        'nda' => "NDA (accord de non-divulgation)",
+        'cancel' => "Annuler l'abonnement en cours",
+        'interval' => "Intervalle de paiement",
+        'amount' => "A effectuer lors de chaque paiement",
+        'heading' => "Mise en place de l'abonnement",
+    ],
+    'overview' => [
+        'abo' => [
+            'interval' => [
+                'label' => "Intervalle de paiement",
+                'setting_values' => [
+                    'never' => "Jamais",
+                    'quarterly' => "trimestrielle",
+                    'annual' => "annuellement",
+                    'monthly' => "mensuel",
+                    'six-monthly' => "semestriellement",
+                ],
+            ],
+            'create' => "Mise en place",
+            'last_invoice' => "Dernière facture",
+            'update' => "Mise à jour",
+            'heading' => "Accès aux données actuelles",
+            'next_invoice' => "Facture suivante",
+            'never' => "Jamais",
+            'hint' => "Vous pouvez ici configurer l'accès aux journaux des requêtes de recherche de MetaGer pour les mois à venir. L'accès sera automatiquement renouvelé à l'intervalle de paiement choisi.",
+        ],
+        'invoice-data' => [
+            'company' => "Entreprise",
+            'update' => "Mise à jour des données de la facture",
+            'street' => "Numéro de rue et de maison",
+            'city' => "Ville",
+            'first_name' => "Prénom",
+            'last_name' => "Nom de famille",
+            'postal_code' => "Code postal",
+        ],
+        'hint' => 'Vous trouverez ici un aperçu de vos commandes et des informations sur l\'utilisation de l\'API. Veuillez vous assurer que les données de facturation suivantes sont à jour et correctes',
+    ],
+    'orders' => [
+        'status' => [
+            '3' => "Partiellement payé",
+            '1' => "Projet",
+            '-2' => "Paiement en cours",
+            '4' => "Terminé",
+            '-1' => "En retard",
+            '5' => "Annulé",
+            '6' => "Remboursement",
+            '2' => "Livré",
+            '-3' => "Vu",
+        ],
+        'thead' => [
+            'status' => "Statut de la facture",
+            'price' => "Montant de la facture",
+            'from' => "Accès à partir de",
+            'to' => "Accès jusqu'à",
+        ],
+    ],
+    'api_keys' => [
+        'thead' => [
+            'accessed_at' => "Dernier accès",
+            'name' => "Dispositif",
+            'key' => "clé",
+            'created_at' => "Créée",
+        ],
+        'new' => [
+            'name' => "Nom de l'appareil",
+            'heading' => "Créer une nouvelle clé",
+            'submit' => "Créer",
+            'placeholder_name' => "Ordinateur portable",
+        ],
+        'heading' => "Clé API",
+        'hint' => "Pour pouvoir utiliser l'API, vous devez vous authentifier. Ici, vous pouvez créer un code API pour vos appareils. <b>Indications</b>: Les nouveaux modèles créés ne sont pas toujours disponibles. Il convient de les spécifier après leur création.",
+    ],
+    'api-docs' => [
+        'hint' => "Vous trouverez ci-dessous la documentation de notre API, que vous pouvez utiliser pour récupérer les journaux de notre serveur.",
+        'link' => "Documentation de l'API",
+    ],
+    'login' => [
+        'restart' => 'Nouvelle connexion',
+        'hint' => 'Veuillez vous connecter pour accéder à votre compte.',
+        'email_sent' => 'Si ce compte est déjà enregistré, nous vous avons envoyé un code de connexion par e-mail. Veuillez le saisir pour vous connecter.',
+        'code' => 'Code de connexion',
+    ],
+];

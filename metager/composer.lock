@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "791aa52ccb009d4044584609ff1b78d9",
+    "content-hash": "22c44237fc58e695c49ae267e11dfb46",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1344,6 +1344,51 @@
                 }
             ],
             "time": "2022-05-21T17:30:32+00:00"
+        },
+        {
+            "name": "invoiceninja/sdk-php",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/invoiceninja/sdk-php.git",
+                "reference": "dac1b77453e5ffc475b8755da6df000ab77106d1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/invoiceninja/sdk-php/zipball/dac1b77453e5ffc475b8755da6df000ab77106d1",
+                "reference": "dac1b77453e5ffc475b8755da6df000ab77106d1",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.3",
+                "php": "^7.4|^8.0|^8.1"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.16",
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "InvoiceNinja\\Sdk\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David Bomba",
+                    "email": "turbo124@gmail.com"
+                }
+            ],
+            "description": "The Invoice Ninja v5 PHP SDK",
+            "support": {
+                "issues": "https://github.com/invoiceninja/sdk-php/issues",
+                "source": "https://github.com/invoiceninja/sdk-php/tree/v1.1.0"
+            },
+            "time": "2023-01-13T23:39:10+00:00"
         },
         {
             "name": "jaybizzle/crawler-detect",

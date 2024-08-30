@@ -39,6 +39,10 @@ return [
             'first_name' => "Prénom",
             'last_name' => "Nom de famille",
             'postal_code' => "Code postal",
+            'heading' => "Date de la facture",
+            'email' => "Adresse électronique",
+            'full_name' => "Nom",
+            'save' => "Économiser",
         ],
         'hint' => 'Vous trouverez ici un aperçu de vos commandes et des informations sur l\'utilisation de l\'API. Veuillez vous assurer que les données de facturation suivantes sont à jour et correctes',
     ],
@@ -59,7 +63,9 @@ return [
             'price' => "Montant de la facture",
             'from' => "Accès à partir de",
             'to' => "Accès jusqu'à",
+            'invoice' => "Facture",
         ],
+        'heading' => "Commandes",
     ],
     'api_keys' => [
         'thead' => [
@@ -67,6 +73,7 @@ return [
             'name' => "Dispositif",
             'key' => "clé",
             'created_at' => "Créée",
+            'actions' => "Actions",
         ],
         'new' => [
             'name' => "Nom de l'appareil",
@@ -76,6 +83,8 @@ return [
         ],
         'heading' => "Clé API",
         'hint' => "Pour pouvoir utiliser l'API, vous devez vous authentifier. Ici, vous pouvez créer un code API pour vos appareils. <b>Indications</b>: Les nouveaux modèles créés ne sont pas toujours disponibles. Il convient de les spécifier après leur création.",
+        'delete' => "Supprimer",
+        'copy' => "Copie",
     ],
     'api-docs' => [
         'hint' => "Vous trouverez ci-dessous la documentation de notre API, que vous pouvez utiliser pour récupérer les journaux de notre serveur.",
@@ -86,5 +95,7 @@ return [
         'hint' => 'Veuillez vous connecter pour accéder à votre compte.',
         'email_sent' => 'Si ce compte est déjà enregistré, nous vous avons envoyé un code de connexion par e-mail. Veuillez le saisir pour vous connecter.',
         'code' => 'Code de connexion',
+        'email' => 'Adresse électronique',
+        'submit' => 'Soumettre',
     ],
 ];

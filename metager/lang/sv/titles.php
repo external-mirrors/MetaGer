@@ -34,4 +34,9 @@ return [
     'membership' => 'Ditt medlemskap i SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
     'help-glossary' => 'Ordlista - MetaGer',
+    'logs' => [
+        'admin' => "Loggar Admin - MetaGer",
+        'overview' => 'Loggar - MetaGer',
+        'login' => "Loggar Admin - MetaGer",
+    ],
 ];

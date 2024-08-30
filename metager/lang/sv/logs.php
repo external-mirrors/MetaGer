@@ -1,1 +1,90 @@
 <?php
+return [
+    'overview' => [
+        'abo' => [
+            'interval' => [
+                'label' => "Betalningsintervall",
+                'setting_values' => [
+                    'never' => "Aldrig",
+                    'monthly' => "månadsvis",
+                    'six-monthly' => "halvårsvis",
+                    'quarterly' => "kvartalsvis",
+                    'annual' => "årligen",
+                ],
+            ],
+            'last_invoice' => "Senaste fakturan",
+            'create' => "Ställ in",
+            'never' => "Aldrig",
+            'hint' => "Här kan du ställa in åtkomst till MetaGers sökfrågeloggar för de kommande månaderna. Tillgången kommer automatiskt att förnyas vid det valda betalningsintervallet.",
+            'update' => "Uppdatering",
+            'heading' => "Tillgång till aktuella data",
+            'next_invoice' => "Nästa faktura",
+        ],
+        'invoice-data' => [
+            'company' => "Företag",
+            'city' => "Stad",
+            'first_name' => "Förnamn",
+            'last_name' => "Efternamn",
+            'postal_code' => "Postnummer",
+            'update' => "Uppdatera fakturauppgifter",
+            'street' => "Gatu- och husnummer",
+        ],
+        'hint' => 'Här hittar du en översikt över dina beställningar och information om hur du använder API:et. Se till att följande fakturauppgifter är aktuella och korrekta',
+    ],
+    'orders' => [
+        'status' => [
+            '1' => "Utkast",
+            '-3' => "Visas",
+            '-2' => "Utestående betalning",
+            '-1' => "Försenad",
+            '2' => "Levereras",
+            '3' => "Delvis betald",
+            '4' => "Färdigställd",
+            '5' => "Annullerad",
+            '6' => "Återbetalning",
+        ],
+        'thead' => [
+            'status' => "Fakturans status",
+            'from' => "Åtkomst från",
+            'to' => "Tillträde fram till",
+            'price' => "Fakturans belopp",
+        ],
+    ],
+    'api_keys' => [
+        'thead' => [
+            'name' => "Enhet",
+            'key' => "nyckel",
+            'created_at' => "Skapad",
+            'accessed_at' => "Senaste åtkomst",
+        ],
+        'new' => [
+            'heading' => "Skapa ny nyckel",
+            'submit' => "Skapa",
+            'placeholder_name' => "Bärbar dator",
+            'name' => "Enhetens namn",
+        ],
+        'heading' => "API-nyckel",
+        'hint' => "För att API:et ska kunna användas måste du autentisera dig. Här kan du skapa en API-nyckel för dina enheter. <b>Hänvisning</b>: Nytillverkade nycklar är endast en gång tillgängliga. Vänligen spara dessa efter skapandet.",
+    ],
+    'create_abo' => [
+        'conditions' => "Villkor och anvisningar",
+        'amount' => "Skall göras vid varje betalning",
+        'heading' => "Sätt upp prenumeration",
+        'conditions_nda' => "De uppgifter som tillhandahålls kan innehålla personuppgifter, även om de är osorterade. Av denna anledning får uppgifterna inte göras allmänt tillgängliga av dig i någon form. Detta gäller i synnerhet själva rådata, men även modeller som tagits fram utifrån dessa inom maskininlärning. Det är dock möjligt att ge allmänheten tillgång till svaren från en modell. Läs följande NDA (sekretessavtal) noggrant och spara det för dina egna register innan du godkänner det genom att fortsätta.",
+        'accept' => "Jag godkänner NDA (non-disclosure agreement) och betalningsvillkoren",
+        'conditions_hint' => "Vi utfärdar automatiskt en faktura för varje betalningsintervall. Din åtkomst inkluderar åtkomst till MetaGer-loggarna för alla månader som ingår i faktureringsperioden (inklusive den aktuella). Fakturan för följande period kommer att utfärdas en månad före starten, om möjligt, så att sömlös användning är möjlig.",
+        'nda' => "NDA (avtal om tystnadsplikt)",
+        'cancel' => "Avsluta nuvarande prenumeration",
+        'interval' => "Betalningsintervall",
+    ],
+    'login' => [
+        'code' => 'Inloggningskod',
+        'restart' => 'Ny inloggning',
+        'hint' => 'Logga in för att få tillgång till ditt konto.',
+        'email_sent' => 'Om detta konto redan är registrerat har vi skickat en inloggningskod till dig via e-post. Vänligen ange den för att logga in.',
+    ],
+    'api-docs' => [
+        'hint' => "Nedan hittar du vår API-dokumentation, som du kan använda för att hämta loggar från vår server.",
+        'link' => "API-dokumentation",
+    ],
+];

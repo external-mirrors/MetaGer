@@ -56,6 +56,10 @@ spec:
             value: "127.0.0.1"
           - name: REDIS_PORT
             value: "6379"
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -123,6 +127,10 @@ spec:
             value: "127.0.0.1"
           - name: REDIS_PORT
             value: "6379"
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -169,6 +177,10 @@ spec:
             value: "127.0.0.1"
           - name: REDIS_PORT
             value: "6379"
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

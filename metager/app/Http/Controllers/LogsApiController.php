@@ -259,6 +259,8 @@ class LogsApiController extends Controller
                 $key_entry = DB::table("logs_access_key")->where("id", $id)->first();
                 if (!is_null($key_entry) && Hash::check($token, $key_entry->key)) {
                     $email = $key_entry->user_email;
+                    // Log latest usage to DB
+                    DB::table("logs_access_key")->where("id", $id)->update(["accessed_at" => now("UTC")]);
                 }
             }
         }
@@ -266,7 +268,6 @@ class LogsApiController extends Controller
         if ($email == null) {
             throw new AuthorizationException("You are not authorized to access this resource");
         }
-
 
         $validator = Validator::make($request->all(), [
             "start_date" => "required|date|date_format:Y-m-d H:i:s",

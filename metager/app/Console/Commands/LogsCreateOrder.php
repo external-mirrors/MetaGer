@@ -58,8 +58,8 @@ class LogsCreateOrder extends Command
                     });
             })
             ->whereNull('lo2.user_email')
-            ->where('latest_order_to', '<=', $all_before->format("Y-m-d"))
-            ->orWhereNull("latest_order_to")
+            ->where('lo.to', '<=', $all_before->format("Y-m-d"))
+            ->orWhereNull("lo.to")
             ->get();
 
 

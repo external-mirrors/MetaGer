@@ -34,4 +34,9 @@ return [
     'membership' => 'Jäsenyytesi SUMA-EV:ssä',
     'adblocker' => 'Mainostenestimet - MetaGer',
     'help-glossary' => 'Sanasto - MetaGer',
+    'logs' => [
+        'admin' => "Lokit Admin - MetaGer",
+        'overview' => 'Lokit - MetaGer',
+        'login' => "Lokit Admin - MetaGer",
+    ],
 ];

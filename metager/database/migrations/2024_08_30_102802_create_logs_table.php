@@ -25,7 +25,11 @@ return new class extends Migration {
             // ToDo
         } else {
             Schema::create('logs_partitioned', function (Blueprint $table) {
-                $table->timestamp("time");
+                if (config("database.default") === "sqlite") {
+                    $table->integer("time");    // There is no "timestamp" type in sqlite
+                } else {
+                    $table->dateTime("time");
+                }
                 $table->string("referer", 250)->nullable();
                 $table->float("request_time", 2)->nullable();
                 $table->string("focus", 20)->nullable();

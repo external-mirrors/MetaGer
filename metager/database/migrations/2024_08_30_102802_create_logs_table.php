@@ -10,6 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
+        if (Schema::hasTable("logs_partitioned")) {
+            return;
+        }
         if (config("database.default") === "pgsql") {
             DB::statement("CREATE TABLE logs_partitioned(
                 time    timestamp not null,

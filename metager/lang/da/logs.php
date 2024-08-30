@@ -5,6 +5,8 @@ return [
         'hint' => 'Log ind for at få adgang til din konto.',
         'email_sent' => 'Hvis denne konto allerede er registreret, har vi sendt dig en login-kode via e-mail. Indtast den venligst for at logge ind.',
         'code' => 'Login-kode',
+        'email' => 'E-mail-adresse',
+        'submit' => 'Indsend',
     ],
     'overview' => [
         'abo' => [
@@ -34,6 +36,10 @@ return [
             'first_name' => "Fornavn",
             'last_name' => "Efternavn",
             'postal_code' => "Postnummer",
+            'heading' => "Fakturadato",
+            'email' => "E-mail-adresse",
+            'full_name' => "Navn",
+            'save' => "Gem",
         ],
         'hint' => 'Her finder du en oversigt over dine ordrer og oplysninger om brug af API\'en. Sørg for, at følgende fakturadata er opdaterede og korrekte',
     ],
@@ -60,9 +66,12 @@ return [
             'name' => "Enhed",
             'key' => "nøgle",
             'created_at' => "Oprettet",
+            'actions' => "Handlinger",
         ],
         'heading' => "API-nøgle",
         'hint' => "For at kunne spørge om API'en skal du autentificere dig. Her kan du oprette en API-nøgle til dine apparater. <b>Henvisning</b>: Nyoprettede nøgler er kun en gang tilgængelige. Venligst gem dem efter udarbejdelsen.",
+        'delete' => "Slet",
+        'copy' => "Kopi",
     ],
     'api-docs' => [
         'link' => "API-dokumentation",
@@ -85,6 +94,8 @@ return [
             'price' => "Fakturabeløb",
             'from' => "Adgang fra",
             'to' => "Adgang indtil",
+            'invoice' => "Faktura",
         ],
+        'heading' => "Bestillinger",
     ],
 ];

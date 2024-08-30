@@ -1,1 +1,90 @@
 <?php
+return [
+    'login' => [
+        'restart' => 'Nyt login',
+        'hint' => 'Log ind for at få adgang til din konto.',
+        'email_sent' => 'Hvis denne konto allerede er registreret, har vi sendt dig en login-kode via e-mail. Indtast den venligst for at logge ind.',
+        'code' => 'Login-kode',
+    ],
+    'overview' => [
+        'abo' => [
+            'interval' => [
+                'label' => "Betalingsinterval",
+                'setting_values' => [
+                    'never' => "Aldrig",
+                    'quarterly' => "kvartalsvis",
+                    'annual' => "hvert år",
+                    'monthly' => "månedligt",
+                    'six-monthly' => "halvårligt",
+                ],
+            ],
+            'create' => "Sæt op",
+            'last_invoice' => "Sidste faktura",
+            'update' => "Opdatering",
+            'heading' => "Adgang til aktuelle data",
+            'next_invoice' => "Næste faktura",
+            'never' => "Aldrig",
+            'hint' => "Her kan du oprette adgang til MetaGers søgeforespørgselslogfiler for de kommende måneder. Adgangen vil automatisk blive fornyet med det valgte betalingsinterval.",
+        ],
+        'invoice-data' => [
+            'company' => "Virksomhed",
+            'update' => "Opdatering af fakturadata",
+            'street' => "Gade og husnummer",
+            'city' => "By",
+            'first_name' => "Fornavn",
+            'last_name' => "Efternavn",
+            'postal_code' => "Postnummer",
+        ],
+        'hint' => 'Her finder du en oversigt over dine ordrer og oplysninger om brug af API\'en. Sørg for, at følgende fakturadata er opdaterede og korrekte',
+    ],
+    'create_abo' => [
+        'conditions' => "Vilkår og betingelser",
+        'conditions_nda' => "De leverede data kan indeholde personoplysninger, selv om de er usorterede. Af denne grund må dataene ikke gøres offentligt tilgængelige af dig i nogen form. Dette omfatter især selve rådataene, men også modeller, der er lært af dem inden for maskinlæring. Offentlig adgang til svarene fra en model er dog mulig. Læs venligst følgende NDA (fortrolighedsaftale) omhyggeligt, og gem den til dine egne optegnelser, før du accepterer den ved at fortsætte.",
+        'accept' => "Jeg accepterer NDA (non-disclosure agreement) og betalingsbetingelserne.",
+        'conditions_hint' => "Vi udsteder automatisk en faktura for hvert betalingsinterval. Din adgang inkluderer adgang til MetaGer-logfiler for alle måneder, der er inkluderet i faktureringsperioden (inklusive den aktuelle). Fakturaen for den følgende periode vil blive udstedt en måned før starten, hvis det er muligt, så problemfri brug er mulig.",
+        'nda' => "NDA (aftale om hemmeligholdelse)",
+        'cancel' => "Opsig nuværende abonnement",
+        'interval' => "Betalingsinterval",
+        'amount' => "Skal foretages med hver betaling",
+        'heading' => "Opret abonnement",
+    ],
+    'api_keys' => [
+        'new' => [
+            'name' => "Enhedens navn",
+            'heading' => "Opret ny nøgle",
+            'submit' => "Opret",
+            'placeholder_name' => "Bærbar computer",
+        ],
+        'thead' => [
+            'accessed_at' => "Sidste adgang",
+            'name' => "Enhed",
+            'key' => "nøgle",
+            'created_at' => "Oprettet",
+        ],
+        'heading' => "API-nøgle",
+        'hint' => "For at kunne spørge om API'en skal du autentificere dig. Her kan du oprette en API-nøgle til dine apparater. <b>Henvisning</b>: Nyoprettede nøgler er kun en gang tilgængelige. Venligst gem dem efter udarbejdelsen.",
+    ],
+    'api-docs' => [
+        'link' => "API-dokumentation",
+        'hint' => "Nedenfor finder du vores API-dokumentation, som du kan bruge til at hente logfiler fra vores server.",
+    ],
+    'orders' => [
+        'status' => [
+            '3' => "Delvist betalt",
+            '1' => "Udkast",
+            '-3' => "Set",
+            '-2' => "Udestående betaling",
+            '4' => "Afsluttet",
+            '-1' => "Forsinket",
+            '5' => "Annulleret",
+            '6' => "Tilbagebetalt",
+            '2' => "Leveret",
+        ],
+        'thead' => [
+            'status' => "Fakturastatus",
+            'price' => "Fakturabeløb",
+            'from' => "Adgang fra",
+            'to' => "Adgang indtil",
+        ],
+    ],
+];

@@ -3,6 +3,8 @@
 @section('title', $title)
 
 @section('content')
-<h1>Are you interested in giving your company a boost?</h1>
-<p>Then our native and SERP advertisements are </p>
+<h1>@lang("advertising/overview.heading")</h1>
+<div id="keywords">
+    <h2>@lang("advertising/overview.keywords.heading")</h2>
+</div>
 @endsection

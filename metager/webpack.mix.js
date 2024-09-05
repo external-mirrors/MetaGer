@@ -72,10 +72,7 @@ mix
     "resources/less/metager/pages/admin/logs.less",
     "public/css/admin/logs.css"
   )
-  .less(
-    "resources/less/metager/pages/logs.less",
-    "public/css/logs.css"
-  )
+  .less("resources/less/metager/pages/logs.less", "public/css/logs.css")
   .less(
     "resources/less/metager/pages/help-easy-language.less",
     "public/css/help-easy-language.css"
@@ -125,6 +122,14 @@ mix
     "public/css/widget/widget.css"
   )
   .less("resources/less/metager/pages/privacy.less", "public/css/privacy.css")
+  .less(
+    "resources/less/metager/pages/advertising/light.less",
+    "public/css/advertising/light.css"
+  )
+  .less(
+    "resources/less/metager/pages/advertising/dark.less",
+    "public/css/advertising/dark.css"
+  )
   .js(["resources/js/startpage/app.js"], "public/js/startpage/app.js")
   .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")

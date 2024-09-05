@@ -60,6 +60,7 @@ class LogsCreateInvoice extends Command
                     'due_date' => $due_date->format("Y-m-d"),
                     'tax_name1' => "Umsatzsteuer",
                     "tax_rate1" => 19,
+                    "uses_inclusive_taxes" => false,
                     'line_items' => [
                         [
                             'notes' => $notes,

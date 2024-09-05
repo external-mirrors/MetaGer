@@ -19,6 +19,7 @@ use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
 use App\Localization;
+use App\Models\Authorization\Authorization;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -341,6 +342,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
                 mix('/css/plugin-page.css'),
             ]);
     })->name("plugin");
+
+    Route::get('coupon', function (Request $request) {
+        return redirect(LaravelLocalization::getLocalizedURL(null, url("/keys/key/enter")));
+    });
 
     Route::get('tiles', [TilesController::class, 'loadTakeTiles'])->name("tiles");
 

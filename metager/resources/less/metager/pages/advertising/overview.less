@@ -10,13 +10,14 @@
     display: grid;
     row-gap: 2rem;
     z-index: 1;
-    margin-top: 20%;
+    margin-block: 20%;
     background-color: @background-color;
     border-radius: 20px;
     padding: 1rem;
     box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.5);
     > div.teaser {
       display: flex;
+      row-gap: 1rem;
       max-width: 100%;
       overflow: hidden;
       align-items: center;
@@ -31,7 +32,11 @@
       }
       @media (max-width: 860px) {
         flex-direction: column;
-        &:nth-child(even) {
+        > img {
+          width: unset;
+          height: 200px;
+        }
+        &:nth-child(odd) {
           flex-direction: column-reverse;
         }
       }
@@ -43,7 +48,8 @@
         color: white;
         font-weight: bold;
         border-radius: 10px;
-        padding: 0.5rem 1rem;
+        padding: 1rem;
+        font-size: 1.1rem;
       }
     }
   }

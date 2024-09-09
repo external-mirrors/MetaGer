@@ -34,4 +34,9 @@ return [
     'membership' => 'Su afiliación a SUMA-EV',
     'adblocker' => 'Adblockers - MetaGer',
     'help-glossary' => 'Glosario - MetaGer',
+    'logs' => [
+        'admin' => "Logs Admin - MetaGer",
+        'overview' => 'Registros - MetaGer',
+        'login' => "Logs Admin - MetaGer",
+    ],
 ];

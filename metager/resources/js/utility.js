@@ -47,6 +47,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
   }
 
+  // Add a element with the ID "plugin-btn" if it does not exist on this page
+  // Used to determine if a web extension is installed
+  if (document.getElementById("plugin-btn") == null) {
+    let new_container = document.createElement("div");
+    new_container.classList.add("hidden");
+    new_container.id = "plugin-btn";
+    document.querySelector("body").appendChild(new_container);
+  }
+
   backButtons();
 });
 
@@ -54,6 +63,7 @@ reportJSAvailabilityForAuthenticatedSearch();
 function reportJSAvailabilityForAuthenticatedSearch() {
   let Cookies = require("js-cookie");
   let key_cookie = Cookies.get("key");
+
   if (key_cookie !== undefined) {
     Cookies.set("js_available", "true", { sameSite: 'Lax' });
   }
@@ -78,3 +88,32 @@ function backButtons() {
 (async () => {
   statistics.registerPageLoadEvents();
 })();
+
+document.addEventListener("readystatechange", e => {
+  if (document.readyState == "complete") {
+    setTimeout(() => {
+      // Check if a web extension is active
+      let extension_installed = document.getElementById("plugin-btn") == null;
+      if (extension_installed) {
+        updateWebExtensionStatus((new Date()).getTime());
+      } else {
+        updateWebExtensionStatus("no");
+      }
+    }, 250);
+  }
+})
+
+function updateWebExtensionStatus(time) {
+  let Cookies = require("js-cookie");
+  let extension_cookie = Cookies.get("webextension");
+  if (time != "no" && extension_cookie == undefined) {
+    Cookies.set("webextension", time, { sameSite: "Lax" });
+  } else if (time == "no" && extension_cookie != undefined) {
+    Cookies.remove("webextension");
+  }
+  if (localStorage) {
+    localStorage.setItem("webextension", time);
+  }
+  window.webextension = time;
+  window.dispatchEvent(new CustomEvent("webextension_status_update", { detail: time }));
+}

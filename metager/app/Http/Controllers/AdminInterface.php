@@ -63,12 +63,10 @@ class AdminInterface extends Controller
 
         $interface = $request->input('interface', 'all');
 
-        $connection = DB::connection("logs");
-        $log_summary = $connection
-            ->table(
-                $connection->table("logs_partitioned")->select(["*"])->whereRaw("time between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'"),
-                "data"
-            )
+        $log_summary = DB::table(
+            DB::table("logs_partitioned")->select(["*"])->whereRaw("time between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59'"),
+            "data"
+        )
             ->select(DB::raw("date_trunc('hour', data.time) AS timestamp, count(*)"))
 
             #DB::raw("(select * from logs l where (l.time at time zone 'UTC') between '" . $date->format("Y-m-d") . " 00:00:00' and '" . $date->format("Y-m-d") . " 23:59:59') as data"))

@@ -19,24 +19,6 @@ class TilesController extends Controller
 {
     const CACHE_DURATION_SECONDS = 300;
 
-    public function loadTakeTiles(\Illuminate\Http\Request $request)
-    {
-        if (!$request->filled("ckey") || !Cache::has($request->input("ckey"))) {
-            abort(404);
-        }
-        $ckey = $request->input("ckey");
-        $count = $request->input("count", 4);
-        $tiles = [];
-        $tiles = self::TAKE_TILES($ckey, $count);
-        StatisticsController::LOG_STATISTICS([
-            "e_c" => "Take Tiles",
-            "e_a" => "Load",
-            "e_n" => "Take Tiles",
-            "e_v" => sizeof($tiles),
-        ]);
-        return response()->json($tiles);
-    }
-
     /**
      * Generate Tiles for a given request
      * This includes static TIles and SUMA Tiles
@@ -86,8 +68,13 @@ class TilesController extends Controller
         }
         $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: $plugin_url, image_alt: "MetaGer Plugin Logo", classes: $classes, target: $target, id: "plugin-btn");
 
-        $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
-        //$tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
+        if (!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)) {
+        $tiles[] = new Tile(title: __('index.adfree'), image: "/img/svg-icons/lock.svg", url: app(\App\Models\Authorization\Authorization::class)->getAdfreeLink(), image_alt: __('mg-story.privacy.image.alt'), image_classes: "invert-dm");
+        }
+
+        if (Localization::getLanguage() === "de")
+            $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
+        $tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
         $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
 
         return $tiles;
@@ -101,71 +88,6 @@ class TilesController extends Controller
     private static function SUMA_TILES(): array
     {
         $tiles = [];
-        return $tiles;
-    }
-
-    /**
-     * Generates Tile ads from Takeads
-     * 
-     * @return array
-     */
-    private static function TAKE_TILES(string $ckey, int $count): array
-    {
-        $tiles = [];
-
-        // Check if the user has disabled tiles => Allow disabling the ads on the startpage for now aswell
-        if (!app(SearchSettings::class)->tiles_startpage)
-            return $tiles;
-        $cc = Localization::getRegion();
-        $result_cache_key = "taketiles:fetch:$ckey:$cc:$count";
-
-        $result = Cache::get($result_cache_key);
-        if ($result === null) {
-            $supported_countries = ["US", "GB", "DE", "AT", "CH", "TR"];
-            if (!config("metager.taketiles.enabled") || !in_array($cc, $supported_countries)) {
-                return $tiles;
-            }
-            if (app(Authorization::class)->canDoAuthenticatedSearch(false))
-                return $tiles;
-
-            $endpoint = config("metager.taketiles.endpoint");
-            $params = [
-                "count" => $count,
-                "deviceId" => $ckey,
-                "countryCode" => $cc
-            ];
-            $mission = [
-                "resulthash" => $result_cache_key,
-                "url" => $endpoint . "?" . http_build_query($params),
-                "useragent" => Request::useragent(),
-                "headers" => [
-                    "Content-Type" => "application/json",
-                    "Authorization" => "Bearer " . config("metager.taketiles.public_key"),
-                ],
-                "cacheDuration" => ceil(self::CACHE_DURATION_SECONDS / 60),
-                "name" => "Take Tiles",
-            ];
-            $mission = json_encode($mission);
-            Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-            Cache::put($ckey, "1", now()->addSeconds(self::CACHE_DURATION_SECONDS));
-            $result = Redis::blpop($result_cache_key, 0);
-            if (sizeof($result) === 2) {
-                $result = $result[1];
-            }
-        }
-
-        if ($result !== null) {
-            try {
-                $result = json_decode($result);
-                foreach ($result->data as $result_tile) {
-                    $tiles[] = new Tile(title: $result_tile->title, image: $result_tile->image, image_alt: $result_tile->title . " Image", url: $result_tile->url, advertisement: true);
-                }
-            } catch (Exception $e) {
-                Log::error($e);
-            }
-
-        }
-
         return $tiles;
     }
 }

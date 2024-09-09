@@ -32,7 +32,7 @@
     </div>
     <div id="membership-fee">
         <h3>2. Ihr Mitgliedsbeitrag</h3>
-        <div>Wählen Sie nachfolgend bitte Ihren gewünschten monatlichen Mitgliedsbeitrag aus.</div>
+        <div>Wählen Sie nachfolgend bitte Ihren gewünschten <em>monatlichen</em> Mitgliedsbeitrag aus.</div>
         @if(isset($errors) && $errors->has("amount"))
         @foreach($errors->get("amount") as $error)
         <div class="error">{{ $error }}</div>
@@ -44,10 +44,6 @@
         @endforeach
         @endif
         <div class="input-group">
-            <input type="radio" name="amount" id="amount-5" value="5.00" @if(Request::input('amount', '') === "5.00")checked @endif required />
-            <label for="amount-5">5€</label>
-        </div>
-        <div class="input-group">
             <input type="radio" name="amount" id="amount-10" value="10.00" @if(!Request::has('amount') || Request::input('amount') === "10.00")checked @endif required/>
             <label for="amount-10">10€</label>
         </div>
@@ -55,10 +51,14 @@
             <input type="radio" name="amount" id="amount-15" value="15.00" @if(Request::input('amount', '') === "15.00")checked @endif required />
             <label for="amount-15">15€</label>
         </div>
+        <div class="input-group">
+            <input type="radio" name="amount" id="amount-20" value="20.00" @if(Request::input('amount', '') === "20.00")checked @endif required />
+            <label for="amount-20">20€</label>
+        </div>
         <div class="input-group custom">
             <input type="radio" name="amount" id="amount-custom" value="custom" @if(Request::input('amount', '') === "custom")checked @endif required />
             <label for="amount-custom">Wunschbetrag</label>
-            <input type="number" name="custom-amount" id="amount-custom-value" step="0.01" min="2.5" value="{{ Request::input('custom-amount', '5,00') }}" placeholder="5,00€" />
+            <input type="number" name="custom-amount" id="amount-custom-value" step="0.01" min="2.5" value="{{ Request::input('custom-amount', '10,00') }}" placeholder="10,00€" />
         </div>
     </div>
     <div id="membership-payment">
@@ -68,6 +68,9 @@
         <div class="error">{{ $error }}</div>
         @endforeach
         @endif
+        <div>
+        Wenn Sie ein anderes Intervall als monatlich angeben, wird ein entsprechendes Vielfaches Ihres monatlichen Beitrages im gewählten Intervall abgebucht.
+        </div>
         <div id="membership-interval">
             <div class="input-group monthly">
                 <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval') || Request::input('interval') === "annual")checked @endif required>

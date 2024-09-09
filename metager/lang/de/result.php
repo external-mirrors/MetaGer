@@ -18,7 +18,7 @@ return [
     'advertisement' => 'Anzeige',
     'providers' => 'Anbietern',
     'proxytext' => 'Der Link wird anonymisiert geöffnet. Ihre Daten werden nicht zum Zielserver übertragen. Möglicherweise funktionieren manche Webseiten nicht wie gewohnt.',
-    'metagerkeytext' => 'MetaGer werbefrei',
+    'metagerkeytext' => 'MetaGer werbefrei nutzen',
     'news' => 'Relevante Nachrichten',
     'more-news' => 'mehr',
     'videos' => "Videos",

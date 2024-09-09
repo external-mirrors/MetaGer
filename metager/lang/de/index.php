@@ -21,7 +21,7 @@ return [
         'produkte' => 'Produkte',
         'maps' => 'Maps',
     ],
-    'adfree' => 'MetaGer werbefrei nutzen',
+    'adfree' => 'MetaGer werbefrei',
     'skip' => [
         'search' => 'Weiter zur Eingabe der Suchanfrage',
         'navigation' => 'Zur Navigation springen',

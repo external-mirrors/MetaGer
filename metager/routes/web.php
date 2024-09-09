@@ -353,7 +353,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
-    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification')->name("resultpage");
 
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
 

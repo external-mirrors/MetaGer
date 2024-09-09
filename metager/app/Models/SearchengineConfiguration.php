@@ -52,6 +52,11 @@ class SearchengineConfiguration
     /** @var SearchEngineInfos */
     public $infos;
     /**
+     * Additional curlopts which should be set for the query
+     * @var array
+     */
+    public array $curl_opts = [];
+    /**
      * @param object $engineConfigurationJson
      */
     public function __construct($engineConfigurationJson)

@@ -155,6 +155,7 @@ abstract class Searchengine
                 "headers" => (array) $this->configuration->requestHeader,
                 "cacheDuration" => $this->configuration->cacheDuration,
                 "name" => $this->name,
+                "curlopts" => $this->configuration->curl_opts,
             ];
 
             $mission = json_encode($mission);

@@ -29,4 +29,10 @@ return [
     ],
     'lang' => 'wwitch språk',
     'searchreset' => 'radera sökfråga inmatning',
+    'searchbar-replacement' => [
+        'message' => 'MetaGer-sökmotorn är nu endast tillgänglig utan reklam!',
+        'login' => 'Logga in',
+        'start' => 'Börja nu!',
+        'read-more' => 'Läs mer...',
+    ],
 ];

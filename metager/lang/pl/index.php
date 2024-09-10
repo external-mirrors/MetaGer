@@ -29,4 +29,10 @@ return [
     ],
     'lang' => 'język przełącznika',
     'searchreset' => 'usuń wprowadzone zapytanie wyszukiwania',
+    'searchbar-replacement' => [
+        'start' => 'Zacznij teraz!',
+        'message' => 'Wyszukiwarka MetaGer jest teraz dostępna wyłącznie bez reklam!',
+        'read-more' => 'Czytaj więcej...',
+        'login' => 'Zaloguj się',
+    ],
 ];

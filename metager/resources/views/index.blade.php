@@ -22,6 +22,7 @@
   class="active" aria-current="page" @endif>@lang("index.foki.maps")</a>
     </li>
   </ul>
+
   <div id="search-wrapper">
     <h1 id="startpage-logo">
       <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
@@ -31,6 +32,14 @@
         <span>{{ App\Localization::getRegion() }}</span>
       </a>
     </h1>
+
+    @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
+    <div id="searchbar-replacement" style="">
+      <span>MetaGer gibt es jetzt nur noch werbefrei!</span><br>
+      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">Mehr erfahren...</a><br>
+      <a href="https://metager.de/keys/key/enter" class="btn login" style="">Einloggen</a><a href="https://metager.de/keys/key/create#create" class="btn create-key" style="border: 1px solid black;">Jetzt einsteigen</a>
+    </div>
+    @endif
     @include('parts.searchbar', ['class' => 'startpage-searchbar'])
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">

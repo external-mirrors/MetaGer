@@ -35,9 +35,9 @@
 
     @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
     <div id="searchbar-replacement" style="">
-      <span>MetaGer gibt es jetzt nur noch werbefrei!</span><br>
-      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">Mehr erfahren...</a><br>
-      <a href="https://metager.de/keys/key/enter" class="btn login" style="">Einloggen</a><a href="https://metager.de/keys/key/create#create" class="btn create-key" style="border: 1px solid black;">Jetzt einsteigen</a>
+      <span>@lang("index.searchbar-replacement.message")</span><br>
+      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a><br>
+      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a><a href="/keys/key/create#create" class="btn create-key" style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
     </div>
     @else
     @include('parts.searchbar', ['class' => 'startpage-searchbar'])

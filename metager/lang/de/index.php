@@ -29,4 +29,10 @@ return [
     ],
     'lang' => 'Hexensprache',
     'searchreset' => 'Eingabe der Suchanfrage löschen',
+    'searchbar-replacement' => [
+        'read-more' => 'Mehr erfahren...',
+        'message' => 'Die Suchmaschine MetaGer ist jetzt nur noch werbefrei verfügbar!',
+        'login' => 'Einloggen',
+        'start' => 'Starten Sie jetzt!',
+    ],
 ];

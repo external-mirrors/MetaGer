@@ -33,15 +33,17 @@
       </a>
     </h1>
 
-    @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
+    @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false) && !in_array(request()->ip(), explode(",", config("metager.metager.unauth_whitelist"))))
     <div id="searchbar-replacement" style="">
       <span>@lang("index.searchbar-replacement.message")</span><br>
       <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a><br>
-      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a><a href="/keys/key/create#create" class="btn create-key" style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a><a
+      href="/keys/key/create#create" class="btn create-key"
+      style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
     </div>
-    @else
-    @include('parts.searchbar', ['class' => 'startpage-searchbar'])
-    @endif
+  @else
+  @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+@endif
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif

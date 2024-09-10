@@ -29,4 +29,10 @@ return [
     ],
     'lang' => 'langue wwitch',
     'searchreset' => 'supprimer l\'entrée de la requête de recherche',
+    'searchbar-replacement' => [
+        'message' => 'Le moteur de recherche MetaGer est désormais disponible uniquement sans publicité !',
+        'read-more' => 'Lire la suite...',
+        'login' => 'Se connecter',
+        'start' => 'Commencez dès maintenant !',
+    ],
 ];

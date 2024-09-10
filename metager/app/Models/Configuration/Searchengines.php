@@ -87,28 +87,6 @@ class Searchengines
             $suma->configuration->applyLocale();
         }
 
-        // Enable Yahoo Ads if query is unauthorized and yahoo is disabled
-        // Do not enable yahoo-ads anymore. For now temporarily
-        // ToDo: Remove or enable again
-        if (1 == 0 && !app(Authorization::class)->canDoAuthenticatedSearch() && $settings->fokus !== "bilder" && array_key_exists("yahoo", $this->sumas) && array_key_exists("yahoo-ads", $this->sumas)) {
-            if ($this->sumas["yahoo"]->configuration->disabled === true) {
-                $this->sumas["yahoo-ads"]->configuration->disabled = false;
-            }
-        }
-
-        // If user manuall
-
-        // Disable other searchengines if yahoo is enabled
-        if (1 == 0 && $this->sumas["yahoo"]->configuration->disabled === false) {
-            foreach ($this->sumas as $suma_name => $suma) {
-                if ($suma_name === "yahoo")
-                    continue;
-                $suma->configuration->disabled = true;
-                $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
-                $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
-            }
-        }
-
         $settings->loadQueryFilter();
         $settings->loadParameterFilter($this);
         $authorization = app(Authorization::class);

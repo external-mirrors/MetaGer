@@ -18,6 +18,7 @@ use App\Http\Controllers\SuggestionController;
 use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
+use App\Http\Middleware\AuthenticationValidation;
 use App\Localization;
 use App\Models\Authorization\Authorization;
 use Jenssegers\Agent\Agent;
@@ -353,7 +354,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
-    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware('httpcache', 'externalimagesearch', 'spam', 'browserverification', 'humanverification', 'useragentmaster')->name("resultpage");
+    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', 'externalimagesearch', 'spam', 'browserverification', AuthenticationValidation::class])->name("resultpage");
 
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
 

@@ -22,6 +22,7 @@
   class="active" aria-current="page" @endif>@lang("index.foki.maps")</a>
     </li>
   </ul>
+
   <div id="search-wrapper">
     <h1 id="startpage-logo">
       <a class="logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
@@ -31,7 +32,25 @@
         <span>{{ App\Localization::getRegion() }}</span>
       </a>
     </h1>
-    @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+
+    @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false) && !in_array(request()->ip(), explode(",", config("metager.metager.unauth_whitelist"))))
+    <div id="searchbar-replacement" style="">
+      <div>@lang("index.searchbar-replacement.message")</div>
+
+      @if(\App\Localization::getLanguage() === "de")
+      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
+    @else
+      <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
+    @endif
+      <div>
+      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a>
+      <a href="/keys/key/create#create" class="btn create-key"
+        style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+      </div>
+    </div>
+  @else
+  @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+@endif
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif

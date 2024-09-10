@@ -29,4 +29,11 @@ return [
         'maps' => 'Maps'
     ],
     'adfree' => 'MetaGer ad-free',
+    'searchbar-replacement' => [
+        'message' => 'The MetaGer search engine is now only available ad-free!',
+        'read-more' => 'Read More...',
+        'login' => 'Log In',
+        'start' => 'Start now!',
+
+    ]
 ];

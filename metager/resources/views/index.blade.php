@@ -39,8 +39,9 @@
       <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">Mehr erfahren...</a><br>
       <a href="https://metager.de/keys/key/enter" class="btn login" style="">Einloggen</a><a href="https://metager.de/keys/key/create#create" class="btn create-key" style="border: 1px solid black;">Jetzt einsteigen</a>
     </div>
-    @endif
+    @else
     @include('parts.searchbar', ['class' => 'startpage-searchbar'])
+    @endif
     @if(Request::filled('key'))
     <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
   @endif

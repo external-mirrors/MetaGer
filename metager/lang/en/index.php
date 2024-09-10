@@ -30,7 +30,7 @@ return [
     ],
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [
-        'message' => 'MetaGer searchengine is now only available ad-free!',
+        'message' => 'The MetaGer search engine is now only available ad-free!',
         'read-more' => 'Read More...',
         'login' => 'Log In',
         'start' => 'Start now!',

@@ -35,11 +35,18 @@
 
     @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false) && !in_array(request()->ip(), explode(",", config("metager.metager.unauth_whitelist"))))
     <div id="searchbar-replacement" style="">
-      <span>@lang("index.searchbar-replacement.message")</span><br>
-      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a><br>
-      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a><a
-      href="/keys/key/create#create" class="btn create-key"
-      style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+      <div>@lang("index.searchbar-replacement.message")</div>
+
+      @if(\App\Localization::getLanguage() === "de")
+      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
+    @else
+      <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
+    @endif
+      <div>
+      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a>
+      <a href="/keys/key/create#create" class="btn create-key"
+        style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+      </div>
     </div>
   @else
   @include('parts.searchbar', ['class' => 'startpage-searchbar'])

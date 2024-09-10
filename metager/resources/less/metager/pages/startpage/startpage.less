@@ -12,16 +12,22 @@ html {
   grid-area: search;
   text-align: center;
   line-height: 200%;
-  >.btn.login {
-    text-color: @story-diversity-color;
-    border: 1px solid @story-diversity-color;
-    background-color: @story-diversity-background;
-    margin-right: 5px;
-  }
-  >.btn.create-key {
-    text-color: @story-eco-color;
-    border: 1px solid @story-eco-color;
-    background-color: @story-eco-background;
+  display: grid;
+  row-gap: 0.5rem;
+
+  >div {
+    >.btn.login {
+      color: @story-diversity-color;
+      border: 1px solid @story-diversity-color;
+      background-color: @story-diversity-background;
+      margin-right: 5px;
+    }
+
+    >.btn.create-key {
+      color: @story-eco-color;
+      border: 1px solid @story-eco-color;
+      background-color: @story-eco-background;
+    }
   }
 }
 

@@ -32,6 +32,7 @@ return [
     'searchbar-replacement' => [
         'message' => 'MetaGer-søgemaskinen er nu kun tilgængelig uden reklamer!',
         'login' => 'Log ind',
-        'start' => 'Begynd nu!',
+        'start' => 'Opret en ny nøgle',
+        'why' => 'Hvorfor?',
     ],
 ];

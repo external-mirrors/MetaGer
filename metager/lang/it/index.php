@@ -31,7 +31,9 @@ return [
     'searchreset' => 'eliminare l\'input della query di ricerca',
     'searchbar-replacement' => [
         'message' => 'Il motore di ricerca MetaGer è ora disponibile solo senza pubblicità!',
-        'login' => 'Accedi',
-        'start' => 'Iniziate subito!',
+        'login' => 'Accesso con chiave',
+        'start' => 'Creare una nuova chiave',
+        'why' => 'Perché?',
+        'key_error' => "La chiave inserita non è valida. Controllare l'immissione.",
     ],
 ];

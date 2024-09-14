@@ -30,9 +30,10 @@ return [
     'lang' => 'wwitch kieli',
     'searchreset' => 'poista hakukyselyn syöttö',
     'searchbar-replacement' => [
-        'read-more' => 'Lue lisää...',
-        'login' => 'Kirjaudu sisään',
-        'start' => 'Aloita nyt!',
+        'login' => 'Kirjaudu sisään avaimella',
+        'start' => 'Luo uusi avain',
         'message' => 'MetaGer-hakukone on nyt saatavilla vain ilman mainoksia!',
+        'why' => 'Miksi?',
+        'key_error' => "Syötetty avain ei ollut kelvollinen. Tarkista syöttö.",
     ],
 ];

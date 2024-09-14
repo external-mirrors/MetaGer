@@ -31,8 +31,9 @@ return [
     'searchreset' => 'eliminar la entrada de consulta de búsqueda',
     'searchbar-replacement' => [
         'message' => 'El motor de búsqueda MetaGer ya sólo está disponible sin publicidad.',
-        'read-more' => 'Leer más...',
-        'start' => 'Empieza ya.',
-        'login' => 'Iniciar sesión',
+        'start' => 'Crear una nueva clave',
+        'login' => 'Inicio de sesión con clave',
+        'why' => '¿Por qué?',
+        'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
     ],
 ];

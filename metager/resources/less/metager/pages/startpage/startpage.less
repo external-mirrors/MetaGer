@@ -9,24 +9,42 @@ html {
 }
 
 #searchbar-replacement {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-inline: 1rem;
   grid-area: search;
   text-align: center;
   line-height: 200%;
   display: grid;
   row-gap: 0.5rem;
 
-  >div {
-    >.btn.login {
-      color: @story-diversity-color;
-      border: 1px solid @story-diversity-color;
-      background-color: @story-diversity-background;
-      margin-right: 5px;
+  > div.input-group {
+    display: grid;
+    row-gap: 0.5rem;
+    > label {
+      margin: 0;
+      font-size: 0.8rem;
+      line-height: 1.2;
     }
-
-    >.btn.create-key {
+    > div.inputs {
+      > form {
+        width: 100%;
+        display: flex;
+        > input[type="text"] {
+          flex-grow: 1;
+        }
+      }
+      > .key-error {
+        line-height: 1;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+      }
+    }
+    > .btn.create-key {
       color: @story-eco-color;
       border: 1px solid @story-eco-color;
       background-color: @story-eco-background;
+      display: block;
     }
   }
 }
@@ -35,11 +53,11 @@ div.startpage {
   margin: 0;
   padding: 0;
 
-  >main#main-content {
+  > main#main-content {
     width: 100%;
     max-width: 100%;
 
-    >div#search-content {
+    > div#search-content {
       height: 100vh;
 
       @supports (height: 100dvh) {
@@ -53,7 +71,7 @@ div.startpage {
       display: flex;
       flex-direction: column;
 
-      >ul#foki-switcher {
+      > ul#foki-switcher {
         list-style-type: none;
         display: flex;
         gap: 1rem;
@@ -61,7 +79,7 @@ div.startpage {
         @supports not (selector(:first-child)) {
           gap: 0;
 
-          >* {
+          > * {
             padding: 0 1rem;
           }
         }
@@ -74,8 +92,8 @@ div.startpage {
         margin: 0;
         font-size: clamp(0.7rem, 3vw, 1rem);
 
-        >li {
-          >a {
+        > li {
+          > a {
             color: fade(@text-color, 60%);
 
             &.active {
@@ -85,7 +103,7 @@ div.startpage {
         }
       }
 
-      >div#search-wrapper {
+      > div#search-wrapper {
         display: grid;
         grid-template-rows: 20dvh max-content max-content max-content 1fr;
 
@@ -105,7 +123,7 @@ div.startpage {
         grid-template-columns: 1fr;
         place-content: center;
 
-        >#startpage-quicklinks {
+        > #startpage-quicklinks {
           grid-area: quicklinks;
           display: flex;
           justify-content: center;
@@ -114,7 +132,7 @@ div.startpage {
           @supports not (selector(:first-child)) {
             gap: 0;
 
-            >*:not(:nth-child(1)) {
+            > *:not(:nth-child(1)) {
               padding: 0 0.5rem;
             }
           }
@@ -122,7 +140,7 @@ div.startpage {
           flex-wrap: wrap;
           padding: 1rem;
 
-          >.metager-key {
+          > .metager-key {
             color: inherit;
             display: flex;
             align-items: center;
@@ -131,18 +149,18 @@ div.startpage {
             @supports not (selector(:first-child)) {
               gap: 0;
 
-              >* {
+              > * {
                 padding: 0 0.5rem;
               }
             }
 
-            >img {
+            > img {
               height: 1em;
               rotate: -90deg;
             }
 
             &.no-key {
-              >img {
+              > img {
                 rotate: 0deg;
               }
             }
@@ -153,7 +171,7 @@ div.startpage {
             display: flex;
             align-items: center;
 
-            >img {
+            > img {
               // sets the size for the plugin button
               max-width: 15px;
               max-height: 15px;
@@ -162,26 +180,26 @@ div.startpage {
           }
         }
 
-        >#startpage-logo {
+        > #startpage-logo {
           grid-area: logo;
         }
 
-        >fieldset {
+        > fieldset {
           grid-area: search;
         }
       }
 
-      >#language {
+      > #language {
         text-align: center;
         padding-block: 0.5rem;
 
-        >a {
+        > a {
           font-size: 0.8em;
           color: fade(@text-color, 60%);
         }
       }
 
-      >#scroll-links {
+      > #scroll-links {
         // creates a grid for the story-icons
         min-width: 100%;
         display: flex;
@@ -193,26 +211,26 @@ div.startpage {
           display: none;
         }
 
-        &> :nth-child(1) {
+        & > :nth-child(1) {
           background-color: @story-privacy-background;
         }
 
-        &> :nth-child(2) {
+        & > :nth-child(2) {
           background-color: @story-ngo-background;
           color: @story-ngo-color;
         }
 
-        &> :nth-child(3) {
+        & > :nth-child(3) {
           background-color: @story-diversity-background;
           color: @story-diversity-color;
         }
 
-        &> :nth-child(4) {
+        & > :nth-child(4) {
           background-color: @story-eco-background;
           color: @story-eco-color;
         }
 
-        &>a {
+        & > a {
           display: flex;
           justify-content: center;
           align-items: center;
@@ -223,7 +241,7 @@ div.startpage {
           @supports not (selector(:first-child)) {
             gap: 0;
 
-            >* {
+            > * {
               padding: 0 4px;
             }
           }
@@ -234,7 +252,7 @@ div.startpage {
             flex-direction: column;
           }
 
-          >div {
+          > div {
             font-size: clamp(0.6rem, 2vw, 0.8rem);
           }
 
@@ -245,7 +263,7 @@ div.startpage {
             max-width: 250px;
             align-self: center;
 
-            &>i {
+            & > i {
               font-style: normal;
               display: inline-block;
               padding: 8px 0;
@@ -253,7 +271,7 @@ div.startpage {
             }
           }
 
-          &>img {
+          & > img {
             width: 20px;
             height: 20px;
             min-width: 20px;
@@ -261,15 +279,15 @@ div.startpage {
             object-fit: contain;
           }
 
-          &>span {
+          & > span {
             display: block;
           }
         }
       }
     }
 
-    >div#story-container {
-      >section {
+    > div#story-container {
+      > section {
         // creates the grid for the story sections
         display: grid;
         grid-template-columns: 1fr 3fr;
@@ -294,7 +312,15 @@ div.startpage {
         padding: 8rem 0.5rem;
 
         &:not(:nth-child(1)) {
-          @supports (clip-path: polygon(0 0, 30% 0, 50% 30px, 70% 0, 100% 0, 100% 100%, 0 100%)) or (-webkit-clip-path: polygon(0 0, 40% 0, 50% 30px, 60% 0, 100% 0, 100% 100%, 0 100%)) {
+          @supports (
+              clip-path:
+                polygon(0 0, 30% 0, 50% 30px, 70% 0, 100% 0, 100% 100%, 0 100%)
+            )
+            or
+            (
+              -webkit-clip-path: polygon(0 0, 40% 0, 50% 30px, 60% 0, 100% 0, 100%
+                    100%, 0 100%)
+            ) {
             margin-top: -@clippathHeight;
           }
         }
@@ -316,15 +342,17 @@ div.startpage {
         &#story-ngo {
           grid-area: "icn-ngo";
           background-color: @story-ngo-background;
-          clip-path: polygon(0 0,
-              40% 0,
-              50% @clippathHeight,
-              60% 0,
-              100% 0,
-              100% 100%,
-              0 100%);
+          clip-path: polygon(
+            0 0,
+            40% 0,
+            50% @clippathHeight,
+            60% 0,
+            100% 0,
+            100% 100%,
+            0 100%
+          );
 
-          >h1 {
+          > h1 {
             color: @story-ngo-color;
           }
 
@@ -337,15 +365,17 @@ div.startpage {
         &#story-diversity {
           grid-area: "icn-diversity";
           background-color: @story-diversity-background;
-          clip-path: polygon(0 0,
-              40% 0,
-              50% @clippathHeight,
-              60% 0,
-              100% 0,
-              100% 100%,
-              0 100%);
+          clip-path: polygon(
+            0 0,
+            40% 0,
+            50% @clippathHeight,
+            60% 0,
+            100% 0,
+            100% 100%,
+            0 100%
+          );
 
-          >h1 {
+          > h1 {
             color: @story-diversity-color;
           }
 
@@ -358,15 +388,17 @@ div.startpage {
         &#story-eco {
           grid-area: "icn-eco";
           background-color: @story-eco-background;
-          clip-path: polygon(0 0,
-              40% 0,
-              50% @clippathHeight,
-              60% 0,
-              100% 0,
-              100% 100%,
-              0 100%);
+          clip-path: polygon(
+            0 0,
+            40% 0,
+            50% @clippathHeight,
+            60% 0,
+            100% 0,
+            100% 100%,
+            0 100%
+          );
 
-          >h1 {
+          > h1 {
             color: @story-eco-color;
           }
 
@@ -379,13 +411,15 @@ div.startpage {
         &#story-plugin {
           min-height: 60vh;
           background-color: @story-plugin-background;
-          clip-path: polygon(0 0,
-              40% 0,
-              50% @clippathHeight,
-              60% 0,
-              100% 0,
-              100% 100%,
-              0 100%);
+          clip-path: polygon(
+            0 0,
+            40% 0,
+            50% @clippathHeight,
+            60% 0,
+            100% 0,
+            100% 100%,
+            0 100%
+          );
 
           .story-button {
             background-color: #535353;
@@ -393,7 +427,7 @@ div.startpage {
           }
         }
 
-        >h1 {
+        > h1 {
           grid-area: heading;
           font-size: clamp(15px, 3.5vw, 80px);
           margin: 0;
@@ -405,7 +439,7 @@ div.startpage {
           }
         }
 
-        >p {
+        > p {
           // sets all paragraphs for all sections
           grid-area: paragraph;
           font-size: clamp(18px, 5vw, 30px);
@@ -413,13 +447,13 @@ div.startpage {
           max-width: 1100px;
         }
 
-        >figure.story-icon {
+        > figure.story-icon {
           // sets all icons for all sections
           grid-area: story-icon;
           text-align: center;
           padding-inline: 3vw;
 
-          >img {
+          > img {
             // defines the story-icons in the sections
             height: 100%;
             max-height: 300px;
@@ -434,7 +468,7 @@ div.startpage {
           }
         }
 
-        >ul.story-links {
+        > ul.story-links {
           grid-area: story-links;
           display: flex;
           flex-wrap: wrap;
@@ -445,7 +479,7 @@ div.startpage {
           @supports not (selector(:first-child)) {
             gap: 0;
 
-            >* {
+            > * {
               padding: 1em;
             }
           }
@@ -458,12 +492,12 @@ div.startpage {
             gap: 1rem;
           }
 
-          &>li {
+          & > li {
             flex-basis: 0;
             flex-grow: 1;
             white-space: nowrap;
 
-            &>a {
+            & > a {
               display: block;
               text-align: center;
               // sets the story-button for all sections

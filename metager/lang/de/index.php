@@ -30,9 +30,9 @@ return [
     'lang' => 'Hexensprache',
     'searchreset' => 'Eingabe der Suchanfrage löschen',
     'searchbar-replacement' => [
-        'read-more' => 'Mehr erfahren...',
+        'why' => 'Warum?',
         'message' => 'Die Suchmaschine MetaGer ist jetzt nur noch werbefrei verfügbar!',
-        'login' => 'Einloggen',
-        'start' => 'Starten Sie jetzt!',
+        'start' => 'Neuen Schlüssel erstellen',
+        "key_error" => "Der eingegebene Schlüssel war nicht korrekt. Bitte prüfen Sie die Eingabe."
     ],
 ];

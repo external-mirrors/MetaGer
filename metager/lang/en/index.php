@@ -31,9 +31,8 @@ return [
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [
         'message' => 'The MetaGer search engine is now only available ad-free!',
-        'read-more' => 'Read More...',
-        'login' => 'Log In',
-        'start' => 'Start now!',
-
+        'why' => 'why?',
+        'start' => 'Create a new Key',
+        "key_error" => "The entered key was not valid. Please check the input.",
     ]
 ];

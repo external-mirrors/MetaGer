@@ -30,8 +30,10 @@ return [
     'lang' => 'Witch-taal',
     'searchreset' => 'invoer zoekopdracht verwijderen',
     'searchbar-replacement' => [
-        'login' => 'Aanmelden',
-        'start' => 'Begin nu!',
+        'login' => 'Inloggen met sleutel',
+        'start' => 'Een nieuwe sleutel maken',
         'message' => 'De MetaGer zoekmachine is nu alleen advertentie-vrij beschikbaar!',
+        'why' => 'waarom?',
+        'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",
     ],
 ];

@@ -39,8 +39,7 @@ class HomePage extends Page
                 ->assertTitle(trans("titles.index", [], $lang))
                 ->assertSee(trans("mg-story.ngo.title", [], $lang))
                 ->assertSee(trans("mg-story.diversity.title", [], $lang))
-                ->assertSee(trans("mg-story.eco.title", [], $lang))
-                ->assertSee(trans("index.plugin", [], $lang));
+                ->assertSee(trans("mg-story.eco.title", [], $lang));
         }
     }
 

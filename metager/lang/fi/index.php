@@ -30,7 +30,6 @@ return [
     'lang' => 'wwitch kieli',
     'searchreset' => 'poista hakukyselyn syöttö',
     'searchbar-replacement' => [
-        'read-more' => 'Lue lisää...',
         'login' => 'Kirjaudu sisään',
         'start' => 'Aloita nyt!',
         'message' => 'MetaGer-hakukone on nyt saatavilla vain ilman mainoksia!',

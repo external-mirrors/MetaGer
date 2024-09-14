@@ -30,7 +30,6 @@ return [
     'lang' => 'Witch-taal',
     'searchreset' => 'invoer zoekopdracht verwijderen',
     'searchbar-replacement' => [
-        'read-more' => 'Lees meer...',
         'login' => 'Aanmelden',
         'start' => 'Begin nu!',
         'message' => 'De MetaGer zoekmachine is nu alleen advertentie-vrij beschikbaar!',

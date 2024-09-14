@@ -31,7 +31,6 @@ return [
     'searchreset' => 'Slet input til søgeforespørgsel',
     'searchbar-replacement' => [
         'message' => 'MetaGer-søgemaskinen er nu kun tilgængelig uden reklamer!',
-        'read-more' => 'Læs mere...',
         'login' => 'Log ind',
         'start' => 'Begynd nu!',
     ],

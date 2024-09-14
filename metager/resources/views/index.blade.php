@@ -46,7 +46,7 @@
       </label>
       <div class="inputs">
         <form action="" method="POST">
-        <input type="text" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif required autofocus />
+        <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif required />
         <button class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
         </form>
         @if(Request::filled("key_error"))

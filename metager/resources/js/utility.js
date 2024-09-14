@@ -36,11 +36,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+  document.querySelectorAll("input[type=password][name=key]").forEach((el) => {
+    el.addEventListener("focus", (e) => {
+      el.type = "text";
+    });
+    el.addEventListener("blur", (e) => {
+      el.type = "password";
+    });
+    el.form.addEventListener("submit", (e) => {
+      el.type = "password";
+    });
+  });
 
   let sidebarToggle = document.getElementById("sidebarToggle");
   if (sidebarToggle) {
-    document.querySelectorAll("label[for=sidebarToggle]").forEach(label => {
-      label.addEventListener("click", e => {
+    document.querySelectorAll("label[for=sidebarToggle]").forEach((label) => {
+      label.addEventListener("click", (e) => {
         e.preventDefault();
         sidebarToggle.checked = !sidebarToggle.checked;
       });
@@ -65,15 +76,15 @@ function reportJSAvailabilityForAuthenticatedSearch() {
   let key_cookie = Cookies.get("key");
 
   if (key_cookie !== undefined) {
-    Cookies.set("js_available", "true", { sameSite: 'Lax' });
+    Cookies.set("js_available", "true", { sameSite: "Lax" });
   }
 }
 
 // Implement Back button functionality
 function backButtons() {
-  document.querySelectorAll(".back-button").forEach(button => {
+  document.querySelectorAll(".back-button").forEach((button) => {
     button.style.display = "block";
-    button.addEventListener("click", e => {
+    button.addEventListener("click", (e) => {
       let href = button.href;
       // Use the defined URL on the button if there is one
       if (href && href.trim().length !== 0 && href.trim() != "#") {
@@ -89,19 +100,19 @@ function backButtons() {
   statistics.registerPageLoadEvents();
 })();
 
-document.addEventListener("readystatechange", e => {
+document.addEventListener("readystatechange", (e) => {
   if (document.readyState == "complete") {
     setTimeout(() => {
       // Check if a web extension is active
       let extension_installed = document.getElementById("plugin-btn") == null;
       if (extension_installed) {
-        updateWebExtensionStatus((new Date()).getTime());
+        updateWebExtensionStatus(new Date().getTime());
       } else {
         updateWebExtensionStatus("no");
       }
     }, 250);
   }
-})
+});
 
 function updateWebExtensionStatus(time) {
   let Cookies = require("js-cookie");
@@ -115,5 +126,7 @@ function updateWebExtensionStatus(time) {
     localStorage.setItem("webextension", time);
   }
   window.webextension = time;
-  window.dispatchEvent(new CustomEvent("webextension_status_update", { detail: time }));
+  window.dispatchEvent(
+    new CustomEvent("webextension_status_update", { detail: time })
+  );
 }

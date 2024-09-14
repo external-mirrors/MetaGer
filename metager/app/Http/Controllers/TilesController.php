@@ -45,38 +45,41 @@ class TilesController extends Controller
     {
         $tiles = [];
 
-        $dd = new DeviceDetector(Request::header("user-agent"), ClientHints::factory($_SERVER));
-        $dd->setCache(new LaravelCache());
-        $dd->parse();
-        $plugin_url = route("plugin");
-        $browser = $dd->getClient("name");
-        $version = $dd->getClient("version");
-        $os = $dd->getOs("name");
-        $target = "__self";
-        $classes = "";
-        if (!$dd->isMobile() && $browser === "Firefox" && version_compare($version, "115.0", "ge")) {
-            $plugin_url = "https://addons.mozilla.org/firefox/downloads/latest/metager-suche";
-            $classes .= "orange";
-        } elseif (!$dd->isMobile() && $browser === "Chrome" && $os === "Windows") {
-            $plugin_url = "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd";
-            $target = "__BLANK";
-            $classes .= "orange";
-        } elseif ($browser === "Microsoft Edge") {
-            $plugin_url = "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog";
-            $target = "__BLANK";
-            $classes .= "orange";
+        if (app(Authorization::class)->canDoAuthenticatedSearch(false)) {
+            $dd = new DeviceDetector(Request::header("user-agent"), ClientHints::factory($_SERVER));
+            $dd->setCache(new LaravelCache());
+            $dd->parse();
+            $plugin_url = route("plugin");
+            $browser = $dd->getClient("name");
+            $version = $dd->getClient("version");
+            $os = $dd->getOs("name");
+            $target = "__self";
+            $classes = "";
+            if (!$dd->isMobile() && $browser === "Firefox" && version_compare($version, "115.0", "ge")) {
+                $plugin_url = "https://addons.mozilla.org/firefox/downloads/latest/metager-suche";
+                $classes .= "orange";
+            } elseif (!$dd->isMobile() && $browser === "Chrome" && $os === "Windows") {
+                $plugin_url = "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd";
+                $target = "__BLANK";
+                $classes .= "orange";
+            } elseif ($browser === "Microsoft Edge") {
+                $plugin_url = "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog";
+                $target = "__BLANK";
+                $classes .= "orange";
+            }
+            $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: $plugin_url, image_alt: "MetaGer Plugin Logo", classes: $classes, target: $target, id: "plugin-btn");
         }
-        $tiles[] = new Tile(title: __('index.plugin'), image: "/img/svg-icons/plug-in.svg", url: $plugin_url, image_alt: "MetaGer Plugin Logo", classes: $classes, target: $target, id: "plugin-btn");
-
-        if (!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)) {
+        /*if (!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)) {
         $tiles[] = new Tile(title: __('index.adfree'), image: "/img/svg-icons/lock.svg", url: app(\App\Models\Authorization\Authorization::class)->getAdfreeLink(), image_alt: __('mg-story.privacy.image.alt'), image_classes: "invert-dm");
-        }
+        }*/
 
         if (Localization::getLanguage() === "de")
             $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
         $tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
-        $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
 
+        if (app(Authorization::class)->canDoAuthenticatedSearch(false)) {
+            $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
+        }
         return $tiles;
     }
 

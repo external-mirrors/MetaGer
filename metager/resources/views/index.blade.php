@@ -35,17 +35,28 @@
 
     @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false) && !in_array(request()->ip(), explode(",", config("metager.metager.unauth_whitelist"))))
     <div id="searchbar-replacement" style="">
-      <div>@lang("index.searchbar-replacement.message")</div>
-
-      @if(\App\Localization::getLanguage() === "de")
-      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
+      <div class="input-group">
+      <label for="key">
+        @lang("index.searchbar-replacement.message")
+        @if(\App\Localization::getLanguage() === "de")
+      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
     @else
-      <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.read-more")</a>
-    @endif
+    <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
+  @endif
+      </label>
+      <div class="inputs">
+        <form action="" method="POST">
+        <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif required />
+        <button class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
+        </form>
+        @if(Request::filled("key_error"))
+        <div class="key-error">@lang("index.searchbar-replacement.key_error")</div>
+      @endif
+      </div>
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="create-key">@lang("index.searchbar-replacement.start")</a>
+      </div>
       <div>
-      <a href="/keys/key/enter" class="btn login" style="">@lang("index.searchbar-replacement.login")</a>
-      <a href="/keys/key/create#create" class="btn create-key"
-        style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+
       </div>
     </div>
   @else

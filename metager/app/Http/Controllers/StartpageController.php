@@ -6,6 +6,7 @@ use Cache;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
 use Response;
+use Str;
 
 class StartpageController extends Controller
 {
@@ -43,6 +44,16 @@ class StartpageController extends Controller
             ->with('css', [mix('css/themes/startpage/light.css')])
             ->with('js', [mix('js/startpage/app.js')])
             ->with('darkcss', [mix('css/themes/startpage/dark.css')]);
+    }
+
+    public function login(Request $request)
+    {
+        $key = $request->post("key", "");
+        if (Str::isUuid($key)) {
+            return redirect(route("loadSettings", ["key" => $key]));
+        } else {
+            return redirect(route("startpage", ["key_error" => $key]));
+        }
     }
 
     public function loadPage($subpage)

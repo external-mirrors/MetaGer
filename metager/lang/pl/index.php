@@ -30,8 +30,10 @@ return [
     'lang' => 'język przełącznika',
     'searchreset' => 'usuń wprowadzone zapytanie wyszukiwania',
     'searchbar-replacement' => [
-        'start' => 'Zacznij teraz!',
+        'start' => 'Tworzenie nowego klucza',
         'message' => 'Wyszukiwarka MetaGer jest teraz dostępna wyłącznie bez reklam!',
-        'login' => 'Zaloguj się',
+        'login' => 'Logowanie za pomocą klucza',
+        'key_error' => "Wprowadzony klucz był nieprawidłowy. Sprawdź wprowadzone dane.",
+        'why' => 'dlaczego?',
     ],
 ];

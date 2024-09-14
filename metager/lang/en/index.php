@@ -34,5 +34,6 @@ return [
         'why' => 'why?',
         'start' => 'Create a new Key',
         "key_error" => "The entered key was not valid. Please check the input.",
+        "login" => "Login With Key"
     ]
 ];

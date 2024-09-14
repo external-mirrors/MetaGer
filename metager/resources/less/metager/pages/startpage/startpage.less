@@ -30,6 +30,9 @@ html {
       > form {
         width: 100%;
         display: flex;
+        @media (max-width: 490px) {
+          flex-direction: column;
+        }
         > input[type="text"] {
           flex-grow: 1;
         }
@@ -39,12 +42,6 @@ html {
         font-size: 0.8rem;
         margin-top: 0.5rem;
       }
-    }
-    > .btn.create-key {
-      color: @story-eco-color;
-      border: 1px solid @story-eco-color;
-      background-color: @story-eco-background;
-      display: block;
     }
   }
 }

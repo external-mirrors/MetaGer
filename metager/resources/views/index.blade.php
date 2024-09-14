@@ -46,15 +46,14 @@
       </label>
       <div class="inputs">
         <form action="" method="POST">
-        <input type="text" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif autofocus />
-        <button class="btn btn-default">Anmelden</button>
+        <input type="text" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif required autofocus />
+        <button class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
         </form>
         @if(Request::filled("key_error"))
         <div class="key-error">@lang("index.searchbar-replacement.key_error")</div>
       @endif
       </div>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="btn create-key"
-        style="border: 1px solid black;">@lang("index.searchbar-replacement.start")</a>
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="create-key">@lang("index.searchbar-replacement.start")</a>
       </div>
       <div>
 

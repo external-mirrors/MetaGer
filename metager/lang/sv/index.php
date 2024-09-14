@@ -31,8 +31,9 @@ return [
     'searchreset' => 'radera sökfråga inmatning',
     'searchbar-replacement' => [
         'message' => 'MetaGer-sökmotorn är nu endast tillgänglig utan reklam!',
-        'login' => 'Logga in',
-        'start' => 'Börja nu!',
-        'read-more' => 'Läs mer...',
+        'login' => 'Logga in med nyckel',
+        'start' => 'Skapa en ny nyckel',
+        'why' => 'Varför?',
+        'key_error' => "Den inmatade nyckeln var inte giltig. Vänligen kontrollera inmatningen.",
     ],
 ];

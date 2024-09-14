@@ -31,8 +31,9 @@ return [
     'searchreset' => 'Slet input til søgeforespørgsel',
     'searchbar-replacement' => [
         'message' => 'MetaGer-søgemaskinen er nu kun tilgængelig uden reklamer!',
-        'read-more' => 'Læs mere...',
-        'login' => 'Log ind',
-        'start' => 'Begynd nu!',
+        'login' => 'Login med nøgle',
+        'start' => 'Opret en ny nøgle',
+        'why' => 'Hvorfor?',
+        'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
     ],
 ];

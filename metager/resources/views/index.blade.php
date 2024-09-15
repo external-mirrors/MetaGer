@@ -33,7 +33,7 @@
       </a>
     </h1>
 
-    @if(!app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false) && !in_array(request()->ip(), explode(",", config("metager.metager.unauth_whitelist"))))
+    @if(!app(App\Models\Authorization\Authorization::class)->loggedIn)
     <div id="searchbar-replacement" style="">
       <div class="input-group">
       <label for="key">

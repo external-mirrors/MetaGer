@@ -18,6 +18,8 @@ abstract class Authorization
      */
     public int $cost = 1;
 
+    public bool $loggedIn = false;
+
     /**
      * How many Tokens are available to the user
      */

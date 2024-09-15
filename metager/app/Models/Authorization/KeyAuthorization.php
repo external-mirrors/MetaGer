@@ -13,6 +13,9 @@ class KeyAuthorization extends Authorization
     {
         parent::__construct();
         $this->key = trim($key);
+        if (!empty($this->key)) {
+            $this->loggedIn = true;
+        }
         // Use Keymanager Server from .env if defined or App URL otherwise
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";

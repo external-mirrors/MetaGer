@@ -35,5 +35,6 @@ return [
         'start' => 'Opret en ny nøgle',
         'why' => 'Hvorfor?',
         'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
+        'login_code_error' => "Den indtastede login-kode var ikke gyldig. Tip: Login-koder er kun gyldige, når de er synlige på en anden enhed!",
     ],
 ];

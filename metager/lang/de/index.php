@@ -33,7 +33,8 @@ return [
         'why' => 'Warum?',
         'message' => 'Die Suchmaschine MetaGer ist jetzt nur noch werbefrei verfügbar!',
         'start' => 'Neuen Schlüssel erstellen',
-        "key_error" => "Der eingegebene Schlüssel war nicht korrekt. Bitte prüfen Sie die Eingabe.",
-        "login" => "Mit Schlüssel Anmelden"
+        'key_error' => "Der eingegebene Schlüssel war nicht korrekt. Bitte prüfen Sie die Eingabe.",
+        'login' => "Mit Schlüssel Anmelden",
+        'login_code_error' => "Der eingegebene Login-Code war nicht gültig. Hinweis: Login-Codes sind nur gültig, solange sie auf einem anderen Gerät angezeigt werden!",
     ],
 ];

@@ -78,6 +78,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
         el.type = "password";
       }
     });
+    let error_key = new URLSearchParams(document.location.search).get(
+      "invalid_key"
+    );
+    if (error_key != null && error_key.length > 0) {
+      el.dispatchEvent(new Event("keyup"));
+    }
   });
 
   let sidebarToggle = document.getElementById("sidebarToggle");

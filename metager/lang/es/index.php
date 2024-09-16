@@ -35,5 +35,6 @@ return [
         'login' => 'Inicio de sesión con clave',
         'why' => '¿Por qué?',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
+        'login_code_error' => "El código de inicio de sesión introducido no era válido. Sugerencia: ¡Los códigos de inicio de sesión sólo son válidos mientras están visibles en otro dispositivo!",
     ],
 ];

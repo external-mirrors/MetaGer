@@ -38,7 +38,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
   });
   let key_keyup = function (e) {
     let el = e.target;
-    console.log(el);
     if (el.value.match(/^\d{6}$/)) {
       let clone = el.cloneNode(true);
       clone.setAttribute("type", "text");

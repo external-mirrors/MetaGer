@@ -35,5 +35,6 @@ return [
         'start' => 'Créer une nouvelle clé',
         'why' => 'pourquoi ?',
         'key_error' => "La clé introduite n'était pas valide. Veuillez vérifier la saisie.",
+        'login_code_error' => "Le code de connexion saisi n'était pas valide. Conseil : les codes de connexion ne sont valables que lorsqu'ils sont visibles sur un autre appareil !",
     ],
 ];

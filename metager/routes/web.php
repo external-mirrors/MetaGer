@@ -54,7 +54,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
     Route::get('/', [StartpageController::class, "loadStartPage"])->name("startpage");
-    Route::post("/", [StartpageController::class, "login"])->name("startpage:login");
 
     Route::get('asso', function () {
         return view('assoziator.asso')

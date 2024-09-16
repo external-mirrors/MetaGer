@@ -36,16 +36,53 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+  let key_keyup = function (e) {
+    let el = e.target;
+    if (el.value.match(/^\d{6}$/)) {
+      let clone = el.cloneNode(true);
+      clone.setAttribute("type", "text");
+      clone.setAttribute("autocomplete", "one-time-code");
+      el.replaceWith(clone);
+      clone.addEventListener("keyup", key_keyup);
+      clone.addEventListener("focus", key_focus);
+      clone.addEventListener("blur", key_blur);
+      clone.focus();
+      clone.setSelectionRange(clone.value.length, clone.value.length);
+    } else {
+      let clone = el.cloneNode(true);
+      clone.setAttribute("type", "password");
+      clone.removeAttribute("autocomplete");
+      el.replaceWith(clone);
+      clone.addEventListener("keyup", key_keyup);
+      clone.addEventListener("focus", key_focus);
+      clone.addEventListener("blur", key_blur);
+      clone.focus();
+      clone.setSelectionRange(clone.value.length, clone.value.length);
+    }
+  };
+  let key_focus = function (e) {
+    e.target.type = "text";
+  };
+  let key_blur = function (e) {
+    if (!e.target.value.match(/^\d{6}$/)) {
+      e.target.type = "password";
+    }
+  };
   document.querySelectorAll("input[type=password][name=key]").forEach((el) => {
-    el.addEventListener("focus", (e) => {
-      el.type = "text";
-    });
-    el.addEventListener("blur", (e) => {
-      el.type = "password";
-    });
+    el.addEventListener("keyup", key_keyup);
+    el.addEventListener("focus", key_focus);
+    el.addEventListener("blur", key_blur);
     el.form.addEventListener("submit", (e) => {
-      el.type = "password";
+      if (!el.value.match(/^\d{6}$/)) {
+        el.type = "password";
+      }
     });
+    let error_key = new URLSearchParams(document.location.search).get(
+      "invalid_key"
+    );
+    if (error_key != null && error_key.length > 0) {
+      el.dispatchEvent(new Event("keyup"));
+    }
   });
 
   let sidebarToggle = document.getElementById("sidebarToggle");

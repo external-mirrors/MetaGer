@@ -45,12 +45,18 @@
   @endif
       </label>
       <div class="inputs">
-        <form action="" method="POST">
-        <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("key") }}" @endif required />
+        <form action="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" method="POST">
+        <input type="hidden" name="redirect_success" value="{{ route("loadSettings") }}">
+        <input type="hidden" name="redirect_error" value="{{ route('startpage') }}">
+        <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("invalid_key") }}" @endif required />
         <button class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
         </form>
         @if(Request::filled("key_error"))
+        @if(Request::input("key_error") === "invalid_key")
         <div class="key-error">@lang("index.searchbar-replacement.key_error")</div>
+        @else
+        <div class="key-error">@lang("index.searchbar-replacement.login_code_error")</div>
+        @endif
       @endif
       </div>
       <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="create-key">@lang("index.searchbar-replacement.start")</a>

@@ -35,5 +35,6 @@ return [
         'message' => 'De MetaGer zoekmachine is nu alleen advertentie-vrij beschikbaar!',
         'why' => 'waarom?',
         'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",
+        'login_code_error' => "De ingevoerde inlogcode was niet geldig. Tip: Inlogcodes zijn alleen geldig als ze zichtbaar zijn op een ander apparaat!",
     ],
 ];

@@ -35,5 +35,6 @@ return [
         'message' => 'MetaGer-hakukone on nyt saatavilla vain ilman mainoksia!',
         'why' => 'Miksi?',
         'key_error' => "Syötetty avain ei ollut kelvollinen. Tarkista syöttö.",
+        'login_code_error' => "Syötetty kirjautumiskoodi ei ollut voimassa. Vihje: Kirjautumiskoodit ovat voimassa vain silloin, kun ne näkyvät toisessa laitteessa!",
     ],
 ];

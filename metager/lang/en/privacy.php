@@ -22,9 +22,6 @@ return [
             'description' => 'When using our web search engine MetaGer via its web form or through its OpenSearch interface, the following data is generated:',
             'query' => 'As an integral part of metasearch, the search query is transmitted to our partners to obtain search results for display on the results page. The results received, including the search term, are kept for display for a few hours.',
             'preferences' => 'We use this data (e.g. language settings) to answer the respective search query. We store some of this data on a non-personal basis for statistical purposes.',
-            'additionally' => 'The following data is also collected if you use our ad-supported version:',
-            'botprotection' => 'To protect our service from overload, we need to limit the number of searches per internet connection. For this purpose alone, we store the full IP address and a timestamp for a maximum of 96 hours. If a noticeably large number of searches are carried out from an IP, this IP is temporarily (maximum 96 hours after the last search) saved in a blacklist. The IP is then deleted.',
-            'clarity' => 'We work with Microsoft Clarity and Microsoft Advertising to bring you free Yahoo search results and advertising. For this purpose, usage data for statistical purposes including your IP address is recorded on the MetaGer results page.',
         ],
         'contact' => [
             'title' => 'Use of the contact form',

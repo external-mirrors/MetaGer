@@ -39,19 +39,6 @@
                         <li><a href="#preferences">@lang('privacy.data.preferences'):</a>
                             @lang('privacy.contexts.metager.preferences')</li>
                     </ol>
-                    <h3>@lang('privacy.contexts.metager.additionally')</h3>
-                    <ol class="datum-list">
-                        <li>
-                            <div><a href="#ip-address">@lang('privacy.data.ip')</a>, <a
-                                    href="#user-agent">@lang('privacy.data.useragent')</a>:</div>
-                            <div>@lang('privacy.contexts.metager.botprotection')</div>
-                        </li>
-                        <li>
-                            <div><a href="https://privacy.microsoft.com/privacystatement">Microsoft Clarity & Yahoo</a>
-                            </div>
-                            <div>@lang('privacy.contexts.metager.clarity')</div>
-                        </li>
-                    </ol>
                 </article>
                 <article class="kontext">
                     <h1 id="contact">@lang('privacy.contexts.contact.title')</h1>
@@ -276,6 +263,6 @@
     <div class="section">
         <h1>@lang('privacy.changes.title')</h1>
         <div>@lang('privacy.changes.description')</div>
-        <div>@lang('privacy.changes.date', ['date' => '2024-07-24'])</div>
+        <div>@lang('privacy.changes.date', ['date' => '2024-09-18'])</div>
     </div>
     @endsection

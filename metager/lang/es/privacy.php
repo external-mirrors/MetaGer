@@ -10,11 +10,8 @@ return [
         'metager' => [
             'title' => 'Utilización del motor de búsqueda MetaGer',
             'description' => 'Al utilizar nuestro motor de búsqueda web MetaGer a través de su formulario web o de su interfaz OpenSearch, se generan los siguientes datos:',
-            'additionally' => 'Los siguientes datos también se recopilan si utiliza nuestra versión con publicidad:',
             'query' => 'Como parte integrante de la metabúsqueda, la consulta de búsqueda se transmite a nuestros socios para obtener resultados de búsqueda que se mostrarán en la página de resultados. Los resultados recibidos, incluido el término de búsqueda, se conservan para su visualización durante unas horas.',
             'preferences' => 'Utilizamos estos datos (por ejemplo, la configuración de idioma) para responder a la consulta de búsqueda correspondiente. Almacenamos algunos de estos datos de forma no personal con fines estadísticos.',
-            'botprotection' => 'Para proteger nuestro servicio de la sobrecarga, necesitamos limitar el número de búsquedas por conexión a Internet. Sólo con este fin, almacenamos la dirección IP completa y una marca de tiempo durante un máximo de 96 horas. Si se realiza un número notablemente elevado de búsquedas desde una IP, esta IP se guarda temporalmente (máximo 96 horas después de la última búsqueda) en una lista negra. A continuación, la IP se elimina.',
-            'clarity' => 'Trabajamos con Microsoft Clarity y Microsoft Advertising para ofrecerle resultados de búsqueda y publicidad de Yahoo gratuitos. Para ello, en la página de resultados de MetaGer se registran datos de uso con fines estadísticos, incluida su dirección IP.',
         ],
         'title' => 'Datos entrantes por contexto',
         'contact' => [

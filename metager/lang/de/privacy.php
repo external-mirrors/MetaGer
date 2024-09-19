@@ -12,7 +12,7 @@ return [
     ],
     'stats' => [
         'title' => 'Anonyme Statistiken',
-        'description' => 'Wir arbeiten stets daran unsere Dienste zu verbessern. Um dazu in der Lage zu sein, müssen wir wissen, welche unserer Funktionen verwendet werden. Aus diesem Grund erfassen wir vollkommen anonyme Daten über die Häufigkeit von Seitenaufrufen und die Verwendung einzelner Funktionen unserer Webseiten. Ebenfalls erfassen wir anonymisierte Daten über die Verteilung von Browserarten und Versionen. Diese Statistiken basieren nicht auf einzelnen Nutzerprofilen und werden ohne Cookies oder ähnlichem erstellt. Sie beinhalten keine personenbezogenen Daten.'
+        'description' => 'Wir arbeiten stets daran unsere Dienste zu verbessern. Um dazu in der Lage zu sein, müssen wir wissen, welche unserer Funktionen verwendet werden. Aus diesem Grund erfassen wir vollkommen anonyme Daten über die Häufigkeit von Seitenaufrufen und die Verwendung einzelner Funktionen unserer Webseiten. Ebenfalls erfassen wir anonymisierte Daten über die Verteilung von Browserarten und Versionen. Diese Statistiken basieren nicht auf einzelnen Nutzerprofilen und werden ohne Cookies oder ähnlichem erstellt. Sie beinhalten keine personenbezogenen Daten.',
     ],
     'contexts' => [
         'title' => 'Anfallende Daten nach Kontext',
@@ -21,9 +21,6 @@ return [
             'description' => 'Bei der Nutzung unserer Websuchmaschine MetaGer über deren Web-Formular oder durch deren OpenSearch-Schnittstelle fallen folgende Daten an:',
             'query' => 'Als integraler Bestandteil der Metasuche wird die Suchanfrage an unsere Partner übertragen, um Suchergebnisse zur Anzeige auf der Ergebisseite zu erhalten. Die erhaltenen Ergebnisse inklusive dem Suchbegriff werden für wenige Stunden zur Anzeige vorgehalten.',
             'preferences' => 'Wir verwenden diese Daten (z.B. Spracheinstellungen), um die jeweilige Suchanfrage zu beantworten. Einige dieser Daten speichern wir nicht-personenbezogen zu statistischen Zwecken.',
-            'additionally' => 'Folgende Daten fallen außerdem an, falls Sie unsere werbefinanzierte Version verwenden:',
-            'botprotection' => 'Um unseren Dienst vor Überlastung zu schützen, müssen wir die Anzahl der Suchanfragen pro Internetanschluss begrenzen. Allein für diesen Zweck speichern wir die vollständige IP-Adresse und einen Zeitstempel für maximal 96 Stunden. Werden auffällig viele Suchen von einer IP durchgeführt, wird diese IP vorübergehend (maximal 96 Stunden nach der letzen Suche) in einer Sperrliste gespeichert. Anschließend wird die IP gelöscht.',
-            'clarity' => 'Wir arbeiten mit Microsoft Clarity und Microsoft Advertising zusammen, um Ihnen kostenlose Yahoo-Suchergebnisse und Werbung anbieten zu können. Zu diesem Zweck werden auf der MetaGer-Ergebnisseite Nutzungsdaten einschließlich Ihrer IP-Adresse zu statistischen Zwecken aufgezeichnet.',
         ],
         'contact' => [
             'title' => 'Nutzung des Kontaktformulars',

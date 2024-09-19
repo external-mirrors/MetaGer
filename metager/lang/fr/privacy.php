@@ -115,9 +115,6 @@ return [
             'description' => 'Lors de l\'utilisation de notre moteur de recherche MetaGer via son formulaire web ou son interface OpenSearch, les données suivantes sont générées :',
             'query' => 'En tant que partie intégrante de la métarecherche, la requête de recherche est transmise à nos partenaires afin d\'obtenir des résultats de recherche à afficher sur la page de résultats. Les résultats reçus, y compris le terme de recherche, sont conservés pour affichage pendant quelques heures.',
             'preferences' => 'Nous utilisons ces données (par exemple, les paramètres linguistiques) pour répondre à la demande de recherche correspondante. Nous stockons certaines de ces données sur une base non personnelle à des fins statistiques.',
-            'additionally' => 'Les données suivantes sont également collectées si vous utilisez notre version avec support publicitaire :',
-            'botprotection' => 'Pour protéger notre service de la surcharge, nous devons limiter le nombre de recherches par connexion internet. Dans ce seul but, nous enregistrons l\'adresse IP complète et un horodatage pour une durée maximale de 96 heures. Si un grand nombre de recherches sont effectuées à partir d\'une adresse IP, celle-ci est temporairement (au maximum 96 heures après la dernière recherche) enregistrée dans une liste noire. L\'IP est ensuite supprimée.',
-            'clarity' => 'Nous travaillons avec Microsoft Clarity et Microsoft Advertising pour vous offrir gratuitement des résultats de recherche et de la publicité sur Yahoo. À cette fin, des données d\'utilisation à des fins statistiques, y compris votre adresse IP, sont enregistrées sur la page de résultats de MetaGer.',
         ],
         'contact' => [
             'title' => 'Utilisation du formulaire de contact',

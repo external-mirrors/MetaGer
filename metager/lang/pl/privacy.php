@@ -48,9 +48,6 @@ return [
             'description' => 'Podczas korzystania z naszej wyszukiwarki internetowej MetaGer za pośrednictwem formularza internetowego lub interfejsu OpenSearch generowane są następujące dane:',
             'query' => 'Jako integralna część metasearch, zapytanie wyszukiwania jest przesyłane do naszych partnerów w celu uzyskania wyników wyszukiwania do wyświetlenia na stronie wyników. Otrzymane wyniki, w tym wyszukiwane hasło, są wyświetlane przez kilka godzin.',
             'preferences' => 'Używamy tych danych (np. ustawień językowych), aby odpowiedzieć na odpowiednie zapytanie wyszukiwania. Niektóre z tych danych przechowujemy w celach statystycznych.',
-            'additionally' => 'Następujące dane są również gromadzone w przypadku korzystania z naszej wersji z reklamami:',
-            'botprotection' => 'Aby chronić naszą usługę przed przeciążeniem, musimy ograniczyć liczbę wyszukiwań na połączenie internetowe. Tylko w tym celu przechowujemy pełny adres IP i znacznik czasu przez maksymalnie 96 godzin. Jeśli z danego adresu IP przeprowadzana jest zauważalnie duża liczba wyszukiwań, adres ten jest tymczasowo (maksymalnie 96 godzin po ostatnim wyszukiwaniu) zapisywany na czarnej liście. Następnie adres IP jest usuwany.',
-            'clarity' => 'Współpracujemy z Microsoft Clarity i Microsoft Advertising, aby dostarczać bezpłatne wyniki wyszukiwania i reklamy Yahoo. W tym celu na stronie wyników MetaGer rejestrowane są dane o użytkowaniu do celów statystycznych, w tym adres IP użytkownika.',
         ],
         'contact' => [
             'title' => 'Korzystanie z formularza kontaktowego',

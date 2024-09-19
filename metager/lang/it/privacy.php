@@ -108,9 +108,6 @@ return [
             'description' => 'Quando si utilizza il nostro motore di ricerca MetaGer tramite il suo modulo web o la sua interfaccia OpenSearch, vengono generati i seguenti dati:',
             'query' => 'Come parte integrante del metasearch, la query di ricerca viene trasmessa ai nostri partner per ottenere risultati da visualizzare sulla pagina dei risultati. I risultati ricevuti, compreso il termine di ricerca, vengono conservati per la visualizzazione per alcune ore.',
             'preferences' => 'Utilizziamo questi dati (ad esempio, le impostazioni della lingua) per rispondere alla rispettiva domanda di ricerca. Alcuni di questi dati vengono memorizzati su base non personale a fini statistici.',
-            'additionally' => 'I seguenti dati vengono raccolti anche se si utilizza la nostra versione ad-supported:',
-            'botprotection' => 'Per proteggere il nostro servizio dal sovraccarico, dobbiamo limitare il numero di ricerche per connessione Internet. Solo a questo scopo, memorizziamo l\'indirizzo IP completo e un timestamp per un massimo di 96 ore. Se da un IP viene effettuato un numero considerevolmente elevato di ricerche, questo IP viene temporaneamente (al massimo 96 ore dopo l\'ultima ricerca) salvato in una lista nera. L\'IP viene poi cancellato.',
-            'clarity' => 'Collaboriamo con Microsoft Clarity e Microsoft Advertising per offrirvi risultati di ricerca e pubblicità gratuiti su Yahoo. A tal fine, nella pagina dei risultati di MetaGer vengono registrati dati di utilizzo a fini statistici, compreso il vostro indirizzo IP.',
             'title' => 'Utilizzo del motore di ricerca web MetaGer',
         ],
         'contact' => [

@@ -66,6 +66,12 @@ ingress:
       if ($host = "www.metager.de") {
           return 301 https://metager.de$request_uri;
       }
+      if ($host = "metager2.de") {
+          return 301 https://metager.de$request_uri;
+      }
+      if ($host = "www.metager2.de") {
+          return 301 https://metager.de$request_uri;
+      }
       if ($host = "www.metager.org") {
           return 301 https://metager.org$request_uri;
       }

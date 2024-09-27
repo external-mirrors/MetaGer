@@ -7,7 +7,7 @@ ingress:
   tls:
     - hosts:
         - metager3.de
-
+      secretName: development-auto-deploy-tls
 resources:
   requests:
     fpm:

@@ -7,7 +7,6 @@ ingress:
   tls:
     - hosts:
         - metager3.de
-      secretName: metager-tls-2023
 
 resources:
   requests:

@@ -131,6 +131,7 @@ return [
             [
                 'host' => env("REDIS_SENTINEL_HOST", 'localhost'),
                 'port' => env('REDIS_SENTINEL_PORT', 26379),
+                'password' => env('REDIS_SENTINEL_PASSWORD', null),
                 'timeout' => env('REDIS_CONNECT_TIMEOUT', 0.2),
             ],
             'options' => [

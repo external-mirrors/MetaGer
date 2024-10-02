@@ -342,8 +342,11 @@ class SearchSettings
      * 
      * @return bool
      */
-    function isValidSetting(string $setting_key, string $setting_value): bool
+    function isValidSetting(string $setting_key, string|null $setting_value): bool
     {
+        if (is_null($setting_value)) {
+            $setting_value = "";
+        }
         if (in_array($setting_key, $this->global_setting_keys))
             return true;
         if (preg_match("/^([^_]+)_blpage$/", $setting_key, $matches) && in_array($matches[1], $this->available_foki))

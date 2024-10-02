@@ -36,5 +36,6 @@ return [
         'why' => 'Varför?',
         'key_error' => "Den inmatade nyckeln var inte giltig. Vänligen kontrollera inmatningen.",
         'login_code_error' => "Den angivna inloggningskoden var inte giltig. Tips: Inloggningskoder är endast giltiga när de är synliga på en annan enhet!",
+        'payment_id_error' => "Du har angett ett betalnings-id som inte är en korrekt nyckel. Din nyckel är 36 tecken lång.",
     ],
 ];

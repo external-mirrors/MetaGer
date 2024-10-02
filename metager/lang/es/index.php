@@ -36,5 +36,6 @@ return [
         'why' => '¿Por qué?',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
         'login_code_error' => "El código de inicio de sesión introducido no era válido. Sugerencia: ¡Los códigos de inicio de sesión sólo son válidos mientras están visibles en otro dispositivo!",
+        'payment_id_error' => "Ha introducido un identificador de pago que no es una clave correcta. Tu clave tiene 36 caracteres.",
     ],
 ];

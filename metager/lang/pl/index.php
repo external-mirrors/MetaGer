@@ -36,5 +36,6 @@ return [
         'key_error' => "Wprowadzony klucz był nieprawidłowy. Sprawdź wprowadzone dane.",
         'why' => 'dlaczego?',
         'login_code_error' => "Wprowadzony kod logowania był nieprawidłowy. Wskazówka: Kody logowania są ważne tylko wtedy, gdy są widoczne na innym urządzeniu!",
+        'payment_id_error' => "Wprowadzono identyfikator płatności, który nie jest prawidłowym kluczem. Klucz ma długość 36 znaków.",
     ],
 ];

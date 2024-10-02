@@ -36,5 +36,6 @@ return [
         'why' => 'Perché?',
         'key_error' => "La chiave inserita non è valida. Controllare l'immissione.",
         'login_code_error' => "Il codice di accesso inserito non è valido. Suggerimento: i codici di accesso sono validi solo quando sono visibili su un altro dispositivo!",
+        'payment_id_error' => "È stato inserito un ID di pagamento che non è una chiave corretta. La chiave è lunga 36 caratteri.",
     ],
 ];

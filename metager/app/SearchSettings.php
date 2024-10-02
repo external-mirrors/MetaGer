@@ -16,6 +16,7 @@ class SearchSettings
     public $q;
     /** @var string */
     public $fokus;
+    public $available_foki = [];
     public $newtab = false;
     public $zitate = true;
     public $blacklist = [];
@@ -65,6 +66,8 @@ class SearchSettings
             $this->sumasJson->foki->{$this->fokus} = new \stdClass;
             $this->sumasJson->foki->{$this->fokus}->sumas = [];
         }
+
+        $this->available_foki = array_keys(get_object_vars($this->sumasJson->foki));
 
         $this->user_settings = [];
 

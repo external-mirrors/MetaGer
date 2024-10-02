@@ -21,7 +21,7 @@ return [
             '1' => 'Android-app',
             '3' => 'MetaGer-Web-Associator',
             '4' => 'MetaGer-widget',
-            '5' => 'MetaGer Kartor',
+            '5' => 'MetaGer-kartor',
             '0' => 'Tjänster',
         ],
         '3' => [

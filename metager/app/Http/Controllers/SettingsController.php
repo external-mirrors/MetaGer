@@ -556,6 +556,9 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
 
         $params_for_startpage = [];
+        if ($request->filled("eingabe")) {
+            $params_for_startpage["eingabe"] = $request->input("eingabe");
+        }
 
         $searchsettings = app(SearchSettings::class);
 

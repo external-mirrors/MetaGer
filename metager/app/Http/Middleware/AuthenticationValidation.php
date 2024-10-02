@@ -18,7 +18,11 @@ class AuthenticationValidation
     {
         $whitelisted_ips = explode(",", config("metager.metager.unauth_whitelist"));
         if (!app(Authorization::class)->canDoAuthenticatedSearch() && !in_array($request->ip(), $whitelisted_ips)) {
-            return redirect(route("startpage"));
+            $parameters = [];
+            if ($request->filled("eingabe")) {
+                $parameters["eingabe"] = $request->input("eingabe");
+            }
+            return redirect(route("startpage", $parameters));
         }
         return $next($request);
     }

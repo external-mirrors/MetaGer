@@ -48,6 +48,9 @@
         <form action="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" method="POST">
         <input type="hidden" name="redirect_success" value="{{ route("loadSettings") }}">
         <input type="hidden" name="redirect_error" value="{{ route('startpage') }}">
+        @if(Request::filled("eingabe"))
+        <input type="hidden" name="eingabe" value="{{ Request::input("eingabe") }}">
+        @endif
         <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("invalid_key") }}" @endif required />
         <button class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
         </form>

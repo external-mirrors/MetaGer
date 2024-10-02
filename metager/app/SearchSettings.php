@@ -16,6 +16,7 @@ class SearchSettings
     public $q;
     /** @var string */
     public $fokus;
+    public $available_foki = [];
     public $newtab = false;
     public $zitate = true;
     public $blacklist = [];
@@ -38,6 +39,11 @@ class SearchSettings
 
     public $user_settings = []; // Stores user settings that are parsed
     private $ignore_user_settings = ["js_available"];
+    /**
+     * List of setting keys used independant of fokus
+     * @var array
+     */
+    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key"];
     public function __construct()
     {
 
@@ -65,6 +71,8 @@ class SearchSettings
             $this->sumasJson->foki->{$this->fokus} = new \stdClass;
             $this->sumasJson->foki->{$this->fokus}->sumas = [];
         }
+
+        $this->available_foki = array_keys(get_object_vars($this->sumasJson->foki));
 
         $this->user_settings = [];
 
@@ -327,5 +335,27 @@ class SearchSettings
         }
 
         return $default;
+    }
+
+    /**
+     * Validates if the setting is used by MetaGer 
+     * 
+     * @return bool
+     */
+    function isValidSetting(string $setting_key, string|null $setting_value): bool
+    {
+        if (is_null($setting_value)) {
+            $setting_value = "";
+        }
+        if (in_array($setting_key, $this->global_setting_keys))
+            return true;
+        if (preg_match("/^([^_]+)_blpage$/", $setting_key, $matches) && in_array($matches[1], $this->available_foki))
+            return true;
+        if (preg_match("/^([^_]+)_engine_(.*)$/", $setting_key, $matches) && in_array($matches[1], $this->available_foki) && in_array($setting_value, ["on", "off"]))
+            return true;
+        if (preg_match("/^([^_]+)_setting_(.*)$/", $setting_key, $matches) && in_array($matches[1], $this->available_foki))
+            return true;
+
+        return false;
     }
 }

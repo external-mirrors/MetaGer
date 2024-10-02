@@ -5,7 +5,7 @@ return [
     'easy.language' => "Zur einfachen Hilfe",
     'tableofcontents' => [
         '1' => [
-            '0' => 'Die Hauptseiten',
+            '0' => 'Die Benutzung der Hauptseiten',
             '1' => 'Die Startseite',
             '2' => 'Das Suchfeld',
             '3' => 'Die Ergebnisseite',
@@ -19,7 +19,7 @@ return [
             '4' => 'MetaGer hinzufügen',
         ],
         '3' => [
-            '0' => 'Funktionen zur Anonymität und Datensicherheit',
+            '0' => 'Datenschutz',
             '2' => 'Cookies & Co.',
             '3' => 'Tor-Hidden-Service',
             '4' => 'MetaGer-Proxy',

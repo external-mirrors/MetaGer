@@ -46,6 +46,23 @@ class StartpageController extends Controller
             ->with('darkcss', [mix('css/themes/startpage/dark.css')]);
     }
 
+    /**
+     * The chrome extension has currently a problem when loading MetaGer as a startpage
+     * The extension is not yet initialized when the startpage is loaded and as such the key is not loaded on first load
+     * As a temporary fix we can check the login status asynchroniously on the startpage for a few seconds and reload if status changes
+     * 
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function isLoggedIn(Request $request)
+    {
+        if (app(abstract: \App\Models\Authorization\Authorization::class)->loggedIn) {
+            return response()->json([], 200);
+        } else {
+            return response()->json([], 401);
+        }
+    }
+
     public function loadPage($subpage)
     {
         /* TODO CSS und Titel laden

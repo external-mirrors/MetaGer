@@ -36,5 +36,6 @@ return [
         'why' => 'waarom?',
         'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",
         'login_code_error' => "De ingevoerde inlogcode was niet geldig. Tip: Inlogcodes zijn alleen geldig als ze zichtbaar zijn op een ander apparaat!",
+        'payment_id_error' => "Je hebt een betalings-id ingevoerd die geen correcte sleutel is. Je sleutel is 36 tekens lang.",
     ],
 ];

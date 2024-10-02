@@ -55,7 +55,18 @@ class SettingsController extends Controller
         $blacklist = array_merge($blacklist_tld, app(SearchSettings::class)->blacklist);
 
         # Generating link with set cookies
-        $settings_params = array_merge($settings->user_settings, $searchengines->user_settings);
+        $settings_params = [];
+
+        # Add Settings for searchengines supplied in cookies and headers
+        foreach (array_merge($request->header(), $request->cookie()) as $key => $value) {
+            if (is_array($value)) {
+                $value = $value[0];
+            }
+            if ($settings->isValidSetting($key, $value)) {
+                $settings_params[$key] = $value;
+            }
+        }
+
         unset($settings_params["js_available"]);
         if (is_string($authorization->getToken()) && !empty($authorization->getToken())) {
             $settings_params["key"] = $authorization->getToken();
@@ -545,40 +556,27 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
 
         $params_for_startpage = [];
+        if ($request->filled("eingabe")) {
+            $params_for_startpage["eingabe"] = $request->input("eingabe");
+        }
+
+        $searchsettings = app(SearchSettings::class);
 
         foreach ($settings as $key => $value) {
-            if ($key === 'key') {
-                Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, false));
-                $params_for_startpage["key"] = $value;
-            } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
-                Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, false));
-            } elseif ($key === 'new_tab' && $value === 'on') {
-                Cookie::queue(Cookie::forever($key, 'on', '/', null, $secure, false));
-            } elseif ($key === 'zitate' && $value === 'off') {
-                Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, false));
-            } else {
-                foreach ($langFile->foki as $fokus => $fokusInfo) {
-                    if (strpos($key, $fokus . '_blpage') === 0) {
-                        Cookie::queue(Cookie::forever($key, $value, "/", null, $secure, false));
-                    } elseif (strpos($key, $fokus . '_setting_') === 0) {
-                        foreach ($langFile->filter->{'parameter-filter'} as $parameter) {
-                            foreach ($parameter->values as $p => $v) {
-                                if ($key === $fokus . '_setting_' . $parameter->{'get-parameter'} && $value === $p) {
-                                    Cookie::queue(Cookie::forever($key, $value, "/", null, $secure, false));
-                                }
-                            }
-                        }
-                    } else {
-                        $sumalist = array_keys($this->getSumas($fokus));
-                        foreach ($sumalist as $suma) {
-                            if ($value !== "on") {
-                                $value = "off";
-                            }
-                            if (strpos($key, $fokus . '_engine_' . $suma) === 0) {
-                                Cookie::queue(Cookie::forever($key, $value, "/", null, true, false));
-                            }
-                        }
-                    }
+            # Add Settings for searchengines supplied in cookies and headers
+            if ($searchsettings->isValidSetting($key, $value)) {
+                if ($key === 'key') {
+                    Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, false));
+                    $params_for_startpage["key"] = $value;
+                } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
+                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, false));
+                } elseif ($key === 'new_tab' && $value === 'on') {
+                    Cookie::queue(Cookie::forever($key, 'on', '/', null, $secure, false));
+                } elseif ($key === 'zitate' && $value === 'off') {
+                    Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, false));
+                } else {
+                    // Setting page
+                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, false));
                 }
             }
         }

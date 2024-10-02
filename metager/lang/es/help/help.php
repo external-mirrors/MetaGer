@@ -9,7 +9,7 @@ Dado que desarrollamos y mejoramos nuestro motor de búsqueda  constantemente, p
             '2' => 'El campo de búsqueda',
             '3' => 'La página de resultados',
             '4' => 'Ajustes',
-            '0' => 'Las páginas principales',
+            '0' => 'Uso del motor de búsqueda',
         ],
         '2' => [
             '1' => 'Funciones de búsqueda',
@@ -22,7 +22,7 @@ Dado que desarrollamos y mejoramos nuestro motor de búsqueda  constantemente, p
             '1' => 'Aplicación Android',
             '3' => 'Buscar palabra asociada',
             '4' => 'MetaGer Widget',
-            '5' => 'MetaGer Maps',
+            '5' => 'Mapas MetaGer',
             '0' => 'Otros servicios en torno a la búsqueda',
         ],
         '3' => [
@@ -30,7 +30,7 @@ Dado que desarrollamos y mejoramos nuestro motor de búsqueda  constantemente, p
             '3' => 'Servicio oculto de Tor',
             '4' => 'MetaGer proxy',
             '5' => 'Protección de menores',
-            '0' => 'Funciones de anonimato y seguridad de los datos',
+            '0' => 'Protección de datos',
         ],
     ],
     'easy.language' => "para una ayuda fácil",

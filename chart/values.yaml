@@ -58,7 +58,7 @@ ingress:
   enabled: true
   className: "nginx"
   annotations:
-    kubernetes.io/tls-acme: "false"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/configuration-snippet: >
       if ($arg_out = "results-with-style") {
         more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";

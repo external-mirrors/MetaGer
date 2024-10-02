@@ -145,7 +145,8 @@ function backButtons() {
 
   async function checkLoginStatus() {
     let key_container = document.querySelector("input[name=key]#key");
-    if (key_container == null) return;  // Stop if there is no key input field
+    let login_button = document.querySelector("button#login");
+    if (key_container == null || login_button == null) return;  // Stop if there is no key input field
     return fetch("/authorized", {
       method: "POST"
     }).then(response => {

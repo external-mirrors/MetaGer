@@ -55,7 +55,15 @@ class SettingsController extends Controller
         $blacklist = array_merge($blacklist_tld, app(SearchSettings::class)->blacklist);
 
         # Generating link with set cookies
-        $settings_params = array_merge($settings->user_settings, $searchengines->user_settings);
+        $settings_params = $settings->user_settings;
+
+        # Add Settings for searchengines supplied in cookies and headers
+        foreach (array_merge($request->headers->all(), $request->cookies->all()) as $key => $value) {
+            if (preg_match("/^(.*)_(setting|engine)_(.*)$/", $key, $matches) && in_array($matches[1], $settings->available_foki)) {
+                $settings_params[$key] = $value;
+            }
+        }
+
         unset($settings_params["js_available"]);
         if (is_string($authorization->getToken()) && !empty($authorization->getToken())) {
             $settings_params["key"] = $authorization->getToken();

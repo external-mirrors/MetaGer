@@ -36,5 +36,6 @@ return [
         'key_error' => "Der eingegebene Schlüssel war nicht korrekt. Bitte prüfen Sie die Eingabe.",
         'login' => "Mit Schlüssel Anmelden",
         'login_code_error' => "Der eingegebene Login-Code war nicht gültig. Hinweis: Login-Codes sind nur gültig, solange sie auf einem anderen Gerät angezeigt werden!",
+        'payment_id_error' => "Sie haben eine Zahlungskennung eingegeben, die kein korrekter Schlüssel ist. Ihr Schlüssel ist 36 Zeichen lang.",
     ],
 ];

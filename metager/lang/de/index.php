@@ -1,17 +1,17 @@
 <?php
 return [
     'plugin' => 'MetaGer Installieren',
-    'plugin-title' => 'MetaGer zu Ihrem Browser hinzufügen',
+    'plugin-title' => 'MetaGer-Plugin hinzufügen',
     'key' => [
         'placeholder' => 'Schlüssel für werbefreie Suche eingeben',
         'tooltip' => [
-            'nokey' => 'Werbefreie Suche einrichten',
+            'nokey' => 'Werbefreie Suche neu einrichten',
             'empty' => 'Token aufgebraucht. Jetzt aufladen.',
             'low' => 'Token bald aufgebraucht. Jetzt aufladen.',
             'full' => 'Werbefreie Suche aktiviert.',
         ],
     ],
-    'placeholder' => 'MetaGer: Sicher suchen & finden',
+    'placeholder' => 'MetaGer - Mehr als eine Suchmaschine',
     'searchbutton' => 'MetaGer-Suche starten',
     'foki' => [
         'web' => 'Web',
@@ -21,7 +21,7 @@ return [
         'produkte' => 'Produkte',
         'maps' => 'Maps',
     ],
-    'adfree' => 'MetaGer werbefrei',
+    'adfree' => 'MetaGer werbefrei nutzen',
     'skip' => [
         'search' => 'Weiter zur Eingabe der Suchanfrage',
         'navigation' => 'Zur Navigation springen',

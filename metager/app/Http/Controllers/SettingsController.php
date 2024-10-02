@@ -58,7 +58,7 @@ class SettingsController extends Controller
         $settings_params = [];
 
         # Add Settings for searchengines supplied in cookies and headers
-        foreach (array_merge($request->headers->all(), $request->cookies->all()) as $key => $value) {
+        foreach (array_merge($request->header(), $request->cookie()) as $key => $value) {
             if (is_array($value)) {
                 $value = $value[0];
             }

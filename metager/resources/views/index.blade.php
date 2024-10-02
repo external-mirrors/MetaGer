@@ -70,9 +70,6 @@
   @else
   @include('parts.searchbar', ['class' => 'startpage-searchbar'])
 @endif
-    @if(Request::filled('key'))
-    <input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
-  @endif
     @if(app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
     <div id="startpage-quicklinks">
       <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">

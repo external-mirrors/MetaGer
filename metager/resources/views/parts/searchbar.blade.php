@@ -97,6 +97,9 @@
 				@if(Request::filled("token"))
 				<input type="hidden" name="token" value={{ Request::input("token") }}>
 				@endif
+				@if(Request::filled('key'))
+				<input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
+				@endif
 				@if (isset($option_values))
 				@foreach($option_values as $option => $value)
 				<input type="hidden" name={{ $option }} value={{ $value }}>

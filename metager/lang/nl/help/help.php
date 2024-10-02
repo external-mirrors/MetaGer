@@ -21,7 +21,7 @@ return [
             '1' => 'Android-app',
             '3' => 'MetaGer-Web-Associator',
             '4' => 'MetaGer-widget',
-            '5' => 'MetaGer-kaarten',
+            '5' => 'MetaGer Kaarten',
             '0' => 'Diensten',
         ],
         '3' => [

@@ -3,7 +3,7 @@ return [
     'tableofcontents' => [
         '4' => [
             '4' => 'Widget MetaGer',
-            '5' => 'Cartes MetaGer',
+            '5' => 'MetaGer Maps',
             '0' => 'Services',
             '1' => 'Application Android',
             '3' => 'MetaGer-Web-Associator',

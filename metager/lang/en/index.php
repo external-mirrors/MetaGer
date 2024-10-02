@@ -35,6 +35,7 @@ return [
         'start' => 'Create a new Key',
         "key_error" => "The entered key was not valid. Please check the input.",
         "login_code_error" => "The entered login code was not valid. Hint: Login Codes are only valid while visible on another device!",
+        "payment_id_error" => "You've entered a payment id which is not a correct key. Your key is 36 characters long.",
         "login" => "Login With Key"
     ]
 ];

@@ -54,6 +54,8 @@
         @if(Request::filled("key_error"))
         @if(Request::input("key_error") === "invalid_key")
         <div class="key-error">@lang("index.searchbar-replacement.key_error")</div>
+        @elseif(Request::input("key_error") === "invalid_key_payment_id")
+        <div class="key-error">@lang("index.searchbar-replacement.payment_id_error")</div>
         @else
         <div class="key-error">@lang("index.searchbar-replacement.login_code_error")</div>
         @endif

@@ -127,6 +127,12 @@ return [
             'cluster' => false,
         ],
 
+        'cache' => [
+            'host' => env('REDIS_CACHE_HOST', 'localhost'),
+            'port' => env('REDIS_CACHE_PORT', 6379),
+            'password' => env('REDIS_CACHE_PASSWORD', null),
+        ],
+
         'sentinel' => [
             [
                 'host' => env("REDIS_SENTINEL_HOST", 'localhost'),

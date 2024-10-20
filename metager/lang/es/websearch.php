@@ -6,7 +6,7 @@ return [
         '3' => 'Vista previa',
         '4' => 'Buscar & encontrar seguro con MetaGer',
         '5' => 'Busca con MetaGer...',
-        '6' => 'todos',
+        '6' => 'es',
         '7' => 'Código',
         '8' => 'Búsqueda',
         'copy' => 'Copiar',

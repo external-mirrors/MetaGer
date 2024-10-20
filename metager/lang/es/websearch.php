@@ -8,7 +8,7 @@ return [
         '5' => 'Busca con MetaGer...',
         '6' => 'todos',
         '7' => 'Código',
-        '8' => 'Buscar',
+        '8' => 'Búsqueda',
         'copy' => 'Copiar',
     ],
     'alert' => [

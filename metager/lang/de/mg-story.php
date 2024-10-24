@@ -6,7 +6,7 @@ return [
             'alt' => 'Sicherheitsschloss',
         ],
         'title' => 'Garantierte Privatsphäre',
-        'p' => 'Mit unserer werbefreien Suche, behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
+        'p' => 'Mit unserer werbefreien Suche behalten Sie die volle Kontrolle über Ihre Daten. Unser Anonymisierungs-Proxy schützt Sie, auch wenn Sie weiter surfen. Wir tracken nicht.',
     ],
     'ngo' => [
         'title' => 'Gemeinnütziger Verein',
@@ -36,7 +36,7 @@ return [
     'btn-member-advantage' => 'Mitgliedschaft',
     'btn-mg-code' => 'MetaGer-Quellcode',
     'btn-mg-algorithm' => 'Unser Algorithmus',
-    'btn-more' => 'Mehr dazu',
+    'btn-more' => 'Mehr',
     'plugin' => [
         'title' => 'Jetzt MetaGer installieren',
         'btn-add' => 'Plugin hinzufügen',

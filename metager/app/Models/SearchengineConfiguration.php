@@ -16,6 +16,8 @@ class SearchengineConfiguration
     /** @var int */
     public $port;
     /** @var string */
+    public $method = "get";
+    /** @var string */
     public $queryParameter;
     /** @var string */
     public $inputEncoding;

@@ -49,7 +49,7 @@
 					</div>
 						<input id="custom-date" type="checkbox" form="searchForm" 
 							@if(Request::input('fc', "off") === "on")checked @endif 
-							@if(sizeof(app(\App\SearchSettings::class)->parameterFilter["customfreshness"]->{"disabled-values"}) > 0)
+							@if(array_key_exists("customfreshness", app(\App\SearchSettings::class)->parameterFilter) && sizeof(app(\App\SearchSettings::class)->parameterFilter["customfreshness"]->{"disabled-values"}) > 0)
 							disabled
 							@endif
 							name="fc"/>

@@ -157,6 +157,14 @@ abstract class Searchengine
                 "name" => $this->name,
             ];
 
+            if ($this->configuration->method === "post_json") {
+                $mission["headers"]["Content-Type"] = "application/json";
+                $mission["curlopts"] = [
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => json_encode($this->configuration->getParameter)
+                ];
+            }
+
             $mission = json_encode($mission);
 
             // Submit this mission to the corresponding Redis Queue
@@ -274,21 +282,23 @@ abstract class Searchengine
             $getString .= "/";
         }
 
-        $getString .= "?";
+        if ($this->configuration->method === "get") {
+            $getString .= "?";
 
-        $parameters = (array) clone $this->configuration->getParameter;
+            $parameters = (array) clone $this->configuration->getParameter;
 
-        # Dynamic Parameters
-        $parameters = \array_merge($parameters, $this->getDynamicParams());
+            # Dynamic Parameters
+            $parameters = \array_merge($parameters, $this->getDynamicParams());
 
-        if (!empty($this->configuration->inputEncoding)) {
-            $inputEncoding = $this->configuration->inputEncoding;
-            \array_walk($parameters, function (&$value, $key) use ($inputEncoding) {
-                $value = \mb_convert_encoding($value, $inputEncoding);
-            });
+            if (!empty($this->configuration->inputEncoding)) {
+                $inputEncoding = $this->configuration->inputEncoding;
+                \array_walk($parameters, function (&$value, $key) use ($inputEncoding) {
+                    $value = \mb_convert_encoding($value, $inputEncoding);
+                });
+            }
+
+            $getString .= \http_build_query($parameters, "", "&", \PHP_QUERY_RFC3986);
         }
-
-        $getString .= \http_build_query($parameters, "", "&", \PHP_QUERY_RFC3986);
 
         return $getString;
     }

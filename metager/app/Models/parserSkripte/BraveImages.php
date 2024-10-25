@@ -21,7 +21,7 @@ class BraveImages extends Searchengine
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
-        $this->configuration->disabledByDefault = true;
+        $this->configuration->disabledByDefault = false;
 
         $this->configuration->engineBoost = 1.2;
         $this->configuration->cost = 1;

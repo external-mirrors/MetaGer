@@ -78,7 +78,7 @@ class Result
         $this->image = isset($additionalInformation["image"]) ? $additionalInformation["image"] : "";
         $this->imageDimensions = isset($additionalInformation["imagedimensions"]) ? $additionalInformation["imagedimensions"] : [];
         $this->price = isset($additionalInformation["price"]) ? $additionalInformation["price"] : 0;
-        $this->price_text = $this->price_to_text($this->price);
+        $this->price_text = is_int($this->price) ? $this->price_to_text($this->price) : $this->price;
         $this->additionalInformation = $additionalInformation;
         $this->hash = md5(serialize($this));
     }
@@ -296,8 +296,8 @@ class Result
             ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
                 in_array($this->strippedLink, $metager->getUrlBlacklist()) ||
                 in_array($this->strippedLink . "|" . strtolower(app(SearchSettings::class)->q), $metager->getUrlBlacklist())
-                )
-            ) 
+            )
+            )
         ) {
             return true;
         } else {

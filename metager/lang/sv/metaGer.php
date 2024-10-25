@@ -103,6 +103,7 @@ return [
             'year' => 'Förra året',
             'custom' => 'Kundanpassad',
             'name' => 'Datum',
+            'hour' => 'Sista 60m',
         ],
         'customdatetitle' => 'Välj anpassat datum',
         'market' => [

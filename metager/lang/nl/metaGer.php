@@ -77,6 +77,7 @@ return [
             'year' => 'Vorig jaar',
             'custom' => 'Aangepast',
             'name' => 'Datum',
+            'hour' => 'Laatste 60m',
         ],
         'customdatetitle' => 'Kies aangepaste datum',
         'market' => [

@@ -131,6 +131,7 @@ return [
             'year' => 'L\'année dernière',
             'custom' => 'Sur mesure',
             'name' => 'Date',
+            'hour' => 'Les 60 derniers mètres',
         ],
         'customdatetitle' => 'Choisir une date personnalisée',
         'sort' => [

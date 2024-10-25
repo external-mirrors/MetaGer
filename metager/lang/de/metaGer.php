@@ -103,6 +103,7 @@ return [
             'month' => "Letzter Monat",
             'year' => "Letztes Jahr",
             'custom' => "Benutzerdefiniert",
+            'hour' => 'Letzte 60m',
         ],
         'customdatetitle' => "Benutzerdefiniertes Datum auswählen",
         'market' => [

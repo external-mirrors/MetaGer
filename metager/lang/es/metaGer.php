@@ -109,6 +109,7 @@ return [
             'year' => 'El año pasado',
             'custom' => 'Personalizado',
             'name' => 'Fecha',
+            'hour' => 'Últimos 60m',
         ],
         'customdatetitle' => 'Seleccione una fecha personalizada',
         'market' => [

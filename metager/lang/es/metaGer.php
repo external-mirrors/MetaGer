@@ -27,7 +27,7 @@ return [
         'urlBlacklist' => 'Los resultados con URLs que contienen ":url" no se muestran',
     ],
     'sitesearch' => [
-        'failed' => 'Habéis querido una búsqueda en ":site". Los motores de busqueda seleccioados no tienen resultados. Podéis hacer el sitesearch en el foco "Web":  <a href=":searchLink">hier</a> ',
+        'failed' => 'Habéis querido una búsqueda en ":site". Los motores de busqueda seleccioados no tienen resultados. Podéis hacer el sitesearch en el foco "Web":  <a href=":searchLink">hier</a>',
         'success' => 'Habéis querido una búsqueda "sitesearch". Recibís resultados solo de  <a href="http://:site" target="_blank" rel="noopener">":site"</a> .',
     ],
     'ads' => [

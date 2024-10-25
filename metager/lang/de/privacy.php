@@ -41,7 +41,7 @@ return [
         ],
         'suma' => [
             'title' => 'Nutzung des Webangebotes <a href="https://suma-ev.de">suma-ev.de</a>',
-            'description' => 'Beim Besuch von Webseiten der Domain „suma-ev.de“ werden folgende Daten erhoben und bis zu einer Woche gespeichert:',
+            'description' => 'Wir verwenden die genannten Daten, um die Funktionsfähigkeit der Webseite sicherzustellen und uns vor Angriffen zu schützen. Die Rechtsgrundlage für die Verarbeitung ist damit ein berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.',
             'function' => 'Wir verwenden die genannten Daten, um die Funktionsfähigkeit der Webseite sicherzustellen und uns vor Angriffen zu schützen. Die Rechtsgrundlage für die Verarbeitung ist damit ein berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.',
             'other' => 'Auf den anderen Webseiten unserer Domains verarbeiten wir die erhobenen Daten nur zur Beantwortung von Anfragen und im Rahmen der anderen Punkte dieser Datenschutzerklärung.',
             'startpage' => 'Auf der Startseite unseres Dienstes MetaGer verwenden wir den von Ihnen übertragenen User-Agent, um Ihnen die passende PlugIn-Installationsanleitung zu Ihrem Browser anzuzeigen.',

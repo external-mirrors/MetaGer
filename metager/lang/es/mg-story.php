@@ -23,7 +23,7 @@ return [
         'p' => 'Metager protege contra la censura combinando resultados de muchos motores de búsqueda. Nuestros algoritmos son transparentes y todos pueden verlos. <br> El código fuente es gratuito y de código abierto.',
     ],
     'eco' => [
-        'title' => '100% electricidad verde',
+        'title' => 'electricidad 100% verde',
         'image' => [
             'alt' => 'hoja verde',
         ],
@@ -40,7 +40,7 @@ return [
     'plugin' => [
         'title' => 'Instale MetaGer ahora',
         'btn-add' => 'Agregar el complemento MetaGer',
-        'btn-app' => 'Aplicación MetaGer',
+        'btn-app' => 'MetaGer App',
         'image' => [
             'alt' => 'Aplicaciones de Metager',
         ],

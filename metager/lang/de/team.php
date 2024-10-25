@@ -4,11 +4,11 @@ return [
         '0' => 'geschäftsführender Vorstand',
         '1' => [
             '0' => 'Vorstand',
-            '1' => 'Vorständin',
+            '1' => 'Vorstand',
         ],
         '2' => 'Jugendschutzbeauftragte',
         '3' => 'Pressereferentin',
-        '5' => 'Programmierer',
+        '5' => 'Programmiererin',
         '6' => 'Programmiererin',
         '7' => 'Sekretariat',
         '8' => 'Founder',

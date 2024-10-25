@@ -72,6 +72,7 @@ return [
             'year' => 'Viime vuonna',
             'custom' => 'Räätälöity',
             'name' => 'Päivämäärä',
+            'hour' => 'Viimeiset 60m',
         ],
         'customdatetitle' => 'Valitse räätälöity päivämäärä',
         'market' => [

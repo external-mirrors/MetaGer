@@ -8,6 +8,7 @@ return [
             'month' => 'Il mese scorso',
             'year' => 'L\'anno scorso',
             'custom' => 'Personalizzato',
+            'hour' => 'Ultimi 60 m',
         ],
         'sitesearch' => 'Ricerca siti',
         'safesearch' => [

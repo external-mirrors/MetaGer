@@ -9,7 +9,7 @@ return [
     ],
     'search' => [
         'helpline' => [
-            'title' => 'Ist Ihr Land nicht dabei? ',
+            'title' => 'Ist Ihr Land nicht dabei?',
             'text' => 'Unter <a href="https://findahelpline.com" target="_blank">https://findahelpline.com</a> können Sie weitere hilfreiche Telefonnummern und Webseiten finden.',
         ],
     ],
@@ -34,7 +34,7 @@ return [
     ],
     'greece' => [
         'name' => "Griechenland 🇬🇷",
-        'text' => '<strong>Klimaka NGO:</strong> <a href="https://www.klimaka.org.gr" target="_blank"> https://www.klimaka.org.gr</a><br> <strong> Suicide Help Greece:</strong> <a href="https://www.suicide-help.gr" target="_blank"> https://www.suicide-help.gr</a> <br> Phone:<a href="tel:+30 1018"> +30 1018</a> ',
+        'text' => '<strong>Klimaka NGO:</strong> <a href="https://www.klimaka.org.gr" target="_blank"> https://www.klimaka.org.gr</a><br> <strong> Suicide Help Greece:</strong> <a href="https://www.suicide-help.gr" target="_blank"> https://www.suicide-help.gr</a> <br> Phone:<a href="tel:+30 1018"> +30 1018</a>',
     ],
     'italy' => [
         'name' => "Italien 🇮🇹",
@@ -42,7 +42,7 @@ return [
     ],
     'latvia' => [
         'name' => "Lettland 🇱🇻",
-        'text' => '<strong>Skalbes:</strong> <a href="https://www.skalbes.lv" target="_blank"> https://www.skalbes.lv</a> <br> Tālrunis:<a href="tel: +371 6722 2922">+371 6722 2922</a>, <a href="tel:+371 2722 2292">+371 2722 2292</a> ',
+        'text' => '<strong>Skalbes:</strong> <a href="https://www.skalbes.lv" target="_blank"> https://www.skalbes.lv</a> <br> Tālrunis:<a href="tel: +371 6722 2922">+371 6722 2922</a>, <a href="tel:+371 2722 2292">+371 2722 2292</a>',
     ],
     'lithuania' => [
         'name' => "Litauen 🇱🇹",
@@ -50,7 +50,7 @@ return [
     ],
     'luxembourg' => [
         'name' => "Luxemburg 🇱🇺",
-        'text' => '<strong>SOS Détresse – Hëllef iwwer Telefon</strong> <a href="https://www.454545.lu" target="_blank"> https://www.454545.lu</a> <br> Telefon:<a href="tel:+352 454545"> +352 454545</a><br> <strong>Kanner-Jugendtelefon:</strong> <a href="https://www.kjt.lu" target="_blank"> https://www.kjt.lu</a> <br> Telefon:<a href="tel:+352 0800 0113"> +352 0800 0113</a> ',
+        'text' => '<strong>SOS Détresse – Hëllef iwwer Telefon</strong> <a href="https://www.454545.lu" target="_blank"> https://www.454545.lu</a> <br> Telefon:<a href="tel:+352 454545"> +352 454545</a><br> <strong>Kanner-Jugendtelefon:</strong> <a href="https://www.kjt.lu" target="_blank"> https://www.kjt.lu</a> <br> Telefon:<a href="tel:+352 0800 0113"> +352 0800 0113</a>',
     ],
     'netherlands' => [
         'name' => "Niederlande 🇳🇱",
@@ -90,7 +90,7 @@ return [
     ],
     'serbia' => [
         'name' => "Serbien 🇷🇸",
-        'text' => '<strong>Centar Srce:</strong> <a href="https://www.centarsrce.org" target="_blank"> https://www.centarsrce.org</a> <br> телефон: <a href="tel:+38 1 800 300 303"> +38 1 800 300 303</a>; е-маил: vanja@centarsrce.org ',
+        'text' => '<strong>Centar Srce:</strong> <a href="https://www.centarsrce.org" target="_blank"> https://www.centarsrce.org</a> <br> телефон: <a href="tel:+38 1 800 300 303"> +38 1 800 300 303</a>; е-маил: vanja@centarsrce.org',
     ],
     'spain' => [
         'name' => "Spanien 🇪🇸",
@@ -114,7 +114,7 @@ return [
     'costa' => [
         'rica' => [
             'name' => "Costa Rica 🇨🇷",
-            'text' => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono:<a href="tel:+506 2272 3774"> +506 2272 3774</a> ',
+            'text' => '<strong>Colegio de Profesionales en Psicología de Costa Rica:</strong> <a href="https://psicologiacr.com/aqui-estoy" target="_blank"> https://psicologiacr.com/aqui-estoy</a> <br> Teléfono:<a href="tel:+506 2272 3774"> +506 2272 3774</a>',
         ],
     ],
     'canada' => [
@@ -123,11 +123,11 @@ return [
     ],
     'mexico' => [
         'name' => "Mexiko 🇲🇽",
-        'text' => '<strong>Consejo Ciudadano:</strong> <a href="https://consejociudadanomx.org" target="_blank"> httpss://consejociudadanomx.org</a> <br> Teléfono: <a href="tel:+52 55 5533 5533">+52 55 5533 5533</a> <br> <strong>Instituto Hispanoamericano de Suicidologia, A.C:</strong> <br> Teléfono: <a href="tel:+52 55 4631 3300">+52 55 4631 3300</a>; Correo electrónico: info@suicidiologia.com.mx ',
+        'text' => '<strong>Consejo Ciudadano:</strong> <a href="https://consejociudadanomx.org" target="_blank"> httpss://consejociudadanomx.org</a> <br> Teléfono: <a href="tel:+52 55 5533 5533">+52 55 5533 5533</a> <br> <strong>Instituto Hispanoamericano de Suicidologia, A.C:</strong> <br> Teléfono: <a href="tel:+52 55 4631 3300">+52 55 4631 3300</a>; Correo electrónico: info@suicidiologia.com.mx',
     ],
     'usa' => [
         'name' => "USA 🇺🇸",
-        'text' => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: <a href="tel:988">988</a> <br> <strong>Veterans/Military Crisis Line (für aktive Angehörige, Veteranen und Familienmitglieder der US-Streitkräfte):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone:<a href="tel:+1 800 273 8255"> +1 800 273 8255</a> , press 1; Text message: +1 838255 <br> <strong>The Trevor Project (für Jugendliche, Freunde und Familienmitglieder der LGBT-Gemeinschaft):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone:<a href="tel:+1 866 488 7386"> +1 866 488 7386</a> ',
+        'text' => '<strong>Suicide & Crisis Lifeline :</strong> <a href="https://988lifeline.org/talk-to-someone-now/" target="_blank"> https://988lifeline.org/talk-to-someone-now/</a> <br> Phone: <a href="tel:988">988</a> <br> <strong>Veterans/Military Crisis Line (für aktive Angehörige, Veteranen und Familienmitglieder der US-Streitkräfte):</strong> <a href="http://www.veteranscrisisline.net" target="_blank"> http://www.veteranscrisisline.net</a> <br> Phone:<a href="tel:+1 800 273 8255"> +1 800 273 8255</a> , press 1; Text message: +1 838255 <br> <strong>The Trevor Project (für Jugendliche, Freunde und Familienmitglieder der LGBT-Gemeinschaft):</strong> <a href="https://www.thetrevorproject.org" target="_blank"> https://www.thetrevorproject.org</a> <br> Phone:<a href="tel:+1 866 488 7386"> +1 866 488 7386</a>',
     ],
     'argentina' => [
         'name' => "Argentinien 🇦🇷",
@@ -139,7 +139,7 @@ return [
     ],
     'chile' => [
         'name' => "Chile 🇨🇱",
-        'text' => '<strong>Teléfono de la Esperanza:</strong> <a href="https://telefonodelaesperanza.org/intervencion-en-crisis" target="_blank"> https://telefonodelaesperanza.org/intervencion-en-crisis</a> <br> Teléfono:<a href="tel:+56 717 003 717"> +56 717 003 717</a> ',
+        'text' => '<strong>Teléfono de la Esperanza:</strong> <a href="https://telefonodelaesperanza.org/intervencion-en-crisis" target="_blank"> https://telefonodelaesperanza.org/intervencion-en-crisis</a> <br> Teléfono:<a href="tel:+56 717 003 717"> +56 717 003 717</a>',
     ],
     'asia' => [
         'name' => "Asien",
@@ -187,12 +187,12 @@ return [
         ],
         'africa' => [
             'name' => "Südafrika 🇿🇦",
-            'text' => '<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: <a href="tel:+27 800 567 567"> +27 800 567 567</a>; SMS: +27 31393 ',
+            'text' => '<strong>The South African Depression and Anxiety Group (SADAG):</strong> <a href="www.sadag.org" target="_blank"> www.sadag.org</a> <br> Telefon: <a href="tel:+27 800 567 567"> +27 800 567 567</a>; SMS: +27 31393',
         ],
     ],
     'taiwan' => [
         'name' => "Taiwan 🇹🇼",
-        'text' => '<strong>Suizidpräventionstelefon des Ministeriums für Gesundheit und Soziales (MOHW) (衛生福利部):</strong> <a href="www.life1995.org.tw" target="_blank"> www.life1995.org.tw</a> <br> Phone: <a href="tel:1995"> 1995</a> ',
+        'text' => '<strong>Suizidpräventionstelefon des Ministeriums für Gesundheit und Soziales (MOHW) (衛生福利部):</strong> <a href="www.life1995.org.tw" target="_blank"> www.life1995.org.tw</a> <br> Phone: <a href="tel:1995"> 1995</a>',
     ],
     'africa' => [
         'name' => "Afrika",

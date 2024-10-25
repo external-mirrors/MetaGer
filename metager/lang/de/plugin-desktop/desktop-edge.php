@@ -2,14 +2,14 @@
 return [
     'default-search-v15' => [
         //Instructions for Edge version 15-17
-        '1' => 'Klicken Sie in Ihrem Browser oben rechts auf "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" und wählen Sie "Einstellungen".',
+        '1' => 'Klicken Sie oben rechts im Browser auf "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" und öffnen Sie die "Einstellungen".',
         '2' => 'Scrollen Sie nach unten und klicken auf "Erweiterte Einstellungen".',
         '3' => 'Scrollen Sie erneut nach unten bis zum Punkt "In Adressleiste suchen mit" und klicken Sie auf "Ändern".',
-        '4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard"',
+        '4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard".',
     ],
     'default-search-v18' => [
         //Instructions for Edge version 18
-        '1' => 'Klicken Sie in Ihrem Browser oben rechts auf "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" und wählen Sie "Einstellungen".',
+        '1' => 'Klicken Sie oben rechts im Browser auf "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">" und öffnen Sie die "Einstellungen".',
         '2' => 'Wählen Sie den Reiter "Erweitert".',
         '3' => 'Scrollen Sie nach unten bis zum Punkt "In Adressleiste suchen mit" und klicken Sie auf "Ändern".',
         '4' => 'Wählen Sie "MetaGer: Sicher suchen & finden..." und klicken Sie auf "Als Standard".',

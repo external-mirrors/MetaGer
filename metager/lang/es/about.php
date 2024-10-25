@@ -1,7 +1,7 @@
 <?php
 return [
     'head' => [
-        '1' => 'Sobre nosotros',
+        '1' => 'sobre nosotros',
         '2' => 'Crónica',
         '3' => 'Lo que representamos',
         '4' => '¿Qué hace especial a MetaGer?',
@@ -13,7 +13,7 @@ return [
         ],
         'association' => [
             'heading' => 'Asociación sin ánimo de lucro',
-            'text' => 'MetaGer es un proyecto de la asociación sin ánimo de lucro SUMA-EV, Asociación para el Libre Acceso al Conocimiento. SUMA-EV se compromete principalmente a promover la alfabetización mediática.',
+            'text' => 'MetaGer es un proyecto de la asociación sin ánimo de lucro SUMA-EV, Asociación para el Libre Acceso al Conocimiento. SUMA-EV se compromete principalmente a promover la alfabetización mediática',
         ],
         'diverse' => [
             'heading' => 'Diversos y libres',
@@ -75,7 +75,7 @@ return [
             '2' => 'La amplia modernización del núcleo de MetaGer reduce el tiempo medio de respuesta del motor de búsqueda a menos de 1,3 segundos. En los próximos años, esta cifra se reducirá aún más, hasta casi la mitad.',
         ],
         '11' => [
-            '1' => '2016-2019: Página de inicio de MetaGer',
+            '1' => '2019-2020: Página de inicio de MetaGer',
             '2' => 'Otros pequeños ajustes consolidan gradualmente el naranja como el color de MetaGer',
         ],
         '12' => [
@@ -120,7 +120,7 @@ return [
         ],
         '21' => [
             '1' => 'Hoy',
-            '2' => 'Incluso hoy, MetaGer está en constante evolución.',
+            '2' => 'Aún hoy, MetaGer sigue desarrollándose.',
         ],
     ],
 ];

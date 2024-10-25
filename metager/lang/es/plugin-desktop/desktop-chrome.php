@@ -6,12 +6,12 @@ return [
         '3' => 'En la mitad inferior del menú que aparece, mueva el mouse sobre la página web de MetaGer y  haga clic en el botón azul "Establecer como predeterminado" que aparece en el lado derecho',
     ],
     'default-search-v53' => [
-        '1' => 'En la parte superior derecha de la aplicación Chrome haga clic en <img class= "mg-icon" src="/img/ellipsis.svg"> y en el siguiente menú de opciones haga clic en "Configuración" para abrir las configuraciónes de Chrome.',
+        '1' => 'En la esquina superior derecha del navegador haga clic en <img class= "mg-icon" src="/img/ellipsis.svg"> y abra la "Configuración".',
         '2' => 'En la sección "Buscar", haga clic en "Administrar buscadores...".',
         '3' => 'En la mitad inferior del menú que aparece, mueva el mouse sobre la página web de MetaGer y  haga clic en el botón azul "Establecer como predeterminado" que aparece en el lado derecho',
     ],
     'default-search-v59' => [
-        '1' => 'En la parte superior derecha de la aplicación Chrome haga clic en <img class= "mg-icon" src="/img/ellipsis.svg"> y en el siguiente menú de opciones haga clic en "Configuración" para abrir las configuraciónes de Chrome.',
+        '1' => 'En la esquina superior derecha del navegador haga clic en <img class= "mg-icon" src="/img/ellipsis.svg"> y abra la "Configuración".',
         '2' => 'En la sección "Motor de búsqueda", haga clic en "Administrar buscadores..."',
         '3' => 'En la lista mostrada aparece "MetaGer". Mueva el ratón sobre "MetaGer" y haga clic a la derecha en <img class= "mg-icon" src="/img/ellipsis.svg"> y después en "Establecer como predeterminado"',
     ],

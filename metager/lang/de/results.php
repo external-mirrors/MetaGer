@@ -1,6 +1,6 @@
 <?php
 return [
-    'weiter' => 'Weitersuchen',
+    'weiter' => 'mehr',
     'zurueck' => 'Zurück',
     'backtotop' => 'Zum Anfang der Seite',
     'query' => [

@@ -1,13 +1,13 @@
 <?php
 return [
     'default-search-v15' => [
-        '1' => 'Haga clic en "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">"</img> en la esquina superior derecha de su navegador<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">y seleccione "Configuración"</img>.',
+        '1' => 'Haga clic en "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">"</img> en la parte superior derecha del navegador<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">y abra la "Configuración"</img>.',
         '2' => 'Desplácese hacia abajo y haga clic en "Configuración avanzada".',
         '3' => 'Desplácese de nuevo hacia abajo hasta el punto "Buscar en la barra de direcciones con" y haga clic en "Cambiar".',
-        '4' => 'Selecciona "MetaGer: Search & Find Safely..." y haz clic en "Set as default"',
+        '4' => 'Selecciona "MetaGer: Search & find securely..." y haz clic en "Set as default".',
     ],
     'default-search-v18' => [
-        '1' => 'Haga clic en "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">"</img> en la esquina superior derecha de su navegador<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">y seleccione "Configuración"</img>.',
+        '1' => 'Haga clic en "<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">"</img> en la parte superior derecha del navegador<img class= "mg-icon" src="/img/ellipsis-horizontal.svg">y abra la "Configuración"</img>.',
         '2' => 'Seleccione la pestaña "Avanzado".',
         '3' => 'Desplácese hasta la opción "Buscar en la barra de direcciones con" y haga clic en "Cambiar".',
         '4' => 'Selecciona "MetaGer: Search & find securely..." y haz clic en "Set as default".',

@@ -103,6 +103,7 @@ return [
             'year' => 'W zeszłym roku',
             'custom' => 'Dostosowane',
             'name' => 'Data',
+            'hour' => 'Ostatnie 60 m',
         ],
         'customdatetitle' => 'Wybierz niestandardową datę',
         'market' => [

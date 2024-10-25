@@ -97,6 +97,7 @@ return [
             'name' => 'License',
         ],
         'freshness' => [
+            'hour' => 'Last 60m',
             'day' => 'Last 24h',
             'week' => 'Last week',
             'month' => 'Last month',

@@ -107,6 +107,7 @@ return [
             'custom' => 'Tilpasset',
             'name' => 'Dato',
             'day' => 'Sidste 24 timer',
+            'hour' => 'Sidste 60 meter',
         ],
         'imageaspect' => [
             'square' => 'Rektangel',

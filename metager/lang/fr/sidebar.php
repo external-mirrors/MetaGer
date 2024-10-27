@@ -21,7 +21,7 @@ return [
     'nav24' => 'Code source de MetaGer',
     'nav25' => 'Application MetaGer',
     'nav26' => 'MetaGer-Fanshop',
-    'nav27' => 'Cartes MetaGer',
+    'nav27' => 'MetaGer Maps',
     'nav28' => 'Paramètres',
     'nav29' => 'Déclaration de transparence',
     'nav30' => 'Moteurs de recherche',

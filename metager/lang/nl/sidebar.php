@@ -14,7 +14,7 @@ return [
     'nav24' => 'MetaGer broncode',
     'nav25' => 'MetaGer-app',
     'nav26' => 'MetaGer-Fanshop',
-    'nav27' => 'MetaGer-kaarten',
+    'nav27' => 'MetaGer Kaarten',
     'nav28' => 'Instellingen',
     'nav29' => 'Transparantieverklaring',
     'nav30' => 'Zoekmachines',

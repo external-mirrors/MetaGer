@@ -422,30 +422,6 @@ class MetaGer
     }
 
     /**
-     * @param \App\Models\Admitad[] $affiliates
-     * @return \App\Models\Admitad[] whether or not all Admitad Objects are finished
-     */
-    public function parseAffiliates($affiliates)
-    {
-        $wait = false;
-        $finished = true;
-        if (!\app()->make(SearchSettings::class)->javascript_enabled) {
-            $wait = true;
-        }
-        $newAffiliates = [];
-        foreach ($affiliates as $affiliate) {
-            $affiliate->fetchAffiliates($wait);
-            $affiliate->parseAffiliates();
-            if (!$affiliate->finished) {
-                $newAffiliates[] = $affiliate;
-            }
-        }
-
-        return $newAffiliates;
-    }
-
-
-    /**
      * Modifies the already filled array of advertisements and
      * includes an advertisement for our donation page.
      * 

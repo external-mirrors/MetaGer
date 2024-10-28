@@ -15,6 +15,31 @@ use Request;
 
 class Brave extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        "lang" => [
+            "parameter" => "country",
+            "languages" => [],
+            "regions" => [
+                "de_DE" => "de_DE",
+                "de_AT" => "de_AT",
+                "en_US" => "en_US",
+                "en_GB" => "en_GB",
+                "es_ES" => "es_ES",
+                "es_MX" => "es_MX",
+                "da_DK" => "da_DK",
+                "de_CH" => "de_CH",
+                "fi_FI" => "fi_FI",
+                "it_IT" => "it_IT",
+                "nl_NL" => "nl_NL",
+                "sv_SE" => "sv_SE",
+                "fr_FR" => "fr_FR",
+                "fr_CA" => "fr_CA",
+                "pl_PL" => "pl_PL",
+                "pt_PT" => "pt-pt_PT",
+                "pt_BR" => "pt-br_BR",
+            ]
+        ]
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

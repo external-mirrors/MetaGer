@@ -15,6 +15,7 @@ use LaravelLocalization;
 
 abstract class Searchengine
 {
+    const CONFIG_OVERLOAD = [];
     public $getString = ""; # Der String für die Get-Anfrage
     public $query = ""; # The search query
     public $alteredQuery = ""; // If the query was modified by the searchengine

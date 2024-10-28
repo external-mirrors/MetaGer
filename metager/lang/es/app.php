@@ -2,7 +2,7 @@
 return [
     'head' => [
         '1' => 'Aplicaciones MetaGer',
-        '2' => 'Aplicación MetaGer',
+        '2' => 'MetaGer App',
         '3' => 'Aplicación Maps MetaGer',
         '4' => 'Instalación',
     ],
@@ -24,6 +24,6 @@ return [
             '1' => 'Acceso a datos de posición => Si el GPS está activado en su teléfono móvil, podemos mejorar sus resultados de búsqueda. Además habilita la función de navegación paso a paso.<b>Por supuesto, estos datos no se almacenan en ningún lugar y ciertamente no se transmiten a terceros.</b>',
             '2' => 'El APK para la instalación manual tiene un actualizador integrado. Para que el actualizador funcione, la aplicación le pedirá permiso para publicar notificaciones con el fin de notificarle de una actualización disponible y utiliza el permiso de Android REQUEST_INSTALL_PACKAGES para que pueda pedirle que instale la actualización de la aplicación.',
         ],
-        '4' => 'Tras el primer inicio se le pedirán los siguientes permisos:',
+        '4' => 'Después del primer inicio, la aplicación solicita los siguientes permisos:',
     ],
 ];

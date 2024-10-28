@@ -7,5 +7,11 @@ return [
         '2' => 'Aqui encontra um Metager-Widget para o seu sítio Web.',
         '3' => 'Pré-visualização',
         'copy' => 'Cópia',
+        '1' => 'MetaGer Websearch-Widget',
+        '4' => 'Pesquisar e encontrar em segurança com o MetaGer',
+    ],
+    'alert' => [
+        'failure' => 'Alguma coisa correu mal!',
+        'success' => 'Copiado!',
     ],
 ];

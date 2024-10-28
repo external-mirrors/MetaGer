@@ -6,6 +6,7 @@ return [
             '4' => 'Servidor proxy MetaGer',
             '0' => 'Privacidade',
             '2' => 'Rastreio e cookies',
+            '5' => 'Proteção dos jovens',
         ],
         '4' => [
             '3' => 'MetaGer-Web-Associator',
@@ -19,6 +20,7 @@ return [
             '0' => 'Utilização do motor de busca',
             '2' => 'O campo de pesquisa',
             '3' => 'A página de resultados',
+            '4' => 'Definições',
         ],
         '2' => [
             '3' => 'Pesquisar na pesquisa',
@@ -30,4 +32,5 @@ return [
     ],
     'achtung' => 'Aviso! A estrutura e a funcionalidade do nosso sítio Web estão sujeitas a constantes desenvolvimentos e alterações. Tentamos atualizar as nossas páginas de ajuda o mais rapidamente possível, mas não podemos evitar erros temporários.',
     'easy.language' => "para uma ajuda fácil",
+    'title' => 'MetaGer - Ajuda',
 ];

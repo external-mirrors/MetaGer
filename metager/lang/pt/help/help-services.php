@@ -18,4 +18,6 @@ return [
         'text' => "Serviços adicionais em torno da pesquisa",
     ],
     'easy-help' => 'Ao clicar no símbolo <a title="For easy help, click here" href="/hilfe/easy-language/services" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a> , acederá a uma versão simplificada da ajuda.',
+    'backarrow' => 'Voltar',
+    'title' => 'MetaGer - Ajuda',
 ];

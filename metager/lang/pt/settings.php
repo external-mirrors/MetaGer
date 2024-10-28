@@ -88,4 +88,7 @@ return [
     'disable-engine' => 'Desativar o motor de busca',
     'filtered-engine' => 'Motor de pesquisa desativado por filtro',
     'payment-engine' => 'O motor de busca requer a configuração da chave MetaGer',
+    'actions' => 'Acções',
+    'save' => 'Guardar',
+    'copy' => 'Cópia',
 ];

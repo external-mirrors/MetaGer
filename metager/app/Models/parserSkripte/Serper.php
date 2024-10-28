@@ -13,6 +13,32 @@ use Log;
 
 class Serper extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        "lang" => [
+            "parameter" => "gl",
+            "languages" => [],
+            "regions" => [
+                "de_DE" => "de",
+                "de_AT" => "at",
+                "en_US" => "us",
+                "en_GB" => "gb",
+                "es_ES" => "es",
+                "es_MX" => "mx",
+                "da_DK" => "dk",
+                "at_AT" => "at",
+                "de_CH" => "ch",
+                "fi_FI" => "fi",
+                "it_IT" => "it",
+                "nl_NL" => "nl",
+                "sv_SE" => "se",
+                "fr_FR" => "fr",
+                "fr_CA" => "ca",
+                "pl_PL" => "pl",
+                "pt_PT" => "pt-pt_PT",
+                "pt_BR" => "pt-br_BR",
+            ]
+        ]
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)
@@ -24,25 +50,6 @@ class Serper extends Searchengine
         $this->configuration->method = "post_json";
 
         //$this->configuration->cost = 1;
-
-        $this->configuration->setLanguages("gl", [], [
-            "de_DE" => "de",
-            "de_AT" => "at",
-            "en_US" => "us",
-            "en_GB" => "gb",
-            "es_ES" => "es",
-            "es_MX" => "mx",
-            "da_DK" => "dk",
-            "at_AT" => "at",
-            "de_CH" => "ch",
-            "fi_FI" => "fi",
-            "it_IT" => "it",
-            "nl_NL" => "nl",
-            "sv_SE" => "se",
-            "fr_FR" => "fr",
-            "fr_CA" => "ca",
-            "pl_PL" => "pl"
-        ]);
 
         $this->configuration->infos = new SearchEngineInfos("https://metager.de/search-engine", "Google", "Serper", null, null, "Serper", "~500,000,000,000");
     }

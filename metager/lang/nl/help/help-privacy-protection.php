@@ -19,7 +19,7 @@ return [
         ],
     ],
     'maps' => [
-        'title' => 'MetaGer-kaarten',
+        'title' => 'MetaGer Kaarten',
         '1' => 'Het behoud van privacy in het tijdperk van wereldwijde datagiganten heeft er ook toe geleid dat we <a href="https://maps.metager.de" target="_blank">https://maps.metager.de</a> hebben ontwikkeld: de (voor zover wij weten) enige routeplanner die volledige functionaliteit biedt via een browser en app zonder locaties van gebruikers op te slaan. Dit is allemaal controleerbaar omdat onze software open source is. Voor het gebruik van maps.metager.de raden we onze snelle app-versie aan. Je kunt onze apps downloaden van <a href="/app" target="_blank">hier</a> (of natuurlijk ook van de Play Store).',
         '2' => 'Deze kaartfunctie is ook toegankelijk vanuit de MetaGer zoekfunctie (en omgekeerd). Zodra je hebt gezocht naar een term in MetaGer, zie je een nieuwe zoekfocus \'Kaarten\' in de rechterbovenhoek. Door erop te klikken ga je naar de bijbehorende kaart.',
         '3' => 'Bij het laden toont de kaart de punten (POI\'s = Points of Interest) gevonden door MetaGer, die ook in de rechterkolom staan. Bij het zoomen past deze lijst zich aan de kaartsectie aan. Als je met je muis over een marker op de kaart of in de lijst beweegt, wordt het overeenkomstige item gemarkeerd. Klik op \'Details\' voor meer informatie over dat punt uit de onderstaande database.',

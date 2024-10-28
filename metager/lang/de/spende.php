@@ -39,7 +39,7 @@ return [
     'payment-method' => [
         'heading' => 'Wie möchten Sie die Zahlung durchführen?',
         'methods' => [
-            'banktransfer' => 'Banküberweisung',
+            'banktransfer' => 'Überweisung',
             'directdebit' => 'Lastschrift',
             'paypal' => 'PayPal',
             'venmo' => 'Venmo',

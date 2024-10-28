@@ -36,4 +36,7 @@ return [
     'prevention' => 'Ajuda com pensamentos suicidas - MetaGer',
     'search-engine' => 'Motores de pesquisa - MetaGer',
     'transparency' => 'Declaração de transparência - MetaGer',
+    'settings' => 'Definições',
+    'index' => 'MetaGer: Pesquisa e localização protegidas pela privacidade',
+    'lang-selector' => 'Seleção da língua',
 ];

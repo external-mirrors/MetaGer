@@ -24,6 +24,6 @@ return [
             '1' => 'Zugriff auf Positionsdaten  => Falls GPS an ihrem Mobiltelefon aktiviert ist, können wir dadurch Ihre Suchergebnisse verbessern. Außerdem schalten Sie damit die Funktion Schritt-für-Schritt Navigation frei. <b>Selbstverständlich werden diese Daten nirgendwo gespeichert und erst recht nicht an Dritte weiter gegeben!</b>',
             '2' => 'Die APK für die manuelle Installation hat einen integrierten Updater. Damit der Updater funktioniert, bittet die App um die Erlaubnis, Benachrichtigungen zu versenden, um Sie über ein verfügbares Update zu informieren, und verwendet die Android-Erlaubnis REQUEST_INSTALL_PACKAGES, damit sie Sie bitten kann, das App-Update zu installieren',
         ],
-        '4' => 'Nach dem ersten Start werden Sie nach den folgenden Berechtigungen gefragt:',
+        '4' => 'Die App fragt nach dem ersten Start nach folgenden Berechtigungen:',
     ],
 ];

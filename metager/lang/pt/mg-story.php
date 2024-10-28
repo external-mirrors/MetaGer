@@ -5,6 +5,9 @@ return [
         'btn-add' => 'Adicionar o plugin MetaGer',
         'title' => 'Instalar o MetaGer agora',
         'p' => 'Utilize o nosso plugin para instalar o MetaGer como o seu motor de busca. Pode utilizar confortavelmente a aplicação MetaGer no seu smartphone.',
+        'image' => [
+            'alt' => 'MetaGer Apps',
+        ],
     ],
     'eco' => [
         'title' => '100% de energia renovável',

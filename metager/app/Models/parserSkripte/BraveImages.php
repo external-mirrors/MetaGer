@@ -47,7 +47,9 @@ class BraveImages extends Searchengine
             "sv_SE" => "SE",
             "fr_FR" => "FR",
             "fr_CA" => "CA",
-            "pl_PL" => "PL"
+            "pl_PL" => "PL",
+            "pt_PT" => "PT",
+            "pt_BR" => "BR",
         ]);
 
         $this->configuration->infos = new SearchEngineInfos("https://search.brave.com/", "Brave Search", "Brave", "Juni 2021", "San Francisco", "Brave San Francisco", "einige Milliarden");

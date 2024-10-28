@@ -30,22 +30,23 @@ class Brave extends Searchengine
         ]);
 
         $this->configuration->setLanguages("country", [], [
-            "de_DE" => "DE",
-            "de_AT" => "AT",
-            "en_US" => "US",
-            "en_GB" => "GB",
-            "es_ES" => "ES",
-            "es_MX" => "MX",
-            "da_DK" => "DK",
-            "at_AT" => "AT",
-            "de_CH" => "CH",
-            "fi_FI" => "FI",
-            "it_IT" => "IT",
-            "nl_NL" => "NL",
-            "sv_SE" => "SE",
-            "fr_FR" => "FR",
-            "fr_CA" => "CA",
-            "pl_PL" => "PL"
+            "de_DE" => "de_DE",
+            "de_AT" => "de_AT",
+            "en_US" => "en_US",
+            "en_GB" => "en_GB",
+            "es_ES" => "es_ES",
+            "es_MX" => "es_MX",
+            "da_DK" => "da_DK",
+            "de_CH" => "de_CH",
+            "fi_FI" => "fi_FI",
+            "it_IT" => "it_IT",
+            "nl_NL" => "nl_NL",
+            "sv_SE" => "sv_SE",
+            "fr_FR" => "fr_FR",
+            "fr_CA" => "fr_CA",
+            "pl_PL" => "pl_PL",
+            "pt_PT" => "pt-pt_PT",
+            "pt_BR" => "pt-br_BR",
         ]);
 
         $this->configuration->infos = new SearchEngineInfos("https://search.brave.com/", "Brave Search", "Brave", "Juni 2021", "San Francisco", "Brave San Francisco", "einige Milliarden");

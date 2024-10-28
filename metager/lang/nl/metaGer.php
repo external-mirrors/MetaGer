@@ -121,6 +121,7 @@ return [
             'eus' => 'Engels (VS)',
             'sa' => 'Spaans (Argentinië)',
             'sc' => 'Spaans (Chili)',
+            'ppt' => 'Portugees (Portugal)',
         ],
         'sort' => [
             'priceascending' => 'Prijs (oplopend)',

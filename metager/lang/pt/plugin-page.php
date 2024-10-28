@@ -16,4 +16,7 @@ return [
     'mobile-notlisted' => 'Não sabemos se o browser que utiliza permite adicionar o MetaGer como motor de pesquisa (predefinido), mas pode descarregar o Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">aqui</a>, um browser de código aberto que oferece esta funcionalidade.',
     'desktop-notlisted' => 'Não sabemos se o browser que utiliza permite adicionar o MetaGer como motor de pesquisa (predefinido), mas pode descarregar o Firefox <a href="https://www.mozilla.org/en-US/firefox/new/" target="_blank" rel="noopener">aqui</a>, um browser de código aberto que oferece esta funcionalidade.',
     'mobile-unable' => 'O browser que utiliza não oferece a possibilidade de adicionar o MetaGer como motor de pesquisa (predefinido), mas pode descarregar o Firefox <a href="https://www.mozilla.org/en-US/firefox/mobile/" target="_blank" rel="noopener">aqui</a>, um browser de código aberto que oferece esta funcionalidade.',
+    'open-modal' => [
+        'title' => 'Adicionar MetaGer ao seu browser',
+    ],
 ];

@@ -179,4 +179,5 @@ return [
         'title' => 'Princípios',
         'description' => 'Enquanto associação sem fins lucrativos, estamos empenhados no livre acesso ao conhecimento. Como sabemos que a investigação livre não é compatível com a vigilância em massa, também levamos muito a sério a proteção de dados. Sempre processámos apenas os dados absolutamente necessários para o funcionamento dos nossos serviços. A proteção de dados é sempre a nossa norma. Não utilizamos a definição de perfis, ou seja, a criação automática de perfis de utilizador.',
     ],
+    'title' => 'política de privacidade',
 ];

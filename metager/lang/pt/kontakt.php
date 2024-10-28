@@ -28,10 +28,12 @@ Alemanha",
         '6' => 'A sua mensagem',
         '9' => 'Até 5 anexos (tamanho do ficheiro < 5 MB)',
         '5' => 'O seu endereço eletrónico (facultativo)',
+        'name' => 'Nome',
     ],
     'headline' => [
         '2' => 'Correio eletrónico',
         'pgp' => 'Encriptação',
+        '1' => 'Contacto',
     ],
     'success' => [
         '1' => 'A sua mensagem foi entregue com sucesso. Foi enviada uma primeira resposta automática para :email.',

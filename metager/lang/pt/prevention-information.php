@@ -27,6 +27,7 @@ return [
     ],
     'head' => [
         'b' => 'Não está sozinho',
+        'a' => 'Ajuda com pensamentos suicidas - MetaGer',
     ],
     'denmark' => [
         'name' => 'Dinamarca 🇩🇰',

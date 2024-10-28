@@ -16,6 +16,7 @@ return [
         'sv' => 'ruotsi',
         'pl' => 'puola',
         'fr' => 'ranska',
+        'pt' => 'Portugues',
     ],
     'h1' => [
         '1' => 'Kielen valinta',

@@ -6,6 +6,7 @@ return [
         '5' => 'Código',
         '2' => 'Pesquisar e encontrar em segurança com o MetaGer',
         '1' => 'Pré-visualização',
+        '4' => 'Pesquisar',
     ],
     'head' => [
         '5' => 'Gerar',

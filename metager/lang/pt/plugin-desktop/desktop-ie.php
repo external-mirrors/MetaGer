@@ -10,6 +10,7 @@ return [
     'default-page-v9' => [
         '2' => 'No novo separador, clique na seta junto a <img class= "mg-icon" src="/img/home.svg"> no canto superior esquerdo e escolha "Adicionar ou alterar a página inicial".',
         '3' => 'Na janela pop-up, selecione "Utilizar esta página Web como única página inicial" e clique em "Sim".',
+        '1' => 'Clique em <a href="/" target="_blank" rel="noopener">aqui</a> para abrir o MetaGer num novo separador.',
     ],
     'default-search-v9' => [
         '1' => 'Clique em <a href="javascript:window.external.addSearchProvider($(\'link[rel=search]\').attr(\'href\'));">aqui</a> para adicionar o MetaGer como motor de pesquisa.',

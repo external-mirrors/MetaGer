@@ -42,7 +42,9 @@ class SerperImages extends Searchengine
             "sv_SE" => "se",
             "fr_FR" => "fr",
             "fr_CA" => "ca",
-            "pl_PL" => "pl"
+            "pl_PL" => "pl",
+            "pt_PT" => "pt-pt_PT",
+            "pt_BR" => "pt-br_BR",
         ]);
 
         $this->configuration->infos = new SearchEngineInfos("https://metager.de/search-engine", "Google", "Serper", null, null, "Serper", "~500,000,000,000");

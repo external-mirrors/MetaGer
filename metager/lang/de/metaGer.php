@@ -147,6 +147,7 @@ return [
             'chk' => "Chinesisch (Hong Kong SAR)",
             'cc' => "Chinesisch (China)",
             'ct' => "Chinesisch (Taiwan)",
+            'ppt' => 'Portugiesisch (Portugal)',
         ],
         'sort' => [
             'name' => "Sortieren nach",

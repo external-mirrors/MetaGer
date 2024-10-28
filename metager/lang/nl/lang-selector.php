@@ -12,6 +12,7 @@ return [
         'sv' => 'Zweeds',
         'pl' => 'Pools',
         'fr' => 'Frans',
+        'pt' => 'Portugees',
     ],
     'h1' => [
         '1' => 'Taalkeuze',

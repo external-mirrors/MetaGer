@@ -28,4 +28,10 @@ return [
     'nav5' => 'Contacto',
     'nav2' => 'Doar',
     'nav4' => 'Direção',
+    'nav28' => 'Definições',
+    'nav27' => 'Mapas MetaGer',
+    'nav29' => 'Declaração de transparência',
+    'nav25' => 'MetaGer App',
+    'nav1' => 'Pesquisar',
+    'nav3' => 'Privacidade',
 ];

@@ -12,6 +12,7 @@ return [
             '5' => 'Mapas MetaGer',
             '0' => 'Serviços',
             '1' => 'Android-App',
+            '4' => 'MetaGer Widget',
         ],
         '1' => [
             '1' => 'A página inicial',
@@ -24,6 +25,7 @@ return [
             '2' => '!bangs',
             '4' => 'Adicionar MetaGer',
             '0' => 'Funções e dicas úteis',
+            '1' => 'Funções de pesquisa',
         ],
     ],
     'achtung' => 'Aviso! A estrutura e a funcionalidade do nosso sítio Web estão sujeitas a constantes desenvolvimentos e alterações. Tentamos atualizar as nossas páginas de ajuda o mais rapidamente possível, mas não podemos evitar erros temporários.',

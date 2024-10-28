@@ -9,6 +9,7 @@ return [
         'copy' => 'Cópia',
         '1' => 'MetaGer Websearch-Widget',
         '4' => 'Pesquisar e encontrar em segurança com o MetaGer',
+        '6' => 'en',
     ],
     'alert' => [
         'failure' => 'Alguma coisa correu mal!',

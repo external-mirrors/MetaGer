@@ -116,6 +116,7 @@ return [
             'cc' => 'Cinese (Cina)',
             'ct' => 'Cinese (Taiwan)',
             'name' => 'Lingua',
+            'ppt' => 'Portoghese (Portogallo)',
         ],
         'sort' => [
             'priceascending' => 'Prezzo (crescente)',

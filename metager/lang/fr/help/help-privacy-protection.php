@@ -2,7 +2,7 @@
 return [
     'title' => 'MetaGer - Aide',
     'maps' => [
-        'title' => 'Cartes MetaGer',
+        'title' => 'MetaGer Maps',
         '3' => 'Au chargement, la carte affiche les points (POI = Points d\'Intérêt) trouvés par MetaGer, qui sont également listés dans la colonne de droite. Lors d\'un zoom, cette liste s\'adapte à la section de la carte. En passant la souris sur un marqueur de la carte ou de la liste, l\'élément correspondant est mis en évidence. Cliquez sur "Détails" pour obtenir plus d\'informations sur ce point à partir de la base de données ci-dessous.',
         '1' => 'La préservation de la vie privée à l\'ère des géants mondiaux de l\'information nous a également conduits à développer <a href="https://maps.metager.de" target="_blank">https://maps.metager.de</a>: le (à notre connaissance) seul planificateur d\'itinéraires qui offre une fonctionnalité complète via un navigateur et une application sans stocker les emplacements de l\'utilisateur. Tout cela est vérifiable car notre logiciel est open source. Pour l\'utilisation de maps.metager.de, nous recommandons notre version rapide de l\'application. Vous pouvez télécharger nos applications à partir de <a href="/app" target="_blank">ici</a> (ou bien sûr aussi à partir du Play Store).',
         '2' => 'Cette fonction cartographique est également accessible à partir de la recherche MetaGer (et vice versa). Une fois que vous avez recherché un terme dans MetaGer, vous verrez apparaître un nouvel axe de recherche "Cartes" dans le coin supérieur droit. En cliquant dessus, vous accéderez à la carte correspondante.',

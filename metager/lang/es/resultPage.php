@@ -1,6 +1,6 @@
 <?php
 return [
-    'opensearch' => 'MetaGer: Buscar & encontrar seguro, proteger la privacidad',
+    'opensearch' => 'MetaGer: Buscar y encontrar seguro, proteger la esfera privada',
     'startseite' => 'MetaGer página de inicio',
     'impressum' => 'Aviso legal',
     'search-placeholder' => 'Introduzca los términos de búsqueda',
@@ -14,7 +14,7 @@ return [
         'heading' => 'Saltar rápidamente al contenido',
         'results' => 'Saltar a los resultados de búsqueda',
         'query' => 'Saltar al campo de entrada de la consulta de búsqueda',
-        'settings' => 'Saltar a la configuración de búsqueda',
+        'settings' => 'Ir a la configuración de búsqueda',
         'navigation' => 'Saltar a navegación',
         'return' => 'Puede volver a este menú en cualquier momento pulsando la tecla escape',
     ],

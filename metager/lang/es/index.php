@@ -11,7 +11,7 @@ return [
             'full' => 'Búsqueda sin publicidad activada.',
         ],
     ],
-    'placeholder' => 'MetaGer: Buscar & encontrar de forma segura',
+    'placeholder' => 'MetaGer: Buscar & encontrar seguro, proteger la privacidad',
     'searchbutton' => 'Iniciar MetaGer-Search',
     'foki' => [
         'web' => 'Web',

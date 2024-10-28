@@ -147,6 +147,7 @@ return [
             'cc' => 'Kinesiska (Kina)',
             'ct' => 'Kinesiska (Taiwan)',
             'name' => 'Språk',
+            'ppt' => 'Portugisiska (Portugal)',
         ],
         'sort' => [
             'priceascending' => 'Pris (stigande)',

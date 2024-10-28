@@ -12,6 +12,7 @@ return [
         'sv' => 'Svensk',
         'pl' => 'Polsk',
         'fr' => 'Fransk',
+        'pt' => 'Portugisisk',
     ],
     'h1' => [
         '1' => 'Valg af sprog',

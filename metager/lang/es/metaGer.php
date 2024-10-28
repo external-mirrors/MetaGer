@@ -153,6 +153,7 @@ return [
             'cc' => 'Chino (China)',
             'ct' => 'Chino (Taiwán)',
             'name' => 'Idioma',
+            'ppt' => 'Portugués (Portugal)',
         ],
         'sort' => [
             'priceascending' => 'Precio (ascendente)',

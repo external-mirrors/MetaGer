@@ -42,6 +42,7 @@ return [
             'chk' => 'Kinesisk (Hong Kong SAR)',
             'cc' => 'Kinesisk (Kina)',
             'name' => 'Sprog',
+            'ppt' => 'Portugisisk (Portugal)',
         ],
         'skip' => 'Spring over',
         'min' => 'Minimum søvn (i s)',

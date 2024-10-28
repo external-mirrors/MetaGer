@@ -116,6 +116,7 @@ return [
             'cc' => 'Kiinalainen (Kiina)',
             'ct' => 'Kiinalainen (Taiwan)',
             'name' => 'Kieli',
+            'ppt' => 'portugali (Portugali)',
         ],
         'sort' => [
             'priceascending' => 'Hinta (nouseva)',

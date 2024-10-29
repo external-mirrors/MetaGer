@@ -16,8 +16,7 @@ class AuthenticationValidation
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $whitelisted_ips = explode(",", config("metager.metager.unauth_whitelist"));
-        if (!app(Authorization::class)->canDoAuthenticatedSearch() && !in_array($request->ip(), $whitelisted_ips)) {
+        if (!app(Authorization::class)->canDoAuthenticatedSearch(false)) {
             $parameters = [];
             if ($request->filled("eingabe")) {
                 $parameters["eingabe"] = $request->input("eingabe");

@@ -12,4 +12,5 @@ enum DisabledReason
     case INCOMPATIBLE_FOKUS;
     case INCOMPATIBLE_LOCALE;
     case SUMAS_CONFIGURATION;
+    case SUMAS_DEFAULT_CONFIGURATION;
 }

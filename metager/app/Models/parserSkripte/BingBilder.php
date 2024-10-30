@@ -2,7 +2,6 @@
 
 namespace app\Models\parserSkripte;
 
-use App\Http\Controllers\Pictureproxy;
 use App\Models\DeepResults\Imagesearchdata;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
@@ -11,6 +10,9 @@ use Log;
 
 class BingBilder extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        "filter-opt-in" => true,
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

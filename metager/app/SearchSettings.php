@@ -216,7 +216,7 @@ class SearchSettings
                     continue;
                 }
                 foreach ($options->values as $value => $sumaValue) {
-                    if ($searchengines->sumas[$name]->configuration->disabled === true && !in_array($value, $enabledValues)) {
+                    if ($searchengines->sumas[$name]->configuration->disabled === true && !$searchengines->sumas[$name]->configuration->filterOptIn && !in_array($value, $enabledValues)) {
                         if (!array_key_exists($value, $disabledValues)) {
                             $disabledValues[$value] = [];
                         }

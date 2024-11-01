@@ -92,7 +92,6 @@ class BrowserVerification
                     // cost of the upcoming search by setting a Cookie
                     // We do not know if there are anough tokens
                     // But we need to calculate correct cost as if it were so
-                    app(Authorization::class)->availableTokens = 100;
                     app(Searchengines::class);  // Is needed so we know the cost of a search
                     $cost = app(Authorization::class)->cost;
                     if (\Request::header("tokensource", "app") === "webextension") {

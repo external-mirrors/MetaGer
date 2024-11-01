@@ -66,7 +66,7 @@ class Searchengines
         }
 
         foreach ($this->sumas as $suma) {
-            if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
+            if (!app(Authorization::class)->canDoAuthenticatedSearch(false) && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;

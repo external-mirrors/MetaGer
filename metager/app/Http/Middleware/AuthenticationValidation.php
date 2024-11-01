@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\AnonymousToken;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationValidation
@@ -43,8 +45,18 @@ class AuthenticationValidation
         } elseif ($authorization instanceof TokenAuthorization) {
             // Handle different versions of Tokenauthorization depending of source (app|webextension) and their respective versions
             if ($request->header("tokensource", "app") === "webextension") {
-                if (version_compare($request->header("Mg-Webext", "0.0"), "1.2", ">=")) {
-
+                if (version_compare($request->header("Mg-Webext", "0.0"), "1.2", ">=") && $request->hasHeader("anonymous-token-payment-id")) {
+                    // New Token authorization system triggered
+                    $payment_id = $request->header("anonymous-token-payment-id");
+                    if (!uuid_is_valid($payment_id))
+                        abort(400);
+                    AnonymousToken::SET_COST($authorization->cost, $payment_id);
+                    $payment = AnonymousToken::GET_PAYMENT($payment_id);
+                    if ($payment === null) {
+                        // Payment didn't make it in time
+                        return redirect(route("startpage", $parameters));
+                    }
+                    abort(400);
                 } else {
                     if (!$authorization->canDoAuthenticatedSearch()) {
                         /** Version 1.2 of webextension introduced a new token payment strategy */

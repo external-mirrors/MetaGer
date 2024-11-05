@@ -78,8 +78,10 @@ abstract class Authorization
      */
     public function getAdfreeLink()
     {
-        if (!empty($this->getToken()) && is_string($this->getToken())) {
+        if ($this instanceof KeyAuthorization) {
             return LaravelLocalization::getLocalizedUrl(null, "/keys/key/" . urlencode($this->getToken()));
+        } else if ($this instanceof TokenAuthorization) {
+            return LaravelLocalization::getLocalizedUrl(null, "/keys/key/enter");
         } else {
             return LaravelLocalization::getLocalizedUrl(null, "/keys");
         }

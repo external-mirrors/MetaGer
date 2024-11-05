@@ -14,6 +14,7 @@ class TokenAuthorization extends Authorization
     private $tokens = [];
     private $keyserver = "";
     private $tokenauthorization_header;
+    public ?AnonymousTokenPayment $token_payment = null;
 
     public function __construct(string|null $tokenString, string $tokenauthorization)
     {
@@ -23,6 +24,7 @@ class TokenAuthorization extends Authorization
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";
 
+        $this->token_payment = new AnonymousTokenPayment($this->cost, [], []);
         $tokenJson = json_decode($tokenString);
         if ($tokenJson === null) {
             $this->availableTokens = 0;
@@ -31,29 +33,15 @@ class TokenAuthorization extends Authorization
             $this->availableTokens = 0;
             $tokenJson = [];
         } else {
-            $this->availableTokens = sizeof($tokenJson);
+            foreach ($tokenJson as $token) {
+                $this->token_payment->addJSONToken($token);
+            }
+            $this->availableTokens = $this->token_payment->getAvailableTokenCount();
         }
 
-        foreach ($tokenJson as $token) {
-            if (!property_exists($token, "token") || !property_exists($token, "date") || !property_exists($token, "signature")) {
-                continue;
-            }
-            $tokenString = $token->token;
-            if (!is_string($tokenString)) {
-                continue;
-            }
-            $tokenSignature = $token->signature;
-            if (!is_string($tokenSignature)) {
-                continue;
-            }
-            $tokenDate = $token->date;
-            if (!is_string($tokenDate)) {
-                continue;
-            }
-            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
-        }
-        $this->checkTokens();
-        $this->availableTokens = sizeof($this->tokens);
+        $this->token_payment->checkTokens();
+        $this->availableTokens = $this->token_payment->getAvailableTokenCount();
+
         $this->updateCookie();
     }
 
@@ -63,37 +51,7 @@ class TokenAuthorization extends Authorization
             return false;
         }
 
-        $tokens_to_use = [];
-        for ($i = 0; $i < $cost; $i++) {
-            $tokens_to_use[] = array_shift($this->tokens);
-        }
-
-        $url = $this->keyserver . "/token/use";
-        $result_hash = md5($url . microtime(true));
-        $mission = [
-            "resulthash" => $result_hash,
-            "url" => $url,
-            "useragent" => "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:81.0) Gecko/20100101 Firefox/81.0",
-            "headers" => [
-                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
-                "Content-Type" => "application/json",
-            ],
-            "cacheDuration" => 0,
-            "name" => "Key Login",
-            "proxy" => false,
-            // Don't use Http Proxy if defined in .env
-            "curlopts" => [
-                CURLOPT_POST => true,
-                CURLOPT_TIMEOUT => 15,
-                CURLOPT_POSTFIELDS => json_encode(["tokens" => $tokens_to_use])
-            ]
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-        $this->usedTokens += sizeof($tokens_to_use);
-        $this->updateCookie();
-
-        return true;
+        return $this->token_payment->makePayment($cost);
     }
 
     /**
@@ -172,11 +130,11 @@ class TokenAuthorization extends Authorization
     }
 
     /**
-     * @return Token[]
+     * @return AnonymousTokenPayment
      */
     public function getToken()
     {
-        return $this->tokens;
+        return $this->token_payment;
     }
 
     private function checkTokens()
@@ -217,27 +175,43 @@ class TokenAuthorization extends Authorization
 
     private function updateCookie()
     {
-        if (sizeof($this->tokens) === 0) {
+        if (sizeof($this->token_payment->tokens) === 0) {
             Cookie::queue(Cookie::forget("tokens", "/", null));
         } else {
-            Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, true, true));
+            Cookie::queue(Cookie::forever("tokens", json_encode($this->token_payment->tokens), "/", null, true, true));
+        }
+        if (sizeof($this->token_payment->decitokens) === 0) {
+            Cookie::queue(Cookie::forget("tokens", "/", null));
+        } else {
+            Cookie::queue(Cookie::forever("decitokens", json_encode($this->token_payment->decitokens), "/", null, true, true));
         }
     }
 
-    private function parseError($result)
+
+
+    public function addTokens($tokens = [], $decitoken = [])
     {
-        $new_tokens = [];
-        foreach ($result->errors as $error) {
-            if ($error->msg === "Invalid Signatures") {
-                // One or more tokens are invalid. Remove the invalid tokens
-                foreach ($error->value as $error_token) {
-                    if ($error_token->status === "ok") {
-                        $new_tokens[] = new Token($error_token->token, $error_token->signature, $error_token->date);
-                    }
-                }
+        $tokens = json_decode(json_encode($tokens, JSON_FORCE_OBJECT));
+        foreach ($tokens as $token) {
+            if (!property_exists($token, "token") || !property_exists($token, "date") || !property_exists($token, "signature")) {
+                continue;
             }
+            $tokenString = $token->token;
+            if (!is_string($tokenString)) {
+                continue;
+            }
+            $tokenSignature = $token->signature;
+            if (!is_string($tokenSignature)) {
+                continue;
+            }
+            $tokenDate = $token->date;
+            if (!is_string($tokenDate)) {
+                continue;
+            }
+            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
         }
-        return $new_tokens;
+        $this->checkTokens();
+        $this->availableTokens = sizeof($this->tokens);
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Authorization\AnonymousTokenPayment;
 use Illuminate\Http\Request;
 use Illuminate\Redis\Connections\Connection;
 use Illuminate\Support\Facades\Redis;
@@ -24,13 +25,19 @@ class AnonymousToken extends Controller
             abort(400);
         }
         $payment_id = $request->input($payment_id_paramater);
-        $cost = (int) self::GET_REDIS_CLIENT()->blpop(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUS_TOKEN_CACHE_COST . ":" . $payment_id, 5);
-        return response()->json(["cost" => $cost, "token" => ["token" => [], "decitoken" => []]]);
+        $payment = AnonymousTokenPayment::UNPUBLISH($payment_id);
+        return response()->json($payment->toJSON(), 200, ["Cache-Control" => "no-store"]);
     }
 
     public function pay(Request $request)
     {
+        $payment_id = $request->json("payment_id");
+        $payment_uid = $request->json("payment_uid");
 
+        $content = $request->getContent();
+        self::GET_REDIS_CLIENT()->rpush(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, $content);
+        self::GET_REDIS_CLIENT()->expire(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, 300);
+        return response()->json(["status" => "ok"], 200, ["Cache-Control" => "no-store"]);
     }
 
     /**
@@ -38,15 +45,19 @@ class AnonymousToken extends Controller
      * @param int $cost - The cost of the request
      * @return void
      */
-    public static function SET_COST(int $cost, string $payment_id)
+    public static function SET_COST(int $cost, string $payment_id): string
     {
         $redis_client = self::GET_REDIS_CLIENT();
+
+        $request_id = uniqid('', true);
+
         $redis_key = self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUS_TOKEN_CACHE_COST . ":" . $payment_id;
         if (!uuid_is_valid($payment_id) || $redis_client->exists($redis_key) === 1) {
             throw new \ErrorException("$payment_id is not a valid payment id.");
         }
         $redis_client->rpush($redis_key, $cost);
         $redis_client->expire($redis_key, 600);
+        return $request_id;
     }
 
     /**
@@ -60,7 +71,7 @@ class AnonymousToken extends Controller
         if ($payment === null) {
             return null;
         } else {
-            return json_decode($payment[1]);
+            return json_decode($payment[1], true);
         }
     }
 

@@ -93,7 +93,7 @@ class BrowserVerification
                     // We do not know if there are anough tokens
                     // But we need to calculate correct cost as if it were so
                     app(Searchengines::class);  // Is needed so we know the cost of a search
-                    $cost = app(Authorization::class)->cost;
+                    $cost = app(Authorization::class)->getCost();
                     if (\Request::header("tokensource", "app") === "webextension") {
                         return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer", "cost" => $cost, "resultpage" => $url]);
                     }

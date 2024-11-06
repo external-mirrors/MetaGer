@@ -26,18 +26,27 @@ class AnonymousTokenPayment
      * @var string
      */
     private ?string $payment_uid;
-    public readonly float $cost;
+    /**
+     * A key should never be defined for an anonymous payment.
+     * but if it is. There was an error with the token payment which falls back to using the key instead
+     */
+    public ?string $key;
+    public float $cost;
     /** @var Token[] */
     public array $tokens = [];
     /** @var Token[] */
     public array $decitokens = [];
 
+    private $key_api_server;
+
     /**
      * @param float $cost
      * @param Token[] $tokens
      */
-    public function __construct(float $cost, array $tokens, array $decitoken, string|null $payment_id = null, string|null $payment_uid = null)
+    public function __construct(float $cost, array $tokens, array $decitoken, string|null $payment_id = null, string|null $payment_uid = null, string $key = null)
     {
+        $this->key_api_server = config("metager.metager.keymanager.server") . "/api/json";
+        $this->key = $key;
         $this->cost = $cost;
         foreach ($tokens as $token) {
             if ($token instanceof Token) {
@@ -70,7 +79,7 @@ class AnonymousTokenPayment
         if (sizeof($this->tokens) === 0 && sizeof($this->decitokens) === 0) {
             return false;
         }
-        $url = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys/token/check";
+        $url = $this->key_api_server . "/token/check";
 
         $ch = curl_init($url);
         curl_setopt_array($ch, [
@@ -124,7 +133,7 @@ class AnonymousTokenPayment
             $decitokens--;
         }
 
-        $url = config("metager.metager.keymanager.server") ?: config("app.url") . "/token/use";
+        $url = $this->key_api_server . "/token/use";
         $result_hash = md5($url . microtime(true));
         $mission = [
             "resulthash" => $result_hash,
@@ -146,8 +155,6 @@ class AnonymousTokenPayment
         ];
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-        $this->usedTokens += sizeof($tokens_to_use);
-        $this->updateCookie();
 
         return true;
     }
@@ -204,6 +211,7 @@ class AnonymousTokenPayment
             "cost" => $this->cost,
             "payment_id" => $this->payment_id,
             "payment_uid" => $this->payment_uid,
+            "key" => $this->key,
             "tokens" => [
                 "tokens" => $this->tokens,
                 "decitokens" => $this->decitokens
@@ -253,11 +261,45 @@ class AnonymousTokenPayment
         return null;
     }
 
+    /**
+     * Sends Token payment via redis to the waiting main process which is waiting on the receive function
+     * 
+     * @return void
+     */
+    public function send()
+    {
+        Redis::rpush("payment:anonymous:$this->payment_id:$this->payment_uid", $this->toJSON());
+        Redis::expire("payment:anonymous:$this->payment_id:$this->payment_uid", 30);
+        $this->tokens = [];
+        $this->decitokens = [];
+    }
+
+    public function receive()
+    {
+        $payment = Redis::blpop("payment:anonymous:$this->payment_id:$this->payment_uid", 30);
+        if (is_null($payment))
+            return;
+        $payment = AnonymousTokenPayment::fromJSON($payment[1]);
+        foreach ($payment->tokens as $token) {
+            $this->tokens[] = $token;
+        }
+        foreach ($payment->decitokens as $token) {
+            $this->decitokens[] = $token;
+        }
+        if (!is_null($payment->key)) {
+            $this->key = $payment->key;
+        }
+    }
+
     public static function fromJSON(string $json): AnonymousTokenPayment|null
     {
         $payment_json = json_decode($json);
         if (is_null($payment_json)) {
             return null;
+        }
+        $key = null;
+        if (property_exists($payment_json, "key")) {
+            $key = $payment_json->key;
         }
         if (!property_exists($payment_json, "cost")) {
             return null;
@@ -297,7 +339,7 @@ class AnonymousTokenPayment
                 $decitokens[] = $token;
             }
         }
-        return new AnonymousTokenPayment($cost, $tokens, $decitokens, $payment_id, $payment_uid);
+        return new AnonymousTokenPayment($cost, $tokens, $decitokens, $payment_id, $payment_uid, $key);
     }
 
     /**
@@ -322,7 +364,7 @@ class AnonymousTokenPayment
         if (!is_string($tokenDate)) {
             return null;
         }
-        return new Token($token, $tokenSignature, $tokenDate);
+        return new Token($tokenString, $tokenSignature, $tokenDate);
     }
 
 }

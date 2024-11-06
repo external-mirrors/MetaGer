@@ -92,7 +92,7 @@ class Searchengines
 
         $authorization = app(Authorization::class);
 
-        $authorization->cost = 0; // Update cost with actual cost that are correct for current engine configuration
+        $authorization->setCost(0); // Update cost with actual cost that are correct for current engine configuration
 
         foreach ($this->sumas as $suma) {
             if ($suma->configuration->disabled) {
@@ -125,13 +125,13 @@ class Searchengines
             // Apply final settings to Sumas
             $suma->applySettings();
             if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
-                $authorization->cost += $suma->configuration->cost;
+                $authorization->setCost($authorization->getCost() + $suma->configuration->cost);
             }
         }
 
         $this->handleFilterOptIn();
 
-        $authorization->cost = max($authorization->cost, 1);
+        $authorization->setCost(max($authorization->getCost(), 1));
 
         uasort($this->sumas, function ($a, $b) {
             if ($a->configuration->engineBoost === $b->configuration->engineBoost) {
@@ -171,7 +171,7 @@ class Searchengines
                 $suma->configuration->disabled = false;
                 $suma->configuration->disabledReasons = [];
                 if ($suma->configuration->cost > 0) {
-                    $authorization->cost += $suma->configuration->cost;
+                    $authorization->setCost($authorization->getCost() + $suma->configuration->cost);
                 }
                 $suma->applySettings();
             }

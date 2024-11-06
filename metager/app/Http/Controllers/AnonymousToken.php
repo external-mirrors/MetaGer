@@ -16,7 +16,6 @@ class AnonymousToken extends Controller
     /**
      * A client using anonymous token can use this route to retrieve the cost of a specific action
      * @param \Illuminate\Http\Request $request
-     * @return void
      */
     public function cost(Request $request)
     {
@@ -26,18 +25,31 @@ class AnonymousToken extends Controller
         }
         $payment_id = $request->input($payment_id_paramater);
         $payment = AnonymousTokenPayment::UNPUBLISH($payment_id);
-        return response()->json($payment->toJSON(), 200, ["Cache-Control" => "no-store"]);
+        return response($payment->toJSON(), 200, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
     }
 
     public function pay(Request $request)
     {
-        $payment_id = $request->json("payment_id");
-        $payment_uid = $request->json("payment_uid");
+        $payment = AnonymousTokenPayment::fromJSON($request->getContent());
+        if ($payment === null) {
+            abort(400);
+        }
 
-        $content = $request->getContent();
-        self::GET_REDIS_CLIENT()->rpush(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, $content);
-        self::GET_REDIS_CLIENT()->expire(self::ANONYMOUS_TOKEN_CACHE_PREFIX . ":" . self::ANONYMOUSE_TOKEN_CACHE_PAYMENT . ":" . $payment_id, 300);
-        return response()->json(["status" => "ok"], 200, ["Cache-Control" => "no-store"]);
+        if (is_null($payment->key)) {
+            // Check validity of submitted tokens
+            $tokens_valid = $payment->checkTokens();
+
+            if ($payment->cost > $payment->getAvailableTokenCount()) {
+                // Either not enough tokens supplied or some of the token were invalid
+                return response($payment->toJSON(), 402, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
+            } elseif ($tokens_valid === false) {
+                return response($payment->toJSON(), 503, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
+            }
+
+        }
+
+        $payment->send();
+        return response($payment->toJSON(), 202, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
     }
 
     /**

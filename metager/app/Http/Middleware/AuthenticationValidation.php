@@ -37,7 +37,7 @@ class AuthenticationValidation
         /** First authorization check passed. Now we can calculate the actual cost of the search */
         app(Searchengines::class);  // Is needed so we know the cost of a search
         $authorization = app(Authorization::class);
-        $cost = $authorization->cost;
+        $cost = $authorization->getCost();
         $authorized = false;
         if ($authorization instanceof KeyAuthorization) {
             /** Abort if key doesn't cover the acual cost of this request */
@@ -50,10 +50,27 @@ class AuthenticationValidation
                     $payment_id = $request->header("anonymous-token-payment-id");
                     if (!uuid_is_valid($payment_id))
                         abort(400);
-                    $token_payment = new AnonymousTokenPayment($cost, [], []);
-                    $payment_uid = $token_payment->publish($payment_id);
-                    if ($payment_uid !== null) {
+                    $payment_uid = $authorization->token_payment->publish($payment_id);
 
+                    if ($payment_uid !== null) {
+                        // Received tokens are already checked to be valid. No need to validate them here again
+                        $authorization->token_payment->receive();
+
+                        if (!is_null($authorization->token_payment->key)) {
+                            // Something weird happened which caused anonymous token payment to fail. For convenience purposes we fall back to key
+                            // Authorization in that case
+                            $key = $authorization->token_payment->key;
+                            app()->singleton(Authorization::class, function ($app) use ($key) {
+                                return new KeyAuthorization($key);
+                            });
+                            $authorization = app(Authorization::class);
+                            $authorized = $authorization->canDoAuthenticatedSearch();
+                        } else {
+                            $authorization->availableTokens = $authorization->token_payment->getAvailableTokenCount();
+                        }
+                        if ($authorization->canDoAuthenticatedSearch()) {
+                            $authorized = true;
+                        }
                     }
 
                 } else {

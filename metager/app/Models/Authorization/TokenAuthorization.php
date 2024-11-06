@@ -45,13 +45,25 @@ class TokenAuthorization extends Authorization
         $this->updateCookie();
     }
 
-    function makePayment(int $cost)
+    public function makePayment(int $cost)
     {
         if (!$this->canDoAuthenticatedSearch()) {
             return false;
         }
 
-        return $this->token_payment->makePayment($cost);
+        if ($this->token_payment->makePayment($cost)) {
+            $this->usedTokens += $cost;
+            $this->updateCookie();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function setCost(int $cost)
+    {
+        parent::setCost($cost);
+        $this->token_payment->cost = $cost;
     }
 
     /**
@@ -181,7 +193,7 @@ class TokenAuthorization extends Authorization
             Cookie::queue(Cookie::forever("tokens", json_encode($this->token_payment->tokens), "/", null, true, true));
         }
         if (sizeof($this->token_payment->decitokens) === 0) {
-            Cookie::queue(Cookie::forget("tokens", "/", null));
+            Cookie::queue(Cookie::forget("decitokens", "/", null));
         } else {
             Cookie::queue(Cookie::forever("decitokens", json_encode($this->token_payment->decitokens), "/", null, true, true));
         }
@@ -212,26 +224,5 @@ class TokenAuthorization extends Authorization
         }
         $this->checkTokens();
         $this->availableTokens = sizeof($this->tokens);
-    }
-}
-
-class Token
-{
-    /**
-     * @var string $token
-     * @var string $signature
-     * @var string $date
-     */
-    public $token, $signature, $date;
-    /**
-     * @param string $token
-     * @param string $signature
-     * @param string $date
-     */
-    public function __construct($token, $signature, $date)
-    {
-        $this->token = $token;
-        $this->signature = $signature;
-        $this->date = $date;
     }
 }

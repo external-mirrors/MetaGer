@@ -16,7 +16,7 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    public int $cost = 1;
+    protected int $cost = 1;
 
     public bool $loggedIn = false;
 
@@ -121,5 +121,15 @@ abstract class Authorization
             $tooltip = __("index.key.tooltip.full");
         }
         return $tooltip;
+    }
+
+    public function setCost(int $cost)
+    {
+        $this->cost = $cost;
+    }
+
+    public function getCost(): int
+    {
+        return $this->cost;
     }
 }

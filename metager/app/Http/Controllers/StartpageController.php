@@ -30,16 +30,12 @@ class StartpageController extends Controller
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
 
-        $ckey = hash_hmac("sha256", $request->ip() . now()->format("Y-m-d"), config("metager.taketiles.secret"));
-        Cache::put($ckey, "1", now()->addSeconds(TilesController::CACHE_DURATION_SECONDS));
-        $tiles = TilesController::TILES($ckey);
-        $tiles_update_url = route('tiles', ["ckey" => $ckey]);
+        $tiles = TilesController::TILES();
 
         return view('index')
             ->with('title', trans('titles.index'))
             ->with('focus', $request->input('focus', 'web'))
             ->with('request', $request->input('request', 'GET'))
-            ->with('tiles_update_url', $tiles_update_url)
             ->with('tiles', $tiles)
             ->with('css', [mix('css/themes/startpage/light.css')])
             ->with('js', [mix('js/startpage/app.js')])

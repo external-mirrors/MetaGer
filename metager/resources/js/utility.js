@@ -198,3 +198,12 @@ function updateWebExtensionStatus(time) {
     new CustomEvent("webextension_status_update", { detail: time })
   );
 }
+
+(() => {
+  let url = new URL(document.location)
+  if (url.searchParams.has("key")) {
+    // Remove the key from the visible URL in the browser
+    url.searchParams.delete("key");
+    window.history.replaceState({}, null, url);
+  }
+})();

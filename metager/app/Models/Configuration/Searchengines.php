@@ -131,8 +131,6 @@ class Searchengines
 
         $this->handleFilterOptIn();
 
-        $authorization->setCost(max($authorization->getCost(), 1));
-
         uasort($this->sumas, function ($a, $b) {
             if ($a->configuration->engineBoost === $b->configuration->engineBoost) {
                 return 0;

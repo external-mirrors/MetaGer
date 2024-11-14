@@ -16,14 +16,14 @@ abstract class Authorization
     /**
      * The cost of this search
      */
-    protected int $cost = 1;
+    protected float $cost = 1;
 
     public bool $loggedIn = false;
 
     /**
      * How many Tokens are available to the user
      */
-    public int $availableTokens;
+    public float $availableTokens;
 
     /**
      * How many tokens were already consumed by the search
@@ -50,11 +50,11 @@ abstract class Authorization
 
     /**
      * Makes a payment for the current request
-     * @param int $cost Amount of token to pay
+     * @param float $cost Amount of token to pay
      * 
      * @return bool
      */
-    public abstract function makePayment(int $cost);
+    public abstract function makePayment(float $cost);
 
     /**
      * Checks whether the user has given any kind of authentication
@@ -123,12 +123,12 @@ abstract class Authorization
         return $tooltip;
     }
 
-    public function setCost(int $cost)
+    public function setCost(float $cost)
     {
-        $this->cost = $cost;
+        $this->cost = round($cost, 1);
     }
 
-    public function getCost(): int
+    public function getCost(): float
     {
         return $this->cost;
     }

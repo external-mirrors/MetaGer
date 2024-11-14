@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Authorization\AnonymousTokenPayment;
+use Cookie;
 use Illuminate\Http\Request;
 use Illuminate\Redis\Connections\Connection;
 use Illuminate\Support\Facades\Redis;
@@ -25,6 +26,12 @@ class AnonymousToken extends Controller
         }
         $payment_id = $request->input($payment_id_paramater);
         $payment = AnonymousTokenPayment::UNPUBLISH($payment_id);
+
+        if (is_null($payment)) {
+            $payment = new AnonymousTokenPayment(0, [], [], $payment_id, null, null);
+        }
+
+        Cookie::flushQueuedCookies();
         return response($payment->toJSON(), 200, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
     }
 
@@ -41,14 +48,17 @@ class AnonymousToken extends Controller
 
             if ($payment->cost > $payment->getAvailableTokenCount()) {
                 // Either not enough tokens supplied or some of the token were invalid
+                Cookie::flushQueuedCookies();
                 return response($payment->toJSON(), 402, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
             } elseif ($tokens_valid === false) {
+                Cookie::flushQueuedCookies();
                 return response($payment->toJSON(), 503, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
             }
 
         }
 
         $payment->send();
+        Cookie::flushQueuedCookies();
         return response($payment->toJSON(), 202, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
     }
 

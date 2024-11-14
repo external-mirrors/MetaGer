@@ -42,28 +42,27 @@ class TokenAuthorization extends Authorization
         $this->token_payment->checkTokens();
         $this->availableTokens = $this->token_payment->getAvailableTokenCount();
 
-        $this->updateCookie();
     }
 
-    public function makePayment(int $cost)
+    public function makePayment(float $cost)
     {
+        $cost = round($cost, 1);
         if (!$this->canDoAuthenticatedSearch()) {
             return false;
         }
 
         if ($this->token_payment->makePayment($cost)) {
             $this->usedTokens += $cost;
-            $this->updateCookie();
             return true;
         } else {
             return false;
         }
     }
 
-    public function setCost(int $cost)
+    public function setCost(float $cost)
     {
         parent::setCost($cost);
-        $this->token_payment->cost = $cost;
+        $this->token_payment->cost = round($cost, 1);
     }
 
     /**
@@ -149,80 +148,4 @@ class TokenAuthorization extends Authorization
         return $this->token_payment;
     }
 
-    private function checkTokens()
-    {
-        if (sizeof($this->tokens) === 0) {
-            return false;
-        }
-        $url = $this->keyserver . "/token/check";
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . config("metager.metager.keymanager.access_token"),
-                "Content-Type: application/json"
-            ],
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["tokens" => $this->tokens]),
-            CURLOPT_USERAGENT => "MetaGer"
-        ]);
-
-        $result = curl_exec($ch);
-        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-        if ($response_code === 200) {
-            return true;
-        } elseif ($response_code === 422) {
-            $this->tokens = [];
-            $result = json_decode($result);
-            if ($result === null) {
-                return false;
-            }
-            $this->tokens = $this->parseError($result);
-        }
-        return false;
-    }
-
-    private function updateCookie()
-    {
-        if (sizeof($this->token_payment->tokens) === 0) {
-            Cookie::queue(Cookie::forget("tokens", "/", null));
-        } else {
-            Cookie::queue(Cookie::forever("tokens", json_encode($this->token_payment->tokens), "/", null, true, true));
-        }
-        if (sizeof($this->token_payment->decitokens) === 0) {
-            Cookie::queue(Cookie::forget("decitokens", "/", null));
-        } else {
-            Cookie::queue(Cookie::forever("decitokens", json_encode($this->token_payment->decitokens), "/", null, true, true));
-        }
-    }
-
-
-
-    public function addTokens($tokens = [], $decitoken = [])
-    {
-        $tokens = json_decode(json_encode($tokens, JSON_FORCE_OBJECT));
-        foreach ($tokens as $token) {
-            if (!property_exists($token, "token") || !property_exists($token, "date") || !property_exists($token, "signature")) {
-                continue;
-            }
-            $tokenString = $token->token;
-            if (!is_string($tokenString)) {
-                continue;
-            }
-            $tokenSignature = $token->signature;
-            if (!is_string($tokenSignature)) {
-                continue;
-            }
-            $tokenDate = $token->date;
-            if (!is_string($tokenDate)) {
-                continue;
-            }
-            $this->tokens[] = new Token($tokenString, $tokenSignature, $tokenDate);
-        }
-        $this->checkTokens();
-        $this->availableTokens = sizeof($this->tokens);
-    }
 }

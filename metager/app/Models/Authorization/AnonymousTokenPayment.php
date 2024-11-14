@@ -3,8 +3,10 @@
 namespace App\Models\Authorization;
 
 use Cache;
+use Cookie;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Redis;
+use Request;
 
 /**
  * Holds information about a anonymous token
@@ -32,10 +34,20 @@ class AnonymousTokenPayment
      */
     public ?string $key;
     public float $cost;
+    /**
+     * When making a payment we will charge up necessary credits using anonymous token
+     * and then substract the cost from this credits
+     * @var float
+     */
+    private float $credits = 0;
     /** @var Token[] */
     public array $tokens = [];
     /** @var Token[] */
     public array $decitokens = [];
+    /** @var Token[] */
+    public array $used_tokens = [];
+    /** @var Token[] */
+    public array $used_decitokens = [];
 
     private $key_api_server;
 
@@ -47,7 +59,7 @@ class AnonymousTokenPayment
     {
         $this->key_api_server = config("metager.metager.keymanager.server") . "/api/json";
         $this->key = $key;
-        $this->cost = $cost;
+        $this->cost = round($cost, 1);
         foreach ($tokens as $token) {
             if ($token instanceof Token) {
                 $this->tokens[] = $token;
@@ -58,6 +70,7 @@ class AnonymousTokenPayment
                 $this->decitokens[] = $token;
             }
         }
+        $this->updateCookie();
         $this->payment_id = $payment_id;
         $this->payment_uid = $payment_uid;
     }
@@ -71,7 +84,7 @@ class AnonymousTokenPayment
         foreach ($this->decitokens as $token) {
             $available_token += 0.1;
         }
-        return $available_token;
+        return round($available_token, 1);
     }
 
     public function checkTokens(): bool
@@ -106,35 +119,73 @@ class AnonymousTokenPayment
             if ($result === null) {
                 return false;
             }
-            $this->tokens = $this->parseError($result);
+            foreach ($result->errors as $error) {
+                if (!in_array($error->param, ["tokens", "decitokens"]))
+                    continue;
+                if (!in_array($error->msg, ["Invalid Signatures", "Token structure is invalid"]))
+                    continue;
+                $tokens = [];
+                if (property_exists($error, "values")) {
+                    $tokens = $error->values;
+                } else if (property_exists($error, "value")) {
+                    $tokens = $error->value;
+                }
+                foreach ($tokens as $token) {
+                    if ($token->status === "ok") {
+                        if ($error->param === "tokens") {
+                            $this->tokens[] = new Token($token->token, $token->signature, $token->date);
+                        }
+                    }
+                }
+            }
+            $this->updateCookie();
         }
         return false;
     }
 
     public function makePayment(float $cost)
     {
-        if ($this->getAvailableTokenCount() < $cost)
+        $credit_to_charge = max(round($cost - $this->credits, 1), 0);
+        if ($this->getAvailableTokenCount() < $credit_to_charge)
             return false;
+
         $tokens_to_use = [];
         $decitokens_to_use = [];
-        $tokens = floor($cost);
-        $decitokens = ceil(($cost - $tokens) * 10);
-        if (sizeof($this->decitokens) < $this->decitokens) {
-            $tokens++;
-            $decitokens = 0;
+
+        $cost_payment = $credit_to_charge;
+        while ($cost_payment >= 1) {
+            $token = array_shift($this->tokens);
+            if (is_null($token))
+                break;
+            $tokens_to_use[] = $token;
+            $cost_payment--;
         }
-        while ($tokens >= 1) {
-            $tokens_to_use[] = array_shift($this->tokens);
-            $tokens--;
+        $this->used_tokens = array_merge($this->used_tokens, $tokens_to_use);
+        while ($cost_payment > 0) {
+            $token = array_shift($this->decitokens);
+            if (is_null($token))
+                break;
+            $decitokens_to_use[] = $token;
+            $cost_payment = round($cost_payment - 0.1, 1);
         }
-        $cost = ceil($cost * 10);
-        while ($decitokens >= 1) {
-            $decitokens_to_use[] = array_shift($this->decitokens);
-            $decitokens--;
+        $this->used_decitokens = array_merge($this->used_decitokens, $decitokens_to_use);
+        while ($cost_payment > 0) {
+            $token = array_shift($this->tokens);
+            if (is_null($token))
+                break;
+            $tokens_to_use[] = $token;
+            $cost_payment--;
         }
+        $this->used_tokens = array_merge($this->used_tokens, $tokens_to_use);
+
+        $this->credits = round($this->credits + ($credit_to_charge - $cost_payment), 1);
+        $this->updateCookie();
+
+        $this->credits = round($this->credits - $cost, 1);
 
         $url = $this->key_api_server . "/token/use";
         $result_hash = md5($url . microtime(true));
+        $payment = ["tokens" => $tokens_to_use, "decitokens" => $decitokens_to_use];
         $mission = [
             "resulthash" => $result_hash,
             "url" => $url,
@@ -150,7 +201,7 @@ class AnonymousTokenPayment
             "curlopts" => [
                 CURLOPT_POST => true,
                 CURLOPT_TIMEOUT => 15,
-                CURLOPT_POSTFIELDS => json_encode(["tokens" => $tokens_to_use, "decitokens" => $decitokens_to_use])
+                CURLOPT_POSTFIELDS => json_encode($payment)
             ]
         ];
         $mission = json_encode($mission);
@@ -163,7 +214,7 @@ class AnonymousTokenPayment
     {
         $new_tokens = [];
         foreach ($result->errors as $error) {
-            if ($error->msg === "Invalid Signatures") {
+            if ($error->msg === "Invalid Signatures" || $error->msg === "Token structure is invalid") {
                 // One or more tokens are invalid. Remove the invalid tokens
                 foreach ($error->value as $error_token) {
                     if ($error_token->status === "ok") {
@@ -187,6 +238,7 @@ class AnonymousTokenPayment
             return false;
         }
         $this->tokens[] = $token;
+        $this->updateCookie();
         return true;
     }
 
@@ -202,6 +254,7 @@ class AnonymousTokenPayment
             return false;
         }
         $this->decitokens[] = $token;
+        $this->updateCookie();
         return true;
     }
 
@@ -235,11 +288,11 @@ class AnonymousTokenPayment
         $this->payment_uid = uniqid('', true);
 
         // Lock this payment so we can only publish once
-        $lock = Cache::lock("payment:anonymous:$payment_id", 30);
+        $lock = Cache::lock("payment:anonymous:$payment_id", 2);
         try {
             $lock->block(10);
             Redis::rpush("payment:anonymous:$payment_id", $this->toJSON());
-            Redis::expire("payment:anonymous:$payment_id", 30);
+            Redis::expire("payment:anonymous:$payment_id", 1);
             return $this->payment_uid;
         } catch (LockTimeoutException $e) {
             return null;
@@ -252,8 +305,8 @@ class AnonymousTokenPayment
      */
     public static function UNPUBLISH(string $payment_id): AnonymousTokenPayment|null
     {
-        $lock = Cache::lock("payment:anonymous:$payment_id", 30);
-        $payment_json = Redis::blpop("payment:anonymous:$payment_id", 30);
+        $lock = Cache::lock("payment:anonymous:$payment_id", 2);
+        $payment_json = Redis::blpop("payment:anonymous:$payment_id", 1);
         $lock->forceRelease();
         if (!is_null($payment_json)) {
             return AnonymousTokenPayment::fromJSON($payment_json[1]);
@@ -268,15 +321,17 @@ class AnonymousTokenPayment
      */
     public function send()
     {
-        Redis::rpush("payment:anonymous:$this->payment_id:$this->payment_uid", $this->toJSON());
-        Redis::expire("payment:anonymous:$this->payment_id:$this->payment_uid", 30);
+        if (!is_null($this->payment_id) & !is_null($this->payment_uid)) {
+            Redis::rpush("payment:anonymous:$this->payment_id:$this->payment_uid", $this->toJSON());
+            Redis::expire("payment:anonymous:$this->payment_id:$this->payment_uid", 5);
+        }
         $this->tokens = [];
         $this->decitokens = [];
     }
 
     public function receive()
     {
-        $payment = Redis::blpop("payment:anonymous:$this->payment_id:$this->payment_uid", 30);
+        $payment = Redis::blpop("payment:anonymous:$this->payment_id:$this->payment_uid", 3);
         if (is_null($payment))
             return;
         $payment = AnonymousTokenPayment::fromJSON($payment[1]);
@@ -288,6 +343,21 @@ class AnonymousTokenPayment
         }
         if (!is_null($payment->key)) {
             $this->key = $payment->key;
+        }
+        $this->updateCookie();
+    }
+
+    private function updateCookie()
+    {
+        if (sizeof($this->tokens) === 0) {
+            Cookie::queue(Cookie::forget("tokens", "/", null));
+        } else {
+            Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, Request::isSecure(), false));
+        }
+        if (sizeof($this->decitokens) === 0) {
+            Cookie::queue(Cookie::forget("decitokens", "/", null));
+        } else {
+            Cookie::queue(Cookie::forever("decitokens", json_encode($this->decitokens), "/", null, Request::isSecure(), false));
         }
     }
 

@@ -16,7 +16,7 @@ class TokenAuthorization extends Authorization
     private $tokenauthorization_header;
     public ?AnonymousTokenPayment $token_payment = null;
 
-    public function __construct(string|null $tokenString, string $tokenauthorization)
+    public function __construct(string $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
     {
         parent::__construct();
         $this->tokenauthorization_header = $tokenauthorization;
@@ -24,7 +24,7 @@ class TokenAuthorization extends Authorization
         $keyserver = config("metager.metager.keymanager.server") ?: config("app.url") . "/keys";
         $this->keyserver = $keyserver . "/api/json";
 
-        $this->token_payment = new AnonymousTokenPayment($this->cost, [], []);
+        $this->token_payment = new AnonymousTokenPayment($this->cost, [], [], $payment_id, $payment_uid);
         $tokenJson = json_decode($tokenString);
         if ($tokenJson === null) {
             $this->availableTokens = 0;
@@ -52,7 +52,7 @@ class TokenAuthorization extends Authorization
         }
 
         if ($this->token_payment->makePayment($cost)) {
-            $this->usedTokens += $cost;
+            $this->usedTokens = round($this->usedTokens + $cost, 1);
             return true;
         } else {
             return false;

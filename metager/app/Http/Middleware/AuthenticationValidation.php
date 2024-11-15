@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Http\Controllers\AnonymousToken;
 use App\Models\Authorization\AnonymousTokenPayment;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
@@ -10,7 +9,6 @@ use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationValidation
@@ -46,13 +44,10 @@ class AuthenticationValidation
             // Handle different versions of Tokenauthorization depending of source (app|webextension) and their respective versions
             if ($request->header("tokensource", "app") === "webextension") {
                 if (version_compare($request->header("Mg-Webext", "0.0"), "1.2", ">=") && $request->hasHeader("anonymous-token-payment-id")) {
-                    // New Token authorization system triggered
-                    $payment_id = $request->header("anonymous-token-payment-id");
-                    if (!uuid_is_valid($payment_id))
-                        abort(400);
-                    $payment_uid = $authorization->token_payment->publish($payment_id);
+                    $authorization->availableTokens = $authorization->token_payment->receive(0.01);
+                    $payment_uid = $authorization->token_payment->publish();
 
-                    if ($payment_uid !== null) {
+                    if ($payment_uid !== null && !AnonymousTokenPayment::IS_ASYNC_DISABLED()) {
                         // Received tokens are already checked to be valid. No need to validate them here again
                         $authorization->token_payment->receive();
 
@@ -71,13 +66,20 @@ class AuthenticationValidation
                         if ($authorization->canDoAuthenticatedSearch()) {
                             $authorized = true;
                         }
+                    } else {
+                        // Async Token Authentication is either disabled due to rate limit
+                        // or no payment did go through. We will fallback to a synchronious payment
+                        if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
+                            $url = route("resultpage", parameters: $request->all());
+                            return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "payment" => base64_encode($authorization->token_payment->toJSON()), "method" => $request->method(), "page" => $url, "parameters" => $request->all(), "error_url" => route("startpage", $parameters)]);
+                        }
                     }
 
                 } else {
                     if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
                         /** Version 1.2 of webextension introduced a new token payment strategy */
                         $url = route("resultpage", parameters: $request->all());
-                        return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "cost" => $cost, "resultpage" => $url]);
+                        return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "cost" => $cost, "method" => $request->method(), "resultpage" => $url]);
                     }
                 }
             } else {

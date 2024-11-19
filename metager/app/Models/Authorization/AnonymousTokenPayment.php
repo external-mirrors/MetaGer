@@ -15,7 +15,7 @@ use Request;
  */
 class AnonymousTokenPayment
 {
-    const MAX_PARALLEL_ASYNC_PAYMENTS = 0;
+    const MAX_PARALLEL_ASYNC_PAYMENTS = 40;
     const MAX_PARALLEL_ASYNC_PAYMENTS_RLKEY = "payment:anonymous"; // Ratelimiter Key
     /**
      * Identifier for this payment. Used by payment process to fetch initial information about this
@@ -355,11 +355,12 @@ class AnonymousTokenPayment
             $timeout = 0.01;
         }
         $timeout = max($timeout, 0.01);
-        $payment = Redis::connection(config("cache.stores.redis.connection"))->blpop("payment:anonymous:$this->payment_id:$this->payment_uid", $timeout);
-        //RateLimiter::decrement(self::MAX_PARALLEL_ASYNC_PAYMENTS_RLKEY);
+        $payment = Redis::connection(config("cache.stores.redis.connection"))->blmove("payment:anonymous:$this->payment_id:$this->payment_uid", "payment:anonymous:$this->payment_id:$this->payment_uid", "LEFT", "LEFT", $timeout);
+        Redis::connection(config("cache.stores.redis.connection"))->expire("payment:anonymous:$this->payment_id:$this->payment_uid", 60);
+        RateLimiter::decrement(self::MAX_PARALLEL_ASYNC_PAYMENTS_RLKEY);
         if (is_null($payment))
             return $this->getAvailableTokenCount();
-        $payment = AnonymousTokenPayment::fromJSON($payment[1]);
+        $payment = AnonymousTokenPayment::fromJSON($payment);
         foreach ($payment->tokens as $token) {
             $this->tokens[] = $token;
         }

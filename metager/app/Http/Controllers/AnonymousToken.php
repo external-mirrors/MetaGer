@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Authorization\AnonymousTokenPayment;
+use Cache;
 use Cookie;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\Request;
 use Illuminate\Redis\Connections\Connection;
 use Illuminate\Support\Facades\Redis;
@@ -37,6 +39,7 @@ class AnonymousToken extends Controller
 
     public function pay(Request $request)
     {
+        $payment_json = $request->json();
         $payment = AnonymousTokenPayment::fromJSON($request->getContent());
         if ($payment === null) {
             abort(400);
@@ -44,22 +47,30 @@ class AnonymousToken extends Controller
 
         if (is_null($payment->key)) {
             // Check validity of submitted tokens
-            $tokens_valid = $payment->checkTokens();
+            $lock_key = "anonymous_payment:payment_lock:" . $payment_json->get("payment_id", "") . ":" . $payment_json->get("payment_uid", "");
+            $lock = Cache::lock($lock_key, 3);
+            try {
+                $lock->block(3);
+                $payment->receive(0);
+                $tokens_valid = $payment->checkTokens();
 
-            if ($payment->cost > $payment->getAvailableTokenCount()) {
-                // Either not enough tokens supplied or some of the token were invalid
+                if ($payment->cost > $payment->getAvailableTokenCount()) {
+                    // Either not enough tokens supplied or some of the token were invalid
+                    Cookie::flushQueuedCookies();
+                    return response($payment->toJSON(), 402, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
+                } elseif ($tokens_valid === false) {
+                    Cookie::flushQueuedCookies();
+                    return response($payment->toJSON(), 503, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
+                }
+                $payment->send();
                 Cookie::flushQueuedCookies();
-                return response($payment->toJSON(), 402, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
-            } elseif ($tokens_valid === false) {
-                Cookie::flushQueuedCookies();
-                return response($payment->toJSON(), 503, ["Content-Type" => "application/json", "Cache-Control" => "no-store"]);
+                return response($payment->toJSON(), 202, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
+            } catch (LockTimeoutException $e) {
+                abort(400);
+            } finally {
+                $lock->release();
             }
-
         }
-
-        $payment->send();
-        Cookie::flushQueuedCookies();
-        return response($payment->toJSON(), 202, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
     }
 
     /**

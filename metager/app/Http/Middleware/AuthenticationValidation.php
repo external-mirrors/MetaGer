@@ -8,6 +8,7 @@ use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
 use Closure;
+use Cookie;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -83,6 +84,9 @@ class AuthenticationValidation
                          * It requires the now removed mgv url parameter to work correctly
                          */
                         if ($request->filled("mgv")) {
+                            // THere is a bug in this version of webextension where a token header is falsely stored as setting
+                            // This results in a endless loop with false authentication. It can be mitigated by deleting this setting
+                            Cookie::queue(Cookie::forget("tokens"));
                             return redirect(route("startpage", $parameters));
                         }
                         $mgv = md5(microtime(true));

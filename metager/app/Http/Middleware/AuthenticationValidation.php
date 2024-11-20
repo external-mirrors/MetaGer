@@ -77,7 +77,15 @@ class AuthenticationValidation
 
                 } else {
                     if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
-                        /** Version 1.2 of webextension introduced a new token payment strategy */
+                        /** 
+                         * Version 1.2 of webextension introduced a new token payment strategy 
+                         * This will continue to support the old method while we are phasing it out
+                         * It requires the now removed mgv url parameter to work correctly
+                         */
+                        if (!$request->filled("mgv")) {
+                            $mgv = md5(microtime(true));
+                            return redirect(route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv])));
+                        }
                         $url = route("resultpage", parameters: $request->all());
                         return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "cost" => $cost, "method" => $request->method(), "resultpage" => $url]);
                     }

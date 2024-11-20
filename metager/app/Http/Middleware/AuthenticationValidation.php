@@ -85,9 +85,11 @@ class AuthenticationValidation
             } else {
                 // The android app currently uses the cost token to apply token payments
                 // ANd applies those on the following request
-                $url = route("resultpage", $request->all());
-                \Cookie::queue("cost", $cost, 0);
-                return redirect($url);
+                if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
+                    $url = route("resultpage", $request->all());
+                    \Cookie::queue("cost", $cost, 0);
+                    return redirect($url);
+                }
             }
         }
 

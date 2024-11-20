@@ -8,6 +8,7 @@ use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
 use Closure;
+use Cookie;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -82,11 +83,14 @@ class AuthenticationValidation
                          * This will continue to support the old method while we are phasing it out
                          * It requires the now removed mgv url parameter to work correctly
                          */
-                        if (!$request->filled("mgv")) {
-                            $mgv = md5(microtime(true));
-                            return redirect(route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv])));
+                        if ($request->filled("mgv")) {
+                            return redirect(route("startpage", $parameters));
                         }
-                        $url = route("resultpage", parameters: $request->all());
+                        // There is a bug in this version of webextension where a token header is falsely stored as setting
+                        // This results in a endless loop with false authentication. It can be mitigated by deleting this setting
+                        Cookie::queue(Cookie::forget("tokens", "/", null));
+                        $mgv = md5(microtime(true));
+                        $url = route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv]));
                         return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "cost" => $cost, "method" => $request->method(), "resultpage" => $url]);
                     }
                 }

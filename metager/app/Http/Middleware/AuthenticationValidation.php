@@ -82,11 +82,11 @@ class AuthenticationValidation
                          * This will continue to support the old method while we are phasing it out
                          * It requires the now removed mgv url parameter to work correctly
                          */
-                        if (!$request->filled("mgv")) {
-                            $mgv = md5(microtime(true));
-                            return redirect(route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv])));
+                        if ($request->filled("mgv")) {
+                            return redirect(route("resultpage", parameters: $request->except("mgv")));
                         }
-                        $url = route("resultpage", parameters: $request->all());
+                        $mgv = md5(microtime(true));
+                        $url = route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv]));
                         return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "cost" => $cost, "method" => $request->method(), "resultpage" => $url]);
                     }
                 }

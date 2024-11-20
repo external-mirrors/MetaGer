@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdgoalController;
+use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HealthcheckController;
@@ -355,10 +356,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
-    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class, 'externalimagesearch', 'spam', 'browserverification'])->name("resultpage");
-
+    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class, 'externalimagesearch'])->name("resultpage");
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
-
+    Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"]);
+    Route::post('anonymous-token', [AnonymousToken::class, "pay"]);
 
     Route::get('meta/picture', [Pictureproxy::class, 'get'])->name("imageproxy");
 

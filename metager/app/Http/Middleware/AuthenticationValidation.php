@@ -83,7 +83,7 @@ class AuthenticationValidation
                          * It requires the now removed mgv url parameter to work correctly
                          */
                         if ($request->filled("mgv")) {
-                            return redirect(route("resultpage", parameters: $request->except("mgv")));
+                            return redirect(route("startpage", $parameters));
                         }
                         $mgv = md5(microtime(true));
                         $url = route("resultpage", parameters: array_merge($request->all(), ["mgv" => $mgv]));

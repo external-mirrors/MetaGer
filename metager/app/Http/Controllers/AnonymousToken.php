@@ -70,6 +70,18 @@ class AnonymousToken extends Controller
             } finally {
                 $lock->release();
             }
+        } else {
+            $lock_key = "anonymous_payment:payment_lock:" . $payment_json->get("payment_id", "") . ":" . $payment_json->get("payment_uid", "");
+            $lock = Cache::lock($lock_key, 3);
+            try {
+                $payment->send();
+                Cookie::flushQueuedCookies();
+                return response($payment->toJSON(), 202, ["Content_Type" => "application/json", "Cache-Control" => "no-store"]);
+            } catch (LockTimeoutException $e) {
+                abort(400);
+            } finally {
+                $lock->release();
+            }
         }
     }
 

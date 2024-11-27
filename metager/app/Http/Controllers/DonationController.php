@@ -290,11 +290,6 @@ class DonationController extends Controller
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
 
-        if ($funding_source === "card") {
-            RateLimiter::hit("donation_paypal_card", 600);
-            RateLimiter::hit("donation_paypal_card:" . $request->ip(), 3600);
-        }
-
         if ($validator->fails() || RateLimiter::tooManyAttempts("donation_paypal_card", 25) || RateLimiter::tooManyAttempts("donation_paypal_card:" . $request->ip(), 20)) {
             $failedParams = $validator->failed();
             if (array_key_exists("amount", $failedParams)) {
@@ -431,10 +426,10 @@ class DonationController extends Controller
         if ($funding_source === "card") {
             $ratelimit_key = 'create-order-cc';
 
-            RateLimiter::hit($ratelimit_key, 60);
+            RateLimiter::hit($ratelimit_key, 3600);
             RateLimiter::hit($ratelimit_key . "-user-" . $request->ip(), 86400);
 
-            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 10)) {
+            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
                 abort(400);
             }
         }
@@ -535,8 +530,10 @@ class DonationController extends Controller
             if (property_exists($order_details->payment_source->card, "authentication_result") && !$this->cardAuthenticated($order_details->payment_source->card->authentication_result)) {
                 return response()->json(["error" => "card not authenticated"], 400);
             }
-            RateLimiter::decrement("donation_paypal_card", 600);
-            RateLimiter::decrement("donation_paypal_card:" . $request->ip(), 3600);
+            $ratelimit_key = 'create-order-cc';
+
+            RateLimiter::decrement($ratelimit_key, 60);
+            RateLimiter::decrement($ratelimit_key . "-user-" . $request->ip(), 86400);
         }
         $url = $base_url . "/v2/checkout/orders/$orderId/capture";
         $opts = [

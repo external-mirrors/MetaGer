@@ -290,7 +290,9 @@ class DonationController extends Controller
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
 
-        if ($validator->fails() || RateLimiter::tooManyAttempts("donation_paypal_card", 25) || RateLimiter::tooManyAttempts("donation_paypal_card:" . $request->ip(), 20)) {
+        $ratelimit_key = 'create-order-cc';
+
+        if ($validator->fails() || RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
             $failedParams = $validator->failed();
             if (array_key_exists("amount", $failedParams)) {
                 return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));

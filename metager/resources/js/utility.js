@@ -36,30 +36,39 @@ document.addEventListener("DOMContentLoaded", (event) => {
       });
     }
   });
+
   let key_keyup = function (e) {
     let el = e.target;
-    if (el.value.match(/^\d{6}$/)) {
+    let has_focus = document.activeElement == el;
+    if (el.value.match(/^\d{6}$/) && el.dataset.type != "otp") {
       let clone = el.cloneNode(true);
       clone.setAttribute("type", "text");
       clone.setAttribute("autocomplete", "one-time-code");
+      clone.dataset.type = "otp";
       el.replaceWith(clone);
       clone.addEventListener("keyup", key_keyup);
       clone.addEventListener("focus", key_focus);
       clone.addEventListener("blur", key_blur);
-      clone.focus();
-      clone.setSelectionRange(clone.value.length, clone.value.length);
-    } else {
+      if (has_focus) {
+        clone.focus();
+        clone.setSelectionRange(clone.value.length, clone.value.length);
+      }
+    } else if (el.dataset.type != "password") {
       let clone = el.cloneNode(true);
       clone.setAttribute("type", "password");
       clone.removeAttribute("autocomplete");
+      clone.dataset.type = "password";
       el.replaceWith(clone);
       clone.addEventListener("keyup", key_keyup);
       clone.addEventListener("focus", key_focus);
       clone.addEventListener("blur", key_blur);
-      clone.focus();
-      clone.setSelectionRange(clone.value.length, clone.value.length);
+      if (has_focus) {
+        clone.focus();
+        clone.setSelectionRange(clone.value.length, clone.value.length);
+      }
     }
   };
+
   let key_focus = function (e) {
     e.target.type = "text";
   };
@@ -72,11 +81,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     el.addEventListener("keyup", key_keyup);
     el.addEventListener("focus", key_focus);
     el.addEventListener("blur", key_blur);
-    el.form.addEventListener("submit", (e) => {
-      if (!el.value.match(/^\d{6}$/)) {
-        el.type = "password";
-      }
-    });
+
+    el.dispatchEvent(new Event("keyup"));
+
     let error_key = new URLSearchParams(document.location.search).get(
       "invalid_key"
     );
@@ -191,3 +198,12 @@ function updateWebExtensionStatus(time) {
     new CustomEvent("webextension_status_update", { detail: time })
   );
 }
+
+(() => {
+  let url = new URL(document.location)
+  if (url.searchParams.has("key")) {
+    // Remove the key from the visible URL in the browser
+    url.searchParams.delete("key");
+    window.history.replaceState({}, null, url);
+  }
+})();

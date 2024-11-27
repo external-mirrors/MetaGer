@@ -47,8 +47,8 @@ class Searchengines
             // Default mode for this searchengine. Can be overriden by the user configuration
             if ($suma->configuration->disabledByDefault) {
                 $suma->configuration->disabled = true;
-                $suma->configuration->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
-                $this->disabledReasons[] = DisabledReason::USER_CONFIGURATION;
+                $suma->configuration->disabledReasons[] = DisabledReason::SUMAS_DEFAULT_CONFIGURATION;
+                $this->disabledReasons[] = DisabledReason::SUMAS_DEFAULT_CONFIGURATION;
             }
             // User setting defined via permanent cookie in browser
             $engine_user_setting = $this->parseUserEngineSetting($name);
@@ -66,7 +66,7 @@ class Searchengines
         }
 
         foreach ($this->sumas as $suma) {
-            if (!app(Authorization::class)->canDoAuthenticatedSearch() && $suma->configuration->cost > 0) {
+            if (!app(Authorization::class)->canDoAuthenticatedSearch(false) && $suma->configuration->cost > 0) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
@@ -89,9 +89,11 @@ class Searchengines
 
         $settings->loadQueryFilter();
         $settings->loadParameterFilter($this);
+
         $authorization = app(Authorization::class);
 
-        $authorization->cost = 0; // Update cost with actual cost that are correct for current engine configuration
+        $authorization->setCost(0); // Update cost with actual cost that are correct for current engine configuration
+
         foreach ($this->sumas as $suma) {
             if ($suma->configuration->disabled) {
                 continue;
@@ -123,10 +125,11 @@ class Searchengines
             // Apply final settings to Sumas
             $suma->applySettings();
             if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
-                $authorization->cost += $suma->configuration->cost;
+                $authorization->setCost($authorization->getCost() + $suma->configuration->cost);
             }
         }
-        $authorization->cost = max($authorization->cost, 1);
+
+        $this->handleFilterOptIn();
 
         uasort($this->sumas, function ($a, $b) {
             if ($a->configuration->engineBoost === $b->configuration->engineBoost) {
@@ -134,6 +137,43 @@ class Searchengines
             }
             return ($a->configuration->engineBoost > $b->configuration->engineBoost) ? -1 : 1;
         });
+    }
+
+    /**
+     * There are disabled searchengines which are disabled by default but can be automatically
+     * enabled if it has the filterOptIn option set to true and the user has selected a focus
+     * which would otherwise not be supported by another searchengine
+     * 
+     * @return void
+     */
+    private function handleFilterOptIn()
+    {
+        $filter_disabled_engine_present = false;    // Is there a searchengine disabled only because of the selected filter
+        $filter_opt_in_engines = [];      // Is there a searchengine which could serve the filter and has filterOptIn enabled
+
+        $authorization = app(Authorization::class);
+        foreach ($this->sumas as $suma) {
+            if (!$suma->configuration->disabled)
+                return;    // If there is an enabled searchengine there is no need for filterOptIn mechanic
+            if (sizeof($suma->configuration->disabledReasons) === 1) {
+                if (in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
+                    $filter_disabled_engine_present = true;
+                }
+                if (in_array(DisabledReason::SUMAS_DEFAULT_CONFIGURATION, $suma->configuration->disabledReasons) && $suma->configuration->filterOptIn === true) {
+                    $filter_opt_in_engines[] = $suma;
+                }
+            }
+        }
+        if ($filter_disabled_engine_present && sizeof($filter_opt_in_engines) > 0) {
+            foreach ($filter_opt_in_engines as $suma) {
+                $suma->configuration->disabled = false;
+                $suma->configuration->disabledReasons = [];
+                if ($suma->configuration->cost > 0) {
+                    $authorization->setCost($authorization->getCost() + $suma->configuration->cost);
+                }
+                $suma->applySettings();
+            }
+        }
     }
 
     public function getSearchEnginesForFokus()

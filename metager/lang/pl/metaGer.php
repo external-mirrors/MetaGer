@@ -103,6 +103,7 @@ return [
             'year' => 'W zeszłym roku',
             'custom' => 'Dostosowane',
             'name' => 'Data',
+            'hour' => 'Ostatnie 60 m',
         ],
         'customdatetitle' => 'Wybierz niestandardową datę',
         'market' => [
@@ -133,7 +134,7 @@ return [
             'db' => 'Niderlandzki (Belgia)',
             'dn' => 'Niderlandzki (Holandia)',
             'pp' => 'Polski (Polska)',
-            'pb' => 'Portugalski (Brazylia)',
+            'pb' => 'portugalski (Brazylia)',
             'dd' => 'Duński (Dania)',
             'fif' => 'Fiński (Finlandia)',
             'nn' => 'Norweski (Norwegia)',
@@ -146,6 +147,7 @@ return [
             'cc' => 'Chiński (Chiny)',
             'ct' => 'Chiński (Tajwan)',
             'name' => 'Język',
+            'ppt' => 'Portugalski (Portugalia)',
         ],
         'sort' => [
             'priceascending' => 'Cena (rosnąco)',

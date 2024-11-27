@@ -77,6 +77,7 @@ return [
             'year' => 'Vorig jaar',
             'custom' => 'Aangepast',
             'name' => 'Datum',
+            'hour' => 'Laatste 60m',
         ],
         'customdatetitle' => 'Kies aangepaste datum',
         'market' => [
@@ -120,6 +121,7 @@ return [
             'eus' => 'Engels (VS)',
             'sa' => 'Spaans (Argentinië)',
             'sc' => 'Spaans (Chili)',
+            'ppt' => 'Portugees (Portugal)',
         ],
         'sort' => [
             'priceascending' => 'Prijs (oplopend)',

@@ -79,6 +79,17 @@
     </div>
     <div class="result-body {{ !empty($result->logo) || !empty($result->image) ? 'with-image' : '' }}">
         <div class="result-description" tabindex="0">
+            @if (array_key_exists('date', $result->additionalInformation))
+            <span class="date" data-timestamp="{{ $result->getDate()->unix() }}">
+                @if ($result->getDate()->isToday())
+                    {{ $result->additionalInformation['date']->format('H:i:s') }} — 
+                @else
+                    {{ $result->additionalInformation['date']->isoFormat('lll') }} — 
+                @endif
+            </span>
+            @elseif(array_key_exists('date_string', $result->additionalInformation))
+                <span class="date-string">{{ $result->additionalInformation['date_string'] }} — </span>
+            @endif
             {{ $result->descr }}
         </div>
         @if (isset($result->logo))

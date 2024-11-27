@@ -59,12 +59,12 @@
                     @endforeach
                     <div class="no-engines">@lang('settings.no-engines')</div>
                 </div>
-                @if (in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $disabledReasons))
+                @if (in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $disabledReasons) || in_array(\App\Models\DisabledReason::SUMAS_DEFAULT_CONFIGURATION, $disabledReasons))
                     <div class="sumas disabled-engines">
                         @foreach ($sumas as $name => $suma)
                             @if (
                                 $suma->configuration->disabled &&
-                                    in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $suma->configuration->disabledReasons) &&
+                                    (in_array(\App\Models\DisabledReason::USER_CONFIGURATION, $suma->configuration->disabledReasons) || in_array(\App\Models\DisabledReason::SUMAS_DEFAULT_CONFIGURATION, $suma->configuration->disabledReasons)) &&
                                     sizeof($suma->configuration->disabledReasons) === 1)
                                 <div class="suma disabled-engine">
                                     <form action="{{ route('enableEngine') }}" method="post" title="@lang('settings.enable-engine')">

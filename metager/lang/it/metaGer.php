@@ -8,6 +8,7 @@ return [
             'month' => 'Il mese scorso',
             'year' => 'L\'anno scorso',
             'custom' => 'Personalizzato',
+            'hour' => 'Ultimi 60 m',
         ],
         'sitesearch' => 'Ricerca siti',
         'safesearch' => [
@@ -115,6 +116,7 @@ return [
             'cc' => 'Cinese (Cina)',
             'ct' => 'Cinese (Taiwan)',
             'name' => 'Lingua',
+            'ppt' => 'Portoghese (Portogallo)',
         ],
         'sort' => [
             'priceascending' => 'Prezzo (crescente)',

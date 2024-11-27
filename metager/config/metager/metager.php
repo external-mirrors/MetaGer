@@ -6,7 +6,6 @@ return [
         "whitelist" => explode(",", env("BROWSERVERIFICATION_PROTECTION_WHITELIST", "")),
     ],
     "affiliate_preference" => "adgoal",
-    "unauth_whitelist" => env("UNAUTH_SEARCH_WHITELIST", ""),
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
         "whitelist" => explode(",", env("BOT_PROTECTION_WHITELIST", "")),
@@ -51,12 +50,6 @@ return [
         "url" => env("CIVICRM_URL", "https://metager.de"),
         "apikey" => env("CIVICRM_API_KEY", ""),
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
-    ],
-    "admitad" => [
-        "suggestions_enabled" => false,
-        "germany_public_key" => env("admitad_germany_public", ""),
-        "international_public_key" => env("admitad_international_public", ""),
-        "suggest_public_key" => env("admitad_suggest_public", "")
     ],
     "webdriver" => [
         "user" => env("WEBDRIVER_USER", ""),

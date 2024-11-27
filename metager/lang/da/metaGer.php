@@ -42,6 +42,7 @@ return [
             'chk' => 'Kinesisk (Hong Kong SAR)',
             'cc' => 'Kinesisk (Kina)',
             'name' => 'Sprog',
+            'ppt' => 'Portugisisk (Portugal)',
         ],
         'skip' => 'Spring over',
         'min' => 'Minimum søvn (i s)',
@@ -107,6 +108,7 @@ return [
             'custom' => 'Tilpasset',
             'name' => 'Dato',
             'day' => 'Sidste 24 timer',
+            'hour' => 'Sidste 60 meter',
         ],
         'imageaspect' => [
             'square' => 'Rektangel',

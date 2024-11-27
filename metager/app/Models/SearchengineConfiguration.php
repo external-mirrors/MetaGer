@@ -16,6 +16,8 @@ class SearchengineConfiguration
     /** @var int */
     public $port;
     /** @var string */
+    public $method = "get";
+    /** @var string */
     public $queryParameter;
     /** @var string */
     public $inputEncoding;
@@ -57,6 +59,14 @@ class SearchengineConfiguration
     public function __construct($engineConfigurationJson)
     {
         try {
+
+            /** Load in Config Overload from Engine */
+            $parser_class = "App\\Models\\parserSkripte\\" . $engineConfigurationJson->{"parser-class"};
+            if (class_exists($parser_class)) {
+                $config_overload = json_decode(json_encode(constant($parser_class . "::CONFIG_OVERLOAD"), JSON_FORCE_OBJECT));
+                $engineConfigurationJson = (object) array_merge((array) $engineConfigurationJson, (array) $config_overload);
+            }
+
             /** Required parameters from json file */
             $this->host = $engineConfigurationJson->host;
             $this->path = $engineConfigurationJson->path;
@@ -203,9 +213,9 @@ class SearchEngineLanguages
     /** @var string */
     public $getParameter;
     /** @var object */
-    private $languages;
+    public $languages;
     /** @var object */
-    private $regions;
+    public $regions;
 
     public function __construct(string $getParameter, object $languages, object $regions)
     {

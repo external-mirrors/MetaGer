@@ -422,30 +422,6 @@ class MetaGer
     }
 
     /**
-     * @param \App\Models\Admitad[] $affiliates
-     * @return \App\Models\Admitad[] whether or not all Admitad Objects are finished
-     */
-    public function parseAffiliates($affiliates)
-    {
-        $wait = false;
-        $finished = true;
-        if (!\app()->make(SearchSettings::class)->javascript_enabled) {
-            $wait = true;
-        }
-        $newAffiliates = [];
-        foreach ($affiliates as $affiliate) {
-            $affiliate->fetchAffiliates($wait);
-            $affiliate->parseAffiliates();
-            if (!$affiliate->finished) {
-                $newAffiliates[] = $affiliate;
-            }
-        }
-
-        return $newAffiliates;
-    }
-
-
-    /**
      * Modifies the already filled array of advertisements and
      * includes an advertisement for our donation page.
      * 
@@ -588,105 +564,6 @@ class MetaGer
             $engines[] = $tmp;
         }
         $this->engines = $engines;
-    }
-
-    public function getAvailableParameterFilter()
-    {
-        $request = App::make(Request::class);
-        $parameterFilter = $this->sumaFile->filter->{"parameter-filter"};
-
-        $availableFilter = [];
-
-        foreach ($parameterFilter as $filterName => $filter) {
-            $values = clone $filter->values;
-            # Check if any of the enabled search engines provide this filter
-            foreach ($this->enabledSearchengines as $engineName => $engine) {
-                if (!empty($filter->sumas->$engineName)) {
-                    if (empty($availableFilter[$filterName])) {
-                        $availableFilter[$filterName] = $filter;
-                        foreach ($availableFilter[$filterName]->values as $key => $value) {
-                            if ($key !== "nofilter") {
-                                unset($availableFilter[$filterName]->values->{$key});
-                            }
-                        }
-                    }
-                    if (empty($availableFilter[$filterName]->values)) {
-                        $availableFilter[$filterName]->values = new \stdClass();
-                    }
-                    foreach ($filter->sumas->{$engineName}->values as $key => $value) {
-                        if (\property_exists($values, $key)) {
-                            $availableFilter[$filterName]->values->{$key} = $values->$key;
-                        }
-                    }
-                }
-            }
-            # We will also add the filter from the opt-in search engines (the searchengines that are only used when a filter of it is too)
-            foreach ($this->sumaFile->foki->{app(SearchSettings::class)->fokus}->sumas as $suma) {
-                if ($this->sumaFile->sumas->{$suma}->{"filter-opt-in"} && Cookie::get($this->getFokus() . "_engine_" . $suma) !== "off") {
-                    if (!empty($filter->sumas->{$suma})) {
-                        # If the searchengine is disabled this filter shouldn't be available
-                        if (
-                            (!empty($this->sumaFile->sumas->{$suma}->disabled) && $this->sumaFile->sumas->{$suma}->disabled === true)
-                            || (!empty($this->sumaFile->sumas->{$suma}->{"auto-disabled"}) && $this->sumaFile->sumas->{$suma}->{"auto-disabled"} === true)
-                        ) {
-                            continue;
-                        }
-                        if (empty($availableFilter[$filterName])) {
-                            $availableFilter[$filterName] = $filter;
-                            foreach ($availableFilter[$filterName]->values as $key => $value) {
-                                if ($key !== "nofilter") {
-                                    unset($availableFilter[$filterName]->values->{$key});
-                                }
-                            }
-                        }
-                        if (empty($availableFilter[$filterName]->values)) {
-                            $availableFilter[$filterName]->values = new \stdClass();
-                        }
-                        foreach ($filter->sumas->{$suma}->values as $key => $value) {
-                            if (\property_exists($values, $key)) {
-                                $availableFilter[$filterName]->values->{$key} = $values->$key;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        # Set the current values for the filters
-        foreach ($availableFilter as $filterName => $filter) {
-            if ($request->filled($filter->{"get-parameter"})) {
-                $filter->value = $request->input($filter->{"get-parameter"});
-            } elseif (Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"}) !== null) {
-                $filter->value = Cookie::get($this->getFokus() . "_setting_" . $filter->{"get-parameter"});
-            }
-        }
-
-        if (\array_key_exists("language", $availableFilter)) {
-            $current_locale = LaravelLocalization::getCurrentLocaleRegional();
-            $default_language_value = "";
-            # Set default Value for language selector to current locale
-            foreach ($this->enabledSearchengines as $name => $engine) {
-                if (\property_exists($engine->lang->regions, $current_locale) && \property_exists($availableFilter["language"]->sumas, $name)) {
-                    $region_suma_value = $engine->lang->regions->{$current_locale};
-                    foreach ($availableFilter["language"]->sumas->{$name}->values as $key => $value) {
-                        if ($value === $region_suma_value) {
-                            $default_language_value = $key;
-                            break 2;
-                        }
-                    }
-                }
-            }
-
-            if (\property_exists($availableFilter["language"], "value") && $availableFilter["language"]->value === $default_language_value) {
-                unset($availableFilter["language"]->value);
-            }
-            if (!empty($default_language_value) && \property_exists($availableFilter["language"]->values, $default_language_value)) {
-                $availableFilter["language"]->values->nofilter = $availableFilter["language"]->values->$default_language_value;
-                unset($availableFilter["language"]->values->$default_language_value);
-            }
-        }
-
-        return $availableFilter;
     }
 
     public function isBildersuche()

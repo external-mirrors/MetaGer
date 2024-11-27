@@ -103,6 +103,7 @@ return [
             'year' => 'Förra året',
             'custom' => 'Kundanpassad',
             'name' => 'Datum',
+            'hour' => 'Sista 60m',
         ],
         'customdatetitle' => 'Välj anpassat datum',
         'market' => [
@@ -146,6 +147,7 @@ return [
             'cc' => 'Kinesiska (Kina)',
             'ct' => 'Kinesiska (Taiwan)',
             'name' => 'Språk',
+            'ppt' => 'Portugisiska (Portugal)',
         ],
         'sort' => [
             'priceascending' => 'Pris (stigande)',

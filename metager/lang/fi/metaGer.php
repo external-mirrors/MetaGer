@@ -72,6 +72,7 @@ return [
             'year' => 'Viime vuonna',
             'custom' => 'Räätälöity',
             'name' => 'Päivämäärä',
+            'hour' => 'Viimeiset 60m',
         ],
         'customdatetitle' => 'Valitse räätälöity päivämäärä',
         'market' => [
@@ -115,6 +116,7 @@ return [
             'cc' => 'Kiinalainen (Kiina)',
             'ct' => 'Kiinalainen (Taiwan)',
             'name' => 'Kieli',
+            'ppt' => 'portugali (Portugali)',
         ],
         'sort' => [
             'priceascending' => 'Hinta (nouseva)',

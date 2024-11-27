@@ -113,15 +113,6 @@ class MetaGerSearch extends Controller
             $query_timer->observeEnd("Search_LoadQuicktips");
         }
 
-        $admitad = [];
-        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitad[] = $newAdmitad;
-            }
-        }
-        $admitad = $metager->parseAffiliates($admitad);
-
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
         $metager->rankAll();
@@ -161,7 +152,6 @@ class MetaGerSearch extends Controller
                     "quicktips" => $quicktips,
                 ],
                 "donation_advertisement_position" => $donation_advertisement_position,
-                "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
@@ -248,7 +238,6 @@ class MetaGerSearch extends Controller
         }
 
         $engines = $cached["engines"];
-        $admitad = $cached["admitad"];
         $mg = $cached["metager"];
 
         $metager = new MetaGer(substr($hash, strpos($hash, "loader_") + 7));
@@ -272,7 +261,6 @@ class MetaGerSearch extends Controller
         # Nach Spezialsuchen überprüfen:
         $metager->checkSpecialSearches($request);
 
-        $admitadCountBefore = sizeof($admitad);
         $engineCountBefore = 0;
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
@@ -283,15 +271,6 @@ class MetaGerSearch extends Controller
         # Checks Cache for engine Results
         $metager->checkCache();
         $metager->retrieveResults();
-
-        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $newAdmitad = new \App\Models\Admitad($metager);
-            if (!empty($newAdmitad->hash)) {
-                $admitadCountBefore = -1; // Always Mark admitad as changed when adding a new request
-                $admitad[] = $newAdmitad;
-            }
-        }
-        $admitad = $metager->parseAffiliates($admitad);
 
         $metager->rankAll();
         $metager->prepareResults();
@@ -339,11 +318,7 @@ class MetaGerSearch extends Controller
             }
         }
 
-        if (sizeof($admitad) > 0) {
-            $finished = false;
-        }
-
-        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && $admitadCountBefore === sizeof($admitad) && !array_key_exists("quicktips", $result)) {
+        if ($request->header("If-Modified-Since") !== null && $engineCountBefore === $enginesLoadedAfter && !array_key_exists("quicktips", $result)) {
             // Nothing changed but we are not finished yet either
             return response("", 304);
         }
@@ -371,7 +346,6 @@ class MetaGerSearch extends Controller
                     "settings" => $settings,
                     "quicktips" => $quicktips,
                 ],
-                "admitad" => $admitad,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         }

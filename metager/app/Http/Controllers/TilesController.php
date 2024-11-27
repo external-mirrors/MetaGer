@@ -21,13 +21,11 @@ class TilesController extends Controller
 
     /**
      * Generate Tiles for a given request
-     * This includes static TIles and SUMA Tiles
-     * Take Tiles are generated asynchroniously
+     * This includes static Tiles and SUMA Tiles
      * 
-     * @param string $ckey
      * @return array
      */
-    public static function TILES(string $ckey): array
+    public static function TILES(): array
     {
         // Check if the user has disabled tiles
         if (!app(SearchSettings::class)->tiles_startpage)

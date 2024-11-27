@@ -12,6 +12,7 @@ return [
         'sv' => 'Svedese',
         'pl' => 'Polacco',
         'fr' => 'Francese',
+        'pt' => 'Portoghese',
     ],
     'h1' => [
         '1' => 'Selezione della lingua',

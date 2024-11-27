@@ -1,9 +1,9 @@
 <?php
 return [
-    'nav1' => 'Suche',
+    'nav1' => 'Suchen',
     'nav2' => 'Spenden',
     'nav3' => 'Datenschutz',
-    'nav4' => 'Forum',
+    'nav4' => 'Vorstand',
     'nav5' => 'Kontakt',
     'nav6' => 'Team',
     'nav8' => 'Impressum',

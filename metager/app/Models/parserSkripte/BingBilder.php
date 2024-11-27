@@ -2,7 +2,6 @@
 
 namespace app\Models\parserSkripte;
 
-use App\Http\Controllers\Pictureproxy;
 use App\Models\DeepResults\Imagesearchdata;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
@@ -11,11 +10,16 @@ use Log;
 
 class BingBilder extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        "filter-opt-in" => true,
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
         parent::__construct($name, $configuration);
+        $this->configuration->disabledByDefault = true;
+
     }
 
     public function loadResults($result)
@@ -28,10 +32,10 @@ class BingBilder extends Searchengine
             $results = $results->value;
 
             foreach ($results as $result) {
-                $title       = $result->name;
-                $link        = $result->hostPageUrl;
+                $title = $result->name;
+                $link = $result->hostPageUrl;
                 $anzeigeLink = $result->hostPageDisplayUrl;
-                $descr       = "";
+                $descr = "";
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -63,7 +67,7 @@ class BingBilder extends Searchengine
                 return;
             }
             $totalMatches = $results->totalEstimatedMatches;
-            $nextOffset   = $results->nextOffset;
+            $nextOffset = $results->nextOffset;
 
             if ($nextOffset >= $totalMatches) {
                 return;
@@ -73,8 +77,8 @@ class BingBilder extends Searchengine
             $newConfiguration = unserialize(serialize($this->configuration));
 
             $newConfiguration->getParameter->offset = $nextOffset;
-            $next                                   = new BingBilder($this->name, $newConfiguration);
-            $this->next                             = $next;
+            $next = new BingBilder($this->name, $newConfiguration);
+            $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());

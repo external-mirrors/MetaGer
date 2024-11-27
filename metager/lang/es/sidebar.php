@@ -21,7 +21,7 @@ return [
     'nav24' => 'Código fuente MetaGer',
     'nav25' => 'MetaGer App',
     'nav26' => 'Tienda de fans',
-    'nav27' => 'MetaGer Maps',
+    'nav27' => 'Mapas MetaGer',
     'nav28' => 'Ajustes',
     'nav29' => 'Declaración de transparencia',
     'navigationToggle' => 'Mostrar navegación',

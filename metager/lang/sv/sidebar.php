@@ -24,7 +24,7 @@ return [
     'nav24' => 'MetaGer källkod',
     'nav25' => 'MetaGer-app',
     'nav26' => 'MetaGer-Fanshop',
-    'nav27' => 'MetaGer Kartor',
+    'nav27' => 'MetaGer-kartor',
     'nav28' => 'Inställningar',
     'nav29' => 'Förklaring om öppenhet',
     'navigationToggle' => 'Visa navigering',

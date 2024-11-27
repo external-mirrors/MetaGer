@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Localization;
 use \App\MetaGer;
 use App\Models\Authorization\Authorization;
+use App\Models\Authorization\KeyAuthorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use App\SearchSettings;
@@ -68,7 +69,7 @@ class SettingsController extends Controller
         }
 
         unset($settings_params["js_available"]);
-        if (is_string($authorization->getToken()) && !empty($authorization->getToken())) {
+        if ($authorization instanceof KeyAuthorization) {
             $settings_params["key"] = $authorization->getToken();
         }
         $cookieLink = null;

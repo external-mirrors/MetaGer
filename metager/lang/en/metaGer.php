@@ -97,6 +97,7 @@ return [
             'name' => 'License',
         ],
         'freshness' => [
+            'hour' => 'Last 60m',
             'day' => 'Last 24h',
             'week' => 'Last week',
             'month' => 'Last month',
@@ -133,7 +134,8 @@ return [
             'db' => 'Dutch (Belgium)',
             'dn' => 'Dutch (Netherlands)',
             'pp' => 'Polish (Poland)',
-            'pb' => 'Portuguese (Brasil)',
+            'pb' => 'Portuguese (Brazil)',
+            'ppt' => 'Portuguese (Portugal)',
             'dd' => 'Danish (Denmark)',
             'fif' => 'Finnish (Finland)',
             'nn' => 'Norwegian (Norway)',

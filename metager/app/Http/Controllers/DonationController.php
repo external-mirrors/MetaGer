@@ -289,7 +289,13 @@ class DonationController extends Controller
             'amount' => ['required', 'numeric', 'min:1', Rule::when($funding_source === "card", 'min:5')],
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
-        if ($validator->fails()) {
+
+        if ($funding_source === "card") {
+            RateLimiter::hit("donation_paypal_card", 600);
+            RateLimiter::hit("donation_paypal_card:" . $request->ip(), 3600);
+        }
+
+        if ($validator->fails() || RateLimiter::tooManyAttempts("donation_paypal_card", 25) || RateLimiter::tooManyAttempts("donation_paypal_card:" . $request->ip(), 20)) {
             $failedParams = $validator->failed();
             if (array_key_exists("amount", $failedParams)) {
                 return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
@@ -529,6 +535,8 @@ class DonationController extends Controller
             if (property_exists($order_details->payment_source->card, "authentication_result") && !$this->cardAuthenticated($order_details->payment_source->card->authentication_result)) {
                 return response()->json(["error" => "card not authenticated"], 400);
             }
+            RateLimiter::decrement("donation_paypal_card", 600);
+            RateLimiter::decrement("donation_paypal_card:" . $request->ip(), 3600);
         }
         $url = $base_url . "/v2/checkout/orders/$orderId/capture";
         $opts = [

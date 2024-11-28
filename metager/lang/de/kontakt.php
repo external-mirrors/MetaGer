@@ -19,8 +19,8 @@ return [
         '1' => 'Per Brief-Post',
         '2' => 'Wir ziehen es vor, auf digitalem Wege kontaktiert zu werden. Wenn Sie jedoch eine postalische Kontaktaufnahme als unbedingt nötig erachten, erreichen Sie uns unter der folgenden Adresse:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Germany",
     ],
     'error' => [

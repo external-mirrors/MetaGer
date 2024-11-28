@@ -4,8 +4,8 @@ return [
         '1' => 'Med brevpost',
         '2' => 'Vi foretrækker digital kontakt. Men hvis du finder det nødvendigt at kontakte os postalt, kan du sende os en mail på:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Tyskland",
     ],
     'error' => [

@@ -5,6 +5,6 @@ Ein Mitarbeiter wird sich aber möglichst schnell mit Ihrem Anliegen befassen.
 Thank you for contacting us. As you might already suspect, this is initially just an automatically generated answer in which we explain our data protection. In our [data protection declaration](https://metager.org/datenschutz#contact) you can find out more about how long we keep data about our conversation and what data is actually generated.  
 However, an employee will deal with your request as quickly as possible.
   
-Team SUMA-EV & MetaGer, Röselerstraße 3, 30159 Hannover  
+Team SUMA-EV & MetaGer, Postfach 51 01 43, 30631 Hannover
 Tel.: +4951134000070, E-Mail: support@suma-ev.de, Fax: +4951134001023  
 [suma-ev.de](https://suma-ev.de) & [metager.de](https://metager.de)

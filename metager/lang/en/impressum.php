@@ -6,7 +6,7 @@ return [
     ],
     'info' => [
         '1' => 'Wikipedia-entry for the <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
-        '2' => "SUMA-EV\r\nRöselerstr. 3\r\nD-30159 Hannover\r\nDeutschland/Germany",
+        '2' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nDeutschland/Germany",
         '3' => "Contact:\r\nTel.: +4951134000070\r\nEMail: <a href=\"/en-GB/kontakt\">Encrypted contact form</a>",
         '4' => 'Board: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Youth Protection Commissioner: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',

@@ -130,7 +130,7 @@
             </li>
           @endif
           <li>
-            <a href="https://www.wecanhelp.de/430159004" target="_blank">{{ trans('sidebar.nav17') }} <img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a>
+            <a href="https://www.wecanhelp.de/430631004" target="_blank">{{ trans('sidebar.nav17') }} <img src="/img/svg-icons/icon-outlink.svg" alt="" aria-hidden="true" id="sidebar-img-outlink"></a>
           
           </li>
         </ul>

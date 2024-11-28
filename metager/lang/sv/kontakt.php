@@ -2,8 +2,8 @@
 return [
     'letter' => [
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Tyskland",
         '1' => 'Med brevpost',
         '2' => 'Vi föredrar digital kontakt. Om du anser att det är nödvändigt att kontakta oss postalt kan du skicka e-post till oss på',

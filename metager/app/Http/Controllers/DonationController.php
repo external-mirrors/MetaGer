@@ -289,7 +289,10 @@ class DonationController extends Controller
             'amount' => ['required', 'numeric', 'min:1', Rule::when($funding_source === "card", 'min:5')],
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
-        if ($validator->fails()) {
+
+        $ratelimit_key = 'create-order-cc';
+
+        if ($validator->fails() || RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
             $failedParams = $validator->failed();
             if (array_key_exists("amount", $failedParams)) {
                 return redirect(LaravelLocalization::getLocalizedUrl(null, '/spende'));
@@ -425,10 +428,10 @@ class DonationController extends Controller
         if ($funding_source === "card") {
             $ratelimit_key = 'create-order-cc';
 
-            RateLimiter::hit($ratelimit_key, 60);
+            RateLimiter::hit($ratelimit_key, 3600);
             RateLimiter::hit($ratelimit_key . "-user-" . $request->ip(), 86400);
 
-            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 10)) {
+            if (RateLimiter::tooManyAttempts($ratelimit_key, 5) || RateLimiter::tooManyAttempts($ratelimit_key . "-user-" . $request->ip(), 2)) {
                 abort(400);
             }
         }
@@ -529,6 +532,10 @@ class DonationController extends Controller
             if (property_exists($order_details->payment_source->card, "authentication_result") && !$this->cardAuthenticated($order_details->payment_source->card->authentication_result)) {
                 return response()->json(["error" => "card not authenticated"], 400);
             }
+            $ratelimit_key = 'create-order-cc';
+
+            RateLimiter::decrement($ratelimit_key, 60);
+            RateLimiter::decrement($ratelimit_key . "-user-" . $request->ip(), 86400);
         }
         $url = $base_url . "/v2/checkout/orders/$orderId/capture";
         $opts = [

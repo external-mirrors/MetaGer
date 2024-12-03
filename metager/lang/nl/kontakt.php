@@ -4,8 +4,8 @@ return [
         '1' => 'Per briefpost',
         '2' => 'We geven de voorkeur aan digitaal contact. Als je het echter nodig vindt om ons per post te bereiken, kun je ons mailen op:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Duitsland",
     ],
     'error' => [

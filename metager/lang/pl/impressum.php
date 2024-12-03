@@ -5,8 +5,8 @@ return [
         '10' => 'Pomimo dokładnej kontroli treści nie ponosimy odpowiedzialności za treści linków zewnętrznych. Za treść linków zewnętrznych odpowiedzialni są wyłącznie ich operatorzy.',
         '1' => 'Wpis w Wikipedii dla <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r
-Röselerstr. 3\r
-D-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Deutschland/Niemcy",
         '3' => "Kontakt:\r
 Tel: +4951134000070\r

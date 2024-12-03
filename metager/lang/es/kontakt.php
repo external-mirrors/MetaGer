@@ -19,8 +19,8 @@ return [
         '1' => 'Por carta',
         '2' => 'Preferimos que nos contacte por medios digitales. Si lo ve indispensable contactarnos vía correo fisico, nos puede escribir a la siguiente dirección:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Germany",
     ],
     'error' => [

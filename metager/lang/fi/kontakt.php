@@ -26,8 +26,8 @@ return [
         '1' => 'Kirjepostitse',
         '2' => 'Suosimme digitaalista yhteydenpitoa. Jos kuitenkin katsot tarpeelliseksi ottaa meihin yhteyttä postitse, voit lähettää meille sähköpostia osoitteeseen:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Saksa",
     ],
     'email' => [

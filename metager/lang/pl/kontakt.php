@@ -14,8 +14,8 @@ return [
         '1' => 'Listownie',
         '2' => 'Preferujemy kontakt cyfrowy. Jeśli jednak uznasz za konieczne skontaktowanie się z nami drogą pocztową, możesz wysłać do nas wiadomość na adres:',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hanower\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Niemcy",
     ],
     'error' => [

@@ -257,8 +257,8 @@
         </ol>
         <div>@lang('privacy.rights.perception', ['contact_link' => route('contact')])</div>
         <br />SUMA-EV
-        <br />Röselerstraße 3
-        <br />30159 Hannover
+        <br />Postfach 51 01 43
+        <br />30631 Hannover\r
     </div>
     <div class="section">
         <h1>@lang('privacy.changes.title')</h1>

@@ -19,8 +19,8 @@ return [
         '1' => 'Par courrier postal',
         '2' => 'Nous préférons les contacts numériques. Toutefois, si vous estimez qu\'il est nécessaire de nous contacter par voie postale, vous pouvez nous envoyer un courrier à l\'adresse suivante :',
         '3' => "SUMA-EV\r
-Röselerstr. 3\r
-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Allemagne",
     ],
     'error' => [

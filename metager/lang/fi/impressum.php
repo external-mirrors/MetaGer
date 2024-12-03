@@ -7,8 +7,8 @@ return [
     'info' => [
         '1' => 'Wikipedia-merkintä osoitteesta <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r
-Röselerstr. 3\r
-D-30159 Hannover\r
+Postfach 51 01 43\r
+D-30631 Hannover\r
 Deutschland/Saksa",
         '3' => "Yhteystiedot:\r
 Puh: +4951134000070\r

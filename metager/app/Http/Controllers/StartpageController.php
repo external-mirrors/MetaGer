@@ -53,7 +53,9 @@ class StartpageController extends Controller
     public function isLoggedIn(Request $request)
     {
         if (app(abstract: \App\Models\Authorization\Authorization::class)->loggedIn) {
-            return response()->json([], 200);
+            return response()->json([
+                "is_bugged_extension" => $request->hasHeader("mg-webext") && $request->header("mg-webext", "") === "1.2"
+            ], 200);
         } else {
             return response()->json([], 401);
         }

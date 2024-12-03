@@ -161,7 +161,12 @@ function backButtons() {
         if ((new Date()).getTime() - starttime > 5000) return;
         return (new Promise(resolve => { setTimeout(resolve, 1000) })).then(() => checkLoginStatus());
       } else {
-        document.location.reload();
+        response.json().then(json_response => {
+          if (json_response.hasOwnProperty("is_bugged_extension") && json_response.is_bugged_extension) {
+            document.location.pathname += "meta/meta.ger3";
+          }
+        });
+        //document.location.reload();
         return;
       }
     });

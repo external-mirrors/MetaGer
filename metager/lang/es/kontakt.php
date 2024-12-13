@@ -14,6 +14,7 @@ return [
         '8' => 'Encriptar y enviar',
         'name' => 'Nombre',
         '9' => 'Añadir hasta 5 archivos adjuntos (tamaño de archivo &lt; 5 MB)',
+        'temperror' => 'Actualmente experimentamos dificultades. Nuestro formulario de contacto volverá pronto.',
     ],
     'letter' => [
         '1' => 'Por carta',

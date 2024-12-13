@@ -14,6 +14,7 @@ return [
         '7' => 'Sujet',
         '8' => 'Envoyer',
         '9' => 'Jusqu\'à 5 pièces jointes (taille des fichiers < 5 MB)',
+        'temperror' => 'Nous rencontrons actuellement des difficultés. Notre formulaire de contact sera bientôt rétabli.',
     ],
     'letter' => [
         '1' => 'Par courrier postal',

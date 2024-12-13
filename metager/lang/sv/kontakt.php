@@ -29,6 +29,7 @@ Tyskland",
         '7' => 'Ämne',
         '8' => 'Skicka',
         '9' => 'Upp till 5 bilagor (filstorlek < 5 MB)',
+        'temperror' => 'Vi har för närvarande problem. Vårt kontaktformulär kommer snart att vara tillbaka.',
     ],
     'email' => [
         'text' => 'Du kan kontakta oss genom att skicka ett mail till <a href="mailto::mail">:mail</a>',

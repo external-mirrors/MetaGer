@@ -29,6 +29,7 @@ Tyskland",
         '7' => 'Emne',
         '8' => 'Send',
         '9' => 'Op til 5 vedhæftede filer (filstørrelse < 5 MB)',
+        'temperror' => 'Vi oplever i øjeblikket problemer. Vores kontaktformular er snart tilbage.',
     ],
     'email' => [
         'text' => 'Du kan kontakte os ved at sende en mail til: <a href="mailto::mail">:mail</a>',

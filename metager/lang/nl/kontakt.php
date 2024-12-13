@@ -29,6 +29,7 @@ Duitsland",
         '7' => 'Onderwerp',
         '8' => 'Stuur',
         '9' => 'Maximaal 5 bijlagen (bestandsgrootte < 5 MB)',
+        'temperror' => 'We ondervinden momenteel problemen. Ons contactformulier is binnenkort weer beschikbaar.',
     ],
     'email' => [
         'text' => 'Je kunt ons bereiken door een mail te sturen naar: <a href="mailto::mail">:mail</a>',

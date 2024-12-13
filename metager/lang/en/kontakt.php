@@ -22,6 +22,7 @@ return [
         '7' => 'Subject',
         '8' => 'Send',
         '9' => 'Up to 5 attachments (filesize < 5 MB)',
+        'temperror' => 'We currently experience difficulties. Our Contact Form will be back soon.',
     ],
     'letter' => [
         '1' => 'By Letter Mail',

@@ -26,6 +26,7 @@ Germania",
         '7' => 'Oggetto',
         '8' => 'Inviare',
         '9' => 'Fino a 5 allegati (dimensione del file < 5 MB)',
+        'temperror' => 'Al momento abbiamo delle difficoltà. Il nostro modulo di contatto tornerà presto.',
     ],
     'success' => [
         '1' => 'Il messaggio è stato consegnato con successo. È stata inviata una prima risposta automatica a :email.',

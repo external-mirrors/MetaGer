@@ -14,6 +14,7 @@ return [
         '7' => 'Betreff',
         '8' => 'Senden',
         '9' => 'Bis zu 5 Anhänge hinzufügen (Dateigröße < 5 MB)',
+        'temperror' => 'Wir haben derzeit Schwierigkeiten. Unser Kontakt-Formular wird bald wieder verfügbar sein.',
     ],
     'letter' => [
         '1' => 'Per Brief-Post',

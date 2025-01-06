@@ -58,15 +58,23 @@ async function sendMessage(payload) {
     };
 
     return new Promise(resolve => {
-        window.addEventListener("message", receiveMessage);
-        window.postMessage(message);
+        if (typeof mgapp == "undefined") {
+            window.addEventListener("message", receiveMessage);
+            window.postMessage(message);
+        } else {
+            mgapp.addEventListener("message", receiveMessage);
+            mgapp.postMessage(JSON.stringify(message));
+        }
 
         let timeout = setTimeout(() => {
             resolve(null);
         }, 10000);
 
         function receiveMessage(event) {
-            if (event.source !== window || event?.data?.sender !== "tokenmanager" || event?.data?.message_id !== message_id) return;
+            if (typeof mgapp != "undefined" && typeof event.data == "string") {
+                event.data = JSON.parse(event.data);
+            }
+            if ((event.source !== window && typeof mgapp == "undefined") || !["tokenmanager", "mgapp"].includes(event?.data?.sender) || event?.data?.message_id !== message_id) return;
             clearTimeout(timeout);
             window.removeEventListener("message", receiveMessage);
             resolve(event.data.payload);

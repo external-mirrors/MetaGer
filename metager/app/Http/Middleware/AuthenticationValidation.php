@@ -45,37 +45,12 @@ class AuthenticationValidation
             // Handle different versions of Tokenauthorization depending of source (app|webextension) and their respective versions
             if ($request->header("tokensource", "app") === "webextension") {
                 if (version_compare($request->header("Mg-Webext", "0.0"), "1.2", ">=") && $request->hasHeader("anonymous-token-payment-id")) {
-                    $authorization->availableTokens = $authorization->token_payment->receive(0.01);
-                    $payment_uid = $authorization->token_payment->publish();
-
-                    if ($payment_uid !== null && !AnonymousTokenPayment::IS_ASYNC_DISABLED()) {
-                        // Received tokens are already checked to be valid. No need to validate them here again
-                        $authorization->token_payment->receive();
-
-                        if (!is_null($authorization->token_payment->key)) {
-                            // Something weird happened which caused anonymous token payment to fail. For convenience purposes we fall back to key
-                            // Authorization in that case
-                            $key = $authorization->token_payment->key;
-                            app()->singleton(Authorization::class, function ($app) use ($key) {
-                                return new KeyAuthorization($key);
-                            });
-                            $authorization = app(Authorization::class);
-                            $authorized = $authorization->canDoAuthenticatedSearch();
-                        } else {
-                            $authorization->availableTokens = $authorization->token_payment->getAvailableTokenCount();
-                        }
-                        if ($authorization->canDoAuthenticatedSearch()) {
-                            $authorized = true;
-                        }
+                    $response = $this->syncTokenPayment($request, $authorization);
+                    if (is_bool($response)) {
+                        $authorized = $response;
                     } else {
-                        // Async Token Authentication is either disabled due to rate limit
-                        // or no payment did go through. We will fallback to a synchronious payment
-                        if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
-                            $url = route("resultpage", parameters: $request->all());
-                            return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "payment" => base64_encode($authorization->token_payment->toJSON()), "method" => $request->method(), "page" => $url, "parameters" => $request->all(), "error_url" => route("startpage", $parameters)]);
-                        }
+                        return $response;
                     }
-
                 } else {
                     if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
                         /** 
@@ -95,12 +70,21 @@ class AuthenticationValidation
                     }
                 }
             } else {
-                // The android app currently uses the cost token to apply token payments
-                // ANd applies those on the following request
-                if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
-                    $url = route("resultpage", $request->all());
-                    \Cookie::queue("cost", $cost, 0);
-                    return redirect($url);
+                if (version_compare($request->header("mg-app", "0.0"), "5.1.7", "<=") || !$request->hasHeader("anonymous-token-payment-id")) {
+                    // The android app currently uses the cost token to apply token payments
+                    // ANd applies those on the following request
+                    if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
+                        $url = route("resultpage", $request->all());
+                        \Cookie::queue("cost", $cost, 0);
+                        return redirect($url);
+                    }
+                } else {
+                    $response = $this->syncTokenPayment($request, $authorization);
+                    if (is_bool($response)) {
+                        $authorized = $response;
+                    } else {
+                        return $response;
+                    }
                 }
             }
         }
@@ -110,5 +94,50 @@ class AuthenticationValidation
         } else {
             return redirect(route("startpage", $parameters));
         }
+    }
+
+    private function syncTokenPayment(Request $request, TokenAuthorization $authorization)
+    {
+        $authorization->availableTokens = $authorization->token_payment->receive(0.01);
+        $payment_uid = $authorization->token_payment->publish();
+
+        if ($authorization->canDoAuthenticatedSearch()) {
+            return true;
+        }
+
+        $authorized = false;
+
+        if ($payment_uid !== null && !AnonymousTokenPayment::IS_ASYNC_DISABLED()) {
+            // Received tokens are already checked to be valid. No need to validate them here again
+            $authorization->token_payment->receive();
+
+            if (!is_null($authorization->token_payment->key)) {
+                // Something weird happened which caused anonymous token payment to fail. For convenience purposes we fall back to key
+                // Authorization in that case
+                $key = $authorization->token_payment->key;
+                app()->singleton(Authorization::class, function ($app) use ($key) {
+                    return new KeyAuthorization($key);
+                });
+                $authorization = app(Authorization::class);
+                $authorized = $authorization->canDoAuthenticatedSearch();
+            } else {
+                $authorization->availableTokens = $authorization->token_payment->getAvailableTokenCount();
+            }
+            if ($authorization->canDoAuthenticatedSearch()) {
+                $authorized = true;
+            }
+        } else {
+            // Async Token Authentication is either disabled due to rate limit
+            // or no payment did go through. We will fallback to a synchronious payment
+            if (!($authorized = $authorization->canDoAuthenticatedSearch())) {
+                $url = route("resultpage", parameters: $request->all());
+                $parameters = [];
+                if ($request->filled("eingabe")) {
+                    $parameters["eingabe"] = $request->input("eingabe");
+                }
+                return response()->view("resultpages.tokenauthorization", ["title" => "MetaGer Anonymous Tokens", "payment" => base64_encode($authorization->token_payment->toJSON()), "method" => $request->method(), "page" => $url, "parameters" => $request->all(), "error_url" => route("startpage", $parameters)]);
+            }
+        }
+        return $authorized;
     }
 }

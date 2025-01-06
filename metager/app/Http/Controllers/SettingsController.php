@@ -79,7 +79,7 @@ class SettingsController extends Controller
 
         $agent = new Agent();
 
-        return view('settings.index')
+        return response(view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $settings->fokus)
             ->with('fokusName', $fokusName)
@@ -95,7 +95,7 @@ class SettingsController extends Controller
             ->with('cookieLink', $cookieLink)
             ->with('agent', $agent)
             ->with('browser', $agent->browser())
-            ->with('js', [mix('js/scriptSettings.js')]);
+            ->with('js', [mix('js/scriptSettings.js')]), 200, ["Cache-Control" => "no-store"]);
     }
 
     private function getSumas($fokus)
@@ -165,7 +165,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines";
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url, "anchor" => "engines"]);
 
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
@@ -195,7 +195,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#engines";
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url, "anchor" => "engines"]);
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -247,7 +247,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#filter";
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "filter"]);
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -276,7 +276,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#external-search-service";
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "external-search-service"]);
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -348,12 +348,13 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
+        $headers = ["Cache-Control" => "no-store"];
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
-            return response()->json($response);
+            return response()->json($response, 200, $headers);
         } else {
-            return redirect($redirect_url);
+            return redirect($redirect_url, 302, $headers);
         }
     }
 
@@ -500,7 +501,7 @@ class SettingsController extends Controller
         Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, false));
 
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#bl";
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "bl"]);
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -517,7 +518,7 @@ class SettingsController extends Controller
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#bl";
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "bl"]);
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);

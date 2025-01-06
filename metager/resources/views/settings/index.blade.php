@@ -24,7 +24,7 @@
                     <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter') }}"
                         class="btn btn-default">@lang('settings.metager-key.manage')</a>
                     <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(url()->full())) }}"
-                        class="btn btn-default">@lang('settings.metager-key.logout')</a>
+                        class="btn btn-default" id="remove-key">@lang('settings.metager-key.logout')</a>
                 </div>
             @else
                 <p>@lang('settings.metager-key.no-key')</p>
@@ -302,5 +302,6 @@
             </div>
             @endif
         </div>
+        <div id="plugin-btn" class="hidden"></div>
     </div>
 @endsection

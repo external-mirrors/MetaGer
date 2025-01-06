@@ -20,6 +20,7 @@ use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
 use App\Http\Middleware\AuthenticationValidation;
+use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
 use App\Models\Authorization\Authorization;
 use Jenssegers\Agent\Agent;
@@ -358,8 +359,8 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class, 'externalimagesearch'])->name("resultpage");
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
-    Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"]);
-    Route::post('anonymous-token', [AnonymousToken::class, "pay"]);
+    Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"])->withoutMiddleware([LocalizationRedirect::class]);
+    Route::post('anonymous-token', [AnonymousToken::class, "pay"])->withoutMiddleware([LocalizationRedirect::class]);
 
     Route::get('meta/picture', [Pictureproxy::class, 'get'])->name("imageproxy");
 

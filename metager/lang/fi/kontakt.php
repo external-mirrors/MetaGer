@@ -21,6 +21,7 @@ return [
         '7' => 'Aihe',
         '8' => 'Lähetä',
         '9' => 'Enintään 5 liitetiedostoa (tiedostokoko < 5 MB)',
+        'temperror' => 'Meillä on tällä hetkellä vaikeuksia. Yhteydenottolomakkeemme palaa pian.',
     ],
     'letter' => [
         '1' => 'Kirjepostitse',

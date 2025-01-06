@@ -29,6 +29,7 @@ Alemanha",
         '9' => 'Até 5 anexos (tamanho do ficheiro < 5 MB)',
         '5' => 'O seu endereço eletrónico (facultativo)',
         'name' => 'Nome',
+        'temperror' => 'Estamos atualmente com dificuldades. O nosso formulário de contacto estará de volta em breve.',
     ],
     'headline' => [
         '2' => 'Correio eletrónico',

@@ -9,6 +9,7 @@ return [
         '9' => 'Do 5 załączników (rozmiar pliku < 5 MB)',
         '1' => 'Anonimowy formularz kontaktowy',
         '8' => 'Wyślij',
+        'temperror' => 'Obecnie doświadczamy trudności. Nasz formularz kontaktowy wkrótce powróci.',
     ],
     'letter' => [
         '1' => 'Listownie',

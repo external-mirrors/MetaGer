@@ -21,7 +21,9 @@
                     <div class="alert alert-danger" role="alert">{{ $errormessage }}</div>
                 @endforeach
             @endif
-            <form class="contact" name="contact" method="post"
+
+            <div class="alert alert-danger" role="alert">{!! trans('kontakt.form.temperror') !!}</div>
+            <!-- <form class="contact" name="contact" method="post"
                 action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/kontakt') }}"
                 enctype="multipart/form-data" onsubmit="document.getElementById('submit').disabled=true;">
                 {{ csrf_field() }}
@@ -60,7 +62,7 @@
                     <button id="submit" title="" data-original-title="" class="btn btn-default encrypt-btn"
                         type="submit">{!! trans('kontakt.form.8') !!}</button>
                 </div>
-            </form>
+            </form> -->
         </div>
         <div class="card">
             <h2>{!! trans('kontakt.letter.1') !!}</h2>

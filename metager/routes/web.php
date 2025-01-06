@@ -111,7 +111,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with("css", [mix("css/contact.css")]);
     })->name("contact");
 
-    Route::post('kontakt', [MailController::class, 'contactMail']);
+    //Route::post('kontakt', [MailController::class, 'contactMail']);
     Route::get('adblocker', function () {
         return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
     })->name("adblocker");

@@ -164,9 +164,10 @@ function backButtons() {
         response.json().then(json_response => {
           if (json_response.hasOwnProperty("is_bugged_extension") && json_response.is_bugged_extension) {
             document.location.pathname += "meta/meta.ger3";
+          } else {
+            document.location.replace(document.location.href);
           }
         });
-        //document.location.reload();
         return;
       }
     });

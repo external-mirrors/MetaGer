@@ -204,17 +204,15 @@
             <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
                 <input type="hidden" name="focus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
-                @if (config('metager.metager.admitad.suggestions_enabled'))
-                    <div class="form-group">
-                        <label for="sg">@lang('settings.suggestions.label')</label>
-                        <select name="sg" id="sg" class="form-control">
-                            <option value="off" {{ app(App\SearchSettings::class)->suggestions === 'off' ? 'disabled selected' : '' }}>
-                                @lang('settings.suggestions.off')</option>
-                            <option value="on" {{ app(App\SearchSettings::class)->suggestions !== 'off' ? 'disabled selected' : '' }}>
-                                @lang('settings.suggestions.on')</option>
-                        </select>
-                    </div>
-                @endif
+                <div class="form-group">
+                    <label for="sg">@lang('settings.suggestions.label')</label>
+                    <select name="sg" id="sg" class="form-control">
+                        <option value="off" {{ in_array(app(App\SearchSettings::class)->suggestions, [null, "off"]) ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        <option value="serper" {{ app(App\SearchSettings::class)->suggestions === 'serper' ? 'disabled selected' : '' }}>
+                           Serper</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
                     <select name="self_advertisements" id="self_advertisements" class="form-control">

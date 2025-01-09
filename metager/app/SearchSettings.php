@@ -88,9 +88,11 @@ class SearchSettings
         $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
-        $suggestions = $this->getSettingValue("suggestions", "bing");
-        if ($suggestions === "off") {
-            $this->suggestions = "off";
+        $suggestions = $this->getSettingValue("suggestions", null);
+        if (in_array($suggestions, ["off", "serper"])) {
+            $this->suggestions = $suggestions;
+        } else {
+            $this->suggestions = null;
         }
 
         if ($this->getSettingValue("quicktips") !== null) {

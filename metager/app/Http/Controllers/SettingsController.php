@@ -296,8 +296,8 @@ class SettingsController extends Controller
         if (!empty($suggestions)) {
             if ($suggestions === "off") {
                 Cookie::queue(Cookie::forever('suggestions', 'off', '/', null, $secure, false));
-            } elseif ($suggestions === "on") {
-                Cookie::queue(Cookie::forget("suggestions", "/"));
+            } elseif ($suggestions === "serper") {
+                Cookie::queue(Cookie::forever('suggestions', 'serper', '/', null, $secure, false));
             }
         }
 

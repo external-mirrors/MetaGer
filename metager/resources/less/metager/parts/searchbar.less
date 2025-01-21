@@ -16,10 +16,11 @@
   &[data-suggest="active"]:focus-within {
     grid-template-rows: max-content 1fr;
 
-    > .suggestions {
+    >.suggestions {
       border: 1px solid @searchbar-border-color;
       border-top: 0;
     }
+
   }
 
   .search-input-submit {
@@ -40,12 +41,12 @@
         padding-right: 1rem;
       }
 
-      > a {
+      >a {
         color: #585858;
         display: block;
         height: 100%;
 
-        > img {
+        >img {
           height: 100%;
           display: block;
           transform: rotate(-90deg);
@@ -104,11 +105,10 @@
         }
       }
 
-      &:focus-within:not(.search-delete-js-only)
-        > input:not(:placeholder-shown) {
+      &:focus-within:not(.search-delete-js-only)>input:not(:placeholder-shown) {
         padding-right: 35px; // Makes it so the overlayed delete button does not hide the text below
 
-        + #search-delete-btn {
+        +#search-delete-btn {
           display: grid;
         }
       }
@@ -126,7 +126,7 @@
         color: #585858;
         filter: invert(@icon-color);
 
-        > img#searchbar-img-lupe {
+        >img#searchbar-img-lupe {
           height: 100%;
           display: block;
         }
@@ -134,7 +134,7 @@
     }
   }
 
-  > .suggestions {
+  >.suggestions {
     --highlight-color: @highlight-color;
     display: grid;
     display: none;
@@ -142,83 +142,54 @@
     border-left: initial;
     border-top: 0;
     border: 0;
+    margin-bottom: 1rem;
     color: @text-color;
     background-color: @body-background-color;
 
-    > .partners {
-      display: flex;
-      gap: 1rem;
-      background-color: var(--highlight-color);
-      padding-inline: 0.5rem;
-
-      > .partner {
-        display: none;
-        gap: 0.5rem;
-        align-items: center;
-        justify-content: center;
-        padding-block: 1rem;
-        color: inherit;
-
-        > img {
-          height: 1em;
-        }
-
-        > div {
-          display: grid;
-          align-items: center;
-          grid-template-columns: max-content 1fr;
-          column-gap: 0.5rem;
-
-          > .description {
-            grid-column: span 2;
-            font-size: 0.7rem;
-          }
-
-          > div {
-            > .mark {
-              color: limegreen;
-              font-size: 0.5rem;
-              width: max-content;
-              border: 1px solid limegreen;
-              padding: 0.1rem 0.25rem;
-              border-radius: 5px;
-            }
-          }
-        }
-      }
-    }
-
-    > .suggestion {
+    >.suggestion {
       display: none;
-      cursor: pointer;
       align-items: center;
-      gap: 1rem;
-      padding: 0.25rem 0.5rem;
       color: inherit;
 
-      > img {
-        height: 1rem;
-        filter: invert(@icon-color);
+      >button {
+        cursor: pointer;
+        height: 100%;
+        padding-inline: 0.5rem;
+
+        >img {
+          height: 1rem;
+          filter: invert(@icon-color);
+        }
+
+        &:hover {
+          background-color: var(--highlight-color);
+        }
       }
 
-      &:hover {
-        background-color: var(--highlight-color);
+      >span {
+        flex-grow: 1;
+        padding: 0.5rem;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--highlight-color);
+        }
       }
     }
 
-    > .partner {
+    >.partner {
       display: none;
       align-items: center;
       gap: 1rem;
       padding: 0.25rem 0.5rem;
       color: inherit;
 
-      > img {
+      >img {
         width: 16px;
       }
 
-      > div {
-        > .mark {
+      >div {
+        >.mark {
           color: limegreen;
           font-size: 0.5rem;
           width: max-content;
@@ -245,7 +216,7 @@
 
 .startpage-searchbar {
   &[data-suggest="active"]:focus-within {
-    @media (max-height: 680px) {
+    @media (max-height: 780px) {
       z-index: 21;
       position: absolute;
       top: 0;
@@ -253,10 +224,20 @@
       width: 100%;
       grid-template-rows: max-content 1fr;
       height: 100dvh;
+
+      >.suggestions {
+        margin-bottom: 0;
+        overflow: auto;
+      }
+    }
+
+    >.search-input-submit {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 
-  > * {
+  >* {
     border: 1px solid @searchbar-border-color;
 
     &:not(:first-child):not(.suggestions) {
@@ -273,24 +254,18 @@
   }
 
   @media (max-width: @screen-mobile) {
-    .search-focus-selector {
-      border: 1px solid #aaa;
-      border-top: none;
-      border-radius: 5px;
-    }
-
     .search-input-submit {
-      border: 1px solid #aaa;
+      border: 1px solid @searchbar-border-color;
       border-radius: 5px;
     }
 
-    > * {
-      border: 1px solid #aaa;
+    >*:not(.suggestions) {
+      border: 1px solid @searchbar-border-color;
       border-radius: 5px;
       min-height: 40px;
 
       &:not(:first-child) {
-        border-left: 1px solid #aaa;
+        border-left: 1px solid @searchbar-border-color;
       }
     }
   }
@@ -306,14 +281,14 @@
     .search-input {
       height: 1.9rem;
 
-      > input {
+      >input {
         scroll-margin-top: 80px;
         padding: 0 0.5rem;
       }
     }
   }
 
-  > .suggestions {
+  >.suggestions {
     display: none;
     position: absolute;
     top: 3.8rem;
@@ -323,7 +298,7 @@
   }
 
   &[data-suggest="active"]:focus-within {
-    > .suggestions {
+    >.suggestions {
       display: grid;
     }
   }

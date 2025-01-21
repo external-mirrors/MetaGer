@@ -23,75 +23,47 @@
 					</button>
 				</div>
 			</div>
-			<div class="suggestions" data-suggest="{{Crypt::encrypt(now()->addMinutes(2))}}" data-partners="{{ route('suggest_partner') }}" data-suggestions="{{ route('suggest_suggest') }}">
-					<div class="partners">
-						<a href="" class="partner">
-							<img src="" alt="">
-							<div>
-								<div class="title"></div>
-								<div><div class="mark">@lang('result.options.4')</div></div>
-								<div class="description"></div>
-							</div>
-						</a>
-						<a href="" class="partner">
-							<img src="" alt="">
-							<div>
-								<div class="title"></div>
-								<div><div class="mark">@lang('result.options.4')</div></div>
-								<div class="description"></div>
-							</div>
-						</a>
+			<div class="suggestions" data-suggestions="{{ route('suggest_suggest') }}">
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<span></span>
 					</div>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<a href="" class="partner">
-						<img src="" alt="">
-						<div class="title"></div>
-						<div><div class="mark">@lang('result.options.4')</div></div>
-					</a>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<a href="" class="partner">
-						<img src="" alt="">
-						<div class="title"></div>
-						<div><div class="mark">@lang('result.options.4')</div></div>
-					</a>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
-						<span></span>
-					</button>
+					</div>
 				</div>
 			<div class="search-hidden">
 				@if(Request::filled("token"))

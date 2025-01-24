@@ -1,3 +1,5 @@
+const { initializeSuggestions } = require("./suggest");
+
 require("es6-promise").polyfill();
 require("fetch-ie8");
 
@@ -11,6 +13,7 @@ function initialize() {
   enableResultSaver();
   enablePagination();
   enableABHints();
+
 }
 
 // Submit search form when filters change
@@ -388,6 +391,10 @@ function initialize() {
       { once: true }
     );
   });
+})();
+
+(() => {
+  initializeSuggestions();
 })();
 
 if (document.readyState == "loading") {

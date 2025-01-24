@@ -6,6 +6,7 @@ export function initializeSuggestions() {
   let query = "";
   let suggest_timeout = null;
   let searchbar_container = document.querySelector(".searchbar");
+  let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
   if (!searchbar_container) {
     return;
   }
@@ -33,6 +34,7 @@ export function initializeSuggestions() {
     e.preventDefault();
     suggest();
   });
+  search_input.addEventListener("blur", e => setTimeout(() => { if (document.activeElement != search_input) searchbar_container.dataset.suggest = "inactive"; else console.log("test") }, 250));
   search_input.addEventListener("change", (e) => {
     if (search_input.value.trim() == "") {
       query = "";
@@ -76,10 +78,8 @@ export function initializeSuggestions() {
   function updateSuggestions() {
     // Enable/Disable Suggestions
     if (suggestions.length > 0) {
-      suggestions_container.style.display = "grid";
       searchbar_container.dataset.suggest = "active";
     } else {
-      suggestions_container.style.display = "none";
       searchbar_container.dataset.suggest = "inactive";
     }
 
@@ -102,16 +102,22 @@ export function initializeSuggestions() {
 
         search_button.value = suggestions[index];
         title_container.textContent = suggestions[index];
-
         if (eingabe_container) {
           title_container.onclick = e => {
+            e.preventDefault();
+            console.log("test", suggestions[index]);
             eingabe_container.value = suggestions[index] + " ";
             eingabe_container.focus();
           };
         }
       });
-    if (suggestions.length > 0) {
-      setTimeout(() => searchbar_container.scrollIntoView(false), 250);
+    if (suggestions.length > 0 && on_startpage) {
+      setTimeout(() => {
+        let rect_bounds = searchbar_container.getBoundingClientRect();
+        if (rect_bounds.top < 0 || rect_bounds.left < 0 || rect_bounds.bottom > (window.visualViewport.height || window.innerHeight || document.documentElement.clientHeight) || rect_bounds.right > (window.visualViewport.width || window.innerWidth || document.documentElement.clientWidth)) {
+          searchbar_container.scrollIntoView(true);
+        }
+      }, 250);
     }
   }
 }

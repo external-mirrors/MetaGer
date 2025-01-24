@@ -22,7 +22,7 @@
                     'request' => Request::method(),
                 ])
             </div>
-            <div class="sidebar-opener-placeholder"></div>
+            @include('parts.sidebar-opener', ['class' => 'fixed'])
         </div>
     </div>
     <div id="foki">

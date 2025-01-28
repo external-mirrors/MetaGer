@@ -11,6 +11,7 @@
 						>
 					</a>
 				</div>
+				<div id="suggest-exit">&larr;</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
 					<input type="search" id="eingabe" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
 					<button id="search-delete-btn" name="delete-search-input" type="reset" title="@lang('index.searchreset')">

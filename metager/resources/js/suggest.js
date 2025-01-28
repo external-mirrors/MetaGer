@@ -24,28 +24,36 @@ export function initializeSuggestions() {
   search_input.addEventListener("keydown", clearSuggestTimeout);
   search_input.addEventListener("keyup", (e) => {
     if (e.key == "Escape") {
+      e.stopPropagation();
       e.target.blur();
     } else {
       clearSuggestTimeout();
       suggest_timeout = setTimeout(suggest, 600);
     }
   });
+  search_input.addEventListener("paste", e => {
+    e.preventDefault();
+    search_input.value = e.clipboardData.getData("text");
+    clearSuggestTimeout();
+    suggest();
+  });
   search_input.addEventListener("focusin", e => {
     e.preventDefault();
     suggest();
   });
-  search_input.addEventListener("blur", e => setTimeout(() => { if (document.activeElement != search_input) searchbar_container.dataset.suggest = "inactive"; else console.log("test") }, 250));
-  search_input.addEventListener("change", (e) => {
-    if (search_input.value.trim() == "") {
-      query = "";
-      searchbar_container.dataset.suggest = "inactive";
-    }
+  search_input.addEventListener("blur", e => {
+    clearSuggestTimeout();
+    setTimeout(() => {
+      if (document.activeElement != search_input) searchbar_container.dataset.suggest = "inactive";
+    }, 250);
   });
+
   search_input.form.addEventListener("submit", clearSuggestTimeout);
 
   function clearSuggestTimeout(e) {
     if (suggest_timeout != null) {
       clearTimeout(suggest_timeout);
+      suggest_timeout = null;
     }
   }
 

@@ -24,7 +24,7 @@
 					</button>
 				</div>
 			</div>
-			<div class="suggestions" data-suggestions="{{ route('suggest_suggest') }}">
+			<div class="suggestions" data-suggestions="{{ route('suggest') }}">
 					<div class="suggestion" tabindex="0">
 						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>

@@ -4,7 +4,6 @@
 export function initializeSuggestions() {
   let suggestions = [];
   let query = "";
-  let suggest_timeout = null;
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
   if (!searchbar_container) {
@@ -21,20 +20,17 @@ export function initializeSuggestions() {
     return;
   }
 
-  search_input.addEventListener("keydown", clearSuggestTimeout);
   search_input.addEventListener("keyup", (e) => {
     if (e.key == "Escape") {
       e.stopPropagation();
       e.target.blur();
     } else {
-      clearSuggestTimeout();
-      suggest_timeout = setTimeout(suggest, 600);
+      suggest();
     }
   });
   search_input.addEventListener("paste", e => {
     e.preventDefault();
     search_input.value = e.clipboardData.getData("text");
-    clearSuggestTimeout();
     suggest();
   });
   search_input.addEventListener("focusin", e => {
@@ -49,13 +45,6 @@ export function initializeSuggestions() {
   });
 
   search_input.form.addEventListener("submit", clearSuggestTimeout);
-
-  function clearSuggestTimeout(e) {
-    if (suggest_timeout != null) {
-      clearTimeout(suggest_timeout);
-      suggest_timeout = null;
-    }
-  }
 
   function suggest() {
     if (search_input.value.trim().length <= 3 || navigator.webdriver) {
@@ -75,7 +64,7 @@ export function initializeSuggestions() {
     })
       .then((response) => response.json())
       .then((response) => {
-        suggestions = response;
+        suggestions = response[1];
         updateSuggestions();
       }).catch(reason => {
         suggestions = [];

@@ -13,6 +13,7 @@ abstract class Suggestions
 {
     public const NAME = "";
     protected string $query;
+    protected array $suggestions = [];
     /** Should the request be made as POST request. GET method is used otherwise */
     protected bool $api_method_post = false;
     protected int $api_success_response_code = 200;
@@ -47,7 +48,7 @@ abstract class Suggestions
      * Parses the server response and returns an array of suggestions
      * @return array
      */
-    abstract protected function parseResponse(string $response): array;
+    abstract protected function parseResponse(string $response): void;
 
     public function fetch()
     {
@@ -80,5 +81,17 @@ abstract class Suggestions
         } else {
             return [];
         }
+    }
+
+    public function toJSON(): array
+    {
+        $result = [];
+        $result[0] = $this->query;
+        $result[1] = $this->suggestions;
+        $result[2] = [];
+        foreach ($result[1] as $suggestion) {
+            $result[3][] = route("resultpage", ["eingabe" => $suggestion]);
+        }
+        return $result;
     }
 }

@@ -4,5 +4,6 @@
         <Description>{{ trans('plugin.description') }}</Description>
         <Image width="16" height="16" type="image/x-icon">{{ url('/favicon.ico') }}</Image>
         <Url type="text/html" template="{{ $link }}" method="GET" />
+        <Url type="application/x-suggestions+json" template="{{ $suggestLink }}"/>
         <InputEncoding>UTF-8</InputEncoding>
 </OpenSearchDescription>

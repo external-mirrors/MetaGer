@@ -28,17 +28,15 @@ class Serper extends Suggestions
         return parent::fetch();
     }
 
-    protected function parseResponse(string $response): array
+    protected function parseResponse(string $response): void
     {
         try {
             $suggestion_response = json_decode($response, true);
             $result = [];
             foreach ($suggestion_response["suggestions"] as $suggestion) {
-                $result[] = $suggestion["value"];
+                $this->suggestions[] = $suggestion["value"];
             }
-            return $result;
         } catch (Exception $e) {
-            return [];
         }
     }
 }

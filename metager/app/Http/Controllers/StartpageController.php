@@ -78,16 +78,14 @@ class StartpageController extends Controller
 
     public function loadPlugin(Request $request, $locale = "de")
     {
-        $link = action('MetaGerSearch@search', []);
-        $link .= "?";
-        $link .= "eingabe={searchTerms}";
-        $key = $request->input('key', '');
-        if (!empty($key)) {
-            $link .= "&key=" . urlencode($key);
-        }
+        $link = action('MetaGerSearch@search') . "?eingabe={searchTerms}";
+
+        $suggestLink = route('suggest') . "?query={searchTerms}";
+
         $response = Response::make(
             view('plugin')
-                ->with('link', $link),
+                ->with('link', $link)
+                ->with('suggestLink', $suggestLink),
             "200"
         );
         $response->header('Content-Type', "application/opensearchdescription+xml");

@@ -31,12 +31,13 @@
 	<link rel="apple-touch-icon" sizes="{{$matches[1]}}x{{$matches[1]}}" href="/img/favicon/{{$file}}" type="image/png">
 	@endif
 	@endforeach
-	@if(empty(Cookie::get('key')))
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
+	@if(app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
+	@if(isset($suggestions_ff_plugin_desktop) && $suggestions_ff_plugin_desktop)
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ["key" => app(\App\Models\Authorization\Authorization::class)->getToken()]) }}">
 	@else
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ['key' => Cookie::get('key')]) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
 	@endif
-
+	@endif
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
 	@if (isset($css) && is_array($css))
 	@foreach($css as $cssFile)

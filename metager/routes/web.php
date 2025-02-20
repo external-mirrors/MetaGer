@@ -79,7 +79,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(url('impressum'));
     });
 
-    Route::get("suggest", [SuggestionController::class, "suggest"])->name("suggest");
+    Route::get("suggest/{key?}", [SuggestionController::class, "suggest"])->name("suggest");
 
     Route::get('about', function () {
         return view('about')

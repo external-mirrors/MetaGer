@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\SuggestionController;
 use App\Models\Configuration\Searchengines;
 use Cookie;
 use LaravelLocalization;
@@ -34,7 +35,9 @@ class SearchSettings
     /** @var bool */
     public $tiles_startpage;
     /** @var string */
-    public $suggestions = "bing";
+    public $suggestion_provider = "bing";
+    public $suggestion_delay = "medium";
+    public $suggestion_locationbar = false;
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
@@ -88,11 +91,29 @@ class SearchSettings
         $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
-        $suggestions = $this->getSettingValue("suggestions", null);
-        if (in_array($suggestions, ["off", "serper"])) {
-            $this->suggestions = $suggestions;
+        $suggestion_provider = $this->getSettingValue("suggestion_provider", null);
+        if (in_array($suggestion_provider, ["off", "serper"])) {
+            $this->suggestion_provider = $suggestion_provider;
         } else {
-            $this->suggestions = null;
+            $this->suggestion_provider = null;
+        }
+
+        $suggestion_delay = $this->getSettingValue("suggestion_delay", null);
+        if (in_array($suggestion_delay, ["short", "medium", "long"])) {
+            $this->suggestion_delay = $suggestion_delay;
+        }
+
+        $suggestion_locationbar = filter_var($this->getSettingValue("suggestion_locationbar", false), FILTER_VALIDATE_BOOL);
+        $this->suggestion_locationbar = $suggestion_locationbar;
+
+        $suggestion_server_settings = SuggestionController::LOAD_SERVER_SETTINGS();
+        if ($suggestion_server_settings !== null) {
+            if (array_key_exists("suggestion_provider", $suggestion_server_settings))
+                $this->suggestion_provider = $suggestion_server_settings["suggestion_provider"];
+            if (array_key_exists("suggestion_delay", $suggestion_server_settings))
+                $this->suggestion_delay = $suggestion_server_settings["suggestion_delay"];
+            if (array_key_exists("suggestion_locationbar", $suggestion_server_settings))
+                $this->suggestion_locationbar = $suggestion_server_settings["suggestion_locationbar"];
         }
 
         if ($this->getSettingValue("quicktips") !== null) {

@@ -27,6 +27,17 @@ class StartpageController extends Controller
          */
         if ($request->filled("q")) {
             $eingabe = $request->input("q");
+
+            /**
+             * Chrome only adds opensearch descriptions when visiting the startpage
+             * turns out a redirect also works.
+             */
+            if ($eingabe === "opensearch" && $request->hasValidSignature()) {
+                if ($request->filled("url")) {
+                    return redirect($request->input("url"));
+                }
+            }
+
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
 
@@ -80,7 +91,13 @@ class StartpageController extends Controller
     {
         $link = action('MetaGerSearch@search') . "?eingabe={searchTerms}";
 
-        $suggestLink = route('suggest') . "?query={searchTerms}";
+        $key = $request->input("key", "");
+        if (!uuid_is_valid($key)) {
+            $key = "";
+        }
+
+        $suggestLink = route('suggest', ["key" => $key]);
+        $suggestLink .= "?query={searchTerms}";
 
         $response = Response::make(
             view('plugin')
@@ -89,6 +106,7 @@ class StartpageController extends Controller
             "200"
         );
         $response->header('Content-Type', "application/opensearchdescription+xml");
+        $response->header("Cache-Control", "no-store");
         return $response;
     }
 

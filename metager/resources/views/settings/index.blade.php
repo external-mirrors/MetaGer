@@ -198,21 +198,81 @@
                 </form>
             </div>
         @endif
+        <div class="card" id="suggest-settings">
+            <h1>@lang('settings.suggestions.heading')</h1>
+            <p>@lang('settings.hint.hint')</p>
+            <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
+                <input type="hidden" name="focus" value="{{ $fokus }}">
+                <input type="hidden" name="url" value="{{ $url }}">
+                <div class="form-group">
+                    <label for="sg">@lang('settings.suggestions.provider.label')</label>
+                    <select name="sg" id="sg" class="form-control">
+                        <option value="off" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        <option value="serper" {{ app(App\SearchSettings::class)->suggestion_provider === 'serper' ? 'disabled selected' : '' }}>
+                           Serper</option>
+                    </select>
+                </div>
+                @if(!in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]))
+                <div class="form-group">
+                    <label for="sgd">@lang('settings.suggestions.delay.label')</label>
+                    <div class="text-left">@lang('settings.suggestions.delay.description')</div>
+                    <select name="sgd" id="sgd" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }}>
+                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === "short" ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.short')</option>
+                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === "medium" ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.medium')</option>
+                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === "long" ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.long')</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sglb">@lang('settings.suggestions.locationbar.label')</label>
+                    <div class="text-left">@lang('settings.suggestions.locationbar.description')</div>
+                    <select name="sglb" id="sglb" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }} @if(app(\App\Models\Authorization\Authorization::class)->availableTokens <= 0) disabled @endif>
+                        <option value="false" {{ app(App\SearchSettings::class)->suggestion_locationbar === false ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.locationbar.no')</option>
+                        <option value="true" {{ app(App\SearchSettings::class)->suggestion_locationbar === true ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.locationbar.yes')</option>
+                    </select>
+                    @if(app(App\SearchSettings::class)->suggestion_locationbar === true)
+                    <div id="suggestions-ff-hint" class="text-left">
+                        <div class="warning">@lang('settings.suggestions.locationbar.hints')</div>
+                        <ul>
+                        @if((new Jenssegers\Agent\Agent())->isFirefox())
+                            @if((new Jenssegers\Agent\Agent())->isMobile())
+                        <li>
+                            <div>@lang('settings.suggestions.locationbar.criteria.ff-mobile')</div>
+                            <label for="searchstring">Such-String-URL</label>
+                            <div class="copyLink">
+                                <input id="searchstring" name="searchstring" type="text" class="copy" value="{{ route('resultpage') }}?eingabe=%s">
+                                <button class="btn btn-default">@lang('settings.copy')</button>
+                            </div>
+                            <label for="suggestionstring">Suchvorschlags-API</label>
+                            <div class="copyLink">
+                                <input id="suggestionstring" name="suggestionstring" type="text" class="copy" value="{{ route('suggest', []) }}?query=%s">
+                                <button class="btn btn-default">@lang('settings.copy')</button>
+                            </div>
+
+                        </li>
+                            @else
+                        <li>@lang('settings.suggestions.locationbar.criteria.ff-desktop')</li>
+                            @endif
+                        @endif
+                        <li>@lang('settings.suggestions.locationbar.criteria.default')</li>
+                        </ul>
+                    </div>
+                    @endif
+                </div>
+                @endif
+            </form>
+        </div>
         <div class="card" id="more-settings">
             <h1>@lang('settings.more')</h1>
             <p>@lang('settings.hint.hint')</p>
             <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
                 <input type="hidden" name="focus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
-                <div class="form-group">
-                    <label for="sg">@lang('settings.suggestions.label')</label>
-                    <select name="sg" id="sg" class="form-control">
-                        <option value="off" {{ in_array(app(App\SearchSettings::class)->suggestions, [null, "off"]) ? 'disabled selected' : '' }}>
-                            @lang('settings.suggestions.off')</option>
-                        <option value="serper" {{ app(App\SearchSettings::class)->suggestions === 'serper' ? 'disabled selected' : '' }}>
-                           Serper</option>
-                    </select>
-                </div>
                 <div class="form-group">
                     <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
                     <select name="self_advertisements" id="self_advertisements" class="form-control">

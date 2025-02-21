@@ -36,7 +36,8 @@ class SearchSettings
     public $tiles_startpage;
     /** @var string */
     public $suggestion_provider = "bing";
-    public $suggestion_delay = "medium";
+    /** @var int */
+    public $suggestion_delay = 600;
     public $suggestion_locationbar = false;
     public $external_image_search = "metager";
 
@@ -98,9 +99,13 @@ class SearchSettings
             $this->suggestion_provider = null;
         }
 
-        $suggestion_delay = $this->getSettingValue("suggestion_delay", null);
+        $suggestion_delay = $this->getSettingValue("suggestion_delay", "medium");
         if (in_array($suggestion_delay, ["short", "medium", "long"])) {
-            $this->suggestion_delay = $suggestion_delay;
+            $this->suggestion_delay = match ($suggestion_delay) {
+                "short" => 400,
+                "medium" => 600,
+                "long" => 800
+            };
         }
 
         $suggestion_locationbar = filter_var($this->getSettingValue("suggestion_locationbar", false), FILTER_VALIDATE_BOOL);

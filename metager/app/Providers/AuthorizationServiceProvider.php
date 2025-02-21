@@ -54,7 +54,7 @@ class AuthorizationServiceProvider extends ServiceProvider
             $payment_uid = Request::header("anonymous-token-payment-uid");
         }
 
-        if ($key === "" && ($tokens !== null || $tokenauthorization !== null)) {
+        if ($key === "" && ($tokens !== null || $decitokens !== null || $tokenauthorization !== null)) {
             $this->app->singleton(Authorization::class, function ($app) use ($tokens, $tokenauthorization, $decitokens, $payment_id, $payment_uid) {
                 return new TokenAuthorization(tokenString: $tokens, decitokenString: $decitokens, tokenauthorization: $tokenauthorization, payment_id: $payment_id, payment_uid: $payment_uid);
             });

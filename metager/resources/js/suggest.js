@@ -1,3 +1,5 @@
+import { getToken, putToken } from "./messaging";
+
 /**
  * MetaGers basic suggestion module
  */
@@ -6,6 +8,7 @@ export function initializeSuggestions() {
   let query = "";
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
+
   if (!searchbar_container) {
     return;
   }
@@ -46,30 +49,108 @@ export function initializeSuggestions() {
 
   search_input.form.addEventListener("submit", clearSuggestTimeout);
 
-  function suggest() {
-    if (search_input.value.trim().length <= 3 || navigator.webdriver) {
+  async function suggest(cost = 0, iteration = 1) {
+    console.log(cost);
+
+    if (iteration > 2 || navigator.webdriver) {
       suggestions = [];
       updateSuggestions();
       return;
     }
+    let token_header = null;
+    let decitoken_header = null;
+    if (cost > 0) {
+      let tokens = await getAnonymousTokens(cost);
+      token_header = [];
+      let index = 0;
+      while (cost >= 1) {
+        if (tokens.tokens.length >= (index + 1)) {
+          token_header[index] = tokens.tokens[index];
+          cost -= 1;
+        } else {
+          break;
+        }
+        index++;
+      }
+      decitoken_header = [];
+      index = 0;
+      while (cost > 0) {
+        if (tokens.decitokens.length >= (index + 1)) {
+          decitoken_header[index] = tokens.decitokens[index];
+          cost -= 0.1;
+        }
+        index++;
+      }
+    }
     if (search_input.value.trim() == query) {
       updateSuggestions();
       return;
-    } else {
-      query = search_input.value.trim();
     }
 
-    fetch(suggestion_url + "?query=" + encodeURIComponent(query), {
+    return fetch(suggestion_url + "?query=" + encodeURIComponent(search_input.value.trim()), {
       method: "GET",
+      headers: {
+        Accept: "application/json",
+        tokens: JSON.stringify(token_header),
+        decitokens: JSON.stringify(decitoken_header),
+      }
     })
-      .then((response) => response.json())
-      .then((response) => {
-        suggestions = response[1];
-        updateSuggestions();
-      }).catch(reason => {
+      .then(async (response) => {
+        let status = response.status;
+        let json_response = await response.json();
+        await recycleTokens(json_response);
+
+        console.log(status, status == 402);
+        switch (+status) {
+          case 200:
+            query = search_input.value.trim();
+            suggestions = json_response[1];
+            updateSuggestions();
+            return;
+          case 423:
+            break;
+          case 402:
+            console.log(json_response);
+            return suggest(json_response.cost, iteration + 1);
+        }
+        //return response.json()
+      })
+      .catch(reason => {
         suggestions = [];
         updateSuggestions();
       });
+  }
+
+  async function recycleTokens(json_response) {
+    let recycleTokens = {
+      tokens: {
+        tokens: [],
+        decitokens: []
+      }
+    };
+    if (json_response.hasOwnProperty("tokens")) {
+      recycleTokens.tokens.tokens = json_response.tokens;
+    }
+    if (json_response.hasOwnProperty("decitokens")) {
+      recycleTokens.tokens.decitokens = json_response.decitokens;
+    }
+
+    if (recycleTokens.tokens.tokens.length > 0 || recycleTokens.tokens.decitokens.length > 0) {
+      return putToken(recycleTokens);
+    }
+  }
+
+  async function getAnonymousTokens(cost) {
+    return getToken({
+      cost: cost,
+      missing: cost,
+      tokens: {
+        tokens: [],
+        decitokens: [],
+      }
+    }).then(newtokens => {
+      return newtokens.tokens;
+    })
   }
 
   function updateSuggestions() {

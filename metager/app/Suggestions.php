@@ -32,6 +32,8 @@ abstract class Suggestions
     protected array $api_get_parameters = [];
     protected array $api_header = [];
 
+    public $cost = 0;
+
 
     abstract public function __construct(string $query);
     public static function fromProviderName(string $provider, string $query): Suggestions|null

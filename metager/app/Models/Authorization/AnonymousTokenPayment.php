@@ -99,6 +99,32 @@ class AnonymousTokenPayment
         if (sizeof($this->tokens) === 0 && sizeof($this->decitokens) === 0) {
             return false;
         }
+
+        $payload = [
+            "tokens" => [],
+            "decitokens" => []
+        ];
+        $tokens = $this->tokens;
+        $this->tokens = [];
+        foreach ($tokens as $token) {
+            $check_result = $this->isChecked($token, false);
+            if ($check_result === null) {
+                $payload["tokens"][] = $token;
+            } else if ($check_result === true) {
+                $this->tokens[] = $token;
+            }
+        }
+        $decitokens = $this->decitokens;
+        $this->decitokens = [];
+        foreach ($decitokens as $token) {
+            $check_result = $this->isChecked($token, true);
+            if ($check_result === null) {
+                $payload["decitokens"][] = $token;
+            } else if ($check_result === true) {
+                $this->decitokens[] = $token;
+            }
+        }
+
         $url = $this->key_api_server . "/token/check";
 
         $ch = curl_init($url);
@@ -110,7 +136,7 @@ class AnonymousTokenPayment
             ],
             CURLOPT_TIMEOUT => 5,
             CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode(["tokens" => $this->tokens, "decitokens" => $this->decitokens]),
+            CURLOPT_POSTFIELDS => json_encode($payload),
             CURLOPT_USERAGENT => "MetaGer"
         ]);
 
@@ -118,10 +144,16 @@ class AnonymousTokenPayment
         $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         if ($response_code === 200) {
+            foreach ($payload["tokens"] as $token) {
+                $this->tokens[] = $token;
+                $this->markChecked($token, false, true);
+            }
+            foreach ($payload["decitokens"] as $token) {
+                $this->decitokens[] = $token;
+                $this->markChecked($token, true, true);
+            }
             return true;
         } elseif ($response_code === 422) {
-            $this->tokens = [];
-            $this->decitokens = [];
             $result = json_decode($result);
             if ($result === null) {
                 return false;
@@ -140,7 +172,17 @@ class AnonymousTokenPayment
                 foreach ($tokens as $token) {
                     if ($token->status === "ok") {
                         if ($error->param === "tokens") {
+                            $this->markChecked($token, false, true);
                             $this->tokens[] = new Token($token->token, $token->signature, $token->date);
+                        } elseif ($error->param === "decitokens") {
+                            $this->markChecked($token, true, true);
+                            $this->decitokens[] = new Token($token->token, $token->signature, $token->date);
+                        }
+                    } else {
+                        if ($error->param === "tokens") {
+                            $this->markChecked($token, false, false);
+                        } elseif ($error->param === "decitokens") {
+                            $this->markChecked($token, true, false);
                         }
                     }
                 }
@@ -376,6 +418,9 @@ class AnonymousTokenPayment
 
     private function updateCookie()
     {
+        if (Request::wantsJson()) {
+            return;
+        }
         if (sizeof($this->tokens) === 0) {
             Cookie::queue(Cookie::forget("tokens", "/", null));
         } else {
@@ -441,6 +486,16 @@ class AnonymousTokenPayment
             }
         }
         return new AnonymousTokenPayment($cost, $tokens, $decitokens, $payment_id, $payment_uid, $key, $credits);
+    }
+
+    private function markChecked(Token $token, bool $decitoken = false, $valid)
+    {
+        Cache::put($decitoken ? "decitoken" : "token" . ":valid:" . md5($token->token . $token->signature . $token->date), true, now()->addMinutes(5));
+    }
+
+    private function isChecked(Token $token, bool $decitoken = false): bool
+    {
+        return Cache::get($decitoken ? "decitoken" : "token" . ":valid:" . md5($token->token . $token->signature . $token->date), null);
     }
 
     /**

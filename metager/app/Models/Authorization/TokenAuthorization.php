@@ -16,7 +16,7 @@ class TokenAuthorization extends Authorization
     private $tokenauthorization_header;
     public ?AnonymousTokenPayment $token_payment = null;
 
-    public function __construct(string $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
+    public function __construct(string|null $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
     {
         parent::__construct();
         $this->tokenauthorization_header = $tokenauthorization;
@@ -35,6 +35,14 @@ class TokenAuthorization extends Authorization
         } else {
             foreach ($tokenJson as $token) {
                 $this->token_payment->addJSONToken($token);
+            }
+            $this->availableTokens = $this->token_payment->getAvailableTokenCount();
+        }
+
+        $decitokenJson = json_decode($decitokenString);
+        if (is_array($decitokenJson)) {
+            foreach ($decitokenJson as $token) {
+                $this->token_payment->addJSONDeciToken($token);
             }
             $this->availableTokens = $this->token_payment->getAvailableTokenCount();
         }

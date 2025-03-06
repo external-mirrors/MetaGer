@@ -103,7 +103,7 @@ class LocalizationRedirect
         $path_locale = $request->segment(1);
         $legacy_country_codes = [
             "uk" => "en-GB",
-            "ie" => "en-IE",
+            "ie" => "en-GB",
             "es" => "es-ES",
             "at" => "de-AT"
         ];

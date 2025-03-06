@@ -53,10 +53,15 @@ class LocalizationRedirect
             return redirect($new_uri);
         }
 
-        if (Cookie::has("web_setting_m")) {
+        $setting = Cookie::get("web_setting_m");
+        if ($setting === null) {
+            $setting = $request->header("web_setting_m");
+        }
+
+        if ($setting !== null) {
             // No locale defined in the path
             // Check if the user defined a permanent language setting matching one of our supported locales
-            $setting_locale = str_replace("_", "-", Cookie::get("web_setting_m"));
+            $setting_locale = str_replace("_", "-", $setting);
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
             $current_locale = LaravelLocalization::getCurrentLocale();
             $new_url = preg_replace("/^\/$current_locale\/?/", "/", $request->getRequestUri());

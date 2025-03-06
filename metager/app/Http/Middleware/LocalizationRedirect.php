@@ -3,12 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Localization;
+use App\SearchSettings;
 use Closure;
 use Cookie;
-use Faker\Provider\UserAgent;
 use LaravelLocalization;
 use Illuminate\Http\Request;
-use URL;
 
 class LocalizationRedirect
 {
@@ -177,10 +176,24 @@ class LocalizationRedirect
             "redirect_url" => $url,
             "expires" => "" . now()->addMinutes(5)->unix(),
         ];
+
         // Read out all current settings
+        $settings = array_merge($settings, app(SearchSettings::class)->user_settings);
+
         foreach (Cookie::get() as $key => $value) {
-            $settings[$key] = $value;
+            if (preg_match("/.*_setting_.*/", $key)) {
+                $settings[$key] = $value;
+            }
         }
+        foreach (\Request::header() as $key => $value) {
+            if (is_array($value))
+                $value = implode("", $value);
+            $key = str_replace("-setting-", "_setting_", $key);
+            if (preg_match("/.*_setting_.*/", $key)) {
+                $settings[$key] = $value;
+            }
+        }
+
         if (!array_key_exists("web_setting_m", $settings)) {
             $settings["web_setting_m"] = str_replace("-", "_", LaravelLocalization::getCurrentLocale());
         }

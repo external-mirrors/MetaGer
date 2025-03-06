@@ -218,11 +218,11 @@
                     <label for="sgd">@lang('settings.suggestions.delay.label')</label>
                     <div class="text-left">@lang('settings.suggestions.delay.description')</div>
                     <select name="sgd" id="sgd" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }}>
-                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === "short" ? 'disabled selected' : '' }}>
+                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === 400 ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.short')</option>
-                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === "medium" ? 'disabled selected' : '' }}>
+                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === 600 ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.medium')</option>
-                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === "long" ? 'disabled selected' : '' }}>
+                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === 800 ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.long')</option>
                     </select>
                 </div>

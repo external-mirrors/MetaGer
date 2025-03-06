@@ -4,10 +4,17 @@ import { getToken, putToken } from "./messaging";
  * MetaGers basic suggestion module
  */
 export function initializeSuggestions() {
+  let active = true;
+
   let suggestions = [];
   let query = "";
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
+
+  let suggest_id = crypto.randomUUID();
+  let tokens = null;
+  let last_cost = 0;
+  let counter = 0;
 
   if (!searchbar_container) {
     return;
@@ -23,7 +30,18 @@ export function initializeSuggestions() {
     return;
   }
 
+  // Update cost for suggestion requests
+  (() => {
+    fetch(suggestion_url + "/cost").then(response => response.json()).then(async response => {
+      last_cost = response.tokencost;
+      if (document.activeElement == search_input) {
+        await getAnonymousTokens(last_cost);
+      }
+    })
+  })();
+
   search_input.addEventListener("keyup", (e) => {
+    if (!active) return;
     if (e.key == "Escape") {
       e.stopPropagation();
       e.target.blur();
@@ -32,26 +50,33 @@ export function initializeSuggestions() {
     }
   });
   search_input.addEventListener("paste", e => {
+    if (!active) return;
     e.preventDefault();
     search_input.value = e.clipboardData.getData("text");
     suggest();
   });
   search_input.addEventListener("focusin", e => {
+    active = true;
     e.preventDefault();
     suggest();
   });
   search_input.addEventListener("blur", e => {
-    clearSuggestTimeout();
+    active = false;
+    cancelSuggest();
     setTimeout(() => {
-      if (document.activeElement != search_input) searchbar_container.dataset.suggest = "inactive";
+      if (document.activeElement != search_input) {
+        searchbar_container.dataset.suggest = "inactive";
+      }
     }, 250);
   });
+  search_input.form.addEventListener("submit", e => {
+    active = false;
+    e.preventDefault();
+    let form = e.target;
+    cancelSuggest().then(() => form.submit());
+  })
 
-  search_input.form.addEventListener("submit", clearSuggestTimeout);
-
-  async function suggest(cost = 0, iteration = 1) {
-    console.log(cost);
-
+  async function suggest(iteration = 1) {
     if (iteration > 2 || navigator.webdriver) {
       suggestions = [];
       updateSuggestions();
@@ -59,8 +84,9 @@ export function initializeSuggestions() {
     }
     let token_header = null;
     let decitoken_header = null;
+    let cost = last_cost;
     if (cost > 0) {
-      let tokens = await getAnonymousTokens(cost);
+      await getAnonymousTokens(cost);
       token_header = [];
       let index = 0;
       while (cost >= 1) {
@@ -87,31 +113,35 @@ export function initializeSuggestions() {
       return;
     }
 
+
+    counter += 1;
     return fetch(suggestion_url + "?query=" + encodeURIComponent(search_input.value.trim()), {
       method: "GET",
       headers: {
         Accept: "application/json",
         tokens: JSON.stringify(token_header),
         decitokens: JSON.stringify(decitoken_header),
+        id: suggest_id,
+        number: counter
       }
     })
       .then(async (response) => {
         let status = response.status;
         let json_response = await response.json();
-        await recycleTokens(json_response);
 
-        console.log(status, status == 402);
         switch (+status) {
           case 200:
+            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
             query = search_input.value.trim();
             suggestions = json_response[1];
             updateSuggestions();
-            return;
+            return putAnonymousTokens();
           case 423:
             break;
           case 402:
-            console.log(json_response);
-            return suggest(json_response.cost, iteration + 1);
+            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+            last_cost = json_response.cost;
+            return suggest(iteration + 1);
         }
         //return response.json()
       })
@@ -121,36 +151,99 @@ export function initializeSuggestions() {
       });
   }
 
-  async function recycleTokens(json_response) {
+  async function cancelSuggest() {
+    return putAnonymousTokens().then(() => {
+      return fetch(suggestion_url + "/cancel", {
+        headers: {
+          id: suggest_id,
+        }
+      })
+    });
+  }
+
+  /**
+   * Replaces locally stored tokens with the received server resposne
+   * Those tokens will be checked valid. All other local tokens will be invalidated
+   * @param {*} json_response 
+   * @returns 
+   */
+  async function recycleTokens(sent_tokens, json_response) {
+    let new_tokens = { tokens: [], decitokens: [] };
+    // Keep all tokens that were not sent 
+    if (sent_tokens.tokens != null)
+      new_tokens.tokens = tokens.tokens.filter(x => !sent_tokens.tokens.includes(x));
+    if (sent_tokens.decitokens != null)
+      new_tokens.decitokens = tokens.decitokens.filter(x => !sent_tokens.decitokens.includes(x));
+
+    // Keep all tokens returned by the server
+    if (json_response.hasOwnProperty("tokens")) {
+      json_response.tokens.forEach(token => {
+        new_tokens.tokens.push(token);
+      });
+    }
+    if (json_response.hasOwnProperty("decitokens")) {
+      json_response.decitokens.forEach(token => {
+        new_tokens.decitokens.push(token);
+      });
+    }
+    tokens = new_tokens;
+  }
+
+  /**
+   * Returns unused anonymous Tokens to the extension
+   */
+  async function putAnonymousTokens() {
     let recycleTokens = {
       tokens: {
         tokens: [],
         decitokens: []
       }
     };
-    if (json_response.hasOwnProperty("tokens")) {
-      recycleTokens.tokens.tokens = json_response.tokens;
-    }
-    if (json_response.hasOwnProperty("decitokens")) {
-      recycleTokens.tokens.decitokens = json_response.decitokens;
-    }
+    if (tokens == null) return;
+    tokens.tokens.forEach(token => {
+      recycleTokens.tokens.tokens.push(token);
+    });
+    tokens.decitokens.forEach(token => {
+      recycleTokens.tokens.decitokens.push(token);
+    });
 
     if (recycleTokens.tokens.tokens.length > 0 || recycleTokens.tokens.decitokens.length > 0) {
+      tokens = null;
       return putToken(recycleTokens);
     }
   }
 
   async function getAnonymousTokens(cost) {
+    let current_tokencount = 0;
+    if (tokens != null) {
+      tokens.tokens.forEach(token => {
+        current_tokencount += 1;
+      });
+      tokens.decitokens.forEach(token => {
+        current_tokencount += 0.1;
+      });
+    }
+
+    if (cost <= current_tokencount) return;
+
     return getToken({
       cost: cost,
-      missing: cost,
+      missing: Math.max(cost - current_tokencount, 0),
       tokens: {
         tokens: [],
         decitokens: [],
       }
     }).then(newtokens => {
-      return newtokens.tokens;
-    })
+      if (tokens == null) tokens = { tokens: [], decitokens: [] };
+
+      newtokens.tokens.tokens.forEach(token => {
+        tokens.tokens.push(token);
+      });
+
+      newtokens.tokens.decitokens.forEach(token => {
+        tokens.decitokens.push(token);
+      });
+    });
   }
 
   function updateSuggestions() {
@@ -183,7 +276,6 @@ export function initializeSuggestions() {
         if (eingabe_container) {
           title_container.onclick = e => {
             e.preventDefault();
-            console.log("test", suggestions[index]);
             eingabe_container.value = suggestions[index] + " ";
             eingabe_container.focus();
           };

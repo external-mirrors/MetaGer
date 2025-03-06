@@ -10,6 +10,7 @@ use App\Models\Result;
 use App\SearchSettings;
 use App\Suggestions;
 use Cache;
+use Carbon;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
@@ -34,13 +35,14 @@ class SuggestionController extends Controller
         $suggestion_provider = $settings->suggestion_provider;
 
         $cache_key = "suggestion:cache:$suggestion_provider:$query";
-        if (Cache::has($cache_key)) {
+        if (Cache::has($cache_key) && 1 == 0) { // ToDo reenable cache
             return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200"]);
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
             $authorization = app(Authorization::class);
             $authorization->setCost($suggestions->cost);
 
+            $start_time = now();
             if (!$authorization->canDoAuthenticatedSearch(true)) {
                 return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
             }
@@ -51,11 +53,11 @@ class SuggestionController extends Controller
                 $token_data["decitokens"] = $authorization->getToken()->decitokens;
             }
             try {
-                switch ($this->delay()) {
-                    case 402:
+                switch ($this->delay($start_time)) {
+                    case 402:   // Payment Required = Not enough or invalid Token
                         return response()->json(array_merge(["error" => "Payment Required", "cost" => $authorization->getCost()], $token_data), 402);
                     case 423:
-                        return response()->json(array_merge(["error" => "Aborted because of newer request"], $token_data), 423);
+                        return response()->json(["error" => "Aborted because of newer request"], 423);
                     case 200:
                         $authorization->makePayment($authorization->getCost());
                         if ($authorization instanceof TokenAuthorization) {
@@ -78,6 +80,31 @@ class SuggestionController extends Controller
         }
     }
 
+    public function tokenCost(Request $request)
+    {
+        $authorization = app(Authorization::class);
+        $token_cost = 0;
+        if ($authorization instanceof TokenAuthorization) {
+            $settings = app(SearchSettings::class);
+            if ($settings->suggestion_provider !== null) {
+                $suggestions = Suggestions::fromProviderName($settings->suggestion_provider, "");
+                $token_cost = $suggestions->cost;
+            }
+        }
+        return response()->json(["tokencost" => $token_cost]);
+    }
+
+    public function cancelSuggest(Request $request)
+    {
+        $suggest_group = $this->generateSuggestCacheKey();
+        $this->disableSuggestionGroup($suggest_group);
+        $list = $this->getSuggestionGroupList($suggest_group);
+        foreach ($list as $uuid) {
+            $this->abortSuggestionGroupRequest($uuid, 423);
+        }
+        return response()->json(["status" => "ok"]);
+    }
+
     /**
      * Suggestions will load after a configured time to not
      * load them everytime a user enters a letter but rather
@@ -87,15 +114,114 @@ class SuggestionController extends Controller
      * 
      * @return int Status code of response
      */
-    private function delay(): int
+    private function delay(\Illuminate\Support\Carbon|null $start_time): int
     {
+        if ($start_time === null) {
+            $start_time = now();
+        }
         $settings = app(SearchSettings::class);
         $authorization = app(Authorization::class);
 
-        $uuid = \Request::input("number", microtime(true));
+        $uuid = \Request::header("number", microtime(true));
         $list = [];
 
-        if ($authorization instanceof KeyAuthorization) {
+        /**
+         * Groups all suggest requests to prevent unnecessary requests
+         * @var string
+         */
+        $cache_key = $this->generateSuggestCacheKey();
+        if ($this->isSuggestionGroupDisabled($cache_key))
+            return 423;
+        // 
+        $expiration = clone $start_time;
+        $expiration->addMilliseconds($settings->suggestion_delay);
+        $list = $this->addSuggestGroupRequest($cache_key, $uuid, $expiration);
+
+        // Abort all but the newest request
+        if (sizeof($list) > 0) {
+            $newest = max($list);
+            foreach ($list as $suggest_request) {
+                if ($suggest_request !== $newest) {
+                    $this->abortSuggestionGroupRequest($suggest_request, 423, $expiration);
+                }
+            }
+        }
+
+        $delay_result = Redis::blpop("suggest:delay:request:$uuid", now()->diffInMilliseconds($expiration, true) / 1000);
+        if ($delay_result !== null) {
+            return filter_var($delay_result[1], FILTER_VALIDATE_INT);
+        } else {
+            if ($authorization instanceof TokenAuthorization && sizeof($list) > 0) {
+                // Abort all other requests that use this token because it will be used up by this request
+                foreach ($list as $suggest_request) {
+                    if ($suggest_request !== $newest) {
+                        $this->abortSuggestionGroupRequest($suggest_request, 402, $expiration);
+                    }
+                }
+            }
+            return 200;
+        }
+    }
+
+
+    private function getSuggestionGroupList($suggest_group): array
+    {
+        return Redis::lrange($suggest_group, 0, -1);
+    }
+
+    private function abortSuggestionGroupRequest($uuid, $status_code = 423, \Illuminate\Support\Carbon $expiration = null)
+    {
+        if ($expiration == null) {
+            $expiration = now();
+            $expiration->addMilliseconds(app(SearchSettings::class)->suggestion_delay);
+        }
+        $key = "suggest:delay:request:$uuid";
+        Redis::rpush($key, $status_code);
+        Redis::pexpireat($key, $expiration->getTimestampMs());
+    }
+
+    private function addSuggestGroupRequest($suggest_group, $uuid, \Illuminate\Support\Carbon $expiration = null): array
+    {
+        if ($expiration == null) {
+            $expiration = now();
+            $expiration->addMilliseconds(app(SearchSettings::class)->suggestion_delay);
+        }
+        $result = Redis::pipeline(function (Pipeline $pipe) use ($suggest_group, $uuid, $expiration) {
+            $pipe->rpush($suggest_group, $uuid);
+            $pipe->lrange($suggest_group, 0, -1);
+            $pipe->pexpireat($suggest_group, $expiration->getTimestampMs());
+        });
+
+        // Abort all but the newest request
+        return $result[1];
+    }
+
+    private function isSuggestionGroupDisabled($suggest_group): bool
+    {
+        return filter_var(Redis::get("suggest:group:block:$suggest_group"), FILTER_VALIDATE_BOOLEAN);
+    }
+
+    private function disableSuggestionGroup($suggest_group, \Illuminate\Support\Carbon $expiration = null)
+    {
+        if ($expiration == null) {
+            $expiration = now();
+            $expiration->addMilliseconds(app(SearchSettings::class)->suggestion_delay);
+        }
+        Redis::psetex("suggest:group:block:$suggest_group", intval(now()->diffInMilliseconds($expiration, true)), true);
+    }
+
+    /**
+     * Generates a temporary grouping ID between suggest requests so that additional
+     * requests can be aborted
+     * @return string
+     */
+    private function generateSuggestCacheKey(): string
+    {
+        $authorization = app(Authorization::class);
+        $suggest_request_id = \Request::header("id");
+        if ($suggest_request_id !== null) {
+            $cache_key = $suggest_request_id;
+        } else if ($authorization instanceof KeyAuthorization) {
             $cache_key = $authorization->getToken();
         } else if ($authorization instanceof TokenAuthorization) {
             /**
@@ -113,44 +239,7 @@ class SuggestionController extends Controller
             $cache_key = \Request::ip() . \Request::userAgent();
         }
         $cache_key = md5($cache_key);
-
-        $expiration = now()->addMilliseconds($settings->suggestion_delay);
-        $result = Redis::pipeline(function (Pipeline $pipe) use ($cache_key, $uuid, $expiration) {
-            $pipe->rpush($cache_key, $uuid);
-            $pipe->lrange($cache_key, 0, -1);
-            $pipe->pexpireat($cache_key, $expiration->getTimestampMs() + 50000);
-
-        });
-
-        // Abort all but the newest request
-        $list = $result[1];
-        if (sizeof($list) > 0) {
-            $newest = max($list);
-            foreach ($list as $suggest_request) {
-                if ($suggest_request !== $newest) {
-                    $key = "suggest:delay:request:$suggest_request";
-                    Redis::rpush($key, 423);
-                    Redis::pexpireat($key, $expiration->getTimestampMs());
-                }
-            }
-        }
-
-        $delay_result = Redis::blpop("suggest:delay:request:$uuid", now()->diffInMilliseconds($expiration, true) / 1000);
-        if ($delay_result !== null) {
-            return filter_var($delay_result[1], FILTER_VALIDATE_INT);
-        } else {
-            if ($authorization instanceof TokenAuthorization && sizeof($list) > 0) {
-                // Abort all other requests that use this token because it will be used up by this request
-                foreach ($list as $suggest_request) {
-                    if ($suggest_request !== $newest) {
-                        $key = "suggest:delay:request:$suggest_request";
-                        Redis::rpush($key, 402);
-                        Redis::pexpireat($key, $expiration->getTimestampMs());
-                    }
-                }
-            }
-            return 200;
-        }
+        return $cache_key;
     }
 
     /**

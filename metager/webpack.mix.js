@@ -129,6 +129,7 @@ mix
   .js(["resources/js/suggest.js"], "public/js/suggest.js")
   .js(["resources/js/scriptSettings.js"], "public/js/scriptSettings.js")
   .js(["resources/js/imagesearch.js"], "public/js/imagesearch.js")
+  .js(["resources/js/lang.js"], "public/js/lang.js")
   .js(
     [
       //   'node_modules/chart.js/dist/chart.js',

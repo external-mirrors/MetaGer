@@ -184,7 +184,9 @@ class LocalizationRedirect
             if (is_array($value))
                 $value = implode("", $value);
             $key = str_replace("-setting-", "_setting_", $key);
-            if (preg_match("/.*_setting_.*/", $key)) {
+            $key = str_replace("-engine-", "_engine_", $key);
+            $key = str_replace("-", "_", $key);
+            if (preg_match("/.*_(setting|engine)_.*/", $key)) {
                 $settings[$key] = $value;
             }
         }

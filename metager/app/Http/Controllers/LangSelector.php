@@ -44,6 +44,7 @@ class LangSelector extends Controller
         return view('lang-selector')
             ->with("previous_url", $previous_url)
             ->with("title", trans("titles.lang-selector"))
+            ->with("js", [mix("js/lang.js")])
             ->with('css', [mix('css/lang-selector.css')]);
     }
 
@@ -67,11 +68,10 @@ class LangSelector extends Controller
         }
         $secure = !app()->environment("local");
         if (empty($path_locale)) {
-            $default_locale = Localization::GET_PREFERRED_LOCALE($request->getHost() === "metager.de" ? "de-DE" : "en-US");
             // Path locale might not be present if the user is switching to the default language
             // of the browser
-            Cookie::queue("web_setting_m", str_replace("-", "_", $default_locale), 1, "/", null, $secure, false);
-            $new_locale = $default_locale;
+            Cookie::queue(Cookie::forget("web_setting_m", "/", null));
+            $new_locale = config("app.default_locale");
         } else {
             Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, false));
             $new_locale = $path_locale;

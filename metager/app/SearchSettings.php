@@ -291,28 +291,6 @@ class SearchSettings
         }
 
         /**
-         * Check Request HTTP Header in all variations
-         */
-        // Setting defined directly in GET Parameters
-        if (Request::hasHeader($setting_name)) {
-            $value = Request::header($setting_name, $default);
-            $this->user_settings[$setting_name] = $value;
-            return $value;
-        }
-        // Setting defined without fokus prefix which will be handled as matching all foki
-        if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::hasHeader(str_replace($this->fokus . "_setting_", "", $setting_name))) {
-            $value = Request::header(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
-            $this->user_settings[$setting_name] = $value;
-            return $value;
-        }
-        // Setting defined with fokus prefix in request parameters and fokus matches currently used one
-        if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::hasHeader($this->fokus . "_setting_" . $setting_name)) {
-            $value = Request::header($this->fokus . "_setting_" . $setting_name, $default);
-            $this->user_settings[$setting_name] = $value;
-            return $value;
-        }
-
-        /**
          * Check Cookies in all variations
          */
         // Setting defined directly in GET Parameters
@@ -330,6 +308,28 @@ class SearchSettings
         // Setting defined with fokus prefix in request parameters and fokus matches currently used one
         if (stripos($setting_name, $this->fokus . "_setting_") === false && Cookie::has($this->fokus . "_setting_" . $setting_name)) {
             $value = Cookie::get($this->fokus . "_setting_" . $setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
+        }
+
+        /**
+         * Check Request HTTP Header in all variations
+         */
+        // Setting defined directly in GET Parameters
+        if (Request::hasHeader($setting_name)) {
+            $value = Request::header($setting_name, $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
+        }
+        // Setting defined without fokus prefix which will be handled as matching all foki
+        if (stripos($setting_name, $this->fokus . "_setting_") === 0 && Request::hasHeader(str_replace($this->fokus . "_setting_", "", $setting_name))) {
+            $value = Request::header(str_replace($this->fokus . "_setting_", "", $setting_name), $default);
+            $this->user_settings[$setting_name] = $value;
+            return $value;
+        }
+        // Setting defined with fokus prefix in request parameters and fokus matches currently used one
+        if (stripos($setting_name, $this->fokus . "_setting_") === false && Request::hasHeader($this->fokus . "_setting_" . $setting_name)) {
+            $value = Request::header($this->fokus . "_setting_" . $setting_name, $default);
             $this->user_settings[$setting_name] = $value;
             return $value;
         }

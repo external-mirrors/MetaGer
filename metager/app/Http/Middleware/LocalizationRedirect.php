@@ -3,12 +3,11 @@
 namespace App\Http\Middleware;
 
 use App\Localization;
+use App\SearchSettings;
 use Closure;
 use Cookie;
-use Faker\Provider\UserAgent;
 use LaravelLocalization;
 use Illuminate\Http\Request;
-use URL;
 
 class LocalizationRedirect
 {
@@ -53,10 +52,15 @@ class LocalizationRedirect
             return redirect($new_uri);
         }
 
-        if (Cookie::has("web_setting_m")) {
+        $setting = Cookie::get("web_setting_m");
+        if ($setting === null) {
+            $setting = $request->header("web_setting_m");
+        }
+
+        if ($setting !== null) {
             // No locale defined in the path
             // Check if the user defined a permanent language setting matching one of our supported locales
-            $setting_locale = str_replace("_", "-", Cookie::get("web_setting_m"));
+            $setting_locale = str_replace("_", "-", $setting);
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
             $current_locale = LaravelLocalization::getCurrentLocale();
             $new_url = preg_replace("/^\/$current_locale\/?/", "/", $request->getRequestUri());
@@ -103,7 +107,7 @@ class LocalizationRedirect
         $path_locale = $request->segment(1);
         $legacy_country_codes = [
             "uk" => "en-GB",
-            "ie" => "en-IE",
+            "ie" => "en-GB",
             "es" => "es-ES",
             "at" => "de-AT"
         ];
@@ -172,10 +176,24 @@ class LocalizationRedirect
             "redirect_url" => $url,
             "expires" => "" . now()->addMinutes(5)->unix(),
         ];
+
         // Read out all current settings
+        $settings = array_merge($settings, app(SearchSettings::class)->user_settings);
+
         foreach (Cookie::get() as $key => $value) {
-            $settings[$key] = $value;
+            if (preg_match("/.*_setting_.*/", $key)) {
+                $settings[$key] = $value;
+            }
         }
+        foreach (\Request::header() as $key => $value) {
+            if (is_array($value))
+                $value = implode("", $value);
+            $key = str_replace("-setting-", "_setting_", $key);
+            if (preg_match("/.*_setting_.*/", $key)) {
+                $settings[$key] = $value;
+            }
+        }
+
         if (!array_key_exists("web_setting_m", $settings)) {
             $settings["web_setting_m"] = str_replace("-", "_", LaravelLocalization::getCurrentLocale());
         }

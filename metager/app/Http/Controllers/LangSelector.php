@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
@@ -64,14 +65,15 @@ class LangSelector extends Controller
         if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             $path_locale = null;
         }
+        $secure = !app()->environment("local");
         if (empty($path_locale)) {
+            $default_locale = Localization::GET_PREFERRED_LOCALE($request->getHost() === "metager.de" ? "de-DE" : "en-US");
             // Path locale might not be present if the user is switching to the default language
             // of the browser
-            Cookie::queue(Cookie::forget("web_setting_m", "/", null));
-            $new_locale = config("app.default_locale");
+            Cookie::queue("web_setting_m", str_replace("-", "_", $default_locale), 1, "/", null, $secure, false);
+            $new_locale = $default_locale;
         } else {
-            $secure = !app()->environment("local");
-            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, true));
+            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, false));
             $new_locale = $path_locale;
         }
 

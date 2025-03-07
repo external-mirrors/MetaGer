@@ -23,6 +23,7 @@ class SerperImages extends Searchengine
                 "de_AT" => "at",
                 "en_US" => "us",
                 "en_GB" => "gb",
+                "en_AU" => "au",
                 "es_ES" => "es",
                 "es_MX" => "mx",
                 "da_DK" => "dk",

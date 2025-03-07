@@ -25,6 +25,7 @@ class BraveImages extends Searchengine
                 "de_AT" => "de_AT",
                 "en_US" => "en_US",
                 "en_GB" => "en_GB",
+                "en_AU" => "en_AU",
                 "es_ES" => "es_ES",
                 "es_MX" => "es_MX",
                 "da_DK" => "da_DK",

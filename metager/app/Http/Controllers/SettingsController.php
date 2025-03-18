@@ -10,8 +10,8 @@ use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use App\SearchSettings;
 use Cookie;
+use foroco\BrowserDetection;
 use \Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 
 class SettingsController extends Controller
@@ -80,12 +80,12 @@ class SettingsController extends Controller
             $cookieLink = route('loadSettings', $settings_params);
         }
 
-        $agent = new Agent();
+        $agent = (new BrowserDetection())->getAll($request->userAgent());
 
-        if ($settings->suggestion_locationbar === true && $agent->isFirefox() && $agent->isDesktop() && $authorization instanceof KeyAuthorization) {
-            $suggestions_ff_plugin_desktop = true;
+        if ($settings->suggestion_locationbar === true && $authorization instanceof KeyAuthorization && $authorization->canDoAuthenticatedSearch()) {
+            $suggestions_plugin_enabled = true;
         } else {
-            $suggestions_ff_plugin_desktop = false;
+            $suggestions_plugin_enabled = false;
         }
 
         return response(view('settings.index')
@@ -102,9 +102,9 @@ class SettingsController extends Controller
             ->with('url', $url)
             ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
-            ->with("suggestions_ff_plugin_desktop", $suggestions_ff_plugin_desktop)
+            ->with("suggestions_plugin_enabled", $suggestions_plugin_enabled)
             ->with('agent', $agent)
-            ->with('browser', $agent->browser())
+            ->with('browser', $agent)
             ->with('js', [mix('js/scriptSettings.js')]), 200, ["Cache-Control" => "no-store"]);
     }
 
@@ -304,8 +304,6 @@ class SettingsController extends Controller
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
         } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('sgd', ''))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
-        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_locationbar", $request->input('sglb', ''))) {
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
         } else {
             // All Settings behind "More Settings"
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
@@ -343,7 +341,6 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forever('suggestion_provider', 'serper', '/', null, $secure, false));
             }
             $settings->suggestion_provider = $value;
-            SuggestionController::UPDATE_SERVER_SETTINGS();
             return true;
         } else if ($key === "suggestion_delay" && !empty($value) && in_array($value, ["short", "medium", "long"])) {
             if ($value === "medium") {
@@ -352,17 +349,6 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, false));
             }
             $settings->suggestion_delay = $value;
-            SuggestionController::UPDATE_SERVER_SETTINGS();
-            return true;
-        } else if ($key === "suggestion_locationbar" && !empty($value)) {
-            $value = filter_var($value, FILTER_VALIDATE_BOOL);
-            if ($value) {
-                Cookie::queue(Cookie::forever('suggestion_locationbar', true, '/', null, $secure, false));
-            } else {
-                Cookie::queue(Cookie::forget("suggestion_locationbar", "/"));
-            }
-            $settings->suggestion_locationbar = $value;
-            SuggestionController::UPDATE_SERVER_SETTINGS();
             return true;
         } else if ($key === "self_advertisements" && !empty($value)) {
             if ($value === "off") {

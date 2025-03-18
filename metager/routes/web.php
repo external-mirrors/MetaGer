@@ -82,7 +82,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::group(['prefix' => 'suggest'], function () {
         Route::get("cost", [SuggestionController::class, 'tokenCost'])->name("suggest_cost");
         Route::get("cancel", [SuggestionController::class, "cancelSuggest"])->name("suggest_cancel");
-        Route::get("{key?}", [SuggestionController::class, "suggest"])->name("suggest");
+        Route::any("{key?}", [SuggestionController::class, "suggest"])->name("suggest");
     });
 
 

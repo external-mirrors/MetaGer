@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
+use App\Models\Authorization\KeyAuthorization;
 use Cache;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
@@ -74,16 +76,6 @@ class StartpageController extends Controller
 
     public function loadPage($subpage)
     {
-        /* TODO CSS und Titel laden
-        $css = array(
-        'datenschutz' => 'privacy.css',
-        );
-
-        if (in_array($subpage, $css)) {
-        return view($subpage, [ 'title' => 'Datenschutz Richtlinien', 'css' => $css[$subpage]]);
-        } else {
-        return view($subpage, [ 'title' => 'Datenschutz Richtlinien']);
-        }*/
         return view($subpage, ['title' => 'Datenschutz Richtlinien']);
     }
 
@@ -91,23 +83,33 @@ class StartpageController extends Controller
     {
         $link = action('MetaGerSearch@search') . "?eingabe={searchTerms}";
 
-        $key = $request->input("key", "");
-        if (!uuid_is_valid($key)) {
-            $key = "";
-        }
+        $plugin_short_name = self::GET_PLUGIN_SHORT_NAME();
 
-        $suggestLink = route('suggest', ["key" => $key]);
-        $suggestLink .= "?query={searchTerms}";
+        $suggestLink = route("suggest") . "?query={searchTerms}";
 
         $response = Response::make(
             view('plugin')
                 ->with('link', $link)
+                ->with('plugin_short_name', $plugin_short_name)
                 ->with('suggestLink', $suggestLink),
             "200"
         );
         $response->header('Content-Type', "application/opensearchdescription+xml");
         $response->header("Cache-Control", "no-store");
         return $response;
+    }
+
+    public static function GET_PLUGIN_SHORT_NAME(): string
+    {
+        $plugin_short_name = trans('plugin.short_name');
+
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", \Request::segment(1))) {
+            $plugin_short_name .= " (" . \Request::segment(1) . ")";
+        }
+        if (!\App::environment("production")) {
+            $plugin_short_name = "(dev) " . $plugin_short_name;
+        }
+        return $plugin_short_name;
     }
 
     public function berlin(Request $request)

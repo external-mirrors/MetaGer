@@ -32,10 +32,10 @@
 	@endif
 	@endforeach
 	@if(app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
-	@if(isset($suggestions_ff_plugin_desktop) && $suggestions_ff_plugin_desktop)
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ["key" => app(\App\Models\Authorization\Authorization::class)->getToken()]) }}">
+	@if(isset($suggestions_plugin_enabled) && $suggestions_plugin_enabled)
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ["key" => app(\App\Models\Authorization\Authorization::class)->getToken()]) }}">
 	@else
-	<link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
+	<link rel="search" type="application/opensearchdescription+xml" title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
 	@endif
 	@endif
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />

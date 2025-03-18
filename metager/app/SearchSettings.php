@@ -111,16 +111,6 @@ class SearchSettings
         $suggestion_locationbar = filter_var($this->getSettingValue("suggestion_locationbar", false), FILTER_VALIDATE_BOOL);
         $this->suggestion_locationbar = $suggestion_locationbar;
 
-        $suggestion_server_settings = SuggestionController::LOAD_SERVER_SETTINGS();
-        if ($suggestion_server_settings !== null) {
-            if (array_key_exists("suggestion_provider", $suggestion_server_settings))
-                $this->suggestion_provider = $suggestion_server_settings["suggestion_provider"];
-            if (array_key_exists("suggestion_delay", $suggestion_server_settings))
-                $this->suggestion_delay = $suggestion_server_settings["suggestion_delay"];
-            if (array_key_exists("suggestion_locationbar", $suggestion_server_settings))
-                $this->suggestion_locationbar = $suggestion_server_settings["suggestion_locationbar"];
-        }
-
         if ($this->getSettingValue("quicktips") !== null) {
             $this->quicktips = false;
         }

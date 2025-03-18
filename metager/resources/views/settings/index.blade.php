@@ -226,44 +226,6 @@
                             @lang('settings.suggestions.delay.long')</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="sglb">@lang('settings.suggestions.locationbar.label')</label>
-                    <div class="text-left">@lang('settings.suggestions.locationbar.description')</div>
-                    <select name="sglb" id="sglb" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }} @if(app(\App\Models\Authorization\Authorization::class)->availableTokens <= 0) disabled @endif>
-                        <option value="false" {{ app(App\SearchSettings::class)->suggestion_locationbar === false ? 'disabled selected' : '' }}>
-                            @lang('settings.suggestions.locationbar.no')</option>
-                        <option value="true" {{ app(App\SearchSettings::class)->suggestion_locationbar === true ? 'disabled selected' : '' }}>
-                            @lang('settings.suggestions.locationbar.yes')</option>
-                    </select>
-                    @if(app(App\SearchSettings::class)->suggestion_locationbar === true)
-                    <div id="suggestions-ff-hint" class="text-left">
-                        <div class="warning">@lang('settings.suggestions.locationbar.hints')</div>
-                        <ul>
-                        @if((new Jenssegers\Agent\Agent())->isFirefox())
-                            @if((new Jenssegers\Agent\Agent())->isMobile())
-                        <li>
-                            <div>@lang('settings.suggestions.locationbar.criteria.ff-mobile')</div>
-                            <label for="searchstring">Such-String-URL</label>
-                            <div class="copyLink">
-                                <input id="searchstring" name="searchstring" type="text" class="copy" value="{{ route('resultpage') }}?eingabe=%s">
-                                <button class="btn btn-default">@lang('settings.copy')</button>
-                            </div>
-                            <label for="suggestionstring">Suchvorschlags-API</label>
-                            <div class="copyLink">
-                                <input id="suggestionstring" name="suggestionstring" type="text" class="copy" value="{{ route('suggest', []) }}?query=%s">
-                                <button class="btn btn-default">@lang('settings.copy')</button>
-                            </div>
-
-                        </li>
-                            @else
-                        <li>@lang('settings.suggestions.locationbar.criteria.ff-desktop')</li>
-                            @endif
-                        @endif
-                        <li>@lang('settings.suggestions.locationbar.criteria.default')</li>
-                        </ul>
-                    </div>
-                    @endif
-                </div>
                 @endif
             </form>
         </div>
@@ -343,12 +305,12 @@
         </div>
         <div class="card">
             <h1>@lang('settings.hint.header')</h1>
-            @if($agent->is("Firefox"))
+            @if($agent["browser_gecko_version"] > 0)
             <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
-            @elseif($agent->is('Chrome') && !$agent->isMobile())
-            <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
-            @elseif($agent->is('Edge'))
+            @elseif($agent["browser_name"] === "Edge")
             <p>@lang('settings.hint.addon', ["link" => "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog"])</p>
+            @elseif($agent["browser_chromium_version"] > 0 && $agent["device_type"] === "desktop" )
+            <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
             @endif
             <p>@lang('settings.hint.loadSettings')</p>
             @if(empty($cookieLink))

@@ -116,7 +116,7 @@ export function initializeSuggestions() {
 
     counter += 1;
     return fetch(suggestion_url + "?query=" + encodeURIComponent(search_input.value.trim()), {
-      method: "GET",
+      method: "POST",
       headers: {
         Accept: "application/json",
         tokens: JSON.stringify(token_header),

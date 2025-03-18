@@ -41,23 +41,6 @@ return [
             'medium' => 'Medium',
             'long' => 'Long'
         ],
-        'locationbar' => [
-            'label' => 'Load Suggestions in Addressbar',
-            'description' => 'Search suggestions will be loaded while typing in the adressbar of your browser additionally to the searchbox on our start- and resultpage.',
-            'no' => "No",
-            'yes' => 'Yes',
-            'hints' => 'In order for suggestions to load when typing in your addressbar the following criteria have to be met:',
-            'criteria' => [
-                'default' => 'MetaGer has to be the default searchengine in your browser settings.',
-                'other' => 'You might need to recreate the entry for MetaGer in your search settings if it was added before we added support for search suggestions',
-                'ff-desktop' => 'Due to the way Firefox handles search suggestions the searchengine entry for MetaGer in your browser settings needs to be recreated once after activating this feature. You can just right click your addressbar now and click on "Add Searchengine MetaGer..."',
-                'ff-mobile' => 'Due to the way Firefox handles search suggestions, the searchengine entry for MetaGer in your browser settings need to be recreated or modified to include the following URLs'
-            ],
-            'firefox' => [
-                'description' => 'Due to the way Firefox handles search suggestions in the locationbar, additional steps are required to activate this feature.',
-                'desktop' => ''
-            ],
-        ],
         "off" => "Disabled",
         "on" => "Enabled",
     ],

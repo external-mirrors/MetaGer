@@ -180,15 +180,18 @@ class LocalizationRedirect
         // Read out all current settings
         $settings = array_merge($settings, app(SearchSettings::class)->user_settings);
 
-        foreach (Cookie::get() as $key => $value) {
-            if (preg_match("/.*_setting_.*/", $key)) {
-                $settings[$key] = $value;
-            }
-        }
         foreach (\Request::header() as $key => $value) {
             if (is_array($value))
                 $value = implode("", $value);
             $key = str_replace("-setting-", "_setting_", $key);
+            $key = str_replace("-engine-", "_engine_", $key);
+            $key = str_replace("-", "_", $key);
+            if (preg_match("/.*_(setting|engine)_.*/", $key)) {
+                $settings[$key] = $value;
+            }
+        }
+
+        foreach (Cookie::get() as $key => $value) {
             if (preg_match("/.*_setting_.*/", $key)) {
                 $settings[$key] = $value;
             }

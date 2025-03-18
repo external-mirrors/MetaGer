@@ -80,6 +80,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     });
 
     Route::group(["prefix" => 'suggest'], function () {
+        Route::get("/", [SuggestionController::class, "dummy"])->name("suggest");
         Route::get("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
         Route::get("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
     });

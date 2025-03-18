@@ -18,6 +18,13 @@ class SuggestionController extends Controller
         "us" => "us(en)",
         "ch" => "ch(de)",
     ];
+
+
+    public function dummy(Request $request)
+    {
+        return response()->json([[$request->input("query", "")], [], [], []], 200, ["Cache-Control" => "no-cache, private"]);
+    }
+
     public function partner(Request $request)
     {
         if (!$this->verifySignature($request)) {

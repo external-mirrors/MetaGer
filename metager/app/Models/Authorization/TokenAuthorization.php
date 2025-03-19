@@ -141,14 +141,6 @@ class TokenAuthorization extends Authorization
     }
 
     /**
-     * Tokenauthorization is always authenticated
-     */
-    public function isAuthenticated(): bool
-    {
-        return true;
-    }
-
-    /**
      * @return AnonymousTokenPayment
      */
     public function getToken()

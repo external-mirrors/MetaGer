@@ -57,11 +57,6 @@ abstract class Authorization
     public abstract function makePayment(float $cost);
 
     /**
-     * Checks whether the user has given any kind of authentication
-     */
-    public abstract function isAuthenticated(): bool;
-
-    /**
      * Calculates the cost of the current search 
      * Will currently be always 3;
      */

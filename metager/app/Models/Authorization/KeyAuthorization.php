@@ -100,14 +100,6 @@ class KeyAuthorization extends Authorization
     }
 
     /**
-     * Tokenauthorization is always authenticated
-     */
-    public function isAuthenticated(): bool
-    {
-        return !empty($this->key);
-    }
-
-    /**
      * @return string
      */
     public function getToken()

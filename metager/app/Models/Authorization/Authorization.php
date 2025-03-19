@@ -49,7 +49,7 @@ abstract class Authorization
      * 
      * @return bool
      */
-    public abstract function makePayment(float $cost);
+    public abstract function makePayment(float $cost): bool;
 
     /**
      * Returns a link where the user should be sent to, when we want

@@ -38,7 +38,6 @@ class SearchSettings
     public $suggestion_provider = "bing";
     /** @var int */
     public $suggestion_delay = 600;
-    public $suggestion_locationbar = false;
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
@@ -107,9 +106,6 @@ class SearchSettings
                 "long" => 800
             };
         }
-
-        $suggestion_locationbar = filter_var($this->getSettingValue("suggestion_locationbar", false), FILTER_VALIDATE_BOOL);
-        $this->suggestion_locationbar = $suggestion_locationbar;
 
         if ($this->getSettingValue("quicktips") !== null) {
             $this->quicktips = false;

@@ -52,7 +52,7 @@ class TokenAuthorization extends Authorization
 
     }
 
-    public function makePayment(float $cost)
+    public function makePayment(float $cost): bool
     {
         $cost = round($cost, 1);
         if (!$this->canDoAuthenticatedSearch()) {

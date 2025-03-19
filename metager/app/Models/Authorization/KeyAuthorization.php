@@ -64,7 +64,7 @@ class KeyAuthorization extends Authorization
     /**
      * @return bool
      */
-    public function makePayment(float $cost)
+    public function makePayment(float $cost): bool
     {
         $cost = round($cost, 1);
         if (!$this->canDoAuthenticatedSearch()) {

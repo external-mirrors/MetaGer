@@ -1,12 +1,7 @@
 <?php
 
 namespace App\Models\Authorization;
-
-use App\Models\Configuration\Searchengines;
-use App\SearchSettings;
-use Cookie;
 use LaravelLocalization;
-use Request;
 
 /**
  * Summary of Authorization
@@ -55,15 +50,6 @@ abstract class Authorization
      * @return bool
      */
     public abstract function makePayment(float $cost);
-
-    /**
-     * Calculates the cost of the current search 
-     * Will currently be always 3;
-     */
-    private function calculateCost()
-    {
-
-    }
 
     /**
      * Returns a link where the user should be sent to, when we want

@@ -12,6 +12,9 @@
 	<meta name="audience" content="all" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<meta name="statistics-enabled" content="{{ config("metager.matomo.enabled") }}">
+	@if(!in_array(app(\App\SearchSettings::class)->suggestion_provider, [null, "off"]))
+	<meta name="suggestions-enabled" content="true">
+	@endif
 	<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 	@foreach(LaravelLocalization::getSupportedLocales() as $locale => $locale_data)

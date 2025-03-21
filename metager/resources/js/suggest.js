@@ -4,6 +4,11 @@ import { getToken, putToken } from "./messaging";
  * MetaGers basic suggestion module
  */
 export function initializeSuggestions() {
+
+  if (!document.querySelector("meta[name=suggestions-enabled]")) {
+    return;
+  }
+
   let active = true;
 
   let suggestions = [];

@@ -10,7 +10,7 @@ class Dev extends Suggestions
 {
     public const NAME = "dev";
     public const DISABLED = true;
-    public $cost = 0;
+    public const COST = 0;
 
     public function __construct(string $query)
     {

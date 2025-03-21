@@ -51,7 +51,7 @@ class SuggestionController extends Controller
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
             $authorization = app(Authorization::class);
-            $authorization->setCost($suggestions->cost);
+            $authorization->setCost($suggestions::COST);
 
             $start_time = now();
             if (!$authorization->canDoAuthenticatedSearch(true)) {
@@ -99,7 +99,7 @@ class SuggestionController extends Controller
             $settings = app(SearchSettings::class);
             if ($settings->suggestion_provider !== null) {
                 $suggestions = Suggestions::fromProviderName($settings->suggestion_provider, "");
-                $token_cost = $suggestions->cost;
+                $token_cost = $suggestions::COST;
             }
         }
         return response()->json(["tokencost" => $token_cost]);

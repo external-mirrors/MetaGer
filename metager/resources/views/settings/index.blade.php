@@ -209,8 +209,10 @@
                     <select name="sg" id="sg" class="form-control">
                         <option value="off" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.off')</option>
-                        <option value="serper" {{ app(App\SearchSettings::class)->suggestion_provider === 'serper' ? 'disabled selected' : '' }}>
-                           Serper</option>
+                        @foreach(App\Suggestions::GET_AVAILABLE_PROVIDERS() as $name => $class)
+                        <option value="{{ $name }}" {{ app(App\SearchSettings::class)->suggestion_provider === $name ? 'disabled selected' : '' }}>
+                           {{ \Str::ucfirst($name) . " (" . $class::COST . " Token)"}}</option>
+                        @endforeach
                     </select>
                 </div>
                 @if(!in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]))

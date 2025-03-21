@@ -8,7 +8,7 @@ use App\Suggestions;
 class Serper extends Suggestions
 {
     public const NAME = "serper";
-    public $cost = 0.2;
+    public const COST = 0.2;
 
     public function __construct(string $query)
     {

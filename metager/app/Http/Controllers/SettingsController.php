@@ -10,6 +10,7 @@ use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use App\SearchSettings;
+use App\Suggestions;
 use Cookie;
 use foroco\BrowserDetection;
 use \Illuminate\Http\Request;
@@ -328,12 +329,14 @@ class SettingsController extends Controller
     {
         $settings = app(SearchSettings::class);
         $secure = app()->environment("local") ? false : true;
-        if ($key === "suggestion_provider" && !empty($value) && in_array($value, ["off", "serper"])) {
+        $valid_suggest_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
+
+        if ($key === "suggestion_provider" && !empty($value) && in_array($value, $valid_suggest_providers)) {
             $settings->suggestion_provider = $value;
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('suggestion_provider', '/'));
-            } elseif ($value === "serper") {
-                Cookie::queue(Cookie::forever('suggestion_provider', 'serper', '/', null, $secure, false));
+            } else {
+                Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, false));
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             }
             return true;

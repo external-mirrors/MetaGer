@@ -92,7 +92,8 @@ class SearchSettings
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
         $suggestion_provider = $this->getSettingValue("suggestion_provider", null);
-        if (in_array($suggestion_provider, ["off", "serper"])) {
+        $valid_suggestion_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
+        if (in_array($suggestion_provider, $valid_suggestion_providers)) {
             $this->suggestion_provider = $suggestion_provider;
         } else {
             $this->suggestion_provider = null;

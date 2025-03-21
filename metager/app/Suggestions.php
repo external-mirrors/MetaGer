@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Suggestions\Serper;
+use Composer\ClassMapGenerator\ClassMapGenerator;
 use Exception;
 
 /**
@@ -12,12 +13,15 @@ use Exception;
 abstract class Suggestions
 {
     public const NAME = "";
+    public const DISABLED = false;
     protected string $query;
     protected array $suggestions = [];
     /** Should the request be made as POST request. GET method is used otherwise */
     protected bool $api_method_post = false;
     protected int $api_success_response_code = 200;
     protected string $api_base;
+    protected string $api_useragent = "MetaGer";
+
     /**
      * Only used if $api_method_post == true
      * Defines the Post data to send
@@ -38,12 +42,12 @@ abstract class Suggestions
     abstract public function __construct(string $query);
     public static function fromProviderName(string $provider, string $query): Suggestions|null
     {
-        switch ($provider) {
-            case "serper":
-                return new Serper($query);
-            default:
-                return null;
+        foreach (self::GET_AVAILABLE_PROVIDERS(true) as $name => $provider_class) {
+            if ($provider === $name) {
+                return new $provider_class($query);
+            }
         }
+        return null;
     }
 
     /**
@@ -60,7 +64,7 @@ abstract class Suggestions
         }
         $ch = curl_init($api_url);
         curl_setopt_array($ch, [
-            CURLOPT_USERAGENT => "MetaGer",
+            CURLOPT_USERAGENT => $this->api_useragent,
             CURLOPT_HTTPHEADER => $this->api_header,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_FOLLOWLOCATION => true,
@@ -83,6 +87,20 @@ abstract class Suggestions
         } else {
             return [];
         }
+    }
+
+    public static function GET_AVAILABLE_PROVIDERS(bool $include_disabled = false): array
+    {
+        $providers = [];
+        $provider_path_map = ClassMapGenerator::createMap(app_path("Models/Suggestions"));
+        foreach ($provider_path_map as $class => $path) {
+            if (!defined("$class::NAME") || !defined("$class::DISABLED"))
+                continue;
+            if (!$include_disabled && $class::DISABLED === true)
+                continue;
+            $providers[$class::NAME] = $class;
+        }
+        return $providers;
     }
 
     public function toJSON(): array

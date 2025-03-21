@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Localization;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
+use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Authorization\TokenAuthorization;
-use App\Models\Result;
 use App\SearchSettings;
 use App\Suggestions;
 use Cache;
-use Carbon;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
@@ -23,44 +21,33 @@ class SuggestionController extends Controller
 
     public function suggest(Request $request, string $key = null)
     {
+        Suggestions::GET_AVAILABLE_PROVIDERS();
         $query = $request->input("query");
 
-        $headers = [];
-        $etag = null;
+        $authorization = app(Authorization::class);
+
+        if ($authorization instanceof KeyAuthorization && $authorization->key === "") {
+            app()->singleton(Authorization::class, function ($app) use ($key) {
+                return new SuggestionDebtAuthorization();
+            });
+            $authorization = app(Authorization::class);
+        }
+
+        if ($authorization instanceof SuggestionDebtAuthorization) {
+            SuggestionDebtAuthorization::LOAD_SETTINGS();
+        }
 
         // Do not generate Suggestions if User turned them off        
         $settings = app(SearchSettings::class);
         if (empty($query) || in_array($settings->suggestion_provider, [null, "off"])) {
-            //return response()->json([], 200, ["Cache-Control" => "no-cache, private"]);
+            return response()->json([$query, [], [], []], 200, ["Cache-Control" => "no-cache, private"]);
         }
-
-        $authorization = app(Authorization::class);
-        if ($authorization instanceof KeyAuthorization && !uuid_is_valid($authorization->key)) {
-            if ($query !== null) {
-                return redirect(route("suggest"), 302, ["Cache-Control" => "no-store", "Referrer-Policy" => "same-origin"]);
-            } else {
-                $headers = ["Cache-Control" => "max-age=0, must-revalidate"];
-                $etag = $request->getETags();
-                if (sizeof($etag) > 0)
-                    $etag = $etag[0];
-                else
-                    $etag = uuid_create();
-            }
-        }
-
-        $referer = $request->header("referer");
-
-        $response = response()->json([], 200, $headers);
-        if ($etag !== null) {
-            $response = $response->setEtag($etag);
-        }
-        return $response;
 
         $suggestion_provider = $settings->suggestion_provider;
 
         $cache_key = "suggestion:cache:$suggestion_provider:$query";
         if (Cache::has($cache_key) && 1 == 0) { // ToDo reenable cache
-            return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200"]);
+            return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
             $authorization = app(Authorization::class);
@@ -100,7 +87,7 @@ class SuggestionController extends Controller
             $suggestion_response = array_merge($suggestions->toJSON(), $token_data);
             Cache::put($cache_key, $suggestion_response, now()->addDay());
 
-            return response()->json($suggestion_response, 200, ["Cache-Control" => "max-age=7200"]);
+            return response()->json($suggestion_response, 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         }
     }
 
@@ -120,11 +107,11 @@ class SuggestionController extends Controller
 
     public function cancelSuggest(Request $request)
     {
-        $suggest_group = $this->generateSuggestCacheKey();
+        $suggest_group = $this->GENERATE_SUGGEST_CACHE_KEY();
         $this->disableSuggestionGroup($suggest_group);
-        $list = $this->getSuggestionGroupList($suggest_group);
+        $list = $this->GET_SUGGESTION_GROUP_LIST($suggest_group);
         foreach ($list as $uuid) {
-            $this->abortSuggestionGroupRequest($uuid, 423);
+            $this->ABORT_SUGGESTION_GROUP_REQUEST($uuid, 423);
         }
         return response()->json(["status" => "ok"]);
     }
@@ -144,6 +131,10 @@ class SuggestionController extends Controller
             $start_time = now();
         }
         $settings = app(SearchSettings::class);
+
+        if ($settings->suggestion_delay === 0)
+            return 200;
+
         $authorization = app(Authorization::class);
 
         $uuid = \Request::header("number", microtime(true));
@@ -153,7 +144,7 @@ class SuggestionController extends Controller
          * Groups all suggest requests to prevent unnecessary requests
          * @var string
          */
-        $cache_key = $this->generateSuggestCacheKey();
+        $cache_key = $this->GENERATE_SUGGEST_CACHE_KEY();
         if ($this->isSuggestionGroupDisabled($cache_key))
             return 423;
         // 
@@ -166,7 +157,7 @@ class SuggestionController extends Controller
             $newest = max($list);
             foreach ($list as $suggest_request) {
                 if ($suggest_request !== $newest) {
-                    $this->abortSuggestionGroupRequest($suggest_request, 423, $expiration);
+                    $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 423, $expiration);
                 }
             }
         }
@@ -179,7 +170,7 @@ class SuggestionController extends Controller
                 // Abort all other requests that use this token because it will be used up by this request
                 foreach ($list as $suggest_request) {
                     if ($suggest_request !== $newest) {
-                        $this->abortSuggestionGroupRequest($suggest_request, 402, $expiration);
+                        $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 402, $expiration);
                     }
                 }
             }
@@ -188,12 +179,16 @@ class SuggestionController extends Controller
     }
 
 
-    private function getSuggestionGroupList($suggest_group): array
+    public static function GET_SUGGESTION_GROUP_LIST($suggest_group): array
     {
-        return Redis::lrange($suggest_group, 0, -1);
+        $list = Redis::lrange($suggest_group, 0, -1);
+        if ($list === null) {
+            $list = [];
+        }
+        return $list;
     }
 
-    private function abortSuggestionGroupRequest($uuid, $status_code = 423, \Illuminate\Support\Carbon $expiration = null)
+    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Illuminate\Support\Carbon $expiration = null)
     {
         if ($expiration == null) {
             $expiration = now();
@@ -239,7 +234,7 @@ class SuggestionController extends Controller
      * requests can be aborted
      * @return string
      */
-    private function generateSuggestCacheKey(): string
+    public static function GENERATE_SUGGEST_CACHE_KEY(): string
     {
         $authorization = app(Authorization::class);
         $suggest_request_id = \Request::header("id");
@@ -260,7 +255,7 @@ class SuggestionController extends Controller
                 $cache_key .= $token->token;
             }
         } else {
-            $cache_key = \Request::ip() . \Request::userAgent();
+            $cache_key = SuggestionDebtAuthorization::GET_CACHE_KEY() . ":group";
         }
         $cache_key = md5($cache_key);
         return $cache_key;

@@ -25,11 +25,7 @@
                 href="/img/favicon/{{ $file }}" type="image/png">
         @endif
     @endforeach
-    @if (empty(Cookie::get('key')))
-        <link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{ action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
-    @else
-        <link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{ action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ['key' => Cookie::get('key')]) }}">
-    @endif
+    <link rel="search" type="application/opensearchdescription+xml" title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 

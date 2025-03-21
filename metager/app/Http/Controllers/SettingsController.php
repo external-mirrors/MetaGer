@@ -6,6 +6,7 @@ use App\Localization;
 use \App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
+use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use App\SearchSettings;
@@ -82,12 +83,6 @@ class SettingsController extends Controller
 
         $agent = (new BrowserDetection())->getAll($request->userAgent());
 
-        if ($settings->suggestion_locationbar === true && $authorization instanceof KeyAuthorization && $authorization->canDoAuthenticatedSearch()) {
-            $suggestions_plugin_enabled = true;
-        } else {
-            $suggestions_plugin_enabled = false;
-        }
-
         return response(view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
             ->with('fokus', $settings->fokus)
@@ -102,7 +97,6 @@ class SettingsController extends Controller
             ->with('url', $url)
             ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
-            ->with("suggestions_plugin_enabled", $suggestions_plugin_enabled)
             ->with('agent', $agent)
             ->with('browser', $agent)
             ->with('js', [mix('js/scriptSettings.js')]), 200, ["Cache-Control" => "no-store"]);
@@ -335,12 +329,13 @@ class SettingsController extends Controller
         $settings = app(SearchSettings::class);
         $secure = app()->environment("local") ? false : true;
         if ($key === "suggestion_provider" && !empty($value) && in_array($value, ["off", "serper"])) {
+            $settings->suggestion_provider = $value;
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('suggestion_provider', '/'));
             } elseif ($value === "serper") {
                 Cookie::queue(Cookie::forever('suggestion_provider', 'serper', '/', null, $secure, false));
+                SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             }
-            $settings->suggestion_provider = $value;
             return true;
         } else if ($key === "suggestion_delay" && !empty($value) && in_array($value, ["short", "medium", "long"])) {
             if ($value === "medium") {

@@ -107,7 +107,7 @@ class StartpageController extends Controller
             $plugin_short_name .= " (" . \Request::segment(1) . ")";
         }
         if (!\App::environment("production")) {
-            $plugin_short_name = "(dev) " . $plugin_short_name;
+            $plugin_short_name .= " (dev)";
         }
         return $plugin_short_name;
     }

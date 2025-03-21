@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Models\Suggestions\Serper;
 use Composer\ClassMapGenerator\ClassMapGenerator;
 use Exception;
 

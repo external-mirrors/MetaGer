@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "composer/class-map-generator": "^1.6",
         "endroid/qr-code": "^5.0",
         "foroco/php-browser-detection": "^2.8",
         "globalcitizen/php-iban": "^4.2.3",

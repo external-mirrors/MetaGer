@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Controllers\SuggestionController;
 use App\Models\Configuration\Searchengines;
 use Cookie;
 use LaravelLocalization;
@@ -34,7 +35,9 @@ class SearchSettings
     /** @var bool */
     public $tiles_startpage;
     /** @var string */
-    public $suggestions = "bing";
+    public $suggestion_provider = "bing";
+    /** @var int */
+    public $suggestion_delay = 600;
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
@@ -88,9 +91,21 @@ class SearchSettings
         $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
-        $suggestions = $this->getSettingValue("suggestions", "bing");
-        if ($suggestions === "off") {
-            $this->suggestions = "off";
+        $suggestion_provider = $this->getSettingValue("suggestion_provider", null);
+        $valid_suggestion_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
+        if (in_array($suggestion_provider, $valid_suggestion_providers)) {
+            $this->suggestion_provider = $suggestion_provider;
+        } else {
+            $this->suggestion_provider = null;
+        }
+
+        $suggestion_delay = $this->getSettingValue("suggestion_delay", "medium");
+        if (in_array($suggestion_delay, ["short", "medium", "long"])) {
+            $this->suggestion_delay = match ($suggestion_delay) {
+                "short" => 400,
+                "medium" => 600,
+                "long" => 800
+            };
         }
 
         if ($this->getSettingValue("quicktips") !== null) {

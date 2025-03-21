@@ -16,7 +16,7 @@ class TokenAuthorization extends Authorization
     private $tokenauthorization_header;
     public ?AnonymousTokenPayment $token_payment = null;
 
-    public function __construct(string $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
+    public function __construct(string|null $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
     {
         parent::__construct();
         $this->tokenauthorization_header = $tokenauthorization;
@@ -39,12 +39,20 @@ class TokenAuthorization extends Authorization
             $this->availableTokens = $this->token_payment->getAvailableTokenCount();
         }
 
+        $decitokenJson = json_decode($decitokenString);
+        if (is_array($decitokenJson)) {
+            foreach ($decitokenJson as $token) {
+                $this->token_payment->addJSONDeciToken($token);
+            }
+            $this->availableTokens = $this->token_payment->getAvailableTokenCount();
+        }
+
         $this->token_payment->checkTokens();
         $this->availableTokens = $this->token_payment->getAvailableTokenCount();
 
     }
 
-    public function makePayment(float $cost)
+    public function makePayment(float $cost): bool
     {
         $cost = round($cost, 1);
         if (!$this->canDoAuthenticatedSearch()) {
@@ -130,14 +138,6 @@ class TokenAuthorization extends Authorization
             }
         }
         return $tooltip;
-    }
-
-    /**
-     * Tokenauthorization is always authenticated
-     */
-    public function isAuthenticated(): bool
-    {
-        return true;
     }
 
     /**

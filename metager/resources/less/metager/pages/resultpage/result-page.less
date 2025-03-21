@@ -16,7 +16,7 @@
 // The point upon which a .screen-large logo is displayed
 @logo-size-breakpoint: (@results-width-min + @padding-small-default * 2);
 // The point upon which the sidebar opener switches place
-@sidebar-opener-breakpoint: (@results-width-max + @padding-small-default * 2 + 60px);
+@sidebar-opener-breakpoint: 920px;
 // Quicktip background color
 @quicktip-background-color: @resultpage-background-color;
 // Color of the Spruch author
@@ -924,45 +924,82 @@ a {
     border-bottom: 1px solid @metager-orange;
     box-shadow: 0px 1px 1.5px 0px rgba(0, 0, 0, 0.12),
       1px 0px 1px 0px rgba(0, 0, 0, 0.24);
-    display: flex;
+    display: grid;
+    grid-template-areas: "research-logo research-searchbar";
+    grid-template-columns: max-content 1fr;
     align-items: center;
     padding: 4px;
 
-    .resultpage-searchbar {
-      .search-input-submit {
-        background-color: @background-color;
 
-        .search-input {
-          border-bottom: 1px solid @border-color;
-          border-radius: 5px;
 
-          input {
+    >#header-logo {
+      grid-area: research-logo;
+    }
 
-            &::-webkit-search-cancel-button,
-            &::-webkit-search-decoration {
-              appearance: none;
+    >#header-searchbar {
+      grid-area: research-searchbar;
+
+      .resultpage-searchbar {
+        .search-input-submit {
+          background-color: @background-color;
+
+          .search-input {
+            border-bottom: 1px solid @border-color;
+            border-radius: 5px;
+
+            input {
+
+              &::-webkit-search-cancel-button,
+              &::-webkit-search-decoration {
+                appearance: none;
+              }
             }
           }
         }
-      }
 
-      @media (max-width: @sidebar-opener-breakpoint) {
-        .search-focus-selector {
-          border-top: none;
-          border-radius: 5px;
-        }
-
-        >* {
-          border-radius: 5px;
-          min-height: 40px;
-
-          &:not(:first-child) {
-            border-left: 1px solid #aaa;
+        @media (max-width: @sidebar-opener-breakpoint) {
+          .search-focus-selector {
+            border-top: none;
+            border-radius: 5px;
           }
         }
       }
     }
+
+    >label.sidebar-opener {
+      display: none;
+
+      &:not(.close) {
+        position: initial;
+        height: 100%;
+        padding-inline: 0.5rem;
+        place-content: center;
+      }
+    }
+
+    @media(max-width: 920px) {
+      grid-template-columns: max-content 1fr max-content;
+      grid-template-areas: "research-logo research-searchbar sidebar-opener";
+
+      >label.sidebar-opener {
+        &:not(.close) {
+          display: grid;
+        }
+      }
+    }
+
+    /* Create enough space for the search input on small screens */
+    &:has(#header-searchbar .searchbar:focus-within) {
+      grid-template-columns: 1fr;
+      grid-template-areas: "research-searchbar";
+
+      >:not(#header-searchbar) {
+        display: none;
+      }
+    }
   }
+
+
 }
 
 #foki {
@@ -1191,28 +1228,17 @@ a {
   }
 }
 
+@media(max-width: @sidebar-opener-breakpoint) {
+  body>.sidebar-opener:not(.close) {
+    display: none;
+  }
+}
+
 footer.resultPageFooter {
   max-width: @results-width-max;
 
   @media (max-width: (2 * @results-margin-left + @results-width-max - 1px)) {
     margin: 20px 0 0 0;
-  }
-}
-
-/* Searchbar Opener */
-#research-bar>.sidebar-opener {
-  display: none;
-  margin-right: 10px;
-  margin-left: 20px;
-}
-
-@media (max-width: @sidebar-opener-breakpoint) {
-  #resultpage-container>.sidebar-opener {
-    display: none;
-  }
-
-  #research-bar>.sidebar-opener {
-    display: initial;
   }
 }
 

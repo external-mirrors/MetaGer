@@ -1,11 +1,23 @@
 /* Einstellungen */
-
 @settings-abort-btn-color: white;
+
+.form-group {
+    display: grid;
+    row-gap: 1rem;
+}
+
+#searchstring,
+#suggestionstring {
+    width: 100%;
+    max-width: 450px;
+}
+
 #settings-buttons {
     margin-top: 10px;
     display: flex;
     flex-wrap: wrap;
     justify-content: end;
+
     >* {
         margin: 10px;
     }
@@ -15,6 +27,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: end;
+
     >* {
         padding: 10px;
         width: 33%;
@@ -32,19 +45,23 @@ label.select-label {
 }
 
 @media (max-width: @screen-mobile) {
+
     html,
     body,
     .wrapper,
     #settings-buttons {
         width: 100%;
     }
+
     #settings-buttons>* {
         width: 100%;
         margin: 10px 0px;
         overflow: auto;
     }
+
     #settings-selectors {
         justify-content: stretch;
+
         >* {
             width: 100%;
             margin: 10px 0px;

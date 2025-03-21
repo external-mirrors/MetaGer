@@ -198,23 +198,45 @@
                 </form>
             </div>
         @endif
+        <div class="card" id="suggest-settings">
+            <h1>@lang('settings.suggestions.heading')</h1>
+            <p>@lang('settings.hint.hint')</p>
+            <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
+                <input type="hidden" name="focus" value="{{ $fokus }}">
+                <input type="hidden" name="url" value="{{ $url }}">
+                <div class="form-group">
+                    <label for="sg">@lang('settings.suggestions.provider.label')</label>
+                    <select name="sg" id="sg" class="form-control">
+                        <option value="off" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        @foreach(App\Suggestions::GET_AVAILABLE_PROVIDERS() as $name => $class)
+                        <option value="{{ $name }}" {{ app(App\SearchSettings::class)->suggestion_provider === $name ? 'disabled selected' : '' }}>
+                           {{ \Str::ucfirst($name) . " (" . $class::COST . " Token)"}}</option>
+                        @endforeach
+                    </select>
+                </div>
+                @if(!in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]))
+                <div class="form-group">
+                    <label for="sgd">@lang('settings.suggestions.delay.label')</label>
+                    <div class="text-left">@lang('settings.suggestions.delay.description')</div>
+                    <select name="sgd" id="sgd" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }}>
+                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === 400 ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.short')</option>
+                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === 600 ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.medium')</option>
+                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === 800 ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.delay.long')</option>
+                    </select>
+                </div>
+                @endif
+            </form>
+        </div>
         <div class="card" id="more-settings">
             <h1>@lang('settings.more')</h1>
             <p>@lang('settings.hint.hint')</p>
             <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
                 <input type="hidden" name="focus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
-                @if (config('metager.metager.admitad.suggestions_enabled'))
-                    <div class="form-group">
-                        <label for="sg">@lang('settings.suggestions.label')</label>
-                        <select name="sg" id="sg" class="form-control">
-                            <option value="off" {{ app(App\SearchSettings::class)->suggestions === 'off' ? 'disabled selected' : '' }}>
-                                @lang('settings.suggestions.off')</option>
-                            <option value="on" {{ app(App\SearchSettings::class)->suggestions !== 'off' ? 'disabled selected' : '' }}>
-                                @lang('settings.suggestions.on')</option>
-                        </select>
-                    </div>
-                @endif
                 <div class="form-group">
                     <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
                     <select name="self_advertisements" id="self_advertisements" class="form-control">
@@ -285,12 +307,12 @@
         </div>
         <div class="card">
             <h1>@lang('settings.hint.header')</h1>
-            @if($agent->is("Firefox"))
+            @if($agent["browser_gecko_version"] > 0)
             <p>@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
-            @elseif($agent->is('Chrome') && !$agent->isMobile())
-            <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
-            @elseif($agent->is('Edge'))
+            @elseif($agent["browser_name"] === "Edge")
             <p>@lang('settings.hint.addon', ["link" => "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog"])</p>
+            @elseif($agent["browser_chromium_version"] > 0 && $agent["device_type"] === "desktop" )
+            <p>@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
             @endif
             <p>@lang('settings.hint.loadSettings')</p>
             @if(empty($cookieLink))

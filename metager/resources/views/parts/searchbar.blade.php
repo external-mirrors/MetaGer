@@ -3,7 +3,7 @@
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->isAuthenticated())class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
+					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch(false))class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
 						data-tooltip="{{ app('App\Models\Authorization\Authorization')->getKeyTooltip() }}" tabindex="0">
 						<img 
 							src="{{ app('App\Models\Authorization\Authorization')->getKeyIcon() }}"
@@ -11,6 +11,7 @@
 						>
 					</a>
 				</div>
+				<div id="suggest-exit">&larr;</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">
 					<input type="search" id="eingabe" name="eingabe" value="@if(Request::filled("eingabe")){{Request::input("eingabe")}}@endif" @if(\Request::is('/') && !\Request::filled('mgapp')) autofocus @endif autocomplete="off" class="form-control" placeholder="{{ trans('index.placeholder') }}">
 					<button id="search-delete-btn" name="delete-search-input" type="reset" title="@lang('index.searchreset')">
@@ -23,75 +24,47 @@
 					</button>
 				</div>
 			</div>
-			<div class="suggestions" data-suggest="{{Crypt::encrypt(now()->addMinutes(2))}}" data-partners="{{ route('suggest_partner') }}" data-suggestions="{{ route('suggest_suggest') }}">
-					<div class="partners">
-						<a href="" class="partner">
-							<img src="" alt="">
-							<div>
-								<div class="title"></div>
-								<div><div class="mark">@lang('result.options.4')</div></div>
-								<div class="description"></div>
-							</div>
-						</a>
-						<a href="" class="partner">
-							<img src="" alt="">
-							<div>
-								<div class="title"></div>
-								<div><div class="mark">@lang('result.options.4')</div></div>
-								<div class="description"></div>
-							</div>
-						</a>
+			<div class="suggestions" data-suggestions="{{ route('suggest') }}">
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<span></span>
 					</div>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<a href="" class="partner">
-						<img src="" alt="">
-						<div class="title"></div>
-						<div><div class="mark">@lang('result.options.4')</div></div>
-					</a>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<a href="" class="partner">
-						<img src="" alt="">
-						<div class="title"></div>
-						<div><div class="mark">@lang('result.options.4')</div></div>
-					</a>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
+					</div>
+					<div class="suggestion" tabindex="0">
+						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
 						<span></span>
-					</button>
-					<button type="submit" name="eingabe" class="suggestion">
-						<img src="/img/icon-lupe.svg" alt="search">
-						<span></span>
-					</button>
+					</div>
 				</div>
 			<div class="search-hidden">
 				@if(Request::filled("token"))

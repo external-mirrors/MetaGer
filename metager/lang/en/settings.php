@@ -30,7 +30,17 @@ return [
     'copy' => 'Copy',
     'darkmode' => 'Toggle dark mode',
     'suggestions' => [
-        "label" => 'Search suggestions',
+        'heading' => 'Search Suggestions',
+        'provider' => [
+            "label" => 'Provider',
+        ],
+        'delay' => [
+            'label' => 'Delay',
+            'description' => 'Suggestions will be loaded after this delay while typing. Ideally you chose a delay long enough so suggestions are only loaded when you stop typing.',
+            'short' => 'Short',
+            'medium' => 'Medium',
+            'long' => 'Long'
+        ],
         "off" => "Disabled",
         "on" => "Enabled",
     ],

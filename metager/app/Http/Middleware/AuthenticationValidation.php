@@ -2,9 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\SuggestionController;
 use App\Models\Authorization\AnonymousTokenPayment;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
+use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
 use Closure;
@@ -36,6 +38,8 @@ class AuthenticationValidation
         /** First authorization check passed. Now we can calculate the actual cost of the search */
         app(Searchengines::class);  // Is needed so we know the cost of a search
         $authorization = app(Authorization::class);
+        $suggestion_debt = $this->getSuggestionDebt();
+        $authorization->setCost($authorization->getCost() + $suggestion_debt);
         $cost = $authorization->getCost();
         $authorized = false;
         if ($authorization instanceof KeyAuthorization) {
@@ -90,9 +94,31 @@ class AuthenticationValidation
         }
 
         if ($authorized === true) {
+            $this->clearSuggestionDebt($suggestion_debt);
             return $next($request);
         } else {
             return redirect(route("startpage", $parameters));
+        }
+    }
+
+    private function getSuggestionDebt(): float
+    {
+        // Clear all pending suggestion requests
+        $cache_key = SuggestionController::GENERATE_SUGGEST_CACHE_KEY();
+        $list = SuggestionController::GET_SUGGESTION_GROUP_LIST($cache_key);
+        foreach ($list as $uuid) {
+            SuggestionController::ABORT_SUGGESTION_GROUP_REQUEST($uuid, 423);
+        }
+        return SuggestionDebtAuthorization::GET_DEBT();
+    }
+
+    private function clearSuggestionDebt($suggestion_debt)
+    {
+        $authorization = app(Authorization::class);
+        SuggestionDebtAuthorization::ADD_CREDIT(0.1);
+        SuggestionDebtAuthorization::UPDATE_SETTINGS();
+        if ($suggestion_debt > 0 && $authorization->makePayment($suggestion_debt)) {
+            SuggestionDebtAuthorization::ADD_DEBT($suggestion_debt * -1);
         }
     }
 

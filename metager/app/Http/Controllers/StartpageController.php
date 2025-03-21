@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
+use App\Models\Authorization\KeyAuthorization;
 use Cache;
 use Illuminate\Http\Request;
 use Jenssegers\Agent\Agent;
@@ -27,6 +29,17 @@ class StartpageController extends Controller
          */
         if ($request->filled("q")) {
             $eingabe = $request->input("q");
+
+            /**
+             * Chrome only adds opensearch descriptions when visiting the startpage
+             * turns out a redirect also works.
+             */
+            if ($eingabe === "opensearch" && $request->hasValidSignature()) {
+                if ($request->filled("url")) {
+                    return redirect($request->input("url"));
+                }
+            }
+
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
         }
 
@@ -63,35 +76,40 @@ class StartpageController extends Controller
 
     public function loadPage($subpage)
     {
-        /* TODO CSS und Titel laden
-        $css = array(
-        'datenschutz' => 'privacy.css',
-        );
-
-        if (in_array($subpage, $css)) {
-        return view($subpage, [ 'title' => 'Datenschutz Richtlinien', 'css' => $css[$subpage]]);
-        } else {
-        return view($subpage, [ 'title' => 'Datenschutz Richtlinien']);
-        }*/
         return view($subpage, ['title' => 'Datenschutz Richtlinien']);
     }
 
     public function loadPlugin(Request $request, $locale = "de")
     {
-        $link = action('MetaGerSearch@search', []);
-        $link .= "?";
-        $link .= "eingabe={searchTerms}";
-        $key = $request->input('key', '');
-        if (!empty($key)) {
-            $link .= "&key=" . urlencode($key);
-        }
+        $link = action('MetaGerSearch@search') . "?eingabe={searchTerms}";
+
+        $plugin_short_name = self::GET_PLUGIN_SHORT_NAME();
+
+        $suggestLink = route("suggest") . "?query={searchTerms}";
+
         $response = Response::make(
             view('plugin')
-                ->with('link', $link),
+                ->with('link', $link)
+                ->with('plugin_short_name', $plugin_short_name)
+                ->with('suggestLink', $suggestLink),
             "200"
         );
         $response->header('Content-Type', "application/opensearchdescription+xml");
+        $response->header("Cache-Control", "no-store");
         return $response;
+    }
+
+    public static function GET_PLUGIN_SHORT_NAME(): string
+    {
+        $plugin_short_name = trans('plugin.short_name');
+
+        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", \Request::segment(1))) {
+            $plugin_short_name .= " (" . \Request::segment(1) . ")";
+        }
+        if (!\App::environment("production")) {
+            $plugin_short_name .= " (dev)";
+        }
+        return $plugin_short_name;
     }
 
     public function berlin(Request $request)

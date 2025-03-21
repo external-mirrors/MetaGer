@@ -6,16 +6,21 @@ use App\Localization;
 use \App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
+use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use App\SearchSettings;
+use App\Suggestions;
 use Cookie;
+use foroco\BrowserDetection;
 use \Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 use LaravelLocalization;
 
 class SettingsController extends Controller
 {
+
+
+
     public function index(Request $request)
     {
         $settings = app(SearchSettings::class);
@@ -77,7 +82,7 @@ class SettingsController extends Controller
             $cookieLink = route('loadSettings', $settings_params);
         }
 
-        $agent = new Agent();
+        $agent = (new BrowserDetection())->getAll($request->userAgent());
 
         return response(view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
@@ -94,7 +99,7 @@ class SettingsController extends Controller
             ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
             ->with('agent', $agent)
-            ->with('browser', $agent->browser())
+            ->with('browser', $agent)
             ->with('js', [mix('js/scriptSettings.js')]), 200, ["Cache-Control" => "no-store"]);
     }
 
@@ -289,66 +294,21 @@ class SettingsController extends Controller
     {
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
-        $secure = app()->environment("local") ? false : true;
-        // Currently only the setting for quotes is supported
 
-        $suggestions = $request->input('sg', '');
-        if (!empty($suggestions)) {
-            if ($suggestions === "off") {
-                Cookie::queue(Cookie::forever('suggestions', 'off', '/', null, $secure, false));
-            } elseif ($suggestions === "on") {
-                Cookie::queue(Cookie::forget("suggestions", "/"));
-            }
+        if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", $request->input('sg', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('sgd', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
+        } else {
+            // All Settings behind "More Settings"
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
+            self::PROCESS_GLOBAL_SETTING_CHANGE("self_advertisements", $request->input('self_advertisements', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", $request->input('tiles_startpage', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", $request->input('zitate', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("dm", $request->input('dm', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("nt", $request->input('nt', ''));
         }
 
-        $self_advertisements = $request->input('self_advertisements', '');
-        if (!empty($self_advertisements)) {
-            if ($self_advertisements === "off") {
-                Cookie::queue(Cookie::forever('self_advertisements', 'off', '/', null, $secure, false));
-            } elseif ($self_advertisements === "on") {
-                Cookie::queue(Cookie::forget("self_advertisements", "/"));
-            }
-        }
-
-        $tiles_startpage = $request->input('tiles_startpage', '');
-        if (!empty($tiles_startpage)) {
-            if ($tiles_startpage === "off") {
-                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, false));
-            } elseif ($tiles_startpage === "on") {
-                Cookie::queue(Cookie::forget("tiles_startpage", "/"));
-            }
-        }
-
-        $quotes = $request->input('zitate', '');
-        if (!empty($quotes)) {
-            if ($quotes === "off") {
-                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, false));
-            } elseif ($quotes === "on") {
-                Cookie::queue('zitate', '', 5256000, '/', null, $secure, true);
-            }
-        }
-
-        $darkmode = $request->input('dm');
-        if (!empty($darkmode)) {
-            if ($darkmode === "off") {
-                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, false));
-            } elseif ($darkmode === "on") {
-                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, false));
-            } elseif ($darkmode === "system") {
-                Cookie::queue(Cookie::forget('dark_mode', '/'));
-            }
-        }
-
-        $newTab = $request->input('nt');
-        if (!empty($newTab)) {
-            if ($newTab === "off") {
-                Cookie::queue(Cookie::forget('new_tab', '/'));
-            } elseif ($newTab === "on") {
-                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, false));
-            }
-        }
-
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
         $headers = ["Cache-Control" => "no-store"];
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
@@ -356,6 +316,77 @@ class SettingsController extends Controller
         } else {
             return redirect($redirect_url, 302, $headers);
         }
+    }
+
+    /**
+     * Processes a new setting value and queues/deletes necessary cookies
+     * 
+     * @param string $key
+     * @param string $value
+     * @return bool True if setting was valid and has been processed. False Otherwise
+     */
+    public static function PROCESS_GLOBAL_SETTING_CHANGE(string $key, string $value): bool
+    {
+        $settings = app(SearchSettings::class);
+        $secure = app()->environment("local") ? false : true;
+        $valid_suggest_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
+
+        if ($key === "suggestion_provider" && !empty($value) && in_array($value, $valid_suggest_providers)) {
+            $settings->suggestion_provider = $value;
+            if ($value === "off") {
+                Cookie::queue(Cookie::forget('suggestion_provider', '/'));
+            } else {
+                Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, false));
+                SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
+            }
+            return true;
+        } else if ($key === "suggestion_delay" && !empty($value) && in_array($value, ["short", "medium", "long"])) {
+            if ($value === "medium") {
+                Cookie::queue(Cookie::forget("suggestion_delay", "/"));
+            } else {
+                Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, false));
+            }
+            $settings->suggestion_delay = $value;
+            return true;
+        } else if ($key === "self_advertisements" && !empty($value)) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forever('self_advertisements', 'off', '/', null, $secure, false));
+            } elseif ($value === "on") {
+                Cookie::queue(Cookie::forget("self_advertisements", "/"));
+            }
+            return true;
+        } else if ($key === "tiles_startpage" && !empty($value)) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, false));
+            } elseif ($value === "on") {
+                Cookie::queue(Cookie::forget("tiles_startpage", "/"));
+            }
+            return true;
+        } else if ($key === "zitate" && !empty($value)) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, false));
+            } elseif ($value === "on") {
+                Cookie::queue(Cookie::forget("zitate", "/"));
+            }
+            return true;
+        } else if ($key === "dm" && !empty($value)) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, false));
+            } elseif ($value === "on") {
+                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, false));
+            } elseif ($value === "system") {
+                Cookie::queue(Cookie::forget('dark_mode', '/'));
+            }
+            return true;
+        } else if ($key === "nt" && !empty($value)) {
+            if ($value === "off") {
+                Cookie::queue(Cookie::forget('new_tab', '/'));
+            } elseif ($value === "on") {
+                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, false));
+            }
+            return true;
+        }
+        return false;
     }
 
     public function deleteSettings(Request $request)
@@ -372,7 +403,8 @@ class SettingsController extends Controller
             "zitate",
             "self_advertisements",
             "tiles_startpage",
-            "suggestions",
+            "suggestion_provider",
+            "suggestion_delay"
         ];
 
         $settings = Cookie::get();

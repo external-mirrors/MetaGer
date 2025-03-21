@@ -74,7 +74,7 @@
 </head>
 
 <body>
-	@if(Request::getHttpHost() === "metager3.de")
+	@if(Request::getHttpHost() === "metager3.de" && app(\App\SearchSettings::class)->self_advertisements)
 	<div class="alert alert-info metager3-unstable-warning-static-pages">
 		{!! @trans('resultPage.metager3') !!}
 	</div>

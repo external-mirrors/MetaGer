@@ -42,10 +42,12 @@ export function initializeSuggestions() {
 
   search_input.addEventListener("keyup", (e) => {
     if (!active) return;
+    let ignored_keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+    moveFocus(e.key);
     if (e.key == "Escape") {
       e.stopPropagation();
       e.target.blur();
-    } else {
+    } else if (!ignored_keys.includes(e.key)) {
       suggest();
     }
   });
@@ -288,6 +290,45 @@ export function initializeSuggestions() {
           searchbar_container.scrollIntoView(true);
         }
       }, 250);
+    }
+  }
+
+  function moveFocus(key) {
+    if (key != "ArrowUp" && key != "ArrowDown") {
+      suggestions_container.querySelectorAll(".suggestion").forEach((element, index) => {
+        if (element.classList.contains("active"))
+          element.classList.remove("active");
+      });
+      return;
+    }
+    let down = key == "ArrowDown";
+    let focus_number = -1;
+    let max_number = suggestions_container.querySelectorAll(".suggestion").length;
+    suggestions_container.querySelectorAll(".suggestion").forEach((element, index) => {
+      if (element.classList.contains("active")) {
+        focus_number = index;
+        element.classList.remove("active");
+      }
+    });
+    if (down) {
+      if (focus_number >= (max_number - 1)) {
+        focus_number = 0;
+      } else {
+        focus_number++;
+      }
+    } else {
+      if (focus_number <= -1) {
+        focus_number = max_number - 1;
+      } else {
+        focus_number--;
+      }
+    }
+    if (focus_number == -1) {
+      search_input.value = query;
+    } else {
+      let element = suggestions_container.querySelector(".suggestion:nth-child(" + (focus_number + 1) + ")");
+      element.classList.add("active");
+      search_input.value = element.querySelector("span").textContent;
     }
   }
 }

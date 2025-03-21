@@ -46,7 +46,7 @@ class SuggestionController extends Controller
         $suggestion_provider = $settings->suggestion_provider;
 
         $cache_key = "suggestion:cache:$suggestion_provider:$query";
-        if (Cache::has($cache_key) && 1 == 0) { // ToDo reenable cache
+        if (Cache::has($cache_key)) { // ToDo reenable cache
             return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);

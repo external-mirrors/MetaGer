@@ -2,7 +2,6 @@
 
 namespace App;
 
-use App\Http\Controllers\SuggestionController;
 use App\Models\Configuration\Searchengines;
 use Cookie;
 use LaravelLocalization;
@@ -10,6 +9,10 @@ use \Request;
 
 class SearchSettings
 {
+
+    const SUGGESTION_DELAY_SHORT = 300;
+    const SUGGESTION_DELAY_MEDIUM = 450;
+    const SUGGESTION_DELAY_LONG = 600;
 
     public $bv_key = null; // Cache Key where data of BV is temporarily stored
     public $javascript_enabled = false;
@@ -37,7 +40,8 @@ class SearchSettings
     /** @var string */
     public $suggestion_provider = "bing";
     /** @var int */
-    public $suggestion_delay = 600;
+    public $suggestion_delay = self::SUGGESTION_DELAY_MEDIUM;
+    public $suggestion_addressbar = false;
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
@@ -46,7 +50,7 @@ class SearchSettings
      * List of setting keys used independant of fokus
      * @var array
      */
-    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key"];
+    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key", "suggestion_provider", "suggestion_delay", "suggestion_addressbar"];
     public function __construct()
     {
 
@@ -102,10 +106,15 @@ class SearchSettings
         $suggestion_delay = $this->getSettingValue("suggestion_delay", "medium");
         if (in_array($suggestion_delay, ["short", "medium", "long"])) {
             $this->suggestion_delay = match ($suggestion_delay) {
-                "short" => 400,
-                "medium" => 600,
-                "long" => 800
+                "short" => self::SUGGESTION_DELAY_SHORT,
+                "medium" => self::SUGGESTION_DELAY_MEDIUM,
+                "long" => self::SUGGESTION_DELAY_LONG
             };
+        }
+
+        $suggestion_addressbar = $this->getSettingValue("suggestion_addressbar", "off");
+        if (in_array($suggestion_addressbar, ["on", "off"])) {
+            $this->suggestion_addressbar = $suggestion_addressbar === "on";
         }
 
         if ($this->getSettingValue("quicktips") !== null) {

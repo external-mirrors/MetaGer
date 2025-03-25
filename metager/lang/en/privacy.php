@@ -22,6 +22,7 @@ return [
             'description' => 'When using our web search engine MetaGer via its web form or through its OpenSearch interface, the following data is generated:',
             'query' => 'As an integral part of metasearch, the search query is transmitted to our partners to obtain search results for display on the results page. The results received, including the search term, are kept for display for a few hours.',
             'preferences' => 'We use this data (e.g. language settings) to answer the respective search query. We store some of this data on a non-personal basis for statistical purposes.',
+            'suggest' => 'If search suggestions are enabled for the address bar of your browser (optional) we need to store your suggestion settings on our server. The key will be a concatenated string of your IP Address, your useragent and your browsers accept-language header which is sha1 hashed. If the setting is disabled (default) nothing will be stored.'
         ],
         'contact' => [
             'title' => 'Use of the contact form',

@@ -199,7 +199,7 @@
             </div>
         @endif
         <div class="card" id="suggest-settings">
-            <h1>@lang('settings.suggestions.heading')</h1>
+            <h1>@lang('settings.suggestions.heading') <a href="{{ route("help-mainpages") . "#suggest" }}" target="_blank"><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"></a></h1>
             <p>@lang('settings.hint.hint')</p>
             <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
                 <input type="hidden" name="focus" value="{{ $fokus }}">
@@ -220,12 +220,24 @@
                     <label for="sgd">@lang('settings.suggestions.delay.label')</label>
                     <div class="text-left">@lang('settings.suggestions.delay.description')</div>
                     <select name="sgd" id="sgd" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }}>
-                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === 400 ? 'disabled selected' : '' }}>
+                        <option value="short" {{ app(App\SearchSettings::class)->suggestion_delay === \App\SearchSettings::SUGGESTION_DELAY_SHORT ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.short')</option>
-                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === 600 ? 'disabled selected' : '' }}>
+                        <option value="medium" {{ app(App\SearchSettings::class)->suggestion_delay === \App\SearchSettings::SUGGESTION_DELAY_MEDIUM  ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.medium')</option>
-                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === 800 ? 'disabled selected' : '' }}>
+                        <option value="long" {{ app(App\SearchSettings::class)->suggestion_delay === \App\SearchSettings::SUGGESTION_DELAY_LONG  ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.delay.long')</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sga">@lang('settings.suggestions.addressbar.label')</label>
+                    <div class="text-left">@lang('settings.suggestions.addressbar.description')</div>
+                    <div class="text-left">@lang('settings.suggestions.addressbar.hint')</div>
+                    <select name="sga" id="sga" class="form-control" {{ in_array(app(App\SearchSettings::class)->suggestion_provider, [null, "off"]) ? 'disabled' : '' }}>
+                        <option value="off"
+                            {{ app(App\SearchSettings::class)->suggestion_addressbar === false ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.off')</option>
+                        <option value="on" {{ app(App\SearchSettings::class)->suggestion_addressbar === true ? 'disabled selected' : '' }}>
+                            @lang('settings.suggestions.on')</option>
                     </select>
                 </div>
                 @endif

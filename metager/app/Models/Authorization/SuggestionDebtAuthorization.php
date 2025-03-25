@@ -4,6 +4,7 @@ namespace App\Models\Authorization;
 
 use App;
 use App\Localization;
+use App\SearchSettings;
 use foroco\BrowserDetection;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
@@ -26,13 +27,6 @@ class SuggestionDebtAuthorization extends Authorization
     public function __construct()
     {
         $this->availableTokens = round(max(self::GET_CREDIT() - self::GET_DEBT(), 0), 1);
-
-        $agent = (new BrowserDetection())->getAll(Request::userAgent());
-        if ($agent["browser_gecko_version"] > 0) {
-            if ($this->availableTokens == 0 || RateLimiter::tooManyAttempts(self::GET_CACHE_KEY() . ":ratelimit", $this->availableTokens * 10 * 3)) {
-                $this->availableTokens = -0.1;
-            }
-        }
     }
 
     public function getToken(): null
@@ -42,11 +36,6 @@ class SuggestionDebtAuthorization extends Authorization
 
     public function makePayment(float $cost): bool
     {
-        $agent = (new BrowserDetection())->getAll(\Request::userAgent());
-        if ($agent["browser_gecko_version"] > 0 && $cost == 0) {
-            RateLimiter::increment(self::GET_CACHE_KEY() . ":ratelimit");
-            return true;
-        }
         if ($cost === 0)
             return true;
         if (!$this->canDoAuthenticatedSearch(true)) {
@@ -135,12 +124,11 @@ class SuggestionDebtAuthorization extends Authorization
         $cache_key = self::GET_CACHE_KEY();
         $expiration = now()->addDays(2);
 
-        $settings = app(\App\SearchSettings::class);
+        $settings = app(SearchSettings::class);
 
         $agent = (new BrowserDetection())->getAll(\Request::userAgent());
         if ($agent["browser_gecko_version"] > 0) {
-            $settings->suggestion_provider = "dev";
-            $settings->suggestion_delay = 0;
+            $settings->suggestion_delay = SearchSettings::SUGGESTION_DELAY_SHORT;
         }
 
         $stored_settings = Redis::connection(config('cache.stores.redis.connection'))->hget($cache_key, "settings");
@@ -162,12 +150,13 @@ class SuggestionDebtAuthorization extends Authorization
                 }
             }
 
-        } else if (!in_array($settings->suggestion_provider, [null, "off"])) {
+        } else if ($settings->suggestion_addressbar && !in_array($settings->suggestion_provider, [null, "off"])) {
             $stored_settings = ["provider" => $settings->suggestion_provider];
         }
         if ($stored_settings !== null) {
             $stored_settings["locale"] = Localization::getLanguage() . "-" . Localization::getRegion();
             $stored_settings["delay"] = $settings->suggestion_delay;
+            $stored_settings["addressbar"] = $settings->suggestion_addressbar;
             Redis::connection(config('cache.stores.redis.connection'))->hset($cache_key, "settings", json_encode($stored_settings));
             Redis::connection(config('cache.stores.redis.connection'))->hexpireat($cache_key, $expiration->getTimestamp(), ["settings"]);
         }
@@ -175,15 +164,22 @@ class SuggestionDebtAuthorization extends Authorization
 
     public static function LOAD_SETTINGS()
     {
-        $settings = app(\App\SearchSettings::class);
+        $settings = app(SearchSettings::class);
         $stored_settings = Redis::connection(config('cache.stores.redis.connection'))->hget(self::GET_CACHE_KEY(), "settings");
         if ($stored_settings !== null) {
             $stored_settings = json_decode($stored_settings, true);
             $settings->suggestion_provider = $stored_settings["provider"];
             $settings->suggestion_delay = $stored_settings["delay"];
+            if (!$stored_settings["addressbar"])
+                $settings->suggestion_provider = "off";
             App::setLocale($stored_settings["locale"]);
             LaravelLocalization::setLocale($stored_settings["locale"]);
         }
+    }
+
+    public static function REMOVE_SETTINGS()
+    {
+        Redis::connection(config('cache.stores.redis.connection'))->hdel(self::GET_CACHE_KEY(), ["settings"]);
     }
 
     public static function GET_CACHE_KEY(): string

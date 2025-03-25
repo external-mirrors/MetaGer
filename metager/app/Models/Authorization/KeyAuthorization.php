@@ -46,14 +46,15 @@ class KeyAuthorization extends Authorization
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $result = Redis::blpop($result_hash, 10);
+        $result = Redis::brpop($result_hash, 10);
         try {
             if ($result && \is_array($result) && sizeof($result) === 2) {
                 $result = \json_decode($result[1]);
-                if ($result === null) {
+                $body = json_decode($result->body);
+                if ($body === null) {
                     return false;
                 } else {
-                    $this->availableTokens = $result->charge;
+                    $this->availableTokens = $body->charge;
                 }
             }
         } catch (\ErrorException $e) {

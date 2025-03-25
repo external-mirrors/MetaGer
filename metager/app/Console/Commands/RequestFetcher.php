@@ -164,8 +164,8 @@ class RequestFetcher extends Command
                     $body = \curl_multi_getcontent($info["handle"]);
                 }
 
-                Redis::pipeline(function ($pipe) use ($resulthash, $body, $cacheDurationMinutes) {
-                    $pipe->lpush($resulthash, $body);
+                Redis::pipeline(function ($pipe) use ($resulthash, $info, $body) {
+                    $pipe->lpush($resulthash, json_encode(["info" => curl_getinfo($info["handle"]), "body" => $body]));
                     $pipe->expire($resulthash, 60);
                 });
 
@@ -200,10 +200,12 @@ class RequestFetcher extends Command
                 CURLOPT_LOW_SPEED_LIMIT => 50000,
                 CURLOPT_LOW_SPEED_TIME => 10,
                 CURLOPT_TIMEOUT => 10,
+                CURLOPT_TCP_KEEPALIVE => 1,
+                CURLOPT_TCP_KEEPIDLE => 600,
+                CURLOPT_TCP_KEEPINTVL => 15,
+                // CURLOPT_TCP_KEEPCNT => 39 // Available only in php 8.4 onwards
             )
         );
-
-
 
         if (!empty($job["curlopts"])) {
             curl_setopt_array($ch, $job["curlopts"]);

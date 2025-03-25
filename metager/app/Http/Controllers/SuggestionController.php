@@ -9,6 +9,7 @@ use App\Models\Authorization\TokenAuthorization;
 use App\SearchSettings;
 use App\Suggestions;
 use Cache;
+use Carbon;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
@@ -39,21 +40,25 @@ class SuggestionController extends Controller
 
         // Do not generate Suggestions if User turned them off        
         $settings = app(SearchSettings::class);
-        if (empty($query) || in_array($settings->suggestion_provider, [null, "off"])) {
+        if (
+            empty($query) || in_array($settings->suggestion_provider, [null, "off"])
+            || ($request->input("source", null) === "opensearch" && !$settings->suggestion_addressbar)
+        ) {
             return response()->json([$query, [], [], []], 200, ["Cache-Control" => "no-cache, private"]);
         }
 
         $suggestion_provider = $settings->suggestion_provider;
 
         $cache_key = "suggestion:cache:$suggestion_provider:$query";
-        if (Cache::has($cache_key)) {
+        if (Cache::has($cache_key) && 1 == 0) {
             return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
             $authorization = app(Authorization::class);
             $authorization->setCost($suggestions::COST);
 
-            $start_time = now();
+            $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
+
             if (!$authorization->canDoAuthenticatedSearch(true)) {
                 return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
             }
@@ -125,7 +130,7 @@ class SuggestionController extends Controller
      * 
      * @return int Status code of response
      */
-    private function delay(\Illuminate\Support\Carbon|null $start_time): int
+    private function delay(\Carbon\Carbon|null $start_time): int
     {
         if ($start_time === null) {
             $start_time = now();
@@ -169,9 +174,7 @@ class SuggestionController extends Controller
             if ($authorization instanceof TokenAuthorization && sizeof($list) > 0) {
                 // Abort all other requests that use this token because it will be used up by this request
                 foreach ($list as $suggest_request) {
-                    if ($suggest_request !== $newest) {
-                        $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 402, $expiration);
-                    }
+                    $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 402, $expiration);
                 }
             }
             return 200;
@@ -188,7 +191,7 @@ class SuggestionController extends Controller
         return $list;
     }
 
-    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Illuminate\Support\Carbon $expiration = null)
+    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Carbon\Carbon $expiration = null)
     {
         if ($expiration == null) {
             $expiration = now();
@@ -199,7 +202,7 @@ class SuggestionController extends Controller
         Redis::pexpireat($key, $expiration->getTimestampMs());
     }
 
-    private function addSuggestGroupRequest($suggest_group, $uuid, \Illuminate\Support\Carbon $expiration = null): array
+    private function addSuggestGroupRequest($suggest_group, $uuid, \Carbon\Carbon $expiration = null): array
     {
         if ($expiration == null) {
             $expiration = now();

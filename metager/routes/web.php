@@ -204,7 +204,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return view('help/help-mainpages')
             ->with('title', trans('titles.help-mainpages'))
             ->with('navbarFocus', 'hilfe');
-    });
+    })->name("help-mainpages");
 
     Route::get('hilfe/easy-language/mainpages', function () {
         return view('help/easy-language/help-mainpages')

@@ -41,6 +41,11 @@ return [
             'medium' => 'Medium',
             'long' => 'Long'
         ],
+        "addressbar" => [
+            'label' => 'Suggestions in Address Bar',
+            'description' => 'Load Suggestions when typing in the address bar. Above delay configuration will always be "short" for Firefox users due to very short timeouts for those requests.',
+            'hint' => '<b>Attention:</b> We need to store your suggestion settings on our server for several days to offer this feature. If this is not what you want keep this setting disabled.',
+        ],
         "off" => "Disabled",
         "on" => "Enabled",
     ],

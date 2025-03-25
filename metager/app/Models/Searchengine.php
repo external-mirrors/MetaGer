@@ -234,6 +234,11 @@ abstract class Searchengine
             if ($body === false) {
                 return $body;
             }
+            $body = json_decode($body);
+            if ($body === false) {
+                return $body;
+            }
+            $body = $body->body;
         }
 
         if ($body === "no-result") {

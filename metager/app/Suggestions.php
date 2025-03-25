@@ -4,6 +4,7 @@ namespace App;
 
 use Composer\ClassMapGenerator\ClassMapGenerator;
 use Exception;
+use Illuminate\Support\Facades\Redis;
 
 /**
  * Base class for all search suggestions implementations
@@ -61,25 +62,39 @@ abstract class Suggestions
         if ($this->api_method_post === false && sizeof($this->api_get_parameters) > 0) {
             $api_url .= "?" . http_build_query($this->api_get_parameters);
         }
-        $ch = curl_init($api_url);
-        curl_setopt_array($ch, [
-            CURLOPT_USERAGENT => $this->api_useragent,
-            CURLOPT_HTTPHEADER => $this->api_header,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 3,
-            CURLOPT_POST => $this->api_method_post,
-        ]);
+
+        $hash = sha1($api_url . microtime(true));
+
+        $mission = [
+            "resulthash" => $hash,
+            "url" => $api_url,
+            "useragent" => $this->api_useragent,
+            "cacheDuration" => 0,   // We'll cache seperately
+            "headers" => $this->api_header,
+            "name" => "Suggestions: " . self::NAME,
+            "curlopts" => [
+                CURLOPT_POST => $this->api_method_post,
+            ]
+        ];
+
         if ($this->api_method_post) {
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $this->api_post_data);
+            $mission["curlopts"][CURLOPT_POST] = $this->api_method_post;
+            $mission["curlopts"][CURLOPT_POSTFIELDS] = $this->api_post_data;
         }
 
-        $response = curl_exec($ch);
+        $mission = json_encode($mission);
+        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        if (curl_getinfo($ch, CURLINFO_HTTP_CODE) === $this->api_success_response_code) {
+        $results = Redis::brpop($hash, 10);
+        if (!is_array($results))
+            return;
+        $results = $results[1];
+        $results = json_decode($results, true);
+        $info = $results["info"];
+        $body = $results["body"];
+        if ($info["http_code"] === $this->api_success_response_code) {
             try {
-                return $this->parseResponse($response);
+                return $this->parseResponse($body);
             } catch (Exception $e) {
                 return [];
             }

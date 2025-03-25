@@ -15,8 +15,8 @@ class Brave extends Suggestions
     {
         $this->query = $query;
         $this->api_base = "https://api.search.brave.com/res/v1/suggest/search";
-        $this->api_header[] = "X-Subscription-Token: " . config("metager.suggestions.brave.api_key");
-        $this->api_header[] = "Accept: application/json";
+        $this->api_header["X-Subscription-Token"] = config("metager.suggestions.brave.api_key");
+        $this->api_header["Accept"] = "application/json";
         $this->api_get_parameters = [
             "count" => "10",
             "country" => Localization::getRegion(),

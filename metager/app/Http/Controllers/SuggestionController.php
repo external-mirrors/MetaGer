@@ -9,6 +9,7 @@ use App\Models\Authorization\TokenAuthorization;
 use App\SearchSettings;
 use App\Suggestions;
 use Cache;
+use Carbon;
 use Crypt;
 use Exception;
 use Illuminate\Http\Request;
@@ -46,7 +47,7 @@ class SuggestionController extends Controller
         $suggestion_provider = $settings->suggestion_provider;
 
         $cache_key = "suggestion:cache:$suggestion_provider:$query";
-        if (Cache::has($cache_key)) {
+        if (Cache::has($cache_key) && 1 == 0) {
             return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         } else {
             $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
@@ -54,6 +55,11 @@ class SuggestionController extends Controller
             $authorization->setCost($suggestions::COST);
 
             $start_time = now();
+            $start_float = $_SERVER["REQUEST_TIME_FLOAT"];
+            $real_start_time = Carbon::createFromTimestamp($start_float);
+
+            $start_diff = $real_start_time->diffInMilliseconds($start_time, true);
+
             if (!$authorization->canDoAuthenticatedSearch(true)) {
                 return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
             }
@@ -169,9 +175,7 @@ class SuggestionController extends Controller
             if ($authorization instanceof TokenAuthorization && sizeof($list) > 0) {
                 // Abort all other requests that use this token because it will be used up by this request
                 foreach ($list as $suggest_request) {
-                    if ($suggest_request !== $newest) {
-                        $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 402, $expiration);
-                    }
+                    $this->ABORT_SUGGESTION_GROUP_REQUEST($suggest_request, 402, $expiration);
                 }
             }
             return 200;

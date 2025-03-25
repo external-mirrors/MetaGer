@@ -92,13 +92,13 @@ class Quicktips
      */
     public function retrieveResults($hash, $wait)
     {
-        $body = null;
+        $result = null;
         if (Cache::has($this->hash)) {
             return Cache::get($this->hash, false);
         }
 
         do {
-            $body = Redis::rpoplpush($this->hash, $this->hash);
+            $result = Redis::rpoplpush($this->hash, $this->hash);
             Redis::expire($this->hash, 60);
             if ($body === false || $body === null) {
                 if ($wait) {
@@ -109,16 +109,18 @@ class Quicktips
             }
         } while ($wait && microtime(true) - $this->startTime < 0.5);
 
-        if ($body === false) {
+        if ($result === false) {
             return false;
         }
 
-        if ($body === "no-result") {
+        $result = json_decode($result);
+
+        if ($result->body === "no-result") {
             return false;
         }
 
-        if ($body !== null) {
-            return $body;
+        if ($result->body !== null) {
+            return $result->body;
         } else {
             return false;
         }

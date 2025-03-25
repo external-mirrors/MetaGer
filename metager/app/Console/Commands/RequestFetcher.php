@@ -200,6 +200,10 @@ class RequestFetcher extends Command
                 CURLOPT_LOW_SPEED_LIMIT => 50000,
                 CURLOPT_LOW_SPEED_TIME => 10,
                 CURLOPT_TIMEOUT => 10,
+                CURLOPT_TCP_KEEPALIVE => 1,
+                CURLOPT_TCP_KEEPIDLE => 600,
+                CURLOPT_TCP_KEEPINTVL => 15,
+                CURLOPT_TCP_KEEPCNT => 39
             )
         );
 

@@ -85,7 +85,7 @@ class StartpageController extends Controller
 
         $plugin_short_name = self::GET_PLUGIN_SHORT_NAME();
 
-        $suggestLink = route("suggest") . "?query={searchTerms}";
+        $suggestLink = route("suggest") . "?source=opensearch&query={searchTerms}";
 
         $response = Response::make(
             view('plugin')

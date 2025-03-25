@@ -40,7 +40,10 @@ class SuggestionController extends Controller
 
         // Do not generate Suggestions if User turned them off        
         $settings = app(SearchSettings::class);
-        if (empty($query) || in_array($settings->suggestion_provider, [null, "off"])) {
+        if (
+            empty($query) || in_array($settings->suggestion_provider, [null, "off"])
+            || ($request->input("source", null) === "opensearch" && !$settings->suggestion_addressbar)
+        ) {
             return response()->json([$query, [], [], []], 200, ["Cache-Control" => "no-cache, private"]);
         }
 
@@ -54,11 +57,7 @@ class SuggestionController extends Controller
             $authorization = app(Authorization::class);
             $authorization->setCost($suggestions::COST);
 
-            $start_time = now();
-            $start_float = $_SERVER["REQUEST_TIME_FLOAT"];
-            $real_start_time = Carbon::createFromTimestamp($start_float);
-
-            $start_diff = $real_start_time->diffInMilliseconds($start_time, true);
+            $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
 
             if (!$authorization->canDoAuthenticatedSearch(true)) {
                 return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
@@ -131,7 +130,7 @@ class SuggestionController extends Controller
      * 
      * @return int Status code of response
      */
-    private function delay(\Illuminate\Support\Carbon|null $start_time): int
+    private function delay(\Carbon\Carbon|null $start_time): int
     {
         if ($start_time === null) {
             $start_time = now();
@@ -192,7 +191,7 @@ class SuggestionController extends Controller
         return $list;
     }
 
-    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Illuminate\Support\Carbon $expiration = null)
+    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Carbon\Carbon $expiration = null)
     {
         if ($expiration == null) {
             $expiration = now();
@@ -203,7 +202,7 @@ class SuggestionController extends Controller
         Redis::pexpireat($key, $expiration->getTimestampMs());
     }
 
-    private function addSuggestGroupRequest($suggest_group, $uuid, \Illuminate\Support\Carbon $expiration = null): array
+    private function addSuggestGroupRequest($suggest_group, $uuid, \Carbon\Carbon $expiration = null): array
     {
         if ($expiration == null) {
             $expiration = now();

@@ -299,6 +299,8 @@ class SettingsController extends Controller
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
         } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('sgd', ''))) {
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_addressbar", $request->input('sga', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
         } else {
             // All Settings behind "More Settings"
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
@@ -335,18 +337,31 @@ class SettingsController extends Controller
             $settings->suggestion_provider = $value;
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('suggestion_provider', '/'));
+                SuggestionDebtAuthorization::REMOVE_SETTINGS();
             } else {
                 Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, false));
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             }
             return true;
         } else if ($key === "suggestion_delay" && !empty($value) && in_array($value, ["short", "medium", "long"])) {
+            $settings->suggestion_delay = $value;
+            SuggestionDebtAuthorization::UPDATE_SETTINGS();
             if ($value === "medium") {
                 Cookie::queue(Cookie::forget("suggestion_delay", "/"));
             } else {
                 Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, false));
             }
             $settings->suggestion_delay = $value;
+            return true;
+        } else if ($key === "suggestion_addressbar" && !empty($value) && in_array($value, ["on", "off"])) {
+            $settings->suggestion_addressbar = $value === "on" ? true : false;
+            if ($value === "on") {
+                Cookie::queue(Cookie::forever('suggestion_addressbar', 'on', '/', null, $secure, false));
+                SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
+            } elseif ($value === "off") {
+                Cookie::queue(Cookie::forget("suggestion_addressbar", "/"));
+                SuggestionDebtAuthorization::REMOVE_SETTINGS();
+            }
             return true;
         } else if ($key === "self_advertisements" && !empty($value)) {
             if ($value === "off") {

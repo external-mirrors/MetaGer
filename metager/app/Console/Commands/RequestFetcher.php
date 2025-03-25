@@ -203,7 +203,7 @@ class RequestFetcher extends Command
                 CURLOPT_TCP_KEEPALIVE => 1,
                 CURLOPT_TCP_KEEPIDLE => 600,
                 CURLOPT_TCP_KEEPINTVL => 15,
-                CURLOPT_TCP_KEEPCNT => 39
+                // CURLOPT_TCP_KEEPCNT => 39 // Available only in php 8.4 onwards
             )
         );
 

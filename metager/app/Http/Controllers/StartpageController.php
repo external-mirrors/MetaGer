@@ -95,7 +95,7 @@ class StartpageController extends Controller
             "200"
         );
         $response->header('Content-Type', "application/opensearchdescription+xml");
-        $response->header("Cache-Control", "no-store");
+        $response->header("Cache-Control", "max-age=3600");
         return $response;
     }
 
@@ -107,7 +107,7 @@ class StartpageController extends Controller
             $plugin_short_name .= " (" . \Request::segment(1) . ")";
         }
         if (!\App::environment("production")) {
-            $plugin_short_name .= " (dev)";
+            $plugin_short_name .= " (" . \App::environment() . ")";
         }
         return $plugin_short_name;
     }

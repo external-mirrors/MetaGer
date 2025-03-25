@@ -199,7 +199,7 @@
             </div>
         @endif
         <div class="card" id="suggest-settings">
-            <h1>@lang('settings.suggestions.heading')</h1>
+            <h1>@lang('settings.suggestions.heading') <a href="{{ route("help-mainpages") . "#suggest" }}" target="_blank"><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"></a></h1>
             <p>@lang('settings.hint.hint')</p>
             <form id="setting-form" action="{{ route('enableSetting') }}" method="post" class="form">
                 <input type="hidden" name="focus" value="{{ $fokus }}">

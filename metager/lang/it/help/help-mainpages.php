@@ -21,6 +21,7 @@ return [
             'description' => "È possibile ricevere un elenco di query di ricerca autocompletate da scegliere mentre si digita nel nostro campo di ricerca. Nelle impostazioni sono disponibili diverse opzioni per modificare l'esperienza: Questa funzione è disattivata per impostazione predefinita.",
             'delay' => "<b>Ritardo:</b> Qualsiasi altra richiesta in arrivo durante l'intervallo di tempo selezionato interromperà tutte le richieste precedenti in sospeso. Le richieste interrotte non avranno alcun costo e si vedranno solo i suggerimenti per l'ultima richiesta. È possibile scegliere tra Breve (:short), Medio (:medium) e Lungo (:long).",
             'addressbar' => "<b>Barra degli indirizzi:</b> Se MetaGer è il motore di ricerca predefinito del browser, può richiedere suggerimenti di ricerca mentre si digita nella barra degli indirizzi. Se questa opzione è attivata, MetaGer fornirà suggerimenti a tali chiamate. A causa del modo in cui questo meccanismo è implementato dai browser, dobbiamo memorizzare le impostazioni dei suggerimenti sui nostri server insieme a un identificatore temporaneo pseudomediato del dispositivo. Questa funzione è quindi disabilitata per impostazione predefinita.",
+            'title' => "Suggerimenti per la ricerca",
         ],
     ],
     'resultpage' => [

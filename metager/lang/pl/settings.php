@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Wyłączony",
         'on' => "Włączone",
+        'delay' => [
+            'long' => 'Długi',
+            'label' => 'Opóźnienie',
+            'description' => 'Sugestie zostaną załadowane po tym opóźnieniu podczas pisania. Najlepiej wybrać wystarczająco długie opóźnienie, aby sugestie były ładowane dopiero po zatrzymaniu pisania.',
+            'short' => 'Krótki',
+            'medium' => 'Średni',
+        ],
+        'heading' => 'Sugestie wyszukiwania',
+        'provider' => [
+            'label' => 'Dostawca',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtelne reklamy naszych własnych usług",

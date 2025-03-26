@@ -93,6 +93,11 @@ return [
         'provider' => [
             'label' => 'Udbyder',
         ],
+        'addressbar' => [
+            'label' => 'Forslag i adresselinjen',
+            'description' => 'Indlæs forslag, når du skriver i adresselinjen. Ovenstående forsinkelseskonfiguration vil altid være "kort" for Firefox-brugere på grund af meget korte timeouts for disse anmodninger.',
+            'hint' => '<b>Vær opmærksom på dette:</b> Vi er nødt til at gemme dine forslagsindstillinger på vores server i flere dage for at kunne tilbyde denne funktion. Hvis det ikke er det, du ønsker, skal du holde denne indstilling deaktiveret.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtile reklamer for vores egen service",

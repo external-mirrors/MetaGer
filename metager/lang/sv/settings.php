@@ -82,6 +82,11 @@ return [
     'suggestions' => [
         'off' => "Inaktiverad",
         'on' => "Aktiverad",
+        'addressbar' => [
+            'hint' => '<b>Var uppmärksam på detta:</b> Vi måste lagra dina förslagsinställningar på vår server i flera dagar för att kunna erbjuda den här funktionen. Om detta inte är vad du vill ha, behåll denna inställning inaktiverad.',
+            'label' => 'Förslag i adressfältet',
+            'description' => 'Ladda förslag när du skriver i adressfältet. Ovanstående fördröjningskonfiguration kommer alltid att vara "kort" för Firefox-användare på grund av mycket korta tidsgränser för dessa förfrågningar.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtila annonser för vår egen tjänst",

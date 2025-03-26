@@ -7,7 +7,7 @@ return [
         '6' => 'fr',
         '7' => 'Code',
         '8' => 'Recherche',
-        'copy' => 'Copie',
+        'copy' => 'Copier',
         '1' => 'MetaGer Websearch-Widget',
         '2' => 'Vous trouverez ici un Metager-Widget pour votre site web.',
     ],

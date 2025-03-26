@@ -28,6 +28,9 @@ return [
         'slot' => 'sökfältet: Ange din sökterm här. Stora och små bokstäver särskiljs inte.',
         'search' => 'förstoringsglaset: Börja din sökning genom att klicka här eller trycka på "Enter".',
         'morefunctions' => 'Ytterligare funktioner hittar du under menyalternativet "<a href = "/hilfe/funktionen">Sökfunktioner</a>"',
+        'suggest' => [
+            'title' => "Sökförslag",
+        ],
     ],
     'resultpage' => [
         'title' => 'Sidan med resultat <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

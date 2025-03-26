@@ -16,6 +16,10 @@ return [
         'info' => 'O campo de pesquisa é composto por várias partes:',
         'suggest' => [
             'title' => "Sugestões de pesquisa",
+            'provider' => "<b>Fornecedor:</b> Selecione o fornecedor das sugestões de pesquisa que pretende que o MetaGer consulte. Os diferentes fornecedores têm custos diferentes. Também pode desativar completamente as sugestões de pesquisa.",
+            'description' => "Pode receber uma lista de consultas de pesquisa preenchidas automaticamente para escolher enquanto escreve no nosso campo de pesquisa. Nas nossas definições, tem várias opções para modificar a sua experiência: Esta funcionalidade está desactivada por predefinição.",
+            'delay' => "<b>Atraso:</b> Qualquer outro pedido que chegue durante o intervalo de tempo selecionado irá abortar todos os pedidos anteriores pendentes. Os pedidos abortados não terão qualquer custo e só verá sugestões para o pedido mais recente. Pode escolher entre Curto (:curto), Médio (:médio) e Longo (:longo)",
+            'addressbar' => "<b>Barra de endereços:</b> Se o MetaGer for o motor de busca predefinido no seu browser, pode solicitar sugestões de pesquisa enquanto escreve na barra de endereço. Se esta opção for activada, o MetaGer fornecerá sugestões para essas chamadas. Devido à forma como este mecanismo é implementado pelos browsers, temos de armazenar as suas definições de sugestões nos nossos servidores, juntamente com um identificador de dispositivo pseudomizado temporário. Por conseguinte, esta funcionalidade está desactivada por predefinição.",
         ],
     ],
     'settings' => [

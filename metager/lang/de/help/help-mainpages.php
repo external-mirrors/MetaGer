@@ -34,6 +34,7 @@ return [
             'description' => "Sie können eine Liste von automatisch vervollständigten Suchanfragen erhalten, aus der Sie auswählen können, während Sie in unser Suchfeld tippen. In unseren Einstellungen haben Sie mehrere Möglichkeiten, Ihre Erfahrungen zu ändern: Diese Funktion ist standardmäßig deaktiviert.",
             'delay' => "<b>Verzögern:</b> Jede andere Anfrage, die während des gewählten Zeitraums eingeht, bricht alle anhängigen vorherigen Anfragen ab. Abgebrochene Anfragen haben keine Kosten, und Sie sehen nur Vorschläge für die letzte Anfrage. Sie können zwischen Kurz (:short), Mittel (:medium) und Lang (:long) wählen.",
             'addressbar' => "<b>Adressleiste:</b> Wenn MetaGer die Standardsuchmaschine in Ihrem Browser ist, kann es Suchvorschläge anfordern, während Sie in der Adressleiste tippen. Wenn diese Option aktiviert ist, wird MetaGer bei diesen Aufrufen Vorschläge unterbreiten. Aufgrund der Art und Weise, wie diese Mechanik von den Browsern implementiert wird, müssen wir Ihre Vorschlagseinstellungen auf unseren Servern zusammen mit einer temporären pseudomisierten Gerätekennung speichern. Diese Funktion ist daher standardmäßig deaktiviert.",
+            'title' => "Suchvorschläge",
         ],
     ],
     'settings' => [

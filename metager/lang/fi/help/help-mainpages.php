@@ -16,6 +16,9 @@ return [
         'slot' => 'hakukenttä: Kirjoita hakusanasi tähän. Isoja ja pieniä kirjaimia ei eroteta toisistaan.',
         'search' => 'suurennuslasi: Aloita haku klikkaamalla tästä tai painamalla "Enter".',
         'morefunctions' => 'Lisätoiminnot löytyvät valikkokohdasta "<a href = "/hilfe/funktionen">Hakutoiminnot</a>".',
+        'suggest' => [
+            'title' => "Hakuehdotukset",
+        ],
     ],
     'resultpage' => [
         'title' => 'Tulossivu <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

@@ -45,6 +45,11 @@ return [
         'provider' => [
             'label' => 'Anbieter',
         ],
+        'addressbar' => [
+            'label' => 'Vorschläge in der Adressleiste',
+            'description' => 'Load Suggestions bei der Eingabe in die Adressleiste. Die obige Verzögerungskonfiguration wird für Firefox-Benutzer immer "kurz" sein, da die Timeouts für diese Anfragen sehr kurz sind.',
+            'hint' => '<b>Achtung!</b> Um diese Funktion anbieten zu können, müssen wir Ihre Vorschlagseinstellungen mehrere Tage lang auf unserem Server speichern. Wenn Sie dies nicht wünschen, lassen Sie diese Einstellung deaktiviert.',
+        ],
     ],
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
     'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",

@@ -93,6 +93,11 @@ return [
         'provider' => [
             'label' => 'Dostawca',
         ],
+        'addressbar' => [
+            'label' => 'Sugestie na pasku adresu',
+            'description' => 'Załaduj sugestie podczas wpisywania w pasku adresu. Powyższa konfiguracja opóźnienia będzie zawsze "krótka" dla użytkowników Firefoksa z powodu bardzo krótkich limitów czasu dla tych żądań.',
+            'hint' => '<b>Uwaga:</b> Aby zaoferować tę funkcję, musimy przechowywać ustawienia sugestii na naszym serwerze przez kilka dni. Jeśli nie tego chcesz, pozostaw to ustawienie wyłączone.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtelne reklamy naszych własnych usług",

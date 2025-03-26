@@ -29,6 +29,13 @@ return [
         'search' => 'das Vergrößerungsglas: Starten Sie Ihre Suche, indem Sie hier klicken oder "Enter" drücken.',
         'slot' => 'dem Suchfeld: Geben Sie hier Ihren Suchbegriff ein. Zwischen Groß- und Kleinschreibung wird nicht unterschieden.',
         'title' => 'Das Suchfeld <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        'suggest' => [
+            'provider' => "<b>Anbieter:</b> Wählen Sie den Anbieter für Suchvorschläge, die MetaGer abfragen soll. Verschiedene Anbieter haben unterschiedliche Kosten. Sie können die Suchvorschläge auch komplett deaktivieren.",
+            'description' => "Sie können eine Liste von automatisch vervollständigten Suchanfragen erhalten, aus der Sie auswählen können, während Sie in unser Suchfeld tippen. In unseren Einstellungen haben Sie mehrere Möglichkeiten, Ihre Erfahrungen zu ändern: Diese Funktion ist standardmäßig deaktiviert.",
+            'delay' => "<b>Verzögern:</b> Jede andere Anfrage, die während des gewählten Zeitraums eingeht, bricht alle anhängigen vorherigen Anfragen ab. Abgebrochene Anfragen haben keine Kosten, und Sie sehen nur Vorschläge für die letzte Anfrage. Sie können zwischen Kurz (:short), Mittel (:medium) und Lang (:long) wählen.",
+            'addressbar' => "<b>Adressleiste:</b> Wenn MetaGer die Standardsuchmaschine in Ihrem Browser ist, kann es Suchvorschläge anfordern, während Sie in der Adressleiste tippen. Wenn diese Option aktiviert ist, wird MetaGer bei diesen Aufrufen Vorschläge unterbreiten. Aufgrund der Art und Weise, wie diese Mechanik von den Browsern implementiert wird, müssen wir Ihre Vorschlagseinstellungen auf unseren Servern zusammen mit einer temporären pseudomisierten Gerätekennung speichern. Diese Funktion ist daher standardmäßig deaktiviert.",
+            'title' => "Suchvorschläge",
+        ],
     ],
     'settings' => [
         '1' => 'Werbefreie Suche <br> Hier können Sie das Guthaben Ihres Schlüssels, sowie Ihren Schlüssel einsehen. Sie haben ebenfalls die Optionen, Ihren Schlüssel aufzuladen oder zu entfernen.',

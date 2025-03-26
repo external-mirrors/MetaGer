@@ -9,15 +9,15 @@ return [
     'points' => [
         'privacy' => [
             'heading' => 'Confidentialité garantie',
-            'text' => 'La protection des données et de la vie privée est importante pour nous. C\'est pourquoi nous ne suivons pas et ne stockons pas les données personnelles et nous offrons plusieurs services pour protéger votre vie privée, par exemple notre proxy d\'anonymisation (fonction "Ouvrir de manière anonyme").',
+            'text' => 'La protection des données et de la vie privée sont importants pour nous. C\'est pourquoi nous ne pistons pas et ne stockons pas les données personnelles, et nous offrons plusieurs services pour protéger votre vie privée, par exemple notre proxy d\'anonymisation (fonction "Ouvrir de manière anonyme").',
         ],
         'association' => [
-            'heading' => 'Association à but non lucratif',
+            'heading' => 'Association sans but lucratif',
             'text' => 'MetaGer est un projet de l\'association à but non lucratif SUMA-EV, Association pour le libre accès à la connaissance. SUMA-EV est principalement engagée dans la promotion de l\'éducation aux médias.',
         ],
         'diverse' => [
             'heading' => 'Diversité et liberté',
-            'text' => 'MetaGer produit des résultats variés parce qu\'il s\'agit d\'un métamoteur de recherche. Nous avons expliqué exactement ce que cela signifie dans notre déclaration de transparence <a href=":transparenz"></a> . En publiant notre code source, nous montrons que le libre accès à la connaissance est important pour nous. Notre code source est libre et gratuit.',
+            'text' => 'MetaGer produit des résultats variés parce qu\'il s\'agit d\'un métamoteur de recherche. Nous avons expliqué exactement ce que cela signifie dans notre déclaration de transparence <a href=":transparenz"></a> . En publiant notre code source, nous montrons que le libre accès à la connaissance est important pour nous. Notre code source est libre et ouvert.',
         ],
         'renewable' => [
             'heading' => '100% d\'énergie renouvelable',
@@ -58,11 +58,11 @@ return [
             '2' => 'Pour la première fois, l\'interface de MetaGer est également proposée en anglais.',
         ],
         '7' => [
-            '1' => 'Décembre 2013 : Tor-Service',
-            '2' => 'MetaGer offre un accès au réseau d\'anonymisation Tor en tant qu\'élément de sécurité.',
+            '1' => 'Décembre 2013 : Service Tor',
+            '2' => 'MetaGer offre un accès au réseau d\'anonymisation Tor comme fonctionnalité de sécurité.',
         ],
         '8' => [
-            '1' => 'Mars 2014 : Mise en œuvre de la fonction "Ouvrir de manière anonyme',
+            '1' => 'Mars 2014 : Mise en œuvre de la fonction "Ouvrir de manière anonyme"',
             '2' => 'Un service proxy est proposé avec la nouvelle fonction "Ouvrir anonymement". Grâce à cette fonction, les utilisateurs de MetaGer restent protégés même après la recherche.',
         ],
         '9' => [

@@ -40,9 +40,24 @@ return [
     'clear' => 'Limpar lista negra',
     'darkmode' => 'Alternar o modo escuro',
     'suggestions' => [
-        'label' => 'Sugestões de pesquisa',
         'off' => "Desativado",
         'on' => "Ativado",
+        'heading' => 'Sugestões de pesquisa',
+        'delay' => [
+            'description' => 'As sugestões serão carregadas após este atraso durante a digitação. O ideal é escolher um atraso suficientemente longo para que as sugestões só sejam carregadas quando parar de escrever.',
+            'short' => 'Curto',
+            'medium' => 'Médio',
+            'long' => 'Longo',
+            'label' => 'Atraso',
+        ],
+        'provider' => [
+            'label' => 'Fornecedor',
+        ],
+        'addressbar' => [
+            'label' => 'Sugestões na barra de endereços',
+            'description' => 'Carregar sugestões ao digitar na barra de endereços. A configuração de atraso acima será sempre "curta" para os utilizadores do Firefox devido aos tempos limite muito curtos para esses pedidos.',
+            'hint' => '<b>Atenção:</b> Para podermos oferecer esta funcionalidade, temos de guardar as suas definições de sugestões no nosso servidor durante vários dias. Se não é isto que pretende, mantenha esta definição desactivada.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidade subtil ao nosso próprio serviço",

@@ -109,6 +109,7 @@ return [
             'query' => 'Come parte integrante del metasearch, la query di ricerca viene trasmessa ai nostri partner per ottenere risultati da visualizzare sulla pagina dei risultati. I risultati ricevuti, compreso il termine di ricerca, vengono conservati per la visualizzazione per alcune ore.',
             'preferences' => 'Utilizziamo questi dati (ad esempio, le impostazioni della lingua) per rispondere alla rispettiva domanda di ricerca. Alcuni di questi dati vengono memorizzati su base non personale a fini statistici.',
             'title' => 'Utilizzo del motore di ricerca web MetaGer',
+            'suggest' => 'Se i suggerimenti di ricerca sono abilitati per la barra degli indirizzi del browser (opzionale), dobbiamo memorizzare le impostazioni dei suggerimenti sul nostro server. La chiave sarà una stringa concatenata del vostro indirizzo IP, del vostro useragent e dell\'intestazione accept-language del vostro browser, sottoposta a hashhed sha1. Se l\'impostazione è disattivata (impostazione predefinita) non verrà memorizzato nulla.',
         ],
         'contact' => [
             'title' => 'Utilizzo del modulo di contatto',

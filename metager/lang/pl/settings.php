@@ -80,9 +80,24 @@ return [
         'description' => 'Możesz skonfigurować korzystanie z dowolnej z poniższych zewnętrznych wyszukiwarek zamiast naszego zintegrowanego rozwiązania. Przekierujemy wyszukiwanie do skonfigurowanego dostawcy.',
     ],
     'suggestions' => [
-        'label' => 'Propozycje wyszukiwania',
         'off' => "Wyłączony",
         'on' => "Włączone",
+        'delay' => [
+            'long' => 'Długi',
+            'label' => 'Opóźnienie',
+            'description' => 'Sugestie zostaną załadowane po tym opóźnieniu podczas pisania. Najlepiej wybrać wystarczająco długie opóźnienie, aby sugestie były ładowane dopiero po zatrzymaniu pisania.',
+            'short' => 'Krótki',
+            'medium' => 'Średni',
+        ],
+        'heading' => 'Sugestie wyszukiwania',
+        'provider' => [
+            'label' => 'Dostawca',
+        ],
+        'addressbar' => [
+            'label' => 'Sugestie na pasku adresu',
+            'description' => 'Załaduj sugestie podczas wpisywania w pasku adresu. Powyższa konfiguracja opóźnienia będzie zawsze "krótka" dla użytkowników Firefoksa z powodu bardzo krótkich limitów czasu dla tych żądań.',
+            'hint' => '<b>Uwaga:</b> Aby zaoferować tę funkcję, musimy przechowywać ustawienia sugestii na naszym serwerze przez kilka dni. Jeśli nie tego chcesz, pozostaw to ustawienie wyłączone.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtelne reklamy naszych własnych usług",

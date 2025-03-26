@@ -80,9 +80,24 @@ return [
         'description' => 'Voit määrittää käyttämään mitä tahansa seuraavista ulkoisista hakukoneista integroidun ratkaisumme sijaan. Ohjaamme hakusi määritettyyn palveluntarjoajaan.',
     ],
     'suggestions' => [
-        'label' => 'Hakuehdotukset',
         'off' => "Vammaiset",
         'on' => "Käytössä",
+        'heading' => 'Hakuehdotukset',
+        'provider' => [
+            'label' => 'Palveluntarjoaja',
+        ],
+        'delay' => [
+            'label' => 'Viive',
+            'description' => 'Ehdotukset ladataan tämän viiveen jälkeen kirjoitettaessa. Ihannetapauksessa valitset riittävän pitkän viiveen, jotta ehdotukset ladataan vasta, kun lopetat kirjoittamisen.',
+            'short' => 'Lyhyt',
+            'medium' => 'Medium',
+            'long' => 'Pitkä',
+        ],
+        'addressbar' => [
+            'label' => 'Ehdotukset osoiterivillä',
+            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen määritys on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
+            'hint' => '<b>Huomio:</b> Meidän on tallennettava ehdotusasetuksesi palvelimellemme useiden päivien ajaksi, jotta voimme tarjota tämän ominaisuuden. Jos et halua tätä, pidä tämä asetus poissa käytöstä.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Oman palvelumme hienovarainen mainonta",

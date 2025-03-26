@@ -12,6 +12,7 @@ return [
             'description' => 'Al utilizar nuestro motor de búsqueda web MetaGer a través de su formulario web o de su interfaz OpenSearch, se generan los siguientes datos:',
             'query' => 'Como parte integrante de la metabúsqueda, la consulta de búsqueda se transmite a nuestros socios para obtener resultados de búsqueda que se mostrarán en la página de resultados. Los resultados recibidos, incluido el término de búsqueda, se conservan para su visualización durante unas horas.',
             'preferences' => 'Utilizamos estos datos (por ejemplo, la configuración de idioma) para responder a la consulta de búsqueda correspondiente. Almacenamos algunos de estos datos de forma no personal con fines estadísticos.',
+            'suggest' => 'Si las sugerencias de búsqueda están habilitadas para la barra de direcciones de su navegador (opcional), necesitamos almacenar su configuración de sugerencias en nuestro servidor. La clave será una cadena concatenada de su dirección IP, su agente de usuario y la cabecera accept-language de su navegador con hash sha1. Si la configuración está desactivada (por defecto) no se almacenará nada.',
         ],
         'title' => 'Datos entrantes por contexto',
         'contact' => [

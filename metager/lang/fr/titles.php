@@ -17,8 +17,8 @@ return [
     'help-privacy-protection' => 'Aide - MetaGer',
     'widget' => 'Widget MetaGer',
     'settings' => 'Paramètres',
-    'websearch' => 'Websearch-Widget - MetaGer',
-    'sitesearch' => 'Sitesearch-Widget - MetaGer',
+    'websearch' => 'Widget de recherche web - MetaGer',
+    'sitesearch' => 'Widget de recherche de site - MetaGer',
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Boutiques partenaires - MetaGer',
     'app' => 'Applications - MetaGer',
@@ -27,7 +27,7 @@ return [
     'ad-info' => 'Annonces MetaGer',
     'asso' => 'Associateur - MetaGer',
     'plugin' => 'Plugin - MetaGer',
-    'key' => 'Clé publicitaire - MetaGer',
+    'key' => 'Clé anti publicité - MetaGer',
     'allSettings' => 'Tous les paramètres - MetaGer',
     'transparency' => 'Déclaration de transparence - MetaGer',
     'search-engine' => 'Moteurs de recherche - MetaGer',
@@ -37,6 +37,6 @@ return [
     'logs' => [
         'admin' => "Logs Admin - MetaGer",
         'overview' => 'Journaux - MetaGer',
-        'login' => "Logs Admin - MetaGer",
+        'login' => "Connexion - MetaGer",
     ],
 ];

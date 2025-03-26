@@ -80,9 +80,24 @@ return [
         'description' => 'Du kan konfigurera att använda någon av följande externa sökmotorer istället för vår integrerade lösning. Vi kommer att omdirigera dina sökningar till den konfigurerade leverantören.',
     ],
     'suggestions' => [
-        'label' => 'Sökförslag',
         'off' => "Inaktiverad",
         'on' => "Aktiverad",
+        'addressbar' => [
+            'hint' => '<b>Var uppmärksam på detta:</b> Vi måste lagra dina förslagsinställningar på vår server i flera dagar för att kunna erbjuda den här funktionen. Om detta inte är vad du vill ha, behåll denna inställning inaktiverad.',
+            'label' => 'Förslag i adressfältet',
+            'description' => 'Ladda förslag när du skriver i adressfältet. Ovanstående fördröjningskonfiguration kommer alltid att vara "kort" för Firefox-användare på grund av mycket korta tidsgränser för dessa förfrågningar.',
+        ],
+        'delay' => [
+            'description' => 'Förslagen kommer att laddas efter denna fördröjning medan du skriver. Helst ska du välja en fördröjning som är tillräckligt lång för att förslagen ska laddas först när du slutar skriva.',
+            'label' => 'Fördröjning',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lång',
+        ],
+        'heading' => 'Sökförslag',
+        'provider' => [
+            'label' => 'Leverantör',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtila annonser för vår egen tjänst",

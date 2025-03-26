@@ -80,9 +80,24 @@ return [
         'description' => 'Du kan konfigurere til at bruge en af følgende eksterne søgemaskiner i stedet for vores integrerede løsning. Vi omdirigerer dine søgninger til den konfigurerede udbyder.',
     ],
     'suggestions' => [
-        'label' => 'Forslag til søgning',
         'off' => "Deaktiveret",
         'on' => "Aktiveret",
+        'delay' => [
+            'description' => 'Forslagene indlæses efter denne forsinkelse, mens du skriver. Ideelt set vælger du en forsinkelse, der er lang nok til, at forslagene først indlæses, når du holder op med at skrive.',
+            'label' => 'Forsinkelse',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lang',
+        ],
+        'heading' => 'Forslag til søgning',
+        'provider' => [
+            'label' => 'Udbyder',
+        ],
+        'addressbar' => [
+            'label' => 'Forslag i adresselinjen',
+            'description' => 'Indlæs forslag, når du skriver i adresselinjen. Ovenstående forsinkelseskonfiguration vil altid være "kort" for Firefox-brugere på grund af meget korte timeouts for disse anmodninger.',
+            'hint' => '<b>Vær opmærksom på dette:</b> Vi er nødt til at gemme dine forslagsindstillinger på vores server i flere dage for at kunne tilbyde denne funktion. Hvis det ikke er det, du ønsker, skal du holde denne indstilling deaktiveret.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtile reklamer for vores egen service",

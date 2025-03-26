@@ -10,6 +10,7 @@ return [
             'title' => 'Brug af websøgemaskinen MetaGer',
             'query' => 'Som en integreret del af metasøgning sendes søgeforespørgslen til vores partnere for at få søgeresultater til visning på resultatsiden. De modtagne resultater, inklusive søgetermen, opbevares til visning i et par timer.',
             'preferences' => 'Vi bruger disse data (f.eks. sprogindstillinger) til at besvare den pågældende søgeforespørgsel. Vi gemmer nogle af disse data på et ikke-personligt grundlag til statistiske formål.',
+            'suggest' => 'Hvis søgeforslag er aktiveret i adresselinjen i din browser (valgfrit), er vi nødt til at gemme dine forslagsindstillinger på vores server. Nøglen vil være en sammenkædet streng af din IP-adresse, din brugeragent og din browsers accept-language header, som er sha1-hashet. Hvis indstillingen er deaktiveret (standard), bliver der ikke gemt noget.',
         ],
         'newsletter' => [
             'title' => 'Tilmeld dig SUMA-EV\'s nyhedsbrev',

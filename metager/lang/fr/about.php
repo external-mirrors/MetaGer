@@ -59,7 +59,7 @@ return [
         ],
         '7' => [
             '1' => 'Décembre 2013 : Service Tor',
-            '2' => 'MetaGer offre un accès au réseau d\'anonymisation Tor en tant qu\'élément de sécurité.',
+            '2' => 'MetaGer offre un accès au réseau d\'anonymisation Tor comme fonctionnalité de sécurité.',
         ],
         '8' => [
             '1' => 'Mars 2014 : Mise en œuvre de la fonction "Ouvrir de manière anonyme',

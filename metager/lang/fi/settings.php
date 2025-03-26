@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Vammaiset",
         'on' => "Käytössä",
+        'heading' => 'Hakuehdotukset',
+        'provider' => [
+            'label' => 'Palveluntarjoaja',
+        ],
+        'delay' => [
+            'label' => 'Viive',
+            'description' => 'Ehdotukset ladataan tämän viiveen jälkeen kirjoitettaessa. Ihannetapauksessa valitset riittävän pitkän viiveen, jotta ehdotukset ladataan vasta, kun lopetat kirjoittamisen.',
+            'short' => 'Lyhyt',
+            'medium' => 'Medium',
+            'long' => 'Pitkä',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Oman palvelumme hienovarainen mainonta",

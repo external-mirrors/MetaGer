@@ -12,6 +12,7 @@ export function initializeSuggestions() {
   let active = true;
 
   let suggestions = [];
+  let suggestion_urls = [];
   let query = "";
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
@@ -141,6 +142,7 @@ export function initializeSuggestions() {
             await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
             query = search_input.value.trim();
             suggestions = json_response[1];
+            suggestion_urls = json_response[3];
             updateSuggestions();
             return putAnonymousTokens();
           case 423:
@@ -268,17 +270,19 @@ export function initializeSuggestions() {
       .forEach((value, index) => {
         if (suggestions.length < index + 1) {
           value.style.display = "none";
+          value.classList.remove("filled");
           return;
         } else {
           value.style.display = "flex";
+          value.classList.add("filled");
         }
 
-        let search_button = value.querySelector("button");
+        let search_button = value.querySelector("a");
         if (!search_button) return 1;
         let title_container = value.querySelector("span");
         if (!title_container) return 1;
 
-        search_button.value = suggestions[index];
+        search_button.href = suggestion_urls[index];
         title_container.textContent = suggestions[index];
         if (eingabe_container) {
           title_container.onclick = e => {
@@ -308,7 +312,7 @@ export function initializeSuggestions() {
     }
     let down = key == "ArrowDown";
     let focus_number = -1;
-    let max_number = suggestions_container.querySelectorAll(".suggestion").length;
+    let max_number = suggestions_container.querySelectorAll(".suggestion.filled").length;
     suggestions_container.querySelectorAll(".suggestion").forEach((element, index) => {
       if (element.classList.contains("active")) {
         focus_number = index;
@@ -331,7 +335,7 @@ export function initializeSuggestions() {
     if (focus_number == -1) {
       search_input.value = query;
     } else {
-      let element = suggestions_container.querySelector(".suggestion:nth-child(" + (focus_number + 1) + ")");
+      let element = suggestions_container.querySelector(".suggestion.filled:nth-child(" + (focus_number + 1) + ")");
       element.classList.add("active");
       search_input.value = element.querySelector("span").textContent;
     }

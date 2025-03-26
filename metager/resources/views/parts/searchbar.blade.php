@@ -26,43 +26,43 @@
 			</div>
 			<div class="suggestions" data-suggestions="{{ route('suggest') }}">
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 					<div class="suggestion" tabindex="0">
-						<button type="submit" name="eingabe"><img src="/img/icon-lupe.svg" alt="search"></button>
+						<a href=""><img src="/img/icon-lupe.svg" alt="search"></a>
 						<span></span>
 					</div>
 				</div>

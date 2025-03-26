@@ -87,6 +87,17 @@ return [
             'label' => 'Förslag i adressfältet',
             'description' => 'Ladda förslag när du skriver i adressfältet. Ovanstående fördröjningskonfiguration kommer alltid att vara "kort" för Firefox-användare på grund av mycket korta tidsgränser för dessa förfrågningar.',
         ],
+        'delay' => [
+            'description' => 'Förslagen kommer att laddas efter denna fördröjning medan du skriver. Helst ska du välja en fördröjning som är tillräckligt lång för att förslagen ska laddas först när du slutar skriva.',
+            'label' => 'Fördröjning',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lång',
+        ],
+        'heading' => 'Sökförslag',
+        'provider' => [
+            'label' => 'Leverantör',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtila annonser för vår egen tjänst",

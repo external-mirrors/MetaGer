@@ -115,6 +115,7 @@ return [
             'description' => 'Lors de l\'utilisation de notre moteur de recherche MetaGer via son formulaire web ou son interface OpenSearch, les données suivantes sont générées :',
             'query' => 'En tant que partie intégrante de la métarecherche, la requête de recherche est transmise à nos partenaires afin d\'obtenir des résultats de recherche à afficher sur la page de résultats. Les résultats reçus, y compris le terme de recherche, sont conservés pour affichage pendant quelques heures.',
             'preferences' => 'Nous utilisons ces données (par exemple, les paramètres linguistiques) pour répondre à la demande de recherche correspondante. Nous stockons certaines de ces données sur une base non personnelle à des fins statistiques.',
+            'suggest' => 'Si les suggestions de recherche sont activées dans la barre d\'adresse de votre navigateur (facultatif), nous devons stocker vos paramètres de suggestion sur notre serveur. La clé sera une chaîne concaténée de votre adresse IP, de votre useragent et de l\'en-tête accept-language de votre navigateur, qui est hachée en sha1. Si le paramètre est désactivé (par défaut), rien ne sera stocké.',
         ],
         'contact' => [
             'title' => 'Utilisation du formulaire de contact',

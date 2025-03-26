@@ -62,7 +62,7 @@ return [
             '2' => 'MetaGer offre un accès au réseau d\'anonymisation Tor comme fonctionnalité de sécurité.',
         ],
         '8' => [
-            '1' => 'Mars 2014 : Mise en œuvre de la fonction "Ouvrir de manière anonyme',
+            '1' => 'Mars 2014 : Mise en œuvre de la fonction "Ouvrir de manière anonyme"',
             '2' => 'Un service proxy est proposé avec la nouvelle fonction "Ouvrir anonymement". Grâce à cette fonction, les utilisateurs de MetaGer restent protégés même après la recherche.',
         ],
         '9' => [

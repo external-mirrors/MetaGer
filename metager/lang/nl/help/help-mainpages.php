@@ -21,6 +21,7 @@ return [
             'description' => "Je kunt een lijst met automatisch ingevulde zoekopdrachten krijgen waaruit je kunt kiezen terwijl je in ons zoekveld typt. In onze instellingen heb je verschillende opties om je ervaring aan te passen: Deze functie is standaard uitgeschakeld.",
             'delay' => "<b>Vertraging:</b> Elk ander verzoek dat binnenkomt tijdens het geselecteerde timerbereik zal alle voorgaande verzoeken afbreken. Afgebroken verzoeken hebben geen kosten en je ziet alleen suggesties voor het laatste verzoek. U kunt kiezen tussen Kort (:short), Medium (:medium) en Lang (:long).",
             'addressbar' => "<b>Adresbalk:</b> Als MetaGer de standaard zoekmachine is in je browser kan het zoeksuggesties opvragen tijdens het typen in de adresbalk. Als deze optie is ingeschakeld zal MetaGer suggesties geven bij deze oproepen. Door de manier waarop dit mechanisme is geïmplementeerd door de browsers moeten we je suggestie-instellingen opslaan op onze servers, samen met een tijdelijke gepseudomiseerde apparaat-identificatie. Deze functie is daarom standaard uitgeschakeld.",
+            'title' => "Zoeken Suggesties",
         ],
     ],
     'resultpage' => [

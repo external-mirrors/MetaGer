@@ -18,6 +18,7 @@ return [
             'description' => 'Kun käytät verkkohakukonettamme MetaGeriä sen verkkolomakkeen tai OpenSearch-käyttöliittymän kautta, syntyy seuraavia tietoja:',
             'query' => 'Metahakuun kuuluu olennaisena osana se, että hakukysely välitetään yhteistyökumppaneillemme hakutulosten saamiseksi tulossivulle. Saadut tulokset, hakusana mukaan lukien, säilytetään näytettävänä muutaman tunnin ajan.',
             'preferences' => 'Käytämme näitä tietoja (esim. kieliasetuksia) vastataksemme vastaavaan hakukyselyyn. Säilytämme osan näistä tiedoista ei-henkilökohtaisesti tilastollisia tarkoituksia varten.',
+            'suggest' => 'Jos hakuehdotukset on otettu käyttöön selaimesi osoitepalkissa (valinnainen), meidän on tallennettava ehdotusten asetukset palvelimellemme. Avain on IP-osoitteestasi, käyttäjäagentistasi ja selaimesi accept-language-otsakkeesta koostuva merkkijono, joka on sha1-hashed. Jos asetus on poistettu käytöstä (oletus), mitään ei tallenneta.',
         ],
         'donate' => [
             'title' => 'Lahjoituslomakkeen käyttö',

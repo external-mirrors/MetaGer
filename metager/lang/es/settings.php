@@ -80,9 +80,24 @@ return [
         'description' => 'Puede configurar el uso de cualquiera de los siguientes motores de búsqueda externos en lugar de nuestra solución integrada. Redirigiremos sus búsquedas al proveedor configurado.',
     ],
     'suggestions' => [
-        'label' => 'Sugerencias de búsqueda',
         'off' => "Discapacitados",
         'on' => "Activado",
+        'heading' => 'Sugerencias de búsqueda',
+        'provider' => [
+            'label' => 'Proveedor',
+        ],
+        'delay' => [
+            'label' => 'Retraso',
+            'description' => 'Las sugerencias se cargarán después de este retardo mientras escribes. Lo ideal es que elijas un retardo lo suficientemente largo como para que las sugerencias sólo se carguen cuando dejes de escribir.',
+            'short' => 'Corto',
+            'medium' => 'Medio',
+            'long' => 'Largo',
+        ],
+        'addressbar' => [
+            'label' => 'Sugerencias en la barra de direcciones',
+            'description' => 'Cargar Sugerencias al escribir en la barra de direcciones. La configuración de retardo anterior siempre será "corta" para los usuarios de Firefox debido a los tiempos de espera muy cortos para esas solicitudes.',
+            'hint' => '<b>Atención:</b> Para poder ofrecer esta función, tenemos que almacenar la configuración de tus sugerencias en nuestro servidor durante varios días. Si esto no es lo que quieres, mantén esta opción desactivada.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidad sutil de nuestro propio servicio",

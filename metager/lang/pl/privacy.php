@@ -48,6 +48,7 @@ return [
             'description' => 'Podczas korzystania z naszej wyszukiwarki internetowej MetaGer za pośrednictwem formularza internetowego lub interfejsu OpenSearch generowane są następujące dane:',
             'query' => 'Jako integralna część metasearch, zapytanie wyszukiwania jest przesyłane do naszych partnerów w celu uzyskania wyników wyszukiwania do wyświetlenia na stronie wyników. Otrzymane wyniki, w tym wyszukiwane hasło, są wyświetlane przez kilka godzin.',
             'preferences' => 'Używamy tych danych (np. ustawień językowych), aby odpowiedzieć na odpowiednie zapytanie wyszukiwania. Niektóre z tych danych przechowujemy w celach statystycznych.',
+            'suggest' => 'Jeśli sugestie wyszukiwania są włączone na pasku adresu przeglądarki (opcjonalnie), musimy przechowywać ustawienia sugestii na naszym serwerze. Kluczem będzie połączony ciąg adresu IP, useragent i nagłówek accept-language przeglądarki, który jest hashowany sha1. Jeśli ustawienie jest wyłączone (domyślnie), nic nie zostanie zapisane.',
         ],
         'contact' => [
             'title' => 'Korzystanie z formularza kontaktowego',

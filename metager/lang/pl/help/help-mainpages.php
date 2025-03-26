@@ -16,6 +16,13 @@ return [
         'slot' => 'pole wyszukiwania: Wpisz tutaj wyszukiwane hasło. Wielkie i małe litery nie są rozróżniane.',
         'search' => 'szkło powiększające: Rozpocznij wyszukiwanie, klikając tutaj lub naciskając "Enter".',
         'morefunctions' => 'Dodatkowe funkcje można znaleźć w punkcie menu "<a href = "/hilfe/funktionen">Funkcje wyszukiwania</a>".',
+        'suggest' => [
+            'title' => "Sugestie wyszukiwania",
+            'provider' => "<b>Dostawca:</b> Wybierz dostawcę sugestii wyszukiwania, o którego ma pytać MetaGer. Różni dostawcy mają różne koszty. Możesz także całkowicie wyłączyć sugestie wyszukiwania.",
+            'description' => "Możesz otrzymać listę automatycznie uzupełnianych zapytań do wyboru podczas wpisywania w naszym polu wyszukiwania. W naszych ustawieniach masz kilka opcji, aby zmodyfikować swoje doświadczenie: Ta funkcja jest domyślnie wyłączona.",
+            'delay' => "<b>Opóźnienie:</b> Każde inne żądanie przychodzące w wybranym przedziale czasowym spowoduje przerwanie wszystkich oczekujących poprzednich żądań. Przerwane żądania nie będą wiązać się z żadnymi kosztami, a wyświetlane będą tylko sugestie dotyczące najnowszego żądania. Możesz wybrać pomiędzy Short (:krótki), Medium (:średni) i Long (:długi).",
+            'addressbar' => "<b>Pasek adresu:</b> Jeśli MetaGer jest domyślną wyszukiwarką w przeglądarce, może żądać sugestii wyszukiwania podczas wpisywania w pasku adresu. Jeśli ta opcja jest włączona, MetaGer dostarczy sugestie do tych połączeń. Ze względu na sposób, w jaki ta mechanika jest implementowana przez przeglądarki, musimy przechowywać ustawienia sugestii na naszych serwerach wraz z tymczasowym pseudonimizowanym identyfikatorem urządzenia. Z tego powodu funkcja ta jest domyślnie wyłączona.",
+        ],
     ],
     'resultpage' => [
         'title' => 'Strona wyników <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

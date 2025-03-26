@@ -80,9 +80,24 @@ return [
         'description' => 'Je kunt configureren om een van de volgende externe zoekmachines te gebruiken in plaats van onze geïntegreerde oplossing. We zullen je zoekopdrachten omleiden naar de geconfigureerde leverancier.',
     ],
     'suggestions' => [
-        'label' => 'Zoeksuggesties',
         'off' => "Uitgeschakeld",
         'on' => "Ingeschakeld",
+        'delay' => [
+            'description' => 'Suggesties worden na deze vertraging tijdens het typen geladen. Idealiter kies je een vertraging die lang genoeg is, zodat suggesties pas worden geladen als je stopt met typen.',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lang',
+            'label' => 'Vertraging',
+        ],
+        'heading' => 'Zoeken Suggesties',
+        'provider' => [
+            'label' => 'Aanbieder',
+        ],
+        'addressbar' => [
+            'label' => 'Suggesties in de adresbalk',
+            'description' => 'Suggesties laden bij het typen in de adresbalk. Bovenstaande vertragingsconfiguratie zal altijd "kort" zijn voor Firefox-gebruikers vanwege de zeer korte time-outs voor die verzoeken.',
+            'hint' => '<b>Let op:</b> We moeten je suggestie-instellingen enkele dagen op onze server opslaan om deze functie te kunnen aanbieden. Als je dit niet wilt, moet je deze instelling uitschakelen.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtiele reclame voor onze eigen service",

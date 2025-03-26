@@ -1,15 +1,15 @@
 <?php
 return [
     'head' => [
-        '3' => 'Avant-première',
+        '3' => 'Prévisualisation',
         '4' => 'Rechercher et trouver en toute sécurité avec MetaGer',
         '5' => 'Recherche avec MetaGer...',
         '6' => 'fr',
         '7' => 'Code',
         '8' => 'Recherche',
-        'copy' => 'Copie',
-        '1' => 'MetaGer Websearch-Widget',
-        '2' => 'Vous trouverez ici un Metager-Widget pour votre site web.',
+        'copy' => 'Copier',
+        '1' => 'Widget de recherche',
+        '2' => 'Vous trouverez ici un widget Metager pour votre site web.',
     ],
     'alert' => [
         'success' => 'Copié !',

@@ -16,6 +16,13 @@ return [
         'slot' => 'hakukenttä: Kirjoita hakusanasi tähän. Isoja ja pieniä kirjaimia ei eroteta toisistaan.',
         'search' => 'suurennuslasi: Aloita haku klikkaamalla tästä tai painamalla "Enter".',
         'morefunctions' => 'Lisätoiminnot löytyvät valikkokohdasta "<a href = "/hilfe/funktionen">Hakutoiminnot</a>".',
+        'suggest' => [
+            'title' => "Hakuehdotukset",
+            'provider' => "<b>Palveluntarjoaja:</b> Valitse hakuehdotusten palveluntarjoaja, jota haluat MetaGerin kysyvän. Eri palveluntarjoajilla on erilaiset kustannukset. Voit myös poistaa hakuehdotukset kokonaan käytöstä.",
+            'description' => "Voit saada luettelon automaattisesti täytetyistä hakukyselyistä, joista voit valita, kun kirjoitat hakukenttään. Asetuksissamme sinulla on useita vaihtoehtoja, joilla voit muokata hakukokemustasi: Tämä ominaisuus on oletusarvoisesti poistettu käytöstä.",
+            'delay' => "<b>Viivytys:</b> Kaikki muut pyynnöt, jotka saapuvat valitun ajanjakson aikana, keskeyttävät kaikki vireillä olevat edelliset pyynnöt. Keskeytetyillä pyynnöillä ei ole kustannuksia, ja näet vain viimeisimmän pyynnön ehdotukset. Voit valita lyhyen (:short), keskipitkän (:medium) ja pitkän (:long) välillä.",
+            'addressbar' => "<b>Osoitepalkki:</b> Jos MetaGer on selaimesi oletushakukone, se voi pyytää hakuehdotuksia kirjoittaessasi osoiteriville. Jos tämä vaihtoehto on käytössä, MetaGer antaa ehdotuksia näihin kutsuihin. Koska selaimet ovat toteuttaneet tämän mekanismin, meidän on tallennettava ehdotusasetuksesi palvelimillemme yhdessä väliaikaisen pseudomuotoisen laitetunnisteen kanssa. Tämä ominaisuus on siksi oletusarvoisesti poistettu käytöstä.",
+        ],
     ],
     'resultpage' => [
         'title' => 'Tulossivu <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

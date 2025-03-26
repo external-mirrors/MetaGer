@@ -130,7 +130,7 @@ return [
             'message' => 'Le message que vous saisissez ici nous sera transmis et pris en compte lors du traitement de votre don.',
         ],
         'key' => [
-            'title' => 'Vérifier la clé MetaGer',
+            'title' => 'Paiement d\'une clé MetaGer',
             'contact' => 'Nous utilisons ces données exclusivement pour d\'éventuelles demandes de renseignements ou pour la facturation et ne les transmettons en aucun cas à des tiers.',
             'payment' => 'Les données de paiement ne seront utilisées que pour le traitement du don et ne seront en aucun cas transmises à des tiers. Pour des raisons fiscales, nous sommes tenus de conserver ces données pendant 10 ans. Elles seront ensuite automatiquement effacées et ne feront plus l\'objet d\'aucun traitement.',
         ],

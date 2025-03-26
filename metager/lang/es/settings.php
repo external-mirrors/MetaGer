@@ -93,6 +93,11 @@ return [
             'medium' => 'Medio',
             'long' => 'Largo',
         ],
+        'addressbar' => [
+            'label' => 'Sugerencias en la barra de direcciones',
+            'description' => 'Cargar Sugerencias al escribir en la barra de direcciones. La configuración de retardo anterior siempre será "corta" para los usuarios de Firefox debido a los tiempos de espera muy cortos para esas solicitudes.',
+            'hint' => '<b>Atención:</b> Para poder ofrecer esta función, tenemos que almacenar la configuración de tus sugerencias en nuestro servidor durante varios días. Si esto no es lo que quieres, mantén esta opción desactivada.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidad sutil de nuestro propio servicio",

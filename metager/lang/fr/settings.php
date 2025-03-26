@@ -18,7 +18,7 @@ return [
     'hint' => [
         'header' => 'Rétablir tous les paramètres actuels',
         'loadSettings' => 'Ici vous trouverez un lien que vous pouvez définir comme page d\'accueil ou comme signet pour restaurer vos paramètres actuels.',
-        'hint' => 'Ces paramètres s\'appliquent à tous les centres d\'intérêts et à toutes les sous-pages !',
+        'hint' => 'Ces paramètres s\'appliquent sur l’ensemble des pages du site MetaGer !',
         'addon' => 'En installant notre <a href=":link" target="_blank" rel="noopener">extension de navigateur</a> , vous pouvez éviter que les paramètres de MetaGer soient accidentellement réinitialisés lorsque vous effacez les données de votre navigateur. ',
         'no-settings' => '- Aucun réglage n\'a encore été effectué -',
         'yahoo' => '<b>Note</b>: Malheureusement, nous ne sommes plus autorisés à afficher les résultats de recherche de Yahoo avec ceux d\'autres moteurs de recherche. Par conséquent, tous les autres moteurs de recherche sont désormais désactivés tant que Yahoo est activé.',

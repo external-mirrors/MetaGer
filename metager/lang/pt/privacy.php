@@ -68,6 +68,7 @@ return [
             'description' => 'Ao utilizar o nosso motor de busca MetaGer através do seu formulário web ou através da sua interface OpenSearch, são gerados os seguintes dados:',
             'query' => 'Como parte integrante da metapesquisa, a consulta de pesquisa é transmitida aos nossos parceiros para obter resultados de pesquisa a apresentar na página de resultados. Os resultados recebidos, incluindo o termo de pesquisa, são mantidos para apresentação durante algumas horas.',
             'preferences' => 'Utilizamos estes dados (por exemplo, definições de idioma) para responder à respectiva consulta de pesquisa. Armazenamos alguns destes dados numa base não pessoal para fins estatísticos.',
+            'suggest' => 'Se as sugestões de pesquisa estiverem activadas para a barra de endereço do seu browser (opcional), precisamos de armazenar as suas definições de sugestões no nosso servidor. A chave será uma cadeia concatenada do seu endereço IP, do seu useragent e do cabeçalho accept-language do seu browser, que é hash sha1. Se a definição estiver desactivada (predefinição), nada será armazenado.',
         ],
         'contact' => [
             'title' => 'Utilização do formulário de contacto',

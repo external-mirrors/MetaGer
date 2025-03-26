@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Discapacitados",
         'on' => "Activado",
+        'heading' => 'Sugerencias de búsqueda',
+        'provider' => [
+            'label' => 'Proveedor',
+        ],
+        'delay' => [
+            'label' => 'Retraso',
+            'description' => 'Las sugerencias se cargarán después de este retardo mientras escribes. Lo ideal es que elijas un retardo lo suficientemente largo como para que las sugerencias sólo se carguen cuando dejes de escribir.',
+            'short' => 'Corto',
+            'medium' => 'Medio',
+            'long' => 'Largo',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidad sutil de nuestro propio servicio",

@@ -71,7 +71,7 @@ return [
     'disabledBecausePaymentRequired' => 'Vous pouvez utiliser les moteurs de recherche suivants avec une clé <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Avec les paramètres de recherche actuels, aucun moteur de recherche n\'est interrogé.',
     'cost' => 'Nous calculons <strong>:cost tokens</strong> par requête avec les paramètres actuels.',
-    'cost-free' => 'Vos recherches sont gratuites <strong></strong> avec les paramètres actuels.',
+    'cost-free' => 'Vos recherches sont <strong>gratuites</strong> avec les paramètres actuels.',
     'enable-engine' => 'Activer le moteur de recherche',
     'disable-engine' => 'Désactiver le moteur de recherche',
     'filtered-engine' => 'Moteur de recherche désactivé par le filtre',

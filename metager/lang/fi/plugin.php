@@ -2,4 +2,5 @@
 return [
     'description' => 'MetaGer: turvallinen haku ja löytäminen, yksityisyyden suojaaminen',
     'development' => 'MetaGer Development (fi)',
+    'short_name' => 'MetaGer',
 ];

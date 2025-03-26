@@ -93,6 +93,11 @@ return [
             'short' => 'Breve',
             'medium' => 'Medio',
         ],
+        'addressbar' => [
+            'label' => 'Suggerimenti nella barra degli indirizzi',
+            'description' => 'Caricamento dei suggerimenti quando si digita nella barra degli indirizzi. La configurazione del ritardo di cui sopra sarà sempre "breve" per gli utenti di Firefox, a causa dei timeout molto brevi per queste richieste.',
+            'hint' => '<b>Attenzione:</b> Per offrire questa funzione, dobbiamo memorizzare le impostazioni dei suggerimenti sul nostro server per diversi giorni. Se non è questo che desiderate, mantenete questa impostazione disattivata.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Pubblicità sottile per il nostro servizio",

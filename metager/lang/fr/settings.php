@@ -93,6 +93,11 @@ return [
             'medium' => 'Moyen',
             'long' => 'Longues',
         ],
+        'addressbar' => [
+            'label' => 'Suggestions dans la barre d\'adresse',
+            'description' => 'Charger les suggestions lorsque l\'on tape dans la barre d\'adresse. La configuration du délai ci-dessus sera toujours "courte" pour les utilisateurs de Firefox en raison des délais d\'attente très courts pour ces demandes.',
+            'hint' => '<b>Attention :</b> Nous devons stocker vos paramètres de suggestion sur notre serveur pendant plusieurs jours pour offrir cette fonction. Si ce n\'est pas ce que vous souhaitez, laissez ce paramètre désactivé.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Des publicités subtiles pour nos propres services",

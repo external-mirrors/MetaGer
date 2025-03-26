@@ -16,6 +16,9 @@ return [
         'slot' => 'pole wyszukiwania: Wpisz tutaj wyszukiwane hasło. Wielkie i małe litery nie są rozróżniane.',
         'search' => 'szkło powiększające: Rozpocznij wyszukiwanie, klikając tutaj lub naciskając "Enter".',
         'morefunctions' => 'Dodatkowe funkcje można znaleźć w punkcie menu "<a href = "/hilfe/funktionen">Funkcje wyszukiwania</a>".',
+        'suggest' => [
+            'title' => "Sugestie wyszukiwania",
+        ],
     ],
     'resultpage' => [
         'title' => 'Strona wyników <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

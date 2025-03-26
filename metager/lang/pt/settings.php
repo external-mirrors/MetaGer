@@ -42,6 +42,17 @@ return [
     'suggestions' => [
         'off' => "Desativado",
         'on' => "Ativado",
+        'heading' => 'Sugestões de pesquisa',
+        'delay' => [
+            'description' => 'As sugestões serão carregadas após este atraso durante a digitação. O ideal é escolher um atraso suficientemente longo para que as sugestões só sejam carregadas quando parar de escrever.',
+            'short' => 'Curto',
+            'medium' => 'Médio',
+            'long' => 'Longo',
+            'label' => 'Atraso',
+        ],
+        'provider' => [
+            'label' => 'Fornecedor',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidade subtil ao nosso próprio serviço",

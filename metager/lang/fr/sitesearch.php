@@ -3,7 +3,7 @@ return [
     'head' => [
         '5' => 'Générer',
         '1' => 'MetaGer Sitesearch-Widget',
-        '2' => 'Vous trouverez ici un Metager-Widget pour votre site web.',
+        '2' => 'Vous trouverez ici un widget Metager pour votre site web.',
         '3' => 'Site web sur lequel effectuer la recherche',
         '4' => 'Entrer dans le site web...',
     ],

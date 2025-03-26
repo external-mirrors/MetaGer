@@ -12,6 +12,7 @@ return [
             'description' => "Du kan få en liste med automatisk udfyldte søgeforespørgsler, som du kan vælge imellem, når du skriver i vores søgefelt. I vores indstillinger har du flere muligheder for at ændre din oplevelse: Denne funktion er deaktiveret som standard.",
             'delay' => "<b>Forsinkelse:</b> Enhver anden anmodning, der kommer ind i løbet af det valgte tidsinterval, vil afbryde alle ventende tidligere anmodninger. Afbrudte anmodninger har ingen omkostninger, og du vil kun se forslag til den seneste anmodning. Du kan vælge mellem kort (:short), mellem (:medium) og lang (:long).",
             'addressbar' => "<b>Adresselinje:</b> Hvis MetaGer er standardsøgemaskinen i din browser, kan den anmode om søgeforslag, mens du skriver i adresselinjen. Hvis denne mulighed er aktiveret, vil MetaGer give forslag til disse opkald. På grund af hvordan denne mekanik implementeres af browserne, er vi nødt til at gemme dine forslagsindstillinger på vores servere sammen med en midlertidig pseudonymiseret enhedsidentifikator. Denne funktion er derfor deaktiveret som standard.",
+            'title' => "Forslag til søgning",
         ],
     ],
     'backarrow' => 'Tilbage',

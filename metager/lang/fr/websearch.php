@@ -8,7 +8,7 @@ return [
         '7' => 'Code',
         '8' => 'Recherche',
         'copy' => 'Copie',
-        '1' => 'Widget de recherche MetaGer',
+        '1' => 'MetaGer Websearch-Widget',
         '2' => 'Vous trouverez ici un Metager-Widget pour votre site web.',
     ],
     'alert' => [

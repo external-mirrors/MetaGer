@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Handicapés",
         'on' => "Activé",
+        'heading' => 'Suggestions de recherche',
+        'provider' => [
+            'label' => 'Fournisseur',
+        ],
+        'delay' => [
+            'label' => 'Délai',
+            'description' => 'Les suggestions seront chargées après ce délai pendant la saisie. L\'idéal est de choisir un délai suffisamment long pour que les suggestions ne soient chargées que lorsque vous arrêtez de taper.',
+            'short' => 'Court',
+            'medium' => 'Moyen',
+            'long' => 'Longues',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Des publicités subtiles pour nos propres services",

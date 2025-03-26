@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Disabili",
         'on' => "Abilitato",
+        'heading' => 'Suggerimenti per la ricerca',
+        'provider' => [
+            'label' => 'Fornitore',
+        ],
+        'delay' => [
+            'long' => 'Lungo',
+            'label' => 'Ritardo',
+            'description' => 'I suggerimenti verranno caricati dopo questo ritardo durante la digitazione. L\'ideale sarebbe scegliere un ritardo abbastanza lungo, in modo che i suggerimenti vengano caricati solo quando si smette di digitare.',
+            'short' => 'Breve',
+            'medium' => 'Medio',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Pubblicità sottile per il nostro servizio",

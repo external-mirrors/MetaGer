@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Uitgeschakeld",
         'on' => "Ingeschakeld",
+        'delay' => [
+            'description' => 'Suggesties worden na deze vertraging tijdens het typen geladen. Idealiter kies je een vertraging die lang genoeg is, zodat suggesties pas worden geladen als je stopt met typen.',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lang',
+            'label' => 'Vertraging',
+        ],
+        'heading' => 'Zoeken Suggesties',
+        'provider' => [
+            'label' => 'Aanbieder',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtiele reclame voor onze eigen service",

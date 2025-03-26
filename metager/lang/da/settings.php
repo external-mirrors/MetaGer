@@ -82,6 +82,17 @@ return [
     'suggestions' => [
         'off' => "Deaktiveret",
         'on' => "Aktiveret",
+        'delay' => [
+            'description' => 'Forslagene indlæses efter denne forsinkelse, mens du skriver. Ideelt set vælger du en forsinkelse, der er lang nok til, at forslagene først indlæses, når du holder op med at skrive.',
+            'label' => 'Forsinkelse',
+            'short' => 'Kort',
+            'medium' => 'Medium',
+            'long' => 'Lang',
+        ],
+        'heading' => 'Forslag til søgning',
+        'provider' => [
+            'label' => 'Udbyder',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Subtile reklamer for vores egen service",

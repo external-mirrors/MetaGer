@@ -14,6 +14,9 @@ return [
         'morefunctions' => 'Funções adicionais podem ser encontradas no item de menu "<a href = "/hilfe/funktionen">Funções de pesquisa</a>"',
         'title' => 'O campo de pesquisa <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#eh-searchfield" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         'info' => 'O campo de pesquisa é composto por várias partes:',
+        'suggest' => [
+            'title' => "Sugestões de pesquisa",
+        ],
     ],
     'settings' => [
         '5' => 'Alternar o modo escuro <br> Mudar para o modo escuro facilmente aqui.',

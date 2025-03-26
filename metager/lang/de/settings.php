@@ -34,6 +34,17 @@ return [
     'suggestions' => [
         'off' => "Aus",
         'on' => "An",
+        'delay' => [
+            'long' => 'Lang',
+            'description' => 'Die Vorschläge werden erst nach dieser Verzögerung beim Tippen geladen. Idealerweise wählen Sie eine ausreichend lange Verzögerung, damit die Vorschläge erst geladen werden, wenn Sie aufhören zu tippen.',
+            'label' => 'Verzögerung',
+            'short' => 'Kurz',
+            'medium' => 'Mittel',
+        ],
+        'heading' => 'Suchvorschläge',
+        'provider' => [
+            'label' => 'Anbieter',
+        ],
     ],
     'disabledByFilter' => 'Durch Suchfilter deaktiviert:',
     'disabledBecausePaymentRequired' => "Folgende Suchmaschinen können Sie mit einem <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> nutzen.",

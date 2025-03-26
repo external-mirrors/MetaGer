@@ -204,6 +204,14 @@
   &[data-suggest="active"]:focus-within {
     display: grid;
 
+    #search-key {
+      display: none;
+    }
+
+    #suggest-exit {
+      display: block;
+    }
+
     @media (max-height: 700px) {
       z-index: 21;
       position: absolute;
@@ -216,14 +224,6 @@
       >.suggestions {
         margin-bottom: 0;
         overflow: auto;
-      }
-
-      #search-key {
-        display: none;
-      }
-
-      #suggest-exit {
-        display: block;
       }
     }
 
@@ -302,6 +302,14 @@
       display: grid;
       overflow: auto;
     }
+
+    #search-key {
+      display: none;
+    }
+
+    #suggest-exit {
+      display: block;
+    }
   }
 }
 
@@ -328,14 +336,6 @@
         >.suggestions {
           position: initial;
           border: 0;
-        }
-
-        #search-key {
-          display: none;
-        }
-
-        #suggest-exit {
-          display: block;
         }
       }
     }

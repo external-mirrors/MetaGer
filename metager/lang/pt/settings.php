@@ -40,7 +40,6 @@ return [
     'clear' => 'Limpar lista negra',
     'darkmode' => 'Alternar o modo escuro',
     'suggestions' => [
-        'label' => 'Sugestões de pesquisa',
         'off' => "Desativado",
         'on' => "Ativado",
     ],

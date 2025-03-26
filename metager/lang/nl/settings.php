@@ -80,7 +80,6 @@ return [
         'description' => 'Je kunt configureren om een van de volgende externe zoekmachines te gebruiken in plaats van onze geïntegreerde oplossing. We zullen je zoekopdrachten omleiden naar de geconfigureerde leverancier.',
     ],
     'suggestions' => [
-        'label' => 'Zoeksuggesties',
         'off' => "Uitgeschakeld",
         'on' => "Ingeschakeld",
     ],

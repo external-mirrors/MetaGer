@@ -32,7 +32,6 @@ return [
     'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'suggestions' => [
-        'label' => 'Suchvorschläge',
         'off' => "Aus",
         'on' => "An",
     ],

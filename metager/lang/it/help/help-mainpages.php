@@ -16,6 +16,12 @@ return [
         'slot' => 'il campo di ricerca: Inserire qui il termine di ricerca. Le lettere maiuscole e minuscole non vengono distinte.',
         'search' => 'la lente di ingrandimento: Avviare la ricerca facendo clic qui o premendo "Invio".',
         'morefunctions' => 'Ulteriori funzioni sono disponibili alla voce di menu "<a href = "/hilfe/funktionen">Funzioni di ricerca</a>".',
+        'suggest' => [
+            'provider' => "<b>Provider:</b> Selezionare il provider per i suggerimenti di ricerca che si desidera interrogare con MetaGer. I diversi provider hanno costi diversi. È inoltre possibile disattivare completamente i suggerimenti di ricerca.",
+            'description' => "È possibile ricevere un elenco di query di ricerca autocompletate da scegliere mentre si digita nel nostro campo di ricerca. Nelle impostazioni sono disponibili diverse opzioni per modificare l'esperienza: Questa funzione è disattivata per impostazione predefinita.",
+            'delay' => "<b>Ritardo:</b> Qualsiasi altra richiesta in arrivo durante l'intervallo di tempo selezionato interromperà tutte le richieste precedenti in sospeso. Le richieste interrotte non avranno alcun costo e si vedranno solo i suggerimenti per l'ultima richiesta. È possibile scegliere tra Breve (:short), Medio (:medium) e Lungo (:long).",
+            'addressbar' => "<b>Barra degli indirizzi:</b> Se MetaGer è il motore di ricerca predefinito del browser, può richiedere suggerimenti di ricerca mentre si digita nella barra degli indirizzi. Se questa opzione è attivata, MetaGer fornirà suggerimenti a tali chiamate. A causa del modo in cui questo meccanismo è implementato dai browser, dobbiamo memorizzare le impostazioni dei suggerimenti sui nostri server insieme a un identificatore temporaneo pseudomediato del dispositivo. Questa funzione è quindi disabilitata per impostazione predefinita.",
+        ],
     ],
     'resultpage' => [
         'title' => 'La pagina dei risultati <a title="For easy help, click here" href="/hilfe/easy-language/mainpages#help-resultpage" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

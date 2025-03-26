@@ -20,6 +20,7 @@ return [
             'description' => "Puede recibir una lista de consultas de búsqueda autocompletadas para elegir mientras escribe en nuestro campo de búsqueda. En nuestra configuración tienes varias opciones para modificar tu experiencia: Esta función está desactivada por defecto.",
             'delay' => "<b>Retraso:</b> Cualquier otra solicitud que llegue durante el intervalo de tiempo seleccionado abortará todas las solicitudes anteriores pendientes. Las solicitudes abortadas no tendrán coste y sólo verá sugerencias para la última solicitud. Puede elegir entre Corto (:corto), Medio (:medio) y Largo (:largo).",
             'addressbar' => "<b>Barra de direcciones:</b> Si MetaGer es el buscador por defecto en su navegador puede solicitar sugerencias de búsqueda mientras escribe en la barra de direcciones. Si esta opción está activada MetaGer proporcionará sugerencias a esas llamadas. Debido a la forma en que los navegadores implementan esta mecánica, necesitamos almacenar su configuración de sugerencias en nuestros servidores junto con un identificador de dispositivo pseudomizado temporal. Por lo tanto, esta función está desactivada por defecto.",
+            'title' => "Sugerencias de búsqueda",
         ],
     ],
     'resultpage' => [

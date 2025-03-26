@@ -53,6 +53,11 @@ return [
         'provider' => [
             'label' => 'Fornecedor',
         ],
+        'addressbar' => [
+            'label' => 'Sugestões na barra de endereços',
+            'description' => 'Carregar sugestões ao digitar na barra de endereços. A configuração de atraso acima será sempre "curta" para os utilizadores do Firefox devido aos tempos limite muito curtos para esses pedidos.',
+            'hint' => '<b>Atenção:</b> Para podermos oferecer esta funcionalidade, temos de guardar as suas definições de sugestões no nosso servidor durante vários dias. Se não é isto que pretende, mantenha esta definição desactivada.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Publicidade subtil ao nosso próprio serviço",

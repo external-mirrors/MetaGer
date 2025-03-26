@@ -20,6 +20,7 @@ return [
             'provider' => "<b>Fournisseur :</b> Sélectionnez le fournisseur de suggestions de recherche que vous souhaitez que MetaGer interroge. Les coûts varient selon les fournisseurs. Vous pouvez également désactiver complètement les suggestions de recherche.",
             'description' => "Vous pouvez recevoir une liste de requêtes de recherche autocomplétées à choisir lorsque vous tapez dans notre champ de recherche. Dans nos paramètres, vous disposez de plusieurs options pour modifier votre expérience : Cette fonction est désactivée par défaut.",
             'addressbar' => "<b>Barre d'adresse :</b> Si MetaGer est le moteur de recherche par défaut de votre navigateur, il peut demander des suggestions de recherche lorsque vous tapez dans la barre d'adresse. Si cette option est activée, MetaGer fournira des suggestions à ces appels. En raison de la manière dont ce mécanisme est mis en œuvre par les navigateurs, nous devons stocker vos paramètres de suggestion sur nos serveurs, ainsi qu'un identifiant pseudomisé temporaire de l'appareil. Cette fonction est donc désactivée par défaut.",
+            'title' => "Suggestions de recherche",
         ],
     ],
     'backarrow' => 'Retour',

@@ -30,6 +30,10 @@ return [
         'morefunctions' => 'Ytterligare funktioner hittar du under menyalternativet "<a href = "/hilfe/funktionen">Sökfunktioner</a>"',
         'suggest' => [
             'title' => "Sökförslag",
+            'description' => "Du kan få en lista med autokompletterade sökfrågor att välja mellan när du skriver i vårt sökfält. I våra inställningar har du flera alternativ för att ändra din upplevelse: Den här funktionen är inaktiverad som standard.",
+            'provider' => "<b>Leverantör:</b> Välj leverantör för sökförslag som du vill att MetaGer ska fråga. Olika leverantörer har olika kostnader. Du kan också inaktivera sökförslag helt.",
+            'delay' => "<b>Fördröjning:</b> Alla andra förfrågningar som kommer in under det valda tidsintervallet kommer att avbryta alla väntande tidigare förfrågningar. Avbrutna förfrågningar har ingen kostnad och du ser bara förslag för den senaste förfrågningen. Du kan välja mellan kort (:kort), medel (:medel) och lång (:lång)",
+            'addressbar' => "<b>Adressfältet:</b> Om MetaGer är standardsökmotorn i din webbläsare kan den begära sökförslag medan du skriver i adressfältet. Om det här alternativet är aktiverat kommer MetaGer att ge förslag till dessa samtal. På grund av hur denna mekanik implementeras av webbläsarna måste vi lagra dina förslagsinställningar på våra servrar tillsammans med en tillfällig pseudomiserad enhetsidentifierare. Den här funktionen är därför inaktiverad som standard.",
         ],
     ],
     'resultpage' => [

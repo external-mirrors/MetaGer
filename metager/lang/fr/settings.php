@@ -11,8 +11,8 @@ return [
     'payment-engine' => 'Le moteur de recherche nécessite l\'installation d\'une clé MetaGer',
     'text' => [
         '1' => 'Pour enregistrer vos paramètres de recherche, nous utilisons des cookies non identifiables personnellement. Ceux-ci sont stockés en texte clair dans votre navigateur.',
-        '2' => 'Vous pouvez voir ci-dessous tous les moteurs de recherche disponibles.',
-        '3' => 'Vous pouvez définir ici les filtres qui seront appliqués sur toutes vos prochaines recherches. Si vous les changez, seuls les moteurs de recherche respectant l’ensemble des filtres seront disponibles et les moteurs incompatibles seront retirés. Inversement, seul les filtres supportés par au moins un moteur de recherche utilisé seront disponibles.',
+        '2' => 'Vous pouvez les activer ou les désactiver en cliquant sur leur nom.',
+        '3' => 'Vous pouvez définir ici les filtres qui seront appliqués sur toutes vos prochaines recherches. Si vous les changez, seuls les moteurs de recherche respectant l’ensemble des filtres seront disponibles et les moteurs incompatibles seront retirés. À l’inverse, seuls les filtres supportés par au moins un moteur de recherche actif seront disponibles.',
         '4' => 'Ici, vous pouvez ajouter des domaines à exclure lors de la recherche. Si vous souhaitez exclure tous les sous-domaines, commencez par "*.". Un domaine par ligne.',
     ],
     'hint' => [

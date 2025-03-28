@@ -13,6 +13,6 @@ return [
         '4' => 'Recherche',
         '5' => 'Code',
         '6' => 'fr',
-        '1' => 'Avant-première',
+        '1' => 'Prévisualisation',
     ],
 ];

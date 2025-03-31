@@ -126,11 +126,6 @@ class SuggestionDebtAuthorization extends Authorization
 
         $settings = app(SearchSettings::class);
 
-        $agent = (new BrowserDetection())->getAll(\Request::userAgent());
-        if ($agent["browser_gecko_version"] > 0) {
-            $settings->suggestion_delay = SearchSettings::SUGGESTION_DELAY_SHORT;
-        }
-
         $stored_settings = Redis::connection(config('cache.stores.redis.connection'))->hget($cache_key, "settings");
         if ($stored_settings !== null) {
             $stored_settings = json_decode($stored_settings, true);
@@ -170,8 +165,15 @@ class SuggestionDebtAuthorization extends Authorization
             $stored_settings = json_decode($stored_settings, true);
             $settings->suggestion_provider = $stored_settings["provider"];
             $settings->suggestion_delay = $stored_settings["delay"];
+            $settings->suggestion_addressbar = $stored_settings["addressbar"];
             if (!$stored_settings["addressbar"])
                 $settings->suggestion_provider = "off";
+
+            $agent = (new BrowserDetection())->getAll(\Request::userAgent());
+            if ($agent["browser_gecko_version"] > 0) {
+                $settings->suggestion_delay = 200;
+            }
+
             App::setLocale($stored_settings["locale"]);
             LaravelLocalization::setLocale($stored_settings["locale"]);
         }

@@ -54,6 +54,8 @@ class SuggestionDebtAuthorization extends Authorization
      */
     public static function ADD_CREDIT(float $amount = 0.1)
     {
+        if (!app(SearchSettings::class)->suggestion_addressbar)
+            return;
         $expiration = now()->addDays(2);
 
         $cache_key = self::GET_CACHE_KEY();

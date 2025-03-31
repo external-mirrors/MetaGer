@@ -185,7 +185,7 @@ class SuggestionDebtAuthorization extends Authorization
     public static function GET_CACHE_KEY(): string
     {
         $cache_key = self::CACHE_PREFIX;
-        $cache_key .= Request::ip() . ":" . sha1(Request::userAgent() . implode(",", Request::getLanguages()));
+        $cache_key .= sha1(Request::ip() . Request::userAgent() . implode(",", Request::getLanguages()));
         return $cache_key;
     }
 }

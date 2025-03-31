@@ -255,7 +255,7 @@ abstract class Searchengine
             // Pay for the searchengine if cost > 0 and returned results
             if ($this->configuration->cost > 0 && sizeof($this->results) > 0) {
                 // Remove namespace before passing engine to exporter
-                PrometheusExporter::KeyUsed(preg_replace("/^.*\\\/", "", get_class($this)), $this->cached);
+                PrometheusExporter::KeyUsed($this->configuration->cost, preg_replace("/^.*\\\/", "", get_class($this)), $this->cached);
                 if (!$this->cached) {
                     app(Authorization::class)->makePayment($this->configuration->cost);
                 }

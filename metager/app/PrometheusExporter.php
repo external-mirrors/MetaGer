@@ -67,11 +67,11 @@ class PrometheusExporter
         $counter->inc();
     }
 
-    public static function KeyUsed(string $engine, bool $cached)
+    public static function KeyUsed(float $amount, string $source, bool $cached)
     {
         $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["searchengine", "cached"]);
-        $counter->inc([$engine, json_encode($cached)]);
+        $counter->incBy($amount, [$source, json_encode($cached)]);
     }
     public static function UpdateMainzKeyStatus($tokens)
     {
@@ -84,5 +84,19 @@ class PrometheusExporter
         $registry = CollectorRegistry::getDefault();
         $counter = $registry->getOrRegisterCounter("metager", "donation_card", "Card Payment started", ["status"]);
         $counter->inc([$status]);
+    }
+
+    public static function SuggestionResult(string $httpcode)
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "suggestion_results", "Suggestion Requests answered", ["httpcode"]);
+        $counter->inc([$httpcode]);
+    }
+
+    public static function SuggestionSessionCounter()
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "suggestion_sessions", "Suggestion Requests answered");
+        $counter->inc();
     }
 }

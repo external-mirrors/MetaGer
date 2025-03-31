@@ -70,7 +70,7 @@ class PrometheusExporter
     public static function KeyUsed(float $amount, string $source, bool $cached)
     {
         $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["searchengine", "cached"]);
+        $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["source", "cached"]);
         $counter->incBy($amount, [$source, json_encode($cached)]);
     }
     public static function UpdateMainzKeyStatus($tokens)

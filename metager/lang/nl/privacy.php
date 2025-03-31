@@ -26,6 +26,7 @@ return [
             'description' => 'Wanneer u onze webzoekmachine MetaGer gebruikt via het webformulier of via de OpenSearch-interface, worden de volgende gegevens gegenereerd:',
             'query' => 'Als integraal onderdeel van metasearch wordt de zoekopdracht naar onze partners verzonden om zoekresultaten te verkrijgen voor weergave op de resultatenpagina. De ontvangen resultaten, inclusief de zoekterm, worden enkele uren bewaard om te worden weergegeven.',
             'preferences' => 'We gebruiken deze gegevens (bijv. taalinstellingen) om de betreffende zoekopdracht te beantwoorden. Sommige van deze gegevens slaan we op niet-persoonlijke basis op voor statistische doeleinden.',
+            'suggest' => 'Als zoeksuggesties zijn ingeschakeld voor de adresbalk van je browser (optioneel), moeten we je suggestie-instellingen opslaan op onze server. De sleutel is een aaneengeschakelde string van je IP-adres, je useragent en de accept-taalheader van je browser die sha1-gehasht is. Als de instelling is uitgeschakeld (standaard), wordt er niets opgeslagen.',
         ],
         'contact' => [
             'title' => 'Gebruik van het contactformulier',

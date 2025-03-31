@@ -46,14 +46,15 @@ class KeyAuthorization extends Authorization
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        $result = Redis::blpop($result_hash, 10);
+        $result = Redis::brpop($result_hash, 10);
         try {
             if ($result && \is_array($result) && sizeof($result) === 2) {
                 $result = \json_decode($result[1]);
-                if ($result === null) {
+                $body = json_decode($result->body);
+                if ($body === null) {
                     return false;
                 } else {
-                    $this->availableTokens = $result->charge;
+                    $this->availableTokens = $body->charge;
                 }
             }
         } catch (\ErrorException $e) {
@@ -64,7 +65,7 @@ class KeyAuthorization extends Authorization
     /**
      * @return bool
      */
-    public function makePayment(float $cost)
+    public function makePayment(float $cost): bool
     {
         $cost = round($cost, 1);
         if (!$this->canDoAuthenticatedSearch()) {
@@ -97,14 +98,6 @@ class KeyAuthorization extends Authorization
         }
 
         return true;
-    }
-
-    /**
-     * Tokenauthorization is always authenticated
-     */
-    public function isAuthenticated(): bool
-    {
-        return !empty($this->key);
     }
 
     /**

@@ -21,6 +21,7 @@ return [
             'description' => 'Bei der Nutzung unserer Websuchmaschine MetaGer über deren Web-Formular oder durch deren OpenSearch-Schnittstelle fallen folgende Daten an:',
             'query' => 'Als integraler Bestandteil der Metasuche wird die Suchanfrage an unsere Partner übertragen, um Suchergebnisse zur Anzeige auf der Ergebisseite zu erhalten. Die erhaltenen Ergebnisse inklusive dem Suchbegriff werden für wenige Stunden zur Anzeige vorgehalten.',
             'preferences' => 'Wir verwenden diese Daten (z.B. Spracheinstellungen), um die jeweilige Suchanfrage zu beantworten. Einige dieser Daten speichern wir nicht-personenbezogen zu statistischen Zwecken.',
+            'suggest' => 'Wenn Suchvorschläge für die Adressleiste Ihres Browsers aktiviert sind (optional), müssen wir Ihre Vorschlagseinstellungen auf unserem Server speichern. Der Schlüssel ist eine verkettete Zeichenkette aus Ihrer IP-Adresse, Ihrem User-Agent und dem accept-language-Header Ihres Browsers, der mit einem sha1-Hash versehen ist. Wenn die Einstellung deaktiviert ist (Standard), wird nichts gespeichert.',
         ],
         'contact' => [
             'title' => 'Nutzung des Kontaktformulars',

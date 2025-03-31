@@ -79,11 +79,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(url('impressum'));
     });
 
-    Route::group(["prefix" => 'suggest'], function () {
-        Route::get("/", [SuggestionController::class, "dummy"])->name("suggest");
-        Route::get("partner", [SuggestionController::class, "partner"])->name("suggest_partner");
-        Route::get("suggest", [SuggestionController::class, "suggest"])->name("suggest_suggest");
+    Route::group(['prefix' => 'suggest'], function () {
+        Route::get("cost", [SuggestionController::class, 'tokenCost'])->name("suggest_cost");
+        Route::get("cancel", [SuggestionController::class, "cancelSuggest"])->name("suggest_cancel");
+        Route::any("{key?}", [SuggestionController::class, "suggest"])->name("suggest");
     });
+
 
     Route::get('about', function () {
         return view('about')
@@ -203,7 +204,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return view('help/help-mainpages')
             ->with('title', trans('titles.help-mainpages'))
             ->with('navbarFocus', 'hilfe');
-    });
+    })->name("help-mainpages");
 
     Route::get('hilfe/easy-language/mainpages', function () {
         return view('help/easy-language/help-mainpages')
@@ -366,7 +367,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::get('meta/picture', [Pictureproxy::class, 'get'])->name("imageproxy");
 
     Route::get('tips', [MetaGerSearch::class, 'tips']);
-    Route::get('/plugins/opensearch.xml', [StartpageController::class, 'loadPlugin']);
+    Route::get('/plugins/opensearch.xml', [StartpageController::class, 'loadPlugin'])->name("opensearch");
     Route::get('owi', function () {
         return redirect('https://metager.de/klassik/en/owi/');
     });

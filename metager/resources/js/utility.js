@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     if (copy_button) {
       copy_button.addEventListener("click", (e) => {
         // Select all the text
+        e.preventDefault();
         let key = input_field.value;
         input_field.select();
         navigator.clipboard

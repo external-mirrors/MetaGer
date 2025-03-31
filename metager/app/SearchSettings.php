@@ -10,6 +10,10 @@ use \Request;
 class SearchSettings
 {
 
+    const SUGGESTION_DELAY_SHORT = 300;
+    const SUGGESTION_DELAY_MEDIUM = 450;
+    const SUGGESTION_DELAY_LONG = 600;
+
     public $bv_key = null; // Cache Key where data of BV is temporarily stored
     public $javascript_enabled = false;
     /** @var string */
@@ -34,7 +38,10 @@ class SearchSettings
     /** @var bool */
     public $tiles_startpage;
     /** @var string */
-    public $suggestions = "bing";
+    public $suggestion_provider = "bing";
+    /** @var int */
+    public $suggestion_delay = self::SUGGESTION_DELAY_MEDIUM;
+    public $suggestion_addressbar = false;
     public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
@@ -43,7 +50,7 @@ class SearchSettings
      * List of setting keys used independant of fokus
      * @var array
      */
-    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key"];
+    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key", "suggestion_provider", "suggestion_delay", "suggestion_addressbar"];
     public function __construct()
     {
 
@@ -88,9 +95,26 @@ class SearchSettings
         $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;
 
-        $suggestions = $this->getSettingValue("suggestions", "bing");
-        if ($suggestions === "off") {
-            $this->suggestions = "off";
+        $suggestion_provider = $this->getSettingValue("suggestion_provider", null);
+        $valid_suggestion_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
+        if (in_array($suggestion_provider, $valid_suggestion_providers)) {
+            $this->suggestion_provider = $suggestion_provider;
+        } else {
+            $this->suggestion_provider = null;
+        }
+
+        $suggestion_delay = $this->getSettingValue("suggestion_delay", "medium");
+        if (in_array($suggestion_delay, ["short", "medium", "long"])) {
+            $this->suggestion_delay = match ($suggestion_delay) {
+                "short" => self::SUGGESTION_DELAY_SHORT,
+                "medium" => self::SUGGESTION_DELAY_MEDIUM,
+                "long" => self::SUGGESTION_DELAY_LONG
+            };
+        }
+
+        $suggestion_addressbar = $this->getSettingValue("suggestion_addressbar", "off");
+        if (in_array($suggestion_addressbar, ["on", "off"])) {
+            $this->suggestion_addressbar = $suggestion_addressbar === "on";
         }
 
         if ($this->getSettingValue("quicktips") !== null) {

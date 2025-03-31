@@ -1,4 +1,5 @@
 import "./tiles";
+import { initializeSuggestions } from "../suggest";
 
 // Register Keyboard listener for quicklinks on startpage
 (async () => {
@@ -30,4 +31,6 @@ import "./tiles";
     },
     { once: true }
   );
+
+  initializeSuggestions();
 })();

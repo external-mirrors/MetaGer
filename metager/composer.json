@@ -9,7 +9,9 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "composer/class-map-generator": "^1.6",
         "endroid/qr-code": "^5.0",
+        "foroco/php-browser-detection": "^2.8",
         "globalcitizen/php-iban": "^4.2.3",
         "invoiceninja/sdk-php": "^1.1",
         "jenssegers/agent": "^2.6.4",
@@ -20,7 +22,7 @@
         "mcamara/laravel-localization": "2.0.1",
         "mews/captcha": "^3.3.3",
         "mlocati/ip-lib": "^1.18",
-        "predis/predis": "^2.2",
+        "predis/predis": "^2.3",
         "promphp/prometheus_client_php": "^2.10",
         "smhg/sepa-qr-data": "^2.0",
         "vizir/laravel-keycloak-web-guard": "^4.0"

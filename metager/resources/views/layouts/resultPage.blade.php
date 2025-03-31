@@ -25,11 +25,7 @@
                 href="/img/favicon/{{ $file }}" type="image/png">
         @endif
     @endforeach
-    @if (empty(Cookie::get('key')))
-        <link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{ action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
-    @else
-        <link rel="search" type="application/opensearchdescription+xml" title="{{ trans('staticPages.opensearch') }}" href="{{ action([App\Http\Controllers\StartpageController::class, 'loadPlugin'], ['key' => Cookie::get('key')]) }}">
-    @endif
+    <link rel="search" type="application/opensearchdescription+xml" title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 
@@ -59,6 +55,9 @@
     <meta name="referrer" content="origin-when-cross-origin">
     <meta name="age-meta-label" content="age=18" />
     <meta name="statistics-enabled" content="{{ config("metager.matomo.enabled") }}">
+    @if(!in_array(app(\App\SearchSettings::class)->suggestion_provider, [null, "off"]))
+	<meta name="suggestions-enabled" content="true">
+	@endif
     {{-- Add Advertisement Scripts if Yahoo is enabled --}}
     @if (app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo') !== null)
         <meta name="source_tag"
@@ -87,7 +86,7 @@
         <a href="#sidebarToggle">@lang('resultPage.skiplinks.navigation')</a>
         <div class="escape">@lang('resultPage.skiplinks.return')</div>
     </div>
-    @if (Request::getHttpHost() === 'metager3.de')
+    @if (Request::getHttpHost() === 'metager3.de' && app(\App\SearchSettings::class)->self_advertisements)
         <div class="alert alert-info metager3-unstable-warning-resultpage">
             {!! @trans('resultPage.metager3') !!}
         </div>

@@ -30,7 +30,22 @@ return [
     'copy' => 'Copy',
     'darkmode' => 'Toggle dark mode',
     'suggestions' => [
-        "label" => 'Search suggestions',
+        'heading' => 'Search Suggestions',
+        'provider' => [
+            "label" => 'Provider',
+        ],
+        'delay' => [
+            'label' => 'Delay',
+            'description' => 'Suggestions will be loaded after this delay while typing. Ideally you chose a delay long enough so suggestions are only loaded when you stop typing.',
+            'short' => 'Short',
+            'medium' => 'Medium',
+            'long' => 'Long'
+        ],
+        "addressbar" => [
+            'label' => 'Suggestions in Address Bar',
+            'description' => 'Load Suggestions when typing in the address bar. Above delay configuration will always be "short" for Firefox users due to very short timeouts for those requests.',
+            'hint' => '<b>Attention:</b> We need to store your suggestion settings on our server for several days to offer this feature. If this is not what you want keep this setting disabled.',
+        ],
         "off" => "Disabled",
         "on" => "Enabled",
     ],

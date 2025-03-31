@@ -14,6 +14,7 @@ return [
             'description' => 'När du använder vår webbsökmotor MetaGer via dess webbformulär eller via dess OpenSearch-gränssnitt genereras följande data:',
             'query' => 'Som en integrerad del av metasökningen överförs sökfrågan till våra partner för att erhålla sökresultat som visas på resultatsidan. De mottagna resultaten, inklusive söktermen, sparas för visning under några timmar.',
             'preferences' => 'Vi använder dessa uppgifter (t.ex. språkinställningar) för att besvara respektive sökfråga. Vi lagrar en del av dessa uppgifter på en icke-personlig basis för statistiska ändamål.',
+            'suggest' => 'Om sökförslag är aktiverade för adressfältet i din webbläsare (valfritt) måste vi lagra dina förslagsinställningar på vår server. Nyckeln kommer att vara en sammanhängande sträng av din IP-adress, din useragent och din webbläsares accept-language header som är sha1-hashad. Om inställningen är avaktiverad (standard) lagras ingenting.',
         ],
         'contact' => [
             'title' => 'Användning av kontaktformuläret',

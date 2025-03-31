@@ -42,7 +42,7 @@ return [
             'heading' => "Date de la facture",
             'email' => "Adresse électronique",
             'full_name' => "Nom",
-            'save' => "Économiser",
+            'save' => "Sauvegarder",
         ],
         'hint' => 'Vous trouverez ici un aperçu de vos commandes et des informations sur l\'utilisation de l\'API. Veuillez vous assurer que les données de facturation suivantes sont à jour et correctes',
     ],
@@ -84,7 +84,7 @@ return [
         'heading' => "Clé API",
         'hint' => "Pour pouvoir utiliser l'API, vous devez vous authentifier. Ici, vous pouvez créer un code API pour vos appareils. <b>Indications</b>: Les nouveaux modèles créés ne sont pas toujours disponibles. Il convient de les spécifier après leur création.",
         'delete' => "Supprimer",
-        'copy' => "Copie",
+        'copy' => "Copier",
     ],
     'api-docs' => [
         'hint' => "Vous trouverez ci-dessous la documentation de notre API, que vous pouvez utiliser pour récupérer les journaux de notre serveur.",

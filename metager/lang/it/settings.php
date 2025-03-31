@@ -80,9 +80,24 @@ return [
         'description' => 'È possibile configurare l\'utilizzo di uno dei seguenti motori di ricerca esterni al posto della nostra soluzione integrata. Le ricerche verranno reindirizzate al provider configurato.',
     ],
     'suggestions' => [
-        'label' => 'Suggerimenti per la ricerca',
         'off' => "Disabili",
         'on' => "Abilitato",
+        'heading' => 'Suggerimenti per la ricerca',
+        'provider' => [
+            'label' => 'Fornitore',
+        ],
+        'delay' => [
+            'long' => 'Lungo',
+            'label' => 'Ritardo',
+            'description' => 'I suggerimenti verranno caricati dopo questo ritardo durante la digitazione. L\'ideale sarebbe scegliere un ritardo abbastanza lungo, in modo che i suggerimenti vengano caricati solo quando si smette di digitare.',
+            'short' => 'Breve',
+            'medium' => 'Medio',
+        ],
+        'addressbar' => [
+            'label' => 'Suggerimenti nella barra degli indirizzi',
+            'description' => 'Caricamento dei suggerimenti quando si digita nella barra degli indirizzi. La configurazione del ritardo di cui sopra sarà sempre "breve" per gli utenti di Firefox, a causa dei timeout molto brevi per queste richieste.',
+            'hint' => '<b>Attenzione:</b> Per offrire questa funzione, dobbiamo memorizzare le impostazioni dei suggerimenti sul nostro server per diversi giorni. Se non è questo che desiderate, mantenete questa impostazione disattivata.',
+        ],
     ],
     'self_advertisements' => [
         'label' => "Pubblicità sottile per il nostro servizio",

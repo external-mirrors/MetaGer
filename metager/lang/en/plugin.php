@@ -1,6 +1,6 @@
 <?php
 return [
     'description' => 'MetaGer: secure search & find, protecting privacy',
-    'production'  => 'MetaGer (en)',
+    'short_name' => 'MetaGer',
     'development' => 'MetaGer Development (en)',
 ];

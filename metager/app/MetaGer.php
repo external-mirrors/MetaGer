@@ -648,7 +648,10 @@ class MetaGer
             }
             foreach ($engines as $index => $engine) {
                 if ($engine->getHash() === $answer[0]) {
-                    $engine->retrieveResults($this, $answer[1]);
+                    $body = json_decode($answer[1]);
+                    if ($body !== null)
+                        $body = $body->body;
+                    $engine->retrieveResults($this, $body);
                     foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
                         if ($engineToWaitFor === $answer[0]) {
                             unset($enginesToWaitFor[$waitIndex]);

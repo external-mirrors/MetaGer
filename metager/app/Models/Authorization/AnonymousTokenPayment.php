@@ -494,7 +494,7 @@ class AnonymousTokenPayment
         return new AnonymousTokenPayment($cost, $tokens, $decitokens, $payment_id, $payment_uid, $key, $credits);
     }
 
-    private function markChecked(Token $token, bool $decitoken = false, $valid)
+    private function markChecked(Token $token, bool $decitoken, $valid)
     {
         Cache::put(($decitoken ? "decitoken" : "token") . ":valid:" . md5($token->token . $token->signature . $token->date), $valid, now()->addMinutes(5));
     }

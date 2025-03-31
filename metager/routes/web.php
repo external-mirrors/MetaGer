@@ -367,7 +367,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::get('meta/picture', [Pictureproxy::class, 'get'])->name("imageproxy");
 
     Route::get('tips', [MetaGerSearch::class, 'tips']);
-    Route::get('/plugins/opensearch.xml', [StartpageController::class, 'loadPlugin']);
+    Route::get('/plugins/opensearch.xml', [StartpageController::class, 'loadPlugin'])->name("opensearch");
     Route::get('owi', function () {
         return redirect('https://metager.de/klassik/en/owi/');
     });

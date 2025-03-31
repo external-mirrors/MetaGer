@@ -7,6 +7,7 @@ use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Authorization\TokenAuthorization;
+use App\PrometheusExporter;
 use App\SearchSettings;
 use App\Suggestions;
 use Cache;
@@ -49,12 +50,13 @@ class SuggestionController extends Controller
         }
 
         $suggestion_provider = $settings->suggestion_provider;
+        $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
 
         $cache_key = "suggestion:cache:$suggestion_provider:" . Localization::getLanguage() . ":" . Localization::getRegion() . ":$query";
         if (Cache::has($cache_key)) {
+            PrometheusExporter::KeyUsed($suggestions::COST, "suggestions", true);
             return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
         } else {
-            $suggestions = Suggestions::fromProviderName($suggestion_provider, $query);
             $authorization = app(Authorization::class);
             $authorization->setCost($suggestions::COST);
 
@@ -70,12 +72,15 @@ class SuggestionController extends Controller
                 $token_data["decitokens"] = $authorization->getToken()->decitokens;
             }
             try {
-                switch ($this->delay($start_time)) {
+                $httpcode = $this->delay($start_time);
+                PrometheusExporter::SuggestionResult($httpcode);
+                switch ($httpcode) {
                     case 402:   // Payment Required = Not enough or invalid Token
                         return response()->json(array_merge(["error" => "Payment Required", "cost" => $authorization->getCost()], $token_data), 402);
                     case 423:
                         return response()->json(["error" => "Aborted because of newer request"], 423);
                     case 200:
+                        PrometheusExporter::KeyUsed($authorization->getCost(), "suggestions", false);
                         $authorization->makePayment($authorization->getCost());
                         if ($authorization instanceof TokenAuthorization) {
                             $token_data["tokens"] = $authorization->getToken()->tokens;
@@ -214,6 +219,11 @@ class SuggestionController extends Controller
             $pipe->lrange($suggest_group, 0, -1);
             $pipe->pexpireat($suggest_group, $expiration->getTimestampMs());
         });
+
+        // New Session
+        if ($result[0] === 1) {
+            PrometheusExporter::SuggestionSessionCounter();
+        }
 
         // Abort all but the newest request
         return $result[1];

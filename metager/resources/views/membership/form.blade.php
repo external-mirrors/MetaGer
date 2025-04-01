@@ -11,19 +11,76 @@
     können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
 <form id="membership-form" method="POST">
     <input type="hidden" name="_token" value="{{$csrf_token}}">
-    <div id="contact-data">
-        <h3>1. Ihre Kontaktdaten</h3>
-        <div class="input-group">
-            @if(isset($errors) && $errors->has("name"))
-                @foreach($errors->get("name") as $error)
+    <div id="contact-data" @if(Request::input("type", "") === "company")class="company"@else class="person"@endif>
+        <h3 id="contact_data">1. Ihre Kontaktdaten 
+            @if(Request::input("type", "") === "company")
+            <a href="{{  route("membership_form", Request::except(["type"])) }}#contact_data">Als Person beitreten?</a>
+            @else
+            <a href="{{  route("membership_form", array_merge(Request::all(), ["type" => "company"])) }}#contact_data">Als Firma beitreten?</a>
+            @endif
+        </h3>
+        @if(Request::input("type", "") !== "company")
+        <div class="input-group title">
+            @if(isset($errors) && $errors->has("title"))
+                @foreach($errors->get("title") as $error)
                     <div class="error">{{ $error }}</div>
                 @endforeach
             @endif
-            <label for="name">Ihr Name</label>
-            <input type="text" name="name" id="name" size="25" placeholder="Max Mustermann / Muster GmbH"
-                value="{{ Request::input('name', '') }}" autofocus required />
+            <label for="title">Anrede</label>
+            <select name="title" id="title" required>
+                <option disabled selected value>-- Auswahl --</option>
+                <option value="Herr">Herr</option>
+                <option value="Frau">Frau</option>
+                <option value="Neutral">Neutral</option>
+            </select>
         </div>
         <div class="input-group">
+            @if(isset($errors) && $errors->has("firstname"))
+                @foreach($errors->get("firstname") as $error)
+                    <div class="error">{{ $error }}</div>
+                @endforeach
+            @endif
+            <label for="firstname">Ihr Vorname</label>
+            <input type="text" name="firstname" id="firstname" size="25" placeholder="Max"
+                value="{{ Request::input('firstname', '') }}" required />
+        </div>
+        <div class="input-group">
+            @if(isset($errors) && $errors->has("lastname"))
+                @foreach($errors->get("lastname") as $error)
+                    <div class="error">{{ $error }}</div>
+                @endforeach
+            @endif
+            <label for="lastname">Ihr Nachname</label>
+            <input type="text" name="lastname" id="lastname" size="25" placeholder="Mustermann"
+                value="{{ Request::input('lastname', '') }}" required />
+        </div>
+        @else
+        <div class="input-group">
+            @if(isset($errors) && $errors->has("company"))
+                @foreach($errors->get("company") as $error)
+                    <div class="error">{{ $error }}</div>
+                @endforeach
+            @endif
+            <label for="company">Ihr Firmenname</label>
+            <input type="text" name="company" id="company" size="25" placeholder="Muster GmbH"
+                value="{{ Request::input('company', '') }}" required />
+        </div>
+        <div class="input-group employees">
+            @if(isset($errors) && $errors->has("employees"))
+                @foreach($errors->get("employees") as $error)
+                    <div class="error">{{ $error }}</div>
+                @endforeach
+            @endif
+            <label for="employees">Anzahl Mitarbeitende</label>
+            <select name="employees" id="employees" required>
+                <option disabled selected value>-- Auswahl --</option>
+                <option value="1-19">1 - 19</option>
+                <option value="20-199">20 - 199</option>
+                <option value=">200">> 200</option>
+            </select>
+        </div>
+        @endif
+        <div class="input-group email">
             @if(isset($errors) && $errors->has("email"))
                 @foreach($errors->get("email") as $error)
                     <div class="error">{{ $error }}</div>
@@ -66,8 +123,15 @@
             <input type="radio" name="amount" id="amount-custom" value="custom" @if(Request::input('amount', ''
                 )==="custom" )checked @endif required />
             <label for="amount-custom">Wunschbetrag</label>
-            <input type="number" name="custom-amount" id="amount-custom-value" step="0.01" min="2.5"
+            <input type="text" name="custom-amount" id="amount-custom-value" inputmode="numeric"
                 value="{{ Request::input('custom-amount', '10,00') }}" placeholder="10,00€" />
+        </div>
+        <div id="reduction-container" class="hidden">
+            <div>Der Mindestbeitrag beträgt monatlich <span>5€</span>. Wenn Sie <a href="https://suma-ev.de/beitragsordnung/" target="_blank">Anspruch auf einen reduzierten Beitrag</a> haben, laden Sie bitte nachfolgend einen geeigneten Nachweis zusammen mit Ihrem Antrag hoch.</div>
+            <div class="input-group">
+                <label for="reduction">Nachweis</label>
+                <input type="file" name="reduction" id="reduction">
+            </div>
         </div>
     </div>
     <div id="membership-payment">
@@ -77,30 +141,26 @@
                 <div class="error">{{ $error }}</div>
             @endforeach
         @endif
-        <div>
-            Wenn Sie ein anderes Intervall als monatlich angeben, wird ein entsprechendes Vielfaches Ihres monatlichen
-            Beitrages im gewählten Intervall abgebucht.
-        </div>
         <div id="membership-interval">
             <div class="input-group monthly">
                 <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval')
                     || Request::input('interval')==="annual" )checked @endif required>
-                <label for="interval-monthly">monatlich</label>
+                <label for="interval-monthly">monatlich <span class="amount"></span></label>
             </div>
             <div class="input-group quarterly">
                 <input type="radio" name="interval" id="interval-quarterly" value="quarterly"
                     @if(Request::input('interval', '' )==="quarterly" )checked @endif required>
-                <label for="interval-quarterly">vierteljährlich</label>
+                <label for="interval-quarterly">vierteljährlich <span class="amount"></span></label>
             </div>
             <div class="input-group six-monthly">
                 <input type="radio" name="interval" id="interval-six-monthly" value="six-monthly"
                     @if(Request::input('interval', '' )==="six-monthly" )checked @endif required>
-                <label for="interval-six-monthly">halbjährlich</label>
+                <label for="interval-six-monthly">halbjährlich <span class="amount"></span></label>
             </div>
             <div class="input-group annual">
                 <input type="radio" name="interval" id="interval-annual" value="annual"
                     @if(Request::input('interval', '' )==="quarterly" )checked @endif required>
-                <label for="interval-annual">jährlich</label>
+                <label for="interval-annual">jährlich <span class="amount"></span></label>
             </div>
         </div>
         <h3>4. Ihre Zahlungsmethode</h3>

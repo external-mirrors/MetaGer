@@ -238,6 +238,8 @@ export function initializeSuggestions() {
     return getToken({
       cost: cost,
       missing: Math.max(cost - current_tokencount, 0),
+      credits: 0,
+      async_disabled: false,
       tokens: {
         tokens: [],
         decitokens: [],

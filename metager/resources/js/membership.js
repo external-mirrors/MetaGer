@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", (e) => {
 });
 document.querySelectorAll("input[name=payment-method]").forEach((input) => {
   input.addEventListener("change", (e) => {
-    console.log("change");
     updateIBANRequired();
   });
 });
@@ -96,7 +95,7 @@ function updateIntervalAmount() {
   let amountContainer = document.querySelector("input[name=interval]:checked + label > span");
   if (amountContainer) {
     amount_string += amount.toFixed(2);
-    amountContainer.textContent = " (" + amount_string + "€)";
+    amountContainer.textContent = " " + amount_string + "€";
   }
 }
 

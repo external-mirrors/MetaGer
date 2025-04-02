@@ -60,6 +60,10 @@ return [
         'base_url' => env("APP_ENV") === "local" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com",
         'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_CLIENT_ID") : env("PAYPAL_CLIENT_ID"),
         'secret' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
+        'membership' => [
+            'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_CLIENT_ID") : env("PAYPAL_MEMBERSHIP_CLIENT_ID"),
+            'secret' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_SECRET") : env("PAYPAL_MEMBERSHIP_SECRET"),
+        ],
         'subscription_plans' => [
             'de' => [
                 'monthly' => env("APP_ENV") === "local" ? "P-9K924561XA8341447MR4OWLY" : "P-5T792079318830948MR7RKNQ",

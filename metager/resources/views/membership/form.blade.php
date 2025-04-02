@@ -11,6 +11,7 @@
     können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
 <form id="membership-form" method="POST">
     <input type="hidden" name="_token" value="{{$csrf_token}}">
+    <input type="hidden" name="type" value="{{ request("type", "") === "company" ? "company" : "person"  }}">
     <div id="contact-data" @if(Request::input("type", "") === "company")class="company"@else class="person"@endif>
         <h3 id="contact_data">1. Ihre Kontaktdaten 
             @if(Request::input("type", "") === "company")
@@ -29,9 +30,9 @@
             <label for="title">Anrede</label>
             <select name="title" id="title" required>
                 <option disabled selected value>-- Auswahl --</option>
-                <option value="Herr">Herr</option>
-                <option value="Frau">Frau</option>
-                <option value="Neutral">Neutral</option>
+                <option value="Herr" @if(Request::input('title', '' )==="Herr")selected @endif>Herr</option>
+                <option value="Frau" @if(Request::input('title', '' )==="Frau")selected @endif>Frau</option>
+                <option value="Neutral" @if(Request::input('title', '' )==="Neutral")selected @endif>Neutral</option>
             </select>
         </div>
         <div class="input-group">
@@ -92,8 +93,7 @@
         </div>
     </div>
     <div id="membership-fee">
-        <h3>2. Ihr Mitgliedsbeitrag</h3>
-        <div>Wählen Sie nachfolgend bitte Ihren gewünschten <em>monatlichen</em> Mitgliedsbeitrag aus.</div>
+        <h3>2. Ihr monatlicher Mitgliedsbeitrag</h3>
         @if(isset($errors) && $errors->has("amount"))
             @foreach($errors->get("amount") as $error)
                 <div class="error">{{ $error }}</div>
@@ -144,7 +144,7 @@
         <div id="membership-interval">
             <div class="input-group monthly">
                 <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval')
-                    || Request::input('interval')==="annual" )checked @endif required>
+                    || Request::input('interval')==="monthly" )checked @endif required>
                 <label for="interval-monthly">monatlich <span class="amount"></span></label>
             </div>
             <div class="input-group quarterly">
@@ -177,7 +177,13 @@
             <input type="radio" name="payment-method" id="payment-method-banktransfer" value="banktransfer"
                 @if(Request::input('payment-method', '' )==="banktransfer" )checked @endif required>
             <label for="payment-method-banktransfer">Banküberweisung</label>
-            <div id="directdebit-data">
+            <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
+                @if(Request::input('payment-method', '' )==="paypal" )checked @endif required>
+            <label for="payment-method-paypal" class="js-only">PayPal</label>
+            <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="creditcard"
+                @if(Request::input('payment-method', '' )==="creditcard" )checked @endif required>
+            <label for="payment-method-creditcard" class="js-only">Kredit-/Debitkarte</label>
+            <div id="directdebit-data" class="info-container">
                 @if(isset($errors) && $errors->has("iban"))
                     @foreach($errors->get("iban") as $error)
                         <div class="error">{{ $error }}</div>
@@ -194,6 +200,7 @@
                         value="{{ Request::input('iban', '') }}">
                 </div>
             </div>
+            <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Abschicken</button>

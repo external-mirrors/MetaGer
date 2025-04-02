@@ -127,7 +127,6 @@
 
       >h3,
       >div.error,
-      div:nth-child(2),
       div#reduction-container {
         grid-column: span 4;
       }
@@ -247,8 +246,12 @@
           border: 1px solid @border-color;
         }
 
-        >div#directdebit-data {
+        .info-container {
           display: none;
+          grid-column: span 2;
+        }
+
+        >div#directdebit-data {
           grid-column: span 2;
           grid-template-columns: 1fr 1fr;
 
@@ -290,6 +293,10 @@
             &#payment-method-directdebit~div#directdebit-data {
               display: grid;
             }
+
+            &#payment-method-paypal~div#paypal-data {
+              display: block;
+            }
           }
         }
 
@@ -298,6 +305,11 @@
 
           >div#directdebit-data {
             grid-column: auto;
+          }
+
+          .info-container {
+            display: none;
+            grid-column: span 1;
           }
         }
       }

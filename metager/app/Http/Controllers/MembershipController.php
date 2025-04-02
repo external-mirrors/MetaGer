@@ -52,12 +52,15 @@ class MembershipController extends Controller
                     }
                 },
             ],
-            "name" => 'required',
+            "title" => ['exclude_if:type,company', 'required', 'in:Frau,Herr,Neutral'],
+            "firstname" => ['exclude_if:type,company', 'required', 'max:50'],
+            "lastname" => ['exclude_if:type,company', 'required', 'max:50'],
+            "company" => ['exclude_unless:type,company', 'required', 'max:100'],
             "email" => "required|email",
             "amount" => 'required|in:5.00,10.00,15.00,custom',
             "custom-amount" => 'exclude_unless:amount,custom|numeric|required|min:2.5',
             "interval" => 'required|in:annual,six-monthly,quarterly,monthly',
-            "payment-method" => 'required|in:directdebit,banktransfer',
+            "payment-method" => 'required|in:directdebit,banktransfer,paypal,creditcard',
             "iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()]
         ]);
         if ($validator->fails()) {

@@ -47,6 +47,7 @@ return [
         "donation_ticket_id" => env("TICKET_DONATION_ID", "")
     ],
     "civicrm" => [
+        "enabled" => env("CIVICRM_NOTIFICATIONS_ENABLED", true),
         "url" => env("CIVICRM_URL", "https://metager.de"),
         "apikey" => env("CIVICRM_API_KEY", ""),
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
@@ -63,6 +64,7 @@ return [
         'membership' => [
             'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_CLIENT_ID") : env("PAYPAL_MEMBERSHIP_CLIENT_ID"),
             'secret' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_SECRET") : env("PAYPAL_MEMBERSHIP_SECRET"),
+            "webhook_id" => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_WEBHOOKID") : env("PAYPAL_MEMBERSHIP_WEBHOOKID"),
         ],
         'subscription_plans' => [
             'de' => [

@@ -121,6 +121,8 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::group(["prefix" => "membership"], function () {
         Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");
         Route::post("/", [MembershipController::class, "submitMembershipForm"]);
+        Route::get("paypal/authorized/{id}", [MembershipController::class, "paypalHandleAuthorized"])->name("membership_paypal_authorized");
+        Route::post("webhook/paypal", [MembershipController::class, "paypalWebhook"]);
         Route::get("/success", [MembershipController::class, "success"])->name("membership_success");
     });
 

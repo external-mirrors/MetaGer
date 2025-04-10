@@ -227,7 +227,7 @@ class RequestFetcher extends Command
         if (!empty($job["headers"]) && sizeof($job["headers"]) > 0) {
             $headers = [];
             foreach ($job["headers"] as $key => $value) {
-                $headers[] = $key . ":" . $value;
+                $headers[] = $key . ": " . $value;
             }
             # Headers are in the Form:
             # <key>:<value>;<key>:<value>

@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create('membership_paypal', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('vault_id')->nullable();
-            $table->string('order_id')->nullable(false);
+            $table->string('order_id')->nullable();
             $table->string('authorization_id')->nullable();
+            $table->timestamp("expires_at")->nullable(false);
             $table->timestamp('created_at')->nullable(false)->useCurrent();
         });
     }

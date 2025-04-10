@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->string('iban');
             $table->string('bic')->nullable();
             $table->string('name')->nullable();
+            $table->timestamp("expires_at")->nullable(false);
             $table->timestamp('created_at')->nullable(false)->useCurrent();
         });
     }

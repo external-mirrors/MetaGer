@@ -37,6 +37,11 @@ document.querySelectorAll("input[name=payment-method]").forEach((input) => {
 (() => {
   validateAmount();
   document.querySelector("#amount-custom-value").addEventListener("change", validateAmount);
+  document.querySelectorAll('input[type=radio][name=amount]').forEach(element => {
+    element.addEventListener("change", e => {
+      document.querySelector("#reduction-container").classList.add("hidden");
+    });
+  });
 })();
 
 function validateAmount() {

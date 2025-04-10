@@ -30,6 +30,7 @@ mix
     "resources/less/metager/pages/admin/spam/style.less",
     "public/css/admin/spam/style.css"
   )
+  .less("resources/less/metager/pages/admin/membership.less", "public/css/admin/membership.css")
   .less(
     "resources/less/metager/pages/admin/spam/dark.less",
     "public/css/admin/spam/dark.css"
@@ -136,6 +137,13 @@ mix
       "resources/js/admin/count.js",
     ],
     "public/js/admin/count.js"
+  )
+  .js(
+    [
+      //   'node_modules/chart.js/dist/chart.js',
+      "resources/js/admin/membership.js",
+    ],
+    "public/js/admin/membership.js"
   )
   .js(["resources/js/scriptResultPage.js"], "public/js/scriptResultPage.js")
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")

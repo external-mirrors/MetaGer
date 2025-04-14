@@ -37,6 +37,6 @@ return [
     'logs' => [
         'admin' => "Logs Admin - MetaGer",
         'overview' => 'Journaux - MetaGer',
-        'login' => "Connexion - MetaGer",
+        'login' => "Logs Admin - MetaGer",
     ],
 ];

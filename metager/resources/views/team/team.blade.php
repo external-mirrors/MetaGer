@@ -20,9 +20,6 @@
 				<p>Branz, Manuela - {!! trans('team.role.1.1') !!} & {!! trans('team.role.3') !!}
 			</li>
 			<li>
-				<p>Höfer, Kim - {!! trans('team.role.6') !!}
-			</li>
-			<li>
 				<p><a href="https://de.wikipedia.org/wiki/Wolfgang_Sander-Beuermann" target="_blank" rel="noopener">Sander-Beuermann, Wolfgang</a>, Dr.-Ing - {!! trans('team.role.8') !!}
 			</li>
 			<li>

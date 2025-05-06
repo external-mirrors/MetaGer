@@ -94,7 +94,7 @@ class MetaGer
         # Read blocklists
         if (file_exists(config_path() . "/blacklistDomains.txt") && file_exists(config_path() . "/blacklistUrl.txt")) {
             $tmp = file_get_contents(config_path() . "/blacklistDomains.txt");
-            $this->domainsBlacklisted = explode("\n", $tmp);
+            $this->domainsBlacklisted = array_map('trim', explode("\n", $tmp));
             $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
             $lines = explode("\n", $tmp);
             $filtered_lines = array_filter($lines, function ($line) {

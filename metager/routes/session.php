@@ -24,6 +24,9 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
     Route::match(["get", "post"], "logs", [LogsApiController::class, "admin"])->name("logs:admin");
     Route::get("membership", [MembershipController::class, "adminIndex"])->name("membership_admin_overview");
     Route::get("membership/test", [MembershipController::class, "test"]);
+    Route::get("membership/reduction", [MembershipController::class, "adminMembershipReduction"])->name("membership_admin_reduction");
+    Route::post("membership/reduction/deny", [MembershipController::class, "adminMembershipReductionDeny"])->name("membership_admin_reduction_deny");
+    Route::post("membership/reduction/accept", [MembershipController::class, "adminMembershipReductionAccept"])->name("membership_admin_reduction_accept");
     Route::post("membership/accept", [MembershipController::class, "adminAccept"])->name("membership_admin_accept");
     Route::post("membership/deny", [MembershipController::class, "adminDeny"])->name("membership_admin_deny");
     Route::get("logs/mail", [LogsApiController::class, "mail_logincode"]);

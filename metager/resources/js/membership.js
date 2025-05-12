@@ -45,20 +45,26 @@ document.querySelectorAll("input[name=payment-method]").forEach((input) => {
 })();
 
 function validateAmount() {
-  let element = document.querySelector("#amount-custom-value");
-  let value = parseFloat(element.value);
+  let amount_element = document.querySelector("input[name=amount]:checked");
+  let custom_amount_element = document.querySelector("#amount-custom-value");
+  let value = amount_element.value;
+  if (value == "custom") {
+    value = parseFloat(custom_amount_element.value);
+  } else {
+    value = parseFloat(value);
+  }
   if (isNaN(value)) {
     document.querySelector("#reduction-container").classList.add("hidden");
-    element.value = "";
+    custom_amount_element.value = "";
     return
   };
 
-  if (element.value != value) {
-    element.value = value;
+  if (custom_amount_element.value != value) {
+    custom_amount_element.value = value;
   }
 
   if (value < 2.5) {
-    element.value = 2.5;
+    custom_amount_element.value = 2.5;
   }
 
   if (value < 5) {

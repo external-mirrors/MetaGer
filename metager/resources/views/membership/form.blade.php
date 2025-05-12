@@ -9,7 +9,7 @@
 <div class="page-description">Vielen Dank, dass Sie eine <a href="https://suma-ev.de/mitglieder/"
         target="_blank">Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu
     können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
-<form id="membership-form" method="POST">
+<form id="membership-form" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{$csrf_token}}">
     <input type="hidden" name="type" value="{{ request("type", "") === "company" ? "company" : "person"  }}">
     <div id="contact-data" @if(Request::input("type", "") === "company")class="company"@else class="person"@endif>
@@ -128,8 +128,13 @@
         </div>
         <div id="reduction-container" class="hidden">
             <div>Der Mindestbeitrag beträgt monatlich <span>5€</span>. Wenn Sie <a href="https://suma-ev.de/beitragsordnung/" target="_blank">Anspruch auf einen reduzierten Beitrag</a> haben, laden Sie bitte nachfolgend einen geeigneten Nachweis zusammen mit Ihrem Antrag hoch.</div>
+            @if(isset($errors) && $errors->has("reduction"))
+                @foreach($errors->get("reduction") as $error)
+                    <div class="error">{{ $error }}</div>
+                @endforeach
+            @endif
             <div class="input-group">
-                <label for="reduction">Nachweis</label>
+                <label for="reduction">Nachweis (PNG/JPG/PDF)</label>
                 <input type="file" name="reduction" id="reduction">
             </div>
         </div>
@@ -159,7 +164,7 @@
             </div>
             <div class="input-group annual">
                 <input type="radio" name="interval" id="interval-annual" value="annual"
-                    @if(Request::input('interval', '' )==="quarterly" )checked @endif required>
+                    @if(Request::input('interval', '' )==="annual" )checked @endif required>
                 <label for="interval-annual">jährlich <span class="amount"></span></label>
             </div>
         </div>

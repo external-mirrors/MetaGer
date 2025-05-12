@@ -87,7 +87,7 @@ spec:
             mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
             subPath: BLACKLIST_DESCRIPTION_URL
           - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/logs/metager
+            mountPath: /metager/metager_app/storage/metager
             readOnly: false
           - name: sqlite-databases
             mountPath: /metager/metager_app/database/databases

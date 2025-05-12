@@ -22,6 +22,7 @@ return new class extends Migration {
             $table->string("key")->nullable(false);
             $table->double("amount")->nullable();
             $table->enum("interval", ["monthly", "quarterly", "six-monthly", "annual"])->nullable();
+            $table->timestamp("reduced_until")->nullable();
             $table->enum("payment_method", ["banktransfer", "directdebit", "paypal", "creditcard"])->nullable();
             $table->unsignedBigInteger("civicrm_membership_id")->nullable()->unique();
             $table->unsignedBigInteger('directdebit')->references("id")->on("membership_directdebit")->nullable()->unique();

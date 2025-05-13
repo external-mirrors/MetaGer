@@ -229,6 +229,7 @@ export function initializeSuggestions() {
    */
   async function putAnonymousTokens() {
     let recycleTokens = {
+      cost: 0,
       tokens: {
         tokens: [],
         decitokens: []

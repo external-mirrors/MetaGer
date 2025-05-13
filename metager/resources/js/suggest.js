@@ -17,6 +17,7 @@ export function initializeSuggestions() {
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
 
+  let suggest_requests = [];
   let suggest_id = crypto.randomUUID();
   let tokens = null;
   let last_cost = 0;
@@ -46,15 +47,21 @@ export function initializeSuggestions() {
     })
   })();
 
-  search_input.addEventListener("keyup", (e) => {
+  search_input.addEventListener("keyup", async (e) => {
     if (!active) return;
-    let ignored_keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     moveFocus(e.key);
     if (e.key == "Escape") {
       e.stopPropagation();
       e.target.blur();
-    } else if (!ignored_keys.includes(e.key)) {
-      suggest();
+    }
+  });
+
+  search_input.addEventListener("input", async (e) => {
+    if (!active) return;
+    let ignored_keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Escape"];
+    if (!ignored_keys.includes(e.key)) {
+      let suggest_query = search_input.value.trim();
+      return suggest(1, suggest_query);
     }
   });
   search_input.addEventListener("paste", e => {
@@ -84,12 +91,18 @@ export function initializeSuggestions() {
     cancelSuggest().then(() => form.submit());
   })
 
-  async function suggest(iteration = 1) {
+  async function suggest(iteration = 1, suggest_query = search_input.value.trim()) {
     if (iteration > 2 || navigator.webdriver) {
       suggestions = [];
       updateSuggestions();
       return;
     }
+    if (search_input.value.trim() == query) {
+      updateSuggestions();
+      return;
+    }
+    counter += 1;
+
     let token_header = null;
     let decitoken_header = null;
     let cost = last_cost;
@@ -116,14 +129,8 @@ export function initializeSuggestions() {
         index++;
       }
     }
-    if (search_input.value.trim() == query) {
-      updateSuggestions();
-      return;
-    }
 
-
-    counter += 1;
-    return fetch(suggestion_url + "?query=" + encodeURIComponent(search_input.value.trim()), {
+    let fetch_request = fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -132,32 +139,38 @@ export function initializeSuggestions() {
         id: suggest_id,
         number: counter
       }
-    })
-      .then(async (response) => {
-        let status = response.status;
-        let json_response = await response.json();
+    }).then(async (response) => {
+      let status = response.status;
+      let json_response = await response.json();
 
-        switch (+status) {
-          case 200:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            query = search_input.value.trim();
-            suggestions = json_response[1];
-            suggestion_urls = json_response[3];
-            updateSuggestions();
-            return putAnonymousTokens();
-          case 423:
-            break;
-          case 402:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            last_cost = json_response.cost;
-            return suggest(iteration + 1);
-        }
-        //return response.json()
-      })
+      switch (+status) {
+        case 200:
+          await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+          query = search_input.value.trim();
+          suggestions = json_response[1];
+          suggestion_urls = json_response[3];
+          updateSuggestions();
+          return putAnonymousTokens();
+        case 423:
+          break;
+        case 402:
+          await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+          last_cost = json_response.cost;
+          return suggest(iteration + 1);
+      }
+      //return response.json()
+    })
       .catch(reason => {
         suggestions = [];
         updateSuggestions();
       });
+    suggest_requests.push(fetch_request);
+    suggest_requests.forEach(async suggest_request => {
+      await suggest_request;
+    });
+
+    return fetch_request;
+
   }
 
   async function cancelSuggest() {

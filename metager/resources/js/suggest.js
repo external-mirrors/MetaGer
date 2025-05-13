@@ -105,6 +105,18 @@ export function initializeSuggestions() {
 
     let token_header = null;
     let decitoken_header = null;
+
+    let params = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        tokens: JSON.stringify(token_header),
+        decitokens: JSON.stringify(decitoken_header),
+        id: suggest_id,
+        number: counter
+      }
+    };
+
     let cost = last_cost;
     if (cost > 0) {
       await getAnonymousTokens(cost);
@@ -130,53 +142,47 @@ export function initializeSuggestions() {
       }
     }
 
-    let params = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        tokens: JSON.stringify(token_header),
-        decitokens: JSON.stringify(decitoken_header),
-        id: suggest_id,
-        number: counter
-      }
-    };
+    params.headers.tokens = JSON.stringify(token_header);
+    params.headers.decitokens = JSON.stringify(decitoken_header);
 
-    let fetch_request = fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), params)
-      .then(async (response) => {
-        let status = response.status;
-        let json_response = await response.json();
+    let fetch_request =
+      fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), params)
+        .then(async (response) => {
+          let status = response.status;
+          let json_response = await response.json();
 
-        switch (+status) {
-          case 200:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            if (params.headers.number >= counter) {
-              query = search_input.value.trim();
-              suggestions = json_response[1];
-              suggestion_urls = json_response[3];
-              updateSuggestions();
-            }
-            return putAnonymousTokens();
-          case 423:
-            break;
-          case 402:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            last_cost = json_response.cost;
-            return suggest(iteration + 1);
-        }
-        //return response.json()
-      })
-      .catch(reason => {
-        if (params.headers.number >= counter) {
-          suggestions = [];
-          updateSuggestions();
-        }
-      });
-    suggest_requests[counter] = fetch_request;
-    suggest_requests.forEach(async suggest_request => {
-      await suggest_request;
+          switch (+status) {
+            case 200:
+              await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+              if (params.headers.number >= counter) {
+                query = search_input.value.trim();
+                suggestions = json_response[1];
+                suggestion_urls = json_response[3];
+                updateSuggestions();
+              }
+              return putAnonymousTokens();
+            case 423:
+              break;
+            case 402:
+              await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+              last_cost = json_response.cost;
+              return suggest(iteration + 1);
+          }
+          //return response.json()
+        })
+        .catch(reason => {
+          console.error(reason);
+          if (params.headers.number >= counter) {
+            suggestions = [];
+            updateSuggestions();
+          }
+        });
+
+    return Promise.all(suggest_requests).then(() => {
+      suggest_requests[counter] = fetch_request;
+      return fetch_request;
     });
 
-    return fetch_request;
 
   }
 
@@ -199,9 +205,9 @@ export function initializeSuggestions() {
   async function recycleTokens(sent_tokens, json_response) {
     let new_tokens = { tokens: [], decitokens: [] };
     // Keep all tokens that were not sent 
-    if (sent_tokens.tokens != null)
+    if (sent_tokens.tokens != null && tokens != null)
       new_tokens.tokens = tokens.tokens.filter(x => !sent_tokens.tokens.includes(x));
-    if (sent_tokens.decitokens != null)
+    if (sent_tokens.decitokens != null && tokens != null)
       new_tokens.decitokens = tokens.decitokens.filter(x => !sent_tokens.decitokens.includes(x));
 
     // Keep all tokens returned by the server

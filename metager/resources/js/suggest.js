@@ -230,6 +230,7 @@ export function initializeSuggestions() {
   async function putAnonymousTokens() {
     let recycleTokens = {
       cost: 0,
+      missing: 0,
       tokens: {
         tokens: [],
         decitokens: []

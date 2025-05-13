@@ -231,6 +231,8 @@ export function initializeSuggestions() {
     let recycleTokens = {
       cost: 0,
       missing: 0,
+      credits: 0,
+      async_disabled: false,
       tokens: {
         tokens: [],
         decitokens: []

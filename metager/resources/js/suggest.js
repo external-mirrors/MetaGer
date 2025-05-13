@@ -130,7 +130,7 @@ export function initializeSuggestions() {
       }
     }
 
-    let fetch_request = fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), {
+    let params = {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -139,32 +139,39 @@ export function initializeSuggestions() {
         id: suggest_id,
         number: counter
       }
-    }).then(async (response) => {
-      let status = response.status;
-      let json_response = await response.json();
+    };
 
-      switch (+status) {
-        case 200:
-          await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-          query = search_input.value.trim();
-          suggestions = json_response[1];
-          suggestion_urls = json_response[3];
-          updateSuggestions();
-          return putAnonymousTokens();
-        case 423:
-          break;
-        case 402:
-          await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-          last_cost = json_response.cost;
-          return suggest(iteration + 1);
-      }
-      //return response.json()
-    })
+    let fetch_request = fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), params)
+      .then(async (response) => {
+        let status = response.status;
+        let json_response = await response.json();
+
+        switch (+status) {
+          case 200:
+            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+            if (params.headers.number >= counter) {
+              query = search_input.value.trim();
+              suggestions = json_response[1];
+              suggestion_urls = json_response[3];
+              updateSuggestions();
+            }
+            return putAnonymousTokens();
+          case 423:
+            break;
+          case 402:
+            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+            last_cost = json_response.cost;
+            return suggest(iteration + 1);
+        }
+        //return response.json()
+      })
       .catch(reason => {
-        suggestions = [];
-        updateSuggestions();
+        if (params.headers.number >= counter) {
+          suggestions = [];
+          updateSuggestions();
+        }
       });
-    suggest_requests.push(fetch_request);
+    suggest_requests[counter] = fetch_request;
     suggest_requests.forEach(async suggest_request => {
       await suggest_request;
     });

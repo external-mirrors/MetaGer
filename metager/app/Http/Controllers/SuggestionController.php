@@ -55,7 +55,11 @@ class SuggestionController extends Controller
         $cache_key = "suggestion:cache:$suggestion_provider:" . Localization::getLanguage() . ":" . Localization::getRegion() . ":$query";
         if (Cache::has($cache_key)) {
             PrometheusExporter::KeyUsed($suggestions::COST, "suggestions", true);
-            return response()->json(Cache::get($cache_key), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json"]);
+            if ($authorization instanceof TokenAuthorization) {
+                $token_data["tokens"] = $authorization->getToken()->tokens;
+                $token_data["decitokens"] = $authorization->getToken()->decitokens;
+            }
+            return response()->json(array_merge(Cache::get($cache_key), $token_data), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json", "X-Cached" => "True"]);
         } else {
             $authorization = app(Authorization::class);
             $authorization->setCost($suggestions::COST);

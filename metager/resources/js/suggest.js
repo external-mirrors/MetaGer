@@ -17,6 +17,7 @@ export function initializeSuggestions() {
   let searchbar_container = document.querySelector(".searchbar");
   let on_startpage = document.querySelector("#searchForm .startpage-searchbar") != null;
 
+  let suggest_requests = [];
   let suggest_id = crypto.randomUUID();
   let tokens = null;
   let last_cost = 0;
@@ -46,15 +47,21 @@ export function initializeSuggestions() {
     })
   })();
 
-  search_input.addEventListener("keyup", (e) => {
+  search_input.addEventListener("keyup", async (e) => {
     if (!active) return;
-    let ignored_keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
     moveFocus(e.key);
     if (e.key == "Escape") {
       e.stopPropagation();
       e.target.blur();
-    } else if (!ignored_keys.includes(e.key)) {
-      suggest();
+    }
+  });
+
+  search_input.addEventListener("input", async (e) => {
+    if (!active) return;
+    let ignored_keys = ["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Escape"];
+    if (!ignored_keys.includes(e.key)) {
+      let suggest_query = search_input.value.trim();
+      return suggest(1, suggest_query);
     }
   });
   search_input.addEventListener("paste", e => {
@@ -84,14 +91,32 @@ export function initializeSuggestions() {
     cancelSuggest().then(() => form.submit());
   })
 
-  async function suggest(iteration = 1) {
+  async function suggest(iteration = 1, suggest_query = search_input.value.trim()) {
     if (iteration > 2 || navigator.webdriver) {
       suggestions = [];
       updateSuggestions();
       return;
     }
+    if (search_input.value.trim() == query) {
+      updateSuggestions();
+      return;
+    }
+    counter += 1;
+
     let token_header = null;
     let decitoken_header = null;
+
+    let params = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        tokens: JSON.stringify(token_header),
+        decitokens: JSON.stringify(decitoken_header),
+        id: suggest_id,
+        number: counter
+      }
+    };
+
     let cost = last_cost;
     if (cost > 0) {
       await getAnonymousTokens(cost);
@@ -116,48 +141,49 @@ export function initializeSuggestions() {
         index++;
       }
     }
-    if (search_input.value.trim() == query) {
-      updateSuggestions();
-      return;
-    }
 
+    params.headers.tokens = JSON.stringify(token_header);
+    params.headers.decitokens = JSON.stringify(decitoken_header);
 
-    counter += 1;
-    return fetch(suggestion_url + "?query=" + encodeURIComponent(search_input.value.trim()), {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        tokens: JSON.stringify(token_header),
-        decitokens: JSON.stringify(decitoken_header),
-        id: suggest_id,
-        number: counter
-      }
-    })
-      .then(async (response) => {
-        let status = response.status;
-        let json_response = await response.json();
+    let fetch_request =
+      fetch(suggestion_url + "?query=" + encodeURIComponent(suggest_query), params)
+        .then(async (response) => {
+          let status = response.status;
+          let json_response = await response.json();
 
-        switch (+status) {
-          case 200:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            query = search_input.value.trim();
-            suggestions = json_response[1];
-            suggestion_urls = json_response[3];
+          switch (+status) {
+            case 200:
+              await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+              if (params.headers.number >= counter) {
+                query = search_input.value.trim();
+                suggestions = json_response[1];
+                suggestion_urls = json_response[3];
+                updateSuggestions();
+              }
+              return putAnonymousTokens();
+            case 423:
+              break;
+            case 402:
+              await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
+              last_cost = json_response.cost;
+              return suggest(iteration + 1);
+          }
+          //return response.json()
+        })
+        .catch(reason => {
+          console.error(reason);
+          if (params.headers.number >= counter) {
+            suggestions = [];
             updateSuggestions();
-            return putAnonymousTokens();
-          case 423:
-            break;
-          case 402:
-            await recycleTokens({ tokens: token_header, decitokens: decitoken_header }, json_response);
-            last_cost = json_response.cost;
-            return suggest(iteration + 1);
-        }
-        //return response.json()
-      })
-      .catch(reason => {
-        suggestions = [];
-        updateSuggestions();
-      });
+          }
+        });
+
+    return Promise.all(suggest_requests).then(() => {
+      suggest_requests[counter] = fetch_request;
+      return fetch_request;
+    });
+
+
   }
 
   async function cancelSuggest() {
@@ -179,9 +205,9 @@ export function initializeSuggestions() {
   async function recycleTokens(sent_tokens, json_response) {
     let new_tokens = { tokens: [], decitokens: [] };
     // Keep all tokens that were not sent 
-    if (sent_tokens.tokens != null)
+    if (sent_tokens.tokens != null && tokens != null)
       new_tokens.tokens = tokens.tokens.filter(x => !sent_tokens.tokens.includes(x));
-    if (sent_tokens.decitokens != null)
+    if (sent_tokens.decitokens != null && tokens != null)
       new_tokens.decitokens = tokens.decitokens.filter(x => !sent_tokens.decitokens.includes(x));
 
     // Keep all tokens returned by the server
@@ -203,6 +229,10 @@ export function initializeSuggestions() {
    */
   async function putAnonymousTokens() {
     let recycleTokens = {
+      cost: 0,
+      missing: 0,
+      credits: 0,
+      async_disabled: false,
       tokens: {
         tokens: [],
         decitokens: []

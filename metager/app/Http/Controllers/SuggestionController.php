@@ -55,6 +55,7 @@ class SuggestionController extends Controller
         $cache_key = "suggestion:cache:$suggestion_provider:" . Localization::getLanguage() . ":" . Localization::getRegion() . ":$query";
         if (Cache::has($cache_key)) {
             PrometheusExporter::KeyUsed($suggestions::COST, "suggestions", true);
+            $token_data = [];
             if ($authorization instanceof TokenAuthorization) {
                 $token_data["tokens"] = $authorization->getToken()->tokens;
                 $token_data["decitokens"] = $authorization->getToken()->decitokens;

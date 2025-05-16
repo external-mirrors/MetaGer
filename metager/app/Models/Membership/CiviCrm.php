@@ -110,6 +110,21 @@ class CiviCrm
         return null;
     }
 
+    public static function CREATE_COMPANY(string $company_name, string $email)
+    {
+        $params = [
+            'values' => ['organization_name' => $company_name, 'contact_type' => 'Organization'],
+            'chain' => ['name_me_0' => ['Email', 'create', ['values' => ['contact_id' => '$id', 'email' => $email]]]],
+        ];
+
+        $response = self::API_POST("/Contact/create", $params);
+        if ($response["count"] > 0) {
+            return Arr::get($response, "values.0");
+        }
+
+        return null;
+    }
+
     public static function FIND_MEMBERSHIPS(string $contact_id = null, string $membership_id = null)
     {
         if ($contact_id === null && $membership_id === null)

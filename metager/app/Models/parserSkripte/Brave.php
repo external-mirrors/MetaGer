@@ -117,10 +117,10 @@ class Brave extends Searchengine
                         $override .= "+";
                     }
                     $override .= $char;
-                    if (empty(trim($char))) {
+                    if (strlen(trim($char)) === 0) {
                         $wordstart = true;
                     }
-                    if (!empty(trim($char))) {
+                    if (strlen(trim($char)) > 0) {
                         $wordstart = false;
                     }
                     if ($char === "\"") {

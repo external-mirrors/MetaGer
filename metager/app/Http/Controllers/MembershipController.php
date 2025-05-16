@@ -32,8 +32,12 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $membership_id = 2171; // ToDo dynamically generate list
-        PayPal::UPDATE_AUTHORIZED_ORDER($membership_id);
+        $membership_id = 2195; // ToDo dynamically generate list
+        $paypal_entry = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $membership_id)->first();
+        if ($paypal_entry !== null) {
+            $authorization_id = $paypal_entry->authorization_id;
+            PayPal::CAPTURE_PAYMENT($authorization_id);
+        }
         return response("");
     }
     /**
@@ -203,35 +207,29 @@ class MembershipController extends Controller
             case "VAULT.PAYMENT-TOKEN.CREATED":
                 // There is a new Payment Token. Check if a order ID is attached
                 $order_id = $request->input("resource.metadata.order_id");
+                $vault_id = $request->input("resource.id");
                 if ($order_id !== null) {
-                    $updated = DB::table("membership_paypal")->where("order_id", "=", $order_id)->update(["vault_id" => $request->input("resource.id")]);
-                    if ($updated > 0) {
+                    $civicrm_membership_id = DB::table("membership_paypal")->where("order_id", "=", $order_id)->get("civicrm_membership_id");
+                    if ($civicrm_membership_id !== null) {
+                        CiviCrm::ADD_MEMBERSHIP_PAYPAL_VAULT($civicrm_membership_id, $vault_id);
                         return response()->json([]);
                     }
                 }
                 abort(404);
             case "VAULT.PAYMENT-TOKEN.DELETED":
-                DB::table("membership_paypal")->where("vault_id", "=", $request->input("resource.id"))->update(["vault_id" => null]);
-                // ToDo: Delete payment token in Civicrm aswell
+                $vault_id = $request->input("resource.id");
+                CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id);
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.CREATED":
                 $authorization_id = $request->input("resource.id");
                 $authorization_status = $request->input("resource.status");
-                if ($authorization_status === "CREATED") {
-                    $custom_id = $request->input("resource.custom_id");
-                    if (preg_match("/^pending_(\d+)$/", $custom_id, $matches)) {
-                        $custom_id = $matches[1];
-                        $membership_entry = DB::table("membership")->where("id", "=", $custom_id)->first();
-                        if ($membership_entry !== null) {
-                            DB::table("membership_paypal")->where("id", "=", $membership_entry->paypal)->update(["authorization_id" => $authorization_id]);
-                        }
-                    }
-                } else {
-                    DB::table("membership_paypal")->where("authorization_id", "=", $authorization_id)->update(["authorization_id" => null]);
-                }
+                $order_id = $request->input("resource.supplementary_data.related_ids.order_id");
+                DB::table("membership_paypal")->where("order_id", "=", $order_id)->update(["authorization_id" => $authorization_id, "authorization_status" => $authorization_status]);
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.VOIDED":
-                DB::table("membership_paypal")->where("authorization_id", "=", $request->input("resource.id"))->update(["authorization_id" => null]);
+                $authorization_id = $request->input("resource.id");
+                $authorization_status = $request->input("resource.status");
+                DB::table("membership_paypal")->where("authorization_id", "=", $authorization_id)->update(["authorization_status" => $authorization_status]);
                 return response()->json([]);
             case "PAYMENT.CAPTURE.COMPLETED":
                 $invoice_id = $request->input("resource.invoice_id");
@@ -267,10 +265,10 @@ class MembershipController extends Controller
         abort(400);
     }
 
-    public function paypalHandleAuthorized(Request $request, $id)
+    public function paypalHandleAuthorized(Request $request, $payment_method, $civicrm_membership_id)
     {
         try {
-            $parameters = ["id" => intval($id), "error_url" => $request->input("error_url"), "success_url" => $request->input("success_url"), "expires_at" => intval($request->input("expires_at"))];
+            $parameters = ["id" => $civicrm_membership_id, "error_url" => $request->input("error_url"), "success_url" => $request->input("success_url"), "expires_at" => intval($request->input("expires_at"))];
             $expiration = Carbon::createFromTimestamp($parameters["expires_at"]);
             if (!hash_equals(hash_hmac("sha256", json_encode($parameters), config("app.key")), $request->input("signature", "")) || now()->isAfter($expiration)) {
                 abort(401);
@@ -281,8 +279,7 @@ class MembershipController extends Controller
         $error_url = $request->input("error_url");
         $success_url = $request->input("success_url");
         try {
-            $membership_record = DB::table("membership")->where("id", "=", $id)->firstOrFail();
-            $paypal_record = DB::table("membership_paypal")->where("id", "=", $membership_record->paypal)->firstOrFail();
+            $paypal_record = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $civicrm_membership_id)->firstOrFail();
         } catch (Exception $e) {
             return redirect($error_url);
         }
@@ -290,24 +287,27 @@ class MembershipController extends Controller
         $order = PayPal::GET_ORDER($paypal_record->order_id);
 
         if ($order["intent"] === "AUTHORIZE" && $order["status"] === "APPROVED") {
-            $order = PayPal::AUTHORIZE_ODER($paypal_record->order_id);
+            $order = PayPal::AUTHORIZE_ORDER($paypal_record->order_id);
         } else if ($order["status"] !== "COMPLETED") {
             return redirect($error_url);
         }
 
         // Check if PaymentSource was vaulted
-        if (array_key_exists($membership_record->payment_method, $order["payment_source"])) {
-            if ($order["payment_source"][$membership_record->payment_method]["attributes"]["vault"]["status"] === "VAULTED") {
-                $paypal_record->vault_id = $order["payment_source"][$membership_record->payment_method]["attributes"]["vault"]["id"];
-                DB::table("membership_paypal")->where("id", "=", $membership_record->paypal)->update(["vault_id" => $paypal_record->vault_id]);
-            }
+        $vault_id = Arr::get($order, "payment_source.{$payment_method}.attributes.vault.id");
+        if ($vault_id !== null) {
+            CiviCrm::ADD_MEMBERSHIP_PAYPAL_VAULT($civicrm_membership_id, $vault_id);
         }
-        if (sizeof($order["purchase_units"]) === 1 && sizeof($order["purchase_units"][0]["payments"]["authorizations"]) === 1) {
-            $paypal_record->authorization_id = $order["purchase_units"][0]["payments"]["authorizations"][0]["id"];
-            DB::table("membership_paypal")->where("id", "=", $membership_record->paypal)->update(["authorization_id" => $paypal_record->authorization_id]);
+
+        $authorization_id = Arr::get($order, "purchase_units.0.payments.authorizations.0.id");
+        $authorization_status = Arr::get($order, "purchase_units.0.payments.authorizations.0.status");
+        if ($authorization_id !== null && $authorization_status !== null) {
+            DB::table("membership_paypal")->where("id", "=", $paypal_record->id)->update([
+                "authorization_id" => $paypal_record->authorization_id,
+                "authorization_status" => $authorization_status
+            ]);
         }
         // Check if Authorization ID exists
-        if ($paypal_record->vault_id !== null && $paypal_record->authorization_id !== null) {
+        if ($vault_id !== null && $authorization_id !== null) {
             return redirect($success_url);
         } else {
             return redirect($error_url);
@@ -318,10 +318,7 @@ class MembershipController extends Controller
     {
         $membership_applications = CiviCrm::FIND_MEMBERSHIP_APPLICATIONS();
 
-        $reductions = DB::table("membership_reduction")
-            ->select(["membership_reduction.id", "file_path", "file_mimetype", "membership_id", "title", "firstname", "lastname", "company", "email", "amount", "interval"])
-            ->leftJoin("membership", "membership.id", "=", "membership_reduction.membership_id")
-            ->get();
+        $reductions = DB::table("membership_reduction")->get();
         return response(view(
             "admin.membership.index",
             [
@@ -403,6 +400,12 @@ class MembershipController extends Controller
             return redirect(route("membership_admin_overview", ["error" => "Couldn't accept membership"]));
         }
 
+        $paypal_entry = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $membership_id)->first();
+        if ($paypal_entry !== null) {
+            $authorization_id = $paypal_entry->authorization_id;
+            PayPal::CAPTURE_PAYMENT($authorization_id);
+        }
+
         $mail = new WelcomeMail($membership_id);
         if (Mail::mailer("membership")->send($mail) === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
@@ -421,7 +424,7 @@ class MembershipController extends Controller
 
     private function createPayPalAuthorizeOrder(string $membership_id, string $payment_source, string $success_url, string $error_url)
     {
-        $parameters = ["id" => $membership_id, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters = ["id" => intval($membership_id), "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
         $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
         $success_url = route("membership_paypal_authorized", $parameters);
 
@@ -433,8 +436,11 @@ class MembershipController extends Controller
         if ($order["status"] === "PAYER_ACTION_REQUIRED") {
             foreach ($order["links"] as $link) {
                 if ($link["rel"] === "payer-action") {
-                    $paypal_id = DB::table("membership_paypal")->insertGetId(["order_id" => $order["id"], "expires_at" => now()->addDays(3)]);
-                    DB::table("membership")->where("id", "=", $membership_id)->update(["paypal" => $paypal_id]);
+                    DB::table("membership_paypal")->insert([
+                        "civicrm_membership_id" => $membership_id,
+                        "order_id" => Arr::get($order, "id"),
+                        "expires_at" => now()->addDays(7)
+                    ]);
                     return redirect($link["href"]);
                 }
             }

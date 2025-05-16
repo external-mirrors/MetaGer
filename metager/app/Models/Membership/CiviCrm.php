@@ -149,6 +149,7 @@ class CiviCrm
         $params = [
             'select' => ['*', 'contact_id.addressee_display', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
             'where' => [['status_id', '=', 9]], // Status = Applied
+            'orderBy' => ['join_date' => 'DESC'],
             'limit' => 25,
         ];
 
@@ -196,6 +197,24 @@ class CiviCrm
             'useTrash' => FALSE,
         ];
         self::API_POST("/Contact/delete", $params);
+    }
+
+    public static function ADD_MEMBERSHIP_PAYPAL_VAULT(string $membership_id, string $vault_id)
+    {
+        $params = [
+            'values' => ['Beitrag.PayPal_Vault' => $vault_id, 'Beitrag.PayPal_ID' => PayPal::GET_ID()],
+            'where' => [['id', '=', $membership_id]],
+        ];
+        return self::API_POST("/Membership/update", $params);
+    }
+
+    public static function REMOVE_MEMBERSHIP_PAYPAL_VAULT(string $vault_id)
+    {
+        $params = [
+            'values' => ['Beitrag.PayPal_Vault' => '', 'Beitrag.PayPal_ID' => '', 'Beitrag.Zahlungsweise' => 2],
+            'where' => [['Beitrag.PayPal_Vault', '=', $vault_id]],
+        ];
+        return self::API_POST("/Membership/update", $params);
     }
 
     public static function GET_MEMBERSHIP_COUNT()
@@ -341,7 +360,8 @@ class CiviCrm
 
         $params = [
             'notificationForPayment' => FALSE,
-            'disableActionsOnCompleteOrder' => TRUE,
+            'notificationForCompleteOrder' => FALSE,
+            'disableActionsOnCompleteOrder' => FALSE,
             'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
         ];
         return self::API_POST("/Payment/create", $params);

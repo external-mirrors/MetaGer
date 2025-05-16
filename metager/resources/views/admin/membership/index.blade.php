@@ -18,6 +18,7 @@
             <h1>Aufnahmeanträge</h1>
             <table>
                 <thead>
+                    <th>Datum</th>
                     <th>Name</th>
                     <th>Beitrag</th>
                     <th>Zahlungsmethode</th>
@@ -26,6 +27,7 @@
                 <tbody>
                     @foreach($membership_applications as $membership_application)
                         <tr>
+                            <td>{{ $membership_application["join_date"] }}</td>
                             <td>
                                 <a href="https://suma-ev.de/wp-admin/admin.php?page=CiviCRM&q=civicrm%2Fcontact%2Fview&reset=1&cid={{ $membership_application["contact_id"] }}&selectedChild=member"
                                     target="_blank">
@@ -48,7 +50,8 @@
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_accept") }}">
                                     <input type="hidden" name="id" value="{{ $membership_application["id"] }}">
-                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default">
+                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default"
+                                        @if($membership_application["Beitrag.Zahlungsweise:label"] === "PayPal" && empty($membership_application["Beitrag.PayPal_Vault"])) disabled @endif>
                                 </form>
                             </td>
                             <td>

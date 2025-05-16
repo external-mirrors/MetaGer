@@ -30,16 +30,11 @@ use Validator;
 class MembershipController extends Controller
 {
 
-    public function test(Request $reqeust)
+    public function test(Request $request)
     {
-        $membership_id = 2155; // ToDo dynamically generate list
-
-        PayPal::CREATE_ORDER(2155);
-        return response("Success");
-
-        $mail = new WelcomeMail(2149);
-        //MembershipMail::dispatch("Dominik Hebeler", $mail->email, $mail->subject, $mail->render());
-        return $mail;
+        $membership_id = 2171; // ToDo dynamically generate list
+        PayPal::UPDATE_AUTHORIZED_ORDER($membership_id);
+        return response("");
     }
     /**
      * First stage of membership form
@@ -109,23 +104,10 @@ class MembershipController extends Controller
                 )
             );
         }
-        $formData = $validator->validated();
-        if ($formData["amount"] === "custom") {
-            $formData["amount"] = $formData["custom-amount"];
+        $membership = $validator->validated();
+        if ($membership["amount"] === "custom") {
+            $membership["amount"] = $membership["custom-amount"];
         }
-
-        $membership = [
-            "title" => $formData["title"] ?? null,
-            "firstname" => $formData["firstname"] ?? null,
-            "lastname" => $formData["lastname"] ?? null,
-            "company" => $formData["company"] ?? null,
-            "employees" => $formData["employees"] ?? null,
-            "email" => $formData["email"],
-            "amount" => $formData["amount"],
-            "interval" => $formData["interval"],
-            "payment_method" => $formData["payment-method"],
-            "expires_at" => now()->addWeeks(2)
-        ];
 
         $store_key = false;
         $authorization = app(\App\Models\Authorization\Authorization::class);
@@ -138,15 +120,42 @@ class MembershipController extends Controller
 
         $membership["locale"] = Localization::getLanguage() . "-" . Localization::getRegion();
 
-        $membership_id = DB::table("membership")->insertGetId($membership);
-        $membership["id"] = $membership_id;
+        /**
+         * Create or get CiviCRM Contact
+         */
+        $contact_id = null;
+        if (!empty($membership["company"])) {
+            $contact = CiviCrm::FIND_COMPANY($membership["company"], $membership["email"]);
+            $contact_id = $contact["id"];
+        } else {
+            $contact = CiviCrm::FIND_CONTACT($membership["title"], $membership["firstname"], $membership["lastname"], $membership["email"]);
+            if ($contact === null) {
+                $contact = CiviCrm::CREATE_CONTACT($membership["title"], $membership["firstname"], $membership["lastname"], $membership["email"]);
+                $contact_id = Arr::get($contact, "id");
+            } else {
+                $contact_id = $contact["id"];
+            }
+        }
+        if ($contact_id === null)
+            throw new Exception("Cannot find or create contact"); // ToDO Better error handling
 
-        if ($membership["company"] === null && $membership["amount"] < 5) {
+        /**
+         * Create or get CiviCRM Membership
+         */
+        $memberships = CiviCrm::FIND_MEMBERSHIPS($contact_id);
+        if (sizeof($memberships) > 0) {
+            throw new Exception("Contact already has an active membership"); // ToDO Better error handling
+        }
+        $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($contact_id, $membership);
+        $civicrm_membership = CiviCrm::FIND_MEMBERSHIPS(null, $civicrm_membership["id"]);
+        $civicrm_membership = Arr::get($civicrm_membership, "0");
+
+        if (empty($membership["company"]) && $membership["amount"] < 5) {
             /**
              * @var \Illuminate\Http\UploadedFile
              */
-            $file = $formData["reduction"];
-            DB::table("membership_reduction")->insert(["file_path" => storage_path("metager/" . $file->getBasename()), "file_mimetype" => $file->getMimeType(), 'expires_at' => $membership["expires_at"], 'membership_id' => $membership_id]);
+            $file = $membership["reduction"];
+            DB::table("membership_reduction")->insert(["file_path" => storage_path("metager/" . $file->getBasename()), "file_mimetype" => $file->getMimeType(), 'expires_at' => $membership["expires_at"], 'membership_id' => $civicrm_membership["id"]]);
             $file->move(storage_path("metager"), $file->getBasename());
         }
 
@@ -159,30 +168,23 @@ class MembershipController extends Controller
         }
         $error_url = route("membership_form", request()->except(["reduction", "_token"]));
 
-        if ($membership["payment_method"] === "paypal") {
-            return $this->createPayPalAuthorizeOrder($membership, $success_url, $error_url);
-        } elseif ($membership["payment_method"] === "card") {
+        if ($membership["payment-method"] === "paypal") {
+            return $this->createPayPalAuthorizeOrder($civicrm_membership["id"], $membership["payment-method"], $success_url, $error_url);
+        } elseif ($membership["payment-method"] === "card") {
             // ToDo: Add
-        } elseif ($membership["payment_method"] === "directdebit") {
-            $directdebit_id = DB::table("membership_directdebit")->insertGetId([
-                "iban" => $formData["iban"],
-                "name" => $formData["accountholder"],
-                "expires_at" => $membership["expires_at"]
-            ]);
-            DB::table("membership")->where("id", "=", $membership_id)->update(["directdebit" => $directdebit_id]);
         }
 
         if (config("metager.metager.civicrm.enabled")) {
-            $formData["amount"] = number_format(round(floatval($formData["amount"]), 2), 2, ",", ".") . "€";
+            $membership["amount"] = number_format(round(floatval($membership["amount"]), 2), 2, ",", ".") . "€";
             $message = <<<MESSAGE
-            Name: {$formData["name"]}
-            Email: {$formData["email"]}
-            Betrag: {$formData["amount"]}
-            Intervall: {$formData["interval"]}
-            Zahlungsart: {$formData["payment-method"]}
+            Name: {$membership["name"]}
+            Email: {$membership["email"]}
+            Betrag: {$membership["amount"]}
+            Intervall: {$membership["interval"]}
+            Zahlungsart: {$membership["payment-method"]}
             MESSAGE;
             // Create Notification
-            ContactMail::dispatch("verein@metager.de", "Mitglieder", $formData["name"], $formData["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
+            ContactMail::dispatch("verein@metager.de", "Mitglieder", $membership["name"], $membership["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
         }
         return redirect($success_url);
     }
@@ -309,12 +311,7 @@ class MembershipController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $membership_applications = DB::table("membership")
-            ->leftJoin("membership_directdebit", "membership.directdebit", "membership_directdebit.id")
-            ->leftJoin("membership_paypal", "membership.paypal", "membership_paypal.id")
-            ->where("amount", ">=", 5)
-            ->orWhere("reduced_until", ">", now())
-            ->get(["membership.id", "email", "company", "title", "firstname", "lastname", "amount", "interval", "payment_method", "iban", "name as accountholder", "vault_id"]);
+        $membership_applications = CiviCrm::FIND_MEMBERSHIP_APPLICATIONS();
 
         $reductions = DB::table("membership_reduction")
             ->select(["membership_reduction.id", "file_path", "file_mimetype", "membership_id", "title", "firstname", "lastname", "company", "email", "amount", "interval"])
@@ -394,75 +391,36 @@ class MembershipController extends Controller
     public function adminAccept(Request $request)
     {
         $membership_id = $request->input("id");
-        if (!filter_var($membership_id, FILTER_VALIDATE_INT))
-            return redirect(route("membership_admin_overview", ["error" => "Invalid Membership ID"]));
-        $membership_entry = DB::table("membership")
-            ->leftJoin("membership_directdebit", "membership.directdebit", "membership_directdebit.id")
-            ->leftJoin("membership_paypal", "membership.paypal", "membership_paypal.id")
-            ->where("membership.id", "=", $membership_id)->first();
-        if ($membership_entry === null)
-            return redirect(route("membership_admin_overview", ["error" => "Membership ID not found"]));
 
-        $contact_id = null;
-        if ($membership_entry->company !== null) {
-            $contact = CiviCrm::FIND_COMPANY($membership_entry->company);
-            $contact_id = $contact["id"];
-        } else {
-            $contact = CiviCrm::FIND_CONTACT($membership_entry->title, $membership_entry->firstname, $membership_entry->lastname, $membership_entry->email);
-            if ($contact === null) {
-                $contact = CiviCrm::CREATE_CONTACT($membership_entry->title, $membership_entry->firstname, $membership_entry->lastname, $membership_entry->email);
-                $contact_id = Arr::get($contact, "id");
-            } else {
-                $contact_id = $contact["id"];
-            }
-        }
-        if ($contact_id === null)
-            return redirect(route("membership_admin_overview", ["error" => "Couldn't create contact"]));
+        $result = CiviCRM::ACCEPT_MEMBERSHIP_APPLICATION($membership_id);
 
-        $memberships = CiviCrm::FIND_MEMBERSHIPS($contact_id);
-        if (sizeof($memberships) > 0) {
-            return redirect(route("membership_admin_overview", ["error" => "Contact already has an active membership"]));
+        if (Arr::get($result, "count", 0) !== 1) {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't accept membership"]));
         }
-        $new_membership = CiviCrm::CREATE_MEMBERSHIP($contact_id, $membership_entry);
-        if ($new_membership !== null) {
-            $mail = new WelcomeMail($new_membership["id"]);
-            if (Mail::mailer("membership")->send($mail) === null) {
-                return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
-            }
-            DB::table("membership")->where("id", "=", $membership_id)->delete();
-            return redirect(route("membership_admin_overview"));
-        } else {
-            return redirect(route("membership_admin_overview", ["error" => "Error when creating membership"]));
+
+        $mail = new WelcomeMail($membership_id);
+        if (Mail::mailer("membership")->send($mail) === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
         }
+        return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
     }
 
     public function adminDeny(Request $request)
     {
         $membership_id = $request->input("id");
-        if (!filter_var($membership_id, FILTER_VALIDATE_INT))
-            return redirect(route("membership_admin_overview", ["error" => "Invalid Membership ID"]));
-        $membership_entry = DB::table("membership")->where("id", "=", $membership_id)->delete();
+
+        CiviCrm::DELETE_MEMBERSHIP_APPLICATION($membership_id);
+
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }
 
-    private function createPayPalAuthorizeOrder(array $membership, string $success_url, string $error_url)
+    private function createPayPalAuthorizeOrder(string $membership_id, string $payment_source, string $success_url, string $error_url)
     {
-        $payment_source = $membership["payment_method"];
-
-        $quantity = match ($membership["interval"]) {
-            "monthly" => 1,
-            "quarterly" => 3,
-            "six-monthly" => 6,
-            "annual" => 12
-        };
-
-        $vault_description = "SUMA-EV Mitgliedsbeitrag - Fällig im gewählten Zahlungsintervall.";
-
-        $parameters = ["id" => $membership["id"], "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters = ["id" => $membership_id, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
         $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
         $success_url = route("membership_paypal_authorized", $parameters);
 
-        $order = PayPal::CREATE_AUTHORIZE_ORDER($payment_source, $membership["amount"], $quantity, $vault_description, $error_url, $success_url, $membership["id"]);
+        $order = PayPal::CREATE_AUTHORIZE_ORDER($membership_id, $payment_source, $success_url, $error_url);
 
         if ($order === null)
             return redirect($error_url);
@@ -471,7 +429,7 @@ class MembershipController extends Controller
             foreach ($order["links"] as $link) {
                 if ($link["rel"] === "payer-action") {
                     $paypal_id = DB::table("membership_paypal")->insertGetId(["order_id" => $order["id"], "expires_at" => now()->addDays(3)]);
-                    DB::table("membership")->where("id", "=", $membership["id"])->update(["paypal" => $paypal_id]);
+                    DB::table("membership")->where("id", "=", $membership_id)->update(["paypal" => $paypal_id]);
                     return redirect($link["href"]);
                 }
             }

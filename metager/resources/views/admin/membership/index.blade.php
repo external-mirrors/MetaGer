@@ -27,32 +27,33 @@
                     @foreach($membership_applications as $membership_application)
                         <tr>
                             <td>
-                                <a href="mailto:{{ $membership_application->email }}" target="_blank">
-                                    {{ $membership_application->company . implode(" ", [$membership_application->title, $membership_application->firstname, $membership_application->lastname]) }}
+                                <a href="https://suma-ev.de/wp-admin/admin.php?page=CiviCRM&q=civicrm%2Fcontact%2Fview&reset=1&cid={{ $membership_application["contact_id"] }}&selectedChild=member"
+                                    target="_blank">
+                                    {{ $membership_application["contact_id.addressee_display"] }}
                                 </a>
                             </td>
-                            <td>{{ number_format($membership_application->amount, 2, ",", ".") . "€ " . $membership_application->interval }}
+                            <td>{{ number_format($membership_application["Beitrag.Monatlicher_Mitgliedsbeitrag"], 2, ",", ".") . "€ " }}
                             </td>
                             <td>
-                                <div>{{ $membership_application->payment_method }}</div>
-                                @if($membership_application->payment_method === "directdebit")
-                                    @if($membership_application->accountholder !== null)
-                                        <div>Kontoinhaber: {{ $membership_application->accountholder }}</div>
+                                <div>{{ $membership_application["Beitrag.Zahlungsweise:label"] }}</div>
+                                @if($membership_application["Beitrag.Zahlungsweise:label"] === "Lastschrift")
+                                    @if($membership_application["Beitrag.Kontoinhaber"] !== null)
+                                        <div>Kontoinhaber: {{ $membership_application["Beitrag.Kontoinhaber"] }}</div>
                                     @endif
-                                    <div>IBAN: {{ iban_to_human_format($membership_application->iban) }}</div>
-                                @elseif($membership_application->payment_method === "paypal")
-                                    <div>PayPal Vault: {{ $membership_application->vault_id }}</div>
+                                    <div>IBAN: {{ iban_to_human_format($membership_application["Beitrag.IBAN"]) }}</div>
+                                @elseif($membership_application["Beitrag.Zahlungsweise:label"] === "PayPal")
+                                    <div>PayPal Vault: {{ $membership_application["Beitrag.PayPal_Vault"] }}</div>
                                 @endif
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_accept") }}">
-                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="hidden" name="id" value="{{ $membership_application["id"] }}">
                                     <input type="submit" name="action" value="Annehmen" class="btn btn-default">
                                 </form>
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_deny") }}">
-                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="hidden" name="id" value="{{ $membership_application["id"] }}">
                                     <input type="submit" id="membership-deny" name="action" value="Ablehnen" class="btn btn-danger">
                                 </form>
                             </td>

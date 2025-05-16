@@ -174,6 +174,11 @@ class PayPal
         return self::PAYPAL_REQUEST("/v2/checkout/orders", self::API_METHOD_POST, $order_data);
     }
 
+    public static function CAPTURE_PAYMENT(string $authorization_id)
+    {
+        return self::PAYPAL_REQUEST("/v2/payments/authorizations/{$authorization_id}/capture", self::API_METHOD_POST, []);
+    }
+
     public static function UPDATE_AUTHORIZED_ORDER(string $civicrm_membership_id)
     {
         $order_id = DB::table("membership")
@@ -211,11 +216,11 @@ class PayPal
         if ($method === self::API_METHOD_POST) {
             $mission["headers"]["Content-Type"] = "application/json";
             $mission["curlopts"][CURLOPT_POST] = true;
-            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
         } else if ($method === self::API_METHOD_PATCH) {
             $mission["headers"]["Content-Type"] = "application/json";
             $mission["curlopts"][CURLOPT_CUSTOMREQUEST] = "PATCH";
-            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
         }
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
@@ -300,7 +305,7 @@ class PayPal
         return $body;
     }
 
-    public static function AUTHORIZE_ODER(string $order_id)
+    public static function AUTHORIZE_ORDER(string $order_id)
     {
         $resulthash = md5("paypal:order" . microtime(true));
 

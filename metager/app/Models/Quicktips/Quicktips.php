@@ -115,11 +115,10 @@ class Quicktips
 
         $result = json_decode($result);
 
-        if ($result->body === "no-result") {
-            return false;
-        }
-
         if ($result->body !== null) {
+            if ($result->body === "no-result") {
+                return false;
+            }
             return $result->body;
         } else {
             return false;

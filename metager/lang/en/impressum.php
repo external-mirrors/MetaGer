@@ -7,7 +7,7 @@ return [
     'info' => [
         '1' => 'Wikipedia-entry for the <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r\nPostfach 51 01 43\r\nD-30631 Hannover\r\nDeutschland/Germany",
-        '3' => "Contact:\r\nTel.: +4951134000070\r\nEMail: <a href=\"/en-GB/kontakt\">Encrypted contact form</a>",
+        '3' => "Contact:\r\nTel.: +4951134000070\r\nEMail: <a href=\":contact_link\">Contact Form</a>",
         '4' => 'Board: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Youth Protection Commissioner: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
         '8' => '"SUMA-EV - Verein für freien Wissenszugang" is a charitable association, registered in the register of associations at the Amtsgericht Hannover under VR200033. Sales tax identification number: DE 300 464 091. The "Gottfried Wilhelm Leibniz Universität Hannover" is a statutory body.',

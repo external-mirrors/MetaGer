@@ -12,7 +12,7 @@ D-30631 Hannover\r
 Deutschland/Germany",
         '3' => "Kontakt:\r
 Tel.: +4951134000070\r
-EMail: <a href=\"/en-GB/kontakt\">Verschlüsseltes Kontakt-Formular</a>",
+EMail: <a href=\":contact_link\">Kontakt-Formular</a>",
         '4' => 'Vorstand: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Jugendschutzbeauftragte: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
         '8' => "\"SUMA-EV - Verein für freien Wissenszugang\" ist ein gemeinnütziger Verein, eingetragen in das Vereinsregister beim Amtsgericht Hannover unter VR200033. Umsatzsteueridentifikationsnummer: DE 300 464 091. Die \"Gottfried Wilhelm Leibniz Universität Hannover\" ist eine Körperschaft des öffentlichen Rechts.",

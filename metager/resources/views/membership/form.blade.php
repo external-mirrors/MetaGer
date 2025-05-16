@@ -75,9 +75,9 @@
             <label for="employees">Anzahl Mitarbeitende</label>
             <select name="employees" id="employees" required>
                 <option disabled selected value>-- Auswahl --</option>
-                <option value="1-19">1 - 19</option>
-                <option value="20-199">20 - 199</option>
-                <option value=">200">> 200</option>
+                <option value="1-19" @if(Request::input('employees', '' )==="1-19")selected @endif>1 - 19</option>
+                <option value="20-199" @if(Request::input('employees', '' )==="20-199")selected @endif>20 - 199</option>
+                <option value=">200" @if(Request::input('employees', '' )===">200")selected @endif>> 200</option>
             </select>
         </div>
         @endif

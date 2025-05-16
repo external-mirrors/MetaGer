@@ -10,7 +10,7 @@ D-30631 Hannover\r
 Deutschland/Tyskland",
         '3' => "Kontakta oss på\r
 Tfn: +4951134000070\r
-E-post: <a href=\"/en-GB/kontakt\">Krypterat kontaktformulär</a>",
+E-post: <a href=\":contact_link\">Kontaktformulär</a>",
         '4' => 'Styrelsen: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Kommissionär för ungdomsskydd: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',
         '9' => 'Ansvarsförbindelse:',

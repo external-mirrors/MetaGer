@@ -126,7 +126,12 @@ class MembershipController extends Controller
         $contact_id = null;
         if (!empty($membership["company"])) {
             $contact = CiviCrm::FIND_COMPANY($membership["company"], $membership["email"]);
-            $contact_id = $contact["id"];
+            if ($contact === null) {
+                $contact = CiviCrm::CREATE_COMPANY($membership["company"], $membership["email"]);
+                $contact_id = Arr::get($contact, "id");
+            } else {
+                $contact_id = Arr::get($contact, "id");
+            }
         } else {
             $contact = CiviCrm::FIND_CONTACT($membership["title"], $membership["firstname"], $membership["lastname"], $membership["email"]);
             if ($contact === null) {

@@ -3,12 +3,22 @@
 namespace App\Models\Membership;
 
 use App\Localization;
+use Arr;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Cache;
 
 class PayPal
 {
+
+    const INTENT_CAPTURE = "CAPTURE";
+    const INTENT_AUTHORIZE = "AUTHORIZE";
+
+    const API_METHOD_POST = "POST";
+    const API_METHOD_PATCH = "PATCH";
+    const API_METHOD_GET = "GET";
 
     public static function GET_ID(): string
     {
@@ -17,44 +27,9 @@ class PayPal
 
     public static function CREATE_ORDER(string $civicrm_membership_id): array|null
     {
-        $membership = CiviCrm::FIND_MEMBERSHIPS(null, $civicrm_membership_id);
-        if ($membership === null || sizeof($membership) === 0) {
-            return null;
-        } else {
-            $membership = $membership[0];
-        }
-        $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($civicrm_membership_id, count: 2);
-        if ($payments === null)
-            return null;
-
-
-        $contribution = CiviCrm::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($civicrm_membership_id);
+        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_CAPTURE);
 
         $resulthash = md5("paypal" . microtime(true));
-
-        $amount = $payments[0]["amount"];
-
-        $payment_source = match ($membership["Beitrag.Zahlungsweise:label"]) {
-            "PayPal" => "paypal",
-        };
-
-        $quantity = 1;
-        $unit_amount = $amount;
-
-        $description = "SUMA-EV Mitgliedsbeitrag";
-        if ($payments[0]["payment_interval_months"] * $payments[0]["monthly"] === $amount) {
-            $quantity = $payments[0]["payment_interval_months"];
-            $unit_amount = $payments[0]["monthly"];
-
-            $date_start = clone $payments[0]["due_date"];
-            $date_end = clone $payments[1]["due_date"];
-            $date_end->addMonths(-1);
-            if ($date_start->diffInMonths($date_end, true) <= 0) {
-                $description .= " " . $date_end->format("M Y");
-            } else {
-                $description .= " " . $date_start->format("M Y") . " - " . $date_end->format("M Y");
-            }
-        }
 
         $mission = [
             "resulthash" => $resulthash,
@@ -69,51 +44,7 @@ class PayPal
             "name" => "PayPal",
             "curlopts" => [
                 CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode([
-                    "purchase_units" => [
-                        [
-                            "description" => $description,
-                            "soft_descriptor" => "Mitgliedsbeitrag",
-                            "custom_id" => $membership["Beitrag.Zahlungsreferenz"],
-                            "invoice_id" => "contribution_" . $contribution,
-                            "amount" => [
-                                "currency_code" => "EUR",
-                                "value" => $amount,
-                                "breakdown" => [
-                                    "item_total" => [
-                                        "currency_code" => "EUR",
-                                        "value" => $amount
-                                    ],
-                                    "tax_total" => [
-                                        "currency_code" => "EUR",
-                                        "value" => 0
-                                    ]
-                                ]
-                            ],
-                            "items" => [
-                                [
-                                    "name" => $description,
-                                    "quantity" => $quantity,
-                                    "category" => "DIGITAL_GOODS",
-                                    "unit_amount" => [
-                                        "currency_code" => "EUR",
-                                        "value" => $unit_amount
-                                    ],
-                                    "tax" => [
-                                        "currency_code" => "EUR",
-                                        "value" => 0
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
-                    "intent" => "CAPTURE",
-                    "payment_source" => [
-                        $payment_source => [
-                            "vault_id" => $membership["Beitrag.PayPal_Vault"]
-                        ]
-                    ]
-                ]),
+                CURLOPT_POSTFIELDS => json_encode($order_data),
             ]
         ];
         $mission = json_encode($mission);
@@ -129,94 +60,163 @@ class PayPal
         return $body;
     }
 
+    public static function CREATE_ORDER_DATA(string $civicrm_membership_id, $intent): array
+    {
+        $order_data = [
+            "purchase_units" => [
+                [
+                    "description" => __("membership/order.default_description"),
+                    "soft_descriptor" => __("membership/order.default_softdescription"),
+                    "custom_id" => "pending",
+                    "invoice_id" => "pending",
+                    "amount" => [
+                        "currency_code" => "EUR",
+                        "value" => 0,
+                        "breakdown" => [
+                            "item_total" => [
+                                "currency_code" => "EUR",
+                                "value" => 0
+                            ],
+                            "tax_total" => [
+                                "currency_code" => "EUR",
+                                "value" => 0
+                            ]
+                        ]
+                    ],
+                    "items" => [
+                        [
+                            "name" => __("membership/order.default_description"),
+                            "quantity" => 0,
+                            "category" => "DIGITAL_GOODS",
+                            "unit_amount" => [
+                                "currency_code" => "EUR",
+                                "value" => 0
+                            ],
+                            "tax" => [
+                                "currency_code" => "EUR",
+                                "value" => 0
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+            "intent" => $intent,
+        ];
 
-    public static function CREATE_AUTHORIZE_ORDER(string $payment_source, float $monthly_amount, int $number_of_months, string $vault_description, string $error_url, string $success_url, int $membership_tmpid): array|null
+        $membership = CiviCrm::FIND_MEMBERSHIPS(null, $civicrm_membership_id);
+        if ($membership === null || sizeof($membership) === 0) {
+            throw new Exception("Cannot find membership");
+        } else {
+            $membership = $membership[0];
+        }
+        $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($civicrm_membership_id, count: 2);
+        if ($payments === null)
+            throw new Exception("Cannot load Payments");
+
+
+        $contribution = CiviCrm::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($civicrm_membership_id);
+
+        $amount = $payments[0]["amount"];
+
+        $payment_source = match ($membership["Beitrag.Zahlungsweise:label"]) {
+            "PayPal" => "paypal",
+        };
+
+        $quantity = 1;
+        $unit_amount = $amount;
+
+        $description = "";
+        if ($payments[0]["payment_interval_months"] * $payments[0]["monthly"] === $amount) {
+            $quantity = $payments[0]["payment_interval_months"];
+            $unit_amount = $payments[0]["monthly"];
+
+            $date_start = clone $payments[0]["due_date"];
+            $date_end = clone $payments[1]["due_date"];
+            $date_end->addMonths(-1);
+            if ($date_start->diffInMonths($date_end, true) <= 0) {
+                $description .= " " . $date_end->format("M Y");
+            } else {
+                $description .= " " . $date_start->format("M Y") . " - " . $date_end->format("M Y");
+            }
+        }
+        Arr::set($order_data, "purchase_units.0.description", Arr::get($order_data, "purchase_units.0.description") . $description);
+        Arr::set($order_data, "purchase_units.0.items.0.name", Arr::get($order_data, "purchase_units.0.description") . $description);
+        Arr::set($order_data, "purchase_units.0.custom_id", $membership["Beitrag.Zahlungsreferenz"]);
+        Arr::set($order_data, "purchase_units.0.invoice_id", "contribution_" . $contribution);
+        Arr::set($order_data, "purchase_units.0.amount.value", $amount);
+        Arr::set($order_data, "purchase_units.0.amount.breakdown.item_total.value", $amount);
+        Arr::set($order_data, "purchase_units.0.items.0.quantity", $quantity);
+        Arr::set($order_data, "purchase_units.0.items.0.unit_amount.value", $unit_amount);
+        Arr::set($order_data, "payment_source.$payment_source.vault_id", $membership["Beitrag.PayPal_Vault"]);
+        return $order_data;
+    }
+
+
+    public static function CREATE_AUTHORIZE_ORDER(string $civicrm_membership_id, string $payment_source, string $success_url, string $error_url): array|null
+    {
+        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_AUTHORIZE);
+        Arr::set($order_data, "payment_source.$payment_source", [
+            "attributes" => [
+                "vault" => [
+                    "store_in_vault" => "ON_SUCCESS",
+                    "usage_type" => "MERCHANT",
+                    "usage_pattern" => "SUBSCRIPTION_PREPAID",
+                    "description" => __("membership/order.vault.description")
+                ]
+            ],
+            "experience_context" => [
+                "return_url" => $success_url,
+                "cancel_url" => $error_url,
+                "shipping_preference" => "NO_SHIPPING",
+                "locale" => Localization::getLanguage() . "-" . Localization::getRegion()
+            ]
+        ]);
+        return self::PAYPAL_REQUEST("/v2/checkout/orders", self::API_METHOD_POST, $order_data);
+    }
+
+    public static function UPDATE_AUTHORIZED_ORDER(string $civicrm_membership_id)
+    {
+        $order_id = DB::table("membership")
+            ->leftJoin("membership_paypal", "membership_paypal.id", "=", "membership.paypal")
+            ->where("civicrm_membership_id", "=", $civicrm_membership_id)->firstOrFail("order_id")->order_id;
+        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_CAPTURE);
+
+        $patch_data = [];
+        $patch_data[] = [
+            "op" => "replace",
+            "path" => "/purchase_units/@reference_id=='default'/description",
+            "value" => Arr::get($order_data, "purchase_units.0.description")
+        ];
+        $order = self::GET_ORDER($order_id);
+        if (self::PAYPAL_REQUEST("/v2/checkout/orders/$order_id", self::API_METHOD_PATCH, $patch_data) === null) {
+            throw new Exception("Couldn't patch PayPal Order");
+        }
+    }
+
+    private static function PAYPAL_REQUEST(string $api_path, string $method = self::API_METHOD_POST, array|null $request_data): null|array
     {
         $resulthash = md5("paypal" . microtime(true));
-
-        $amount = $monthly_amount * $number_of_months;
-
-        $vault_description = "SUMA-EV Mitgliedsbeitrag - Fällig im gewählten Zahlungsintervall.";
-
-        $error_url = route("membership_form", request()->except(["reduction", "_token"]));
-        $parameters = ["id" => $membership_tmpid, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
-        $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
-        $success_url = route("membership_paypal_authorized", $parameters);
-
-
         $mission = [
             "resulthash" => $resulthash,
-            "url" => config("metager.metager.paypal.base_url") . "/v2/checkout/orders",
+            "url" => config("metager.metager.paypal.base_url") . $api_path,
             "useragent" => "MetaGer",
             "cacheDuration" => 0,   // We'll cache seperately
             "headers" => [
-                "Content-Type" => "application/json",
                 "Authorization" => "Bearer " . self::GET_ACCESS_TOKEN(),
                 "PayPal-Request-Id" => uuid_create()
             ],
             "name" => "PayPal",
-            "curlopts" => [
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode([
-                    "purchase_units" => [
-                        [
-                            "description" => "SUMA-EV Mitgliedsbeitrag",
-                            "soft_descriptor" => "Mitgliedsbeitrag",
-                            "custom_id" => "pending_$membership_tmpid",
-                            "invoice_id" => "pending_$membership_tmpid",
-                            "amount" => [
-                                "currency_code" => "EUR",
-                                "value" => $amount,
-                                "breakdown" => [
-                                    "item_total" => [
-                                        "currency_code" => "EUR",
-                                        "value" => $amount
-                                    ],
-                                    "tax_total" => [
-                                        "currency_code" => "EUR",
-                                        "value" => 0
-                                    ]
-                                ]
-                            ],
-                            "items" => [
-                                [
-                                    "name" => "SUMA-EV Mitgliedsbeitrag",
-                                    "quantity" => $number_of_months,
-                                    "category" => "DIGITAL_GOODS",
-                                    "unit_amount" => [
-                                        "currency_code" => "EUR",
-                                        "value" => $monthly_amount
-                                    ],
-                                    "tax" => [
-                                        "currency_code" => "EUR",
-                                        "value" => 0
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ],
-                    "intent" => "AUTHORIZE",
-                    "payment_source" => [
-                        $payment_source => [
-                            "attributes" => [
-                                "vault" => [
-                                    "store_in_vault" => "ON_SUCCESS",
-                                    "usage_type" => "MERCHANT",
-                                    "usage_pattern" => "SUBSCRIPTION_PREPAID",
-                                    "description" => $vault_description
-                                ]
-                            ],
-                            "experience_context" => [
-                                "return_url" => $success_url,
-                                "cancel_url" => $error_url,
-                                "shipping_preference" => "NO_SHIPPING",
-                                "locale" => Localization::getLanguage() . "-" . Localization::getRegion()
-                            ]
-                        ]
-                    ]
-                ]),
-            ]
+            "curlopts" => []
         ];
+        if ($method === self::API_METHOD_POST) {
+            $mission["headers"]["Content-Type"] = "application/json";
+            $mission["curlopts"][CURLOPT_POST] = true;
+            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+        } else if ($method === self::API_METHOD_PATCH) {
+            $mission["headers"]["Content-Type"] = "application/json";
+            $mission["curlopts"][CURLOPT_CUSTOMREQUEST] = "PATCH";
+            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+        }
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
         $results = Redis::brpop($resulthash, 10);

@@ -51,7 +51,7 @@ class CiviCrm
     {
         $params = [
             'select' => ['*', 'email_primary.email'],
-            'where' => [['prefix_id:label', '=', 'Herr'], ['first_name', '=', 'Max'], ['last_name', '=', 'Mustermann'], ['email_primary.email', '=', 'dominik@hebeler.club'], ['contact_type', '=', 'Individual']],
+            'where' => [['prefix_id:label', '=', $title], ['first_name', '=', $firstname], ['last_name', '=', $lastname], ['email_primary.email', '=', $email], ['contact_type', '=', 'Individual']],
             'limit' => 25,
         ];
 
@@ -94,11 +94,11 @@ class CiviCrm
         return null;
     }
 
-    public static function FIND_COMPANY(string $company_name)
+    public static function FIND_COMPANY(string $company_name, string $email)
     {
         $params = [
             'select' => ['*', 'email_primary.email'],
-            'where' => [['contact_type', '=', 'Organization'], ['organization_name', '=', $company_name]],
+            'where' => [['contact_type', '=', 'Organization'], ['organization_name', '=', $company_name], ['email_primary.email', '=', $email]],
             'limit' => 25,
         ];
 
@@ -115,7 +115,7 @@ class CiviCrm
         if ($contact_id === null && $membership_id === null)
             return null;
         $params = [
-            'select' => ['*', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
+            'select' => ['*', 'contact_id.addressee_display', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
             'where' => [],
             'limit' => 25,
         ];
@@ -127,6 +127,60 @@ class CiviCrm
 
         $response = self::API_POST("/Membership/get", $params);
         return $response["values"];
+    }
+
+    public static function FIND_MEMBERSHIP_APPLICATIONS()
+    {
+        $params = [
+            'select' => ['*', 'contact_id.addressee_display', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
+            'where' => [['status_id', '=', 9]], // Status = Applied
+            'limit' => 25,
+        ];
+
+        $response = self::API_POST("/Membership/get", $params);
+        return Arr::get($response, "values");
+    }
+
+    public static function ACCEPT_MEMBERSHIP_APPLICATION(string $membership_id)
+    {
+        $params = [
+            'values' => ['is_override' => FALSE],
+            'where' => [['id', '=', $membership_id]],
+        ];
+        return self::API_POST("/Membership/update", $params);
+    }
+
+    public static function DELETE_MEMBERSHIP_APPLICATION(string $membership_id)
+    {
+        $membership_entry = self::FIND_MEMBERSHIPS(null, $membership_id);
+        $membership_entry = Arr::get($membership_entry, "0");
+        if ($membership_entry === null)
+            return;
+
+        // Delete Membership
+        $params = [
+            'where' => [
+                ['status_id', '=', 9], // Applied
+                ['id', '=', $membership_id]
+            ],
+        ];
+        self::API_POST("/Membership/delete", $params);
+
+        // Check if contact has any contributions
+        $params = [
+            'where' => [['contact_id', '=', Arr::get($membership_entry, "contact_id")]],
+            'limit' => 25,
+        ];
+        $contributions = Arr::get(self::API_POST("/Contribution/get", $params), "values", []);
+        if (sizeof($contributions) > 0)
+            return;
+
+        // Delete the whole contact 
+        $params = [
+            'where' => [['id', '=', Arr::get($membership_entry, "contact_id")]],
+            'useTrash' => FALSE,
+        ];
+        self::API_POST("/Contact/delete", $params);
     }
 
     public static function GET_MEMBERSHIP_COUNT()
@@ -157,24 +211,24 @@ class CiviCrm
         return $response;
     }
 
-    public static function CREATE_MEMBERSHIP(string $contact_id, object $membership_entry)
+    public static function CREATE_MEMBERSHIP(string $contact_id, array $membership)
     {
         $type_string = "";
-        if ($membership_entry->company === null) {
+        if (empty($membership["company"])) {
             $type_string .= "person";
-            if ($membership_entry->amount < 5) {
+            if ($membership["amount"] < 5) {
                 $type_string .= ".reduced";
             } else {
                 $type_string .= ".regular";
             }
         } else {
             $type_string .= "company";
-            $type_string .= "." . $membership_entry->employees;
+            $type_string .= "." . $membership["employees"];
         }
-        $type_string .= ".{$membership_entry->interval}";
+        $type_string .= "." . $membership['interval'];
 
         $membership_type = Arr::get(self::MEMBERSHIP_TYPES, $type_string);
-        $payment_type = match ($membership_entry->payment_method) {
+        $payment_type = match ($membership["payment-method"]) {
             "banktransfer" => "Banküberweisung",
             "directdebit" => "Lastschrift",
             "paypal" => "PayPal",
@@ -182,29 +236,32 @@ class CiviCrm
         };
         $params = [
             'values' => [
+                'status_id:label' => 'Applied',
+                'is_override' => TRUE,
+                'start_date' => now()->format("Y-m-d"),
+                'end_date' => now()->format("Y-m-d"),
                 'contact_id' => $contact_id,
                 'membership_type_id' => $membership_type,
-                'Beitrag.Monatlicher_Mitgliedsbeitrag' => $membership_entry->amount,
+                'Beitrag.Monatlicher_Mitgliedsbeitrag' => $membership["amount"],
                 'Beitrag.Zahlungsweise:label' => $payment_type,
                 'Beitrag.Zahlungsstatus:label' => 'Eingetreten',
                 'Ver_ffentlichung.Eintrag_auf_SUMA_EV_Webseite' => FALSE,
             ],
         ];
 
-        if ($membership_entry->payment_method === "directdebit") {
-            $params["values"]["Beitrag.Kontoinhaber"] = $membership_entry->name;
-            $params["values"]["Beitrag.IBAN"] = $membership_entry->iban;
-        } elseif ($membership_entry->payment_method === "paypal") {
-            $params["values"]["Beitrag.PayPal_Vault"] = $membership_entry->vault_id;
-            $params["values"]["Beitrag.PayPal_ID"] = PayPal::GET_ID();  // Unique Identifier for this deployment
+        if ($membership["payment-method"] === "directdebit") {
+            $params["values"]["Beitrag.Kontoinhaber"] = $membership["accountholder"];
+            $params["values"]["Beitrag.IBAN"] = $membership["iban"];
+        } elseif ($membership["payment-method"] === "paypal") {
+
         }
 
-        if (!empty($membership_entry->key)) {
-            $params["values"]["MetaGer_Key.Key"] = $membership_entry->key;
+        if (!empty($membership["key"])) {
+            $params["values"]["MetaGer_Key.Key"] = $membership["key"];
         }
 
-        if (!empty($membership_entry->reduced_until)) {
-            $params["values"]["Beitrag.Erm_igt_bis"] = $membership_entry->reduced_until;
+        if (!empty($membership["reduced_until"])) {
+            $params["values"]["Beitrag.Erm_igt_bis"] = $membership["reduced_until"];
         }
 
         $response = self::API_POST("/Membership/create", $params);

@@ -397,7 +397,7 @@ class AnonymousTokenPayment
         $this->decitokens = [];
     }
 
-    public function receive($timeout = 3): float
+    public function receive($timeout = 8): float
     {
         if (self::IS_ASYNC_DISABLED()) {
             $timeout = 0.01;

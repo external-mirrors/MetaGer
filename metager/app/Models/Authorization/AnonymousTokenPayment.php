@@ -179,7 +179,7 @@ class AnonymousTokenPayment
                             $this->markChecked($token, false, true);
                             $this->tokens[] = $parsed_token;
                         } elseif ($error->param === "decitokens") {
-                            $this->markChecked($token, true, true);
+                            $this->markChecked($parsed_token, true, true);
                             $this->decitokens[] = $parsed_token;
                         }
                     } else {

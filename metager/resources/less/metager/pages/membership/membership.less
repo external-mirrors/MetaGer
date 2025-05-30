@@ -297,6 +297,66 @@
             &#payment-method-paypal~div#paypal-data {
               display: block;
             }
+
+            &#payment-method-creditcard~div#creditcard-data {
+              display: block;
+            }
+          }
+        }
+
+        >div#creditcard-data {
+          div.input-group {
+            display: flex;
+            flex-direction: column;
+            place-items: center;
+
+            >label {
+              font-size: 0.8rem;
+              font-weight: normal;
+              color: @color-light-grey;
+            }
+          }
+
+          div>label {
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: @color-light-grey;
+          }
+
+          &.loading {
+            display: flex !important;
+            margin-top: 1rem;
+            justify-content: center;
+
+            &::before {
+              content: attr(data-loading-text);
+              background-image: url("/img/ajax-loader.gif");
+              background-repeat: no-repeat;
+              padding-left: 2rem;
+            }
+
+            >#creditcard-name-container,
+            #creditcard-details,
+            #billing-address {
+              display: none;
+            }
+          }
+
+          #creditcard-details {
+            display: grid;
+            grid-template-columns: 7fr 1fr 1fr;
+          }
+
+          #billing-address {
+            >.inputs {
+              margin-top: 1rem;
+              display: flex;
+              flex-wrap: wrap;
+              gap:
+                1rem;
+              place-content:
+                space-around;
+            }
           }
         }
 
@@ -311,6 +371,25 @@
             display: none;
             grid-column: span 1;
           }
+        }
+      }
+    }
+
+    >button[type=submit] {
+      &.loading {
+        display: flex;
+        gap: 1rem;
+        place-content: center;
+
+        &::before {
+          background-image: url("/img/ajax-loader.gif");
+          content: '';
+          display: grid;
+          width: 20px;
+          height: 20px;
+          background-repeat: no-repeat;
+          background-position:
+            center;
         }
       }
     }

@@ -73,6 +73,7 @@ return [
         'heading' => 'Complete payment',
         'item-name' => 'Donation to the SUMA-EV',
         'card' => [
+            'loading' => 'Loading Creditcard Form',
             'name' => 'Cardholder Name (optional)',
             'number' => 'Card number',
             'expiration' => 'Valid until',
@@ -90,7 +91,19 @@ return [
                 '0500' => 'Credit card declined by credit institution',
                 '1330' => 'Credit card invalid. Please check your entry',
                 'generic' => 'Credit card declined by credit institution',
+                'syntax' => 'The entered data is incorrect. Please validate.',
+                'acceptance' => 'The card with the provided details was not accepted by our payment processor. Please validate data and try again.'
             ],
+            'billing' => [
+                'address' => 'Billing Address (optional)',
+                'hint' => 'Your billing address is not required (we don\'t need it) however some creditcards require a billing address for address validation and will reject your card if it\'s not provided.',
+                'address-line-1' => 'Address line 1',
+                'address-line-2' => 'Address line 2',
+                'address-admin-area-line-1' => 'City',
+                'address-admin-area-line-2' => 'State',
+                'address-country-code' => 'Country Code (eg. US, DE, GB)',
+                'address-postal-code' => 'Postal/Zip Code'
+            ]
         ],
         'banktransfer' => [
             'description' => [

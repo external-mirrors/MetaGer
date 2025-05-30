@@ -6,6 +6,7 @@ use Arr;
 use Illuminate\Support\Facades\Redis;
 use DB;
 use Carbon\Carbon;
+use Log;
 
 
 class CiviCrm
@@ -160,7 +161,7 @@ class CiviCrm
     public static function ACCEPT_MEMBERSHIP_APPLICATION(string $membership_id)
     {
         $params = [
-            'values' => ['is_override' => FALSE],
+            'values' => ['is_override' => FALSE, 'status_id' => 2],
             'where' => [['id', '=', $membership_id]],
         ];
         return self::API_POST("/Membership/update", $params);
@@ -205,6 +206,11 @@ class CiviCrm
             'values' => ['Beitrag.PayPal_Vault' => $vault_id, 'Beitrag.PayPal_ID' => PayPal::GET_ID()],
             'where' => [['id', '=', $membership_id]],
         ];
+        $membership = Arr::get(self::FIND_MEMBERSHIPS(null, $membership_id), "0");
+        if ($membership !== null) {
+            $params["values"]['status_id'] = $membership["status_id"];
+            $params["values"]['is_override'] = $membership["is_override"];
+        }
         return self::API_POST("/Membership/update", $params);
     }
 
@@ -266,7 +272,7 @@ class CiviCrm
             "banktransfer" => "Banküberweisung",
             "directdebit" => "Lastschrift",
             "paypal" => "PayPal",
-            "creditcard" => "Creditcard",
+            "card" => "Creditcard",
         };
         $params = [
             'values' => [
@@ -361,7 +367,7 @@ class CiviCrm
         $params = [
             'notificationForPayment' => FALSE,
             'notificationForCompleteOrder' => FALSE,
-            'disableActionsOnCompleteOrder' => FALSE,
+            'disableActionsOnCompleteOrder' => true,
             'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
         ];
         return self::API_POST("/Payment/create", $params);
@@ -438,6 +444,7 @@ class CiviCrm
         if (!is_array($results))
             return null;
         $results = json_decode($results[1], true);
+        Log::error(var_export($results, true));
         if ($results["info"]["http_code"] !== 200) {
             return null;
         }

@@ -120,6 +120,7 @@ class PayPal
 
         $payment_source = match ($membership["Beitrag.Zahlungsweise:label"]) {
             "PayPal" => "paypal",
+            "Creditcard" => "card"
         };
 
         $quantity = 1;
@@ -155,22 +156,45 @@ class PayPal
     public static function CREATE_AUTHORIZE_ORDER(string $civicrm_membership_id, string $payment_source, string $success_url, string $error_url): array|null
     {
         $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_AUTHORIZE);
-        Arr::set($order_data, "payment_source.$payment_source", [
-            "attributes" => [
-                "vault" => [
-                    "store_in_vault" => "ON_SUCCESS",
-                    "usage_type" => "MERCHANT",
-                    "usage_pattern" => "SUBSCRIPTION_PREPAID",
-                    "description" => __("membership/order.vault.description")
+
+        if ($payment_source === "card") {
+            Arr::set($order_data, "payment_source.$payment_source", [
+                "attributes" => [
+                    "vault" => [
+                        "store_in_vault" => "ON_SUCCESS"
+                    ],
+                    "verification" => [
+                        "method" => "SCA_WHEN_REQUIRED"
+                    ]
+                ],
+                "stored_credentials" => [
+                    "payment_initiator" => "CUSTOMER",
+                    "payment_type" => "RECURRING",
+                    "usage" => "FIRST"
+                ],
+                "experience_context" => [
+                    "return_url" => $success_url,
+                    "cancel_url" => $error_url,
                 ]
-            ],
-            "experience_context" => [
-                "return_url" => $success_url,
-                "cancel_url" => $error_url,
-                "shipping_preference" => "NO_SHIPPING",
-                "locale" => Localization::getLanguage() . "-" . Localization::getRegion()
-            ]
-        ]);
+            ]);
+        } else {
+            Arr::set($order_data, "payment_source.$payment_source", [
+                "attributes" => [
+                    "vault" => [
+                        "store_in_vault" => "ON_SUCCESS",
+                        "usage_type" => "MERCHANT",
+                        "usage_pattern" => "SUBSCRIPTION_PREPAID",
+                        "description" => __("membership/order.vault.description")
+                    ]
+                ],
+                "experience_context" => [
+                    "return_url" => $success_url,
+                    "cancel_url" => $error_url,
+                    "shipping_preference" => "NO_SHIPPING",
+                    "locale" => Localization::getLanguage() . "-" . Localization::getRegion()
+                ]
+            ]);
+        }
         return self::PAYPAL_REQUEST("/v2/checkout/orders", self::API_METHOD_POST, $order_data);
     }
 
@@ -216,11 +240,19 @@ class PayPal
         if ($method === self::API_METHOD_POST) {
             $mission["headers"]["Content-Type"] = "application/json";
             $mission["curlopts"][CURLOPT_POST] = true;
-            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
+            if (!empty($request_data)) {
+                $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+            } else {
+                $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
+            }
         } else if ($method === self::API_METHOD_PATCH) {
             $mission["headers"]["Content-Type"] = "application/json";
             $mission["curlopts"][CURLOPT_CUSTOMREQUEST] = "PATCH";
-            $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
+            if (!empty($request_data)) {
+                $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data);
+            } else {
+                $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
+            }
         }
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);

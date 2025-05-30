@@ -10,14 +10,22 @@
         target="_blank">Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu
     können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
 <form id="membership-form" method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="_token" value="{{$csrf_token}}">
+    <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     <input type="hidden" name="type" value="{{ request("type", "") === "company" ? "company" : "person"  }}">
     <div id="contact-data" @if(Request::input("type", "") === "company")class="company"@else class="person"@endif>
+        @php
+            $title = $application !== null ? $application->contact->title : Request::input('title', '');
+            $firstname = $application !== null ? $application->contact->first_name : Request::input('firstname', '');
+            $lastname = $application !== null ? $application->contact->last_name : Request::input('lastname', '');
+            $email = $application !== null ? $application->contact->email : Request::input('email', '');
+        @endphp
         <h3 id="contact_data">1. Ihre Kontaktdaten 
+            @if($application === null)
             @if(Request::input("type", "") === "company")
             <a href="{{  route("membership_form", Request::except(["type"])) }}#contact_data">Als Person beitreten?</a>
             @else
             <a href="{{  route("membership_form", array_merge(Request::all(), ["type" => "company"])) }}#contact_data">Als Firma beitreten?</a>
+            @endif
             @endif
         </h3>
         @if(Request::input("type", "") !== "company")
@@ -28,11 +36,11 @@
                 @endforeach
             @endif
             <label for="title">Anrede</label>
-            <select name="title" id="title" required>
+            <select name="title" id="title" required @if($application !== null) disabled @endif>
                 <option disabled selected value>-- Auswahl --</option>
-                <option value="Herr" @if(Request::input('title', '' )==="Herr")selected @endif>Herr</option>
-                <option value="Frau" @if(Request::input('title', '' )==="Frau")selected @endif>Frau</option>
-                <option value="Neutral" @if(Request::input('title', '' )==="Neutral")selected @endif>Neutral</option>
+                <option value="Herr" @if($title === "Herr")selected @endif>Herr</option>
+                <option value="Frau" @if($title === "Frau")selected @endif>Frau</option>
+                <option value="Neutral" @if($title === "Neutral")selected @endif>Neutral</option>
             </select>
         </div>
         <div class="input-group">
@@ -42,8 +50,8 @@
                 @endforeach
             @endif
             <label for="firstname">Ihr Vorname</label>
-            <input type="text" name="firstname" id="firstname" size="25" placeholder="Max"
-                value="{{ Request::input('firstname', '') }}" required />
+            <input type="text" name="firstname" id="firstname" size="25" placeholder="Max" @if($application !== null) disabled @endif
+                value="{{ $firstname }}" required />
         </div>
         <div class="input-group">
             @if(isset($errors) && $errors->has("lastname"))
@@ -52,8 +60,8 @@
                 @endforeach
             @endif
             <label for="lastname">Ihr Nachname</label>
-            <input type="text" name="lastname" id="lastname" size="25" placeholder="Mustermann"
-                value="{{ Request::input('lastname', '') }}" required />
+            <input type="text" name="lastname" id="lastname" size="25" placeholder="Mustermann"  @if($application !== null) disabled @endif
+                value="{{ $lastname }}" required />
         </div>
         @else
         <div class="input-group">
@@ -63,7 +71,7 @@
                 @endforeach
             @endif
             <label for="company">Ihr Firmenname</label>
-            <input type="text" name="company" id="company" size="25" placeholder="Muster GmbH"
+            <input type="text" name="company" id="company" size="25" placeholder="Muster GmbH"  @if($application !== null) disabled @endif
                 value="{{ Request::input('company', '') }}" required />
         </div>
         <div class="input-group employees">
@@ -88,12 +96,13 @@
                 @endforeach
             @endif
             <label for="email">Ihre Email Addresse</label>
-            <input type="email" name="email" id="email" placeholder="max@mustermann.de"
-                value="{{ Request::input('email', '') }}" />
+            <input type="email" name="email" id="email" placeholder="max@mustermann.de"  @if($application !== null) disabled @endif
+                value="{{ $email }}" />
         </div>
     </div>
     <div id="membership-fee">
         <h3>2. Ihr monatlicher Mitgliedsbeitrag</h3>
+        @if($application !== null)
         @if(isset($errors) && $errors->has("amount"))
             @foreach($errors->get("amount") as $error)
                 <div class="error">{{ $error }}</div>
@@ -138,9 +147,11 @@
                 <input type="file" name="reduction" id="reduction">
             </div>
         </div>
+        @endif
     </div>
     <div id="membership-payment">
         <h3>3. Ihr Zahlungsintervall</h3>
+        @if($application !== null)
         @if(isset($errors) && $errors->has("interval"))
             @foreach($errors->get("interval") as $error)
                 <div class="error">{{ $error }}</div>
@@ -168,7 +179,9 @@
                 <label for="interval-annual">jährlich <span class="amount"></span></label>
             </div>
         </div>
+        @endif
         <h3>4. Ihre Zahlungsmethode</h3>
+        @if($application !== null)
         @if(isset($errors) && $errors->has("payment-method"))
             @foreach($errors->get("payment-method") as $error)
                 <div class="error">{{ $error }}</div>
@@ -185,8 +198,8 @@
             <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
                 @if(Request::input('payment-method', '' )==="paypal" )checked @endif required>
             <label for="payment-method-paypal" class="js-only">PayPal</label>
-            <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="creditcard"
-                @if(Request::input('payment-method', '' )==="creditcard" )checked @endif required>
+            <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="card"
+                @if(Request::input('payment-method', '' )==="creditcard" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
             <label for="payment-method-creditcard" class="js-only">Kredit-/Debitkarte</label>
             <div id="directdebit-data" class="info-container">
                 @if(isset($errors) && $errors->has("iban"))
@@ -206,7 +219,62 @@
                 </div>
             </div>
             <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
+            <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}">
+                <div id="creditcard-name-container">
+                    <label for="creditcard-name">@lang("spende.execute-payment.card.name")</label>
+                    <div id="creditcard-name"></div>
+                </div>
+                <div id="errors">
+                    <div id="card-acceptance-error" class="error hidden">@lang('spende.execute-payment.card.error.acceptance')</div>
+                    <div id="syntax-error" class="error hidden">@lang('spende.execute-payment.card.error.syntax')</div>
+                </div>
+                <div id="creditcard-details">
+                    <div id="creditcard-number-container">
+                        <label for="creditcard-number">@lang("spende.execute-payment.card.number")</label>
+                        <div id="creditcard-number"></div>
+                    </div>
+                    <div id="creditcard-valid-until-container">
+                        <label for="creditcard-valid-until">@lang("spende.execute-payment.card.expiration")</label>
+                        <div id="creditcard-valid-until"></div>
+                    </div>
+                    <div id="creditcard-valid-until-container">
+                        <label for="creditcard-cvv">@lang("spende.execute-payment.card.cvv")</label>
+                        <div id="creditcard-cvv"></div>
+                    </div>
+                </div>
+                <div id="billing-address">
+                    <h4>@lang('spende.execute-payment.card.billing.address')</h4>
+                    <div>@lang('spende.execute-payment.card.billing.hint')</div>
+                    <div class="inputs">
+                        <div class="input-group">
+                            <label for="card-billing-address-line-1">@lang('spende.execute-payment.card.billing.address-line-1')</label>
+                            <input type="text" id="card-billing-address-line-1" name="card-billing-address-line-1" autocomplete="off" placeholder="Musterstraße 3" />
+                        </div>
+                        <div class="input-group">
+                            <label for="card-billing-address-line-2">@lang('spende.execute-payment.card.billing.address-line-2')</label>
+                            <input type="text" id="card-billing-address-line-2" name="card-billing-address-line-2" autocomplete="off" placeholder="Appartment 3"/>
+                        </div>
+                        <div class="input-group">
+                            <label for="card-billing-address-admin-area-line-1">@lang('spende.execute-payment.card.billing.address-admin-area-line-1')</label>
+                            <input type="text" id="card-billing-address-admin-area-line-1" name="card-billing-address-admin-area-line-1" autocomplete="off" placeholder="Musterstadt"/>
+                        </div>
+                        <div class="input-group">
+                            <label for="card-billing-address-admin-area-line-2">@lang('spende.execute-payment.card.billing.address-admin-area-line-2')</label>
+                            <input type="text" id="card-billing-address-admin-area-line-2" name="card-billing-address-admin-area-line-2" autocomplete="off" placeholder="Niedersachsen"/>
+                        </div>
+                        <div class="input-group">
+                            <label for="card-billing-address-country-code">@lang('spende.execute-payment.card.billing.address-country-code')</label>
+                            <input type="text" id="card-billing-address-country-code" name="card-billing-address-country-code" autocomplete="off" placeholder="DE"/>
+                        </div>
+                        <div class="input-group">
+                        <label for="card-billing-address-postal-code">@lang('spende.execute-payment.card.billing.address-postal-code')</label>
+                            <input type="text" id="card-billing-address-postal-code" name="card-billing-address-postal-code" autocomplete="off" placeholder="30159"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        @endif
     </div>
     <button type="submit" class="btn btn-primary">Abschicken</button>
 </form>

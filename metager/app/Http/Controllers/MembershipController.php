@@ -9,9 +9,12 @@ use App\Localization;
 use App\Mail\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
+use App\Models\Membership\MembershipApplication;
+use App\Models\Membership\MembershipContact;
 use App\Models\Membership\PayPal;
 use App\Rules\IBANValidator;
 use Arr;
+use Bus;
 use Cache;
 use Closure;
 use Cookie;
@@ -19,6 +22,8 @@ use Crypt;
 use DB;
 use Illuminate\Validation\Rule;
 use Mail;
+use Queue;
+use RateLimiter;
 use Str;
 use Exception;
 use Illuminate\Http\Request;
@@ -44,11 +49,27 @@ class MembershipController extends Controller
      * First stage of membership form
      * gather information for contact data
      */
-    public function contactData(Request $request)
+    public function contactData(Request $request, $application_id = null)
     {
         if (Localization::getLanguage() === "de") {
             $csrf_token = Crypt::encrypt(now()->addHour());
-            return response(view("membership.form", ["title" => __("titles.membership"), 'csrf_token' => $csrf_token, "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+
+            $application = null;
+            if ($application_id !== null) {
+                $application = MembershipApplication::find($application_id);
+            }
+
+            return response(view(
+                "membership.form",
+                [
+                    "title" => __("titles.membership"),
+                    'csrf_token' => $csrf_token,
+                    "css" => [mix("/css/membership.css")],
+                    "darkcss" => [mix("/css/membership-dark.css")],
+                    "js" => [mix("/js/membership.js")],
+                    "application" => $application
+                ]
+            ));
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         }
@@ -59,9 +80,25 @@ class MembershipController extends Controller
         return response(view("membership.success", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")]]));
     }
 
-    public function submitMembershipForm(Request $request)
+    public function getToken(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $executed = RateLimiter::attempt("_token", 3, function () {
+
+        }, 60);
+        if ($executed) {
+            return response()->json([
+                "token" => Crypt::encrypt(now()->addHour())
+            ]);
+        } else {
+            return response()->json([
+                "message" => "Too many Tokens"
+            ], 429);
+        }
+    }
+
+    public function submitMembershipForm(Request $request, $application_id = null)
+    {
+        $validator = Validator::make(array_merge($request->all(), ["application_id" => $application_id]), [
             "_token" => [
                 'required',
                 function (string $attribute, mixed $value, Closure $fail) {
@@ -77,23 +114,30 @@ class MembershipController extends Controller
                     }
                 },
             ],
+            "application_id" => "nullable|uuid",
             "title" => ['exclude_if:type,company', 'required', 'in:Frau,Herr,Neutral'],
             "firstname" => ['exclude_if:type,company', 'required', 'max:50'],
             "lastname" => ['exclude_if:type,company', 'required', 'max:50'],
             "company" => ['exclude_unless:type,company', 'required', 'max:100'],
             "employees" => ['exclude_unless:type,company', 'required', 'in:1-19,20-199,>200'],
             "email" => "required|email",
-            "amount" => 'required|in:5.00,10.00,15.00,custom',
-            "custom-amount" => 'exclude_unless:amount,custom|numeric|required|min:2.5',
-            "interval" => 'required|in:annual,six-monthly,quarterly,monthly',
-            "reduction" => [Rule::excludeIf(floatval($request->input("amount")) >= 5), 'required', 'file', 'max:10485760', 'mimetypes:image/jpeg,image/png,image/jpg,application/pdf'],
-            "payment-method" => 'required|in:directdebit,banktransfer,paypal,creditcard',
-            "iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()],
-            "accountholder" => ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"]
+            //"amount" => 'required|in:5.00,10.00,15.00,custom',
+            //"custom-amount" => 'exclude_unless:amount,custom|numeric|required|min:2.5',
+            //"interval" => 'required|in:annual,six-monthly,quarterly,monthly',
+            //"reduction" => [Rule::excludeIf(floatval($request->input("amount")) >= 5), 'required', 'file', 'max:10485760', 'mimetypes:image/jpeg,image/png,image/jpg,application/pdf'],
+            //"payment-method" => 'required|in:directdebit,banktransfer,paypal,card',
+            //"iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()],
+            //"accountholder" => ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"]
         ]);
 
         if ($validator->fails()) {
             $csrf_token = Crypt::encrypt(now()->addHour());
+
+            $application = null;
+            if ($application_id !== null) {
+                $application = MembershipApplication::find($application_id);
+            }
+
             return response(
                 view(
                     "membership.form",
@@ -103,12 +147,36 @@ class MembershipController extends Controller
                         "css" => [mix("/css/membership.css")],
                         "darkcss" => [mix("/css/membership-dark.css")],
                         "js" => [mix("/js/membership.js")],
-                        "errors" => $validator->errors()
+                        "errors" => $validator->errors(),
+                        "application" => $application
                     ]
                 )
             );
         }
-        $membership = $validator->validated();
+
+        $form_data = $validator->validated();
+
+        $application = null;
+        if ($form_data["application_id"] !== null) {
+            $application_id = MembershipApplication::find($form_data["application_id"]);
+        } else {
+            $application = MembershipApplication::create([]);
+        }
+
+        if ($application->contact === null) {
+            $application->contact()->create([
+                "title" => $form_data["title"],
+                "first_name" => $form_data["firstname"],
+                "last_name" => $form_data["lastname"],
+                "email" => $form_data["email"],
+                "application_id" => $application->id
+            ]);
+            return redirect(route("membership_form", ["application_id" => $application->id]));
+        }
+
+
+
+        abort(404);
         if ($membership["amount"] === "custom") {
             $membership["amount"] = $membership["custom-amount"];
         }
@@ -177,7 +245,7 @@ class MembershipController extends Controller
         }
         $error_url = route("membership_form", request()->except(["reduction", "_token"]));
 
-        if ($membership["payment-method"] === "paypal") {
+        if (in_array($membership["payment-method"], ["paypal", "card"])) {
             return $this->createPayPalAuthorizeOrder($civicrm_membership["id"], $membership["payment-method"], $success_url, $error_url);
         } elseif ($membership["payment-method"] === "card") {
             // ToDo: Add
@@ -209,7 +277,7 @@ class MembershipController extends Controller
                 $order_id = $request->input("resource.metadata.order_id");
                 $vault_id = $request->input("resource.id");
                 if ($order_id !== null) {
-                    $civicrm_membership_id = DB::table("membership_paypal")->where("order_id", "=", $order_id)->get("civicrm_membership_id");
+                    $civicrm_membership_id = Arr::get(DB::table("membership_paypal")->where("order_id", "=", $order_id)->get("civicrm_membership_id"), "0.civicrm_membership_id");
                     if ($civicrm_membership_id !== null) {
                         CiviCrm::ADD_MEMBERSHIP_PAYPAL_VAULT($civicrm_membership_id, $vault_id);
                         return response()->json([]);
@@ -268,7 +336,13 @@ class MembershipController extends Controller
     public function paypalHandleAuthorized(Request $request, $payment_method, $civicrm_membership_id)
     {
         try {
-            $parameters = ["id" => $civicrm_membership_id, "error_url" => $request->input("error_url"), "success_url" => $request->input("success_url"), "expires_at" => intval($request->input("expires_at"))];
+            $parameters = [
+                "id" => intval($civicrm_membership_id),
+                "payment_method" => $payment_method,
+                "error_url" => $request->input("error_url"),
+                "success_url" => $request->input("success_url"),
+                "expires_at" => intval($request->input("expires_at"))
+            ];
             $expiration = Carbon::createFromTimestamp($parameters["expires_at"]);
             if (!hash_equals(hash_hmac("sha256", json_encode($parameters), config("app.key")), $request->input("signature", "")) || now()->isAfter($expiration)) {
                 abort(401);
@@ -281,7 +355,7 @@ class MembershipController extends Controller
         try {
             $paypal_record = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $civicrm_membership_id)->firstOrFail();
         } catch (Exception $e) {
-            return redirect($error_url);
+            return $request->wantsJson() ? response()->json(["message" => "There is no pending Paypal registration.", "cancel_url" => $error_url], 404) : redirect($error_url);
         }
 
         $order = PayPal::GET_ORDER($paypal_record->order_id);
@@ -289,7 +363,7 @@ class MembershipController extends Controller
         if ($order["intent"] === "AUTHORIZE" && $order["status"] === "APPROVED") {
             $order = PayPal::AUTHORIZE_ORDER($paypal_record->order_id);
         } else if ($order["status"] !== "COMPLETED") {
-            return redirect($error_url);
+            return $request->wantsJson() ? response()->json(["message" => "There couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
         }
 
         // Check if PaymentSource was vaulted
@@ -308,10 +382,32 @@ class MembershipController extends Controller
         }
         // Check if Authorization ID exists
         if ($vault_id !== null && $authorization_id !== null) {
-            return redirect($success_url);
+            return $request->wantsJson() ? response()->json(["success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
         } else {
-            return redirect($error_url);
+            return $request->wantsJson() ? response()->json(["message" => "Either vault or authorization wasn't created", "cancel_url" => $error_url], 400) : redirect($error_url);
         }
+    }
+
+    public function paypalHandleCancelled(Request $request, $civicrm_membership_id)
+    {
+        try {
+            $parameters = [
+                "id" => intval($civicrm_membership_id),
+                "error_url" => $request->input("error_url"),
+                "expires_at" => intval($request->input("expires_at"))
+            ];
+            $expiration = Carbon::createFromTimestamp($parameters["expires_at"]);
+            if (!hash_equals(hash_hmac("sha256", json_encode($parameters), config("app.key")), $request->input("signature", "")) || now()->isAfter($expiration)) {
+                abort(401);
+            }
+        } catch (Exception $e) {
+            abort(401);
+        }
+
+        CiviCrm::DELETE_MEMBERSHIP_APPLICATION($civicrm_membership_id);
+
+        $error_url = $request->input("error_url");
+        return $request->wantsJson() ? response()->json(["status" => "OK", "error_url" => $error_url]) : redirect($error_url);
     }
 
     public function adminIndex(Request $request)
@@ -424,14 +520,18 @@ class MembershipController extends Controller
 
     private function createPayPalAuthorizeOrder(string $membership_id, string $payment_source, string $success_url, string $error_url)
     {
-        $parameters = ["id" => intval($membership_id), "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters = ["id" => intval($membership_id), "payment_method" => $payment_source, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
         $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
         $success_url = route("membership_paypal_authorized", $parameters);
+
+        $parameters = ["id" => intval($membership_id), "error_url" => $error_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
+        $error_url = route("membership_paypal_cancelled", $parameters);
 
         $order = PayPal::CREATE_AUTHORIZE_ORDER($membership_id, $payment_source, $success_url, $error_url);
 
         if ($order === null)
-            return redirect($error_url);
+            return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
 
         if ($order["status"] === "PAYER_ACTION_REQUIRED") {
             foreach ($order["links"] as $link) {
@@ -441,11 +541,18 @@ class MembershipController extends Controller
                         "order_id" => Arr::get($order, "id"),
                         "expires_at" => now()->addDays(7)
                     ]);
-                    return redirect($link["href"]);
+                    return \Request::wantsJson() ? response()->json(["order_id" => Arr::get($order, "id"), "cancel_url" => $error_url, "success_url" => $success_url]) : redirect($link["href"]);
                 }
             }
+        } else if (Arr::get($order, "status") === "CREATED") {
+            DB::table("membership_paypal")->insert([
+                "civicrm_membership_id" => $membership_id,
+                "order_id" => Arr::get($order, "id"),
+                "expires_at" => now()->addDays(7)
+            ]);
+            return \Request::wantsJson() ? response()->json(["order_id" => Arr::get($order, "id"), "success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
         }
-        return redirect($error_url);
+        return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
     }
 
 

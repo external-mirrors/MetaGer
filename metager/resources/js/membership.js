@@ -1,3 +1,6 @@
+import { initializeCreditcard } from "./membership_creditcard";
+
+
 // Add event when custom amount is selected to focus the input field
 document.querySelector("#amount-custom").addEventListener("change", (e) => {
   if (!e.target.checked) {
@@ -13,6 +16,7 @@ document.addEventListener("DOMContentLoaded", (e) => {
 document.querySelectorAll("input[name=payment-method]").forEach((input) => {
   input.addEventListener("change", (e) => {
     updateIBANRequired();
+    initializeCreditcard();
   });
 });
 
@@ -42,6 +46,10 @@ document.querySelectorAll("input[name=payment-method]").forEach((input) => {
       document.querySelector("#reduction-container").classList.add("hidden");
     });
   });
+})();
+
+(() => {
+  initializeCreditcard();
 })();
 
 function validateAmount() {

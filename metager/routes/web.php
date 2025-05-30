@@ -119,11 +119,13 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     })->name("adblocker");
 
     Route::group(["prefix" => "membership"], function () {
-        Route::get("/", [MembershipController::class, "contactData"])->name("membership_form");
-        Route::post("/", [MembershipController::class, "submitMembershipForm"]);
+        Route::get("token", [MembershipController::class, "getToken"]);
         Route::get("paypal/authorized/{payment_method}/{id}", [MembershipController::class, "paypalHandleAuthorized"])->name("membership_paypal_authorized");
+        Route::get("paypal/cancelled/{id}", [MembershipController::class, "paypalHandleCancelled"])->name("membership_paypal_cancelled");
         Route::post("webhook/paypal", [MembershipController::class, "paypalWebhook"]);
         Route::get("/success", [MembershipController::class, "success"])->name("membership_success");
+        Route::get("/{application_id?}", [MembershipController::class, "contactData"])->name("membership_form");
+        Route::post("/{application_id?}", [MembershipController::class, "submitMembershipForm"]);
     });
 
     Route::get('tor', function () {

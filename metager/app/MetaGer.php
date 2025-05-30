@@ -635,10 +635,10 @@ class MetaGer
 
         $timeStart = microtime(true);
         while (sizeof($enginesToWaitFor) > 0) {
-            if ((microtime(true) - $timeStart) >= 2) {
+            if ((microtime(true) - $timeStart) >= 6) {
                 break;
             }
-            $answer = Redis::brpop($enginesToWaitFor, 2);
+            $answer = Redis::brpop($enginesToWaitFor, 6);
 
             if ($answer === null) {
                 continue;

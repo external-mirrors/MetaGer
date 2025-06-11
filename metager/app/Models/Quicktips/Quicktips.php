@@ -100,7 +100,7 @@ class Quicktips
         do {
             $result = Redis::rpoplpush($this->hash, $this->hash);
             Redis::expire($this->hash, 60);
-            if ($body === false || $body === null) {
+            if ($result === false || $result === null) {
                 if ($wait) {
                     usleep(50 * 1000);
                 }
@@ -109,17 +109,16 @@ class Quicktips
             }
         } while ($wait && microtime(true) - $this->startTime < 0.5);
 
-        if ($result === false) {
+        if ($result === false || $result === null) {
             return false;
         }
 
         $result = json_decode($result);
 
-        if ($result->body === "no-result") {
-            return false;
-        }
-
         if ($result->body !== null) {
+            if ($result->body === "no-result") {
+                return false;
+            }
             return $result->body;
         } else {
             return false;

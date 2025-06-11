@@ -335,6 +335,7 @@
                     </div>
                 </div>
             </div>
+            <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
         </div>
         @endif
     </div>

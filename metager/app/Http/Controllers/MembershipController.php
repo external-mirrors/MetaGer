@@ -15,8 +15,6 @@ use Arr;
 use Cache;
 use Closure;
 use Crypt;
-use DB;
-use Illuminate\Mail\Mailables\Address;
 use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
 use Lang;

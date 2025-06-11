@@ -12,7 +12,7 @@ D-30631 Hannover\r
 Alemanha",
         '3' => "Contacto:\r
 Tel: +4951134000070\r
-Correio eletrónico: <a href=\"/en-GB/kontakt\">Formulário de contacto encriptado</a>",
+Email: <a href=\":contact_link\">Formulário de contacto</a>",
         '8' => 'A "SUMA-EV - Verein für freien Wissenszugang" é uma associação de solidariedade social, inscrita no registo de associações do Amtsgericht Hannover sob o número VR200033. Número de identificação fiscal: DE 300 464 091. A "Gottfried Wilhelm Leibniz Universität Hannover" é um organismo estatutário.',
         '4' => 'Direção: Dominik Hebeler, Phil Höfer, Carsten Riel, Manuela Branz',
         '6' => 'Comissária para a Proteção da Juventude: Manuela Branz <a href="mailto:jugendschutz@metager.de">jugendschutz@metager.de</a>',

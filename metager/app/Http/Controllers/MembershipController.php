@@ -2,29 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\ContactMail;
-use App\Jobs\MembershipMail;
-use App\Jobs\MembershipPayPalUpdateOrder;
 use App\Localization;
-use App\Mail\WelcomeMail;
+use App\Mail\Membership\ReductionDeny;
+use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
-use App\Models\Membership\MembershipContact;
+use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
 use App\Rules\IBANValidator;
 use Arr;
-use Bus;
 use Cache;
 use Closure;
-use Cookie;
 use Crypt;
 use DB;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
+use Lang;
 use Mail;
-use Queue;
 use RateLimiter;
-use Str;
 use Exception;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -37,13 +34,10 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $membership_id = 2195; // ToDo dynamically generate list
-        $paypal_entry = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $membership_id)->first();
-        if ($paypal_entry !== null) {
-            $authorization_id = $paypal_entry->authorization_id;
-            PayPal::CAPTURE_PAYMENT($authorization_id);
-        }
-        return response("");
+        $application = MembershipApplication::reductionRequests()->whereRelation("reduction", "id", "=", "9f20e286-47b7-412d-aa8a-73028e1ed662")->first();
+
+        $mail = new ReductionDeny($application, "Ein schlechter Nachweis");
+        return $mail;
     }
     /**
      * First stage of membership form
@@ -57,6 +51,47 @@ class MembershipController extends Controller
             $application = null;
             if ($application_id !== null) {
                 $application = MembershipApplication::find($application_id);
+                if ($application === null) {
+                    return redirect(route("membership_form"));
+                }
+
+                $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
+                if ($request->input("edit", "") === "contact") {
+                    if ($application->contact !== null) {
+                        $application->contact()->delete();
+                    } elseif ($application->company !== null) {
+                        $application->company()->delete();
+                        $application->amount = null;
+                        $application->save();
+                        $request_data["type"] = "company";
+                    }
+                    return redirect(route("membership_form", $request_data) . "#contact-data");
+                } elseif ($request->input("edit", "") === "membership-fee") {
+                    $application->amount = null;
+                    $application->save();
+                    if ($application->reduction !== null)
+                        $application->reduction->delete();
+                    return redirect(route("membership_form", $request_data) . "#membership-fee");
+                } elseif ($request->input("edit", "") === "membership-payment") {
+                    $application->interval = null;
+                    $application->save();
+                    return redirect(route("membership_form", $request_data) . "#membership-payment");
+                }
+
+                if ($application->payment_method === null) {
+                    if ($application->paypal !== null)
+                        $application->paypal()->delete();
+                }
+
+                if (
+                    ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null &&
+                    (
+                        $application->payment_method === "banktransfer" ||
+                        ($application->payment_method === "directdebit" && $application->directdebit !== null)
+                    )
+                ) {
+                    return redirect(route("membership_success", ["application_id" => $application->id]));
+                }
             }
 
             return response(view(
@@ -75,9 +110,26 @@ class MembershipController extends Controller
         }
     }
 
-    public function success(Request $request)
+    public function success(Request $request, $application_id = null)
     {
-        return response(view("membership.success", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")]]));
+        $application = null;
+        if ($application_id !== null) {
+            $application = MembershipApplication::finished()->where("id", "=", $application_id)->first();
+            if ($application === null) {
+                return redirect(route("membership_form", ["application_id" => $application_id]));
+            }
+        } else {
+            return redirect(route("membership_form"));
+        }
+        return response(view(
+            "membership.success",
+            [
+                "application" => $application,
+                "title" => __("titles.membership"),
+                "css" => [mix("/css/membership.css")],
+                "darkcss" => [mix("/css/membership-dark.css")]
+            ]
+        ));
     }
 
     public function getToken(Request $request)
@@ -98,6 +150,11 @@ class MembershipController extends Controller
 
     public function submitMembershipForm(Request $request, $application_id = null)
     {
+        $application = null;
+        if ($application_id !== null) {
+            $application = MembershipApplication::find($application_id);
+        }
+
         $validator = Validator::make(array_merge($request->all(), ["application_id" => $application_id]), [
             "_token" => [
                 'required',
@@ -114,21 +171,77 @@ class MembershipController extends Controller
                     }
                 },
             ],
-            "application_id" => "nullable|uuid",
-            "title" => ['exclude_if:type,company', 'required', 'in:Frau,Herr,Neutral'],
-            "firstname" => ['exclude_if:type,company', 'required', 'max:50'],
-            "lastname" => ['exclude_if:type,company', 'required', 'max:50'],
-            "company" => ['exclude_unless:type,company', 'required', 'max:100'],
-            "employees" => ['exclude_unless:type,company', 'required', 'in:1-19,20-199,>200'],
-            "email" => "required|email",
-            //"amount" => 'required|in:5.00,10.00,15.00,custom',
-            //"custom-amount" => 'exclude_unless:amount,custom|numeric|required|min:2.5',
-            //"interval" => 'required|in:annual,six-monthly,quarterly,monthly',
-            //"reduction" => [Rule::excludeIf(floatval($request->input("amount")) >= 5), 'required', 'file', 'max:10485760', 'mimetypes:image/jpeg,image/png,image/jpg,application/pdf'],
-            //"payment-method" => 'required|in:directdebit,banktransfer,paypal,card',
-            //"iban" => ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()],
-            //"accountholder" => ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"]
         ]);
+
+        $min_amount = 5;
+        if ($application !== null) {
+            if ($application->contact !== null)
+                $min_amount = 2.5;
+            else if ($application->company !== null) {
+                if ($application->company->employees === "20-199")
+                    $min_amount = 100;
+                elseif ($application->company->employees === ">200")
+                    $min_amount = 200;
+            }
+        }
+
+        $validator->sometimes("title", ['exclude_if:type,company', 'required', 'in:Frau,Herr,Neutral'], function (Fluent $input) use ($application) {
+            return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "person";
+        });
+        $validator->sometimes("firstname", ['exclude_if:type,company', 'required', 'max:50'], function (Fluent $input) use ($application) {
+            return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "person";
+        });
+        $validator->sometimes("lastname", ['exclude_if:type,company', 'required', 'max:50'], function (Fluent $input) use ($application) {
+            return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "person";
+        });
+        $validator->sometimes("company", ['exclude_unless:type,company', 'required', 'max:100'], function (Fluent $input) use ($application) {
+            return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "company";
+        });
+        $validator->sometimes("employees", ['exclude_unless:type,company', 'required', 'in:1-19,20-199,>200'], function (Fluent $input) use ($application) {
+            return ($application === null || ($application->contact === null && $application->company === null)) && $input->type === "company";
+        });
+        $validator->sometimes("email", "required|email", function (Fluent $input) use ($application) {
+            return $application === null || ($application->contact === null && $application->company === null);
+        });
+        $validator->sometimes("amount", [
+            "required",
+            function ($attribute, $value, $fail) use ($min_amount) {
+                $numeric_value = (float) $value;
+                if ($value !== "custom" && $numeric_value < $min_amount) {
+                    $fail(__("validation.min.numeric", ["attribute" => $attribute, "min" => $min_amount]));
+                } elseif (!in_array($value, ["10.00", "15.00", "20.00", "custom"])) {
+                    $fail(__("validation.in", ["attribute" => $attribute]));
+                }
+            }
+        ], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount === null;
+        });
+        $validator->sometimes("custom-amount", [
+            Rule::excludeIf($request->input("amount") !== "custom"),
+            "numeric",
+            "required",
+            "min:$min_amount"
+        ], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount === null;
+        });
+        $validator->sometimes("reduction", [Rule::excludeIf(floatval($request->input("amount")) >= 5 || $request->input("custom-amount") >= 5), 'required', 'file', 'max:10485760', 'mimetypes:image/jpeg,image/png,image/jpg,application/pdf'], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount === null;
+        });
+        $validator->sometimes("interval", 'required|in:annual,six-monthly,quarterly,monthly', function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval === null;
+        });
+        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal,card', function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
+        });
+        $validator->sometimes("iban", ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
+        });
+        $validator->sometimes("bic", ["exclude_unless:payment-method,directdebit", "nullable"], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
+        });
+        $validator->sometimes("accountholder", ["exclude_unless:payment-method,directdebit", "nullable", "string", "max:100"], function (Fluent $input) use ($application) {
+            return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
+        });
 
         if ($validator->fails()) {
             $csrf_token = Crypt::encrypt(now()->addHour());
@@ -156,114 +269,125 @@ class MembershipController extends Controller
 
         $form_data = $validator->validated();
 
-        $application = null;
-        if ($form_data["application_id"] !== null) {
-            $application_id = MembershipApplication::find($form_data["application_id"]);
-        } else {
-            $application = MembershipApplication::create([]);
+        if ($application === null) {
+            if ($application_id !== null) {
+                return redirect(route("membership_form"));
+            }
+            $application = MembershipApplication::create(["locale" => Localization::getLanguage() . "-" . Localization::getRegion()]);
         }
+        if ($application->contact === null && $application->company === null) {
+            $key = null;
+            $authorization = app(\App\Models\Authorization\Authorization::class);
+            $success_url = route("membership_form", ["application_id" => $application->id]) . "#membership-fee";
+            if ($authorization instanceof KeyAuthorization && !empty($authorization->key)) {
+                $key = $authorization->key;
+            } else {
+                $key = $this->generateNewKey();
+                $final_url = route("membership_success");
+                $expires = now()->addMinutes(1)->timestamp;
+                $signature = hash_hmac("sha256", $final_url . $expires, config("app.key"));
+                $success_url = route("loadSettings", ["key" => $key, "redirect_url" => $success_url, "expires" => $expires, "signature" => $signature]);
+            }
+            $application->key = $key;
+            $application->save();
+            if ($request->input("type", "person") === "person") {
+                $application->contact()->create([
+                    "title" => $form_data["title"],
+                    "first_name" => $form_data["firstname"],
+                    "last_name" => $form_data["lastname"],
+                    "email" => $form_data["email"],
+                    "application_id" => $application->id
+                ]);
+            } else if ($request->input("type", "person") === "company") {
+                $application->company()->create([
+                    "company" => $form_data["company"],
+                    "employees" => $form_data["employees"],
+                    "email" => $form_data["email"]
+                ]);
+            }
+            return redirect($success_url);
+        } elseif ($application->amount === null) {
+            $amount = $form_data["amount"];
+            if ($amount === "custom") {
+                $amount = $form_data["custom-amount"];
+            }
+            $application->amount = (float) $amount;
 
-        if ($application->contact === null) {
-            $application->contact()->create([
-                "title" => $form_data["title"],
-                "first_name" => $form_data["firstname"],
-                "last_name" => $form_data["lastname"],
-                "email" => $form_data["email"],
-                "application_id" => $application->id
-            ]);
+            // Check for a submitted reduction
+            /** @var \File */
+            $file = Arr::get($form_data, "reduction");
+            if ($file !== null) {
+                $application->reduction()->create([
+                    "file_path" => storage_path("metager/" . $file->getBasename()),
+                    "file_mimetype" => $file->getMimeType(),
+                ]);
+                $file->move(storage_path("metager"), $file->getBasename());
+            }
+            $application->save();
+            return redirect(route("membership_form", ["application_id" => $application->id]) . "#membership-payment");
+        } elseif ($application->interval === null) {
+            $application->interval = $form_data["interval"];
+            $application->save();
+            return redirect(route("membership_form", ["application_id" => $application->id]) . "#membership-payment-method");
+        } elseif ($application->payment_method === null) {
+            switch ($form_data["payment-method"]) {
+                case "banktransfer":
+                    $application->payment_method = $form_data["payment-method"];
+                    $application->save();
+                    break;
+                case "directdebit":
+                    $attributes = [
+                        "iban" => $form_data["iban"],
+                        "bic" => $form_data["bic"],
+                        "accountholder" => $form_data["accountholder"]
+                    ];
+                    if ($application->directdebit !== null)
+                        $application->directdebit()->delete();
+                    $application->directdebit()->create($attributes);
+                    $application->payment_method = $form_data["payment-method"];
+                    $application->save();
+                    break;
+                case "paypal":
+                case "card":
+                    return $this->createPayPalAuthorizeOrder(
+                        $application,
+                        $form_data["payment-method"],
+                        route("membership_success", ["application_id" => $application->id]),
+                        route("membership_form", ["application_id" => $application->id]) . "#membership-payment-method"
+                    );
+            }
+
             return redirect(route("membership_form", ["application_id" => $application->id]));
-        }
-
-
-
-        abort(404);
-        if ($membership["amount"] === "custom") {
-            $membership["amount"] = $membership["custom-amount"];
-        }
-
-        $store_key = false;
-        $authorization = app(\App\Models\Authorization\Authorization::class);
-        if ($authorization instanceof KeyAuthorization && !empty($authorization->key)) {
-            $membership["key"] = $authorization->key;
         } else {
-            $membership["key"] = $this->generateNewKey();
-            $store_key = true;
+            return redirect(route("membership_success", ["key" => $application->key]));
         }
 
-        $membership["locale"] = Localization::getLanguage() . "-" . Localization::getRegion();
+        /*
+                
 
-        /**
-         * Create or get CiviCRM Contact
-         */
-        $contact_id = null;
-        if (!empty($membership["company"])) {
-            $contact = CiviCrm::FIND_COMPANY($membership["company"], $membership["email"]);
-            if ($contact === null) {
-                $contact = CiviCrm::CREATE_COMPANY($membership["company"], $membership["email"]);
-                $contact_id = Arr::get($contact, "id");
-            } else {
-                $contact_id = Arr::get($contact, "id");
-            }
-        } else {
-            $contact = CiviCrm::FIND_CONTACT($membership["title"], $membership["firstname"], $membership["lastname"], $membership["email"]);
-            if ($contact === null) {
-                $contact = CiviCrm::CREATE_CONTACT($membership["title"], $membership["firstname"], $membership["lastname"], $membership["email"]);
-                $contact_id = Arr::get($contact, "id");
-            } else {
-                $contact_id = $contact["id"];
-            }
-        }
-        if ($contact_id === null)
-            throw new Exception("Cannot find or create contact"); // ToDO Better error handling
 
-        /**
-         * Create or get CiviCRM Membership
-         */
-        $memberships = CiviCrm::FIND_MEMBERSHIPS($contact_id);
-        if (sizeof($memberships) > 0) {
-            throw new Exception("Contact already has an active membership"); // ToDO Better error handling
-        }
-        $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($contact_id, $membership);
-        $civicrm_membership = CiviCrm::FIND_MEMBERSHIPS(null, $civicrm_membership["id"]);
-        $civicrm_membership = Arr::get($civicrm_membership, "0");
+                
 
-        if (empty($membership["company"]) && $membership["amount"] < 5) {
-            /**
-             * @var \Illuminate\Http\UploadedFile
-             */
-            $file = $membership["reduction"];
-            DB::table("membership_reduction")->insert(["file_path" => storage_path("metager/" . $file->getBasename()), "file_mimetype" => $file->getMimeType(), 'expires_at' => $membership["expires_at"], 'membership_id' => $civicrm_membership["id"]]);
-            $file->move(storage_path("metager"), $file->getBasename());
-        }
+                if (empty($membership["company"]) && $membership["amount"] < 5) {
 
-        $success_url = route("membership_success");
-        if ($store_key) {
-            $final_url = route("membership_success");
-            $expires = now()->addMinutes(1)->timestamp;
-            $signature = hash_hmac("sha256", $final_url . $expires, config("app.key"));
-            $success_url = route("loadSettings", ["key" => $membership["key"], "redirect_url" => $final_url, "expires" => $expires, "signature" => $signature]);
-        }
-        $error_url = route("membership_form", request()->except(["reduction", "_token"]));
+                    $file = $membership["reduction"];
+                    DB::table("membership_reduction")->insert(["file_path" => storage_path("metager/" . $file->getBasename()), "file_mimetype" => $file->getMimeType(), 'expires_at' => $membership["expires_at"], 'membership_id' => $civicrm_membership["id"]]);
+                    $file->move(storage_path("metager"), $file->getBasename());
+                }
 
-        if (in_array($membership["payment-method"], ["paypal", "card"])) {
-            return $this->createPayPalAuthorizeOrder($civicrm_membership["id"], $membership["payment-method"], $success_url, $error_url);
-        } elseif ($membership["payment-method"] === "card") {
-            // ToDo: Add
-        }
-
-        if (config("metager.metager.civicrm.enabled")) {
-            $membership["amount"] = number_format(round(floatval($membership["amount"]), 2), 2, ",", ".") . "€";
-            $message = <<<MESSAGE
-            Name: {$membership["name"]}
-            Email: {$membership["email"]}
-            Betrag: {$membership["amount"]}
-            Intervall: {$membership["interval"]}
-            Zahlungsart: {$membership["payment-method"]}
-            MESSAGE;
-            // Create Notification
-            ContactMail::dispatch("verein@metager.de", "Mitglieder", $membership["name"], $membership["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
-        }
-        return redirect($success_url);
+                if (config("metager.metager.civicrm.enabled")) {
+                    $membership["amount"] = number_format(round(floatval($membership["amount"]), 2), 2, ",", ".") . "€";
+                    $message = <<<MESSAGE
+                    Name: {$membership["name"]}
+                    Email: {$membership["email"]}
+                    Betrag: {$membership["amount"]}
+                    Intervall: {$membership["interval"]}
+                    Zahlungsart: {$membership["payment-method"]}
+                    MESSAGE;
+                    // Create Notification
+                    ContactMail::dispatch("verein@metager.de", "Mitglieder", $membership["name"], $membership["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
+                }
+                return redirect($success_url);*/
     }
 
     public function paypalWebhook(Request $request)
@@ -277,68 +401,85 @@ class MembershipController extends Controller
                 $order_id = $request->input("resource.metadata.order_id");
                 $vault_id = $request->input("resource.id");
                 if ($order_id !== null) {
-                    $civicrm_membership_id = Arr::get(DB::table("membership_paypal")->where("order_id", "=", $order_id)->get("civicrm_membership_id"), "0.civicrm_membership_id");
-                    if ($civicrm_membership_id !== null) {
-                        CiviCrm::ADD_MEMBERSHIP_PAYPAL_VAULT($civicrm_membership_id, $vault_id);
-                        return response()->json([]);
+                    $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
+                    if ($paypal !== null) {
+                        $paypal->vault_id = $vault_id;
+                        $paypal->save();
                     }
+                    return response()->json([]);
                 }
                 abort(404);
             case "VAULT.PAYMENT-TOKEN.DELETED":
                 $vault_id = $request->input("resource.id");
+                MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
                 CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id);
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.CREATED":
                 $authorization_id = $request->input("resource.id");
                 $authorization_status = $request->input("resource.status");
                 $order_id = $request->input("resource.supplementary_data.related_ids.order_id");
-                DB::table("membership_paypal")->where("order_id", "=", $order_id)->update(["authorization_id" => $authorization_id, "authorization_status" => $authorization_status]);
+                $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
+                if ($paypal !== null) {
+                    $paypal->authorization_id = $authorization_id;
+                    $paypal->authorization_status = $authorization_status;
+                    $paypal->save();
+                }
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.VOIDED":
                 $authorization_id = $request->input("resource.id");
                 $authorization_status = $request->input("resource.status");
-                DB::table("membership_paypal")->where("authorization_id", "=", $authorization_id)->update(["authorization_status" => $authorization_status]);
+                MembershipPaymentPaypal::where("authorization_id", "=", $authorization_id)->delete();
                 return response()->json([]);
             case "PAYMENT.CAPTURE.COMPLETED":
+                $order_id = $request->input("resource.supplementary_data.related_ids.order_id");
+                if ($order_id !== null) {
+                    $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
+                    if ($paypal !== null) {
+                        if ($paypal->vault_id !== null) {
+                            $paypal->order_id = null;
+                            $paypal->authorization_id = null;
+                            $paypal->authorization_status = null;
+                            $paypal->save();
+                        } else {
+                            $paypal->delete();
+                        }
+                    }
+                }
                 $invoice_id = $request->input("resource.invoice_id");
-                if (preg_match("/^contribution_(\d+)$/", $invoice_id, $matches)) {
-                    $contribution_id = (int) $matches[1];
-                    $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
-                    $date = new Carbon($request->input("resource.create_time"));
-                    $date->setTimezone("Europe/Berlin");
-                    $transaction_id = $request->input("resource.id");
-                    CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($contribution_id, $amount, $date, $transaction_id);
+                $custom_id = $request->input("resource.custom_id");
+                $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
+                $date = new Carbon($request->input("resource.create_time"));
+                $date->setTimezone("Europe/Berlin");
+                $transaction_id = $request->input("resource.id");
+                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($invoice_id, $custom_id, $amount, $date, $transaction_id) !== null) {
                     return response()->json([]);
                 } else {
-                    return response()->json([]);
+                    abort(code: 500, message: "Couldn't create contribution payment");
                 }
             case "PAYMENT.CAPTURE.REVERSED":
             case "PAYMENT.CAPTURE.REFUNDED":
                 $invoice_id = $request->input("resource.invoice_id");
-                if (preg_match("/^contribution_(\d+)$/", $invoice_id, $matches)) {
-                    $contribution_id = (int) $matches[1];
-                    $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
-                    $amount = abs($amount) * -1;
-                    $date = new Carbon($request->input("resource.create_time"));
-                    $date->setTimezone("Europe/Berlin");
-                    $transaction_id = $request->input("resource.id");
-                    CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($contribution_id, $amount, $date, $transaction_id);
+                $custom_id = $request->input("resource.custom_id");
+                $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
+                $amount = abs($amount) * -1;
+                $date = new Carbon($request->input("resource.create_time"));
+                $date->setTimezone("Europe/Berlin");
+                $transaction_id = $request->input("resource.id");
+                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($invoice_id, $custom_id, $amount, $date, $transaction_id) !== null) {
                     return response()->json([]);
                 } else {
-                    return response()->json([]);
+                    abort(code: 500, message: "Couldn't create contribution payment");
                 }
             default:
                 return response()->json([]);
         }
-        abort(400);
     }
 
-    public function paypalHandleAuthorized(Request $request, $payment_method, $civicrm_membership_id)
+    public function paypalHandleAuthorized(Request $request, $application_id)
     {
         try {
             $parameters = [
-                "id" => intval($civicrm_membership_id),
-                "payment_method" => $payment_method,
+                "application_id" => $application_id,
                 "error_url" => $request->input("error_url"),
                 "success_url" => $request->input("success_url"),
                 "expires_at" => intval($request->input("expires_at"))
@@ -352,47 +493,71 @@ class MembershipController extends Controller
         }
         $error_url = $request->input("error_url");
         $success_url = $request->input("success_url");
-        try {
-            $paypal_record = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $civicrm_membership_id)->firstOrFail();
-        } catch (Exception $e) {
+        $application = MembershipApplication::find($application_id);
+
+        if ($application === null) {
             return $request->wantsJson() ? response()->json(["message" => "There is no pending Paypal registration.", "cancel_url" => $error_url], 404) : redirect($error_url);
         }
 
-        $order = PayPal::GET_ORDER($paypal_record->order_id);
+        $order_id = Cache::pull("membership:paypal:orderid:{$application->id}");
 
-        if ($order["intent"] === "AUTHORIZE" && $order["status"] === "APPROVED") {
-            $order = PayPal::AUTHORIZE_ORDER($paypal_record->order_id);
+        if ($order_id === null) {
+            return $request->wantsJson() ? response()->json(["message" => "There is no pending Paypal registration.", "cancel_url" => $error_url], 404) : redirect($error_url);
+        }
+
+        $order = PayPal::VALIDATE_ORDER($order_id);
+        if ($order === null) {
+            return $request->wantsJson() ? response()->json(["message" => "The PayPal Order could not be validated", "cancel_url" => $error_url], 400) : redirect($error_url);
+        } else if (is_string($order)) {
+            return $request->wantsJson() ? response()->json(["message" => $order, "cancel_url" => $error_url], 400) : redirect($error_url);
+        }
+
+        if ($order["intent"] === "AUTHORIZE" && in_array($order["status"], ["SAVED", "APPROVED", "CREATED"])) {
+            $order = PayPal::AUTHORIZE_ORDER($order_id);
         } else if ($order["status"] !== "COMPLETED") {
-            return $request->wantsJson() ? response()->json(["message" => "There couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
+            return $request->wantsJson() ? response()->json(["message" => "Couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
         }
 
-        // Check if PaymentSource was vaulted
-        $vault_id = Arr::get($order, "payment_source.{$payment_method}.attributes.vault.id");
-        if ($vault_id !== null) {
-            CiviCrm::ADD_MEMBERSHIP_PAYPAL_VAULT($civicrm_membership_id, $vault_id);
-        }
+        $application->payment_method = array_key_first(Arr::get($order, "payment_source", []));
 
+        $vault_id = Arr::get($order, "payment_source.{$application->payment_method}.attributes.vault.id");
         $authorization_id = Arr::get($order, "purchase_units.0.payments.authorizations.0.id");
         $authorization_status = Arr::get($order, "purchase_units.0.payments.authorizations.0.status");
         if ($authorization_id !== null && $authorization_status !== null) {
-            DB::table("membership_paypal")->where("id", "=", $paypal_record->id)->update([
-                "authorization_id" => $paypal_record->authorization_id,
-                "authorization_status" => $authorization_status
+            $application->paypal()->create([
+                "order_id" => $order_id,
+                "vault_id" => $vault_id,
+                "authorization_id" => $authorization_id,
+                "authorization_status" => $authorization_status,
             ]);
+            $application->save();   // Save payment method
         }
+
         // Check if Authorization ID exists
-        if ($vault_id !== null && $authorization_id !== null) {
+        if ($authorization_status === "CREATED") {
             return $request->wantsJson() ? response()->json(["success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
         } else {
-            return $request->wantsJson() ? response()->json(["message" => "Either vault or authorization wasn't created", "cancel_url" => $error_url], 400) : redirect($error_url);
+            // Check if we can identify an error code
+            $message = "Authorization couldn't be created";
+            if ($application->payment_method === "card") {
+                $response_code = Arr::get($order, "purchase_units.0.payments.authorizations.0.processor_response.response_code");
+                if ($response_code !== null) {
+                    if (Lang::has("spende.execute-payment.card.error.{$response_code}")) {
+                        $message = __("spende.execute-payment.card.error.declined_reason", ["reason" => __("spende.execute-payment.card.error.{$response_code}")]);
+                    } else {
+                        $message = __("spende.execute-payment.card.error.generic");
+                    }
+                }
+            }
+            return $request->wantsJson() ? response()->json(["message" => $message, "cancel_url" => $error_url], 400) : redirect($error_url);
         }
     }
 
-    public function paypalHandleCancelled(Request $request, $civicrm_membership_id)
+    public function paypalHandleCancelled(Request $request, $application_id)
     {
         try {
             $parameters = [
-                "id" => intval($civicrm_membership_id),
+                "application_id" => $application_id,
                 "error_url" => $request->input("error_url"),
                 "expires_at" => intval($request->input("expires_at"))
             ];
@@ -404,7 +569,11 @@ class MembershipController extends Controller
             abort(401);
         }
 
-        CiviCrm::DELETE_MEMBERSHIP_APPLICATION($civicrm_membership_id);
+        $application = MembershipApplication::find($application_id);
+        if ($application !== null) {
+            if ($application->paypal !== null)
+                $application->paypal()->delete();
+        }
 
         $error_url = $request->input("error_url");
         return $request->wantsJson() ? response()->json(["status" => "OK", "error_url" => $error_url]) : redirect($error_url);
@@ -412,15 +581,14 @@ class MembershipController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $membership_applications = CiviCrm::FIND_MEMBERSHIP_APPLICATIONS();
-
-        $reductions = DB::table("membership_reduction")->get();
+        $membership_applications = MembershipApplication::finished()->get();
+        $reduction_requests = MembershipApplication::reductionRequests()->get();
         return response(view(
             "admin.membership.index",
             [
                 "title" => "Aufnahmeanträge",
                 "membership_applications" => $membership_applications,
-                "reductions" => $reductions,
+                "reduction_requests" => $reduction_requests,
                 "css" => [mix("/css/admin/membership.css")],
                 "js" => [mix("/js/admin/membership.js")]
             ]
@@ -430,18 +598,18 @@ class MembershipController extends Controller
     public function adminMembershipReduction(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "reduction_id" => "required|numeric"
+            "reduction_id" => "required|uuid"
         ]);
         if ($validator->fails()) {
             abort(404);
         }
         $reduction_id = $validator->validated()["reduction_id"];
-        $entry = DB::table("membership_reduction")->where("id", "=", $reduction_id)->first();
-        if ($entry === null || !file_exists($entry->file_path)) {
+        $entry = MembershipApplication::reductionRequests()->whereRelation("reduction", "id", "=", $reduction_id)->first();
+        if ($entry === null || !file_exists($entry->reduction->file_path)) {
             abort(404);
         }
         $filename = "reduction_validation";
-        switch ($entry->file_mimetype) {
+        switch ($entry->reduction->file_mimetype) {
             case "application/pdf":
                 $filename .= ".pdf";
                 break;
@@ -455,102 +623,220 @@ class MembershipController extends Controller
                 $filename .= ".png";
                 break;
         }
-        return response()->file($entry->file_path, ["Content-Type" => $entry->file_mimetype, "Content-Disposition" => "inline; filename=$filename"]);
+        return response()->file($entry->reduction->file_path, ["Content-Type" => $entry->reduction->file_mimetype, "Content-Disposition" => "inline; filename=$filename"]);
     }
 
     public function adminMembershipReductionAccept(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "id" => "required|numeric",
+            "id" => "required|uuid",
             "reduction_until" => ["required", "date", Rule::date()->afterOrEqual(now()), Rule::date()->beforeOrEqual(now()->addYears(20))]
         ]);
         if ($validator->fails()) {
             return redirect(route("membership_admin_overview", ["error" => "Cannot find specified ID"]));
         }
-        $id = $validator->validated()["id"];
-        $date = $validator->validated()["reduction_until"];
+        $formdata = $validator->validated();
+        $id = $formdata["id"];
+        $date = $formdata["reduction_until"];
 
-        $reduction_entry = DB::table("membership_reduction")->find($id);
-        if ($reduction_entry === null) {
+        $application = MembershipApplication::reductionRequests()->whereRelation("reduction", "id", "=", $formdata["id"])->first();
+        if ($application === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Cannot find application"]));
+        }
+
+        $application->reduction->expires_at = $date;
+        if ($application->reduction->save()) {
+            return redirect(route("membership_admin_overview", ["success" => "Successfully accepted reduction application"]));
+        } else {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't update application"]));
+        }
+    }
+
+    public function adminMembershipReductionDeny(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            "id" => "required|uuid",
+            "message" => "required|max:500",
+        ]);
+        if ($validator->fails()) {
             return redirect(route("membership_admin_overview", ["error" => "Cannot find specified ID"]));
         }
-        $membership_entry = DB::table("membership")->where("id", "=", $reduction_entry->membership_id)->first();
-        if ($membership_entry === null) {
-            return redirect(route("membership_admin_overview", ["error" => "Cannot find specified ID"]));
+        $formdata = $validator->validated();
+
+        $application = MembershipApplication::reductionRequests()->whereRelation("reduction", "id", "=", $formdata["id"])->first();
+        if ($application === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Cannot find application"]));
         }
-        DB::table("membership")->where("id", "=", $membership_entry->id)->update(["reduced_until" => $date]);
-        DB::table("membership_reduction")->where("id", "=", $id)->delete();
-        if (file_exists($reduction_entry->file_path)) {
-            unlink($reduction_entry->file_path);
+
+        $mail = new ReductionDeny($application, $formdata["message"]);
+        if (Mail::mailer("membership")->send($mail) === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't send Mail"]));
+        } else {
+            $application->reduction->delete();
+            $application->amount = null;
+            $application->save();
+            return redirect(route("membership_admin_overview", ["success" => "Antrag auf verminderten Beitrag abgelehnt"]));
         }
-        return redirect(route("membership_admin_overview", ["success" => "Reduzierter Beitrag erfolgreich bestätigt"]));
     }
 
     public function adminAccept(Request $request)
     {
-        $membership_id = $request->input("id");
-
-        $result = CiviCRM::ACCEPT_MEMBERSHIP_APPLICATION($membership_id);
-
-        if (Arr::get($result, "count", 0) !== 1) {
-            return redirect(route("membership_admin_overview", ["error" => "Couldn't accept membership"]));
+        $application = MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+        if ($application === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
+        }
+        // Create CiviCRM contact
+        if ($application->crm_contact === null) {
+            if ($application->company !== null) {
+                $contact = CiviCrm::FIND_COMPANY($application->company);
+                if ($contact === null) {
+                    $contact = CiviCrm::CREATE_COMPANY($application->company);
+                    if ($contact !== null && Arr::get($contact, "id") !== null) {
+                        $application->crm_contact = Arr::get($contact, "id");
+                        $application->save();
+                        $application->contact()->delete();
+                    } else {
+                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
+                    }
+                } else if (Arr::get($contact, "id") !== null) {
+                    $application->crm_contact = Arr::get($contact, "id");
+                    $application->save();
+                    $application->contact()->delete();
+                } else {
+                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
+                }
+            } elseif ($application->contact !== null) {
+                $contact = CiviCrm::FIND_CONTACT($application->contact);
+                if ($contact === null) {
+                    $contact = CiviCrm::CREATE_CONTACT($application->contact);
+                    if ($contact !== null && Arr::get($contact, "id") !== null) {
+                        $application->crm_contact = Arr::get($contact, "id");
+                        $application->save();
+                        $application->contact()->delete();
+                    } else {
+                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
+                    }
+                } else if (Arr::get($contact, "id") !== null) {
+                    $application->crm_contact = Arr::get($contact, "id");
+                    $application->save();
+                } else {
+                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
+                }
+            }
         }
 
-        $paypal_entry = DB::table("membership_paypal")->where("civicrm_membership_id", "=", $membership_id)->first();
-        if ($paypal_entry !== null) {
-            $authorization_id = $paypal_entry->authorization_id;
-            PayPal::CAPTURE_PAYMENT($authorization_id);
+        /**
+         * Create CiviCRM Membership
+         */
+        if ($application->crm_membership === null) {
+            $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
+            if (sizeof($memberships) > 0) {
+                return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
+            }
+            $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($application);
+            if ($civicrm_membership === null) {
+                return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while creating a new membership"]));
+            } else {
+                $application->crm_membership = Arr::get($civicrm_membership, "id");
+                $application->amount = null;
+                $application->interval = null;
+                $application->locale = null;
+                $application->key = null;
+                $application->payment_reference = null;
+                $application->save();
+                if ($application->reduction !== null)
+                    $application->reduction->delete();
+            }
         }
 
-        $mail = new WelcomeMail($membership_id);
+        // Add Payment method to CiviCRM
+        if (CiviCrm::UPDATE_MEMBERSHIP($application) !== null) {
+            if ($application->paypal !== null) {
+                if ($application->paypal->order_id !== null && $application->paypal->authorization_status === "CREATED") {
+                    $application->paypal->vault_id = null;
+                    $application->paypal->save();
+                    PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id);
+                } else {
+                    $application->paypal->delete();
+                }
+            } elseif ($application->directdebit !== null) {
+                $application->directdebit->delete();
+            }
+            if ($application->reduction !== null) {
+                $application->reduction->delete();
+            }
+        }
+
+        $mail = new WelcomeMail($application->crm_membership);
         if (Mail::mailer("membership")->send($mail) === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
         }
+
+        $application->delete();
+
         return redirect(route("membership_admin_overview", ["success" => "Membership Request accepted"]));
     }
 
     public function adminDeny(Request $request)
     {
-        $membership_id = $request->input("id");
+        $application = MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+        if ($application === null) {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
+        }
 
-        CiviCrm::DELETE_MEMBERSHIP_APPLICATION($membership_id);
+        if ($application->directdebit !== null) {
+            $application->directdebit->delete();
+        }
+        if ($application->paypal !== null) {
+            $application->paypal->delete();
+        }
+        $application->delete();
 
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }
 
-    private function createPayPalAuthorizeOrder(string $membership_id, string $payment_source, string $success_url, string $error_url)
+    private function createPayPalAuthorizeOrder(MembershipApplication $application, string $payment_method, string $success_url, string $error_url)
     {
-        $parameters = ["id" => intval($membership_id), "payment_method" => $payment_source, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters = ["application_id" => $application->id, "error_url" => $error_url, "success_url" => $success_url, "expires_at" => now()->addHours(3)->timestamp];
         $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
         $success_url = route("membership_paypal_authorized", $parameters);
 
-        $parameters = ["id" => intval($membership_id), "error_url" => $error_url, "expires_at" => now()->addHours(3)->timestamp];
+        $parameters = ["application_id" => $application->id, "error_url" => $error_url, "expires_at" => now()->addHours(3)->timestamp];
         $parameters["signature"] = hash_hmac("sha256", json_encode($parameters), config("app.key"));
         $error_url = route("membership_paypal_cancelled", $parameters);
 
-        $order = PayPal::CREATE_AUTHORIZE_ORDER($membership_id, $payment_source, $success_url, $error_url);
+        // We need a mandate reference so we can cross reference any given paypal order to the membership
+        $start_date = now();
+        while ($application->payment_reference === null) {
+            if (now()->diffInSeconds($start_date, true) > 5) {
+                return redirect($error_url);
+            }
+            $date = now();
+            sleep(1);
+            $memberships = CiviCrm::FIND_MEMBERSHIPS(mandate: $date->format("YmdHis"));
+            if ($memberships !== null && sizeof($memberships) === 0) {
+                $application->payment_reference = "M" . $date->format("YmdHis");
+                $application->save();
+            }
+        }
+        $application->payment_method = $payment_method;
+        $order = PayPal::CREATE_AUTHORIZE_ORDER($application, $success_url, $error_url);
+        $application->payment_method = null;
 
-        if ($order === null)
+        if ($order === null) {
             return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
+        }
+
+        Cache::put("membership:paypal:orderid:{$application->id}", $order["id"], now()->addDay());
 
         if ($order["status"] === "PAYER_ACTION_REQUIRED") {
             foreach ($order["links"] as $link) {
                 if ($link["rel"] === "payer-action") {
-                    DB::table("membership_paypal")->insert([
-                        "civicrm_membership_id" => $membership_id,
-                        "order_id" => Arr::get($order, "id"),
-                        "expires_at" => now()->addDays(7)
-                    ]);
-                    return \Request::wantsJson() ? response()->json(["order_id" => Arr::get($order, "id"), "cancel_url" => $error_url, "success_url" => $success_url]) : redirect($link["href"]);
+                    return \Request::wantsJson() ? response()->json(["order_id" => $order["id"], "cancel_url" => $error_url, "success_url" => $success_url]) : redirect($link["href"]);
                 }
             }
         } else if (Arr::get($order, "status") === "CREATED") {
-            DB::table("membership_paypal")->insert([
-                "civicrm_membership_id" => $membership_id,
-                "order_id" => Arr::get($order, "id"),
-                "expires_at" => now()->addDays(7)
-            ]);
-            return \Request::wantsJson() ? response()->json(["order_id" => Arr::get($order, "id"), "success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
+            return \Request::wantsJson() ? response()->json(["order_id" => $order["id"], "success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
         }
         return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
     }

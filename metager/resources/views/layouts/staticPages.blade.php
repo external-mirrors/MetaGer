@@ -48,6 +48,7 @@
 	@endif
 	@if(app(App\SearchSettings::class)->theme === "dark")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
+	<meta name="color-scheme" content="dark light">
 	@if(!empty($darkcss) && is_array($darkcss))
 	@foreach($darkcss as $cssFile)
 	<link rel="stylesheet" type="text/css" href="{{ $cssFile }}" />
@@ -55,8 +56,10 @@
 	@endif
 	@elseif(app(App\SearchSettings::class)->theme === "light")
 	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+	<meta name="color-scheme" content="light dark">
 	@else
 	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
+	<meta name="color-scheme" content="light dark">
 	@if(!empty($darkcss) && is_array($darkcss))
 	@foreach($darkcss as $cssFile)
 	<link rel="stylesheet" type="text/css" media="(prefers-color-scheme:dark)" href="{{ $cssFile }}" />

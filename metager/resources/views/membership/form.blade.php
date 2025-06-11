@@ -11,24 +11,38 @@
     können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
 <form id="membership-form" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
-    <input type="hidden" name="type" value="{{ request("type", "") === "company" ? "company" : "person"  }}">
-    <div id="contact-data" @if(Request::input("type", "") === "company")class="company"@else class="person"@endif>
-        @php
-            $title = $application !== null ? $application->contact->title : Request::input('title', '');
-            $firstname = $application !== null ? $application->contact->first_name : Request::input('firstname', '');
-            $lastname = $application !== null ? $application->contact->last_name : Request::input('lastname', '');
-            $email = $application !== null ? $application->contact->email : Request::input('email', '');
-        @endphp
+    @php
+        $editable = $application === null || ($application->contact === null && $application->company === null);
+        $type = Request::input("type", "person");
+        if($application !== null){
+            if($application->contact !== null){
+                $type = "person";
+            }elseif($application->company !== null){
+                $type = "company";
+            }
+        }
+        $title = $application !== null && $application->contact !== null ? $application->contact->title : Request::input('title', '');
+        $firstname = $application !== null && $application->contact !== null ? $application->contact->first_name : Request::input('firstname', '');
+        $lastname = $application !== null && $application->contact !== null ? $application->contact->last_name : Request::input('lastname', '');
+        $email = $application !== null && $application->contact !== null ? $application->contact->email : Request::input('email', '');
+        $email = $application !== null && $application->company !== null ? $application->company->email : $email;
+        $company = $application !== null && $application->company !== null ? $application->company->company : Request::input('company', '');
+        $employees = $application !== null && $application->company !== null ? $application->company->employees : Request::input('employees', '');
+    @endphp
+    <input type="hidden" name="type" value="{{ $type }}">
+    <div id="contact-data" @if($type === "company")class="company"@else class="person"@endif>
         <h3 id="contact_data">1. Ihre Kontaktdaten 
-            @if($application === null)
-            @if(Request::input("type", "") === "company")
-            <a href="{{  route("membership_form", Request::except(["type"])) }}#contact_data">Als Person beitreten?</a>
+            @if($editable)
+            @if($type === "company")
+            <a href="{{  route("membership_form", array_merge(Request::except(["type"]), ["application_id" => request()->route("application_id")])) }}#contact_data">Als Person beitreten?</a>
             @else
-            <a href="{{  route("membership_form", array_merge(Request::all(), ["type" => "company"])) }}#contact_data">Als Firma beitreten?</a>
+            <a href="{{  route("membership_form", array_merge(Request::all(), ["type" => "company", "application_id" => request()->route("application_id")])) }}#contact_data">Als Firma beitreten?</a>
             @endif
+            @else
+            <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "contact"])) }}#contact_data">Bearbeiten</a>
             @endif
         </h3>
-        @if(Request::input("type", "") !== "company")
+        @if($type !== "company")
         <div class="input-group title">
             @if(isset($errors) && $errors->has("title"))
                 @foreach($errors->get("title") as $error)
@@ -36,8 +50,8 @@
                 @endforeach
             @endif
             <label for="title">Anrede</label>
-            <select name="title" id="title" required @if($application !== null) disabled @endif>
-                <option disabled selected value>-- Auswahl --</option>
+            <select name="title" id="title" required @if(!$editable) disabled autocomplete="off" @endif>
+                <option disabled @if($title === "")selected @endif value>-- Auswahl --</option>
                 <option value="Herr" @if($title === "Herr")selected @endif>Herr</option>
                 <option value="Frau" @if($title === "Frau")selected @endif>Frau</option>
                 <option value="Neutral" @if($title === "Neutral")selected @endif>Neutral</option>
@@ -50,7 +64,7 @@
                 @endforeach
             @endif
             <label for="firstname">Ihr Vorname</label>
-            <input type="text" name="firstname" id="firstname" size="25" placeholder="Max" @if($application !== null) disabled @endif
+            <input type="text" name="firstname" id="firstname" size="25" placeholder="Max" @if(!$editable) disabled autocomplete="off" @endif
                 value="{{ $firstname }}" required />
         </div>
         <div class="input-group">
@@ -60,19 +74,19 @@
                 @endforeach
             @endif
             <label for="lastname">Ihr Nachname</label>
-            <input type="text" name="lastname" id="lastname" size="25" placeholder="Mustermann"  @if($application !== null) disabled @endif
+            <input type="text" name="lastname" id="lastname" size="25" placeholder="Mustermann"  @if(!$editable) disabled autocomplete="off" @endif
                 value="{{ $lastname }}" required />
         </div>
         @else
-        <div class="input-group">
+        <div class="input-group company">
             @if(isset($errors) && $errors->has("company"))
                 @foreach($errors->get("company") as $error)
                     <div class="error">{{ $error }}</div>
                 @endforeach
             @endif
             <label for="company">Ihr Firmenname</label>
-            <input type="text" name="company" id="company" size="25" placeholder="Muster GmbH"  @if($application !== null) disabled @endif
-                value="{{ Request::input('company', '') }}" required />
+            <input type="text" name="company" id="company" size="25" placeholder="Muster GmbH"  @if(!$editable) disabled autocomplete="off" @endif
+                value="{{ $company }}" required />
         </div>
         <div class="input-group employees">
             @if(isset($errors) && $errors->has("employees"))
@@ -81,11 +95,11 @@
                 @endforeach
             @endif
             <label for="employees">Anzahl Mitarbeitende</label>
-            <select name="employees" id="employees" required>
-                <option disabled selected value>-- Auswahl --</option>
-                <option value="1-19" @if(Request::input('employees', '' )==="1-19")selected @endif>1 - 19</option>
-                <option value="20-199" @if(Request::input('employees', '' )==="20-199")selected @endif>20 - 199</option>
-                <option value=">200" @if(Request::input('employees', '' )===">200")selected @endif>> 200</option>
+            <select name="employees" id="employees" required @if(!$editable) disabled autocomplete="off" @endif>
+                <option disabled @if($employees === "")selected @endif value>-- Auswahl --</option>
+                <option value="1-19" @if($employees==="1-19")selected @endif>1 - 19</option>
+                <option value="20-199" @if($employees==="20-199")selected @endif>20 - 199</option>
+                <option value=">200" @if($employees===">200")selected @endif>> 200</option>
             </select>
         </div>
         @endif
@@ -96,13 +110,27 @@
                 @endforeach
             @endif
             <label for="email">Ihre Email Addresse</label>
-            <input type="email" name="email" id="email" placeholder="max@mustermann.de"  @if($application !== null) disabled @endif
+            <input type="email" name="email" id="email" placeholder="max@mustermann.de"  @if(!$editable) disabled @endif
                 value="{{ $email }}" />
         </div>
+        @if($editable)
+        <button type="submit" class="btn btn-primary">Weiter</button>
+        @endif
     </div>
-    <div id="membership-fee">
-        <h3>2. Ihr monatlicher Mitgliedsbeitrag</h3>
-        @if($application !== null)
+    @php
+    $visible = $application !== null && ($application->contact !== null || $application->company !== null);
+    $editable = $visible && $application->amount === null ;
+    $amount = $application !== null && $application->amount !== null ? $application->amount : request()->input("amount", null);
+    if($amount === "custom") $amount = request()->input("custom-amount");
+    if($amount !== null) $amount = floatval($amount);
+    @endphp
+    <div id="membership-fee" @if(!$visible)class="disabled"@endif>
+        <h3>2. Ihr monatlicher Mitgliedsbeitrag
+            @if($visible && !$editable)
+            <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "membership-fee"])) }}">Bearbeiten</a>
+            @endif
+        </h3>
+        @if($visible)
         @if(isset($errors) && $errors->has("amount"))
             @foreach($errors->get("amount") as $error)
                 <div class="error">{{ $error }}</div>
@@ -113,28 +141,28 @@
                 <div class="error">{{ $error }}</div>
             @endforeach
         @endif
-        <div class="input-group">
-            <input type="radio" name="amount" id="amount-10" value="10.00" @if(!Request::has('amount') ||
-                Request::input('amount')==="10.00" )checked @endif required />
+        <div class="input-group @if(!$editable)disabled @endif " >
+            <input type="radio" name="amount" id="amount-10" value="10.00" @if($amount === null ||
+                $amount == 10 )checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-10">10€</label>
         </div>
-        <div class="input-group">
-            <input type="radio" name="amount" id="amount-15" value="15.00" @if(Request::input('amount', '' )==="15.00"
-                )checked @endif required />
+        <div class="input-group @if(!$editable)disabled @endif ">
+            <input type="radio" name="amount" id="amount-15" value="15.00" @if($amount == 15
+                )checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-15">15€</label>
         </div>
-        <div class="input-group">
-            <input type="radio" name="amount" id="amount-20" value="20.00" @if(Request::input('amount', '' )==="20.00"
-                )checked @endif required />
+        <div class="input-group @if(!$editable)disabled @endif ">
+            <input type="radio" name="amount" id="amount-20" value="20.00" @if($amount == 20
+                )checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-20">20€</label>
         </div>
-        <div class="input-group custom">
-            <input type="radio" name="amount" id="amount-custom" value="custom" @if(Request::input('amount', ''
-                )==="custom" )checked @endif required />
+        <div class="input-group custom @if(!$editable)disabled @endif ">
+            <input type="radio" name="amount" id="amount-custom" value="custom" @if(!in_array($amount, [null, (float)"10.00", (float)"15.00", (float)"20.00"]))checked @endif @if(!$editable)disabled @endif required />
             <label for="amount-custom">Wunschbetrag</label>
             <input type="text" name="custom-amount" id="amount-custom-value" inputmode="numeric"
-                value="{{ Request::input('custom-amount', '10,00') }}" placeholder="10,00€" />
+                value="{{ $amount }}" placeholder="10,00€" @if(!$editable)disabled @endif />
         </div>
+        @if($editable)
         <div id="reduction-container" class="hidden">
             <div>Der Mindestbeitrag beträgt monatlich <span>5€</span>. Wenn Sie <a href="https://suma-ev.de/beitragsordnung/" target="_blank">Anspruch auf einen reduzierten Beitrag</a> haben, laden Sie bitte nachfolgend einen geeigneten Nachweis zusammen mit Ihrem Antrag hoch.</div>
             @if(isset($errors) && $errors->has("reduction"))
@@ -147,59 +175,88 @@
                 <input type="file" name="reduction" id="reduction">
             </div>
         </div>
+        <button type="submit" class="btn btn-primary">Weiter</button>
+        @endif
         @endif
     </div>
-    <div id="membership-payment">
-        <h3>3. Ihr Zahlungsintervall</h3>
-        @if($application !== null)
+    @php
+    $visible = $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null;
+    $editable = $visible && $application->interval === null;
+    $interval = $application !== null && $application->interval !== null ? $application->interval : request()->input("interval", null);
+    @endphp
+    <div id="membership-payment" @if(!$visible)class="disabled"@endif>
+        <h3>3. Ihr Zahlungsintervall
+            @if($visible && !$editable)
+            <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "membership-payment"])) }}">Bearbeiten</a>
+            @endif
+        </h3>
+        @if($visible)
         @if(isset($errors) && $errors->has("interval"))
             @foreach($errors->get("interval") as $error)
                 <div class="error">{{ $error }}</div>
             @endforeach
         @endif
         <div id="membership-interval">
-            <div class="input-group monthly">
-                <input type="radio" name="interval" id="interval-monthly" value="monthly" @if(!Request::has('interval')
-                    || Request::input('interval')==="monthly" )checked @endif required>
-                <label for="interval-monthly">monatlich <span class="amount"></span></label>
+            <div class="input-group monthly @if(!$editable)disabled @endif">
+                <input type="radio" name="interval" id="interval-monthly" value="monthly" @if($interval === null || $interval === "monthly" )checked @endif required>
+                <label for="interval-monthly">monatlich</label>
             </div>
-            <div class="input-group quarterly">
+            <div class="input-group quarterly @if(!$editable)disabled @endif">
                 <input type="radio" name="interval" id="interval-quarterly" value="quarterly"
-                    @if(Request::input('interval', '' )==="quarterly" )checked @endif required>
-                <label for="interval-quarterly">vierteljährlich <span class="amount"></span></label>
+                    @if($interval==="quarterly" )checked @endif required>
+                <label for="interval-quarterly">vierteljährlich <span class="amount"> {{ number_format($application->amount * 3, 2, ",") }}€</span></label>
             </div>
-            <div class="input-group six-monthly">
+            <div class="input-group six-monthly @if(!$editable)disabled @endif">
                 <input type="radio" name="interval" id="interval-six-monthly" value="six-monthly"
-                    @if(Request::input('interval', '' )==="six-monthly" )checked @endif required>
-                <label for="interval-six-monthly">halbjährlich <span class="amount"></span></label>
+                    @if($interval==="six-monthly" )checked @endif required>
+                <label for="interval-six-monthly">halbjährlich <span class="amount"> {{ number_format($application->amount * 6, 2, ",") }}€</span></label>
             </div>
-            <div class="input-group annual">
+            <div class="input-group annual @if(!$editable)disabled @endif">
                 <input type="radio" name="interval" id="interval-annual" value="annual"
-                    @if(Request::input('interval', '' )==="annual" )checked @endif required>
-                <label for="interval-annual">jährlich <span class="amount"></span></label>
+                    @if($interval==="annual" )checked @endif required>
+                <label for="interval-annual">jährlich <span class="amount"> {{ number_format($application->amount * 12, 2, ",") }}€</span></label>
             </div>
         </div>
+        @if($editable)
+        <button type="submit" class="btn btn-primary">Weiter</button>
         @endif
-        <h3>4. Ihre Zahlungsmethode</h3>
-        @if($application !== null)
+        @endif
+    </div>
+    @php
+    $visible = $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
+    $editable = $visible ;
+    $payment_method = $application !== null && $application->payment_method !== null ? $application->payment_method : request()->input("payment-method", null);
+    $payment_directdebit_accountholder = $application !== null && $application->directdebit !== null ? $application->directdebit->accountholder : request()->input("accountholder", "");
+    $payment_directdebit_iban = $application !== null && $application->directdebit !== null ? $application->directdebit->iban : request()->input("iban", "");
+    $payment_directdebit_bic = $application !== null && $application->directdebit !== null ? $application->directdebit->bic : request()->input("bic", "");
+    @endphp
+    <div id="membership-payment-method" @if(!$visible)class="disabled"@endif>
+        <h3>4. Ihre Zahlungsmethode
+            <div class="funding-sources">
+                <img src="/img/funding_source/sepa.svg" alt="SEPA">
+                <img src="/img/funding_source/card.svg" alt="Creditcard">
+                <img src="/img/funding_source/paypal.svg" alt="PayPal">
+            </div>
+        </h3>
+        @if($visible)
         @if(isset($errors) && $errors->has("payment-method"))
             @foreach($errors->get("payment-method") as $error)
                 <div class="error">{{ $error }}</div>
             @endforeach
         @endif
-        <div id="membership-payment-method">
+        <div @if(!$editable)class="disabled"@endif>
             <input type="radio" name="payment-method" id="payment-method-directdebit" value="directdebit"
-                @if(!Request::has('payment-method') || Request::input('payment-method')==="directdebit" )checked @endif
+                @if(in_array($payment_method, [null, "directdebit"]) )checked @endif
                 required>
             <label for="payment-method-directdebit">SEPA Lastschrift</label>
             <input type="radio" name="payment-method" id="payment-method-banktransfer" value="banktransfer"
-                @if(Request::input('payment-method', '' )==="banktransfer" )checked @endif required>
+                @if($payment_method==="banktransfer" )checked @endif required>
             <label for="payment-method-banktransfer">Banküberweisung</label>
             <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
-                @if(Request::input('payment-method', '' )==="paypal" )checked @endif required>
+                @if($payment_method==="paypal" )checked @endif required>
             <label for="payment-method-paypal" class="js-only">PayPal</label>
             <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="card"
-                @if(Request::input('payment-method', '' )==="creditcard" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
+                @if($payment_method==="creditcard" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
             <label for="payment-method-creditcard" class="js-only">Kredit-/Debitkarte</label>
             <div id="directdebit-data" class="info-container">
                 @if(isset($errors) && $errors->has("iban"))
@@ -207,15 +264,20 @@
                         <div class="error">{{ $error }}</div>
                     @endforeach
                 @endif
-                <div class="input-group">
+                <div class="input-group accountholder">
                     <label for="accountholder">Kontoinhaber (falls abweichend)</label>
                     <input type="text" name="accountholder" id="accountholder" placeholder="Max Mustermann"
-                        value="{{ Request::input('accountholder', '') }}">
+                        value="{{ $payment_directdebit_accountholder }}">
                 </div>
-                <div class="input-group">
+                <div class="input-group iban">
                     <label for="iban">IBAN</label>
                     <input type="text" name="iban" id="iban" placeholder="DE80 1234 5678 9012 3456 78"
-                        value="{{ Request::input('iban', '') }}">
+                        value="{{ $payment_directdebit_iban }}">
+                </div>
+                <div class="input-group bic">
+                    <label for="bic">BIC (optional)</label>
+                    <input type="text" name="bic" id="bic" placeholder=""
+                        value="{{ $payment_directdebit_bic }}">
                 </div>
             </div>
             <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
@@ -276,7 +338,9 @@
         </div>
         @endif
     </div>
+    @if($editable)
     <button type="submit" class="btn btn-primary">Abschicken</button>
+    @endif
 </form>
 <section id="membership-advantages">
     <div>

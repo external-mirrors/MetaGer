@@ -7,17 +7,23 @@
 
 @lang("membership/welcome_mail.membership.description", ["amount" => number_format($payments[0]["amount"], 2, ","), "due" => $payments[0]["due_date"]->format("d.m.Y")])  
 
-@switch($membership["Beitrag.Zahlungsweise:label"])
-@case("Banküberweisung")
-@lang("membership/welcome_mail.membership.banktransfer", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership["Beitrag.Zahlungsreferenz"]])
+@switch($membership->payment_method)
+@case("banktransfer")
+@lang("membership/welcome_mail.membership.banktransfer", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference])
 
 > `SUMA-EV`\
 > `DE64 4306 0967 4075 0332 01`\
 > `GENODEM1GLS`\
 > `GLS Gemeinschaftsbank, Bochum`
 @break
-@case("Lastschrift")
-@lang("membership/welcome_mail.membership.directdebit", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership["Beitrag.Zahlungsreferenz"], 'iban' => iban_to_obfuscated_format($membership["Beitrag.IBAN"])])
+@case("directdebit")
+@lang("membership/welcome_mail.membership.directdebit", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference, 'iban' => iban_to_obfuscated_format($membership->directdebit->iban)])
+@break
+@case("paypal")
+@lang("membership/welcome_mail.membership.paypal", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
+@break
+@case("card")
+@lang("membership/welcome_mail.membership.card", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
 @break
 @endswitch
 
@@ -42,11 +48,11 @@
 
 @lang("membership/welcome_mail.key.description_first", ["infos" => url("keys")])
 
-> {{ $membership["MetaGer_Key.Key"] }}
+> {{ $membership->key }}
 
 @lang("membership/welcome_mail.key.description_second", ["startpage_link" => url("/")])
 
-> [{{ route("loadSettings", ["key" => $membership["MetaGer_Key.Key"]]) }}]({{ route("loadSettings", ["key" => $membership["MetaGer_Key.Key"]]) }})
+> [{{ route("loadSettings", ["key" => $membership->key]) }}]({{ route("loadSettings", ["key" => $membership->key]) }})
 
 @lang("membership/welcome_mail.key.description_third")
 

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Membership;
 
 use App\Localization;
 use App\Models\Membership\CiviCrm;
+use App\Models\Membership\MembershipApplication;
+use Arr;
 use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,7 +20,7 @@ class WelcomeMail extends Mailable
     use Queueable, SerializesModels;
 
     public int $membership_count;
-    public array $membership;
+    public MembershipApplication $membership;
     public array $payments;
     public array $contact;
     public string $plugin_firefox_url;
@@ -29,15 +31,14 @@ class WelcomeMail extends Mailable
      */
     public function __construct(int $membership_id)
     {
-        $membership = CiviCrm::FIND_MEMBERSHIPS(null, $membership_id);
-        if ($membership !== null && !empty($membership)) {
-            $this->membership = $membership[0];
-        } else {
+        $this->membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+        if ($this->membership === null) {
             throw new Exception("Couldn't find membership with ID $membership_id");
         }
-        $this->contact = CiviCrm::GET_CONTACT($this->membership["contact_id"]);
+        $this->locale($this->membership->locale);
+        $this->contact = CiviCrm::GET_CONTACT($this->membership->crm_contact);
         if ($this->contact === null) {
-            throw new Exception("Couldn't find contact with ID {$membership['contact_id']}");
+            throw new Exception("Couldn't find contact with ID {$this->membership->crm_contact}");
         }
         // Get membership count
         $this->membership_count = CiviCrm::GET_MEMBERSHIP_COUNT();
@@ -56,7 +57,7 @@ class WelcomeMail extends Mailable
             subject: __("membership/welcome_mail.subject"),
             from: new Address("verein@metager.de", "SUMA-EV"),
             to: [new Address($this->contact["email_primary.email"], $this->contact["addressee_display"])],
-            bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

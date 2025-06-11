@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('membership_paypal', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('civicrm_membership_id');
+        Schema::create('membership_payment_paypals', function (Blueprint $table) {
+            $table->uuid('id')->primary(true);
             $table->string('order_id')->nullable();
             $table->string('authorization_id')->nullable();
             $table->string('authorization_status')->nullable();
-            $table->timestamp("expires_at")->nullable(false);
-            $table->timestamp('created_at')->nullable(false)->useCurrent();
+            $table->string('vault_id')->nullable();
+            $table->uuid("application_id")->unique()->references("id")->on("membership_applications");
+            $table->timestamps();
         });
     }
 
@@ -26,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('membership_paypal');
+        Schema::dropIfExists('membership_payment_paypals');
     }
 };

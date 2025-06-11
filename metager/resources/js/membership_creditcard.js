@@ -8,7 +8,7 @@ let success_callback = null;
 
 export function initializeCreditcard() {
     let required =
-        document.querySelector("#payment-method-creditcard").checked == true;
+        document.querySelector("#payment-method-creditcard")?.checked == true;
 
 
     if (!required) return;
@@ -60,7 +60,7 @@ export function initializeCreditcard() {
         let client_id = document.querySelector("#payment-method-creditcard").dataset.clientid;
         loadScript({ clientId: client_id, components: ["card-fields"], currency: "EUR", vault: true, intent: "authorize" }).then(paypal => {
             card_fields = paypal.CardFields({
-                createOrder: createOrder, onError: onError, onApprove: approveOrder, onCancel: handleCancel, style: {
+                createOrder: createOrder, onError: onError, onApprove: approveOrder, style: {
                     'body': {
                         padding: '1px',
                     },
@@ -115,8 +115,9 @@ export function initializeCreditcard() {
                 if (response.status == 200) {
                     return response_json.order_id;
                 } else {
-                    handle_card_error("custom", response_json.message);
-                    actions.restart();
+                    if (response_json?.message)
+                        handle_card_error("custom", response_json.message);
+                    throw new Error(response_json);
                 }
             }).catch(error => {
                 // ToDo handle order creation error
@@ -132,23 +133,27 @@ export function initializeCreditcard() {
                             document.location.href = success_callback;
                         } catch (error) {
                             handleCancel();
-                            actions.restart();
                         }
                     } else {
+                        let response_json = null;
                         try {
-                            let response_json = await response.json();
+                            response_json = await response.json();
                             cancel_callback = response_json.cancel_url;
                         } catch (ignored) { }
                         handleCancel();
-                        actions.restart();
+                        if (response_json?.message) {
+                            handle_card_error("custom", response_json.message);
+                        }
                     }
+                }).catch(error => {
+
                 });
             } else {
                 handleCancel();
-                actions.restart();
             }
         }
         let onError = async error => {
+            console.log("Error:", error);
             return handleCancel();
         }
     }
@@ -167,9 +172,38 @@ function handleSubmit(e) {
         if (!state.isFormValid) {
             handle_card_error("syntax");
         } else {
-            card_fields.submit().catch(error => {
+            let card_fields_promise = null;
+            if (billingFilled()) {
+                card_fields_promise = card_fields.submit({
+                    addressLine1: document.getElementById(
+                        "card-billing-address-line-1"
+                    ).value,
+                    addressLine2: document.getElementById(
+                        "card-billing-address-line-2"
+                    ).value,
+                    adminArea1: document.getElementById(
+                        "card-billing-address-admin-area-line-1"
+                    ).value,
+                    adminArea2: document.getElementById(
+                        "card-billing-address-admin-area-line-2"
+                    ).value,
+                    countryCode: document.getElementById(
+                        "card-billing-address-country-code"
+                    ).value,
+                    postalCode: document.getElementById(
+                        "card-billing-address-postal-code"
+                    ).value,
+                });
+            } else {
+                card_fields_promise = card_fields.submit();
+            }
+            card_fields_promise.catch(error => {
                 console.error(error);
-                handle_card_error("acceptance");
+                if (error.message) {
+                    handle_card_error("custom", error.message);
+                } else {
+                    handle_card_error("acceptance");
+                }
             });
         }
     });
@@ -239,4 +273,13 @@ function clear_card_errors() {
     errors.querySelectorAll(".error").forEach(element => {
         element.classList.add("hidden");
     });
+}
+
+function billingFilled() {
+    return document.querySelector("#card-billing-address-line-1").value != "" ||
+        document.querySelector("#card-billing-address-line-2").value != "" ||
+        document.querySelector("#card-billing-address-admin-area-line-1").value != "" ||
+        document.querySelector("#card-billing-address-admin-area-line-2").value != "" ||
+        document.querySelector("#card-billing-address-country-code").value != "" ||
+        document.querySelector("#card-billing-address-postal-code").value != "";
 }

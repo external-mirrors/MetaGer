@@ -10,11 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('membership_contacts', function (Blueprint $table) {
+        Schema::create('membership_companies', function (Blueprint $table) {
             $table->uuid('id')->primary(true);
-            $table->enum("title", ["Herr", "Frau", "Neutral"])->nullable(false);
-            $table->string("first_name")->nullable(false);
-            $table->string("last_name")->nullable(false);
+            $table->string("company")->nullable(false);
+            $table->enum("employees", ["1-19", "20-199", ">200"])->nullable(false);
             $table->string("email")->nullable(false);
             $table->uuid("application_id")->unique()->references("id")->on("membership_applications");
             $table->timestamps();
@@ -26,6 +25,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('membership_contacts');
+        Schema::dropIfExists('membership_companies');
     }
 };

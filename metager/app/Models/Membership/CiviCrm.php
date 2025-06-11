@@ -3,6 +3,7 @@
 namespace App\Models\Membership;
 
 use Arr;
+use Exception;
 use Illuminate\Support\Facades\Redis;
 use DB;
 use Carbon\Carbon;
@@ -48,20 +49,16 @@ class CiviCrm
         ]
     ];
 
-    public static function FIND_CONTACT(string $title, string $firstname, string $lastname, string $email)
+    public static function FIND_CONTACT(MembershipContact $contact): array|null
     {
         $params = [
             'select' => ['*', 'email_primary.email'],
-            'where' => [['prefix_id:label', '=', $title], ['first_name', '=', $firstname], ['last_name', '=', $lastname], ['email_primary.email', '=', $email], ['contact_type', '=', 'Individual']],
-            'limit' => 25,
+            'where' => [['prefix_id:label', '=', $contact->title], ['first_name', '=', $contact->first_name], ['last_name', '=', $contact->last_name], ['email_primary.email', '=', $contact->email], ['contact_type', '=', 'Individual']],
+            'limit' => 1,
         ];
 
         $response = self::API_POST("/Contact/get", $params);
-        if ($response["count"] > 0) {
-            return $response["values"][0];
-        }
-
-        return null;
+        return Arr::get($response, "values.0");
     }
 
     public static function GET_CONTACT(int $contact_id)
@@ -80,69 +77,125 @@ class CiviCrm
         return null;
     }
 
-    public static function CREATE_CONTACT(string $title, string $firstname, string $lastname, string $email)
+    public static function CREATE_CONTACT(MembershipContact $contact)
     {
         $params = [
-            'values' => ['contact_type' => 'Individual', 'prefix_id:label' => $title, 'first_name' => $firstname, 'last_name' => $lastname],
-            'chain' => ['name_me_0' => ['Email', 'create', ['values' => ['contact_id' => '$id', 'email' => $email]]]],
+            'values' => ['contact_type' => 'Individual', 'prefix_id:label' => $contact->title, 'first_name' => $contact->first_name, 'last_name' => $contact->last_name],
+            'chain' => ['name_me_0' => ['Email', 'create', ['values' => ['contact_id' => '$id', 'email' => $contact->email]]]],
         ];
 
         $response = self::API_POST("/Contact/create", $params);
-        if ($response["count"] > 0) {
-            return $response["values"][0];
-        }
-
-        return null;
+        return Arr::get($response, "values.0");
     }
 
-    public static function FIND_COMPANY(string $company_name, string $email)
+    public static function FIND_COMPANY(MembershipCompany $company): array|null
     {
         $params = [
             'select' => ['*', 'email_primary.email'],
-            'where' => [['contact_type', '=', 'Organization'], ['organization_name', '=', $company_name], ['email_primary.email', '=', $email]],
+            'where' => [['contact_type', '=', 'Organization'], ['organization_name', '=', $company->company], ['email_primary.email', '=', $company->email]],
             'limit' => 25,
         ];
 
         $response = self::API_POST("/Contact/get", $params);
-        if ($response["count"] > 0) {
-            return $response["values"][0];
-        }
-
-        return null;
+        return Arr::get($response, "values.0");
     }
 
-    public static function CREATE_COMPANY(string $company_name, string $email)
+    public static function CREATE_COMPANY(MembershipCompany $company): array|null
     {
         $params = [
-            'values' => ['organization_name' => $company_name, 'contact_type' => 'Organization'],
-            'chain' => ['name_me_0' => ['Email', 'create', ['values' => ['contact_id' => '$id', 'email' => $email]]]],
+            'values' => ['organization_name' => $company->company, 'contact_type' => 'Organization'],
+            'chain' => ['name_me_0' => ['Email', 'create', ['values' => ['contact_id' => '$id', 'email' => $company->email]]]],
         ];
 
         $response = self::API_POST("/Contact/create", $params);
-        if ($response["count"] > 0) {
-            return Arr::get($response, "values.0");
-        }
-
-        return null;
+        return Arr::get($response, "values.0");
     }
 
-    public static function FIND_MEMBERSHIPS(string $contact_id = null, string $membership_id = null)
+    /**
+     * Summary of FIND_MEMBERSHIPS
+     * @param string $contact_id
+     * @param string $membership_id
+     * @return MembershipApplication[]|null
+     */
+    public static function FIND_MEMBERSHIPS(string $contact_id = null, string $membership_id = null, string $mandate = null): array|null
     {
-        if ($contact_id === null && $membership_id === null)
-            return null;
+        $memberships = [];
         $params = [
-            'select' => ['*', 'contact_id.addressee_display', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
+            'select' => ['*', 'email.email', 'contact_id.prefix_id:label', 'contact_id.first_name', 'contact_id.last_name', 'contact_id.prefix_id:label', 'contact_id.organization_name', 'contact_id.addressee_display', 'membership_type_id.duration_unit', 'membership_type_id.duration_interval', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Locale', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
+            'join' => [['Email AS email', 'LEFT', ['contact_id.email_primary', '=', 'email.id']]],
             'where' => [],
             'limit' => 25,
         ];
-        if ($membership_id === null) {
+        if ($contact_id !== null) {
             $params["where"][] = ['contact_id', '=', $contact_id];
-        } else {
+        } else if ($membership_id !== null) {
             $params["where"][] = ['id', '=', $membership_id];
+        } else if ($mandate !== null) {
+            $params["where"][] = ['Beitrag.Zahlungsreferenz', '=', $mandate];
+        } else {
+            return $memberships;
         }
 
         $response = self::API_POST("/Membership/get", $params);
-        return $response["values"];
+        $response = Arr::get($response, "values", null);
+        if ($response === null)
+            return null;
+
+        foreach ($response as $membership_entry) {
+            $membership = new MembershipApplication;
+            $membership->crm_contact = Arr::get($membership_entry, "contact_id");
+            $membership->crm_membership = Arr::get($membership_entry, "id");
+            $membership->amount = Arr::get($membership_entry, "Beitrag.Monatlicher_Mitgliedsbeitrag");
+            $membership->key = Arr::get($membership_entry, 'MetaGer_Key.Key');
+            $membership->locale = Arr::get($membership_entry, "Beitrag.Locale");
+            if (Arr::get($membership_entry, 'contact_id.organization_name') !== null) {
+                $company = new MembershipCompany;
+                $company->company = Arr::get($membership_entry, 'contact_id.organization_name');
+                $company->email = Arr::get($membership_entry, "email.email");
+                $membership->company = $company;
+            } else {
+                $contact = new MembershipContact;
+                $contact->title = Arr::get($membership_entry, "contact_id.prefix_id:label");
+                $contact->first_name = Arr::get($membership_entry, 'contact_id.first_name');
+                $contact->last_name = Arr::get($membership_entry, 'contact_id.last_name');
+                $contact->email = Arr::get($membership_entry, "email.email");
+                $membership->contact = $contact;
+            }
+            $membership->interval = "monthly";
+            switch (Arr::get($membership_entry, 'membership_type_id.duration_unit')) {
+                case "year":
+                    $membership->interval = "annual";
+                    break;
+                case "month":
+                    $membership->interval = match (Arr::get($membership_entry, 'membership_type_id.duration_interval')) {
+                        1 => "monthly",
+                        3 => "quarterly",
+                        6 => "six-monthly",
+                        default => "monthly"
+                    };
+                    break;
+            }
+            $membership->payment_method = match (Arr::get($membership_entry, 'Beitrag.Zahlungsweise:label')) {
+                "Banküberweisung" => "banktransfer",
+                "Lastschrift" => "directdebit",
+                "PayPal" => "paypal",
+                "Creditcard" => "card",
+            };
+            $membership->payment_reference = Arr::get($membership_entry, 'Beitrag.Zahlungsreferenz');
+            if (in_array($membership->payment_method, ["paypal", "card"])) {
+                $paypal = new MembershipPaymentPaypal;
+                $paypal->vault_id = Arr::get($membership_entry, 'Beitrag.PayPal_Vault');
+                $membership->paypal = $paypal;
+            } elseif ($membership->payment_method === "directdebit") {
+                $directdebit = new MembershipPaymentDirectdebit;
+                $directdebit->accountholder = Arr::get($membership_entry, 'Beitrag.Kontoinhaber');
+                $directdebit->iban = Arr::get($membership_entry, 'Beitrag.IBAN');
+                $directdebit->bic = Arr::get($membership_entry, 'Beitrag.BIC');
+                $membership->directdebit = $directdebit;
+            }
+            $memberships[] = $membership;
+        }
+        return $memberships;
     }
 
     public static function FIND_MEMBERSHIP_APPLICATIONS()
@@ -156,48 +209,6 @@ class CiviCrm
 
         $response = self::API_POST("/Membership/get", $params);
         return Arr::get($response, "values");
-    }
-
-    public static function ACCEPT_MEMBERSHIP_APPLICATION(string $membership_id)
-    {
-        $params = [
-            'values' => ['is_override' => FALSE, 'status_id' => 2],
-            'where' => [['id', '=', $membership_id]],
-        ];
-        return self::API_POST("/Membership/update", $params);
-    }
-
-    public static function DELETE_MEMBERSHIP_APPLICATION(string $membership_id)
-    {
-        $membership_entry = self::FIND_MEMBERSHIPS(null, $membership_id);
-        $membership_entry = Arr::get($membership_entry, "0");
-        if ($membership_entry === null)
-            return;
-
-        // Delete Membership
-        $params = [
-            'where' => [
-                ['status_id', '=', 9], // Applied
-                ['id', '=', $membership_id]
-            ],
-        ];
-        self::API_POST("/Membership/delete", $params);
-
-        // Check if contact has any contributions
-        $params = [
-            'where' => [['contact_id', '=', Arr::get($membership_entry, "contact_id")]],
-            'limit' => 25,
-        ];
-        $contributions = Arr::get(self::API_POST("/Contribution/get", $params), "values", []);
-        if (sizeof($contributions) > 0)
-            return;
-
-        // Delete the whole contact 
-        $params = [
-            'where' => [['id', '=', Arr::get($membership_entry, "contact_id")]],
-            'useTrash' => FALSE,
-        ];
-        self::API_POST("/Contact/delete", $params);
     }
 
     public static function ADD_MEMBERSHIP_PAYPAL_VAULT(string $membership_id, string $vault_id)
@@ -251,57 +262,59 @@ class CiviCrm
         return $response;
     }
 
-    public static function CREATE_MEMBERSHIP(string $contact_id, array $membership)
+    public static function CREATE_MEMBERSHIP(MembershipApplication $application): array|null
     {
         $type_string = "";
-        if (empty($membership["company"])) {
+        if ($application->contact !== null) {
             $type_string .= "person";
-            if ($membership["amount"] < 5) {
+            if ($application->amount < 5) {
                 $type_string .= ".reduced";
             } else {
                 $type_string .= ".regular";
             }
-        } else {
+        } else if ($application->company !== null) {
             $type_string .= "company";
-            $type_string .= "." . $membership["employees"];
+            $type_string .= "." . $application->company->employees;
+        } else {
+            throw new Exception("Application is missing contact data.");
         }
-        $type_string .= "." . $membership['interval'];
+        $type_string .= "." . $application->interval;
 
         $membership_type = Arr::get(self::MEMBERSHIP_TYPES, $type_string);
-        $payment_type = match ($membership["payment-method"]) {
+
+        $params = [
+            'values' => [
+                'contact_id' => $application->crm_contact,
+                'membership_type_id' => $membership_type,
+                'Beitrag.Monatlicher_Mitgliedsbeitrag' => $application->amount,
+                'Beitrag.Zahlungsweise:label' => "Banküberweisung",
+                'Beitrag.Zahlungsstatus:label' => 'Eingetreten',
+                'Beitrag.Locale' => $application->locale,
+                'Ver_ffentlichung.Eintrag_auf_SUMA_EV_Webseite' => FALSE,
+                "MetaGer_Key.Key" => $application->key
+            ],
+        ];
+
+        if ($application->payment_reference !== null) {
+            $params["values"]['Beitrag.Zahlungsreferenz'] = $application->payment_reference;
+        }
+
+        $params["values"]["Beitrag.Zahlungsweise:label"] = match ($application->payment_method) {
             "banktransfer" => "Banküberweisung",
             "directdebit" => "Lastschrift",
             "paypal" => "PayPal",
             "card" => "Creditcard",
         };
-        $params = [
-            'values' => [
-                'status_id:label' => 'Applied',
-                'is_override' => TRUE,
-                'start_date' => now()->format("Y-m-d"),
-                'end_date' => now()->format("Y-m-d"),
-                'contact_id' => $contact_id,
-                'membership_type_id' => $membership_type,
-                'Beitrag.Monatlicher_Mitgliedsbeitrag' => $membership["amount"],
-                'Beitrag.Zahlungsweise:label' => $payment_type,
-                'Beitrag.Zahlungsstatus:label' => 'Eingetreten',
-                'Ver_ffentlichung.Eintrag_auf_SUMA_EV_Webseite' => FALSE,
-            ],
-        ];
-
-        if ($membership["payment-method"] === "directdebit") {
-            $params["values"]["Beitrag.Kontoinhaber"] = $membership["accountholder"];
-            $params["values"]["Beitrag.IBAN"] = $membership["iban"];
-        } elseif ($membership["payment-method"] === "paypal") {
-
+        if ($application->payment_method === "directdebit") {
+            $params["values"]["Beitrag.Kontoinhaber"] = $application->directdebit->accountholder;
+            $params["values"]["Beitrag.IBAN"] = $application->directdebit->iban;
+            $params["values"]["Beitrag.BIC"] = $application->directdebit->bic;
+        } elseif ($application->payment_method === "paypal") {
+            // ToDo complete paypal data
         }
 
-        if (!empty($membership["key"])) {
-            $params["values"]["MetaGer_Key.Key"] = $membership["key"];
-        }
-
-        if (!empty($membership["reduced_until"])) {
-            $params["values"]["Beitrag.Erm_igt_bis"] = $membership["reduced_until"];
+        if ($application->reduction !== null && $application->reduction->expires_at !== null) {
+            $params["values"]['Beitrag.Erm_igt_bis'] = $application->reduction->expires_at->format("Y-m-d");
         }
 
         $response = self::API_POST("/Membership/create", $params);
@@ -309,13 +322,88 @@ class CiviCrm
         return $new_membership;
     }
 
+    public static function UPDATE_MEMBERSHIP(MembershipApplication $application): array|null
+    {
+        $params = [
+            'where' => [['id', '=', $application->crm_membership]],
+            'values' => [],
+        ];
+
+        if ($application->amount !== null) {
+            $params["values"]['Beitrag.Monatlicher_Mitgliedsbeitrag'] = $application->amount;
+            $type_string = null;
+            if ($application->contact !== null) {
+                $type_string .= "person";
+                if ($application->amount < 5) {
+                    $type_string .= ".reduced";
+                } else {
+                    $type_string .= ".regular";
+                }
+            } else if ($application->company !== null) {
+                $type_string .= "company";
+                $type_string .= "." . $application->company->employees;
+            }
+            if ($type_string !== null) {
+                $type_string .= "." . $application->interval;
+                $params["values"]['membership_type_id'] = Arr::get(self::MEMBERSHIP_TYPES, $type_string);
+            }
+        }
+        if ($application->payment_method !== null) {
+            $params["values"]["Beitrag.Zahlungsweise:label"] = match ($application->payment_method) {
+                "banktransfer" => "Banküberweisung",
+                "directdebit" => "Lastschrift",
+                "paypal" => "PayPal",
+                "card" => "Creditcard",
+            };
+            if ($application->payment_method === "paypal" || $application->payment_method === "card") {
+                if ($application->paypal === null || $application->paypal->vault_id === null)
+                    return null;
+                $params["values"]['Beitrag.PayPal_Vault'] = $application->paypal->vault_id;
+                $params["values"]['Beitrag.PayPal_ID'] = PayPal::GET_ID();
+                $params["values"]["Beitrag.Kontoinhaber"] = "";
+                $params["values"]["Beitrag.IBAN"] = "";
+                $params["values"]["Beitrag.BIC"] = "";
+            } elseif ($application->payment_method === "directdebit") {
+                if ($application->directdebit === null || $application->directdebit->iban === null)
+                    return null;
+                $params["values"]['Beitrag.PayPal_Vault'] = "";
+                $params["values"]['Beitrag.PayPal_ID'] = "";
+                $params["values"]["Beitrag.Kontoinhaber"] = $application->directdebit->accountholder;
+                $params["values"]["Beitrag.IBAN"] = $application->directdebit->iban;
+                $params["values"]["Beitrag.BIC"] = $application->directdebit->bic;
+            } elseif ($application->payment_method === "banktransfer") {
+                $params["values"]['Beitrag.Zahlungsweise:label'] = "Banküberweisung";
+                $params["values"]["Beitrag.Kontoinhaber"] = "";
+                $params["values"]["Beitrag.IBAN"] = "";
+                $params["values"]["Beitrag.BIC"] = "";
+                $params["values"]['Beitrag.PayPal_Vault'] = "";
+                $params["values"]['Beitrag.PayPal_ID'] = "";
+            }
+        }
+        if ($application->locale !== null) {
+            $params["values"]["Beitrag.Locale"] = $application->locale;
+        }
+        if ($application->key !== null) {
+            $params["values"]["MetaGer_Key.Key"] = $application->key;
+        }
+        if ($application->payment_reference !== null) {
+            $params["values"]['Beitrag.Zahlungsreferenz'] = $application->payment_reference;
+        }
+        if ($application->reduction !== null && $application->reduction->expires_at !== null) {
+            $params["values"]['Beitrag.Erm_igt_bis'] = $application->reduction->expires_at->format("Y-m-d");
+        }
+        if (!empty($params['values'])) {
+            $response = self::API_POST("/Membership/update", $params);
+            return $response;
+        }
+        return null;
+    }
+
     public static function CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION(int $membership_id): int|null
     {
-        $membership = self::FIND_MEMBERSHIPS(null, $membership_id);
-        if ($membership === null || sizeof($membership) === 0) {
+        $membership = Arr::get(self::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+        if ($membership === null) {
             return null;
-        } else {
-            $membership = $membership[0];
         }
         $payments = self::MEMBERSHIP_NEXT_PAYMENTS($membership_id, 1);
         if ($payments === null)
@@ -332,7 +420,7 @@ class CiviCrm
                     'payment_instrument_id' => 7,
                     'currency' => 'EUR',
                     'receive_date' => $payments[0]["due_date"]->format("Y-m-d") . " 00:00:00",
-                    'contact_id' => $membership["contact_id"],
+                    'contact_id' => $membership->crm_contact,
                     'net_amount' => $payments[0]["amount"],
                     'total_amount' => $payments[0]["amount"],
                     'source' => ''
@@ -351,7 +439,7 @@ class CiviCrm
         return $contribution_id;
     }
 
-    public static function CREATE_MEMBERSHIP_PAYPAL_PAYMENT(int $contribution_id, float $amount, Carbon $date, string $transaction_id): array|null
+    public static function CREATE_MEMBERSHIP_PAYPAL_PAYMENT(string $invoice_id, string $custom_id, float $amount, Carbon $date, string $transaction_id): array|null
     {
         $transaction_id = trim($transaction_id);
         // Verify that there is not already a transaction with this ID
@@ -361,16 +449,55 @@ class CiviCrm
         ];
         $results = self::API_POST("/Payment/get", $params);
         if (!empty(Arr::get($results, "values", ["false"]))) {
-            return Arr::get($results, "values.0");
+            return $results;
         }
 
-        $params = [
-            'notificationForPayment' => FALSE,
-            'notificationForCompleteOrder' => FALSE,
-            'disableActionsOnCompleteOrder' => true,
-            'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
-        ];
-        return self::API_POST("/Payment/create", $params);
+        // Check if a contribution ID is given
+        if (preg_match("/^contribution_(\d+)$/", $invoice_id, $matches)) {
+            $contribution_id = $matches[1];
+            $params = [
+                'where' => [['id', '=', $contribution_id]],
+                'limit' => 25,
+            ];
+            $results = self::API_POST("/Contribution/get", $params);
+            $contributions = Arr::get($results, "values", null);
+            if ($contributions !== null) {
+                if (sizeof($contributions) >= 1) {
+                    $params = [
+                        'notificationForPayment' => FALSE,
+                        'notificationForCompleteOrder' => FALSE,
+                        'disableActionsOnCompleteOrder' => true,
+                        'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
+                    ];
+                    return self::API_POST("/Payment/create", $params);
+                } else {
+                    return [];
+                }
+            } else {
+                return null;
+            }
+        } else {
+            $memberships = self::FIND_MEMBERSHIPS(mandate: $custom_id);
+            if ($memberships === null)
+                return null;
+            $membership = Arr::get($memberships, "0");
+            if ($membership !== null) {
+                $contribution_id = self::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($membership->crm_membership);
+                if ($contribution_id !== null) {
+                    $params = [
+                        'notificationForPayment' => FALSE,
+                        'notificationForCompleteOrder' => FALSE,
+                        'disableActionsOnCompleteOrder' => true,
+                        'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
+                    ];
+                    return self::API_POST("/Payment/create", $params);
+                }
+            } else {
+                return [];
+            }
+        }
+
+        return null;
     }
 
     private static function API_POST_V3(string $entity, string $action, array $json)

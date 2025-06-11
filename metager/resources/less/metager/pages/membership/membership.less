@@ -11,6 +11,10 @@
   h3 {
     margin: 0;
     border-bottom: 1px solid @border-color;
+
+    >a {
+      font-size: 0.8rem;
+    }
   }
 
   .error {
@@ -61,9 +65,35 @@
 
         >h3 {
           grid-column: span 3;
+        }
 
-          >a {
-            font-size: 0.8rem;
+        input,
+        select {
+          width: 100%;
+        }
+
+        >button[type=submit] {
+          margin-top: 1rem;
+          grid-column: span 3;
+        }
+
+        @media(max-width: 700px) {
+          grid-template-columns: 0.5fr 1fr;
+
+          >h3,
+          .input-group.company,
+          button[type=submit] {
+            grid-column: span 2;
+          }
+        }
+
+        @media(max-width: 450px) {
+          grid-template-columns: 1fr;
+
+          >h3,
+          .input-group.company,
+          button[type=submit] {
+            grid-column: span 1;
           }
         }
       }
@@ -79,6 +109,10 @@
           }
         }
 
+        >button[type=submit] {
+          grid-column: span 4;
+          margin-top: 1rem;
+        }
 
 
         @media (max-width: 920px) {
@@ -88,8 +122,14 @@
             grid-column: span 3;
           }
 
+          >button[type=submit] {
+            grid-column: span 3;
+          }
+
           >div.input-group {
-            >input {
+
+            >input,
+            select {
               width: 100%;
             }
 
@@ -106,8 +146,14 @@
             grid-column: span 2;
           }
 
+          >button[type=submit] {
+            grid-column: span 2;
+          }
+
           >div.input-group {
-            >input {
+
+            >input,
+            select {
               width: 100%;
             }
 
@@ -127,7 +173,8 @@
 
       >h3,
       >div.error,
-      div#reduction-container {
+      div#reduction-container,
+      >button[type=submit] {
         grid-column: span 4;
       }
 
@@ -136,8 +183,8 @@
 
         >h3,
         >div.error,
-        div:nth-child(2),
-        div#reduction-container {
+        div#reduction-container,
+        >button[type=submit] {
           grid-column: span 2;
         }
       }
@@ -187,7 +234,6 @@
           border: 1px solid @border-color;
         }
       }
-
     }
 
     >div#membership-payment {
@@ -198,8 +244,12 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
 
-        @media (max-width: 600px) {
+        @media (max-width: 690px) {
           grid-template-columns: 1fr 1fr;
+        }
+
+        @media (max-width: 400px) {
+          grid-template-columns: 1fr;
         }
 
         gap: 0.5rem;
@@ -232,7 +282,39 @@
         }
       }
 
-      >div#membership-payment-method {
+
+    }
+
+    >div#membership-payment-method {
+      display: grid;
+      gap: 1rem;
+
+      >h3 {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        line-height: 1;
+
+        >div.funding-sources {
+          display: none;
+          gap: 0.5rem;
+
+          >img {
+            opacity: 0;
+            height: 24px;
+          }
+        }
+      }
+
+      &.disabled>h3>div.funding-sources {
+        display: flex;
+
+        >img {
+          opacity: 0.4;
+        }
+      }
+
+      >div {
         display: grid;
         gap: 0.5rem;
         grid-template-columns: 1fr 1fr;
@@ -259,11 +341,19 @@
             grid-column: span 2;
           }
 
+          >div.bic {
+            grid-column: span 2;
+          }
+
           @media (max-width: 500px) {
             grid-template-columns: 1fr;
 
             >div.error {
               grid-column: auto;
+            }
+
+            >div.bic {
+              grid-column: span 1;
             }
           }
 
@@ -402,6 +492,32 @@
     >div {
       display: grid;
       gap: 0.5rem;
+    }
+  }
+
+  // Success Page
+  #data {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+
+      >label {
+        font-size: 0.8rem;
+      }
+    }
+  }
+
+  #key {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .description {
+      display: inline-block;
     }
   }
 }

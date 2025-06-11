@@ -11,7 +11,7 @@
     @endif
     <div id="membership" , class="card">
         <h1>Mitgliedsanträge Admin</h1>
-        @if(sizeof($membership_applications) === 0 && sizeof($reductions) === 0)
+        @if(sizeof($membership_applications) === 0 && sizeof($reduction_requests) === 0)
             <div class="alert alert-success">Aktuell nichts zu tun</div>
         @endif
         @if(sizeof($membership_applications) > 0)
@@ -27,37 +27,54 @@
                 <tbody>
                     @foreach($membership_applications as $membership_application)
                         <tr>
-                            <td>{{ $membership_application["join_date"] }}</td>
-                            <td>
-                                <a href="https://suma-ev.de/wp-admin/admin.php?page=CiviCRM&q=civicrm%2Fcontact%2Fview&reset=1&cid={{ $membership_application["contact_id"] }}&selectedChild=member"
-                                    target="_blank">
-                                    {{ $membership_application["contact_id.addressee_display"] }}
-                                </a>
-                            </td>
-                            <td>{{ number_format($membership_application["Beitrag.Monatlicher_Mitgliedsbeitrag"], 2, ",", ".") . "€ " }}
+                            <td title="{{ $membership_application->created_at->format("d.m.Y H:i:s") }}">
+                                {{ $membership_application->created_at->diffForHumans() }}
                             </td>
                             <td>
-                                <div>{{ $membership_application["Beitrag.Zahlungsweise:label"] }}</div>
-                                @if($membership_application["Beitrag.Zahlungsweise:label"] === "Lastschrift")
-                                    @if($membership_application["Beitrag.Kontoinhaber"] !== null)
-                                        <div>Kontoinhaber: {{ $membership_application["Beitrag.Kontoinhaber"] }}</div>
+                                @if($membership_application->contact !== null)
+                                    {{ $membership_application->contact->title . " " . $membership_application->contact->first_name . " " . $membership_application->contact->last_name }}
+                                @elseif($membership_application->company !== null)
+                                    {{ $membership_application->company->company }}
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    $amount = match ($membership_application->interval) {
+                                        "monthly" => $membership_application->amount,
+                                        "quarterly" => $membership_application->amount * 3,
+                                        "six-monthly" => $membership_application->amount * 6,
+                                        "annual" => $membership_application->amount * 12,
+                                        null => 0
+                                    };
+                                @endphp
+                                @if($membership_application->amount !== null)
+                                    {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
+                                @endif
+                            </td>
+                            <td>
+                                <div>@lang("membership.data.payment_methods.{$membership_application->payment_method}")</div>
+                                @if($membership_application->payment_method === "directdebit")
+                                    @if($membership_application->directdebit->accountholder !== null)
+                                        <div>Kontoinhaber: {{ $membership_application->directdebit->accountholder }}</div>
                                     @endif
-                                    <div>IBAN: {{ iban_to_human_format($membership_application["Beitrag.IBAN"]) }}</div>
-                                @elseif($membership_application["Beitrag.Zahlungsweise:label"] === "PayPal")
-                                    <div>PayPal Vault: {{ $membership_application["Beitrag.PayPal_Vault"] }}</div>
+                                    <div>IBAN: {{ iban_to_human_format($membership_application->directdebit->iban) }}</div>
+                                    @if($membership_application->directdebit->bic !== null)
+                                        <div>BIC: {{ $membership_application->directdebit->bic }}</div>
+                                    @endif
+                                @elseif($membership_application->payment_method === "paypal")
+                                    <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
                                 @endif
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_accept") }}">
-                                    <input type="hidden" name="id" value="{{ $membership_application["id"] }}">
-                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default"
-                                        @if($membership_application["Beitrag.Zahlungsweise:label"] === "PayPal" && empty($membership_application["Beitrag.PayPal_Vault"])) disabled @endif>
+                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default">
                                 </form>
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_deny") }}">
-                                    <input type="hidden" name="id" value="{{ $membership_application["id"] }}">
-                                    <input type="submit" id="membership-deny" name="action" value="Ablehnen" class="btn btn-danger">
+                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="submit" name="action" value="Ablehnen" class="btn btn-danger membership-deny">
                                 </form>
                             </td>
                         </tr>
@@ -65,41 +82,72 @@
                 </tbody>
             </table>
         @endif
-        @if(sizeof($reductions) > 0)
+        @if(sizeof($reduction_requests) > 0)
             <h1>Nachweise für Beitragsminderung</h1>
             <table>
                 <thead>
+                    <th>Datum</th>
                     <th>Name</th>
                     <th>Beitrag</th>
                     <th>Nachweis</th>
                     <th></th>
                 </thead>
                 <tbody>
-                    @foreach($reductions as $reduction)
+                    @foreach($reduction_requests as $reduction_application)
                         <tr>
-                            <td>{{ $reduction->company . implode(" ", [$reduction->title, $reduction->firstname, $reduction->lastname]) }}
+                            <td title="{{ $reduction_application->reduction->created_at->format("d.m.Y H:i:s") }}">
+                                {{ $reduction_application->reduction->created_at->diffForHumans() }}
                             </td>
-                            <td>{{ $reduction->amount . "€ " . $reduction->interval }}</td>
                             <td>
-                                <a href="{{ route("membership_admin_reduction", ["reduction_id" => $reduction->id]) }}"
+                                @if($reduction_application->contact !== null)
+                                    {{ $reduction_application->contact->title . " " . $reduction_application->contact->first_name . " " . $reduction_application->contact->last_name }}
+                                @elseif($reduction_application->company !== null)
+                                    {{ $reduction_application->company->company }}
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    $amount = match ($reduction_application->interval) {
+                                        "monthly" => $reduction_application->amount,
+                                        "quarterly" => $reduction_application->amount * 3,
+                                        "six-monthly" => $reduction_application->amount * 6,
+                                        "annual" => $reduction_application->amount * 12,
+                                        null => 0
+                                    };
+                                @endphp
+                                @if($reduction_application->amount !== null)
+                                    {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$reduction_application->interval}") }}
+                                @endif
+                            </td>
+                            <td>
+                                <a href="{{ route("membership_admin_reduction", ["reduction_id" => $reduction_application->reduction->id]) }}"
                                     target="_blank">Nachweis
                                     für Beitragsminderung</a>
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_reduction_accept") }}">
-                                    <input type="hidden" name="id" value="{{ $reduction->id }}">
+                                    <input type="hidden" name="id" value="{{ $reduction_application->reduction->id }}">
                                     <input type="date" name="reduction_until" id="reduction-until"
                                         min="{{ now()->format("Y-m-d") }}" max="{{ now()->addYears(20)->format("Y-m-d") }}"
                                         value="{{ now()->addYear()->format("Y-m-d") }}">
-                                    <input type="submit" id="membership-reduction-deny" name="action" value="Annehmen"
-                                        class="btn btn-success">
+                                    <input type="submit" name="action" value="Annehmen"
+                                        class="btn btn-success membership-reduction-accept">
                                 </form>
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_reduction_deny") }}">
-                                    <input type="hidden" name="id" value="{{ $reduction->id }}">
-                                    <input type="submit" id="membership-reduction-deny" name="action" value="Ablehnen"
-                                        class="btn btn-danger">
+                                    <input type="hidden" name="id" value="{{ $reduction_application->reduction->id }}">
+                                    <input type="submit" id="membership-reduction-deny-modal" name="action" value="Ablehnen"
+                                        class="btn btn-danger reduction-deny">
+                                    <dialog>
+                                        <div>
+                                            <label for="message">Begründung für den Nutzer</label>
+                                            <textarea name="message" id="message" rows="10" required></textarea>
+                                            <input type="submit" name="action" value="Ablehnen"
+                                                class="btn btn-danger membership-reduction-deny">
+                                            <button class="close-modal btn btn-default" autofocus>Schließen</button>
+                                        </div>
+                                    </dialog>
                                 </form>
                             </td>
                         </tr>

@@ -60,7 +60,7 @@ class PayPal
         return $body;
     }
 
-    public static function CREATE_ORDER_DATA(string $civicrm_membership_id, $intent): array
+    public static function CREATE_ORDER_DATA(MembershipApplication $application, $intent): array
     {
         $order_data = [
             "purchase_units" => [
@@ -103,68 +103,89 @@ class PayPal
             "intent" => $intent,
         ];
 
-        $membership = CiviCrm::FIND_MEMBERSHIPS(null, $civicrm_membership_id);
-        if ($membership === null || sizeof($membership) === 0) {
-            throw new Exception("Cannot find membership");
-        } else {
-            $membership = $membership[0];
-        }
-        $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($civicrm_membership_id, count: 2);
-        if ($payments === null)
-            throw new Exception("Cannot load Payments");
-
-
-        $contribution = CiviCrm::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($civicrm_membership_id);
-
-        $amount = $payments[0]["amount"];
-
-        $payment_source = match ($membership["Beitrag.Zahlungsweise:label"]) {
-            "PayPal" => "paypal",
-            "Creditcard" => "card"
-        };
-
+        $description = Arr::get($order_data, "purchase_units.0.description");
+        $custom_id = null;
+        $invoice_id = null;
+        $amount = null;
+        $unit_amount = null;
         $quantity = 1;
-        $unit_amount = $amount;
-
-        $description = "";
-        if ($payments[0]["payment_interval_months"] * $payments[0]["monthly"] === $amount) {
-            $quantity = $payments[0]["payment_interval_months"];
-            $unit_amount = $payments[0]["monthly"];
-
-            $date_start = clone $payments[0]["due_date"];
-            $date_end = clone $payments[1]["due_date"];
-            $date_end->addMonths(-1);
-            if ($date_start->diffInMonths($date_end, true) <= 0) {
-                $description .= " " . $date_end->format("M Y");
-            } else {
-                $description .= " " . $date_start->format("M Y") . " - " . $date_end->format("M Y");
+        if ($application->crm_membership !== null) {
+            $membership = CiviCrm::FIND_MEMBERSHIPS(null, $application->crm_membership);
+            $membership = Arr::get($membership, "0");
+            if ($membership === null) {
+                throw new Exception("Cannot find membership");
             }
+
+            $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership, count: 2);
+            if ($payments === null)
+                throw new Exception("Cannot load Payments");
+
+
+            $contribution = CiviCrm::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($application->crm_membership);
+
+            $amount = $payments[0]["amount"];
+            $unit_amount = $amount;
+            $payment_source = $membership->payment_method;
+
+            if (Arr::get($payments, "0.payment_interval_months", 0) * Arr::get($payments, "0.monthly", 0) === $amount) {
+                $quantity = Arr::get($payments, "0.payment_interval_months");
+                $unit_amount = Arr::get($payments, "0.monthly");
+                $date_start = clone Arr::get($payments, "0.due_date");
+                $date_end = clone Arr::get($payments, "1.due_date");
+                $date_end->addMonths(-1);
+                if ($date_start->diffInMonths($date_end, true) <= 0) {
+                    $description .= " " . $date_end->format("M Y");
+                } else {
+                    $description .= " " . $date_start->format("M Y") . " - " . $date_end->format("M Y");
+                }
+            }
+            $custom_id = $membership->payment_reference;
+            $invoice_id = $contribution !== null ? $contribution : $custom_id;
+            Arr::set($order_data, "payment_source.$payment_source.vault_id", $membership->paypal->vault_id);
+        } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {
+            $quantity = match ($application->interval) {
+                "monthly" => 1,
+                "quarterly" => 3,
+                "six-monthly" => 6,
+                "annual" => 12
+            };
+            $unit_amount = $application->amount;
+            $amount = $quantity * $unit_amount;
+            $custom_id = $application->payment_reference;
+            $invoice_id = $custom_id;
+            $description .= " " . now()->format("M Y");
+            if ($quantity > 1) {
+                $description .= " - " . now()->addMonths($quantity - 1)->format("M Y");
+            }
+        } else {
+            throw new Exception("Cannot create Order data for this application");
         }
-        Arr::set($order_data, "purchase_units.0.description", Arr::get($order_data, "purchase_units.0.description") . $description);
-        Arr::set($order_data, "purchase_units.0.items.0.name", Arr::get($order_data, "purchase_units.0.description") . $description);
-        Arr::set($order_data, "purchase_units.0.custom_id", $membership["Beitrag.Zahlungsreferenz"]);
-        Arr::set($order_data, "purchase_units.0.invoice_id", "contribution_" . $contribution);
+
+        Arr::set($order_data, "purchase_units.0.description", $description);
+        Arr::set($order_data, "purchase_units.0.items.0.name", $description);
+        Arr::set($order_data, "purchase_units.0.custom_id", $custom_id);
+        Arr::set($order_data, "purchase_units.0.invoice_id", $invoice_id);
         Arr::set($order_data, "purchase_units.0.amount.value", $amount);
         Arr::set($order_data, "purchase_units.0.amount.breakdown.item_total.value", $amount);
         Arr::set($order_data, "purchase_units.0.items.0.quantity", $quantity);
         Arr::set($order_data, "purchase_units.0.items.0.unit_amount.value", $unit_amount);
-        Arr::set($order_data, "payment_source.$payment_source.vault_id", $membership["Beitrag.PayPal_Vault"]);
         return $order_data;
     }
 
 
-    public static function CREATE_AUTHORIZE_ORDER(string $civicrm_membership_id, string $payment_source, string $success_url, string $error_url): array|null
+    public static function CREATE_AUTHORIZE_ORDER(MembershipApplication $application, string $success_url, string $error_url): array|null
     {
-        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_AUTHORIZE);
+        $order_data = self::CREATE_ORDER_DATA($application, self::INTENT_AUTHORIZE);
 
-        if ($payment_source === "card") {
-            Arr::set($order_data, "payment_source.$payment_source", [
+        if ($application->payment_method === "card") {
+            Arr::set($order_data, "payment_source.{$application->payment_method}", [
                 "attributes" => [
                     "vault" => [
                         "store_in_vault" => "ON_SUCCESS"
                     ],
                     "verification" => [
-                        "method" => "SCA_WHEN_REQUIRED"
+                        //"method" => "SCA_WHEN_REQUIRED"
+                        "method" => "SCA_ALWAYS"
                     ]
                 ],
                 "stored_credentials" => [
@@ -178,7 +199,7 @@ class PayPal
                 ]
             ]);
         } else {
-            Arr::set($order_data, "payment_source.$payment_source", [
+            Arr::set($order_data, "payment_source.{$application->payment_method}", [
                 "attributes" => [
                     "vault" => [
                         "store_in_vault" => "ON_SUCCESS",
@@ -201,25 +222,6 @@ class PayPal
     public static function CAPTURE_PAYMENT(string $authorization_id)
     {
         return self::PAYPAL_REQUEST("/v2/payments/authorizations/{$authorization_id}/capture", self::API_METHOD_POST, []);
-    }
-
-    public static function UPDATE_AUTHORIZED_ORDER(string $civicrm_membership_id)
-    {
-        $order_id = DB::table("membership")
-            ->leftJoin("membership_paypal", "membership_paypal.id", "=", "membership.paypal")
-            ->where("civicrm_membership_id", "=", $civicrm_membership_id)->firstOrFail("order_id")->order_id;
-        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_CAPTURE);
-
-        $patch_data = [];
-        $patch_data[] = [
-            "op" => "replace",
-            "path" => "/purchase_units/@reference_id=='default'/description",
-            "value" => Arr::get($order_data, "purchase_units.0.description")
-        ];
-        $order = self::GET_ORDER($order_id);
-        if (self::PAYPAL_REQUEST("/v2/checkout/orders/$order_id", self::API_METHOD_PATCH, $patch_data) === null) {
-            throw new Exception("Couldn't patch PayPal Order");
-        }
     }
 
     private static function PAYPAL_REQUEST(string $api_path, string $method = self::API_METHOD_POST, array|null $request_data): null|array
@@ -335,6 +337,70 @@ class PayPal
         $body = json_decode($results["body"], true);
 
         return $body;
+    }
+
+    public static function VALIDATE_ORDER(string $order_id): array|string|null
+    {
+        $order = self::GET_ORDER($order_id);
+
+        if ($order === null)
+            return null;
+        $payment_method = array_key_first(Arr::get($order, "payment_source", []));
+        if ($payment_method === null)
+            return null;
+
+        if ($payment_method === "paypal")
+            return $order;
+
+        // Card Payment. Validate Authentication result if available
+        $authentication_result = Arr::get($order, "payment_source.card.authentication_result");
+        if ($authentication_result === null)
+            return $order;
+
+        $liability_shift = Arr::get($authentication_result, "liability_shift");
+        $enrollment_status = Arr::get($authentication_result, "three_d_secure.enrollment_status");
+        $authentication_status = Arr::get($authentication_result, "three_d_secure.authentication_status");
+        // Validate authentication result => https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/response-parameters/
+        if ($enrollment_status === "Y") {
+            if ($authentication_status === "Y") {
+                if (in_array($liability_shift, ["POSSIBLE", "YES"])) {
+                    return $order;
+                }
+            } elseif ($authentication_status === "N") {
+                if ($liability_shift === "NO")
+                    return __("spende.execute-payment.card.error.generic");
+            } elseif ($authentication_status === "R") {
+                if ($liability_shift === "NO")
+                    return __("spende.execute-payment.card.error.generic");
+            } elseif ($authentication_status === "A") {
+                if ($liability_shift === "POSSIBLE")
+                    return $order;
+            } elseif ($authentication_status === "U") {
+                if (in_array($liability_shift, ["UNKNOWN", "NO"]))
+                    return __("spende.execute-payment.card.error.try_again");
+            } elseif ($authentication_status === "C") {
+                if ($liability_shift === "UNKNOWN")
+                    return __("spende.execute-payment.card.error.try_again");
+            } else {
+                if ($liability_shift === "NO")
+                    return __("spende.execute-payment.card.error.try_again");
+            }
+        } elseif ($enrollment_status === "N") {
+            if ($liability_shift === "NO")
+                return $order;
+        } elseif ($enrollment_status === "U") {
+            if ($liability_shift === "NO")
+                return $order;
+            elseif ($liability_shift === "UNKNOWN")
+                return __("spende.execute-payment.card.error.try_again");
+        } elseif ($enrollment_status === "B") {
+            if ($liability_shift === "NO")
+                return $order;
+        } else {
+            if ($liability_shift === "UNKNOWN")
+                return __("spende.execute-payment.card.error.try_again");
+        }
+        return $order;
     }
 
     public static function AUTHORIZE_ORDER(string $order_id)

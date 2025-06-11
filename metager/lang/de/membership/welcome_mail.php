@@ -8,6 +8,8 @@ return [
         'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese Mail erhalten haben. Ihr Mitgliedsbeitrag i.H.v. **:amount€** ist erstmalig zum **:due** fällig.',
         'banktransfer' => 'Bitte überweisen Sie uns diesen **:interval** unter Angabe des Verwendungszwecks (**:mandate**) auf folgendes Konto:',
         'directdebit' => 'Wir buchen diesen **:interval** mit der Mandatsreferenz **:mandate** von Ihrem Konto **:iban** ab.',
+        'paypal' => 'Wir buchen diesen **:interval** vom angegebenen PayPal Konto ab.',
+        'card' => 'Wir buchen diesen **:interval** von der angegebenen Kreditkarte ab.',
         'mandate' => 'Verwendungszweck',
         'next_payments' => 'Die nächsten Beiträge',
         'due' => 'Fälligkeit',

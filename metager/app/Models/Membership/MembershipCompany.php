@@ -7,16 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string $title
- * @property string $first_name
- * @property string $last_name
+ * @property string $company
+ * @property string $employees
  * @property string $email
- * @property MembershipApplication $application
+ * @property string $application_id
  */
-class MembershipContact extends Model
+class MembershipCompany extends Model
 {
     use HasUuids;
-    protected $fillable = ["title", "first_name", "last_name", "email", "application_id"];
+    protected $fillable = ["company", "employees", "email", "application_id"];
 
     public function application(): BelongsTo
     {

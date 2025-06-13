@@ -6,9 +6,11 @@
 
 @section('content')
 <h1 class="page-title">@lang('membership.title')</h1>
-<div class="page-description">Vielen Dank, dass Sie eine <a href="https://suma-ev.de/mitglieder/"
-        target="_blank">Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu
-    können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.</div>
+@if($application === null || !$application->is_update)
+<div class="page-description">@lang('membership.application.description')</div>
+@else
+<div class="page-description">@lang('membership.application.update')</div>
+@endif
 <form id="membership-form" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     @php
@@ -38,7 +40,7 @@
             @else
             <a href="{{  route("membership_form", array_merge(Request::all(), ["type" => "company", "application_id" => request()->route("application_id")])) }}#contact_data">Als Firma beitreten?</a>
             @endif
-            @else
+            @elseif(!$application->is_update)
             <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "contact"])) }}#contact_data">Bearbeiten</a>
             @endif
         </h3>
@@ -224,7 +226,7 @@
     </div>
     @php
     $visible = $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
-    $editable = $visible ;
+    $editable = $visible && $application->payment_method === null;
     $payment_method = $application !== null && $application->payment_method !== null ? $application->payment_method : request()->input("payment-method", null);
     $payment_directdebit_accountholder = $application !== null && $application->directdebit !== null ? $application->directdebit->accountholder : request()->input("accountholder", "");
     $payment_directdebit_iban = $application !== null && $application->directdebit !== null ? $application->directdebit->iban : request()->input("iban", "");
@@ -232,6 +234,9 @@
     @endphp
     <div id="membership-payment-method" @if(!$visible)class="disabled"@endif>
         <h3>4. Ihre Zahlungsmethode
+            @if($visible && !$editable)
+            <a href="{{  route("membership_form", array_merge(Request::all(), [Request::route("application_id")], ["edit" => "membership-payment-method"])) }}">Bearbeiten</a>
+            @endif
             <div class="funding-sources">
                 <img src="/img/funding_source/sepa.svg" alt="SEPA">
                 <img src="/img/funding_source/card.svg" alt="Creditcard">
@@ -256,7 +261,7 @@
                 @if($payment_method==="paypal" )checked @endif required>
             <label for="payment-method-paypal" class="js-only">PayPal</label>
             <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="card"
-                @if($payment_method==="creditcard" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
+                @if($payment_method==="card" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
             <label for="payment-method-creditcard" class="js-only">Kredit-/Debitkarte</label>
             <div id="directdebit-data" class="info-container">
                 @if(isset($errors) && $errors->has("iban"))
@@ -280,8 +285,11 @@
                         value="{{ $payment_directdebit_bic }}">
                 </div>
             </div>
-            <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
-            <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}">
+            <div id="paypal-data" class="info-container">
+                <div>Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
+                <div>@lang('membership.application.payment_block')</div>
+            </div>
+            <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}" data-is-update="{{ $application !== null ? $application->is_update : false }}">
                 <div id="creditcard-name-container">
                     <label for="creditcard-name">@lang("spende.execute-payment.card.name")</label>
                     <div id="creditcard-name"></div>
@@ -334,8 +342,8 @@
                         </div>
                     </div>
                 </div>
+                <div id="payment-block">@lang('membership.application.payment_block')</div>
             </div>
-            <div id="paypal-data" class="info-container">Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
         </div>
         @endif
     </div>

@@ -50,9 +50,28 @@ class MembershipController extends Controller
             if ($application_id !== null) {
                 $application = MembershipApplication::find($application_id);
                 if ($application === null) {
-                    return redirect(route("membership_form"));
+                    $edit_data = json_decode(base64_decode($application_id), true);
+                    if ($edit_data === null) {
+                        return redirect(route("membership_form"));
+                    }
+                    $signature = Arr::pull($edit_data, "signature");
+                    $signature_calced = hash_hmac("sha256", json_encode($edit_data), config("app.key"));
+                    if (!hash_equals($signature_calced, $signature)) {
+                        return redirect(route("membership_form"));
+                    }
+                    $expiration = new Carbon($edit_data["expiration"]);
+                    if ($expiration->isPast()) {
+                        return redirect(route("membership_form"));
+                    }
+                    $application = MembershipApplication::where("crm_membership", "=", $edit_data["crm_membership"])->first();
+                    if ($application !== null) {
+                        return redirect(route("membership_form", ["application_id" => $application->id]));
+                    }
+                    $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $edit_data["crm_membership"]), "0");
+                    if ($application === null) {
+                        return redirect(route("membership_form"));
+                    }
                 }
-
                 $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
                 if ($request->input("edit", "") === "contact") {
                     if ($application->contact !== null) {
@@ -65,15 +84,37 @@ class MembershipController extends Controller
                     }
                     return redirect(route("membership_form", $request_data) . "#contact-data");
                 } elseif ($request->input("edit", "") === "membership-fee") {
+                    $application = $application->editable();
+                    $request_data["application_id"] = $application->id;
+                    if (in_array($application->amount, [(float) "10.00", (float) "15.00", (float) "20.00"])) {
+                        $request_data["amount"] = number_format($application->amount, 2);
+                    } elseif ($application->amount !== null) {
+                        $request_data["amount"] = "custom";
+                        $request_data["custom-amount"] = number_format($application->amount, 2);
+                    }
                     $application->amount = null;
                     $application->save();
                     if ($application->reduction !== null)
                         $application->reduction->delete();
                     return redirect(route("membership_form", $request_data) . "#membership-fee");
                 } elseif ($request->input("edit", "") === "membership-payment") {
+                    $application = $application->editable();
+                    $request_data["application_id"] = $application->id;
+                    $request_data["interval"] = $application->interval;
                     $application->interval = null;
                     $application->save();
                     return redirect(route("membership_form", $request_data) . "#membership-payment");
+                } elseif ($request->input("edit", "") === "membership-payment-method") {
+                    $application = $application->editable();
+                    $request_data["application_id"] = $application->id;
+                    $request_data["payment-method"] = $application->payment_method;
+                    $application->payment_method = null;
+                    $application->save();
+                    if ($application->directdebit !== null)
+                        $application->directdebit->delete();
+                    if ($application->paypal !== null)
+                        $application->paypal->delete();
+                    return redirect(route("membership_form", $request_data) . "#mmembership-payment-method");
                 }
 
                 if ($application->payment_method === null) {
@@ -82,6 +123,7 @@ class MembershipController extends Controller
                 }
 
                 if (
+                    !$application->is_update &&
                     ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null &&
                     (
                         $application->payment_method === "banktransfer" ||
@@ -359,33 +401,6 @@ class MembershipController extends Controller
         } else {
             return redirect(route("membership_success", ["key" => $application->key]));
         }
-
-        /*
-                
-
-
-                
-
-                if (empty($membership["company"]) && $membership["amount"] < 5) {
-
-                    $file = $membership["reduction"];
-                    DB::table("membership_reduction")->insert(["file_path" => storage_path("metager/" . $file->getBasename()), "file_mimetype" => $file->getMimeType(), 'expires_at' => $membership["expires_at"], 'membership_id' => $civicrm_membership["id"]]);
-                    $file->move(storage_path("metager"), $file->getBasename());
-                }
-
-                if (config("metager.metager.civicrm.enabled")) {
-                    $membership["amount"] = number_format(round(floatval($membership["amount"]), 2), 2, ",", ".") . "€";
-                    $message = <<<MESSAGE
-                    Name: {$membership["name"]}
-                    Email: {$membership["email"]}
-                    Betrag: {$membership["amount"]}
-                    Intervall: {$membership["interval"]}
-                    Zahlungsart: {$membership["payment-method"]}
-                    MESSAGE;
-                    // Create Notification
-                    ContactMail::dispatch("verein@metager.de", "Mitglieder", $membership["name"], $membership["email"], "Neuer Aufnahmeantrag", $message, [], "text/plain")->onQueue("general");
-                }
-                return redirect($success_url);*/
     }
 
     public function paypalWebhook(Request $request)
@@ -443,27 +458,25 @@ class MembershipController extends Controller
                         }
                     }
                 }
-                $invoice_id = $request->input("resource.invoice_id");
                 $custom_id = $request->input("resource.custom_id");
                 $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
                 $date = new Carbon($request->input("resource.create_time"));
                 $date->setTimezone("Europe/Berlin");
                 $transaction_id = $request->input("resource.id");
-                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($invoice_id, $custom_id, $amount, $date, $transaction_id) !== null) {
+                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($custom_id, $amount, $date, $transaction_id) !== null) {
                     return response()->json([]);
                 } else {
                     abort(code: 500, message: "Couldn't create contribution payment");
                 }
             case "PAYMENT.CAPTURE.REVERSED":
             case "PAYMENT.CAPTURE.REFUNDED":
-                $invoice_id = $request->input("resource.invoice_id");
                 $custom_id = $request->input("resource.custom_id");
                 $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
                 $amount = abs($amount) * -1;
                 $date = new Carbon($request->input("resource.create_time"));
                 $date->setTimezone("Europe/Berlin");
                 $transaction_id = $request->input("resource.id");
-                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($invoice_id, $custom_id, $amount, $date, $transaction_id) !== null) {
+                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($custom_id, $amount, $date, $transaction_id) !== null) {
                     return response()->json([]);
                 } else {
                     abort(code: 500, message: "Couldn't create contribution payment");
@@ -499,55 +512,59 @@ class MembershipController extends Controller
 
         $order_id = Cache::pull("membership:paypal:orderid:{$application->id}");
 
-        if ($order_id === null) {
-            return $request->wantsJson() ? response()->json(["message" => "There is no pending Paypal registration.", "cancel_url" => $error_url], 404) : redirect($error_url);
-        }
+        if ($order_id !== null) {
+            // PayPal Vault Request with immediate payment
+            $order = PayPal::VALIDATE_ORDER($order_id);
+            if ($order === null) {
+                return $request->wantsJson() ? response()->json(["message" => "The PayPal Order could not be validated", "cancel_url" => $error_url], 400) : redirect($error_url);
+            } else if (is_string($order)) {
+                return $request->wantsJson() ? response()->json(["message" => $order, "cancel_url" => $error_url], 400) : redirect($error_url);
+            }
 
-        $order = PayPal::VALIDATE_ORDER($order_id);
-        if ($order === null) {
-            return $request->wantsJson() ? response()->json(["message" => "The PayPal Order could not be validated", "cancel_url" => $error_url], 400) : redirect($error_url);
-        } else if (is_string($order)) {
-            return $request->wantsJson() ? response()->json(["message" => $order, "cancel_url" => $error_url], 400) : redirect($error_url);
-        }
+            if ($order["intent"] === "AUTHORIZE" && in_array($order["status"], ["SAVED", "APPROVED", "CREATED"])) {
+                $order = PayPal::AUTHORIZE_ORDER($order_id);
+            } else if ($order["status"] !== "COMPLETED") {
+                return $request->wantsJson() ? response()->json(["message" => "Couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
+            }
 
-        if ($order["intent"] === "AUTHORIZE" && in_array($order["status"], ["SAVED", "APPROVED", "CREATED"])) {
-            $order = PayPal::AUTHORIZE_ORDER($order_id);
-        } else if ($order["status"] !== "COMPLETED") {
-            return $request->wantsJson() ? response()->json(["message" => "Couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
-        }
+            $application->payment_method = array_key_first(Arr::get($order, "payment_source", []));
 
-        $application->payment_method = array_key_first(Arr::get($order, "payment_source", []));
+            $vault_id = Arr::get($order, "payment_source.{$application->payment_method}.attributes.vault.id");
+            $authorization_id = Arr::get($order, "purchase_units.0.payments.authorizations.0.id");
+            $authorization_status = Arr::get($order, "purchase_units.0.payments.authorizations.0.status");
 
-        $vault_id = Arr::get($order, "payment_source.{$application->payment_method}.attributes.vault.id");
-        $authorization_id = Arr::get($order, "purchase_units.0.payments.authorizations.0.id");
-        $authorization_status = Arr::get($order, "purchase_units.0.payments.authorizations.0.status");
-        if ($authorization_id !== null && $authorization_status !== null) {
-            $application->paypal()->create([
-                "order_id" => $order_id,
-                "vault_id" => $vault_id,
-                "authorization_id" => $authorization_id,
-                "authorization_status" => $authorization_status,
-            ]);
-            $application->save();   // Save payment method
-        }
 
-        // Check if Authorization ID exists
-        if ($authorization_status === "CREATED") {
-            return $request->wantsJson() ? response()->json(["success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
-        } else {
-            // Check if we can identify an error code
-            $message = "Authorization couldn't be created";
-            if ($application->payment_method === "card") {
-                $response_code = Arr::get($order, "purchase_units.0.payments.authorizations.0.processor_response.response_code");
-                if ($response_code !== null) {
-                    if (Lang::has("spende.execute-payment.card.error.{$response_code}")) {
-                        $message = __("spende.execute-payment.card.error.declined_reason", ["reason" => __("spende.execute-payment.card.error.{$response_code}")]);
-                    } else {
-                        $message = __("spende.execute-payment.card.error.generic");
+            // Check if Authorization ID exists
+            if ($authorization_status === "CREATED") {
+                $paypal_order_data = [
+                    "order_id" => $order_id,
+                    "vault_id" => $vault_id,
+                ];
+                if ($authorization_id !== null)
+                    $paypal_order_data["authorization_id"] = $authorization_id;
+                if ($authorization_status !== null)
+                    $paypal_order_data["authorization_status"] = $authorization_status;
+
+                $application->paypal()->create($paypal_order_data);
+                $application->save();   // Save payment method
+                return $request->wantsJson() ? response()->json(["success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
+            } else {
+                // Check if we can identify an error code
+                $message = "Authorization couldn't be created";
+                if ($application->payment_method === "card") {
+                    $response_code = Arr::get($order, "purchase_units.0.payments.authorizations.0.processor_response.response_code");
+                    if ($response_code !== null) {
+                        if (Lang::has("spende.execute-payment.card.error.{$response_code}")) {
+                            $message = __("spende.execute-payment.card.error.declined_reason", ["reason" => __("spende.execute-payment.card.error.{$response_code}")]);
+                        } else {
+                            $message = __("spende.execute-payment.card.error.generic");
+                        }
                     }
                 }
+                return $request->wantsJson() ? response()->json(["message" => $message, "cancel_url" => $error_url], 400) : redirect($error_url);
             }
-            return $request->wantsJson() ? response()->json(["message" => $message, "cancel_url" => $error_url], 400) : redirect($error_url);
+        } else {
+            return $request->wantsJson() ? response()->json(["message" => "There is no pending Paypal registration.", "cancel_url" => $error_url], 404) : redirect($error_url);
         }
     }
 
@@ -580,12 +597,14 @@ class MembershipController extends Controller
     public function adminIndex(Request $request)
     {
         $membership_applications = MembershipApplication::finished()->get();
+        $membership_update_requests = MembershipApplication::updateRequests()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
         return response(view(
             "admin.membership.index",
             [
                 "title" => "Aufnahmeanträge",
                 "membership_applications" => $membership_applications,
+                "membership_update_requests" => $membership_update_requests,
                 "reduction_requests" => $reduction_requests,
                 "css" => [mix("/css/admin/membership.css")],
                 "js" => [mix("/js/admin/membership.js")]
@@ -679,73 +698,79 @@ class MembershipController extends Controller
 
     public function adminAccept(Request $request)
     {
-        $application = MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+        $application =
+            $request->filled("update-request") ?
+            MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
+            MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
-        // Create CiviCRM contact
-        if ($application->crm_contact === null) {
-            if ($application->company !== null) {
-                $contact = CiviCrm::FIND_COMPANY($application->company);
-                if ($contact === null) {
-                    $contact = CiviCrm::CREATE_COMPANY($application->company);
-                    if ($contact !== null && Arr::get($contact, "id") !== null) {
+        if (!$application->is_update) {
+            // Create CiviCRM contact
+            if ($application->crm_contact === null) {
+                if ($application->company !== null) {
+                    $contact = CiviCrm::FIND_COMPANY($application->company);
+                    if ($contact === null) {
+                        $contact = CiviCrm::CREATE_COMPANY($application->company);
+                        if ($contact !== null && Arr::get($contact, "id") !== null) {
+                            $application->crm_contact = Arr::get($contact, "id");
+                            $application->save();
+                            $application->contact()->delete();
+                        } else {
+                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
+                        }
+                    } else if (Arr::get($contact, "id") !== null) {
                         $application->crm_contact = Arr::get($contact, "id");
                         $application->save();
                         $application->contact()->delete();
                     } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
+                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
                     }
-                } else if (Arr::get($contact, "id") !== null) {
-                    $application->crm_contact = Arr::get($contact, "id");
-                    $application->save();
-                    $application->contact()->delete();
-                } else {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
+                } elseif ($application->contact !== null) {
+                    $contact = CiviCrm::FIND_CONTACT($application->contact);
+                    if ($contact === null) {
+                        $contact = CiviCrm::CREATE_CONTACT($application->contact);
+                        if ($contact !== null && Arr::get($contact, "id") !== null) {
+                            $application->crm_contact = Arr::get($contact, "id");
+                            $application->save();
+                            $application->contact()->delete();
+                        } else {
+                            return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
+                        }
+                    } else if (Arr::get($contact, "id") !== null) {
+                        $application->crm_contact = Arr::get($contact, "id");
+                        $application->save();
+                    } else {
+                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
+                    }
                 }
-            } elseif ($application->contact !== null) {
-                $contact = CiviCrm::FIND_CONTACT($application->contact);
-                if ($contact === null) {
-                    $contact = CiviCrm::CREATE_CONTACT($application->contact);
-                    if ($contact !== null && Arr::get($contact, "id") !== null) {
-                        $application->crm_contact = Arr::get($contact, "id");
-                        $application->save();
-                        $application->contact()->delete();
-                    } else {
-                        return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] An error occured while creating the CRM contact. Please try again."]));
-                    }
-                } else if (Arr::get($contact, "id") !== null) {
-                    $application->crm_contact = Arr::get($contact, "id");
-                    $application->save();
+            }
+
+            /**
+             * Create CiviCRM Membership
+             */
+            if ($application->crm_membership === null) {
+                $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
+                if (sizeof($memberships) > 0) {
+                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
+                }
+                $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($application);
+                if ($civicrm_membership === null) {
+                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while creating a new membership"]));
                 } else {
-                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM contact] Couldn't parse remote server response. Please try again."]));
+                    $application->crm_membership = Arr::get($civicrm_membership, "id");
+                    $application->amount = null;
+                    $application->interval = null;
+                    $application->locale = null;
+                    $application->key = null;
+                    $application->payment_reference = null;
+                    $application->save();
+                    if ($application->reduction !== null)
+                        $application->reduction->delete();
                 }
             }
         }
 
-        /**
-         * Create CiviCRM Membership
-         */
-        if ($application->crm_membership === null) {
-            $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
-            if (sizeof($memberships) > 0) {
-                return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
-            }
-            $civicrm_membership = CiviCrm::CREATE_MEMBERSHIP($application);
-            if ($civicrm_membership === null) {
-                return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while creating a new membership"]));
-            } else {
-                $application->crm_membership = Arr::get($civicrm_membership, "id");
-                $application->amount = null;
-                $application->interval = null;
-                $application->locale = null;
-                $application->key = null;
-                $application->payment_reference = null;
-                $application->save();
-                if ($application->reduction !== null)
-                    $application->reduction->delete();
-            }
-        }
 
         // Add Payment method to CiviCRM
         if (CiviCrm::UPDATE_MEMBERSHIP($application) !== null) {
@@ -753,7 +778,20 @@ class MembershipController extends Controller
                 if ($application->paypal->order_id !== null && $application->paypal->authorization_status === "CREATED") {
                     $application->paypal->vault_id = null;
                     $application->paypal->save();
-                    PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id);
+                    $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership);
+                    $due_date = Arr::get($payments, "0.due_date");
+                    if (now()->diffInDays($due_date) <= 14) {
+                        if (PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id) !== null) {
+
+                        }
+                    } else {
+                        if (PayPal::VOID_AUTHORIZATION(authorization_id: $application->paypal->authorization_id)) {
+                            $application->paypal->order_id = null;
+                            $application->paypal->authorization_id = null;
+                            $application->paypal->authorization_status = null;
+                            $application->save();
+                        }
+                    }
                 } else {
                     $application->paypal->delete();
                 }
@@ -763,11 +801,15 @@ class MembershipController extends Controller
             if ($application->reduction !== null) {
                 $application->reduction->delete();
             }
+        } else {
+            return redirect(route("membership_admin_overview", ["error" => "Couldn't update membership"]));
         }
 
-        $mail = new WelcomeMail($application->crm_membership);
-        if (Mail::mailer("membership")->send($mail) === null) {
-            return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
+        if (!$application->is_update) {
+            $mail = new WelcomeMail($application->crm_membership);
+            if (Mail::mailer("membership")->send($mail) === null) {
+                return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
+            }
         }
 
         $application->delete();
@@ -777,7 +819,10 @@ class MembershipController extends Controller
 
     public function adminDeny(Request $request)
     {
-        $application = MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+        $application =
+            $request->filled("update-request") ?
+            MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
+            MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
@@ -838,7 +883,6 @@ class MembershipController extends Controller
         }
         return \Request::wantsJson() ? response()->json(["message" => "Error creating order", "cancel_url" => $error_url], 400) : redirect($error_url);
     }
-
 
     private function generateNewKey()
     {

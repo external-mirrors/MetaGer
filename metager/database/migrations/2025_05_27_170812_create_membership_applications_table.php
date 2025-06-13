@@ -19,8 +19,8 @@ return new class extends Migration {
             $table->string('payment_reference')->nullable();
             $table->uuid("key")->nullable();
             $table->boolean("is_update")->default(false);
-            $table->integer("crm_contact")->nullable();
-            $table->integer("crm_membership")->nullable();
+            $table->integer("crm_contact")->nullable()->unique();
+            $table->integer("crm_membership")->nullable()->unique();
             $table->timestamps();
         });
     }

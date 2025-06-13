@@ -11,7 +11,7 @@
     @endif
     <div id="membership" , class="card">
         <h1>Mitgliedsanträge Admin</h1>
-        @if(sizeof($membership_applications) === 0 && sizeof($reduction_requests) === 0)
+        @if(sizeof($membership_applications) === 0 && sizeof($reduction_requests) === 0 && sizeof($membership_update_requests) === 0)
             <div class="alert alert-success">Aktuell nichts zu tun</div>
         @endif
         @if(sizeof($membership_applications) > 0)
@@ -74,6 +74,79 @@
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_deny") }}">
                                     <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="submit" name="action" value="Ablehnen" class="btn btn-danger membership-deny">
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+        @if(sizeof($membership_update_requests) > 0)
+            <h1>Änderungsanträge</h1>
+            <table>
+                <thead>
+                    <th>Datum</th>
+                    <th>Name</th>
+                    <th>Beitrag</th>
+                    <th>Zahlungsmethode</th>
+                    <th></th>
+                </thead>
+                <tbody>
+                    @foreach($membership_update_requests as $membership_application)
+                        <tr>
+                            <td title="{{ $membership_application->created_at->format("d.m.Y H:i:s") }}">
+                                {{ $membership_application->created_at->diffForHumans() }}
+                            </td>
+                            <td>
+                                <a href="https://suma-ev.de/wp-admin/admin.php?page=CiviCRM&q=civicrm%2Fcontact%2Fview%2Fmembership&action=view&reset=1&cid={{ $membership_application->crm_contact }}&id={{ $membership_application->crm_membership }}&context=membership&selectedChild=member"
+                                    target="_blank">
+                                    @if($membership_application->contact !== null)
+                                        {{ $membership_application->contact->title . " " . $membership_application->contact->first_name . " " . $membership_application->contact->last_name }}
+                                    @elseif($membership_application->company !== null)
+                                        {{ $membership_application->company->company }}
+                                    @endif
+                                </a>
+                            </td>
+                            <td>
+                                @php
+                                    $amount = match ($membership_application->interval) {
+                                        "monthly" => $membership_application->amount,
+                                        "quarterly" => $membership_application->amount * 3,
+                                        "six-monthly" => $membership_application->amount * 6,
+                                        "annual" => $membership_application->amount * 12,
+                                        null => 0
+                                    };
+                                @endphp
+                                @if($membership_application->amount !== null)
+                                    {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
+                                @endif
+                            </td>
+                            <td>
+                                <div>@lang("membership.data.payment_methods.{$membership_application->payment_method}")</div>
+                                @if($membership_application->payment_method === "directdebit")
+                                    @if($membership_application->directdebit->accountholder !== null)
+                                        <div>Kontoinhaber: {{ $membership_application->directdebit->accountholder }}</div>
+                                    @endif
+                                    <div>IBAN: {{ iban_to_human_format($membership_application->directdebit->iban) }}</div>
+                                    @if($membership_application->directdebit->bic !== null)
+                                        <div>BIC: {{ $membership_application->directdebit->bic }}</div>
+                                    @endif
+                                @elseif($membership_application->payment_method === "paypal")
+                                    <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
+                                @endif
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route("membership_admin_accept") }}">
+                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="hidden" name="update-request" value="true">
+                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default">
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route("membership_admin_deny") }}">
+                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="hidden" name="update-request" value="true">
                                     <input type="submit" name="action" value="Ablehnen" class="btn btn-danger membership-deny">
                                 </form>
                             </td>

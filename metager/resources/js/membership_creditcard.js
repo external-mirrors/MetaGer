@@ -8,7 +8,7 @@ let success_callback = null;
 
 export function initializeCreditcard() {
     let required =
-        document.querySelector("#payment-method-creditcard")?.checked == true;
+        document.querySelector("#payment-method-creditcard")?.checked == true && !document.querySelector("#membership-payment-method >div")?.classList.contains("disabled");
 
 
     if (!required) return;
@@ -59,10 +59,11 @@ export function initializeCreditcard() {
                 .getPropertyValue("font-family") ?? "";
         let client_id = document.querySelector("#payment-method-creditcard").dataset.clientid;
         loadScript({ clientId: client_id, components: ["card-fields"], currency: "EUR", vault: true, intent: "authorize" }).then(paypal => {
-            card_fields = paypal.CardFields({
+            let card_field_options = {
                 createOrder: createOrder, onError: onError, onApprove: approveOrder, style: {
                     'body': {
                         padding: '1px',
+                        background: background_color,
                     },
                     'input': {
                         'padding': '0.5rem 1rem',
@@ -81,7 +82,9 @@ export function initializeCreditcard() {
                         'outline': 'auto',
                     }
                 }
-            });
+            };
+
+            card_fields = paypal.CardFields(card_field_options);
             if (card_fields.isEligible()) {
                 let render_promises = [];
                 const name_field = card_fields.NameField({});
@@ -95,8 +98,6 @@ export function initializeCreditcard() {
                 Promise.all(render_promises).then(() => creditcard_container.classList.remove("loading"));
             }
         });
-
-
 
         let createOrder = async (data, actions) => {
             let form_data = new FormData(membership_form);

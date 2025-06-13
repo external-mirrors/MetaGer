@@ -143,6 +143,7 @@ class CiviCrm
 
         foreach ($response as $membership_entry) {
             $membership = new MembershipApplication;
+            $membership->is_update = true;
             $membership->crm_contact = Arr::get($membership_entry, "contact_id");
             $membership->crm_membership = Arr::get($membership_entry, "id");
             $membership->amount = Arr::get($membership_entry, "Beitrag.Monatlicher_Mitgliedsbeitrag");
@@ -399,8 +400,18 @@ class CiviCrm
         return null;
     }
 
-    public static function CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION(int $membership_id): int|null
+    /**
+     * Creates a pending CiviCRM contribution for the incoming amount
+     * If there already is a pending contribution we will make sure that the contribution amount
+     * is not overpaid by $amount
+     * @param int $membership_id CiviCRM membership id
+     * @param float $amount what payment amount to account for
+     * @return int|null
+     */
+    public static function CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION(int $membership_id, float $amount, Carbon $date = null): int|null
     {
+        if ($date === null)
+            $date = now();
         $membership = Arr::get(self::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
         if ($membership === null) {
             return null;
@@ -409,8 +420,8 @@ class CiviCrm
         if ($payments === null)
             return null;
 
-        $contribution_id = null;
-        if ($payments[0]["contribution_id"] === null) {
+        $contribution_id = Arr::get($payments, "0.contribution_id");
+        if ($contribution_id === null) {
             // Create Contribution
             $params = [
                 'values' => [
@@ -419,10 +430,10 @@ class CiviCrm
                     'is_pay_later' => TRUE,
                     'payment_instrument_id' => 7,
                     'currency' => 'EUR',
-                    'receive_date' => $payments[0]["due_date"]->format("Y-m-d") . " 00:00:00",
+                    'receive_date' => $date->format("Y-m-d H:i:s"),
                     'contact_id' => $membership->crm_contact,
-                    'net_amount' => $payments[0]["amount"],
-                    'total_amount' => $payments[0]["amount"],
+                    'net_amount' => max($payments[0]["amount"], $amount),
+                    'total_amount' => max($payments[0]["amount"], $amount),
                     'source' => ''
                 ],
             ];
@@ -433,13 +444,25 @@ class CiviCrm
                 "contribution_id" => $contribution_id
             ]);
         } else {
-            $contribution_id = intval($payments[0]["contribution_id"]);
+            $contribution_id = intval($contribution_id);
+            $params = [
+                'values' => ['receive_date' => $date->format("Y-m-d H:i:s")],
+                'where' => [['id', '=', $contribution_id]],
+            ];
+            if ($amount > Arr::get($payments, "0.amount")) {
+                // Update total amount of contribution to account for overpayment
+                // Fist fetch the current contribution
+                $new_total = $amount - Arr::get($payments, "0.amount") + Arr::get($payments, "0.total_amount");
+                $params["values"]["total_amount"] = $new_total;
+                $params["values"]["net_amount"] = $new_total;
+            }
+            self::API_POST("/Contribution/update", $params);
         }
 
         return $contribution_id;
     }
 
-    public static function CREATE_MEMBERSHIP_PAYPAL_PAYMENT(string $invoice_id, string $custom_id, float $amount, Carbon $date, string $transaction_id): array|null
+    public static function CREATE_MEMBERSHIP_PAYPAL_PAYMENT(string $custom_id, float $amount, Carbon $date, string $transaction_id): array|null
     {
         $transaction_id = trim($transaction_id);
         // Verify that there is not already a transaction with this ID
@@ -452,49 +475,23 @@ class CiviCrm
             return $results;
         }
 
-        // Check if a contribution ID is given
-        if (preg_match("/^contribution_(\d+)$/", $invoice_id, $matches)) {
-            $contribution_id = $matches[1];
-            $params = [
-                'where' => [['id', '=', $contribution_id]],
-                'limit' => 25,
-            ];
-            $results = self::API_POST("/Contribution/get", $params);
-            $contributions = Arr::get($results, "values", null);
-            if ($contributions !== null) {
-                if (sizeof($contributions) >= 1) {
-                    $params = [
-                        'notificationForPayment' => FALSE,
-                        'notificationForCompleteOrder' => FALSE,
-                        'disableActionsOnCompleteOrder' => true,
-                        'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
-                    ];
-                    return self::API_POST("/Payment/create", $params);
-                } else {
-                    return [];
-                }
-            } else {
-                return null;
+        $memberships = self::FIND_MEMBERSHIPS(mandate: $custom_id);
+        if ($memberships === null)
+            return null;
+        $membership = Arr::get($memberships, "0");
+        if ($membership !== null) {
+            $contribution_id = self::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($membership->crm_membership, $amount);
+            if ($contribution_id !== null) {
+                $params = [
+                    'notificationForPayment' => FALSE,
+                    'notificationForCompleteOrder' => FALSE,
+                    'disableActionsOnCompleteOrder' => true,
+                    'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
+                ];
+                return self::API_POST("/Payment/create", $params);
             }
         } else {
-            $memberships = self::FIND_MEMBERSHIPS(mandate: $custom_id);
-            if ($memberships === null)
-                return null;
-            $membership = Arr::get($memberships, "0");
-            if ($membership !== null) {
-                $contribution_id = self::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($membership->crm_membership);
-                if ($contribution_id !== null) {
-                    $params = [
-                        'notificationForPayment' => FALSE,
-                        'notificationForCompleteOrder' => FALSE,
-                        'disableActionsOnCompleteOrder' => true,
-                        'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
-                    ];
-                    return self::API_POST("/Payment/create", $params);
-                }
-            } else {
-                return [];
-            }
+            return [];
         }
 
         return null;

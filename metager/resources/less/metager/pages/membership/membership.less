@@ -292,9 +292,9 @@
 
       >h3 {
         display: flex;
+        align-items: first baseline;
         flex-wrap: wrap;
         gap: 0.5rem;
-        line-height: 1;
 
         >div.funding-sources {
           display: none;
@@ -380,7 +380,11 @@
             +label {
               border-color: @metager-orange;
             }
+          }
+        }
 
+        &:not(.disabled)>input {
+          &:checked {
             &#payment-method-directdebit~div#directdebit-data {
               display: grid;
             }
@@ -428,7 +432,8 @@
 
             >#creditcard-name-container,
             #creditcard-details,
-            #billing-address {
+            #billing-address,
+            #payment-block {
               display: none;
             }
           }
@@ -448,6 +453,10 @@
               place-content:
                 space-around;
             }
+          }
+
+          #payment-block {
+            margin-top: 1rem;
           }
         }
 

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->string('authorization_id')->nullable();
             $table->string('authorization_status')->nullable();
             $table->string('vault_id')->nullable();
-            $table->uuid("application_id")->unique()->references("id")->on("membership_applications");
+            $table->uuid("application_id")->unique()->nullable()->references("id")->on("membership_applications");
             $table->timestamps();
         });
     }

@@ -120,9 +120,6 @@ class PayPal
             if ($payments === null)
                 throw new Exception("Cannot load Payments");
 
-
-            $contribution = CiviCrm::CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION($application->crm_membership);
-
             $amount = $payments[0]["amount"];
             $unit_amount = $amount;
             $payment_source = $membership->payment_method;
@@ -140,7 +137,7 @@ class PayPal
                 }
             }
             $custom_id = $membership->payment_reference;
-            $invoice_id = $contribution !== null ? $contribution : $custom_id;
+            $invoice_id = $custom_id;
             Arr::set($order_data, "payment_source.$payment_source.vault_id", $membership->paypal->vault_id);
         } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {
             $quantity = match ($application->interval) {

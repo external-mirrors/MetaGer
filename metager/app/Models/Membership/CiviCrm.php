@@ -203,7 +203,7 @@ class CiviCrm
 
     public static function FIND_DUE_MEMBERSHIPS(array $ignore_references = [], array $ignore_vaults = []): array|null
     {
-        $end_date = now()->addDays(14);
+        $end_date = now()->addDays(12);
         $params = [
             'select' => ['id', 'Beitrag.PayPal_Vault'],
             'where' => [['Beitrag.PayPal_ID', '=', PayPal::GET_ID()], ['Beitrag.Zahlungsweise:label', 'IN', ['PayPal', 'Creditcard']], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.PayPal_Vault', 'IS NOT NULL'], ['Beitrag.Zahlungsstatus:label', 'NOT IN', ['Ausgetreten', 'Verstorben']], ['Beitrag.Zahlungsreferenz', 'NOT IN', $ignore_references], ['Beitrag.PayPal_Vault', 'NOT IN', $ignore_vaults]],

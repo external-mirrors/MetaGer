@@ -38,6 +38,9 @@ class MembershipPayPalPayments extends Command
     {
         $ignore_vault = [];
         $ignore_reference = [];
+
+        MembershipPaymentPaypal::whereNull("application_id")->where("updated_at", "<", now()->subDays(3))->delete();
+
         foreach (MembershipPaymentPaypal::whereNotNull("vault_id")->orWhereNotNull("application_id")->get() as $paypal) {
             if ($paypal->vault_id !== null) {
                 $ignore_vault[] = $paypal->vault_id;

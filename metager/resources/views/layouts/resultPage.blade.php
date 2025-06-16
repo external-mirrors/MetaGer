@@ -16,16 +16,17 @@
             @continue
         @endif
         @php
-    preg_match("/(\d+)\.png$/", $file, $matches);
+            preg_match("/(\d+)\.png$/", $file, $matches);
         @endphp
         @if ($matches)
-            <link rel="icon" sizes="{{ $matches[1] }}x{{ $matches[1] }}" href="/img/favicon/{{ $file }}"
+            <link rel="icon" sizes="{{ $matches[1] }}x{{ $matches[1] }}" href="/img/favicon/{{ $file }}" type="image/png">
+            <link rel="apple-touch-icon" sizes="{{ $matches[1] }}x{{ $matches[1] }}" href="/img/favicon/{{ $file }}"
                 type="image/png">
-            <link rel="apple-touch-icon" sizes="{{ $matches[1] }}x{{ $matches[1] }}"
-                href="/img/favicon/{{ $file }}" type="image/png">
         @endif
     @endforeach
-    <link rel="search" type="application/opensearchdescription+xml" title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}" href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
+    <link rel="search" type="application/opensearchdescription+xml"
+        title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}"
+        href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 
@@ -56,8 +57,8 @@
     <meta name="age-meta-label" content="age=18" />
     <meta name="statistics-enabled" content="{{ config("metager.matomo.enabled") }}">
     @if(!in_array(app(\App\SearchSettings::class)->suggestion_provider, [null, "off"]))
-	<meta name="suggestions-enabled" content="true">
-	@endif
+        <meta name="suggestions-enabled" content="true">
+    @endif
     {{-- Add Advertisement Scripts if Yahoo is enabled --}}
     @if (app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo') !== null)
         <meta name="source_tag"
@@ -109,11 +110,6 @@
     @endif
     @include('parts.sidebar', ['id' => 'resultPageSideBar'])
     @include('parts.sidebar-opener', ['class' => 'fixed'])
-    {{-- Add Advertisement Scripts if Yahoo is enabled --}}
-    @if (app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo') !== null)
-        <img height=”1” width=”1”
-            src="https://search.yahoo.com/beacon/geop/p?s=1197774733&ysid={{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->search_id }}&traffic_source={{ app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengine('yahoo')->configuration->getParameter->Partner }}" />
-    @endif
 </body>
 
 </html>

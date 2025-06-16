@@ -16,8 +16,10 @@
 
 </x-mail::button>
 
+@include('mail.membership.layouts.next_payments', ['payments' => $payments])
+
 \
-@lang("membership/welcome_mail.greeting"),\
+@lang("membership/mails/welcome_mail.greeting"),\
 [SUMA-EV](https://suma-ev.de) & [Metager]({{ url("/") }})\
 Postfach 51 01 43\
 D-30631 Hannover\

@@ -12,6 +12,7 @@ return [
         'card' => 'We will debit this **:interval** from the specified credit card.',
         'mandate' => 'Purpose of use',
         'next_payments' => 'The next contributions',
+        'next_payments_hint' => 'The next payment might include additional fees from previously failed payments. If you have questions about your fee, please send us an email.',
         'due' => 'Due date',
         'amount' => 'Contribution',
         'now' => 'Now',

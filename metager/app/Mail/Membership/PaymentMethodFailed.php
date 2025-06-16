@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,6 +19,7 @@ class PaymentMethodFailed extends Mailable
 
     public MembershipApplication $application;
     public string $name;
+    public array $payments;
 
     /**
      * Create a new message instance.
@@ -32,6 +34,7 @@ class PaymentMethodFailed extends Mailable
             $this->to(new Address($application->company->email, $this->name));
         }
         $this->application = $application;
+        $this->payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership, 3);
         $this->locale($application->locale);
     }
 

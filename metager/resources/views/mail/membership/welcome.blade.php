@@ -27,16 +27,7 @@
 @break
 @endswitch
 
-## @lang("membership/mails/welcome_mail.membership.next_payments"):
-<x-mail::table>
-
-| @lang("membership/mails/welcome_mail.membership.due")    | @lang("membership/mails/welcome_mail.membership.amount")       |
-| :-----------: | :-----------: |
-@foreach($payments as $payment)
-| {{ $payment["due_date_in_the_past"] ? __("membership/mails/welcome_mail.membership.now") : $payment["due_date"]->format("d.m.Y") }} | {{ number_format($payment["amount"], 2, ",") }}€ | 
-@endforeach
-
-</x-mail::table>
+@include('mail.membership.layouts.next_payments', ['payments' => $payments])
 
 @if(\App\Localization::getLanguage() === "de")
 # @lang("membership/mails/welcome_mail.websites.title")

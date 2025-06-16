@@ -33,6 +33,10 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
+
+        $order = PayPal::GET_ORDER("75R112876P132212G");
+        return response()->json($order);
+
         $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
 
         $mail = new PaymentMethodFailed($application);
@@ -513,6 +517,12 @@ class MembershipController extends Controller
 
             if ($order["intent"] === "AUTHORIZE" && in_array($order["status"], ["SAVED", "APPROVED", "CREATED"])) {
                 $order = PayPal::AUTHORIZE_ORDER($order_id);
+                $order = PayPal::VALIDATE_ORDER(Arr::get($order, "id"), $order);
+                if ($order === null) {
+                    return $request->wantsJson() ? response()->json(["message" => "The PayPal Order could not be validated", "cancel_url" => $error_url], 400) : redirect($error_url);
+                } else if (is_string($order)) {
+                    return $request->wantsJson() ? response()->json(["message" => $order, "cancel_url" => $error_url], 400) : redirect($error_url);
+                }
             } else if ($order["status"] !== "COMPLETED") {
                 return $request->wantsJson() ? response()->json(["message" => "Couldn't authorize PayPal order.", "cancel_url" => $error_url], 400) : redirect($error_url);
             }

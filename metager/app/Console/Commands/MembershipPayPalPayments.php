@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Localization;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Models\Membership\CiviCrm;
+use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
 use Arr;
@@ -64,14 +65,17 @@ class MembershipPayPalPayments extends Command
                 if ($status_code === 403) {
                     // We are not authorized to create the order
                     // Most likely our vault was invalidated i.e. by the user
-                    if (CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($membership->paypal->vault_id) !== null) {
-                        $notification = new PaymentMethodFailed($membership);
-                        Mail::mailer("membership")->send($notification);
-                    }
-                    return false;
+                    $this->disablePaymentMethod($membership);
+                    continue;
                 }
             }
             if ($paypal_order !== null) {
+                // Validate PayPal Order
+                $paypal_order = PayPal::VALIDATE_ORDER(Arr::get($paypal_order, "id"), $paypal_order);
+                if (is_string($paypal_order)) {
+                    $this->disablePaymentMethod($membership);
+                    continue;
+                }
                 $paypal_payment->order_id = Arr::get($paypal_order, "id");
                 $paypal_payment->save();
             }
@@ -80,6 +84,17 @@ class MembershipPayPalPayments extends Command
             foreach ($captures as $capture) {
                 CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);
             }
+        }
+    }
+
+    private function disablePaymentMethod(MembershipApplication $membership): bool
+    {
+        if (CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($membership->paypal->vault_id) !== null) {
+            $notification = new PaymentMethodFailed($membership);
+            Mail::mailer("membership")->send($notification);
+            return true;
+        } else {
+            return false;
         }
     }
 }

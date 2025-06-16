@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 use Cache;
+use Lang;
 
 class PayPal
 {
@@ -315,9 +316,13 @@ class PayPal
         return $body;
     }
 
-    public static function VALIDATE_ORDER(string $order_id): array|string|null
+    public static function VALIDATE_ORDER(string $order_id, array $order = null): array|string|null
     {
-        $order = self::GET_ORDER($order_id);
+        if ($order === null) {
+            $order = self::GET_ORDER($order_id);
+        } else {
+            $order_id = Arr::get($order, "id");
+        }
 
         if ($order === null)
             return null;
@@ -327,6 +332,24 @@ class PayPal
 
         if ($payment_method === "paypal")
             return $order;
+
+        // If there already is a processor response we will validate it here aswell
+        $payments = Arr::get($order, "purchase_units.0.payments");
+        if ($payments !== null) {
+            foreach (Arr::get($payments, "authorizations", []) as $authorization) {
+                switch (Arr::get($authorization, "status")) {
+                    case "DENIED":
+                        return self::PARSE_PROCESSOR_RESPONSE_ERROR(Arr::get($authorization, "processor_response", self::INTENT_AUTHORIZE));
+                }
+            }
+            foreach (Arr::get($payments, "captures") as $capture) {
+                switch (Arr::get($capture, "status")) {
+                    case "DECLINED":
+                    case "FAILED":
+                        return self::PARSE_PROCESSOR_RESPONSE_ERROR(Arr::get($capture, "processor_response"));
+                }
+            }
+        }
 
         // Card Payment. Validate Authentication result if available
         $authentication_result = Arr::get($order, "payment_source.card.authentication_result");
@@ -482,5 +505,23 @@ class PayPal
         $expires_in = max($body["expires_in"] - 10, 0);
         Cache::put($cache_key, $access_token, now()->addSeconds($expires_in));
         return $access_token;
+    }
+
+    private static function PARSE_PROCESSOR_RESPONSE_ERROR(array $processor_response, string $intent = self::INTENT_CAPTURE): string|null
+    {
+        $response_code = Arr::get($processor_response, "response_code");
+        if ($response_code !== null) {
+            if (Lang::has("spende.execute-payment.card.error.{$response_code}")) {
+                return __("spende.execute-payment.card.error.declined_reason", ["reason" => __("spende.execute-payment.card.error.{$response_code}")]);
+            } else {
+                return __("spende.execute-payment.card.error.generic");
+            }
+        } else {
+            if ($intent === self::INTENT_CAPTURE) {
+                return __("spende.execute-payment.errors.capture_failed");
+            } else {
+                return __("spende.execute-payment.errors.authorization_denied");
+            }
+        }
     }
 }

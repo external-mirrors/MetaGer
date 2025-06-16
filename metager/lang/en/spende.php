@@ -72,6 +72,10 @@ return [
     'execute-payment' => [
         'heading' => 'Complete payment',
         'item-name' => 'Donation to the SUMA-EV',
+        'errors' => [
+            'authorization_denied' => 'The payment couldn\'t be authorized',
+            'capture_failed' => 'The payment couldn\'t be captured'
+        ],
         'card' => [
             'loading' => 'Loading Creditcard Form',
             'name' => 'Cardholder Name (optional)',

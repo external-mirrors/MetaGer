@@ -1,15 +1,15 @@
 <x-mail::message>
 # {{ $contact["addressee_display"] }},
 
-@lang('membership/welcome_mail.general', ["member_count" => $membership_count])
+@lang('membership/mails/welcome_mail.general', ["member_count" => $membership_count])
 
-# @lang("membership/welcome_mail.membership.title")
+# @lang("membership/mails/welcome_mail.membership.title")
 
-@lang("membership/welcome_mail.membership.description", ["amount" => number_format($payments[0]["amount"], 2, ","), "due" => $payments[0]["due_date"]->format("d.m.Y")])  
+@lang("membership/mails/welcome_mail.membership.description", ["amount" => number_format($payments[0]["amount"], 2, ","), "due" => $payments[0]["due_date"]->format("d.m.Y")])  
 
 @switch($membership->payment_method)
 @case("banktransfer")
-@lang("membership/welcome_mail.membership.banktransfer", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference])
+@lang("membership/mails/welcome_mail.membership.banktransfer", ['interval' => __("membership/mails/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference])
 
 > `SUMA-EV`\
 > `DE64 4306 0967 4075 0332 01`\
@@ -17,60 +17,60 @@
 > `GLS Gemeinschaftsbank, Bochum`
 @break
 @case("directdebit")
-@lang("membership/welcome_mail.membership.directdebit", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference, 'iban' => iban_to_obfuscated_format($membership->directdebit->iban)])
+@lang("membership/mails/welcome_mail.membership.directdebit", ['interval' => __("membership/mails/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"]), 'mandate' => $membership->payment_reference, 'iban' => iban_to_obfuscated_format($membership->directdebit->iban)])
 @break
 @case("paypal")
-@lang("membership/welcome_mail.membership.paypal", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
+@lang("membership/mails/welcome_mail.membership.paypal", ['interval' => __("membership/mails/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
 @break
 @case("card")
-@lang("membership/welcome_mail.membership.card", ['interval' => __("membership/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
+@lang("membership/mails/welcome_mail.membership.card", ['interval' => __("membership/mails/welcome_mail.membership.interval." . $payments[0]["payment_interval_string"])])
 @break
 @endswitch
 
-## @lang("membership/welcome_mail.membership.next_payments"):
+## @lang("membership/mails/welcome_mail.membership.next_payments"):
 <x-mail::table>
 
-| @lang("membership/welcome_mail.membership.due")    | @lang("membership/welcome_mail.membership.amount")       |
+| @lang("membership/mails/welcome_mail.membership.due")    | @lang("membership/mails/welcome_mail.membership.amount")       |
 | :-----------: | :-----------: |
 @foreach($payments as $payment)
-| {{ $payment["due_date_in_the_past"] ? __("membership/welcome_mail.membership.now") : $payment["due_date"]->format("d.m.Y") }} | {{ number_format($payment["amount"], 2, ",") }}€ | 
+| {{ $payment["due_date_in_the_past"] ? __("membership/mails/welcome_mail.membership.now") : $payment["due_date"]->format("d.m.Y") }} | {{ number_format($payment["amount"], 2, ",") }}€ | 
 @endforeach
 
 </x-mail::table>
 
 @if(\App\Localization::getLanguage() === "de")
-# @lang("membership/welcome_mail.websites.title")
+# @lang("membership/mails/welcome_mail.websites.title")
 
-@lang("membership/welcome_mail.websites.description")
+@lang("membership/mails/welcome_mail.websites.description")
 @endif
 
-# @lang("membership/welcome_mail.key.title")
+# @lang("membership/mails/welcome_mail.key.title")
 
-@lang("membership/welcome_mail.key.description_first", ["infos" => url("keys")])
+@lang("membership/mails/welcome_mail.key.description_first", ["infos" => url("keys")])
 
 > {{ $membership->key }}
 
-@lang("membership/welcome_mail.key.description_second", ["startpage_link" => url("/")])
+@lang("membership/mails/welcome_mail.key.description_second", ["startpage_link" => url("/")])
 
 > [{{ route("loadSettings", ["key" => $membership->key]) }}]({{ route("loadSettings", ["key" => $membership->key]) }})
 
-@lang("membership/welcome_mail.key.description_third")
+@lang("membership/mails/welcome_mail.key.description_third")
 
-## @lang("membership/welcome_mail.key.extension")
+## @lang("membership/mails/welcome_mail.key.extension")
 
 > [Firefox]({{ $plugin_firefox_url }}) | [Chrome]({{ $plugin_chrome_url }}) | [Edge]({{ $plugin_edge_url }})
 
-@lang("membership/welcome_mail.key.description_fourth", ["anonymous_token_link" => url("/keys/help/anonymous-token")])\
-@lang("membership/welcome_mail.key.description_fifth")\
-@lang("membership/welcome_mail.key.description_sixth")
+@lang("membership/mails/welcome_mail.key.description_fourth", ["anonymous_token_link" => url("/keys/help/anonymous-token")])\
+@lang("membership/mails/welcome_mail.key.description_fifth")\
+@lang("membership/mails/welcome_mail.key.description_sixth")
 
-# @lang("membership/welcome_mail.mastodon.title")
+# @lang("membership/mails/welcome_mail.mastodon.title")
 
-@lang("membership/welcome_mail.mastodon.description_first")\
-@lang("membership/welcome_mail.mastodon.description_second")\
-@lang("membership/welcome_mail.mastodon.description_third", ["email" => $contact["email_primary.email"]])\
+@lang("membership/mails/welcome_mail.mastodon.description_first")\
+@lang("membership/mails/welcome_mail.mastodon.description_second")\
+@lang("membership/mails/welcome_mail.mastodon.description_third", ["email" => $contact["email_primary.email"]])\
 \
-@lang("membership/welcome_mail.greeting"),\
+@lang("membership/mails/welcome_mail.greeting"),\
 [SUMA-EV](https://suma-ev.de) & [Metager]({{ url("/") }})\
 Postfach 51 01 43\
 D-30631 Hannover\

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
@@ -32,9 +33,9 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $application = MembershipApplication::reductionRequests()->whereRelation("reduction", "id", "=", "9f20e286-47b7-412d-aa8a-73028e1ed662")->first();
+        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
 
-        $mail = new ReductionDeny($application, "Ein schlechter Nachweis");
+        $mail = new PaymentMethodFailed($application);
         return $mail;
     }
     /**
@@ -423,9 +424,9 @@ class MembershipController extends Controller
                 }
                 abort(404);
             case "VAULT.PAYMENT-TOKEN.DELETED":
-                $vault_id = $request->input("resource.id");
-                MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
-                CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id);
+                //$vault_id = $request->input("resource.id");
+                //MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
+                //CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id);
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.CREATED":
                 $authorization_id = $request->input("resource.id");
@@ -444,42 +445,31 @@ class MembershipController extends Controller
                 MembershipPaymentPaypal::where("authorization_id", "=", $authorization_id)->delete();
                 return response()->json([]);
             case "PAYMENT.CAPTURE.COMPLETED":
-                $order_id = $request->input("resource.supplementary_data.related_ids.order_id");
-                if ($order_id !== null) {
-                    $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
-                    if ($paypal !== null) {
-                        if ($paypal->vault_id !== null) {
-                            $paypal->order_id = null;
-                            $paypal->authorization_id = null;
-                            $paypal->authorization_status = null;
-                            $paypal->save();
-                        } else {
-                            $paypal->delete();
+                if (CiviCrm::HANDLE_PAYPAL_CAPTURE($request->input("resource")) === null) {
+                    abort(500, "Couldn't create contribution payment");
+                } else {
+                    $order_id = $request->input("resource.supplementary_data.related_ids.order_id");
+                    if ($order_id !== null) {
+                        $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
+                        if ($paypal !== null) {
+                            if ($paypal->vault_id !== null) {
+                                $paypal->order_id = null;
+                                $paypal->authorization_id = null;
+                                $paypal->authorization_status = null;
+                                $paypal->save();
+                            } else {
+                                $paypal->delete();
+                            }
                         }
                     }
-                }
-                $custom_id = $request->input("resource.custom_id");
-                $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
-                $date = new Carbon($request->input("resource.create_time"));
-                $date->setTimezone("Europe/Berlin");
-                $transaction_id = $request->input("resource.id");
-                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($custom_id, $amount, $date, $transaction_id) !== null) {
-                    return response()->json([]);
-                } else {
-                    abort(code: 500, message: "Couldn't create contribution payment");
+                    return response()->json(["status" => "success"]);
                 }
             case "PAYMENT.CAPTURE.REVERSED":
             case "PAYMENT.CAPTURE.REFUNDED":
-                $custom_id = $request->input("resource.custom_id");
-                $amount = (float) $request->input("resource.amount.value", $request->input("resource.amount.total"));
-                $amount = abs($amount) * -1;
-                $date = new Carbon($request->input("resource.create_time"));
-                $date->setTimezone("Europe/Berlin");
-                $transaction_id = $request->input("resource.id");
-                if (CiviCrm::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($custom_id, $amount, $date, $transaction_id) !== null) {
-                    return response()->json([]);
+                if (CiviCrm::HANDLE_PAYPAL_REFUND($request->input("resource")) === null) {
+                    abort(500, "Couldn't create contribution payment");
                 } else {
-                    abort(code: 500, message: "Couldn't create contribution payment");
+                    return response()->json(["status" => "success"]);
                 }
             default:
                 return response()->json([]);

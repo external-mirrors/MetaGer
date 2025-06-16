@@ -25,39 +25,10 @@ class PayPal
         return hash_hmac("sha256", config("metager.metager.paypal.membership.client_id"), config("app.key"));
     }
 
-    public static function CREATE_ORDER(string $civicrm_membership_id): array|null
+    public static function CREATE_ORDER(MembershipApplication $application): array|null
     {
-        $order_data = self::CREATE_ORDER_DATA($civicrm_membership_id, self::INTENT_CAPTURE);
-
-        $resulthash = md5("paypal" . microtime(true));
-
-        $mission = [
-            "resulthash" => $resulthash,
-            "url" => config("metager.metager.paypal.base_url") . "/v2/checkout/orders",
-            "useragent" => "MetaGer",
-            "cacheDuration" => 0,   // We'll cache seperately
-            "headers" => [
-                "Content-Type" => "application/json",
-                "Authorization" => "Bearer " . self::GET_ACCESS_TOKEN(),
-                "PayPal-Request-Id" => uuid_create()
-            ],
-            "name" => "PayPal",
-            "curlopts" => [
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($order_data),
-            ]
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-        $results = Redis::brpop($resulthash, 10);
-        if (!is_array($results))
-            return null;
-        $results = json_decode($results[1], true);
-        if (!in_array($results["info"]["http_code"], [200, 201])) {
-            return null;
-        }
-        $body = json_decode($results["body"], true);
-        return $body;
+        $order_data = self::CREATE_ORDER_DATA($application, self::INTENT_CAPTURE);
+        return self::PAYPAL_REQUEST("/v2/checkout/orders", self::API_METHOD_POST, $order_data, true);
     }
 
     public static function CREATE_ORDER_DATA(MembershipApplication $application, $intent): array
@@ -110,19 +81,13 @@ class PayPal
         $unit_amount = null;
         $quantity = 1;
         if ($application->crm_membership !== null) {
-            $membership = CiviCrm::FIND_MEMBERSHIPS(null, $application->crm_membership);
-            $membership = Arr::get($membership, "0");
-            if ($membership === null) {
-                throw new Exception("Cannot find membership");
-            }
-
             $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership, count: 2);
             if ($payments === null)
                 throw new Exception("Cannot load Payments");
 
             $amount = $payments[0]["amount"];
             $unit_amount = $amount;
-            $payment_source = $membership->payment_method;
+            $payment_source = $application->payment_method;
 
             if (Arr::get($payments, "0.payment_interval_months", 0) * Arr::get($payments, "0.monthly", 0) === $amount) {
                 $quantity = Arr::get($payments, "0.payment_interval_months");
@@ -136,9 +101,9 @@ class PayPal
                     $description .= " " . $date_start->format("M Y") . " - " . $date_end->format("M Y");
                 }
             }
-            $custom_id = $membership->payment_reference;
+            $custom_id = $application->payment_reference;
             $invoice_id = $custom_id;
-            Arr::set($order_data, "payment_source.$payment_source.vault_id", $membership->paypal->vault_id);
+            Arr::set($order_data, "payment_source.$payment_source.vault_id", $application->paypal->vault_id);
         } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {
             $quantity = match ($application->interval) {
                 "monthly" => 1,
@@ -221,7 +186,7 @@ class PayPal
         return self::PAYPAL_REQUEST("/v2/payments/authorizations/{$authorization_id}/capture", self::API_METHOD_POST, []);
     }
 
-    private static function PAYPAL_REQUEST(string $api_path, string $method = self::API_METHOD_POST, array|null $request_data): null|array
+    private static function PAYPAL_REQUEST(string $api_path, string $method = self::API_METHOD_POST, array|null $request_data, bool $return_errors = false): null|array
     {
         $resulthash = md5("paypal" . microtime(true));
         $mission = [
@@ -260,10 +225,24 @@ class PayPal
             return null;
         $results = json_decode($results[1], true);
         if (!in_array($results["info"]["http_code"], [200, 201])) {
-            return null;
+            if ($return_errors) {
+                return [
+                    "status_code" => $results["info"]["http_code"],
+                    "response_body" => json_decode($results["body"], true)
+                ];
+            } else {
+                return null;
+            }
         }
-        $body = json_decode($results["body"], true);
-        return $body;
+        if ($return_errors) {
+            return [
+                "status_code" => $results["info"]["http_code"],
+                "response_body" => json_decode($results["body"], true)
+            ];
+        } else {
+            $body = json_decode($results["body"], true);
+            return $body;
+        }
     }
 
     public static function VALIDATE_WEBHOOK(Request $request)
@@ -407,39 +386,6 @@ class PayPal
         $mission = [
             "resulthash" => $resulthash,
             "url" => config("metager.metager.paypal.base_url") . "/v2/checkout/orders/$order_id/authorize",
-            "useragent" => "MetaGer",
-            "cacheDuration" => 0,   // We'll cache seperately
-            "headers" => [
-                "Content-Type" => "application/json",
-                "PayPal-Request-Id" => uuid_create(),
-                "Authorization" => "Bearer " . self::GET_ACCESS_TOKEN(),
-            ],
-            "name" => "PayPal",
-            "curlopts" => [
-                CURLOPT_POST => true
-            ]
-        ];
-        $mission = json_encode($mission);
-        Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
-        $results = Redis::brpop($resulthash, 10);
-        if (!is_array($results))
-            return null;
-        $results = json_decode($results[1], true);
-        if (!in_array($results["info"]["http_code"], [200, 201])) {
-            return null;
-        }
-        $body = json_decode($results["body"], true);
-
-        return $body;
-    }
-
-    public static function REAUTHORIZE_ORDER(string $authorization_id)
-    {
-        $resulthash = md5("paypal:order" . microtime(true));
-
-        $mission = [
-            "resulthash" => $resulthash,
-            "url" => config("metager.metager.paypal.base_url") . "/v2/payments/authorizations/$authorization_id/reauthorize",
             "useragent" => "MetaGer",
             "cacheDuration" => 0,   // We'll cache seperately
             "headers" => [

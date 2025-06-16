@@ -3,7 +3,9 @@
 namespace App\Models\Membership;
 
 use Arr;
+use Cache;
 use Exception;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Redis;
 use DB;
 use Carbon\Carbon;
@@ -197,6 +199,22 @@ class CiviCrm
             $memberships[] = $membership;
         }
         return $memberships;
+    }
+
+    public static function FIND_DUE_MEMBERSHIPS(array $ignore_references = [], array $ignore_vaults = []): array|null
+    {
+        $end_date = now()->addDays(14);
+        $params = [
+            'select' => ['id', 'Beitrag.PayPal_Vault'],
+            'where' => [['Beitrag.Zahlungsweise:label', 'IN', ['PayPal', 'Creditcard']], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.PayPal_Vault', 'IS NOT NULL'], ['Beitrag.Zahlungsstatus:label', 'NOT IN', ['Ausgetreten', 'Verstorben']], ['Beitrag.Zahlungsreferenz', 'NOT IN', $ignore_references], ['Beitrag.PayPal_Vault', 'NOT IN', $ignore_vaults]],
+            'limit' => 25,
+            'chain' => ['payments' => ['Membership', 'nextPayments', ['membershipId' => '$id', 'count' => 1]]],
+        ];
+        $due_memberships = self::API_POST("/Membership/get", $params);
+        if ($due_memberships === null)
+            return null;
+        $due_memberships = Arr::get($due_memberships, "values");
+        return $due_memberships;
     }
 
     public static function FIND_MEMBERSHIP_APPLICATIONS()
@@ -497,6 +515,38 @@ class CiviCrm
         return null;
     }
 
+    public static function HANDLE_PAYPAL_REFUND(array $capture): bool|null
+    {
+        // Make sure the value is negative
+        Arr::set($capture, "amount.value", abs(Arr::get($capture, "amount.value")) * -1);
+        return self::HANDLE_PAYPAL_CAPTURE($capture);
+    }
+
+    public static function HANDLE_PAYPAL_CAPTURE(array $capture): bool|null
+    {
+        $payment_reference = Arr::get($capture, "custom_id");
+        if ($payment_reference === null)
+            return false;
+        $lock = Cache::lock("capture:$payment_reference", 10);
+        try {
+            $lock->block(5);
+            if (Arr::get($capture, "status") !== "COMPLETED")
+                return null;
+            $currency = Arr::get($capture, "amount.currency_code");
+            $amount = (float) Arr::Get($capture, "amount.value");
+            $date = new Carbon(Arr::get($capture, "create_time"));
+            $date->setTimezone("Europe/Berlin");
+            if ($currency !== "EUR")
+                return false;
+            self::CREATE_MEMBERSHIP_PAYPAL_PAYMENT($payment_reference, $amount, $date, Arr::get($capture, "id"));
+        } catch (LockTimeoutException $e) {
+            return null;
+        } finally {
+            $lock->release();
+        }
+        return true;
+    }
+
     private static function API_POST_V3(string $entity, string $action, array $json)
     {
         $resulthash = md5("civicrm:api" . microtime(true));
@@ -568,7 +618,6 @@ class CiviCrm
         if (!is_array($results))
             return null;
         $results = json_decode($results[1], true);
-        Log::error(var_export($results, true));
         if ($results["info"]["http_code"] !== 200) {
             return null;
         }

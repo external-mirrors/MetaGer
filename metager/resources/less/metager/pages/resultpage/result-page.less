@@ -291,8 +291,18 @@ a {
       display: grid;
       grid-template-columns: 2fr 1fr;
 
+      >.alert,
+      >.mg-pager {
+        grid-column: span 2;
+      }
+
       @media (max-width: @full-screen-details-breakpoint) {
         grid-template-columns: 100%;
+
+        >.alert,
+        >.mg-pager {
+          grid-column: span 1;
+        }
       }
 
       >.image-container {

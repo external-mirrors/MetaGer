@@ -206,7 +206,7 @@ class CiviCrm
         $end_date = now()->addDays(14);
         $params = [
             'select' => ['id', 'Beitrag.PayPal_Vault'],
-            'where' => [['Beitrag.Zahlungsweise:label', 'IN', ['PayPal', 'Creditcard']], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.PayPal_Vault', 'IS NOT NULL'], ['Beitrag.Zahlungsstatus:label', 'NOT IN', ['Ausgetreten', 'Verstorben']], ['Beitrag.Zahlungsreferenz', 'NOT IN', $ignore_references], ['Beitrag.PayPal_Vault', 'NOT IN', $ignore_vaults]],
+            'where' => [['Beitrag.PayPal_ID', '=', PayPal::GET_ID()], ['Beitrag.Zahlungsweise:label', 'IN', ['PayPal', 'Creditcard']], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.PayPal_Vault', 'IS NOT NULL'], ['Beitrag.Zahlungsstatus:label', 'NOT IN', ['Ausgetreten', 'Verstorben']], ['Beitrag.Zahlungsreferenz', 'NOT IN', $ignore_references], ['Beitrag.PayPal_Vault', 'NOT IN', $ignore_vaults]],
             'limit' => 25,
             'chain' => ['payments' => ['Membership', 'nextPayments', ['membershipId' => '$id', 'count' => 1]]],
         ];

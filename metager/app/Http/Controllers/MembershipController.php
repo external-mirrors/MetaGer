@@ -336,9 +336,8 @@ class MembershipController extends Controller
                 $key = $authorization->key;
             } else {
                 $key = $this->generateNewKey();
-                $final_url = route("membership_success");
                 $expires = now()->addMinutes(1)->timestamp;
-                $signature = hash_hmac("sha256", $final_url . $expires, config("app.key"));
+                $signature = hash_hmac("sha256", $success_url . $expires, config("app.key"));
                 $success_url = route("loadSettings", ["key" => $key, "redirect_url" => $success_url, "expires" => $expires, "signature" => $signature]);
             }
             $application->key = $key;

@@ -61,7 +61,7 @@
                                     @if($membership_application->directdebit->bic !== null)
                                         <div>BIC: {{ $membership_application->directdebit->bic }}</div>
                                     @endif
-                                @elseif($membership_application->payment_method === "paypal")
+                                @elseif(in_array($membership_application->payment_method, ["paypal", "card"]))
                                     <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
                                 @endif
                             </td>
@@ -132,7 +132,7 @@
                                     @if($membership_application->directdebit->bic !== null)
                                         <div>BIC: {{ $membership_application->directdebit->bic }}</div>
                                     @endif
-                                @elseif($membership_application->payment_method === "paypal")
+                                @elseif(in_array($membership_application->payment_method, ["paypal", "card"]))
                                     <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
                                 @endif
                             </td>

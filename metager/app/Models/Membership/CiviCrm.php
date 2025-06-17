@@ -547,6 +547,18 @@ class CiviCrm
         return true;
     }
 
+    public static function GET_EDIT_ID(int $crm_membership, Carbon|null $expiration = null)
+    {
+        if ($expiration === null)
+            $expiration = now()->addDays(3);
+        $edit_data = [
+            "crm_membership" => $crm_membership,
+            "expiration" => $expiration
+        ];
+        $edit_data["signature"] = hash_hmac("sha256", json_encode($edit_data), config("app.key"));
+        return base64_encode(json_encode($edit_data));
+    }
+
     private static function API_POST_V3(string $entity, string $action, array $json)
     {
         $resulthash = md5("civicrm:api" . microtime(true));

@@ -34,9 +34,6 @@ class MembershipController extends Controller
     public function test(Request $request)
     {
 
-        $order = PayPal::GET_ORDER("75R112876P132212G");
-        return response()->json($order);
-
         $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
 
         $mail = new PaymentMethodFailed($application);
@@ -60,6 +57,7 @@ class MembershipController extends Controller
                         return redirect(route("membership_form"));
                     }
                     $signature = Arr::pull($edit_data, "signature");
+                    $edit_data = collect($edit_data)->sortKeys();
                     $signature_calced = hash_hmac("sha256", json_encode($edit_data), config("app.key"));
                     if (!hash_equals($signature_calced, $signature)) {
                         return redirect(route("membership_form"));
@@ -78,7 +76,8 @@ class MembershipController extends Controller
                     }
                 }
                 $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
-                if ($request->input("edit", "") === "contact") {
+                // Do not allow edits for existing contacts
+                if (($application === null || !$application->is_update) && $request->input("edit", "") === "contact") {
                     if ($application->contact !== null) {
                         $application->contact()->delete();
                     } elseif ($application->company !== null) {
@@ -153,6 +152,15 @@ class MembershipController extends Controller
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         }
+    }
+
+    public function abortApplication(Request $request, string $application_id)
+    {
+        $application = MembershipApplication::find($application_id);
+        if ($application !== null) {
+            $application->delete();
+        }
+        return redirect(route("membership_form"));
     }
 
     public function success(Request $request, $application_id = null)
@@ -428,9 +436,18 @@ class MembershipController extends Controller
                 }
                 abort(404);
             case "VAULT.PAYMENT-TOKEN.DELETED":
-                //$vault_id = $request->input("resource.id");
-                //MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
-                //CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id);
+                $vault_id = $request->input("resource.id");
+                MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
+                if (($membership_data = CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id)) !== null) {
+                    $membership_id = Arr::get($membership_data, "values.0.id");
+                    if ($membership_id !== null) {
+                        $membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+                        if ($membership !== null) {
+                            $notification = new PaymentMethodFailed($membership);
+                            Mail::mailer("membership")->send($notification);
+                        }
+                    }
+                }
                 return response()->json([]);
             case "PAYMENT.AUTHORIZATION.CREATED":
                 $authorization_id = $request->input("resource.id");

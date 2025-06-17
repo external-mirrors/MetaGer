@@ -104,7 +104,8 @@ class PayPal
             }
             $custom_id = $application->payment_reference;
             $invoice_id = $custom_id;
-            Arr::set($order_data, "payment_source.$payment_source.vault_id", $application->paypal->vault_id);
+            if ($intent === self::INTENT_CAPTURE)
+                Arr::set($order_data, "payment_source.$payment_source.vault_id", $application->paypal->vault_id);
         } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {
             $quantity = match ($application->interval) {
                 "monthly" => 1,
@@ -342,7 +343,7 @@ class PayPal
                         return self::PARSE_PROCESSOR_RESPONSE_ERROR(Arr::get($authorization, "processor_response", self::INTENT_AUTHORIZE));
                 }
             }
-            foreach (Arr::get($payments, "captures") as $capture) {
+            foreach (Arr::get($payments, "captures", []) as $capture) {
                 switch (Arr::get($capture, "status")) {
                     case "DECLINED":
                     case "FAILED":

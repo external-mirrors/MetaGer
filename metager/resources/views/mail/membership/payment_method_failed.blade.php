@@ -10,7 +10,7 @@
 
 @lang('membership/mails/payment_method_failed.edit')
 
-<x-mail::button :url="route('membership_form', ['application_id' => $application->id])" color="success">
+<x-mail::button :url="route('membership_form', ['application_id' => App\Models\Membership\CiviCrm::GET_EDIT_ID($application->crm_membership, now()->addWeeks(2))])" color="success">
 
 @lang('membership/mails/payment_method_failed.edit_button')
 

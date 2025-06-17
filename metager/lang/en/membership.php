@@ -5,6 +5,11 @@ return [
     'success' => 'Thank you very much for submitting your application for membership. We will process it as quickly as possible. You will then receive an e-mail with further information from us at the address provided.',
     'back' => 'Back to the startpage',
     'application' => [
+        'cancel' => [
+            'application' => 'Delete Membership Application',
+            'update' => 'Discard Changes'
+        ],
+        'update_hint' => 'The requested changes for your membership will be reviewed/accepted soon. If you are satisfied with the shown state you can leave this page. Otherwise you can make more changes or delete your change request with the button below.',
         'description' => 'Thank you for considering <a href="https://suma-ev.de/en/mitglieder/" target="_blank">membership</a> in our non-profit association. In order to process your application, we only need a few pieces of information, which you can fill in here.',
         "payment_block" => 'We will try to authorize a payment for your next membership fee to validate your payment method but the payment will only be executed if it is due within the next two weeks and voided otherwise.'
     ],

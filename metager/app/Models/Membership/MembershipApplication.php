@@ -30,7 +30,7 @@ class MembershipApplication extends Model
 {
     use HasUuids;
 
-    protected $fillable = ["locale", "amount", "interval", "payment_method", "payment_referende", "key", "crm_contact", "crm_membership", "payment_reference", "is_update"];
+    protected $fillable = ["locale", "amount", "interval", "payment_method", "payment_reference", "key", "crm_contact", "crm_membership", "payment_reference", "is_update"];
 
     /**
      * The model's default values for attributes.
@@ -161,6 +161,20 @@ class MembershipApplication extends Model
         }
 
         return $new_entry;
+    }
+
+    public function isComplete(): bool
+    {
+        return ($this->contact !== null || $this->company !== null) &&
+            $this->locale !== null &&
+            $this->amount !== null &&
+            $this->payment_method !== null &&
+            $this->payment_reference !== null && (
+            $this->amount >= 5 ||
+            ($this->reduction !== null &&
+                $this->reduction->expires_at !== null)
+        ) &&
+            $this->interval !== null;
     }
 
     protected static function booted(): void

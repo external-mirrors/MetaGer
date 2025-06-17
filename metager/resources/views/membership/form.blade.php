@@ -9,7 +9,7 @@
 @if($application === null || !$application->is_update)
 <div class="page-description">@lang('membership.application.description')</div>
 @else
-<div class="page-description">@lang('membership.application.update')</div>
+<div class="page-description">@lang('membership.application.update', ["contact_link" => route("contact")])</div>
 @endif
 <form id="membership-form" method="POST" enctype="multipart/form-data">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
@@ -349,6 +349,18 @@
     </div>
     @if($editable)
     <button type="submit" class="btn btn-primary">Abschicken</button>
+    @endif
+    @if($application !== null && $application->id !== null)
+    @if($application->is_update && $application->isComplete())
+    <div class="alert alert-success">@lang('membership.application.update_hint')</div>
+    @endif
+    <a href="{{ route("membership_abort", ["application_id" => $application->id]) }}" class="btn btn-disabled">
+        @if($application === null || !$application->is_update)
+        @lang('membership.application.cancel.application')
+        @else
+        @lang('membership.application.cancel.update')
+        @endif
+    </a>
     @endif
 </form>
 <section id="membership-advantages">

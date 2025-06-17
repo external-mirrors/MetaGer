@@ -126,6 +126,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::get("/success/{application_id?}", [MembershipController::class, "success"])->name("membership_success");
         Route::get("/{application_id?}", [MembershipController::class, "contactData"])->name("membership_form");
         Route::post("/{application_id?}", [MembershipController::class, "submitMembershipForm"]);
+        Route::get("/{application_id}/abort", [MembershipController::class, "abortApplication"])->name("membership_abort");
     });
 
     Route::get('tor', function () {

@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'subject' => "Welcome to SUMA-EV",
+    'subject' => "[SUMA-EV & MetaGer] Welcome to SUMA-EV",
     'general' => "Welcome to SUMA-EV! May I first ask how you found out about us? I assume through our search engine MetaGer? Together with you, the association now has :member_count members from a wide variety of areas. Below are some further explanations and tips that are more than useful for SUMA-EV.",
     'membership' => [
         'title' => 'Membership',

@@ -43,7 +43,7 @@ class ReductionDeny extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: '[SUMA-EV] ' . __("membership/mails/reduction_deny.subject"),
+            subject: __("membership/mails/reduction_deny.subject"),
             from: new Address("verein@metager.de", "SUMA-EV"),
             // bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );

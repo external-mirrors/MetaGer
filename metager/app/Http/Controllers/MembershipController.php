@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Mail\Membership\ApplicationUnfinished;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
@@ -34,9 +35,9 @@ class MembershipController extends Controller
     public function test(Request $request)
     {
 
-        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
+        $application = MembershipApplication::find("9f2b01c9-2297-4946-9c2a-60cb3c5a81f1");
 
-        $mail = new PaymentMethodFailed($application);
+        $mail = new ApplicationUnfinished($application);
         return $mail;
     }
     /**
@@ -328,10 +329,14 @@ class MembershipController extends Controller
             }
             $application = MembershipApplication::create(["locale" => Localization::getLanguage() . "-" . Localization::getRegion()]);
         }
+
+        $request_data = array_merge($request->except(["edit", "_token"]), ["application_id" => $application->id]);
+        $membership_form_url = route("membership_form", $request_data);
+
         if ($application->contact === null && $application->company === null) {
             $key = null;
             $authorization = app(\App\Models\Authorization\Authorization::class);
-            $success_url = route("membership_form", ["application_id" => $application->id]) . "#membership-fee";
+            $success_url = $membership_form_url . "#membership-fee";
             if ($authorization instanceof KeyAuthorization && !empty($authorization->key)) {
                 $key = $authorization->key;
             } else {
@@ -376,11 +381,11 @@ class MembershipController extends Controller
                 $file->move(storage_path("metager"), $file->getBasename());
             }
             $application->save();
-            return redirect(route("membership_form", ["application_id" => $application->id]) . "#membership-payment");
+            return redirect($membership_form_url . "#membership-payment");
         } elseif ($application->interval === null) {
             $application->interval = $form_data["interval"];
             $application->save();
-            return redirect(route("membership_form", ["application_id" => $application->id]) . "#membership-payment-method");
+            return redirect($membership_form_url . "#membership-payment-method");
         } elseif ($application->payment_method === null) {
             switch ($form_data["payment-method"]) {
                 case "banktransfer":
@@ -405,11 +410,11 @@ class MembershipController extends Controller
                         $application,
                         $form_data["payment-method"],
                         route("membership_success", ["application_id" => $application->id]),
-                        route("membership_form", ["application_id" => $application->id]) . "#membership-payment-method"
+                        $membership_form_url . "#membership-payment-method"
                     );
             }
 
-            return redirect(route("membership_form", ["application_id" => $application->id]));
+            return redirect($membership_form_url);
         } else {
             return redirect(route("membership_success", ["key" => $application->key]));
         }

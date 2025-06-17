@@ -62,6 +62,14 @@ class MembershipApplication extends Model
             ->whereNotNull("payment_method");
     }
 
+    public function scopeUnfinished(Builder $query)
+    {
+        $finished = MembershipApplication::finished()->get("id");
+        $query
+            ->where("is_update", "=", false)
+            ->whereNotIn("id", $finished);
+    }
+
     /**
      * Scope to query all applications containing all required data
      * @param \Illuminate\Database\Eloquent\Builder $query
@@ -72,16 +80,25 @@ class MembershipApplication extends Model
         $query
             ->where("is_update", "=", true)
             ->whereNotNull("crm_membership")
+            ->whereNotNull("crm_contact")
             ->where(function (Builder $query) {
-                $query->whereHas("contact")->orWhereHas("company")->orWhereNotNull("crm_contact");
+                $query->whereHas("contact")->orWhereHas("company");
             })->where(function (Builder $query) {
                 $query->where(function (Builder $query) {
                     $query->whereNotNull("amount")->wherenotNull("interval")->where(function (Builder $query) {
                         $query->has("reduction", "=", 0)->orWhereRelation("reduction", "expires_at", "!=", null);
                     });
-                })->orWhereNotNull("crm_membership");
+                });
             })
             ->whereNotNull("payment_method");
+    }
+
+    public function scopeUnfinishedUpdateRequests(Builder $query)
+    {
+        $finished = MembershipApplication::updateRequests()->get("id");
+        $query
+            ->where("is_update", "=", true)
+            ->whereNotIn("id", $finished);
     }
 
     /**

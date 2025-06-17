@@ -2,10 +2,10 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -13,13 +13,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
 
 
-class PaymentMethodFailed extends Mailable
+class ApplicationUnfinished extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public MembershipApplication $application;
     public string $name;
-    public array $payments;
+    public string $application_link;
 
     /**
      * Create a new message instance.
@@ -33,9 +32,28 @@ class PaymentMethodFailed extends Mailable
             $this->name = $application->company->company;
             $this->to(new Address($application->company->email, $this->name));
         }
-        $this->application = $application;
-        $this->payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership, 3);
+        $locale = App::getLocale();
+        App::setLocale($application->locale);
+        $parameters = [
+            "type" => "person",
+            "amount" => $application->amount,
+            "interval" => $application->interval,
+            "payment_method" => $application->payment_method
+        ];
+        if ($application->contact !== null) {
+            $parameters["title"] = $application->contact->title;
+            $parameters["firstname"] = $application->contact->first_name;
+            $parameters["lastname"] = $application->contact->last_name;
+            $parameters["email"] = $application->contact->email;
+        } elseif ($application->company !== null) {
+            $parameters["type"] = "company";
+            $parameters["company"] = $application->company->company;
+            $parameters["employees"] = $application->company->employees;
+            $parameters["email"] = $application->company->email;
+        }
+        $this->application_link = route("membership_form", $parameters);
         $this->locale($application->locale);
+        App::setLocale($locale);
     }
 
     /**
@@ -56,7 +74,7 @@ class PaymentMethodFailed extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.membership.payment_method_failed',
+            markdown: 'mail.membership.application_unfinished',
             with: [
                 "header_url" => "https://suma-ev.de"
             ]

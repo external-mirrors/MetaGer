@@ -11,7 +11,10 @@
 @else
 <div class="page-description">@lang('membership.application.update', ["contact_link" => route("contact")])</div>
 @endif
-<form id="membership-form" method="POST" enctype="multipart/form-data">
+@php
+    $application_id = $application !== null && $application->id !== null ? $application->id : null;
+@endphp
+<form id="membership-form" method="POST" enctype="multipart/form-data" action="{{ route("membership_form", array_merge(request()->except("edit"), ["application_id" => $application_id])) }}">
     <input type="hidden" name="_token" value="{{$csrf_token}}" autocomplete="off">
     @php
         $editable = $application === null || ($application->contact === null && $application->company === null);

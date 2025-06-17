@@ -32,6 +32,7 @@ Schedule::command('queue:work --queue=general --stop-when-empty');
 if (app()->environment("production")) {
     Schedule::command('membership:paypal-payments')->hourly()->onOneServer();
 }
+Schedule::command('membership:membership:notify-unfinished')->hourly()->onOneServer();
 
 // Logs Commands
 Schedule::command('logs:create-order')->onOneServer()->dailyAt("06:00");

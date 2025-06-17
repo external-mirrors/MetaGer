@@ -797,8 +797,14 @@ class MembershipController extends Controller
                     $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership);
                     $due_date = Arr::get($payments, "0.due_date");
                     if (now()->diffInDays($due_date) <= 14) {
-                        if (PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id) !== null) {
-
+                        if (($order = PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id)) !== null) {
+                            if ($order !== null) {
+                                // We'll only process one purchase unit since we do not create orders with more than that
+                                $captures = Arr::get($order, "purchase_units.0.payments.captures", []);
+                                foreach ($captures as $capture) {
+                                    CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);
+                                }
+                            }
                         }
                     } else {
                         if (PayPal::VOID_AUTHORIZATION(authorization_id: $application->paypal->authorization_id)) {

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\Membership\ApplicationUnfinished;
+use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
@@ -31,6 +32,15 @@ class MembershipPaymentReminder extends Command
      */
     public function handle()
     {
+        $chargebacks = CiviCrm::FIND_CHARGEBACKS();
+        foreach ($chargebacks as $chargeback) {
+            $mail = new PaymentMethodFailed($chargeback);
+            if (Mail::mailer("membership")->send($mail)) {
+                CiviCrm::UPDATE_MEMBERSHIP_RAW($chargeback, ['Beitrag.Zahlungsweise:label' => 'Banküberweisung', 'Beitrag.IBAN' => '', 'Beitrag.BIC' => '', 'Beitrag.Kontoinhaber' => '', 'Beitrag.PayPal_Vault' => '', 'Beitrag.PayPal_ID' => '']);
+                CiviCrm::MEMBERSHIP_RENEW(true);
+            }
+        }
+
         $first_reminders = CiviCrm::FIND_FIRST_REMINDER();
         foreach ($first_reminders as $first_reminder) {
             $mail = new PaymentReminder($first_reminder, PaymentReminder::REMINDER_STAGE_FIRST);

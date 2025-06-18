@@ -265,6 +265,58 @@ class CiviCrm
         return self::MEMBERSHIP_RESPONSE_TO_APPLICATION($response);
     }
 
+    /**
+     * Finds memberships with chargeback contributions that where not yet handled
+     * @return MembershipApplication[]|null
+     */
+    public static function FIND_CHARGEBACKS(): array|null
+    {
+        $params = [
+            'select' => ['membership.id'],
+            'join' => [['Membership AS membership', 'LEFT', ['contact_id', '=', 'membership.contact_id']]],
+            'where' => [['contribution_status_id:label', 'IN', ['Chargeback', 'Failed']], ['Mitgliedschaft_erneuert.Membership_Renewed', '=', TRUE]],
+            'limit' => 25,
+        ];
+
+        $response = self::API_POST("/Contribution/get", $params);
+        $response = Arr::get($response, "values", []);
+        if ($response === null)
+            return null;
+
+        $membership_ids = [];
+        foreach ($response as $contribution) {
+            $membership_ids[] = Arr::get($contribution, "membership.id");
+        }
+
+        if (sizeof($membership_ids) > 0) {
+            $params = array_merge(self::MEMBERSHIP_FETCH_PARAMS, [
+                'where' => [['id', 'IN', $membership_ids]],
+                'limit' => 25,
+            ]);
+            $response = self::API_POST("/Membership/get", $params);
+            $response = Arr::get($response, "values", []);
+            if ($response === null)
+                return null;
+
+            return self::MEMBERSHIP_RESPONSE_TO_APPLICATION($response);
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * Finds memberships with chargeback contributions that where not yet handled
+     * @return MembershipApplication[]|null
+     */
+    public static function MEMBERSHIP_RENEW(bool $unrenew = false): array|null
+    {
+        $params = [
+            'unrenew' => $unrenew,
+        ];
+        $response = self::API_POST("/Membership/renew", $params);
+        return $response;
+    }
+
     public static function FIND_MEMBERSHIP_APPLICATIONS()
     {
         $params = [

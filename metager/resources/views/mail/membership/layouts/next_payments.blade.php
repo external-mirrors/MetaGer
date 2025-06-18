@@ -10,5 +10,5 @@
 </x-mail::table>
 
 @if(sizeof($payments) > 2 && $payments[0]["amount"] > $payments["1"]["amount"])
-@lang("membership/mails/welcome_mail.membership.next_payments_hint")\
+@lang("membership/mails/welcome_mail.membership.next_payments_hint")
 @endif

@@ -31,6 +31,7 @@ Schedule::command('queue:work --queue=general --stop-when-empty');
 // Membership Commands
 if (app()->environment("production")) {
     Schedule::command('membership:paypal-payments')->hourly()->onOneServer();
+    Schedule::command('membership:payment-reminder')->hourly()->onOneServer();
 }
 Schedule::command('membership:membership:notify-unfinished')->hourly()->onOneServer();
 

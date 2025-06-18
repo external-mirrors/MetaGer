@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
-use App\Mail\Membership\ApplicationUnfinished;
 use App\Mail\Membership\PaymentMethodFailed;
+use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
 use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
@@ -35,9 +35,8 @@ class MembershipController extends Controller
     public function test(Request $request)
     {
 
-        $application = MembershipApplication::find("9f2b01c9-2297-4946-9c2a-60cb3c5a81f1");
-
-        $mail = new ApplicationUnfinished($application);
+        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
+        $mail = new PaymentReminder($application, PaymentReminder::REMINDER_STAGE_SECOND);
         return $mail;
     }
     /**

@@ -25,6 +25,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $key
  * @property string $locale
  * @property boolean $is_update
+ * @property \Carbon\Carbon|null $join_date
+ * @property \Carbon\Carbon|null $start_date
+ * @property \Carbon\Carbon|null $end_date
+ * @property string|null $mastodon_id
  */
 class MembershipApplication extends Model
 {

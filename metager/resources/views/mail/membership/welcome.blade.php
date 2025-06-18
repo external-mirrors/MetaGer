@@ -1,6 +1,10 @@
 <x-mail::message>
 # {{ $contact["addressee_display"] }},
 
+@if(!empty($additional_message))
+{{ $additional_message }}
+@endif
+
 @lang('membership/mails/welcome_mail.general', ["member_count" => $membership_count])
 
 # @lang("membership/mails/welcome_mail.membership.title")

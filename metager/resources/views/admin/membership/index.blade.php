@@ -68,13 +68,35 @@
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_accept") }}">
                                     <input type="hidden" name="id" value="{{ $membership_application->id }}">
-                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default">
+                                    <input type="submit" name="action" value="Annehmen" class="btn btn-default application-accept">
+                                    <dialog>
+                                        <div>
+                                            <label for="message">Zusätzlicher Text für die Willkommensmail (optional)</label>
+                                            <textarea name="message" id="message" rows="10"
+                                                placeholder="Wird als eigener erster Absatz direkt nach dem Namen am Anfang eingefügt."
+                                                required></textarea>
+                                            <input type="submit" name="action" value="Annehmen"
+                                                class="btn btn-success membership-reduction-deny">
+                                            <button class="close-modal btn btn-default" autofocus>Schließen</button>
+                                        </div>
+                                    </dialog>
                                 </form>
                             </td>
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_deny") }}">
                                     <input type="hidden" name="id" value="{{ $membership_application->id }}">
-                                    <input type="submit" name="action" value="Ablehnen" class="btn btn-danger membership-deny">
+                                    <input type="submit" name="action" value="Ablehnen" class="btn btn-danger application-deny">
+                                    <dialog>
+                                        <div>
+                                            <label for="message">Zusätzlicher Text für die Ablehnungsmail (optional)</label>
+                                            <textarea name="message" id="message" rows="10"
+                                                placeholder="Wird als Begründung für die Ablehnung in den Text eingefügt."
+                                                required></textarea>
+                                            <input type="submit" name="action" value="Ablehnen"
+                                                class="btn btn-danger membership-reduction-deny">
+                                            <button class="close-modal btn btn-default" autofocus>Schließen</button>
+                                        </div>
+                                    </dialog>
                                 </form>
                             </td>
                         </tr>

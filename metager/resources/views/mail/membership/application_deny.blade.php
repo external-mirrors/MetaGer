@@ -1,19 +1,22 @@
 <x-mail::message>
 # {{ $name }},
 
-@lang('membership/mails/reduction_deny.description')
-
+@if(empty($message))
+@lang(key: 'membership/mails/application_deny.description')
+@else
+@lang(key: 'membership/mails/application_deny.description_reason')
 <x-mail::panel>
 
 {{ $message }}
 
 </x-mail::panel>
+@endif
 
-@lang('membership/mails/reduction_deny.continue')
+@lang('membership/mails/application_deny.continue')
 
-<x-mail::button :url="route('membership_form', ['application_id' => $application_id])" color="success">
+<x-mail::button :url="route('membership_form')" color="success">
 
-@lang('membership/mails/reduction_deny.continue_button')
+@lang('membership/mails/application_deny.continue_button')
 
 </x-mail::button>
 

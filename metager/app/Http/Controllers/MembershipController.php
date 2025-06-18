@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
@@ -35,8 +36,8 @@ class MembershipController extends Controller
     public function test(Request $request)
     {
 
-        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2283"), "0");
-        $mail = new PaymentReminder($application, PaymentReminder::REMINDER_STAGE_SECOND);
+        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2290"), "0");
+        $mail = new ApplicationDeny($application, "Unter dem Namen Max Mustermann können wir Sie leider nicht aufnehmen.");
         return $mail;
     }
     /**
@@ -832,7 +833,7 @@ class MembershipController extends Controller
         }
 
         if (!$application->is_update) {
-            $mail = new WelcomeMail($application->crm_membership);
+            $mail = new WelcomeMail($application->crm_membership, $request->input("message", ""));
             if (Mail::mailer("membership")->send($mail) === null) {
                 return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
             }
@@ -860,6 +861,9 @@ class MembershipController extends Controller
             $application->paypal->delete();
         }
         $application->delete();
+
+        $mail = new ApplicationDeny($application, $request->input("message", ""));
+        Mail::mailer("membership")->send($mail);
 
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }

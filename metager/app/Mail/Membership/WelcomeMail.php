@@ -21,6 +21,7 @@ class WelcomeMail extends Mailable
 
     public int $membership_count;
     public MembershipApplication $membership;
+    public string $additional_message;
     public array $payments;
     public array $contact;
     public string $plugin_firefox_url;
@@ -29,9 +30,10 @@ class WelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(int $membership_id)
+    public function __construct(int $membership_id, string $additional_message = "")
     {
         $this->membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+        $this->additional_message = $additional_message;
         if ($this->membership === null) {
             throw new Exception("Couldn't find membership with ID $membership_id");
         }
@@ -54,7 +56,7 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __("membership/welcome_mail.subject"),
+            subject: __("membership/mails/welcome_mail.subject"),
             from: new Address("verein@metager.de", "SUMA-EV"),
             to: [new Address($this->contact["email_primary.email"], $this->contact["addressee_display"])],
             // bcc: [new Address("verein@metager.de", "SUMA-EV")],

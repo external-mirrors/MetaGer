@@ -1,4 +1,41 @@
 <?php
-
 return [
+    'subject' => "[SUMA-EV & MetaGer] Velkommen til SUMA-EV",
+    'general' => "Velkommen til SUMA-EV! Må jeg først spørge, hvordan du fandt frem til os? Jeg går ud fra, at det var gennem vores søgemaskine MetaGer? Sammen med dig har foreningen nu :member_count medlemmer fra en lang række områder. Nedenfor er der nogle yderligere forklaringer og tips, som er mere end nyttige for SUMA-EV.",
+    'membership' => [
+        'description' => 'Denne e-mail er også en bekræftelse på dit medlemskab. Bekræft venligst kort, at du har modtaget denne e-mail. Dit medlemskontingent på **:beløb€** forfalder første gang til betaling på **:forfaldsdato**.',
+        'banktransfer' => 'Overfør venligst dette **:interval** til følgende konto med angivelse af anvendelsesformål (**:mandat**):',
+        'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandat** fra din konto **:iban**.',
+        'paypal' => 'Vi debiterer dette **:interval** fra den angivne PayPal-konto.',
+        'card' => 'Vi trækker dette **:interval** fra det angivne kreditkort.',
+        'mandate' => 'Formål med brug',
+        'next_payments' => 'De næste bidrag',
+        'next_payments_hint' => 'Den næste betaling kan omfatte yderligere gebyrer fra tidligere mislykkede betalinger. Hvis du har spørgsmål om dit gebyr, så send os en e-mail.',
+        'due' => 'Forfaldsdato',
+        'amount' => 'Bidrag',
+        'now' => 'Og nu',
+        'interval' => [
+            'halbjährlich' => 'halvårligt',
+        ],
+    ],
+    'websites' => [
+        'description' => 'På [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finder du mange af de tidligere rundskrivelser og nyhedsbreve. Du kan finde tidligere pressemeddelelser fra SUMA-EV på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du er også meget velkommen til at blive skrevet op på vores [offentlige medlemsliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). I så fald skal du bare give os kort besked.',
+    ],
+    'key' => [
+        'title' => 'Søgning med MetaGer',
+        'extension' => 'Vores webudvidelser til',
+        'description_first' => 'For at konfigurere søgningen med MetaGer skal du bruge følgende nøgle, som du kan bruge til at logge ind på et hvilket som helst antal enheder. Den kan bruges med det samme. Du kan finde alt om den på vores [info-sider](:infos). Din nye medlemsnøgle vil automatisk blive fyldt op af os hver måned til en værdi af **€10,00** uden ekstra omkostninger. Nøglen er',
+        'description_second' => 'For at starte skal du blot gå til vores [startside](:startside_link). Indtast ovenstående nøgle der, og send den ved at klikke på "Registrer med nøgle". Du kan gøre det samme ved at hente følgende URL til indstillinger i din webbrowser:',
+        'description_third' => 'Hvis du har deaktiveret cookies i din browser eller regelmæssigt sletter alle webstedsdata i din browser, anbefaler vi, at du installerer vores browserudvidelse',
+        'description_fourth' => 'I et sådant tilfælde sikrer dette, at du kan fortsætte med at bruge MetaGer uden at logge ind igen og muliggør verificerbar anonymitet i websøgninger ved hjælp af [anonymous token](:anonymous_token_link).',
+        'description_fifth' => 'Alternativt kan du også oprette ovenstående URL som et bogmærke for at få hurtig adgang eller gemme nøglen i en adgangskodeadministrator. Men med standardindstillingerne i de fleste browsere vil du forblive permanent logget ind, selv uden en browserudvidelse.',
+        'description_sixth' => 'Hvis alt gik godt, vil du se MetaGer-søgefeltet og et grønt nøglesymbol. Klik på dette nøglesymbol én gang. Så ser du alle egenskaber for din nøgle. Du vil også se flere muligheder for at overføre din nøgle til andre enheder. Antallet af enheder er ikke begrænset. Og tjek også de indstillinger, du kan få adgang til via MetaGer-menuen: andre søgemaskiner, sortlister, nattilstand og meget mere.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon - en del af en stor familie',
+        'description_first' => 'SUMA-EV er repræsenteret i det alternative og distribuerede sociale netværk Mastodon med sin egen [konto](https://suma-ev.social/@MetaGer). Til dette formål driver vi en [instans](https://suma-ev.social/) på vores egne servere. Som medlem har du også den eksklusive mulighed for at deltage i [Fediverse](https://de.wikipedia.org/wiki/Mastodon_(Software)) via denne instans. Du vil derefter modtage en brugerkonto, der slutter på @suma-ev.social.',
+        'description_second' => 'Målet er at facilitere en livlig udveksling: for eksempel om alle emner, der vedrører vidensfrihed, overvågning og privatliv, men selvfølgelig også om generelle emner, der ikke har noget at gøre med SUMA-EV, MetaGer og beskyttelse af privatlivets fred.',
+        'description_third' => 'For at komme i gang er du velkommen til at oprette en konto på suma-ev.social med e-mailadressen **:email**.',
+    ],
+    'greeting' => 'Med venlig hilsen',
 ];

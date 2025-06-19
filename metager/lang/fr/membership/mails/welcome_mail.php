@@ -14,12 +14,15 @@ return [
         'now' => 'Maintenant',
         'interval' => [
             'halbjährlich' => 'semestrielle',
+            'jährlich' => 'annuellement',
         ],
+        'title' => 'L\'adhésion',
     ],
     'subject' => "[SUMA-EV & MetaGer] Bienvenue à SUMA-EV",
     'general' => "Bienvenue à SUMA-EV ! Puis-je d'abord vous demander comment vous nous avez découvert ? Je suppose que c'est grâce à notre moteur de recherche MetaGer ? Avec vous, l'association compte désormais :member_count des membres issus des domaines les plus divers. Vous trouverez ci-dessous des explications et des conseils plus qu'utiles pour SUMA-EV.",
     'websites' => [
         'description' => 'Sur [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/), vous trouverez un grand nombre de circulaires et de bulletins d\'information antérieurs. Vous trouverez les communiqués de presse antérieurs de SUMA-EV sur [suma-ev.de/presse/](https://suma-ev.de/presse/). Vous pouvez également vous inscrire sur notre [liste de membres publics] (https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Dans ce cas, il vous suffit de nous en informer brièvement.',
+        'title' => 'L\'adhésion',
     ],
     'key' => [
         'title' => 'Recherche avec MetaGer',

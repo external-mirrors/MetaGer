@@ -14,6 +14,8 @@ return [
         'due' => 'Termin płatności',
         'interval' => [
             'halbjährlich' => 'półroczny',
+            'monatlich' => 'miesięcznik',
+            'vierteljährlich' => 'kwartalnik',
         ],
     ],
     'subject' => "[SUMA-EV & MetaGer] Witamy w SUMA-EV",

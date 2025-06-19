@@ -109,7 +109,6 @@ class PayPal
                 Arr::set($order_data, "payment_source.$payment_source.stored_credentials", [
                     "payment_initiator" => "MERCHANT",
                     "payment_type" => "RECURRING",
-                    "usage" => "SUBSEQUENT"
                 ]);
             }
         } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {

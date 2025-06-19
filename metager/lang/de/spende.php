@@ -211,6 +211,7 @@ return [
                 'address-postal-code' => 'Post-/Postleitzahl',
                 'address' => 'Rechnungsadresse (optional)',
                 'hint' => 'Ihre Rechnungsadresse ist nicht erforderlich (wir brauchen sie nicht), aber einige Kreditkarten verlangen eine Rechnungsadresse zur Adressüberprüfung und lehnen Ihre Karte ab, wenn sie nicht angegeben wird.',
+                'address-admin-area-line-1' => 'Stadt',
             ],
             'loading' => 'Laden des Kreditkartenformulars',
         ],

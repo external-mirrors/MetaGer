@@ -19,6 +19,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Direktdebitering",
             'card' => "Kreditkort",
+            'banktransfer' => "Banköverföring",
+            'paypal' => "PayPal",
         ],
         'payment' => [
             'interval' => [

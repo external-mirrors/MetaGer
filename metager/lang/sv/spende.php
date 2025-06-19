@@ -223,6 +223,7 @@ return [
                 'address-admin-area-line-2' => 'Stat',
                 'address-country-code' => 'Landskod (t.ex. US, DE, GB)',
                 'address-postal-code' => 'Postnummer/Zipnummer',
+                'address-admin-area-line-1' => 'Stad',
             ],
         ],
         'processing' => 'Betalningen är genomförd',

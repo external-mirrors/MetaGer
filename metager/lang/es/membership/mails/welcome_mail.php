@@ -16,6 +16,7 @@ return [
             'halbjährlich' => 'semestral',
             'monatlich' => 'mensualmente',
             'vierteljährlich' => 'trimestral',
+            'jährlich' => 'anualmente',
         ],
         'title' => 'membresía',
     ],

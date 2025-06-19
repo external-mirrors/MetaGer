@@ -7,6 +7,7 @@ use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
+use App\Mail\Membership\ReductionReminder;
 use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
@@ -35,9 +36,8 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-
         $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2290"), "0");
-        $mail = new ApplicationDeny($application, "Unter dem Namen Max Mustermann können wir Sie leider nicht aufnehmen.");
+        $mail = new PaymentReminder($application, PaymentReminder::REMINDER_STAGE_ABORTED);
         return $mail;
     }
     /**
@@ -52,6 +52,7 @@ class MembershipController extends Controller
             $application = null;
             if ($application_id !== null) {
                 $application = MembershipApplication::find($application_id);
+                $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
                 if ($application === null) {
                     $edit_data = json_decode(base64_decode($application_id), true);
                     if ($edit_data === null) {
@@ -69,14 +70,14 @@ class MembershipController extends Controller
                     }
                     $application = MembershipApplication::where("crm_membership", "=", $edit_data["crm_membership"])->first();
                     if ($application !== null) {
-                        return redirect(route("membership_form", ["application_id" => $application->id]));
+                        return redirect(route("membership_form", array_merge($request_data, ["application_id" => $application->id])));
                     }
                     $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $edit_data["crm_membership"]), "0");
                     if ($application === null) {
                         return redirect(route("membership_form"));
                     }
                 }
-                $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
+
                 // Do not allow edits for existing contacts
                 if (($application === null || !$application->is_update) && $request->input("edit", "") === "contact") {
                     if ($application->contact !== null) {
@@ -168,7 +169,7 @@ class MembershipController extends Controller
     {
         $application = null;
         if ($application_id !== null) {
-            $application = MembershipApplication::finished()->where("id", "=", $application_id)->first();
+            $application = MembershipApplication::finishedUser()->where("id", "=", $application_id)->first();
             if ($application === null) {
                 return redirect(route("membership_form", ["application_id" => $application_id]));
             }
@@ -617,7 +618,7 @@ class MembershipController extends Controller
 
     public function adminIndex(Request $request)
     {
-        $membership_applications = MembershipApplication::finished()->get();
+        $membership_applications = MembershipApplication::finishedAdmin()->get();
         $membership_update_requests = MembershipApplication::updateRequests()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
         return response(view(
@@ -722,7 +723,7 @@ class MembershipController extends Controller
         $application =
             $request->filled("update-request") ?
             MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
-            MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+            MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
@@ -849,7 +850,7 @@ class MembershipController extends Controller
         $application =
             $request->filled("update-request") ?
             MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
-            MembershipApplication::finished()->where("id", "=", $request->input("id", ""))->first();
+            MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }

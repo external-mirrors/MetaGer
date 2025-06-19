@@ -29,7 +29,7 @@
 
 @lang('membership/mails/payment_reminder.edit')
 
-<x-mail::button :url="route('membership_form', ['application_id' => App\Models\Membership\CiviCrm::GET_EDIT_ID($application->crm_membership, now()->addWeeks(2))])" color="success">
+<x-mail::button :url="route('membership_form', ['application_id' => App\Models\Membership\CiviCrm::GET_EDIT_ID($application->crm_membership, $reminder_stage !== \App\Mail\Membership\PaymentReminder::REMINDER_STAGE_ABORTED ? now()->addWeeks(2) : now()->addYears(2))])" color="success">
 
 @lang('membership/mails/payment_reminder.edit_button')
 

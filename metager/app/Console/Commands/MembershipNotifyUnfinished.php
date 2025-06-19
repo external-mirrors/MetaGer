@@ -30,7 +30,7 @@ class MembershipNotifyUnfinished extends Command
     public function handle()
     {
         // Delete unfinished applications but send a notification to the user
-        $unfinished = MembershipApplication::unfinished()->where("updated_at", "<", now()->subHours(value: 6))->get();
+        $unfinished = MembershipApplication::unfinishedUser()->where("updated_at", "<", now()->subHours(value: 6))->get();
         foreach ($unfinished as $unfinished_application) {
             try {
                 $mail = new ApplicationUnfinished($unfinished_application);

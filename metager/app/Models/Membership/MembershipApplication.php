@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property string $id 
- * @property MembershipContact $contact
- * @property MembershipCompany $company
- * @property MembershipReduction $reduction
- * @property MembershipPaymentDirectdebit $directdebit
- * @property MembershipPaymentPaypal $paypal
+ * @property MembershipContact|null $contact
+ * @property MembershipCompany|null $company
+ * @property MembershipReduction|null $reduction
+ * @property MembershipPaymentDirectdebit|null $directdebit
+ * @property MembershipPaymentPaypal|null $paypal
  * @property int $crm_contact
  * @property int $crm_membership
  * @property float $amount
@@ -46,11 +46,30 @@ class MembershipApplication extends Model
     ];
 
     /**
-     * Scope to query all applications containing all required data
+     * Scope to query all applications containing all required data for the user to enter
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return void
      */
-    public function scopeFinished(Builder $query)
+    public function scopeFinishedUser(Builder $query)
+    {
+        $query
+            ->where("is_update", "=", false)
+            ->where(function (Builder $query) {
+                $query->whereHas("contact")->orWhereHas("company")->orWhereNotNull("crm_contact");
+            })->where(function (Builder $query) {
+                $query->where(function (Builder $query) {
+                    $query->whereNotNull("amount")->wherenotNull("interval");
+                })->orWhereNotNull("crm_membership");
+            })
+            ->whereNotNull("payment_method");
+    }
+
+    /**
+     * Scope to query all applications containing all required data for the application to be accepted
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return void
+     */
+    public function scopeFinishedAdmin(Builder $query)
     {
         $query
             ->where("is_update", "=", false)
@@ -66,9 +85,9 @@ class MembershipApplication extends Model
             ->whereNotNull("payment_method");
     }
 
-    public function scopeUnfinished(Builder $query)
+    public function scopeUnfinishedUser(Builder $query)
     {
-        $finished = MembershipApplication::finished()->get("id");
+        $finished = MembershipApplication::finishedUser()->get("id");
         $query
             ->where("is_update", "=", false)
             ->whereNotIn("id", $finished);
@@ -190,11 +209,8 @@ class MembershipApplication extends Model
             $this->locale !== null &&
             $this->amount !== null &&
             $this->payment_method !== null &&
-            $this->payment_reference !== null && (
-            $this->amount >= 5 ||
-            ($this->reduction !== null &&
-                $this->reduction->expires_at !== null)
-        ) &&
+            $this->payment_reference !== null &&
+            ($this->amount >= 5 || $this->reduction !== null) &&
             $this->interval !== null;
     }
 

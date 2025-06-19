@@ -2,7 +2,6 @@
 
 namespace App\Mail\Membership;
 
-use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,19 +12,17 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Address;
 
 
-class ReductionDeny extends Mailable
+class ReductionReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public string $application_id;
+    public MembershipApplication $application;
     public string $name;
-    public string $message;
-    public string $update_link;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(MembershipApplication $application, string $message)
+    public function __construct(MembershipApplication $application)
     {
         if ($application->contact !== null) {
             $this->name = $application->contact->first_name . " " . $application->contact->last_name;
@@ -34,10 +31,8 @@ class ReductionDeny extends Mailable
             $this->name = $application->company->company;
             $this->to(new Address($application->company->email, $this->name));
         }
-        $this->application_id = $application->id;
+        $this->application = $application;
         $this->locale($application->locale);
-        $this->message = $message;
-        $this->update_link = $application->is_update ? route("membership_form", ["application_id" => CiviCrm::GET_EDIT_ID($application->crm_membership), "edit" => "membership-fee"]) : route("membership_form", ["application_id" => $application->id]);
     }
 
     /**
@@ -46,7 +41,7 @@ class ReductionDeny extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: __("membership/mails/reduction_deny.subject"),
+            subject: __("membership/mails/reduction_reminder.subject"),
             from: new Address("verein@metager.de", "SUMA-EV"),
             // bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
@@ -58,7 +53,7 @@ class ReductionDeny extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.membership.reduction_deny',
+            markdown: 'mail.membership.reduction_reminder',
             with: [
                 "header_url" => "https://suma-ev.de"
             ]

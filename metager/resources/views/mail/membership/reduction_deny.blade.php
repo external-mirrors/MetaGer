@@ -11,7 +11,7 @@
 
 @lang('membership/mails/reduction_deny.continue')
 
-<x-mail::button :url="route('membership_form', ['application_id' => $application_id])" color="success">
+<x-mail::button :url="$update_link" color="success">
 
 @lang('membership/mails/reduction_deny.continue_button')
 

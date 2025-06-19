@@ -266,6 +266,27 @@ class CiviCrm
     }
 
     /**
+     * Finds memberships due for reduction prove
+     * @return MembershipApplication[]|null
+     */
+    public static function FIND_REDUCTION_REMINDER(): array|null
+    {
+        $end_date = now()->addDays(12)->addDays(7);
+        $params = self::MEMBERSHIP_FETCH_PARAMS;
+        $params["where"] = array_merge(
+            $params["where"],
+            [['Beitrag.Zahlungsstatus:label', '=', 'Okay'], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.Monatlicher_Mitgliedsbeitrag', '<', 5], ['Beitrag.Erm_igt_bis', '<', now()->format("Y-m-d")]]
+        );
+
+        $response = self::API_POST("/Membership/get", $params);
+        $response = Arr::get($response, "values", null);
+        if ($response === null)
+            return null;
+
+        return self::MEMBERSHIP_RESPONSE_TO_APPLICATION($response);
+    }
+
+    /**
      * Finds memberships with chargeback contributions that where not yet handled
      * @return MembershipApplication[]|null
      */
@@ -441,7 +462,7 @@ class CiviCrm
         return $new_membership;
     }
 
-    public static function UPDATE_MEMBERSHIP(MembershipApplication $application): array|null
+    public static function UPDATE_MEMBERSHIP(MembershipApplication $application, $remove_membership_fields = []): array|null
     {
         $params = [
             'where' => [['id', '=', $application->crm_membership]],
@@ -511,6 +532,11 @@ class CiviCrm
         if ($application->reduction !== null && $application->reduction->expires_at !== null) {
             $params["values"]['Beitrag.Erm_igt_bis'] = $application->reduction->expires_at->format("Y-m-d");
         }
+
+        foreach ($remove_membership_fields as $membership_field) {
+            $params["values"][$membership_field] = "";
+        }
+
         if (!empty($params['values'])) {
             $response = self::API_POST("/Membership/update", $params);
             return $response;

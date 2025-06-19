@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\Membership\ApplicationUnfinished;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
+use App\Mail\Membership\ReductionReminder;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use Exception;
@@ -38,6 +39,16 @@ class MembershipPaymentReminder extends Command
             if (Mail::mailer("membership")->send($mail)) {
                 CiviCrm::UPDATE_MEMBERSHIP_RAW($chargeback, ['Beitrag.Zahlungsweise:label' => 'Banküberweisung', 'Beitrag.IBAN' => '', 'Beitrag.BIC' => '', 'Beitrag.Kontoinhaber' => '', 'Beitrag.PayPal_Vault' => '', 'Beitrag.PayPal_ID' => '']);
                 CiviCrm::MEMBERSHIP_RENEW(true);
+            }
+        }
+
+        $reductions = CiviCrm::FIND_REDUCTION_REMINDER();
+        foreach ($reductions as $reduction) {
+            $mail = new ReductionReminder($reduction);
+            if (Mail::mailer("membership")->send($mail)) {
+                $reduction->reduction = null;
+                $reduction->amount = 5;
+                CiviCrm::UPDATE_MEMBERSHIP($reduction, ['Beitrag.Erm_igt_bis']);
             }
         }
 

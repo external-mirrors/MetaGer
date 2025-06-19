@@ -165,6 +165,7 @@ return [
                 'address-admin-area-line-2' => 'Stato',
                 'address-country-code' => 'Codice paese (es. US, DE, GB)',
                 'address-postal-code' => 'Codice postale',
+                'address-admin-area-line-1' => 'Città',
             ],
         ],
         'errors' => [

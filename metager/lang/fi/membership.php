@@ -21,6 +21,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Suoraveloitus",
             'card' => "Luottokortti",
+            'banktransfer' => "Pankkisiirto",
+            'paypal' => "PayPal",
         ],
         'payment' => [
             'interval' => [

@@ -57,7 +57,7 @@ return [
         "key" => env("WEBDRIVER_KEY", ""),
     ],
     "membership" => [
-        "membership_id_testing" => env("MEMBERSHIP_TESTING_ID", 2290),
+        "membership_id_testing" => env("MEMBERSHIP_TESTING_ID", ""),
         "notification_address" => env("MEMBERSHIP_NOTIFICATION_EMAIL", "")
     ],
     "paypal" => [

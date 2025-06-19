@@ -441,7 +441,7 @@ class MembershipController extends Controller
                 $order_id = $request->input("resource.metadata.order_id");
                 $vault_id = $request->input("resource.id");
                 if ($order_id !== null) {
-                    $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->first();
+                    $paypal = MembershipPaymentPaypal::where("order_id", "=", $order_id)->whereNotNull("application_id")->first();
                     if ($paypal !== null) {
                         $paypal->vault_id = $vault_id;
                         $paypal->save();

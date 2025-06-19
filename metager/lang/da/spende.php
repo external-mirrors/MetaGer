@@ -211,6 +211,7 @@ return [
                 'address-postal-code' => 'Postnummer',
                 'address' => 'Faktureringsadresse (valgfrit)',
                 'hint' => 'Din faktureringsadresse er ikke påkrævet (vi har ikke brug for den), men nogle kreditkort kræver en faktureringsadresse til adressevalidering og afviser dit kort, hvis den ikke oplyses.',
+                'address-admin-area-line-1' => 'By',
             ],
             'loading' => 'Indlæsning af kreditkortformular',
         ],

@@ -16,10 +16,13 @@ return [
         'now' => 'Og nu',
         'interval' => [
             'halbjährlich' => 'halvårligt',
+            'jährlich' => 'hvert år',
         ],
+        'title' => 'Medlemskab',
     ],
     'websites' => [
         'description' => 'På [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finder du mange af de tidligere rundskrivelser og nyhedsbreve. Du kan finde tidligere pressemeddelelser fra SUMA-EV på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du er også meget velkommen til at blive skrevet op på vores [offentlige medlemsliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). I så fald skal du bare give os kort besked.',
+        'title' => 'Medlemskab',
     ],
     'key' => [
         'title' => 'Søgning med MetaGer',

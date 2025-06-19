@@ -14,6 +14,8 @@ return [
         'now' => 'Och nu',
         'interval' => [
             'halbjährlich' => 'var sjätte månad',
+            'monatlich' => 'månadsvis',
+            'vierteljährlich' => 'kvartalsvis',
         ],
     ],
     'key' => [

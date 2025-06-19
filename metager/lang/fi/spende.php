@@ -211,6 +211,7 @@ return [
                 'address-postal-code' => 'Postinumero/osoite',
                 'hint' => 'Laskutusosoitettasi ei tarvita (emme tarvitse sitä), mutta jotkin luottokortit vaativat laskutusosoitteen osoitteen vahvistamista varten ja hylkäävät korttisi, jos sitä ei ole annettu.',
                 'address-line-1' => 'Osoiterivi 1',
+                'address-admin-area-line-1' => 'Kaupunki',
             ],
             'loading' => 'Ladataan luottokorttilomake',
         ],

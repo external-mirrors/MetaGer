@@ -4,4 +4,5 @@ return [
     'vault' => [
         'description' => "Medlemsavgift SUMA-EV - Förfaller till betalning vid valt betalningsintervall.",
     ],
+    'default_softdescription' => "Medlemsavgift",
 ];

@@ -26,8 +26,12 @@ return [
             'interval' => [
                 'six-monthly' => "Puolivuosittain",
                 'annual' => "vuosittain",
+                'monthly' => "kuukausittain",
+                'quarterly' => "neljännesvuosittain",
             ],
         ],
+        'name' => 'Nimi',
+        'email' => 'Sähköpostiosoite',
     ],
     'key' => [
         'description' => 'MetaGerin käyttämiseen käytetään seuraavaa avainta, jota me täydennämme. Jos olit jo kirjautunut sisään, käytettiin olemassa olevaa avaintasi.',

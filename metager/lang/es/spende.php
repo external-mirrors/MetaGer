@@ -212,6 +212,7 @@ return [
                 'address-admin-area-line-2' => 'Estado',
                 'address-country-code' => 'Código de país (ej. US, DE, GB)',
                 'address-postal-code' => 'Código postal',
+                'address-admin-area-line-1' => 'Ciudad',
             ],
             'loading' => 'Cargando formulario de tarjeta de crédito',
         ],

@@ -20,6 +20,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Polecenie zapłaty",
             'card' => "Karta kredytowa",
+            'banktransfer' => "Przelew bankowy",
+            'paypal' => "PayPal",
         ],
         'payment' => [
             'interval' => [

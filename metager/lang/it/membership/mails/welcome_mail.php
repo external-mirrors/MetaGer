@@ -18,6 +18,8 @@ return [
         'interval' => [
             'halbjährlich' => 'semestrale',
             'jährlich' => 'annualmente',
+            'monatlich' => 'mensile',
+            'vierteljährlich' => 'trimestrale',
         ],
         'title' => 'Soci',
     ],

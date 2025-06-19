@@ -25,8 +25,12 @@ return [
             'interval' => [
                 'six-monthly' => "Co pół roku",
                 'annual' => "rocznie",
+                'monthly' => "miesięcznik",
+                'quarterly' => "kwartalnik",
             ],
         ],
+        'name' => 'Nazwa',
+        'email' => 'Adres e-mail',
     ],
     'key' => [
         'description' => 'Aby korzystać z MetaGer, następujący klucz jest używany i doładowywany przez nas. Jeśli byłeś już zalogowany, Twój istniejący klucz został użyty.',

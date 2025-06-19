@@ -17,6 +17,8 @@ return [
         'interval' => [
             'halbjährlich' => 'halvårligt',
             'jährlich' => 'hvert år',
+            'monatlich' => 'månedligt',
+            'vierteljährlich' => 'kvartalsvis',
         ],
         'title' => 'Medlemskab',
     ],

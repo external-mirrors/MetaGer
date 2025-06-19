@@ -104,8 +104,14 @@ class PayPal
             }
             $custom_id = $application->payment_reference;
             $invoice_id = $custom_id;
-            if ($intent === self::INTENT_CAPTURE)
+            if ($intent === self::INTENT_CAPTURE) {
                 Arr::set($order_data, "payment_source.$payment_source.vault_id", $application->paypal->vault_id);
+                Arr::set($order_data, "payment_source.$payment_source.stored_credentials", [
+                    "payment_initiator" => "MERCHANT",
+                    "payment_type" => "RECURRING",
+                    "usage" => "SUBSEQUENT"
+                ]);
+            }
         } elseif ($application->payment_reference !== null && $application->amount !== null && $application->interval !== null) {
             $quantity = match ($application->interval) {
                 "monthly" => 1,

@@ -33,9 +33,12 @@ return [
         'now' => 'Nyt',
         'interval' => [
             'halbjährlich' => 'puolivuosittain',
+            'jährlich' => 'vuosittain',
         ],
+        'title' => 'Jäsenyys',
     ],
     'websites' => [
         'description' => 'Osoitteessa [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) on useita aiempia kiertokirjeitä ja uutiskirjeitä. Aiemmat SUMA-EV:n lehdistötiedotteet löydät osoitteesta [suma-ev.de/presse/](https://suma-ev.de/presse/). Olette myös erittäin tervetulleita saamaan merkinnän [julkiseen jäsenluetteloon](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Ilmoita tässä tapauksessa vain lyhyesti.',
+        'title' => 'Jäsenyys',
     ],
 ];

@@ -26,8 +26,12 @@ return [
             'interval' => [
                 'six-monthly' => "Semestrale",
                 'annual' => "annualmente",
+                'monthly' => "mensile",
+                'quarterly' => "trimestrale",
             ],
         ],
+        'email' => 'Indirizzo e-mail',
+        'name' => 'Nome',
     ],
     'key' => [
         'description' => 'Per utilizzare MetaGer, viene utilizzata la seguente chiave, che viene ricaricata da noi. Se eravate già connessi, viene utilizzata la vostra chiave esistente.',

@@ -211,6 +211,7 @@ return [
                 'address-postal-code' => 'Code postal',
                 'address-line-1' => 'Ligne d\'adresse 1',
                 'address-line-2' => 'Ligne d\'adresse 2',
+                'address-admin-area-line-1' => 'Ville',
             ],
             'loading' => 'Chargement du formulaire de carte de crédit',
         ],

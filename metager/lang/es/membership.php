@@ -23,15 +23,21 @@ return [
             'interval' => [
                 'six-monthly' => "Semestral",
                 'annual' => "anualmente",
+                'quarterly' => "trimestral",
+                'monthly' => "mensualmente",
             ],
         ],
         'payment_methods' => [
             'directdebit' => "Domiciliación bancaria",
             'card' => "Tarjeta de crédito",
+            'banktransfer' => "Transferencia bancaria",
+            'paypal' => "PayPal",
         ],
         'company' => "Nombre de la empresa",
         'payment_method' => "Forma de pago",
         'amount' => "Cuota de afiliación",
+        'email' => 'Correo electrónico',
+        'name' => 'Nombre',
     ],
     'success' => 'Muchas gracias por enviar su solicitud de afiliación. La tramitaremos lo antes posible. Le enviaremos un correo electrónico con más información a la dirección indicada.',
 ];

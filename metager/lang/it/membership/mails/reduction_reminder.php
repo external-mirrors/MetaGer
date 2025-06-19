@@ -3,5 +3,5 @@ return [
     'subject' => '',
     'description' => "",
     'continue' => "",
-    'continue_button' => "",
+    'continue_button' => "Aggiornamento dei soci",
 ];

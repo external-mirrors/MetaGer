@@ -24,6 +24,8 @@ return [
             'interval' => [
                 'six-monthly' => "Halvårligt",
                 'annual' => "hvert år",
+                'quarterly' => "kvartalsvis",
+                'monthly' => "månedligt",
             ],
         ],
         'payment_methods' => [
@@ -33,5 +35,7 @@ return [
         'company' => "Virksomhedens navn",
         'payment_method' => "Betalingsmetode",
         'amount' => "Medlemskontingent",
+        'email' => 'E-mail-adresse',
+        'name' => 'Navn',
     ],
 ];

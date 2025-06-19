@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
@@ -43,10 +44,13 @@ class PaymentMethodFailed extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = __("membership/mails/payment_method_failed.subject");
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: __("membership/mails/payment_method_failed.subject"),
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

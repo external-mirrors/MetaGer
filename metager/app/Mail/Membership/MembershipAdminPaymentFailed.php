@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -28,11 +29,10 @@ class MembershipAdminPaymentFailed extends Mailable
     {
         if ($application->contact !== null) {
             $this->name = $application->contact->first_name . " " . $application->contact->last_name;
-            $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
         } else {
             $this->name = $application->company->company;
-            $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
         }
+        $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
         $this->locale($application->locale);
         $this->application = $application;
         $order_string = json_encode($order, JSON_PRETTY_PRINT);
@@ -49,8 +49,11 @@ class MembershipAdminPaymentFailed extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = "[SUMA-EV] PayPal Zahlung fehlgeschlagen";
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: "[SUMA-EV] PayPal Zahlung fehlgeschlagen",
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
         );
     }

@@ -61,10 +61,13 @@ class ApplicationUnfinished extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = __("membership/mails/application_unfinished.subject");
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: __("membership/mails/payment_method_failed.subject"),
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

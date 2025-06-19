@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Localization;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
@@ -55,11 +56,14 @@ class WelcomeMail extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = __("membership/mails/welcome_mail.subject");
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: __("membership/mails/welcome_mail.subject"),
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
             to: [new Address($this->contact["email_primary.email"], $this->contact["addressee_display"])],
-            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

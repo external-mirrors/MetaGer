@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -33,7 +34,9 @@ class MembershipAdminApplicationNotification extends Mailable
         $this->updates = $updates;
         $this->reductions = $reductions;
 
-        $this->to("dominik@suma-ev.de", "SUMA-EV Vorstand");
+        $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         $this->subject($subject);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App;
 use App\Mail\Membership\MembershipAdminApplicationNotification;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Console\Command;
@@ -40,6 +41,7 @@ class MembershipAdminNotifyApplications extends Command
         if (empty($subject)) {
             $subject = "[SUMA-EV] Unbearbeitete Mitgliedsanträge";
         }
+
         $mail = new MembershipAdminApplicationNotification($finished, $updates, $reductions, $subject);
         Mail::mailer("membership")->send($mail);
     }

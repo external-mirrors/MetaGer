@@ -55,14 +55,17 @@ class PaymentReminder extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = match ($this->reminder_stage) {
+            self::REMINDER_STAGE_FIRST => __("membership/mails/payment_reminder.subject.first"),
+            self::REMINDER_STAGE_SECOND => __("membership/mails/payment_reminder.subject.second", ['date' => (clone $this->application->end_date)->addMonath(1)->isoFormat("L")]),
+            self::REMINDER_STAGE_ABORTED => __("membership/mails/payment_reminder.subject.expired")
+        };
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: match ($this->reminder_stage) {
-                self::REMINDER_STAGE_FIRST => __("membership/mails/payment_reminder.subject.first"),
-                self::REMINDER_STAGE_SECOND => __("membership/mails/payment_reminder.subject.second", ['date' => (clone $this->application->end_date)->addMonath(1)->isoFormat("L")]),
-                self::REMINDER_STAGE_ABORTED => __("membership/mails/payment_reminder.subject.expired")
-            },
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Mail\Membership;
 
+use App;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -40,10 +41,13 @@ class ReductionReminder extends Mailable
      */
     public function envelope(): Envelope
     {
+        $subject = __("membership/mails/reduction_reminder.subject");
+        if (!App::is("production"))
+            $subject = "[**TEST**]" . $subject;
         return new Envelope(
-            subject: __("membership/mails/reduction_reminder.subject"),
+            subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            // bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

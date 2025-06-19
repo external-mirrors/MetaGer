@@ -382,10 +382,10 @@ class MembershipController extends Controller
             $file = Arr::get($form_data, "reduction");
             if ($file !== null) {
                 $application->reduction()->create([
-                    "file_path" => storage_path("metager/" . $file->getBasename()),
+                    "file_path" => storage_path("logs/metager/" . $file->getBasename()),
                     "file_mimetype" => $file->getMimeType(),
                 ]);
-                $file->move(storage_path("metager"), $file->getBasename());
+                $file->move(storage_path("logs/metager"), $file->getBasename());
             }
             $application->save();
             return redirect($membership_form_url . "#membership-payment");

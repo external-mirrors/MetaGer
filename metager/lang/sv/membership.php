@@ -24,9 +24,13 @@ return [
             'interval' => [
                 'six-monthly' => "Halvårsvis",
                 'annual' => "årligen",
+                'monthly' => "månadsvis",
+                'quarterly' => "kvartalsvis",
             ],
         ],
         'description' => 'Vi har registrerat följande data för din applikation:',
+        'email' => 'E-postadress',
+        'name' => 'Namn',
     ],
     'key' => [
         'description' => 'För att använda MetaGer används följande nyckel och fylls på av oss. Om du redan var inloggad användes din befintliga nyckel.',

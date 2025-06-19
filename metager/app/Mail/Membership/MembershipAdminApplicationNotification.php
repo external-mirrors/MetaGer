@@ -34,8 +34,8 @@ class MembershipAdminApplicationNotification extends Mailable
         $this->updates = $updates;
         $this->reductions = $reductions;
 
-        $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
-        if (!App::is("production"))
+        $this->to(config("metager.metager.membership.notification_address"), "SUMA-EV Vorstand");
+        if (!App::environment("production"))
             $subject = "[**TEST**]" . $subject;
         $this->subject($subject);
     }

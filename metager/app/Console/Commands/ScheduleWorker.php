@@ -32,7 +32,7 @@ class ScheduleWorker extends Command
         $this->info("Starting Scheduler");
         $this->call('schedule:run');
         do {
-            sleep(60);
+            sleep(seconds: 60 - now()->second + 1);
             $this->call('schedule:run');
         } while (!$this->should_exit);
         return 0;

@@ -47,12 +47,12 @@ class ReductionDeny extends Mailable
     public function envelope(): Envelope
     {
         $subject = __("membership/mails/reduction_deny.subject");
-        if (!App::is("production"))
+        if (!App::environment("production"))
             $subject = "[**TEST**]" . $subject;
         return new Envelope(
             subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address(config("metager.metager.membership.notification_address"), "SUMA-EV")],
         );
     }
 

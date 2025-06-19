@@ -60,12 +60,12 @@ class PaymentReminder extends Mailable
             self::REMINDER_STAGE_SECOND => __("membership/mails/payment_reminder.subject.second", ['date' => (clone $this->application->end_date)->addMonath(1)->isoFormat("L")]),
             self::REMINDER_STAGE_ABORTED => __("membership/mails/payment_reminder.subject.expired")
         };
-        if (!App::is("production"))
+        if (!App::environment("production"))
             $subject = "[**TEST**]" . $subject;
         return new Envelope(
             subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
-            bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address(config("metager.metager.membership.notification_address"), "SUMA-EV")],
         );
     }
 

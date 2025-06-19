@@ -32,7 +32,7 @@ class MembershipAdminPaymentFailed extends Mailable
         } else {
             $this->name = $application->company->company;
         }
-        $this->to("vorstand@suma-ev.de", "SUMA-EV Vorstand");
+        $this->to(config("metager.metager.membership.notification_address"), "SUMA-EV Vorstand");
         $this->locale($application->locale);
         $this->application = $application;
         $order_string = json_encode($order, JSON_PRETTY_PRINT);
@@ -50,7 +50,7 @@ class MembershipAdminPaymentFailed extends Mailable
     public function envelope(): Envelope
     {
         $subject = "[SUMA-EV] PayPal Zahlung fehlgeschlagen";
-        if (!App::is("production"))
+        if (!App::environment("production"))
             $subject = "[**TEST**]" . $subject;
         return new Envelope(
             subject: $subject,

@@ -2,6 +2,7 @@
 
 namespace App\Models\Membership;
 
+use App;
 use Arr;
 use Cache;
 use Exception;
@@ -161,6 +162,12 @@ class CiviCrm
             'limit' => 25,
             'chain' => ['payments' => ['Membership', 'nextPayments', ['membershipId' => '$id', 'count' => 1]]],
         ];
+
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
+
         $due_memberships = self::API_POST("/Membership/get", $params);
         if ($due_memberships === null)
             return null;
@@ -192,6 +199,11 @@ class CiviCrm
                 ['end_date', '>=', $end_date->format("Y-m-d")]
             ]
         );
+
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
 
         $response = self::API_POST("/Membership/get", $params);
         $response = Arr::get($response, "values", null);
@@ -227,6 +239,11 @@ class CiviCrm
             ]
         );
 
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
+
         $response = self::API_POST("/Membership/get", $params);
         $response = Arr::get($response, "values", null);
         if ($response === null)
@@ -257,6 +274,11 @@ class CiviCrm
             ]
         );
 
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
+
         $response = self::API_POST("/Membership/get", $params);
         $response = Arr::get($response, "values", null);
         if ($response === null)
@@ -278,6 +300,11 @@ class CiviCrm
             [['Beitrag.Zahlungsstatus:label', '=', 'Okay'], ['end_date', '<=', $end_date->format("Y-m-d")], ['Beitrag.Monatlicher_Mitgliedsbeitrag', '<', 5], ['Beitrag.Erm_igt_bis', '<', now()->format("Y-m-d")]]
         );
 
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
+
         $response = self::API_POST("/Membership/get", $params);
         $response = Arr::get($response, "values", null);
         if ($response === null)
@@ -298,6 +325,11 @@ class CiviCrm
             'where' => [['contribution_status_id:label', 'IN', ['Chargeback', 'Failed']], ['Mitgliedschaft_erneuert.Membership_Renewed', '=', TRUE]],
             'limit' => 25,
         ];
+
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
 
         $response = self::API_POST("/Contribution/get", $params);
         $response = Arr::get($response, "values", []);
@@ -336,19 +368,6 @@ class CiviCrm
         ];
         $response = self::API_POST("/Membership/renew", $params);
         return $response;
-    }
-
-    public static function FIND_MEMBERSHIP_APPLICATIONS()
-    {
-        $params = [
-            'select' => ['*', 'contact_id.addressee_display', 'Beitrag.Monatlicher_Mitgliedsbeitrag', 'Beitrag.Zahlungsweise:label', 'Beitrag.Zahlungsstatus:label', 'Beitrag.Zahlungsreferenz', 'Beitrag.Kontoinhaber', 'Beitrag.IBAN', 'Beitrag.BIC', 'Beitrag.PayPal_Vault', 'MetaGer_Key.Key'],
-            'where' => [['status_id', '=', 9]], // Status = Applied
-            'orderBy' => ['join_date' => 'DESC'],
-            'limit' => 25,
-        ];
-
-        $response = self::API_POST("/Membership/get", $params);
-        return Arr::get($response, "values");
     }
 
     public static function ADD_MEMBERSHIP_PAYPAL_VAULT(string $membership_id, string $vault_id)

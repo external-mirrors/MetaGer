@@ -57,13 +57,13 @@ class WelcomeMail extends Mailable
     public function envelope(): Envelope
     {
         $subject = __("membership/mails/welcome_mail.subject");
-        if (!App::is("production"))
+        if (!App::environment("production"))
             $subject = "[**TEST**]" . $subject;
         return new Envelope(
             subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
             to: [new Address($this->contact["email_primary.email"], $this->contact["addressee_display"])],
-            bcc: [new Address("verein@metager.de", "SUMA-EV")],
+            bcc: [new Address(config("metager.metager.membership.notification_address"), "SUMA-EV")],
         );
     }
 

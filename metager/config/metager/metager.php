@@ -56,6 +56,10 @@ return [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),
     ],
+    "membership" => [
+        "membership_id_testing" => env("MEMBERSHIP_TESTING_ID", 2290),
+        "notification_address" => env("MEMBERSHIP_NOTIFICATION_EMAIL", "")
+    ],
     "paypal" => [
         'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
         'base_url' => env("APP_ENV") === "local" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com",

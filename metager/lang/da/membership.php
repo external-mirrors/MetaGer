@@ -31,6 +31,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Direkte debitering",
             'card' => "Kreditkort",
+            'banktransfer' => "Bankoverførsel",
+            'paypal' => "PayPal",
         ],
         'company' => "Virksomhedens navn",
         'payment_method' => "Betalingsmetode",

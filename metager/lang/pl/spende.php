@@ -211,6 +211,7 @@ return [
                 'address-admin-area-line-2' => 'Stan',
                 'address-country-code' => 'Kod kraju (np. US, DE, GB)',
                 'address-postal-code' => 'Kod pocztowy',
+                'address-admin-area-line-1' => 'Miasto',
             ],
             'loading' => 'Ładowanie formularza karty kredytowej',
         ],

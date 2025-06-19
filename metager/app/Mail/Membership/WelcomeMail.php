@@ -63,7 +63,7 @@ class WelcomeMail extends Mailable
             subject: $subject,
             from: new Address("verein@metager.de", "SUMA-EV"),
             to: [new Address($this->contact["email_primary.email"], $this->contact["addressee_display"])],
-            bcc: [new Address(config("metager.metager.membership.notification_address"), "SUMA-EV")],
+            bcc: [new Address("verein@metager.de", "SUMA-EV")],
         );
     }
 

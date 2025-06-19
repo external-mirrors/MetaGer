@@ -23,15 +23,21 @@ return [
             'interval' => [
                 'six-monthly' => "Semestral",
                 'annual' => "anualmente",
+                'quarterly' => "trimestral",
+                'monthly' => "mensal",
             ],
         ],
         'payment_methods' => [
             'directdebit' => "Débito direto",
             'card' => "Cartão de crédito",
+            'banktransfer' => "Transferência bancária",
+            'paypal' => "PayPal",
         ],
         'company' => "Nome da empresa",
         'payment_method' => "Método de pagamento",
         'amount' => "Taxa de adesão",
+        'email' => 'Endereço de correio eletrónico',
+        'name' => 'Nome',
     ],
     'success' => 'Muito obrigado por ter enviado o seu pedido de adesão. Iremos processá-lo o mais rapidamente possível. Receberá então uma mensagem eletrónica com mais informações da nossa parte para o endereço fornecido.',
 ];

@@ -16,10 +16,13 @@ return [
         'now' => 'Nu',
         'interval' => [
             'halbjährlich' => 'halfjaarlijks',
+            'jährlich' => 'jaarlijks',
         ],
+        'title' => 'Lidmaatschap',
     ],
     'websites' => [
         'description' => 'Op [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) vindt u veel van de vorige circulaires en nieuwsbrieven. Op [suma-ev.de/presse/](https://suma-ev.de/presse/) vindt u eerdere persberichten van SUMA-EV. Je bent ook van harte welkom op onze [openbare ledenlijst](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Laat het ons in dat geval even kort weten.',
+        'title' => 'Lidmaatschap',
     ],
     'key' => [
         'title' => 'Zoeken met MetaGer',

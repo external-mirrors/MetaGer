@@ -184,6 +184,7 @@ export function initializeCreditcard() {
       }
     };
     let onError = async (error) => {
+      handle_card_error("custom", error);
       console.log("Error:", error);
       return handleCancel();
     };
@@ -258,29 +259,19 @@ function toggleFormSubmit(enabled = true, loading = true) {
 }
 
 async function handleCancel() {
-  if (cancel_callback != null) {
-    return fetch(cancel_callback, {
-      headers: {
-        Accept: "application/json",
-      },
+  return fetch("/membership/token", {
+    headers: { Accept: "application/json" },
+  })
+    .then(async (response) => {
+      if (response.status == 200) {
+        let json_response = await response.json();
+        let token = json_response.token;
+        document.querySelector("input[name=_token]").value = token;
+      }
     })
-      .then(() => {
-        cancel_callback = null;
-        return fetch("/membership/token", {
-          headers: { Accept: "application/json" },
-        });
-      })
-      .then(async (response) => {
-        if (response.status == 200) {
-          let json_response = await response.json();
-          let token = json_response.token;
-          document.querySelector("input[name=_token]").value = token;
-        }
-      })
-      .finally(() => {
-        toggleFormSubmit(true);
-      });
-  }
+    .finally(() => {
+      toggleFormSubmit(true);
+    });
 }
 
 function handle_card_error(error_type, message) {

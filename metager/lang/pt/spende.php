@@ -218,6 +218,7 @@ return [
                 'address-admin-area-line-2' => 'Estado',
                 'address-country-code' => 'Código do país (por exemplo, US, DE, GB)',
                 'address-postal-code' => 'Código postal',
+                'address-admin-area-line-1' => 'Cidade',
             ],
         ],
         'banktransfer' => [

@@ -10,6 +10,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Automatische incasso",
             'card' => "Creditcard",
+            'banktransfer' => "Overschrijving",
+            'paypal' => "PayPal",
         ],
         'payment' => [
             'interval' => [

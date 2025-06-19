@@ -17,6 +17,8 @@ return [
         'interval' => [
             'halbjährlich' => 'halfjaarlijks',
             'jährlich' => 'jaarlijks',
+            'monatlich' => 'maandelijks',
+            'vierteljährlich' => 'driemaandelijks',
         ],
         'title' => 'Lidmaatschap',
     ],

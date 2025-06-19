@@ -17,9 +17,13 @@ return [
             'interval' => [
                 'six-monthly' => "Halfjaarlijks",
                 'annual' => "jaarlijks",
+                'monthly' => "maandelijks",
+                'quarterly' => "driemaandelijks",
             ],
         ],
         'description' => 'We hebben de volgende gegevens opgenomen voor uw toepassing:',
+        'name' => 'Naam',
+        'email' => 'E-mailadres',
     ],
     'key' => [
         'description' => 'Om MetaGer te gebruiken wordt de volgende sleutel gebruikt en door ons aangevuld. Als je al was ingelogd, werd je bestaande sleutel gebruikt.',

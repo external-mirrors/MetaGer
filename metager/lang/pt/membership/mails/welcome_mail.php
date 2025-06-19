@@ -33,9 +33,13 @@ return [
         'now' => 'Agora',
         'interval' => [
             'halbjährlich' => 'semestral',
+            'monatlich' => 'mensal',
+            'vierteljährlich' => 'trimestral',
         ],
+        'title' => 'Filiação',
     ],
     'websites' => [
         'description' => 'Em [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) encontrará muitas das circulares e boletins informativos anteriores. Pode encontrar os comunicados de imprensa anteriores da SUMA-EV em [suma-ev.de/presse/](https://suma-ev.de/presse/). Também é muito bem-vindo para receber uma entrada na nossa [lista pública de membros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Neste caso, basta informar-nos brevemente.',
+        'title' => 'Filiação',
     ],
 ];

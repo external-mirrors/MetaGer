@@ -34,6 +34,8 @@ return [
         'interval' => [
             'halbjährlich' => 'puolivuosittain',
             'jährlich' => 'vuosittain',
+            'monatlich' => 'kuukausittain',
+            'vierteljährlich' => 'neljännesvuosittain',
         ],
         'title' => 'Jäsenyys',
     ],

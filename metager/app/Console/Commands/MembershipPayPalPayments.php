@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Localization;
+use App\Mail\Membership\MembershipAdminPaymentFailed;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
@@ -74,9 +75,12 @@ class MembershipPayPalPayments extends Command
             }
             if ($paypal_order !== null) {
                 // Validate PayPal Order
+                $old_order = $paypal_order;
                 $paypal_order = PayPal::VALIDATE_ORDER(Arr::get($paypal_order, "id"), $paypal_order);
                 if (is_string($paypal_order)) {
                     $this->disablePaymentMethod($membership);
+                    $notification = new MembershipAdminPaymentFailed($membership, $old_order);
+                    Mail::mailer("membership")->send($notification);
                     continue;
                 }
                 $paypal_payment->order_id = Arr::get($paypal_order, "id");

@@ -41,7 +41,7 @@ class MembershipNotifyUnfinished extends Command
         }
 
         // Delete unfinished update requests
-        $unfinished = MembershipApplication::unfinishedUpdateRequests()->where("updated_at", "<", now()->subHours(value: 6))->get();
+        $unfinished = MembershipApplication::unfinishedUpdateRequestsUser()->where("updated_at", "<", now()->subHours(value: 6))->get();
         foreach ($unfinished as $unfinished_application) {
             $unfinished_application->delete();
         }

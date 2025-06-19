@@ -94,11 +94,11 @@ class MembershipApplication extends Model
     }
 
     /**
-     * Scope to query all applications containing all required data
+     * Scope to query all applications containing all required data to be accepted
      * @param \Illuminate\Database\Eloquent\Builder $query
      * @return void
      */
-    public function scopeUpdateRequests(Builder $query)
+    public function scopeUpdateRequestsAdmin(Builder $query)
     {
         $query
             ->where("is_update", "=", true)
@@ -116,9 +116,30 @@ class MembershipApplication extends Model
             ->whereNotNull("payment_method");
     }
 
-    public function scopeUnfinishedUpdateRequests(Builder $query)
+    /**
+     * Scope to query all applications containing all required data for the user to be finished with it (i.e. includes non accepted reduction requests)
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return void
+     */
+    public function scopeUpdateRequestsUser(Builder $query)
     {
-        $finished = MembershipApplication::updateRequests()->get("id");
+        $query
+            ->where("is_update", "=", true)
+            ->whereNotNull("crm_membership")
+            ->whereNotNull("crm_contact")
+            ->where(function (Builder $query) {
+                $query->whereHas("contact")->orWhereHas("company");
+            })->where(function (Builder $query) {
+                $query->where(function (Builder $query) {
+                    $query->whereNotNull("amount")->wherenotNull("interval");
+                });
+            })
+            ->whereNotNull("payment_method");
+    }
+
+    public function scopeUnfinishedUpdateRequestsUser(Builder $query)
+    {
+        $finished = MembershipApplication::updateRequestsUser()->get("id");
         $query
             ->where("is_update", "=", true)
             ->whereNotIn("id", $finished);

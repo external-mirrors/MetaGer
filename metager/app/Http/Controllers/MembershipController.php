@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
+use App\Mail\Membership\MembershipAdminApplicationNotification;
+use App\Mail\Membership\MembershipAdminPaymentFailed;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
@@ -16,6 +19,7 @@ use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
 use App\Rules\IBANValidator;
 use Arr;
+use Artisan;
 use Cache;
 use Closure;
 use Crypt;
@@ -36,8 +40,10 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $application = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2290"), "0");
-        $mail = new PaymentReminder($application, PaymentReminder::REMINDER_STAGE_ABORTED);
+        $finished = MembershipApplication::finishedAdmin()->orderBy("updated_at", "desc")->get();
+        $updates = MembershipApplication::updateRequestsAdmin()->orderBy("updated_at", "desc")->get();
+        $reductions = MembershipApplication::reductionRequests()->orderBy("updated_at", "desc")->get();
+        $mail = new MembershipAdminApplicationNotification($finished, $updates, $reductions);
         return $mail;
     }
     /**
@@ -415,6 +421,9 @@ class MembershipController extends Controller
                     );
             }
 
+            if (!$application->is_update) {
+                Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
+            }
             return redirect($membership_form_url);
         } else {
             return redirect(route("membership_success", ["key" => $application->key]));
@@ -569,6 +578,9 @@ class MembershipController extends Controller
 
                 $application->paypal()->create($paypal_order_data);
                 $application->save();   // Save payment method
+                if (App::environment("production") && !$application->is_update) {
+                    Artisan::call("membership:notify-admin", ["subject" => "[SUMA-EV] Neuer Aufnahmeantrag"]);
+                }
                 return $request->wantsJson() ? response()->json(["success_url" => $success_url, "cancel_url" => $error_url]) : redirect($success_url);
             } else {
                 // Check if we can identify an error code
@@ -619,7 +631,7 @@ class MembershipController extends Controller
     public function adminIndex(Request $request)
     {
         $membership_applications = MembershipApplication::finishedAdmin()->get();
-        $membership_update_requests = MembershipApplication::updateRequests()->get();
+        $membership_update_requests = MembershipApplication::updateRequestsAdmin()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
         return response(view(
             "admin.membership.index",
@@ -722,7 +734,7 @@ class MembershipController extends Controller
     {
         $application =
             $request->filled("update-request") ?
-            MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
+            MembershipApplication::updateRequestsAdmin()->where("id", "=", $request->input("id", ""))->first() :
             MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
@@ -849,7 +861,7 @@ class MembershipController extends Controller
     {
         $application =
             $request->filled("update-request") ?
-            MembershipApplication::updateRequests()->where("id", "=", $request->input("id", ""))->first() :
+            MembershipApplication::updateRequestsAdmin()->where("id", "=", $request->input("id", ""))->first() :
             MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
@@ -863,8 +875,10 @@ class MembershipController extends Controller
         }
         $application->delete();
 
-        $mail = new ApplicationDeny($application, $request->input("message", ""));
-        Mail::mailer("membership")->send($mail);
+        if ($request->filled("message")) {
+            $mail = new ApplicationDeny($application, $request->input("message", ""));
+            Mail::mailer("membership")->send($mail);
+        }
 
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }

@@ -21,6 +21,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Addebito diretto",
             'card' => "Carta di credito",
+            'banktransfer' => "Bonifico bancario",
+            'paypal' => "PayPal",
         ],
         'payment' => [
             'interval' => [

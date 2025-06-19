@@ -80,13 +80,11 @@ return [
             'recurring-hint' => 'Bemærk: Direkte kreditkortbetaling uden validering af adresse/navn er kun mulig for engangsdonationer.',
             'error' => [
                 '9500' => 'Kreditkort afvist som svigagtigt',
-                '5100' => 'Kreditkortet blev afvist af kreditinstituttet.',
                 '00N7' => 'Forkert CVV. Kontroller venligst input',
                 '5400' => 'Kreditkortet er udløbet',
                 '5180' => 'Luhn-tjekket mislykkedes',
                 '5120' => 'Kreditkort afvist på grund af utilstrækkelige midler.',
                 '9520' => 'Kreditkort afvist som tabt/stjålet',
-                '0500' => 'Kreditkort afvist af kreditinstitut',
                 '1330' => 'Kreditkortet er ugyldigt. Tjek venligst din tilmelding',
                 'generic' => 'Kreditkort afvist af kreditinstitut',
             ],

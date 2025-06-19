@@ -91,13 +91,11 @@ return [
             'recurring-hint' => 'Observera: Direkt kreditkortsbetalning utan adress-/namnvalidering är endast möjlig för engångsdonationer.',
             'error' => [
                 '9500' => 'Kreditkortet avvisas som bedrägligt',
-                '5100' => 'Kreditkortet har nekats av kreditinstitutet',
                 '00N7' => 'Fel CVV. Vänligen kontrollera inmatningen',
                 '5400' => 'Kreditkortet har gått ut',
                 '5180' => 'Luhn check misslyckades',
                 '5120' => 'Kreditkortet nekades på grund av otillräckliga medel.',
                 '9520' => 'Kreditkort avvisat som förlorat/stulet',
-                '0500' => 'Kreditkort nekat av kreditinstitut',
                 '1330' => 'Kreditkortet är ogiltigt. Vänligen kontrollera din post',
                 'generic' => 'Kreditkort nekat av kreditinstitut',
             ],

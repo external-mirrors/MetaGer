@@ -80,13 +80,11 @@ return [
             'recurring-hint' => 'Note : Le paiement direct par carte de crédit sans validation de l\'adresse ou du nom n\'est possible que pour les dons uniques.',
             'error' => [
                 '9500' => 'Carte de crédit rejetée comme frauduleuse',
-                '5100' => 'La carte de crédit a été refusée par l\'établissement de crédit',
                 '00N7' => 'CVV erroné. Veuillez vérifier la saisie',
                 '5400' => 'Carte de crédit expirée',
                 '5180' => 'Le contrôle de Luhn a échoué',
                 '5120' => 'Carte de crédit refusée pour cause de fonds insuffisants.',
                 '9520' => 'Carte de crédit rejetée comme perdue ou volée',
-                '0500' => 'Carte de crédit refusée par l\'établissement de crédit',
                 '1330' => 'Carte de crédit invalide. Veuillez vérifier votre inscription',
                 'generic' => 'Carte de crédit refusée par l\'établissement de crédit',
             ],

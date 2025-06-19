@@ -68,13 +68,11 @@ return [
             'recurring-hint' => 'Opmerking: Directe creditcardbetaling zonder adres-/naamvalidatie is alleen mogelijk voor eenmalige donaties.',
             'error' => [
                 '9500' => 'Creditcard afgewezen als frauduleus',
-                '5100' => 'De creditcard is geweigerd door de kredietinstelling',
                 '00N7' => 'Verkeerde CVV. Controleer invoer',
                 '5400' => 'Creditcard verlopen',
                 '5180' => 'Luhn-controle mislukt',
                 '5120' => 'Creditcard geweigerd wegens onvoldoende saldo.',
                 '9520' => 'Creditcard geweigerd als verloren/gestolen',
-                '0500' => 'Creditcard geweigerd door kredietinstelling',
                 '1330' => 'Creditcard ongeldig. Controleer uw inschrijving',
                 'generic' => 'Creditcard geweigerd door kredietinstelling',
             ],

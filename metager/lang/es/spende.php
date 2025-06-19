@@ -81,13 +81,11 @@ return [
             'recurring-hint' => 'Nota: El pago directo con tarjeta de crédito sin validación de dirección/nombre sólo es posible para donaciones únicas.',
             'error' => [
                 '9500' => 'Tarjeta de crédito rechazada por fraudulenta',
-                '5100' => 'La tarjeta de crédito ha sido rechazada por la entidad de crédito',
                 '00N7' => 'CVV incorrecto. Por favor, compruebe la entrada',
                 '5400' => 'Tarjeta de crédito caducada',
                 '5180' => 'Chequeo fallido de Luhn',
                 '5120' => 'Tarjeta de crédito rechazada por fondos insuficientes.',
                 '9520' => 'Tarjeta de crédito rechazada por pérdida o robo',
-                '0500' => 'Tarjeta de crédito rechazada por la entidad de crédito',
                 '1330' => 'Tarjeta de crédito inválida. Por favor, compruebe su entrada',
                 'generic' => 'Tarjeta de crédito rechazada por la entidad de crédito',
             ],

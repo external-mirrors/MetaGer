@@ -80,13 +80,11 @@ return [
             'recurring-hint' => 'Huomautus: Suora luottokorttimaksu ilman osoitteen/nimen vahvistusta on mahdollista vain kertaluonteisten lahjoitusten osalta.',
             'error' => [
                 '9500' => 'Luottokortti on hylätty vilpillisenä',
-                '5100' => 'Luottolaitos hylkäsi luottokortin.',
                 '00N7' => 'Väärä CVV. Tarkista syöttö',
                 '5400' => 'Luottokortti vanhentunut',
                 '5180' => 'Luhnin tarkastus epäonnistui',
                 '5120' => 'Luottokortti hylättiin riittämättömien varojen vuoksi.',
                 '9520' => 'Luottokortti hylätään kadonneena/varastettuna',
-                '0500' => 'Luottolaitos hylkäsi luottokortin',
                 '1330' => 'Luottokortti ei ole voimassa. Tarkista osallistumisesi',
                 'generic' => 'Luottolaitos hylkäsi luottokortin',
             ],

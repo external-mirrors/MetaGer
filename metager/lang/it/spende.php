@@ -33,13 +33,11 @@ return [
             'recurring-hint' => 'Nota: il pagamento diretto con carta di credito senza convalida dell\'indirizzo/nome è possibile solo per le donazioni una tantum.',
             'error' => [
                 '9500' => 'Carta di credito respinta come fraudolenta',
-                '5100' => 'La carta di credito è stata rifiutata dall\'istituto di credito.',
                 '00N7' => 'CVV errato. Controllare l\'inserimento',
                 '5400' => 'Carta di credito scaduta',
                 '5180' => 'Controllo Luhn fallito',
                 '5120' => 'Carta di credito rifiutata a causa di fondi insufficienti.',
                 '9520' => 'Carta di credito respinta come smarrita/rubata',
-                '0500' => 'Carta di credito rifiutata dall\'istituto di credito',
                 '1330' => 'Carta di credito non valida. Si prega di controllare l\'iscrizione',
                 'generic' => 'Carta di credito rifiutata dall\'istituto di credito',
             ],

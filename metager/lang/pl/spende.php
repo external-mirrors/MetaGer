@@ -80,13 +80,11 @@ return [
             'recurring-hint' => 'Uwaga: Bezpośrednia płatność kartą kredytową bez weryfikacji adresu/imienia i nazwiska jest możliwa tylko w przypadku jednorazowych darowizn.',
             'error' => [
                 '9500' => 'Karta kredytowa odrzucona jako fałszywa',
-                '5100' => 'Karta kredytowa została odrzucona przez instytucję kredytową',
                 '00N7' => 'Nieprawidłowy kod CVV. Sprawdź wprowadzone dane',
                 '5400' => 'Karta kredytowa wygasła',
                 '5180' => 'Kontrola Luhna nie powiodła się',
                 '5120' => 'Karta kredytowa została odrzucona z powodu niewystarczających środków.',
                 '9520' => 'Karta kredytowa odrzucona jako zagubiona/skradziona',
-                '0500' => 'Karta kredytowa odrzucona przez instytucję kredytową',
                 '1330' => 'Karta kredytowa jest nieważna. Sprawdź swoje zgłoszenie',
                 'generic' => 'Karta kredytowa odrzucona przez instytucję kredytową',
             ],

@@ -87,13 +87,11 @@ return [
             'recurring-hint' => 'Nota: O pagamento direto por cartão de crédito sem validação do endereço/nome só é possível para donativos únicos.',
             'error' => [
                 '9500' => 'Cartão de crédito rejeitado como fraudulento',
-                '5100' => 'O cartão de crédito foi recusado pela instituição de crédito',
                 '00N7' => 'CVV incorreto. Verificar a introdução',
                 '5400' => 'Cartão de crédito expirado',
                 '5180' => 'O controlo de Luhn falhou',
                 '5120' => 'Cartão de crédito recusado por falta de fundos.',
                 '9520' => 'Cartão de crédito rejeitado como perdido/roubado',
-                '0500' => 'Cartão de crédito recusado pela instituição de crédito',
                 '1330' => 'Cartão de crédito inválido. Por favor, verifique a sua entrada',
                 'generic' => 'Cartão de crédito recusado pela instituição de crédito',
             ],

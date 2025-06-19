@@ -18,6 +18,8 @@ return [
         'payment_methods' => [
             'directdebit' => "Prélèvement automatique",
             'card' => "Carte de crédit",
+            'banktransfer' => "Virement bancaire",
+            'paypal' => "PayPal",
         ],
         'description' => 'Nous avons enregistré les données suivantes pour votre application :',
         'company' => "Nom de l'entreprise",

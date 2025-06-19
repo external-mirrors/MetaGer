@@ -28,6 +28,12 @@ Schedule::call(function () {
 Schedule::command('queue:work --queue=donations --stop-when-empty');
 Schedule::command('queue:work --queue=general --stop-when-empty');
 
+// Membership Commands
+Schedule::command('membership:paypal-payments')->hourly()->onOneServer();
+Schedule::command('membership:payment-reminder')->cron("0 6-23 * * *")->onOneServer();
+Schedule::command('membership:notify-admin')->dailyAt("06:00")->onOneServer();
+Schedule::command('membership:membership:notify-unfinished')->hourly()->onOneServer();
+
 // Logs Commands
 Schedule::command('logs:create-order')->onOneServer()->dailyAt("06:00");
 Schedule::command('logs:create-invoice')->onOneServer()->dailyAt("07:00");

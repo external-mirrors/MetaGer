@@ -171,7 +171,7 @@ class QueryLogger
     public static function migrate($year, $month)
     {
         $batch_size = 10000;
-        $path = \storage_path("logs/metager/$year/$month");
+        $path = \storage_path("metager/$year/$month");
 
         /** @var \Predis\Client */
         $redis = Redis::connection();

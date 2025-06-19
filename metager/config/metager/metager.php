@@ -20,7 +20,6 @@ return [
     "keys" => [
         "uni_mainz" => env("mainz_key"),
         "assoziator" => env("ASSO_KEY"),
-        "berlin" => env("berlin"),
     ],
     "tts" => [
         "base_url" => env("TTS_BASE_URL", ""),
@@ -33,12 +32,6 @@ return [
             "password" => env("FETCHER_PROXY_PASSWORD", ""),
         ],
     ],
-    "fail2ban" => [
-        "enabled" => true,
-        "url" => env("fail2banurl", false),
-        "user" => env("fail2banuser", false),
-        "password" => env("fail2banpassword", false),
-    ],
     "ticketsystem" => [
         "url" => env("TICKET_URL", "https://metager.de"),
         "apikey" => env("TICKET_APIKEY", ""),
@@ -47,6 +40,7 @@ return [
         "donation_ticket_id" => env("TICKET_DONATION_ID", "")
     ],
     "civicrm" => [
+        "enabled" => env("CIVICRM_NOTIFICATIONS_ENABLED", true),
         "url" => env("CIVICRM_URL", "https://metager.de"),
         "apikey" => env("CIVICRM_API_KEY", ""),
         "sitekey" => env("CIVICRM_SITE_KEY", ""),
@@ -55,11 +49,20 @@ return [
         "user" => env("WEBDRIVER_USER", ""),
         "key" => env("WEBDRIVER_KEY", ""),
     ],
+    "membership" => [
+        "membership_id_testing" => env("MEMBERSHIP_TESTING_ID", ""),
+        "notification_address" => env("MEMBERSHIP_NOTIFICATION_EMAIL", "")
+    ],
     "paypal" => [
         'pdt_token' => env("PAYPAL_PDT_TOKEN", ""),
         'base_url' => env("APP_ENV") === "local" ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com",
         'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_CLIENT_ID") : env("PAYPAL_CLIENT_ID"),
         'secret' => env("APP_ENV") === "local" ? env("PAYPAL_SANDBOX_SECRET") : env("PAYPAL_SECRET"),
+        'membership' => [
+            'client_id' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_CLIENT_ID") : env("PAYPAL_MEMBERSHIP_CLIENT_ID"),
+            'secret' => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_SECRET") : env("PAYPAL_MEMBERSHIP_SECRET"),
+            "webhook_id" => env("APP_ENV") === "local" ? env("PAYPAL_MEMBERSHIP_SANDBOX_WEBHOOKID") : env("PAYPAL_MEMBERSHIP_WEBHOOKID"),
+        ],
         'subscription_plans' => [
             'de' => [
                 'monthly' => env("APP_ENV") === "local" ? "P-9K924561XA8341447MR4OWLY" : "P-5T792079318830948MR7RKNQ",

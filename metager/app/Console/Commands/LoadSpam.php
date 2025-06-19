@@ -52,11 +52,12 @@ class LoadSpam extends Command
                 sleep(1);
             }
         }
-        
+
     }
 
-    private function loadSpam() {
-        $filePath = \storage_path('logs/metager/ban.txt');
+    private function loadSpam()
+    {
+        $filePath = \storage_path('metager/ban.txt');
         $bans = [];
         if (\file_exists($filePath)) {
             $bans = json_decode(file_get_contents($filePath), true);

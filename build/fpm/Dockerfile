@@ -28,7 +28,7 @@ RUN apt update && apt install --no-install-recommends -y \
     liblz4-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql
+RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
 RUN yes 'y' | pecl install xdebug-3.3.2 igbinary-3.2.15 msgpack-2.2.0 redis-6.0.2 imagick
 RUN docker-php-ext-enable msgpack igbinary redis imagick
 RUN docker-php-ext-enable --ini-name=xdebug.ini xdebug

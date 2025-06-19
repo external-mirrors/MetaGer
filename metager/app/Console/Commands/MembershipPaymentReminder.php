@@ -2,13 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\Membership\ApplicationUnfinished;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionReminder;
 use App\Models\Membership\CiviCrm;
-use App\Models\Membership\MembershipApplication;
-use Exception;
 use Illuminate\Console\Command;
 use Mail;
 

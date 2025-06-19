@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Localization;
 use App\Mail\Membership\MembershipAdminPaymentFailed;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Models\Membership\CiviCrm;
@@ -10,8 +9,6 @@ use App\Models\Membership\MembershipApplication;
 use App\Models\Membership\MembershipPaymentPaypal;
 use App\Models\Membership\PayPal;
 use Arr;
-use Cache;
-use Carbon;
 use Illuminate\Console\Command;
 use LaravelLocalization;
 use Mail;

@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App;
 use App\Mail\Membership\MembershipAdminApplicationNotification;
 use App\Models\Membership\MembershipApplication;
 use Illuminate\Console\Command;

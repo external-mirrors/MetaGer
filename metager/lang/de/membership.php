@@ -20,7 +20,7 @@ return [
         'amount' => "Mitgliedsbeitrag",
         'payment_method' => "Zahlungsmethode",
         'payment_methods' => [
-            'banktransfer' => "Banküberweisung",
+            'banktransfer' => "Überweisung",
             'directdebit' => "Lastschrift",
             'paypal' => "PayPal",
             'card' => "Kreditkarte",

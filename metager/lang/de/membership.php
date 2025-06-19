@@ -5,6 +5,12 @@ return [
     'success' => 'Herzlichen Dank für die Übermittlung Ihres Aufnahmeantrags. Wir werden diesen möglichst schnell bearbeiten. Anschließend erhalten Sie eine Mail mit weiteren Informationen von uns an die angegebene Addresse.',
     'application' => [
         'description' => 'Vielen Dank, dass Sie eine <a href="https://suma-ev.de/mitglieder/" target="_blank">Mitgliedschaft</a> in unserem gemeinnützigen Trägerverein erwägen. Um Ihren Antrag bearbeiten zu können benötigen wir lediglich ein paar Informationen, die Sie hier ausfüllen können.',
+        'cancel' => [
+            'application' => 'Mitgliedschaftsantrag löschen',
+            'update' => 'Änderungen verwerfen',
+        ],
+        'update_hint' => 'Die beantragten Änderungen für Ihre Mitgliedschaft werden in Kürze geprüft/akzeptiert. Wenn Sie mit dem angezeigten Stand zufrieden sind, können Sie diese Seite verlassen. Andernfalls können Sie weitere Änderungen vornehmen oder Ihren Änderungsantrag über die Schaltfläche unten löschen.',
+        'payment_block' => 'Wir werden versuchen, eine Zahlung für Ihren nächsten Mitgliedsbeitrag zu autorisieren, um Ihre Zahlungsmethode zu validieren, aber die Zahlung wird nur ausgeführt, wenn sie innerhalb der nächsten zwei Wochen fällig ist und andernfalls storniert.',
     ],
     'data' => [
         'description' => 'Folgende Daten haben wir für Ihren Antrag erfasst:',

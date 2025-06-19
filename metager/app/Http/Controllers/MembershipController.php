@@ -146,6 +146,8 @@ class MembershipController extends Controller
                 }
             }
 
+            $csp = "default-src * 'unsafe-inline' 'unsafe-eval'";
+
             return response(view(
                 "membership.form",
                 [
@@ -156,7 +158,7 @@ class MembershipController extends Controller
                     "js" => [mix("/js/membership.js")],
                     "application" => $application
                 ]
-            ));
+            ), 200, ["Content-Security-Policy" => $csp]);
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         }

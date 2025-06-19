@@ -15,6 +15,8 @@ return [
         'interval' => [
             'halbjährlich' => 'semestrielle',
             'jährlich' => 'annuellement',
+            'monatlich' => 'mensuel',
+            'vierteljährlich' => 'trimestrielle',
         ],
         'title' => 'L\'adhésion',
     ],

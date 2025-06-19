@@ -23,7 +23,7 @@ class PayPal
 
     public static function GET_ID(): string
     {
-        return hash_hmac("sha256", config("metager.metager.paypal.membership.client_id"), config("app.key"));
+        return hash_hmac("sha256", config("metager.metager.paypal.membership.client_id"), config("metager.metager.paypal.membership.secret"));
     }
 
     public static function CREATE_ORDER(MembershipApplication $application): array|null

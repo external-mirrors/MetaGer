@@ -1,4 +1,46 @@
 <?php
-
 return [
+    'membership' => [
+        'mandate' => 'Syfte med användningen',
+        'next_payments' => 'Nästa bidrag',
+        'due' => 'Förfallodag',
+        'description' => 'Detta e-postmeddelande är också en bekräftelse på ditt medlemskap. Vänligen bekräfta kortfattat att du har mottagit detta e-postmeddelande. Din medlemsavgift på **:belopp€** förfaller till betalning första gången den **:förfallodagen**.',
+        'banktransfer' => 'Vänligen överför detta **:intervall** till följande konto, med angivande av användningsändamål (**:mandat**):',
+        'directdebit' => 'Vi kommer att debitera detta **:intervall** med mandatreferens **:mandat** från ditt konto **:iban**.',
+        'paypal' => 'Vi kommer att debitera detta **:intervall** från det angivna PayPal-kontot.',
+        'card' => 'Vi kommer att debitera detta **:intervall** från det angivna kreditkortet.',
+        'next_payments_hint' => 'Nästa betalning kan innehålla ytterligare avgifter från tidigare misslyckade betalningar. Om du har frågor om din avgift, vänligen skicka ett e-postmeddelande till oss.',
+        'amount' => 'Bidrag',
+        'now' => 'Och nu',
+        'interval' => [
+            'halbjährlich' => 'var sjätte månad',
+            'monatlich' => 'månadsvis',
+            'vierteljährlich' => 'kvartalsvis',
+            'jährlich' => 'årligen',
+        ],
+        'title' => 'Medlemskap',
+    ],
+    'key' => [
+        'title' => 'Söka med MetaGer',
+        'extension' => 'Våra webbtillägg för',
+        'description_third' => 'Om du har avaktiverat cookies i din webbläsare eller regelbundet raderar all webbplatsdata i din webbläsare, rekommenderar vi att du installerar vårt webbläsartillägg',
+        'description_sixth' => 'Om allt gick bra kommer du att se MetaGer-sökfältet och en grön nyckelsymbol. Klicka på denna nyckelsymbol en gång. Du kommer då att se alla egenskaper för din nyckel. Du kommer också att se flera alternativ för att överföra din nyckel till andra enheter. Antalet enheter är inte begränsat. Och kontrollera också inställningarna som du kan komma åt via MetaGer-menyn; andra sökmotorer, svarta listor, nattläge och mer.',
+        'description_first' => 'För att ställa in sökningen med MetaGer behöver du följande nyckel, som du kan använda för att logga in på valfritt antal enheter. Den kan användas omedelbart. Du kan hitta allt om det på våra [infosidor](:infos). Din nya medlemsnyckel kommer automatiskt att fyllas på av oss varje månad till ett värde av **€10,00** utan extra kostnad. Nyckeln är',
+        'description_second' => 'För att börja, gå helt enkelt till vår [startsida](:startsida_länk). Skriv in ovanstående nyckel där och skicka den genom att klicka på "Registrera med nyckel". Du kan göra samma sak genom att hämta följande URL för inställningar i din webbläsare:',
+        'description_fourth' => 'I ett sådant fall säkerställer detta att du kan fortsätta använda MetaGer utan att logga in igen och möjliggör verifierbar anonymitet i webbsökningar med hjälp av [anonym token](:anonymous_token_link).',
+        'description_fifth' => 'Alternativt kan du också ställa in ovanstående URL som ett bokmärke för snabb åtkomst eller ha nyckeln sparad i en lösenordshanterare. Med standardinställningarna i de flesta webbläsare kommer du dock att förbli permanent inloggad även utan ett webbläsartillägg.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon - en del av en stor familj',
+        'description_first' => 'SUMA-EV finns representerat i det alternativa och distribuerade sociala nätverket Mastodon med ett eget [konto](https://suma-ev.social/@MetaGer). För detta ändamål driver vi en [instans](https://suma-ev.social/) på våra egna servrar. Som medlem har du också exklusiv möjlighet att ansluta dig till [Fediverse](https://de.wikipedia.org/wiki/Mastodon_(Software)) via denna instans. Du kommer då att få ett användarkonto som slutar på @suma-ev.social.',
+        'description_second' => 'Syftet är att underlätta ett livligt utbyte: till exempel om alla ämnen som rör kunskapsfrihet, övervakning och integritet, men naturligtvis också om allmänna ämnen som inte har något att göra med SUMA-EV, MetaGer och integritetsskydd.',
+        'description_third' => 'För att komma igång är du välkommen att skapa ett konto på suma-ev.social med e-postadressen **:email**.',
+    ],
+    'subject' => "[SUMA-EV & MetaGer] Välkommen till SUMA-EV",
+    'general' => "Välkommen till SUMA-EV! Får jag först fråga hur du fick reda på om oss? Jag antar att det var genom vår sökmotor MetaGer? Tillsammans med dig har föreningen nu :member_count medlemmar från en mängd olika områden. Nedan följer några ytterligare förklaringar och tips som är mer än användbara för SUMA-EV.",
+    'websites' => [
+        'description' => 'På [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) hittar du många av de tidigare cirkulären och nyhetsbreven. Tidigare pressmeddelanden från SUMA-EV hittar du på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du är också mycket välkommen att bli upptagen på vår [offentliga medlemslista](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). I så fall är det bara att meddela oss kortfattat.',
+        'title' => 'Medlemskap',
+    ],
+    'greeting' => 'Bästa hälsningar',
 ];

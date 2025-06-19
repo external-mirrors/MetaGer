@@ -1,1 +1,4 @@
 <?php
+return [
+    'sponsored' => "Sponsorizzato",
+];

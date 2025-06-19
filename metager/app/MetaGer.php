@@ -1209,7 +1209,7 @@ class MetaGer
 
     public static function getMGLogFile()
     {
-        $logpath = storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/");
+        $logpath = storage_path("metager/" . date("Y") . "/" . date("m") . "/");
         if (!file_exists($logpath)) {
             mkdir($logpath, 0777, true);
         }

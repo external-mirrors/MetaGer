@@ -184,7 +184,7 @@ class HumanVerification extends Controller
             "time=" . $time,
             "dnaa=" . var_export($dnaa, true)
         ];
-        $file_path = \storage_path("logs/metager/captcha_solve.csv");
+        $file_path = \storage_path("metager/captcha_solve.csv");
         $fh = fopen($file_path, "a");
         try {
             \fputcsv($fh, $log);

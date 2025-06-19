@@ -271,7 +271,7 @@ class BrowserVerification
     public static function FLUSH_LOGS()
     {
         $max_entries = 250;
-        $file_path = \storage_path("logs/metager/bv_fail.csv");
+        $file_path = \storage_path("metager/bv_fail.csv");
         $fh = fopen($file_path, "a");
 
         $logs = [];

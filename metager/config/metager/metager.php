@@ -20,7 +20,6 @@ return [
     "keys" => [
         "uni_mainz" => env("mainz_key"),
         "assoziator" => env("ASSO_KEY"),
-        "berlin" => env("berlin"),
     ],
     "tts" => [
         "base_url" => env("TTS_BASE_URL", ""),
@@ -32,12 +31,6 @@ return [
             "user" => env("FETCHER_PROXY_USER", ""),
             "password" => env("FETCHER_PROXY_PASSWORD", ""),
         ],
-    ],
-    "fail2ban" => [
-        "enabled" => true,
-        "url" => env("fail2banurl", false),
-        "user" => env("fail2banuser", false),
-        "password" => env("fail2banpassword", false),
     ],
     "ticketsystem" => [
         "url" => env("TICKET_URL", "https://metager.de"),

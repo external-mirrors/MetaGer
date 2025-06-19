@@ -43,7 +43,7 @@ class Spam
                 abort(404);
             }
             // ToDo Remove Log
-            $file_path = \storage_path("logs/metager/spam.csv");
+            $file_path = \storage_path("metager/spam.csv");
             $fh = fopen($file_path, "a");
             try {
 

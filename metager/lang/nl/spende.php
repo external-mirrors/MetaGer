@@ -201,6 +201,7 @@ return [
                 'address-admin-area-line-2' => 'Staat',
                 'address-country-code' => 'Landcode (bijv. VS, DE, GB)',
                 'address-postal-code' => 'Postcode',
+                'address-admin-area-line-1' => 'Stad',
             ],
             'loading' => 'Creditcard laden',
         ],

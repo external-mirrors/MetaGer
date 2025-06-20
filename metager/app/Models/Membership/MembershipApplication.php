@@ -208,9 +208,6 @@ class MembershipApplication extends Model
         if ($this->paypal !== null) {
             $new_entry->paypal()->create($this->paypal->attributes);
         }
-        if ($this->directdebit !== null) {
-            $new_entry->directdebit()->create($this->directdebit->attributes);
-        }
         if ($this->reduction !== null) {
             $new_entry->reduction()->create($this->reduction->attributes);
         }

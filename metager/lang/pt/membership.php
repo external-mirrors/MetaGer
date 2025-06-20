@@ -16,6 +16,7 @@ return [
         ],
         'update_hint' => 'As alterações solicitadas para a sua inscrição serão analisadas/aceites em breve. Se estiver satisfeito com o estado apresentado, pode sair desta página. Caso contrário, pode efetuar mais alterações ou eliminar o seu pedido de alteração através do botão abaixo.',
         'payment_block' => 'Tentaremos autorizar um pagamento para a sua próxima quota de membro para validar o seu método de pagamento, mas o pagamento só será executado se for devido nas duas semanas seguintes e anulado caso contrário.',
+        'update' => 'Em baixo, verá as informações que guardámos sobre a sua inscrição. Pode alterar estas informações clicando em "Editar". Não é possível alterar os seus dados de contacto aqui. Se estes foram alterados, envie-nos um e-mail para <a href=":contact_link" target="_blank"></a> com as suas informações actualizadas.',
     ],
     'data' => [
         'description' => 'Registámos os seguintes dados para a sua aplicação:',

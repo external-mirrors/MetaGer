@@ -199,7 +199,7 @@ return [
                 'PPVC' => "Validera valuta",
                 'PPVE' => "Valideringsfel",
                 'PPVT' => "Virtuell terminal stöds inte",
-                'declined_reason' => "Kreditkortet nekades med anledning: :anledning",
+                'declined_reason' => "Kreditkortet nekades med anledning: :reason",
                 'syntax' => 'De inmatade uppgifterna är felaktiga. Vänligen validera.',
                 'acceptance' => 'Kortet med de angivna uppgifterna accepterades inte av vår betalningsprocessor. Vänligen validera uppgifterna och försök igen.',
                 'try_again' => 'Ditt kort gick inte igenom. Vänligen försök igen!',

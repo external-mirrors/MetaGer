@@ -12,6 +12,7 @@ return [
         'update_hint' => 'Le modifiche richieste per la vostra iscrizione saranno esaminate/accettate a breve. Se siete soddisfatti dello stato mostrato, potete lasciare questa pagina. In caso contrario, è possibile apportare ulteriori modifiche o cancellare la richiesta di modifica con il pulsante sottostante.',
         'description' => 'Grazie per aver preso in considerazione l\'iscrizione a <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> nella nostra associazione no-profit. Per poter elaborare la sua domanda di adesione, abbiamo bisogno solo di alcune informazioni, che può compilare qui.',
         'payment_block' => 'Cercheremo di autorizzare il pagamento della prossima quota associativa per convalidare il metodo di pagamento, ma il pagamento verrà eseguito solo se la scadenza è prevista entro le due settimane successive e annullato in caso contrario.',
+        'update' => 'Di seguito sono riportate le informazioni che abbiamo memorizzato per la vostra iscrizione. È possibile modificare queste informazioni facendo clic su "Modifica". Non è possibile modificare i dati di contatto. Se questi sono cambiati, inviateci un\'e-mail a <a href=":contact_link" target="_blank"></a> con le informazioni aggiornate.',
     ],
     'data' => [
         'description' => 'Abbiamo registrato i seguenti dati per la vostra applicazione:',

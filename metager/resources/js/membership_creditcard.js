@@ -1,4 +1,4 @@
-import { loadScript } from "@paypal/paypal-js";
+import { loadCustomScript, loadScript } from "@paypal/paypal-js";
 
 let creditcard_container = document.querySelector("#creditcard-data");
 const membership_form = document.getElementById("membership-form");
@@ -8,12 +8,18 @@ let success_callback = null;
 
 export function initializeCreditcard() {
     let required =
-        document.querySelector("#payment-method-creditcard")?.checked == true && !document.querySelector("#membership-payment-method >div")?.classList.contains("disabled");
+        document.querySelector("#payment-method-creditcard")?.checked == true &&
+        !document
+            .querySelector("#membership-payment-method >div")
+            ?.classList.contains("disabled");
 
-
-    if (!required) return;
+    if (!required) {
+        uninitializeCreditcard();
+        return;
+    }
     if (card_fields == null) {
         creditcard_container.classList.add("loading");
+        toggleFormSubmit(false, false);
         let background_color =
             window
                 .getComputedStyle(document.querySelector("html"))
@@ -57,47 +63,71 @@ export function initializeCreditcard() {
             window
                 .getComputedStyle(document.querySelector("#firstname"))
                 .getPropertyValue("font-family") ?? "";
-        let client_id = document.querySelector("#payment-method-creditcard").dataset.clientid;
-        loadScript({ clientId: client_id, components: ["card-fields"], currency: "EUR", vault: true, intent: "authorize" }).then(paypal => {
-            let card_field_options = {
-                createOrder: createOrder, onError: onError, onApprove: approveOrder, style: {
-                    'body': {
-                        padding: '1px',
-                        background: background_color,
+        let client_id = document.querySelector("#payment-method-creditcard").dataset
+            .clientid;
+        loadScript({
+            clientId: client_id,
+            components: ["card-fields"],
+            currency: "EUR",
+            vault: true,
+            intent: "authorize",
+        })
+            .then((paypal) => {
+                let card_field_options = {
+                    createOrder: createOrder,
+                    onError: onError,
+                    onApprove: approveOrder,
+                    style: {
+                        body: {
+                            padding: "1px",
+                            background: background_color,
+                        },
+                        input: {
+                            padding: "0.5rem 1rem",
+                            "font-size": "16px",
+                            background: background_color,
+                            color: color,
+                            border: border_width + " " + border_style + " " + border_color,
+                            "border-radius": border_radius,
+                            "line-height": line_height,
+                            height: height,
+                            "font-size": font_size,
+                            "font-family": font_family,
+                        },
+                        "input:focus": {
+                            "box-shadow": "none",
+                            outline: "auto",
+                        },
                     },
-                    'input': {
-                        'padding': '0.5rem 1rem',
-                        'font-size': '16px',
-                        background: background_color,
-                        color: color,
-                        border: border_width + " " + border_style + " " + border_color,
-                        'border-radius': border_radius,
-                        'line-height': line_height,
-                        height: height,
-                        'font-size': font_size,
-                        'font-family': font_family
-                    },
-                    'input:focus': {
-                        'box-shadow': 'none',
-                        'outline': 'auto',
-                    }
-                }
-            };
+                };
 
-            card_fields = paypal.CardFields(card_field_options);
-            if (card_fields.isEligible()) {
-                let render_promises = [];
-                const name_field = card_fields.NameField({});
-                render_promises.push(name_field.render("#creditcard-name"));
-                const number_field = card_fields.NumberField({});
-                render_promises.push(number_field.render("#creditcard-number"));
-                const valid_until_field = card_fields.ExpiryField({});
-                render_promises.push(valid_until_field.render("#creditcard-valid-until"));
-                const cvv_field = card_fields.CVVField({});
-                render_promises.push(cvv_field.render("#creditcard-cvv"));
-                Promise.all(render_promises).then(() => creditcard_container.classList.remove("loading"));
-            }
-        });
+                card_fields = paypal.CardFields(card_field_options);
+                if (card_fields.isEligible()) {
+                    let render_promises = [];
+                    const name_field = card_fields.NameField({});
+                    render_promises.push(name_field.render("#creditcard-name"));
+                    const number_field = card_fields.NumberField({});
+                    render_promises.push(number_field.render("#creditcard-number"));
+                    const valid_until_field = card_fields.ExpiryField({});
+                    render_promises.push(
+                        valid_until_field.render("#creditcard-valid-until")
+                    );
+                    const cvv_field = card_fields.CVVField({});
+                    render_promises.push(cvv_field.render("#creditcard-cvv"));
+                    Promise.all(render_promises).then(() => {
+                        creditcard_container.classList.remove("loading");
+                        toggleFormSubmit(true);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                document.querySelector("#creditcard-data").textContent =
+                    "Error Loading payment processor. Please try again later.";
+                document.querySelector("#creditcard-data").classList.add("error");
+                creditcard_container.classList.remove("loading");
+                return;
+            });
 
         let createOrder = async (data, actions) => {
             let form_data = new FormData(membership_form);
@@ -121,7 +151,13 @@ export function initializeCreditcard() {
                     throw new Error(response_json);
                 }
             }).catch(error => {
-                // ToDo handle order creation error
+                console.error(error);
+                if (error.message) {
+                    handle_card_error("custom", error.message);
+                } else {
+                    handle_card_error("syntax");
+                }
+                return handleCancel();
             });
         };
         let approveOrder = async (data, actions) => {
@@ -147,21 +183,33 @@ export function initializeCreditcard() {
                         }
                     }
                 }).catch(error => {
-
+                    console.error(error);
+                    if (error.message) {
+                        handle_card_error("custom", error.message);
+                    } else {
+                        handle_card_error("syntax");
+                    }
+                    return handleCancel();
                 });
             } else {
-                handleCancel();
+                return handleCancel();
             }
         }
         let onError = async error => {
-            console.log("Error:", error);
+            console.error(error);
+            if (error.message) {
+                handle_card_error("custom", error.message);
+            } else {
+                handle_card_error("syntax");
+            }
             return handleCancel();
         }
     }
     membership_form.addEventListener("submit", handleSubmit);
 }
 
-export function uninitializeCreditcard() {
+function uninitializeCreditcard() {
+    toggleFormSubmit(true);
     membership_form.removeEventListener("submit", handleSubmit);
 }
 
@@ -169,19 +217,17 @@ function handleSubmit(e) {
     e.preventDefault();
     toggleFormSubmit(false);
     clear_card_errors();
-    card_fields.getState().then(state => {
+    card_fields.getState().then((state) => {
         if (!state.isFormValid) {
             handle_card_error("syntax");
         } else {
             let card_fields_promise = null;
             if (billingFilled()) {
                 card_fields_promise = card_fields.submit({
-                    addressLine1: document.getElementById(
-                        "card-billing-address-line-1"
-                    ).value,
-                    addressLine2: document.getElementById(
-                        "card-billing-address-line-2"
-                    ).value,
+                    addressLine1: document.getElementById("card-billing-address-line-1")
+                        .value,
+                    addressLine2: document.getElementById("card-billing-address-line-2")
+                        .value,
                     adminArea1: document.getElementById(
                         "card-billing-address-admin-area-line-1"
                     ).value,
@@ -198,7 +244,7 @@ function handleSubmit(e) {
             } else {
                 card_fields_promise = card_fields.submit();
             }
-            card_fields_promise.catch(error => {
+            card_fields_promise.catch((error) => {
                 console.error(error);
                 if (error.message) {
                     handle_card_error("custom", error.message);
@@ -210,7 +256,7 @@ function handleSubmit(e) {
     });
 }
 
-function toggleFormSubmit(enabled = true) {
+function toggleFormSubmit(enabled = true, loading = true) {
     let submit_button = document.querySelector("button[type=submit]");
     if (enabled) {
         submit_button.classList.add("btn-primary");
@@ -223,28 +269,25 @@ function toggleFormSubmit(enabled = true) {
         submit_button.classList.add("loading");
         submit_button.disabled = true;
     }
+    if (!enabled && !loading) {
+        submit_button.classList.remove("loading");
+    }
 }
 
 async function handleCancel() {
-    if (cancel_callback != null) {
-        return fetch(cancel_callback, {
-            headers: {
-                Accept: "application/json"
-            }
-        }).then(() => {
-            cancel_callback = null;
-            return fetch("/membership/token", { headers: { Accept: "application/json" } });
-
-        }).then(async response => {
+    return fetch("/membership/token", {
+        headers: { Accept: "application/json" },
+    })
+        .then(async (response) => {
             if (response.status == 200) {
                 let json_response = await response.json();
                 let token = json_response.token;
                 document.querySelector("input[name=_token]").value = token;
             }
-        }).finally(() => {
+        })
+        .finally(() => {
             toggleFormSubmit(true);
         });
-    }
 }
 
 function handle_card_error(error_type, message) {
@@ -258,6 +301,12 @@ function handle_card_error(error_type, message) {
             errors.querySelector("#syntax-error").classList.remove("hidden");
             break;
         case "custom":
+            if (message.indexOf("/confirm-payment-source") > -1) {
+                try {
+                    let error_array = message.split("\n");
+                    message = JSON.parse(error_array[2]).details[0].description;
+                } catch (error) { }
+            }
             let error_container = document.createElement("div");
             error_container.classList.add("error", "custom-error");
             error_container.textContent = message;
@@ -268,19 +317,23 @@ function handle_card_error(error_type, message) {
 
 function clear_card_errors() {
     let errors = document.querySelector("#creditcard-data #errors");
-    errors.querySelectorAll(".custom-error").forEach(element => {
+    errors.querySelectorAll(".custom-error").forEach((element) => {
         element.remove();
     });
-    errors.querySelectorAll(".error").forEach(element => {
+    errors.querySelectorAll(".error").forEach((element) => {
         element.classList.add("hidden");
     });
 }
 
 function billingFilled() {
-    return document.querySelector("#card-billing-address-line-1").value != "" ||
+    return (
+        document.querySelector("#card-billing-address-line-1").value != "" ||
         document.querySelector("#card-billing-address-line-2").value != "" ||
-        document.querySelector("#card-billing-address-admin-area-line-1").value != "" ||
-        document.querySelector("#card-billing-address-admin-area-line-2").value != "" ||
+        document.querySelector("#card-billing-address-admin-area-line-1").value !=
+        "" ||
+        document.querySelector("#card-billing-address-admin-area-line-2").value !=
+        "" ||
         document.querySelector("#card-billing-address-country-code").value != "" ||
-        document.querySelector("#card-billing-address-postal-code").value != "";
+        document.querySelector("#card-billing-address-postal-code").value != ""
+    );
 }

@@ -170,7 +170,7 @@ return [
                 'PPVC' => "Validar moneda",
                 'PPVE' => "Error de validación",
                 'PPVT' => "Terminal virtual no soportado",
-                'declined_reason' => "La tarjeta de crédito ha sido rechazada por el motivo: :motivo",
+                'declined_reason' => "La tarjeta de crédito ha sido rechazada por el motivo: :reason",
                 'syntax' => 'Los datos introducidos son incorrectos. Por favor, valídelos.',
                 'acceptance' => 'La tarjeta con los datos facilitados no ha sido aceptada por nuestro procesador de pagos. Por favor, valide los datos e inténtelo de nuevo.',
                 'try_again' => 'Su tarjeta no ha sido procesada. Por favor, inténtelo de nuevo.',

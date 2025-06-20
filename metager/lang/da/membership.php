@@ -17,6 +17,7 @@ return [
         ],
         'update_hint' => 'De ønskede ændringer for dit medlemskab vil snart blive gennemgået/accepteret. Hvis du er tilfreds med den viste tilstand, kan du forlade denne side. Ellers kan du foretage flere ændringer eller slette din ændringsanmodning med knappen nedenfor.',
         'payment_block' => 'Vi vil forsøge at godkende en betaling for dit næste medlemsgebyr for at validere din betalingsmetode, men betalingen vil kun blive gennemført, hvis den forfalder inden for de næste to uger, og ellers annulleres den.',
+        'update' => 'Nedenfor kan du se de oplysninger, vi har gemt om dit medlemskab. Du kan ændre disse oplysninger ved at klikke på "Rediger". Det er ikke muligt at ændre dine kontaktoplysninger her. Hvis de har ændret sig, bedes du sende os en e-mail til <a href=":contact_link" target="_blank"></a> med dine opdaterede oplysninger.',
     ],
     'data' => [
         'description' => 'Vi har registreret følgende data til din ansøgning:',

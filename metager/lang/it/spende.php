@@ -130,7 +130,7 @@ return [
                 'PPVC' => "Convalida della valuta",
                 'PPVE' => "Errore di convalida",
                 'PPVT' => "Terminale virtuale non supportato",
-                'declined_reason' => "La carta di credito è stata rifiutata con il seguente motivo: :motivo",
+                'declined_reason' => "La carta di credito è stata rifiutata con il seguente motivo: :reason",
                 'syntax' => 'I dati inseriti non sono corretti. Si prega di convalidare.',
                 'acceptance' => 'La carta con i dati forniti non è stata accettata dal nostro processore di pagamento. Convalidare i dati e riprovare.',
                 'try_again' => 'La carta non è stata accettata. Si prega di riprovare!',

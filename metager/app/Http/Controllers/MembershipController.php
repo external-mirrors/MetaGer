@@ -57,7 +57,7 @@ class MembershipController extends Controller
 
             $application = null;
             if ($application_id !== null) {
-                $application = MembershipApplication::find($application_id);
+                $application = uuid_is_valid($application_id) ? MembershipApplication::find($application_id) : null;
                 $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
                 if ($application === null) {
                     $edit_data = json_decode(base64_decode($application_id), true);
@@ -146,6 +146,8 @@ class MembershipController extends Controller
                 }
             }
 
+            $csp = "default-src * 'unsafe-inline' 'unsafe-eval'";
+
             return response(view(
                 "membership.form",
                 [
@@ -156,7 +158,7 @@ class MembershipController extends Controller
                     "js" => [mix("/js/membership.js")],
                     "application" => $application
                 ]
-            ));
+            ), 200, ["Content-Security-Policy" => $csp]);
         } else {
             return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
         }
@@ -633,6 +635,7 @@ class MembershipController extends Controller
         $membership_applications = MembershipApplication::finishedAdmin()->get();
         $membership_update_requests = MembershipApplication::updateRequestsAdmin()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
+        $unfinished_applications = MembershipApplication::unfinishedUser()->get();
         return response(view(
             "admin.membership.index",
             [
@@ -640,6 +643,7 @@ class MembershipController extends Controller
                 "membership_applications" => $membership_applications,
                 "membership_update_requests" => $membership_update_requests,
                 "reduction_requests" => $reduction_requests,
+                "unfinished_applications" => $unfinished_applications,
                 "css" => [mix("/css/admin/membership.css")],
                 "js" => [mix("/js/admin/membership.js")]
             ]
@@ -943,6 +947,7 @@ class MembershipController extends Controller
                 "headers" => [
                     "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
                 ],
+                "proxy" => false,
                 "name" => "PayPal",
             ];
             $mission = json_encode($mission);

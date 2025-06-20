@@ -945,6 +945,7 @@ class MembershipController extends Controller
                 "headers" => [
                     "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
                 ],
+                "proxy" => false,
                 "name" => "PayPal",
             ];
             $mission = json_encode($mission);

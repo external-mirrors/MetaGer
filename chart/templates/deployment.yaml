@@ -87,12 +87,12 @@ spec:
             mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
             subPath: BLACKLIST_DESCRIPTION_URL
           - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/logs/metager
+            mountPath: /metager/metager_app/storage/metager
             readOnly: false
           - name: sqlite-databases
             mountPath: /metager/metager_app/database/databases
           - name: fast-logs
-            mountPath: /metager/metager_app/storage/logs/metager/fast_dir
+            mountPath: /metager/metager_app/storage/metager/fast_dir
           ports:
             - name: http
               containerPort: 8080
@@ -140,12 +140,12 @@ spec:
             subPath: ENV_PRODUCTION
             readOnly: true
           - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/logs/metager
+            mountPath: /metager/metager_app/storage/metager
             readOnly: false
           - name: sqlite-databases
             mountPath: /metager/metager_app/database/databases
           - name: fast-logs
-            mountPath: /metager/metager_app/storage/logs/metager/fast_dir
+            mountPath: /metager/metager_app/storage/metager/fast_dir
           ports:
             - name: http
               containerPort: 8080

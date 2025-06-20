@@ -45,7 +45,7 @@ class AdminSpamController extends Controller
         $banTime = $request->input('ban-time');
         $banRegexp = $request->input('regexp');
 
-        $file = storage_path('logs/metager/ban.txt');
+        $file = storage_path('metager/ban.txt');
 
         $bans = [];
         if (file_exists($file)) {
@@ -143,7 +143,7 @@ class AdminSpamController extends Controller
 
     public function getBans()
     {
-        $file = \storage_path('logs/metager/ban.txt');
+        $file = \storage_path('metager/ban.txt');
         $bans = [];
 
         if (file_exists($file)) {
@@ -164,7 +164,7 @@ class AdminSpamController extends Controller
 
     public function deleteRegexp(Request $request)
     {
-        $file = \storage_path('logs/metager/ban.txt');
+        $file = \storage_path('metager/ban.txt');
         $bans = [];
 
         if (file_exists($file)) {

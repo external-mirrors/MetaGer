@@ -1,0 +1,26 @@
+table {
+    width: 100%;
+    text-align: center;
+}
+
+dialog {
+    &::backdrop {
+        background-color: var(--background-color);
+        opacity: 0.6;
+    }
+
+    background-color: var(--highlight-color);
+    color: var(--font-color);
+    border-color: var(--border-color);
+
+    >div {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 0.5rem;
+
+        >textarea,
+        label {
+            grid-column: span 2;
+        }
+    }
+}

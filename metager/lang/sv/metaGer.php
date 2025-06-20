@@ -90,7 +90,7 @@ return [
         'imagelicense' => [
             'any' => 'Ej vald',
             'public' => 'Offentlig domän',
-            'share' => 'Andel',
+            'share' => 'Dela',
             'sharecommercially' => 'Aktie (kommersiellt)',
             'modify' => 'Ändra',
             'modifycommercially' => 'Modifiera (kommersiellt)',

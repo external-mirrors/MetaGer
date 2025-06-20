@@ -16,6 +16,6 @@ if [ ! -f "$BASE_DIR/database/databases/database.sqlite" ]; then
     touch "$BASE_DIR/database/databases/database.sqlite"
 fi
 
-if [ ! -d "$BASE_DIR/storage/logs/metager" ]; then
-    mkdir -p $BASE_DIR/storage/logs/metager
+if [ ! -d "$BASE_DIR/storage/metager" ]; then
+    mkdir -p $BASE_DIR/storage/metager
 fi

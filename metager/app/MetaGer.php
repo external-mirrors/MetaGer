@@ -1013,20 +1013,6 @@ class MetaGer
 
         $this->hostBlacklist = array_merge($this->hostBlacklist, app(SearchSettings::class)->blacklist);
         $this->hostBlacklist = array_unique($this->hostBlacklist);
-
-        // print the host blacklist as a user warning
-        if (sizeof($this->hostBlacklist) > 0) {
-            if (sizeof($this->hostBlacklist) <= 3) {
-                $hostString = "";
-                foreach ($this->hostBlacklist as $host) {
-                    $hostString .= $host . ", ";
-                }
-                $hostString = rtrim($hostString, ", ");
-                $this->warnings[] = trans('metaGer.formdata.hostBlacklist', ['host' => $hostString]);
-            } else {
-                $this->warnings[] = trans('metaGer.formdata.hostBlacklistCount', ['count' => sizeof($this->hostBlacklist)]);
-            }
-        }
     }
 
     private function searchCheckDomainBlacklist($request)
@@ -1054,20 +1040,6 @@ class MetaGer
         }
         $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist_tld);
         $this->domainBlacklist = array_unique($this->domainBlacklist);
-
-        // print the domain blacklist as a user warning
-        if (sizeof($this->domainBlacklist) > 0) {
-            if (sizeof($this->domainBlacklist) <= 3) {
-                $domainString = "";
-                foreach ($this->domainBlacklist as $domain) {
-                    $domainString .= $domain . ", ";
-                }
-                $domainString = rtrim($domainString, ", ");
-                $this->warnings[] = trans('metaGer.formdata.domainBlacklist', ['domain' => $domainString]);
-            } else {
-                $this->warnings[] = trans('metaGer.formdata.domainBlacklistCount', ['count' => sizeof($this->domainBlacklist)]);
-            }
-        }
     }
 
     private function searchCheckUrlBlacklist()
@@ -1209,7 +1181,7 @@ class MetaGer
 
     public static function getMGLogFile()
     {
-        $logpath = storage_path("logs/metager/" . date("Y") . "/" . date("m") . "/");
+        $logpath = storage_path("metager/" . date("Y") . "/" . date("m") . "/");
         if (!file_exists($logpath)) {
             mkdir($logpath, 0777, true);
         }

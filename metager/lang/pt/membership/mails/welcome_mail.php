@@ -1,0 +1,46 @@
+<?php
+return [
+    'key' => [
+        'title' => 'Pesquisar com o MetaGer',
+        'extension' => 'As nossas extensões Web para',
+        'description_first' => 'Para configurar a pesquisa com o MetaGer, é necessária a seguinte chave, que pode ser utilizada para iniciar sessão em qualquer número de dispositivos. Pode ser utilizada imediatamente. Pode encontrar tudo sobre o assunto nas nossas [páginas de informação](:infos). A sua nova chave de membro será automaticamente recarregada por nós todos os meses até ao valor de **10,00€** sem qualquer custo adicional. A chave é',
+        'description_second' => 'Para começar, basta ir à nossa [startpage](:startpage_link). Introduza aí a chave acima referida e envie-a clicando em "Registar com chave". Pode fazer o mesmo chamando o seguinte URL de definições no seu navegador Web:',
+        'description_third' => 'Se tiver desativado os cookies no seu navegador ou se apagar regularmente todos os dados do sítio Web no seu navegador, recomendamos que instale a nossa extensão do navegador',
+        'description_fourth' => 'Neste caso, isto garante que pode continuar a utilizar o MetaGer sem ter de iniciar sessão novamente e permite o anonimato verificável nas pesquisas na Web através do [token anónimo](:anonymous_token_link).',
+        'description_fifth' => 'Em alternativa, também pode configurar o URL acima como um marcador para acesso rápido ou ter a chave guardada num gestor de palavras-passe. No entanto, com as definições predefinidas da maioria dos browsers, a sessão será permanentemente iniciada, mesmo sem uma extensão do browser.',
+        'description_sixth' => 'Se tudo correu bem, verá o campo de pesquisa do MetaGer e um símbolo de chave verde. Clique uma vez neste símbolo de chave. Verá então todas as propriedades da sua chave. Também verá várias opções para transferir a sua chave para outros dispositivos. O número de dispositivos não é limitado. E verifique também as definições a que pode aceder através do menu MetaGer; outros motores de busca, listas negras, modo noturno e muito mais.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon - parte de uma grande família',
+        'description_first' => 'A SUMA-EV está representada na rede social alternativa e distribuída Mastodon com a sua própria [conta](https://suma-ev.social/@MetaGer). Para o efeito, operamos uma [instância] (https://suma-ev.social/) nos nossos próprios servidores. Como membro, tem também a oportunidade exclusiva de aderir ao [Fediverso](https://de.wikipedia.org/wiki/Mastodon_(Software)) através desta instância. Receberá então uma conta de utilizador que termina em @suma-ev.social.',
+        'description_second' => 'O objetivo é facilitar um intercâmbio animado: por exemplo, sobre todos os temas relacionados com a liberdade de conhecimento, a vigilância e a privacidade, mas também, naturalmente, sobre temas gerais que nada têm a ver com o SUMA-EV, o MetaGer e a proteção da privacidade.',
+        'description_third' => 'Para começar, pode criar uma conta em suma-ev.social com o endereço de correio eletrónico **:email**.',
+    ],
+    'greeting' => 'Com os melhores cumprimentos',
+    'subject' => "[SUMA-EV & MetaGer] Bem-vindo ao SUMA-EV",
+    'general' => "Bem-vindo ao SUMA-EV! Posso começar por perguntar como é que nos conheceu? Presumo que através do nosso motor de busca MetaGer? Juntamente consigo, a associação conta agora com :member_count membros das mais diversas áreas. Seguem-se algumas explicações e dicas que são mais do que úteis para a SUMA-EV.",
+    'membership' => [
+        'description' => 'Esta mensagem eletrónica é também a confirmação da sua adesão. Por favor, confirme brevemente que recebeu esta mensagem de correio eletrónico. A sua quotização no valor de **:montante€** é devida pela primeira vez em **:vencimento**.',
+        'banktransfer' => 'Queira transferir este **intervalo** para a seguinte conta, indicando o objetivo da utilização (**mandato**):',
+        'directdebit' => 'Debitaremos este **:intervalo** com a referência do mandato **:mandato** da sua conta **:iban**.',
+        'paypal' => 'Iremos debitar este **:intervalo** da conta PayPal especificada.',
+        'card' => 'Iremos debitar este **:intervalo** do cartão de crédito especificado.',
+        'mandate' => 'Objetivo da utilização',
+        'next_payments' => 'As próximas contribuições',
+        'next_payments_hint' => 'O pagamento seguinte pode incluir taxas adicionais de pagamentos anteriores não efectuados. Se tiver dúvidas sobre a sua taxa, envie-nos uma mensagem de correio eletrónico.',
+        'due' => 'Data de vencimento',
+        'amount' => 'Contribuição',
+        'now' => 'Agora',
+        'interval' => [
+            'halbjährlich' => 'semestral',
+            'monatlich' => 'mensal',
+            'vierteljährlich' => 'trimestral',
+            'jährlich' => 'anualmente',
+        ],
+        'title' => 'Filiação',
+    ],
+    'websites' => [
+        'description' => 'Em [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) encontrará muitas das circulares e boletins informativos anteriores. Pode encontrar os comunicados de imprensa anteriores da SUMA-EV em [suma-ev.de/presse/](https://suma-ev.de/presse/). Também é muito bem-vindo para receber uma entrada na nossa [lista pública de membros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Neste caso, basta informar-nos brevemente.',
+        'title' => 'Filiação',
+    ],
+];

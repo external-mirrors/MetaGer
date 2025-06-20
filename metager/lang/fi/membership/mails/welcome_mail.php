@@ -1,0 +1,46 @@
+<?php
+return [
+    'key' => [
+        'description_third' => 'Jos olet poistanut evästeet käytöstä selaimessasi tai poistat säännöllisesti kaikki verkkosivuston tiedot selaimestasi, suosittelemme selainlaajennuksen asentamista.',
+        'title' => 'MetaGerin haku',
+        'extension' => 'Verkkolaajennuksemme',
+        'description_first' => 'MetaGer-hakua varten tarvitset seuraavan avaimen, jolla voit kirjautua sisään millä tahansa laitteella. Sitä voidaan käyttää välittömästi. Löydät kaiken siitä [info-sivuiltamme](:infos). Me lataamme uuden jäsenavaimesi automaattisesti joka kuukausi **10,00 euron** arvosta ilman lisäkustannuksia. Avain on',
+        'description_second' => 'Aloita yksinkertaisesti siirtymällä [aloitussivulle](:aloitussivun_linkki). Kirjoita sinne yllä oleva avain ja lähetä se klikkaamalla "Rekisteröidy avaimella". Voit tehdä saman kutsumalla seuraavan asetusten URL-osoitteen selaimellasi:',
+        'description_fourth' => 'Tällaisessa tapauksessa tämä varmistaa, että voit jatkaa MetaGerin käyttöä kirjautumatta sisään uudelleen, ja mahdollistaa todennettavan anonymiteetin verkkohauissa [anonymous token](:anonymous_token_link) avulla.',
+        'description_fifth' => 'Vaihtoehtoisesti voit myös asettaa yllä olevan URL-osoitteen kirjanmerkiksi nopeaa käyttöä varten tai tallentaa avaimen salasananhallintaan. Useimpien selainten oletusasetuksilla pysyt kuitenkin jatkuvasti kirjautuneena sisään, vaikka selainlaajennusta ei olisikaan.',
+        'description_sixth' => 'Jos kaikki meni hyvin, näet MetaGer-hakukentän ja vihreän avainsymbolin. Napsauta tätä avainsymbolia kerran. Tämän jälkeen näet kaikki avaimesi ominaisuudet. Näet myös useita vaihtoehtoja avaimen siirtämiseksi muihin laitteisiin. Laitteiden määrää ei ole rajoitettu. Ja tarkista myös asetukset, joihin pääset MetaGer-valikon kautta; muut hakukoneet, mustat listat, yötila ja paljon muuta.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon - osa suurta perhettä',
+        'description_first' => 'SUMA-EV on edustettuna vaihtoehtoisessa ja hajautetussa sosiaalisessa verkostossa Mastodonissa omalla [tilillään] (https://suma-ev.social/@MetaGer). Tätä varten käytämme [instanssia](https://suma-ev.social/) omilla palvelimillamme. Jäsenenä sinulla on myös yksinoikeus liittyä [Fediverseen](https://de.wikipedia.org/wiki/Mastodon_(Software)) tämän instanssin kautta. Saat tällöin käyttäjätilin, joka päättyy osoitteeseen @suma-ev.social.',
+        'description_second' => 'Tavoitteena on edistää vilkasta keskustelua esimerkiksi kaikista tiedonvapauteen, valvontaan ja yksityisyyteen liittyvistä aiheista, mutta tietenkin myös yleisistä aiheista, joilla ei ole mitään tekemistä SUMA-EV:n, MetaGerin ja yksityisyyden suojan kanssa.',
+        'description_third' => 'Aloittaaksesi voit luoda tilin osoitteessa suma-ev.social sähköpostiosoitteella **:email**.',
+    ],
+    'greeting' => 'Ystävällisin terveisin',
+    'subject' => "[SUMA-EV & MetaGer] Tervetuloa SUMA-EV:hen!",
+    'general' => "Tervetuloa SUMA-EV:hen! Saanko ensin kysyä, miten sait tietää meistä? Oletan hakukoneemme MetaGerin kautta? Yhdistyksellä on nyt kanssasi :member_count jäseniä monilta eri aloilta. Seuraavassa on muutamia lisäselvityksiä ja vinkkejä, jotka ovat enemmän kuin hyödyllisiä SUMA-EV:lle.",
+    'membership' => [
+        'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:summa€**, erääntyy ensimmäisen kerran **:eräpäivä**.',
+        'banktransfer' => 'Siirrä tämä **:intervalli** seuraavalle tilille ja ilmoita käyttötarkoitus (**:valtuutus**):',
+        'directdebit' => 'Me veloitamme tämän **:intervalli** valtuutuksen viitteellä **:valtuutus** tililtäsi **:iban**.',
+        'paypal' => 'Me veloitamme tämän **:aikavälin** määritetyltä PayPal-tililtä.',
+        'card' => 'Veloitamme tämän **:aikavälin** määritetyltä luottokortilta.',
+        'mandate' => 'Käyttötarkoitus',
+        'next_payments' => 'Seuraavat rahoitusosuudet',
+        'next_payments_hint' => 'Seuraavaan maksuun saattaa sisältyä lisämaksuja aiemmin epäonnistuneista maksuista. Jos sinulla on kysyttävää maksusta, lähetä meille sähköpostia.',
+        'due' => 'Eräpäivä',
+        'amount' => 'Osallistuminen',
+        'now' => 'Nyt',
+        'interval' => [
+            'halbjährlich' => 'puolivuosittain',
+            'jährlich' => 'vuosittain',
+            'monatlich' => 'kuukausittain',
+            'vierteljährlich' => 'neljännesvuosittain',
+        ],
+        'title' => 'Jäsenyys',
+    ],
+    'websites' => [
+        'description' => 'Osoitteessa [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) on useita aiempia kiertokirjeitä ja uutiskirjeitä. Aiemmat SUMA-EV:n lehdistötiedotteet löydät osoitteesta [suma-ev.de/presse/](https://suma-ev.de/presse/). Olette myös erittäin tervetulleita saamaan merkinnän [julkiseen jäsenluetteloon](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Ilmoita tässä tapauksessa vain lyhyesti.',
+        'title' => 'Jäsenyys',
+    ],
+];

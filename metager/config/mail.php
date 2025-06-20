@@ -49,6 +49,18 @@ return [
             'local_domain' => env('MAIL_EHLO_DOMAIN'),
         ],
 
+        'membership' => [
+            'transport' => 'smtp',
+            'url' => env('MEMBERSHIP_MAIL_URL'),
+            'host' => env('MEMBERSHIP_MAIL_HOST', '127.0.0.1'),
+            'port' => env('MEMBERSHIP_MAIL_PORT', 2525),
+            'encryption' => env('MEMBERSHIP_MAIL_ENCRYPTION', 'tls'),
+            'username' => env('MEMBERSHIP_MAIL_USERNAME'),
+            'password' => env('MEMBERSHIP_MAIL_PASSWORD'),
+            'timeout' => null,
+            'local_domain' => env('MEMBERSHIP_MAIL_EHLO_DOMAIN'),
+        ],
+
         'ses' => [
             'transport' => 'ses',
         ],

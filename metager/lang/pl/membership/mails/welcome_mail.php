@@ -1,0 +1,46 @@
+<?php
+return [
+    'membership' => [
+        'amount' => 'Wkład',
+        'now' => 'Teraz',
+        'description' => 'Ten e-mail jest również potwierdzeniem członkostwa. Prosimy o krótkie potwierdzenie otrzymania tej wiadomości e-mail. Opłatę członkowską w wysokości **:kwota€** należy uiścić po raz pierwszy w terminie **:termin**.',
+        'banktransfer' => 'Prosimy o przelanie tego **:interwału** na następujące konto, podając cel użycia (**:mandat**):',
+        'directdebit' => 'Obciążymy ten **:interwał** z numerem referencyjnym **:mandatu** z twojego konta **:iban**.',
+        'paypal' => 'Obciążymy ten **:interwał** z podanego konta PayPal.',
+        'card' => 'Obciążymy tę **:przerwę** ze wskazanej karty kredytowej.',
+        'mandate' => 'Cel użytkowania',
+        'next_payments' => 'Następny wkład',
+        'next_payments_hint' => 'Kolejna płatność może zawierać dodatkowe opłaty za poprzednie nieudane płatności. Jeśli masz pytania dotyczące opłaty, wyślij nam wiadomość e-mail.',
+        'due' => 'Termin płatności',
+        'interval' => [
+            'halbjährlich' => 'półroczny',
+            'monatlich' => 'miesięcznik',
+            'vierteljährlich' => 'kwartalnik',
+            'jährlich' => 'rocznie',
+        ],
+        'title' => 'Członkostwo',
+    ],
+    'subject' => "[SUMA-EV & MetaGer] Witamy w SUMA-EV",
+    'general' => "Witamy w SUMA-EV! Czy mogę najpierw zapytać, jak się o nas dowiedziałeś? Zakładam, że przez naszą wyszukiwarkę MetaGer? Razem z Tobą stowarzyszenie ma teraz :member_count członków z wielu różnych dziedzin. Poniżej znajduje się kilka dodatkowych wyjaśnień i wskazówek, które są bardziej niż przydatne dla SUMA-EV.",
+    'websites' => [
+        'description' => 'Na stronie [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) można znaleźć wiele poprzednich okólników i biuletynów. Poprzednie komunikaty prasowe SUMA-EV można znaleźć na stronie [suma-ev.de/presse/](https://suma-ev.de/presse/). Zapraszamy również do wpisania się na naszą [publiczną listę członków](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). W takim przypadku wystarczy nas krótko powiadomić.',
+        'title' => 'Członkostwo',
+    ],
+    'key' => [
+        'title' => 'Wyszukiwanie za pomocą MetaGer',
+        'extension' => 'Nasze rozszerzenia internetowe dla',
+        'description_first' => 'Aby skonfigurować wyszukiwanie za pomocą MetaGer, potrzebujesz następującego klucza, którego możesz użyć do zalogowania się na dowolnej liczbie urządzeń. Można go użyć natychmiast. Wszystko na ten temat można znaleźć na naszych [stronach informacyjnych](:infos). Twój nowy klucz członkowski będzie automatycznie doładowywany przez nas co miesiąc do wartości **10,00 €** bez dodatkowych kosztów. Klucz to',
+        'description_second' => 'Aby rozpocząć, wystarczy wejść na naszą stronę [startpage](:startpage_link). Wprowadź tam powyższy klucz i wyślij go, klikając "Zarejestruj za pomocą klucza". To samo można zrobić, wywołując następujący adres URL ustawień w przeglądarce internetowej:',
+        'description_third' => 'Jeśli dezaktywowałeś pliki cookie w swojej przeglądarce lub regularnie usuwasz wszystkie dane witryny w przeglądarce, zalecamy zainstalowanie naszego rozszerzenia przeglądarki',
+        'description_fourth' => 'W takim przypadku zapewnia to możliwość dalszego korzystania z MetaGer bez ponownego logowania i umożliwia weryfikowalną anonimowość w wyszukiwaniu internetowym za pomocą [anonimowego tokena](:anonymous_token_link).',
+        'description_fifth' => 'Alternatywnie można również ustawić powyższy adres URL jako zakładkę w celu szybkiego dostępu lub zapisać klucz w menedżerze haseł. Jednak przy domyślnych ustawieniach większości przeglądarek, pozostaniesz trwale zalogowany nawet bez rozszerzenia przeglądarki.',
+        'description_sixth' => 'Jeśli wszystko poszło dobrze, zobaczysz pole wyszukiwania MetaGer i zielony symbol klucza. Kliknij ten symbol klucza jeden raz. Wyświetlą się wszystkie właściwości klucza. Zobaczysz również kilka opcji przesyłania klucza do innych urządzeń. Liczba urządzeń nie jest ograniczona. Sprawdź również ustawienia, do których możesz uzyskać dostęp za pośrednictwem menu MetaGer; inne wyszukiwarki, czarne listy, tryb nocny i inne.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon - część wielkiej rodziny',
+        'description_first' => 'SUMA-EV jest reprezentowana w alternatywnej i rozproszonej sieci społecznościowej Mastodon z własnym [kontem](https://suma-ev.social/@MetaGer). W tym celu prowadzimy [instancję](https://suma-ev.social/) na naszych własnych serwerach. Jako członek masz również wyłączną możliwość dołączenia do [Fediverse](https://de.wikipedia.org/wiki/Mastodon_(Software)) za pośrednictwem tej instancji. Otrzymasz wtedy konto użytkownika, które kończy się na @suma-ev.social.',
+        'description_second' => 'Celem jest ułatwienie ożywionej wymiany poglądów: na przykład na wszystkie tematy związane z wolnością wiedzy, inwigilacją i prywatnością, ale oczywiście także na tematy ogólne, które nie mają nic wspólnego z SUMA-EV, MetaGer i ochroną prywatności.',
+        'description_third' => 'Aby rozpocząć, zapraszamy do utworzenia konta na suma-ev.social z adresem e-mail **:email**.',
+    ],
+    'greeting' => 'Pozdrawiam',
+];

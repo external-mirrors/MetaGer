@@ -16,6 +16,7 @@ return [
         ],
         'update_hint' => 'Los cambios solicitados para su afiliación serán revisados/aceptados en breve. Si está satisfecho con el estado mostrado puede abandonar esta página. De lo contrario, puede realizar más cambios o eliminar su solicitud de cambio con el botón de abajo.',
         'payment_block' => 'Intentaremos autorizar el pago de su próxima cuota de afiliación para validar su método de pago, pero el pago sólo se ejecutará si vence en las próximas dos semanas y se anulará en caso contrario.',
+        'update' => 'A continuación verás la información que hemos almacenado sobre tu afiliación. Puedes cambiar esta información haciendo clic en "Editar". Aquí no es posible cambiar tus datos de contacto. Si han cambiado, envíanos un correo electrónico a <a href=":contact_link" target="_blank"></a> con la información actualizada.',
     ],
     'data' => [
         'description' => 'Hemos registrado los siguientes datos para su solicitud:',

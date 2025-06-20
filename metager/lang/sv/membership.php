@@ -11,6 +11,7 @@ return [
             'update' => 'Kassera ändringar',
         ],
         'update_hint' => 'De begärda ändringarna för ditt medlemskap kommer att granskas/accepteras inom kort. Om du är nöjd med det visade tillståndet kan du lämna den här sidan. Annars kan du göra fler ändringar eller ta bort din ändringsbegäran med knappen nedan.',
+        'update' => 'Nedan ser du den information som vi har lagrat för ditt medlemskap. Du kan ändra denna information genom att klicka på "Redigera". Det är inte möjligt att ändra dina kontaktuppgifter här. Om dessa har ändrats, vänligen skicka oss ett <a href=":contact_link" target="_blank">e-post</a> med din uppdaterade information.',
     ],
     'data' => [
         'company' => "Företagets namn",

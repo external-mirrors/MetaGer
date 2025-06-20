@@ -57,7 +57,7 @@ class MembershipController extends Controller
 
             $application = null;
             if ($application_id !== null) {
-                $application = MembershipApplication::find($application_id);
+                $application = uuid_is_valid($application_id) ? MembershipApplication::find($application_id) : null;
                 $request_data = array_merge($request->except("edit"), ["application_id" => $application_id]);
                 if ($application === null) {
                     $edit_data = json_decode(base64_decode($application_id), true);

@@ -290,7 +290,9 @@
             </div>
             <div id="paypal-data" class="info-container">
                 <div>Mit Abschicken des Formulars werden Sie zwecks Authorisierung der Mitgliedsbeiträge zu PayPal weitergeleitet.</div>
+                @if($application !== null && $application->is_update)
                 <div>@lang('membership.application.payment_block')</div>
+                @endif
             </div>
             <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}" data-is-update="{{ $application !== null ? $application->is_update : false }}">
                 <div id="creditcard-name-container">
@@ -345,7 +347,9 @@
                         </div>
                     </div>
                 </div>
+                @if($application !== null && $application->is_update)
                 <div id="payment-block">@lang('membership.application.payment_block')</div>
+                @endif
             </div>
         </div>
         @endif

@@ -13,7 +13,10 @@ export function initializeCreditcard() {
             .querySelector("#membership-payment-method >div")
             ?.classList.contains("disabled");
 
-    if (!required) return;
+    if (!required) {
+        uninitializeCreditcard();
+        return;
+    }
     if (card_fields == null) {
         creditcard_container.classList.add("loading");
         toggleFormSubmit(false, false);
@@ -205,7 +208,7 @@ export function initializeCreditcard() {
     membership_form.addEventListener("submit", handleSubmit);
 }
 
-export function uninitializeCreditcard() {
+function uninitializeCreditcard() {
     toggleFormSubmit(true);
     membership_form.removeEventListener("submit", handleSubmit);
 }

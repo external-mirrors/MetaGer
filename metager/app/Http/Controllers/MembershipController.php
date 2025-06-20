@@ -635,6 +635,7 @@ class MembershipController extends Controller
         $membership_applications = MembershipApplication::finishedAdmin()->get();
         $membership_update_requests = MembershipApplication::updateRequestsAdmin()->get();
         $reduction_requests = MembershipApplication::reductionRequests()->get();
+        $unfinished_applications = MembershipApplication::unfinishedUser()->get();
         return response(view(
             "admin.membership.index",
             [
@@ -642,6 +643,7 @@ class MembershipController extends Controller
                 "membership_applications" => $membership_applications,
                 "membership_update_requests" => $membership_update_requests,
                 "reduction_requests" => $reduction_requests,
+                "unfinished_applications" => $unfinished_applications,
                 "css" => [mix("/css/admin/membership.css")],
                 "js" => [mix("/js/admin/membership.js")]
             ]

@@ -11,6 +11,7 @@ return [
         ],
         'update_hint' => 'Żądane zmiany dotyczące członkostwa zostaną wkrótce sprawdzone/zaakceptowane. Jeśli jesteś zadowolony z wyświetlonego stanu, możesz opuścić tę stronę. W przeciwnym razie możesz wprowadzić więcej zmian lub usunąć żądanie zmiany za pomocą przycisku poniżej.',
         'description' => 'Dziękujemy za rozważenie członkostwa <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> w naszym stowarzyszeniu non-profit. W celu przetworzenia wniosku potrzebujemy tylko kilku informacji, które można wypełnić tutaj.',
+        'update' => 'Poniżej znajdują się informacje, które zapisaliśmy dla Twojego członkostwa. Możesz zmienić te informacje, klikając "Edytuj". Zmiana danych kontaktowych nie jest tutaj możliwa. Jeśli uległy one zmianie, wyślij nam wiadomość e-mail na adres <a href=":contact_link" target="_blank"></a> ze zaktualizowanymi informacjami.',
     ],
     'data' => [
         'description' => 'Zarejestrowaliśmy następujące dane dla Twojej aplikacji:',

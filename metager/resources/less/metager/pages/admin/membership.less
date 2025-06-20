@@ -1,6 +1,12 @@
 table {
     width: 100%;
     text-align: center;
+
+    tbody {
+        >tr:nth-child(even) {
+            background-color: var(--highlight-color);
+        }
+    }
 }
 
 dialog {

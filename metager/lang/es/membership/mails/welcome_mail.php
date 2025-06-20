@@ -1,4 +1,46 @@
 <?php
-
 return [
+    'membership' => [
+        'banktransfer' => 'Por favor, transfiera este **:intervalo** a la siguiente cuenta, indicando la finalidad de uso (**:mandato**):',
+        'directdebit' => 'Cargaremos este **:intervalo** con la referencia de mandato **:mandato** en su cuenta **:iban**.',
+        'now' => 'Ahora',
+        'description' => 'Este correo electrónico es también la confirmación de su afiliación. Por favor, confirme brevemente que ha recibido este correo electrónico. Su cuota de afiliación por importe de **:importe€** vence por primera vez en **:vencimiento**.',
+        'paypal' => 'Cargaremos este **:intervalo** en la cuenta PayPal especificada.',
+        'card' => 'Cargaremos este **:intervalo** en la tarjeta de crédito especificada.',
+        'mandate' => 'Finalidad de uso',
+        'next_payments' => 'Las próximas contribuciones',
+        'next_payments_hint' => 'El siguiente pago podría incluir tasas adicionales de pagos fallidos anteriores. Si tiene alguna duda sobre las tasas, envíenos un correo electrónico.',
+        'due' => 'Fecha de vencimiento',
+        'amount' => 'Contribución',
+        'interval' => [
+            'halbjährlich' => 'semestral',
+            'monatlich' => 'mensualmente',
+            'vierteljährlich' => 'trimestral',
+            'jährlich' => 'anualmente',
+        ],
+        'title' => 'membresía',
+    ],
+    'subject' => "[SUMA-EV & MetaGer] Bienvenido a SUMA-EV",
+    'general' => "¡Bienvenido a SUMA-EV! ¿Puedo preguntarte primero cómo nos has conocido? Supongo que a través de nuestro motor de búsqueda MetaGer. Junto con usted, la asociación cuenta ahora con :member_count miembros de ámbitos muy diversos. A continuación encontrarás algunas explicaciones y consejos más que útiles para SUMA-EV.",
+    'websites' => [
+        'description' => 'En [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) encontrará muchas de las circulares y boletines anteriores. Encontrará los comunicados de prensa anteriores de SUMA-EV en [suma-ev.de/presse/](https://suma-ev.de/presse/). También le invitamos a inscribirse en nuestra [lista pública de miembros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). En este caso, háganoslo saber brevemente.',
+        'title' => 'membresía',
+    ],
+    'key' => [
+        'title' => 'Buscar con MetaGer',
+        'extension' => 'Nuestras extensiones web para',
+        'description_first' => 'Para configurar la búsqueda con MetaGer, necesita la siguiente clave, que puede utilizar para iniciar sesión en cualquier número de dispositivos. Se puede utilizar inmediatamente. Encontrará toda la información al respecto en nuestras [páginas de información](:infos). Su nueva clave de miembro será recargada automáticamente por nosotros cada mes por valor de **10,00** sin coste adicional. La clave es',
+        'description_second' => 'Para empezar, sólo tiene que ir a nuestra [startpage](:startpage_link). Introduzca allí la clave anterior y envíela haciendo clic en "Registrar con clave". Puede hacer lo mismo llamando a la siguiente URL de configuración en su navegador web:',
+        'description_third' => 'Si ha desactivado las cookies en su navegador o borra regularmente todos los datos del sitio web en su navegador, le recomendamos que instale nuestra extensión de navegador',
+        'description_fourth' => 'En tal caso, esto garantiza que puedas seguir utilizando MetaGer sin necesidad de volver a iniciar sesión y permite el anonimato verificable en las búsquedas web mediante [anonymous token](:anonymous_token_link).',
+        'description_fifth' => 'Alternativamente, también puede configurar la URL anterior como marcador para un acceso rápido o tener la clave guardada en un gestor de contraseñas. Sin embargo, con la configuración por defecto de la mayoría de los navegadores, permanecerás permanentemente conectado incluso sin una extensión del navegador.',
+        'description_sixth' => 'Si todo ha ido bien, verás el campo de búsqueda de MetaGer y un símbolo de llave verde. Haz clic una vez en este símbolo de llave. Verás todas las propiedades de tu llave. También verás varias opciones para transferir tu llave a otros dispositivos. El número de dispositivos no está limitado. Y comprueba también los ajustes a los que puedes acceder a través del menú de MetaGer; otros motores de búsqueda, listas negras, modo nocturno y mucho más.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodonte: parte de una gran familia',
+        'description_first' => 'SUMA-EV está representada en la red social alternativa y distribuida Mastodon con su propia [cuenta](https://suma-ev.social/@MetaGer). Para ello, gestionamos una [instancia](https://suma-ev.social/) en nuestros propios servidores. Como miembro, también tienes la oportunidad exclusiva de unirte al [Fediverso](https://de.wikipedia.org/wiki/Mastodon_(Software)) a través de esta instancia. Recibirás entonces una cuenta de usuario que termina en @suma-ev.social.',
+        'description_second' => 'El objetivo es facilitar un intercambio animado: por ejemplo, sobre todos los temas relacionados con la libertad de conocimiento, la vigilancia y la privacidad, pero por supuesto también sobre temas generales que no tengan nada que ver con SUMA-EV, MetaGer y la protección de la privacidad.',
+        'description_third' => 'Para empezar, te invitamos a crear una cuenta en suma-ev.social con la dirección de correo electrónico **:email**.',
+    ],
+    'greeting' => 'Saludos cordiales',
 ];

@@ -12,6 +12,7 @@ return [
         'update_hint' => 'Jäsenyytesi muutospyynnöt tarkistetaan/hyväksytään pian. Jos olet tyytyväinen esitettyyn tilaan, voit poistua tältä sivulta. Muussa tapauksessa voit tehdä lisää muutoksia tai poistaa muutospyyntösi alla olevasta painikkeesta.',
         'description' => 'Kiitos, että harkitset <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> jäsenyyttä voittoa tavoittelemattomassa yhdistyksessämme. Hakemuksenne käsittelyä varten tarvitsemme vain muutamia tietoja, jotka voitte täyttää tässä.',
         'payment_block' => 'Yritämme hyväksyä seuraavan jäsenmaksusi maksun validoidaksemme maksutapasi, mutta maksu suoritetaan vain, jos se erääntyy seuraavan kahden viikon kuluessa, ja muussa tapauksessa maksu mitätöidään.',
+        'update' => 'Alla näet tiedot, jotka olemme tallentaneet jäsenyydestäsi. Voit muuttaa näitä tietoja klikkaamalla "Muokkaa". Yhteystietojesi muuttaminen ei ole mahdollista tässä. Jos ne ovat muuttuneet, lähetä meille päivitetyt tiedot sähköpostitse osoitteeseen <a href=":contact_link" target="_blank"></a> .',
     ],
     'data' => [
         'description' => 'Olemme tallentaneet seuraavat tiedot hakemustasi varten:',

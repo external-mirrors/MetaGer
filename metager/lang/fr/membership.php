@@ -39,5 +39,6 @@ return [
         'update_hint' => 'Les modifications demandées pour votre adhésion seront bientôt examinées/acceptées. Si vous êtes satisfait de l\'état affiché, vous pouvez quitter cette page. Sinon, vous pouvez apporter d\'autres modifications ou supprimer votre demande de modification en cliquant sur le bouton ci-dessous.',
         'description' => 'Nous vous remercions d\'envisager d\'adhérer à <a href="https://suma-ev.de/en/mitglieder/" target="_blank"></a> à notre association sans but lucratif. Afin de traiter votre demande, nous n\'avons besoin que de quelques informations, que vous pouvez remplir ici.',
         'payment_block' => 'Nous essaierons d\'autoriser le paiement de votre prochaine cotisation afin de valider votre mode de paiement, mais le paiement ne sera exécuté que s\'il est dû dans les deux semaines à venir et sera annulé dans le cas contraire.',
+        'update' => 'Vous trouverez ci-dessous les informations que nous avons stockées pour votre adhésion. Vous pouvez modifier ces informations en cliquant sur "Modifier". Il n\'est pas possible de modifier vos coordonnées ici. Si elles ont changé, veuillez nous envoyer un courriel à <a href=":contact_link" target="_blank"></a> avec vos nouvelles informations.',
     ],
 ];

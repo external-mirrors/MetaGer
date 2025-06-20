@@ -119,7 +119,7 @@
                 value="{{ $email }}" />
         </div>
         @if($editable)
-        <button type="submit" class="btn btn-primary">Weiter</button>
+        <button type="submit" class="btn btn-primary" autofocus>Weiter</button>
         @endif
     </div>
     @php
@@ -180,7 +180,7 @@
                 <input type="file" name="reduction" id="reduction">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Weiter</button>
+        <button type="submit" class="btn btn-primary" autofocus>Weiter</button>
         @endif
         @endif
     </div>
@@ -223,7 +223,7 @@
             </div>
         </div>
         @if($editable)
-        <button type="submit" class="btn btn-primary">Weiter</button>
+        <button type="submit" class="btn btn-primary" autofocus>Weiter</button>
         @endif
         @endif
     </div>
@@ -280,7 +280,7 @@
                 <div class="input-group iban">
                     <label for="iban">IBAN</label>
                     <input type="text" name="iban" id="iban" placeholder="DE80 1234 5678 9012 3456 78"
-                        value="{{ $payment_directdebit_iban }}">
+                        value="{{ $payment_directdebit_iban }}" autofocus>
                 </div>
                 <div class="input-group bic">
                     <label for="bic">BIC (optional)</label>

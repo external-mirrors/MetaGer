@@ -11,6 +11,7 @@ return [
         ],
         'update_hint' => 'The requested changes for your membership will be reviewed/accepted soon. If you are satisfied with the shown state you can leave this page. Otherwise you can make more changes or delete your change request with the button below.',
         'description' => 'Thank you for considering <a href="https://suma-ev.de/en/mitglieder/" target="_blank">membership</a> in our non-profit association. In order to process your application, we only need a few pieces of information, which you can fill in here.',
+        'update' => 'Below you\'ll see the information we\'ve stored for your membership. You can change this information by clicking "Edit". Changing your contact details isn\'t possible here. If these have changed, please send us an <a href=":contact_link" target="_blank">email</a> with your updated information.',
         "payment_block" => 'We will try to authorize a payment for your next membership fee to validate your payment method but the payment will only be executed if it is due within the next two weeks and voided otherwise.'
     ],
     'data' => [

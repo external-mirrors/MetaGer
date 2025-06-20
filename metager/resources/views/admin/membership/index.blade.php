@@ -248,5 +248,63 @@
                 </tbody>
             </table>
         @endif
+
+        @if(sizeof($unfinished_applications) > 0)
+            <h1>Unfertige Aufnahmeanträge</h1>
+            <table>
+                <thead>
+                    <th>Datum</th>
+                    <th>Name</th>
+                    <th>Beitrag</th>
+                    <th>Zahlungsmethode</th>
+                </thead>
+                <tbody>
+                    @foreach($unfinished_applications as $membership_application)
+                        <tr>
+                            <td title="{{ $membership_application->created_at->format("d.m.Y H:i:s") }}">
+                                {{ $membership_application->created_at->diffForHumans() }}
+                            </td>
+                            <td>
+                                @if($membership_application->contact !== null)
+                                    {{ $membership_application->contact->title . " " . $membership_application->contact->first_name . " " . $membership_application->contact->last_name }}
+                                @elseif($membership_application->company !== null)
+                                    {{ $membership_application->company->company }}
+                                @endif
+                            </td>
+                            <td>
+                                @php
+                                    $amount = match ($membership_application->interval) {
+                                        "monthly" => $membership_application->amount,
+                                        "quarterly" => $membership_application->amount * 3,
+                                        "six-monthly" => $membership_application->amount * 6,
+                                        "annual" => $membership_application->amount * 12,
+                                        null => 0
+                                    };
+                                @endphp
+                                @if($membership_application->amount !== null)
+                                    {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
+                                @endif
+                            </td>
+                            <td>
+                                @if($membership_application->payment_method !== null)
+                                    <div>@lang("membership.data.payment_methods.{$membership_application->payment_method}")</div>
+                                    @if($membership_application->payment_method === "directdebit")
+                                        @if($membership_application->directdebit->accountholder !== null)
+                                            <div>Kontoinhaber: {{ $membership_application->directdebit->accountholder }}</div>
+                                        @endif
+                                        <div>IBAN: {{ iban_to_human_format($membership_application->directdebit->iban) }}</div>
+                                        @if($membership_application->directdebit->bic !== null)
+                                            <div>BIC: {{ $membership_application->directdebit->bic }}</div>
+                                        @endif
+                                    @elseif(in_array($membership_application->payment_method, ["paypal", "card"]))
+                                        <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
+                                    @endif
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
     </div>
 @endsection

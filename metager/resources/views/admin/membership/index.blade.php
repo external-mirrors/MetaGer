@@ -44,10 +44,10 @@
                                         "quarterly" => $membership_application->amount * 3,
                                         "six-monthly" => $membership_application->amount * 6,
                                         "annual" => $membership_application->amount * 12,
-                                        null => 0
+                                        default => null
                                     };
                                 @endphp
-                                @if($membership_application->amount !== null)
+                                @if($amount !== null)
                                     {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
                                 @endif
                             </td>
@@ -135,10 +135,10 @@
                                         "quarterly" => $membership_application->amount * 3,
                                         "six-monthly" => $membership_application->amount * 6,
                                         "annual" => $membership_application->amount * 12,
-                                        null => 0
+                                        default => null
                                     };
                                 @endphp
-                                @if($membership_application->amount !== null)
+                                @if($amount !== null)
                                     {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
                                 @endif
                             </td>
@@ -205,10 +205,10 @@
                                         "quarterly" => $reduction_application->amount * 3,
                                         "six-monthly" => $reduction_application->amount * 6,
                                         "annual" => $reduction_application->amount * 12,
-                                        null => 0
+                                        default => null
                                     };
                                 @endphp
-                                @if($reduction_application->amount !== null)
+                                @if($amount !== null)
                                     {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$reduction_application->interval}") }}
                                 @endif
                             </td>
@@ -278,10 +278,10 @@
                                         "quarterly" => $membership_application->amount * 3,
                                         "six-monthly" => $membership_application->amount * 6,
                                         "annual" => $membership_application->amount * 12,
-                                        null => 0
+                                        default => null
                                     };
                                 @endphp
-                                @if($membership_application->amount !== null)
+                                @if($amount !== null)
                                     {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
                                 @endif
                             </td>

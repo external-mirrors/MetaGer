@@ -190,7 +190,7 @@ return [
                 'PPVC' => "Walidacja waluty",
                 'PPVE' => "Błąd walidacji",
                 'PPVT' => "Terminal wirtualny nie jest obsługiwany",
-                'declined_reason' => "Karta kredytowa została odrzucona z powodem: :powód",
+                'declined_reason' => "Karta kredytowa została odrzucona z powodem: :reason",
                 'syntax' => 'Wprowadzone dane są nieprawidłowe. Sprawdź poprawność.',
                 'acceptance' => 'Karta z podanymi danymi nie została zaakceptowana przez nasz procesor płatności. Sprawdź poprawność danych i spróbuj ponownie.',
                 'try_again' => 'Twoja karta nie została przyjęta. Spróbuj ponownie!',

@@ -132,7 +132,7 @@ return [
                 'PPVC' => "Valider la monnaie",
                 'PPVE' => "Erreur de validation",
                 'PPVT' => "Terminal virtuel non pris en charge",
-                'declined_reason' => "La carte de crédit a été refusée pour le motif suivant : :motif",
+                'declined_reason' => "La carte de crédit a été refusée pour le motif suivant : :reason",
                 'syntax' => 'Les données saisies sont incorrectes. Veuillez valider.',
                 'acceptance' => 'La carte avec les détails fournis n\'a pas été acceptée par notre processeur de paiement. Veuillez valider les données et réessayer.',
                 'try_again' => 'Votre carte n\'a pas été acceptée. Veuillez réessayer !',

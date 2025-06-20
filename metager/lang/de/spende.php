@@ -79,7 +79,7 @@ return [
             'submit' => 'Jetzt Spenden',
             'recurring-hint' => 'Hinweis: Eine direkte Kreditkartenzahlung ohne Address-/Namensvalidierung ist nur für einmalige Spenden möglich.',
             'error' => [
-                '9500' => 'Betrugsversuch vermutet. Versuchen Sie es nicht noch einmal mit der gleichen Karte.',
+                '9500' => 'Die Karte ist wegen Betrugsverdacht gesperrt. Versuchen Sie es nicht noch einmal mit der gleichen Karte.',
                 '00N7' => 'CVV-Prüfung fehlgeschlagen. Bitte bestätigen Sie die Eingabe',
                 '5400' => 'Die Karte ist abgelaufen',
                 '5180' => 'Ungültige Karte. Verwenden Sie diese Karte nicht mehr.',
@@ -149,7 +149,7 @@ return [
                 'PPTE' => "Verifizierungs-Token ist abgelaufen",
                 'PPTV' => "Ungültiges Verifizierungs-Token",
                 'PPVT' => "Virtuelles Terminal wird nicht unterstützt",
-                'declined_reason' => "Die Kreditkarte wurde mit folgender Begründung abgelehnt: :Grund",
+                'declined_reason' => "Die Kreditkarte wurde mit folgender Begründung abgelehnt: :reason",
                 'syntax' => 'Die eingegebenen Daten sind falsch. Bitte bestätigen Sie.',
                 'acceptance' => 'Die Karte mit den angegebenen Daten wurde von unserem Zahlungsdienstleister nicht akzeptiert. Bitte validieren Sie die Daten und versuchen Sie es erneut.',
                 'try_again' => 'Ihre Karte wurde nicht akzeptiert. Bitte versuchen Sie es erneut!',

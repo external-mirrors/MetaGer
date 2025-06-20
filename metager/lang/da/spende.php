@@ -197,7 +197,7 @@ return [
                 'PPUI' => "Ikke-understøttet afbetaling",
                 'PPVE' => "Valideringsfejl",
                 'PPVT' => "Virtuel terminal understøttes ikke",
-                'declined_reason' => "Kreditkortet blev afvist med årsag: :årsag",
+                'declined_reason' => "Kreditkortet blev afvist med årsag: :reason",
                 'syntax' => 'De indtastede data er forkerte. Bekræft venligst.',
                 'try_again' => 'Dit kort gik ikke igennem. Prøv venligst igen!',
                 '1317' => "Ugyldig optagelsesdato",

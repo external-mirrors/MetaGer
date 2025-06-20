@@ -16,3 +16,9 @@
 (async () => {
     window.history.replaceState(null, "Title", window.location.href.split("?")[0]);
 })();
+
+(async () => {
+    window.setInterval(() => {
+        window.location.reload();
+    }, 60000)
+})();

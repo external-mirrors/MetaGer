@@ -30,7 +30,7 @@ return [
         'hint' => 'Nämä asetukset vaikuttavat kaikkiin polttopisteisiin ja alasivuihin!',
         'no-settings' => '- Asetuksia ei ole vielä asetettu -',
         'addon' => 'Asentamalla <a href=":link" target="_blank" rel="noopener">selainlaajennuksen</a> voit estää MetaGerin asetusten palautumisen vahingossa, kun poistat selaimen tietoja. ',
-        'yahoo' => '<b>Huomautus</b>: Valitettavasti emme saa enää näyttää Yahoon hakutuloksia yhdessä muiden hakukoneiden tulosten kanssa. Siksi kaikki muut hakukoneet ovat nyt pois käytöstä niin kauan kuin Yahoo on käytössä.',
+        'yahoo' => '<b>Huomautus</b>: Valitettavasti emme saa enää näyttää Yahoon hakutuloksia yhdessä muiden hakukoneiden tulosten kanssa. Siksi kaikki muut hakukoneet ovat nyt poissa käytöstä niin kauan kuin Yahoo on käytössä.',
     ],
     'disabledByFilter' => 'Ei käytössä hakusuodattimella:',
     'address' => 'Osoite',
@@ -95,7 +95,7 @@ return [
         ],
         'addressbar' => [
             'label' => 'Ehdotukset osoiterivillä',
-            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen määritys on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
+            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen asetus on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
             'hint' => '<b>Huomio:</b> Meidän on tallennettava ehdotusasetuksesi palvelimellemme useiden päivien ajaksi, jotta voimme tarjota tämän ominaisuuden. Jos et halua tätä, pidä tämä asetus poissa käytöstä.',
         ],
     ],

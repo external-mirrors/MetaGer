@@ -22,7 +22,7 @@ class WelcomeMail extends Mailable
 
     public int $membership_count;
     public MembershipApplication $membership;
-    public string $additional_message;
+    public string|null $additional_message;
     public array $payments;
     public array $contact;
     public string $plugin_firefox_url;
@@ -31,7 +31,7 @@ class WelcomeMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(int $membership_id, string $additional_message = "")
+    public function __construct(int $membership_id, string|null $additional_message = "")
     {
         $this->membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
         $this->additional_message = $additional_message;

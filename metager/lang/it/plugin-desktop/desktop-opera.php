@@ -3,7 +3,7 @@ return [
     'default-search-v36' => [
         '2' => 'Scegliere "Crea motore di ricerca..." nel menu contestuale.',
         '3' => 'Fare clic su "Crea" nel popup.',
-        '1' => 'Fare clic con il tasto destro del mouse sulla barra di ricerca alla fine di questa istruzione',
+        '1' => 'Cliccate con il tasto destro del mouse sulla barra di ricerca alla fine di questa istruzione.',
     ],
     'default-page-v36' => [
         '1' => 'Spostarsi nell\'angolo in alto a sinistra e fare clic sul logo "Opera" o su "Menu" e fare clic su "Impostazioni".',

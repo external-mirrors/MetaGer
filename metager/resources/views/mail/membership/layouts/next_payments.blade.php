@@ -4,7 +4,7 @@
 | @lang("membership/mails/welcome_mail.membership.due")    | @lang("membership/mails/welcome_mail.membership.amount")       |
 | :-----------: | :-----------: |
 @foreach($payments as $payment)
-| {{ $payment["due_date_in_the_past"] ? __("membership/mails/welcome_mail.membership.now") : $payment["due_date"]->format("d.m.Y") }} | {{ number_format($payment["amount"], 2, ",") }}€ | 
+| {{ $payment["due_date_in_the_past"] ? __("membership/mails/welcome_mail.membership.now") : $payment["due_date"]->format("d.m.Y") }} | {{ (new \NumberFormatter($locale, \NumberFormatter::CURRENCY))->formatCurrency($payment["amount"], "EUR") }} | 
 @endforeach
 
 </x-mail::table>

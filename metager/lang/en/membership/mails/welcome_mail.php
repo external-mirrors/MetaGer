@@ -5,7 +5,7 @@ return [
     'general' => "Welcome to SUMA-EV! May I first ask how you found out about us? I assume through our search engine MetaGer? Together with you, the association now has :member_count members from a wide variety of areas. Below are some further explanations and tips that are more than useful for SUMA-EV.",
     'membership' => [
         'title' => 'Membership',
-        'description' => 'This e-mail is also the confirmation of your membership. Please briefly confirm that you have received this e-mail. Your membership fee in the amount of **:amount€** is due for the first time at **:due**.',
+        'description' => 'This e-mail is also the confirmation of your membership. Please briefly confirm that you have received this e-mail. Your membership fee in the amount of **:amount** is due for the first time at **:due**.',
         'banktransfer' => 'Please transfer this **:interval** to the following account, stating the purpose of use (**:mandate**):',
         'directdebit' => 'We will debit this **:interval** with the mandate reference **:mandate** from your account **:iban**.',
         'paypal' => 'We will debit this **:interval** from the specified PayPal account.',
@@ -30,8 +30,9 @@ return [
     'key' => [
         'title' => 'Searching with MetaGer',
         'extension' => 'Our web extensions for',
-        'description_first' => 'To set up the search with MetaGer, you need the following key, which you can use to log in on any number of devices. It can be used immediately. You can find everything about it on our [info pages](:infos). Your new member key will be automatically topped up by us every month to the value of **€10.00** at no extra cost. The key is',
-        'description_second' => 'To start, simply go to our [startpage](:startpage_link). Enter the above key there and send it by clicking on “Register with key”. You can do the same by calling up the following settings URL in your web browser:',
+        'banktransfer' => 'The first full top up happens after we registered the first payment of your membership fee. In the meantime a small credit amount has already been added to your key.',
+        'description_first' => 'To set up the search with MetaGer, you need the following key, which you can use to log in on any number of devices. It can be used immediately. You can find everything about it on our [info pages](:infos). Your new member key will be automatically topped up by us every month to the value of **:amount** at no extra cost. The key is',
+        'description_second' => 'The device you submitted your application with has automatically been logged in. To login more devices, simply go to our [startpage](:startpage_link). Enter the above key there and send it by clicking on “Register with key”. You can do the same by calling up the following settings URL in your web browser:',
         'description_third' => 'If you have deactivated cookies in your browser or regularly delete all website data in your browser, we recommend installing our browser extension',
         'description_fourth' => 'In such a case, this ensures that you can continue to use MetaGer without logging in again and enables verifiable anonymity in web searches by means of [anonymous token](:anonymous_token_link).',
         'description_fifth' => 'Alternatively, you can also set up the above URL as a bookmark for quick access or have the key saved in a password manager. However, with the default settings of most browsers, you will remain permanently logged in even without a browser extension.',

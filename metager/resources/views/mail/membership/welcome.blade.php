@@ -9,7 +9,7 @@
 
 # @lang("membership/mails/welcome_mail.membership.title")
 
-@lang("membership/mails/welcome_mail.membership.description", ["amount" => number_format($payments[0]["amount"], 2, ","), "due" => $payments[0]["due_date"]->format("d.m.Y")])  
+@lang("membership/mails/welcome_mail.membership.description", ["amount" => (new \NumberFormatter($membership->locale, \NumberFormatter::CURRENCY))->formatCurrency($payments[0]["amount"], "EUR"), "due" => $payments[0]["due_date"]->format("d.m.Y")])  
 
 @switch($membership->payment_method)
 @case("banktransfer")
@@ -31,7 +31,7 @@
 @break
 @endswitch
 
-@include('mail.membership.layouts.next_payments', ['payments' => $payments])
+@include('mail.membership.layouts.next_payments', ['payments' => $payments, 'locale' => $membership->locale])
 
 @if(\App\Localization::getLanguage() === "de")
 # @lang("membership/mails/welcome_mail.websites.title")
@@ -41,9 +41,15 @@
 
 # @lang("membership/mails/welcome_mail.key.title")
 
-@lang("membership/mails/welcome_mail.key.description_first", ["infos" => url("keys")])
+@lang("membership/mails/welcome_mail.key.description_first", ["infos" => url("keys"), "amount" => (new \NumberFormatter($membership->locale, \NumberFormatter::CURRENCY))->formatCurrency($payments[1]["amount"], "EUR")])
 
 > {{ $membership->key }}
+
+@if($membership->payment_method === "banktransfer")
+
+@lang("membership/mails/welcome_mail.key.banktransfer")
+
+@endif
 
 @lang("membership/mails/welcome_mail.key.description_second", ["startpage_link" => url("/")])
 

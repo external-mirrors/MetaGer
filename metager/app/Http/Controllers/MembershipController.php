@@ -40,10 +40,7 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $finished = MembershipApplication::finishedAdmin()->orderBy("updated_at", "desc")->get();
-        $updates = MembershipApplication::updateRequestsAdmin()->orderBy("updated_at", "desc")->get();
-        $reductions = MembershipApplication::reductionRequests()->orderBy("updated_at", "desc")->get();
-        $mail = new MembershipAdminApplicationNotification($finished, $updates, $reductions);
+        $mail = new WelcomeMail(2291);
         return $mail;
     }
     /**

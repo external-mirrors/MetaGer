@@ -1,6 +1,6 @@
 <?php
 return [
-    'subject' => "[SUMA-EV & MetaGer] Willkommen bei SUMA-EV",
+    'subject' => "[SUMA-EV & MetaGer] Willkommen im SUMA-EV",
     'general' => "Willkommen im SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für Ihre Mitgliedschaft im SUMA-EV mehr als nützlich sind.",
     'membership' => [
         'title' => 'Mitgliedschaft',

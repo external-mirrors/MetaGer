@@ -29,7 +29,7 @@ return [
     'blentry' => 'Blacklisteintrag',
     'clear' => 'Schwarze Liste löschen',
     'copy' => 'Kopieren',
-    'dark' => 'Dunkelheit',
+    'dark' => 'Dunkel',
     'darkmode' => 'Dunkelmodus umschalten',
     'suggestions' => [
         'off' => "Behinderte",
@@ -59,7 +59,7 @@ return [
         '1' => 'Präferenzen für die Suche',
         '2' => 'Verwendete Suchmaschinen',
         '3' => 'Such-Filter',
-        '4' => 'Schwarze Liste',
+        '4' => 'Blacklist',
     ],
     'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Schwerpunkte und Unterseiten!',

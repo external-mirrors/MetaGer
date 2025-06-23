@@ -23,8 +23,8 @@ return [
     'membership' => [
         'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:amount**, erääntyy ensimmäisen kerran **:due**.',
         'banktransfer' => 'Siirrä tämä **:intervalli** seuraavalle tilille ja ilmoita käyttötarkoitus (**:valtuutus**):',
-        'directdebit' => 'Me veloitamme tämän **:intervalli** valtuutuksen viitteellä **:valtuutus** tililtäsi **:iban**.',
-        'paypal' => 'Me veloitamme tämän **:aikavälin** määritetyltä PayPal-tililtä.',
+        'directdebit' => 'Me veloitamme tämän **:interval** valtuutuksen viitteellä **:mandate** tililtäsi **:iban**.',
+        'paypal' => 'Me veloitamme tämän **:interval** määritetyltä PayPal-tililtä.',
         'card' => 'Veloitamme tämän **:aikavälin** määritetyltä luottokortilta.',
         'mandate' => 'Käyttötarkoitus',
         'next_payments' => 'Seuraavat rahoitusosuudet',

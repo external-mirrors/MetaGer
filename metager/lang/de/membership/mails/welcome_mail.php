@@ -9,7 +9,7 @@ return [
         'directdebit' => 'Wir buchen diesen **:interval**  unter der Mandatsreferenz **:mandate** von Ihrem Konto **:iban** ab.',
         'paypal' => 'Wir werden diesen **:interval** vom angegebenen PayPal-Konto abbuchen.',
         'card' => 'Wir werden diesen **:interval** von der angegebenen Kreditkarte abbuchen.',
-        'mandate' => 'Zweck der Nutzung',
+        'mandate' => 'Verwendungszweck',
         'next_payments' => 'Die nächsten Beiträge',
         'due' => 'Fälligkeitsdatum',
         'amount' => 'Beitrag',
@@ -24,10 +24,10 @@ return [
     ],
     'websites' => [
         'title' => 'Mitgliedschaft',
-        'description' => 'Unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finden Sie viele der bisherigen Rundbriefe und Newsletters. Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Gerne können Sie auch einen Eintrag in unsere [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) erhalten. Lassen Sie es uns in diesem Fall einfach kurz wissen.',
+        'description' => 'Unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finden Sie viele der bisherigen Rundschreiben und Newsletter. Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Gerne können Sie auch einen Eintrag in unsere [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) erhalten. Lassen Sie es uns in diesem Fall einfach kurz wissen.',
     ],
     'key' => [
-        'title' => 'Suchen mit MetaGer',
+        'title' => 'Die Suche mit MetaGer',
         'extension' => 'Unsere Web-Erweiterungen für',
         'description_first' => 'Um die Suche mit MetaGer einzurichten, benötigen Sie den folgenden Schlüssel, mit dem Sie sich auf beliebig vielen Geräten anmelden können. Er kann sofort verwendet werden. Alles dazu finden Sie auf unseren [Infoseiten](:infos). Ihr neuer Mitgliedsschlüssel wird von uns jeden Monat automatisch und ohne zusätzliche Kosten auf den Wert von **:amount** aufgeladen. Der Schlüssel ist',
         'description_second' => 'Das Gerät, mit dem Sie Ihren Antrag eingereicht haben, wurde automatisch angemeldet. Um weitere Geräte anzumelden, gehen Sie einfach auf unsere [startpage](:startpage_link). Geben Sie dort den obigen Schlüssel ein und senden Sie ihn mit einem Klick auf "Mit Schlüssel anmelden" ab. Sie können dies auch tun, indem Sie die folgende Einstellungs-URL in Ihrem Webbrowser aufrufen:',

@@ -7,6 +7,6 @@ return [
     ],
     'default-page-v3-3' => [
         2 => 'Wählen Sie unter "Homepage" die Option "Spezifische Seite" und geben Sie :link ein.',
-        1 => 'Klicken Sie auf das "Vivaldi"-Logo oben links und wählen Sie "<img class="mg-icon" src="/img/icon-settings.svg">" "Einstellungen" unter "Werkzeuge"',
+        1 => 'Navigieren Sie in die linke obere Ecke, klicken Sie auf das "Vivaldi"-Logo und wählen Sie "<img class="mg-icon" src="/img/icon-settings.svg">" "Einstellungen" unter "Werkzeuge".',
     ],
 ];

@@ -6,8 +6,8 @@ return [
     'membership' => [
         'description' => 'Questa e-mail è anche la conferma della vostra adesione. La preghiamo di confermare brevemente di aver ricevuto questa e-mail. La quota associativa di **:importo€** è dovuta per la prima volta a **:scadenza**.',
         'banktransfer' => 'Si prega di trasferire questo **:interval** al seguente conto, indicando lo scopo dell\'utilizzo (**:mandate**):',
-        'directdebit' => 'Addebiteremo questo **:intervallo** con il riferimento del mandato **:mandato** dal vostro conto **:iban**.',
-        'paypal' => 'Addebiteremo questo **:intervallo** sul conto PayPal specificato.',
+        'directdebit' => 'Addebiteremo questo **:interval** con il riferimento del mandato **:mandate** dal vostro conto **:iban**.',
+        'paypal' => 'Addebiteremo questo **:interval** sul conto PayPal specificato.',
         'card' => 'Addebiteremo questo **:intervallo** sulla carta di credito specificata.',
         'mandate' => 'Scopo dell\'utilizzo',
         'next_payments' => 'I prossimi contributi',

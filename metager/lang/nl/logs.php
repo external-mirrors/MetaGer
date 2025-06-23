@@ -31,7 +31,7 @@ return [
     ],
     'overview' => [
         'invoice-data' => [
-            'heading' => "Factuurdatum",
+            'heading' => "Factuurgegevens",
             'email' => "E-mailadres",
             'full_name' => "Naam",
             'save' => "Sla",
@@ -89,7 +89,7 @@ return [
         'interval' => "Betalingsinterval",
         'amount' => "Te doen bij elke betaling",
         'conditions' => "Algemene voorwaarden",
-        'conditions_nda' => "De verstrekte gegevens kunnen persoonsgegevens bevatten, zelfs als deze ongesorteerd zijn. Om deze reden mogen de gegevens in geen enkele vorm door u openbaar toegankelijk worden gemaakt. Dit geldt met name voor de ruwe gegevens zelf, maar ook voor modellen die daaruit zijn geleerd op het gebied van machine learning. Openbare toegang tot de antwoorden van een model is echter mogelijk. Lees de volgende NDA (geheimhoudingsverklaring) zorgvuldig door en bewaar deze voor uw eigen administratie voordat u doorgaat.",
+        'conditions_nda' => "De verstrekte gegevens kunnen persoonsgegevens bevatten, zelfs als ze ongesorteerd zijn. Om deze reden mogen de gegevens in geen enkele vorm door u openbaar toegankelijk worden gemaakt. Dit geldt met name voor de ruwe gegevens zelf, maar ook voor modellen die daaruit zijn geleerd op het gebied van machine learning. Openbare toegang tot de antwoorden van een model is echter mogelijk. Lees de volgende NDA (geheimhoudingsverklaring) zorgvuldig door en bewaar deze voor uw eigen administratie voordat u doorgaat.",
         'accept' => "Ik ga akkoord met de NDA (geheimhoudingsverklaring) en de betalingsvoorwaarden",
         'conditions_hint' => "We geven automatisch een factuur uit voor elk betalingsinterval. Je toegang omvat toegang tot de MetaGer-logboeken voor alle maanden in de factureringsperiode (inclusief de huidige). De factuur voor de volgende periode wordt, indien mogelijk, een maand voor de start uitgegeven, zodat naadloos gebruik mogelijk is.",
         'heading' => "Abonnement instellen",

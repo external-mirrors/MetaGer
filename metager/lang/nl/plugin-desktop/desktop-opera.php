@@ -3,7 +3,7 @@ return [
     'default-search-v36' => [
         '2' => 'Kies "Zoekmachine maken..." in het contextmenu.',
         '3' => 'Klik op "Maken" in het pop-upvenster.',
-        '1' => 'Klik met de rechtermuisknop op de zoekbalk aan het einde van deze instructie',
+        '1' => 'Klik met de rechtermuisknop op de zoekbalk aan het einde van deze instructie.',
     ],
     'default-page-v36' => [
         '1' => 'Navigeer naar de linkerbovenhoek en klik op het "Opera" logo of op "Menu" en klik op "Instellingen".',

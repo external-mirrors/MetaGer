@@ -15,7 +15,7 @@ return [
                 'setting_values' => [
                     'annual' => "anual",
                     'never' => "Nunca",
-                    'quarterly' => "trimestral",
+                    'quarterly' => "trimestralmente",
                     'monthly' => "mensal",
                     'six-monthly' => "semestralmente",
                 ],
@@ -26,7 +26,7 @@ return [
             'last_invoice' => "Última fatura",
             'update' => "Atualização",
             'never' => "Nunca",
-            'hint' => "Aqui pode configurar o acesso aos registos de pesquisa do MetaGer para os próximos meses. O acesso será automaticamente renovado no intervalo de pagamento selecionado.",
+            'hint' => "Aqui pode configurar o acesso aos registos de pesquisa do MetaGer para os próximos meses. O acesso será renovado automaticamente no intervalo de pagamento selecionado.",
         ],
         'invoice-data' => [
             'street' => "Rua e número da porta",
@@ -86,7 +86,7 @@ return [
     'create_abo' => [
         'amount' => "A efetuar com cada pagamento",
         'conditions' => "Termos e condições",
-        'conditions_nda' => "Os dados fornecidos podem conter dados pessoais, mesmo que não estejam selecionados. Por este motivo, os dados não podem ser tornados publicamente acessíveis pelo utilizador sob qualquer forma. Isto inclui, nomeadamente, os próprios dados em bruto, mas também os modelos obtidos a partir deles no domínio da aprendizagem automática. No entanto, é possível o acesso público às respostas de um modelo. Leia atentamente o seguinte NDA (acordo de não divulgação) e guarde-o para os seus próprios registos antes de continuar a aceitá-lo.",
+        'conditions_nda' => "Os dados fornecidos podem conter dados pessoais, mesmo que não estejam selecionados. Por este motivo, os dados não podem ser tornados publicamente acessíveis pelo utilizador sob qualquer forma. Isto inclui, nomeadamente, os próprios dados em bruto, mas também os modelos obtidos a partir deles no domínio da aprendizagem automática. No entanto, o acesso público às respostas de um modelo é possível. Leia atentamente o seguinte NDA (acordo de não divulgação) e guarde-o para os seus próprios registos antes de continuar a aceitá-lo.",
         'accept' => "Aceito o NDA (acordo de não divulgação) e as condições de pagamento",
         'conditions_hint' => "Emitimos automaticamente uma fatura para cada intervalo de pagamento. O seu acesso inclui o acesso aos registos do MetaGer para todos os meses incluídos no período de faturação (incluindo o atual). A fatura para o período seguinte será emitida um mês antes do início, se possível, para que seja possível uma utilização sem interrupções.",
         'nda' => "NDA (acordo de não divulgação)",
@@ -95,7 +95,7 @@ return [
         'heading' => "Configurar a subscrição",
     ],
     'api-docs' => [
-        'hint' => "Abaixo encontra a nossa documentação API, que pode utilizar para obter registos do nosso servidor.",
+        'hint' => "Abaixo encontrará a nossa documentação API, que pode utilizar para obter registos do nosso servidor.",
         'link' => "Documentação da API",
     ],
 ];

@@ -10,7 +10,7 @@ return [
     'edit' => 'También puede actualizar su suscripción y autorizar un método de pago adecuado (domiciliación bancaria, PayPal, tarjeta de crédito).',
     'mastodon' => 'Tu cuenta de Mastodon en nuestra [instancia](https://suma-ev.social) será congelada y ya no podrá ser utilizada. Asegúrate de trasladarte a una instancia pública a tiempo. Eliminaremos todos los datos vinculados a su cuenta 6 meses después de que finalice su afiliación.',
     'expired' => 'Lamentamos confirmarle hoy que su afiliación a [SUMA-EV](https://suma-ev.de) ha finalizado.',
-    'description' => 'Su cuota de socio vencía el **:fecha**. Por favor, transfiera el importe pendiente de **:importe** a nuestra cuenta bancaria antes de **:vencimiento**, indicando el motivo del pago (**:referencia_de_pago**):',
+    'description' => 'Su cuota de socio vencía el **:date**. Por favor, transfiera el importe pendiente de **:amount** a nuestra cuenta bancaria antes de **:due**, indicando el motivo del pago (**:payment_reference**):',
     'key_charge' => 'La recarga automática de su clave para el uso de MetaGer (**:clave**) ha sido desactivada por el momento.',
     'terminate' => 'Sin la recepción del pago, lamentablemente tendremos que cancelar su afiliación a [SUMA-EV](https://suma-ev.de) con efecto a partir de <b>:expiración</b>',
     'description_rejoin' => 'En ese caso, sólo tiene que transferir su cuota de afiliación de **:importe** a nuestra cuenta bancaria, indicando el motivo del pago (**:referencia_de_pago**):',

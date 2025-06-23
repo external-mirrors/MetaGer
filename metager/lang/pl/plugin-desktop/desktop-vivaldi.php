@@ -1,7 +1,7 @@
 <?php
 return [
     'default-search-v3-3' => [
-        1 => 'Kliknij prawym przyciskiem myszy pasek wyszukiwania na końcu tej instrukcji.',
+        1 => 'Kliknij prawym przyciskiem myszy pasek wyszukiwania na końcu tej instrukcji',
         2 => 'Wybierz "Dodaj jako wyszukiwarkę..." z menu kontekstowego.',
         3 => 'Zaznacz pole "Ustaw jako domyślne wyszukiwanie" i kliknij "Dodaj" w wyskakującym okienku.',
     ],

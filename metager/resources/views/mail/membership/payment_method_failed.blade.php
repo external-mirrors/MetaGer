@@ -16,7 +16,7 @@
 
 </x-mail::button>
 
-@include('mail.membership.layouts.next_payments', ['payments' => $payments])
+@include('mail.membership.layouts.next_payments', ['payments' => $payments, "locale" => $application->locale])
 
 \
 @lang("membership/mails/welcome_mail.greeting"),\

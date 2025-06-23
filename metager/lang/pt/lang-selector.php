@@ -20,7 +20,7 @@ return [
     ],
     'detection' => [
         'title' => 'Qual é a definição de língua predefinida?',
-        'description' => 'Utilizamos URLs específicos para cada língua que podem ser utilizados diretamente. Se não for definida uma língua no URL, utilizamos a definição de língua armazenada nas definições do seu browser para pré-selecionar a região mais adequada para si. Na maioria dos casos, os resultados da pesquisa serão automaticamente apresentados para a região correta. Em alternativa, pode alterar a definição acima referida.',
+        'description' => 'Utilizamos URLs específicos para cada língua que podem ser utilizados diretamente. Se não estiver definida uma língua no URL, utilizamos a definição de língua armazenada nas definições do seu browser para pré-selecionar a região mais adequada para si. Na maioria dos casos, os resultados da pesquisa serão automaticamente apresentados para a região correta. Em alternativa, pode alterar a definição acima referida.',
     ],
     'h1' => [
         '1' => 'Seleção da língua',

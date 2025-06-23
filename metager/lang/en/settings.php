@@ -18,7 +18,7 @@ return [
         'hint' => 'These settings affect all foci and sub-pages!',
         'addon' => 'By installing our <a href=":link" target="_blank" rel="noopener">browser extension</a>, you can prevent the MetaGer settings from being accidentally reset when you delete your browser data. ',
         'no-settings' => '- No settings have been set yet -',
-        'yahoo' => '<b>Note</b>: Unfortunately, we are no longer allowed to display Yahoo search results together with those of other search engines. Therefore, all other search engines are now disabled as long as Yahoo is enabled.'
+        'yahoo' => '<b>Note</b>: Unfortunately, we are no longer allowed to display Yahoo search results together with those of other search engines. Therefore, all other search engines are now disabled as long as Yahoo is enabled.',
     ],
     'disabledByFilter' => 'Disabled by Search Filter:',
     'address' => 'Address',
@@ -32,25 +32,25 @@ return [
     'suggestions' => [
         'heading' => 'Search Suggestions',
         'provider' => [
-            "label" => 'Provider',
+            'label' => 'Provider',
         ],
         'delay' => [
             'label' => 'Delay',
             'description' => 'Suggestions will be loaded after this delay while typing. Ideally you chose a delay long enough so suggestions are only loaded when you stop typing.',
             'short' => 'Short',
             'medium' => 'Medium',
-            'long' => 'Long'
+            'long' => 'Long',
         ],
-        "addressbar" => [
+        'addressbar' => [
             'label' => 'Suggestions in Address Bar',
             'description' => 'Load Suggestions when typing in the address bar. Above delay configuration will always be "short" for Firefox users due to very short timeouts for those requests.',
             'hint' => '<b>Attention:</b> We need to store your suggestion settings on our server for several days to offer this feature. If this is not what you want keep this setting disabled.',
         ],
-        "off" => "Disabled",
-        "on" => "Enabled",
+        'off' => "Disabled",
+        'on' => "Enabled",
     ],
     'self_advertisements' => [
-        "label" => "Subtle advertisements for our own service",
+        'label' => "Subtle advertisements for our own service",
     ],
     'tiles_startpage' => [
         'label' => "Show tiles on the startpage",
@@ -81,7 +81,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Advertising free search',
+        'header' => 'MetaGer Key',
         'charge' => 'Credit: :token Token',
         'manage' => 'Charge key',
         'logout' => 'Remove key',

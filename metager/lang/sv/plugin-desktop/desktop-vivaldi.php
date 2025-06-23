@@ -6,7 +6,7 @@ return [
         3 => 'Markera rutan "Ange som standardsökning" och klicka på "Lägg till" i popup-fönstret.',
     ],
     'default-page-v3-3' => [
-        2 => 'Under "Hemsida" väljer du "Specifik sida" och anger :länk .',
+        2 => 'Under "Hemsida" väljer du "Specifik sida" och skriver in :länk .',
         1 => 'Navigera till det övre vänstra hörnet, klicka på "Vivaldi"-logotypen och välj "<img class="mg-icon" src="/img/icon-settings.svg">" "Inställningar" under "Verktyg"',
     ],
 ];

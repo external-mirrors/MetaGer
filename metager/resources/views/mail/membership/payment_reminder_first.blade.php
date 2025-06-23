@@ -50,7 +50,7 @@
 </x-mail::panel>
 
 @if($reminder_stage !== \App\Mail\Membership\PaymentReminder::REMINDER_STAGE_ABORTED)
-@include('mail.membership.layouts.next_payments', ['payments' => $payments])
+@include('mail.membership.layouts.next_payments', ['payments' => $payments, 'locale' => $application->locale])
 @endif
 
 @lang("membership/mails/welcome_mail.greeting"),\

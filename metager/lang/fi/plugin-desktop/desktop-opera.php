@@ -1,7 +1,7 @@
 <?php
 return [
     'default-search-v36' => [
-        '1' => 'Klikkaa hiiren oikealla painikkeella hakupalkkia tämän ohjeen lopussa.',
+        '1' => 'Napsauta hiiren kakkospainikkeella tämän ohjeen lopussa olevaa hakupalkkia.',
         '2' => 'Valitse kontekstivalikosta "Luo hakukone...".',
         '3' => 'Napsauta ponnahdusikkunassa "Luo".',
     ],

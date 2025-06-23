@@ -1,4 +1,4 @@
 <?php
 return [
-    'amount' => 'Cantidad',
+    'amount' => 'Importe',
 ];

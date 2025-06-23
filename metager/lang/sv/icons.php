@@ -8,10 +8,10 @@ return [
         'alt' => 'Sök',
     ],
     'menu' => [
-        'alt' => 'tre horisontella slag',
+        'alt' => 'tre horisontella streck',
     ],
     'cogs' => [
-        'alt' => 'Cogs',
+        'alt' => 'Koggar',
     ],
     'ellipsis' => [
         'alt' => 'vertikal ellips',

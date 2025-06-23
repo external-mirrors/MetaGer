@@ -24,11 +24,11 @@ return [
     'floppy' => [
         'alt' => 'Floppy',
     ],
-    'Icon-settings' => 'Cog',
+    'Icon-settings' => 'Koglen',
     'angle-double-right' => [
         'alt' => 'Vinkel dobbelt højre',
     ],
     'icon-lupe' => [
-        'alt' => 'Søgning',
+        'alt' => 'Søg efter',
     ],
 ];

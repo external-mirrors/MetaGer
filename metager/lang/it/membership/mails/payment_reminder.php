@@ -3,7 +3,7 @@ return [
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Promemoria per il pagamento della quota associativa',
         'expired' => '[SUMA-EV & MetaGer] La tua iscrizione è scaduta',
-        'second' => '[SUMA-EV & MetaGer] La tua iscrizione termina in data :senza pagamento',
+        'second' => '[SUMA-EV & MetaGer] La tua iscrizione termina in data :date pagamento',
     ],
     'description_expired' => 'L\'esperienza ci ha dimostrato che l\'abbandono del sito <a href="https://suma-ev.de">SUMA-EV</a> spesso non è legato all\'allontanamento dai nostri valori e dalle nostre idee, ma di solito ha ragioni finanziarie. Ci auguriamo quindi che possa arrivare un momento in cui possiate immaginare di tornare a far parte della nostra associazione.',
     'edit' => 'In alternativa, potete aggiornare la vostra iscrizione e autorizzare un metodo di pagamento adeguato per l\'addebito (addebito diretto, PayPal, carta di credito).',

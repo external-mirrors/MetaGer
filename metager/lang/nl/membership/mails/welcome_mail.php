@@ -4,7 +4,7 @@ return [
     'general' => "Welkom bij SUMA-EV! Mag ik eerst vragen hoe je ons hebt leren kennen? Ik neem aan via onze zoekmachine MetaGer? Samen met jou heeft de vereniging nu :member_count leden uit de meest uiteenlopende gebieden. Hieronder vind je meer uitleg en tips die meer dan nuttig zijn voor SUMA-EV.",
     'membership' => [
         'description' => 'Deze e-mail is ook de bevestiging van je lidmaatschap. Bevestig in het kort dat je deze e-mail hebt ontvangen. Je lidmaatschapsgeld ten bedrage van **:amount** is voor de eerste keer verschuldigd op **:due**.',
-        'banktransfer' => 'Gelieve dit **:interval** over te maken op de volgende rekening, met vermelding van het gebruiksdoel (**:mandaat**):',
+        'banktransfer' => 'Gelieve dit **:interval** over te maken op de volgende rekening, met vermelding van het gebruiksdoel (**:mandate**):',
         'directdebit' => 'We schrijven dit **:interval** met de mandaatreferentie **:mandate** af van uw rekening **:iban**.',
         'paypal' => 'We schrijven dit **:interval** af van de opgegeven PayPal-rekening.',
         'card' => 'We schrijven dit **:interval** af van de opgegeven creditcard.',

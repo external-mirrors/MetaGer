@@ -1,7 +1,7 @@
 <?php
 return [
     'default-search-v3-3' => [
-        1 => 'Fare clic con il tasto destro del mouse sulla barra di ricerca alla fine di questa istruzione',
+        1 => 'Cliccare con il tasto destro del mouse sulla barra di ricerca alla fine di questa istruzione',
         2 => 'Scegliere "Aggiungi come motore di ricerca..." nel menu contestuale.',
         3 => 'Selezionare la casella "Imposta come ricerca predefinita" e fare clic su "Aggiungi" nel popup.',
     ],

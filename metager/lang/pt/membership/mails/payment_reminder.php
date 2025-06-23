@@ -11,7 +11,7 @@ return [
     'key_charge' => 'O recarregamento automático da sua chave para a utilização do MetaGer (**:key**) foi desativado por enquanto.',
     'mastodon' => 'A sua conta Mastodon na nossa [instância](https://suma-ev.social) será congelada e não poderá mais ser usada. Por favor, certifique-se de que muda para uma instância pública em tempo útil. Eliminaremos todos os dados associados à sua conta 6 meses após o fim da sua inscrição.',
     'expired' => 'É com pesar que confirmamos hoje que a sua adesão à [SUMA-EV](https://suma-ev.de) terminou.',
-    'description' => 'A sua quota era devida em **:data**. Queira transferir o montante pendente de **:montante** para a nossa conta bancária até **:data**, indicando o motivo do pagamento (**:referência_do_pagamento**):',
+    'description' => 'A sua quota era devida em **:date**. Queira transferir o montante pendente de **:amount** para a nossa conta bancária até **:due**, indicando o motivo do pagamento (**:payment_reference**):',
     'terminate' => 'Se não recebermos o pagamento, teremos infelizmente de anular a sua adesão à [SUMA-EV](https://suma-ev.de) com efeitos a partir de <b>:expiração</b>',
     'description_rejoin' => 'Se for esse o caso, basta transferir a sua quotização de **:montante** para a nossa conta bancária, indicando o motivo do pagamento (**:referência_do_pagamento**):',
 ];

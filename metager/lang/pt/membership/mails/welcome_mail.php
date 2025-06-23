@@ -22,8 +22,8 @@ return [
     'membership' => [
         'description' => 'Esta mensagem eletrónica é também a confirmação da sua adesão. Por favor, confirme brevemente que recebeu esta mensagem de correio eletrónico. A sua quotização no valor de **:montante€** é devida pela primeira vez em **:vencimento**.',
         'banktransfer' => 'Queira transferir este **interval** para a seguinte conta, indicando o objetivo da utilização (**mandate**):',
-        'directdebit' => 'Debitaremos este **:intervalo** com a referência do mandato **:mandato** da sua conta **:iban**.',
-        'paypal' => 'Iremos debitar este **:intervalo** da conta PayPal especificada.',
+        'directdebit' => 'Debitaremos este **:interval** com a referência do mandato **:mandate** da sua conta **:iban**.',
+        'paypal' => 'Iremos debitar este **:interval** da conta PayPal especificada.',
         'card' => 'Iremos debitar este **:intervalo** do cartão de crédito especificado.',
         'mandate' => 'Objetivo da utilização',
         'next_payments' => 'As próximas contribuições',

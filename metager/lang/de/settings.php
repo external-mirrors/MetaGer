@@ -15,8 +15,8 @@ return [
     ],
     'metager-key' => [
         'header' => 'Anzeigenfreie Suche',
-        'charge' => 'Kredit: :token Token',
-        'manage' => 'Ladetaste',
+        'charge' => 'Guthaben: :token Token',
+        'manage' => 'Schlüassel aufladen',
         'logout' => 'Schlüssel entfernen',
         'no-key' => 'Sie haben keinen Schlüssel für die werbefreie Suche eingerichtet.',
         'actions' => [
@@ -26,7 +26,7 @@ return [
         ],
     ],
     'back' => 'Zurück zur letzten Seite',
-    'blentry' => 'Eintrag in die Schwarze Liste',
+    'blentry' => 'Blacklisteintrag',
     'clear' => 'Schwarze Liste löschen',
     'copy' => 'Kopieren',
     'dark' => 'Dunkelheit',

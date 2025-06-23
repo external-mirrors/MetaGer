@@ -4,7 +4,7 @@ return [
         'amount' => 'Wkład',
         'now' => 'Teraz',
         'description' => 'Ten e-mail jest również potwierdzeniem członkostwa. Prosimy o krótkie potwierdzenie otrzymania tej wiadomości e-mail. Opłatę członkowską w wysokości **:kwota€** należy uiścić po raz pierwszy w terminie **:termin**.',
-        'banktransfer' => 'Prosimy o przelanie tego **:interwału** na następujące konto, podając cel użycia (**:mandat**):',
+        'banktransfer' => 'Prosimy o przelanie tego **:interval** na następujące konto, podając cel użycia (**:mandate**):',
         'directdebit' => 'Obciążymy ten **:interwał** z numerem referencyjnym **:mandatu** z twojego konta **:iban**.',
         'paypal' => 'Obciążymy ten **:interwał** z podanego konta PayPal.',
         'card' => 'Obciążymy tę **:przerwę** ze wskazanej karty kredytowej.',

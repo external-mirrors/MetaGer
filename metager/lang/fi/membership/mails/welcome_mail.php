@@ -4,11 +4,12 @@ return [
         'description_third' => 'Jos olet poistanut evästeet käytöstä selaimessasi tai poistat säännöllisesti kaikki verkkosivuston tiedot selaimestasi, suosittelemme selainlaajennuksen asentamista.',
         'title' => 'MetaGerin haku',
         'extension' => 'Verkkolaajennuksemme',
-        'description_first' => 'MetaGer-hakua varten tarvitset seuraavan avaimen, jolla voit kirjautua sisään millä tahansa laitteella. Sitä voidaan käyttää välittömästi. Löydät kaiken siitä [info-sivuiltamme](:infos). Me lataamme uuden jäsenavaimesi automaattisesti joka kuukausi **10,00 euron** arvosta ilman lisäkustannuksia. Avain on',
-        'description_second' => 'Aloita yksinkertaisesti siirtymällä [aloitussivulle](:startpage_link). Kirjoita sinne yllä oleva avain ja lähetä se klikkaamalla "Rekisteröidy avaimella". Voit tehdä saman kutsumalla seuraavan asetusten URL-osoitteen selaimellasi:',
+        'description_first' => 'MetaGer-hakua varten tarvitset seuraavan avaimen, jolla voit kirjautua sisään millä tahansa laitteella. Sitä voidaan käyttää välittömästi. Löydät kaiken siitä [info-sivuiltamme](:infos). Me lataamme uuden jäsenavaimesi automaattisesti joka kuukausi **:amount** arvoon ilman lisäkustannuksia. Avain on',
+        'description_second' => 'Laite, jolla lähetit hakemuksesi, on automaattisesti kirjautunut sisään. Jos haluat kirjautua sisään useammalla laitteella, siirry [aloitussivulle](:startpage_link). Kirjoita siellä yllä oleva avain ja lähetä se klikkaamalla "Register with key". Voit tehdä saman kutsumalla seuraavan asetusten URL-osoitteen selaimellasi:',
         'description_fourth' => 'Tällaisessa tapauksessa tämä varmistaa, että voit jatkaa MetaGerin käyttöä kirjautumatta sisään uudelleen, ja mahdollistaa todennettavan anonymiteetin verkkohauissa [anonymous token](:anonymous_token_link) avulla.',
         'description_fifth' => 'Vaihtoehtoisesti voit myös asettaa yllä olevan URL-osoitteen kirjanmerkiksi nopeaa käyttöä varten tai tallentaa avaimen salasananhallintaan. Useimpien selainten oletusasetuksilla pysyt kuitenkin jatkuvasti kirjautuneena sisään, vaikka selainlaajennusta ei olisikaan.',
         'description_sixth' => 'Jos kaikki meni hyvin, näet MetaGer-hakukentän ja vihreän avainsymbolin. Napsauta tätä avainsymbolia kerran. Tämän jälkeen näet kaikki avaimesi ominaisuudet. Näet myös useita vaihtoehtoja avaimen siirtämiseksi muihin laitteisiin. Laitteiden määrää ei ole rajoitettu. Ja tarkista myös asetukset, joihin pääset MetaGer-valikon kautta; muut hakukoneet, mustat listat, yötila ja paljon muuta.',
+        'banktransfer' => 'Ensimmäinen täysi lisäys tapahtuu sen jälkeen, kun olemme rekisteröineet jäsenmaksun ensimmäisen maksun. Sillä välin avaimeesi on jo lisätty pieni hyvityssumma.',
     ],
     'mastodon' => [
         'title' => 'Mastodon - osa suurta perhettä',
@@ -20,7 +21,7 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Tervetuloa SUMA-EV:hen!",
     'general' => "Tervetuloa SUMA-EV:hen! Saanko ensin kysyä, miten sait tietää meistä? Oletan hakukoneemme MetaGerin kautta? Yhdistyksellä on nyt kanssasi :member_count jäseniä monilta eri aloilta. Seuraavassa on muutamia lisäselvityksiä ja vinkkejä, jotka ovat enemmän kuin hyödyllisiä SUMA-EV:lle.",
     'membership' => [
-        'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:summa€**, erääntyy ensimmäisen kerran **:eräpäivä**.',
+        'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:amount**, erääntyy ensimmäisen kerran **:due**.',
         'banktransfer' => 'Siirrä tämä **:interval** seuraavalle tilille ja ilmoita käyttötarkoitus (**:mandate**):',
         'directdebit' => 'Me veloitamme tämän **:interval** valtuutuksen viitteellä **:mandate** tililtäsi **:iban**.',
         'paypal' => 'Me veloitamme tämän **:interval** määritetyltä PayPal-tililtä.',

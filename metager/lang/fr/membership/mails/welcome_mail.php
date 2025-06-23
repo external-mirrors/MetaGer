@@ -2,7 +2,7 @@
 return [
     'membership' => [
         'mandate' => 'But de l\'utilisation',
-        'description' => 'Cet e-mail est également la confirmation de votre adhésion. Veuillez confirmer brièvement que vous avez reçu cet e-mail. Votre cotisation d\'un montant de **:montant€** est due pour la première fois à **:échéance**.',
+        'description' => 'Cet e-mail est également la confirmation de votre adhésion. Veuillez confirmer brièvement que vous avez reçu cet e-mail. Votre cotisation d\'un montant de **:amount** est due pour la première fois à **:due**.',
         'banktransfer' => 'Veuillez transférer ce **:interval** sur le compte suivant, en indiquant le but de l\'utilisation (**:mandate**) :',
         'directdebit' => 'Nous débiterons ce **:interval** avec la référence du mandat **:mandate** de votre compte **:iban**.',
         'paypal' => 'Nous débiterons ce **:interval** du compte PayPal spécifié.',
@@ -29,12 +29,13 @@ return [
     'key' => [
         'title' => 'Recherche avec MetaGer',
         'extension' => 'Nos extensions web pour',
-        'description_first' => 'Pour lancer la recherche avec MetaGer, vous avez besoin de la clé suivante, que vous pouvez utiliser pour vous connecter sur n\'importe quel nombre d\'appareils. Elle peut être utilisée immédiatement. Vous trouverez toutes les informations à ce sujet sur nos [pages d\'information](:infos). Votre nouvelle clé de membre sera automatiquement rechargée par nos soins tous les mois pour une valeur de **€10.00** sans frais supplémentaires. La clé est',
-        'description_second' => 'Pour commencer, il vous suffit de vous rendre sur notre [page d\'accueil](:startpage_link). Saisissez-y la clé ci-dessus et envoyez-la en cliquant sur "Enregistrer avec la clé". Vous pouvez faire de même en appelant l\'URL de configuration suivante dans votre navigateur web :',
+        'description_first' => 'Pour lancer la recherche avec MetaGer, vous avez besoin de la clé suivante, que vous pouvez utiliser pour vous connecter sur n\'importe quel nombre d\'appareils. Elle peut être utilisée immédiatement. Vous trouverez toutes les informations à ce sujet sur nos [pages d\'information](:infos). Votre nouvelle clé de membre sera automatiquement rechargée par nos soins chaque mois à hauteur de **:amount**, sans frais supplémentaires. La clé est',
+        'description_second' => 'L\'appareil avec lequel vous avez soumis votre demande a été automatiquement connecté. Pour connecter d\'autres appareils, il vous suffit de vous rendre sur notre [page d\'accueil](:startpage_link). Saisissez la clé ci-dessus et envoyez-la en cliquant sur "Enregistrer avec la clé". Vous pouvez faire de même en appelant l\'URL de configuration suivante dans votre navigateur web :',
         'description_third' => 'Si vous avez désactivé les cookies dans votre navigateur ou si vous effacez régulièrement toutes les données du site web dans votre navigateur, nous vous recommandons d\'installer notre extension de navigateur',
         'description_fourth' => 'Dans ce cas, cela garantit que vous pouvez continuer à utiliser MetaGer sans vous connecter à nouveau et permet un anonymat vérifiable dans les recherches sur le web au moyen du [jeton anonyme](:anonymous_token_link).',
         'description_fifth' => 'Vous pouvez également mettre l\'URL ci-dessus en signet pour un accès rapide ou enregistrer la clé dans un gestionnaire de mots de passe. Cependant, avec les paramètres par défaut de la plupart des navigateurs, vous resterez connecté en permanence, même sans extension de navigateur.',
         'description_sixth' => 'Si tout s\'est bien passé, vous verrez apparaître le champ de recherche MetaGer et un symbole clé vert. Cliquez une fois sur ce symbole de clé. Vous verrez alors toutes les propriétés de votre clé. Vous disposez également de plusieurs options pour transférer votre clé vers d\'autres appareils. Le nombre d\'appareils n\'est pas limité. Consultez également les paramètres accessibles via le menu MetaGer : autres moteurs de recherche, listes noires, mode nuit, etc.',
+        'banktransfer' => 'Le premier rechargement complet a lieu après l\'enregistrement du premier paiement de votre cotisation. Entre-temps, un petit crédit a déjà été ajouté à votre clé.',
     ],
     'mastodon' => [
         'title' => 'Mastodon - une grande famille',

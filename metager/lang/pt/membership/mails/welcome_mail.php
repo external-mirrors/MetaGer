@@ -3,12 +3,13 @@ return [
     'key' => [
         'title' => 'Pesquisar com o MetaGer',
         'extension' => 'As nossas extensões Web para',
-        'description_first' => 'Para configurar a pesquisa com o MetaGer, é necessária a seguinte chave, que pode ser utilizada para iniciar sessão em qualquer número de dispositivos. Pode ser utilizada imediatamente. Pode encontrar tudo sobre o assunto nas nossas [páginas de informação](:infos). A sua nova chave de membro será automaticamente recarregada por nós todos os meses até ao valor de **10,00€** sem qualquer custo adicional. A chave é',
-        'description_second' => 'Para começar, basta ir à nossa [startpage](:startpage_link). Introduza aí a chave acima referida e envie-a clicando em "Registar com chave". Pode fazer o mesmo chamando o seguinte URL de definições no seu navegador Web:',
+        'description_first' => 'Para configurar a pesquisa com o MetaGer, é necessária a seguinte chave, que pode ser utilizada para iniciar sessão em qualquer número de dispositivos. Pode ser utilizada imediatamente. Pode encontrar tudo sobre ela nas nossas [páginas de informação](:infos). A sua nova chave de membro será automaticamente recarregada por nós todos os meses até ao valor de **:amount** sem qualquer custo adicional. A chave é',
+        'description_second' => 'O dispositivo com que submeteu a sua candidatura foi automaticamente registado. Para registar mais dispositivos, basta ir à nossa [startpage](:startpage_link). Introduza aí a chave acima referida e envie-a clicando em "Registar com chave". Pode fazer o mesmo acedendo ao seguinte URL de definições no seu navegador Web:',
         'description_third' => 'Se tiver desativado os cookies no seu navegador ou se apagar regularmente todos os dados do sítio Web no seu navegador, recomendamos que instale a nossa extensão do navegador',
         'description_fourth' => 'Neste caso, isto garante que pode continuar a utilizar o MetaGer sem ter de iniciar sessão novamente e permite o anonimato verificável nas pesquisas na Web através do [token anónimo](:anonymous_token_link).',
         'description_fifth' => 'Em alternativa, também pode configurar o URL acima como um marcador para acesso rápido ou ter a chave guardada num gestor de palavras-passe. No entanto, com as definições predefinidas da maioria dos browsers, a sessão será permanentemente iniciada, mesmo sem uma extensão do browser.',
         'description_sixth' => 'Se tudo correu bem, verá o campo de pesquisa do MetaGer e um símbolo de chave verde. Clique uma vez neste símbolo de chave. Verá então todas as propriedades da sua chave. Também verá várias opções para transferir a sua chave para outros dispositivos. O número de dispositivos não é limitado. E verifique também as definições a que pode aceder através do menu MetaGer; outros motores de busca, listas negras, modo noturno e muito mais.',
+        'banktransfer' => 'A primeira recarga completa ocorre depois de termos registado o primeiro pagamento da sua taxa de adesão. Entretanto, um pequeno montante de crédito já foi adicionado à sua chave.',
     ],
     'mastodon' => [
         'title' => 'Mastodon - parte de uma grande família',
@@ -20,7 +21,7 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Bem-vindo ao SUMA-EV",
     'general' => "Bem-vindo ao SUMA-EV! Posso começar por perguntar como é que nos conheceu? Presumo que através do nosso motor de busca MetaGer? Juntamente consigo, a associação conta agora com :member_count membros das mais diversas áreas. Seguem-se algumas explicações e dicas que são mais do que úteis para a SUMA-EV.",
     'membership' => [
-        'description' => 'Esta mensagem eletrónica é também a confirmação da sua adesão. Por favor, confirme brevemente que recebeu esta mensagem de correio eletrónico. A sua quotização no valor de **:montante€** é devida pela primeira vez em **:vencimento**.',
+        'description' => 'Esta mensagem eletrónica é também a confirmação da sua adesão. Por favor, confirme brevemente que recebeu esta mensagem de correio eletrónico. A sua quota de membro no montante de **:amount** é devida pela primeira vez em **:due**.',
         'banktransfer' => 'Queira transferir este **interval** para a seguinte conta, indicando o objetivo da utilização (**mandate**):',
         'directdebit' => 'Debitaremos este **:interval** com a referência do mandato **:mandate** da sua conta **:iban**.',
         'paypal' => 'Iremos debitar este **:interval** da conta PayPal especificada.',
@@ -34,7 +35,7 @@ return [
         'interval' => [
             'halbjährlich' => 'semestral',
             'monatlich' => 'mensal',
-            'vierteljährlich' => 'trimestral',
+            'vierteljährlich' => 'trimestralmente',
             'jährlich' => 'anualmente',
         ],
         'title' => 'Filiação',

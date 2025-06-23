@@ -3,7 +3,7 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Velkommen til SUMA-EV",
     'general' => "Velkommen til SUMA-EV! Må jeg først spørge, hvordan du fandt frem til os? Jeg går ud fra, at det var gennem vores søgemaskine MetaGer? Sammen med dig har foreningen nu :member_count medlemmer fra en lang række områder. Nedenfor er der nogle yderligere forklaringer og tips, som er mere end nyttige for SUMA-EV.",
     'membership' => [
-        'description' => 'Denne e-mail er også en bekræftelse på dit medlemskab. Bekræft venligst kort, at du har modtaget denne e-mail. Dit medlemskontingent på **:beløb€** forfalder første gang til betaling på **:forfaldsdato**.',
+        'description' => 'Denne e-mail er også en bekræftelse på dit medlemskab. Bekræft venligst kort, at du har modtaget denne e-mail. Dit medlemskontingent på **:amount** forfalder første gang til betaling på **:due**.',
         'banktransfer' => 'Overfør venligst dette **:interval** til følgende konto med angivelse af anvendelsesformål (**:mandate**):',
         'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandate** fra din konto **:iban**.',
         'paypal' => 'Vi debiterer dette **:interval** fra den angivne PayPal-konto.',
@@ -29,12 +29,13 @@ return [
     'key' => [
         'title' => 'Søgning med MetaGer',
         'extension' => 'Vores webudvidelser til',
-        'description_first' => 'For at konfigurere søgningen med MetaGer skal du bruge følgende nøgle, som du kan bruge til at logge ind på et hvilket som helst antal enheder. Den kan bruges med det samme. Du kan finde alt om den på vores [info-sider](:infos). Din nye medlemsnøgle vil automatisk blive fyldt op af os hver måned til en værdi af **€10,00** uden ekstra omkostninger. Nøglen er',
-        'description_second' => 'For at starte skal du blot gå til vores [startside](:startpage_link). Indtast ovenstående nøgle der, og send den ved at klikke på "Registrer med nøgle". Du kan gøre det samme ved at hente følgende URL til indstillinger i din webbrowser:',
+        'description_first' => 'For at konfigurere søgningen med MetaGer skal du bruge følgende nøgle, som du kan bruge til at logge ind på et hvilket som helst antal enheder. Den kan bruges med det samme. Du kan finde alt om den på vores [info-sider](:infos). Din nye medlemsnøgle vil automatisk blive fyldt op af os hver måned til en værdi af **:amount** uden ekstra omkostninger. Nøglen er',
+        'description_second' => 'Den enhed, du indsendte din ansøgning med, er automatisk blevet logget ind. For at logge flere enheder ind skal du blot gå til vores [startside](:startpage_link). Indtast ovenstående nøgle der, og send den ved at klikke på "Registrer med nøgle". Du kan gøre det samme ved at kalde følgende URL til indstillinger i din webbrowser:',
         'description_third' => 'Hvis du har deaktiveret cookies i din browser eller regelmæssigt sletter alle webstedsdata i din browser, anbefaler vi, at du installerer vores browserudvidelse',
         'description_fourth' => 'I et sådant tilfælde sikrer dette, at du kan fortsætte med at bruge MetaGer uden at logge ind igen og muliggør verificerbar anonymitet i websøgninger ved hjælp af [anonymous token](:anonymous_token_link).',
         'description_fifth' => 'Alternativt kan du også oprette ovenstående URL som et bogmærke for at få hurtig adgang eller gemme nøglen i en adgangskodeadministrator. Men med standardindstillingerne i de fleste browsere vil du forblive permanent logget ind, selv uden en browserudvidelse.',
         'description_sixth' => 'Hvis alt gik godt, vil du se MetaGer-søgefeltet og et grønt nøglesymbol. Klik på dette nøglesymbol én gang. Så ser du alle egenskaber for din nøgle. Du vil også se flere muligheder for at overføre din nøgle til andre enheder. Antallet af enheder er ikke begrænset. Og tjek også de indstillinger, du kan få adgang til via MetaGer-menuen: andre søgemaskiner, sortlister, nattilstand og meget mere.',
+        'banktransfer' => 'Den første fulde optankning sker, når vi har registreret den første betaling af dit medlemsgebyr. I mellemtiden er der allerede tilføjet et lille kreditbeløb til din nøgle.',
     ],
     'mastodon' => [
         'title' => 'Mastodon - en del af en stor familie',

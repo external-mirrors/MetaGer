@@ -3,7 +3,7 @@ return [
     'subject' => [
         'expired' => '[SUMA-EV & MetaGer] A sua inscrição expirou',
         'first' => '[SUMA-EV & MetaGer] Lembrete de pagamento da quota de membro',
-        'second' => '[SUMA-EV & MetaGer] A tua inscrição termina em :data sem pagamento',
+        'second' => '[SUMA-EV & MetaGer] A tua inscrição termina em :date sem pagamento',
     ],
     'edit_button' => "Atualizar o estatuto de membro",
     'description_expired' => 'A experiência tem-nos mostrado que o abandono da <a href="https://suma-ev.de">SUMA-EV</a> não está muitas vezes relacionado com o distanciamento dos nossos valores e ideias, mas tem geralmente razões financeiras. Esperamos, por isso, que chegue um momento em que se possa imaginar a juntar-se novamente à nossa associação.',

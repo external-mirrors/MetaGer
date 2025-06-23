@@ -2,7 +2,7 @@
 return [
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Påmindelse om betaling af dit medlemskontingent',
-        'second' => '[SUMA-EV & MetaGer] Dit medlemskab slutter på :dato uden betaling',
+        'second' => '[SUMA-EV & MetaGer] Dit medlemskab slutter på :date uden betaling',
         'expired' => '[SUMA-EV & MetaGer] Dit medlemskab er udløbet',
     ],
     'description' => 'Dit medlemskontingent skulle være betalt den **:date**. Overfør venligst det udestående beløb på **:amount** til vores bankkonto inden **:due** med angivelse af årsagen til betalingen (**:payment_reference**):',

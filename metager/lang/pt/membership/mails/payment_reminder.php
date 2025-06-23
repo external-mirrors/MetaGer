@@ -13,5 +13,5 @@ return [
     'expired' => 'É com pesar que confirmamos hoje que a sua adesão à [SUMA-EV](https://suma-ev.de) terminou.',
     'description' => 'A sua quota era devida em **:date**. Queira transferir o montante pendente de **:amount** para a nossa conta bancária até **:due**, indicando o motivo do pagamento (**:payment_reference**):',
     'terminate' => 'Se não recebermos o pagamento, teremos infelizmente de anular a sua adesão à [SUMA-EV](https://suma-ev.de) com efeitos a partir de <b>:expiração</b>',
-    'description_rejoin' => 'Se for esse o caso, basta transferir a sua quotização de **:montante** para a nossa conta bancária, indicando o motivo do pagamento (**:referência_do_pagamento**):',
+    'description_rejoin' => 'Se for esse o caso, basta transferir a sua quotização de **:amount** para a nossa conta bancária, indicando o motivo do pagamento (**:payment_reference**):',
 ];

@@ -3,7 +3,7 @@ return [
     'edit_button' => "Update Mitgliedschaft",
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Zahlungserinnerung für Ihren Mitgliedsbeitrag',
-        'second' => '[SUMA-EV & MetaGer] Ihre Mitgliedschaft endet am :Datum ohne Zahlung',
+        'second' => '[SUMA-EV & MetaGer] Ihre Mitgliedschaft endet am :date ohne Zahlung',
         'expired' => '[SUMA-EV & MetaGer] Ihre Mitgliedschaft ist abgelaufen',
     ],
     'description' => 'Ihr Mitgliedsbeitrag war am **:date** fällig. Bitte überweisen Sie den ausstehenden Betrag von **:amount** bis **:due** unter Angabe des Zahlungsgrundes (**:payment_reference**) auf unser Konto:',

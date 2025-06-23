@@ -6,7 +6,7 @@ return [
         'banktransfer' => 'Veuillez transférer ce **:interval** sur le compte suivant, en indiquant le but de l\'utilisation (**:mandate**) :',
         'directdebit' => 'Nous débiterons ce **:interval** avec la référence du mandat **:mandate** de votre compte **:iban**.',
         'paypal' => 'Nous débiterons ce **:interval** du compte PayPal spécifié.',
-        'card' => 'Nous débiterons ce **:intervalle** de la carte de crédit spécifiée.',
+        'card' => 'Nous débiterons ce **:interval** de la carte de crédit spécifiée.',
         'next_payments' => 'Les prochaines contributions',
         'next_payments_hint' => 'Le prochain paiement peut inclure des frais supplémentaires liés à des paiements antérieurs qui n\'ont pas été effectués. Si vous avez des questions concernant vos frais, veuillez nous envoyer un courriel.',
         'due' => 'Date d\'échéance',

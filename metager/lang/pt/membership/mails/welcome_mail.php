@@ -24,7 +24,7 @@ return [
         'banktransfer' => 'Queira transferir este **interval** para a seguinte conta, indicando o objetivo da utilização (**mandate**):',
         'directdebit' => 'Debitaremos este **:interval** com a referência do mandato **:mandate** da sua conta **:iban**.',
         'paypal' => 'Iremos debitar este **:interval** da conta PayPal especificada.',
-        'card' => 'Iremos debitar este **:intervalo** do cartão de crédito especificado.',
+        'card' => 'Iremos debitar este **:interval** do cartão de crédito especificado.',
         'mandate' => 'Objetivo da utilização',
         'next_payments' => 'As próximas contribuições',
         'next_payments_hint' => 'O pagamento seguinte pode incluir taxas adicionais de pagamentos anteriores não efectuados. Se tiver dúvidas sobre a sua taxa, envie-nos uma mensagem de correio eletrónico.',

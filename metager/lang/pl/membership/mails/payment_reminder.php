@@ -12,6 +12,6 @@ return [
     'mastodon' => 'Twoje konto Mastodon na naszej [instancji](https://suma-ev.social) zostanie zamrożone i nie będzie mogło być dłużej używane. Upewnij się, że przeniesiesz się do publicznej instancji w odpowiednim czasie. Usuniemy wszystkie dane powiązane z kontem 6 miesięcy po zakończeniu członkostwa.',
     'expired' => 'Z przykrością potwierdzamy, że Twoje członkostwo w [SUMA-EV](https://suma-ev.de) dobiegło końca.',
     'description' => 'Twoja składka członkowska była wymagalna w dniu **:date**. Prosimy o przelanie zaległej kwoty w wysokości **:amount** na nasze konto bankowe do **:due**, podając powód płatności (**:payment_reference**):',
-    'terminate' => 'Bez otrzymania płatności będziemy niestety musieli anulować członkostwo w [SUMA-EV](https://suma-ev.de) ze skutkiem od <b>:wygaśnięcie</b>',
+    'terminate' => 'Bez otrzymania płatności będziemy niestety musieli anulować członkostwo w [SUMA-EV](https://suma-ev.de) ze skutkiem od <b>:expiration</b>',
     'description_rejoin' => 'W takim przypadku możesz po prostu przelać swoją opłatę członkowską w wysokości **:amount** na nasze konto bankowe, podając powód płatności (**:payment_reference**):',
 ];

@@ -3,7 +3,7 @@ return [
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Przypomnienie o płatności składki członkowskiej',
         'expired' => '[SUMA-EV & MetaGer] Twoje członkostwo wygasło',
-        'second' => '[SUMA-EV & MetaGer] Twoje członkostwo kończy się w dniu :data bez płatności',
+        'second' => '[SUMA-EV & MetaGer] Twoje członkostwo kończy się w dniu :date bez płatności',
     ],
     'description_expired' => 'Doświadczenie pokazało nam, że opuszczenie <a href="https://suma-ev.de">SUMA-EV</a> często nie jest związane z dystansowaniem się od naszych wartości i idei, ale zwykle ma przyczyny finansowe. Dlatego mamy nadzieję, że nadejdzie czas, kiedy będziesz mógł sobie wyobrazić ponowne dołączenie do naszego stowarzyszenia.',
     'edit' => 'Alternatywnie możesz zaktualizować swoje członkostwo i autoryzować odpowiednią metodę płatności, z której będziemy pobierać środki (polecenie zapłaty, PayPal, karta kredytowa).',

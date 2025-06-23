@@ -4,8 +4,8 @@ return [
     'general' => "Velkommen til SUMA-EV! Må jeg først spørge, hvordan du fandt frem til os? Jeg går ud fra, at det var gennem vores søgemaskine MetaGer? Sammen med dig har foreningen nu :member_count medlemmer fra en lang række områder. Nedenfor er der nogle yderligere forklaringer og tips, som er mere end nyttige for SUMA-EV.",
     'membership' => [
         'description' => 'Denne e-mail er også en bekræftelse på dit medlemskab. Bekræft venligst kort, at du har modtaget denne e-mail. Dit medlemskontingent på **:amount** forfalder første gang til betaling på **:due**.',
-        'banktransfer' => 'Overfør venligst dette **:interval** til følgende konto med angivelse af anvendelsesformål (**:mandat**):',
-        'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandat** fra din konto **:iban**.',
+        'banktransfer' => 'Overfør venligst dette **:interval** til følgende konto med angivelse af anvendelsesformål (**:mandate**):',
+        'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandate** fra din konto **:iban**.',
         'paypal' => 'Vi debiterer dette **:interval** fra den angivne PayPal-konto.',
         'card' => 'Vi trækker dette **:interval** fra det angivne kreditkort.',
         'mandate' => 'Formål med brug',

@@ -3,7 +3,7 @@ return [
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Muistutus jäsenmaksun maksamisesta',
         'expired' => '[SUMA-EV & MetaGer] Jäsenyytesi on päättynyt.',
-        'second' => '[SUMA-EV & MetaGer] Jäsenyytesi päättyy :päivänä ilman maksua.',
+        'second' => '[SUMA-EV & MetaGer] Jäsenyytesi päättyy :date ilman maksua.',
     ],
     'description_expired' => 'Kokemus on osoittanut meille, että <a href="https://suma-ev.de">SUMA-EV</a> -verkkosivuston jättäminen ei useinkaan liity arvoista ja ajatuksista etääntymiseen, vaan siihen on yleensä taloudellisia syitä. Siksi toivomme, että saattaa tulla aika, jolloin voitte kuvitella liittyvänne jälleen yhdistykseemme.',
     'edit' => 'Vaihtoehtoisesti voit päivittää jäsenyytesi ja valtuuttaa sopivan maksutavan, josta voimme veloittaa (suoraveloitus, PayPal, luottokortti).',

@@ -5,7 +5,7 @@ return [
     'membership' => [
         'description' => 'Deze e-mail is ook de bevestiging van je lidmaatschap. Bevestig in het kort dat je deze e-mail hebt ontvangen. Je lidmaatschapsgeld ten bedrage van **:amount** is voor de eerste keer verschuldigd op **:due**.',
         'banktransfer' => 'Gelieve dit **:interval** over te maken op de volgende rekening, met vermelding van het gebruiksdoel (**:mandaat**):',
-        'directdebit' => 'We schrijven dit **:interval** met de mandaatreferentie **:mandaat** af van uw rekening **:iban**.',
+        'directdebit' => 'We schrijven dit **:interval** met de mandaatreferentie **:mandate** af van uw rekening **:iban**.',
         'paypal' => 'We schrijven dit **:interval** af van de opgegeven PayPal-rekening.',
         'card' => 'We schrijven dit **:interval** af van de opgegeven creditcard.',
         'mandate' => 'Doel van gebruik',

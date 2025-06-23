@@ -13,5 +13,5 @@ return [
     'expired' => 'Con rammarico le confermiamo oggi che la sua adesione al [SUMA-EV](https://suma-ev.de) è terminata.',
     'description' => 'La quota associativa doveva essere versata il **:date**. La preghiamo di versare l\'importo residuo di **:amount** sul nostro conto bancario entro **:due**, indicando la causale del pagamento (**:payment_reference**):',
     'description_rejoin' => 'In tal caso è sufficiente versare la quota associativa di **:amount** sul nostro conto corrente bancario, indicando la causale del pagamento (**:payment_reference**):',
-    'terminate' => 'Senza il ricevimento del pagamento, saremo purtroppo costretti a cancellare la tua iscrizione a [SUMA-EV](https://suma-ev.de) con effetto da <b>:scadenza</b>',
+    'terminate' => 'Senza il ricevimento del pagamento, saremo purtroppo costretti a cancellare la tua iscrizione a [SUMA-EV](https://suma-ev.de) con effetto da <b>:expiration</b>',
 ];

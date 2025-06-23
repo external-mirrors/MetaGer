@@ -8,7 +8,7 @@ return [
         'banktransfer' => 'Si prega di trasferire questo **:interval** al seguente conto, indicando lo scopo dell\'utilizzo (**:mandate**):',
         'directdebit' => 'Addebiteremo questo **:interval** con il riferimento del mandato **:mandate** dal vostro conto **:iban**.',
         'paypal' => 'Addebiteremo questo **:interval** sul conto PayPal specificato.',
-        'card' => 'Addebiteremo questo **:intervallo** sulla carta di credito specificata.',
+        'card' => 'Addebiteremo questo **:interval** sulla carta di credito specificata.',
         'mandate' => 'Scopo dell\'utilizzo',
         'next_payments' => 'I prossimi contributi',
         'next_payments_hint' => 'Il pagamento successivo potrebbe includere spese aggiuntive derivanti da pagamenti precedentemente non andati a buon fine. In caso di domande sulle tariffe, inviateci un\'e-mail.',

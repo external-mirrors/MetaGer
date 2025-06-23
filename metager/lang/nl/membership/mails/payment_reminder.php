@@ -3,7 +3,7 @@ return [
     'subject' => [
         'first' => '[SUMA-EV & MetaGer] Betalingsherinnering voor je lidmaatschapsgeld',
         'expired' => '[SUMA-EV & MetaGer] Je lidmaatschap is verlopen',
-        'second' => '[SUMA-EV & MetaGer] Je lidmaatschap eindigt op :datum zonder betaling',
+        'second' => '[SUMA-EV & MetaGer] Je lidmaatschap eindigt op :date zonder betaling',
     ],
     'description_expired' => 'De ervaring heeft ons geleerd dat het verlaten van de <a href="https://suma-ev.de">SUMA-EV</a> vaak geen verband houdt met het afstand nemen van onze waarden en ideeën, maar meestal financiële redenen heeft. We hopen daarom dat er een moment komt waarop je je kunt voorstellen weer lid te worden van onze vereniging.',
     'edit' => 'Je kunt ook je lidmaatschap bijwerken en een geschikte betaalmethode autoriseren (automatische incasso, PayPal, creditcard).',

@@ -5,7 +5,7 @@ return [
         'second' => '[SUMA-EV & MetaGer] Dit medlemskab slutter på :dato uden betaling',
         'expired' => '[SUMA-EV & MetaGer] Dit medlemskab er udløbet',
     ],
-    'description' => 'Dit medlemskontingent skulle være betalt den **:dato**. Overfør venligst det udestående beløb på **:beløb** til vores bankkonto inden **:forfaldsdato** med angivelse af årsagen til betalingen (**:betalingsreference**):',
+    'description' => 'Dit medlemskontingent skulle være betalt den **:date**. Overfør venligst det udestående beløb på **:amount** til vores bankkonto inden **:due** med angivelse af årsagen til betalingen (**:payment_reference**):',
     'description_expired' => 'Erfaringen har vist os, at det at forlade <a href="https://suma-ev.de">SUMA-EV</a> ofte ikke handler om at tage afstand fra vores værdier og ideer, men som regel har økonomiske årsager. Vi håber derfor, at der kan komme et tidspunkt, hvor du kan forestille dig at blive medlem af vores forening igen.',
     'description_rejoin' => 'Hvis det er tilfældet, kan du bare overføre dit medlemskontingent på **:beløb** til vores bankkonto med angivelse af årsagen til betalingen (**:betalingsreference**):',
     'edit' => 'Alternativt kan du opdatere dit medlemskab og godkende en passende betalingsmetode, som vi kan debitere fra (Directdebit, PayPal, Creditcard).',

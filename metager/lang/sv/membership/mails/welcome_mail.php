@@ -8,7 +8,7 @@ return [
         'banktransfer' => 'Vänligen överför detta **:intervall** till följande konto, med angivande av användningsändamål (**:mandat**):',
         'directdebit' => 'Vi kommer att debitera detta **:interval** med mandatreferens **:mandate** från ditt konto **:iban**.',
         'paypal' => 'Vi kommer att debitera detta **:interval** från det angivna PayPal-kontot.',
-        'card' => 'Vi kommer att debitera detta **:intervall** från det angivna kreditkortet.',
+        'card' => 'Vi kommer att debitera detta **:interval** från det angivna kreditkortet.',
         'next_payments_hint' => 'Nästa betalning kan innehålla ytterligare avgifter från tidigare misslyckade betalningar. Om du har frågor om din avgift, vänligen skicka ett e-postmeddelande till oss.',
         'amount' => 'Bidrag',
         'now' => 'Och nu',

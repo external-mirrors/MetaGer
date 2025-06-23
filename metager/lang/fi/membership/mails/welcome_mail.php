@@ -21,7 +21,7 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Tervetuloa SUMA-EV:hen!",
     'general' => "Tervetuloa SUMA-EV:hen! Saanko ensin kysyä, miten sait tietää meistä? Oletan hakukoneemme MetaGerin kautta? Yhdistyksellä on nyt kanssasi :member_count jäseniä monilta eri aloilta. Seuraavassa on muutamia lisäselvityksiä ja vinkkejä, jotka ovat enemmän kuin hyödyllisiä SUMA-EV:lle.",
     'membership' => [
-        'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:määrä**, erääntyy ensimmäisen kerran **:eräpäivänä**.',
+        'description' => 'Tämä sähköposti on myös vahvistus jäsenyydestäsi. Vahvista lyhyesti, että olet saanut tämän sähköpostin. Jäsenmaksusi, jonka suuruus on **:amount**, erääntyy ensimmäisen kerran **:due**.',
         'banktransfer' => 'Siirrä tämä **:intervalli** seuraavalle tilille ja ilmoita käyttötarkoitus (**:valtuutus**):',
         'directdebit' => 'Me veloitamme tämän **:intervalli** valtuutuksen viitteellä **:valtuutus** tililtäsi **:iban**.',
         'paypal' => 'Me veloitamme tämän **:aikavälin** määritetyltä PayPal-tililtä.',

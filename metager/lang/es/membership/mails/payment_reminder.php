@@ -13,5 +13,5 @@ return [
     'description' => 'Su cuota de socio vencía el **:date**. Por favor, transfiera el importe pendiente de **:amount** a nuestra cuenta bancaria antes de **:due**, indicando el motivo del pago (**:payment_reference**):',
     'key_charge' => 'La recarga automática de su clave para el uso de MetaGer (**:clave**) ha sido desactivada por el momento.',
     'terminate' => 'Sin la recepción del pago, lamentablemente tendremos que cancelar su afiliación a [SUMA-EV](https://suma-ev.de) con efecto a partir de <b>:expiración</b>',
-    'description_rejoin' => 'En ese caso, sólo tiene que transferir su cuota de afiliación de **:importe** a nuestra cuenta bancaria, indicando el motivo del pago (**:referencia_de_pago**):',
+    'description_rejoin' => 'En ese caso, sólo tiene que transferir su cuota de afiliación de **:amount** a nuestra cuenta bancaria, indicando el motivo del pago (**:payment_reference**):',
 ];

@@ -13,10 +13,10 @@ return [
         'alt' => 'Zahnräder',
     ],
     'ellipsis' => [
-        'alt' => 'vertikale Ellipse',
+        'alt' => 'Weitere Optionen',
     ],
     'ellipsis-horizontal' => [
-        'alt' => 'horizontale Ellipse',
+        'alt' => 'Weitere Optionen',
     ],
     'home' => [
         'alt' => 'Startseite',
@@ -30,5 +30,5 @@ return [
     'floppy' => [
         'alt' => 'Floppy',
     ],
-    'Icon-settings' => 'Kogge',
+    'Icon-settings' => 'Zahnrad',
 ];

@@ -21,7 +21,7 @@ return [
     'general' => "Bem-vindo ao SUMA-EV! Posso começar por perguntar como é que nos conheceu? Presumo que através do nosso motor de busca MetaGer? Juntamente consigo, a associação conta agora com :member_count membros das mais diversas áreas. Seguem-se algumas explicações e dicas que são mais do que úteis para a SUMA-EV.",
     'membership' => [
         'description' => 'Esta mensagem eletrónica é também a confirmação da sua adesão. Por favor, confirme brevemente que recebeu esta mensagem de correio eletrónico. A sua quotização no valor de **:montante€** é devida pela primeira vez em **:vencimento**.',
-        'banktransfer' => 'Queira transferir este **intervalo** para a seguinte conta, indicando o objetivo da utilização (**mandato**):',
+        'banktransfer' => 'Queira transferir este **interval** para a seguinte conta, indicando o objetivo da utilização (**mandate**):',
         'directdebit' => 'Debitaremos este **:intervalo** com a referência do mandato **:mandato** da sua conta **:iban**.',
         'paypal' => 'Iremos debitar este **:intervalo** da conta PayPal especificada.',
         'card' => 'Iremos debitar este **:intervalo** do cartão de crédito especificado.',

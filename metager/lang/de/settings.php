@@ -27,12 +27,12 @@ return [
     ],
     'back' => 'Zurück zur letzten Seite',
     'blentry' => 'Blacklisteintrag',
-    'clear' => 'Schwarze Liste löschen',
+    'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
     'dark' => 'Dunkel',
     'darkmode' => 'Dunkelmodus umschalten',
     'suggestions' => [
-        'off' => "Behinderte",
+        'off' => "Deaktiviert",
         'on' => "Aktiviert",
         'delay' => [
             'long' => 'Lang',
@@ -47,7 +47,7 @@ return [
         ],
         'addressbar' => [
             'label' => 'Vorschläge in der Adressleiste',
-            'description' => 'Load Suggestions bei der Eingabe in die Adressleiste. Die obige Verzögerungskonfiguration wird für Firefox-Benutzer immer "kurz" sein, da die Timeouts für diese Anfragen sehr kurz sind.',
+            'description' => 'Lade Suchvorschläge bei der Eingabe in die Adressleiste. Die obige Verzögerungskonfiguration wird für Firefox-Benutzer immer "kurz" sein, da die Timeouts für diese Anfragen sehr kurz sind.',
             'hint' => '<b>Achtung!</b> Um diese Funktion anbieten zu können, müssen wir Ihre Vorschlagseinstellungen mehrere Tage lang auf unserem Server speichern. Wenn Sie dies nicht wünschen, lassen Sie diese Einstellung deaktiviert.',
         ],
     ],
@@ -84,7 +84,7 @@ return [
     'on' => 'auf',
     'removeCookie' => 'Dieses Cookie entfernen',
     'reset' => 'Alle Einstellungen löschen',
-    'save' => 'Speichern Sie',
+    'save' => 'Speichern',
     'system' => 'Systemvoreinstellung',
     'enable-engine' => "Suchmaschine einschalten",
     'disable-engine' => "Suchmaschine ausschalten",

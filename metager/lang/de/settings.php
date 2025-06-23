@@ -15,8 +15,8 @@ return [
     ],
     'metager-key' => [
         'header' => 'Anzeigenfreie Suche',
-        'charge' => 'Kredit: :token Token',
-        'manage' => 'Ladetaste',
+        'charge' => 'Guthaben: :token Token',
+        'manage' => 'Schlüassel aufladen',
         'logout' => 'Schlüssel entfernen',
         'no-key' => 'Sie haben keinen Schlüssel für die werbefreie Suche eingerichtet.',
         'actions' => [
@@ -26,13 +26,13 @@ return [
         ],
     ],
     'back' => 'Zurück zur letzten Seite',
-    'blentry' => 'Eintrag in die Schwarze Liste',
-    'clear' => 'Schwarze Liste löschen',
+    'blentry' => 'Blacklisteintrag',
+    'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
-    'dark' => 'Dunkelheit',
+    'dark' => 'Dunkel',
     'darkmode' => 'Dunkelmodus umschalten',
     'suggestions' => [
-        'off' => "Behinderte",
+        'off' => "Deaktiviert",
         'on' => "Aktiviert",
         'delay' => [
             'long' => 'Lang',
@@ -47,7 +47,7 @@ return [
         ],
         'addressbar' => [
             'label' => 'Vorschläge in der Adressleiste',
-            'description' => 'Load Suggestions bei der Eingabe in die Adressleiste. Die obige Verzögerungskonfiguration wird für Firefox-Benutzer immer "kurz" sein, da die Timeouts für diese Anfragen sehr kurz sind.',
+            'description' => 'Lade Suchvorschläge bei der Eingabe in die Adressleiste. Die obige Verzögerungskonfiguration wird für Firefox-Benutzer immer "kurz" sein, da die Timeouts für diese Anfragen sehr kurz sind.',
             'hint' => '<b>Achtung!</b> Um diese Funktion anbieten zu können, müssen wir Ihre Vorschlagseinstellungen mehrere Tage lang auf unserem Server speichern. Wenn Sie dies nicht wünschen, lassen Sie diese Einstellung deaktiviert.',
         ],
     ],
@@ -59,7 +59,7 @@ return [
         '1' => 'Präferenzen für die Suche',
         '2' => 'Verwendete Suchmaschinen',
         '3' => 'Such-Filter',
-        '4' => 'Schwarze Liste',
+        '4' => 'Blacklist',
     ],
     'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Schwerpunkte und Unterseiten!',
@@ -84,7 +84,7 @@ return [
     'on' => 'auf',
     'removeCookie' => 'Dieses Cookie entfernen',
     'reset' => 'Alle Einstellungen löschen',
-    'save' => 'Speichern Sie',
+    'save' => 'Speichern',
     'system' => 'Systemvoreinstellung',
     'enable-engine' => "Suchmaschine einschalten",
     'disable-engine' => "Suchmaschine ausschalten",

@@ -80,7 +80,7 @@ return [
         'description' => 'Du kan konfigurere at bruge en af følgende eksterne søgemaskiner i stedet for vores integrerede løsning. Vi omdirigerer dine søgninger til den konfigurerede udbyder.',
     ],
     'suggestions' => [
-        'off' => "Handicappet",
+        'off' => "Deaktiveret",
         'on' => "Aktiveret",
         'delay' => [
             'description' => 'Forslagene indlæses efter denne forsinkelse, mens du skriver. Ideelt set vælger du en forsinkelse, der er lang nok til, at forslagene først indlæses, når du holder op med at skrive.',

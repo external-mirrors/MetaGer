@@ -1,7 +1,7 @@
 <?php
 return [
     'angle-double-right' => [
-        'alt' => 'Winkel doppelt rechts',
+        'alt' => 'Doppelter Pfeil nach rechts',
     ],
     'icon-lupe' => [
         'alt' => 'Suche',
@@ -10,13 +10,13 @@ return [
         'alt' => 'drei horizontale Striche',
     ],
     'cogs' => [
-        'alt' => 'Koggen',
+        'alt' => 'Zahnräder',
     ],
     'ellipsis' => [
-        'alt' => 'vertikale Ellipse',
+        'alt' => 'Weitere Optionen',
     ],
     'ellipsis-horizontal' => [
-        'alt' => 'horizontale Ellipse',
+        'alt' => 'Weitere Optionen',
     ],
     'home' => [
         'alt' => 'Startseite',
@@ -30,5 +30,5 @@ return [
     'floppy' => [
         'alt' => 'Floppy',
     ],
-    'Icon-settings' => 'Kogge',
+    'Icon-settings' => 'Zahnrad',
 ];

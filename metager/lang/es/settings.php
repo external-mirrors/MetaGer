@@ -80,7 +80,7 @@ return [
         'description' => 'Puede configurar el uso de cualquiera de los siguientes motores de búsqueda externos en lugar de nuestra solución integrada. Redirigiremos sus búsquedas al proveedor configurado.',
     ],
     'suggestions' => [
-        'off' => "Discapacitados",
+        'off' => "Desactivado",
         'on' => "Activado",
         'heading' => 'Sugerencias de búsqueda',
         'provider' => [

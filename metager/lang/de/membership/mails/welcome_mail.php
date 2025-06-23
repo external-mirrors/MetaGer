@@ -1,11 +1,11 @@
 <?php
 return [
     'subject' => "[SUMA-EV & MetaGer] Willkommen bei SUMA-EV",
-    'general' => "Willkommen bei SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für SUMA-EV mehr als nützlich sind.",
+    'general' => "Willkommen bei SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für Ihre Mitgliedschaft im SUMA-EV mehr als nützlich sind.",
     'membership' => [
         'title' => 'Mitgliedschaft',
-        'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese E-Mail erhalten haben. Ihr Mitgliedsbeitrag in Höhe von **:Betrag** ist erstmals am **:Fälligkeitstag** fällig.',
-        'banktransfer' => 'Bitte überweisen Sie dieses **:Intervall** auf das folgende Konto unter Angabe des Verwendungszwecks (**:Mandat**):',
+        'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese E-Mail erhalten haben. Ihr Mitgliedsbeitrag in Höhe von **:amount** ist erstmals am **:due** fällig.',
+        'banktransfer' => 'Bitte überweisen Sie dieses **:interval** auf das folgende Konto unter Angabe des Verwendungszwecks (**:mandate**):',
         'directdebit' => 'Dieses **:Intervall** buchen wir mit der Mandatsreferenz **:Mandat** von Ihrem Konto **:iban** ab.',
         'paypal' => 'Wir werden dieses **:Intervall** vom angegebenen PayPal-Konto abbuchen.',
         'card' => 'Wir werden dieses **:Intervall** von der angegebenen Kreditkarte abbuchen.',

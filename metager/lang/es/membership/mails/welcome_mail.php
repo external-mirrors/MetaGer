@@ -2,11 +2,11 @@
 return [
     'membership' => [
         'banktransfer' => 'Por favor, transfiera este **:intervalo** a la siguiente cuenta, indicando la finalidad de uso (**:mandato**):',
-        'directdebit' => 'Cargaremos este **:intervalo** con la referencia de mandato **:mandato** en su cuenta **:iban**.',
+        'directdebit' => 'Cargaremos este **:interval** con la referencia de mandato **:mandate** en su cuenta **:iban**.',
         'now' => 'Ahora',
         'description' => 'Este correo electrónico es también la confirmación de su afiliación. Por favor, confirme brevemente que ha recibido este correo electrónico. Su cuota de afiliación por importe de **:amount** vence por primera vez a las **:due**.',
         'paypal' => 'Cargaremos este **:interval** en la cuenta PayPal especificada.',
-        'card' => 'Cargaremos este **:intervalo** en la tarjeta de crédito especificada.',
+        'card' => 'Cargaremos este **:interval** en la tarjeta de crédito especificada.',
         'mandate' => 'Finalidad de uso',
         'next_payments' => 'Las próximas contribuciones',
         'next_payments_hint' => 'El siguiente pago podría incluir tasas adicionales de pagos fallidos anteriores. Si tiene alguna duda sobre las tasas, envíenos un correo electrónico.',

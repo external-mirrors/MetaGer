@@ -41,7 +41,7 @@
 
 # @lang("membership/mails/welcome_mail.key.title")
 
-@lang("membership/mails/welcome_mail.key.description_first", ["infos" => url("keys"), "amount" => (new \NumberFormatter($membership->locale, \NumberFormatter::CURRENCY))->formatCurrency($payments[1]["amount"], "EUR")])
+@lang("membership/mails/welcome_mail.key.description_first", ["infos" => url("keys"), "amount" => (new \NumberFormatter($membership->locale, \NumberFormatter::CURRENCY))->formatCurrency($membership->amount, "EUR")])
 
 > {{ $membership->key }}
 

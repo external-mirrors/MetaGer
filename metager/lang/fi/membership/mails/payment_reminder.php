@@ -11,7 +11,7 @@ return [
     'key_charge' => 'MetaGerin käyttöavaimen (**:key**) automaattinen lataus on toistaiseksi poistettu käytöstä.',
     'mastodon' => 'Mastodon-tilisi [instanssi](https://suma-ev.social) jäädytetään, eikä sitä voi enää käyttää. Varmista, että siirryt hyvissä ajoin julkiseen instanssiin. Poistamme kaikki tiliisi liittyvät tiedot 6 kuukauden kuluttua jäsenyytesi päättymisestä.',
     'expired' => 'Vahvistamme valitettavasti tänään, että jäsenyytesi [SUMA-EV](https://suma-ev.de) on päättynyt.',
-    'description' => 'Jäsenmaksunne erääntyi **:päivämäärä**. Pyydämme teitä siirtämään maksamatta olevan määrän **:määrä** pankkitilillemme **:eräpäivään** mennessä ja ilmoittamaan maksun perusteen (**:maksun_viite**):',
+    'description' => 'Jäsenmaksunne erääntyi **:date**. Pyydämme teitä siirtämään maksamatta olevan määrän **:amount** pankkitilillemme **:due** mennessä ja ilmoittamaan maksun perusteen (**:payment_reference**):',
     'terminate' => 'Ilman maksun vastaanottamista joudumme valitettavasti peruuttamaan jäsenyytesi [SUMA-EV](https://suma-ev.de) <b>:stä alkaen.</b>',
     'description_rejoin' => 'Jos näin on, voit vain siirtää jäsenmaksusi **:summan** pankkitilillemme ja ilmoittaa maksun perusteen (**:maksun_viite**):',
 ];

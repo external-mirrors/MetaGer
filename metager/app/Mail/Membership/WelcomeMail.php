@@ -39,7 +39,6 @@ class WelcomeMail extends Mailable
             throw new Exception("Couldn't find membership with ID $membership_id");
         }
         $this->locale($this->membership->locale);
-        $this->locale("en-US");
         $this->contact = CiviCrm::GET_CONTACT($this->membership->crm_contact);
         if ($this->contact === null) {
             throw new Exception("Couldn't find contact with ID {$this->membership->crm_contact}");

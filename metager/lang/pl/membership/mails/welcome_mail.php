@@ -7,7 +7,7 @@ return [
         'banktransfer' => 'Prosimy o przelanie tego **:interwału** na następujące konto, podając cel użycia (**:mandat**):',
         'directdebit' => 'Obciążymy ten **:interval** z numerem referencyjnym **:mandate** z twojego konta **:iban**.',
         'paypal' => 'Obciążymy ten **:interval** z podanego konta PayPal.',
-        'card' => 'Obciążymy tę **:przerwę** ze wskazanej karty kredytowej.',
+        'card' => 'Obciążymy tę **:interval** ze wskazanej karty kredytowej.',
         'mandate' => 'Cel użytkowania',
         'next_payments' => 'Następny wkład',
         'next_payments_hint' => 'Kolejna płatność może zawierać dodatkowe opłaty za poprzednie nieudane płatności. Jeśli masz pytania dotyczące opłaty, wyślij nam wiadomość e-mail.',

@@ -13,5 +13,5 @@ return [
     'expired' => 'Z przykrością potwierdzamy, że Twoje członkostwo w [SUMA-EV](https://suma-ev.de) dobiegło końca.',
     'description' => 'Twoja składka członkowska była wymagalna w dniu **:date**. Prosimy o przelanie zaległej kwoty w wysokości **:amount** na nasze konto bankowe do **:due**, podając powód płatności (**:payment_reference**):',
     'terminate' => 'Bez otrzymania płatności będziemy niestety musieli anulować członkostwo w [SUMA-EV](https://suma-ev.de) ze skutkiem od <b>:wygaśnięcie</b>',
-    'description_rejoin' => 'W takim przypadku możesz po prostu przelać swoją opłatę członkowską w wysokości **:kwota** na nasze konto bankowe, podając powód płatności (**:płatność_referencja**):',
+    'description_rejoin' => 'W takim przypadku możesz po prostu przelać swoją opłatę członkowską w wysokości **:amount** na nasze konto bankowe, podając powód płatności (**:payment_reference**):',
 ];

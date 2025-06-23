@@ -6,7 +6,7 @@ return [
         'second' => '[SUMA-EV & MetaGer] Ihre Mitgliedschaft endet am :Datum ohne Zahlung',
         'expired' => '[SUMA-EV & MetaGer] Ihre Mitgliedschaft ist abgelaufen',
     ],
-    'description' => 'Ihr Mitgliedsbeitrag war am **:Datum** fällig. Bitte überweisen Sie den ausstehenden Betrag von **:Betrag** bis **:Fälligkeit** unter Angabe des Zahlungsgrundes (**:payment_reference**) auf unser Konto:',
+    'description' => 'Ihr Mitgliedsbeitrag war am **:date** fällig. Bitte überweisen Sie den ausstehenden Betrag von **:amount** bis **:due** unter Angabe des Zahlungsgrundes (**:payment_reference**) auf unser Konto:',
     'description_expired' => 'Die Erfahrung hat uns gezeigt, dass der Austritt aus dem <a href="https://suma-ev.de">SUMA-EV</a> oft nicht mit einer Distanzierung von unseren Werten und Ideen zu tun hat, sondern meist finanzielle Gründe hat. Wir hoffen daher, dass Sie sich irgendwann vorstellen können, unserem Verband wieder beizutreten.',
     'description_rejoin' => 'In diesem Fall überweisen Sie einfach Ihren Mitgliedsbeitrag in Höhe von **:Betrag** unter Angabe des Verwendungszwecks (**:Zahlungsreferenz**) auf unser Konto:',
     'edit' => 'Alternativ können Sie Ihre Mitgliedschaft aktualisieren und uns eine geeignete Zahlungsmethode zur Abbuchung erteilen (Lastschrift, PayPal, Kreditkarte)',

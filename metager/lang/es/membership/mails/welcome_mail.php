@@ -4,7 +4,7 @@ return [
         'banktransfer' => 'Por favor, transfiera este **:intervalo** a la siguiente cuenta, indicando la finalidad de uso (**:mandato**):',
         'directdebit' => 'Cargaremos este **:intervalo** con la referencia de mandato **:mandato** en su cuenta **:iban**.',
         'now' => 'Ahora',
-        'description' => 'Este correo electrónico es también la confirmación de su afiliación. Por favor, confirme brevemente que ha recibido este correo electrónico. Su cuota de afiliación por importe de **:importe** vence por primera vez a las **:vencimiento**.',
+        'description' => 'Este correo electrónico es también la confirmación de su afiliación. Por favor, confirme brevemente que ha recibido este correo electrónico. Su cuota de afiliación por importe de **:amount** vence por primera vez a las **:due**.',
         'paypal' => 'Cargaremos este **:intervalo** en la cuenta PayPal especificada.',
         'card' => 'Cargaremos este **:intervalo** en la tarjeta de crédito especificada.',
         'mandate' => 'Finalidad de uso',

@@ -24,7 +24,7 @@ return [
         'banktransfer' => 'Siirrä tämä **:interval** seuraavalle tilille ja ilmoita käyttötarkoitus (**:mandate**):',
         'directdebit' => 'Me veloitamme tämän **:interval** valtuutuksen viitteellä **:mandate** tililtäsi **:iban**.',
         'paypal' => 'Me veloitamme tämän **:interval** määritetyltä PayPal-tililtä.',
-        'card' => 'Veloitamme tämän **:aikavälin** määritetyltä luottokortilta.',
+        'card' => 'Veloitamme tämän **:interval** määritetyltä luottokortilta.',
         'mandate' => 'Käyttötarkoitus',
         'next_payments' => 'Seuraavat rahoitusosuudet',
         'next_payments_hint' => 'Seuraavaan maksuun saattaa sisältyä lisämaksuja aiemmin epäonnistuneista maksuista. Jos sinulla on kysyttävää maksusta, lähetä meille sähköpostia.',

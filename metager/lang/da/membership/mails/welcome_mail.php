@@ -5,7 +5,7 @@ return [
     'membership' => [
         'description' => 'Denne e-mail er også en bekræftelse på dit medlemskab. Bekræft venligst kort, at du har modtaget denne e-mail. Dit medlemskontingent på **:beløb€** forfalder første gang til betaling på **:forfaldsdato**.',
         'banktransfer' => 'Overfør venligst dette **:interval** til følgende konto med angivelse af anvendelsesformål (**:mandate**):',
-        'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandat** fra din konto **:iban**.',
+        'directdebit' => 'Vi debiterer dette **:interval** med mandatreferencen **:mandate** fra din konto **:iban**.',
         'paypal' => 'Vi debiterer dette **:interval** fra den angivne PayPal-konto.',
         'card' => 'Vi trækker dette **:interval** fra det angivne kreditkort.',
         'mandate' => 'Formål med brug',

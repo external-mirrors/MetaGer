@@ -12,6 +12,6 @@ return [
     'key_charge' => 'Den automatiska laddningen av din nyckel för användning av MetaGer (**:key**) har avaktiverats för tillfället.',
     'mastodon' => 'Ditt Mastodon-konto på vår [instans] (https://suma-ev.social) kommer att frysas och kan inte längre användas. Vänligen se till att du flyttar till en offentlig instans i god tid. Vi kommer att radera all data som är kopplad till ditt konto 6 månader efter att ditt medlemskap har upphört.',
     'terminate' => 'Utan mottagande av betalning måste vi tyvärr säga upp ditt medlemskap i [SUMA-EV](https://suma-ev.de) från och med <b>:upphörande</b>',
-    'description' => 'Din medlemsavgift förföll till betalning den **:datum**. Vänligen överför det utestående beloppet på **:belopp** till vårt bankkonto senast **:förfallodag**, med angivande av skälet till betalningen (**:betalningsreferens**):',
+    'description' => 'Din medlemsavgift förföll till betalning den **:date**. Vänligen överför det utestående beloppet på **:amount** till vårt bankkonto senast **:due**, med angivande av skälet till betalningen (**:payment_reference**):',
     'description_rejoin' => 'Om så är fallet kan du bara överföra din medlemsavgift på **:belopp** till vårt bankkonto och ange orsaken till betalningen (**:betalningsreferens**):',
 ];

@@ -3,7 +3,7 @@ return [
     'membership' => [
         'mandate' => 'But de l\'utilisation',
         'description' => 'Cet e-mail est également la confirmation de votre adhésion. Veuillez confirmer brièvement que vous avez reçu cet e-mail. Votre cotisation d\'un montant de **:montant€** est due pour la première fois à **:échéance**.',
-        'banktransfer' => 'Veuillez transférer ce **:intervalle** sur le compte suivant, en indiquant le but de l\'utilisation (**:mandat**) :',
+        'banktransfer' => 'Veuillez transférer ce **:interval** sur le compte suivant, en indiquant le but de l\'utilisation (**:mandate**) :',
         'directdebit' => 'Nous débiterons ce **:intervalle** avec la référence du mandat **:mandat** de votre compte **:iban**.',
         'paypal' => 'Nous débiterons ce **:intervalle** du compte PayPal spécifié.',
         'card' => 'Nous débiterons ce **:intervalle** de la carte de crédit spécifiée.',

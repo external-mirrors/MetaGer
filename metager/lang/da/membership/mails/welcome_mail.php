@@ -29,7 +29,7 @@ return [
     'key' => [
         'title' => 'Søgning med MetaGer',
         'extension' => 'Vores webudvidelser til',
-        'description_first' => 'For at konfigurere søgningen med MetaGer skal du bruge følgende nøgle, som du kan bruge til at logge ind på et hvilket som helst antal enheder. Den kan bruges med det samme. Du kan finde alt om den på vores [info-sider](:infos). Din nye medlemsnøgle vil automatisk blive fyldt op af os hver måned til en værdi af **:beløb** uden ekstra omkostninger. Nøglen er',
+        'description_first' => 'For at konfigurere søgningen med MetaGer skal du bruge følgende nøgle, som du kan bruge til at logge ind på et hvilket som helst antal enheder. Den kan bruges med det samme. Du kan finde alt om den på vores [info-sider](:infos). Din nye medlemsnøgle vil automatisk blive fyldt op af os hver måned til en værdi af **:amount** uden ekstra omkostninger. Nøglen er',
         'description_second' => 'Den enhed, du indsendte din ansøgning med, er automatisk blevet logget ind. For at logge flere enheder ind skal du blot gå til vores [startside](:startside_link). Indtast ovenstående nøgle der, og send den ved at klikke på "Registrer med nøgle". Du kan gøre det samme ved at kalde følgende URL til indstillinger i din webbrowser:',
         'description_third' => 'Hvis du har deaktiveret cookies i din browser eller regelmæssigt sletter alle webstedsdata i din browser, anbefaler vi, at du installerer vores browserudvidelse',
         'description_fourth' => 'I et sådant tilfælde sikrer dette, at du kan fortsætte med at bruge MetaGer uden at logge ind igen og muliggør verificerbar anonymitet i websøgninger ved hjælp af [anonymous token](:anonymous_token_link).',

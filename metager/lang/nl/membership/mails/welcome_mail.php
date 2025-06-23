@@ -3,9 +3,9 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Welkom bij SUMA-EV",
     'general' => "Welkom bij SUMA-EV! Mag ik eerst vragen hoe je ons hebt leren kennen? Ik neem aan via onze zoekmachine MetaGer? Samen met jou heeft de vereniging nu :member_count leden uit de meest uiteenlopende gebieden. Hieronder vind je meer uitleg en tips die meer dan nuttig zijn voor SUMA-EV.",
     'membership' => [
-        'description' => 'Deze e-mail is ook de bevestiging van je lidmaatschap. Bevestig in het kort dat je deze e-mail hebt ontvangen. Je lidmaatschapsgeld ten bedrage van **:bedrag€** is voor de eerste keer verschuldigd op **:vervaldatum**.',
-        'banktransfer' => 'Gelieve dit **:interval** over te maken op de volgende rekening, met vermelding van het gebruiksdoel (**:mandate**):',
-        'directdebit' => 'We schrijven dit **:interval** met de mandaatreferentie **:mandate** af van uw rekening **:iban**.',
+        'description' => 'Deze e-mail is ook de bevestiging van je lidmaatschap. Bevestig in het kort dat je deze e-mail hebt ontvangen. Je lidmaatschapsgeld ten bedrage van **:bedrag** is voor de eerste keer verschuldigd op **:vervaldatum**.',
+        'banktransfer' => 'Gelieve dit **:interval** over te maken op de volgende rekening, met vermelding van het gebruiksdoel (**:mandaat**):',
+        'directdebit' => 'We schrijven dit **:interval** met de mandaatreferentie **:mandaat** af van uw rekening **:iban**.',
         'paypal' => 'We schrijven dit **:interval** af van de opgegeven PayPal-rekening.',
         'card' => 'We schrijven dit **:interval** af van de opgegeven creditcard.',
         'mandate' => 'Doel van gebruik',
@@ -29,12 +29,13 @@ return [
     'key' => [
         'title' => 'Zoeken met MetaGer',
         'extension' => 'Onze webuitbreidingen voor',
-        'description_first' => 'Om het zoeken met MetaGer in te stellen, heb je de volgende sleutel nodig, die je kunt gebruiken om op een willekeurig aantal apparaten in te loggen. Het kan onmiddellijk gebruikt worden. Je kunt er alles over vinden op onze [info pagina\'s](:infos). Je nieuwe lidmaatschapsleutel wordt elke maand automatisch door ons aangevuld ter waarde van **€10,00** zonder extra kosten. De sleutel is',
-        'description_second' => 'Ga om te beginnen naar onze [startpagina](:startpage_link). Voer daar de bovenstaande sleutel in en verstuur deze door op "Registreer met sleutel" te klikken. Je kunt hetzelfde doen door de volgende instellingen-URL op te roepen in je webbrowser:',
+        'description_first' => 'Om het zoeken met MetaGer in te stellen, heb je de volgende sleutel nodig, die je kunt gebruiken om op een willekeurig aantal apparaten in te loggen. Het kan onmiddellijk gebruikt worden. Je kunt er alles over vinden op onze [info pagina\'s](:infos). Je nieuwe lidmaatschapsleutel wordt elke maand automatisch door ons aangevuld ter waarde van **:bedrag** zonder extra kosten. De sleutel is',
+        'description_second' => 'Het apparaat waarmee je je aanvraag hebt ingediend, is automatisch aangemeld. Om meer apparaten aan te melden, ga je naar onze [startpagina](:startpagina_link). Voer daar de bovenstaande sleutel in en verstuur deze door op "Registreer met sleutel" te klikken. U kunt hetzelfde doen door de volgende instellingen-URL op te roepen in uw webbrowser:',
         'description_third' => 'Als je cookies in je browser hebt uitgeschakeld of regelmatig alle websitegegevens in je browser verwijdert, raden we je aan onze browserextensie te installeren',
         'description_fourth' => 'In zo\'n geval zorgt dit ervoor dat je MetaGer kunt blijven gebruiken zonder opnieuw in te loggen en maakt het verifieerbare anonimiteit mogelijk bij zoekopdrachten op het web door middel van [anonymous token](:anonymous_token_link).',
         'description_fifth' => 'Je kunt de bovenstaande URL ook instellen als bladwijzer voor snelle toegang of de sleutel laten opslaan in een wachtwoordmanager. Met de standaardinstellingen van de meeste browsers blijft u echter permanent ingelogd, zelfs zonder browserextensie.',
         'description_sixth' => 'Als alles goed is gegaan, zie je het MetaGer zoekveld en een groen sleutelsymbool. Klik eenmaal op dit sleutelsymbool. Je ziet dan alle eigenschappen van je sleutel. Je ziet ook verschillende opties om je sleutel over te zetten naar andere apparaten. Het aantal apparaten is niet beperkt. Bekijk ook de instellingen die je kunt openen via het MetaGer menu; andere zoekmachines, zwarte lijsten, nachtmodus en meer.',
+        'banktransfer' => 'De eerste volledige opwaardering gebeurt nadat we de eerste betaling van je lidmaatschapsgeld hebben geregistreerd. In de tussentijd is er al een klein tegoed toegevoegd aan je sleutel.',
     ],
     'mastodon' => [
         'title' => 'Mastodon - deel van een grote familie',

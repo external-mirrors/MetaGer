@@ -1,7 +1,7 @@
 <?php
 return [
     'subject' => "[SUMA-EV & MetaGer] Willkommen bei SUMA-EV",
-    'general' => "Willkommen bei SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für Ihre Mitgliedschaft im SUMA-EV mehr als nützlich sind.",
+    'general' => "Willkommen im SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für Ihre Mitgliedschaft im SUMA-EV mehr als nützlich sind.",
     'membership' => [
         'title' => 'Mitgliedschaft',
         'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese E-Mail erhalten haben. Ihr Mitgliedsbeitrag in Höhe von **:amount** ist erstmals am **:due** fällig.',
@@ -24,7 +24,7 @@ return [
     ],
     'websites' => [
         'title' => 'Mitgliedschaft',
-        'description' => 'Unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finden Sie viele der bisherigen Rundschreiben und Newsletter. Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Gerne können Sie auch einen Eintrag in unsere [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) erhalten. Lassen Sie es uns in diesem Fall einfach kurz wissen.',
+        'description' => 'Unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finden Sie viele der bisherigen Rundschreiben und Newsletter. Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Gerne können Sie auch einen Eintrag auf unserer [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) erhalten. Lassen Sie es uns in diesem Fall einfach kurz wissen.',
     ],
     'key' => [
         'title' => 'Die Suche mit MetaGer',

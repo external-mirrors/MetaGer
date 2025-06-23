@@ -13,5 +13,5 @@ return [
     'expired' => 'Vahvistamme valitettavasti tänään, että jäsenyytesi [SUMA-EV](https://suma-ev.de) on päättynyt.',
     'description' => 'Jäsenmaksunne erääntyi **:date**. Pyydämme teitä siirtämään maksamatta olevan määrän **:amount** pankkitilillemme **:due** mennessä ja ilmoittamaan maksun perusteen (**:payment_reference**):',
     'terminate' => 'Ilman maksun vastaanottamista joudumme valitettavasti peruuttamaan jäsenyytesi [SUMA-EV](https://suma-ev.de) <b>:stä alkaen.</b>',
-    'description_rejoin' => 'Jos näin on, voit vain siirtää jäsenmaksusi **:summan** pankkitilillemme ja ilmoittaa maksun perusteen (**:maksun_viite**):',
+    'description_rejoin' => 'Jos näin on, voit vain siirtää jäsenmaksusi **:amount** pankkitilillemme ja ilmoittaa maksun perusteen (**:payment_reference**):',
 ];

@@ -33,19 +33,31 @@ class WelcomeMail extends Mailable
      */
     public function __construct(int $membership_id, string|null $additional_message = "")
     {
-        $this->membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+        $membership = Arr::get(CiviCrm::FIND_MEMBERSHIPS(membership_id: $membership_id), "0");
+        if ($membership === null) {
+            throw new Exception("Error while fetching membership from CiviCRM");
+        } else {
+            $this->membership = $membership;
+        }
         $this->additional_message = $additional_message;
         if ($this->membership === null) {
             throw new Exception("Couldn't find membership with ID $membership_id");
         }
         $this->locale($this->membership->locale);
-        $this->contact = CiviCrm::GET_CONTACT($this->membership->crm_contact);
-        if ($this->contact === null) {
-            throw new Exception("Couldn't find contact with ID {$this->membership->crm_contact}");
+        $contact = CiviCrm::GET_CONTACT($this->membership->crm_contact);
+        if ($contact === null) {
+            throw new Exception("Error while fetching CiviCRM Contact with ID {$this->membership->crm_contact}");
+        } else {
+            $this->contact = $contact;
         }
         // Get membership count
         $this->membership_count = CiviCrm::GET_MEMBERSHIP_COUNT();
-        $this->payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($membership_id, 3);
+        $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($membership_id, 3);
+        if ($payments === null) {
+            throw new Exception("Error while fetching next payments from CiviCRM");
+        } else {
+            $this->payments = $payments;
+        }
         $this->plugin_firefox_url = "https://addons.mozilla.org/firefox/addon/metager-suche/";
         $this->plugin_chrome_url = "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd";
         $this->plugin_edge_url = "https://microsoftedge.microsoft.com/addons/detail/metager-suche/fdckbcmhkcoohciclcedgjmchbdeijog";

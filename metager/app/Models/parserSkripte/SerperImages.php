@@ -168,6 +168,17 @@ class SerperImages extends Searchengine
     public function getNext(\App\MetaGer $metager, $result)
     {
         try {
+            $results = json_decode($result);
+            if ($results !== null) {
+                $web = $results->images;
+                $num = 10;
+                if (property_exists($this->configuration->getParameter, "num")) {
+                    $num = $this->configuration->getParameter->num;
+                }
+                if (sizeof($web) < $num)
+                    return;
+            }
+
             /** @var SearchEngineConfiguration */
             $newConfiguration = unserialize(serialize($this->configuration));
             $page = 1;

@@ -22,10 +22,6 @@ return [
         ],
         'next_payments_hint' => 'Die nächste Zahlung kann zusätzliche Gebühren aus zuvor fehlgeschlagenen Zahlungen enthalten. Wenn Sie Fragen zu Ihrer Gebühr haben, senden Sie uns bitte eine E-Mail.',
     ],
-    'websites' => [
-        'title' => 'Mitgliedschaft',
-        'description' => 'Unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finden Sie viele der bisherigen Rundschreiben und Newsletter. Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Gerne können Sie auch einen Eintrag auf unserer [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) erhalten. Lassen Sie es uns in diesem Fall einfach kurz wissen.',
-    ],
     'key' => [
         'title' => 'Die Suche mit MetaGer',
         'extension' => 'Unsere Web-Erweiterungen für',

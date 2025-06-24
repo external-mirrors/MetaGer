@@ -23,10 +23,6 @@ return [
         ],
         'title' => 'Soci',
     ],
-    'websites' => [
-        'description' => 'Su [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) sono disponibili molte delle precedenti circolari e newsletter. I precedenti comunicati stampa del SUMA-EV si trovano su [suma-ev.de/presse/](https://suma-ev.de/presse/). Siete inoltre invitati a farvi inserire nella nostra [lista pubblica dei membri](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). In questo caso, è sufficiente comunicarcelo brevemente.',
-        'title' => 'Soci',
-    ],
     'key' => [
         'title' => 'Ricerca con MetaGer',
         'extension' => 'Le nostre estensioni web per',

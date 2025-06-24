@@ -21,6 +21,8 @@ return [
             'jährlich' => 'jährlich',
         ],
         'next_payments_hint' => 'Die nächste Zahlung kann zusätzliche Gebühren aus zuvor fehlgeschlagenen Zahlungen enthalten. Wenn Sie Fragen zu Ihrer Gebühr haben, senden Sie uns bitte eine E-Mail.',
+        'cancel' => 'Sie können Ihre Mitgliedschaft jederzeit vor dem nächsten Zahlungstermin kündigen, falls erforderlich.',
+        'websites' => 'Viele der früheren Rundschreiben und Newsletter finden Sie unter [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Frühere SUMA-EV-Pressemitteilungen finden Sie unter [suma-ev.de/presse/](https://suma-ev.de/presse/). Sie können sich auch gerne in unsere [öffentliche Mitgliederliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/) eintragen lassen. Wenn Sie daran interessiert sind, lassen Sie es uns einfach wissen.',
     ],
     'key' => [
         'title' => 'Die Suche mit MetaGer',

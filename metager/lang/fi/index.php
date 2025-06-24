@@ -3,7 +3,7 @@ return [
     'plugin' => 'Asenna MetaGer',
     'plugin-title' => 'Lisää MetaGer selaimeesi',
     'key' => [
-        'placeholder' => 'Syötä jäsenen avain',
+        'placeholder' => 'Kirjoita MetaGer-avaimesi aloittaaksesi haun.',
         'tooltip' => [
             'nokey' => 'Aseta mainokseton haku',
             'empty' => 'Merkki käytetty loppuun. Lataa nyt.',
@@ -32,10 +32,12 @@ return [
     'searchbar-replacement' => [
         'login' => 'Kirjaudu sisään avaimella',
         'start' => 'Luo uusi avain',
-        'message' => 'MetaGer-hakukone on nyt saatavilla vain ilman mainoksia!',
+        'message' => 'Kirjaudu sisään avaimellasi käyttääksesi MetaGer-hakukonetta. Se on saatavilla vain mainosvapaasti!',
         'why' => 'Miksi?',
         'key_error' => "Syötetty avain ei ollut kelvollinen. Tarkista syöttö.",
         'login_code_error' => "Syötetty kirjautumiskoodi ei ollut voimassa. Vihje: Kirjautumiskoodit ovat voimassa vain silloin, kun ne näkyvät toisessa laitteessa!",
         'payment_id_error' => "Olet syöttänyt maksutunnuksen, joka ei ole oikea avain. Avaimesi on 36 merkkiä pitkä.",
+        'new_key' => 'Ei vielä avainta?',
+        'extension' => 'Pysy kirjautuneena sisään ja anonyyminä webextensionin avulla',
     ],
 ];

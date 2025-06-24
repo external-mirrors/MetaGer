@@ -39,9 +39,7 @@ return [
             'vierteljährlich' => 'neljännesvuosittain',
         ],
         'title' => 'Jäsenyys',
-    ],
-    'websites' => [
-        'description' => 'Osoitteessa [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) on useita aiempia kiertokirjeitä ja uutiskirjeitä. Aiemmat SUMA-EV:n lehdistötiedotteet löydät osoitteesta [suma-ev.de/presse/](https://suma-ev.de/presse/). Olette myös erittäin tervetulleita saamaan merkinnän [julkiseen jäsenluetteloon](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Ilmoita tässä tapauksessa vain lyhyesti.',
-        'title' => 'Jäsenyys',
+        'cancel' => 'Voit tarvittaessa irtisanoa jäsenyytesi milloin tahansa ennen seuraavaa maksupäivää.',
+        'websites' => 'Monet aiemmat kiertokirjeet ja uutiskirjeet löytyvät osoitteesta [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Aiemmat SUMA-EV:n lehdistötiedotteet löytyvät osoitteesta [suma-ev.de/presse/](https://suma-ev.de/presse/). Olet myös tervetullut [julkinen jäsenluettelo](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Jos olet kiinnostunut, ilmoita meille.',
     ],
 ];

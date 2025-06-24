@@ -19,13 +19,11 @@ return [
             'jährlich' => 'rocznie',
         ],
         'title' => 'Członkostwo',
+        'websites' => 'Wiele z poprzednich okólników i biuletynów można znaleźć na stronie [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Poprzednie komunikaty prasowe SUMA-EV można znaleźć na stronie [suma-ev.de/presse/](https://suma-ev.de/presse/). Zapraszamy również do dodania do naszej [publicznej listy członków](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Jeśli jesteś zainteresowany, daj nam znać.',
+        'cancel' => 'W razie potrzeby można zakończyć członkostwo w dowolnym momencie przed terminem kolejnej płatności.',
     ],
     'subject' => "[SUMA-EV & MetaGer] Witamy w SUMA-EV",
     'general' => "Witamy w SUMA-EV! Czy mogę najpierw zapytać, jak się o nas dowiedziałeś? Zakładam, że przez naszą wyszukiwarkę MetaGer? Razem z Tobą stowarzyszenie ma teraz :member_count członków z wielu różnych dziedzin. Poniżej znajduje się kilka dodatkowych wyjaśnień i wskazówek, które są bardziej niż przydatne dla SUMA-EV.",
-    'websites' => [
-        'description' => 'Na stronie [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) można znaleźć wiele poprzednich okólników i biuletynów. Poprzednie komunikaty prasowe SUMA-EV można znaleźć na stronie [suma-ev.de/presse/](https://suma-ev.de/presse/). Zapraszamy również do wpisania się na naszą [publiczną listę członków](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). W takim przypadku wystarczy nas krótko powiadomić.',
-        'title' => 'Członkostwo',
-    ],
     'key' => [
         'title' => 'Wyszukiwanie za pomocą MetaGer',
         'extension' => 'Nasze rozszerzenia internetowe dla',

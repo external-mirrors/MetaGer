@@ -18,14 +18,12 @@ return [
             'vierteljährlich' => 'trimestral',
             'jährlich' => 'anualmente',
         ],
-        'title' => 'Afiliación',
+        'title' => 'membresía',
+        'websites' => 'Encontrará muchas de las circulares y boletines anteriores en [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Los comunicados de prensa anteriores de SUMA-EV se encuentran en [suma-ev.de/presse/](https://suma-ev.de/presse/). También puede inscribirse en nuestra [lista pública de miembros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Si está interesado, háganoslo saber.',
+        'cancel' => 'En caso necesario, puede darse de baja en cualquier momento antes de la siguiente fecha de pago.',
     ],
     'subject' => "[SUMA-EV & MetaGer] Bienvenido a SUMA-EV",
     'general' => "¡Bienvenido a SUMA-EV! ¿Puedo preguntarte primero cómo nos has conocido? Supongo que a través de nuestro motor de búsqueda MetaGer. Junto con usted, la asociación cuenta ahora con :member_count miembros de ámbitos muy diversos. A continuación encontrarás algunas explicaciones y consejos más que útiles para SUMA-EV.",
-    'websites' => [
-        'description' => 'En [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) encontrará muchas de las circulares y boletines anteriores. Encontrará los comunicados de prensa anteriores de SUMA-EV en [suma-ev.de/presse/](https://suma-ev.de/presse/). También le invitamos a inscribirse en nuestra [lista pública de miembros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). En este caso, háganoslo saber brevemente.',
-        'title' => 'Afiliación',
-    ],
     'key' => [
         'title' => 'Buscar con MetaGer',
         'extension' => 'Nuestras extensiones web para',

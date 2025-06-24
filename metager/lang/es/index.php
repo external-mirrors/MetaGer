@@ -3,7 +3,7 @@ return [
     'plugin' => 'Instalar MetaGer',
     'plugin-title' => 'Añadir MetaGer a su navegador',
     'key' => [
-        'placeholder' => 'Introducir la clave para la búsqueda sin publicidad',
+        'placeholder' => 'Introduzca su MetaGer Key para iniciar la búsqueda.',
         'tooltip' => [
             'nokey' => 'Configurar una búsqueda sin anuncios',
             'empty' => 'Ficha agotada. Recarga ahora.',
@@ -30,12 +30,14 @@ return [
     'lang' => 'lenguaje wwitch',
     'searchreset' => 'eliminar la entrada de consulta de búsqueda',
     'searchbar-replacement' => [
-        'message' => 'El motor de búsqueda MetaGer ya sólo está disponible sin publicidad.',
+        'message' => 'Inicie sesión con su clave para utilizar el motor de búsqueda MetaGer. ¡Sólo está disponible sin publicidad!',
         'start' => 'Crear una nueva clave',
         'login' => 'Inicio de sesión con clave',
         'why' => '¿Por qué?',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
         'login_code_error' => "El código de inicio de sesión introducido no era válido. Sugerencia: ¡Los códigos de inicio de sesión sólo son válidos mientras están visibles en otro dispositivo!",
         'payment_id_error' => "Ha introducido un identificador de pago que no es una clave correcta. Tu clave tiene 36 caracteres.",
+        'new_key' => '¿Aún no tienes llave?',
+        'extension' => 'Permanezca conectado y anónimo con nuestra webextensión',
     ],
 ];

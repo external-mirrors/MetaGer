@@ -3,7 +3,7 @@ return [
     'plugin' => 'MetaGer installeren',
     'plugin-title' => 'MetaGer aan uw browser toevoegen',
     'key' => [
-        'placeholder' => 'Lidmaatschapsleutel invoeren',
+        'placeholder' => 'Voer je MetaGer Key in om te beginnen zoeken.',
         'tooltip' => [
             'nokey' => 'Advertentievrij zoeken instellen',
             'empty' => 'Fiche opgebruikt. Nu herladen.',
@@ -32,10 +32,12 @@ return [
     'searchbar-replacement' => [
         'login' => 'Inloggen met sleutel',
         'start' => 'Een nieuwe sleutel maken',
-        'message' => 'De MetaGer zoekmachine is nu alleen advertentie-vrij beschikbaar!',
+        'message' => 'Log in met je sleutel om de MetaGer zoekmachine te gebruiken. Het is alleen advertentie-vrij beschikbaar!',
         'why' => 'waarom?',
         'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",
         'login_code_error' => "De ingevoerde inlogcode was niet geldig. Tip: Inlogcodes zijn alleen geldig als ze zichtbaar zijn op een ander apparaat!",
         'payment_id_error' => "Je hebt een betalings-id ingevoerd die geen correcte sleutel is. Je sleutel is 36 tekens lang.",
+        'new_key' => 'Nog geen sleutel?',
+        'extension' => 'Blijf ingelogd en anoniem met onze webextensie',
     ],
 ];

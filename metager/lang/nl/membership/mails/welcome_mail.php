@@ -21,6 +21,8 @@ return [
             'vierteljährlich' => 'driemaandelijks',
         ],
         'title' => 'Lidmaatschap',
+        'websites' => 'Veel van de vorige circulaires en nieuwsbrieven zijn te vinden op [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Eerdere persberichten van SUMA-EV vindt u op [suma-ev.de/presse/](https://suma-ev.de/presse/). Je bent ook welkom op onze [openbare ledenlijst](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Laat het ons weten als je geïnteresseerd bent.',
+        'cancel' => 'Je kunt je lidmaatschap op elk moment voor de volgende betaaldatum beëindigen, indien nodig.',
     ],
     'key' => [
         'title' => 'Zoeken met MetaGer',

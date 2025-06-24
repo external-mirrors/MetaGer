@@ -33,10 +33,11 @@
 
 @include('mail.membership.layouts.next_payments', ['payments' => $payments, 'locale' => $membership->locale])
 
-@if(\App\Localization::getLanguage() === "de")
-# @lang("membership/mails/welcome_mail.websites.title")
+@lang("membership/mails/welcome_mail.membership.cancel")
 
-@lang("membership/mails/welcome_mail.websites.description")
+
+@if(\App\Localization::getLanguage() === "de")
+@lang("membership/mails/welcome_mail.membership.websites")
 @endif
 
 # @lang("membership/mails/welcome_mail.key.title")

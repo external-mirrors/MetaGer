@@ -3,11 +3,13 @@ return [
     'searchbar-replacement' => [
         'payment_id_error' => "Introduziu um ID de pagamento que não é uma chave correta. A sua chave tem 36 caracteres.",
         'start' => 'Criar uma nova chave',
-        'message' => 'O motor de busca MetaGer está agora disponível apenas sem anúncios!',
+        'message' => 'Por favor, inicie sessão com a sua chave para utilizar o motor de busca MetaGer. Só está disponível sem anúncios!',
         'why' => 'Porquê?',
         'key_error' => "A chave introduzida não é válida. Por favor, verifique a entrada.",
         'login_code_error' => "O código de início de sessão introduzido não era válido. Dica: os códigos de início de sessão só são válidos enquanto estiverem visíveis noutro dispositivo!",
         'login' => "Iniciar sessão com chave",
+        'new_key' => 'Ainda não tem chave?',
+        'extension' => 'Mantenha-se ligado e anónimo com a nossa extensão Web',
     ],
     'plugin-title' => 'Adicionar MetaGer ao seu browser',
     'key' => [
@@ -17,7 +19,7 @@ return [
             'empty' => 'Token usado. Recarregar agora.',
             'full' => 'Pesquisa sem anúncios activada.',
         ],
-        'placeholder' => 'Introduzir a chave de membro',
+        'placeholder' => 'Introduza a sua chave MetaGer para iniciar a pesquisa.',
     ],
     'foki' => [
         'produkte' => 'Produtos',

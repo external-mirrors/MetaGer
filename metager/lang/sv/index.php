@@ -3,7 +3,7 @@ return [
     'plugin' => 'Installera MetaGer',
     'plugin-title' => 'Lägg till MetaGer i din webbläsare',
     'key' => [
-        'placeholder' => 'Ange medlemsnyckel',
+        'placeholder' => 'Ange din MetaGer-nyckel för att börja söka.',
         'tooltip' => [
             'nokey' => 'Skapa annonsfri sökning',
             'empty' => 'Token förbrukad. Ladda om nu.',
@@ -30,12 +30,14 @@ return [
     'lang' => 'wwitch språk',
     'searchreset' => 'radera sökfråga inmatning',
     'searchbar-replacement' => [
-        'message' => 'MetaGer-sökmotorn är nu endast tillgänglig utan reklam!',
+        'message' => 'Logga in med din nyckel för att använda MetaGer sökmotor. Den är endast tillgänglig annonsfri!',
         'login' => 'Logga in med nyckel',
         'start' => 'Skapa en ny nyckel',
         'why' => 'Varför?',
         'key_error' => "Den inmatade nyckeln var inte giltig. Vänligen kontrollera inmatningen.",
         'login_code_error' => "Den angivna inloggningskoden var inte giltig. Tips: Inloggningskoder är endast giltiga när de är synliga på en annan enhet!",
         'payment_id_error' => "Du har angett ett betalnings-id som inte är en korrekt nyckel. Din nyckel är 36 tecken lång.",
+        'new_key' => 'Ingen nyckel än?',
+        'extension' => 'Håll dig inloggad och anonym med vårt webbtillägg',
     ],
 ];

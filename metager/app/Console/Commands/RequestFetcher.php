@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App;
 use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -107,11 +108,9 @@ class RequestFetcher extends Command
                 $newJobs[] = $newJob[1];
             }
         } else {
-            $elements = Redis::pipeline(function ($redis) {
-                $redis->lrange(\App\MetaGer::FETCHQUEUE_KEY, 0, -1);
-                $redis->del(\App\MetaGer::FETCHQUEUE_KEY);
-            });
-            $newJobs = $elements[0];
+            $newJobs = Redis::lpop(\App\MetaGer::FETCHQUEUE_KEY, 50);
+            if ($newJobs === null)
+                $newJobs = [];
         }
         $addedJobs = 0;
         foreach ($newJobs as $newJob) {
@@ -150,6 +149,9 @@ class RequestFetcher extends Command
 
                 $totalTime = curl_getinfo($info["handle"], CURLINFO_TOTAL_TIME);
                 \App\PrometheusExporter::Duration($totalTime, $name);
+
+                if (!App::environment("production"))
+                    Log::info(sprintf("Fetched: %s - Status %s - Time %s", curl_getinfo($info["handle"], CURLINFO_EFFECTIVE_URL), $responseCode, $totalTime));
 
                 $error = curl_error($info["handle"]);
                 if (!empty($error)) {

@@ -1,5 +1,5 @@
 <?php
 return [
-    'title' => 'Error 404, Página no encontrada',
-    'text' => 'Puede que hayas introducido un enlace incorrecto o antiguo.',
+    'title' => 'Error 404, página no econtrada',
+    'text' => 'Tal vez ha introducido un link antiguo o erróneo.',
 ];

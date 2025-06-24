@@ -14,9 +14,9 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Anzeigenfreie Suche',
+        'header' => 'MetaGer Schlüssel',
         'charge' => 'Guthaben: :token Token',
-        'manage' => 'Schlüassel aufladen',
+        'manage' => 'Schlüssel aufladen',
         'logout' => 'Schlüssel entfernen',
         'no-key' => 'Sie haben keinen Schlüssel für die werbefreie Suche eingerichtet.',
         'actions' => [

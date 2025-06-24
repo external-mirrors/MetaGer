@@ -21,10 +21,8 @@ return [
             'halbjährlich' => 'six-monthly',
             'jährlich' => 'annually',
         ],
-    ],
-    'websites' => [
-        'title' => 'Membership',
-        'description' => 'At [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) you will find many of the previous circulars and newsletters. You can find previous SUMA-EV press releases at [suma-ev.de/presse/](https://suma-ev.de/presse/). You are also very welcome to receive an entry on our [public member list](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). In this case, just let us know briefly.',
+        'cancel' => 'You can terminate your membership at any time before the next payment date, if necessary.',
+        'websites' => 'You will find many of the previous circulars and newsletters at [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Previous SUMA-EV press releases can be found at [suma-ev.de/presse/](https://suma-ev.de/presse/). You are also welcome to be added to our [public member list](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). If you are interested, just let us know.'
     ],
     'key' => [
         'title' => 'Searching with MetaGer',

@@ -40,8 +40,7 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $mail = new WelcomeMail(2291);
-        return $mail;
+        abort(404);
     }
     /**
      * First stage of membership form
@@ -786,6 +785,9 @@ class MembershipController extends Controller
              */
             if ($application->crm_membership === null) {
                 $memberships = CiviCrm::FIND_MEMBERSHIPS($application->crm_contact);
+                if ($memberships === null) {
+                    return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] An error occured while fetching existing memberships"]));
+                }
                 if (sizeof($memberships) > 0) {
                     return redirect(route("membership_admin_overview", ["error" => "[Create CRM membership] Contact already has an active membership"]));
                 }
@@ -814,6 +816,9 @@ class MembershipController extends Controller
                     $application->paypal->vault_id = null;
                     $application->paypal->save();
                     $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership);
+                    if ($payments === null) {
+                        return redirect(route("membership_admin_overview", ["error" => "[Handle PayPal] Error while fetching next membership payments"]));
+                    }
                     $due_date = Arr::get($payments, "0.due_date");
                     if (now()->diffInDays($due_date) <= 14) {
                         if (($order = PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id)) !== null) {
@@ -821,7 +826,7 @@ class MembershipController extends Controller
                                 // We'll only process one purchase unit since we do not create orders with more than that
                                 $captures = Arr::get($order, "purchase_units.0.payments.captures", []);
                                 foreach ($captures as $capture) {
-                                    CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);
+                                    CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);   // Will be picked up by webhook if an error happens
                                 }
                             }
                         }
@@ -847,9 +852,13 @@ class MembershipController extends Controller
         }
 
         if (!$application->is_update) {
-            $mail = new WelcomeMail($application->crm_membership, $request->input("message", ""));
-            if (Mail::mailer("membership")->send($mail) === null) {
-                return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
+            try {
+                $mail = new WelcomeMail($application->crm_membership, $request->input("message", ""));
+                if (Mail::mailer("membership")->send($mail) === null) {
+                    return redirect(route("membership_admin_overview", ["error" => "Couldn't send welcome Mail"]));
+                }
+            } catch (Exception $e) {
+                return redirect(route("membership_admin_overview", ["error" => sprintf("[Welcome Mail] Error while sending welcome mail: %s", $e->getMessage())]));
             }
         }
 
@@ -872,6 +881,14 @@ class MembershipController extends Controller
             $application->directdebit->delete();
         }
         if ($application->paypal !== null) {
+            if ($application->paypal->vault_id !== null) {
+                $vault_entries = CiviCrm::FIND_MEMBERSHIP_PAYPAL_VAULT($application->paypal->vault_id);
+                if ($vault_entries === null) {
+                    return redirect(route("membership_admin_overview", ["error" => "Couldn't fetch CiviCRM memberships"]));
+                } elseif (sizeof($vault_entries) === 0) {
+                    PayPal::DELETE_PAYMENT_TOKEN($application->paypal->vault_id);
+                }
+            }
             $application->paypal->delete();
         }
         $application->delete();

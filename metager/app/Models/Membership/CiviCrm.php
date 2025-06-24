@@ -393,6 +393,18 @@ class CiviCrm
         return self::API_POST("/Membership/update", $params);
     }
 
+    public static function FIND_MEMBERSHIP_PAYPAL_VAULT(string $vault_id)
+    {
+        $params = [
+            'where' => [['Beitrag.PayPal_Vault', '=', $vault_id]],
+        ];
+        $params = array_merge(self::MEMBERSHIP_FETCH_PARAMS, $params);
+        $api_response = self::API_POST("/Membership/get", $params);
+        if ($api_response === null)
+            return null;
+        return self::MEMBERSHIP_RESPONSE_TO_APPLICATION(Arr::get($api_response, "values", []));
+    }
+
     public static function GET_MEMBERSHIP_COUNT()
     {
         $params = [
@@ -830,7 +842,7 @@ class CiviCrm
         return $body;
     }
 
-    private static function API_POST(string $method, array $params)
+    private static function API_POST(string $method, array $params): array|null
     {
         $resulthash = md5("civicrm:api" . microtime(true));
 

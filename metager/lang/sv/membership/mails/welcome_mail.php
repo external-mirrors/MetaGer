@@ -19,6 +19,8 @@ return [
             'jährlich' => 'årligen',
         ],
         'title' => 'Medlemskap',
+        'websites' => 'Du hittar många av de tidigare cirkulären och nyhetsbreven på [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Tidigare pressmeddelanden från SUMA-EV finns på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du är också välkommen att läggas till i vår [offentliga medlemslista] (https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Om du är intresserad är det bara att höra av dig till oss.',
+        'cancel' => 'Du kan säga upp ditt medlemskap när som helst före nästa betalningsdag, om det behövs.',
     ],
     'key' => [
         'title' => 'Söka med MetaGer',
@@ -39,9 +41,5 @@ return [
     ],
     'subject' => "[SUMA-EV & MetaGer] Välkommen till SUMA-EV",
     'general' => "Välkommen till SUMA-EV! Får jag först fråga hur du fick reda på om oss? Jag antar att det var genom vår sökmotor MetaGer? Tillsammans med dig har föreningen nu :member_count medlemmar från en mängd olika områden. Nedan följer några ytterligare förklaringar och tips som är mer än användbara för SUMA-EV.",
-    'websites' => [
-        'description' => 'På [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) hittar du många av de tidigare cirkulären och nyhetsbreven. Tidigare pressmeddelanden från SUMA-EV hittar du på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du är också mycket välkommen att bli upptagen på vår [offentliga medlemslista](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). I så fall är det bara att meddela oss kortfattat.',
-        'title' => 'Medlemskap',
-    ],
     'greeting' => 'Bästa hälsningar',
 ];

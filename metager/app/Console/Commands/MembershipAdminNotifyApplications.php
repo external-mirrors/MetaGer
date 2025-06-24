@@ -41,7 +41,9 @@ class MembershipAdminNotifyApplications extends Command
             $subject = "[SUMA-EV] Unbearbeitete Mitgliedsanträge";
         }
 
-        $mail = new MembershipAdminApplicationNotification($finished, $updates, $reductions, $subject);
-        Mail::mailer("membership")->send($mail);
+        if (!empty(config("metager.metager.membership.notification_address"))) {
+            $mail = new MembershipAdminApplicationNotification($finished, $updates, $reductions, $subject);
+            Mail::mailer("membership")->send($mail);
+        }
     }
 }

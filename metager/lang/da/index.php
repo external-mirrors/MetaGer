@@ -3,7 +3,7 @@ return [
     'plugin' => 'Installer MetaGer',
     'plugin-title' => 'Tilføj MetaGer til din browser',
     'key' => [
-        'placeholder' => 'Indtast medlemsnøgle',
+        'placeholder' => 'Indtast din MetaGer-nøgle for at begynde at søge.',
         'tooltip' => [
             'nokey' => 'Opsæt annoncefri søgning',
             'empty' => 'Token brugt op. Genoplad nu.',

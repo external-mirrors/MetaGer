@@ -22,6 +22,8 @@ return [
             'vierteljährlich' => 'trimestrale',
         ],
         'title' => 'Soci',
+        'websites' => 'Molte delle precedenti circolari e newsletter sono disponibili su [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). I precedenti comunicati stampa del SUMA-EV sono disponibili su [suma-ev.de/presse/](https://suma-ev.de/presse/). Siete inoltre invitati ad aggiungervi alla nostra [lista dei membri pubblici](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Se siete interessati, fatecelo sapere.',
+        'cancel' => 'Se necessario, è possibile interrompere l\'iscrizione in qualsiasi momento prima della data di pagamento successiva.',
     ],
     'key' => [
         'title' => 'Ricerca con MetaGer',

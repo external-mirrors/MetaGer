@@ -39,16 +39,16 @@
       <label for="key">
         @lang("index.searchbar-replacement.message")
         @if(\App\Localization::getLanguage() === "de")
-      <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
-    @else
-    <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
-  @endif
+        <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
+        @else
+        <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
+        @endif
       </label>
       <div class="inputs">
         <form action="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" method="POST">
         <input type="hidden" name="redirect_success" value="{{ route("loadSettings", ["eingabe" => Request::input("eingabe", "")]) }}">
         <input type="hidden" name="redirect_error" value="{{ route('startpage', ["eingabe" => Request::input("eingabe", "")]) }}">
-        <input type="password" name="key" id="key" placeholder="74109e0e-797d-37fb-bdbf-d72fd5658d45" @if(Request::filled("key_error")) value="{{ Request::input("invalid_key") }}" @endif spellcheck="false" autocomplete="off" required />
+        <input type="password" name="key" id="key" placeholder="@lang('index.key.placeholder')" @if(Request::filled("key_error")) value="{{ Request::input("invalid_key") }}" @endif spellcheck="false" autocomplete="off" required />
         <button id="login" class="btn btn-default">@lang("index.searchbar-replacement.login")</button>
         </form>
         @if(Request::filled("key_error"))
@@ -61,7 +61,7 @@
         @endif
       @endif
       </div>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="create-key">@lang("index.searchbar-replacement.start")</a>
+      <div>@lang('index.searchbar-replacement.new_key') <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") . "#how-it-works" }}" class="create-key">@lang("index.searchbar-replacement.start")</a></div>
       </div>
       <div>
 

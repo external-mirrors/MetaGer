@@ -3,7 +3,7 @@ return [
     'plugin' => 'MetaGer Installieren',
     'plugin-title' => 'MetaGer-Plugin hinzufügen',
     'key' => [
-        'placeholder' => 'Geben Sie Ihren MetaGer Key ein, um die Suche zu starten.',
+        'placeholder' => 'Geben Sie Ihren MetaGer Schlüssel ein, um die Suche zu starten.',
         'tooltip' => [
             'nokey' => 'Werbefreie Suche neu einrichten',
             'empty' => 'Token aufgebraucht. Jetzt aufladen.',

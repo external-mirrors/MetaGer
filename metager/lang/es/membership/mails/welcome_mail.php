@@ -18,7 +18,7 @@ return [
             'vierteljährlich' => 'trimestral',
             'jährlich' => 'anualmente',
         ],
-        'title' => 'Afiliación',
+        'title' => 'membresía',
     ],
     'subject' => "[SUMA-EV & MetaGer] Bienvenido a SUMA-EV",
     'general' => "¡Bienvenido a SUMA-EV! ¿Puedo preguntarte primero cómo nos has conocido? Supongo que a través de nuestro motor de búsqueda MetaGer. Junto con usted, la asociación cuenta ahora con :member_count miembros de ámbitos muy diversos. A continuación encontrarás algunas explicaciones y consejos más que útiles para SUMA-EV.",

@@ -19,6 +19,8 @@ return [
             'jährlich' => 'årligen',
         ],
         'title' => 'Medlemskap',
+        'websites' => 'Du hittar många av de tidigare cirkulären och nyhetsbreven på [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Tidigare pressmeddelanden från SUMA-EV finns på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du är också välkommen att läggas till i vår [offentliga medlemslista] (https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Om du är intresserad är det bara att höra av dig till oss.',
+        'cancel' => 'Du kan säga upp ditt medlemskap när som helst före nästa betalningsdag, om det behövs.',
     ],
     'key' => [
         'title' => 'Söka med MetaGer',

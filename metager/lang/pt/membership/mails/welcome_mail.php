@@ -39,5 +39,7 @@ return [
             'jährlich' => 'anualmente',
         ],
         'title' => 'Filiação',
+        'websites' => 'Poderá encontrar muitas das circulares e newsletters anteriores em [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Os comunicados de imprensa anteriores da SUMA-EV podem ser encontrados em [suma-ev.de/presse/](https://suma-ev.de/presse/). Também pode ser adicionado à nossa [lista pública de membros](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Se estiver interessado, contacte-nos.',
+        'cancel' => 'Se necessário, pode rescindir a sua adesão em qualquer altura antes da data de pagamento seguinte.',
     ],
 ];

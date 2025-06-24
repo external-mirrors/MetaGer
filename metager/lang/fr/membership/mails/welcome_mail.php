@@ -19,6 +19,8 @@ return [
             'vierteljährlich' => 'trimestrielle',
         ],
         'title' => 'L\'adhésion',
+        'websites' => 'Vous trouverez un grand nombre de circulaires et de bulletins d\'information antérieurs sur [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Les communiqués de presse antérieurs de SUMA-EV sont disponibles sur [suma-ev.de/presse/](https://suma-ev.de/presse/). Vous pouvez également vous inscrire sur notre [liste de membres publics] (https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Si vous êtes intéressé, faites-le nous savoir.',
+        'cancel' => 'Vous pouvez résilier votre adhésion à tout moment avant la prochaine date de paiement, si nécessaire.',
     ],
     'subject' => "[SUMA-EV & MetaGer] Bienvenue à SUMA-EV",
     'general' => "Bienvenue à SUMA-EV ! Puis-je d'abord vous demander comment vous nous avez découvert ? Je suppose que c'est grâce à notre moteur de recherche MetaGer ? Avec vous, l'association compte désormais :member_count des membres issus des domaines les plus divers. Vous trouverez ci-dessous des explications et des conseils plus qu'utiles pour SUMA-EV.",

@@ -35,7 +35,7 @@ return [
         'interval' => [
             'halbjährlich' => 'semestral',
             'monatlich' => 'mensal',
-            'vierteljährlich' => 'trimestralmente',
+            'vierteljährlich' => 'trimestral',
             'jährlich' => 'anualmente',
         ],
         'title' => 'Filiação',

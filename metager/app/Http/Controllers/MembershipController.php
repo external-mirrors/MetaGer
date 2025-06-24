@@ -40,8 +40,7 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        $mail = new WelcomeMail(2291);
-        return $mail;
+        abort(404);
     }
     /**
      * First stage of membership form
@@ -882,6 +881,14 @@ class MembershipController extends Controller
             $application->directdebit->delete();
         }
         if ($application->paypal !== null) {
+            if ($application->paypal->vault_id !== null) {
+                $vault_entries = CiviCrm::FIND_MEMBERSHIP_PAYPAL_VAULT($application->paypal->vault_id);
+                if ($vault_entries === null) {
+                    return redirect(route("membership_admin_overview", ["error" => "Couldn't fetch CiviCRM memberships"]));
+                } elseif (sizeof($vault_entries) === 0) {
+                    PayPal::DELETE_PAYMENT_TOKEN($application->paypal->vault_id);
+                }
+            }
             $application->paypal->delete();
         }
         $application->delete();

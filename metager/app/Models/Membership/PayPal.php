@@ -20,6 +20,7 @@ class PayPal
     const API_METHOD_POST = "POST";
     const API_METHOD_PATCH = "PATCH";
     const API_METHOD_GET = "GET";
+    const API_METHOD_DELETE = 'DELETE';
 
     public static function GET_ID(): string
     {
@@ -224,6 +225,8 @@ class PayPal
             } else {
                 $mission["curlopts"][CURLOPT_POSTFIELDS] = json_encode($request_data, JSON_FORCE_OBJECT);
             }
+        } else if ($method === self::API_METHOD_DELETE) {
+            $mission["curlopts"][CURLOPT_CUSTOMREQUEST] = "DELETE";
         }
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
@@ -439,6 +442,11 @@ class PayPal
         $body = json_decode($results["body"], true);
 
         return $body;
+    }
+
+    public static function DELETE_PAYMENT_TOKEN(string $payment_token)
+    {
+        return self::PAYPAL_REQUEST("/v3/vault/payment-tokens/$payment_token", self::API_METHOD_DELETE, null);
     }
 
     public static function VOID_AUTHORIZATION(string $authorization_id)

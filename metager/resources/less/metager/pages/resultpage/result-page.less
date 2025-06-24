@@ -999,7 +999,7 @@ a {
     }
 
     /* Create enough space for the search input on small screens */
-    &:has(#header-searchbar .searchbar:focus-within) {
+    &:has(#header-searchbar .searchbar[data-suggest="active"] .search-input:focus-within) {
       grid-template-columns: 1fr;
       grid-template-areas: "research-searchbar";
 

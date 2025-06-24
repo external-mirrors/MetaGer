@@ -3,7 +3,7 @@ return [
     'plugin' => 'Installer MetaGer',
     'plugin-title' => 'Tilføj MetaGer til din browser',
     'key' => [
-        'placeholder' => 'Indtast medlemsnøgle',
+        'placeholder' => 'Indtast din MetaGer-nøgle for at begynde at søge.',
         'tooltip' => [
             'nokey' => 'Opsæt annoncefri søgning',
             'empty' => 'Token brugt op. Genoplad nu.',
@@ -30,12 +30,14 @@ return [
     'lang' => 'wwitch-sprog',
     'searchreset' => 'Slet input til søgeforespørgsel',
     'searchbar-replacement' => [
-        'message' => 'MetaGer-søgemaskinen er nu kun tilgængelig uden reklamer!',
+        'message' => 'Log ind med din nøgle for at bruge MetaGer-søgemaskinen. Den er kun tilgængelig uden reklamer!',
         'login' => 'Login med nøgle',
         'start' => 'Opret en ny nøgle',
         'why' => 'Hvorfor?',
         'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
         'login_code_error' => "Den indtastede login-kode var ikke gyldig. Tip: Login-koder er kun gyldige, når de er synlige på en anden enhed!",
         'payment_id_error' => "Du har indtastet et betalingsid, som ikke er en korrekt nøgle. Din nøgle er 36 tegn lang.",
+        'new_key' => 'Ingen nøgle endnu?',
+        'extension' => 'Forbliv logget ind og anonym med vores webudvidelse',
     ],
 ];

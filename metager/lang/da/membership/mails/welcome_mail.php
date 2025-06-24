@@ -21,10 +21,8 @@ return [
             'vierteljährlich' => 'kvartalsvis',
         ],
         'title' => 'Medlemskab',
-    ],
-    'websites' => [
-        'description' => 'På [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/) finder du mange af de tidligere rundskrivelser og nyhedsbreve. Du kan finde tidligere pressemeddelelser fra SUMA-EV på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du er også meget velkommen til at blive skrevet op på vores [offentlige medlemsliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). I så fald skal du bare give os kort besked.',
-        'title' => 'Medlemskab',
+        'websites' => 'Du kan finde mange af de tidligere cirkulærer og nyhedsbreve på [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Tidligere pressemeddelelser fra SUMA-EV kan findes på [suma-ev.de/presse/](https://suma-ev.de/presse/). Du er også velkommen til at blive tilføjet til vores [offentlige medlemsliste](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Hvis du er interesseret, skal du bare give os besked.',
+        'cancel' => 'Du kan opsige dit medlemskab når som helst inden næste betalingsdato, hvis det er nødvendigt.',
     ],
     'key' => [
         'title' => 'Søgning med MetaGer',

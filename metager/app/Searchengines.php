@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\SearchengineConfiguration;
+use Arr;
 use LaravelLocalization;
 
 class Searchengines
@@ -49,6 +50,10 @@ class Searchengines
                 break;
             }
         }
+
+        // Add Assistant as seperate Fokus
+        $foki = array_merge(array_slice($foki, 0, 1), ["assistant"], array_slice($foki, 1));
+
         return $foki;
     }
 }

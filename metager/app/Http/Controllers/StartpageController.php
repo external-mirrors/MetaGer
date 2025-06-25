@@ -2,13 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Localization;
-use App\Models\Authorization\KeyAuthorization;
-use Cache;
 use Illuminate\Http\Request;
-use Jenssegers\Agent\Agent;
 use Response;
-use Str;
 
 class StartpageController extends Controller
 {
@@ -41,6 +36,10 @@ class StartpageController extends Controller
             }
 
             return redirect(route("resultpage", ["eingabe" => $eingabe]));
+        }
+
+        if ($request->input("focus", "") === "assistant") {
+            return redirect(route("assistant"));
         }
 
         $tiles = TilesController::TILES();

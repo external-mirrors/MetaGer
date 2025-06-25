@@ -1,3 +1,4 @@
+@if(in_array(app()->make(\App\SearchSettings::class)->fokus, ["web", "nachrichten", "bilder", "science", "produkte"]))
 <div id="options">
 	<div id="toggle-box">
 		<div id="settings">
@@ -85,3 +86,4 @@
 	</div>
 	@endif
 </div>
+@endif

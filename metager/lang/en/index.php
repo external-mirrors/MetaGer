@@ -22,6 +22,7 @@ return [
     'searchreset' => 'delete search query input',
     'foki' => [
         'web' => 'Web',
+        'assistant' => 'Assistant',
         'bilder' => 'Images',
         'nachrichten' => 'News',
         'science' => 'Science',

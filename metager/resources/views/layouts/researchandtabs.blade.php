@@ -3,13 +3,11 @@
         <div id="research-bar">
             <div id="header-logo">
                 <a class="screen-large"
-                    href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}"
-                    @if (!empty($metager) && $metager->isFramed()) target="_top" @endif >
+                    href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
                     <h1><img src="/img/metager.svg" alt="MetaGer" /></h1>
                 </a>
                 <a class="screen-small"
-                    href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}"
-                    @if (!empty($metager) && $metager->isFramed()) target="_top" @endif>
+                    href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/') }}">
                     <h1><img src="/img/svg-icons/metager-lock-orange.svg" alt="MetaGer" /></h1>
                 </a>
                 <a class="lang" href="{{ route('lang-selector') }}">
@@ -33,15 +31,18 @@
         </div>
     </div>
     @include('parts.filter')
-    <div id="results-container" @if (sizeof($metager->getResults()) === 0) class="no-results" @endif>
+    <div id="results-container" @if (!empty($metager) && sizeof($metager->getResults()) === 0) class="no-results" @endif>
         <span name="top"></span>
         @include('parts.errors')
         @include('parts.warnings')
         @yield('results')
-        @include('parts.enginefooter')
-        <div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
+        @if(app()->make(App\SearchSettings::class)->fokus !== "assistant")
+            @include('parts.enginefooter')
+        @endif
+    <div id="backtotop"><a href="#top">@lang('results.backtotop')</a></div>
     </div>
-    @include('parts.quicktips', ['quicktips' => $quicktips])
-
+    @if(!empty($quicktips))
+        @include('parts.quicktips', ['quicktips' => $quicktips])
+    @endif
     @include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
 </div>

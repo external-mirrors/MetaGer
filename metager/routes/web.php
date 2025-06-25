@@ -2,11 +2,11 @@
 
 use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
+use App\Http\Controllers\Assistant;
 use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\LangSelector;
-use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MetaGerSearch;
 use App\Http\Controllers\Pictureproxy;
@@ -22,7 +22,6 @@ use App\Http\Controllers\ZitatController;
 use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
-use App\Models\Authorization\Authorization;
 use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
@@ -364,6 +363,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
+    Route::match(['get', 'post'], 'meta/assistant', [Assistant::class, 'assist'])->name("assistant");
     Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class, 'externalimagesearch'])->name("resultpage");
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
     Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"])->withoutMiddleware([LocalizationRedirect::class]);

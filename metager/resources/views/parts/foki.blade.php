@@ -1,10 +1,10 @@
 @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
-<div id="{{$fokus}}" @if($metager->getFokus() === $fokus)class="active"@endif>
-	<a href="@if($metager->getFokus() === $fokus)#@else{!!$metager->generateSearchLink($fokus)!!}@endif" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_self"@endif @if($metager->getFokus() === $fokus)aria-current="page"@endif>{{ trans("index.foki.$fokus") }}</a>
+<div id="{{$fokus}}" @if(app()->make(\App\SearchSettings::class)->fokus === $fokus)class="active"@endif>
+	<a href="@if(app()->make(\App\SearchSettings::class)->fokus === $fokus)#@else{{ route("resultpage", array_merge(request()->only("eingabe", "key"), ["focus" => $fokus])) }}@endif" target="_self" @if(app()->make(\App\SearchSettings::class)->fokus === $fokus)aria-current="page"@endif>{{ trans("index.foki.$fokus") }}</a>
 </div>
 @endforeach
 <div id="maps">
-	<a href="https://maps.metager.de/{{ rawurlencode(app(\App\SearchSettings::class)->q) }}/guess?locale={{ App\Localization::getLanguage() }}" @if(!empty($metager) && $metager->isFramed())target="_top" @else target="_blank"@endif>
+	<a href="https://maps.metager.de/{{ rawurlencode(app(\App\SearchSettings::class)->q) }}/guess?locale={{ App\Localization::getLanguage() }}" target="_blank">
 		Maps
 	</a>
 </div>

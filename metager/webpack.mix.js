@@ -53,6 +53,7 @@ mix
     "resources/less/metager/pages/plugin-page.less",
     "public/css/plugin-page.css"
   )
+  .less("resources/less/metager/pages/assistant.less", "public/css/assistant.css")
   .less(
     "resources/less/metager/pages/count/style-dark.less",
     "public/css/count/dark.css"
@@ -146,6 +147,7 @@ mix
     "public/js/admin/membership.js"
   )
   .js(["resources/js/scriptResultPage.js"], "public/js/scriptResultPage.js")
+  .js("resources/js/assistant.js", "public/js/assistant.js")
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")

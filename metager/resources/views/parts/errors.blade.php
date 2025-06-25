@@ -1,5 +1,5 @@
 {{-- Show all errors --}}
-@if(sizeof($errors) > 0)
+@if(!empty($errors) && sizeof($errors) > 0)
 	<div class="alert alert-danger">
 		<ul>
 			@foreach($errors as $error)

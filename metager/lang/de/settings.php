@@ -29,11 +29,11 @@ return [
     'blentry' => 'Blacklisteintrag',
     'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
-    'dark' => 'Dunkelmodus umschalten',
+    'dark' => 'Dunkel',
     'darkmode' => 'Dunklen Modus umschalten',
     'suggestions' => [
         'off' => "Deaktiviert",
-        'on' => "An",
+        'on' => "Aktiviert",
         'delay' => [
             'long' => 'Lang',
             'description' => 'Die Vorschläge werden erst nach dieser Verzögerung beim Tippen geladen. Idealerweise wählen Sie eine ausreichend lange Verzögerung, damit die Vorschläge erst geladen werden, wenn Sie aufhören zu tippen.',

@@ -13,7 +13,7 @@ return [
         '4' => 'Aqui pode adicionar domínios a excluir durante a pesquisa. Se pretender excluir todos os subdomínios, comece por "*.". Um domínio por linha.',
     ],
     'metager-key' => [
-        'header' => 'Pesquisa gratuita de publicidade',
+        'header' => 'Chave MetaGer',
         'actions' => [
             'create' => 'Criar nova chave',
             'info' => 'O que é que se passa?',
@@ -59,9 +59,6 @@ return [
             'hint' => '<b>Atenção:</b> Para podermos oferecer esta funcionalidade, temos de guardar as suas definições de sugestões no nosso servidor durante vários dias. Se não é isto que pretende, mantenha esta definição desactivada.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Publicidade subtil ao nosso próprio serviço",
-    ],
     'tiles_startpage' => [
         'label' => "Mostrar mosaicos na página inicial",
     ],
@@ -106,4 +103,7 @@ return [
     'actions' => 'Acções',
     'save' => 'Guardar',
     'copy' => 'Cópia',
+    'tips' => [
+        'label' => 'Mostrar sugestões aleatórias na página de resultados',
+    ],
 ];

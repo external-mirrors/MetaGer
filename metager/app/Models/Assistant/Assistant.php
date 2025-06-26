@@ -3,6 +3,7 @@
 namespace App\Models\Assistant;
 
 use App\Models\Assistant\AssistantCapability;
+use Exception;
 use Serializable;
 
 /**
@@ -22,8 +23,16 @@ abstract class Assistant implements Serializable
      */
     protected array $messages = [];
 
+    /**
+     * Processes a new user message
+     * @param string $message
+     * @throws \Exception
+     * @return void
+     */
     public function process(string $message)
     {
+        if (!$this->can(AssistantCapability::CHAT))
+            throw new Exception("Agent is missing the CHAT capability");
         $this->messages[] = new Message($message, MessageType::User);
     }
 

@@ -59,9 +59,6 @@ return [
             'hint' => '<b>Atenção:</b> Para podermos oferecer esta funcionalidade, temos de guardar as suas definições de sugestões no nosso servidor durante vários dias. Se não é isto que pretende, mantenha esta definição desactivada.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Publicidade subtil ao nosso próprio serviço",
-    ],
     'tiles_startpage' => [
         'label' => "Mostrar mosaicos na página inicial",
     ],

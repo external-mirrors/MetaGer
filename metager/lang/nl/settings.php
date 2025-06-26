@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Let op:</b> We moeten je suggestie-instellingen enkele dagen op onze server opslaan om deze functie te kunnen aanbieden. Als je dit niet wilt, moet je deze instelling uitschakelen.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtiele reclame voor onze eigen service",
-    ],
     'limited' => 'beperkt',
     'tiles_startpage' => [
         'label' => "Tegels tonen op de startpagina",

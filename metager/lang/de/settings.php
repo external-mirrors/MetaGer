@@ -100,9 +100,6 @@ return [
         'heading' => 'Nutzung eines externen Suchdienstes',
         'description' => 'Sie können konfigurieren, dass eine der folgenden externen Suchmaschinen anstelle unserer integrierten Lösung verwendet wird. Wir leiten Ihre Suchanfragen an den konfigurierten Anbieter weiter.',
     ],
-    'self_advertisements' => [
-        'label' => "Subtile Werbung für unseren eigenen Service",
-    ],
     'tiles_startpage' => [
         'label' => "Kacheln auf der Startseite anzeigen",
     ],

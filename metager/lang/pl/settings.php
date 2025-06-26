@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Uwaga:</b> Aby zaoferować tę funkcję, musimy przechowywać ustawienia sugestii na naszym serwerze przez kilka dni. Jeśli nie tego chcesz, pozostaw to ustawienie wyłączone.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtelne reklamy naszych własnych usług",
-    ],
     'limited' => 'ograniczony',
     'tiles_startpage' => [
         'label' => "Wyświetlanie kafelków na stronie startowej",

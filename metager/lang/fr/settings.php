@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Attention :</b> Nous devons stocker vos paramètres de suggestion sur notre serveur pendant plusieurs jours pour offrir cette fonction. Si ce n\'est pas ce que vous souhaitez, laissez ce paramètre désactivé.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Des publicités subtiles pour nos propres services",
-    ],
     'limited' => 'limité',
     'tiles_startpage' => [
         'label' => "Afficher les tuiles sur la page d'accueil",

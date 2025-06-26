@@ -99,9 +99,6 @@ return [
             'label' => 'Leverantör',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtila annonser för vår egen tjänst",
-    ],
     'limited' => 'begränsad',
     'tiles_startpage' => [
         'label' => "Visa brickor på startsidan",

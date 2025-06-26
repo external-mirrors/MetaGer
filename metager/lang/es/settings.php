@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Atención:</b> Para poder ofrecer esta función, tenemos que almacenar la configuración de tus sugerencias en nuestro servidor durante varios días. Si esto no es lo que quieres, mantén esta opción desactivada.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Publicidad sutil de nuestro propio servicio",
-    ],
     'limited' => 'limitado',
     'tiles_startpage' => [
         'label' => "Mostrar mosaicos en la página de inicio",

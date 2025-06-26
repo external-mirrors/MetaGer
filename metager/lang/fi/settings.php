@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Huomio:</b> Meidän on tallennettava ehdotusasetuksesi palvelimellemme useiden päivien ajaksi, jotta voimme tarjota tämän ominaisuuden. Jos et halua tätä, pidä tämä asetus poissa käytöstä.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Oman palvelumme hienovarainen mainonta",
-    ],
     'limited' => 'rajoitettu',
     'tiles_startpage' => [
         'label' => "Näytä laatat aloitussivulla",

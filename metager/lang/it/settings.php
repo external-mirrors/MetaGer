@@ -99,9 +99,6 @@ return [
             'hint' => '<b>Attenzione:</b> Per offrire questa funzione, dobbiamo memorizzare le impostazioni dei suggerimenti sul nostro server per diversi giorni. Se non è questo che desiderate, mantenete questa impostazione disattivata.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Pubblicità sottile per il nostro servizio",
-    ],
     'limited' => 'limitato',
     'tiles_startpage' => [
         'label' => "Mostra le piastrelle nella pagina iniziale",

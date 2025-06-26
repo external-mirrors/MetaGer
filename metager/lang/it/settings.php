@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Mostra le piastrelle nella pagina iniziale",
     ],
+    'tips' => [
+        'label' => 'Mostra suggerimenti casuali nella pagina dei risultati',
+    ],
 ];

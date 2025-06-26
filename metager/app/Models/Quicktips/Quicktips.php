@@ -2,6 +2,7 @@
 
 namespace App\Models\Quicktips;
 
+use App;
 use App\SearchSettings;
 use Cache;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -19,6 +20,7 @@ class Quicktips
     private $hash;
     private $startTime;
     private $enableQuotes;
+    private bool $tips;
     public $quicktips;
     public $new = true;
 
@@ -30,6 +32,7 @@ class Quicktips
             $this->quicktipUrl = "https://dev.quicktips.metager.de" . $this->quicktipUrl;
         }
         $this->enableQuotes = $enableQuotes;
+        $this->tips = App::make(App\SearchSettings::class)->tips;
         $this->startTime = microtime(true);
         $this->startSearch($search, $locale, $max_time);
     }
@@ -39,7 +42,15 @@ class Quicktips
         if (\preg_match("/^([a-zA-Z]+)/", $locale, $matches)) {
             $locale = $matches[1];
         }
-        $url = $this->quicktipUrl . "?search=" . $this->normalize_search($search) . "&locale=" . $locale . "&quotes=" . ($this->enableQuotes ? "on" : "off");
+
+        $parameters = [
+            "search" => $search,
+            "locale" => $locale,
+            "quotes" => $this->enableQuotes ? "on" : "off",
+            "tips" => $this->tips ? "on" : "off"
+        ];
+
+        $url = $this->quicktipUrl . "?" . http_build_query(data: $parameters, encoding_type: PHP_QUERY_RFC3986);
         $this->hash = md5($url);
 
         if (!Cache::has($this->hash)) {
@@ -220,10 +231,5 @@ class Quicktips
                 return ($a->order > $b->order) ? 1 : -1;
             });
         }
-    }
-
-    public function normalize_search($search)
-    {
-        return urlencode($search);
     }
 }

@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Wyświetlanie kafelków na stronie startowej",
     ],
+    'tips' => [
+        'label' => 'Pokaż losowe wskazówki na stronie wyników',
+    ],
 ];

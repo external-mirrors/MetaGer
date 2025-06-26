@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Visa brickor på startsidan",
     ],
+    'tips' => [
+        'label' => 'Visa slumpmässiga tips på resultatsidan',
+    ],
 ];

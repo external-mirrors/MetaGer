@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Zeige Kacheln auf der Startseite",
     ],
+    'tips' => [
+        'label' => 'Zufällige Tipps auf der Ergebnisseite anzeigen',
+    ],
 ];

@@ -42,7 +42,6 @@
     @foreach($css as $cssFile)
         <link href="{{ $cssFile }}" rel="stylesheet" />
     @endforeach
-    <script src="{{ mix('js/scriptResultPage.js') }}" defer></script>
     @if (!empty($js))
         @foreach ($js as $js_file)
             <script src="{{ $js_file }}" defer async></script>
@@ -64,8 +63,8 @@
         <div class="chat-form">
             <form action="{{ route("assistant") }}" method="POST">
                 <label class="input-sizer stacked">
-                    <textarea oninput="this.parentNode.dataset.value = this.value" rows="1" name="prompt" id="prompt"
-                        placeholder="@lang('assistant.prompt.placeholder')"></textarea>
+                    <textarea rows="1" name="prompt" id="prompt" placeholder="@lang('assistant.prompt.placeholder')"
+                        autofocus></textarea>
                 </label>
                 <button type="submit"><img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
                 </button>

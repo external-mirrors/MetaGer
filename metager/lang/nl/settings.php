@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Adverteren gratis zoeken',
+        'header' => 'MetaGer-sleutel',
         'charge' => 'Krediet: :token Token',
         'manage' => 'Laadtoets',
         'logout' => 'Sleutel verwijderen',

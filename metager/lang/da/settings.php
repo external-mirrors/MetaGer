@@ -7,7 +7,7 @@ return [
     'clear' => 'Ryd den sorte liste',
     'copy' => 'Kopi',
     'disabledByFilter' => 'Deaktiveret af søgefilter:',
-    'save' => 'Gemme',
+    'save' => 'Gem',
     'header' => [
         '1' => 'Indstillinger for søgning',
         '2' => 'Brugte søgemaskiner',

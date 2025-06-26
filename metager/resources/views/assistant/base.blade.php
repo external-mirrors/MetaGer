@@ -61,25 +61,44 @@
 <body id="resultpage-body" class="{{ app(\App\SearchSettings::class)->fokus }}">
     @section('results')
         <div id="chat">
-            <div id="empty-chat" class="disabled">
-                <div>@lang("assistant.chat.empty_chat.description")</div>
-                <b>@lang("assistant.chat.empty_chat.help")</b>
-            </div>
-        </div>
-        <div class="chat-form">
-            <form action="{{ route("assistant") }}" method="POST">
-                <label class="input-sizer stacked">
-                    <textarea rows="1" name="prompt" id="prompt" placeholder="@lang('assistant.prompt.placeholder')"
-                        autofocus required></textarea>
-                </label>
-                <button type="submit"><img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
-                </button>
-                <div class="input-group include-search">
-                    <input type="checkbox" name="include-search" id="include-search" checked>
-                    <label for="include-search">@lang("assistant.prompt.include_search.label")</label>
+            @if(sizeof($assistant->getMessages()) === 0)
+                <div id="empty-chat" class="disabled">
+                    <div>@lang("assistant.chat.empty_chat.description")</div>
+                    <b>@lang("assistant.chat.empty_chat.help")</b>
                 </div>
-            </form>
+            @else
+                @foreach($assistant->getMessages() as $message)
+                    @if($message->type === App\Models\Assistant\MessageType::User)
+                        <div class="message user">
+                            {{ $message->render() }}
+                        </div>
+                    @elseif($message->type === App\Models\Assistant\MessageType::Agent)
+                        <div class="message agent">
+                            {!! $message->render() !!}
+                        </div>
+                    @endif
+                @endforeach
+            @endif
         </div>
+        @if($assistant->can(App\Models\Assistant\AssistantCapability::CHAT))
+            <div class="chat-form">
+                <form action="{{ route("assistant") }}" method="POST">
+                    <input type="hidden" name="history" value="{{ $history }}">
+                    <label class="input-sizer stacked">
+                        <textarea rows="1" name="prompt" id="prompt" placeholder="@lang('assistant.prompt.placeholder')"
+                            autofocus required></textarea>
+                    </label>
+                    <button type="submit"><img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
+                    </button>
+                    @if($assistant->can(App\Models\Assistant\AssistantCapability::SEARCH))
+                        <div class="input-group include-search">
+                            <input type="checkbox" name="include-search" id="include-search" checked>
+                            <label for="include-search">@lang("assistant.prompt.include_search.label")</label>
+                        </div>
+                    @endif
+                </form>
+            </div>
+        @endif
     @endsection
 
     @include('layouts.researchandtabs')

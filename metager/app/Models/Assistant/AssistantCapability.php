@@ -1,6 +1,6 @@
 <?php
 
-namespace Metager\App\Models\Assistant;
+namespace App\Models\Assistant;
 
 enum AssistantCapability
 {

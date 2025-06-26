@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Afficher les tuiles sur la page d'accueil",
     ],
+    'tips' => [
+        'label' => 'Afficher les conseils aléatoires sur la page de résultats',
+    ],
 ];

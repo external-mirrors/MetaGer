@@ -95,7 +95,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Pode utilizar os seguintes motores de busca com uma chave <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Com as definições de pesquisa actuais, não é consultado qualquer motor de busca.',
-    'cost' => 'Calculamos <strong>:tokens de custo</strong> por consulta de pesquisa com as definições actuais.',
+    'cost' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',
     'cost-free' => 'As suas pesquisas são <strong>free</strong> com as definições actuais.',
     'free' => 'livre',
     'limited' => 'limitado',

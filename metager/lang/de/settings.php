@@ -69,7 +69,7 @@ return [
         'loadSettings' => 'Hier finden Sie einen Link, den Sie als Startseite oder Lesezeichen festlegen können, um Ihre aktuellen Einstellungen wiederherzustellen.',
         'yahoo' => '<b>Hinweis</b>: Leider ist es uns nicht mehr erlaubt, Yahoo-Suchergebnisse zusammen mit denen anderer Suchmaschinen anzuzeigen. Daher sind nun alle anderen Suchmaschinen deaktiviert, solange Yahoo aktiviert ist.',
     ],
-    'cost' => 'Wir berechnen <strong>:cost tokens</strong> pro Suchanfrage mit den aktuellen Einstellungen.',
+    'cost' => 'Wir berechnen <strong>:cost Token</strong> pro Suchanfrage mit den aktuellen Einstellungen.',
     'cost-free' => 'Ihre Recherchen sind <strong>frei</strong> mit den aktuellen Einstellungen.',
     'free' => 'kostenlos',
     'limited' => 'begrenzt',

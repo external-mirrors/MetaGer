@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Du kan bruge følgende søgemaskiner med en <a href=":link" target="_blank">MetaGer-nøgle</a>.',
     'no-engines' => 'Med de nuværende søgeindstillinger forespørges der ikke på nogen søgemaskine.',
-    'cost' => 'Vi beregner <strong>:cost tokens</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
+    'cost' => 'Vi opkræver <strong>:cost Token</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
     'cost-free' => 'Dine søgninger er <strong>gratis</strong> med de nuværende indstillinger.',
     'free' => 'gratis',
     'enable-engine' => 'Slå søgemaskinen til',

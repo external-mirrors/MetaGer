@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Bezpłatne wyszukiwanie reklam',
+        'header' => 'MetaGer Key',
         'charge' => 'Kredyt: :token Token',
         'manage' => 'Klucz ładowania',
         'logout' => 'Usuń klucz',

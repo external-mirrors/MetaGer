@@ -85,8 +85,13 @@
                 <form action="{{ route("assistant") }}" method="POST">
                     <input type="hidden" name="history" value="{{ $history }}">
                     <label class="input-sizer stacked">
-                        <textarea rows="1" name="prompt" id="prompt" placeholder="@lang('assistant.prompt.placeholder')"
-                            autofocus required></textarea>
+                        <textarea rows="1" name="prompt" id="prompt" placeholder=
+                                @if(sizeof($assistant->getMessages()) > 0)
+                                    "@lang('assistant.prompt.placeholder_followup')"
+                                @else
+                                    "@lang('assistant.prompt.placeholder')"
+                                @endif
+                                autofocus required></textarea>
                     </label>
                     <button type="submit"><img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
                     </button>

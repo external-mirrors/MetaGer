@@ -9,6 +9,7 @@ return [
     ],
     'prompt' => [
         'placeholder' => 'How is the wheather in Hanover?',
+        'placeholder_followup' => 'Follow up on this topic...',
         'include_search' => [
             'label' => 'Include search results'
         ]

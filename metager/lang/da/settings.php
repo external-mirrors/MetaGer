@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Reklamefri søgning',
+        'header' => 'MetaGer-nøgle',
         'charge' => 'Kredit: :token Token',
         'manage' => 'Opladningsnøgle',
         'logout' => 'Fjern nøglen',

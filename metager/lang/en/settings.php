@@ -98,7 +98,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'You can use the following search engines with a <a href=":link" target="_blank">MetaGer key</a>.',
     'no-engines' => 'With the current search settings, no search engine is queried.',
-    'cost' => 'We calculate <strong>:cost tokens</strong> per search query with the current settings.',
+    'cost' => 'We charge <strong>:cost Token</strong> per search query with the current settings.',
     'cost-free' => 'Your searches are <strong>free</strong> with the current settings.',
     'free' => 'free',
     'limited' => 'limited',

@@ -62,15 +62,15 @@
     @section('results')
         <div id="chat">
             <div id="empty-chat" class="disabled">
-                Ich bin dein MetaGer-Assistent und unterstütze dich gerne bei deinen Recherchen. Auf Wunsch kann ich
-                aktuelle Suchergebnisse in meine Antworten einbeziehen.
+                <div>@lang("assistant.chat.empty_chat.description")</div>
+                <b>@lang("assistant.chat.empty_chat.help")</b>
             </div>
         </div>
         <div class="chat-form">
             <form action="{{ route("assistant") }}" method="POST">
                 <label class="input-sizer stacked">
                     <textarea rows="1" name="prompt" id="prompt" placeholder="@lang('assistant.prompt.placeholder')"
-                        autofocus></textarea>
+                        autofocus required></textarea>
                 </label>
                 <button type="submit"><img src="/img/icon-lupe.svg" alt="" aria-hidden="true" id="searchbar-img-lupe">
                 </button>

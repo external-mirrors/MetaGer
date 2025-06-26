@@ -60,6 +60,12 @@
 
 <body id="resultpage-body" class="{{ app(\App\SearchSettings::class)->fokus }}">
     @section('results')
+        <div id="chat">
+            <div id="empty-chat" class="disabled">
+                Ich bin dein MetaGer-Assistent und unterstütze dich gerne bei deinen Recherchen. Auf Wunsch kann ich
+                aktuelle Suchergebnisse in meine Antworten einbeziehen.
+            </div>
+        </div>
         <div class="chat-form">
             <form action="{{ route("assistant") }}" method="POST">
                 <label class="input-sizer stacked">

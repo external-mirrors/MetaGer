@@ -1,86 +1,102 @@
 #resultpage-body {
-    .chat-form>form {
-        display: grid;
-        grid-template-columns: 1fr max-content;
-        background-color: var(--highlight-color);
-        border-radius: 10px;
-        padding: .5rem 1rem;
-        gap: .5rem;
+    #results-container {
+        padding: 0;
 
-        >label.input-sizer {
-            display: inline-grid;
-            vertical-align: top;
-            align-items: center;
-            position: relative;
-            width: 100%;
-            font-weight: normal;
-            margin: 0;
+        .chat-form>form {
+            display: grid;
+            grid-template-columns: 1fr max-content;
+            background-color: var(--highlight-color);
+            border-radius: 10px;
+            padding: .5rem 1rem;
+            gap: .5rem;
 
-            &.stacked {
-                align-items: stretch;
+            >label.input-sizer {
+                display: inline-grid;
+                vertical-align: top;
+                align-items: center;
+                position: relative;
+                width: 100%;
+                font-weight: normal;
+                margin: 0;
+
+                &.stacked {
+                    align-items: stretch;
+
+                    &::after,
+                    input,
+                    textarea {
+                        grid-area: 2 / 1;
+                    }
+                }
 
                 &::after,
                 input,
                 textarea {
-                    grid-area: 2 / 1;
+                    width: auto;
+                    overflow: hidden;
+                    min-width: 1em;
+                    grid-area: 1 / 2;
+                    font: inherit;
+                    margin: 0;
+                    resize: none;
+                    background: none;
+                    appearance: none;
+                    border: none;
+                }
+
+                &::after {
+                    content: attr(data-value) ' ';
+                    visibility: hidden;
+                    white-space: pre-wrap;
+                }
+
+                &:focus-within {
+
+                    textarea:focus,
+                    input:focus {
+                        outline: none;
+                    }
+                }
+
+                >textarea {
+                    resize: none;
                 }
             }
 
-            &::after,
-            input,
-            textarea {
-                width: auto;
-                overflow: hidden;
-                min-width: 1em;
-                grid-area: 1 / 2;
-                font: inherit;
-                margin: 0;
-                resize: none;
-                background: none;
-                appearance: none;
-                border: none;
-            }
+            >button {
+                padding: .5rem;
+                cursor: pointer;
 
-            &::after {
-                content: attr(data-value) ' ';
-                visibility: hidden;
-                white-space: pre-wrap;
-            }
-
-            &:focus-within {
-
-                textarea:focus,
-                input:focus {
-                    outline: none;
+                >img {
+                    height: 1.5rem;
                 }
             }
 
-            >textarea {
-                resize: none;
+            >div.include-search {
+                grid-column: span 2;
+
+                >input[type=checkbox] {
+                    accent-color: var(--metager-orange);
+                }
+
+                >label {
+                    margin:
+                        0;
+                    font-size: .8rem;
+                    font-weight: normal;
+                }
             }
         }
 
-        >button {
-            padding: .5rem;
-            cursor: pointer;
+        #chat {
+            margin-bottom: 1rem;
+            padding: 1rem;
 
-            >img {
-                height: 1.5rem;
-            }
-        }
-
-        >div.include-search {
-            grid-column: span 2;
-
-            >input[type=checkbox] {
-                accent-color: var(--metager-orange);
-            }
-
-            >label {
-                margin:
-                    0;
-                font-size: .8rem;
-                font-weight: normal;
+            #empty-chat {
+                max-width: 600px;
+                text-align: left;
+                margin: 0 auto;
+                cursor: text !important;
             }
         }
     }

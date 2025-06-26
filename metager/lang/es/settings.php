@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Puede utilizar los siguientes motores de búsqueda con una clave <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Con la configuración de búsqueda actual, no se consulta ningún motor de búsqueda.',
-    'cost' => 'Calculamos <strong>:fichas de coste</strong> por consulta de búsqueda con la configuración actual.',
+    'cost' => 'Cobramos <strong>:cost Token</strong> por consulta de búsqueda con la configuración actual.',
     'cost-free' => 'Sus búsquedas son <strong>libre</strong> con la configuración actual.',
     'free' => 'gratis',
     'enable-engine' => 'Activar el motor de búsqueda',

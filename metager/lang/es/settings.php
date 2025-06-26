@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Mostrar mosaicos en la página de inicio",
     ],
+    'tips' => [
+        'label' => 'Mostrar consejos aleatorios en la página de resultados',
+    ],
 ];

@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Tegels tonen op de startpagina",
     ],
+    'tips' => [
+        'label' => 'Toon willekeurige Tips op de resultatenpagina',
+    ],
 ];

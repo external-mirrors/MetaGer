@@ -80,7 +80,7 @@ return [
     'more' => 'Weitere Einstellungen',
     'newTab' => 'Ergebnisse in neuem Tab öffnen',
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
-    'off' => 'Aus',
+    'off' => 'Deaktiviert',
     'on' => 'auf',
     'removeCookie' => 'Diesen Cookie entfernen',
     'reset' => 'Alle Einstellungen löschen',

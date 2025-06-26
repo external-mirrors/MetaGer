@@ -7,7 +7,7 @@ return [
     'clear' => 'Ryd den sorte liste',
     'copy' => 'Kopi',
     'disabledByFilter' => 'Deaktiveret af søgefilter:',
-    'save' => 'Gemme',
+    'save' => 'Gem',
     'header' => [
         '1' => 'Indstillinger for søgning',
         '2' => 'Brugte søgemaskiner',
@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Reklamefri søgning',
+        'header' => 'MetaGer-nøgle',
         'charge' => 'Kredit: :token Token',
         'manage' => 'Opladningsnøgle',
         'logout' => 'Fjern nøglen',
@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Du kan bruge følgende søgemaskiner med en <a href=":link" target="_blank">MetaGer-nøgle</a>.',
     'no-engines' => 'Med de nuværende søgeindstillinger forespørges der ikke på nogen søgemaskine.',
-    'cost' => 'Vi beregner <strong>:cost tokens</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
+    'cost' => 'Vi opkræver <strong>:cost Token</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
     'cost-free' => 'Dine søgninger er <strong>gratis</strong> med de nuværende indstillinger.',
     'free' => 'gratis',
     'enable-engine' => 'Slå søgemaskinen til',
@@ -99,11 +99,11 @@ return [
             'hint' => '<b>Vær opmærksom på dette:</b> Vi er nødt til at gemme dine forslagsindstillinger på vores server i flere dage for at kunne tilbyde denne funktion. Hvis det ikke er det, du ønsker, skal du holde denne indstilling deaktiveret.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtile reklamer for vores egen service",
-    ],
     'limited' => 'begrænset',
     'tiles_startpage' => [
         'label' => "Vis fliser på startsiden",
+    ],
+    'tips' => [
+        'label' => 'Vis tilfældige tips på resultatsiden',
     ],
 ];

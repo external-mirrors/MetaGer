@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Adverteren gratis zoeken',
+        'header' => 'MetaGer-sleutel',
         'charge' => 'Krediet: :token Token',
         'manage' => 'Laadtoets',
         'logout' => 'Sleutel verwijderen',
@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Je kunt de volgende zoekmachines gebruiken met een <a href=":link" target="_blank">MetaGer-toets</a>.',
     'no-engines' => 'Met de huidige zoekinstellingen wordt er geen zoekmachine opgevraagd.',
-    'cost' => 'We berekenen <strong>:cost tokens</strong> per zoekopdracht met de huidige instellingen.',
+    'cost' => 'We rekenen <strong>:cost Token</strong> per zoekopdracht met de huidige instellingen.',
     'cost-free' => 'Je zoekopdrachten zijn <strong>gratis</strong> met de huidige instellingen.',
     'free' => 'gratis',
     'enable-engine' => 'Zoekmachine inschakelen',
@@ -99,11 +99,11 @@ return [
             'hint' => '<b>Let op:</b> We moeten je suggestie-instellingen enkele dagen op onze server opslaan om deze functie te kunnen aanbieden. Als je dit niet wilt, moet je deze instelling uitschakelen.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtiele reclame voor onze eigen service",
-    ],
     'limited' => 'beperkt',
     'tiles_startpage' => [
         'label' => "Tegels tonen op de startpagina",
+    ],
+    'tips' => [
+        'label' => 'Toon willekeurige Tips op de resultatenpagina',
     ],
 ];

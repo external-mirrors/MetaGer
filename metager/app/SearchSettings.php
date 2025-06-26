@@ -34,7 +34,7 @@ class SearchSettings
     public $theme = "system";    // Darkmode setting currently either one of 'system', 'light', 'dark'
     public $enableQuotes = true;
     /** @var bool */
-    public $self_advertisements;
+    public $tips;
     /** @var bool */
     public $tiles_startpage;
     /** @var string */
@@ -50,7 +50,7 @@ class SearchSettings
      * List of setting keys used independant of fokus
      * @var array
      */
-    private $global_setting_keys = ["zitate", "self_advertisements", "tiles_startpage", "dark_mode", "new_tab", "key", "suggestion_provider", "suggestion_delay", "suggestion_addressbar"];
+    private $global_setting_keys = ["zitate", "tips", "tiles_startpage", "dark_mode", "new_tab", "key", "suggestion_provider", "suggestion_delay", "suggestion_addressbar"];
     public function __construct()
     {
 
@@ -89,8 +89,8 @@ class SearchSettings
             $this->enableQuotes = false;
         }
 
-        $this->self_advertisements = $this->getSettingValue("self_advertisements", true);
-        $this->self_advertisements = $this->self_advertisements !== "off" ? true : false;
+        $this->tips = $this->getSettingValue("tips", true);
+        $this->tips = $this->tips !== "off" ? true : false;
 
         $this->tiles_startpage = $this->getSettingValue("tiles_startpage", true);
         $this->tiles_startpage = $this->tiles_startpage !== "off" ? true : false;

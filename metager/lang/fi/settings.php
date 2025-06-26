@@ -9,7 +9,7 @@ return [
     'metager-key' => [
         'manage' => 'Latausnäppäin',
         'logout' => 'Poista avain',
-        'header' => 'Mainonta vapaa haku',
+        'header' => 'MetaGer avain',
         'charge' => 'Luotto: :token Token',
         'no-key' => 'Et ole määrittänyt avainta mainoksettomia hakuja varten.',
         'actions' => [
@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Voit käyttää seuraavia hakukoneita <a href=":link" target="_blank">MetaGer-avaimella</a>.',
     'no-engines' => 'Nykyisillä hakuasetuksilla mitään hakukonetta ei kysytä.',
-    'cost' => 'Laskemme <strong>:cost tokens</strong> per hakukysely nykyisillä asetuksilla.',
+    'cost' => 'Veloitamme <strong>:cost Token</strong> per hakukysely nykyisillä asetuksilla.',
     'cost-free' => 'Hakusi ovat <strong>ilmaiseksi</strong> nykyisillä asetuksilla.',
     'free' => 'ilmainen',
     'enable-engine' => 'Kytke hakukone päälle',
@@ -95,15 +95,15 @@ return [
         ],
         'addressbar' => [
             'label' => 'Ehdotukset osoiterivillä',
-            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen asetus on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
+            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen määritys on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
             'hint' => '<b>Huomio:</b> Meidän on tallennettava ehdotusasetuksesi palvelimellemme useiden päivien ajaksi, jotta voimme tarjota tämän ominaisuuden. Jos et halua tätä, pidä tämä asetus poissa käytöstä.',
         ],
-    ],
-    'self_advertisements' => [
-        'label' => "Oman palvelumme hienovarainen mainonta",
     ],
     'limited' => 'rajoitettu',
     'tiles_startpage' => [
         'label' => "Näytä laatat aloitussivulla",
+    ],
+    'tips' => [
+        'label' => 'Näytä satunnaiset vinkit tulossivulla',
     ],
 ];

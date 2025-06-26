@@ -166,6 +166,13 @@ function initialize() {
               let new_source = container.querySelector("#results").innerHTML;
               document.querySelector("#results").innerHTML = new_source;
               document.dispatchEvent(resultLoaderEvent);
+
+              // Remove no results error if results got loaded after the fact by Javascript
+              let results = document.querySelectorAll("#results > .result");
+              let no_results_error = document.querySelector(".alert .no-results-error");
+              if (results.length > 0 && no_results_error !== null) {
+                no_results_error.remove();
+              }
             }
 
             if ("quicktips" in data && data.quicktips !== "") {

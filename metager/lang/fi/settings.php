@@ -95,7 +95,7 @@ return [
         ],
         'addressbar' => [
             'label' => 'Ehdotukset osoiterivillä',
-            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen asetus on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
+            'description' => 'Lataa ehdotuksia, kun kirjoitat osoitepalkkiin. Yllä oleva viiveen määritys on aina "lyhyt" Firefoxin käyttäjille, koska näiden pyyntöjen aikakatkaisut ovat hyvin lyhyitä.',
             'hint' => '<b>Huomio:</b> Meidän on tallennettava ehdotusasetuksesi palvelimellemme useiden päivien ajaksi, jotta voimme tarjota tämän ominaisuuden. Jos et halua tätä, pidä tämä asetus poissa käytöstä.',
         ],
     ],

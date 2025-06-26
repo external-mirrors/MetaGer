@@ -9,7 +9,7 @@ return [
     'metager-key' => [
         'manage' => 'Latausnäppäin',
         'logout' => 'Poista avain',
-        'header' => 'Mainonta vapaa haku',
+        'header' => 'MetaGer avain',
         'charge' => 'Luotto: :token Token',
         'no-key' => 'Et ole määrittänyt avainta mainoksettomia hakuja varten.',
         'actions' => [

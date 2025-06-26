@@ -250,12 +250,12 @@
                 <input type="hidden" name="focus" value="{{ $fokus }}">
                 <input type="hidden" name="url" value="{{ $url }}">
                 <div class="form-group">
-                    <label for="self_advertisements">@lang('settings.self_advertisements.label')</label>
-                    <select name="self_advertisements" id="self_advertisements" class="form-control">
+                    <label for="tips">@lang('settings.tips.label')</label>
+                    <select name="tips" id="tips" class="form-control">
                         <option value="off"
-                            {{ app(App\SearchSettings::class)->self_advertisements === false ? 'disabled selected' : '' }}>
+                            {{ app(App\SearchSettings::class)->tips === false ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.off')</option>
-                        <option value="on" {{ app(App\SearchSettings::class)->self_advertisements === true ? 'disabled selected' : '' }}>
+                        <option value="on" {{ app(App\SearchSettings::class)->tips === true ? 'disabled selected' : '' }}>
                             @lang('settings.suggestions.on')</option>
                     </select>
                 </div>

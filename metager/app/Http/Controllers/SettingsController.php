@@ -304,7 +304,7 @@ class SettingsController extends Controller
         } else {
             // All Settings behind "More Settings"
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
-            self::PROCESS_GLOBAL_SETTING_CHANGE("self_advertisements", $request->input('self_advertisements', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("tips", $request->input('tips', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", $request->input('tiles_startpage', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", $request->input('zitate', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("dm", $request->input('dm', ''));
@@ -363,11 +363,11 @@ class SettingsController extends Controller
                 SuggestionDebtAuthorization::REMOVE_SETTINGS();
             }
             return true;
-        } else if ($key === "self_advertisements" && !empty($value)) {
+        } else if ($key === "tips" && !empty($value)) {
             if ($value === "off") {
-                Cookie::queue(Cookie::forever('self_advertisements', 'off', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('tips', 'off', '/', null, $secure, false));
             } elseif ($value === "on") {
-                Cookie::queue(Cookie::forget("self_advertisements", "/"));
+                Cookie::queue(Cookie::forget("tips", "/"));
             }
             return true;
         } else if ($key === "tiles_startpage" && !empty($value)) {
@@ -416,7 +416,7 @@ class SettingsController extends Controller
             "dark_mode",
             "new_tab",
             "zitate",
-            "self_advertisements",
+            "tips",
             "tiles_startpage",
             "suggestion_provider",
             "suggestion_delay"

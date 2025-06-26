@@ -49,8 +49,8 @@ return [
         'off' => "Disabled",
         'on' => "Enabled",
     ],
-    'self_advertisements' => [
-        'label' => "Subtle advertisements for our own service",
+    'tips' => [
+        'label' => 'Show random Tips on the resultpage'
     ],
     'tiles_startpage' => [
         'label' => "Show tiles on the startpage",

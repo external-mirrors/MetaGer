@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Näytä laatat aloitussivulla",
     ],
+    'tips' => [
+        'label' => 'Näytä satunnaiset vinkit tulossivulla',
+    ],
 ];

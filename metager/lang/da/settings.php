@@ -103,4 +103,7 @@ return [
     'tiles_startpage' => [
         'label' => "Vis fliser på startsiden",
     ],
+    'tips' => [
+        'label' => 'Vis tilfældige tips på resultatsiden',
+    ],
 ];

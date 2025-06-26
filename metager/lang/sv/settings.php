@@ -26,7 +26,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Annonsering fri sökning',
+        'header' => 'MetaGer Nyckel',
         'charge' => 'Kredit: :token Token',
         'manage' => 'Laddningsknapp',
         'logout' => 'Ta bort nyckeln',

@@ -57,7 +57,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Ricerca gratuita della pubblicità',
+        'header' => 'Chiave MetaGer',
         'charge' => 'Credito: :token Token',
         'manage' => 'Tasto di carica',
         'logout' => 'Rimuovere la chiave',

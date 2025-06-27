@@ -13,5 +13,8 @@ return [
         'include_search' => [
             'label' => 'Include search results'
         ]
+    ],
+    'response' => [
+        'error' => 'Sorry, I had trouble loading a response from the selected provider!'
     ]
 ];

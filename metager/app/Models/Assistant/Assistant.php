@@ -13,6 +13,12 @@ use Serializable;
 abstract class Assistant implements Serializable
 {
     /**
+     * Configures the available LLM models for this Assistant
+     * @var array
+     */
+    protected array $available_models;
+    protected string $selected_model;
+    /**
      * Capabilities this Assistant can perform
      * @var \App\Models\Assistant\AssistantCapability[]
      */
@@ -58,6 +64,8 @@ abstract class Assistant implements Serializable
     public function serialize(): string|null
     {
         return serialize([
+            $this->available_models,
+            $this->selected_model,
             $this->capabilities,
             $this->messages
         ]);
@@ -65,6 +73,6 @@ abstract class Assistant implements Serializable
 
     public function unserialize(string $data): void
     {
-        list($this->capabilities, $this->messages) = unserialize($data);
+        list($this->available_models, $this->selected_model, $this->capabilities, $this->messages) = unserialize($data);
     }
 }

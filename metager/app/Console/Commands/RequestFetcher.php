@@ -171,7 +171,7 @@ class RequestFetcher extends Command
                     $pipe->expire($resulthash, 60);
                 });
 
-                if ($cacheDurationMinutes > 0) {
+                if ($cacheDurationMinutes > 0 && $responseCode >= 200 && $responseCode <= 299) {
                     try {
                         Cache::put($resulthash, $body, $cacheDurationMinutes * 60);
                     } catch (\Exception $e) {

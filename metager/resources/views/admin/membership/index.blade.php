@@ -166,7 +166,7 @@
                             <td>
                                 <form method="POST" action="{{ route("membership_admin_deny") }}">
                                     <input type="hidden" name="id" value="{{ $membership_application->id }}">
-                                    <input type="hidden" name="update-request" value="true">
+                                    <input type="hidden" name="type" value="update-request">
                                     <input type="submit" name="action" value="Ablehnen" class="btn btn-danger membership-deny">
                                 </form>
                             </td>
@@ -257,6 +257,7 @@
                     <th>Name</th>
                     <th>Beitrag</th>
                     <th>Zahlungsmethode</th>
+                    <th></th>
                 </thead>
                 <tbody>
                     @foreach($unfinished_applications as $membership_application)
@@ -273,16 +274,24 @@
                             </td>
                             <td>
                                 @php
-                                    $amount = match ($membership_application->interval) {
-                                        "monthly" => $membership_application->amount,
-                                        "quarterly" => $membership_application->amount * 3,
-                                        "six-monthly" => $membership_application->amount * 6,
-                                        "annual" => $membership_application->amount * 12,
-                                        default => null
-                                    };
+                                    $amount = $membership_application->amount;
+                                    if ($amount !== null) {
+                                        if ($membership_application->interval !== null) {
+                                            $amount = match ($membership_application->interval) {
+                                                "monthly" => $membership_application->amount,
+                                                "quarterly" => $membership_application->amount * 3,
+                                                "six-monthly" => $membership_application->amount * 6,
+                                                "annual" => $membership_application->amount * 12,
+                                                default => null
+                                            };
+                                        }
+                                    }                                    
                                 @endphp
                                 @if($amount !== null)
-                                    {{ number_format($amount, 2, ",", ".") . "€ " . __("membership.data.payment.interval.{$membership_application->interval}") }}
+                                    {{ (new \NumberFormatter($membership_application->locale, \NumberFormatter::CURRENCY))->formatCurrency($amount, "EUR") }}
+                                    @if($membership_application->interval !== null)
+                                        {{ __("membership.data.payment.interval.{$membership_application->interval}") }}
+                                    @endif
                                 @endif
                             </td>
                             <td>
@@ -300,6 +309,13 @@
                                         <div>PayPal Vault: {{ $membership_application->paypal->vault_id }}</div>
                                     @endif
                                 @endif
+                            </td>
+                            <td>
+                                <form method="POST" action="{{ route("membership_admin_deny") }}">
+                                    <input type="hidden" name="id" value="{{ $membership_application->id }}">
+                                    <input type="hidden" name="type" value="unfinished">
+                                    <input type="submit" name="action" value="Entfernen" class="btn btn-danger membership-deny">
+                                </form>
                             </td>
                         </tr>
                     @endforeach

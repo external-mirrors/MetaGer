@@ -18,6 +18,7 @@ integrationtest:
     # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
+    - cp $ENV_ASSISTANT .env.asisstant
     - composer install
     - php artisan optimize
     - php artisan test --without-tty

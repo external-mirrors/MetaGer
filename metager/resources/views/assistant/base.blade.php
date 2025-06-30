@@ -68,21 +68,13 @@
                 </div>
             @else
                 @foreach($assistant->getMessages() as $message)
-                    @if($message->type === App\Models\Assistant\MessageType::User)
-                        <div class="message user">
-                            {{ $message->render() }}
-                        </div>
-                    @elseif($message->type === App\Models\Assistant\MessageType::Agent)
-                        <div class="message agent">
-                            {!! $message->render() !!}
-                        </div>
-                    @endif
+                    {!! $message->render() !!}
                 @endforeach
             @endif
         </div>
         @if($assistant->can(App\Models\Assistant\AssistantCapability::CHAT))
             <div class="chat-form">
-                <form action="{{ route("assistant") }}" method="POST">
+                <form action="{{ route("assistant") }}" method="POST" id="chat-prompt">
                     <input type="hidden" name="history" value="{{ $history }}">
                     <label class="input-sizer stacked">
                         <textarea rows="1" name="prompt" id="prompt" placeholder=

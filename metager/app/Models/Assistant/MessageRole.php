@@ -2,7 +2,7 @@
 
 namespace App\Models\Assistant;
 
-enum MessageType
+enum MessageRole
 {
     case Agent;
     case User;

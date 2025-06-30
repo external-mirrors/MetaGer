@@ -2,44 +2,61 @@
 
 namespace App\Models\Assistant;
 
-use Illuminate\Mail\Markdown;
-use League\CommonMark\Util\HtmlFilter;
 use Serializable;
-use Str;
 
 class Message implements Serializable
 {
-    public readonly string $message;
-    public readonly MessageType $type;
+    /**
+     * Contains all parts of this message (Text content, image content etc)
+     * @var MessageContent[]
+     */
+    private array $contents = [];
 
-    public function __construct(string $message, MessageType $type)
+    /**
+     * The Role of this message (i.e. Assistant or User)
+     * @var MessageRole
+     */
+    public readonly MessageRole $role;
+
+    /**
+     * Constructs a message with a given role
+     * @param MessageContent[] $contents
+     */
+    public function __construct(array $contents, MessageRole $role)
     {
-        $this->message = $message;
-        $this->type = $type;
+        $this->contents = $contents;
+        $this->role = $role;
+    }
+
+    public function addContent(MessageContent $content)
+    {
+        $this->contents[] = $content;
+    }
+
+    /**
+     * Returns current contents
+     * @return MessageContent[]
+     */
+    public function getContents(): array
+    {
+        return $this->contents;
     }
 
     public function render(): string
     {
-        switch ($this->type) {
-            case MessageType::Agent:
-                return Str::of($this->message)->markdown([
-                    "html_input" => HtmlFilter::ESCAPE,
-                ]);
-            case MessageType::User:
-                return $this->message;
-        }
+        return view("assistant.message", ["message" => $this])->render();
     }
 
     public function serialize(): string|null
     {
         return serialize([
-            $this->type,
-            $this->message
+            $this->contents,
+            $this->role
         ]);
     }
 
     public function unserialize(string $data): void
     {
-        list($this->type, $this->message) = unserialize($data);
+        list($this->contents, $this->role) = unserialize($data);
     }
 }

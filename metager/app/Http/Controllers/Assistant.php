@@ -23,7 +23,10 @@ class Assistant extends Controller
         }
 
         if ($request->filled("prompt")) {
-            $assistant->process($request->input("prompt"));
+            $response = $assistant->process($request->input("prompt"), !$request->wantsJson());
+            if ($response !== null) {
+                return $response;
+            }
         }
 
         return response(view("assistant/base", [

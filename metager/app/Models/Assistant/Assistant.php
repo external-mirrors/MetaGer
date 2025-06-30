@@ -39,7 +39,7 @@ abstract class Assistant implements Serializable
     {
         if (!$this->can(AssistantCapability::CHAT))
             throw new Exception("Agent is missing the CHAT capability");
-        $this->messages[] = new Message($message, MessageType::User);
+        $this->messages[] = new Message([new MessageContentText($message)], MessageRole::User);
     }
 
     /**

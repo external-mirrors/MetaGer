@@ -52,7 +52,6 @@
                     break;
             }
         }
-
     });
 
     async function* fetchLineByLine(fileURL) {
@@ -66,6 +65,10 @@
                 "Accept": "application/json"
             }
         });
+
+        let prompt_element = document.querySelector("div.chat-form");
+        prompt_element.querySelector("textarea").value = "";
+        prompt_element.classList.add("hidden");
 
         let reader = response.body.getReader();
         let { value: chunk, done: readerDone } = await reader.read();
@@ -94,5 +97,7 @@
             // last line didn't end in a newline char
             yield chunk.substr(startIndex);
         }
+
+        prompt_element.classList.remove("hidden");
     }
 })();

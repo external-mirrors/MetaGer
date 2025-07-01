@@ -60,20 +60,41 @@ class Openai extends Assistant
 
         $body = $response->json();
         foreach (Arr::get($body, "output", []) as $output) {
-            $role = Arr::get($output, "role") === "assistant" ? MessageRole::Agent : MessageRole::User;
-            $message = new Message([], $role);
-            switch (Arr::get($output, "type")) {
-                case "message":
-                    foreach (Arr::get($output, "content") as $content) {
-                        switch (Arr::get($content, "type")) {
-                            case "output_text":
-                                $message->addContent(new MessageContentText(Arr::get($content, "text")));
-                                break;
-                        }
-                    }
-                    break;
-            }
-            $this->messages[] = $message;
+            $this->messages[] = $this->parseOutput($output);
+        }
+    }
+
+    private function parseOutput(array $output): Message
+    {
+        $role = Arr::get($output, "role") === "assistant" ? MessageRole::Agent : MessageRole::User;
+        $message = new Message([], $role);
+        switch (Arr::get($output, "type")) {
+            case "message":
+                foreach (Arr::get($output, "content") as $content) {
+                    $this->parseContent($message, $content);
+                }
+                break;
+        }
+        return $message;
+    }
+
+    /**
+     * Parses the content of a message and returns the appropriate MessageContent object.
+     *
+     * @param Message $message The message to which the content belongs.
+     * @param array $content The content data to parse.
+     * @return MessageContent The parsed content object.
+     */
+    private function parseContent(Message &$message, array $content): MessageContent|null
+    {
+        $content_type = Arr::get($content, "type");
+        switch ($content_type) {
+            case "output_text":
+                $message->addContent(new MessageContentText(Arr::get($content, "text")));
+            // Add more content types as needed
+            default:
+                Log::warning("Unknown content type: " . $content_type);
+                return null;
         }
     }
 

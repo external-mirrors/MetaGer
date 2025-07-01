@@ -6,6 +6,7 @@ use Serializable;
 
 class Message implements Serializable
 {
+    public readonly string $id;
     /**
      * Contains all parts of this message (Text content, image content etc)
      * @var MessageContent[]
@@ -22,8 +23,12 @@ class Message implements Serializable
      * Constructs a message with a given role
      * @param MessageContent[] $contents
      */
-    public function __construct(array $contents, MessageRole $role)
+    public function __construct(string $id = null, array $contents, MessageRole $role)
     {
+        if ($id === null) {
+            $id = uniqid("msg_", true);
+        }
+        $this->id = $id;
         $this->contents = $contents;
         $this->role = $role;
     }
@@ -50,6 +55,7 @@ class Message implements Serializable
     public function serialize(): string|null
     {
         return serialize([
+            $this->id,
             $this->contents,
             $this->role
         ]);
@@ -57,6 +63,6 @@ class Message implements Serializable
 
     public function unserialize(string $data): void
     {
-        list($this->contents, $this->role) = unserialize($data);
+        list($this->id, $this->contents, $this->role) = unserialize($data);
     }
 }

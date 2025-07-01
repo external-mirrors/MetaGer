@@ -64,10 +64,17 @@ class Openai extends Assistant
         }
     }
 
+    /**
+     * Parses the output from the OpenAI API response and returns a Message object.
+     *
+     * @param array $output The output data from the OpenAI API.
+     * @return Message The parsed message object.
+     */
     private function parseOutput(array $output): Message
     {
+        $id = hash_hmac("sha256", Arr::get($output, "id", uniqid("msg_")), config("app.key"));
         $role = Arr::get($output, "role") === "assistant" ? MessageRole::Agent : MessageRole::User;
-        $message = new Message([], $role);
+        $message = new Message($id, [], $role);
         switch (Arr::get($output, "type")) {
             case "message":
                 foreach (Arr::get($output, "content") as $content) {

@@ -15,6 +15,12 @@ return [
         ]
     ],
     'response' => [
-        'error' => 'Sorry, I had trouble loading a response from the selected provider!'
+        'error' => 'Sorry, I had trouble loading a response from the selected provider!',
+        "content" => [
+            "web_search" => [
+                "label" => "Includes Web search results for:",
+                "loading" => "Loading search results...",
+            ]
+        ]
     ]
 ];

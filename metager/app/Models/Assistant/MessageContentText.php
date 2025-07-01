@@ -14,6 +14,12 @@ class MessageContentText extends MessageContent
         $this->message = $message;
     }
 
+    public function append(string $text): void
+    {
+        // Append text to the existing message
+        $this->message .= $text;
+    }
+
     public function render(): string
     {
         return $this->message;

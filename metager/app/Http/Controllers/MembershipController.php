@@ -869,10 +869,18 @@ class MembershipController extends Controller
 
     public function adminDeny(Request $request)
     {
-        $application =
-            $request->filled("update-request") ?
-            MembershipApplication::updateRequestsAdmin()->where("id", "=", $request->input("id", ""))->first() :
-            MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
+        switch ($request->input("type", "application")) {
+            case "application":
+                $application = MembershipApplication::finishedAdmin()->where("id", "=", $request->input("id", ""))->first();
+                break;
+            case "update-request":
+                $application = MembershipApplication::updateRequestsAdmin()->where("id", "=", $request->input("id", ""))->first();
+                break;
+            case "unfinished":
+                $application = MembershipApplication::unfinishedUser()->where("id", "=", $request->input("id", ""))->first();
+                break;
+        }
+
         if ($application === null) {
             return redirect(route("membership_admin_overview", ["error" => "Couldn't find application id {$request->input("id")}"]));
         }
@@ -891,12 +899,12 @@ class MembershipController extends Controller
             }
             $application->paypal->delete();
         }
-        $application->delete();
 
         if ($request->filled("message")) {
             $mail = new ApplicationDeny($application, $request->input("message", ""));
             Mail::mailer("membership")->send($mail);
         }
+        $application->delete();
 
         return redirect(route("membership_admin_overview", ["success" => "Membership Request deleted"]));
     }

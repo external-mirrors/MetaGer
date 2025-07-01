@@ -55,7 +55,7 @@ return [
         ],
     ],
     'metager-key' => [
-        'header' => 'Bezpłatne wyszukiwanie reklam',
+        'header' => 'MetaGer Key',
         'charge' => 'Kredyt: :token Token',
         'manage' => 'Klucz ładowania',
         'logout' => 'Usuń klucz',
@@ -68,7 +68,7 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Możesz używać następujących wyszukiwarek z kluczem <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Przy bieżących ustawieniach wyszukiwania nie jest pobierana żadna wyszukiwarka.',
-    'cost' => 'Obliczamy <strong>:tokeny kosztu</strong> na zapytanie z bieżącymi ustawieniami.',
+    'cost' => 'Pobieramy opłatę <strong>:cost Token</strong> za zapytanie wyszukiwania z bieżącymi ustawieniami.',
     'cost-free' => 'Twoje wyszukiwania są <strong>darmowe</strong> z bieżącymi ustawieniami.',
     'free' => 'darmowy',
     'enable-engine' => 'Włączanie wyszukiwarki',
@@ -99,11 +99,11 @@ return [
             'hint' => '<b>Uwaga:</b> Aby zaoferować tę funkcję, musimy przechowywać ustawienia sugestii na naszym serwerze przez kilka dni. Jeśli nie tego chcesz, pozostaw to ustawienie wyłączone.',
         ],
     ],
-    'self_advertisements' => [
-        'label' => "Subtelne reklamy naszych własnych usług",
-    ],
     'limited' => 'ograniczony',
     'tiles_startpage' => [
         'label' => "Wyświetlanie kafelków na stronie startowej",
+    ],
+    'tips' => [
+        'label' => 'Pokaż losowe wskazówki na stronie wyników',
     ],
 ];

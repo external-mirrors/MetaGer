@@ -87,7 +87,7 @@
         <a href="#sidebarToggle">@lang('resultPage.skiplinks.navigation')</a>
         <div class="escape">@lang('resultPage.skiplinks.return')</div>
     </div>
-    @if (Request::getHttpHost() === 'metager3.de' && app(\App\SearchSettings::class)->self_advertisements)
+    @if (Request::getHttpHost() === 'metager3.de')
         <div class="alert alert-info metager3-unstable-warning-resultpage">
             {!! @trans('resultPage.metager3') !!}
         </div>

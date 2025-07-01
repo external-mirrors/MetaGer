@@ -438,9 +438,7 @@ class MetaGer
      */
     public function addDonationAdvertisement($position = null)
     {
-        if (!app(\App\SearchSettings::class)->self_advertisements) {
-            return;
-        }
+        return;
         /**
          * If there are no other advertisements we will only display our advertisements 
          * every so often. ~33% in this case

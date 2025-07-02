@@ -61,7 +61,15 @@
         }
     });
 
-    const diff = (diffMe, diffBy) => diffMe.split(diffBy).join('');
+    (async () => {
+        let chat_prompt_form = document.querySelector("#chat-prompt");
+        chat_prompt_form.addEventListener("keydown", e => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                document.querySelector(".chat-form button[type=submit]").click();
+            }
+        });
+    })();
 
     async function* fetchLineByLine(fileURL) {
         const utf8Decoder = new TextDecoder("utf-8");

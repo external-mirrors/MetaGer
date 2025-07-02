@@ -47,12 +47,21 @@
                         message_element.replaceWith(div.firstChild);
                     }
                     break;
+                case "history.updated":
+                    let history = event.history;
+                    let history_element = document.querySelector("input[type=hidden][name=history]");
+                    if (history_element) {
+                        history_element.value = history;
+                    }
+                    break;
                 default:
                     console.warn("Unknown event:", event);
                     break;
             }
         }
     });
+
+    const diff = (diffMe, diffBy) => diffMe.split(diffBy).join('');
 
     async function* fetchLineByLine(fileURL) {
         const utf8Decoder = new TextDecoder("utf-8");

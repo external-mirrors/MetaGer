@@ -5,6 +5,7 @@ namespace App\Models\Assistant;
 use App\Models\Assistant\Assistant;
 use Arr;
 use Cache;
+use Crypt;
 use GuzzleHttp\Psr7\Utils;
 use Http;
 use Illuminate\Support\Facades\Redis;
@@ -271,6 +272,14 @@ class Openai extends Assistant
                     flush();
                 }
             }
+
+            echo json_encode([
+                "event" => "history.updated",
+                "history" => Crypt::encrypt(serialize($this)),
+            ]) . PHP_EOL;
+            ob_flush();
+            flush();
+
             if (isset($response) && $response->getStatusCode() === 200) {
                 Cache::put($cache_key, $body, now()->addHours(6)); // Cache for 6 hours
             }

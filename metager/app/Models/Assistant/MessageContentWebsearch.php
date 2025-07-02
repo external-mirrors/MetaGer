@@ -11,7 +11,7 @@ class MessageContentWebsearch extends MessageContent
         $this->query = $query;
     }
 
-    public function render(): string
+    public function render(MessageRole $role = MessageRole::User): string
     {
         return $this->query;
     }

@@ -4,7 +4,7 @@ namespace App\Models\Assistant;
 
 class MessageContentTyping extends MessageContent
 {
-    public function render(): string
+    public function render(MessageRole $role = MessageRole::User): string
     {
         // Render a typing indicator
         return '<div class="typing">

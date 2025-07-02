@@ -38,6 +38,11 @@ class Message implements Serializable
         $this->contents[] = $content;
     }
 
+    public function replaceContent(MessageContent $content, int $index): void
+    {
+        $this->contents[$index] = $content;
+    }
+
     /**
      * Appends a new text content to the message at the specified index.
      * This method is used to add additional text content to an existing message.
@@ -51,7 +56,8 @@ class Message implements Serializable
         if ($this->contents[$index] instanceof MessageContentText) {
             // If the last content is already text, append to it
             $this->contents[$index] = new MessageContentText(
-                $this->contents[$index]->message . $text
+                $this->contents[$index]->message . $text,
+                false // Set finished to false to indicate that the message is still being constructed
             );
             return;
         }

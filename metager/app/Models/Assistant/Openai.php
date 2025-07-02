@@ -89,11 +89,12 @@ class Openai extends Assistant
         switch ($type) {
             case "message":
                 foreach (Arr::get($output, "content") as $content) {
-                    $this->parseContent($message, $content);
+                    $content = $this->parseContent($content);
+                    $message->addContent($content);
                 }
                 break;
             case "web_search_call":
-                $message->addContent(new MessageContentWebsearch(Arr::get($output, "action.query", "")));
+                $message->addContent(new MessageContentWebsearch(query: Arr::get($output, "action.query", "")));
                 break;
         }
         return $message;
@@ -102,19 +103,18 @@ class Openai extends Assistant
     /**
      * Parses the content of a message and returns the appropriate MessageContent object.
      *
-     * @param Message $message The message to which the content belongs.
      * @param array $content The content data to parse.
      * @return MessageContent The parsed content object.
      */
-    private function parseContent(Message &$message, array $content): MessageContent|null
+    private function parseContent(array $content): MessageContent|null
     {
         $content_type = Arr::get($content, "type");
         switch ($content_type) {
             case "output_text":
-                $message->addContent(new MessageContentText(Arr::get($content, "text")));
+                return new MessageContentText(Arr::get($content, "text"));
             // Add more content types as needed
             default:
-                Log::warning("Unknown content type: " . $content_type);
+                Log::debug("Unknown content type: " . $content_type);
                 return null;
         }
     }
@@ -170,9 +170,9 @@ class Openai extends Assistant
             $event_data = null;
             $last_run = now();
             while (!$stream->eof()) {
-                usleep(max(0, 10000 - now()->diffInMicroseconds($last_run, true))); // Sleep for 10ms if last run was less than 10ms ago
+                usleep(max(0, 5000 - now()->diffInMicroseconds($last_run, true))); // Sleep for 5ms if last run was less than 5ms ago
                 $last_run = now();
-                $line = Utils::readLine($stream, 4096);
+                $line = Utils::readLine($stream);
                 $body .= $line . PHP_EOL;
                 if (empty($line)) {
                     $event = null;
@@ -225,7 +225,7 @@ class Openai extends Assistant
                                 }
                             }
                             echo json_encode([
-                                "event" => "message.updated",
+                                "event" => "message.finished",
                                 "message_id" => $id,
                                 "message_data_html" => $this->messages[count($this->messages) - 1]->render()
                             ]) . PHP_EOL;
@@ -235,9 +235,29 @@ class Openai extends Assistant
                             foreach ($this->messages as $message) {
                                 // Find the message with the matching ID
                                 if ($message->id === $id) {
-                                    $this->parseContent($message, Arr::get($event_data, "part", []));
+                                    $content = $this->parseContent(Arr::get($event_data, "part", []));
+                                    if ($content instanceof MessageContentText) {
+                                        $content->setFinished(false);
+                                    }
+                                    $message->addContent($content);
                                     echo json_encode([
                                         "event" => "message.content.added",
+                                        "message_id" => $id,
+                                        "message_data_html" => $message->render()
+                                    ]) . PHP_EOL;
+                                    break;
+                                }
+                            }
+                            break;
+                        case "response.content_part.done":
+                            $id = Message::CREATE_ID(Arr::get($event_data, "item_id"));
+                            foreach ($this->messages as $message) {
+                                // Find the message with the matching ID
+                                if ($message->id === $id) {
+                                    $content = $this->parseContent(Arr::get($event_data, "part", []));
+                                    $message->replaceContent($content, Arr::get($event_data, "content_index", 0));
+                                    echo json_encode([
+                                        "event" => "message.content.updated",
                                         "message_id" => $id,
                                         "message_data_html" => $message->render()
                                     ]) . PHP_EOL;
@@ -261,7 +281,7 @@ class Openai extends Assistant
                             }
                             break;
                         default:
-                            Log::warning("Unhandled event type: {$event}");
+                            Log::debug("Unhandled event type: {$event}");
                             $event = null;
                             $event_data = null;
                     }

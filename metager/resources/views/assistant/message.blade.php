@@ -2,13 +2,10 @@
     class="message {{ $message->role === App\Models\Assistant\MessageRole::User ? "user" : "agent" }}">
     @foreach($message->getContents() as $content)
         @if($content instanceof App\Models\Assistant\MessageContentText)
-            @if($message->role === App\Models\Assistant\MessageRole::Agent)
-                {!! Str::of($content->render())->markdown([
-                            "html_input" => League\CommonMark\Util\HtmlFilter::ESCAPE,
-                        ]) !!}
-            @elseif($message->role === App\Models\Assistant\MessageRole::User)
-                {{ $content->render() }}
-            @endif
+            {{-- Render the content based on the message role --}}
+            {{-- If the message is from the agent, render it as markdown with HTML escaping --}}
+            {{-- If the message is from the user, render it as plain text --}}
+            {!!  $content->render($message->role) !!}
         @elseif($content instanceof App\Models\Assistant\MessageContentWebsearch)
             @if(empty($content->render()))
                 @lang("assistant.response.content.web_search.loading")

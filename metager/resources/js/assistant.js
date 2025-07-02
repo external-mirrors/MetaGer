@@ -36,7 +36,7 @@
                     let element = document.getElementById(event.message_id);
                     if (element) element.remove();
                     break;
-                case "message.updated":
+                case "message.finished":
                 case "message.content.added":
                 case "message.content.updated":
                     let message_id = event.message_id;

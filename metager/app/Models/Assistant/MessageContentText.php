@@ -3,6 +3,7 @@
 namespace App\Models\Assistant;
 
 use App\Http\Controllers\Pictureproxy;
+use App\Localization;
 use Arr;
 use DOMDocument;
 use League\CommonMark\Util\HtmlFilter;
@@ -57,6 +58,14 @@ class MessageContentText extends MessageContent
                         $query_params = [];
                         parse_str(Arr::get($components, 'query', ''), $query_params);
                         unset($query_params['utm_source']);
+
+                        // Replace links to Google Maps with MetaGer Maps
+                        if (isset($components["host"]) && $components["host"] === "www.google.com" && isset($components["path"]) && preg_match("/\/maps\/search\/(.*)/", $components["path"], $matches)) {
+                            // If the link is a Google search link, remove the utm_source parameter
+                            $components['host'] = 'maps.metager.de';
+                            $components['path'] = '/' . $matches[1] . "/guess?locale=" . Localization::getLanguage();
+                        }
+
                         $a->setAttribute('href', $components['scheme'] . '://' . $components['host'] . (isset($components['path']) ? $components['path'] : '') . (!empty($query_params) ? '?' . http_build_query($query_params) : ''));
                     }
                 }

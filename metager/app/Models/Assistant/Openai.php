@@ -2,6 +2,7 @@
 
 namespace App\Models\Assistant;
 
+use App\Localization;
 use App\Models\Assistant\Assistant;
 use Arr;
 use Cache;
@@ -319,7 +320,7 @@ class Openai extends Assistant
                 "If you are not sure about file content or codebase structure pertaining to the user’s request, use your tools to read files and gather the relevant information: do NOT guess or make up an answer.",
                 "You MUST plan extensively before each function call, and reflect extensively on the outcomes of the previous function calls. DO NOT do this entire process by making function calls only, as this can impair your ability to solve the problem and think insightfully."
             ]),
-            "tools" => [["type" => "web_search_preview"]],
+            "tools" => [["type" => "web_search_preview", "user_location" => ["type" => "approximate", "country" => Localization::getRegion()]]],
             "tool_choice" => "auto",
             "input" => [
 

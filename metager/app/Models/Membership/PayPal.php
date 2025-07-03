@@ -204,7 +204,8 @@ class PayPal
             "cacheDuration" => 0,   // We'll cache seperately
             "headers" => [
                 "Authorization" => "Bearer " . self::GET_ACCESS_TOKEN(),
-                "PayPal-Request-Id" => uuid_create()
+                "PayPal-Request-Id" => uuid_create(),
+                "Prefer" => "return=representation"
             ],
             "name" => "PayPal",
             "curlopts" => []

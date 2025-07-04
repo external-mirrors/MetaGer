@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\KeyChanged;
 use App\Localization;
 use App\Models\Authorization\KeyAuthorization;
 use Cache;
@@ -20,6 +21,7 @@ class StartpageController extends Controller
 
     public function loadStartPage(Request $request)
     {
+        KeyChanged::dispatch("METAGER_TESTING");
         /**
          * Some Browsers generate example urls for adding search engines that look like
          * https://google.de?q=%s

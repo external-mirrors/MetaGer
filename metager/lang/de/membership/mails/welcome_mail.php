@@ -4,7 +4,7 @@ return [
     'general' => "Willkommen im SUMA-EV! Darf ich zunächst fragen, wie Sie auf uns aufmerksam geworden sind? Ich nehme an, über unsere Suchmaschine MetaGer? Zusammen mit Ihnen hat der Verein nun :member_count Mitglieder aus den unterschiedlichsten Bereichen. Nachfolgend finden Sie einige weitere Erläuterungen und Tipps, die für Ihre Mitgliedschaft im SUMA-EV mehr als nützlich sind.",
     'membership' => [
         'title' => 'Mitgliedschaft',
-        'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese E-Mail erhalten haben. Ihr nächster Mitgliedsbeitrag in Höhe von **:Betrag** ist fällig am **:fällig**.',
+        'description' => 'Diese E-Mail ist gleichzeitig die Bestätigung Ihrer Mitgliedschaft. Bitte bestätigen Sie kurz, dass Sie diese E-Mail erhalten haben. Ihr nächster Mitgliedsbeitrag in Höhe von **:amount** ist fällig am **:due**.',
         'banktransfer' => 'Bitte überweisen Sie dieses **:interval** auf das folgende Konto unter Angabe des Verwendungszwecks (**:mandate**):',
         'directdebit' => 'Wir buchen diesen **:interval** unter der Mandatsreferenz **:mandate** von Ihrem Konto **:iban** ab.',
         'paypal' => 'Wir werden diesen **:interval** vom angegebenen PayPal-Konto abbuchen.',

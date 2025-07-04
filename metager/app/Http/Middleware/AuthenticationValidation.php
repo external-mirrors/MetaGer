@@ -9,6 +9,7 @@ use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
 use App\Models\Authorization\TokenAuthorization;
 use App\Models\Configuration\Searchengines;
+use Auth;
 use Closure;
 use Cookie;
 use Illuminate\Http\Request;
@@ -27,6 +28,31 @@ class AuthenticationValidation
         if ($request->filled("eingabe")) {
             $parameters["eingabe"] = $request->input("eingabe");
         }
+
+        /**
+         * Our newest authentication form using Laravel Authentication Guard
+         * All requests are soon authenticated using the key guard
+         * In the meantime we still support the old way of authentication
+         * 
+         * @var \App\Authentication\KeyUser|null $user
+         */
+        if (($user = Auth::guard("key")->user()) !== null) {
+            // Initialize searchengines and settings so we can estimate the cost of the search
+            $suma_cost = app(Searchengines::class)->getCost();
+            $suggestion_debt = $this->getSuggestionDebt();
+
+            if ($user->authorize($suma_cost + $suggestion_debt) && $user->makePayment($suggestion_debt)) {
+                return $next($request);
+            } else {
+                return redirect(route("startpage", $parameters));
+            }
+        } else {
+            // ToDo; enable this case once the old authentication is removed
+            //return redirect(route("startpage", $parameters));
+        }
+
+
+
         /**
          * Abort if a search is unauthorized
          * not considering actual cost of the request

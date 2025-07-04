@@ -4,7 +4,7 @@ return [
     'subject' => "[SUMA-EV & MetaGer] Benvenuti a SUMA-EV",
     'general' => "Benvenuti a SUMA-EV! Posso chiederti innanzitutto come ci hai scoperto? Immagino attraverso il nostro motore di ricerca MetaGer? Insieme a voi, l'associazione conta ora :member_count membri provenienti da diversi settori. Qui di seguito troverete alcune spiegazioni e consigli più che utili per il SUMA-EV.",
     'membership' => [
-        'description' => 'Questa e-mail è anche la conferma della vostra adesione. La preghiamo di confermare brevemente di aver ricevuto questa e-mail. La prossima quota associativa dell\'importo di **:importo** deve essere versata a **:scadenza**.',
+        'description' => 'Questa e-mail è anche la conferma della vostra adesione. La preghiamo di confermare brevemente di aver ricevuto questa e-mail. La prossima quota associativa dell\'importo di **:amount** deve essere versata a **:due**.',
         'banktransfer' => 'Si prega di trasferire questo **:interval** al seguente conto, indicando lo scopo dell\'utilizzo (**:mandate**):',
         'directdebit' => 'Addebiteremo questo **:interval** con il riferimento del mandato **:mandate** dal vostro conto **:iban**.',
         'paypal' => 'Addebiteremo questo **:interval** sul conto PayPal specificato.',

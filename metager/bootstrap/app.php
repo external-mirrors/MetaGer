@@ -83,7 +83,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'humanverification' => \App\Http\Middleware\HumanVerification::class,
             'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
-            'browserverification' => \App\Http\Middleware\BrowserVerification::class,
             'spam' => \App\Http\Middleware\Spam::class,
             'allow-local-only' => AllowLocalOnly::class,
             'httpcache' => HttpCache::class,

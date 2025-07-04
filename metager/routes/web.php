@@ -68,7 +68,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
-    Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
+    Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->name("assoresults");
 
     Route::get('impressum', function () {
         return view('impressum')

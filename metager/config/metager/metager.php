@@ -1,10 +1,6 @@
 <?php
 
 return [
-    "browserverification" => [
-        "enabled" => env("BROWSERVERIFICATION_PROTECTION", false),
-        "whitelist" => explode(",", env("BROWSERVERIFICATION_PROTECTION_WHITELIST", "")),
-    ],
     "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),

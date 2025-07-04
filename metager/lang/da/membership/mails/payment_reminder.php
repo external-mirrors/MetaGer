@@ -12,6 +12,6 @@ return [
     'edit_button' => "Opdatering af medlemskab",
     'key_charge' => 'Den automatiske genopladning af din nøgle til brug af MetaGer (**:key**) er blevet deaktiveret indtil videre.',
     'mastodon' => 'Din Mastodon-konto på vores [instans] (https://suma-ev.social) vil blive frosset og kan ikke længere bruges. Sørg for at flytte til en offentlig instans i god tid. Vi sletter alle data, der er knyttet til din konto, 6 måneder efter afslutningen af dit medlemskab.',
-    'terminate' => '<b>Uden modtagelse af betaling er vi desværre nødt til at opsige dit medlemskab af [SUMA-EV] (https://suma-ev.de) med virkning fra <b>:expiration</b>',
+    'terminate' => 'Uden modtagelse af betaling er vi desværre nødt til at opsige dit medlemskab af [SUMA-EV] (https://suma-ev.de) med virkning fra <b>:expiration</b>',
     'expired' => 'Det er med beklagelse, at vi i dag bekræfter, at dit medlemskab af [SUMA-EV] (https://suma-ev.de) er ophørt.',
 ];

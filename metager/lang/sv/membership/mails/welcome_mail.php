@@ -4,7 +4,7 @@ return [
         'mandate' => 'Syfte med användningen',
         'next_payments' => 'Nästa bidrag',
         'due' => 'Förfallodag',
-        'description' => 'Detta e-postmeddelande är också en bekräftelse på ditt medlemskap. Vänligen bekräfta kortfattat att du har mottagit detta e-postmeddelande. Din nästa medlemsavgift på **:belopp** förfaller till betalning på **:förfallodag**.',
+        'description' => 'Detta e-postmeddelande är också en bekräftelse på ditt medlemskap. Vänligen bekräfta kortfattat att du har mottagit detta e-postmeddelande. Din nästa medlemsavgift på **:amount** förfaller till betalning på **:due**.',
         'banktransfer' => 'Vänligen överför detta **:interval** till följande konto, med angivande av användningsändamål (**:mandate**):',
         'directdebit' => 'Vi kommer att debitera detta **:interval** med mandatreferens **:mandate** från ditt konto **:iban**.',
         'paypal' => 'Vi kommer att debitera detta **:interval** från det angivna PayPal-kontot.',

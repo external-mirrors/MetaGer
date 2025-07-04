@@ -43,6 +43,7 @@ return [
 
         'key' => [
             'driver' => 'key',
+            'provider' => 'key-users',
         ],
 
         'api' => [
@@ -73,6 +74,10 @@ return [
     */
 
     'providers' => [
+        'key-users' => [
+            'driver' => 'key-users',
+            'model' => App\Authentication\KeyUser::class,
+        ],
         'users' => [
             'driver' => 'keycloak-users',
             'model' => Vizir\KeycloakWebGuard\Models\KeycloakUser::class,

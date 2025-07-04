@@ -22,11 +22,27 @@ class KeyChanged implements ShouldBroadcast
     public string $key;
 
     /**
+     * The change in the key's value.
+     *
+     * @var float
+     */
+    public float $change;
+
+    /**
+     * The new charge for the key.
+     *
+     * @var float
+     */
+    public float $new_charge;
+
+    /**
      * Create a new event instance.
      */
-    public function __construct(string $key)
+    public function __construct(string $key, float $change = 0, float $new_charge = 0)
     {
         $this->key = $key;
+        $this->change = $change;
+        $this->new_charge = $new_charge;
     }
 
     /**

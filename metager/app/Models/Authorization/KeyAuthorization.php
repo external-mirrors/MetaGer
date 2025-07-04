@@ -2,6 +2,7 @@
 
 namespace App\Models\Authorization;
 
+use App\Events\KeyChanged;
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Redis;
 
@@ -96,6 +97,8 @@ class KeyAuthorization extends Authorization
         if (config('metager.metager.keys.uni_mainz') === $this->key) {
             PrometheusExporter::UpdateMainzKeyStatus($this->availableTokens);
         }
+
+        KeyChanged::dispatch($this->key, $cost, $this->availableTokens - $cost);
 
         return true;
     }

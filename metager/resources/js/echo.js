@@ -1,14 +1,18 @@
-import Echo from 'laravel-echo';
+import Echo from "laravel-echo";
 
-import Pusher from 'pusher-js';
-window.Pusher = Pusher;
+(async () => {
+    window.Pusher = require("pusher-js");
+    window.Echo = new Echo({
+        broadcaster: "reverb",
+        key: "METAGER_TESTING", // ToDo use a real key
+        wsHost: window.location.hostname,
+        wsPort: window.location.port,
+        enabledTransports: ['ws', 'wss'],
+        forceTLS: window.location.protocol === "https:" ? true : false,
+    });
 
-window.Echo = new Echo({
-    broadcaster: 'reverb',
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
-    wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
-});
+    window.Echo.private("App.Models.Authorization.Key.f5d1278e-8109-4dd9-be1e-4197e04873b9").listen("KeyChanged", (e) => {
+        console.log("Authorization key updated:", e);
+    });
+
+})();

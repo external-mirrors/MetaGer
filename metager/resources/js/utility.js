@@ -1,5 +1,4 @@
 import { statistics } from "./statistics";
-import Echo from "laravel-echo";
 
 document.addEventListener("DOMContentLoaded", (event) => {
   document
@@ -214,22 +213,4 @@ function updateWebExtensionStatus(time) {
     url.searchParams.delete("key");
     window.history.replaceState({}, null, url);
   }
-})();
-
-(async () => {
-  window.Pusher = require("pusher-js");
-  window.Echo = new Echo({
-    broadcaster: "reverb",
-    key: "METAGER_TESTING", // ToDo use a real key
-    wsHost: window.location.hostname,
-    wsPort: window.location.port,
-    enabledTransports: ['ws', 'wss'],
-    forceTLS: window.location.protocol === "https:" ? true : false,
-  });
-
-  let key_crypt = document.querySelector("meta[name=key-crypt]")?.content;
-
-  window.Echo.private("App.Models.Authorization.Key." + key_crypt).listen("KeyChanged", (e) => {
-    console.log("Authorization key updated:", e);
-  });
 })();

@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
-use App\Authentication\KeyUser;
+use App\Authentication\KeyAuthGuard;
+use App\Authentication\KeyUserProvider;
 use Auth;
 use Cookie;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
 
@@ -26,12 +28,13 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Auth::viaRequest("key", function ($request) {
-            $key = $this->parseKey($request);
-            if ($key !== "") {
-                return null;
-            }
-            return new KeyUser($key);
+        Auth::provider('key-users', function (Application $app, array $config) {
+            // Return an instance of Illuminate\Contracts\Auth\UserProvider...
+            return new KeyUserProvider();
+
+        });
+        Auth::extend("key", function ($app, $name, array $config) {
+            return new KeyAuthGuard(Auth::createUserProvider($config['provider']));
         });
     }
 

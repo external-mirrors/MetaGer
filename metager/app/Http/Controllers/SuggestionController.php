@@ -72,12 +72,11 @@ class SuggestionController extends Controller
                 $authorization = app(Authorization::class);
                 $authorization->setCost($suggestions::COST);
 
-                $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
-
                 if (!$authorization->canDoAuthenticatedSearch(true)) {
                     return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
                 }
             }
+            $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
             $token_data = [];
             if ($authorization instanceof TokenAuthorization) {
                 $token_data["tokens"] = $authorization->getToken()->tokens;

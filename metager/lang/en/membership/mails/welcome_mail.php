@@ -4,7 +4,7 @@ return [
     'general' => "Welcome to SUMA-EV! May I first ask how you found out about us? I assume through our search engine MetaGer? Together with you, the association now has :member_count members from a wide variety of areas. Below are some further explanations and tips that are more than useful for SUMA-EV.",
     'membership' => [
         'title' => 'Membership',
-        'description' => 'This e-mail is also the confirmation of your membership. Please briefly confirm that you have received this e-mail. Your membership fee in the amount of **:amount** is due for the first time at **:due**.',
+        'description' => 'This e-mail is also the confirmation of your membership. Please briefly confirm that you have received this e-mail. Your next membership fee in the amount of **:amount** is due at **:due**.',
         'banktransfer' => 'Please transfer this **:interval** to the following account, stating the purpose of use (**:mandate**):',
         'directdebit' => 'We will debit this **:interval** with the mandate reference **:mandate** from your account **:iban**.',
         'paypal' => 'We will debit this **:interval** from the specified PayPal account.',

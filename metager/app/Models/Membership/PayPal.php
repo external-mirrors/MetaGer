@@ -4,7 +4,6 @@ namespace App\Models\Membership;
 
 use App\Localization;
 use Arr;
-use DB;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
@@ -104,7 +103,6 @@ class PayPal
                 }
             }
             $custom_id = $application->payment_reference;
-            $invoice_id = $custom_id;
             if ($intent === self::INTENT_CAPTURE) {
                 Arr::set($order_data, "payment_source.$payment_source.vault_id", $application->paypal->vault_id);
                 Arr::set($order_data, "payment_source.$payment_source.stored_credentials", [
@@ -122,7 +120,6 @@ class PayPal
             $unit_amount = $application->amount;
             $amount = $quantity * $unit_amount;
             $custom_id = $application->payment_reference;
-            $invoice_id = $custom_id;
             $description .= " " . now()->format("M Y");
             if ($quantity > 1) {
                 $description .= " - " . now()->addMonths($quantity - 1)->format("M Y");
@@ -134,7 +131,6 @@ class PayPal
         Arr::set($order_data, "purchase_units.0.description", $description);
         Arr::set($order_data, "purchase_units.0.items.0.name", $description);
         Arr::set($order_data, "purchase_units.0.custom_id", $custom_id);
-        Arr::set($order_data, "purchase_units.0.invoice_id", $invoice_id);
         Arr::set($order_data, "purchase_units.0.amount.value", $amount);
         Arr::set($order_data, "purchase_units.0.amount.breakdown.item_total.value", $amount);
         Arr::set($order_data, "purchase_units.0.items.0.quantity", $quantity);
@@ -204,7 +200,8 @@ class PayPal
             "cacheDuration" => 0,   // We'll cache seperately
             "headers" => [
                 "Authorization" => "Bearer " . self::GET_ACCESS_TOKEN(),
-                "PayPal-Request-Id" => uuid_create()
+                "PayPal-Request-Id" => uuid_create(),
+                "Prefer" => "return=representation"
             ],
             "name" => "PayPal",
             "curlopts" => []

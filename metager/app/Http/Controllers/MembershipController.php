@@ -813,21 +813,16 @@ class MembershipController extends Controller
         if (CiviCrm::UPDATE_MEMBERSHIP($application) !== null) {
             if ($application->paypal !== null) {
                 if ($application->paypal->order_id !== null && $application->paypal->authorization_status === "CREATED") {
-                    $application->paypal->vault_id = null;
-                    $application->paypal->save();
                     $payments = CiviCrm::MEMBERSHIP_NEXT_PAYMENTS($application->crm_membership);
                     if ($payments === null) {
                         return redirect(route("membership_admin_overview", ["error" => "[Handle PayPal] Error while fetching next membership payments"]));
                     }
                     $due_date = Arr::get($payments, "0.due_date");
                     if (now()->diffInDays($due_date) <= 14) {
-                        if (($order = PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id)) !== null) {
-                            if ($order !== null) {
+                        if (($capture = PayPal::CAPTURE_PAYMENT(authorization_id: $application->paypal->authorization_id)) !== null) {
+                            if ($capture !== null) {
                                 // We'll only process one purchase unit since we do not create orders with more than that
-                                $captures = Arr::get($order, "purchase_units.0.payments.captures", []);
-                                foreach ($captures as $capture) {
-                                    CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);   // Will be picked up by webhook if an error happens
-                                }
+                                CiviCrm::HANDLE_PAYPAL_CAPTURE($capture);   // Will be picked up by webhook if an error happens
                             }
                         }
                     } else {
@@ -836,8 +831,11 @@ class MembershipController extends Controller
                             $application->paypal->authorization_id = null;
                             $application->paypal->authorization_status = null;
                             $application->save();
+                            $application->paypal->delete();
                         }
                     }
+                    $application->paypal->application_id = null;
+                    $application->paypal->save();
                 } else {
                     $application->paypal->delete();
                 }

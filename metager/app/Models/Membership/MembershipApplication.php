@@ -250,7 +250,6 @@ class MembershipApplication extends Model
                     $application->paypal->delete();
                 else {
                     $paypal = $application->paypal;
-                    $paypal->vault_id = null;
                     $paypal->application_id = null;
                     $paypal->save();
                 }

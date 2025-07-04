@@ -959,7 +959,7 @@ class MetaGer
         # Check for self-harm related searches
         $triggers = ["suizid", "selbstmord", "Selbstmordgedanken", "selbsttötung", "Freitod", "Sterbehilfe", "umbringen", "suizidale", "depressionen", "depressiv", "selbstverletzung", "einsam", "einsamkeit", "self harm", "self injury", "suicidal", "suicidality", "self-murder", "self-slaughter", "self-destruction", "self-homocide", "self-murderer", "kill oneself", "lonely", "depression"];
         foreach ($triggers as $i => $trigger) {
-            if (stripos($this->q, $trigger) !== false) {
+            if (preg_match("/\b" . preg_quote($trigger, '/') . "\b/i", $this->q)) {
                 $this->htmlwarnings[] = trans('metaGer.prevention.phrase', ['prevurl' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "prevention")]);
                 break;
             }

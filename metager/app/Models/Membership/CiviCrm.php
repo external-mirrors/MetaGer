@@ -676,7 +676,11 @@ class CiviCrm
                     'disableActionsOnCompleteOrder' => true,
                     'values' => ['contribution_id' => $contribution_id, 'total_amount' => $amount, 'payment_instrument_id:name' => 'PayPal', 'trxn_date' => $date->format("Y-m-d H:i:s"), 'trxn_id' => $transaction_id],
                 ];
-                return self::API_POST("/Payment/create", $params);
+                $payment = self::API_POST("/Payment/create", $params);
+                if ($membership->crm_contact !== null) {
+                    self::API_POST("/Membership/renew", ["contact_id" => $membership->crm_contact]);
+                }
+                return $payment;
             }
         } else {
             return [];

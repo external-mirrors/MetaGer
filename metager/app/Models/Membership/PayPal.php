@@ -40,7 +40,6 @@ class PayPal
                     "description" => __("membership/order.default_description"),
                     "soft_descriptor" => __("membership/order.default_softdescription"),
                     "custom_id" => "pending",
-                    "invoice_id" => "pending",
                     "amount" => [
                         "currency_code" => "EUR",
                         "value" => 0,

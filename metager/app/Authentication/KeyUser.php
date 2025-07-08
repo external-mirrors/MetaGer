@@ -154,7 +154,6 @@ class KeyUser implements Authenticatable
                 return false;
             }
             Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
-            KeyChanged::dispatch($this->key, -$token_cost, $current_charge);
             Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat("keyserver:claims:" . $this->key, $this->id, -$token_cost);
             return true;
         }

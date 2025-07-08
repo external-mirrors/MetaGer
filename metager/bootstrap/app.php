@@ -76,6 +76,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
             'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+            'auth.events' => \App\Http\Middleware\EventAuthorization::class,
             'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
             'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
             'can' => \Illuminate\Auth\Middleware\Authorize::class,

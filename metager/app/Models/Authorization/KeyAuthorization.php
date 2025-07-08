@@ -98,8 +98,6 @@ class KeyAuthorization extends Authorization
             PrometheusExporter::UpdateMainzKeyStatus($this->availableTokens);
         }
 
-        KeyChanged::dispatch($this->key, $cost, $this->availableTokens - $cost);
-
         return true;
     }
 

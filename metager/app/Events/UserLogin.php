@@ -10,39 +10,20 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class KeyChanged implements ShouldBroadcast
+class UserLogin
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * The key that has changed.
-     *
-     * @var string
-     */
+    public string $login_token;
     public string $key;
-
-    /**
-     * The change in the key's value.
-     *
-     * @var float
-     */
-    public float $change;
-
-    /**
-     * The new charge for the key.
-     *
-     * @var float
-     */
-    public float $new_charge;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $key, float $change = 0, float $new_charge = 0)
+    public function __construct(string $login_token, string $key)
     {
+        $this->login_token = $login_token;
         $this->key = $key;
-        $this->change = $change;
-        $this->new_charge = $new_charge;
     }
 
     /**
@@ -53,7 +34,7 @@ class KeyChanged implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel("App.Models.Authorization.Key.{$this->key}"),
+            new Channel("App.Models.Authorization.Login.{$this->login_token}"),
         ];
     }
 }

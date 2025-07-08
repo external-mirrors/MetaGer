@@ -6,6 +6,7 @@ return [
         "enabled" => env("BOT_PROTECTION", false),
         "whitelist" => explode(",", env("BOT_PROTECTION_WHITELIST", "")),
     ],
+    "event_authorization" => env("EVENT_AUTHORIZATION", "EVENT_AUTHORIZATION"),
     "proxy" => [
         "password" => env("PROXY_PASSWORD", "secure_password"),
     ],

@@ -4,6 +4,7 @@ use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\MailController;
@@ -83,6 +84,11 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::get("cost", [SuggestionController::class, 'tokenCost'])->name("suggest_cost");
         Route::get("cancel", [SuggestionController::class, "cancelSuggest"])->name("suggest_cancel");
         Route::any("{key?}", [SuggestionController::class, "suggest"])->name("suggest");
+    });
+
+    Route::group(['prefix' => 'api/event'], function () {
+        Route::post("key/login", [EventController::class, "loginEvent"])->name("event_key_login");
+        Route::post("key/update", [EventController::class, "keyUpdateEvent"])->name("event_key_update");
     });
 
 

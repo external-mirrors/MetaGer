@@ -214,5 +214,3 @@ function updateWebExtensionStatus(time) {
     window.history.replaceState({}, null, url);
   }
 })();
-
-import("./echo.js")

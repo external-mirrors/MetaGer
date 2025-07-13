@@ -57,7 +57,7 @@ class PaymentReminder extends Mailable
     {
         $subject = match ($this->reminder_stage) {
             self::REMINDER_STAGE_FIRST => __("membership/mails/payment_reminder.subject.first"),
-            self::REMINDER_STAGE_SECOND => __("membership/mails/payment_reminder.subject.second", ['date' => (clone $this->application->end_date)->addMonath(1)->isoFormat("L")]),
+            self::REMINDER_STAGE_SECOND => __("membership/mails/payment_reminder.subject.second", ['date' => (clone $this->application->end_date)->addMonth()->isoFormat("L")]),
             self::REMINDER_STAGE_ABORTED => __("membership/mails/payment_reminder.subject.expired")
         };
         if (!App::environment("production"))

@@ -214,7 +214,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
           command: ["/usr/local/bin/php"]
-          args: ["artisan", "reverb:start", "--debug"]
+          args: ["artisan", "reverb:start"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           - name: APP_ENV

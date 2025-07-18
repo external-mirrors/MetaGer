@@ -24,7 +24,7 @@ class KeyUser implements Authenticatable
 
     public bool $temporary = false;
 
-    private KeyState|null $state = KeyState::NO_KEY;
+    private KeyState|null $state = null;
 
     /**
      * The keyserver URL.
@@ -186,7 +186,7 @@ class KeyUser implements Authenticatable
                 $key_response = $key_response->json();
                 $current_charge = Arr::get($key_response, "charge");
                 if ($current_charge === null) {
-                    return false;
+                    return null;
                 }
                 Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
                 KeyChanged::dispatch($this->key, 0, $current_charge);

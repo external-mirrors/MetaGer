@@ -70,7 +70,9 @@
   @else
   @include('parts.searchbar', ['class' => 'startpage-searchbar'])
 @endif
-    @if(app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false))
+    @if((\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY) || 
+    {{-- Phase out old Authorization @deprecated 18.07.2025 --}}
+    (app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)))
     <div id="startpage-quicklinks">
       <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
       <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />

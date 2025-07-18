@@ -223,7 +223,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "fpm_image" . }}"
           command: ["/usr/local/bin/php"]
-          args: ["artisan", "reverb:start", "--port=8081"]
+          args: ["artisan", "reverb:start", "--port=8081", "--debug"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           - name: APP_ENV

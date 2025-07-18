@@ -53,7 +53,7 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -127,7 +127,7 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -177,7 +177,7 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -220,7 +220,7 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -285,35 +285,6 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.nginx | nindent 14 }}
             limits: {}
-        - name: redis
-          image: "{{ template "redis_image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["redis-server", "/usr/local/etc/redis/redis.conf"]
-          volumeMounts:
-          - name: redis-config
-            mountPath: /usr/local/etc/redis/redis.conf
-            subPath: redis.conf
-            readOnly: true
-          livenessProbe:
-            exec:
-              command:
-              - redis-cli
-              - ping 
-            initialDelaySeconds: 2
-          readinessProbe:
-            exec:
-              command:
-              - redis-cli
-              - ping 
-            initialDelaySeconds: 2
-          resources:
-            requests:
-              {{- toYaml .Values.resources.requests.redis | nindent 14 }}
-            limits:
-          securityContext:
-            runAsUser: 999
-            runAsGroup: 999
-            allowPrivilegeEscalation: false
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

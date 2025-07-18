@@ -34,9 +34,6 @@ spec:
         - name: mglogs-persistent-storage
           persistentVolumeClaim:
             claimName: mglogs
-        - name: redis-config
-          configMap:
-            name: {{ include "chart.fullname" . }}-redis-container-config
         - name: sqlite-databases
           emptyDir: {}
         - name: fast-logs

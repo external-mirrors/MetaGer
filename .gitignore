@@ -3,3 +3,5 @@ metager/.phpstorm.meta.php
 metager/config/sumasEn.json
 metager/config/suggestions.json
 metager/.env.assistant
+chart/charts/*
+.gitignore

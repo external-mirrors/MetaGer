@@ -54,7 +54,7 @@ spec:
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host}}
+            value: {{ .Values.ingress.hosts[0].host }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -130,7 +130,7 @@ spec:
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host}}
+            value: {{ .Values.ingress.hosts[0].host }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -182,7 +182,7 @@ spec:
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host}}
+            value: {{ .Values.ingress.hosts[0].host }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -227,7 +227,7 @@ spec:
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host}}
+            value: {{ .Values.ingress.hosts[0].host }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}

@@ -134,3 +134,8 @@ tolerations: []
 affinity: {}
 
 env: []
+
+redis:
+  enabled: true
+  auth:
+    enabled: false

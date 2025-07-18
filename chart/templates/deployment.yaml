@@ -230,8 +230,8 @@ spec:
             subPath: ENV_PRODUCTION
             readOnly: true
           ports:
-            - name: http
-              containerPort: 8080
+            - name: reverb
+              containerPort: 8081
               protocol: TCP
           livenessProbe:
             exec:

@@ -53,8 +53,10 @@ spec:
             value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- with (index .Values.ingress.hosts 0) }}
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host }}
+            value: {{ .host }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -129,8 +131,10 @@ spec:
             value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- with (index .Values.ingress.hosts 0) }}
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host }}
+            value: {{ .host }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -181,8 +185,10 @@ spec:
             value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- with (index .Values.ingress.hosts 0) }}
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host }}
+            value: {{ .host }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -226,8 +232,10 @@ spec:
             value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- with (index .Values.ingress.hosts 0) }}
           - name: REVERB_HOST
-            value: {{ .Values.ingress.hosts[0].host }}
+            value: {{ .host }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}

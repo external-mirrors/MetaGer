@@ -473,7 +473,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::group(['prefix' => 'health-check'], function () {
         Route::get('liveness', [HealthcheckController::class, 'liveness']);
         Route::get('liveness-scheduler', [HealthcheckController::class, 'livenessScheduler']);
-        Route::get('liveness-worker', [HealthcheckController::class, 'livenessWorker']);
     });
 
     Route::group(['prefix' => 'stats'], function () {

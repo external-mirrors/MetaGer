@@ -68,7 +68,7 @@ services:
     volumes:
       - ./metager:/metager/metager_app
     healthcheck:
-      test: "curl -f http://nginx:8080/health-check/liveness-worker"
+      test: ["CMD", "pgrep",  "-f", "requests:fetcher"]
   reverb:
     image: metager:latest
     build:

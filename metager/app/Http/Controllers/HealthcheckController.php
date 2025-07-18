@@ -31,19 +31,4 @@ class HealthcheckController extends Controller
             return response('ok', 200);
         }
     }
-
-    public function livenessWorker()
-    {
-        $lastSchedule = Redis::get(\App\Console\Commands\RequestFetcher::HEALTHCHECK_KEY);
-        if (empty($lastSchedule)) {
-            abort(500, "No heartbeat yet");
-        }
-        $lastSchedule = Carbon::createFromFormat(\App\Console\Commands\RequestFetcher::HEALTHCHECK_FORMAT, $lastSchedule);
-
-        if (Carbon::now()->diffInMinutes($lastSchedule, true) > 1) {
-            abort(500, "Last heartbeat too long ago");
-        } else {
-            return response('ok', 200);
-        }
-    }
 }

@@ -237,17 +237,23 @@ spec:
               containerPort: 8080
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           readinessProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           startupProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           resources:
             requests:
               {{- toYaml .Values.resources.requests.worker | nindent 14 }}

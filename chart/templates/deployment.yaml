@@ -50,7 +50,7 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -124,7 +124,7 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -174,7 +174,7 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}
@@ -217,7 +217,7 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
           {{- range $name, $value := .Values.env }}

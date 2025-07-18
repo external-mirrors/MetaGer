@@ -209,6 +209,49 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.worker | nindent 14 }}
             limits:
+        - name: reverb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "reverb:start", "--debug"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          - name: REDIS_HOST
+            value: "127.0.0.1"
+          - name: REDIS_PORT
+            value: "6379"
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          startupProbe:
+            httpGet:
+              path: /health-check/liveness-worker
+              port: http
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
+            limits:
         - name: nginx
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

@@ -139,3 +139,16 @@ redis:
   enabled: true
   auth:
     enabled: false
+  architecture: "standalone"
+  global:
+    storageClass: nvme
+  persistence:
+    size: 2Gi
+  resources:
+    limits:
+      memory: 2Gi
+    requests:
+      memory: 50Mi
+  commonConfiguration: |
+    maxmemory 5gb
+    maxmemory-policy allkeys-lru

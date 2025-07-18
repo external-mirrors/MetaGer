@@ -8,6 +8,7 @@ use Cache;
 use Http;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Redis;
+use Request;
 
 class KeyUser implements Authenticatable
 {
@@ -20,6 +21,10 @@ class KeyUser implements Authenticatable
      * @var string
      */
     public string $key;
+
+    public bool $temporary = false;
+
+    private KeyState|null $state = KeyState::NO_KEY;
 
     /**
      * The keyserver URL.
@@ -77,6 +82,31 @@ class KeyUser implements Authenticatable
         return 'remember_token';
     }
 
+    public function getKeyState(): KeyState
+    {
+        if ($this->state === null) {
+            if ($this->temporary) {
+                $this->state = match (Request::header("tokenauthorization")) {
+                    "empty" => KeyState::EMPTY ,
+                    "low" => KeyState::LOW,
+                    "full" => KeyState::FULL,
+                    default => KeyState::NO_KEY, // Default to NO_KEY if no valid state is provided
+                };
+            } else {
+                $key_data = $this->getKeyData();
+                $current_charge = Arr::get($key_data, "charge", null);
+                $this->state = match (true) {
+                    $current_charge > 30 => KeyState::FULL,
+                    $current_charge > 3 && $current_charge <= 30 => KeyState::LOW,
+                    $current_charge <= 3 => KeyState::EMPTY ,
+                    default => KeyState::NO_KEY,
+                };
+
+            }
+        }
+        return $this->state;
+    }
+
     /**
      * Authorize the user for a specific token cost. The amount will be claimed on the key for
      * this process for the specified duration and is not available for other processes
@@ -90,26 +120,9 @@ class KeyUser implements Authenticatable
     {
         $claims = Redis::connection(config('cache.stores.redis.connection'))->hgetall("keyserver:claims:" . $this->key);
 
-        if (!$key_response = Cache::get("keyserver:key:" . $this->key)) {
-            // Fetch key data from the keyserver
-            $key_response = Http::withHeaders([
-                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")
-            ])->get($this->keyserver . "/key/" . urlencode($this->key));
+        $key_data = $this->getKeyData();
+        $current_charge = Arr::get($key_data, "charge", 0);
 
-            if ($key_response->successful()) {
-                $key_response = $key_response->json();
-                $current_charge = Arr::get($key_response, "charge");
-                if ($current_charge === null) {
-                    return false;
-                }
-                Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
-                KeyChanged::dispatch($this->key, 0, $current_charge);
-            } else {
-                return false;
-            }
-        } else {
-            $current_charge = Arr::get($key_response, "charge");
-        }
         foreach ($claims as $id => $amount) {
             if ($id !== $this->id)
                 $current_charge -= max($amount, 0); // Ensure we don't subtract negative amounts
@@ -159,5 +172,30 @@ class KeyUser implements Authenticatable
         }
 
         return false;
+    }
+
+    private function getKeyData(): array|null
+    {
+        if (!$key_response = Cache::get("keyserver:key:" . $this->key)) {
+            // Fetch key data from the keyserver
+            $key_response = Http::withHeaders([
+                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")
+            ])->get($this->keyserver . "/key/" . urlencode($this->key));
+
+            if ($key_response->successful()) {
+                $key_response = $key_response->json();
+                $current_charge = Arr::get($key_response, "charge");
+                if ($current_charge === null) {
+                    return false;
+                }
+                Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
+                KeyChanged::dispatch($this->key, 0, $current_charge);
+                return $key_response;
+            } else {
+                return null;
+            }
+        } else {
+            return $key_response;
+        }
     }
 }

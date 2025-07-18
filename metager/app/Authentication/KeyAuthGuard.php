@@ -42,6 +42,11 @@ class KeyAuthGuard implements StatefulGuard
         }
 
         if ($key === "") {
+            if (Request::hasHeader("anonymous-token-key")) {
+                $user = $this->provider->retrieveById(Request::header("anonymous-token-key"));
+                $user->temporary = true; // Mark as temporary user
+                return $this->user = $user;
+            }
             return null; // No key provided
         } else {
             return $this->user = $this->provider->retrieveById($key);

@@ -33,7 +33,7 @@
       </a>
     </h1>
 
-    @if(!app(App\Models\Authorization\Authorization::class)->loggedIn)
+    @if(Auth::guard("key")->user() === null &&!app(App\Models\Authorization\Authorization::class)->loggedIn)
     <div id="searchbar-replacement" style="">
       <div class="input-group">
       <label for="key">

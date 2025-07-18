@@ -33,19 +33,6 @@ nginx:
   after_script:
     - docker logout $CI_REGISTRY
 
-redis:
-  stage: build_docker_images
-  image: $BUILD_DOCKER_IMAGE
-  before_script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-  script:
-    - cd build/redis
-    - docker build --network=host
-      -t ${CI_REGISTRY_IMAGE}/$DOCKER_REDIS_IMAGE_NAME:$DOCKER_REDIS_IMAGE_TAG .
-    - docker push ${CI_REGISTRY_IMAGE}/$DOCKER_REDIS_IMAGE_NAME:$DOCKER_REDIS_IMAGE_TAG
-  after_script:
-    - docker logout $CI_REGISTRY
-
 .cleanup_revision_images:
   stage: build_docker_images
   image: $DEPLOY_KUBERNETES_IMAGE

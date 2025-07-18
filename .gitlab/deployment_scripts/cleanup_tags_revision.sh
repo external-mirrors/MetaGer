@@ -23,7 +23,6 @@ expired_revisions=$(helm -n $KUBE_NAMESPACE history ${HELM_RELEASE_NAME} -o json
 # Loop through those revisions
 declare -A expired_fpm_tags
 declare -A expired_nginx_tags
-declare -A expired_redis_tags
 for revision in $expired_revisions
 do
     # Get Values for this revision
@@ -31,14 +30,12 @@ do
     # Get Image Tags for this revision
     revision_fpm_tag=$(echo $revision_values | jq -r '.image.fpm.tag')
     revision_nginx_tag=$(echo $revision_values | jq -r '.image.nginx.tag')
-    revision_redis_tag=$(echo $revision_values | jq -r '.image.redis.tag')
 
     # Add Tags to the arrays
     if [[ $revision_fpm_tag = ${DOCKER_IMAGE_TAG_PREFIX}-* ]]
     then
         expired_fpm_tags[$revision_fpm_tag]=0
         expired_nginx_tags[$revision_nginx_tag]=0
-        expired_redis_tags[$revision_redis_tag]=0
     fi
 done
 
@@ -54,12 +51,5 @@ for nginx_tag in ${!expired_nginx_tags[@]}
 do
     echo "Deleting nginx tag $nginx_tag"
     curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$nginx_tag"
-    echo ""
-done
-# Delete all gathered redis tags
-for redis_tag in ${!expired_redis_tags[@]}
-do
-    echo "Deleting redis tag $redis_tag"
-    curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$REDIS_REPOSITORY_ID/tags/$redis_tag"
     echo ""
 done

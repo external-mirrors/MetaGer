@@ -29,6 +29,6 @@ return [
         'alt' => 'Vinkel dobbelt højre',
     ],
     'icon-lupe' => [
-        'alt' => 'Søg efter',
+        'alt' => 'Søgning',
     ],
 ];

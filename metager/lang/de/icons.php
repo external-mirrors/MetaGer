@@ -4,10 +4,10 @@ return [
         'alt' => 'Doppelter Pfeil nach rechts',
     ],
     'icon-lupe' => [
-        'alt' => 'Suche',
+        'alt' => 'Suchen',
     ],
     'menu' => [
-        'alt' => 'drei horizontale Striche',
+        'alt' => 'Menü',
     ],
     'cogs' => [
         'alt' => 'Zahnräder',
@@ -19,16 +19,16 @@ return [
         'alt' => 'Weitere Optionen',
     ],
     'home' => [
-        'alt' => 'Startseite',
+        'alt' => 'Haus',
     ],
     'trashcan' => [
-        'alt' => 'Mülleimer',
+        'alt' => 'Mülltonne',
     ],
     'x' => [
         'alt' => 'x',
     ],
     'floppy' => [
-        'alt' => 'Floppy',
+        'alt' => 'floppy',
     ],
     'Icon-settings' => 'Zahnrad',
 ];

@@ -2,41 +2,41 @@
 return [
     'default-search-v52' => [
         //Instructions for Firefox version 52-56
-        '1' => 'Navigieren Sie zur oberen rechten Ecke und klicken Sie neben der Adressleiste auf das Lupensymbol.',
-        '2' => 'In dem neuen Menü klicken Sie auf "MetaGer hinzufügen ...".',
-        '3' => 'Geben Sie "about:preferences#search" in Ihre Adressleiste ein, um die Sucheinstellungen aufzurufen.',
-        '4' => 'Wählen Sie MetaGer aus dem Dropdown-Menü unter "Standardsuchmaschine".',
+        '1' => 'Klicken Sie oben rechts neben der Adressleiste auf die Lupe mit dem Plussymbol.',
+        '2' => 'Wählen Sie im erscheinenden Menü das MetaGer-Logo mit dem Plussymbol.',
+        '3' => 'Geben Sie "about:preferences#search" in die Adressleiste ein, um in die Sucheinstellungen zu gelangen.',
+        '4' => 'Im Dropdownmenü unter "Standardsuchmaschine" steht Ihnen nun MetaGer zur Verfügung.',
     ],
     'default-search-v57' => [
         //Instructions for Firefox version 57-60
-        '1' => 'Öffnen Sie eine neue Registerkarte und geben Sie "about:preferences#search" ein, um die Einstellungen für "Search" aufzurufen.',
-        '2' => 'Wählen Sie unter "Suchleiste" die Option "Suchleiste in Symbolleiste hinzufügen".',
-        '3' => 'Gehen Sie zurück zur Registerkarte MetaGer und klicken Sie auf die Lupe rechts neben der Adressleiste.',
-        '4' => 'In dem neuen Menü klicken Sie auf "MetaGer hinzufügen ...".',
-        '5' => 'Gehen Sie zurück zur Registerkarte "Einstellungen". Wählen Sie "MetaGer" aus dem Dropdown-Menü unter "Standardsuchmaschine".',
+        '1' => 'Geben Sie "about:preferences#search" in der Adressleiste ein, um in die Sucheinstellungen zu gelangen.',
+        '2' => 'Wählen Sie in den erscheinenden Einstellungen "Suchleiste zur Symbolleiste hinzufügen".',
+        '3' => 'Wechseln Sie zurück in den Tab, in dem MetaGer offen ist und klicken Sie oben rechts neben der Adressleiste auf die Lupe mit dem Plussymbol.',
+        '4' => 'Wählen Sie im erscheinenden Menü das MetaGer-Logo mit dem Plussymbol.',
+        '5' => 'Gehen Sie wieder in den Tab mit den geöffneten Einstellungen. Im Dropdownmenü unter "Standardsuchmaschine" steht Ihnen nun MetaGer zur Verfügung.',
     ],
     //Instructions for Firefox version >= 61
-    'plugin' => 'Mit der Installation unserer <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener">Browsererweiterung</a> wird MetaGer nach Freigabe automatisch als Standardsuchmaschine installiert.',
+    'plugin' => 'Mit der Installation unserer <a href="https://addons.mozilla.org/firefox/addon/metager-suche/" target="_blank" rel="noopener">Browsererweiterung</a> wird MetaGer nach Zustimmung automatisch als Standardsuchmaschine installiert.',
     'default-search-v61' => [
-        '1' => 'Oder klicken Sie auf "<img class="mg-icon" src="/img/ellipsis-horizontal.svg">" auf der rechten Seite in Ihrer Adressleiste und wählen Sie "Suchmaschine hinzufügen".',
-        '2' => 'Geben Sie "about:preferences#search" in die Adressleiste ein. Wählen Sie MetaGer aus dem Dropdown-Menü unter "Standardsuchmaschine".',
+        '1' => 'Alternativ klicken Sie in Ihrem Browser oben rechts in der Adressleiste auf <img class= "mg-icon" src="/img/ellipsis-horizontal.svg"> um das Menü der Seitenaktionen zu öffnen und dann auf "Suchmaschine hinzufügen"',
+        '2' => 'Geben Sie "about:preferences#search" in der Adressleiste ein, um in die Sucheinstellungen zu gelangen. Im Bereich "Standardsuchmaschine" wählen Sie MetaGer aus.',
     ],
     'default-page-v52' => [
         //Instructions for Firefox version 52-60
-        '1' => 'Navigieren Sie zur rechten oberen Ecke, klicken Sie auf "<img class= "mg-icon" src="/img/menu.svg">" und wählen Sie "Optionen".',
-        '2' => 'Unter "Startseite" geben Sie ":link" ein.',
+        '1' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
+        '2' => 'Tragen Sie im Feld "Startseite" ":link" ein.',
     ],
     'default-page-v61' => [
         //Instructions for Firefox version >= 61
-        '1' => 'Navigieren Sie zur rechten oberen Ecke, klicken Sie auf "<img class= "mg-icon" src="/img/menu.svg">" und wählen Sie "Optionen".',
-        '2' => 'Wählen Sie "Home" auf der linken Seite.',
-        '3' => 'Klicken Sie unter "Neue Fenster und Registerkarten" auf das Dropdown-Menü neben "Startseite und neue Fenster" und wählen Sie "Benutzerdefinierte URLs...".',
-        '4' => 'In das neue Textfeld geben Sie ":link" ein.',
+        '1' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
+        '2' => 'Wählen Sie auf der linken Seite die Kategorie "Startseite".',
+        '3' => 'Unter "Neue Fenster und Tabs" klicken Sie auf das Dropdownmenü neben "Startseite und neue Fenster" und wählen "Benutzerdefinierte Adresse".',
+        '4' => 'Tragen Sie in das erscheinende Textfeld ":link" ein.',
     ],
     'default-search-v89' => [
         //Instructions for Firefox version >= 89
-        '1' => 'Alternativ können Sie auch mit der rechten Maustaste in die Adressleiste oben in Ihrem Browser klicken und dann auf "MetaGer: datenschutzgerechtes Suchen & Finden" hinzufügen. MetaGer wird nun als verfügbare Suchmaschine installiert.',
-        '2' => 'Klicken Sie oben rechts im Browser auf <img class="mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
-        '3' => 'Klicken Sie unter "Suche" auf das Dropdown-Menü bei "Standardsuchmaschine" und wählen Sie "MetaGer (de)".',
+        '1' => 'Alternativ klicken Sie in Ihrem Browser mit der rechten Maustaste oben in die Adressleiste und dann auf "MetaGer: sicher suchen & finden" hinzufügen. MetaGer ist nun als verfügbare Suchmaschine installiert.',
+        '2' => 'Klicken Sie oben rechts im Browser auf <img class= "mg-icon" src="/img/menu.svg"> und öffnen Sie die "Einstellungen".',
+        '3' => 'Unter "Suche" klicken Sie auf das Dropdownmenü bei "Standardsuchmaschine" und wählen "MetaGer (de)".',
     ],
 ];

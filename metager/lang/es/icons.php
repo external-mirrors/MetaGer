@@ -1,34 +1,34 @@
 <?php
 return [
     'angle-double-right' => [
-        'alt' => 'Ángulo doble derecha',
+        'alt' => 'Doble flecha a la derecha',
     ],
     'icon-lupe' => [
-        'alt' => 'Buscar en',
+        'alt' => 'Búsqueda',
     ],
     'menu' => [
-        'alt' => 'tres Trazos horizontales',
+        'alt' => 'Menú',
     ],
     'cogs' => [
-        'alt' => 'Cogs',
+        'alt' => 'Engranajes',
     ],
     'ellipsis' => [
-        'alt' => 'elipsis vertical',
+        'alt' => 'Más opciones',
     ],
     'ellipsis-horizontal' => [
-        'alt' => 'elipsis horizontal',
+        'alt' => 'Más opciones',
     ],
     'home' => [
-        'alt' => 'Inicio',
+        'alt' => 'Casa',
     ],
     'trashcan' => [
-        'alt' => 'papelera',
+        'alt' => 'Cubo de basura',
     ],
     'x' => [
         'alt' => 'x',
     ],
     'floppy' => [
-        'alt' => 'disquete',
+        'alt' => 'floppy',
     ],
-    'Icon-settings' => 'Cog',
+    'Icon-settings' => 'Rueda dentada',
 ];

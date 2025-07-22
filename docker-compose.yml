@@ -123,8 +123,7 @@ services:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
-    build:
-      context: ./build/redis
+    image: redis:8.0
     restart: unless-stopped
     user: "redis:redis"
     networks:

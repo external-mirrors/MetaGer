@@ -78,7 +78,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
             'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
-            'spam' => \App\Http\Middleware\Spam::class,
             'allow-local-only' => AllowLocalOnly::class,
             'httpcache' => HttpCache::class,
             'externalimagesearch' => ExternalImagesearch::class,

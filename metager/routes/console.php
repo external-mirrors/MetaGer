@@ -18,7 +18,6 @@ Schedule::command("requests:gather")->everyFifteenMinutes();
 Schedule::command("requests:useragents")->everyFiveMinutes();
 Schedule::command("logs:gather")->everyMinute();
 Schedule::command("logs:truncate")->daily()->onOneServer();
-Schedule::command("spam:load")->everyMinute();
 Schedule::command("load:affiliate-blacklist")->everyMinute();
 Schedule::command("affilliates:store")->everyMinute()->onOneServer();
 Schedule::call(function () {

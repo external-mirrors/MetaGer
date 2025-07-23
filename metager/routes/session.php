@@ -41,16 +41,6 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
             dd($request->ip(), $_SERVER["AGENT"], $request->headers);
         }
     );
-    Route::group(
-        ['prefix' => 'spam'],
-        function () {
-            Route::get('/', 'AdminSpamController@index');
-            Route::post('/', 'AdminSpamController@ban');
-            Route::get('jsonQueries', 'AdminSpamController@jsonQueries');
-            Route::post('queryregexp', 'AdminSpamController@queryregexp');
-            Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
-        }
-    );
     Route::get('stress', 'Stresstest@index');
     Route::get('stress/verify', 'Stresstest@index');
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");

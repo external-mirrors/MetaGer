@@ -5,7 +5,6 @@ namespace App;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
-use App\Models\Verification\HumanVerification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -309,10 +308,6 @@ class MetaGer
             $this->adgoalLoaded = false;
         }
 
-        # Human Verification
-        $this->humanVerification($this->results);
-        $this->humanVerification($this->ads);
-
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
                 $no_sitesearch_query = str_replace(urlencode("site:" . $this->site), "", $this->fullUrl);
@@ -464,33 +459,6 @@ class MetaGer
 
         array_splice($this->ads, $position, 0, [$donationAd]);
         return $position;
-    }
-
-    public function humanVerification(&$results)
-    {
-        # Let's check if we need to implement a redirect for human verification
-        $human_verification = \app()->make(HumanVerification::class);
-        if (max($human_verification->getVerificationCount()) > 10) {
-            foreach ($results as $result) {
-                $link = $result->link;
-                $day = Carbon::now()->day;
-                $pw = md5($day . $link . config("metager.metager.proxy.password"));
-
-                $params = [
-                    'hv' => $human_verification->key,
-                    'pw' => $pw,
-                    "url" => \bin2hex($link),
-                ];
-
-                $url = route('humanverification', $params);
-                $proxyPw = md5($day . $result->proxyLink . config("metager.metager.proxy.password"));
-                $params["pw"] = $proxyPw;
-                $params["url"] = \bin2hex($result->proxyLink);
-                $proxyUrl = route('humanverification', $params);
-                $result->link = $url;
-                $result->proxyLink = $proxyUrl;
-            }
-        }
     }
 
     public function startSearch()

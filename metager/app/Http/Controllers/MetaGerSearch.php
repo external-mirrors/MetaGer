@@ -61,28 +61,6 @@ class MetaGerSearch extends Controller
         }
 
         if (empty(app(Searchengines::class)->getEnabledSearchengines())) {
-            /**
-             * Temporary migration to fix settings for users that already
-             * had now invalid settings saved when we updated.
-             */
-            if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-                $settings = app(SearchSettings::class);
-                $setting_removed = false;
-                foreach ($settings->parameterFilter as $filterName => $filter) {
-                    // Check if the user has an option enabled that is only available with metager key
-                    if (
-                        Cookie::has($settings->fokus . "_setting_" . $filter->{"get-parameter"}) &&
-                        in_array($filter->value, array_keys($filter->{"disabled-values"})) &&
-                        in_array(DisabledReason::PAYMENT_REQUIRED, $filter->{"disabled-values"}[$filter->value])
-                    ) {
-                        Cookie::queue(Cookie::forget($settings->fokus . "_setting_" . $filter->{"get-parameter"}));
-                        $setting_removed = true;
-                    }
-                }
-                if ($setting_removed) {
-                    return redirect(url()->full());
-                }
-            }
             return redirect(route("settings", ["focus" => $settings->fokus]) . "#engines");
         }
 
@@ -123,16 +101,6 @@ class MetaGerSearch extends Controller
         $metager->prepareResults();
         $query_timer->observeEnd("Search_PrepareResults");
 
-
-        $query_timer->observeStart("Search_Affiliates");
-
-        // Add Advertisement for Donations
-        $donation_advertisement_position = null;
-        if (!app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $donation_advertisement_position = $metager->addDonationAdvertisement();
-        }
-        $query_timer->observeEnd("Search_Affiliates");
-
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if ($engine->loaded) {
                 $engine->setNew(false);
@@ -151,7 +119,6 @@ class MetaGerSearch extends Controller
                     "settings" => $settings,
                     "quicktips" => $quicktips,
                 ],
-                "donation_advertisement_position" => $donation_advertisement_position,
                 "engines" => $metager->getEngines(),
             ], 60 * 60);
         } catch (\Exception $e) {
@@ -274,11 +241,6 @@ class MetaGerSearch extends Controller
 
         $metager->rankAll();
         $metager->prepareResults();
-
-        // Add Advertisement for Donations
-        if (!app(Authorization::class)->canDoAuthenticatedSearch() && array_key_exists("donation_advertisement_position", $cached) && $cached["donation_advertisement_position"] !== null) {
-            $metager->addDonationAdvertisement($cached["donation_advertisement_position"]);
-        }
 
         $result = [
             'finished' => true,

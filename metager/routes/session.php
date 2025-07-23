@@ -1,6 +1,5 @@
 <?php
 use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
 use App\Mail\LogsLoginCode;
@@ -42,9 +41,6 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
             dd($request->ip(), $_SERVER["AGENT"], $request->headers);
         }
     );
-    Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
-    Route::post('bot', 'HumanVerification@botOverviewChange');
-    Route::get('bv', [HumanVerification::class, 'bv']);
     Route::group(
         ['prefix' => 'spam'],
         function () {

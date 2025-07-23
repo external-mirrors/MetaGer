@@ -51,11 +51,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \App\Http\Middleware\LocalizationRedirect::class,
         ]);
-        $middleware->appendToGroup("humanverification_routes", [
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \App\Http\Middleware\LocalizationRedirect::class,
-        ]);
         $middleware->appendToGroup("api", [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -82,7 +77,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'can' => \Illuminate\Auth\Middleware\Authorize::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-            'humanverification' => \App\Http\Middleware\HumanVerification::class,
             'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
             'spam' => \App\Http\Middleware\Spam::class,
             'allow-local-only' => AllowLocalOnly::class,

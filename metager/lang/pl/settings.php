@@ -75,10 +75,6 @@ return [
     'disable-engine' => 'Wyłącz wyszukiwarkę',
     'filtered-engine' => 'Wyszukiwarka wyłączona przez filtr',
     'payment-engine' => 'Wyszukiwarka wymaga skonfigurowania klucza MetaGer',
-    'externalservice' => [
-        'heading' => 'Korzystanie z zewnętrznej usługi wyszukiwania',
-        'description' => 'Możesz skonfigurować korzystanie z dowolnej z poniższych zewnętrznych wyszukiwarek zamiast naszego zintegrowanego rozwiązania. Przekierujemy wyszukiwanie do skonfigurowanego dostawcy.',
-    ],
     'suggestions' => [
         'off' => "Wyłączony",
         'on' => "Włączone",

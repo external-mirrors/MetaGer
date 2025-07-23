@@ -8,7 +8,6 @@ return [
     'settings' => [
         'noneSelected' => '¡Guarda! No habéis seleccionado un motor de busqueda.',
         'name' => 'Ajustes',
-        'metager-key-hint' => 'Algunos filtros requieren una <a href=":link" target="_blank">clave MetaGer</a>.',
     ],
     'engines' => [
         'noParser' => 'Falta: Preguntar :engine. Por favor notificáis MetaGer:  <a href="/es/kontakt">Formulario encriptado</a>',

@@ -139,7 +139,6 @@ return [
     'settings' => [
         'noneSelected' => 'Attenzione: non avete scelto alcun motore di ricerca.',
         'name' => 'Impostazioni',
-        'metager-key-hint' => 'Alcuni filtri richiedono una chiave <a href=":link" target="_blank">MetaGer</a>.',
     ],
     'engines' => [
         'noParser' => 'Si è verificato un errore: La richiesta di \":engine" non è andata a buon fine. Si prega di segnalarlo al nostro <a href="/en/kontakt\">formulario di contatto</a>.',

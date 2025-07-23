@@ -7,7 +7,6 @@ return [
     ],
     'settings' => [
         'name' => "Einstellungen",
-        'metager-key-hint' => "Für einige Filter ist ein <a href=\":link\" target=\"_blank\">MetaGer Schlüssel</a> erforderlich.",
         'noneSelected' => 'Achtung: Sie haben in ihren Einstellungen keine Suchmaschine ausgewählt.',
     ],
     'engines' => [

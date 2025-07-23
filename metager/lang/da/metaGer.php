@@ -145,7 +145,6 @@ return [
     'settings' => [
         'noneSelected' => 'OBS: du har ikke valgt nogen søgemaskine.',
         'name' => 'Indstillinger',
-        'metager-key-hint' => 'Nogle filtre kræver en <a href=":link" target="_blank">MetaGer-nøgle</a>.',
     ],
     'engines' => [
         'noParser' => 'Der er opstået en fejl: Anmodning om \":engine\" mislykkedes. Rapporter venligst til vores <a href="/da/kontakt\">kontaktformular</a>.',

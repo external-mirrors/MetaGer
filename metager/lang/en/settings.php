@@ -92,10 +92,6 @@ return [
             'create' => 'Create new key',
         ],
     ],
-    'externalservice' => [
-        'heading' => 'Use an external search service',
-        'description' => 'You can configure to use any of the following external search engines instead of our integrated solution. We will redirect your searches to the configured provider.',
-    ],
     'disabledBecausePaymentRequired' => 'You can use the following search engines with a <a href=":link" target="_blank">MetaGer key</a>.',
     'no-engines' => 'With the current search settings, no search engine is queried.',
     'cost' => 'We charge <strong>:cost Token</strong> per search query with the current settings.',

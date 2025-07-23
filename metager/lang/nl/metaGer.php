@@ -139,7 +139,6 @@ return [
     'settings' => [
         'noneSelected' => 'Let op: je hebt geen zoekmachine gekozen.',
         'name' => 'Instellingen',
-        'metager-key-hint' => 'Sommige filters vereisen een <a href=":link" target="_blank">MetaGer sleutel</a>.',
     ],
     'engines' => [
         'noParser' => 'Er is een fout opgetreden: Het aanvragen van een motor is mislukt. Meld dit aan ons <a href="/nl/kontakt">contactformulier</a>',

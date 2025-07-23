@@ -7,6 +7,7 @@ use App\Models\DisabledReason;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
 use App\SearchSettings;
+use Auth;
 use Cookie;
 use Log;
 use Request;
@@ -66,7 +67,8 @@ class Searchengines
         }
 
         foreach ($this->sumas as $suma) {
-            if (!app(Authorization::class)->canDoAuthenticatedSearch(false) && $suma->configuration->cost > 0) {
+            $user = Auth::guard("key")->user();
+            if ($suma->configuration->cost > 0 && (($user !== null && !$user->authorize($suma->configuration->cost, 0)) || ($user === null && !app(Authorization::class)->canDoAuthenticatedSearch(false)))) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
@@ -137,6 +139,17 @@ class Searchengines
             }
             return ($a->configuration->engineBoost > $b->configuration->engineBoost) ? -1 : 1;
         });
+    }
+
+    public function getCost()
+    {
+        $cost = 0;
+        foreach ($this->sumas as $suma) {
+            if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
+                $cost += $suma->configuration->cost;
+            }
+        }
+        return $cost;
     }
 
     /**

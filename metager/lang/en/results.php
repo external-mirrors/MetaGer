@@ -12,15 +12,4 @@ return [
     'results' => [
         'summary' => 'Showing :resultcount of around :totalresults search results'
     ],
-    "images" => [
-        "external" => [
-            "heading" => "Some results are missing here",
-            "description" => "You have only searched the database of Pixabay. Better search with a MetaGer key.",
-            "buy" => "Buy a MetaGer Key",
-            "or" => "or",
-            "google" => "Search on Google",
-            "bing" => "Search on Bing",
-            "save" => "Remember decision (with cookie)"
-        ]
-    ],
 ];

@@ -38,7 +38,6 @@
                 </div>
             @endif
         </div>
-        @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')
             <div class="card" id="engines">
                 <h1>@lang('settings.header.2')</h1>
                 <p>@lang('settings.text.2')</p>
@@ -131,8 +130,6 @@
                     <p>@lang('settings.hint.yahoo')</p>
                 @endif
             </div>
-        @endif
-        @if ($fokus !== 'bilder' || app(App\SearchSettings::class)->external_image_search === 'metager')
             <div class="card" id="filter">
                 <h1>@lang('settings.header.3')</h1>
                 <p>@lang('settings.text.3')</p>
@@ -181,23 +178,6 @@
                     </div>
                 </form>
             </div>
-        @endif
-        @if ($fokus === 'bilder')
-            <div id="external-search-service" class="card">
-                <h1>@lang('settings.externalservice.heading')</h1>
-                <div>@lang('settings.externalservice.description')</div>
-                <form action="{{ route('enableExternalProvider') }}" method="POST">
-                    <input type="hidden" name="focus" value="{{ $fokus }}">
-                    <input type="hidden" name="url" value="{{ $url }}">
-                    <select name="bilder_setting_external" id="bilder_setting_external" class="form-control">
-                        <option value="metager" @if (app(App\SearchSettings::class)->external_image_search === 'metager') selected @endif>MetaGer</option>
-                        <option value="google" @if (app(App\SearchSettings::class)->external_image_search === 'google') selected @endif>Google</option>
-                        <option value="bing" @if (app(App\SearchSettings::class)->external_image_search === 'bing') selected @endif>Bing</option>
-                    </select>
-                    <button type="submit" class="btn btn-default no-js">@lang('settings.save')</button>
-                </form>
-            </div>
-        @endif
         <div class="card" id="suggest-settings">
             <h1>@lang('settings.suggestions.heading') <a href="{{ route("help-mainpages") . "#suggest" }}" target="_blank"><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"></a></h1>
             <p>@lang('settings.hint.hint')</p>

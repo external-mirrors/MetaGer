@@ -29,7 +29,7 @@ return [
     'blentry' => 'Blacklisteintrag',
     'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
-    'dark' => 'Dunkel',
+    'dark' => 'Dunkelmodus umschalten',
     'darkmode' => 'Dunklen Modus umschalten',
     'suggestions' => [
         'off' => "Deaktiviert",
@@ -80,7 +80,7 @@ return [
     'more' => 'Weitere Einstellungen',
     'newTab' => 'Ergebnisse in neuem Tab öffnen',
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
-    'off' => 'Deaktiviert',
+    'off' => 'Aus',
     'on' => 'auf',
     'removeCookie' => 'Diesen Cookie entfernen',
     'reset' => 'Alle Einstellungen löschen',
@@ -95,10 +95,6 @@ return [
         '2' => 'Nachfolgend sehen Sie alle für diesen Fokus verfügbaren Suchmaschinen. Mit einem Klick auf den Namen können Sie Ein-/Ausgeschaltet werden.',
         '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
-    ],
-    'externalservice' => [
-        'heading' => 'Nutzung eines externen Suchdienstes',
-        'description' => 'Sie können konfigurieren, dass eine der folgenden externen Suchmaschinen anstelle unserer integrierten Lösung verwendet wird. Wir leiten Ihre Suchanfragen an den konfigurierten Anbieter weiter.',
     ],
     'tiles_startpage' => [
         'label' => "Zeige Kacheln auf der Startseite",

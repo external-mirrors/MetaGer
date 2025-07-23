@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Http\Middleware\LogsAuthentication;
 use App\Localization;
-use App\Models\Verification\HumanVerification;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Session\Middleware\StartSession;
@@ -47,8 +46,6 @@ class RouteServiceProvider extends ServiceProvider
         $this->mapSessionRoutes();
 
         $this->mapEnableCookieRoutes();
-
-        $this->mapHumanVerificationRoutes();
 
         $this->mapLogRoutes();
     }
@@ -108,24 +105,6 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "humanverification" routes for the application.
-     *
-     * These routes can all set cookies.
-     *
-     * @return void
-     */
-    protected function mapHumanVerificationRoutes()
-    {
-        Route::group([
-            'middleware' => 'humanverification_routes',
-            'prefix' => Localization::setLocale(),
-            'namespace' => $this->namespace,
-        ], function ($router) {
-            require base_path('routes/humanverification.php');
-        });
-    }
-
-    /**
      * Define the "log" routes for the application.
      *
      * @return void
@@ -151,10 +130,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
-
-        RateLimiter::for('humanverification', function (Request $request) {
-            return Limit::perMinutes(5, 30)->by($request->input("key"));
         });
 
         RateLimiter::for('logs_login', function (Request $request) {

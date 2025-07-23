@@ -10,6 +10,7 @@ use App\Models\Authorization\TokenAuthorization;
 use App\PrometheusExporter;
 use App\SearchSettings;
 use App\Suggestions;
+use Auth;
 use Cache;
 use Carbon;
 use Crypt;
@@ -62,15 +63,20 @@ class SuggestionController extends Controller
             }
             return response()->json(array_merge(Cache::get($cache_key), $token_data), 200, ["Cache-Control" => "max-age=7200", "Content-Type" => "application/x-suggestions+json", "X-Cached" => "True"]);
         } else {
-            $authorization = app(Authorization::class);
-            $authorization->setCost($suggestions::COST);
+            /** @var \App\Authentication\KeyUser $user */
+            if (($user = Auth::guard("key")->user()) !== null) {
+                if (!$user->authorize($suggestions::COST, 30)) {
+                    return response()->json(["error" => "Payment Required", "cost" => $suggestions::COST], 402);
+                }
+            } else {
+                $authorization = app(Authorization::class);
+                $authorization->setCost($suggestions::COST);
 
-            $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
-
-            if (!$authorization->canDoAuthenticatedSearch(true)) {
-                return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
+                if (!$authorization->canDoAuthenticatedSearch(true)) {
+                    return response()->json(["error" => "Payment Required", "cost" => $authorization->getCost()], 402);
+                }
             }
-
+            $start_time = Carbon::createFromTimestamp($_SERVER["REQUEST_TIME_FLOAT"]);
             $token_data = [];
             if ($authorization instanceof TokenAuthorization) {
                 $token_data["tokens"] = $authorization->getToken()->tokens;
@@ -86,7 +92,11 @@ class SuggestionController extends Controller
                         return response()->json(["error" => "Aborted because of newer request"], 423);
                     case 200:
                         PrometheusExporter::KeyUsed($authorization->getCost(), "suggestions", false);
-                        $authorization->makePayment($authorization->getCost());
+                        if ($user !== null) {
+                            $user->makePayment($suggestions::COST);
+                        } else {
+                            $authorization->makePayment($authorization->getCost());
+                        }
                         if ($authorization instanceof TokenAuthorization) {
                             $token_data["tokens"] = $authorization->getToken()->tokens;
                             $token_data["decitokens"] = $authorization->getToken()->decitokens;

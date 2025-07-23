@@ -86,10 +86,6 @@ return [
             '2' => 'desativado',
         ],
     ],
-    'externalservice' => [
-        'heading' => 'Utilizar um serviço de pesquisa externo',
-        'description' => 'Pode configurar a utilização de qualquer um dos seguintes motores de busca externos em vez da nossa solução integrada. Redireccionaremos as suas pesquisas para o fornecedor configurado.',
-    ],
     'disabledBecausePaymentRequired' => 'Pode utilizar os seguintes motores de busca com uma chave <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Com as definições de pesquisa actuais, não é consultado qualquer motor de busca.',
     'cost' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',

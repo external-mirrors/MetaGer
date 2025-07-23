@@ -20,7 +20,6 @@ return [
     'settings' => [
         'noneSelected' => 'Uwaga: nie wybrano żadnej wyszukiwarki.',
         'name' => 'Ustawienia',
-        'metager-key-hint' => 'Niektóre filtry wymagają klucza <a href=":link" target="_blank">MetaGer</a>.',
     ],
     'engines' => [
         'noParser' => 'Wystąpił błąd: Żądanie \":engine\" nie powiodło się. Zgłoś się do naszego <a href="/pl/kontakt">formularza kontaktowego</a>.',

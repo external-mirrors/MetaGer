@@ -12,6 +12,7 @@
 	<meta name="audience" content="all" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 	<meta name="statistics-enabled" content="{{ config("metager.matomo.enabled") }}">
+
 	@if(!in_array(app(\App\SearchSettings::class)->suggestion_provider, [null, "off"]))
 		<meta name="suggestions-enabled" content="true">
 	@endif
@@ -35,7 +36,7 @@
 			<link rel="apple-touch-icon" sizes="{{$matches[1]}}x{{$matches[1]}}" href="/img/favicon/{{$file}}" type="image/png">
 		@endif
 	@endforeach
-	@if(app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
+	@if(\Auth::guard("key")->user() !== null || app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch())
 		<link rel="search" type="application/opensearchdescription+xml"
 			title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}"
 			href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">

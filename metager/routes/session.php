@@ -1,6 +1,5 @@
 <?php
 use App\Http\Controllers\AdminInterface;
-use App\Http\Controllers\HumanVerification;
 use App\Http\Controllers\LogsApiController;
 use App\Http\Controllers\MembershipController;
 use App\Mail\LogsLoginCode;
@@ -42,21 +41,8 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
             dd($request->ip(), $_SERVER["AGENT"], $request->headers);
         }
     );
-    Route::get('bot', 'HumanVerification@botOverview')->name("admin_bot");
-    Route::post('bot', 'HumanVerification@botOverviewChange');
-    Route::get('bv', [HumanVerification::class, 'bv']);
-    Route::group(
-        ['prefix' => 'spam'],
-        function () {
-            Route::get('/', 'AdminSpamController@index');
-            Route::post('/', 'AdminSpamController@ban');
-            Route::get('jsonQueries', 'AdminSpamController@jsonQueries');
-            Route::post('queryregexp', 'AdminSpamController@queryregexp');
-            Route::post('deleteRegexp', 'AdminSpamController@deleteRegexp');
-        }
-    );
     Route::get('stress', 'Stresstest@index');
-    Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
+    Route::get('stress/verify', 'Stresstest@index');
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");

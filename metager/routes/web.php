@@ -4,6 +4,7 @@ use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\MailController;
@@ -68,7 +69,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::get('tts', [TTSController::class, 'tts'])->name("tts");
 
-    Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->middleware('browserverification:assoresults', 'humanverification')->name("assoresults");
+    Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->name("assoresults");
 
     Route::get('impressum', function () {
         return view('impressum')
@@ -83,6 +84,11 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::get("cost", [SuggestionController::class, 'tokenCost'])->name("suggest_cost");
         Route::get("cancel", [SuggestionController::class, "cancelSuggest"])->name("suggest_cancel");
         Route::any("{key?}", [SuggestionController::class, "suggest"])->name("suggest");
+    });
+
+    Route::group(['prefix' => 'api/event'], function () {
+        Route::post("key/login", [EventController::class, "loginEvent"])->name("event_key_login");
+        Route::post("key/update", [EventController::class, "keyUpdateEvent"])->name("event_key_update");
     });
 
 
@@ -364,7 +370,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
-    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class, 'externalimagesearch'])->name("resultpage");
+    Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class])->name("resultpage");
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
     Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"])->withoutMiddleware([LocalizationRedirect::class]);
     Route::post('anonymous-token', [AnonymousToken::class, "pay"])->withoutMiddleware([LocalizationRedirect::class]);
@@ -467,7 +473,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::group(['prefix' => 'health-check'], function () {
         Route::get('liveness', [HealthcheckController::class, 'liveness']);
         Route::get('liveness-scheduler', [HealthcheckController::class, 'livenessScheduler']);
-        Route::get('liveness-worker', [HealthcheckController::class, 'livenessWorker']);
     });
 
     Route::group(['prefix' => 'stats'], function () {

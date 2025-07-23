@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\MetaGer;
-use App\Models\Verification\HumanVerification;
 use App\QueryLogger;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\ServiceProvider;
@@ -50,13 +49,9 @@ class MetaGerProvider extends ServiceProvider
         $this->app->singleton(QueryTimer::class, function ($app) {
             return new QueryTimer();
         });
-
-        $this->app->singleton(HumanVerification::class, function ($app) {
-            return new HumanVerification();
-        });
     }
 
-// public function provides()
+    // public function provides()
 // {
 //     return [
 //         MetaGer::class,

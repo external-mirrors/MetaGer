@@ -25,7 +25,6 @@ php artisan migrate --force
 php artisan optimize
 php artisan route:clear # Do not cache routes; Interferes with Localization
 
-php artisan spam:load
 php artisan load:affiliate-blacklist
 
 docker-php-entrypoint php-fpm &

@@ -26,15 +26,7 @@ mix
     "resources/less/metager/pages/startpage/dark.less",
     "public/css/themes/startpage/dark.css"
   )
-  .less(
-    "resources/less/metager/pages/admin/spam/style.less",
-    "public/css/admin/spam/style.css"
-  )
   .less("resources/less/metager/pages/admin/membership.less", "public/css/admin/membership.css")
-  .less(
-    "resources/less/metager/pages/admin/spam/dark.less",
-    "public/css/admin/spam/dark.css"
-  )
   .less(
     "resources/less/metager/metager-dark.less",
     "public/css/themes/metager-dark.css"
@@ -169,7 +161,6 @@ mix
     "resources/js/admin/affilliates/index.js",
     "public/js/admin/affilliates.js"
   )
-  .js("resources/js/admin/spam.js", "public/js/admin/spam.js")
   .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
   .js("resources/js/verify.js", "public/js/index.js")
   .js("resources/js/membership.js", "public/js/membership.js")

@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\AllowLocalOnly;
-use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
 use App\Http\Middleware\Statistics;
 use Illuminate\Foundation\Application;
@@ -51,11 +50,6 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \App\Http\Middleware\LocalizationRedirect::class,
         ]);
-        $middleware->appendToGroup("humanverification_routes", [
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \App\Http\Middleware\LocalizationRedirect::class,
-        ]);
         $middleware->appendToGroup("api", [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
@@ -76,18 +70,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
             'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
             'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+            'auth.events' => \App\Http\Middleware\EventAuthorization::class,
             'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
             'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
             'can' => \Illuminate\Auth\Middleware\Authorize::class,
             'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
             'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-            'humanverification' => \App\Http\Middleware\HumanVerification::class,
             'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
-            'browserverification' => \App\Http\Middleware\BrowserVerification::class,
-            'spam' => \App\Http\Middleware\Spam::class,
             'allow-local-only' => AllowLocalOnly::class,
             'httpcache' => HttpCache::class,
-            'externalimagesearch' => ExternalImagesearch::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

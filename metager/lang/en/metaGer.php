@@ -7,8 +7,7 @@ return [
     ],
     'settings' => [
         'noneSelected' => 'Attention: you did not choose any search engine.',
-        'name' => 'Settings',
-        'metager-key-hint' => 'Some filters require a <a href=":link" target="_blank">MetaGer key</a>.',
+        'name' => 'Settings'
     ],
     'engines' => [
         'noParser' => 'There is an error: Requesting \":engine\" failed. Please report to our <a href=\"/en/kontakt\">contact form</a>',

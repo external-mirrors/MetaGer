@@ -1,7 +1,7 @@
 import { removeSetting } from "./messaging";
 
 document
-  .querySelectorAll("#setting-form select, #filter-form select, #external-search-service select")
+  .querySelectorAll("#setting-form select, #filter-form select")
   .forEach((element) => {
     element.addEventListener("change", (e) => {
       e.target.form.submit();
@@ -15,9 +15,10 @@ document
     if (document.getElementById("plugin-btn") != null) return;
     let url = new URL(e.target.href);
     e.preventDefault();
-    removeSetting("key").then(() => {
+    removeSetting("key").then((answer) => {
       document.location.href = url;
-    })
+    });
+    return false;
   })
 })();
 

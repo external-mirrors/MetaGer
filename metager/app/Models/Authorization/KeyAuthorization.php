@@ -2,6 +2,7 @@
 
 namespace App\Models\Authorization;
 
+use App\Events\KeyChanged;
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Redis;
 

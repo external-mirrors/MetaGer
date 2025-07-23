@@ -1,21 +1,26 @@
 #settings {
+
   .no-key-actions,
   .actions {
     a:visited {
       color: inherit;
     }
+
     a:hover {
       color: red;
     }
   }
+
   .actions {
     margin-top: 1rem;
   }
+
   .sumas {
     display: flex;
     gap: 1rem;
     flex-wrap: wrap;
     margin: 1rem 0;
+
     .no-engines {
       color: rgba(255, 0, 0, 0.432);
       padding: 0.5rem;
@@ -23,10 +28,12 @@
       border-radius: 5px;
       display: block;
     }
+
     .suma {
       border: 1px solid;
       border-radius: 10px;
-      > form {
+
+      >form {
         display: grid;
         place-content: center;
 
@@ -36,21 +43,25 @@
           cursor: no-drop;
         }
       }
+
       &.disabled-engine {
         color: lighten(@text-color, 50%);
+
         button {
           text-decoration: line-through;
           color: lighten(@text-color, 50%);
           cursor: copy;
         }
       }
+
       &.not-available {
         button {
           cursor: not-allowed;
         }
       }
     }
-    .suma + .no-engines {
+
+    .suma+.no-engines {
       display: none;
     }
   }
@@ -59,7 +70,8 @@
     display: flex;
     flex-wrap: wrap;
     margin-left: -8px;
-    > div {
+
+    >div {
       margin-left: 8px;
     }
   }
@@ -69,9 +81,10 @@
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    > #back,
-    > a,
-    > form {
+
+    >#back,
+    >a,
+    >form {
       margin-left: 8px;
       margin-top: 4px;
       margin-bottom: 4px;
@@ -89,6 +102,7 @@
       flex-direction: column;
       gap: 1rem;
       margin-bottom: 10px;
+
       #blacklist {
         width: fit-content;
         font-size: 1.2rem;
@@ -96,43 +110,42 @@
         background-color: @input-bg;
         color: @input-text;
       }
+
       button {
         width: 200px;
       }
     }
   }
+
   #deleteentry {
     table {
       border: 1px solid lightgray;
       flex-grow: 1;
       width: 100%;
     }
+
     tr:nth-child(odd) {
       background-color: @blacklist-entries-odd;
     }
+
     tr:nth-child(even) {
       background-color: @blacklist-entries-even;
     }
+
     td {
       padding: 2px 0px;
     }
+
     td:first-child {
       padding-left: 5px;
     }
+
     td:last-child {
       width: 20px;
     }
   }
+
   .allSettings-trashcan-icon {
     height: 2em;
-  }
-
-  > #external-search-service {
-    display: grid;
-    gap: 1rem;
-    > form {
-      display: grid;
-      gap: 1rem;
-    }
   }
 }

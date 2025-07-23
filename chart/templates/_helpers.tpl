@@ -42,7 +42,25 @@ app: {{ .Release.Name }}
 Selector labels
 */}}
 {{- define "chart.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Release.Name }}
+app.kubernetes.io/name: {{ .Release.Name }}-app
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{- define "chart.workerLabels" -}}
+helm.sh/chart: {{ include "chart.chart" . }}
+{{ include "chart.selectorLabelsWorker" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Selector labels
+*/}}
+{{- define "chart.selectorLabelsWorker" -}}
+app.kubernetes.io/name: {{ .Release.Name }}-worker
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 

@@ -11,3 +11,4 @@ echo "Removing Image Tags..."
 echo "Stopping Deployment..."
 kubectl -n $KUBE_NAMESPACE delete secret $HELM_RELEASE_NAME
 helm -n $KUBE_NAMESPACE delete $HELM_RELEASE_NAME
+kubectl -n $KUBE_NAMESPACE delete pvc redis-data-$HELM_RELEASE_NAME-redis-master-0

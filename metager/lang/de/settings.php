@@ -16,7 +16,7 @@ return [
     'metager-key' => [
         'header' => 'MetaGer Schlüssel',
         'charge' => 'Guthaben: :token Token',
-        'manage' => 'Schlüssel aufladen',
+        'manage' => 'Schlüassel aufladen',
         'logout' => 'Schlüssel entfernen',
         'no-key' => 'Sie haben keinen Schlüssel für werbefreie Suchen eingerichtet.',
         'actions' => [

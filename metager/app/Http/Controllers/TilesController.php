@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Localization;
 use App\Models\Authorization\Authorization;
+use Auth;
 use DeviceDetector\Cache\LaravelCache;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
-use Exception;
-use Illuminate\Support\Facades\Redis;
 use App\Models\Tile;
 use App\SearchSettings;
-use Cache;
-use Log;
 use Request;
 
 class TilesController extends Controller
@@ -43,7 +40,11 @@ class TilesController extends Controller
     {
         $tiles = [];
 
-        if (app(Authorization::class)->canDoAuthenticatedSearch(false)) {
+        if (
+            (Auth::guard("key")->user() !== null && Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::FULL) ||
+            // Phase out old Authorization @deprecated 18.07.2025
+            app(Authorization::class)->canDoAuthenticatedSearch(false)
+        ) {
             $dd = new DeviceDetector(Request::header("user-agent"), ClientHints::factory($_SERVER));
             $dd->setCache(new LaravelCache());
             $dd->parse();
@@ -75,7 +76,11 @@ class TilesController extends Controller
             $tiles[] = new Tile(title: "Unser Trägerverein", image: "/img/tiles/sumaev.png", url: "https://suma-ev.de", image_alt: "SUMA_EV Logo");
         $tiles[] = new Tile(title: "Maps", image: "/img/tiles/maps.png", url: "https://maps.metager.de", image_alt: "MetaGer Maps Logo");
 
-        if (app(Authorization::class)->canDoAuthenticatedSearch(false)) {
+        if (
+            (Auth::guard("key")->user() !== null && Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::FULL) ||
+            // Phase out old Authorization @deprecated 18.07.2025
+            app(Authorization::class)->canDoAuthenticatedSearch(false)
+        ) {
             $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
         }
         return $tiles;

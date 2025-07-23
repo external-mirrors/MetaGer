@@ -8,6 +8,7 @@ use App\Models\Authorization\Authorization;
 use app\Models\parserSkripte\Overture;
 use App\PrometheusExporter;
 use App\SearchSettings;
+use Auth;
 use Cache;
 use Carbon;
 use Illuminate\Support\Facades\Redis;
@@ -259,7 +260,11 @@ abstract class Searchengine
                 // Remove namespace before passing engine to exporter
                 PrometheusExporter::KeyUsed($this->configuration->cost, preg_replace("/^.*\\\/", "", get_class($this)), $this->cached);
                 if (!$this->cached) {
-                    app(Authorization::class)->makePayment($this->configuration->cost);
+                    if (($user = Auth::guard("key")->user()) !== null) {
+                        $user->makePayment($this->configuration->cost);
+                    } else {
+                        app(Authorization::class)->makePayment($this->configuration->cost);
+                    }
                 }
             }
 

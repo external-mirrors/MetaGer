@@ -141,6 +141,17 @@ class Searchengines
         });
     }
 
+    public function getCost()
+    {
+        $cost = 0;
+        foreach ($this->sumas as $suma) {
+            if (!$suma->configuration->disabled && $suma->configuration->cost > 0) {
+                $cost += $suma->configuration->cost;
+            }
+        }
+        return $cost;
+    }
+
     /**
      * There are disabled searchengines which are disabled by default but can be automatically
      * enabled if it has the filterOptIn option set to true and the user has selected a focus

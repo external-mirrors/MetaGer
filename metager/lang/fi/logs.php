@@ -31,7 +31,7 @@ return [
             'email' => "Sähköpostiosoite",
             'full_name' => "Nimi",
             'save' => "Tallenna",
-            'heading' => "Laskun tiedot",
+            'heading' => "Laskun päivämäärä",
         ],
         'hint' => 'Täältä löydät yleiskatsauksen tilauksistasi ja tietoa API:n käytöstä. Varmista, että seuraavat laskutustiedot ovat ajan tasalla ja oikein.',
     ],

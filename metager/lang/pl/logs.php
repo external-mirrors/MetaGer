@@ -11,7 +11,7 @@ return [
     'overview' => [
         'invoice-data' => [
             'save' => "Zapisz",
-            'heading' => "Dane faktury",
+            'heading' => "Data faktury",
             'email' => "Adres e-mail",
             'full_name' => "Nazwa",
             'update' => "Aktualizacja danych faktury",
@@ -95,7 +95,7 @@ return [
         'heading' => "Konfiguracja subskrypcji",
     ],
     'api-docs' => [
-        'hint' => "Poniżej znajduje się nasza dokumentacja API, której można użyć do pobierania logów z naszego serwera.",
+        'hint' => "Poniżej znajduje się nasza dokumentacja API, której można użyć do pobrania logów z naszego serwera.",
         'link' => "Dokumentacja API",
     ],
 ];

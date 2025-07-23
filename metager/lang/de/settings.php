@@ -29,7 +29,7 @@ return [
     'blentry' => 'Blacklisteintrag',
     'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
-    'dark' => 'Dunkel',
+    'dark' => 'Dunkelmodus umschalten',
     'darkmode' => 'Dunklen Modus umschalten',
     'suggestions' => [
         'off' => "Deaktiviert",
@@ -80,7 +80,7 @@ return [
     'more' => 'Weitere Einstellungen',
     'newTab' => 'Ergebnisse in neuem Tab öffnen',
     'noSettings' => 'Aktuell sind keine Einstellungen gesetzt!',
-    'off' => 'Deaktiviert',
+    'off' => 'Aus',
     'on' => 'auf',
     'removeCookie' => 'Diesen Cookie entfernen',
     'reset' => 'Alle Einstellungen löschen',

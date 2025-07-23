@@ -18,6 +18,7 @@ RUN groupadd -g ${GID} metager && \
 
 # Install required php modules
 RUN apt update && apt install --no-install-recommends -y \
+    procps \
     libzip-dev \
     libpng-dev \
     libfreetype-dev \

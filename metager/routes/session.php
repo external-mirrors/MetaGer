@@ -56,7 +56,7 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
         }
     );
     Route::get('stress', 'Stresstest@index');
-    Route::get('stress/verify', 'Stresstest@index')->middleware('browserverification', 'humanverification');
+    Route::get('stress/verify', 'Stresstest@index');
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");

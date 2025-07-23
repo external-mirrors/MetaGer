@@ -8,7 +8,6 @@ return [
     'settings' => [
         'noneSelected' => 'Attention : vous n\'avez pas choisi de moteur de recherche.',
         'name' => 'Paramètres',
-        'metager-key-hint' => 'Certains filtres nécessitent une clé <a href=":link" target="_blank">MetaGer</a>.',
     ],
     'sitesearch' => [
         'success' => 'Vous effectuez une recherche de site. Seuls les résultats du site <a href=\"http://:site\" target=\"_blank\" rel=\"noopener\">\":site\"</a> seront affichés.',

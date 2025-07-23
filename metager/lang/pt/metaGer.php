@@ -145,7 +145,6 @@ return [
     'settings' => [
         'noneSelected' => 'Atenção: não escolheu nenhum motor de busca.',
         'name' => 'Definições',
-        'metager-key-hint' => 'Alguns filtros requerem uma chave <a href=":link" target="_blank">MetaGer</a>.',
     ],
     'engines' => [
         'noParser' => 'Há um erro: O pedido de \":motor\" falhou. Por favor, informe o nosso <a href=\"/pt/kontakt\">formulário de contacto</a>',

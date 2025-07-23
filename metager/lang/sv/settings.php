@@ -75,10 +75,6 @@ return [
     'clear' => 'Tydlig svart lista',
     'copy' => 'Kopia',
     'darkmode' => 'Växla till mörkt läge',
-    'externalservice' => [
-        'heading' => 'Använd en extern söktjänst',
-        'description' => 'Du kan konfigurera att använda någon av följande externa sökmotorer i stället för vår integrerade lösning. Vi kommer att omdirigera dina sökningar till den konfigurerade leverantören.',
-    ],
     'suggestions' => [
         'off' => "Inaktiverad",
         'on' => "Aktiverad",

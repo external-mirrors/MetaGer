@@ -151,7 +151,6 @@ return [
     'settings' => [
         'noneSelected' => 'Huomio: et valinnut mitään hakukonetta.',
         'name' => 'Asetukset',
-        'metager-key-hint' => 'Jotkin suodattimet vaativat <a href=":link" target="_blank">MetaGer-avaimen</a>.',
     ],
     'engines' => [
         'noParser' => 'On tapahtunut virhe: \":engine\" ei onnistunut. Ilmoita siitä <a href=\"/fi/kontakt\">yhteydenottolomakkeella</a>.',

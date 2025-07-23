@@ -8,7 +8,6 @@ return [
     'settings' => [
         'noneSelected' => 'OBS: du har inte valt någon sökmotor.',
         'name' => 'Inställningar',
-        'metager-key-hint' => 'Vissa filter kräver en <a href=":link" target="_blank">MetaGer-nyckel</a>.',
     ],
     'engines' => [
         'noParser' => 'Ett fel har uppstått: Begäran om \":engine\" misslyckades. Vänligen rapportera till vårt <a href="/sv/kontakt\">kontaktformulär</a>',

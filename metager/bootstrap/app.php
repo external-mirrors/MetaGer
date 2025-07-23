@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Middleware\AllowLocalOnly;
-use App\Http\Middleware\ExternalImagesearch;
 use App\Http\Middleware\HttpCache;
 use App\Http\Middleware\Statistics;
 use Illuminate\Foundation\Application;
@@ -80,7 +79,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'useragentmaster' => \App\Http\Middleware\UserAgentMaster::class,
             'allow-local-only' => AllowLocalOnly::class,
             'httpcache' => HttpCache::class,
-            'externalimagesearch' => ExternalImagesearch::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

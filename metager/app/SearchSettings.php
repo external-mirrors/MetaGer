@@ -42,7 +42,6 @@ class SearchSettings
     /** @var int */
     public $suggestion_delay = self::SUGGESTION_DELAY_MEDIUM;
     public $suggestion_addressbar = false;
-    public $external_image_search = "metager";
 
     public $user_settings = []; // Stores user settings that are parsed
     private $ignore_user_settings = ["js_available"];
@@ -140,13 +139,6 @@ class SearchSettings
             $this->zitate = true;
         else
             $this->zitate = false;
-
-        $external_image_search = $this->getSettingValue("bilder_setting_external", "metager");
-        if (in_array($external_image_search, ["metager", "bing", "google"])) {
-            $this->external_image_search = $external_image_search;
-        } else {
-            $this->external_image_search = "metager";
-        }
 
         // Parse the blacklist
         $blacklist_string = $this->getSettingValue($this->fokus . "_blpage");

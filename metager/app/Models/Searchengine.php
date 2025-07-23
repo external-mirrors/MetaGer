@@ -74,12 +74,6 @@ abstract class Searchengine
         $this->startTime = microtime(true);
 
         $this->canCache = $metager->canCache();
-
-        // Check ratelimit status
-        if ($this->isRateLimited() && !app(Authorization::class)->canDoAuthenticatedSearch()) {
-            $this->configuration->disabled = true;
-            $this->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
-        }
     }
 
     /**

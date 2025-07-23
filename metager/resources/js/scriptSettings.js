@@ -1,7 +1,7 @@
 import { removeSetting } from "./messaging";
 
 document
-  .querySelectorAll("#setting-form select, #filter-form select, #external-search-service select")
+  .querySelectorAll("#setting-form select, #filter-form select")
   .forEach((element) => {
     element.addEventListener("change", (e) => {
       e.target.form.submit();

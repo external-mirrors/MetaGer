@@ -96,10 +96,6 @@ return [
         '3' => 'An dieser Stelle können Sie Suchfilter dauerhaft setzen. Mit der Auswahl eines Suchfilters stehen nur noch Suchmaschinen zur Verfügung, welche diesen Filter unterstützen. Umgekehrt werden auch nur Suchfilter angezeigt, welche von der aktuellen Suchmaschinenauswahl unterstützt werden.',
         '4' => 'Hier können Sie Domains eintragen, welche aus Ihrer Suche ausgeschlossen werden sollen. Wenn Sie alle Subdomains einschließen wollen, starten Sie mit "*.". Eine Domain pro Zeile.',
     ],
-    'externalservice' => [
-        'heading' => 'Nutzung eines externen Suchdienstes',
-        'description' => 'Sie können konfigurieren, dass eine der folgenden externen Suchmaschinen anstelle unserer integrierten Lösung verwendet wird. Wir leiten Ihre Suchanfragen an den konfigurierten Anbieter weiter.',
-    ],
     'tiles_startpage' => [
         'label' => "Zeige Kacheln auf der Startseite",
     ],

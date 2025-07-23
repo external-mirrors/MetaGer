@@ -75,10 +75,6 @@ return [
     'disable-engine' => 'Slå søgemaskinen fra',
     'filtered-engine' => 'Søgemaskine deaktiveret af filter',
     'payment-engine' => 'Søgemaskine kræver opsætning af MetaGer-nøgle',
-    'externalservice' => [
-        'heading' => 'Brug en ekstern søgetjeneste',
-        'description' => 'Du kan konfigurere at bruge en af følgende eksterne søgemaskiner i stedet for vores integrerede løsning. Vi omdirigerer dine søgninger til den konfigurerede udbyder.',
-    ],
     'suggestions' => [
         'off' => "Deaktiveret",
         'on' => "Aktiveret",

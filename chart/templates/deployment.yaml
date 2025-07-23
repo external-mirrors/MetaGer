@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "chart.fullname" . }}-app
   labels:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
@@ -34,9 +34,6 @@ spec:
         - name: mglogs-persistent-storage
           persistentVolumeClaim:
             claimName: mglogs
-        - name: redis-config
-          configMap:
-            name: {{ include "chart.fullname" . }}-redis-container-config
         - name: sqlite-databases
           emptyDir: {}
         - name: fast-logs
@@ -53,9 +50,15 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -127,9 +130,15 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -177,9 +186,66 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: "127.0.0.1"
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
           - name: REDIS_PORT
             value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
+            limits:
+        - name: reverb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "reverb:start", "--port=8081", "--debug"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          - name: REDIS_HOST
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
+          - name: REDIS_PORT
+            value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
           {{- range $name, $value := .Values.env }}
           - name: {{ $name }}
             value: {{ $value }}
@@ -190,21 +256,27 @@ spec:
             subPath: ENV_PRODUCTION
             readOnly: true
           ports:
-            - name: http
-              containerPort: 8080
+            - name: reverb
+              containerPort: 8081
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           readinessProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           startupProbe:
-            httpGet:
-              path: /health-check/liveness-worker
-              port: http
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
           resources:
             requests:
               {{- toYaml .Values.resources.requests.worker | nindent 14 }}
@@ -236,35 +308,122 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.nginx | nindent 14 }}
             limits: {}
-        - name: redis
-          image: "{{ template "redis_image" . }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          args: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: {{ .Release.Name }}
+                topologyKey: kubernetes.io/hostname
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-worker
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.labels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: secrets
+          secret:
+            secretName: {{ template "secret_name" . }}
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: worker
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "requests:fetcher"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          - name: REDIS_HOST
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
+          - name: REDIS_PORT
+            value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
           volumeMounts:
-          - name: redis-config
-            mountPath: /usr/local/etc/redis/redis.conf
-            subPath: redis.conf
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
             readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           livenessProbe:
             exec:
               command:
-              - redis-cli
-              - ping 
-            initialDelaySeconds: 2
+              - pgrep
+              - -f
+              - requests:fetcher
           readinessProbe:
             exec:
               command:
-              - redis-cli
-              - ping 
-            initialDelaySeconds: 2
+              - pgrep
+              - -f
+              - requests:fetcher
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
           resources:
             requests:
-              {{- toYaml .Values.resources.requests.redis | nindent 14 }}
+              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
             limits:
-          securityContext:
-            runAsUser: 999
-            runAsGroup: 999
-            allowPrivilegeEscalation: false
+
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

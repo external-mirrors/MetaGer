@@ -15,9 +15,10 @@ document
     if (document.getElementById("plugin-btn") != null) return;
     let url = new URL(e.target.href);
     e.preventDefault();
-    removeSetting("key").then(() => {
+    removeSetting("key").then((answer) => {
       document.location.href = url;
-    })
+    });
+    return false;
   })
 })();
 

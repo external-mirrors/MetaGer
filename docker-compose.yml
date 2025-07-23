@@ -32,6 +32,7 @@ services:
     restart: unless-stopped
     depends_on:
       - fpm
+      - reverb
     networks:
       - metager
     volumes:
@@ -67,7 +68,25 @@ services:
     volumes:
       - ./metager:/metager/metager_app
     healthcheck:
-      test: "curl -f http://nginx:8080/health-check/liveness-worker"
+      test: ["CMD", "pgrep",  "-f", "requests:fetcher"]
+  reverb:
+    image: metager:latest
+    build:
+      context: ./
+      dockerfile: build/fpm/Dockerfile
+      target: ${APP_ENV}
+    pull_policy: never
+    restart: unless-stopped
+    entrypoint: /usr/local/bin/php
+    command: artisan reverb:start --debug
+    networks:
+      - metager
+    volumes:
+      - ./metager:/metager/metager_app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "pgrep",  "-f", "reverb:start"]
   selenium_standalone_firefox:
     image: ${SELENIUM_IMAGE}
     restart: always
@@ -104,8 +123,7 @@ services:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
-    build:
-      context: ./build/redis
+    image: redis:8.0
     restart: unless-stopped
     user: "redis:redis"
     networks:

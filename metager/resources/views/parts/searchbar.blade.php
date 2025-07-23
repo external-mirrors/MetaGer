@@ -3,13 +3,37 @@
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="search-key">
-					<a id="key-link" @if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch(false))class="authorized" @else class="unauthorized"@endif href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(!empty($metager) && $metager->isFramed())target="_top" @endif 
+					@if(\Auth::guard("key")->user() !== null)
+					<a id="key-link" 
+						class="{{ \Auth::guard("key")->user()->getKeyState() !== \App\Authentication\KeyState::EMPTY ? 'authorized' : 'unauthorized' }}"
+						href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" 
+						data-tooltip="{{ match(\Auth::guard("key")->user()->getKeyState()){
+							\App\Authentication\KeyState::FULL => __("index.key.tooltip.full"),
+							\App\Authentication\KeyState::LOW => __("index.key.tooltip.low"),
+							default => __("index.key.tooltip.empty"),
+						} }}" tabindex="0">
+						<img 
+							src="{{ match(\Auth::guard("key")->user()->getKeyState()){
+							\App\Authentication\KeyState::FULL => "/img/svg-icons/key-full.svg",
+							\App\Authentication\KeyState::LOW => "/img/svg-icons/key-low.svg",
+							default => "/img/svg-icons/key-empty.svg",
+						} }}"
+							alt="" aria-hidden="true" id="searchbar-img-key"
+						>
+					</a>
+					@else
+					<a id="key-link" 
+						@if(app('App\Models\Authorization\Authorization')->canDoAuthenticatedSearch(false))
+							class="authorized" @else class="unauthorized"
+						@endif 
+						href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" 
 						data-tooltip="{{ app('App\Models\Authorization\Authorization')->getKeyTooltip() }}" tabindex="0">
 						<img 
 							src="{{ app('App\Models\Authorization\Authorization')->getKeyIcon() }}"
 							alt="" aria-hidden="true" id="searchbar-img-key"
 						>
 					</a>
+					@endif
 				</div>
 				<div id="suggest-exit">&larr;</div>
 				<div class="search-input @if(!\Request::is('/')) search-delete-js-only @endif">

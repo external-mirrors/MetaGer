@@ -25,7 +25,6 @@ resources:
     redis:
       cpu: 100m
       memory: 1Gi
-
 env:
   DB_CONNECTION: sqlite
   REDIS_CACHE_CONNECTION: default

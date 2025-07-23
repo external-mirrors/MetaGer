@@ -2,7 +2,7 @@
 return [
     'default-search-v3-3' => [
         1 => 'Clique com o botão direito do rato na barra de pesquisa no final desta instrução',
-        2 => 'Selecione "Adicionar como motor de busca..." no menu de contexto.',
+        2 => 'Selecione "Adicionar como motor de pesquisa..." no menu de contexto.',
         3 => 'Selecione a caixa "Definir como pesquisa predefinida" e clique em "Adicionar" na janela de contexto.',
     ],
     'default-page-v3-3' => [

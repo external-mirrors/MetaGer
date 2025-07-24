@@ -279,7 +279,7 @@ spec:
               - reverb:start
           resources:
             requests:
-              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
+              {{- toYaml .Values.resources.requests.reverb | nindent 14 }}
             limits:
         - name: nginx
           securityContext:

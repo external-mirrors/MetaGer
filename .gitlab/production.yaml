@@ -84,6 +84,6 @@ resources:
     nginx:
       cpu: 100m
       memory: 100M
-    redis:
-      cpu: 100m
-      memory: 1Gi
+    reverb:
+      cpu: 50m
+      memory: 100M

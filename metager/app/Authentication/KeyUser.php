@@ -206,7 +206,7 @@ class KeyUser implements Authenticatable
                 if ($current_charge === null) {
                     return null;
                 }
-                Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
+                Cache::put("keyserver:key:" . $this->key, $key_response, now()->addSeconds(10)); // Cache for 10 seconds
                 KeyChanged::dispatch($this->key, 0, $current_charge);
                 $this->key_data = $key_response; // Store the key data for future use
                 return $key_response;
@@ -214,7 +214,6 @@ class KeyUser implements Authenticatable
                 return null;
             }
         } else {
-            KeyChanged::dispatch($this->key, 0, Arr::get($key_response, "charge", 0)); // ToDo: remove
             $this->key_data = $key_response; // Store the key data for future use
             return $this->key_data;
         }

@@ -118,7 +118,8 @@ resources:
     scheduler: {}
     worker: {}
     nginx: {}
-    redis: {}
+    reverb: {}
+    queue: {}
 
 autoscaling:
   enabled: true

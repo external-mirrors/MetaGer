@@ -14,17 +14,20 @@ resources:
       cpu: 1
       memory: 500M
     scheduler:
-      cpu: 100m
-      memory: 100M
+      cpu: 50m
+      memory: 50M
     worker:
       cpu: 1
       memory: 100M
+    queue:
+      cpu: 50m
+      memory: 50M
     nginx:
       cpu: 100m
       memory: 100M
     reverb:
       cpu: 50m
-      memory: 100M
+      memory: 50M
 env:
   DB_CONNECTION: sqlite
   REDIS_CACHE_CONNECTION: default

@@ -175,6 +175,85 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.scheduler | nindent 14 }}
             limits: {}
+        - name: queue
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          - name: REDIS_HOST
+            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
+          - name: REDIS_PORT
+            value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
+            subPath: ADBLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
+            subPath: ADBLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.queue | nindent 14 }}
+            limits:
         - name: worker
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

@@ -24,8 +24,6 @@ Schedule::call(function () {
     DB::table('monthlyrequests')->truncate();
     DB::disconnect('mysql');
 })->monthlyOn(1, '00:00');
-Schedule::command('queue:work --queue=donations --stop-when-empty');
-Schedule::command('queue:work --queue=general --stop-when-empty');
 
 // Membership Commands
 Schedule::command('membership:paypal-payments')->hourly()->onOneServer();

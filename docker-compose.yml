@@ -55,6 +55,20 @@ services:
       - "host.docker.internal:host-gateway"
     healthcheck:
       test: "curl -f http://nginx:8080/health-check/liveness-scheduler"
+  queue:
+    image: metager:latest
+    pull_policy: never
+    restart: unless-stopped
+    entrypoint: /usr/local/bin/php
+    command: artisan queue:work --backoff=60 --tries=5 --sleep=1 --queue=donations,default,general
+    networks:
+      - metager
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./metager:/metager/metager_app
+    healthcheck:
+      test: ["CMD", "pgrep",  "-f", "queue:work"]
   worker:
     image: metager:latest
     pull_policy: never

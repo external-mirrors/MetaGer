@@ -204,6 +204,34 @@ spec:
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
+            subPath: ADBLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
+            subPath: ADBLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
           livenessProbe:
             exec:
               command:

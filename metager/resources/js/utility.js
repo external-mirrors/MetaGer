@@ -145,36 +145,6 @@ function backButtons() {
   statistics.registerPageLoadEvents();
 })();
 
-(async () => {
-  // Check login status on the startpage (temporary fix for chrome extension not initializing fast enough on startup)
-  let starttime = (new Date()).getTime();
-
-  setTimeout(checkLoginStatus, 500);  // Start after 500 ms
-
-  async function checkLoginStatus() {
-    let key_container = document.querySelector("input[name=key]#key");
-    let login_button = document.querySelector("button#login");
-    if (key_container == null || login_button == null) return;  // Stop if there is no key input field
-    return fetch("/authorized", {
-      method: "POST"
-    }).then(response => {
-      if (response.status == 401) {
-        if ((new Date()).getTime() - starttime > 5000) return;
-        return (new Promise(resolve => { setTimeout(resolve, 1000) })).then(() => checkLoginStatus());
-      } else {
-        response.json().then(json_response => {
-          if (json_response.hasOwnProperty("is_bugged_extension") && json_response.is_bugged_extension) {
-            document.location.pathname += "meta/meta.ger3";
-          } else {
-            document.location.replace(document.location.href);
-          }
-        });
-        return;
-      }
-    });
-  }
-})();
-
 document.addEventListener("readystatechange", (e) => {
   if (document.readyState == "complete") {
     setTimeout(() => {

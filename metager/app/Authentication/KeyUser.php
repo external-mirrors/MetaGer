@@ -202,6 +202,7 @@ class KeyUser implements Authenticatable
 
             if ($key_response->successful()) {
                 $key_response = $key_response->json();
+                $this->key = Arr::get($key_response, "key", $this->key); // Update key if it has changed
                 $current_charge = Arr::get($key_response, "charge");
                 if ($current_charge === null) {
                     return null;

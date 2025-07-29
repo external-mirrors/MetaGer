@@ -3,6 +3,7 @@
 namespace App\Authentication;
 
 use App\Events\KeyChanged;
+use App\PrometheusExporter;
 use Arr;
 use Cache;
 use Http;

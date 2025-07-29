@@ -3,6 +3,7 @@
 namespace App\Authentication;
 
 use App\Events\KeyChanged;
+use App\PrometheusExporter;
 use Arr;
 use Cache;
 use Http;
@@ -178,11 +179,15 @@ class KeyUser implements Authenticatable
             if ($current_charge === null) {
                 return false;
             }
+            if (config('metager.metager.keys.uni_mainz') === $this->key) {
+                PrometheusExporter::UpdateMainzKeyStatus($current_charge);
+            }
             Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
             $this->key_data = $key_response; // Store the key data for future use
             $new_claim_amount = Arr::get($this->claims, $this->id, 0) - $token_cost;
             $this->claims[$this->id] = $new_claim_amount;
             Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat("keyserver:claims:" . $this->key, $this->id, -$token_cost);
+
             return true;
         }
 

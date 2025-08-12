@@ -38,7 +38,7 @@ class SearchSettings
     /** @var bool */
     public $tiles_startpage;
     /** @var string */
-    public $suggestion_provider = "bing";
+    public $suggestion_provider = null;
     /** @var int */
     public $suggestion_delay = self::SUGGESTION_DELAY_MEDIUM;
     public $suggestion_addressbar = false;

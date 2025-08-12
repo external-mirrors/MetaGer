@@ -143,9 +143,6 @@ class MetaGerSearch extends Controller
         }
 
         $csp = "'self'";
-        if (app(Searchengines::class)->getEnabledSearchengine("yahoo") !== null) {
-            $csp = "'self' https://*.clarity.ms https://c.bing.com https://*.microsoft.com https://*.yimg.com https://*.azureedge.net https://*.yahoo.com 'unsafe-inline'";
-        }
 
         return response($metager->createView($quicktip_results), 200, [
             "Cache-Control" => "max-age=3600, must-revalidate, public",

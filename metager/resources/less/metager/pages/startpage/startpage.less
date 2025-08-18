@@ -80,6 +80,7 @@ div.startpage {
       >ul#foki-switcher {
         list-style-type: none;
         display: flex;
+        justify-content: center;
         gap: 1rem;
 
         @supports not (selector(:first-child)) {
@@ -91,12 +92,11 @@ div.startpage {
         }
 
         width: 100%;
-        align-items: center;
-        justify-content: center;
         padding-block: 1.5rem;
-        padding: 2dvh 1.5rem;
+        padding: 2dvh 0;
         margin: 0;
-        font-size: clamp(0.7rem, 3vw, 1rem);
+        font-size: 1rem;
+        overflow: auto;
 
         >li {
           >a {
@@ -106,6 +106,13 @@ div.startpage {
               text-decoration: underline;
             }
           }
+        }
+
+        @media (max-width: 540px) {
+          width: calc(100% - 61px);
+          padding-left: 20px;
+          margin-right: 61px;
+          justify-content: flex-start;
         }
       }
 
@@ -500,4 +507,9 @@ div.startpage {
       }
     }
   }
+}
+
+label.sidebar-opener {
+  top: 2dvh;
+  width: 21px;
 }

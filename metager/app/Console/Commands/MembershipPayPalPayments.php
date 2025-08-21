@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Mail\Membership\MembershipAdminPaymentFailed;
+use App\Mail\Membership\PaymentMethodCard;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Models\Membership\CiviCrm;
 use App\Models\Membership\MembershipApplication;
@@ -65,6 +66,13 @@ class MembershipPayPalPayments extends Command
                 LaravelLocalization::setLocale($membership->locale);
                 if ($membership === null)
                     continue;
+
+                if ($membership->payment_method === "card") {
+                    // We need to rollback card payments as we cannot create payments without the user being present
+                    $this->rollbackCardPayment($membership);
+                    continue;
+                }
+
                 $paypal_payment = MembershipPaymentPaypal::create(["vault_id" => $membership->paypal->vault_id]);
                 $paypal_order = PayPal::CREATE_ORDER($membership);
                 $status_code = Arr::get($paypal_order, "status_code");
@@ -109,5 +117,22 @@ class MembershipPayPalPayments extends Command
         } else {
             return false;
         }
+    }
+
+    private function rollbackCardPayment(MembershipApplication $membership): bool
+    {
+        if (!$membership->paypal || !$membership->paypal->vault_id) {
+            return false;
+        }
+        if (CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($membership->paypal->vault_id) !== null) {
+            PayPal::DELETE_PAYMENT_TOKEN($membership->paypal->vault_id);
+            $end_date = $membership->end_date;
+            $end_date->addMonth();
+            CiviCrm::UPDATE_MEMBERSHIP_RAW($membership, ["end_date" => $end_date->format("Y-m-d")]);
+            $notification = new PaymentMethodCard($membership);
+            Mail::mailer("membership")->send($notification);
+            return true;
+        }
+        return false;
     }
 }

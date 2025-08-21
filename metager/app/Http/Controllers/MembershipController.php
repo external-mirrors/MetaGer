@@ -7,6 +7,7 @@ use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
 use App\Mail\Membership\MembershipAdminApplicationNotification;
 use App\Mail\Membership\MembershipAdminPaymentFailed;
+use App\Mail\Membership\PaymentMethodCard;
 use App\Mail\Membership\PaymentMethodFailed;
 use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
@@ -40,6 +41,9 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
+        return response()->json(["id" => PayPal::GET_ID()]);
+        $mail = new PaymentMethodCard(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2376")[0]);
+        return $mail;
         abort(404);
     }
     /**
@@ -289,7 +293,7 @@ class MembershipController extends Controller
         $validator->sometimes("interval", 'required|in:annual,six-monthly,quarterly,monthly', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval === null;
         });
-        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal,card', function (Fluent $input) use ($application) {
+        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
         });
         $validator->sometimes("iban", ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()], function (Fluent $input) use ($application) {
@@ -410,7 +414,6 @@ class MembershipController extends Controller
                     $application->save();
                     break;
                 case "paypal":
-                case "card":
                     return $this->createPayPalAuthorizeOrder(
                         $application,
                         $form_data["payment-method"],
@@ -450,6 +453,12 @@ class MembershipController extends Controller
             case "VAULT.PAYMENT-TOKEN.DELETED":
                 $vault_id = $request->input("resource.id");
                 MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
+                $membership = CiviCrm::FIND_MEMBERSHIP_PAYPAL_VAULT($vault_id);
+                if ($membership === null)
+                    abort(500);
+                if (sizeof($membership) === 0)
+                    return response()->json([]);
+                $membership = Arr::get($membership, "0");
                 if (($membership_data = CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id)) !== null) {
                     $membership_id = Arr::get($membership_data, "values.0.id");
                     if ($membership_id !== null) {

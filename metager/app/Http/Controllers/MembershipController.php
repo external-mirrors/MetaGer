@@ -5,13 +5,8 @@ namespace App\Http\Controllers;
 use App;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
-use App\Mail\Membership\MembershipAdminApplicationNotification;
-use App\Mail\Membership\MembershipAdminPaymentFailed;
-use App\Mail\Membership\PaymentMethodCard;
 use App\Mail\Membership\PaymentMethodFailed;
-use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
-use App\Mail\Membership\ReductionReminder;
 use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
@@ -41,9 +36,6 @@ class MembershipController extends Controller
 
     public function test(Request $request)
     {
-        return response()->json(["id" => PayPal::GET_ID()]);
-        $mail = new PaymentMethodCard(CiviCrm::FIND_MEMBERSHIPS(membership_id: "2376")[0]);
-        return $mail;
         abort(404);
     }
     /**
@@ -453,12 +445,6 @@ class MembershipController extends Controller
             case "VAULT.PAYMENT-TOKEN.DELETED":
                 $vault_id = $request->input("resource.id");
                 MembershipPaymentPaypal::where("vault_id", "=", $vault_id)->delete();
-                $membership = CiviCrm::FIND_MEMBERSHIP_PAYPAL_VAULT($vault_id);
-                if ($membership === null)
-                    abort(500);
-                if (sizeof($membership) === 0)
-                    return response()->json([]);
-                $membership = Arr::get($membership, "0");
                 if (($membership_data = CiviCrm::REMOVE_MEMBERSHIP_PAYPAL_VAULT($vault_id)) !== null) {
                     $membership_id = Arr::get($membership_data, "values.0.id");
                     if ($membership_id !== null) {

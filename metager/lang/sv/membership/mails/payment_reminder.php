@@ -7,7 +7,7 @@ return [
         'second' => '[SUMA-EV & MetaGer] Ditt medlemskap upphör på :date utan betalning',
     ],
     'description_expired' => 'Erfarenheten har visat oss att utträden ur <a href="https://suma-ev.de">SUMA-EV</a> ofta inte har att göra med att man tar avstånd från våra värderingar och idéer, utan oftast har ekonomiska orsaker. Vi hoppas därför att det kan komma en tid då du kan tänka dig att gå med i vår förening igen.',
-    'edit' => 'Alternativt kan du uppdatera ditt medlemskap och godkänna en lämplig betalningsmetod för oss att debitera från (Directdebit, PayPal, Creditcard)',
+    'edit' => 'Alternativt kan du uppdatera ditt medlemskap och godkänna en lämplig betalningsmetod för oss att debitera från (direktdebitering, PayPal)',
     'edit_button' => "Uppdatering av medlemskap",
     'key_charge' => 'Den automatiska laddningen av din nyckel för användning av MetaGer (**:key**) har avaktiverats för tillfället.',
     'mastodon' => 'Ditt Mastodon-konto på vår [instans] (https://suma-ev.social) kommer att frysas och kan inte längre användas. Vänligen se till att du flyttar till en offentlig instans i god tid. Vi kommer att radera all data som är kopplad till ditt konto 6 månader efter att ditt medlemskap har upphört.',

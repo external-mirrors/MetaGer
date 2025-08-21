@@ -5,12 +5,8 @@ namespace App\Http\Controllers;
 use App;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
-use App\Mail\Membership\MembershipAdminApplicationNotification;
-use App\Mail\Membership\MembershipAdminPaymentFailed;
 use App\Mail\Membership\PaymentMethodFailed;
-use App\Mail\Membership\PaymentReminder;
 use App\Mail\Membership\ReductionDeny;
-use App\Mail\Membership\ReductionReminder;
 use App\Mail\Membership\WelcomeMail;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Membership\CiviCrm;
@@ -289,7 +285,7 @@ class MembershipController extends Controller
         $validator->sometimes("interval", 'required|in:annual,six-monthly,quarterly,monthly', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval === null;
         });
-        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal,card', function (Fluent $input) use ($application) {
+        $validator->sometimes("payment-method", 'required|in:directdebit,banktransfer,paypal', function (Fluent $input) use ($application) {
             return $application !== null && ($application->contact !== null || $application->company !== null) && $application->amount !== null && $application->interval !== null;
         });
         $validator->sometimes("iban", ["exclude_unless:payment-method,directdebit", "required", new IBANValidator()], function (Fluent $input) use ($application) {
@@ -410,7 +406,6 @@ class MembershipController extends Controller
                     $application->save();
                     break;
                 case "paypal":
-                case "card":
                     return $this->createPayPalAuthorizeOrder(
                         $application,
                         $form_data["payment-method"],

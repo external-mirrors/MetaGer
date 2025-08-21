@@ -390,6 +390,10 @@ class CiviCrm
             'values' => ['Beitrag.PayPal_Vault' => '', 'Beitrag.PayPal_ID' => '', 'Beitrag.Zahlungsweise' => 2],
             'where' => [['Beitrag.PayPal_Vault', '=', $vault_id]],
         ];
+        // Only handle in production or with testing membership id
+        if (!App::environment("production")) {
+            $params["where"][] = ["id", "=", config("metager.metager.membership.membership_id_testing")];
+        }
         return self::API_POST("/Membership/update", $params);
     }
 

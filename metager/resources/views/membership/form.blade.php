@@ -242,7 +242,6 @@
             @endif
             <div class="funding-sources">
                 <img src="/img/funding_source/sepa.svg" alt="SEPA">
-                <img src="/img/funding_source/card.svg" alt="Creditcard">
                 <img src="/img/funding_source/paypal.svg" alt="PayPal">
             </div>
         </h3>
@@ -263,9 +262,6 @@
             <input type="radio" name="payment-method" id="payment-method-paypal" class="js-only" value="paypal"
                 @if($payment_method==="paypal" )checked @endif required>
             <label for="payment-method-paypal" class="js-only">PayPal</label>
-            <input type="radio" name="payment-method" id="payment-method-creditcard" class="js-only" value="card"
-                @if($payment_method==="card" )checked @endif required data-clientid="{{ config("metager.metager.paypal.membership.client_id") }}">
-            <label for="payment-method-creditcard" class="js-only">Kredit-/Debitkarte</label>
             <div id="directdebit-data" class="info-container">
                 @if(isset($errors) && $errors->has("iban"))
                     @foreach($errors->get("iban") as $error)
@@ -294,6 +290,7 @@
                 <div>@lang('membership.application.payment_block')</div>
                 @endif
             </div>
+            {{-- Credit card memberships are disabled for now
             <div id="creditcard-data" class="info-container" data-loading-text="{{ __('spende.execute-payment.card.loading') }}" data-is-update="{{ $application !== null ? $application->is_update : false }}">
                 <div id="creditcard-name-container">
                     <label for="creditcard-name">@lang("spende.execute-payment.card.name")</label>
@@ -351,6 +348,7 @@
                 <div id="payment-block">@lang('membership.application.payment_block')</div>
                 @endif
             </div>
+            --}}
         </div>
         @endif
     </div>

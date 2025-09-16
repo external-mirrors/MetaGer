@@ -4,3 +4,4 @@ metager/config/sumasEn.json
 metager/config/suggestions.json
 metager/.env.assistant
 .gitignore
+chart/charts/redis-sentinel-*.tgz

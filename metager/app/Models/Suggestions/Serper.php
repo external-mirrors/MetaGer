@@ -20,8 +20,8 @@ class Serper extends Suggestions
             "gl" => Localization::getRegion(),
             "hl" => Localization::getLanguage()
         ]);
-        $this->api_header[] = "X-API-KEY: " . config("metager.suggestions.serper.api_key");
-        $this->api_header[] = "Content-Type: application/json";
+        $this->api_header["X-API-KEY"] = config("metager.suggestions.serper.api_key");
+        $this->api_header["Content-Type"] = "application/json";
     }
 
     public function fetch()

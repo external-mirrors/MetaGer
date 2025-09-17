@@ -1,6 +1,6 @@
 dependencies:
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 21.2.12
-digest: sha256:246d94cf9ec0c5af072fc45838b4028ee0898f5a9d01d5fa31548f179fc81a85
-generated: "2025-07-18T10:20:49.030029836+02:00"
+- name: redis-sentinel
+  repository: https://gitlab.metager.de/api/v4/projects/130/packages/helm/production
+  version: 0.1.5
+digest: sha256:06dbeca166fc8b2324410db66267157f249fefaaa665e33cfd7c6efcf4ab1ca8
+generated: "2025-09-16T14:58:42.554594965+02:00"

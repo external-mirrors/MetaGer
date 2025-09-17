@@ -1,0 +1,131 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-worker
+  labels:
+    {{- include "chart.workerLabels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabelsWorker" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.workerLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      volumes:
+        - name: secrets
+          secret:
+            secretName: {{ template "secret_name" . }}
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: worker
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "requests:fetcher"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          - name: APP_ENV
+            value: {{ .Values.environment }}
+          - name: REDIS_HOST
+            value: {{ .Release.Name}}-redis-sentinel-redis.{{ .Release.Namespace }}.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: {{ .Release.Name}}-redis-sentinel.{{ .Release.Namespace }}.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          {{- if gt (len .Values.ingress.hosts) 0 -}}
+          {{- with (index .Values.ingress.hosts 0) }}
+          - name: REVERB_HOST
+            value: {{ .host }}
+          {{- end }}
+          {{- end }}
+          {{- range $name, $value := .Values.env }}
+          - name: {{ $name }}
+            value: {{ $value }}
+          {{- end }}
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.worker | nindent 14 }}
+            limits:
+
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: {{ .Release.Name }}-worker
+                topologyKey: kubernetes.io/hostname
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

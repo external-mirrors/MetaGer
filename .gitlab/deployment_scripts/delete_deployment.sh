@@ -9,6 +9,5 @@ echo "Removing Image Tags..."
 #'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
 #'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
 echo "Stopping Deployment..."
-kubectl -n $KUBE_NAMESPACE delete secret $HELM_RELEASE_NAME
+kubectl -n $KUBE_NAMESPACE delete secret $HELM_RELEASE_NAME ${HELM_RELEASE_NAME}-redis-sentinel
 helm -n $KUBE_NAMESPACE delete $HELM_RELEASE_NAME
-kubectl -n $KUBE_NAMESPACE delete pvc redis-data-$HELM_RELEASE_NAME-redis-master-0

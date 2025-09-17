@@ -143,10 +143,9 @@ return [
             'options' => [
                 'service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
                 'replication' => 'sentinel',
-                'password' => env('REDIS_SENTINEL_PASSWORD', null),
+                'password' => env('REDIS_SENTINEL_REDIS_PASSWORD', null),
                 'parameters' => [
-                    'database' => 0,
-                    'password' => env('REDIS_SENTINEL_PASSWORD', null),
+                    'database' => 0
                 ]
             ]
         ],

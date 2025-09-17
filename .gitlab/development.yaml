@@ -34,3 +34,9 @@ env:
   REDIS_CACHE_LOCK_CONNECTION: default
   REDIS_SESSION_CONNECTION: default
   SESSION_CONNECTION: default
+
+redis-sentinel:
+  replicaCount: 1
+  redis:
+    persistence:
+      enabled: false

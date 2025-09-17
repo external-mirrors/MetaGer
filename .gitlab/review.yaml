@@ -22,6 +22,7 @@ env:
   SESSION_CONNECTION: default
 
 redis-sentinel:
+  replicaCount: 1
   redis:
     persistence:
       enabled: false

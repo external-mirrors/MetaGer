@@ -145,6 +145,7 @@ return [
                 'replication' => 'sentinel',
                 'password' => env('REDIS_SENTINEL_REDIS_PASSWORD', null),
                 'parameters' => [
+                    'password' => env('REDIS_SENTINEL_REDIS_PASSWORD', null),
                     'database' => 0
                 ]
             ]

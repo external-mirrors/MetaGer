@@ -93,6 +93,3 @@ resources:
 
 redis-sentinel:
   replicaCount: 3
-  redis:
-    persistence:
-      enabled: false

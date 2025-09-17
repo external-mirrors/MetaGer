@@ -50,14 +50,14 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-sentinel-redis
+            value: {{ .Release.Name}}-redis-sentinel-redis.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-redis-sentinel
                 key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
-            value: {{ .Release.Name}}-redis-sentinel
+            value: {{ .Release.Name}}-redis-sentinel.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -147,14 +147,14 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-sentinel-redis
+            value: {{ .Release.Name}}-redis-sentinel-redis.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-redis-sentinel
                 key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
-            value: {{ .Release.Name}}-redis-sentinel
+            value: {{ .Release.Name}}-redis-sentinel.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -220,14 +220,14 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-sentinel-redis
+            value: {{ .Release.Name}}-redis-sentinel-redis.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-redis-sentinel
                 key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
-            value: {{ .Release.Name}}-redis-sentinel
+            value: {{ .Release.Name}}-redis-sentinel.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -316,14 +316,14 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-sentinel-redis
+            value: {{ .Release.Name}}-redis-sentinel-redis.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ .Release.Name }}-redis-sentinel
                 key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
-            value: {{ .Release.Name}}-redis-sentinel
+            value: {{ .Release.Name}}-redis-sentinel.{{ .Release.Namespace }}.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:

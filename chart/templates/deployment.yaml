@@ -51,8 +51,23 @@ spec:
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
             value: {{ .Release.Name}}-redis-sentinel-redis
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
             value: {{ .Release.Name}}-redis-sentinel
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_PORT
             value: "6379"
           {{- if gt (len .Values.ingress.hosts) 0 -}}
@@ -132,7 +147,24 @@ spec:
           - name: APP_URL
             value: {{ .Values.app_url }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
+            value: {{ .Release.Name}}-redis-sentinel-redis
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: {{ .Release.Name}}-redis-sentinel
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_PORT
             value: "6379"
           {{- if gt (len .Values.ingress.hosts) 0 -}}
@@ -189,8 +221,23 @@ spec:
             value: {{ .Values.environment }}
           - name: REDIS_HOST
             value: {{ .Release.Name}}-redis-sentinel-redis
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
             value: {{ .Release.Name}}-redis-sentinel
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_PORT
             value: "6379"
           {{- if gt (len .Values.ingress.hosts) 0 -}}
@@ -270,8 +317,23 @@ spec:
             value: {{ .Values.environment }}
           - name: REDIS_HOST
             value: {{ .Release.Name}}-redis-sentinel-redis
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_SENTINEL_HOST
             value: {{ .Release.Name}}-redis-sentinel
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Release.Name }}-redis-sentinel
+                key: REDIS_PASSWORD
           - name: REDIS_PORT
             value: "6379"
           {{- if gt (len .Values.ingress.hosts) 0 -}}

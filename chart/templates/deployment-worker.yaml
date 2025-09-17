@@ -50,7 +50,9 @@ spec:
           - name: APP_ENV
             value: {{ .Values.environment }}
           - name: REDIS_HOST
-            value: {{ .Release.Name}}-redis-master.metager-2.svc.cluster.local
+            value: {{ .Release.Name}}-redis-sentinel-redis
+          - name: REDIS_SENTINEL_HOST
+            value: {{ .Release.Name}}-redis-sentinel
           - name: REDIS_PORT
             value: "6379"
           {{- if gt (len .Values.ingress.hosts) 0 -}}

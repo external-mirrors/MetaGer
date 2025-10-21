@@ -25,7 +25,7 @@ return [
     'jugendschutz' => 'Beskyttelse af unge',
     'ad-info' => 'MetaGer-reklamer',
     'allSettings' => 'Alle indstillinger - MetaGer',
-    'transparency' => 'Gennemsigtighedserklæring - MetaGer',
+    'transparency' => 'Erklæring om gennemsigtighed - MetaGer',
     'search-engine' => 'Søgemaskiner - MetaGer',
     'lang-selector' => 'Valg af sprog',
     'prevention' => 'Hjælp til selvmordstanker - MetaGer',

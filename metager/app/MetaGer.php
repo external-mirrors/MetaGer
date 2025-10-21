@@ -287,6 +287,23 @@ class MetaGer
         }
         $this->results = $newResults;
 
+        # Validate Videos
+        $newResults = [];
+        foreach ($this->videos as $video) {
+            if ($video->isValid($this)) {
+                $newResults[] = $video;
+            }
+        }
+        $this->videos = $newResults;
+        # Validate News
+        $newResults = [];
+        foreach ($this->news as $news) {
+            if ($news->isValid($this)) {
+                $newResults[] = $news;
+            }
+        }
+        $this->news = $newResults;
+
         $this->duplicationCheck();
 
         # Validate Advertisements

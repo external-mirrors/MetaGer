@@ -31,8 +31,6 @@ return [
     'key' => 'Chave sem anúncios - MetaGer',
     'jugendschutz' => 'Proteção dos jovens',
     'ad-info' => 'Anúncios MetaGer',
-    'asso' => 'Associador - MetaGer',
-    'assosearch' => 'Associações para ":q" - MetaGer',
     'prevention' => 'Ajuda com pensamentos suicidas - MetaGer',
     'search-engine' => 'Motores de pesquisa - MetaGer',
     'transparency' => 'Declaração de transparência - MetaGer',

@@ -1,7 +1,7 @@
 <?php
 return [
     'plugin' => 'Plugin - MetaGer',
-    'key' => 'Ad-Free-Key - MetaGer',
+    'key' => 'Annoncefri nøgle - MetaGer',
     'index' => 'MetaGer: Privatlivsbeskyttet søgning og find',
     'impressum' => 'Meddelelse om webstedet - MetaGer',
     'about' => 'Om os - MetaGer',

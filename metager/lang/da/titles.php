@@ -19,7 +19,7 @@ return [
     'websearch' => 'Websøgnings-widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
     'faq' => 'Ofte stillede spørgsmål - MetaGer',
-    'partnershops' => 'Partnerbutikker - MetaGer',
+    'partnershops' => 'Partnershops - MetaGer',
     'app' => 'Apps - MetaGer',
     'faktencheck' => 'Faktatjek versus falske nyheder',
     'jugendschutz' => 'Beskyttelse af unge',

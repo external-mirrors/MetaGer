@@ -34,7 +34,6 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
     Route::get('count/count-data', [AdminInterface::class, 'getCountData']);
     Route::get('timings', 'MetaGerSearch@searchTimings');
     Route::get('engine/stats.json', 'AdminInterface@engineStats');
-    Route::get('check', 'AdminInterface@check');
     Route::get(
         'ip',
         function (Request $request) {

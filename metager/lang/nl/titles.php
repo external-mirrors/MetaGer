@@ -8,7 +8,7 @@ return [
     'help-privacy-protection' => 'Help - MetaGer',
     'widget' => 'MetaGer-widget',
     'settings' => 'Instellingen',
-    'websearch' => 'Webzoek-Widget - MetaGer',
+    'websearch' => 'Zoekmachine-Widget - MetaGer',
     'sitesearch' => 'Zoekpagina-Widget - MetaGer',
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Partnershops - MetaGer',

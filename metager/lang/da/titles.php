@@ -3,7 +3,7 @@ return [
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Ad-Free-Key - MetaGer',
     'index' => 'MetaGer: Privatlivsbeskyttet søgning og find',
-    'impressum' => 'Meddelelse om websted - MetaGer',
+    'impressum' => 'Meddelelse om webstedet - MetaGer',
     'about' => 'Om os - MetaGer',
     'team' => 'Team - MetaGer',
     'kontakt' => 'Kontakt - MetaGer',

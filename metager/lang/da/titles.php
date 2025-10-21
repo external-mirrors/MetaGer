@@ -16,7 +16,7 @@ return [
     'help-privacy-protection' => 'Hjælp - MetaGer',
     'widget' => 'MetaGer-widget',
     'settings' => 'Indstillinger',
-    'websearch' => 'Websearch-Widget - MetaGer',
+    'websearch' => 'Websøgnings-widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
     'faq' => 'FAQ - MetaGer',
     'partnershops' => 'Partnerbutikker - MetaGer',

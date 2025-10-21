@@ -58,10 +58,6 @@ mix
     "public/css/verify/index.css"
   )
   .less(
-    "resources/less/metager/pages/admin/affilliates/index.less",
-    "public/css/admin/affilliates/index.css"
-  )
-  .less(
     "resources/less/metager/pages/admin/logs.less",
     "public/css/admin/logs.css"
   )
@@ -74,20 +70,8 @@ mix
     "public/css/help-easy-language.css"
   )
   .less(
-    "resources/less/metager/pages/admin/affilliates/index-dark.less",
-    "public/css/admin/affilliates/index-dark.css"
-  )
-  .less(
     "resources/less/metager/pages/admin/bot/index.less",
     "public/css/admin/bot/index.css"
-  )
-  .less(
-    "resources/less/metager/pages/asso/style-dark.less",
-    "public/css/asso/dark.css"
-  )
-  .less(
-    "resources/less/metager/pages/asso/style.less",
-    "public/css/asso/style.css"
   )
   .less(
     "resources/less/metager/pages/spende/base.less",
@@ -157,10 +141,6 @@ mix
   )
   .js("resources/js/widgets.js", "public/js/widgets.js")
   .js("resources/js/scriptJoinPage.js", "public/js/scriptJoinPage.js")
-  .js(
-    "resources/js/admin/affilliates/index.js",
-    "public/js/admin/affilliates.js"
-  )
   .js("resources/js/admin/bot.js", "public/js/admin/bot.js")
   .js("resources/js/verify.js", "public/js/index.js")
   .js("resources/js/membership.js", "public/js/membership.js")

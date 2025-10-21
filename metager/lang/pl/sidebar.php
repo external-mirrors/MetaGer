@@ -6,7 +6,6 @@ return [
     'nav8' => 'Informacje prawne',
     'nav9' => 'Pomoc',
     'nav10' => 'Widget',
-    'nav11' => 'Współpracownik',
     'nav14' => 'TOR-Hidden-Service',
     'nav15' => 'Narzędzia',
     'nav16' => 'Wesprzyj nas',

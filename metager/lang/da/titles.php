@@ -18,7 +18,7 @@ return [
     'settings' => 'Indstillinger',
     'websearch' => 'Websøgnings-widget - MetaGer',
     'sitesearch' => 'Sitesearch-Widget - MetaGer',
-    'faq' => 'FAQ - MetaGer',
+    'faq' => 'Ofte stillede spørgsmål - MetaGer',
     'partnershops' => 'Partnerbutikker - MetaGer',
     'app' => 'Apps - MetaGer',
     'faktencheck' => 'Faktatjek versus falske nyheder',

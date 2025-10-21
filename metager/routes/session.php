@@ -45,19 +45,4 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
     Route::get('adgoal', 'AdgoalTestController@index')->name("adgoal-index");
     Route::post('adgoal', 'AdgoalTestController@post')->name("adgoal-generate");
     Route::post('adgoal/generate-urls', 'AdgoalTestController@generateUrls')->name("adgoal-urls");
-
-    Route::group(
-        ['prefix' => 'affiliates'],
-        function () {
-            Route::get('/', 'AdgoalController@adminIndex');
-            Route::get('/json/blacklist', 'AdgoalController@blacklistJson');
-            Route::put('/json/blacklist', 'AdgoalController@addblacklistJson');
-            Route::delete('/json/blacklist', 'AdgoalController@deleteblacklistJson');
-            Route::get('/json/whitelist', 'AdgoalController@whitelistJson');
-            Route::put('/json/whitelist', 'AdgoalController@addwhitelistJson');
-            Route::delete('/json/whitelist', 'AdgoalController@deletewhitelistJson');
-            Route::get('/json/hosts', 'AdgoalController@hostsJson');
-            Route::get('/json/hosts/clicks', 'AdgoalController@hostClicksJson');
-        }
-    );
 });

@@ -1,4 +1,4 @@
-FROM php:8.3.7-fpm-bookworm AS composer
+FROM php:8.4.13-fpm-trixie AS composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
@@ -30,7 +30,7 @@ RUN apt update && apt install --no-install-recommends -y \
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
-RUN yes 'y' | pecl install xdebug-3.3.2 igbinary-3.2.15 msgpack-2.2.0 redis-6.0.2 imagick
+RUN yes 'y' | pecl install xdebug-3.4.6 igbinary-3.2.16 msgpack-3.0.0 redis-6.3.0RC1 imagick-3.8.0
 RUN docker-php-ext-enable msgpack igbinary redis imagick
 RUN docker-php-ext-enable --ini-name=xdebug.ini xdebug
 

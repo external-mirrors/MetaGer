@@ -23,8 +23,6 @@ return [
     'faktencheck' => 'Fakten-Prüfung contra Fake-News',
     'jugendschutz' => 'Jugendschutz',
     'ad-info' => 'Werbung bei MetaGer',
-    'asso' => 'Assoziator – MetaGer',
-    'assosearch' => 'Assoziationen für ":q" – MetaGer',
     'plugin' => 'Plugin – MetaGer',
     'key' => 'Mitgliederschlüssel – MetaGer',
     'settings' => 'Einstellungen',

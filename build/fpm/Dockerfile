@@ -1,4 +1,4 @@
-FROM php:8.3.7-fpm-bookworm as composer
+FROM php:8.3.7-fpm-bookworm AS composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
@@ -44,7 +44,7 @@ RUN mkdir /composer_cache && \
     chown metager:metager /composer_cache
 VOLUME [ "/composer_cache" ]
 
-FROM composer as development
+FROM composer AS development
 
 # Add General Customizations to php.ini
 ADD build/fpm/configuration/php/custom.ini $PHP_INI_DIR/conf.d/custom.ini
@@ -63,7 +63,7 @@ ADD build/fpm/entrypoint/entrypoint_development.sh /usr/local/bin/entrypoint
 USER metager:metager
 ENTRYPOINT [ "entrypoint" ]
 
-FROM development as production
+FROM development AS production
 
 USER root:root
 

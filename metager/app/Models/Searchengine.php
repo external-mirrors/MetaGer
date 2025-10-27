@@ -218,7 +218,7 @@ abstract class Searchengine
     }
 
     # Fragt die Ergebnisse von Redis ab und lädt Sie
-    public function retrieveResults(MetaGer $metager, $body = null)
+    public function retrieveResults(MetaGer $metager, ?string $body = null)
     {
         if ($this->loaded) {
             return true;

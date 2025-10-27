@@ -448,7 +448,7 @@ class MetaGer
      *
      * @return int | null Position where advertisement was added
      */
-    public function addDonationAdvertisement($position = null)
+    public function addDonationAdvertisement(?int $position = null)
     {
         return;
         /**

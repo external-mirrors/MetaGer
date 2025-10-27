@@ -282,7 +282,7 @@ class SearchSettings
      * @param bool|string|null $default (Optional) Default value to return if setting is not defined anywhere
      * @return string|null
      */
-    private function getSettingValue(string $setting_name, $default = null): string|null
+    private function getSettingValue(string $setting_name, $default = null): ?string
     {
         /**
          * Check GET-Parameter in all variations

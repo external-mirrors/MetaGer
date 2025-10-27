@@ -281,7 +281,7 @@ class Searchengines
      * @param bool|string|null $default (Optional) Default value to return if setting is not defined anywhere
      * @return string|null
      */
-    private function parseUserEngineSetting(string $engine_name, $default = null): string|null
+    private function parseUserEngineSetting(string $engine_name, $default = null): ?string
     {
         $settings = app(SearchSettings::class);
         $valid_values = ["on", "off"];

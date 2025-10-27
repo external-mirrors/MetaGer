@@ -58,7 +58,7 @@ class AnonymousTokenPayment
      * @param float $cost
      * @param Token[] $tokens
      */
-    public function __construct(float $cost, array $tokens, array $decitoken, string|null $payment_id = null, string|null $payment_uid = null, string $key = null, $credits = 0)
+    public function __construct(float $cost, array $tokens, array $decitoken, ?string $payment_id = null, ?string $payment_uid = null, ?string $key = null, $credits = 0)
     {
         $this->key_api_server = config("metager.metager.keymanager.server") . "/api/json";
         $this->key = $key;

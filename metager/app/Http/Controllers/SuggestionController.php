@@ -23,7 +23,7 @@ class SuggestionController extends Controller
 {
     const CACHE_DURATION_HOURS = 6;
 
-    public function suggest(Request $request, string $key = null)
+    public function suggest(Request $request, ?string $key = null)
     {
         Suggestions::GET_AVAILABLE_PROVIDERS();
         $query = $request->input("query");
@@ -212,7 +212,7 @@ class SuggestionController extends Controller
         return $list;
     }
 
-    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, \Carbon\Carbon $expiration = null)
+    public static function ABORT_SUGGESTION_GROUP_REQUEST($uuid, $status_code = 423, ?\Carbon\Carbon $expiration = null)
     {
         if ($expiration == null) {
             $expiration = now();
@@ -223,7 +223,7 @@ class SuggestionController extends Controller
         Redis::pexpireat($key, $expiration->getTimestampMs());
     }
 
-    private function addSuggestGroupRequest($suggest_group, $uuid, \Carbon\Carbon $expiration = null): array
+    private function addSuggestGroupRequest($suggest_group, $uuid, ?\Carbon\Carbon $expiration = null): array
     {
         if ($expiration == null) {
             $expiration = now();
@@ -249,7 +249,7 @@ class SuggestionController extends Controller
         return filter_var(Redis::get("suggest:group:block:$suggest_group"), FILTER_VALIDATE_BOOLEAN);
     }
 
-    private function disableSuggestionGroup($suggest_group, \Illuminate\Support\Carbon $expiration = null)
+    private function disableSuggestionGroup($suggest_group, ?\Illuminate\Support\Carbon $expiration = null)
     {
         if ($expiration == null) {
             $expiration = now();

@@ -321,7 +321,7 @@ class PayPal
         return $body;
     }
 
-    public static function VALIDATE_ORDER(string $order_id, array $order = null): array|string|null
+    public static function VALIDATE_ORDER(string $order_id, ?array $order = null): array|string|null
     {
         if ($order === null) {
             $order = self::GET_ORDER($order_id);

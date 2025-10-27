@@ -131,7 +131,7 @@ class CiviCrm
      * @param string $membership_id
      * @return MembershipApplication[]|null
      */
-    public static function FIND_MEMBERSHIPS(string $contact_id = null, string $membership_id = null, string $mandate = null): array|null
+    public static function FIND_MEMBERSHIPS(?string $contact_id = null, ?string $membership_id = null, ?string $mandate = null): ?array
     {
         $memberships = [];
         $params = self::MEMBERSHIP_FETCH_PARAMS;
@@ -600,7 +600,7 @@ class CiviCrm
      * @param float $amount what payment amount to account for
      * @return int|null
      */
-    public static function CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION(int $membership_id, float $amount, Carbon $date = null): int|null
+    public static function CREATE_MEMBERSHIP_PAYPAL_CONTRIBUTION(int $membership_id, float $amount, ?Carbon $date = null): ?int
     {
         if ($date === null)
             $date = now();
@@ -725,7 +725,7 @@ class CiviCrm
         return true;
     }
 
-    public static function GET_EDIT_ID(int $crm_membership, Carbon|null $expiration = null)
+    public static function GET_EDIT_ID(int $crm_membership, ?Carbon $expiration = null)
     {
         if ($expiration === null)
             $expiration = now()->addDays(3);

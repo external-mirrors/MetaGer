@@ -40,7 +40,7 @@ class LogsClient
         return !empty($this->address1) && !empty($this->postal_code) && !empty($this->city) && $this->contact->isDataComplete();
     }
 
-    public function updateData(string $name = null, string $address1 = null, string $postal_code = null, string $city = null, string $first_name = null, string $last_name = null)
+    public function updateData(?string $name = null, ?string $address1 = null, ?string $postal_code = null, ?string $city = null, ?string $first_name = null, ?string $last_name = null)
     {
         $invoice_client = self::getInvoiceNinjaClient();
         $invoice_client->clients->update($this->id, [

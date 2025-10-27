@@ -42,7 +42,7 @@ class MembershipController extends Controller
      * First stage of membership form
      * gather information for contact data
      */
-    public function contactData(Request $request, $application_id = null)
+    public function contactData(Request $request, ?string $application_id = null)
     {
         if (Localization::getLanguage() === "de") {
             $csrf_token = Crypt::encrypt(now()->addHour());
@@ -165,7 +165,7 @@ class MembershipController extends Controller
         return redirect(route("membership_form"));
     }
 
-    public function success(Request $request, $application_id = null)
+    public function success(Request $request, ?string $application_id = null)
     {
         $application = null;
         if ($application_id !== null) {

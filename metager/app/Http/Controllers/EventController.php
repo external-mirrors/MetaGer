@@ -54,11 +54,11 @@ class EventController extends Controller
     public function keyUpdateEvent(Request $request)
     {
         $key = $request->json('key');
-        $change = $request->json('change', null);
+        $change = $request->json('change', 0);
         $new_charge = $request->json('new_charge', null);
 
-        if ($change === null && $new_charge === null) {
-            return response()->json(['status' => 'error', 'message' => 'No change or new charge provided'], 400);
+        if ($new_charge === null) {
+            return response()->json(['status' => 'error', 'message' => 'No new charge provided'], 400);
         }
 
         if ($key !== null) {

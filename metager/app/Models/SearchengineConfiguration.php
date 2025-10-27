@@ -255,7 +255,7 @@ class SearchEngineInfos
     /** @var string */
     public $indexSize;
 
-    public function __construct(string $homepage = null, string $index_name = null, string $display_name = null, string $founded = null, string $headquarter = null, string $operator = null, string $index_size = null)
+    public function __construct(?string $homepage = null, ?string $index_name = null, ?string $display_name = null, ?string $founded = null, ?string $headquarter = null, ?string $operator = null, ?string $index_size = null)
     {
         $this->homepage = $homepage;
         $this->indexName = $index_name;

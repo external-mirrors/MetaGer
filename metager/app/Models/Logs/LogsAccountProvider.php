@@ -9,7 +9,7 @@ class LogsAccountProvider
     private LogsUser $user;
     public readonly LogsClient $client;
     public readonly LogsAbo|null $abo;
-    public function __construct($email = null)
+    public function __construct(?string $email = null)
     {
         if (is_null($email)) {
             $this->client = new LogsClient(Auth::guard("logs")->user()->getAuthIdentifier());

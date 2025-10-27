@@ -16,7 +16,7 @@ class TokenAuthorization extends Authorization
     private $tokenauthorization_header;
     public ?AnonymousTokenPayment $token_payment = null;
 
-    public function __construct(string|null $tokenauthorization, string|null $tokenString = null, string|null $decitokenString = null, string|null $payment_id = null, string|null $payment_uid = null)
+    public function __construct(?string $tokenauthorization, ?string $tokenString = null, ?string $decitokenString = null, ?string $payment_id = null, ?string $payment_uid = null)
     {
         parent::__construct();
         $this->tokenauthorization_header = $tokenauthorization;

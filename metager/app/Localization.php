@@ -11,7 +11,7 @@ use LaravelLocalization;
  */
 class Localization
 {
-    public static function setLocale(string $locale = null)
+    public static function setLocale(?string $locale = null)
     {
         // Ignore healthchecks
         if (request()->is(['metrics', 'health-check/*'])) {
@@ -130,7 +130,7 @@ class Localization
      *
      * @return string
      */
-    public static function GET_PREFERRED_LOCALE($default = null)
+    public static function GET_PREFERRED_LOCALE(?string $default = null)
     {
         $default = str_replace("-", "_", $default);
         $regional_locales = [];

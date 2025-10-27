@@ -1,6 +1,5 @@
 <?php
 return [
-    'assosearch' => 'Associations pour ":q" - MetaGer',
     'prevention' => 'Aide pour les pensées suicidaires - MetaGer',
     'membership' => 'Votre adhésion à SUMA-EV',
     'index' => 'MetaGer : Rechercher et trouver avec protection de la vie privée',
@@ -25,7 +24,6 @@ return [
     'faktencheck' => 'Fact-checks contre fake news',
     'jugendschutz' => 'Protection de la jeunesse',
     'ad-info' => 'Annonces MetaGer',
-    'asso' => 'Associateur - MetaGer',
     'plugin' => 'Plugin - MetaGer',
     'key' => 'Clé anti publicité - MetaGer',
     'allSettings' => 'Tous les paramètres - MetaGer',

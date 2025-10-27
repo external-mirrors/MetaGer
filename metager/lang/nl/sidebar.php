@@ -2,7 +2,6 @@
 return [
     'nav9' => 'Help',
     'nav10' => 'Widget',
-    'nav11' => 'Vereniger',
     'nav14' => 'TOR-Verborgen-Service',
     'nav15' => 'Gereedschap',
     'nav16' => 'Steun ons',

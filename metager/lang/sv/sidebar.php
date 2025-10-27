@@ -12,7 +12,6 @@ return [
     'nav8' => 'Rättslig information',
     'nav9' => 'Hjälp',
     'nav10' => 'Widget',
-    'nav11' => 'Associatör',
     'nav14' => 'TOR-Dold tjänst',
     'nav15' => 'Verktyg',
     'nav16' => 'Stöd oss',

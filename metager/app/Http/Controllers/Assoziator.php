@@ -136,6 +136,7 @@ class Assoziator extends Controller
             ->with('keywords', $eingabe)
             ->with('wordCount', $wordCount)
             ->with('css', [mix('css/asso/style.css')])
-            ->with('darkcss', [mix('css/asso/dark.css')]);;
+            ->with('darkcss', [mix('css/asso/dark.css')]);
+        ;
     }
 }

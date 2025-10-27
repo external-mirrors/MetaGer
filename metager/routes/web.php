@@ -59,17 +59,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::get('/', [StartpageController::class, "loadStartPage"])->name("startpage");
     Route::post('authorized', [StartpageController::class, "isLoggedIn"])->name("startpage:loggedin");
 
-    Route::get('asso', function () {
-        return view('assoziator.asso')
-            ->with('title', trans('titles.asso'))
-            ->with('navbarFocus', 'dienste')
-            ->with('css', [mix('css/asso/style.css')])
-            ->with('darkcss', [mix('css/asso/dark.css')]);
-    })->name("asso");
-
     Route::get('tts', [TTSController::class, 'tts'])->name("tts");
-
-    Route::get('asso/meta.ger3', [Assoziator::class, 'asso'])->name("assoresults");
 
     Route::get('impressum', function () {
         return view('impressum')

@@ -9,7 +9,6 @@ return [
     'nav8' => 'Impressum',
     'nav9' => 'Hilfe',
     'nav10' => 'Widget',
-    'nav11' => 'Assoziator',
     'nav14' => 'TOR-Hidden-Service',
     'nav15' => 'Dienste',
     'nav16' => 'Fördern',

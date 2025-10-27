@@ -11,7 +11,7 @@ return [
             'full' => 'Werbefreie Suche aktiviert.',
         ],
     ],
-    'placeholder' => 'MetaGer - Mehr als eine Suchmaschine',
+    'placeholder' => 'MetaGer – Mehr als eine Suchmaschine',
     'searchbutton' => 'MetaGer-Suche starten',
     'foki' => [
         'web' => 'Web',

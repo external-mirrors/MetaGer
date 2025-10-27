@@ -10,7 +10,6 @@ return [
     'nav6' => 'Equipa',
     'nav9' => 'Ajuda',
     'nav17' => 'Comprar em lojas afiliadas',
-    'nav11' => 'Associador',
     'nav30' => 'Motores de pesquisa',
     'nav8' => 'Informação jurídica',
     'nav15' => 'Ferramentas',

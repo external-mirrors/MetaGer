@@ -1,4 +1,4 @@
-FROM nginx:1.26.0 as setup
+FROM nginx:1.29.2 AS setup
 
 ARG UID=1000
 ARG GID=1000
@@ -14,14 +14,14 @@ RUN groupadd -g ${GID} metager && \
 
 WORKDIR ${USER_HOME}/metager_app
 
-FROM setup as development
+FROM setup AS development
 
 ADD build/nginx/configuration/nginx.conf /etc/nginx/nginx.conf
 ADD build/nginx/configuration/nginx-default-dev.conf /etc/nginx/conf.d/default.conf
 
 USER metager:metager
 
-FROM development as production
+FROM development AS production
 
 USER root:root
 ADD build/nginx/configuration/nginx-default.conf /etc/nginx/conf.d/default.conf

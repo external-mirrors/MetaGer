@@ -27,7 +27,6 @@ return [
     'nav8' => 'Oikeudelliset tiedot',
     'nav9' => 'Apua',
     'nav10' => 'Widget',
-    'nav11' => 'Associator',
     'nav14' => 'TOR-Hidden-Service',
     'nav15' => 'Työkalut',
     'nav16' => 'Tue meitä',

@@ -12,7 +12,6 @@ return [
     'nav8' => 'Informazioni legali',
     'nav9' => 'Aiuto',
     'nav10' => 'Widget',
-    'nav11' => 'Associatore',
     'nav14' => 'Servizio nascosto TOR',
     'nav15' => 'Strumenti',
     'nav16' => 'Sosteneteci',

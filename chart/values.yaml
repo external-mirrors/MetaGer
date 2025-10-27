@@ -136,20 +136,19 @@ affinity: {}
 
 env: []
 
-redis:
-  enabled: true
-  auth:
-    enabled: false
-  architecture: "standalone"
-  global:
-    storageClass: nvme
-  persistence:
-    size: 2Gi
-  resources:
-    limits:
-      memory: 2Gi
-    requests:
-      memory: 50Mi
-  commonConfiguration: |
-    maxmemory 5gb
-    maxmemory-policy allkeys-lru
+redis-sentinel:
+  replicaCount: 1
+  redis:
+    persistence:
+      enabled: false
+    extraConfig:
+      maxmemory: 5gb
+      maxmemory-policy: allkeys-lru
+      save: ""
+      repl-diskless-sync-delay: 5
+      repl-diskless-sync-max-replicas: 2
+      repl-diskless-load: swapdb
+      repl-timeout: 120
+      repl-backlog-size: 512mb
+      appendonly: "no"
+      shutdown-timeout: 10

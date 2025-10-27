@@ -9,7 +9,6 @@ return [
     'nav8' => 'Informations juridiques',
     'nav9' => 'Aide',
     'nav10' => 'Widget',
-    'nav11' => 'Associateur',
     'nav14' => 'Service caché TOR',
     'nav15' => 'Outils',
     'nav16' => 'Nous soutenir',

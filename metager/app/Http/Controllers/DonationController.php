@@ -15,7 +15,7 @@ use LaravelLocalization;
 use Illuminate\Support\Facades\Validator;
 use PHP_IBAN\IBAN;
 use Illuminate\Support\Facades\RateLimiter;
-use SepaQr\Data;
+use SepaQr\SepaQrData;
 use URL;
 
 class DonationController extends Controller
@@ -27,7 +27,7 @@ class DonationController extends Controller
         }
 
         // Generate qr data uri
-        $payment_data = Data::create()
+        $payment_data = (new SepaQrData())
             ->setName("SUMA-EV")
             ->setIban("DE64430609674075033201")
             ->setBic("GENODEM1GLS")
@@ -51,7 +51,7 @@ class DonationController extends Controller
     function amountQr(Request $request)
     {
         // Generate qr data uri
-        $payment_data = Data::create()
+        $payment_data = (new SepaQrData())
             ->setName("SUMA-EV")
             ->setIban("DE64430609674075033201")
             ->setBic("GENODEM1GLS")

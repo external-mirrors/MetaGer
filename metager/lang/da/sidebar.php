@@ -28,7 +28,6 @@ return [
     'nav23' => 'Bliv medlem',
     'nav24' => 'MetaGer-kildekode',
     'nav25' => 'MetaGer App',
-    'nav11' => 'Associator',
     'nav26' => 'MetaGer-Fanshop',
     'nav27' => 'MetaGer-kort',
     'nav28' => 'Indstillinger',

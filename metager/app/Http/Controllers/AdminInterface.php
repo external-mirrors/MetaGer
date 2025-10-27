@@ -163,21 +163,6 @@ class AdminInterface extends Controller
         return response()->json($result);
     }
 
-    public function check()
-    {
-        $q = "";
-
-        /** @var QueryLogger */
-        $query_logger = App::make(QueryLogger::class);
-        $query = $query_logger->getLatestLogs(1);
-        if (sizeof($query) > 0) {
-            $q = $query[0]->query;
-        }
-
-        return view('admin.check')
-            ->with('title', 'Wer sucht was? - MetaGer')
-            ->with('q', $q);
-    }
 
     public function getFPMStatus()
     {

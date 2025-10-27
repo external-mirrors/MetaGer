@@ -154,7 +154,7 @@ class DonationController extends Controller
         }
 
         // Generate qr data uri
-        $payment_data = Data::create()
+        $payment_data = (new SepaQrData())
             ->setName("SUMA-EV")
             ->setIban("DE64430609674075033201")
             ->setBic("GENODEM1GLS")

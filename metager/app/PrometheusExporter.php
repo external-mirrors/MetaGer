@@ -59,11 +59,11 @@ class PrometheusExporter
         $counter = $registry->getOrRegisterCounter("metager", "key_used", "Counts MetaGer Key Usage", ["source", "cached"]);
         $counter->incBy($amount, [$source, json_encode($cached)]);
     }
-    public static function UpdateMainzKeyStatus($tokens)
+    public static function UpdateKeyStatus($key, $tokens, $owner = null)
     {
         $registry = CollectorRegistry::getDefault();
-        $gauge = $registry->getOrRegisterGauge("metager", "key", "Tracks status of the Mainz Key", ["owner"]);
-        $gauge->set($tokens, ["mainz"]);
+        $gauge = $registry->getOrRegisterGauge("metager", "key", "Tracks status of the Key", ["key", "owner"]);
+        $gauge->set($tokens, [$key, $owner]);
     }
     public static function CreditcardDonation(string $status)
     {

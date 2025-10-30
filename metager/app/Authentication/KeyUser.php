@@ -182,7 +182,7 @@ class KeyUser implements Authenticatable
             /** @var array $uniMainzKeys */
             $uniMainzKeys = config('metager.metager.keys.uni_mainz', []);
             if (in_array($this->key, $uniMainzKeys)) {
-                PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $current_charge, owner: "uni_mainz");
+                PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $current_charge, owner: "mainz");
             }
             Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
             $this->key_data = $key_response; // Store the key data for future use

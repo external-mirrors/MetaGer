@@ -97,7 +97,7 @@ class KeyAuthorization extends Authorization
         /** @var array $uniMainzKeys */
         $uniMainzKeys = config('metager.metager.keys.uni_mainz', []);
         if (in_array($this->key, $uniMainzKeys)) {
-            PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $this->availableTokens, owner: "uni_mainz");
+            PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $this->availableTokens, owner: "mainz");
         }
 
         return true;

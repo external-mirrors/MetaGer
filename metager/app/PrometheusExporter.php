@@ -62,7 +62,7 @@ class PrometheusExporter
     public static function UpdateKeyStatus($key, $tokens, $owner)
     {
         $registry = CollectorRegistry::getDefault();
-        $gauge = $registry->getOrRegisterGauge("metager", "key", "Tracks status of the Key", ["key", "owner"]);
+        $gauge = $registry->getOrRegisterGauge("metager", "key_status", "Tracks status of the Key", ["key", "owner"]);
         $gauge->set($tokens, [$key, $owner]);
     }
     public static function CreditcardDonation(string $status)

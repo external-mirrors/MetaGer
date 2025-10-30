@@ -2,7 +2,6 @@
 
 namespace App\Models\Authorization;
 
-use App\Events\KeyChanged;
 use App\PrometheusExporter;
 use Illuminate\Support\Facades\Redis;
 
@@ -94,8 +93,11 @@ class KeyAuthorization extends Authorization
         $mission = json_encode($mission);
         Redis::rpush(\App\MetaGer::FETCHQUEUE_KEY, $mission);
 
-        if (config('metager.metager.keys.uni_mainz') === $this->key) {
-            PrometheusExporter::UpdateMainzKeyStatus($this->availableTokens);
+
+        /** @var array $uniMainzKeys */
+        $uniMainzKeys = config('metager.metager.keys.uni_mainz', []);
+        if (in_array($this->key, $uniMainzKeys)) {
+            PrometheusExporter::UpdateKeyStatus(key: $this->key, tokens: $this->availableTokens, owner: "mainz");
         }
 
         return true;

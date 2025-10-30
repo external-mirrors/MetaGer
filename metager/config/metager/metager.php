@@ -15,7 +15,7 @@ return [
         "access_token" => env("KEY_ACCESS_TOKEN", "no-auth")
     ],
     "keys" => [
-        "uni_mainz" => env("mainz_key"),
+        "uni_mainz" => explode(separator: ",", string: env("mainz_keys")),
         "assoziator" => env("ASSO_KEY"),
     ],
     "tts" => [

@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Metager Apps',
         ],
-        'p' => 'Installieren Sie unsere Web-Erweiterung, um MetaGer als Ihre Suchmaschine hinzuzufügen. Bleiben Sie auch nach dem Löschen der Browserdaten eingeloggt und bleiben Sie nachweislich anonym mit <a href=":anonymousTokenLink">anonymous token</a>. Sie können auch ganz bequem die MetaGer-App auf Ihrem Smartphone verwenden.',
+        'p' => 'Installieren Sie unsere Browser-Erweiterung, um MetaGer als Suchmaschine hinzuzufügen. Bleiben Sie auch nach dem Löschen der Browserdaten eingeloggt und bleiben Sie nachweislich anonym mit <a href=":anonymousTokenLink">anonymen Token</a>. Sie können auch ganz bequem die MetaGer-App auf Ihrem Smartphone verwenden.',
     ],
 ];

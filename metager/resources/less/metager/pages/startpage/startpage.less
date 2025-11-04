@@ -32,24 +32,22 @@ html {
     }
 
     >div.inputs {
-      >form {
-        width: 100%;
-        display: flex;
 
-        @media (max-width: 490px) {
-          flex-direction: column;
-        }
-
-        >input {
-          flex-grow: 1;
-          padding: .5rem 1rem;
-        }
+      .not-logged-in-info {
+        margin-bottom: 0.75em;
+        color: #b00;
+        font-weight: bold;
+        text-align: center;
       }
 
-      >.key-error {
-        line-height: 1;
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
+      .startpage-login-btn {
+        width: 100%;
+        margin-bottom: 0.5em;
+      }
+
+      .startpage-create-btn {
+        width: 100%;
+        color: @color-white;
       }
     }
   }

@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Metager-apps',
         ],
-        'p' => 'Brug vores plugin til at installere MetaGer som din søgemaskine. Du kan nemt bruge MetaGer-appen på din smartphone.',
+        'p' => 'Installer vores webudvidelse for at tilføje MetaGer som din søgemaskine. Forbliv logget ind, selv efter at du har slettet browserdata, og forbliv beviseligt anonym med <a href=":anonymousTokenLink">anonymous token</a>. Du kan også nemt bruge MetaGer-appen på din smartphone.',
     ],
 ];

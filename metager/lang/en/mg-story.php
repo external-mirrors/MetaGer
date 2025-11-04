@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Metager Apps',
         ],
-        'p' => 'Use our plugin to install MetaGer as your search engine. You can comfortably use the MetaGer app on your smartphone.',
+        'p' => 'Install our web extension to add MetaGer as your search engine. Stay logged in even after clearing browser data and remain provably anonymous with <a href=":anonymousTokenLink">anonymous token</a>. You can also conveniently use the MetaGer app on your smartphone.',
     ],
 ];

@@ -36,7 +36,7 @@ return [
         'image' => [
             'alt' => 'Metager Apps',
         ],
-        'p' => 'Gebruik onze plugin om MetaGer te installeren als je zoekmachine. Je kunt gemakkelijk de MetaGer app op je smartphone gebruiken.',
+        'p' => 'Installeer onze webextensie om MetaGer toe te voegen als je zoekmachine. Blijf ingelogd, zelfs na het wissen van browsergegevens en blijf aantoonbaar anoniem met <a href=":anonymousTokenLink">anonieme token</a>. Je kunt ook gemakkelijk de MetaGer app op je smartphone gebruiken.',
     ],
     'four-reasons' => 'Vier redenen om MetaGer te gebruiken',
     'privacy' => [

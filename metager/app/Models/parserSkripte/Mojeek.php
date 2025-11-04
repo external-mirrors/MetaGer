@@ -16,9 +16,11 @@ class Mojeek extends Searchengine
         parent::__construct($name, $configuration);
 
         $lang = strtoupper(Localization::getLanguage());
-        $this->configuration->getParameter->lr = $lang;
+        $this->configuration->getParameter->lb = $lang;
+        $this->configuration->getParameter->lbb = 100;
         $region = Localization::getRegion();
         $this->configuration->getParameter->rb = $region;
+        $this->configuration->getParameter->rbb = 10;
 
         $this->configuration->disabledByDefault = true;
     }

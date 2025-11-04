@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Apps Metager',
         ],
-        'p' => 'Utilisez notre plugin pour installer MetaGer comme moteur de recherche. Vous pouvez utiliser confortablement l\'application MetaGer sur votre smartphone.',
+        'p' => 'Installez notre extension web pour ajouter MetaGer comme moteur de recherche. Restez connecté même après avoir effacé les données du navigateur et restez anonyme avec <a href=":anonymousTokenLink">anonymous token</a>. Vous pouvez également utiliser l\'application MetaGer sur votre smartphone.',
     ],
 ];

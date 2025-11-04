@@ -176,7 +176,7 @@
       </picture>
 
     </figure>
-    <p>{{ trans('mg-story.plugin.p') }}</p>
+  <p>@lang('mg-story.plugin.p', ['anonymousTokenLink' => url('/help/anonymous-token')])</p>
     <ul class="story-links">
       <li><a class="story-button"
           href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/plugin") }}">{{ trans('mg-story.plugin.btn-add') }}</a>

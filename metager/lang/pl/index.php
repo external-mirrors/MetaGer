@@ -30,8 +30,8 @@ return [
     'lang' => 'język przełącznika',
     'searchreset' => 'usuń wprowadzone zapytanie wyszukiwania',
     'searchbar-replacement' => [
-        'start' => 'Tworzenie nowego klucza',
-        'message' => 'Zaloguj się za pomocą klucza, aby korzystać z wyszukiwarki MetaGer. Jest ona dostępna tylko bez reklam!',
+        'start' => 'Doładowanie nowego klucza',
+        'message' => 'Zaloguj się za pomocą swojego klucza, aby korzystać z wyszukiwarki MetaGer. Jest ona dostępna tylko bez reklam i <a href=":anonym_link">anonimowo</a>!',
         'login' => 'Logowanie za pomocą klucza',
         'key_error' => "Wprowadzony klucz był nieprawidłowy. Sprawdź wprowadzone dane.",
         'why' => 'dlaczego?',
@@ -39,5 +39,6 @@ return [
         'payment_id_error' => "Wprowadzono identyfikator płatności, który nie jest prawidłowym kluczem. Klucz ma długość 36 znaków.",
         'new_key' => 'Nie masz jeszcze klucza?',
         'extension' => 'Pozostań zalogowany i anonimowy dzięki naszemu rozszerzeniu internetowemu',
+        'not_logged_in' => 'Nie jesteś obecnie zalogowany.',
     ],
 ];

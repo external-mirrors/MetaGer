@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Aplicaciones de Metager',
         ],
-        'p' => 'Con nuestro complemento puede configurar MetaGer como el motor de búsqueda predeterminado. Y con la aplicación puede usar MetaGer cómodamente en su teléfono inteligente.',
+        'p' => 'Instale nuestra extensión web para añadir MetaGer como motor de búsqueda. Manténgase conectado incluso después de borrar los datos del navegador y permanezca anónimo de forma demostrable con <a href=":anonymousTokenLink">anonymous token</a>. También puedes utilizar cómodamente la aplicación de MetaGer en tu smartphone.',
     ],
 ];

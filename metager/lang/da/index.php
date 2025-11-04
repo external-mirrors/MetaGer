@@ -30,7 +30,7 @@ return [
     'lang' => 'wwitch-sprog',
     'searchreset' => 'Slet input til søgeforespørgsel',
     'searchbar-replacement' => [
-        'message' => 'Log ind med din nøgle for at bruge MetaGer-søgemaskinen. Den er kun tilgængelig uden reklamer!',
+        'message' => 'Log ind med din nøgle for at bruge MetaGer-søgemaskinen. Den er kun tilgængelig uden reklamer og <a href=":anonym_link">anonymt</a>!',
         'login' => 'Login med nøgle',
         'start' => 'Fyld den nye nøgle op',
         'why' => 'Hvorfor?',

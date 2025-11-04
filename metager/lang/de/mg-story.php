@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Metager Apps',
         ],
-        'p' => 'Mit unserem Plugin können Sie MetaGer als Standardsuchmaschine festlegen. Und mit der App nutzen Sie MetaGer ganz bequem auf Ihrem Smartphone.',
+        'p' => 'Installieren Sie unsere Web-Erweiterung, um MetaGer als Ihre Suchmaschine hinzuzufügen. Bleiben Sie auch nach dem Löschen der Browserdaten eingeloggt und bleiben Sie nachweislich anonym mit <a href=":anonymousTokenLink">anonymous token</a>. Sie können auch ganz bequem die MetaGer-App auf Ihrem Smartphone verwenden.',
     ],
 ];

@@ -32,12 +32,13 @@ return [
     'searchbar-replacement' => [
         'message' => 'Log ind med din nøgle for at bruge MetaGer-søgemaskinen. Den er kun tilgængelig uden reklamer!',
         'login' => 'Login med nøgle',
-        'start' => 'Opret en ny nøgle',
+        'start' => 'Fyld den nye nøgle op',
         'why' => 'Hvorfor?',
         'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
         'login_code_error' => "Den indtastede login-kode var ikke gyldig. Tip: Login-koder er kun gyldige, når de er synlige på en anden enhed!",
         'payment_id_error' => "Du har indtastet et betalingsid, som ikke er en korrekt nøgle. Din nøgle er 36 tegn lang.",
         'new_key' => 'Ingen nøgle endnu?',
         'extension' => 'Forbliv logget ind og anonym med vores webudvidelse',
+        'not_logged_in' => 'Du er i øjeblikket ikke logget ind.',
     ],
 ];

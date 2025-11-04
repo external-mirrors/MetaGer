@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Aplikacje Metager',
         ],
-        'p' => 'Skorzystaj z naszej wtyczki, aby zainstalować MetaGer jako wyszukiwarkę. Możesz wygodnie korzystać z aplikacji MetaGer na swoim smartfonie.',
+        'p' => 'Zainstaluj nasze rozszerzenie internetowe, aby dodać MetaGer jako wyszukiwarkę. Pozostań zalogowany nawet po wyczyszczeniu danych przeglądarki i zachowaj anonimowość dzięki anonimowemu tokenowi <a href=":anonymousTokenLink"></a> . Możesz także wygodnie korzystać z aplikacji MetaGer na smartfonie.',
     ],
 ];

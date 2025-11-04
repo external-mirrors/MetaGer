@@ -30,8 +30,8 @@ return [
     'lang' => 'lenguaje wwitch',
     'searchreset' => 'eliminar la entrada de consulta de búsqueda',
     'searchbar-replacement' => [
-        'message' => 'Inicie sesión con su clave para utilizar el motor de búsqueda MetaGer. ¡Sólo está disponible sin publicidad!',
-        'start' => 'Crear una nueva clave',
+        'message' => 'Inicia sesión con tu clave para utilizar el motor de búsqueda MetaGer. ¡Sólo está disponible sin publicidad y <a href=":anonym_link">anónimo</a>!',
+        'start' => 'Recargar nueva llave',
         'login' => 'Inicio de sesión con clave',
         'why' => '¿Por qué?',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
@@ -39,5 +39,6 @@ return [
         'payment_id_error' => "Ha introducido un identificador de pago que no es una clave correcta. Tu clave tiene 36 caracteres.",
         'new_key' => '¿Aún no tienes llave?',
         'extension' => 'Permanezca conectado y anónimo con nuestra webextensión',
+        'not_logged_in' => 'No ha iniciado sesión.',
     ],
 ];

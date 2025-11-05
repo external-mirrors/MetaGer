@@ -32,7 +32,7 @@ return [
     'searchbar-replacement' => [
         'message' => 'Please log in with your key to use the MetaGer search engine. It is only available ad-free & <a href=":anonym_link">anonymous</a>!',
         'why' => 'why?',
-        'start' => 'Top up new key',
+        'start' => 'Create new key',
         'new_key' => 'No key yet?',
         'extension' => 'Stay logged in and anonymous with our webextension',
         "key_error" => "The entered key was not valid. Please check the input.",

@@ -32,7 +32,7 @@ return [
     'searchbar-replacement' => [
         'message' => 'Logga in med din nyckel för att använda MetaGer-sökmotorn. Den är endast tillgänglig annonsfri & <a href=":anonym_link">anonym</a>!',
         'login' => 'Logga in med nyckel',
-        'start' => 'Påfyllning av ny nyckel',
+        'start' => 'Skapa ny nyckel',
         'why' => 'Varför?',
         'key_error' => "Den inmatade nyckeln var inte giltig. Vänligen kontrollera inmatningen.",
         'login_code_error' => "Den angivna inloggningskoden var inte giltig. Tips: Inloggningskoder är endast giltiga när de är synliga på en annan enhet!",

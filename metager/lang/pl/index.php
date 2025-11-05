@@ -30,7 +30,7 @@ return [
     'lang' => 'język przełącznika',
     'searchreset' => 'usuń wprowadzone zapytanie wyszukiwania',
     'searchbar-replacement' => [
-        'start' => 'Doładowanie nowego klucza',
+        'start' => 'Utwórz nowy klucz',
         'message' => 'Zaloguj się za pomocą swojego klucza, aby korzystać z wyszukiwarki MetaGer. Jest ona dostępna tylko bez reklam i <a href=":anonym_link">anonimowo</a>!',
         'login' => 'Logowanie za pomocą klucza',
         'key_error' => "Wprowadzony klucz był nieprawidłowy. Sprawdź wprowadzone dane.",

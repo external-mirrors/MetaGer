@@ -44,6 +44,6 @@ return [
         'image' => [
             'alt' => 'Metager-sovellukset',
         ],
-        'p' => 'Asenna MetaGer hakukoneeksi lisäosamme avulla. Voit käyttää MetaGer-sovellusta kätevästi älypuhelimessasi.',
+        'p' => 'Asenna verkkolaajennuksemme lisätäksesi MetaGerin hakukoneeksesi. Pysy kirjautuneena sisään selaimen tietojen tyhjentämisen jälkeenkin ja pysy todistettavasti anonyyminä <a href=":anonymousTokenLink">anonyymitunnisteen</a> avulla. Voit myös käyttää kätevästi MetaGer-sovellusta älypuhelimessasi.',
     ],
 ];

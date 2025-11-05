@@ -4,7 +4,7 @@ return [
         'btn-app' => 'MetaGer App',
         'btn-add' => 'Adicionar o plugin MetaGer',
         'title' => 'Instalar o MetaGer agora',
-        'p' => 'Utilize o nosso plugin para instalar o MetaGer como o seu motor de busca. Pode utilizar confortavelmente a aplicação MetaGer no seu smartphone.',
+        'p' => 'Instale a nossa extensão web para adicionar o MetaGer ao seu motor de busca. Mantenha-se conectado mesmo depois de limpar os dados do navegador e permaneça comprovadamente anónimo com o token anónimo <a href=":anonymousTokenLink"></a> . Também pode utilizar convenientemente a aplicação MetaGer no seu smartphone.',
         'image' => [
             'alt' => 'MetaGer Apps',
         ],

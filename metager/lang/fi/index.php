@@ -31,7 +31,7 @@ return [
     'searchreset' => 'poista hakukyselyn syöttö',
     'searchbar-replacement' => [
         'login' => 'Kirjaudu sisään avaimella',
-        'start' => 'Täytä uusi avain',
+        'start' => 'Luo uusi avain',
         'message' => 'Kirjaudu sisään avaimellasi, jotta voit käyttää MetaGer-hakukonetta. Se on saatavilla vain mainosvapaasti ja <a href=":anonym_linkki">anonyymisti</a>!',
         'why' => 'Miksi?',
         'key_error' => "Syötetty avain ei ollut kelvollinen. Tarkista syöttö.",

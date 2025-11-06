@@ -32,9 +32,13 @@
                             </td>
                             <td>
                                 @if($membership_application->contact !== null)
-                                    {{ $membership_application->contact->title . " " . $membership_application->contact->first_name . " " . $membership_application->contact->last_name }}
+                                    <a href="mailto:{{ $membership_application->contact->email }}">
+                                        {{ $membership_application->contact->title . " " . $membership_application->contact->first_name . " " . $membership_application->contact->last_name }}
+                                    </a>
                                 @elseif($membership_application->company !== null)
-                                    {{ $membership_application->company->company }}
+                                    <a href="mailto:{{ $membership_application->company->email }}">
+                                        {{ $membership_application->company->company }}
+                                    </a>
                                 @endif
                             </td>
                             <td>

@@ -39,11 +39,13 @@ class MembershipPaymentReminder extends Command
         $lock = Cache::lock("console:commands:membership:payment-reminder:lock", 60 * 5);
         if ($lock->get()) {
             $chargebacks = CiviCrm::FIND_CHARGEBACKS();
+            if (sizeof($chargebacks) > 0) {
+                CiviCrm::MEMBERSHIP_RENEW(true);
+            }
             foreach ($chargebacks as $chargeback) {
                 $mail = new PaymentMethodFailed($chargeback);
                 if (Mail::mailer("membership")->send($mail)) {
                     CiviCrm::UPDATE_MEMBERSHIP_RAW($chargeback, ['Beitrag.Zahlungsweise:label' => 'Banküberweisung', 'Beitrag.IBAN' => '', 'Beitrag.BIC' => '', 'Beitrag.Kontoinhaber' => '', 'Beitrag.PayPal_Vault' => '', 'Beitrag.PayPal_ID' => '']);
-                    CiviCrm::MEMBERSHIP_RENEW(true);
                 }
             }
 

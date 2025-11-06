@@ -2,7 +2,7 @@
 return [
     'searchbar-replacement' => [
         'payment_id_error' => "Introduziu um ID de pagamento que não é uma chave correta. A sua chave tem 36 caracteres.",
-        'start' => 'Recarregar a nova chave',
+        'start' => 'Criar nova chave',
         'message' => 'Por favor, inicie sessão com a sua chave para utilizar o motor de busca MetaGer. Só está disponível sem anúncios e <a href=":anonym_link">anónimo</a>!',
         'why' => 'Porquê?',
         'key_error' => "A chave introduzida não é válida. Por favor, verifique a entrada.",

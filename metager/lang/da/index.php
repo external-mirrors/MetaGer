@@ -32,7 +32,7 @@ return [
     'searchbar-replacement' => [
         'message' => 'Log ind med din nøgle for at bruge MetaGer-søgemaskinen. Den er kun tilgængelig uden reklamer og <a href=":anonym_link">anonymt</a>!',
         'login' => 'Login med nøgle',
-        'start' => 'Fyld den nye nøgle op',
+        'start' => 'Opret ny nøgle',
         'why' => 'Hvorfor?',
         'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
         'login_code_error' => "Den indtastede login-kode var ikke gyldig. Tip: Login-koder er kun gyldige, når de er synlige på en anden enhed!",

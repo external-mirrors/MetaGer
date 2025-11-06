@@ -31,7 +31,7 @@ return [
     'searchreset' => 'invoer zoekopdracht verwijderen',
     'searchbar-replacement' => [
         'login' => 'Inloggen met sleutel',
-        'start' => 'Nieuwe sleutel bijvullen',
+        'start' => 'Nieuwe sleutel maken',
         'message' => 'Log in met je sleutel om de MetaGer zoekmachine te gebruiken. Het is alleen beschikbaar advertentie-vrij & <a href=":anonym_link">anoniem</a>!',
         'why' => 'waarom?',
         'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",

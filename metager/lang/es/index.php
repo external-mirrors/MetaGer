@@ -31,7 +31,7 @@ return [
     'searchreset' => 'eliminar la entrada de consulta de búsqueda',
     'searchbar-replacement' => [
         'message' => 'Inicia sesión con tu clave para utilizar el motor de búsqueda MetaGer. ¡Sólo está disponible sin publicidad y <a href=":anonym_link">anónimo</a>!',
-        'start' => 'Recargar nueva llave',
+        'start' => 'Crear nueva clave',
         'login' => 'Inicio de sesión con clave',
         'why' => '¿Por qué?',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",

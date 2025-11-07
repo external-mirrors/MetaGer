@@ -100,7 +100,11 @@ class SettingsController extends Controller
             ->with('cookieLink', $cookieLink)
             ->with('agent', $agent)
             ->with('browser', $agent)
-            ->with('js', [mix('js/scriptSettings.js')]), 200, ["Cache-Control" => "no-store"]);
+            ->with('js', [mix('js/scriptSettings.js')]), 200, [
+            "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
+            "Pragma" => "no-cache",
+            "Expires" => "0"
+        ]);
     }
 
     private function getSumas($fokus)
@@ -282,7 +286,11 @@ class SettingsController extends Controller
             self::PROCESS_GLOBAL_SETTING_CHANGE("nt", $request->input('nt', ''));
         }
 
-        $headers = ["Cache-Control" => "no-store"];
+        $headers = [
+            "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
+            "Pragma" => "no-cache",
+            "Expires" => "0"
+        ];
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response, 200, $headers);

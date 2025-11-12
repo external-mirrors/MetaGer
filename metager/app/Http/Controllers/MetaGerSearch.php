@@ -6,14 +6,12 @@ use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
-use App\Models\DisabledReason;
 use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\SearchSettings;
+use Auth;
 use Blade;
-use Carbon;
-use Cookie;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -143,6 +141,30 @@ class MetaGerSearch extends Controller
         }
 
         $csp = "'self'";
+
+        // --- Payment logic for used searchengines ---
+        $engines = app(Searchengines::class)->getEnabledSearchengines();
+        $rawCost = app(Searchengines::class)->getRawSearchCost();
+        $searchCost = app(Searchengines::class)->getSearchCost();
+        if (is_array($engines)) {
+            foreach ($engines as $engine) {
+                // Only pay for engines that are used, not loaded, and not cached
+                if (!$engine->cached && $engine->configuration->cost > 0) {
+                    // Remove namespace before passing engine to exporter
+                    PrometheusExporter::KeyUsed($engine->configuration->cost, preg_replace("/^.*\\\/", "", get_class($engine)), $engine->cached);
+                    if (($user = Auth::guard("key")->user()) !== null) {
+                        $user->makePayment($engine->configuration->cost);
+                    } else {
+                        app(Authorization::class)->makePayment($engine->configuration->cost);
+                    }
+                }
+            }
+            // If rawCost < 1, pay the difference between searchCost and rawCost
+            if ($rawCost < 1 && $searchCost > $rawCost) {
+                $diff = $searchCost - $rawCost;
+                app(Authorization::class)->makePayment($diff);
+            }
+        }
 
         return response($metager->createView($quicktip_results), 200, [
             "Cache-Control" => "max-age=3600, must-revalidate, public",

@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Vis tilfældige tips på resultatsiden',
     ],
+    'cost' => [
+        'total' => 'Vi opkræver <strong>:cost Token</strong> pr. søgeforespørgsel med de nuværende indstillinger.',
+        'minimum' => 'Bemærk: Den mindste omkostning pr. søgning er <strong>:min Token</strong> pr. søgning.',
+    ],
 ];

@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Visa slumpmässiga tips på resultatsidan',
     ],
+    'cost' => [
+        'total' => 'Vi debiterar <strong>:cost Token</strong> per sökfråga med nuvarande inställningar.',
+        'minimum' => 'Obs: Den lägsta kostnaden per sökning är <strong>:min Token</strong> per sökning.',
+    ],
 ];

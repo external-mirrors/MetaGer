@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Toon willekeurige Tips op de resultatenpagina',
     ],
+    'cost' => [
+        'total' => 'We rekenen <strong>:cost Token</strong> per zoekopdracht met de huidige instellingen.',
+        'minimum' => 'Opmerking: De minimale kosten per zoekopdracht zijn <strong>:min Token</strong> per zoekopdracht.',
+    ],
 ];

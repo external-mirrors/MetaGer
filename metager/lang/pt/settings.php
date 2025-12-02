@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Mostrar sugestões aleatórias na página de resultados',
     ],
+    'cost' => [
+        'total' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',
+        'minimum' => 'Nota: O custo mínimo por pesquisa é <strong>:min Token</strong> por pesquisa.',
+    ],
 ];

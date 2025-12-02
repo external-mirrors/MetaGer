@@ -73,7 +73,7 @@ class LangSelector extends Controller
             Cookie::queue(Cookie::forget("web_setting_m", "/", null));
             $new_locale = config("app.default_locale");
         } else {
-            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, false));
+            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, true));
             $new_locale = $path_locale;
         }
 

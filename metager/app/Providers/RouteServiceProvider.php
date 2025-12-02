@@ -4,7 +4,7 @@ namespace App\Providers;
 
 use App\Http\Middleware\LogsAuthentication;
 use App\Localization;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;

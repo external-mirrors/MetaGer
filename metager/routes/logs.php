@@ -2,7 +2,7 @@
 use App\Http\Controllers\LogsApiController;
 use App\Http\Middleware\LogsAuthentication;
 use App\Mail\LogsLoginCode;
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 

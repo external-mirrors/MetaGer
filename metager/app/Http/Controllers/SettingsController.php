@@ -102,8 +102,6 @@ class SettingsController extends Controller
             ->with('browser', $agent)
             ->with('js', [mix('js/scriptSettings.js')]), 200, [
             "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
-            "Pragma" => "no-cache",
-            "Expires" => "0"
         ]);
     }
 
@@ -170,7 +168,7 @@ class SettingsController extends Controller
             if ($engines[$sumaName]->configuration->disabledByDefault) {
                 Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
             } else {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, $secure, false));
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, $secure, true));
             }
         }
 
@@ -198,7 +196,7 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
         if ($engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, $secure, false));
+                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, $secure, true));
             } else {
                 Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
             }
@@ -249,7 +247,7 @@ class SettingsController extends Controller
                         $path = \Request::path();
                         $cookiePath = "/";
                         $secure = app()->environment("local") ? false : true;
-                        Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, $secure, false));
+                        Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, $secure, true));
                         break;
                     }
                 }
@@ -287,9 +285,7 @@ class SettingsController extends Controller
         }
 
         $headers = [
-            "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
-            "Pragma" => "no-cache",
-            "Expires" => "0"
+            "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private"
         ];
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
@@ -318,7 +314,7 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forget('suggestion_provider', '/'));
                 SuggestionDebtAuthorization::REMOVE_SETTINGS();
             } else {
-                Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, true));
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             }
             return true;
@@ -328,14 +324,14 @@ class SettingsController extends Controller
             if ($value === "medium") {
                 Cookie::queue(Cookie::forget("suggestion_delay", "/"));
             } else {
-                Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, true));
             }
             $settings->suggestion_delay = $value;
             return true;
         } else if ($key === "suggestion_addressbar" && !empty($value) && in_array($value, ["on", "off"])) {
             $settings->suggestion_addressbar = $value === "on" ? true : false;
             if ($value === "on") {
-                Cookie::queue(Cookie::forever('suggestion_addressbar', 'on', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('suggestion_addressbar', 'on', '/', null, $secure, true));
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             } elseif ($value === "off") {
                 Cookie::queue(Cookie::forget("suggestion_addressbar", "/"));
@@ -344,30 +340,30 @@ class SettingsController extends Controller
             return true;
         } else if ($key === "tips" && !empty($value)) {
             if ($value === "off") {
-                Cookie::queue(Cookie::forever('tips', 'off', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('tips', 'off', '/', null, $secure, true));
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("tips", "/"));
             }
             return true;
         } else if ($key === "tiles_startpage" && !empty($value)) {
             if ($value === "off") {
-                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, true));
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("tiles_startpage", "/"));
             }
             return true;
         } else if ($key === "zitate" && !empty($value)) {
             if ($value === "off") {
-                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, true));
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("zitate", "/"));
             }
             return true;
         } else if ($key === "dm" && !empty($value)) {
             if ($value === "off") {
-                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, true));
             } elseif ($value === "on") {
-                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, true));
             } elseif ($value === "system") {
                 Cookie::queue(Cookie::forget('dark_mode', '/'));
             }
@@ -376,7 +372,7 @@ class SettingsController extends Controller
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('new_tab', '/'));
             } elseif ($value === "on") {
-                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, false));
+                Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, true));
             }
             return true;
         }
@@ -524,7 +520,7 @@ class SettingsController extends Controller
 
         $cookieName = $fokus . '_blpage';
         $secure = app()->environment("local") ? false : true;
-        Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, false));
+        Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
 
 
         $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "bl"]);
@@ -594,17 +590,17 @@ class SettingsController extends Controller
             # Add Settings for searchengines supplied in cookies and headers
             if ($searchsettings->isValidSetting($key, $value)) {
                 if ($key === 'key') {
-                    Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, false));
+                    Cookie::queue(Cookie::forever("key", $value, '/', null, $secure, true));
                     $params_for_startpage["key"] = $value;
                 } elseif ($key === 'dark_mode' && ($value === '1' || $value === '2')) {
-                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, false));
+                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, true));
                 } elseif ($key === 'new_tab' && $value === 'on') {
-                    Cookie::queue(Cookie::forever($key, 'on', '/', null, $secure, false));
+                    Cookie::queue(Cookie::forever($key, 'on', '/', null, $secure, true));
                 } elseif ($key === 'zitate' && $value === 'off') {
-                    Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, false));
+                    Cookie::queue(Cookie::forever($key, 'off', '/', null, $secure, true));
                 } else {
                     // Setting page
-                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, false));
+                    Cookie::queue(Cookie::forever($key, $value, '/', null, $secure, true));
                 }
             }
         }

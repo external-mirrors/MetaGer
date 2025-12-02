@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Pokaż losowe wskazówki na stronie wyników',
     ],
+    'cost' => [
+        'total' => 'Pobieramy opłatę <strong>:cost Token</strong> za zapytanie wyszukiwania z bieżącymi ustawieniami.',
+        'minimum' => 'Uwaga: Minimalny koszt wyszukiwania to <strong>:min Token</strong> na wyszukiwanie.',
+    ],
 ];

@@ -68,7 +68,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Los siguientes motores de búsqueda requieren una <a href="#metager-key">clave MetaGer</a>',
     'no-engines' => 'Con la configuración de búsqueda actual, no se consulta ningún motor de búsqueda.',
-    'cost' => 'Cobramos <strong>:cost Token</strong> por consulta de búsqueda con la configuración actual.',
     'cost-free' => 'Sus búsquedas son <strong>gratuitas</strong> con la configuración actual.',
     'free' => 'gratis',
     'enable-engine' => 'Activar el motor de búsqueda',

@@ -68,7 +68,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Je kunt de volgende zoekmachines gebruiken met een <a href=":link" target="_blank">MetaGer-toets</a>.',
     'no-engines' => 'Met de huidige zoekinstellingen wordt er geen zoekmachine opgevraagd.',
-    'cost' => 'We rekenen <strong>:cost Token</strong> per zoekopdracht met de huidige instellingen.',
     'cost-free' => 'Je zoekopdrachten zijn <strong>gratis</strong> met de huidige instellingen.',
     'free' => 'gratis',
     'enable-engine' => 'Zoekmachine inschakelen',

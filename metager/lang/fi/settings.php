@@ -101,4 +101,8 @@ return [
     'tips' => [
         'label' => 'Näytä satunnaiset vinkit tulossivulla',
     ],
+    'cost' => [
+        'total' => 'Veloitamme <strong>:cost Token</strong> per hakukysely nykyisillä asetuksilla.',
+        'minimum' => 'Huomautus: Vähimmäiskustannus hakua kohden on <strong>:min Token</strong> per haku.',
+    ],
 ];

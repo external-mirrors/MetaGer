@@ -39,7 +39,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Du kan använda följande sökmotorer med en <a href=":link" target="_blank">MetaGer-nyckel</a>.',
     'no-engines' => 'Med de aktuella sökinställningarna ställs ingen fråga till någon sökmotor.',
-    'cost' => 'Vi debiterar <strong>:cost Token</strong> per sökfråga med nuvarande inställningar.',
     'cost-free' => 'Dina sökningar är <strong>gratis</strong> med de nuvarande inställningarna.',
     'free' => 'fri',
     'enable-engine' => 'Slå på sökmotorn',
@@ -101,5 +100,9 @@ return [
     ],
     'tips' => [
         'label' => 'Visa slumpmässiga tips på resultatsidan',
+    ],
+    'cost' => [
+        'total' => 'Vi debiterar <strong>:cost Token</strong> per sökfråga med nuvarande inställningar.',
+        'minimum' => 'Obs: Den lägsta kostnaden per sökning är <strong>:min Token</strong> per sökning.',
     ],
 ];

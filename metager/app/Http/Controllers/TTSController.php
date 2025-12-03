@@ -27,12 +27,12 @@ class TTSController extends Controller
         ];
 
         $mary_tts_params = [
-            "INPUT_TEXT"    => $text,
-            "INPUT_TYPE"    => "TEXT",
-            "OUTPUT_TYPE"   => "AUDIO",
-            "AUDIO"         => "WAVE_FILE",
-            "LOCALE"        => $locale,
-            "VOICE"         => $voices[$locale]
+            "INPUT_TEXT" => $text,
+            "INPUT_TYPE" => "TEXT",
+            "OUTPUT_TYPE" => "AUDIO",
+            "AUDIO" => "WAVE_FILE",
+            "LOCALE" => $locale,
+            "VOICE" => $voices[$locale]
         ];
 
         $mary_tts_url = config("metager.metager.tts.base_url");
@@ -47,10 +47,9 @@ class TTSController extends Controller
         $content = \file_get_contents($mary_tts_url);
 
         return response($content, 200, [
-            "Content-Type"      => "audio/x-wav",
-            "Pragma"            => "no-cache",
-            "Cache-Control"     => "no-cache, no-store, must-revalidate",
-            "Content-Length"    => strlen($content),
+            "Content-Type" => "audio/x-wav",
+            "Cache-Control" => "no-cache, no-store, must-revalidate",
+            "Content-Length" => strlen($content),
         ]);
     }
 

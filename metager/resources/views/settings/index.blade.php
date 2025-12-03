@@ -122,7 +122,10 @@
                     </div>
                 @endif
                 @if ($searchCost > 0)
-                    <p>@lang('settings.cost', ['cost' => $searchCost])</p>
+                    <p>@lang('settings.cost.total', ['cost' => $searchCost])</p>
+                    @if ($rawSearchCost < 1)
+                        <p class="text-warning">@lang('settings.cost.minimum', ['min' => 1])</p>
+                    @endif
                 @else
                     <p>@lang('settings.cost-free')</p>
                 @endif

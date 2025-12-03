@@ -430,12 +430,12 @@ class AnonymousTokenPayment
         if (sizeof($this->tokens) === 0) {
             Cookie::queue(Cookie::forget("tokens", "/", null));
         } else {
-            Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, Request::isSecure(), false));
+            Cookie::queue(Cookie::forever("tokens", json_encode($this->tokens), "/", null, Request::isSecure(), true));
         }
         if (sizeof($this->decitokens) === 0) {
             Cookie::queue(Cookie::forget("decitokens", "/", null));
         } else {
-            Cookie::queue(Cookie::forever("decitokens", json_encode($this->decitokens), "/", null, Request::isSecure(), false));
+            Cookie::queue(Cookie::forever("decitokens", json_encode($this->decitokens), "/", null, Request::isSecure(), true));
         }
     }
 

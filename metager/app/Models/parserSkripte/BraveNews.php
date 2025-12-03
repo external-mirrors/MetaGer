@@ -46,7 +46,7 @@ class BraveNews extends Searchengine
         parent::__construct($name, $configuration);
 
         $this->configuration->engineBoost = 1.2;
-        $this->configuration->cost = 1;
+        $this->configuration->cost = 0.8;
 
         $this->configuration->addQueryParameters([
             "count" => 100,

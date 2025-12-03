@@ -47,7 +47,7 @@ class SerperNews extends Searchengine
         parent::__construct($name, $configuration);
 
         $this->configuration->engineBoost = 1.2;
-        $this->configuration->disabledByDefault = true;
+        $this->configuration->disabledByDefault = false;
         $this->configuration->method = "post_json";
         //$this->configuration->cost = 1;
 

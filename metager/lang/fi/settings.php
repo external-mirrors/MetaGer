@@ -68,7 +68,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Voit käyttää seuraavia hakukoneita <a href=":link" target="_blank">MetaGer-avaimella</a>.',
     'no-engines' => 'Nykyisillä hakuasetuksilla mitään hakukonetta ei kysytä.',
-    'cost' => 'Veloitamme <strong>:cost Token</strong> per hakukysely nykyisillä asetuksilla.',
     'cost-free' => 'Hakusi ovat <strong>ilmaiseksi</strong> nykyisillä asetuksilla.',
     'free' => 'ilmainen',
     'enable-engine' => 'Kytke hakukone päälle',
@@ -101,5 +100,9 @@ return [
     ],
     'tips' => [
         'label' => 'Näytä satunnaiset vinkit tulossivulla',
+    ],
+    'cost' => [
+        'total' => 'Veloitamme <strong>:cost Token</strong> per hakukysely nykyisillä asetuksilla.',
+        'minimum' => 'Huomautus: Vähimmäiskustannus hakua kohden on <strong>:min Token</strong> per haku.',
     ],
 ];

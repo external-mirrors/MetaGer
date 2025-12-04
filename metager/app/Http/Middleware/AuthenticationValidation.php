@@ -38,7 +38,7 @@ class AuthenticationValidation
          */
         if (($user = Auth::guard("key")->user()) !== null) {
             // Initialize searchengines and settings so we can estimate the cost of the search
-            $suma_cost = app(Searchengines::class)->getCost();
+            $suma_cost = app(Searchengines::class)->getSearchCost();
             $suggestion_debt = $this->getSuggestionDebt();
 
             if ($user->authorize($suma_cost + $suggestion_debt) && $user->makePayment($suggestion_debt)) {

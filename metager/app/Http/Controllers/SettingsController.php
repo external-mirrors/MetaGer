@@ -93,6 +93,7 @@ class SettingsController extends Controller
             ->with('disabledReasons', app(Searchengines::class)->disabledReasons)
             ->with('sumas', $sumas)
             ->with('searchCost', app(Searchengines::class)->getSearchCost())
+            ->with('rawSearchCost', app(Searchengines::class)->getRawSearchCost())
             ->with('filter', $filters)
             ->with('settingActive', $settingActive)
             ->with('url', $url)

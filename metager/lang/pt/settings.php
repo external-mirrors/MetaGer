@@ -88,7 +88,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Pode utilizar os seguintes motores de busca com uma chave <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Com as definições de pesquisa actuais, não é consultado qualquer motor de busca.',
-    'cost' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',
     'cost-free' => 'As suas pesquisas são <strong>free</strong> com as definições actuais.',
     'free' => 'livre',
     'limited' => 'limitado',
@@ -101,5 +100,9 @@ return [
     'copy' => 'Cópia',
     'tips' => [
         'label' => 'Mostrar sugestões aleatórias na página de resultados',
+    ],
+    'cost' => [
+        'total' => 'Cobramos <strong>:cost Token</strong> por consulta de pesquisa com as definições actuais.',
+        'minimum' => 'Nota: O custo mínimo por pesquisa é <strong>:min Token</strong> por pesquisa.',
     ],
 ];

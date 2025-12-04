@@ -68,7 +68,6 @@ return [
     ],
     'disabledBecausePaymentRequired' => 'Możesz używać następujących wyszukiwarek z kluczem <a href=":link" target="_blank">MetaGer</a>.',
     'no-engines' => 'Przy bieżących ustawieniach wyszukiwania nie jest pobierana żadna wyszukiwarka.',
-    'cost' => 'Pobieramy opłatę <strong>:cost Token</strong> za zapytanie wyszukiwania z bieżącymi ustawieniami.',
     'cost-free' => 'Twoje wyszukiwania są <strong>darmowe</strong> z bieżącymi ustawieniami.',
     'free' => 'darmowy',
     'enable-engine' => 'Włączanie wyszukiwarki',
@@ -101,5 +100,9 @@ return [
     ],
     'tips' => [
         'label' => 'Pokaż losowe wskazówki na stronie wyników',
+    ],
+    'cost' => [
+        'total' => 'Pobieramy opłatę <strong>:cost Token</strong> za zapytanie wyszukiwania z bieżącymi ustawieniami.',
+        'minimum' => 'Uwaga: Minimalny koszt wyszukiwania to <strong>:min Token</strong> na wyszukiwanie.',
     ],
 ];

@@ -417,7 +417,7 @@ class MetaGer
                         Arr::set(
                             $arr[$link]->deepResults,
                             "buttons",
-                            array_combine(
+                            array_merge(
                                 Arr::get($arr[$link]->deepResults, "buttons", []),
                                 Arr::get($this->results[$i]->deepResults, "buttons", [])
                             )

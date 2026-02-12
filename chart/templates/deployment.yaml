@@ -376,7 +376,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ template "nginx_image" . }}"
           imagePullPolicy: {{ .Values.image.nginx.pullPolicy }}
-          # ports removed: only nginx exposes 'http'
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
           livenessProbe:
             httpGet:
               path: /health-check/nginx

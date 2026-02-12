@@ -7,9 +7,9 @@ return [
     'info' => [
         '1' => 'Wikipedia-merkintä osoitteesta <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r
-Postfach 51 01 43\r
-D-30631 Hannover\r
-Deutschland/Saksa",
+Henniesruh 28D\r
+D-30655 Hannover\r
+Saksa/Saksa",
         '3' => "Yhteystiedot:\r
 Puh: +4951134000070\r
 EMail: <a href=\":contact_link\">Yhteydenottolomake</a>",

@@ -7,9 +7,9 @@ return [
     'info' => [
         '1' => 'Articulo de Wikipedia de <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r
-Postfach 51 01 43\r
-D-30631 Hannover\r
-Deutschland/Germany",
+Henniesruh 28D\r
+D-30655 Hannover\r
+Deutschland/Alemania",
         '3' => "Contacto:\r
 Tel.: +4951134000070\r
 Correo electrónico <a href=\":contact_link\">Formulario de contacto</a>",

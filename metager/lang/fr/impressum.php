@@ -11,8 +11,8 @@ Courriel : <a href=\":contact_link\">Formulaire de contact</a>",
         '10' => 'Malgré un contrôle approfondi du contenu, nous ne sommes pas responsables du contenu des liens externes. Pour le contenu des liens externes, seuls leurs opérateurs sont fiables.',
         '1' => 'Entrée Wikipédia pour <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '2' => "SUMA-EV\r
-Postfach 51 01 43\r
-D-30631 Hannover\r
+Henniesruh 28D\r
+D-30655 Hannover\r
 Deutschland/Allemagne",
     ],
     'title' => 'Avis de site',

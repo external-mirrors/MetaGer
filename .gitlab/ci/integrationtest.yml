@@ -2,6 +2,8 @@ integrationtest:
   services:
     - name: selenium/standalone-firefox:114.0
       alias: selenium-standalone-firefox
+  tags:
+    - kubernetes
   stage: integrationtest
   image:
     name: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_FPM_IMAGE_TAG

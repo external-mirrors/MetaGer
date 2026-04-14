@@ -1,6 +1,8 @@
 npm:
   stage: build_dependencies
   image: ${CI_REGISTRY_IMAGE}/$DOCKER_NODE_IMAGE_NAME:$DOCKER_NODE_IMAGE_TAG
+  tags:
+    - kubernetes
   script:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
@@ -18,6 +20,8 @@ npm:
 composer:
   stage: build_dependencies
   image: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
+  tags:
+    - kubernetes
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
   script:
@@ -31,5 +35,3 @@ composer:
   cache:
     paths:
       - metager/.composer/
-
-  

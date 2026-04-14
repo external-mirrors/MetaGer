@@ -1,3 +1,6 @@
+default:
+  tags:
+    - kubernetes
 variables:
   DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
   BUILD_DOCKER_IMAGE: docker:24.0.5

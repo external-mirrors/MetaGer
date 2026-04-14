@@ -4,6 +4,8 @@ fpm:
   needs:
     - composer
     - npm
+  tags:
+    - kubernetes
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     # We need the vendor files in our final image. Make sure to not ignore the folder
@@ -22,6 +24,8 @@ nginx:
   image: $BUILD_DOCKER_IMAGE
   needs:
     - npm
+  tags:
+    - kubernetes
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
@@ -35,6 +39,8 @@ nginx:
 
 .cleanup_revision_images:
   stage: build_docker_images
+  tags:
+    - kubernetes
   image: $DEPLOY_KUBERNETES_IMAGE
   needs:
     - composer

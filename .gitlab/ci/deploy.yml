@@ -9,6 +9,8 @@
     DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
+  tags:
+    - kubernetes
   before_script:
     - kubectl config get-contexts
     - kubectl config use-context $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:metager
@@ -19,6 +21,8 @@
 deploy_development:
   extends:
     - .deploy
+  tags:
+    - kubernetes
   environment:
     name: development
     url: https://metager3.de
@@ -33,6 +37,8 @@ deploy_development:
 deploy_production:
   extends:
     - .deploy
+  tags:
+    - kubernetes
   environment:
     name: production
     url: https://metager.de

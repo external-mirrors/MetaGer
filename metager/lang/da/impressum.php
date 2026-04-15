@@ -6,8 +6,8 @@ return [
     ],
     'info' => [
         '2' => "SUMA-EV\r
-Postfach 51 01 43\r
-D-30631 Hannover\r
+Henniesruh 28D\r
+D-30655 Hannover\r
 Deutschland/Tyskland",
         '1' => 'Wikipedia-artikel om <a href="http://de.wikipedia.org/wiki/Suma_e.V." target="_blank" rel="noopener">SUMA-EV</a>',
         '3' => "Kontakt til os:\r

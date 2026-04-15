@@ -146,7 +146,7 @@ class Localization
             "es" => "es_ES",
             "en_UK" => "en_GB",
         ];
-        $regional_locales = array_merge($regional_locales, array_keys($two_letter_locales));
+        $regional_locales = array_merge(array_keys($two_letter_locales), $regional_locales);
 
         // Make sure default locale is at array index 0 of available locales
         if ($default !== null) {

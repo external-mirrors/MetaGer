@@ -5,6 +5,7 @@ namespace App;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
+use Arr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -382,6 +383,8 @@ class MetaGer
                 $link = $this->results[$i]->link;
             }
 
+            $link = urldecode($link);
+
             if (strpos($link, "http://") === 0) {
                 $link = substr($link, 7);
             }
@@ -408,8 +411,17 @@ class MetaGer
                     $arr[$link]->inheritedResults = $this->results[$i]->inheritedResults;
                 }
 
-                if (!empty($this->results[$i]->deepResults)) {
-                    $arr[$link]->deepResults = $this->results[$i]->deepResults;
+                // Combine the deep results buttons of both results
+                if (!empty(Arr::get($this->results[$i]->deepResults, "buttons", []))) {
+                    $arr[$link]->deepResults =
+                        Arr::set(
+                            $arr[$link]->deepResults,
+                            "buttons",
+                            array_merge(
+                                Arr::get($arr[$link]->deepResults, "buttons", []),
+                                Arr::get($this->results[$i]->deepResults, "buttons", [])
+                            )
+                        );
                 }
                 // The duplicate might already be an adgoal partnershop
                 if ($this->results[$i]->partnershop) {

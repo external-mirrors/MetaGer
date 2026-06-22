@@ -48,15 +48,15 @@ deploy_review:
   extends:
     - .deploy
   environment:
-    name: review/$CI_MERGE_REQUEST_IID
-    url: "https://${CI_MERGE_REQUEST_IID}.review.metager.de"
+    name: review/${CI_COMMIT_REF_SLUG}
+    url: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"
     action: start
     on_stop: stop_review
     auto_stop_in: 2 days
   variables:
-    DEPLOYMENT_URL: "${CI_MERGE_REQUEST_IID}.review.metager.de"
+    DEPLOYMENT_URL: "${CI_COMMIT_REF_SLUG}.review.metager.de"
     DEPLOYMENT_HELM_VALUES: .gitlab/review.yaml
-    DEPLOYMENT_CHART_NAME: review-${CI_MERGE_REQUEST_IID}
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
     BRANCH_NAME: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   rules:
     - if: '$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "master" || $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == "development"'
@@ -67,10 +67,10 @@ stop_review:
   stage: deploy
   image: $DEPLOY_KUBERNETES_IMAGE
   environment:
-    name: review/$CI_MERGE_REQUEST_IID
+    name: review/${CI_COMMIT_REF_SLUG}
     action: stop
   variables:
-    DEPLOYMENT_CHART_NAME: review-${CI_MERGE_REQUEST_IID}
+    DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
     KEEP_N: 0 # Environment gets deleted. No Image Tags to keep
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416

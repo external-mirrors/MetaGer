@@ -1,4 +1,5 @@
 const { initializeSuggestions } = require("./suggest");
+import updateProxyLinks from "./resultpage/proxy";
 
 require("es6-promise").polyfill();
 require("fetch-ie8");
@@ -14,6 +15,7 @@ function initialize() {
   enablePagination();
   enableABHints();
 
+  updateProxyLinks();
 }
 
 // Submit search form when filters change
@@ -120,6 +122,7 @@ function initialize() {
                 .append(new_quicktips);
             }
 
+            updateProxyLinks();
             currentlyLoading = false;
           });
       }

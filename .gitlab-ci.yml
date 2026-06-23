@@ -13,11 +13,11 @@ variables:
 
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != "development"
+    - if: ($CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != "development") || ($CI_PIPELINE_SOURCE == 'web' && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development")
       variables:
         APP_URL: "https://${DOCKER_IMAGE_TAG_PREFIX}.review.metager.de"
         APP_ENV: development
-        DOCKER_IMAGE_TAG_PREFIX: $CI_MERGE_REQUEST_IID
+        DOCKER_IMAGE_TAG_PREFIX: $CI_COMMIT_REF_SLUG
         DOCKER_COMPOSER_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-composer-$CI_COMMIT_SHA
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA

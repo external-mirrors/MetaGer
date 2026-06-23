@@ -124,7 +124,7 @@
                     href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
                     @lang('result.options.8')
                 </a>
-            @else
+            @elseif (request()->header("is-proxy") !== "true")
                 <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"
                     target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! trans('result.options.5') !!}

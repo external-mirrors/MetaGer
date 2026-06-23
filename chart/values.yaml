@@ -97,6 +97,8 @@ ingress:
           return 301 https://metager3.de$request_uri;
       }
 
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
     nginx.ingress.kubernetes.io/client-header-buffer-size: 256k
     nginx.ingress.kubernetes.io/proxy-body-size: 30m

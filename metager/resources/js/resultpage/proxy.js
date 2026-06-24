@@ -24,15 +24,8 @@ export default function updateProxyLinks() {
         link.addEventListener('click', function (e) {
             e.preventDefault();
             try {
-                const href = link.getAttribute('href');
-                const urlObj = new URL(href, window.location.origin);
-                const targetUrl = urlObj.searchParams.get('url');
-                if (!targetUrl) return;
-                let newPath = '/proxy/#' + targetUrl;
-                if (langIdentifier) {
-                    newPath = '/' + langIdentifier + newPath;
-                }
-                window.open(newPath, 'metagerproxy');
+                const href = link.dataset.proxyLink;
+                window.open(href, 'metagerproxy');
             } catch (err) {
                 // Fallback: do nothing or log error
                 console.error('Proxy link error:', err);

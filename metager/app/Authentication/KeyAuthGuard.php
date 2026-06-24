@@ -14,7 +14,7 @@ class KeyAuthGuard implements StatefulGuard
     use GuardHelpers;
 
     protected $lastAttempted;
-    protected string $login_method = 'query'; // Default to query parameter
+    public string $login_method = 'query'; // Default to query parameter
 
     public function __construct(KeyUserProvider $provider)
     {

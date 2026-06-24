@@ -125,7 +125,7 @@
                     @lang('result.options.8')
                 </a>
             @elseif (request()->header("is-proxy") !== "true")
-                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"
+                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}@if (auth()->guard("key")->login_method === 'query' && auth()->guard("key")->user() !== null)?key={{ auth()->guard("key")->user()->key }}@endif#{{ $result->link }}"
                     target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! trans('result.options.5') !!}
                 </a>

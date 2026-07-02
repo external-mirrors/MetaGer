@@ -1,89 +1,106 @@
+const WS_TEST_STORAGE_KEY = "safebrowse-ws-ok";
+
+let wsTestInProgress = false;
+
 export default function updateProxyLinks() {
-    // Get current lang identifier from the pathname (e.g. /en/, /de/, etc.)
-    const pathMatch = window.location.pathname.match(/^\/(\w{2}-\w{2})(?:\/|$)/);
-    const langIdentifier = pathMatch ? pathMatch[1] : null;
-
-    // API-level check: does the browser have WebSocket and localStorage at all?
-    const supportsWebsockets = (function () {
-        try {
-            return (
-                typeof window.WebSocket !== 'undefined' &&
-                typeof window.localStorage !== 'undefined'
-            );
-        } catch (e) {
-            return false;
-        }
-    })();
-
-    if (!supportsWebsockets) {
-        // Do not modify link actions if novnc is not supported
+    if (!browserSupportsSafebrowse()) {
+        // Links keep their native href (old proxy) when SafeBrowse won't work in this browser
         return;
     }
 
-    document.querySelectorAll('a.result-open-proxy').forEach(function (link) {
-        link.addEventListener('click', function (e) {
-            e.preventDefault();
-            if (link.dataset.wsTesting) return; // Prevent double-click while testing
+    const links = document.querySelectorAll("a.result-open-proxy");
+    if (links.length === 0) return;
 
+    // Start the reachability test early so the result is usually cached before the first click
+    testWebsocketConnection(links[0].dataset.proxyLink);
+
+    links.forEach(function (link) {
+        if (link.dataset.proxyHandlerAttached) return; // updateProxyLinks runs again after "load more"
+        link.dataset.proxyHandlerAttached = "1";
+
+        link.addEventListener("click", function (e) {
             const href = link.dataset.proxyLink;
-            if (!href) {
-                // No proxy link — follow the original href normally.
-                followOriginalLink(link);
-                return;
-            }
-
-            // Build a WebSocket test URL from the SafeBrowse host embedded in the proxy link.
-            let wsTestUrl;
-            try {
-                const proxyUrl = new URL(href);
-                const wsProto = proxyUrl.protocol === 'https:' ? 'wss:' : 'ws:';
-                wsTestUrl = wsProto + '//' + proxyUrl.host + '/proxy/browser-session';
-            } catch (err) {
-                // Malformed URL — fall back to the original link.
-                followOriginalLink(link);
-                return;
-            }
-
-            link.dataset.wsTesting = '1';
-            link.style.opacity = '0.5';
-            link.style.cursor = 'wait';
-
-            let settled = false;
-            const settle = function (ok) {
-                if (settled) return;
-                settled = true;
-                clearTimeout(timeout);
-                try { testWs.close(); } catch (_) {}
-
-                link.style.opacity = '';
-                link.style.cursor = '';
-                delete link.dataset.wsTesting;
-
-                if (ok) {
-                    window.open(href, 'metagerproxy');
-                } else {
-                    // WebSocket check failed — fall back to the original link so the
-                    // user can still reach the content without the anonymous proxy.
-                    followOriginalLink(link);
-                }
-            };
-
-            const testWs = new WebSocket(wsTestUrl);
-            // 5-second timeout — generous enough to rule out transient slowness
-            const timeout = setTimeout(function () { settle(false); }, 5000);
-
-            testWs.addEventListener('open', function () { settle(true); });
-            testWs.addEventListener('error', function () { settle(false); });
+            // Only intercept when SafeBrowse is known to be reachable. window.open must be
+            // called synchronously within the click handler — popup blockers silently drop
+            // calls made after an async WebSocket test. In all other cases the browser
+            // follows the native href (old proxy) instead.
+            if (!href || getCachedWebsocketResult() !== "ok") return;
+            e.preventDefault();
+            // Reuses the named tab if already open: since all SafeBrowse parameters travel in
+            // the URL hash, this only fires hashchange there instead of reloading the app.
+            const proxyWindow = window.open(href, "metagerproxy");
+            if (proxyWindow) proxyWindow.focus();
         });
     });
 }
 
-function followOriginalLink(link) {
-    const href = link.getAttribute('href');
-    if (!href) return;
-    if (link.target === '_blank') {
-        window.open(href, '_blank', 'noopener');
-    } else {
-        window.location.href = href;
+/**
+ * The SafeBrowse frontend needs more than WebSocket support to boot: its bundle constructs
+ * EventTarget subclasses (Chrome 64+ / Safari 14+) and accesses globalThis and Web Storage.
+ * Browsers failing any of these would hang on the SafeBrowse loading screen, so they keep
+ * the native href instead.
+ */
+function browserSupportsSafebrowse() {
+    try {
+        new EventTarget();
+        return (
+            typeof globalThis !== "undefined" &&
+            typeof window.WebSocket !== "undefined" &&
+            typeof window.localStorage !== "undefined" &&
+            typeof window.sessionStorage !== "undefined"
+        );
+    } catch (e) {
+        return false;
     }
+}
+
+function getCachedWebsocketResult() {
+    try {
+        return sessionStorage.getItem(WS_TEST_STORAGE_KEY);
+    } catch (e) {
+        return null;
+    }
+}
+
+/**
+ * Tests whether a WebSocket connection to the SafeBrowse host can be established (some
+ * networks and browser configurations block WebSockets). A success is cached for the
+ * browsing session; failures are not cached, so the test is retried on the next page.
+ */
+function testWebsocketConnection(proxyLink) {
+    if (wsTestInProgress || !proxyLink || getCachedWebsocketResult() === "ok") return;
+
+    let wsTestUrl;
+    try {
+        const proxyUrl = new URL(proxyLink, window.location.href);
+        const wsProto = proxyUrl.protocol === "https:" ? "wss:" : "ws:";
+        wsTestUrl = wsProto + "//" + proxyUrl.host + "/proxy/browser-session";
+    } catch (e) {
+        return;
+    }
+
+    let testWs;
+    try {
+        testWs = new WebSocket(wsTestUrl);
+    } catch (e) {
+        // e.g. blocked by Content-Security-Policy — some browsers throw synchronously here
+        return;
+    }
+    wsTestInProgress = true;
+
+    let settled = false;
+    const settle = function (ok) {
+        if (settled) return;
+        settled = true;
+        wsTestInProgress = false;
+        clearTimeout(timeout);
+        try { testWs.close(); } catch (e) { }
+        if (ok) {
+            try { sessionStorage.setItem(WS_TEST_STORAGE_KEY, "ok"); } catch (e) { }
+        }
+    };
+
+    const timeout = setTimeout(function () { settle(false); }, 5000);
+    testWs.addEventListener("open", function () { settle(true); });
+    testWs.addEventListener("error", function () { settle(false); });
 }

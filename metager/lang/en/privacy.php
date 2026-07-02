@@ -11,10 +11,6 @@ return [
         'title' => 'Principles',
         'description' => 'As a non-profit association, we are committed to free access to knowledge. Since we know that free research is not compatible with mass surveillance, we also take data protection very seriously. We have always only processed the data that is absolutely necessary for the operation of our services. Data protection is always our standard. We do not operate profiling – i.e. the automatic creation of user profiles.'
     ],
-    'stats' => [
-        'title' => 'Anonymous statistics',
-        'description' => 'We are always working to improve our services. To be able to do this, we need to know which of our functions are being used. For this reason, we collect completely anonymous data on the frequency of page views and the use of individual functions on our websites. We also collect anonymized data on the distribution of browser types and versions. These statistics are not based on individual user profiles and are created without cookies or similar technologies. They do not contain any personal data.'
-    ],
     'contexts' => [
         'title' => 'Incoming data by context',
         'metager' => [
@@ -83,6 +79,23 @@ return [
         'title' => 'Hosting',
         'description' => 'Our services are administered by us, the SUMA-EV, and operated on hardware rented from Hetzner Online GmbH.',
     ],
+    'monitoring' => [
+        'title' => 'Error Tracking and Application Monitoring',
+        'description' => 'To ensure the reliability of our services, we use the open-source error tracking tool GlitchTip, both in the backend and the frontend of our applications. GlitchTip runs exclusively on our own infrastructure; no data is shared with or transmitted to any third-party analytics or monitoring provider.',
+        'collected' => [
+            'title' => 'What data is generated',
+            'description' => 'When an error occurs in our web application or on our servers, we automatically collect:',
+            'error' => 'An error description and a stack trace identifying the affected location in the code.',
+            'useragent' => 'Browser type, operating system, and approximate device type, determined from your user agent.',
+            'url' => 'The address (URL) of the page or function where the error occurred.',
+        ],
+        'not_collected' => [
+            'title' => 'What data is not generated',
+            'description' => 'Your IP address is removed before it is ever transmitted to GlitchTip and never reaches the system. We do not associate error reports with any individual or user account – not even for logged-in users. We also do not collect passwords, payment details, or the content of any forms or messages you submit through our services.',
+        ],
+        'retention' => 'We store error reports for 30 days; they are then automatically deleted.',
+        'base' => 'The legal basis for this processing is our legitimate interest in operating our services reliably and securely (Art. 6 (1) (f) GDPR).',
+    ],
     'description' => [
         'title' => 'Description of resulting data',
         'ip' => [
@@ -121,6 +134,10 @@ return [
         'message' => [
             'title' => 'Message',
             'description' => 'The message entered here will be transmitted to us and used to process your request.',
+        ],
+        'error' => [
+            'title' => 'Error Report (Stack Trace)',
+            'description' => 'When a technical error occurs in our application, an error description together with a stack trace is automatically generated. This shows us where in the source code the error occurred so that we can fix it.',
         ]
     ],
     'base' => [
@@ -177,6 +194,7 @@ return [
         'contact' => 'Contact Details',
         'message' => 'Message',
         'payment' => 'Payment Data',
+        'error' => 'Error Report',
         'referrer' => 'the referrer you sent',
         'gps' => 'Location Data',
         'optional' => 'optional',

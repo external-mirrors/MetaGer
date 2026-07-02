@@ -125,7 +125,10 @@
                     @lang('result.options.8')
                 </a>
             @elseif (request()->header("is-proxy") !== "true")
-                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}@if (auth()->guard("key")->login_method === 'query' && auth()->guard("key")->user() !== null)?key={{ auth()->guard("key")->user()->key }}@endif#{{ $result->link }}"
+                {{-- All SafeBrowse parameters travel in the hash (never the query string): clicking
+                     another result must only change the fragment of the already-open named tab, so
+                     the running SafeBrowse app receives a hashchange instead of a full reload. --}}
+                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->login_method === 'query' && auth()->guard("key")->user() !== null)&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif"
                     target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! trans('result.options.5') !!}
                 </a>

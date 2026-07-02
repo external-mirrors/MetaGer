@@ -57,10 +57,6 @@ return [
         'title' => 'Base jurídica do tratamento',
         'description' => 'A base legal para o processamento dos seus dados pessoais identificáveis é o Art. 6 (1) (a) do RGPD se o utilizador consentir o processamento ao utilizar os nossos serviços, ou o Art. 6 (1) (f) do RGPD se o processamento for necessário para proteger os nossos interesses legítimos, ou outra base legal se o notificarmos separadamente.',
     ],
-    'stats' => [
-        'description' => 'Estamos sempre a trabalhar para melhorar os nossos serviços. Para o fazer, precisamos de saber quais as funções que estão a ser utilizadas. Por este motivo, recolhemos dados completamente anónimos sobre a frequência das visualizações de páginas e a utilização de funções individuais nos nossos sítios Web. Também recolhemos dados anónimos sobre a distribuição dos tipos e versões de browsers. Estas estatísticas não se baseiam em perfis de utilizadores individuais e são criadas sem cookies ou tecnologias semelhantes. Não contêm quaisquer dados pessoais.',
-        'title' => 'Estatísticas anónimas',
-    ],
     'contexts' => [
         'title' => 'Dados de entrada por contexto',
         'metager' => [

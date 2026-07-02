@@ -21,10 +21,6 @@
             <div>@lang('privacy.principles.description')</div>
         </div>
         <div class="section">
-            <h1>@lang('privacy.stats.title')</h1>
-            <div>@lang('privacy.stats.description')</div>
-        </div>
-        <div class="section">
             <h1>@lang('privacy.contexts.title')</h1>
             <ol>
                 <li class="kontext-list">
@@ -145,6 +141,23 @@
             <div>@lang('privacy.hosting.description')</div>
         </div>
         <div class="section">
+            <h1>@lang('privacy.monitoring.title')</h1>
+            <div>@lang('privacy.monitoring.description')</div>
+            <h2>@lang('privacy.monitoring.collected.title')</h2>
+            <div>@lang('privacy.monitoring.collected.description')</div>
+            <ol class="datum-list">
+                <li><a href="#error-report">@lang('privacy.data.error'):</a> @lang('privacy.monitoring.collected.error')
+                </li>
+                <li><a href="#user-agent">@lang('privacy.data.useragent'):</a>
+                    @lang('privacy.monitoring.collected.useragent')</li>
+                <li>@lang('privacy.monitoring.collected.url')</li>
+            </ol>
+            <h2>@lang('privacy.monitoring.not_collected.title')</h2>
+            <div>@lang('privacy.monitoring.not_collected.description')</div>
+            <div>@lang('privacy.monitoring.retention')</div>
+            <div>@lang('privacy.monitoring.base')</div>
+        </div>
+        <div class="section">
             <h1>@lang('privacy.description.title')</h1>
             <ol class="datum-list-general">
                 <li>
@@ -213,6 +226,12 @@
                         <samp>MetaGer Browser-PlugIn</samp><br />
                     </article>
                 </li>
+                <li>
+                    <article id="error-report" class="datum">
+                        <h2>@lang('privacy.description.error.title')</h2>
+                        <div>@lang('privacy.description.error.description')</div>
+                    </article>
+                </li>
             </ol>
         </div>
         <div class="section">
@@ -264,6 +283,6 @@
         <div class="section">
             <h1>@lang('privacy.changes.title')</h1>
             <div>@lang('privacy.changes.description')</div>
-            <div>@lang('privacy.changes.date', ['date' => '2025-03-25'])</div>
+            <div>@lang('privacy.changes.date', ['date' => '2026-07-02'])</div>
         </div>
 @endsection

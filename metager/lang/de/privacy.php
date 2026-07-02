@@ -10,10 +10,6 @@ return [
         'title' => 'Grundsätze',
         'description' => 'Wir haben uns als gemeinnütziger Verein dem freien Wissenszugang verschrieben. Da wir wissen, dass freie Recherche nicht mit Massenüberwachung vereinbar ist, nehmen wir auch Datenschutz sehr ernst. Wir verarbeiten schon immer nur die Daten, die zum Betrieb unserer Dienste unbedingt nötig sind. Datenschutz ist bei uns immer der Standard. Profiling – also die automatische Erstellung von Nutzerprofilen – betreiben wir nicht.',
     ],
-    'stats' => [
-        'title' => 'Anonyme Statistiken',
-        'description' => 'Wir arbeiten stets daran unsere Dienste zu verbessern. Um dazu in der Lage zu sein, müssen wir wissen, welche unserer Funktionen verwendet werden. Aus diesem Grund erfassen wir vollkommen anonyme Daten über die Häufigkeit von Seitenaufrufen und die Verwendung einzelner Funktionen unserer Webseiten. Ebenfalls erfassen wir anonymisierte Daten über die Verteilung von Browserarten und Versionen. Diese Statistiken basieren nicht auf einzelnen Nutzerprofilen und werden ohne Cookies oder ähnlichem erstellt. Sie beinhalten keine personenbezogenen Daten.',
-    ],
     'contexts' => [
         'title' => 'Anfallende Daten nach Kontext',
         'metager' => [
@@ -82,6 +78,23 @@ return [
         'title' => 'Hosting',
         'description' => 'Unsere Dienste werden von uns, dem SUMA-EV, administriert und auf angemieteter Hardware bei der Hetzner Online GmbH betrieben.',
     ],
+    'monitoring' => [
+        'title' => 'Fehlerüberwachung und Anwendungsmonitoring',
+        'description' => 'Um die Zuverlässigkeit unserer Dienste sicherzustellen, setzen wir das quelloffene Fehlerüberwachungs-Tool GlitchTip ein, sowohl im Backend als auch im Frontend unserer Anwendungen. GlitchTip läuft ausschließlich auf unserer eigenen Infrastruktur; es werden keine Daten an Dritte oder externe Analyse- bzw. Monitoring-Anbieter übermittelt.',
+        'collected' => [
+            'title' => 'Welche Daten anfallen',
+            'description' => 'Tritt in unserer Webanwendung oder auf unseren Servern ein Fehler auf, erfassen wir automatisch:',
+            'error' => 'Eine Fehlerbeschreibung sowie einen Stacktrace, der die betroffene Codestelle benennt.',
+            'useragent' => 'Browsertyp, Betriebssystem und grobe Geräteart, ermittelt aus Ihrem User-Agent.',
+            'url' => 'Die Adresse (URL) der Seite bzw. Funktion, bei der der Fehler aufgetreten ist.',
+        ],
+        'not_collected' => [
+            'title' => 'Welche Daten nicht anfallen',
+            'description' => 'Ihre IP-Adresse wird bereits vor der Übermittlung an GlitchTip entfernt und erreicht das System zu keinem Zeitpunkt. Wir ordnen Fehlerberichte keiner Person oder keinem Nutzerkonto zu – auch nicht bei angemeldeten Nutzern. Ebenfalls nicht erfasst werden Passwörter, Zahlungsdaten oder die Inhalte von Formularen und Nachrichten, die Sie über unsere Dienste übermitteln.',
+        ],
+        'retention' => 'Fehlerberichte speichern wir für 30 Tage; anschließend werden sie automatisch gelöscht.',
+        'base' => 'Rechtsgrundlage für diese Verarbeitung ist unser berechtigtes Interesse an einem zuverlässigen und sicheren Betrieb unserer Dienste (Art. 6 Abs. 1 lit. f DSGVO).',
+    ],
     'description' => [
         'title' => 'Beschreibung anfallender Daten',
         'ip' => [
@@ -120,6 +133,10 @@ return [
         'message' => [
             'title' => 'Nachricht',
             'description' => 'Die hier eingegebene Nachricht wird an uns übertragen und zur Bearbeitung Ihres Anliegens genutzt.',
+        ],
+        'error' => [
+            'title' => 'Fehlerbericht (Stacktrace)',
+            'description' => 'Tritt in unserer Anwendung ein technischer Fehler auf, wird automatisch eine Fehlerbeschreibung samt Stacktrace erstellt. Dieser zeigt uns, an welcher Stelle im Quellcode der Fehler aufgetreten ist, damit wir ihn beheben können.',
         ],
     ],
     'base' => [
@@ -176,6 +193,7 @@ return [
         'contact' => 'Kontaktdaten',
         'message' => 'Nachricht',
         'payment' => 'Zahlungsdaten',
+        'error' => 'Fehlerbericht',
         'referrer' => 'der von Ihnen gesendete Referrer',
         'gps' => 'Ortungsdaten',
         'optional' => 'optional',

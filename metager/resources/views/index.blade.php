@@ -34,30 +34,19 @@
     </h1>
 
     @if(Auth::guard("key")->user() === null &&!app(App\Models\Authorization\Authorization::class)->loggedIn)
-    <div id="searchbar-replacement" style="">
-      <div class="input-group">
-      <div class="inputs">
-        <div class="not-logged-in-info">
-          @lang('index.searchbar-replacement.not_logged_in', ['default' => 'Sie sind aktuell nicht eingeloggt.'])
-        </div>
-        <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}" class="btn btn-default startpage-login-btn">
+    <div id="searchbar-replacement">
+      <div class="tagline">@lang('index.searchbar-replacement.tagline')</div>
+      <div class="hook-line">@lang('index.searchbar-replacement.hook')</div>
+      <div class="helper-line">@lang('index.searchbar-replacement.message')</div>
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys') }}" class="btn btn-primary startpage-create-btn">
+        @lang('index.searchbar-replacement.start')
+      </a>
+      <div class="divider-row"><span class="line"></span><span class="divider-label">@lang('index.searchbar-replacement.or')</span><span class="line"></span></div>
+      <div class="login-link">
+        @lang('index.searchbar-replacement.have_key')
+        <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}">
           @lang('index.searchbar-replacement.login')
         </a>
-        <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys#how-it-works') }}" class="btn btn-primary startpage-create-btn">
-          @lang('index.searchbar-replacement.start')
-        </a>
-      </div>
-      <label for="key">
-        @lang("index.searchbar-replacement.message", ['anonym_link' => LaravelLocalization::getLocalizedURL(null, '/keys') . "#no-tradeoff"])
-        @if(\App\Localization::getLanguage() === "de")
-        <a href="https://suma-ev.de/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
-        @else
-        <a href="https://suma-ev.de/en/eine-aera-geht-zu-ende/">@lang("index.searchbar-replacement.why")</a>
-        @endif
-      </label>
-      </div>
-      <div>
-
       </div>
     </div>
   @else

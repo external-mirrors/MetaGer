@@ -8,7 +8,7 @@ return [
     "privacy" => [
         "title" => "Anonymity and Data Security",
         "1" => 'Tracking cookies, session IDs, and IP addresses <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-tracking" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        "2" => 'None of these are used, stored, retained, or otherwise processed here at MetaGer (exception: short-term storage for protection against hacking and bot attacks). Because we consider this topic extremely important, we have also created ways to help you achieve the highest level of security: the MetaGer TOR Hidden Service and our anonymizing proxy server.',
+        "2" => 'None of these are used, stored, retained, or otherwise processed here at MetaGer (exception: short-term storage for protection against hacking and bot attacks). Because we consider this topic extremely important, we have also created ways to help you achieve the highest level of security: the MetaGer TOR Hidden Service and our Anonymous Browser.',
         "3" => "More information can be found below. The functions are accessible under 'Services' in the navigation bar.",
     ],
 
@@ -19,8 +19,8 @@ return [
     ],
 
     "proxy" => [
-        "title" => 'Anonymizing MetaGer Proxy Server <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
-        "1" => "To use it, you only need to click on 'OPEN ANONYMOUSLY' at the bottom of the result on the MetaGer results page. Your request will then be routed to the target website through our anonymizing proxy server, and your personal data will remain fully protected. Important: if you follow links on the pages from this point on, you will remain protected by the proxy. However, you cannot enter a new address in the address field at the top. In this case, you will lose protection. You can see whether you are still protected in the address field, which will display: https://proxy.suma-ev.de/?url=here is the actual address.",
+        "title" => 'Anonymous Browser <a title="For easy help, click here" href="/hilfe/easy-language/privacy-protection#eh-proxy" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
+        "1" => "To use it, simply click 'OPEN ANONYMOUSLY' at the bottom of a result on the MetaGer results page. A separate window then opens with a real, isolated browser running on our servers – not on your device. The session starts right at the page you wanted to open. This browser has its own address bar and its own tabs, which you can use just like normal: you can click through, type in new addresses, and open new tabs without losing your protection. The target website never learns your IP address or any other data about you. Everything is automatically deleted once the session ends. If your browser doesn't support this, we automatically fall back to our simpler anonymizing proxy: you stay protected as long as you follow links on the page, but you cannot enter a new address in the address field. You can tell whether you're still protected because the address field will display: https://proxy.suma-ev.de/?url=here is the actual address.",
     ],
 
     "maps" => [

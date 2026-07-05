@@ -18,7 +18,7 @@ return [
     "proxy" => [
         "title" => "MetaGer-Proxy (open anonymously)",
         "1" => 'With our open-anonymously function, you can open web pages anonymously. <br> That means you remain unrecognized. <br> Open anonymously<a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a> acts as a protective shield. <br> If you want to search anonymously, follow these steps: <br> In the search results, there is a button <strong>open anonymously</strong><a title="A person is anonymous. So, nobody knows: Who is this person? Click here for more information" href="/hilfe/easy-language/glossary#glopenanonymously" ><img class="glossary-icon lm-only" src="/img/glossary-icon-lm.svg"/><img class="glossary-icon dm-only" src="/img/glossary-icon-dm.svg"/></a>. <br> Here\'s how the button looks:',
-        "2" => "When you click the button, you search anonymously. <br> If you enter a new web page in the search bar above, <br> you will no longer search anonymously.",
+        "2" => "When you click the button, a new window opens. <br> It already shows the page you clicked on. <br> This window has its own browser. <br> This browser runs safely on our servers. <br> Not on your device. <br> The web page cannot see who you are. <br> This browser has its own address bar and its own tabs. <br> You can use them just like normal. <br> You stay protected the whole time. <br> When you close the window, everything is deleted.",
     ],
     "content" => [
         'title' => 'Questionable Content / Youth Protection',

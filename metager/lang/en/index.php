@@ -32,10 +32,11 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open Source. Ad-Free. Anonymous.',
         'hook' => "The search engine that doesn't track you.",
-        'message' => 'Instead of an account with your data, all you need is an anonymous key with credit.',
+        'message' => 'All you need is an anonymous key – no account, no email address, no personal data.',
+        'not_logged_in' => "You're not currently logged in.",
         'start' => 'Learn more',
         'or' => 'or',
-        'have_key' => 'Already have a key?',
+        'have_key' => 'I already have a key',
         'new_key' => 'No key yet?',
         'extension' => 'Stay logged in and anonymous with our webextension',
         "key_error" => "The entered key was not valid. Please check the input.",

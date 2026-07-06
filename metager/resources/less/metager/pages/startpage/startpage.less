@@ -17,17 +17,37 @@ html {
   display: grid;
   row-gap: 0.7rem;
 
+  @media (max-height: 700px) {
+    row-gap: 0.4rem;
+  }
+
+  @media (max-height: 550px) {
+    row-gap: 0.25rem;
+  }
+
   >.tagline {
     font-size: 0.8rem;
     letter-spacing: 0.02em;
     color: fade(@text-color, 60%);
     margin-bottom: 0.3rem;
+
+    @media (max-height: 700px) {
+      margin-bottom: 0;
+    }
+
+    @media (max-height: 550px) {
+      display: none;
+    }
   }
 
   >.hook-line {
     font-size: 1.15rem;
     font-weight: 600;
     line-height: 1.35;
+
+    @media (max-height: 550px) {
+      font-size: 1rem;
+    }
   }
 
   >.helper-line {
@@ -35,6 +55,27 @@ html {
     color: fade(@text-color, 70%);
     line-height: 1.45;
     margin-bottom: 0.2rem;
+
+    @media (max-height: 550px) {
+      font-size: 0.8rem;
+      margin-bottom: 0;
+    }
+  }
+
+  >.login-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: fade(@text-color, 60%);
+    margin-bottom: 0.1rem;
+
+    >img {
+      width: 14px;
+      height: 14px;
+    }
   }
 
   >.startpage-create-btn {
@@ -62,14 +103,8 @@ html {
     }
   }
 
-  >.login-link {
-    font-size: 0.88rem;
-
-    >a {
-      color: @link-color;
-      font-weight: 600;
-      margin-left: 0.3em;
-    }
+  >.startpage-login-btn {
+    width: 100%;
   }
 }
 
@@ -88,8 +123,13 @@ div.startpage {
         height: 100dvh;
       }
 
-      @media (max-height: 400px) {
+      @media (max-height: 700px) {
         height: auto;
+        min-height: 100vh;
+
+        @supports (min-height: 100dvh) {
+          min-height: 100dvh;
+        }
       }
 
       display: flex;

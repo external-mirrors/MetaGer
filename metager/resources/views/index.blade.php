@@ -6,10 +6,13 @@
   <div>@lang('resultPage.skiplinks.heading')</div>
   <a href="#eingabe" id="skipto-search" class="skip-link">@lang('index.skip.search')</a>
   <a href="#sidebarToggle" id="skipto-navigation" class="skip-link">@lang('index.skip.navigation')</a>
+  @if(Auth::guard("key")->user() !== null || app(App\Models\Authorization\Authorization::class)->loggedIn)
   <a href="#foki-switcher" id="skipto-fokus" class="skip-link">@lang('index.skip.fokus')</a>
+  @endif
   <div class="escape">@lang('resultPage.skiplinks.return')</div>
 </div>
 <div id="search-content">
+  @if(Auth::guard("key")->user() !== null || app(App\Models\Authorization\Authorization::class)->loggedIn)
   <ul id="foki-switcher">
     @foreach(app()->make(\App\Searchengines::class)->available_foki as $index => $fokus)
     <li @if($index > 4) class="hide-xs" @endif>
@@ -22,6 +25,7 @@
   class="active" aria-current="page" @endif>@lang("index.foki.maps")</a>
     </li>
   </ul>
+  @endif
 
   <div id="search-wrapper">
     <h1 id="startpage-logo">
@@ -37,17 +41,18 @@
     <div id="searchbar-replacement">
       <div class="tagline">@lang('index.searchbar-replacement.tagline')</div>
       <div class="hook-line">@lang('index.searchbar-replacement.hook')</div>
+      <div class="login-status">
+        <img src="/img/svg-icons/key-empty.svg" alt="" aria-hidden="true">
+        @lang('index.searchbar-replacement.not_logged_in')
+      </div>
       <div class="helper-line">@lang('index.searchbar-replacement.message')</div>
       <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys') }}" class="btn btn-primary startpage-create-btn">
         @lang('index.searchbar-replacement.start')
       </a>
       <div class="divider-row"><span class="line"></span><span class="divider-label">@lang('index.searchbar-replacement.or')</span><span class="line"></span></div>
-      <div class="login-link">
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}" class="btn btn-default startpage-login-btn">
         @lang('index.searchbar-replacement.have_key')
-        <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}">
-          @lang('index.searchbar-replacement.login')
-        </a>
-      </div>
+      </a>
     </div>
   @else
   @include('parts.searchbar', ['class' => 'startpage-searchbar'])

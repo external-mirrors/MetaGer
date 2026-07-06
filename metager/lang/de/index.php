@@ -32,10 +32,11 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open-Source. Werbefrei. Anonym.',
         'hook' => 'Die Suchmaschine, die Sie nicht verfolgt.',
-        'message' => 'Statt eines Kontos mit Ihren Daten genügt ein anonymer Schlüssel mit Guthaben.',
+        'message' => 'Für den Zugang genügt ein anonymer Schlüssel – kein Konto, keine E-Mail-Adresse, keine persönlichen Daten.',
+        'not_logged_in' => 'Sie sind aktuell nicht angemeldet.',
         'start' => 'Mehr erfahren',
         'or' => 'oder',
-        'have_key' => 'Sie haben bereits einen Schlüssel?',
+        'have_key' => 'Ich habe bereits einen Schlüssel',
         'key_error' => "Der eingegebene Schlüssel war nicht korrekt. Bitte prüfen Sie die Eingabe.",
         'login' => "Anmelden",
         'login_code_error' => "Der eingegebene Login-Code war nicht gültig. Hinweis: Login-Codes sind nur gültig, solange sie auf einem anderen Gerät angezeigt werden!",

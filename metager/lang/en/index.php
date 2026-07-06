@@ -30,15 +30,18 @@ return [
     ],
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [
-        'message' => 'Please log in with your key to use the MetaGer search engine. It is only available ad-free & <a href=":anonym_link">anonymous</a>!',
-        'why' => 'why?',
-        'start' => 'Create new key',
+        'tagline' => 'Open Source. Ad-Free. Anonymous.',
+        'hook' => "The search engine that doesn't track you.",
+        'message' => 'All you need is an anonymous key – no account, no email address, no personal data.',
+        'not_logged_in' => "You're not currently logged in.",
+        'start' => 'Learn more',
+        'or' => 'or',
+        'have_key' => 'I already have a key',
         'new_key' => 'No key yet?',
         'extension' => 'Stay logged in and anonymous with our webextension',
         "key_error" => "The entered key was not valid. Please check the input.",
         "login_code_error" => "The entered login code was not valid. Hint: Login Codes are only valid while visible on another device!",
         "payment_id_error" => "You've entered a payment id which is not a correct key. Your key is 36 characters long.",
-        "login" => "Login With Key",
-        'not_logged_in' => 'You are currently not logged in.'
+        "login" => "Log in",
     ]
 ];

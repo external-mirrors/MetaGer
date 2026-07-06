@@ -1,16 +1,18 @@
 <?php
 return [
     'searchbar-replacement' => [
+        'tagline' => 'Open source. Sem anúncios. Anónimo.',
+        'hook' => 'O motor de busca que não o rastreia.',
+        'message' => 'Em vez de uma conta com os seus dados, basta uma chave anónima com saldo.',
+        'start' => 'Saiba mais',
+        'or' => 'ou',
+        'have_key' => 'Já tem uma chave?',
         'payment_id_error' => "Introduziu um ID de pagamento que não é uma chave correta. A sua chave tem 36 caracteres.",
-        'start' => 'Criar nova chave',
-        'message' => 'Por favor, inicie sessão com a sua chave para utilizar o motor de busca MetaGer. Só está disponível sem anúncios e <a href=":anonym_link">anónimo</a>!',
-        'why' => 'Porquê?',
         'key_error' => "A chave introduzida não é válida. Por favor, verifique a entrada.",
         'login_code_error' => "O código de início de sessão introduzido não era válido. Dica: os códigos de início de sessão só são válidos enquanto estiverem visíveis noutro dispositivo!",
-        'login' => "Iniciar sessão com chave",
+        'login' => "Iniciar sessão",
         'new_key' => 'Ainda não tem chave?',
         'extension' => 'Mantenha-se ligado e anónimo com a nossa extensão Web',
-        'not_logged_in' => 'Atualmente não tem sessão iniciada.',
     ],
     'plugin-title' => 'Adicionar MetaGer ao seu browser',
     'key' => [

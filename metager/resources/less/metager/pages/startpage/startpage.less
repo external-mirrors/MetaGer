@@ -9,47 +9,102 @@ html {
 }
 
 #searchbar-replacement {
-  max-width: 600px;
+  max-width: 420px;
   margin: 0 auto;
   padding-inline: 1rem;
   grid-area: search;
   text-align: center;
   display: grid;
-  row-gap: 0.5rem;
+  row-gap: 0.7rem;
 
-  >div.input-group {
-    display: grid;
-    row-gap: 0.5rem;
+  @media (max-height: 700px) {
+    row-gap: 0.4rem;
+  }
 
-    >label {
-      margin: 0;
+  @media (max-height: 550px) {
+    row-gap: 0.25rem;
+  }
+
+  >.tagline {
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: fade(@text-color, 60%);
+    margin-bottom: 0.3rem;
+
+    @media (max-height: 700px) {
+      margin-bottom: 0;
+    }
+
+    @media (max-height: 550px) {
+      display: none;
+    }
+  }
+
+  >.hook-line {
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.35;
+
+    @media (max-height: 550px) {
+      font-size: 1rem;
+    }
+  }
+
+  >.helper-line {
+    font-size: 0.88rem;
+    color: fade(@text-color, 70%);
+    line-height: 1.45;
+    margin-bottom: 0.2rem;
+
+    @media (max-height: 550px) {
       font-size: 0.8rem;
-      line-height: 1.2;
+      margin-bottom: 0;
+    }
+  }
 
-      >a {
-        color: @link-color;
-      }
+  >.login-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: fade(@text-color, 60%);
+    margin-bottom: 0.1rem;
+
+    >img {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  >.startpage-create-btn {
+    width: 100%;
+    color: @color-white;
+  }
+
+  >.divider-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.2rem 0;
+
+    >.line {
+      flex: 1;
+      height: 1px;
+      background: @border-color;
     }
 
-    >div.inputs {
-
-      .not-logged-in-info {
-        margin-bottom: 0.75em;
-        color: #b00;
-        font-weight: bold;
-        text-align: center;
-      }
-
-      .startpage-login-btn {
-        width: 100%;
-        margin-bottom: 0.5em;
-      }
-
-      .startpage-create-btn {
-        width: 100%;
-        color: @color-white;
-      }
+    >.divider-label {
+      font-size: 0.72rem;
+      color: fade(@text-color, 50%);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
+  }
+
+  >.startpage-login-btn {
+    width: 100%;
   }
 }
 
@@ -68,8 +123,13 @@ div.startpage {
         height: 100dvh;
       }
 
-      @media (max-height: 400px) {
+      @media (max-height: 700px) {
         height: auto;
+        min-height: 100vh;
+
+        @supports (min-height: 100dvh) {
+          min-height: 100dvh;
+        }
       }
 
       display: flex;

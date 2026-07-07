@@ -67,10 +67,10 @@ standalone service that doesn't have its own repo yet. The docs are split accord
 1. Create the `metager-chat` repo (sibling to `metager-keymanager`/`SafeBrowse`) and copy
    `metager-chat-service/*` into it as its own planning docs. Scaffold the service, provider
    adapter (OpenAI + Anthropic), and streaming — no billing, no UI yet.
-   **In progress**: a bare scaffold (health check only, no provider adapter yet) has been created
-   and verified to run locally alongside the main app — see
-   [`metager-chat-service/bootstrap-guide.md`](metager-chat-service/bootstrap-guide.md) for exactly
-   what's done vs. still manual vs. still deferred.
+   **Done**: repo scaffold, CI/CD, Helm chart, the `/chat` basePath, and the OpenAI + Anthropic
+   provider adapter with streaming (`POST /api/chat`, `GET /api/models`) all exist and were
+   verified locally (a real streaming call reached OpenAI's API end to end) — see `metager-chat`'s
+   own `AGENT.md` for what's actually implemented vs. still design-only in `docs/planning/`.
 2. Billing plumbing (Redis claims + keymanager discharge + pricing table) + the
    `parse_available_foki()` fix in the MetaGer repo.
 3. Add the Mistral adapter (validates that adding a provider is cheap once the pattern is proven

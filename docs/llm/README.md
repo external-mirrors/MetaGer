@@ -6,9 +6,9 @@ option), manually switching between models via a plain-language picker UI. It is
 kept separate from websearch for now.
 
 **Status: implementation under way, ahead of the phasing order below.** The `metager-chat` service
-(provider adapter, streaming, and now a real chat UI) and the MetaGer-side Foki/UI integration
-(steps 1 and 4) are implemented and locally verified; billing (step 2) and the Mistral adapter (step
-3) are not started yet — see the phasing section for the current per-step breakdown.
+(provider adapter, streaming, a real chat UI, and now billing) and the MetaGer-side Foki/UI
+integration (steps 1, 2, and 4) are implemented and locally verified; only the Mistral adapter
+(step 3) is not started yet — see the phasing section for the current per-step breakdown.
 
 ## Verdict
 
@@ -80,8 +80,14 @@ for what remains.
    verified locally (a real streaming call reached OpenAI's API end to end through the actual
    `/chat` route) — see `metager-chat`'s own `AGENT.md` for what's actually implemented vs. still
    design-only in `docs/planning/`.
-2. **Not started.** Billing plumbing (Redis claims + keymanager discharge + pricing table).
-   `parse_available_foki()`'s fix (below) landed early, as part of step 4.
+2. **Done.** Billing plumbing (Redis claims + keymanager discharge + pricing table) — implemented
+   directly in `metager-chat` (`src/lib/billing/*`, `config/billing.json`), no changes to
+   `metager-keymanager` or the main Laravel app needed, per this doc's original verdict. Verified
+   locally end to end: a real keymanager-created key was charged the real per-message cost after a
+   real streaming completion, its reservation claim was released back to 0, and a low-balance key
+   was rejected before any reservation or provider call. See `metager-chat`'s own AGENT.md and
+   `docs/planning/billing.md` for details. `parse_available_foki()`'s fix (below) landed early, as
+   part of step 4.
 3. **Not started.** Add the Mistral adapter (validates that adding a provider is cheap once the
    pattern is proven with two).
 4. **Done, done ahead of steps 2–3.** Foki/UI integration in the MetaGer repo — see

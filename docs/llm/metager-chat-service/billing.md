@@ -2,6 +2,9 @@
 
 > See the note at the top of [`architecture.md`](architecture.md) about this document's home
 > once `metager-chat` becomes its own repo.
+>
+> **Implemented and verified locally** — see `metager-chat`'s own `docs/planning/billing.md` (same
+> content, that repo's copy carries the current status note) and its `AGENT.md`.
 
 ## Why this can't reuse the main app's `KeyUser.php` claim mechanism
 

@@ -184,6 +184,43 @@ side, the only expectation to carry into interface planning is that the iframe's
 chrome rather than like an embedded foreign app — likely via theme information passed into the
 iframe `src` as a query parameter. Left for the interface-planning phase to work out in detail.
 
+### Seamlessness checklist (must be addressed in interface planning, not assumed for free)
+
+A naive `<iframe src="...">` will feel like a bolted-on widget, not part of MetaGer, unless these
+are deliberately designed for:
+
+- **First-message latency**: a full Laravel page load followed by the iframe app's own boot and
+  *then* its first request to start generating is at least two sequential load steps before
+  anything streams — noticeably slower than a native chat app's instant response to the first
+  message. Worth measuring and possibly optimizing (e.g. pre-warming the iframe, skeleton states)
+  once real UI exists.
+- **Visual drift over time**: this is a genuinely separate frontend codebase from MetaGer's
+  Blade/vanilla-JS stack. Matching fonts/colors/spacing/dark-mode at launch (via passed-in theme
+  params) doesn't keep them in sync afterward — a MetaGer redesign won't automatically propagate,
+  and vice versa. Needs an explicit ongoing process (shared design tokens, or a recurring review),
+  not a one-time effort.
+- **No visible iframe "box"**: iframes have their own scroll context and fixed size by default.
+  Needs `postMessage`-based auto-resize to content height and no internal scrollbar, so the whole
+  page scrolls together rather than the chat area reading as an embedded widget.
+- **URL / back-button / bookmarking**: navigating within the chat app (switching conversations,
+  opening settings) should be reflected in the browser's address bar and support back/forward,
+  via the parent page listening for `postMessage` and using the History API — otherwise refresh
+  and back-button behavior will feel broken relative to the rest of MetaGer.
+- **Locale**: the iframe `src` must carry the current locale explicitly (MetaGer uses
+  `mcamara/laravel-localization`); left unaddressed, the chat app will default to one language
+  regardless of what the rest of the page shows. **Decided** (not yet implemented — no chat UI
+  exists yet to translate): pass it as a `?locale=` query param using Laravel's already-resolved
+  locale, deliberately *not* derived from the URL path the way `metager-keymanager` does it — see
+  `metager-chat/docs/planning/locale-awareness.md` for the reasoning (iframe context means the
+  iframe's own URL is never bookmarked, unlike keymanager's directly-navigated pages).
+- **Mobile**: a separately responsive app inside an iframe needs its own explicit mobile testing
+  pass (virtual-keyboard resize behavior, viewport height quirks are known iframe trouble spots),
+  not just reliance on the outer page already being mobile-friendly.
+
+Same-origin routing (auth) and keeping the outer chrome visible (§2 above) are already handled by
+this design — the items above are the remaining gap between "technically embedded" and "feels like
+one product."
+
 Since billing is transparent per-model (see
 [`../metager-chat-service/billing.md`](../metager-chat-service/billing.md)'s pricing table), the
 picker should show a real ballpark cost indicator per model (not just qualitative

@@ -7,10 +7,15 @@
     Layout (fill the viewport exactly, no page-level scroll) lives in
     resources/less/metager/pages/resultpage/chat.less, scoped to body.chat — no inline
     <style>/<script>, this app's CSP doesn't allow 'unsafe-inline' and nothing here should rely on
-    it anyway. Baseline layout only, not the full seamlessness treatment described in
-    docs/llm/metager-integration/foki-integration.md's checklist — real auto-resize-to-*content*
-    (as opposed to just viewport-fill) needs postMessage cooperation from the chat app's own
-    frontend, which doesn't exist yet.
+    it anyway. This app-like viewport-fill model (single internal scrollbar, pinned composer) was
+    deliberately chosen over a growing-with-content/page-scroll model — see
+    docs/llm/metager-integration/foki-integration.md's seamlessness checklist. No postMessage
+    resize is needed for it: the outer grid/flexbox already keeps the iframe sized to the real
+    available area (header/banner/footer) with zero JS.
+
+    `theme` mirrors `app(\App\SearchSettings::class)->theme` ('system'/'light'/'dark', see
+    SearchSettings.php) so the iframe's own dark-mode CSS matches the user's actual MetaGer
+    preference instead of only the OS-level prefers-color-scheme.
 --}}
 
 <div id="chat-container">
@@ -44,7 +49,7 @@
         <iframe
             id="chat-iframe"
             title="@lang('index.foki.chat')"
-            src="{{ LaravelLocalization::getLocalizedURL(null, '/chat') }}?eingabe={{ rawurlencode($eingabe) }}&locale={{ LaravelLocalization::getCurrentLocale() }}"
+            src="{{ LaravelLocalization::getLocalizedURL(null, '/chat') }}?eingabe={{ rawurlencode($eingabe) }}&locale={{ LaravelLocalization::getCurrentLocale() }}&theme={{ app(\App\SearchSettings::class)->theme }}"
         ></iframe>
     @endif
 </div>

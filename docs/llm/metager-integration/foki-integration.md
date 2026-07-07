@@ -2,10 +2,11 @@
 
 **Status: §1–3 implemented and locally verified** (chat focus registered, `parse_available_foki()`
 fixed, iframe wrapper with auth/balance gating renders, nginx route in place, Reverb balance
-updates need no new code). **§4's first-message auto-send is implemented**; the rest of §4 and all
-of §5's seamlessness checklist (postMessage auto-resize, back-button/URL sync, theme handshake, a
-real per-model cost indicator) are still open — see inline notes below and
-[`../open-questions.md`](../open-questions.md).
+updates need no new code). **§4's first-message auto-send is implemented.** Of §5's seamlessness
+checklist: theme handshake is implemented, "no visible iframe box" is resolved by design (no code
+needed), URL/back-button sync is deliberately deferred (nothing to sync yet); first-message
+latency, visual-drift process, mobile testing, and the per-model cost indicator are still open —
+see inline notes below and [`../open-questions.md`](../open-questions.md).
 
 Scope: this document only covers changes to the existing MetaGer Laravel monolith
 (`/home/dominik/code/arbeit/MetaGer/metager`). It assumes `metager-chat` (the new service, see
@@ -208,17 +209,27 @@ are deliberately designed for:
   message. Worth measuring and possibly optimizing (e.g. pre-warming the iframe, skeleton states)
   once real UI exists.
 - **Visual drift over time**: this is a genuinely separate frontend codebase from MetaGer's
-  Blade/vanilla-JS stack. Matching fonts/colors/spacing/dark-mode at launch (via passed-in theme
-  params) doesn't keep them in sync afterward — a MetaGer redesign won't automatically propagate,
-  and vice versa. Needs an explicit ongoing process (shared design tokens, or a recurring review),
-  not a one-time effort.
-- **No visible iframe "box"**: iframes have their own scroll context and fixed size by default.
-  Needs `postMessage`-based auto-resize to content height and no internal scrollbar, so the whole
-  page scrolls together rather than the chat area reading as an embedded widget.
-- **URL / back-button / bookmarking**: navigating within the chat app (switching conversations,
-  opening settings) should be reflected in the browser's address bar and support back/forward,
-  via the parent page listening for `postMessage` and using the History API — otherwise refresh
-  and back-button behavior will feel broken relative to the rest of MetaGer.
+  Blade/vanilla-JS stack. Dark/light **theme is now handshaked** (`?theme=` mirrors
+  `app(\App\SearchSettings::class)->theme`, one of `system`/`light`/`dark` — see
+  `results_chat.blade.php` and `metager-chat/src/lib/theme.ts`), so the iframe always matches the
+  user's actual MetaGer preference rather than only the OS-level `prefers-color-scheme`. That still
+  doesn't keep fonts/colors/spacing in sync going forward — a MetaGer redesign won't automatically
+  propagate into `metager-chat`'s own CSS, and vice versa. Needs an explicit ongoing process (shared
+  design tokens, or a recurring review), not a one-time effort.
+- **No visible iframe "box"**: **resolved by design, no `postMessage` needed.** The chat focus
+  deliberately uses an app-like viewport-fill model (`resources/less/metager/pages/resultpage/chat.less`):
+  the outer grid/flexbox sizes `#chat-iframe` to exactly the real available area (accounting for
+  the header/foki-nav/balance-banner/footer automatically, since it's plain CSS, not a hardcoded
+  height), with a single internal scrollbar inside the message list and a pinned composer — the
+  same model native chat apps (Slack, ChatGPT) use. This was a deliberate choice **against** the
+  alternative literal reading of this bullet (auto-resize the iframe to full content height and let
+  the *outer* MetaGer page scroll instead) — that model fights with keeping the composer visible
+  during a long conversation and isn't worth the added complexity here.
+- **URL / back-button / bookmarking**: **deferred.** This is meant for "switching conversations,
+  opening settings" inside the chat app, but no such internal navigation exists yet — there's one
+  view (composer + transcript), no conversation list or settings pane. Building `postMessage`/History
+  API plumbing now would have no real state to sync. Revisit once step 5 (chat storage &
+  conversation switching, see `../README.md`'s phasing) actually introduces navigable state.
 - **Locale**: the iframe `src` must carry the current locale explicitly (MetaGer uses
   `mcamara/laravel-localization`). **Implemented**, but only for `en`/`de`: the wrapper passes a
   `?locale=` query param using Laravel's already-resolved locale, deliberately *not* derived from

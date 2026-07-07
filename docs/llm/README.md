@@ -94,9 +94,13 @@ for what remains.
    [`metager-integration/foki-integration.md`](metager-integration/foki-integration.md) for the
    per-section implementation status. The `chat` focus is registered, the `parse_available_foki()`
    fix landed, the iframe wrapper with an auth gate and low-balance banner renders, and the nginx
-   route exists. Not done: the seamlessness checklist items (`postMessage` auto-resize,
-   back-button/URL sync, a passed-in theme handshake) and the per-model cost indicator (blocked on
-   billing/step 2, since `/api/models` deliberately doesn't expose pricing yet).
+   route exists. Of the seamlessness checklist: the theme handshake is implemented, and
+   `postMessage` auto-resize/no-visible-iframe-box turned out to need no code (the existing
+   viewport-fill CSS already handles it) — back-button/URL sync is deliberately deferred until step
+   5 introduces actual navigable state (conversation switching). Still open: first-message latency,
+   an ongoing visual-drift process, mobile testing, and the per-model cost indicator (now unblocked
+   by billing/step 2 — `/api/models` still deliberately doesn't expose pricing, that part of the
+   work hasn't started yet).
 5. **Not started.** Chat storage & privacy (opt-in flag, client-id bootstrap, delete flow) —
    deliberately last.
 6. **Not started**, future/separate effort. MCP `web_search` tool for search grounding.

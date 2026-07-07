@@ -5,7 +5,10 @@ users chat with LLMs from multiple providers (OpenAI, Anthropic, and an EU/priva
 option), manually switching between models via a plain-language picker UI. It is deliberately
 kept separate from websearch for now.
 
-**Status: design/planning stage. No application code has been written yet.**
+**Status: implementation under way, ahead of the phasing order below.** The `metager-chat` service
+(provider adapter, streaming, and now a real chat UI) and the MetaGer-side Foki/UI integration
+(steps 1 and 4) are implemented and locally verified; billing (step 2) and the Mistral adapter (step
+3) are not started yet — see the phasing section for the current per-step breakdown.
 
 ## Verdict
 
@@ -62,22 +65,32 @@ standalone service that doesn't have its own repo yet. The docs are split accord
 - **[`future-considerations.md`](future-considerations.md)** — ideas explicitly out of v1 scope
   (e.g. an "Auto" model-selection mode), captured so they aren't lost.
 
-## Phasing (for later reference — not started yet)
+## Phasing (for later reference)
+
+Note: steps were not executed in the listed order — step 4 (Foki/UI integration) landed before
+steps 2 and 3 below. The list itself hasn't been reordered since it's still a reasonable reference
+for what remains.
 
 1. Create the `metager-chat` repo (sibling to `metager-keymanager`/`SafeBrowse`) and copy
    `metager-chat-service/*` into it as its own planning docs. Scaffold the service, provider
    adapter (OpenAI + Anthropic), and streaming — no billing, no UI yet.
-   **Done**: repo scaffold, CI/CD, Helm chart, the `/chat` basePath, and the OpenAI + Anthropic
-   provider adapter with streaming (`POST /api/chat`, `GET /api/models`) all exist and were
-   verified locally (a real streaming call reached OpenAI's API end to end) — see `metager-chat`'s
-   own `AGENT.md` for what's actually implemented vs. still design-only in `docs/planning/`.
-2. Billing plumbing (Redis claims + keymanager discharge + pricing table) + the
-   `parse_available_foki()` fix in the MetaGer repo.
-3. Add the Mistral adapter (validates that adding a provider is cheap once the pattern is proven
-   with two).
-4. Foki/UI integration in the MetaGer repo (iframe wrapper, model picker, live balance push).
-5. Chat storage & privacy (opt-in flag, client-id bootstrap, delete flow) — deliberately last.
-6. (Future, separate effort) MCP `web_search` tool for search grounding.
-
-Only after these docs are reviewed and solid do we move on to planning the interface in detail,
-and only after that does implementation begin.
+   **Done**: repo scaffold, CI/CD, Helm chart, the `/chat` basePath, the OpenAI + Anthropic
+   provider adapter with streaming (`POST /api/chat`, `GET /api/models`), and now a real chat UI
+   (message list, composer, model picker, locale handling for `en`/`de`) all exist and were
+   verified locally (a real streaming call reached OpenAI's API end to end through the actual
+   `/chat` route) — see `metager-chat`'s own `AGENT.md` for what's actually implemented vs. still
+   design-only in `docs/planning/`.
+2. **Not started.** Billing plumbing (Redis claims + keymanager discharge + pricing table).
+   `parse_available_foki()`'s fix (below) landed early, as part of step 4.
+3. **Not started.** Add the Mistral adapter (validates that adding a provider is cheap once the
+   pattern is proven with two).
+4. **Done, done ahead of steps 2–3.** Foki/UI integration in the MetaGer repo — see
+   [`metager-integration/foki-integration.md`](metager-integration/foki-integration.md) for the
+   per-section implementation status. The `chat` focus is registered, the `parse_available_foki()`
+   fix landed, the iframe wrapper with an auth gate and low-balance banner renders, and the nginx
+   route exists. Not done: the seamlessness checklist items (`postMessage` auto-resize,
+   back-button/URL sync, a passed-in theme handshake) and the per-model cost indicator (blocked on
+   billing/step 2, since `/api/models` deliberately doesn't expose pricing yet).
+5. **Not started.** Chat storage & privacy (opt-in flag, client-id bootstrap, delete flow) —
+   deliberately last.
+6. **Not started**, future/separate effort. MCP `web_search` tool for search grounding.

@@ -19,17 +19,12 @@ tagged with which project/doc it belongs to so it can be tracked and closed out 
   [`metager-chat-service/storage-and-privacy.md`](metager-chat-service/storage-and-privacy.md))?
   A legal/product call, not an architecture one.
 
-## `metager-integration`
-
-- **`createView()` vs. a dedicated controller** — should the chat focus's first-load (the iframe
-  wrapper page, see
-  [`metager-integration/foki-integration.md`](metager-integration/foki-integration.md) §2) be
-  woven into the existing `app/MetaGer.php::createView()` alongside the `bilder` branch, or given
-  its own small dedicated controller/route? Depends on how much of the existing search
-  page-state the chat wrapper page actually needs — easier to judge once the interface is planned
-  in detail.
-
 ## Accepted, not open (listed here only to avoid re-litigating)
+
+- **`createView()` vs. a dedicated controller** — **resolved**: woven into the existing
+  `app/MetaGer.php::createView()` alongside the `bilder` branch (plus an early-return branch in
+  `MetaGerSearch.php::search()`), not a dedicated controller. See
+  [`metager-integration/foki-integration.md`](metager-integration/foki-integration.md) §2.
 
 - **Concurrent balance drain** between reservation and settlement (see
   [`metager-chat-service/billing.md`](metager-chat-service/billing.md) "Accepted risk") is a

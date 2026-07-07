@@ -1,5 +1,12 @@
 # Foki / UI Integration (MetaGer Laravel app)
 
+**Status: §1–3 implemented and locally verified** (chat focus registered, `parse_available_foki()`
+fixed, iframe wrapper with auth/balance gating renders, nginx route in place, Reverb balance
+updates need no new code). **§4's first-message auto-send is implemented**; the rest of §4 and all
+of §5's seamlessness checklist (postMessage auto-resize, back-button/URL sync, theme handshake, a
+real per-model cost indicator) are still open — see inline notes below and
+[`../open-questions.md`](../open-questions.md).
+
 Scope: this document only covers changes to the existing MetaGer Laravel monolith
 (`/home/dominik/code/arbeit/MetaGer/metager`). It assumes `metager-chat` (the new service, see
 [`../metager-chat-service/`](../metager-chat-service/)) exists and serves its own frontend at some
@@ -161,13 +168,13 @@ picks up the `KeyChanged` event automatically.
 Every existing focus is stateless request/response: `?eingabe=...&focus=X` → one page render.
 Chat is a stateful multi-turn conversation, so the model differs:
 
-- The **first** message is typed into the normal search box with `focus=chat` selected — exactly
-  like starting a search in any other focus — and triggers the page load described in §2 (the
-  iframe wrapper). The initial query can be passed into the iframe's `src` as a parameter so the
-  chat app can auto-send it as the first turn. Navigating to the chat focus **without** typing a
-  query first (e.g. clicking "Chat" directly in the Foki switcher/startpage nav) must also work
-  cleanly — it should land on an empty composer inside the iframe, not error out or require a
-  query param to be present.
+- **Implemented.** The **first** message is typed into the normal search box with `focus=chat`
+  selected — exactly like starting a search in any other focus — and triggers the page load
+  described in §2 (the iframe wrapper). The initial query is passed into the iframe's `src` as the
+  `eingabe` parameter (`results_chat.blade.php`) and `metager-chat`'s `ChatApp` component auto-sends
+  it as the first turn once a model is selected (`metager-chat/src/components/ChatApp.tsx`).
+  Navigating to the chat focus **without** typing a query first also works cleanly — it lands on an
+  empty composer inside the iframe rather than erroring out.
 - **All subsequent turns** are handled entirely within the iframe, by the chat service's own
   frontend talking directly to its own streaming API — no further full-page Laravel requests.
 
@@ -176,9 +183,15 @@ meaningfully different navigation/state model than the rest of MetaGer.
 
 ## 5. Model picker UX expectation
 
-The model picker itself (list of available models with plain-language capability/cost/speed
-explanations, manual switching, no auto-routing) lives entirely inside the chat service's own
-frontend (inside the iframe) — it is not a Laravel/Blade concern. From the MetaGer-integration
+**Partially implemented.** A working model picker (a plain `<select>` listing `display_name` per
+model from `/api/models`, manual switching, no auto-routing) exists in
+`metager-chat/src/components/ChatApp.tsx`. Not yet done: plain-language capability/cost/speed
+explanations and the real per-model cost indicator described below — both are blocked on the
+billing phase, since `/api/models` deliberately doesn't expose pricing yet
+(`metager-chat/src/app/api/models/route.ts`).
+
+The model picker itself lives entirely inside the chat service's own frontend (inside the iframe) —
+it is not a Laravel/Blade concern. From the MetaGer-integration
 side, the only expectation to carry into interface planning is that the iframe's look and feel
 (fonts, color scheme, light/dark mode) should be made to feel consistent with the surrounding
 chrome rather than like an embedded foreign app — likely via theme information passed into the
@@ -207,12 +220,12 @@ are deliberately designed for:
   via the parent page listening for `postMessage` and using the History API — otherwise refresh
   and back-button behavior will feel broken relative to the rest of MetaGer.
 - **Locale**: the iframe `src` must carry the current locale explicitly (MetaGer uses
-  `mcamara/laravel-localization`); left unaddressed, the chat app will default to one language
-  regardless of what the rest of the page shows. **Decided** (not yet implemented — no chat UI
-  exists yet to translate): pass it as a `?locale=` query param using Laravel's already-resolved
-  locale, deliberately *not* derived from the URL path the way `metager-keymanager` does it — see
-  `metager-chat/docs/planning/locale-awareness.md` for the reasoning (iframe context means the
-  iframe's own URL is never bookmarked, unlike keymanager's directly-navigated pages).
+  `mcamara/laravel-localization`). **Implemented**, but only for `en`/`de`: the wrapper passes a
+  `?locale=` query param using Laravel's already-resolved locale, deliberately *not* derived from
+  the URL path the way `metager-keymanager` does it (iframe context means the iframe's own URL is
+  never bookmarked, unlike keymanager's directly-navigated pages) — see
+  `metager-chat/docs/planning/locale-awareness.md`. Every other MetaGer locale currently falls back
+  to `en` inside the chat app until a translation pass fills in the remaining catalogs.
 - **Mobile**: a separately responsive app inside an iframe needs its own explicit mobile testing
   pass (virtual-keyboard resize behavior, viewport height quirks are known iframe trouble spots),
   not just reliance on the outer page already being mobile-friendly.
@@ -226,6 +239,8 @@ Since billing is transparent per-model (see
 picker should show a real ballpark cost indicator per model (not just qualitative
 "cheap"/"expensive" language) so the "explains available models" requirement actually lets users
 make an informed cost/quality tradeoff — e.g. an approximate MetaGer-token cost per typical
-message, derived from `models.json`. Each assistant message in the transcript should also be
-tagged with which model actually answered it, since a conversation may span several model
-switches.
+message, derived from `models.json`. **Not yet implemented**, blocked on billing/step 2 above.
+
+**Implemented**: each assistant message in the transcript is tagged with which model actually
+answered it (`messageMetadata` in `metager-chat/src/app/api/chat/route.ts`, rendered as a small
+label in `ChatApp.tsx`), since a conversation may span several model switches.

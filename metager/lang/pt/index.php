@@ -31,6 +31,7 @@ return [
         'nachrichten' => 'Notícias',
         'science' => 'Ciência',
         'maps' => 'Mapas',
+        'chat' => 'Chat',
     ],
     'skip' => [
         'fokus' => 'Saltar para a seleção do foco de pesquisa',

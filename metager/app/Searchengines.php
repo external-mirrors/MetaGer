@@ -28,6 +28,13 @@ class Searchengines
 
         $foki = [];
         foreach ($this->sumas->foki as $fokus => $fokus_data) {
+            // Foki with no engines (e.g. "chat") aren't locale-filtered searches at all —
+            // include them unconditionally instead of falling through the per-engine loop below,
+            // which would otherwise never append them.
+            if (empty($fokus_data->sumas)) {
+                $foki[] = $fokus;
+                continue;
+            }
             foreach ($fokus_data->sumas as $fokus_engine) {
                 $suma_data = $this->sumas->sumas->$fokus_engine;
 

@@ -1,0 +1,55 @@
+// Chat focus (resultpages/resultpage_chat.blade.php, results_chat.blade.php): fill the viewport
+// exactly (no page-level scroll) using the existing #resultpage-container CSS *grid* layout
+// (result-page.less, `grid-template-columns: @results-width-max max-content` pins the results
+// column to a fixed reading width — its `display` must stay `grid`, changing it to flex broke
+// that width). This only *adds* `grid-template-rows`, giving the "results" row `1fr` (fill
+// remaining space) while the other rows (searchbar/foki/options/footer) stay content-sized.
+// `#results-container` (grid area "results") is already `display: flex; flex-direction: column`
+// and already stretches to fill its grid row (the grid has `align-items: stretch`) —
+// `#chat-container`/`#chat-iframe` just need `flex: 1 1 auto; min-height: 0` to grow into that
+// space, the same pattern one level down.
+//
+// #options / #engine-footer / #backtotop are the per-engine filter link, engine attribution
+// footer, and "back to top" link — all meaningless for chat (zero engines), hidden so their row
+// heights collapse to 0. The page footer (.resultPageFooter) stays — it carries the
+// legally-required Impressum/Datenschutz/Kontakt links and must stay reachable on every page; its
+// own grid row stays content-sized (not part of the `1fr` row) so it's never squeezed.
+//
+// This is baseline layout only, not the full seamlessness treatment described in
+// docs/llm/metager-integration/foki-integration.md's checklist — real auto-resize-to-*content*
+// (as opposed to just viewport-fill) needs postMessage cooperation from the chat app's own
+// frontend, which doesn't exist yet.
+
+body#resultpage-body.chat {
+    overflow: hidden;
+
+    #resultpage-container {
+        height: 100vh;
+        box-sizing: border-box;
+        grid-template-rows: auto auto auto 1fr auto;
+    }
+
+    #results-container {
+        min-height: 0;
+    }
+
+    #options,
+    #engine-footer,
+    #backtotop {
+        display: none;
+    }
+
+    #chat-container {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #chat-iframe {
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        border: none;
+    }
+}

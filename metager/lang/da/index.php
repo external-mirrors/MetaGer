@@ -20,6 +20,7 @@ return [
         'science' => 'Videnskab',
         'produkte' => 'Produkter',
         'maps' => 'Kort',
+        'chat' => 'Chat',
     ],
     'adfree' => 'Brug MetaGer uden reklamer',
     'skip' => [

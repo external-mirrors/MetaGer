@@ -20,6 +20,7 @@ return [
         'science' => 'Tiede',
         'produkte' => 'Tuotteet',
         'maps' => 'Kartat',
+        'chat' => 'Chat',
     ],
     'adfree' => 'Käytä MetaGeria mainosvapaasti',
     'skip' => [

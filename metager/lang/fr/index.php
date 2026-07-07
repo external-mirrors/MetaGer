@@ -18,6 +18,7 @@ return [
         'science' => 'Sciences',
         'produkte' => 'Produits',
         'maps' => 'Cartes',
+        'chat' => 'Chat',
     ],
     'plugin' => 'Installer MetaGer',
     'plugin-title' => 'Ajouter MetaGer à votre navigateur',

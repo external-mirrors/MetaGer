@@ -26,7 +26,8 @@ return [
         'nachrichten' => 'News',
         'science' => 'Science',
         'produkte' => 'Products',
-        'maps' => 'Maps'
+        'maps' => 'Maps',
+        'chat' => 'Chat',
     ],
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [

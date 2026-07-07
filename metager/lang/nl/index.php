@@ -18,6 +18,7 @@ return [
         'science' => 'Wetenschap',
         'produkte' => 'Producten',
         'maps' => 'Kaarten',
+        'chat' => 'Chat',
     ],
     'placeholder' => 'MetaGer: Beschermd zoeken en vinden',
     'searchbutton' => 'MetaGer zoeken starten',

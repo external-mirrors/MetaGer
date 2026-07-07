@@ -206,6 +206,20 @@ class MetaGer
                         ->with('imagesearch', true)
                         ->with('resultcount', count($this->results));
             }
+        } elseif (app(SearchSettings::class)->fokus === "chat") {
+            // Chat has no engines to query (empty "sumas" in sumas.json) and is a single static
+            // wrapper page around an iframe, not a paginated/AJAX result set — unlike every other
+            // focus, $this->out is irrelevant here.
+            return view('resultpages.resultpage_chat')
+                ->with('eingabe', $this->eingabe)
+                ->with('mobile', $this->mobile)
+                ->with('warnings', $this->warnings)
+                ->with('htmlwarnings', $this->htmlwarnings)
+                ->with('errors', $this->errors)
+                ->with('apiAuthorized', $this->apiAuthorized)
+                ->with('metager', $this)
+                ->with('browser', (new Agent())->browser())
+                ->with('quicktips', $quicktipResults);
         } else {
             switch ($this->out) {
                 case 'results':

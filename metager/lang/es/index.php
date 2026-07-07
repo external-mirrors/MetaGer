@@ -20,6 +20,7 @@ return [
         'science' => 'Ciencia',
         'produkte' => 'Productos',
         'maps' => 'Mapas',
+        'chat' => 'Chat',
     ],
     'adfree' => 'Utiliza MetaGer sin publicidad',
     'skip' => [

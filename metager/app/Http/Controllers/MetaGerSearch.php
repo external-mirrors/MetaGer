@@ -42,6 +42,14 @@ class MetaGerSearch extends Controller
             return redirect()->to('https://maps.metager.de/' . rawurlencode($settings->q) . '/guess?locale=' . Localization::getLanguage());
         }
 
+        # Chat has no engines (empty "sumas" in sumas.json) and isn't a redirect like maps —
+        # render the iframe wrapper directly, and unlike every other focus below, do this
+        # regardless of whether a query was typed first (clicking "Chat" with no query must land
+        # on an empty composer, not bounce to the startpage or a "no engines enabled" redirect).
+        if ($settings->fokus === "chat") {
+            return $metager->createView();
+        }
+
         # If there is no query parameter we redirect to the startpage
         if (empty(trim($settings->q))) {
             return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));

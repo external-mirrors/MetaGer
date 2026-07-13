@@ -173,6 +173,22 @@ class MetaGerSearch extends Controller
         ]);
     }
 
+    /**
+     * Firefox suggests https://google.de/search?q=%s as Search-URL
+     * which is not MetaGers search but to catch people calling that path
+     * on MetaGer lets make it work
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse;
+     */
+    public function searchGoogle(Request $request)
+    {
+        $request->merge(["eingabe" => $request->input("q", "")]);
+        $request->request->remove('q');
+        $resultpage_url = route('resultpage', $request->all());
+        return redirect($resultpage_url);
+    }
+
     public function searchTimings(Request $request, MetaGer $metager)
     {
         $request->merge([

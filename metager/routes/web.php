@@ -360,6 +360,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return redirect(LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/'));
     });
 
+    Route::get('/search', [MetaGerSearch::class, 'searchGoogle']);
     Route::match(['get', 'post'], 'meta/meta.ger3', [MetaGerSearch::class, 'search'])->middleware(['httpcache', AuthenticationValidation::class])->name("resultpage");
     Route::get('meta/loadMore', [MetaGerSearch::class, 'loadMore']);
     Route::get('anonymous-token/cost', [AnonymousToken::class, "cost"])->withoutMiddleware([LocalizationRedirect::class]);

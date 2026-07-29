@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Pictureproxy;
 use App\Models\DeepResults\Button;
+use App\Models\DeepResults\Imagesearchdata;
 use App\SearchSettings;
 
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
@@ -523,7 +525,7 @@ class Result
             "proxyLink" => $this->proxyLink !== "" ? $this->proxyLink : null,
             "engines" => $this->enginesToApiArray(),
             "image" => $this->imageToApiArray(),
-            "date" => $this->getDate()?->toIso8601String(),
+            "date" => $this->dateToApiArray(),
             "host" => $this->strippedHost,
             "domain" => $this->strippedDomain,
             "partnershop" => (bool) $this->partnershop,
@@ -555,22 +557,78 @@ class Result
     }
 
     /**
-     * Hinweis: `imageDimensions` wird derzeit von keinem Parser befüllt und ist
-     * praktisch immer leer — width/height sind deshalb in aller Regel null.
-     * Das Feld bleibt trotzdem in der Antwort, damit Clients die Form kennen,
-     * sobald ein Parser die Maße liefert.
+     * `$this->image` hat zwei Formen: die Bildersuche legt ein
+     * Imagesearchdata-Objekt ab (Thumbnail, Vollbild, Maße, Proxy-URLs), Web-
+     * und News-Ergebnisse eine blanke URL. Nach außen ist beides dieselbe
+     * Struktur — ein Client soll nicht auf den Typ prüfen müssen.
+     *
+     * `proxyUrl` läuft über den MetaGer-Bildproxy: das Gerät kontaktiert den
+     * fremden Host nicht. Für einen Privacy-Client ist das die richtige Wahl,
+     * aber die URL ist über Pictureproxy::generateUrl() **nur einen Tag
+     * gültig** und darf nicht länger zwischengespeichert werden.
+     *
+     * `imageDimensions` wird von keinem Parser befüllt; für Web-Ergebnisse sind
+     * width/height deshalb immer null. Die Bildersuche liefert echte Maße,
+     * sofern die Engine sie kennt — Brave meldet 0, Serper echte Werte.
      */
     private function imageToApiArray(): array | null
     {
         if (empty($this->image)) {
             return null;
         }
+
+        if ($this->image instanceof Imagesearchdata) {
+            return [
+                "url" => $this->image->image,
+                "width" => $this->dimensionOrNull($this->image->image_width),
+                "height" => $this->dimensionOrNull($this->image->image_height),
+                "proxyUrl" => $this->image->image_proxy ?? null,
+                "thumbnail" => [
+                    "url" => $this->image->thumbnail,
+                    "width" => $this->dimensionOrNull($this->image->thumbnail_width),
+                    "height" => $this->dimensionOrNull($this->image->thumbnail_height),
+                    "proxyUrl" => $this->image->thumbnail_proxy ?? null,
+                ],
+            ];
+        }
+
         $dimensions = is_array($this->imageDimensions) ? $this->imageDimensions : [];
         return [
             "url" => $this->image,
-            "width" => $dimensions["width"] ?? null,
-            "height" => $dimensions["height"] ?? null,
+            "width" => $this->dimensionOrNull($dimensions["width"] ?? null),
+            "height" => $this->dimensionOrNull($dimensions["height"] ?? null),
+            "proxyUrl" => Pictureproxy::generateUrl($this->image),
+            "thumbnail" => null,
         ];
+    }
+
+    /**
+     * Das Ergebnisdatum als ISO-8601, oder null.
+     *
+     * Liest `additionalInformation["date"]` absichtlich selbst, statt getDate()
+     * zu benutzen: die Parser sind sich über den Typ nicht einig. Die meisten
+     * legen ein Carbon ab, Onenewspagevideo aber einen Unix-Timestamp als int.
+     * getDate() ist auf `Carbon|null` typisiert und stirbt daran mit einem
+     * TypeError. Für eine API, die einen kompletten Suchlauf ausliefert, ist
+     * ein einzelnes unlesbares Datum kein Grund, die ganze Antwort zu verlieren.
+     */
+    private function dateToApiArray(): string | null
+    {
+        $date = $this->additionalInformation["date"] ?? null;
+
+        if ($date instanceof \Carbon\Carbon) {
+            return $date->toIso8601String();
+        }
+        if (is_int($date) && $date > 0) {
+            return \Carbon\Carbon::createFromTimestamp($date)->toIso8601String();
+        }
+        return null;
+    }
+
+    /** 0 ist keine Bildgröße, sondern "unbekannt". */
+    private function dimensionOrNull($value): int | null
+    {
+        return empty($value) ? null : (int) $value;
     }
 
     private function sitelinksToApiArray(): array

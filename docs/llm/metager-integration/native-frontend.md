@@ -152,6 +152,41 @@ a browser at all, and removing the route makes that structurally true rather tha
 On the PHP side the proxy is `response()->stream()` wrapping a Guzzle request with
 `['stream' => true]`, `flush()`ing each chunk. Guzzle is already available via Laravel's HTTP client.
 
+**Verified.** A 39-second generation streamed end to end through nginx → the chat FPM pool →
+`metager-chat` → OpenAI, delivering 1865 incremental delta events and a terminal `done`. Deltas
+arrive spread over time rather than in one batched flush, confirming buffering is genuinely off at
+all three hops. The same request on the `[www]` pool would have been killed at 30 seconds.
+
+### CSRF: not available, and not needed
+
+The original plan here said to keep this route inside CSRF protection. **That turned out to be
+impossible, and unnecessary**, for reasons specific to how MetaGer is built:
+
+- `bootstrap/app.php` removes `StartSession` from the `web` group — MetaGer sets no session cookie
+  for ordinary browsing, deliberately. A CSRF token has nowhere to live, and leaving the middleware
+  on throws `RuntimeException: Session store not set on request` rather than protecting anything.
+  Introducing a session just for chat would be a real privacy cost for no gain.
+- The attack it would prevent is already blocked: the `key` cookie is set `SameSite=Lax` by
+  `metager-keymanager`, so a cross-site POST doesn't carry it at all. The header and query key paths
+  need either JS (CORS-blocked cross-origin) or prior knowledge of the key.
+
+So the route opts out of `ValidateCsrfToken` like every other route in `web.php`, and
+`SameOriginRequest` middleware checks `Sec-Fetch-Site`/`Origin` as defense in depth.
+
+Worth noting for anyone reading `bootstrap/app.php`: its `removeFromGroup('web', …)` call names
+`VerifyCsrfToken`, which no longer matches the `ValidateCsrfToken` entry Laravel 12 actually
+registers — so the group's CSRF middleware is still live despite appearances, which is why the
+explicit opt-out is required.
+
+### Do not apply `AuthenticationValidation` to this route
+
+The resultpage route uses it, so it looks like the obvious thing to copy. It is not: that middleware
+charges the **search** cost (`Searchengines::getSearchCost()`) and drives the anonymous-token
+payment flow. On a chat message that bills a second, unrelated amount on top of the per-token charge
+`metager-chat` already makes, and turns auth failures into HTML redirects to the startpage. The
+controller authenticates through the key guard directly instead, which already covers the
+cookie/header/query precedence *and* the `Anonymous-Token-Key` webextension case.
+
 ### Upstream addressing
 
 Identical in shape to how `metager-chat` is addressed by nginx today, just moved into Laravel config:
@@ -296,7 +331,8 @@ protocol churn.
 | `app/Services/ChatBackend.php` | New: health, model catalog, upstream addressing |
 | `app/Searchengines.php` | Health gate in `parse_available_foki()` |
 | `app/Http/Controllers/MetaGerSearch.php` | Unavailable-notice branch |
-| `routes/web.php` | `POST /chat/message` **with** CSRF (note: most routes sit inside a `withoutMiddleware(ValidateCsrfToken)` group — this one must not) |
+| `routes/web.php` | `POST /chat/message`, CSRF excluded (see below) |
+| `app/Http/Middleware/SameOriginRequest.php` | New: session-free CSRF equivalent |
 | `lang/{locale}/chat.php` | New: all chat UI strings, replacing `metager-chat/src/lib/strings.ts` |
 | `build/fpm/configuration/fpm/*.conf` | Dedicated chat pool |
 | `build/nginx/configuration/nginx-default{,-dev}.conf` | Chat FPM location; **remove** the `/chat` proxy blocks |

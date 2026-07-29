@@ -56,6 +56,9 @@ ADD build/fpm/configuration/php/development.ini $PHP_INI_DIR/conf.d/development.
 
 # Configure FPM
 ADD build/fpm/configuration/fpm/www_01_development.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
+# Second pool, listening on :9001, for the long-running chat message route only — see the header
+# comment in that file for why chat cannot share the [www] pool.
+ADD build/fpm/configuration/fpm/www_02_chat_development.conf $PHP_INI_DIR/../php-fpm.d/www_02_chat.conf
 
 ADD build/fpm/entrypoint/validate_laravel.sh /usr/local/bin/validate_laravel
 ADD build/fpm/entrypoint/entrypoint_development.sh /usr/local/bin/entrypoint
@@ -80,6 +83,7 @@ ADD build/fpm/configuration/php/production.ini $PHP_INI_DIR/conf.d/production.in
 ADD build/fpm/entrypoint/entrypoint_production.sh /usr/local/bin/entrypoint
 # Configure FPM for production
 ADD build/fpm/configuration/fpm/www_01_production.conf $PHP_INI_DIR/../php-fpm.d/www_01.conf
+ADD build/fpm/configuration/fpm/www_02_chat_production.conf $PHP_INI_DIR/../php-fpm.d/www_02_chat.conf
 
 USER metager:metager
 

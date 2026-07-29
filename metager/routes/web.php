@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\Assoziator;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
@@ -21,6 +22,7 @@ use App\Http\Controllers\TilesController;
 use App\Http\Controllers\TTSController;
 use App\Http\Controllers\ZitatController;
 use App\Http\Middleware\AuthenticationValidation;
+use App\Http\Middleware\SameOriginRequest;
 use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
 use App\Models\Authorization\Authorization;
@@ -469,3 +471,33 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::post('pl', [StatisticsController::class, 'pageLoad']);
     });
 });
+
+/**
+ * Chat message submission.
+ *
+ * CSRF is excluded, and it has to be: bootstrap/app.php removes StartSession from the `web` group,
+ * so MetaGer sets no session cookie for ordinary browsing and there is nowhere for a CSRF token to
+ * live — leaving ValidateCsrfToken on this route throws "Session store not set on request" rather
+ * than protecting anything. (Note the removeFromGroup call in bootstrap/app.php names the old
+ * VerifyCsrfToken class, which no longer matches the entry Laravel 12 actually registers, so the
+ * group's CSRF middleware is still live and must be opted out of explicitly — exactly as every
+ * other route in this file does.)
+ *
+ * SameOriginRequest provides the equivalent protection without a session; the `key` cookie being
+ * SameSite=Lax already blocks the underlying attack. See that middleware for the full reasoning.
+ *
+ * AuthenticationValidation is deliberately NOT applied, unlike the resultpage route: it charges the
+ * *search* cost (Searchengines::getSearchCost()) and drives the anonymous-token payment flow, both
+ * of which are wrong here — a chat message is billed by metager-chat per token, so this middleware
+ * would bill a second, unrelated amount for every message. The controller authenticates via the
+ * key guard directly, which already covers the cookie/header/query and Anonymous-Token-Key cases.
+ *
+ * nginx routes this URI to a dedicated PHP-FPM pool (:9001) because a generation holds its worker
+ * for the whole response — see build/nginx/configuration/nginx-default*.conf and
+ * build/fpm/configuration/fpm/www_02_chat_*.conf. Keep the path in sync with those location
+ * blocks: they match "^(/[^/]+)?/chat/message$".
+ */
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])
+    ->post('chat/message', [ChatController::class, 'message'])
+    ->middleware([SameOriginRequest::class])
+    ->name("chat:message");

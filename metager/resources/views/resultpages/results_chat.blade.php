@@ -84,5 +84,25 @@
             'selectedModelId' => $selectedModelId,
             'selectedModelName' => $selectedModelName,
         ])
+
+        {{--
+            Strings the enhancement bundle needs, carried in data attributes.
+
+            Not a JS-side dictionary (resources/js/translations.js style) and not an inline
+            <script>: this keeps lang/{de,en}/chat.php the single translation source for the whole
+            feature, and needs no CSP exception.
+        --}}
+        <div id="chat-strings" hidden
+             data-copy="@lang('chat.action.copy')"
+             data-copy-done="@lang('chat.action.copy_done')"
+             data-regenerate="@lang('chat.action.regenerate')"
+             data-download="@lang('chat.action.download')"
+             data-error-generic="@lang('chat.error.generic')"></div>
+
+        {{--
+            Loaded only where it can do something, and only ever as an enhancement: everything above
+            already works without it. `defer` so it runs after the markup it upgrades exists.
+        --}}
+        <script src="{{ mix('js/chat.js') }}" defer></script>
     @endif
 </div>

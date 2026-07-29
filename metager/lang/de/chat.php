@@ -20,6 +20,14 @@ return [
         "stop" => "Stopp",
     ],
 
+    // Nur mit JavaScript sichtbar (resources/js/chat/affordances.js).
+    "action" => [
+        "copy" => "Kopieren",
+        "copy_done" => "Kopiert",
+        "regenerate" => "Neu generieren",
+        "download" => "Herunterladen",
+    ],
+
     "error" => [
         "no_key" => "Für den Chat wird ein MetaGer-Schlüssel benötigt.",
         "unavailable" => "Der Chat ist derzeit nicht erreichbar. Bitte versuchen Sie es gleich noch einmal.",

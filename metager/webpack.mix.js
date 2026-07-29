@@ -122,6 +122,9 @@ mix
     "public/js/admin/membership.js"
   )
   .js(["resources/js/scriptResultPage.js"], "public/js/scriptResultPage.js")
+  // Chat focus enhancement layer — streaming, message affordances. Loaded only by
+  // resultpages/results_chat.blade.php, and only when the interface is actually rendered.
+  .js("resources/js/chat/index.js", "public/js/chat.js")
   .js("resources/js/aaresultpage.js", "public/js/aaresultpage.js")
   .js(["resources/js/contact.js"], "public/js/contact.js")
   .js("resources/js/editLanguage.js", "public/js/editLanguage.js")

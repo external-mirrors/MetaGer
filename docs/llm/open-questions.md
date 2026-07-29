@@ -29,6 +29,13 @@ tagged with which project/doc it belongs to so it can be tracked and closed out 
   backups, while `metager-chat` would be standing up Postgres for this one feature. Worth a
   deliberate second look before the migration is written; the counter-argument is that MetaGer's DB
   sits on the search hot path.
+- **Claim hashes grow without bound** — found while verifying step 5. `releaseClaim()`
+  (`src/lib/billing/claims.ts`) settles with `hincrbyfloat(hash, claimId, -amount)`, which leaves the
+  field behind at `0` rather than deleting it, and `keyserver:claims:<key>` has no TTL. So every chat
+  message a key ever sends adds one dead field, permanently, and `getClaimsTotal()` reads the whole
+  hash on every request — a heavy user's pre-flight balance check gets slower forever. `HDEL` on
+  settle (or a TTL on the hash) fixes it; correctness is unaffected either way, which is why this is
+  a note rather than a blocker.
 - **Set-id enumeration hardening** — a set id is a bearer credential derived from 128 bits of
   entropy, so guessing is infeasible, but `GET /api/conversations` still needs rate limiting and
   probably some monitoring for scanning behaviour. The specific limits are unset.

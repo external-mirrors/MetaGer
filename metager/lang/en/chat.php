@@ -20,6 +20,14 @@ return [
         "stop" => "Stop",
     ],
 
+    // Only ever shown with JavaScript enabled (resources/js/chat/affordances.js).
+    "action" => [
+        "copy" => "Copy",
+        "copy_done" => "Copied",
+        "regenerate" => "Regenerate",
+        "download" => "Download",
+    ],
+
     "error" => [
         "no_key" => "A MetaGer key is required to use chat.",
         "unavailable" => "Chat is currently unavailable. Please try again in a moment.",

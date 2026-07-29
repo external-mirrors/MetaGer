@@ -1,10 +1,11 @@
 # Native Chat Frontend in MetaGer (supersedes the iframe design)
 
-**Status: steps 1–4 implemented and locally verified.** The backend is headless, the chat route runs
+**Status: steps 1–5 implemented and locally verified.** The backend is headless, the chat route runs
 on its own FPM pool (a 39-second generation verified surviving), the availability gate hides the
-focus when the backend is down, and the no-JS path works end to end — form POST, multi-turn context
-via hidden fields, server-rendered Markdown. Remaining: step 5 (JS enhancement layer), step 6 (model
-picker polish, file upload), step 7 (encrypted conversation history).
+focus when the backend is down, the no-JS path works end to end — form POST, multi-turn context via
+hidden fields, server-rendered Markdown — and the JS layer streams over that same route, verified in
+a real Firefox against the running stack. Remaining: step 6 (model picker polish, file upload),
+step 7 (encrypted conversation history).
 
 This document replaces the iframe-embedding approach described
 in [`foki-integration.md`](foki-integration.md) §2 and §5. Those sections are kept for history but
@@ -248,6 +249,13 @@ Per assistant message: **copy**, **regenerate**, and the existing model tag. Per
 and **download**. All JS-only enhancements — without JS the text is still selectable, which is the
 correct baseline — so they render only after JS boots, rather than appearing as dead controls.
 
+Copy takes the **Markdown source**, not the rendered text: that is what is useful to paste anywhere
+else, and it is what a no-JS user would get by selecting the text. Regenerate truncates the
+transcript to just before that answer and re-sends, so it works on any assistant turn rather than
+only the last one. Code-block downloads map the CommonMark `language-…` class to a file extension
+and use a `Blob` object URL rather than a `data:` URI, which keeps `data:` out of the CSP's
+navigation sources.
+
 ### File upload and download
 
 Uploads are a genuine feature gap, and they interact with the stateless-transcript decision: hidden
@@ -331,6 +339,7 @@ protocol churn.
 | `resources/views/resultpages/parts/chat/*.blade.php` | New: message, model picker, composer partials |
 | `resources/less/metager/pages/resultpage/chat.less` | Retarget iframe rules onto real DOM; message/composer styling |
 | `resources/js/chat/*.js` + `webpack.mix.js` | New enhancement bundle (streaming, copy, download, picker, history crypto + QR) |
+| `lang/{locale}/chat.php` → `#chat-strings` data attributes | JS strings come from the same lang files as the markup, not a JS-side dictionary |
 | `package.json` | QR generator dependency for cross-device history transfer |
 | `app/Http/Controllers/ChatController.php` | New: message route, streaming proxy, Markdown render |
 | `app/Http/Controllers/ChatHistoryController.php` | New: proxy for the encrypted conversation store (normal FPM pool) |
@@ -359,7 +368,32 @@ protocol churn.
    directly instead, supplying the view data the shared chrome expects (`errors` in particular,
    since `parts/errors.blade.php` calls `sizeof($errors)` unguarded and nothing populates it without
    sessions).
-5. JS enhancement layer: streaming, then affordances.
+5. JS enhancement layer: streaming, then affordances. `resources/js/chat/` — `index.js` (composer
+   interception, streaming, stop, textarea growth), `sse.js`, `transcript.js`, `affordances.js`,
+   `strings.js`. Three things were settled while building it:
+
+   - **The hidden fields stay the single source of truth.** `Transcript` does not keep a private
+     copy of the conversation; every change is written straight back into `messages[i][…]`. So if JS
+     stops being involved at any point — a bundle fails to load, the tab is restored from bfcache,
+     the user disables JS mid-conversation — the very next plain form submit continues the same
+     conversation rather than starting a new one. It also means the JS path sends exactly the shape
+     the no-JS path sends, so there is no second protocol to keep in sync.
+   - **A query-string key has to be carried into the form action.** `KeyAuthGuard` accepts a key by
+     cookie, header, *or* query parameter. The first two ride along on a POST by themselves; a query
+     key lives on the page URL and the form's own action drops it, which left those users unable to
+     chat on either path. The composer now appends it, the same way the proxy links in
+     `layouts/result.blade.php` do.
+   - **Stop keeps the partial answer, marked as unrendered.** The tokens are paid for, so discarding
+     them is wrong, but they never went through the server's Markdown renderer and rendering them in
+     JS would reintroduce the second renderer. They stay plain text in a `pre-wrap` container; the
+     Markdown source goes into the hidden fields, so any later server round trip renders it properly.
+
+   Feature-detection is a hard gate, not a nicety: `sse.js` checks `fetch`, `AbortController`,
+   `TextDecoder`, `ReadableStream` *and* `Response.prototype.body` — Firefox <65 has `fetch` but not
+   a readable body, so testing `window.fetch` alone would hand those users a broken chat. Copy
+   buttons additionally require `navigator.clipboard`, which is absent on insecure origins (so they
+   do not appear in local HTTP dev, by design). Whenever a check fails the form is left exactly as
+   the server rendered it.
 6. Model picker redesign and file upload.
 7. Conversation history: the encrypted blob store and its Postgres migration first, then the crypto
    layer, then the list UI, then cross-device transfer. Deliberately last — it is the only part with

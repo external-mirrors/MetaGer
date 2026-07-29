@@ -10,8 +10,17 @@
     and they pay for the tokens either way. What must never be trusted from here is rendered HTML,
     which is why only Markdown source travels (see parts/chat/message.blade.php).
 --}}
-<form id="chat-composer" class="chat-composer" method="POST"
-      action="{{ LaravelLocalization::getLocalizedURL(null, '/chat/message') }}">
+@php
+    // A key can be supplied by cookie, by header, or in the query string (KeyAuthGuard). Only the
+    // first two ride along on a POST by themselves — a query key lives on the *page* URL and would
+    // be dropped by the form's own action, leaving those users unable to chat at all. Carrying it
+    // forward is the same thing the proxy links do (layouts/result.blade.php).
+    $chatAction = LaravelLocalization::getLocalizedURL(null, '/chat/message');
+    if (auth()->guard('key')->login_method === 'query' && auth()->guard('key')->user() !== null) {
+        $chatAction .= '?key=' . rawurlencode(auth()->guard('key')->user()->key);
+    }
+@endphp
+<form id="chat-composer" class="chat-composer" method="POST" action="{{ $chatAction }}">
 
     {{-- Keeps the foki switcher highlighting "Chat" when the no-JS response re-renders. --}}
     <input type="hidden" name="focus" value="chat">

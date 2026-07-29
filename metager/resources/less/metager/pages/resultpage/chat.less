@@ -107,6 +107,95 @@ body#resultpage-body.chat {
         margin-bottom: 4px;
     }
 
+    // --- JS-only affordances (resources/js/chat/) ------------------------------------------------
+    // None of this exists without JS, and nothing below is required to hold a conversation.
+
+    .chat-message-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 6px;
+        // Kept out of the way until the message is under the pointer, so a long conversation reads
+        // as text rather than as rows of buttons. Focus-within keeps them reachable by keyboard,
+        // and coarse pointers get them unconditionally (see below) — there is no hover there.
+        opacity: 0;
+        transition: opacity 0.1s ease-in;
+    }
+
+    .chat-message:hover .chat-message-actions,
+    .chat-message-actions:focus-within {
+        opacity: 1;
+    }
+
+    @media (hover: none) {
+        .chat-message-actions {
+            opacity: 1;
+        }
+    }
+
+    // A streaming answer has nothing to copy yet and must not be regenerated mid-flight.
+    .chat-message--streaming .chat-message-actions {
+        display: none;
+    }
+
+    // Text that arrived over the stream but never made it through the server's Markdown renderer —
+    // the user pressed Stop. Shown as-is rather than rendered client-side; any later server round
+    // trip renders it properly from the same source.
+    .chat-message--unrendered .chat-message-body {
+        white-space: pre-wrap;
+    }
+
+    .chat-action {
+        background: none;
+        border: none;
+        padding: 0;
+        font-size: 0.8em;
+        opacity: 0.7;
+        cursor: pointer;
+        text-decoration: underline;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
+        }
+
+        &.success {
+            color: @metager-orange;
+            opacity: 1;
+            text-decoration: none;
+        }
+
+        &.failure {
+            text-decoration: line-through;
+        }
+    }
+
+    .chat-code {
+        position: relative;
+        margin-bottom: 1em;
+
+        pre {
+            margin-bottom: 0;
+        }
+    }
+
+    .chat-code-toolbar {
+        display: flex;
+        align-items: center;
+        // Controls sit at the trailing edge whether or not the block declared a language.
+        justify-content: flex-end;
+        gap: 12px;
+        font-size: 0.8em;
+        padding: 2px 0;
+    }
+
+    .chat-code-language {
+        opacity: 0.6;
+        // Pushes the buttons to the trailing edge without needing a spacer element.
+        margin-right: auto;
+    }
+
     .chat-error,
     .chat-notice--unavailable {
         border: 1px solid @metager-orange;
@@ -153,6 +242,20 @@ body#resultpage-body.chat {
             font-size: 0.85em;
             opacity: 0.7;
         }
+    }
+
+    // This project has no global .sr-only helper, and the composer's textarea label needs one: the
+    // placeholder is not a label, but a visible "Your message" caption above a chat box is noise.
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
     }
 
     .chat-input-row {

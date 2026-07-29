@@ -183,6 +183,9 @@ class MetaGerSearch extends Controller
             case 'result-count':
                 $headers["Content-Type"] = "text/plain; charset=UTF-8";
                 break;
+            case 'json':
+                $headers["Content-Type"] = "application/json; charset=UTF-8";
+                break;
         }
 
         return response($metager->createView($quicktip_results), 200, $headers);

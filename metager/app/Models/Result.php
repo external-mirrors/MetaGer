@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\DeepResults\Button;
 use App\SearchSettings;
 
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
@@ -493,6 +494,100 @@ class Result
         } else {
             return null;
         }
+    }
+
+    /**
+     * Das Ergebnis so, wie `out=json` es veröffentlicht.
+     *
+     * Bewusst eine kuratierte Auswahl statt `get_object_vars($this)`: die
+     * Eigenschaften dieser Klasse sind Interna (`rank`, `engineBoost`, `new`,
+     * `changed`, `hash`, `inheritedResults`, …), die sich mit dem Ranking-Code
+     * ändern. Ein Dump davon würde jede dieser Änderungen zu einer
+     * Breaking Change der API machen. Hier steht nur, was ein Client auch
+     * anzeigen kann.
+     *
+     * Die Schema-Version steht in der Antwort-Hülle, nicht hier — siehe
+     * `MetaGer::createView()`, `case 'json'`.
+     */
+    public function toApiArray(): array
+    {
+        return [
+            "title" => $this->titel,
+            "link" => $this->link,
+            "displayLink" => $this->anzeigeLink,
+            # Auf DESCRIPTION_LENGTH gekürzt; longDescription ist ungekürzt.
+            "description" => $this->descr,
+            "longDescription" => $this->longDescr,
+            # Einstiegspunkt für "anonym öffnen" (SafeBrowse/Proxy). Ohne dieses
+            # Feld kann ein Client die Funktion pro Ergebnis nicht anbieten.
+            "proxyLink" => $this->proxyLink !== "" ? $this->proxyLink : null,
+            "engines" => $this->enginesToApiArray(),
+            "image" => $this->imageToApiArray(),
+            "date" => $this->getDate()?->toIso8601String(),
+            "host" => $this->strippedHost,
+            "domain" => $this->strippedDomain,
+            "partnershop" => (bool) $this->partnershop,
+            # price/price_text sind dynamische Eigenschaften (nicht oben
+            # deklariert), deshalb hier defensiv gelesen.
+            "price" => empty($this->price) ? null : ($this->price_text ?? null),
+            "sitelinks" => $this->sitelinksToApiArray(),
+        ];
+    }
+
+    /**
+     * gefVon/gefVonLink sind zwei parallele Arrays, die beim Zusammenführen
+     * gleicher Ergebnisse mitwachsen. Nach außen ist ein Array von Objekten
+     * die ehrlichere Form: es kann nicht auseinanderlaufen.
+     */
+    private function enginesToApiArray(): array
+    {
+        $engines = [];
+        foreach ($this->gefVon as $index => $name) {
+            if (empty($name)) {
+                continue;
+            }
+            $engines[] = [
+                "name" => $name,
+                "link" => $this->gefVonLink[$index] ?? null,
+            ];
+        }
+        return $engines;
+    }
+
+    /**
+     * Hinweis: `imageDimensions` wird derzeit von keinem Parser befüllt und ist
+     * praktisch immer leer — width/height sind deshalb in aller Regel null.
+     * Das Feld bleibt trotzdem in der Antwort, damit Clients die Form kennen,
+     * sobald ein Parser die Maße liefert.
+     */
+    private function imageToApiArray(): array | null
+    {
+        if (empty($this->image)) {
+            return null;
+        }
+        $dimensions = is_array($this->imageDimensions) ? $this->imageDimensions : [];
+        return [
+            "url" => $this->image,
+            "width" => $dimensions["width"] ?? null,
+            "height" => $dimensions["height"] ?? null,
+        ];
+    }
+
+    private function sitelinksToApiArray(): array
+    {
+        $sitelinks = [];
+        foreach ($this->deepResults["buttons"] ?? [] as $button) {
+            # deepResults ist ein ungetyptes Array, das die Parser befüllen.
+            # Was kein Button ist, hat in der Antwort nichts zu suchen.
+            if (!($button instanceof Button)) {
+                continue;
+            }
+            $sitelinks[] = [
+                "title" => $button->title,
+                "link" => $button->link,
+            ];
+        }
+        return $sitelinks;
     }
 
     public function getLangString()

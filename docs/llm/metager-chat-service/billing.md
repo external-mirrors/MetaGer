@@ -45,10 +45,11 @@ main app's Laravel guard/middleware stack.
 Unlike websearch's flat, known-in-advance cost (computed once, authorized-and-paid in a single
 request), LLM cost is only known **after** the provider responds, and varies a lot per message.
 
-1. **Pre-flight reservation** (before starting the stream): resolve the requesting key from the
-   `key` cookie/header or `Anonymous-Token-Key` header (the browser sends these automatically,
-   same-origin — see [`../metager-integration/foki-integration.md`](../metager-integration/foki-integration.md)),
-   compute a conservative worst-case ceiling for *this message* —
+1. **Pre-flight reservation** (before starting the stream): take the requesting key from the header
+   MetaGer forwards — MetaGer resolves it with its own guard, so this service no longer parses
+   cookies or query parameters itself (see
+   [`architecture.md`](architecture.md) §"Authentication") — compute a conservative worst-case
+   ceiling for *this message* —
    `(estimated_prompt_tokens × price_in + max_output_tokens × price_out) × margin`, converted to
    MetaGer decitokens (see pricing formula below) — and reserve that amount as a Redis claim.
 2. **Settlement** (after the stream ends): the provider's reported `usage`

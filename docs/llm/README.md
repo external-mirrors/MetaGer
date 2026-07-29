@@ -42,8 +42,21 @@ came out of the research:
   explanations of capability/cost/speed; the user explicitly picks and switches. There is no
   auto-routing logic that silently selects a model.
 - **Billing goes directly from the new chat service to the keymanager**, not through Laravel.
-- **UI integration uses an iframe**, not a bespoke Blade view + JS bundle, so the new chat
-  service can own its entire frontend independently.
+- ~~**UI integration uses an iframe**, not a bespoke Blade view + JS bundle, so the new chat
+  service can own its entire frontend independently.~~ **Reversed** — see
+  [`metager-integration/native-frontend.md`](metager-integration/native-frontend.md). The iframe
+  produced invisible failure modes (MetaGer's own 404 rendering inside MetaGer's chrome when the
+  backend was unreachable), a second hand-maintained copy of `KeyAuthGuard.php`'s auth precedence,
+  and permanent two-codebase visual drift. MetaGer now renders the chat UI itself; `metager-chat`
+  becomes a headless API.
+- **Chat history is end-to-end encrypted and never keyed off the billing key.** A MetaGer key may be
+  shared between several people, and rotates entirely for webextension users — so storage identity is
+  a separate, client-generated recovery code, with the server holding only ciphertext. The
+  extension's cookie/setting sync is explicitly *not* used to carry it: everything that channel syncs
+  is re-sent to MetaGer as a request header, and would therefore be server-visible.
+- **Client JS is optional for chat, as everywhere else in MetaGer.** The composer is a real form
+  that works without JS; JS upgrades the same endpoint to a live token stream. This constraint is
+  what rules out a React frontend and what forces a single, server-side Markdown renderer.
 - **Accepted risk**: a key's balance could theoretically be drained by concurrent activity
   (parallel chat messages, or a chat message racing a websearch spend) between reservation and
   end-of-stream settlement, in rare cases making settlement fail after generation already
@@ -70,6 +83,11 @@ standalone service that doesn't have its own repo yet. The docs are split accord
 Note: steps were not executed in the listed order — step 4 (Foki/UI integration) landed before
 steps 2 and 3 below. The list itself hasn't been reordered since it's still a reasonable reference
 for what remains.
+
+**Steps 1 and 4 describe work that has since been superseded** by step 7 (the native frontend). Their
+"Done" notes are left as a historical record of what was built and why it is being replaced — read
+step 7 and [`metager-integration/native-frontend.md`](metager-integration/native-frontend.md) for
+current intent, not steps 1/4's open items, most of which the redesign dissolves rather than solves.
 
 1. Create the `metager-chat` repo (sibling to `metager-keymanager`/`SafeBrowse`) and copy
    `metager-chat-service/*` into it as its own planning docs. Scaffold the service, provider
@@ -101,6 +119,18 @@ for what remains.
    an ongoing visual-drift process, mobile testing, and the per-model cost indicator (now unblocked
    by billing/step 2 — `/api/models` still deliberately doesn't expose pricing, that part of the
    work hasn't started yet).
-5. **Not started.** Chat storage & privacy (opt-in flag, client-id bootstrap, delete flow) —
-   deliberately last.
+5. **Not started, redesigned.** Chat storage & privacy — now opt-in **end-to-end encrypted** history
+   keyed by a user-held recovery code, with QR-based cross-device recovery and a user-chosen
+   retention window that slides from last use — no keep-forever option, so abandoned history always
+   expires while active users never lose anything. The original plaintext-Postgres-plus-client-id design is superseded; see
+   [`metager-chat-service/storage-and-privacy.md`](metager-chat-service/storage-and-privacy.md).
+   Still deliberately last.
 6. **Not started**, future/separate effort. MCP `web_search` tool for search grounding.
+7. **Not started, and now the priority ahead of 3/5/6.** Frontend relocation — move the chat UI out
+   of `metager-chat` and into MetaGer as server-rendered HTML with a JS enhancement layer, make
+   `metager-chat` headless (Next.js → Express), route chat calls through a Laravel streaming proxy
+   on a dedicated FPM pool, gate the focus on backend health, and redesign the interface (model
+   picker, copy/regenerate, file upload). See
+   [`metager-integration/native-frontend.md`](metager-integration/native-frontend.md) for the design
+   and its sequencing. Note that step 5 (chat storage) gets easier afterwards: the client-id
+   bootstrap it describes becomes MetaGer's concern, where session and key handling already live.

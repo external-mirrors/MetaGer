@@ -1,5 +1,12 @@
 # Foki / UI Integration (MetaGer Laravel app)
 
+> **§2 and §5 are SUPERSEDED** by
+> [`native-frontend.md`](native-frontend.md): the iframe embedding they describe is being replaced
+> by a chat UI rendered natively in MetaGer. They are kept here because the implementation they
+> document currently exists in the codebase, and because their rationale explains what the
+> replacement has to preserve. **§1 (Foki registration), §3 (Reverb balance updates) and §4
+> (interaction model) are unaffected and still current.**
+
 **Status: §1–3 implemented and locally verified** (chat focus registered, `parse_available_foki()`
 fixed, iframe wrapper with auth/balance gating renders, nginx route in place, Reverb balance
 updates need no new code). **§4's first-message auto-send is implemented.** Of §5's seamlessness
@@ -86,6 +93,14 @@ automatically, unlike `maps` which needed literal hardcoded blocks in two templa
 deliberately isn't a real `sumas.json` entry.
 
 ## 2. Layout: iframe inside shared chrome, not a bespoke Blade view
+
+> **SUPERSEDED** — see [`native-frontend.md`](native-frontend.md). The conclusion that inverted:
+> "instead of a bespoke Blade view + JS bundle, render a thin wrapper containing an `<iframe>`" is
+> now exactly backwards — a bespoke Blade view + JS bundle is the chosen design. What survives from
+> this section: keeping the shared chrome (rejecting `$suspendheader`), gating on authentication
+> before rendering anything, the low-balance banner, and `body.chat` CSS scoping. What does not: the
+> iframe itself, "no new entry needed in `webpack.mix.js`", and the same-origin-routing subsection
+> below (the browser no longer talks to `metager-chat` at all).
 
 Two layout mechanisms already exist:
 - The `bilder` pattern: custom Blade view + own JS bundle, still rendered inside the shared
@@ -183,6 +198,19 @@ This should be called out explicitly when the interface is planned in detail, si
 meaningfully different navigation/state model than the rest of MetaGer.
 
 ## 5. Model picker UX expectation
+
+> **SUPERSEDED** — see [`native-frontend.md`](native-frontend.md) §"Interface redesign". The picker
+> is no longer "entirely inside the chat service's own frontend — not a Laravel/Blade concern"; it
+> becomes exactly a Laravel/Blade concern. The *requirements* stated here survive intact and are
+> finally satisfied there: plain-language capability/cost/speed explanations, and a real per-model
+> cost indicator derived from `models.json`.
+>
+> The **seamlessness checklist** below is worth reading as the record of what the iframe cost. Most
+> of its items dissolve rather than get solved: visual drift (one codebase now), theme handshake
+> (no boundary to hand across), locale (Laravel's own `lang/` files), and the mobile
+> iframe-viewport quirks all cease to exist. First-message latency improves for the same reason —
+> one page load, no second boot sequence. URL/back-button sync remains deferred for the original
+> reason: there is still no navigable in-chat state until conversation switching lands.
 
 **Partially implemented.** A working model picker (a plain `<select>` listing `display_name` per
 model from `/api/models`, manual switching, no auto-routing) exists in

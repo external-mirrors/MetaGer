@@ -1,7 +1,8 @@
 <?php
 
 return [
-    "empty" => "Ask anything to get started.",
+    "empty" => "Chat securely and privately with MetaGer.",
+    "empty_note" => "Ask something to get started. Your key is needed, and history only saves if you turn it on.",
 
     "unavailable" => [
         "title" => "Chat is currently unavailable",

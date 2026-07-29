@@ -1,7 +1,8 @@
 <?php
 
 return [
-    "empty" => "Stellen Sie eine Frage, um zu beginnen.",
+    "empty" => "Chatte sicher und privat mit MetaGer.",
+    "empty_note" => "Stell eine Frage, um loszulegen. Dein Chat bleibt privat und eine Historie wird nur gespeichert, wenn du das möchtest.",
 
     "unavailable" => [
         "title" => "Der Chat ist derzeit nicht verfügbar",

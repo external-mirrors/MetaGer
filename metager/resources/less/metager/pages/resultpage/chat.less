@@ -59,7 +59,50 @@ body#resultpage-body.chat {
 
     .chat-empty {
         margin: auto;
-        opacity: 0.7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 22px 18px;
+        max-width: 720px;
+        width: 100%;
+        opacity: 0.95;
+        text-align: left;
+    }
+
+    .chat-empty-icon {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+    }
+
+    .chat-empty-text {
+        max-width: 620px;
+    }
+
+    .chat-empty-text p {
+        margin: 0;
+    }
+
+    .chat-empty-note {
+        margin-top: 10px;
+        opacity: 0.75;
+        font-size: 0.95em;
+        line-height: 1.45;
+    }
+
+    @media (max-width: 768px) {
+        .chat-empty {
+            flex-direction: column;
+            padding: 16px 14px;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .chat-empty-icon {
+            width: 40px;
+            height: 40px;
+        }
     }
 
     .chat-message {

@@ -5,6 +5,12 @@ HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:$MAX_HELM_RELEASE_NAME_LENGTH}
 HELM_RELEASE_NAME=$(echo "$HELM_RELEASE_NAME" | sed 's/-$//')
 
 helm dependency update chart/
+
+if ! helm -n "$KUBE_NAMESPACE" status "$HELM_RELEASE_NAME" > /dev/null 2>&1; then
+  echo "No existing Helm release found for $HELM_RELEASE_NAME; cleaning stale resources."
+  kubectl -n "$KUBE_NAMESPACE" delete ingress,service,secret,configmap,serviceaccount,role,rolebinding,pvc,sts,deploy -l app.kubernetes.io/instance="$HELM_RELEASE_NAME" --ignore-not-found
+fi
+
 helm -n $KUBE_NAMESPACE upgrade --install \
     ${HELM_RELEASE_NAME} \
     chart/ \

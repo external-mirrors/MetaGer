@@ -48,10 +48,13 @@ All from [`metager-integration/native-frontend.md`](metager-integration/native-f
   starve the 100-worker search pool. That number is a guess: too low and concurrent chats queue
   behind each other, too high and the isolation is theatre. Needs real concurrency data, and a
   Prometheus gauge on pool saturation from day one to get it. Cheap to change (config only).
-- **Attachment TTL** — uploads live in Redis for 1 hour so the stateless transcript can reference
-  them by id across turns. Long enough for a normal conversation, but a user returning to a tab
-  after lunch will find a silently-expired attachment. Whether that needs a graceful message, a
-  longer TTL, or a re-upload prompt is a UX call best made against real behaviour.
+- **Attachment TTL** — **narrowed, not closed.** Uploads live in Redis for 1 hour so the stateless
+  transcript can reference them by id across turns. Two of the three worries are now handled: the
+  TTL *slides from last use*, so an active conversation never loses its document, and an expired
+  reference produces a specific, localised "please attach it again" (a 410 emitted before the stream
+  opens) rather than a silent failure. What remains is the genuinely open part — whether an hour of
+  inactivity is the right window, and whether a user who does hit it should be prompted to re-upload
+  in place instead of retyping the turn. Best answered against real behaviour.
 - **Progressive HTML for the no-JS path** — deliberately out of v1 (once the first byte is flushed
   the status code is fixed, so a billing rejection can no longer be a 402). Worth revisiting if the
   no-JS blocking wait proves to be a real complaint rather than a theoretical one.

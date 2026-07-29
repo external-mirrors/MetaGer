@@ -72,6 +72,36 @@ class ChatBackend
     }
 
     /**
+     * Parks an attachment's text with the chat service and returns its id.
+     *
+     * The transcript is stateless — it round-trips through hidden form fields — so a document has
+     * to live somewhere that a field can *point* at. The service keeps it in Redis for an hour,
+     * sliding from last use; nothing durable is written. Returns null if the upload failed, which
+     * the caller turns into a message rather than losing the user's turn over.
+     *
+     * MetaGer does the decoding and validation because it owns the multipart form and the user's
+     * locale; what crosses the wire is a plain string.
+     */
+    public function uploadFile(string $key, string $name, string $content): ?string
+    {
+        try {
+            $response = Http::withHeaders($this->headers($key))
+                ->timeout(config("metager.chat.connect_timeout"))
+                ->post($this->url("/api/files"), ["name" => $name, "content" => $content]);
+
+            if (!$response->successful()) {
+                Log::warning("chat: attachment upload rejected", ["status" => $response->status()]);
+                return null;
+            }
+
+            return $response->json("id");
+        } catch (\Throwable $e) {
+            Log::warning("chat: attachment upload failed", ["exception" => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    /**
      * The model catalog, including per-model cost in MetaGer tokens.
      *
      * Returns an empty array when the service is unreachable, so callers render "no models" rather

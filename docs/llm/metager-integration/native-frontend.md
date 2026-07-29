@@ -1,11 +1,11 @@
 # Native Chat Frontend in MetaGer (supersedes the iframe design)
 
-**Status: steps 1–5 implemented and locally verified.** The backend is headless, the chat route runs
+**Status: steps 1–6 implemented and locally verified.** The backend is headless, the chat route runs
 on its own FPM pool (a 39-second generation verified surviving), the availability gate hides the
 focus when the backend is down, the no-JS path works end to end — form POST, multi-turn context via
-hidden fields, server-rendered Markdown — and the JS layer streams over that same route, verified in
-a real Firefox against the running stack. Remaining: step 6 (model picker polish, file upload),
-step 7 (encrypted conversation history).
+hidden fields, server-rendered Markdown, and file upload — and the JS layer streams over that same
+route, verified in a real Firefox against the running stack. The chat focus renders without the
+search chrome. Remaining: step 7 (encrypted conversation history).
 
 This document replaces the iframe-embedding approach described
 in [`foki-integration.md`](foki-integration.md) §2 and §5. Those sections are kept for history but
@@ -234,11 +234,22 @@ yet, which was reasonable before billing landed and is now just a gap.
 
 Replacement: a `<details>`/`<summary>` disclosure containing one row per model — name, a
 one-line plain-language description, a speed indicator, and **a real per-message cost estimate** in
-the same units the header's balance widget uses, derived from the pricing table `/api/models` will
-now expose. Selection is a `<input type="radio">` per row, inside the composer form.
+the same units the header's balance widget uses, derived from the pricing table `/api/models` now
+exposes. Selection is a `<input type="radio">` per row, inside the composer form.
+
+The two new fields come from different places on purpose. **Speed** (`fast` / `balanced` /
+`thorough`) is a factual property of the model, so it lives in `metager-chat`'s `config/models.json`
+and rides along on `/api/models`; the *word* it renders as is a MetaGer lang string, since that
+service has no locale. **Descriptions** are prose for users and have to be translated, so they live
+in `lang/{locale}/chat.php` keyed by model id — a model the catalog gains before the lang file does
+simply renders without a description rather than breaking. The speed indicator is a word, never a
+colour-only badge, so it survives greyscale and screen readers.
 
 `<details>` and radio inputs are pure HTML, so the redesigned picker works fully without JS. JS
-upgrades it to a popover that closes on outside-click and reflects the choice in the composer.
+upgrades it to a popover (`picker.js`): closes on outside-click, on Escape, and on selection, and
+retitles the summary with the choice. The floating overlay is gated behind a
+`.chat-model-picker--enhanced` class the script adds, because without JS nothing could close an
+overlay — the unenhanced disclosure has to push the composer down instead.
 
 This finally satisfies `foki-integration.md` §5's "plain-language capability/cost/speed
 explanations" and the per-model cost indicator, both of which have been open since billing landed.
@@ -266,6 +277,32 @@ composer form, multipart POST — no JS required). The backend stores the conten
 random id with a 1-hour TTL** and returns the id. The transcript then carries the *id*, not the
 content, so follow-up questions about an attached document work identically on both paths, and
 nothing durable is written anywhere.
+
+Settled while building it:
+
+- **The TTL slides from last use, not from upload.** A conversation that keeps citing a document
+  keeps it alive; a tab abandoned after lunch takes its uploads with it. This narrows, but does not
+  close, the attachment-TTL question in [`../open-questions.md`](../open-questions.md).
+- **Acceptance is "is this text?", not an extension whitelist.** Invalid UTF-8 or an embedded NUL is
+  the honest signal; a suffix list would reject a perfectly readable file for having the wrong name
+  while happily accepting a renamed binary, and it would need maintaining forever.
+- **The 256 KB ceiling is a billing limit, not a storage one.** An attachment's text becomes prompt
+  tokens the user pays for on *every* subsequent turn of that conversation.
+- **`attachment` deliberately has no Laravel validation rule.** A failed rule throws, and with no
+  session Laravel can only answer that with a redirect back — which would drop the entire
+  conversation, since the transcript lives in the request's own fields. `storeAttachment()` performs
+  the same checks and returns a localised message through the normal 422 path instead, so a rejected
+  file costs one sentence rather than the whole chat. Same reason `file()` is used over `hasFile()`:
+  the latter is false for a *failed* upload, which would silently answer as if nothing was attached.
+- **The JS path learns the new id from an `attachments` SSE event** emitted before the first token.
+  The upload has already happened and is already stored by then, so it is sent whether or not
+  generation goes on to succeed, and it lands in the hidden fields — an id that never reaches them
+  is an upload the next turn cannot see.
+- **The JS request only becomes multipart when there is actually a file** (`FormData` vs.
+  `URLSearchParams`), and `Content-Type` is left unset in that case so the browser can supply its own
+  boundary.
+- **An expired attachment is a 410**, mapped to MetaGer's own wording rather than the service's
+  English — it is the one upstream rejection a user can act on.
 
 Downloads are the inverse and much simpler: a download control on code blocks and on the full answer,
 implemented client-side as a `Blob`, JS-only, no server round-trip.
@@ -298,6 +335,35 @@ Note this also finally resolves the URL/back-button item deferred in `foki-integ
 conversation switching is the navigable state that item was waiting for. `history.pushState` per
 conversation, with the conversation id in the path — never the recovery code, which must stay in
 localStorage and in fragments only.
+
+### Page chrome
+
+Chat renders **without the search chrome**: no search bar, no foki switcher, no filter/settings
+row, no "engines queried" attribution footer, no back-to-top link, no quicktips. Every one of those
+describes a search that does not happen on this focus — the engine footer in particular would list
+nothing, and a search bar sitting above a conversation invites abandoning it by accident.
+
+The way back to search is the **header logo**, which links to the start page on every MetaGer page,
+plus the sidebar's existing "Suche" entry. Both stay, as does the sidebar opener and the legal page
+footer (Impressum/Datenschutz/Kontakt must be reachable everywhere).
+
+These parts are *not rendered* rather than hidden with CSS, which is why
+`layouts/researchandtabs.blade.php` branches on the focus. Two consequences follow:
+
+- The `#resultpage-container` grid's `foki` and `options` rows have no occupants, so `chat.less`
+  redeclares `grid-template-areas` without them — otherwise their row gaps survive as dead space.
+- The skiplinks in `layouts/resultPage.blade.php` pointed at `#results`, `#eingabe` and
+  `#settings-link`, none of which exist here. Chat gets a single content skiplink to
+  `#chat-container`, which is present in all three branches of `results_chat.blade.php`.
+
+The focus is also what scopes the entire chat stylesheet (`body#resultpage-body.chat`), and
+`SearchSettings` reads it from the request. The composer sends `focus=chat` for that reason, and
+`ChatController::renderPage()` pins it as well — a lost field would otherwise re-render the no-JS
+answer unstyled and wrapped in search chrome.
+
+> Blade comments are `{{--` … `--}}`. An HTML formatter run over `results_chat.blade.php` split
+> those markers apart once, which silently swallowed half the file into one comment and took the
+> page down with "unexpected token endif". Keep `.blade.php` out of format-on-save.
 
 ### Layout
 
@@ -336,6 +402,7 @@ protocol churn.
 | File | Change |
 |---|---|
 | `resources/views/resultpages/results_chat.blade.php` | Replace iframe with real transcript + composer markup |
+| `resources/views/layouts/researchandtabs.blade.php` + `layouts/resultPage.blade.php` | Skip the search chrome on the chat focus; chat-specific skiplinks and page title |
 | `resources/views/resultpages/parts/chat/*.blade.php` | New: message, model picker, composer partials |
 | `resources/less/metager/pages/resultpage/chat.less` | Retarget iframe rules onto real DOM; message/composer styling |
 | `resources/js/chat/*.js` + `webpack.mix.js` | New enhancement bundle (streaming, copy, download, picker, history crypto + QR) |
@@ -394,7 +461,10 @@ protocol churn.
    buttons additionally require `navigator.clipboard`, which is absent on insecure origins (so they
    do not appear in local HTTP dev, by design). Whenever a check fails the form is left exactly as
    the server rendered it.
-6. Model picker redesign and file upload.
+6. Model picker redesign and file upload. `picker.js` and `attachment.js` join the bundle;
+   `metager-chat` gains `routes/files.ts` + `lib/attachments.ts` and a `speed` field per model.
+   Both upgrades run *before* the streaming feature gate in `index.js`, because they are presentation
+   over markup that already works — a browser that cannot stream still gets them.
 7. Conversation history: the encrypted blob store and its Postgres migration first, then the crypto
    layer, then the list UI, then cross-device transfer. Deliberately last — it is the only part with
    no no-JS story, and everything before it ships without it.

@@ -46,7 +46,9 @@
         @endforeach
     @endif
 
-    <title>{{ $eingabe }} - MetaGer</title>
+    {{-- Chat has no query to name the page after — $eingabe is empty there, which would leave a
+         title of just " - MetaGer". --}}
+    <title>{{ app(\App\SearchSettings::class)->fokus === 'chat' ? __('index.foki.chat') : $eingabe }} - MetaGer</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport" />
     <meta name="p" content="{{ getmypid() }}" />
     <meta name="q" content="{{ $eingabe }}" />
@@ -80,9 +82,17 @@
 <body id="resultpage-body" class="{{ app(\App\SearchSettings::class)->fokus }}">
     <div class="skiplinks">
         <div>@lang('resultPage.skiplinks.heading')</div>
-        <a href="#results">@lang('resultPage.skiplinks.results')</a>
-        <a href="#eingabe">@lang('resultPage.skiplinks.query')</a>
-        <a href="#settings-link">@lang('resultPage.skiplinks.settings')</a>
+        @if (app(\App\SearchSettings::class)->fokus === 'chat')
+            {{-- Chat renders none of the search chrome (layouts/researchandtabs.blade.php), so the
+                 results/query/settings targets below simply do not exist on this page. #chat-container
+                 is present in every branch of results_chat.blade.php, including the unavailable and
+                 not-logged-in ones. --}}
+            <a href="#chat-container">@lang('chat.skiplinks.conversation')</a>
+        @else
+            <a href="#results">@lang('resultPage.skiplinks.results')</a>
+            <a href="#eingabe">@lang('resultPage.skiplinks.query')</a>
+            <a href="#settings-link">@lang('resultPage.skiplinks.settings')</a>
+        @endif
         <a href="#sidebarToggle">@lang('resultPage.skiplinks.navigation')</a>
         <div class="escape">@lang('resultPage.skiplinks.return')</div>
     </div>

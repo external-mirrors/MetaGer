@@ -1,6 +1,8 @@
 import Transcript from "./transcript";
 import { decorateCodeBlocks, decorateMessage } from "./affordances";
 import { readEventStream, supportsStreaming } from "./sse";
+import { setupAttachment } from "./attachment";
+import { setupPicker } from "./picker";
 import t, { loadStrings } from "./strings";
 
 /**
@@ -49,6 +51,11 @@ function boot() {
     }
   });
 
+  // Both are pure presentation over markup that already works, so they run regardless of whether
+  // this browser can stream — a turn that falls back to a plain form submit still gets them.
+  setupPicker(form);
+  const attachment = setupAttachment(form);
+
   if (!supportsStreaming()) {
     // Copy buttons and textarea growth still work; the turn itself keeps using the plain submit.
     autoGrow(input);
@@ -94,7 +101,7 @@ function boot() {
   /**
    * Streams one turn. The transcript already contains everything to send.
    */
-  async function send() {
+  async function send(file) {
     const modelId = selectedModel();
     if (modelId === null || transcript.length === 0) {
       return;
@@ -113,16 +120,26 @@ function boot() {
     pin();
 
     try {
+      const headers = { Accept: "text/event-stream" };
+      if (!file) {
+        // Deliberately unset for a multipart body: only the browser knows the boundary it is about
+        // to generate, and naming the type ourselves would leave the server unable to parse it.
+        headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8";
+      }
+
       const response = await fetch(form.action, {
         method: "POST",
         credentials: "same-origin",
         signal: controller.signal,
-        headers: {
-          Accept: "text/event-stream",
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
-        },
-        body: transcript.toBody(modelId),
+        headers: headers,
+        body: transcript.toBody(modelId, file),
       });
+
+      // The file is on the server now, or the request failed outright; either way the composer
+      // should not offer to send it a second time.
+      if (file && attachment) {
+        attachment.clear();
+      }
 
       if (!response.ok) {
         // The server rejects before opening the stream (no key, empty balance, unknown model), so
@@ -174,6 +191,10 @@ function boot() {
           body.innerHTML = data.html;
           decorateCodeBlocks(body);
         }
+      } else if (name === "attachments") {
+        // Sent before the first token: the file is stored, and these are the ids the conversation
+        // will refer to it by from now on.
+        recordAttachments(data.attachments || []);
       } else if (name === "error") {
         failed = data.message || t("errorGeneric");
       }
@@ -195,6 +216,46 @@ function boot() {
       // Partial answer plus a failure: keep both, so the user can see what they got and retry.
       showError(failed);
     }
+  }
+
+  /**
+   * Files the just-uploaded attachments onto the user turn they were sent with.
+   *
+   * They have to land in the hidden fields, not just on screen: those fields are the conversation,
+   * and an id that never reaches them is an upload the next turn cannot see.
+   */
+  function recordAttachments(attachments) {
+    if (attachments.length === 0) {
+      return;
+    }
+
+    const index = transcript.length - 1;
+    const entry = transcript.entries[index];
+    if (!entry || entry.role !== "user") {
+      return;
+    }
+
+    entry.attachments = (entry.attachments || []).concat(attachments);
+    transcript.syncHiddenFields();
+
+    const node = transcript.nodes()[index];
+    if (!node) {
+      return;
+    }
+
+    let list = node.querySelector(".chat-message-attachments");
+    if (!list) {
+      list = document.createElement("ul");
+      list.className = "chat-message-attachments";
+      node.insertBefore(list, node.querySelector(".chat-message-body"));
+    }
+
+    attachments.forEach((attachment) => {
+      const chip = document.createElement("li");
+      chip.className = "chat-attachment-chip";
+      chip.textContent = attachment.name;
+      list.appendChild(chip);
+    });
   }
 
   /** Turns the placeholder into a real, recorded turn. */
@@ -227,10 +288,12 @@ function boot() {
 
     event.preventDefault();
 
+    const file = attachment ? attachment.file() : null;
+
     input.value = "";
     resize(input);
     transcript.append({ role: "user", content: message });
-    send();
+    send(file);
   });
 
   list.addEventListener("chat:regenerate", (event) => {

@@ -14,6 +14,17 @@
         <div class="chat-message-model">{{ $message['model'] }}</div>
     @endif
 
+    @if(!empty($message['attachments']))
+        {{-- The document's text went to the model, not into the page: showing it here would repeat
+             a file the user already has, at whatever length they uploaded. The name is the useful
+             part — it says which turn the answer was grounded in. --}}
+        <ul class="chat-message-attachments">
+            @foreach($message['attachments'] as $attachment)
+                <li class="chat-attachment-chip">{{ $attachment['name'] }}</li>
+            @endforeach
+        </ul>
+    @endif
+
     <div class="chat-message-body">
         @if($message['role'] === 'assistant')
             {!! \Illuminate\Support\Str::markdown($message['content'], ['html_input' => 'strip', 'allow_unsafe_links' => false]) !!}

@@ -96,6 +96,14 @@ export default class Transcript {
     this.entries.forEach((entry, index) => {
       this.form.insertBefore(hiddenField(`messages[${index}][role]`, entry.role), anchor);
       this.form.insertBefore(hiddenField(`messages[${index}][content]`, entry.content), anchor);
+
+      // Attachments are references, never content: the file's text stays parked with the chat
+      // service, and this is what lets a document attached three turns ago still be in scope.
+      (entry.attachments || []).forEach((attachment, position) => {
+        const prefix = `messages[${index}][attachments][${position}]`;
+        this.form.insertBefore(hiddenField(`${prefix}[id]`, attachment.id), anchor);
+        this.form.insertBefore(hiddenField(`${prefix}[name]`, attachment.name), anchor);
+      });
     });
   }
 
@@ -106,15 +114,27 @@ export default class Transcript {
    * separate `message` field — the server accepts either shape, and sending only one of them keeps
    * the JS path from being a second, subtly different protocol.
    */
-  toBody(modelId) {
-    const body = new URLSearchParams();
+  toBody(modelId, file) {
+    // FormData only when there is actually a file: it forces a multipart body, which is more work
+    // to build and to parse for the overwhelmingly common turn that is just text.
+    const body = file ? new FormData() : new URLSearchParams();
     body.set("focus", "chat");
     body.set("modelId", modelId);
 
     this.entries.forEach((entry, index) => {
       body.set(`messages[${index}][role]`, entry.role);
       body.set(`messages[${index}][content]`, entry.content);
+
+      (entry.attachments || []).forEach((attachment, position) => {
+        const prefix = `messages[${index}][attachments][${position}]`;
+        body.set(`${prefix}[id]`, attachment.id);
+        body.set(`${prefix}[name]`, attachment.name);
+      });
     });
+
+    if (file) {
+      body.set("attachment", file, file.name);
+    }
 
     return body;
   }
@@ -136,14 +156,25 @@ function readHiddenFields(form) {
   const entries = [];
 
   form.querySelectorAll('input[type="hidden"][name^="messages["]').forEach((input) => {
-    const match = input.name.match(/^messages\[(\d+)\]\[(role|content)\]$/);
+    const match = input.name.match(
+      /^messages\[(\d+)\]\[(?:(role|content)|attachments\]\[(\d+)\]\[(id|name))\]$/
+    );
     if (!match) {
       return;
     }
 
     const index = parseInt(match[1], 10);
     entries[index] = entries[index] || { role: "", content: "" };
-    entries[index][match[2]] = input.value;
+
+    if (match[2]) {
+      entries[index][match[2]] = input.value;
+      return;
+    }
+
+    const position = parseInt(match[3], 10);
+    entries[index].attachments = entries[index].attachments || [];
+    entries[index].attachments[position] = entries[index].attachments[position] || {};
+    entries[index].attachments[position][match[4]] = input.value;
   });
 
   return entries.filter((entry) => entry && entry.role !== "");
@@ -165,6 +196,18 @@ export function renderMessage(entry) {
     model.className = "chat-message-model";
     model.textContent = entry.model;
     node.appendChild(model);
+  }
+
+  if (entry.attachments && entry.attachments.length > 0) {
+    const list = document.createElement("ul");
+    list.className = "chat-message-attachments";
+    entry.attachments.forEach((attachment) => {
+      const chip = document.createElement("li");
+      chip.className = "chat-attachment-chip";
+      chip.textContent = attachment.name;
+      list.appendChild(chip);
+    });
+    node.appendChild(list);
   }
 
   const body = document.createElement("div");

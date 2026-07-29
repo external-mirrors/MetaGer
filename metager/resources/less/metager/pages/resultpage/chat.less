@@ -9,11 +9,15 @@
 // `#chat-container` just needs `flex: 1 1 auto; min-height: 0` to grow into that space, the same
 // pattern one level down.
 //
-// #options / #engine-footer / #backtotop are the per-engine filter link, engine attribution
-// footer, and "back to top" link — all meaningless for chat (zero engines), hidden so their row
-// heights collapse to 0. The page footer (.resultPageFooter) stays — it carries the
-// legally-required Impressum/Datenschutz/Kontakt links and must stay reachable on every page; its
-// own grid row stays content-sized (not part of the `1fr` row) so it's never squeezed.
+// The search bar, foki switcher, filter row, engine-attribution footer and back-to-top link are
+// not rendered at all on this focus (layouts/researchandtabs.blade.php) — they describe a search
+// that never happens here. So the "foki" and "options" grid rows have no occupants, and leaving
+// them in the template would only contribute their row gaps as dead vertical space; the areas are
+// redeclared below without them. The header row keeps the logo, which is the way back to search.
+//
+// The page footer (.resultPageFooter) stays — it carries the legally-required
+// Impressum/Datenschutz/Kontakt links and must stay reachable on every page; its own grid row
+// stays content-sized (not part of the `1fr` row) so it's never squeezed.
 //
 // This markup used to be an <iframe>; it is now real DOM rendered by MetaGer. The viewport-fill
 // model survived that change unaltered — what went away is the whole class of iframe-specific
@@ -25,17 +29,19 @@ body#resultpage-body.chat {
     #resultpage-container {
         height: 100vh;
         box-sizing: border-box;
-        grid-template-rows: auto auto auto 1fr auto;
+
+        // Mirrors result-page.less's two layouts, minus the now-unoccupied foki/options rows. The
+        // 1350px split is the same one that drops the ad column.
+        grid-template-areas: "searchbar ." "results additions" "footer .";
+        grid-template-rows: auto 1fr auto;
+
+        @media (max-width: 1350px) {
+            grid-template-areas: "searchbar" "results" "footer";
+        }
     }
 
     #results-container {
         min-height: 0;
-    }
-
-    #options,
-    #engine-footer,
-    #backtotop {
-        display: none;
     }
 
     #chat-container {
@@ -280,10 +286,145 @@ body#resultpage-body.chat {
         align-items: baseline;
         gap: 8px;
         cursor: pointer;
+        padding: 4px 2px;
 
+        .chat-model-option-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            min-width: 0;
+        }
+
+        .chat-model-option-head {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 8px;
+        }
+
+        .chat-model-option-speed,
         .chat-model-option-cost {
             font-size: 0.85em;
             opacity: 0.7;
+        }
+
+        .chat-model-option-speed {
+            // A word, not a colour-only badge: "fast" has to survive greyscale and screen readers.
+            &::before {
+                content: "· ";
+            }
+        }
+
+        .chat-model-option-description {
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.35;
+        }
+    }
+
+    // Enhanced only: without JS the disclosure has to push the composer down, because nothing can
+    // close an overlay that opens over the page.
+    .chat-model-picker--enhanced[open] {
+        position: relative;
+
+        .chat-model-list {
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            z-index: 10;
+            min-width: min(420px, 100%);
+            max-width: 100%;
+            max-height: 50vh;
+            overflow-y: auto;
+            margin-bottom: 6px;
+            padding: 8px;
+            background-color: @background-color;
+            border: 1px solid @border-color;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+        }
+    }
+
+    // --- Attachments -----------------------------------------------------------------------------
+
+    .chat-attach-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9em;
+
+        // With JS the native file input is replaced by a button; the input stays in the DOM and
+        // stays the source of truth, it is just no longer the thing you click.
+        &--enhanced {
+            .chat-attach-label,
+            .chat-attach-input {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+        }
+    }
+
+    .chat-attach-button {
+        background: none;
+        border: 1px solid @border-color;
+        border-radius: 4px;
+        padding: 4px 10px;
+        cursor: pointer;
+        color: inherit;
+
+        &:hover,
+        &:focus {
+            border-color: @metager-orange;
+        }
+    }
+
+    .chat-message-attachments {
+        list-style: none;
+        margin: 0 0 6px;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .chat-attachment-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        max-width: 100%;
+        padding: 2px 8px;
+        border: 1px solid @border-color;
+        border-radius: 999px;
+        font-size: 0.85em;
+        // A file name is arbitrary user input and can be very long.
+        overflow-wrap: anywhere;
+
+        &--pending {
+            border-color: @metager-orange;
+        }
+    }
+
+    .chat-attachment-remove {
+        background: none;
+        border: none;
+        padding: 0;
+        line-height: 1;
+        font-size: 1.1em;
+        cursor: pointer;
+        color: inherit;
+        opacity: 0.7;
+
+        &:hover,
+        &:focus {
+            opacity: 1;
         }
     }
 

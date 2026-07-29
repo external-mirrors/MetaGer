@@ -20,14 +20,26 @@
         $chatAction .= '?key=' . rawurlencode(auth()->guard('key')->user()->key);
     }
 @endphp
-<form id="chat-composer" class="chat-composer" method="POST" action="{{ $chatAction }}">
+{{-- multipart because of the file input. The JS path switches to FormData for the same reason; a
+     turn without a file still posts urlencoded, which is cheaper to build and to parse. --}}
+<form id="chat-composer" class="chat-composer" method="POST" action="{{ $chatAction }}"
+      enctype="multipart/form-data">
 
-    {{-- Keeps the foki switcher highlighting "Chat" when the no-JS response re-renders. --}}
+    {{-- Tells SearchSettings which focus the no-JS response re-renders as. That drives the body
+         class the whole chat stylesheet is scoped to, and whether the search chrome renders at all
+         (layouts/researchandtabs.blade.php) — ChatController::renderPage() pins it as well, so this
+         field is belt to that braces rather than the only thing holding it up. --}}
     <input type="hidden" name="focus" value="chat">
 
     @foreach($transcript as $index => $message)
         <input type="hidden" name="messages[{{ $index }}][role]" value="{{ $message['role'] }}">
         <input type="hidden" name="messages[{{ $index }}][content]" value="{{ $message['content'] }}">
+        {{-- Only the id and label of an attachment travel; its text stays parked with the chat
+             service. That is the whole reason attachments work on the no-JS path at all. --}}
+        @foreach($message['attachments'] ?? [] as $attachmentIndex => $attachment)
+            <input type="hidden" name="messages[{{ $index }}][attachments][{{ $attachmentIndex }}][id]" value="{{ $attachment['id'] }}">
+            <input type="hidden" name="messages[{{ $index }}][attachments][{{ $attachmentIndex }}][name]" value="{{ $attachment['name'] }}">
+        @endforeach
     @endforeach
 
     @if(count($models) > 0)
@@ -36,7 +48,14 @@
             enhancement bundle upgrades it to a popover that closes on outside-click; it does not
             replace it.
         --}}
-        <details class="chat-model-picker">
+        @php
+            // Descriptions live in MetaGer's lang files rather than in the chat service's model
+            // config: they are prose for users and have to be translated, and this service has no
+            // locale. Keyed by model id, so a model the catalog gains before the lang file does
+            // simply shows without a description instead of breaking.
+            $modelDescriptions = trans('chat.model.descriptions');
+        @endphp
+        <details class="chat-model-picker" id="chat-model-picker">
             <summary>
                 <span class="chat-model-picker-label">@lang('chat.model.label')</span>
                 <span class="chat-model-picker-current">{{ $selectedModelName }}</span>
@@ -47,20 +66,42 @@
                         <label class="chat-model-option">
                             <input type="radio" name="modelId" value="{{ $model['id'] }}"
                                    @checked($model['id'] === $selectedModelId)>
-                            <span class="chat-model-option-name">{{ $model['display_name'] }}</span>
-                            @if(isset($model['cost_typical_message']))
-                                {{-- A real ballpark cost, in the same units as the header's balance
-                                     widget, so the choice is informed rather than vibes-based. --}}
-                                <span class="chat-model-option-cost">
-                                    @lang('chat.model.cost_per_message', ['cost' => $model['cost_typical_message']])
+                            <span class="chat-model-option-text">
+                                <span class="chat-model-option-head">
+                                    <span class="chat-model-option-name">{{ $model['display_name'] }}</span>
+                                    @if(isset($model['speed']) && trans()->has('chat.model.speed.' . $model['speed']))
+                                        <span class="chat-model-option-speed chat-model-option-speed--{{ $model['speed'] }}">
+                                            @lang('chat.model.speed.' . $model['speed'])
+                                        </span>
+                                    @endif
+                                    @if(isset($model['cost_typical_message']))
+                                        {{-- A real ballpark cost, in the same units as the header's
+                                             balance widget, so the choice is informed rather than
+                                             vibes-based. --}}
+                                        <span class="chat-model-option-cost">
+                                            @lang('chat.model.cost_per_message', ['cost' => $model['cost_typical_message']])
+                                        </span>
+                                    @endif
                                 </span>
-                            @endif
+                                @if(is_array($modelDescriptions) && isset($modelDescriptions[$model['id']]))
+                                    <span class="chat-model-option-description">{{ $modelDescriptions[$model['id']] }}</span>
+                                @endif
+                            </span>
                         </label>
                     </li>
                 @endforeach
             </ul>
         </details>
     @endif
+
+    {{-- A plain file input, so attaching a document needs no JS. The enhancement bundle hides the
+         input behind a button and shows the chosen file as a removable chip; it does not replace
+         it. One file per turn: the transcript can carry any number across turns, but a composer
+         that queues several needs JS to manage the queue, and the no-JS path could not follow. --}}
+    <div class="chat-attach-row">
+        <label for="chat-attachment" class="chat-attach-label">@lang('chat.attachment.label')</label>
+        <input type="file" id="chat-attachment" class="chat-attach-input" name="attachment">
+    </div>
 
     <div class="chat-input-row">
         <label for="chat-input" class="sr-only">@lang('chat.composer.label')</label>

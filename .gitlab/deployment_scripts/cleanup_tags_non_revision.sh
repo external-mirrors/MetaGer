@@ -2,8 +2,9 @@
 
 set -e
 
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
+MAX_HELM_RELEASE_NAME_LENGTH=40
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:$MAX_HELM_RELEASE_NAME_LENGTH}
+HELM_RELEASE_NAME=$(echo "$HELM_RELEASE_NAME" | sed 's/-$//')
 
 # Get All existing tags for the fpm repo
 echo "Fetching existing fpm tags..."

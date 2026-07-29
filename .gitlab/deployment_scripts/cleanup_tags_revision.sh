@@ -2,8 +2,9 @@
 
 # Call script with KEEP_N variable set to specify the amount of releases to keep
 
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
+MAX_HELM_RELEASE_NAME_LENGTH=40
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:$MAX_HELM_RELEASE_NAME_LENGTH}
+HELM_RELEASE_NAME=$(echo "$HELM_RELEASE_NAME" | sed 's/-$//')
 
 helm -n $KUBE_NAMESPACE history ${HELM_RELEASE_NAME}
 if [ $? -ne 0 ]

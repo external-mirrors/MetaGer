@@ -1,7 +1,8 @@
 #!/bin/bash
 
-HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
-HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
+MAX_HELM_RELEASE_NAME_LENGTH=40
+HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:$MAX_HELM_RELEASE_NAME_LENGTH}
+HELM_RELEASE_NAME=$(echo "$HELM_RELEASE_NAME" | sed 's/-$//')
 
 echo "Removing Image Tags..."
 .gitlab/deployment_scripts/cleanup_tags_revision.sh

@@ -207,9 +207,11 @@ class MetaGer
                         ->with('resultcount', count($this->results));
             }
         } elseif (app(SearchSettings::class)->fokus === "chat") {
-            // Chat has no engines to query (empty "sumas" in sumas.json) and is a single static
-            // wrapper page around an iframe, not a paginated/AJAX result set — unlike every other
-            // focus, $this->out is irrelevant here.
+            // Chat has no engines to query (empty "sumas" in sumas.json) and renders a single
+            // interactive page rather than a paginated/AJAX result set — unlike every other focus,
+            // $this->out is irrelevant here. Follow-up turns POST to the chat:message route, which
+            // renders the same view itself (see ChatController::renderPage() for why it does not
+            // route back through here).
             return view('resultpages.resultpage_chat')
                 ->with('eingabe', $this->eingabe)
                 ->with('mobile', $this->mobile)

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\SearchengineConfiguration;
+use App\Services\ChatBackend;
 use LaravelLocalization;
 
 class Searchengines
@@ -32,6 +33,14 @@ class Searchengines
             // include them unconditionally instead of falling through the per-engine loop below,
             // which would otherwise never append them.
             if (empty($fokus_data->sumas)) {
+                // ...except chat, which depends on an external service. Offering the tab while
+                // metager-chat is unreachable produces a focus that cannot work — previously an
+                // iframe rendering MetaGer's own 404 inside MetaGer's chrome. Hiding it is a
+                // cached Redis read on the hot path; the actual health call happens at most once
+                // per cache window per node, and fails closed.
+                if ($fokus === "chat" && !app(ChatBackend::class)->isAvailable()) {
+                    continue;
+                }
                 $foki[] = $fokus;
                 continue;
             }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\MetaGer;
 use App\Services\ChatBackend;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,19 +30,32 @@ class ChatController extends Controller
 
     public function message(Request $request)
     {
-        $user = Auth::guard("key")->user();
-        if ($user === null) {
-            return response()->json(["message" => __("chat.error.no_key")], 401);
-        }
+        $wantsStream = str_contains((string) $request->header("Accept"), "text/event-stream");
 
         $validated = $request->validate([
             "modelId" => "required|string",
-            "messages" => "required|array|min:1",
+            // Prior turns. Absent on the very first message of a conversation.
+            "messages" => "sometimes|array",
             "messages.*.role" => "required|in:user,assistant",
             "messages.*.content" => "required|string",
+            // The new turn, as the composer's textarea sends it. The JS path may instead fold it
+            // into `messages` itself; either shape is accepted.
+            "message" => "sometimes|string",
         ]);
 
-        $wantsStream = str_contains((string) $request->header("Accept"), "text/event-stream");
+        $transcript = $validated["messages"] ?? [];
+        if (filled($validated["message"] ?? null)) {
+            $transcript[] = ["role" => "user", "content" => $validated["message"]];
+        }
+
+        if (count($transcript) === 0) {
+            return $this->fail($wantsStream, __("chat.error.generic"), 400, [], $validated["modelId"]);
+        }
+
+        $user = Auth::guard("key")->user();
+        if ($user === null) {
+            return $this->fail($wantsStream, __("chat.error.no_key"), 401, $transcript, $validated["modelId"]);
+        }
 
         try {
             $upstream = Http::withHeaders($this->backend->headers($user->getAuthIdentifier()))
@@ -51,10 +65,13 @@ class ChatController extends Controller
                 // the pool's request_terminate_timeout and nginx's fastcgi_read_timeout, both of
                 // which sit far above any legitimate generation.
                 ->timeout(0)
-                ->post($this->backend->url("/api/chat"), $validated);
+                ->post($this->backend->url("/api/chat"), [
+                    "modelId" => $validated["modelId"],
+                    "messages" => $transcript,
+                ]);
         } catch (\Throwable $e) {
             Log::warning("chat: upstream unreachable", ["exception" => $e->getMessage()]);
-            return response()->json(["message" => __("chat.error.unavailable")], 503);
+            return $this->fail($wantsStream, __("chat.error.unavailable"), 503, $transcript, $validated["modelId"]);
         }
 
         // Rejections (401 no key, 402 insufficient balance, 400 bad model) arrive as a normal
@@ -63,15 +80,18 @@ class ChatController extends Controller
         // "top up your balance" from "something broke".
         if (!$upstream->successful()) {
             $body = json_decode($upstream->body(), true);
-            return response()->json(
-                ["message" => $body["message"] ?? __("chat.error.generic")],
-                $upstream->status()
+            return $this->fail(
+                $wantsStream,
+                $body["message"] ?? __("chat.error.generic"),
+                $upstream->status(),
+                $transcript,
+                $validated["modelId"]
             );
         }
 
         return $wantsStream
             ? $this->streamResponse($upstream)
-            : $this->bufferedResponse($upstream);
+            : $this->bufferedResponse($upstream, $transcript, $validated["modelId"]);
     }
 
     /**
@@ -117,13 +137,12 @@ class ChatController extends Controller
     }
 
     /**
-     * The no-JS path: consume the whole stream, then answer once.
+     * The no-JS path: consume the whole stream, then re-render the page with the answer appended.
      *
-     * Slow by nature — tens of seconds with no feedback — but complete. Step 4 of the rollout
-     * replaces this JSON with a full re-render of the chat page carrying the extended transcript;
-     * the proxying and rendering below stay exactly as they are.
+     * Slow by nature — tens of seconds with no feedback — but complete, and it keeps the full
+     * MetaGer chrome (header, foki switcher, live balance widget) around the conversation.
      */
-    private function bufferedResponse($upstream)
+    private function bufferedResponse($upstream, array $transcript, string $modelId)
     {
         $body = $upstream->toPsrResponse()->getBody();
 
@@ -141,15 +160,58 @@ class ChatController extends Controller
             }
         });
 
-        if ($error !== null) {
-            return response()->json(["message" => $error], 502);
+        if ($answer !== "") {
+            $transcript[] = [
+                "role" => "assistant",
+                "content" => $answer,
+                "model" => $meta["model"] ?? $modelId,
+            ];
         }
 
-        return response()->json([
-            "text" => $answer,
-            "html" => $this->renderMarkdown($answer),
-            "model" => $meta["model"] ?? null,
-            "cost" => $meta["cost"] ?? null,
+        return $this->renderPage($transcript, $modelId, $error);
+    }
+
+    /**
+     * Error handling for both paths: JSON for the streaming client, a re-rendered page otherwise.
+     *
+     * The no-JS path must not lose the user's conversation just because one turn failed, so the
+     * transcript is rendered back out along with the message.
+     */
+    private function fail(bool $wantsStream, string $message, int $status, array $transcript, ?string $modelId)
+    {
+        if ($wantsStream) {
+            return response()->json(["message" => $message], $status);
+        }
+
+        return $this->renderPage($transcript, $modelId, $message)->setStatusCode($status);
+    }
+
+    /**
+     * Renders the chat focus page.
+     *
+     * Deliberately does *not* go through MetaGer::createView(), even though that is how the focus
+     * renders on a normal GET: createView() writes a QueryLogger entry, which would file every
+     * chat prompt into MetaGer's search query log. Constructing the view directly keeps chat
+     * prompts out of it entirely.
+     */
+    private function renderPage(array $transcript, ?string $modelId, ?string $error = null)
+    {
+        return response()->view("resultpages.resultpage_chat", [
+            // The shared result-page chrome expects the same view data createView() supplies —
+            // parts/errors.blade.php in particular does sizeof($errors) unguarded, and MetaGer
+            // removes ShareErrorsFromSession (no sessions), so nothing populates these for free.
+            "eingabe" => "",
+            "mobile" => false,
+            "warnings" => [],
+            "htmlwarnings" => [],
+            "errors" => [],
+            "apiAuthorized" => false,
+            "quicktips" => [],
+            "metager" => app(MetaGer::class),
+
+            "chatTranscript" => $transcript,
+            "chatModelId" => $modelId,
+            "chatError" => $error,
         ]);
     }
 

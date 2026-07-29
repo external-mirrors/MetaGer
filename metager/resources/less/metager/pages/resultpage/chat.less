@@ -6,8 +6,8 @@
 // remaining space) while the other rows (searchbar/foki/options/footer) stay content-sized.
 // `#results-container` (grid area "results") is already `display: flex; flex-direction: column`
 // and already stretches to fill its grid row (the grid has `align-items: stretch`) —
-// `#chat-container`/`#chat-iframe` just need `flex: 1 1 auto; min-height: 0` to grow into that
-// space, the same pattern one level down.
+// `#chat-container` just needs `flex: 1 1 auto; min-height: 0` to grow into that space, the same
+// pattern one level down.
 //
 // #options / #engine-footer / #backtotop are the per-engine filter link, engine attribution
 // footer, and "back to top" link — all meaningless for chat (zero engines), hidden so their row
@@ -15,10 +15,9 @@
 // legally-required Impressum/Datenschutz/Kontakt links and must stay reachable on every page; its
 // own grid row stays content-sized (not part of the `1fr` row) so it's never squeezed.
 //
-// This is baseline layout only, not the full seamlessness treatment described in
-// docs/llm/metager-integration/foki-integration.md's checklist — real auto-resize-to-*content*
-// (as opposed to just viewport-fill) needs postMessage cooperation from the chat app's own
-// frontend, which doesn't exist yet.
+// This markup used to be an <iframe>; it is now real DOM rendered by MetaGer. The viewport-fill
+// model survived that change unaltered — what went away is the whole class of iframe-specific
+// bugs (nested scroll context, mobile virtual-keyboard resize, viewport-height quirks).
 
 body#resultpage-body.chat {
     overflow: hidden;
@@ -44,12 +43,139 @@ body#resultpage-body.chat {
         min-height: 0;
         display: flex;
         flex-direction: column;
+        gap: 12px;
     }
 
-    #chat-iframe {
+    // The one scrollable region on the page. Everything else is pinned.
+    .chat-messages {
         flex: 1 1 auto;
         min-height: 0;
-        width: 100%;
-        border: none;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 8px 0;
+    }
+
+    .chat-empty {
+        margin: auto;
+        opacity: 0.7;
+    }
+
+    .chat-message {
+        max-width: 100%;
+
+        &--user .chat-message-body {
+            // User turns are visually distinct but not a "bubble" — MetaGer's result pages are
+            // flat and text-first, and chat should read like part of the same product.
+            border-left: 3px solid @metager-orange;
+            padding-left: 12px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        &--assistant .chat-message-body {
+            // Rendered Markdown. Long tokens (URLs, code identifiers) must not blow out the
+            // fixed-width results column.
+            overflow-wrap: anywhere;
+
+            > :first-child {
+                margin-top: 0;
+            }
+
+            > :last-child {
+                margin-bottom: 0;
+            }
+
+            pre {
+                overflow-x: auto;
+                max-width: 100%;
+            }
+
+            // GFM tables need their own scroll container or a wide table breaks the 360px layout.
+            table {
+                display: block;
+                overflow-x: auto;
+                max-width: 100%;
+            }
+        }
+    }
+
+    .chat-message-model {
+        font-size: 0.8em;
+        opacity: 0.65;
+        margin-bottom: 4px;
+    }
+
+    .chat-error,
+    .chat-notice--unavailable {
+        border: 1px solid @metager-orange;
+        border-radius: 4px;
+        padding: 12px;
+    }
+
+    .chat-composer {
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding-bottom: 8px;
+    }
+
+    .chat-model-picker {
+        summary {
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .chat-model-picker-current {
+            opacity: 0.75;
+            margin-left: 6px;
+        }
+    }
+
+    .chat-model-list {
+        list-style: none;
+        margin: 8px 0 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .chat-model-option {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        cursor: pointer;
+
+        .chat-model-option-cost {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+    }
+
+    .chat-input-row {
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+    }
+
+    .chat-input {
+        flex: 1 1 auto;
+        min-width: 0;
+        resize: none;
+        // Grows with content up to this cap (JS enhancement), then scrolls internally.
+        max-height: 40vh;
+        padding: 8px;
+    }
+
+    // Every MetaGer page must work down to 360px. Stacking the send button under the textarea
+    // keeps the input usable at that width instead of squeezing it to a few characters.
+    @media (max-width: 480px) {
+        .chat-input-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
     }
 }

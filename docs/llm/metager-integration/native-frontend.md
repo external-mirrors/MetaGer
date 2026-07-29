@@ -1,6 +1,12 @@
 # Native Chat Frontend in MetaGer (supersedes the iframe design)
 
-**Status: design, not implemented.** This document replaces the iframe-embedding approach described
+**Status: steps 1–4 implemented and locally verified.** The backend is headless, the chat route runs
+on its own FPM pool (a 39-second generation verified surviving), the availability gate hides the
+focus when the backend is down, and the no-JS path works end to end — form POST, multi-turn context
+via hidden fields, server-rendered Markdown. Remaining: step 5 (JS enhancement layer), step 6 (model
+picker polish, file upload), step 7 (encrypted conversation history).
+
+This document replaces the iframe-embedding approach described
 in [`foki-integration.md`](foki-integration.md) §2 and §5. Those sections are kept for history but
 are marked superseded; §1 (Foki registration), §3 (Reverb balance updates) and §4 (interaction
 model) still apply unchanged.
@@ -347,6 +353,12 @@ protocol churn.
 3. `ChatBackend` service + health gating. Independently valuable and testable — it fixes the failure
    mode from the screenshot even before the UI moves.
 4. No-JS path end to end: Blade transcript, form POST, PHP Markdown rendering. Ship-ready on its own.
+   One constraint found while building it: the buffered path must **not** re-render through
+   `MetaGer::createView()`, because that writes a `QueryLogger` entry — which would file every chat
+   prompt into MetaGer's search query log. `ChatController::renderPage()` constructs the view
+   directly instead, supplying the view data the shared chrome expects (`errors` in particular,
+   since `parts/errors.blade.php` calls `sizeof($errors)` unguarded and nothing populates it without
+   sessions).
 5. JS enhancement layer: streaming, then affordances.
 6. Model picker redesign and file upload.
 7. Conversation history: the encrypted blob store and its Postgres migration first, then the crypto

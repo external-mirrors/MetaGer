@@ -1,25 +1,42 @@
 @php
     $chatKeyUser = \Auth::guard('key')->user();
     $chatLoggedIn = $chatKeyUser !== null || app(\App\Models\Authorization\Authorization::class)->loggedIn;
+
+    $chatBackend = app(\App\Services\ChatBackend::class);
+    $chatAvailable = $chatBackend->isAvailable();
+
+    // Transcript is passed in by ChatController on the no-JS POST path; a plain GET starts empty.
+    $transcript = $chatTranscript ?? [];
+    $models = $chatAvailable ? $chatBackend->models() : [];
+
+    $selectedModelId = $chatModelId
+        ?? (collect($models)->firstWhere('default', true)['id'] ?? ($models[0]['id'] ?? null));
+    $selectedModelName = collect($models)->firstWhere('id', $selectedModelId)['display_name'] ?? '';
 @endphp
 
 {{--
-    Layout (fill the viewport exactly, no page-level scroll) lives in
-    resources/less/metager/pages/resultpage/chat.less, scoped to body.chat — no inline
-    <style>/<script>, this app's CSP doesn't allow 'unsafe-inline' and nothing here should rely on
-    it anyway. This app-like viewport-fill model (single internal scrollbar, pinned composer) was
-    deliberately chosen over a growing-with-content/page-scroll model — see
-    docs/llm/metager-integration/foki-integration.md's seamlessness checklist. No postMessage
-    resize is needed for it: the outer grid/flexbox already keeps the iframe sized to the real
-    available area (header/banner/footer) with zero JS.
+    The chat interface, rendered by MetaGer itself — no iframe. Layout lives in
+    resources/less/metager/pages/resultpage/chat.less, scoped to body.chat; no inline <style>/<script>,
+    since this app's CSP doesn't allow 'unsafe-inline'.
 
-    `theme` mirrors `app(\App\SearchSettings::class)->theme` ('system'/'light'/'dark', see
-    SearchSettings.php) so the iframe's own dark-mode CSS matches the user's actual MetaGer
-    preference instead of only the OS-level prefers-color-scheme.
+    The viewport-fill model (single internal scrollbar, pinned composer) is unchanged from the iframe
+    era — it just applies to real DOM now, which is also why the mobile virtual-keyboard and
+    viewport-height quirks that came with iframing are simply gone.
 --}}
 
 <div id="chat-container">
-    @if(!$chatLoggedIn)
+    @if(!$chatAvailable)
+        {{--
+            The whole point of the health gate: never render a chat UI that cannot work. The focus
+            is normally hidden from both Foki switchers when the backend is down
+            (Searchengines::parse_available_foki()), so reaching this branch means someone
+            navigated directly by URL.
+        --}}
+        <div class="chat-notice chat-notice--unavailable">
+            <h1>@lang('chat.unavailable.title')</h1>
+            <p>@lang('chat.unavailable.body')</p>
+        </div>
+    @elseif(!$chatLoggedIn)
         {{-- Same "get a key" prompt as the startpage (index.blade.php #searchbar-replacement) --}}
         <div id="searchbar-replacement" class="chat-auth-gate">
             <div class="tagline">@lang('index.searchbar-replacement.tagline')</div>
@@ -46,10 +63,26 @@
                 </a>
             </div>
         @endif
-        <iframe
-            id="chat-iframe"
-            title="@lang('index.foki.chat')"
-            src="{{ LaravelLocalization::getLocalizedURL(null, '/chat') }}?eingabe={{ rawurlencode($eingabe) }}&locale={{ LaravelLocalization::getCurrentLocale() }}&theme={{ app(\App\SearchSettings::class)->theme }}"
-        ></iframe>
+
+        <div id="chat-messages" class="chat-messages">
+            @if(count($transcript) === 0)
+                <p class="chat-empty">@lang('chat.empty')</p>
+            @endif
+
+            @foreach($transcript as $message)
+                @include('resultpages.parts.chat.message', ['message' => $message])
+            @endforeach
+
+            @isset($chatError)
+                <div class="chat-error" role="alert">{{ $chatError }}</div>
+            @endisset
+        </div>
+
+        @include('resultpages.parts.chat.composer', [
+            'transcript' => $transcript,
+            'models' => $models,
+            'selectedModelId' => $selectedModelId,
+            'selectedModelName' => $selectedModelName,
+        ])
     @endif
 </div>

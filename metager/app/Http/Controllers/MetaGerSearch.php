@@ -166,11 +166,26 @@ class MetaGerSearch extends Controller
             }
         }
 
-        return response($metager->createView($quicktip_results), 200, [
+        $headers = [
             "Cache-Control" => "max-age=3600, must-revalidate, public",
             "Content-Security-Policy" => "default-src $csp",
             "Last-Modified" => gmdate("D, d M Y H:i:s T"),
-        ]);
+        ];
+        # Die Feed- und Textausgaben sind kein HTML und brauchen einen passenden Content-Type
+        switch ($metager->getOut()) {
+            case 'rss20':
+                $headers["Content-Type"] = "application/rss+xml; charset=UTF-8";
+                break;
+            case 'atom10':
+            case 'api':
+                $headers["Content-Type"] = "application/atom+xml; charset=UTF-8";
+                break;
+            case 'result-count':
+                $headers["Content-Type"] = "text/plain; charset=UTF-8";
+                break;
+        }
+
+        return response($metager->createView($quicktip_results), 200, $headers);
     }
 
     /**

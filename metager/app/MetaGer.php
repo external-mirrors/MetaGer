@@ -21,6 +21,10 @@ class MetaGer
 {
     const FETCHQUEUE_KEY = "fetcher.queue";
 
+    # Schema-Version von `out=json`. Additive Änderungen (neue Felder) lassen
+    # sie unverändert; Umbenennen oder Entfernen eines Feldes erhöht sie.
+    const API_SCHEMA_VERSION = 1;
+
     # Einstellungen für die Suche
     public $alteredQuery = "";
     public $alterationOverrideQuery = "";
@@ -176,6 +180,16 @@ class MetaGer
         /** @var QueryLogger */
         $query_logger = App::make(QueryLogger::class);
         $query_logger->createLog();
+
+        # json wird vor der Fokus-Weiche behandelt: die Antwort hat für jeden
+        # Fokus dieselbe Form (Bildersuche füllt lediglich das image-Feld), und
+        # unterhalb dieser Weiche gäbe es sonst zwei Stellen, die dasselbe
+        # Schema bauen müssten. Vorher war 'json' zwar in der Parameterprüfung
+        # erlaubt, hatte aber keinen case und fiel auf die HTML-Seite durch.
+        if ($this->out === "json") {
+            return $this->createJsonView();
+        }
+
         if (app(SearchSettings::class)->fokus === "bilder") {
             switch ($this->out) {
                 case 'results':
@@ -264,6 +278,58 @@ class MetaGer
                         ->with('focus', app(SearchSettings::class)->fokus);
             }
         }
+    }
+
+    /**
+     * Die Antwort für `out=json`.
+     *
+     * Liefert wie die übrigen Formate einen String; den Content-Type setzt
+     * MetaGerSearch@search anhand von getOut().
+     *
+     * Das Schema ist versioniert. Neue Felder dürfen jederzeit dazukommen;
+     * Umbenennen oder Entfernen erhöht `API_SCHEMA_VERSION`.
+     */
+    private function createJsonView(): string
+    {
+        $results = [];
+        foreach ($this->results as $result) {
+            $results[] = $result->toApiArray();
+        }
+
+        # Werbung ist eine eigene Liste, keine Ergebnisse. Ein Client muss sie
+        # als Werbung kennzeichnen können, und im Ergebnisarray wäre sie von
+        # einem organischen Treffer nicht zu unterscheiden. Der Atom-Feed löst
+        # dasselbe Problem über einen eigenen Namespace (ad:advertisement).
+        $ads = [];
+        while (($ad = $this->popAd()) !== null) {
+            $ads[] = $ad->toApiArray();
+        }
+
+        $nextPage = $this->nextSearchLink();
+
+        # JSON_INVALID_UTF8_SUBSTITUTE: die Texte stammen aus fremden Parsern
+        # und sind nicht garantiert sauberes UTF-8. Ohne das Flag gäbe
+        # json_encode false zurück, und eine einzige kaputte Beschreibung würde
+        # die ganze Suche zu einem Fehler machen.
+        return json_encode([
+            "version" => self::API_SCHEMA_VERSION,
+            "query" => $this->eingabe,
+            "focus" => app(SearchSettings::class)->fokus,
+            # Die Anzahl der Ergebnisse *in dieser Antwort*, keine Schätzung der
+            # Gesamttreffer — die hat MetaGer nicht. Der Atom-Feed schreibt
+            # denselben Wert in opensearch:totalResults, was dort irreführend
+            # ist; hier heißt das Feld deshalb, was es enthält.
+            "resultCount" => count($results),
+            # Fertige URL für die nächste Seite, inklusive Such-UID, oder null
+            # wenn keine weitere Seite existiert.
+            "nextPage" => $nextPage === "#" ? null : $nextPage,
+            "searchTime" => round(microtime(true) - $this->starttime, 2),
+            "results" => $results,
+            "ads" => $ads,
+            # Normale Zustände, keine Fehler: leere Ergebnisliste mit Hinweis.
+            "warnings" => array_values($this->warnings),
+            "errors" => array_values($this->errors),
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
     }
 
     public function prepareResults()

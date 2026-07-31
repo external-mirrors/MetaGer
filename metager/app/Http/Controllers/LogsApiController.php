@@ -179,7 +179,14 @@ class LogsApiController extends Controller
 
             if ($request->filled("action") && $request->filled("email")) {
                 if ($request->input("action") === "delete") {
-                    DB::table("logs_user")->where("email", "=", $request->input("email"))->delete();
+                    $email = $request->input("email");
+                    DB::transaction(function () use ($email) {
+                        DB::table("logs_abo")->where("user_email", "=", $email)->delete();
+                        DB::table("logs_nda")->where("user_email", "=", $email)->delete();
+                        DB::table("logs_order")->where("user_email", "=", $email)->delete();
+                        DB::table("logs_access_key")->where("user_email", "=", $email)->delete();
+                        DB::table("logs_user")->where("email", "=", $email)->delete();
+                    });
                     return redirect(route("logs:admin"));
                 } else if ($request->input("action") === "update") {
                     $user = DB::table("logs_user")->where("email", "=", $request->input("email"))->first();

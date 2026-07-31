@@ -3,65 +3,79 @@
 namespace Tests\Feature;
 
 use App\Http\Controllers\LogsApiController;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class LogsAdminDeleteTest extends TestCase
 {
-    public function test_admin_delete_removes_related_log_rows_before_deleting_user(): void
+    use DatabaseTransactions;
+
+    protected function setUp(): void
     {
-        Schema::dropIfExists('logs_access_key');
-        Schema::dropIfExists('logs_abo');
-        Schema::dropIfExists('logs_nda');
-        Schema::dropIfExists('logs_order');
-        Schema::dropIfExists('logs_user');
+        parent::setUp();
 
-        Schema::create('logs_user', function ($table) {
-            $table->string('email')->primary();
-            $table->integer('discount')->default(0);
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('logs_user')) {
+            Schema::create('logs_user', function ($table) {
+                $table->string('email')->primary();
+                $table->integer('discount')->default(0);
+                $table->timestamps();
+            });
+        }
 
-        Schema::create('logs_abo', function ($table) {
-            $table->string('user_email')->primary();
-            $table->enum('interval', ['monthly', 'quarterly', 'six-monthly', 'annual']);
-            $table->float('monthly_price', 2)->unsigned();
-            $table->timestamps();
-            $table->foreign('user_email')->references('email')->on('logs_user');
-        });
+        if (!Schema::hasTable('logs_abo')) {
+            Schema::create('logs_abo', function ($table) {
+                $table->string('user_email')->primary();
+                $table->enum('interval', ['monthly', 'quarterly', 'six-monthly', 'annual']);
+                $table->float('monthly_price', 2)->unsigned();
+                $table->timestamps();
+                $table->foreign('user_email')->references('email')->on('logs_user');
+            });
+        }
 
-        Schema::create('logs_nda', function ($table) {
-            $table->string('user_email')->primary();
-            $table->binary('nda');
-            $table->timestamps();
-            $table->foreign('user_email')->references('email')->on('logs_user');
-        });
+        if (!Schema::hasTable('logs_nda')) {
+            Schema::create('logs_nda', function ($table) {
+                $table->string('user_email')->primary();
+                $table->binary('nda');
+                $table->timestamps();
+                $table->foreign('user_email')->references('email')->on('logs_user');
+            });
+        }
 
-        Schema::create('logs_order', function ($table) {
-            $table->id();
-            $table->string('user_email');
-            $table->dateTime('from');
-            $table->dateTime('to');
-            $table->float('price', 2);
-            $table->timestamps();
-            $table->foreign('user_email')->references('email')->on('logs_user');
-        });
+        if (!Schema::hasTable('logs_order')) {
+            Schema::create('logs_order', function ($table) {
+                $table->id();
+                $table->string('user_email');
+                $table->dateTime('from');
+                $table->dateTime('to');
+                $table->float('price', 2);
+                $table->timestamps();
+                $table->foreign('user_email')->references('email')->on('logs_user');
+            });
+        }
 
-        Schema::create('logs_access_key', function ($table) {
-            $table->id();
-            $table->string('user_email');
-            $table->string('name');
-            $table->string('key');
-            $table->timestamps();
-            $table->foreign('user_email')->references('email')->on('logs_user');
-        });
+        if (!Schema::hasTable('logs_access_key')) {
+            Schema::create('logs_access_key', function ($table) {
+                $table->id();
+                $table->string('user_email');
+                $table->string('name');
+                $table->string('key');
+                $table->timestamps();
+                $table->foreign('user_email')->references('email')->on('logs_user');
+            });
+        }
 
         $this->app['router']->get('/admin/logs', function () {
             return 'ok';
         })->name('logs:admin');
+    }
 
+    #[Test]
+    public function test_admin_delete_removes_related_log_rows_before_deleting_user(): void
+    {
         $email = 'delete-me@example.com';
         DB::table('logs_user')->insert([
             'email' => $email,

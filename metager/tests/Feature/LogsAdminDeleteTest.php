@@ -12,8 +12,6 @@ class LogsAdminDeleteTest extends TestCase
 {
     public function test_admin_delete_removes_related_log_rows_before_deleting_user(): void
     {
-        DB::statement('PRAGMA foreign_keys = ON');
-
         Schema::dropIfExists('logs_access_key');
         Schema::dropIfExists('logs_abo');
         Schema::dropIfExists('logs_nda');

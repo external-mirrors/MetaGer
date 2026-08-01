@@ -54,6 +54,64 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return response($responseData, 200, ["Content-Type" => "text/plain"]);
     });
 
+    /**
+     * The MetaGer Android app's App Link sign-in handback
+     * (docs/10-open-decisions.md#d52 in the app-en repo): metager-keymanager
+     * redirects a signed-in user back into the app through a verified
+     * Android App Link, and Android checks this file against the app's
+     * signing certificate before ever treating the link as belonging to it.
+     *
+     * A route rather than a static public file **on purpose**: `development`
+     * is only ever a staging run of what `master` will serve, and a static
+     * file cannot express "the same content everywhere except this one
+     * trusted extra certificate in non-production" without the two branches
+     * permanently disagreeing on tracked file content. This is the same
+     * `App::environment("production")` check `robots.txt` above already
+     * uses, so the code is identical on every branch and only the deployed
+     * environment (APP_ENV, .gitlab-ci.yml) decides what gets served.
+     *
+     * Every debuggable build type of the app signs with one committed, and
+     * therefore public, debug keystore. Its fingerprint is safe to publish,
+     * but only where a build carrying it could ever legitimately ask to be
+     * trusted — that must never include production: anyone can clone the
+     * app and sign it with that same public key, so trusting it here would
+     * let a sideloaded clone receive a real user's key on first sign-in.
+     * Real release builds never even ask metager3.de, so serving their
+     * fingerprints there too is harmless rather than useful — kept for
+     * uniformity, not because anything depends on it.
+     */
+    Route::get(".well-known/assetlinks.json", function () {
+        $releaseFingerprint = "7F:85:CC:0C:5A:4D:CD:6C:3E:BF:9C:D2:C2:4F:51:48:34:42:00:99:57:0F:80:14:19:DE:3C:C6:3B:88:67:F9";
+        $fdroidFingerprint = "1E:75:2E:3A:CD:C9:9D:7A:AE:AA:EE:39:CC:61:0D:41:24:76:EC:D7:98:0A:18:5F:B6:65:33:E4:A1:AB:9B:67";
+        // Every debuggable build type shares this one certificate
+        // (android/app/debug.keystore, committed to the app-en repo).
+        $debugFingerprint = "FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C";
+
+        $packages = [
+            "de.metager.metagerapp" => $releaseFingerprint,
+            "de.metager.metagerapp.manual" => $releaseFingerprint,
+            "de.metager.metagerapp.fdroid" => $fdroidFingerprint,
+        ];
+
+        $statements = [];
+        foreach ($packages as $packageName => $fingerprint) {
+            $fingerprints = [$fingerprint];
+            if (!App::environment("production")) {
+                $fingerprints[] = $debugFingerprint;
+            }
+            $statements[] = [
+                "relation" => ["delegate_permission/common.handle_all_urls"],
+                "target" => [
+                    "namespace" => "android_app",
+                    "package_name" => $packageName,
+                    "sha256_cert_fingerprints" => $fingerprints,
+                ],
+            ];
+        }
+
+        return response()->json($statements);
+    });
+
     /** ADD ALL LOCALIZED ROUTES INSIDE THIS GROUP **/
 
     Route::get('/', [StartpageController::class, "loadStartPage"])->name("startpage");

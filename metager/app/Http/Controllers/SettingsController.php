@@ -526,6 +526,10 @@ class SettingsController extends Controller
         $valid_blacklist_entries = [];
 
         foreach ($blacklist as $blacklist_entry) {
+            $blacklist_entry = trim($blacklist_entry);
+            if ($blacklist_entry === '') {
+                continue;
+            }
             if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
                 $blacklist_entry = "https://" . $blacklist_entry;
             }
@@ -534,6 +538,12 @@ class SettingsController extends Controller
             if ($blacklist_entry === null || $blacklist_entry === false)
                 continue;
             $blacklist_entry = substr($blacklist_entry, 0, 255);
+
+            // Reject anything that isn't actually a valid hostname (optionally "*."-wildcarded)
+            $hostname = str_starts_with($blacklist_entry, "*.") ? substr($blacklist_entry, 2) : $blacklist_entry;
+            if (filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
+                continue;
+            }
 
             $valid_blacklist_entries[] = $blacklist_entry;
         }

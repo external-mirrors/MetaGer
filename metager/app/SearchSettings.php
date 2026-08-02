@@ -171,7 +171,7 @@ class SearchSettings
             if (sizeof(array_intersect(array_keys((array) $filter->sumas), $this->sumasJson->foki->{$this->fokus}->sumas)) === 0) {
                 continue;
             }
-            $this->parameterFilter[$filterName] = $filter;
+            $this->parameterFilter[$filterName] = clone $filter;
             if ($filterName === "language") {
                 // Update default Parameter for language
                 $current_locale = LaravelLocalization::getCurrentLocaleRegional();

@@ -97,7 +97,7 @@
                             @foreach ($filterInfo->values as $key => $value)
                                 @if (!empty($key))
                                     <option
-                                        value="@if ($key !== 'nofilter') {{ $key }} @endif"
+                                        value="{{ $key !== 'nofilter' ? $key : '' }}"
                                         @if (
                                             (!empty($filterInfo->value) && $filterInfo->value === $key) ||
                                                 (empty($filterInfo->value) && $filterInfo->{"default-value"} === $key)) selected @endif

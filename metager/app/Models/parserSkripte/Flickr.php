@@ -8,6 +8,43 @@ use Log;
 
 class Flickr extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'flickr' => [
+            'host' => 'api.flickr.com',
+            'path' => '/services/rest/',
+            'port' => 443,
+            'query-parameter' => 'text',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'method' => 'flickr.photos.search',
+                'license' => '1,2,3,4,5,6,7',
+                'sort' => 'relevance',
+                'per_page' => '20',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://www.flickr.com',
+                'index_name' => null,
+                'display_name' => 'flickr',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

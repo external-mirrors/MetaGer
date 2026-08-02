@@ -51,6 +51,13 @@ return [
         '3' => 'Sökfilter',
         '4' => 'Svart lista',
     ],
+    'section' => [
+        'focus' => 'Sökfokus',
+        'account' => 'Konto',
+        'preferences' => 'Allmänt',
+        'backup' => 'Säkerhetskopiering och återställning',
+    ],
+    'resetDescription' => 'Tar bort alla inställningar på denna sida och återställer MetaGer till standardinställningarna.',
     'text' => [
         '1' => 'För att spara dina sökinställningar använder vi icke-personligt identifierbara cookies. Dessa lagras i klartext i din webbläsare.',
         '2' => 'Nedan kan du se alla sökmotorer som är tillgängliga för detta fokus. Du kan slå på/av dem genom att klicka på namnet.',
@@ -73,7 +80,7 @@ return [
     'add' => 'Lägg till',
     'clear' => 'Tydlig svart lista',
     'copy' => 'Kopia',
-    'darkmode' => 'Växla till mörkt läge',
+    'darkmode' => 'Utseende',
     'suggestions' => [
         'off' => "Inaktiverad",
         'on' => "Aktiverad",

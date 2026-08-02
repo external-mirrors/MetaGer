@@ -8,6 +8,40 @@ use Log;
 
 class Infotiger extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'infotiger' => [
+            'host' => 'api.infotiger.com',
+            'path' => '/v1/en',
+            'port' => 443,
+            'query-parameter' => 'query',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'page' => '1',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'en' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 0.9,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://infotiger.com/',
+                'index_name' => null,
+                'display_name' => 'Infotiger',
+                'founded' => '1998',
+                'headquarter' => 'München, Deutschland',
+                'operator' => 'Infotiger UG (haftungsbeschränkt)',
+                'index_size' => '150 Millionen',
+            ],
+        ],
+    ];
     const RESULTS_PER_PAGE = 10;
     public $results = [];
 

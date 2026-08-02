@@ -7,6 +7,72 @@ use App\Models\SearchengineConfiguration;
 
 class Dmoznebel extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'dmoznebel_int' => [
+            'host' => 'minisucher.suma-lab.de',
+            'path' => '/dmoz/dmozintmeta.jsp',
+            'port' => 80,
+            'query-parameter' => 'query',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'count' => '10',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.dmoz.de/',
+                'index_name' => null,
+                'display_name' => 'Dmoz-International',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+        'dmoznebel' => [
+            'host' => 'minisucher.suma-lab.de',
+            'path' => '/dmoz/dmozmeta.jsp',
+            'port' => 80,
+            'query-parameter' => 'query',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'count' => '10',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.dmoz.de/',
+                'index_name' => null,
+                'display_name' => 'Dmoz',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

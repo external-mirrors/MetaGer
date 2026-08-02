@@ -10,31 +10,57 @@ use Log;
 class Mojeek extends Searchengine
 {
     const CONFIG_OVERLOAD = [
-        "lang" => [
-            "parameter" => "lb",
-            "languages" => [],
-            "regions" => [
-                "de_DE" => "de",
-                "de_AT" => "at",
-                "en_US" => "us",
-                "en_GB" => "gb",
-                "en_AU" => "au",
-                "es_ES" => "es",
-                "es_MX" => "mx",
-                "da_DK" => "dk",
-                "at_AT" => "at",
-                "de_CH" => "ch",
-                "fi_FI" => "fi",
-                "it_IT" => "it",
-                "nl_NL" => "nl",
-                "sv_SE" => "se",
-                "fr_FR" => "fr",
-                "fr_CA" => "ca",
-                "pl_PL" => "pl",
-                "pt_PT" => "pt-pt_PT",
-                "pt_BR" => "pt-br_BR",
-            ]
-        ]
+        'mojeek' => [
+            'host' => 'api.mojeek.com',
+            'path' => '/search',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'fmt' => 'json',
+            ],
+            'lang' => [
+                'parameter' => 'lb',
+                'languages' => [],
+                'regions' => [
+                    'de_DE' => 'de',
+                    'de_AT' => 'at',
+                    'en_US' => 'us',
+                    'en_GB' => 'gb',
+                    'en_AU' => 'au',
+                    'es_ES' => 'es',
+                    'es_MX' => 'mx',
+                    'da_DK' => 'dk',
+                    'at_AT' => 'at',
+                    'de_CH' => 'ch',
+                    'fi_FI' => 'fi',
+                    'it_IT' => 'it',
+                    'nl_NL' => 'nl',
+                    'sv_SE' => 'se',
+                    'fr_FR' => 'fr',
+                    'fr_CA' => 'ca',
+                    'pl_PL' => 'pl',
+                    'pt_PT' => 'pt-pt_PT',
+                    'pt_BR' => 'pt-br_BR',
+                ],
+            ],
+            'engine-boost' => 1.2,
+            'cache-duration' => 0,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'ads' => false,
+            'cost' => 0.3,
+            'infos' => [
+                'homepage' => 'https://www.mojeek.com/',
+                'index_name' => 'Mojeek',
+                'display_name' => 'Mojeek',
+                'founded' => '2009',
+                'headquarter' => 'Sussex Innovation Centre, University of Sussex, Science Park Square, Falmer, Brighton, BN1 9SB',
+                'operator' => 'Mojeek Limited',
+                'index_size' => '> 5 Milliarden',
+            ],
+        ],
     ];
     public $results = [];
 

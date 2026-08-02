@@ -1,18 +1,7 @@
 {
-    "sumas": {
-
-    },
-    "foki": {
-        "web": {
-            "display-name": "index.foki.web",
-            "sumas": [
-            ],
-            "main": [
-            ]
+    "brave": {
+        "request-header": {
+            "X-Subscription-Token": "your-secret-api-key"
         }
-    },
-    "filter": {
-        "query-filter": {},
-        "parameter-filter": {}
     }
 }

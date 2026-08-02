@@ -8,6 +8,110 @@ use Log;
 
 class Mg_produkt2 extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'mg_produkt' => [
+            'host' => 'produkte.suma-lab.de',
+            'path' => '/solr-metaprod/select',
+            'port' => 80,
+            'query-parameter' => 'q',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'rows' => '20',
+                'fl' => 'artikelName,artikelDeeplink,shopVisibleName,artikelBeschreibung,artikelImageurl',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'display-name' => 'MetaGer Produktsuche',
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'homepage' => 'https://metager.org/search-engine',
+            'infos' => [
+                'homepage' => 'https://metager.org/search-engine',
+                'index_name' => null,
+                'display_name' => 'MetaGer Produktsuche',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+        'mg_produkt2' => [
+            'host' => 'produkte.suma-lab.de',
+            'path' => '/solr-metaprod2/select',
+            'port' => 80,
+            'query-parameter' => 'q',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'rows' => '20',
+                'fl' => 'artikelName,artikelDeeplink,shopVisibleName,artikelBeschreibung,artikelImageurl',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1.3,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://metager.org/search-engine',
+                'index_name' => null,
+                'display_name' => 'MetaGer Produktsuche 2',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+        'mg_produkt2_ads' => [
+            'host' => 'produkte.suma-lab.de',
+            'path' => '/solr-metaprod/select',
+            'port' => 80,
+            'query-parameter' => 'q',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'sort' => 'artikelGroberPreis%20desc',
+                'rows' => '20',
+                'fl' => 'artikelName,artikelBeschreibung,artikelDeeplink,shopVisibleName',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://metager.org/search-engine',
+                'index_name' => null,
+                'display_name' => 'MetaGer Produktsuche',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

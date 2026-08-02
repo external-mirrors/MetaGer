@@ -1,0 +1,63 @@
+{
+  "web": {
+    "display-name": "index.foki.web",
+    "sumas": [
+      "mojeek",
+      "yandex",
+      "brave",
+      "serper_web"
+    ],
+    "main": [
+      "brave"
+    ]
+  },
+  "bilder": {
+    "display-name": "index.foki.bilder",
+    "sumas": [
+      "brave_images",
+      "pixabay",
+      "serper_images"
+    ],
+    "main": [
+      "brave_images",
+      "pixabay"
+    ]
+  },
+  "nachrichten": {
+    "display-name": "index.foki.nachrichten",
+    "sumas": [
+      "onenewspage",
+      "onenewspagegermany",
+      "brave_news",
+      "serper_news"
+    ],
+    "main": [
+      "onenewspage",
+      "onenewspagegermany",
+      "brave_news"
+    ]
+  },
+  "produkte": {
+    "display-name": "index.foki.produkte",
+    "sumas": [
+      "ebay",
+      "serper_shopping"
+    ],
+    "main": [
+      "serper_shopping"
+    ]
+  },
+  "science": {
+    "display-name": "Wissenschaft",
+    "sumas": [
+      "minism_science",
+      "tuhh",
+      "BASE"
+    ],
+    "main": [
+      "minism_science",
+      "tuhh",
+      "BASE"
+    ]
+  }
+}

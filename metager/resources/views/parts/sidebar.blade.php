@@ -134,19 +134,10 @@
       </details>
     </li>
     <li>
-      <details>
-        <summary aria-label="@lang('sidebar.nav28')" id="navigationEinstellung">
-          <img src="/img/icon-settings.svg" alt="" aria-hidden="true" id="sidebar-img-settings"> 
-          <span>{{ trans('sidebar.nav28') }}</span><span class="caret" aria-hidden="true"></span>
-        </summary>
-        <ul role="presentation">
-          @foreach(app()->make(\App\Searchengines::class)->available_foki as $fokus)
-            <li>
-              <a href="{{ route("settings", ["focus" => $fokus, "url" => url()->full()]) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans("index.foki.$fokus") }}</a>
-            </li>
-          @endforeach
-        </ul>
-      </details>
+      <a href="{{ route('settings', ['focus' => 'web', 'url' => url()->full()]) }}" id="navigationEinstellung" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <img src="/img/icon-settings.svg" alt="" aria-hidden="true" id="sidebar-img-settings">
+        <span>{{ trans('sidebar.nav28') }}</span>
+      </a>
     </li>
     <hr>
     <li>

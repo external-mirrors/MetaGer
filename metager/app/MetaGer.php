@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
 use Arr;
@@ -768,15 +769,13 @@ class MetaGer
 
         # Suma-File
         if ($this->dummy) {
-            $this->sumaFile = \config_path("stress.json");
+            $stressFile = \config_path("stress.json");
+            if (!file_exists($stressFile)) {
+                die(trans('metaGer.formdata.cantLoad'));
+            }
+            $this->sumaFile = json_decode(file_get_contents($stressFile));
         } else {
-            $this->sumaFile = \config_path("sumas.json");
-        }
-
-        if (!file_exists($this->sumaFile)) {
-            die(trans('metaGer.formdata.cantLoad'));
-        } else {
-            $this->sumaFile = json_decode(file_get_contents($this->sumaFile));
+            $this->sumaFile = app(SearchEngineRegistry::class);
         }
         # Sucheingabe
         $this->eingabe = trim(\Request::input('eingabe', ''));
@@ -1450,11 +1449,6 @@ class MetaGer
     public function getLanguage()
     {
         return $this->language;
-    }
-
-    public static function getLanguageFile()
-    {
-        return config_path('sumas.json');
     }
 
     public function getLang()

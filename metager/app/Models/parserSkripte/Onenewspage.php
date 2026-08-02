@@ -9,6 +9,74 @@ use Carbon;
 
 class Onenewspage extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'onenewspage' => [
+            'host' => 'search.onenewspage.com',
+            'path' => '/search.php',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'e' => '1',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'en' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.onenewspage.com/',
+                'index_name' => null,
+                'display_name' => 'OneNewspage',
+                'founded' => '2008',
+                'headquarter' => 'Wales, England',
+                'operator' => 'One News Page Ltd.',
+                'index_size' => null,
+            ],
+        ],
+        'onenewspageAll' => [
+            'host' => 'search.onenewspage.com',
+            'path' => '/search.php',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'e' => '1',
+                'f' => '1',
+                'n' => '100',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'en' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.onenewspage.com/',
+                'index_name' => null,
+                'display_name' => 'OneNewspage (mit Archiv)',
+                'founded' => '2008',
+                'headquarter' => 'Wales, England',
+                'operator' => 'One News Page Ltd.',
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
     public $resultCount = 0;
 

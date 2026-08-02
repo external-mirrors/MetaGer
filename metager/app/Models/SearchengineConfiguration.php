@@ -59,14 +59,6 @@ class SearchengineConfiguration
     public function __construct($engineConfigurationJson)
     {
         try {
-
-            /** Load in Config Overload from Engine */
-            $parser_class = "App\\Models\\parserSkripte\\" . $engineConfigurationJson->{"parser-class"};
-            if (class_exists($parser_class)) {
-                $config_overload = json_decode(json_encode(constant($parser_class . "::CONFIG_OVERLOAD"), JSON_FORCE_OBJECT));
-                $engineConfigurationJson = (object) array_merge((array) $engineConfigurationJson, (array) $config_overload);
-            }
-
             /** Required parameters from json file */
             $this->host = $engineConfigurationJson->host;
             $this->path = $engineConfigurationJson->path;

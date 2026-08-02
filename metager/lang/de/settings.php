@@ -30,7 +30,7 @@ return [
     'clear' => 'Blacklist löschen',
     'copy' => 'Kopieren',
     'dark' => 'Dunkel',
-    'darkmode' => 'Dunklen Modus umschalten',
+    'darkmode' => 'Darstellung',
     'suggestions' => [
         'off' => "Deaktiviert",
         'on' => "Aktiviert",
@@ -61,6 +61,13 @@ return [
         '3' => 'Suchfilter',
         '4' => 'Blacklist',
     ],
+    'section' => [
+        'focus' => 'Suchfokus',
+        'account' => 'Konto',
+        'preferences' => 'Allgemein',
+        'backup' => 'Sicherung und Zurücksetzen',
+    ],
+    'resetDescription' => 'Entfernt alle Einstellungen auf dieser Seite und setzt MetaGer auf die Standardeinstellungen zurück.',
     'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
         'header' => 'Wiederherstellen aller aktuellen Einstellungen',
@@ -104,5 +111,9 @@ return [
     ],
     'tips' => [
         'label' => 'Zufällige Tipps auf der Ergebnisseite anzeigen',
+    ],
+    'zitate' => [
+        'on' => 'Anzeigen',
+        'off' => 'Nicht Anzeigen',
     ],
 ];

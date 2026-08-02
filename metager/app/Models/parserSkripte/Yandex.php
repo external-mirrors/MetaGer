@@ -8,6 +8,46 @@ use Log;
 
 class Yandex extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'yandex' => [
+            'host' => 'yandex.com',
+            'path' => '/search/xml',
+            'port' => 443,
+            'query-parameter' => 'query',
+            'input-encoding' => '',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'user' => 'wsb-metager',
+                'l10n' => 'en',
+                'sortby' => 'rlv',
+                'filter' => 'strict',
+                'groupby' => 'attr%3D%22%22.mode%3Dflat.groups-on-page%3D10.docs-in-group%3D1',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                    'en' => '',
+                    'ru' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://www.yandex.com/',
+                'index_name' => null,
+                'display_name' => 'Yandex',
+                'founded' => '1997',
+                'headquarter' => 'Mäntsälä, Finnland (Europa)',
+                'operator' => 'Yandex OY (Aktiengesellschaft)',
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

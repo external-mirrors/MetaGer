@@ -7,6 +7,37 @@ use App\Models\SearchengineConfiguration;
 
 class Zeitde extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'zeitde' => [
+            'host' => 'api.zeit.de',
+            'path' => '/content',
+            'port' => 80,
+            'query-parameter' => 'q',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.zeit.de/index',
+                'index_name' => null,
+                'display_name' => 'Die ZEIT',
+                'founded' => '1997',
+                'headquarter' => 'Mäntsälä, Finnland (Europa)',
+                'operator' => 'Yandex OY (Aktiengesellschaft)',
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

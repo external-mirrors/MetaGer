@@ -7,6 +7,37 @@ use App\Models\SearchengineConfiguration;
 
 class Onenewspagevideo extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'onenewspagevideo' => [
+            'host' => 'search.onenewspage.com',
+            'path' => '/searchvideos.php',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'Latin1',
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'en' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.onenewspage.com/videos.htm',
+                'index_name' => null,
+                'display_name' => 'OneNewspage (Video)',
+                'founded' => '2008',
+                'headquarter' => 'Wales, England',
+                'operator' => 'One News Page Ltd.',
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
     public $resultCount = 0;
 

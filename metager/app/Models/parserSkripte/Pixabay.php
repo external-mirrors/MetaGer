@@ -10,6 +10,50 @@ use Log;
 
 class Pixabay extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'pixabay' => [
+            'host' => 'pixabay.com',
+            'path' => '/api',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'per_page' => 50,
+            ],
+            'lang' => [
+                'parameter' => 'lang',
+                'languages' => [
+                    'de' => 'de',
+                    'en' => 'en',
+                    'es' => 'es',
+                    'it' => 'it',
+                    'fi' => 'fi',
+                    'sv' => 'sv',
+                    'no' => 'no',
+                    'nl' => 'nl',
+                    'da' => 'da',
+                    'fr' => 'fr',
+                    'pl' => 'pl',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1.0,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://pixabay.com/',
+                'index_name' => 'Pixabay',
+                'display_name' => 'Pixabay',
+                'founded' => '24. November 2010',
+                'headquarter' => 'Berlin, Germany',
+                'operator' => 'Pixabay GmbH',
+                'index_size' => '3,1 Million',
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

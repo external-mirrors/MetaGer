@@ -6,6 +6,13 @@ return [
         '2' => 'Motores de pesquisa usados',
         '3' => 'Filtros de pesquisa',
     ],
+    'section' => [
+        'focus' => 'Foco de pesquisa',
+        'account' => 'Conta',
+        'preferences' => 'Preferências',
+        'backup' => 'Cópia de segurança e redefinição',
+    ],
+    'resetDescription' => 'Remove todas as definições desta página e repõe o MetaGer às predefinições.',
     'text' => [
         '1' => 'Para guardar as suas definições de pesquisa, utilizamos cookies não identificáveis pessoalmente. Estes são armazenados em texto simples no seu browser.',
         '2' => 'Abaixo pode ver todos os motores de busca disponíveis para este foco. Pode activá-los/desactivá-los clicando no nome.',
@@ -38,7 +45,7 @@ return [
     'back' => 'Voltar à última página',
     'add' => 'Adicionar',
     'clear' => 'Limpar lista negra',
-    'darkmode' => 'Alternar o modo escuro',
+    'darkmode' => 'Aparência',
     'suggestions' => [
         'off' => "Desativado",
         'on' => "Ativado",

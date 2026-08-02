@@ -6,6 +6,13 @@ return [
         '3' => 'Filtro de búsqueda',
         '4' => 'Lista negra',
     ],
+    'section' => [
+        'focus' => 'Enfoque de búsqueda',
+        'account' => 'Cuenta',
+        'preferences' => 'Preferencias',
+        'backup' => 'Copia de seguridad y restablecimiento',
+    ],
+    'resetDescription' => 'Elimina todos los ajustes de esta página y restablece MetaGer a los valores predeterminados.',
     'text' => [
         '1' => 'Aquí puede realizar los ajustes de búsqueda permanentes para su búsqueda de MetaGer en el foco :fokusName. Si no se guardan permanentemente, compruebe la configuración de su navegador para ver si borra las cookies guardadas al salir.',
         '2' => 'A continuación puede ver todos los motores de búsqueda disponibles para este enfoque. Pueden activarse y desactivarse haciendo clic en el nombre. Los motores de búsqueda activados se muestran en verde. Los motores de búsqueda desactivados se muestran en rojo o gris.',
@@ -28,7 +35,7 @@ return [
     'add' => 'Añadir',
     'clear' => 'Lista negra vacía',
     'copy' => 'Copiar',
-    'darkmode' => 'Cambiar el modo oscuro',
+    'darkmode' => 'Apariencia',
     'system' => 'Sistema estándar',
     'dark' => 'Oscuro',
     'light' => 'Brillante',

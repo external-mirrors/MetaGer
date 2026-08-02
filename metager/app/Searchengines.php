@@ -2,20 +2,19 @@
 
 namespace App;
 
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\SearchengineConfiguration;
 use LaravelLocalization;
 
 class Searchengines
 {
-    private readonly string $suma_file_path;
-    private $sumas;
+    private readonly SearchEngineRegistry $registry;
 
     public readonly array $available_foki;
 
     public function __construct()
     {
-        $this->suma_file_path = \config_path("sumas.json");
-        $this->sumas = \json_decode(\file_get_contents($this->suma_file_path));
+        $this->registry = app(SearchEngineRegistry::class);
 
         $this->available_foki = $this->parse_available_foki();
     }
@@ -27,9 +26,9 @@ class Searchengines
         $current_lang = Localization::getLanguage();
 
         $foki = [];
-        foreach ($this->sumas->foki as $fokus => $fokus_data) {
+        foreach ($this->registry->foki as $fokus => $fokus_data) {
             foreach ($fokus_data->sumas as $fokus_engine) {
-                $suma_data = $this->sumas->sumas->$fokus_engine;
+                $suma_data = $this->registry->sumas->$fokus_engine;
 
                 $engine_configuration = new SearchengineConfiguration($suma_data);
 

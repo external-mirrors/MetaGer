@@ -8,6 +8,41 @@ use Log;
 
 class Ecoshopper extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'ecoshopper' => [
+            'host' => 'www.ecoshopper.de',
+            'path' => '/ecoshopper/select/',
+            'port' => 80,
+            'query-parameter' => 'q',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'rows' => '20',
+                'fl' => 'artikelName,artikelDeeplink,shopName,artikelBeschreibung,content,artikelPreis,basePriceCurrency,artikelLieferkosten,artikelImageurl',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.ecoshopper.de/',
+                'index_name' => null,
+                'display_name' => 'Ecoshopper',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

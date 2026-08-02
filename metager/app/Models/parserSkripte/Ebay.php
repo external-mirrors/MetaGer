@@ -8,6 +8,45 @@ use Log;
 
 class Ebay extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'ebay' => [
+            'host' => 'svcs.ebay.com',
+            'path' => '/services/search/FindingService/v1',
+            'port' => 80,
+            'query-parameter' => 'keywords',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'OPERATION-NAME' => 'findItemsByKeywords',
+                'SERVICE-VERSION' => '1.0.0',
+                'RESPONSE-DATA-FORMAT' => 'XML',
+                'REST-PAYLOAD' => '',
+                'paginationInput.entriesPerPage' => '20',
+                'GLOBAL-ID' => 'EBAY-DE',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1.1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.ebay.de/',
+                'index_name' => null,
+                'display_name' => 'Ebay',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

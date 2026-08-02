@@ -9,6 +9,43 @@ use Log;
 
 class BASE extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'BASE' => [
+            'host' => 'api.base-search.net',
+            'path' => '/cgi-bin/BaseHttpSearchInterface.fcgi',
+            'port' => 443,
+            'query-parameter' => 'query',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'func' => 'PerformSearch',
+                'format' => 'json',
+                'hits' => 20,
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                    'en' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.base-search.net/',
+                'index_name' => null,
+                'display_name' => 'BASE',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

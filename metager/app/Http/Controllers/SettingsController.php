@@ -2,19 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Localization;
-use \App\MetaGer;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
+use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
 use foroco\BrowserDetection;
 use \Illuminate\Http\Request;
-use LaravelLocalization;
 
 class SettingsController extends Controller
 {
@@ -24,41 +23,71 @@ class SettingsController extends Controller
     public function index(Request $request)
     {
         $settings = app(SearchSettings::class);
-        $searchengines = app(Searchengines::class);
-        $sumas = $searchengines->getSearchEnginesForFokus();
-        $fokus = $settings->fokus;
-        $fokusName = trans('index.foki.' . $fokus);
-
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
-
-
-        # Parse the Parameter Filter
-        $filters = $settings->parameterFilter;
-
-        $filteredSumas = false;
-        foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
-            foreach ($sumas as $name => $suma) {
-                if ($suma->configuration->disabled && in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
-                    $filteredSumas = true;
-                }
-            }
-        }
-
+        $originalFokus = $settings->fokus;
         $authorization = app(Authorization::class);
         $url = $request->input('url', '');
 
-        // Check if any setting is active
-        $settingActive = false;
-        if (sizeof($settings->user_settings) > 0 || sizeof($searchengines->user_settings) > 0) {
-            $settingActive = true;
-        }
+        // Check if any setting is active. Populated further as we build
+        // per-fokus data below (loadParameterFilter()/engine settings touch
+        // $settings->user_settings as a side effect of reading them).
+        $settingActive = sizeof($settings->user_settings) > 0;
 
-        # Reading cookies for black list entries
-        $blacklist_tld = array_map(function ($value) {
-            return "*." . $value;
-        }, app(SearchSettings::class)->blacklist_tld);
-        $blacklist = array_merge($blacklist_tld, app(SearchSettings::class)->blacklist);
+        // Build engines/filter/blacklist for every fokus, not just the
+        // current one, so the settings page can manage all of them at once.
+        $foki = [];
+        foreach ($settings->available_foki as $fokus) {
+            $settings->fokus = $fokus;
+            $settings->parameterFilter = [];
+
+            $searchengines = new Searchengines();
+            $sumas = $searchengines->getSearchEnginesForFokus();
+
+            if (sizeof($searchengines->user_settings) > 0) {
+                $settingActive = true;
+            }
+
+            $filteredSumas = false;
+            foreach ($sumas as $suma) {
+                if ($suma->configuration->disabled && in_array(DisabledReason::INCOMPATIBLE_FILTER, $suma->configuration->disabledReasons)) {
+                    $filteredSumas = true;
+                    break;
+                }
+            }
+
+            [$blacklist_entries, $blacklist_tld] = SearchSettings::parseBlacklistCookie(Cookie::get($fokus . "_blpage"));
+            $blacklist = array_merge(array_map(fn($value) => "*." . $value, $blacklist_tld), $blacklist_entries);
+
+            $hasCustomFilter = false;
+            foreach ($settings->parameterFilter as $filter) {
+                if (!empty($filter->value)) {
+                    $hasCustomFilter = true;
+                    break;
+                }
+            }
+
+            $hasEnabledEngine = false;
+            foreach ($sumas as $suma) {
+                if ($suma->configuration->disabled === false) {
+                    $hasEnabledEngine = true;
+                    break;
+                }
+            }
+
+            $foki[$fokus] = [
+                'name' => trans('index.foki.' . $fokus),
+                'sumas' => $sumas,
+                'disabledReasons' => $searchengines->disabledReasons,
+                'searchCost' => $searchengines->getSearchCost(),
+                'rawSearchCost' => $searchengines->getRawSearchCost(),
+                'filteredSumas' => $filteredSumas,
+                'filter' => $settings->parameterFilter,
+                'blacklist' => $blacklist,
+                'hasEnabledEngine' => $hasEnabledEngine,
+                // Drives the "this focus has custom settings" tab indicator.
+                'hasCustomSettings' => sizeof($searchengines->user_settings) > 0 || sizeof($blacklist) > 0 || $hasCustomFilter,
+            ];
+        }
+        $settings->fokus = $originalFokus;
 
         # Generating link with set cookies
         $settings_params = [];
@@ -85,72 +114,26 @@ class SettingsController extends Controller
         $agent = (new BrowserDetection())->getAll($request->userAgent());
 
         return response(view('settings.index')
-            ->with('title', trans('titles.settings', ['fokus' => $fokusName]))
-            ->with('fokus', $settings->fokus)
-            ->with('fokusName', $fokusName)
+            ->with('title', trans('titles.settings', ['fokus' => $foki[$originalFokus]['name']]))
+            ->with('fokus', $originalFokus)
+            ->with('foki', $foki)
             ->with('authorization', $authorization)
-            ->with('filteredSumas', $filteredSumas)
-            ->with('disabledReasons', app(Searchengines::class)->disabledReasons)
-            ->with('sumas', $sumas)
-            ->with('searchCost', app(Searchengines::class)->getSearchCost())
-            ->with('rawSearchCost', app(Searchengines::class)->getRawSearchCost())
-            ->with('filter', $filters)
             ->with('settingActive', $settingActive)
             ->with('url', $url)
-            ->with('blacklist', $blacklist)
             ->with('cookieLink', $cookieLink)
             ->with('agent', $agent)
             ->with('browser', $agent)
+            ->with('globalSettings', collect(SettingsSchema::forClients(["web"]))->keyBy('key'))
+            ->with('currentGlobalValues', [
+                'tips' => $settings->tips ? 'on' : 'off',
+                'tiles_startpage' => $settings->tiles_startpage ? 'on' : 'off',
+                'dark_mode' => $settings->theme,
+                'new_tab' => $settings->newtab ? 'on' : 'off',
+                'zitate' => $settings->zitate ? 'on' : 'off',
+            ])
             ->with('js', [mix('js/scriptSettings.js')]), 200, [
             "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
         ]);
-    }
-
-    private function getSumas($fokus)
-    {
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
-
-        if (empty($langFile->foki->{$fokus})) {
-            // Fokus does not exist in this suma file
-            return [];
-        }
-
-        $sumasFoki = $langFile->foki->{$fokus}->sumas;
-
-        $sumas = [];
-        $locale = LaravelLocalization::getCurrentLocaleRegional();
-        $lang = Localization::getLanguage();
-        foreach ($sumasFoki as $suma) {
-            if (
-                (!empty($langFile->sumas->{$suma}->disabled) && $langFile->sumas->{$suma}->disabled) ||
-                (!empty($langFile->sumas->{$suma}->{"auto-disabled"}) && $langFile->sumas->{$suma}->{"auto-disabled"}) ||
-                    ## Lang support is not defined
-                (!\property_exists($langFile->sumas->{$suma}, "lang") || !\property_exists($langFile->sumas->{$suma}->lang, "languages") || !\property_exists($langFile->sumas->{$suma}->lang, "regions")) ||
-                    ## Current Locale/Lang is not supported by this engine
-                (!\property_exists($langFile->sumas->{$suma}->lang->languages, $lang) && !\property_exists($langFile->sumas->{$suma}->lang->regions, $locale))
-            ) {
-                continue;
-            }
-            $sumas[$suma]["display-name"] = $langFile->sumas->{$suma}->infos->display_name;
-            $sumas[$suma]["filtered"] = false;
-            if (Cookie::get($fokus . "_engine_" . $suma) === "off") {
-                $sumas[$suma]["enabled"] = false;
-            } else {
-                $sumas[$suma]["enabled"] = true;
-            }
-        }
-
-        foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
-            $values = $filter->values;
-            $cookie = Cookie::get($fokus . "_setting_" . $filter->{"get-parameter"});
-            foreach ($sumas as $suma => $sumaInfo) {
-                if ($cookie !== null && (empty($filter->sumas->{$suma}) || (!empty($filter->sumas->{$suma}) && empty($filter->sumas->{$suma}->values->$cookie)))) {
-                    $sumas[$suma]["filtered"] = true;
-                }
-            }
-        }
-        return $sumas;
     }
 
     public function disableSearchEngine(Request $request)
@@ -173,7 +156,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url, "anchor" => "engines"]);
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#" . $settings->fokus . "-engines";
 
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
@@ -203,7 +186,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url, "anchor" => "engines"]);
+        $redirect_url = route('settings', ["focus" => $settings->fokus, "url" => $url]) . "#" . $settings->fokus . "-engines";
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -222,8 +205,7 @@ class SettingsController extends Controller
 
         $newFilters = $request->except(["focus", "url"]);
 
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
+        $langFile = app(SearchEngineRegistry::class);
 
         $settings = app(SearchSettings::class);
         app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated
@@ -255,7 +237,7 @@ class SettingsController extends Controller
             }
         }
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "filter"]);
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-filter";
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -269,20 +251,20 @@ class SettingsController extends Controller
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
 
-        if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", $request->input('sg', ''))) {
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
-        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('sgd', ''))) {
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
-        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_addressbar", $request->input('sga', ''))) {
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "suggest-settings"]);
+        if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_provider", $request->input('suggestion_provider', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_delay", $request->input('suggestion_delay', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
+        } else if (self::PROCESS_GLOBAL_SETTING_CHANGE("suggestion_addressbar", $request->input('suggestion_addressbar', ''))) {
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
         } else {
             // All Settings behind "More Settings"
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "more-settings"]);
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
             self::PROCESS_GLOBAL_SETTING_CHANGE("tips", $request->input('tips', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", $request->input('tiles_startpage', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", $request->input('zitate', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("dm", $request->input('dm', ''));
-            self::PROCESS_GLOBAL_SETTING_CHANGE("nt", $request->input('nt', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("dark_mode", $request->input('dark_mode', ''));
+            self::PROCESS_GLOBAL_SETTING_CHANGE("new_tab", $request->input('new_tab', ''));
         }
 
         $headers = [
@@ -360,19 +342,17 @@ class SettingsController extends Controller
                 Cookie::queue(Cookie::forget("zitate", "/"));
             }
             return true;
-        } else if ($key === "dm" && !empty($value)) {
-            if ($value === "off") {
-                Cookie::queue(Cookie::forever('dark_mode', '1', '/', null, $secure, true));
-            } elseif ($value === "on") {
-                Cookie::queue(Cookie::forever('dark_mode', '2', '/', null, $secure, true));
-            } elseif ($value === "system") {
+        } else if ($key === "dark_mode" && in_array($value, ["system", "light", "dark"])) {
+            if ($value === "system") {
                 Cookie::queue(Cookie::forget('dark_mode', '/'));
+            } else {
+                Cookie::queue(Cookie::forever('dark_mode', $value, '/', null, $secure, true));
             }
             return true;
-        } else if ($key === "nt" && !empty($value)) {
+        } else if ($key === "new_tab" && in_array($value, ["on", "off"])) {
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('new_tab', '/'));
-            } elseif ($value === "on") {
+            } else {
                 Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, true));
             }
             return true;
@@ -388,15 +368,7 @@ class SettingsController extends Controller
             abort(404);
         }
 
-        $global_settings = [
-            "dark_mode",
-            "new_tab",
-            "zitate",
-            "tips",
-            "tiles_startpage",
-            "suggestion_provider",
-            "suggestion_delay"
-        ];
+        $global_settings = array_diff(SettingsSchema::globalSettingKeys(), ["key", "suggestion_addressbar"]);
 
         $settings = Cookie::get();
         if ($request->wantsJson()) {
@@ -424,10 +396,86 @@ class SettingsController extends Controller
         }
     }
 
+    /**
+     * Machine-readable description of every setting MetaGer understands:
+     * global settings and, per fokus, its engines/filters/blacklist -
+     * along with the {fokus}_engine_{name} / {fokus}_setting_{name} /
+     * {fokus}_blpage naming pattern needed to actually address them as a
+     * GET-parameter, cookie, or header (see SearchSettings::getSettingValue()).
+     *
+     * Intended for headless clients (e.g. the mobile app) that need to
+     * render a settings UI without reverse-engineering the web page.
+     */
+    public function schema(Request $request)
+    {
+        $registry = app(SearchEngineRegistry::class);
+
+        $global = array_map(function ($setting) {
+            return [
+                "key" => $setting["key"],
+                "type" => $setting["type"],
+                "default" => $setting["default"] ?? null,
+                "values" => isset($setting["values"]) ? array_map(fn($option) => [
+                    "value" => $option["value"],
+                    "label" => $option["translate"] ? trans($option["label"]) : $option["label"],
+                ], $setting["values"]) : null,
+            ];
+        }, SettingsSchema::forClients(["headless"]));
+
+        $foki = [];
+        foreach ($registry->foki as $fokus => $fokusInfo) {
+            $engines = [];
+            foreach ($fokusInfo->sumas as $engineName) {
+                if (!property_exists($registry->sumas, $engineName)) {
+                    continue;
+                }
+                $engines[] = [
+                    "name" => $engineName,
+                    "displayName" => $registry->sumas->{$engineName}->infos->display_name ?? $engineName,
+                    "settingKey" => "{$fokus}_engine_{$engineName}",
+                ];
+            }
+
+            $filters = [];
+            foreach ($registry->filter->{"parameter-filter"} as $filterName => $filter) {
+                if (sizeof(array_intersect(array_keys((array) $filter->sumas), $fokusInfo->sumas)) === 0) {
+                    continue;
+                }
+                $filters[] = [
+                    "name" => $filterName,
+                    "label" => trans($filter->name),
+                    "settingKey" => "{$fokus}_setting_{$filter->{'get-parameter'}}",
+                    "values" => array_map(
+                        fn($value, $label) => ["value" => $value, "label" => trans($label)],
+                        array_keys((array) $filter->values),
+                        array_values((array) $filter->values)
+                    ),
+                ];
+            }
+
+            $foki[] = [
+                "fokus" => $fokus,
+                "displayName" => trans($fokusInfo->{"display-name"}),
+                "engines" => $engines,
+                "filters" => $filters,
+                "blacklistSettingKey" => "{$fokus}_blpage",
+            ];
+        }
+
+        return response()->json([
+            "global" => $global,
+            "foki" => $foki,
+            "keyPatterns" => [
+                "engine" => "{fokus}_engine_{name}",
+                "filter" => "{fokus}_setting_{name}",
+                "blacklist" => "{fokus}_blpage",
+            ],
+        ]);
+    }
+
     public function allSettingsIndex(Request $request)
     {
-        $sumaFile = MetaGer::getLanguageFile();
-        $sumaFile = json_decode(file_get_contents($sumaFile));
+        $sumaFile = app(SearchEngineRegistry::class);
 
         return view('settings.allSettings')
             ->with('title', trans('titles.allSettings'))
@@ -438,19 +486,7 @@ class SettingsController extends Controller
     public function removeOneSetting(Request $request)
     {
         $key = $request->input('key', '');
-        $path = \Request::path();
-        $cookiePath = "/";
-        if ($key === 'dark_mode') {
-            Cookie::queue(Cookie::forget($key, "/"));
-        } elseif ($key === 'new_tab') {
-            Cookie::queue(Cookie::forget($key, "/"));
-        } elseif ($key === 'key') {
-            Cookie::queue(Cookie::forget($key, "/"));
-        } elseif ($key === 'zitate') {
-            Cookie::queue(Cookie::forget($key, "/"));
-        } else {
-            Cookie::queue(Cookie::forget($key, "/"));
-        }
+        Cookie::queue(Cookie::forget($key, "/"));
 
         $redirect_url = $request->input('url', 'https://metager.de');
         if ($request->wantsJson()) {
@@ -490,6 +526,10 @@ class SettingsController extends Controller
         $valid_blacklist_entries = [];
 
         foreach ($blacklist as $blacklist_entry) {
+            $blacklist_entry = trim($blacklist_entry);
+            if ($blacklist_entry === '') {
+                continue;
+            }
             if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
                 $blacklist_entry = "https://" . $blacklist_entry;
             }
@@ -498,6 +538,12 @@ class SettingsController extends Controller
             if ($blacklist_entry === null || $blacklist_entry === false)
                 continue;
             $blacklist_entry = substr($blacklist_entry, 0, 255);
+
+            // Reject anything that isn't actually a valid hostname (optionally "*."-wildcarded)
+            $hostname = str_starts_with($blacklist_entry, "*.") ? substr($blacklist_entry, 2) : $blacklist_entry;
+            if (filter_var($hostname, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME) === false) {
+                continue;
+            }
 
             $valid_blacklist_entries[] = $blacklist_entry;
         }
@@ -524,7 +570,7 @@ class SettingsController extends Controller
         Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
 
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "bl"]);
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-bl";
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -541,7 +587,7 @@ class SettingsController extends Controller
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
 
-        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url, "anchor" => "bl"]);
+        $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-bl";
         if ($request->wantsJson()) {
             $response = $this->cookiesToJsonResponse($redirect_url);
             return response()->json($response);
@@ -574,9 +620,6 @@ class SettingsController extends Controller
 
     public function loadSettings(Request $request)
     {
-        $langFile = MetaGer::getLanguageFile();
-        $langFile = json_decode(file_get_contents($langFile));
-
         $settings = $request->query();
         $secure = app()->environment("local") ? false : true;
 

@@ -14,31 +14,49 @@ use Log;
 class Serper extends Searchengine
 {
     const CONFIG_OVERLOAD = [
-        "lang" => [
-            "parameter" => "gl",
-            "languages" => [],
-            "regions" => [
-                "de_DE" => "de",
-                "de_AT" => "at",
-                "en_US" => "us",
-                "en_GB" => "gb",
-                "en_AU" => "au",
-                "es_ES" => "es",
-                "es_MX" => "mx",
-                "da_DK" => "dk",
-                "at_AT" => "at",
-                "de_CH" => "ch",
-                "fi_FI" => "fi",
-                "it_IT" => "it",
-                "nl_NL" => "nl",
-                "sv_SE" => "se",
-                "fr_FR" => "fr",
-                "fr_CA" => "ca",
-                "pl_PL" => "pl",
-                "pt_PT" => "pt-pt_PT",
-                "pt_BR" => "pt-br_BR",
-            ]
-        ]
+        'serper_web' => [
+            'lang' => [
+                'parameter' => 'gl',
+                'languages' => [],
+                'regions' => [
+                    'de_DE' => 'de',
+                    'de_AT' => 'at',
+                    'en_US' => 'us',
+                    'en_GB' => 'gb',
+                    'en_AU' => 'au',
+                    'es_ES' => 'es',
+                    'es_MX' => 'mx',
+                    'da_DK' => 'dk',
+                    'at_AT' => 'at',
+                    'de_CH' => 'ch',
+                    'fi_FI' => 'fi',
+                    'it_IT' => 'it',
+                    'nl_NL' => 'nl',
+                    'sv_SE' => 'se',
+                    'fr_FR' => 'fr',
+                    'fr_CA' => 'ca',
+                    'pl_PL' => 'pl',
+                    'pt_PT' => 'pt-pt_PT',
+                    'pt_BR' => 'pt-br_BR',
+                ],
+            ],
+            'host' => 'google.serper.dev',
+            'path' => '/search',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'request-header' => [
+                'Accept' => 'application/json',
+            ],
+            'engine-boost' => 1.2,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'ads' => false,
+            'cost' => 0.2,
+            'infos' => [],
+        ],
     ];
     public $results = [];
 

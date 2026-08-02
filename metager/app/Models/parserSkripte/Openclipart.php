@@ -8,6 +8,40 @@ use Log;
 
 class Openclipart extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'openclipart' => [
+            'host' => 'openclipart.org',
+            'path' => '/search/json/',
+            'port' => 443,
+            'query-parameter' => 'query',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'amount' => '20',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 0.4,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://openclipart.org/',
+                'index_name' => null,
+                'display_name' => 'Openclipart',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

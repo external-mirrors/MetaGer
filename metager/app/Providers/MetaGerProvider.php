@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\DeferrableProvider;
 use App\QueryTimer;
 use App\Searchengines;
 use App\SearchSettings;
+use App\Models\Configuration\SearchEngineRegistry;
 
 class MetaGerProvider extends ServiceProvider
 {
@@ -48,6 +49,10 @@ class MetaGerProvider extends ServiceProvider
 
         $this->app->singleton(QueryTimer::class, function ($app) {
             return new QueryTimer();
+        });
+
+        $this->app->singleton(SearchEngineRegistry::class, function ($app) {
+            return new SearchEngineRegistry();
         });
     }
 

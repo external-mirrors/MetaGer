@@ -7,6 +7,40 @@ use App\Models\SearchengineConfiguration;
 
 class Suchticker extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'suchticker' => [
+            'host' => 'www.suchticker.de',
+            'path' => '/',
+            'port' => 80,
+            'query-parameter' => 'qu',
+            'input-encoding' => '',
+            'output-encoding' => 'Latin1',
+            'get-parameter' => [
+                'mg' => '1',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://metager.org/search-engine',
+                'index_name' => null,
+                'display_name' => 'Suchticker',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

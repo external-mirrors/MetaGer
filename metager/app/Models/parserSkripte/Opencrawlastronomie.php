@@ -8,6 +8,42 @@ use Log;
 
 class Opencrawlastronomie extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'opencrawlastronomie' => [
+            'host' => 'www.opencrawl.de',
+            'path' => '/opencrawl/opensearch.jsp',
+            'port' => 80,
+            'query-parameter' => 'query',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'Latin1',
+            'get-parameter' => [
+                'subcollection' => 'astronom',
+                'hitsPerPage' => '10',
+                'hitsPerSite' => '2',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.opencrawl.de',
+                'index_name' => null,
+                'display_name' => 'OpenCrawl (Astronomie)',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

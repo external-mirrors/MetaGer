@@ -7,6 +7,40 @@ use App\Models\SearchengineConfiguration;
 
 class Nebel extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'nebel' => [
+            'host' => 'www.netluchs.de',
+            'path' => '/netluchsJsf/meta',
+            'port' => 80,
+            'query-parameter' => 'query',
+            'input-encoding' => 'ISO-8859-1',
+            'output-encoding' => 'Latin1',
+            'get-parameter' => [
+                'count' => '10',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.netluchs.de/',
+                'index_name' => null,
+                'display_name' => 'Netluchs',
+                'founded' => '2005',
+                'headquarter' => 'Hamburg, Deutschland',
+                'operator' => 'Michael Nebel (Privatperson)',
+                'index_size' => '6 Millionen (Stand: 2005)',
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

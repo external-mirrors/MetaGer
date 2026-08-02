@@ -8,6 +8,37 @@ use Log;
 
 class Fernsehsuche extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'fernsehsuche' => [
+            'host' => 'api.fernsehsuche.de',
+            'path' => '/v1/videos/',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://mediathekensuche.de/',
+                'index_name' => null,
+                'display_name' => 'Mediathekensuche',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

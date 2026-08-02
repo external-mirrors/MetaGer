@@ -9,6 +9,39 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class Allesklar extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'allesklar' => [
+            'host' => 'www.allesklar.de',
+            'path' => '/s.php',
+            'port' => 80,
+            'query-parameter' => 'words',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'display-name' => 'AllesKlar',
+            'engine-boost' => 1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'homepage' => 'http://www.allesklar.de/',
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.allesklar.de/',
+                'index_name' => null,
+                'display_name' => 'AllesKlar',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     protected $tds = "";
     public function __construct($name, SearchengineConfiguration $configuration)
     {

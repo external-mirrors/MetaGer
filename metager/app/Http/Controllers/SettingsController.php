@@ -433,6 +433,17 @@ class SettingsController extends Controller
                     "name" => $engineName,
                     "displayName" => $registry->sumas->{$engineName}->infos->display_name ?? $engineName,
                     "settingKey" => "{$fokus}_engine_{$engineName}",
+                    // Per-search-engine token cost, straight from its CONFIG_OVERLOAD
+                    // (SearchengineConfiguration.php defaults this to 0 when a parser
+                    // class doesn't set one, so this mirrors that rather than inventing
+                    // a new default). What a client does with several enabled engines'
+                    // costs - summed, floored to a minimum of 1 token per search - is
+                    // Searchengines::getSearchCost()'s rule, deliberately not
+                    // recomputed here: it is a static fact about one engine, not a
+                    // live quote for a particular combination, so headless clients
+                    // (the mobile app) apply the same floor themselves once they know
+                    // which engines are enabled.
+                    "cost" => $registry->sumas->{$engineName}->cost ?? 0,
                 ];
             }
 

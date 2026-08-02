@@ -9,6 +9,7 @@ use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
+use App\Models\SearchengineConfiguration;
 use App;
 use App\SearchSettings;
 use App\Suggestions;
@@ -483,9 +484,28 @@ class SettingsController extends Controller
                 if (!property_exists($registry->sumas, $engineName)) {
                     continue;
                 }
+                // `disabled`/`disabledByDefault` are not on the registry's raw merged
+                // config - `disabled` there is only ever the hardcoded CONFIG_OVERLOAD
+                // value (e.g. Yandex, retired), and `disabledByDefault` (e.g. Mojeek) is
+                // set imperatively in the parser class's own constructor, the same way
+                // Searchengines::__construct() discovers it. Constructing the parser
+                // instance here - without running Searchengines' later request-context
+                // disabling (payment/ads/locale/filter) - gets the same two static facts
+                // fokus-section.blade.php uses to decide what the website's own settings
+                // page renders at all, without baking in this request's auth/locale state
+                // into a schema response meant to be cached for the whole app run.
+                $engineConfig = $registry->sumas->{$engineName};
+                $parserClass = "App\\Models\\parserSkripte\\" . $engineConfig->{"parser-class"};
+                $engine = new $parserClass($engineName, new SearchengineConfiguration($engineConfig));
+                // Permanently disabled at the config level (sanctions, retired
+                // integrations) - never offered as a toggle, matching
+                // fokus-section.blade.php's own handling of this exact case.
+                if ($engine->configuration->disabled) {
+                    continue;
+                }
                 $engines[] = [
                     "name" => $engineName,
-                    "displayName" => $registry->sumas->{$engineName}->infos->display_name ?? $engineName,
+                    "displayName" => $engineConfig->infos->display_name ?? $engineName,
                     "settingKey" => "{$fokus}_engine_{$engineName}",
                     // Per-search-engine token cost, straight from its CONFIG_OVERLOAD
                     // (SearchengineConfiguration.php defaults this to 0 when a parser
@@ -497,7 +517,12 @@ class SettingsController extends Controller
                     // live quote for a particular combination, so headless clients
                     // (the mobile app) apply the same floor themselves once they know
                     // which engines are enabled.
-                    "cost" => $registry->sumas->{$engineName}->cost ?? 0,
+                    "cost" => $engineConfig->cost ?? 0,
+                    // Whether a fresh install should have this engine switched on.
+                    // Mirrors what the website's own settings page shows as an
+                    // already-off toggle (e.g. Mojeek) rather than defaulting
+                    // everything to on and leaving a client to guess.
+                    "enabledByDefault" => !$engine->configuration->disabledByDefault,
                 ];
             }
 

@@ -55,7 +55,22 @@ class Serper extends Searchengine
             'filter-opt-in' => false,
             'ads' => false,
             'cost' => 0.2,
-            'infos' => [],
+            // Static equivalent of the SearchEngineInfos this class also sets
+            // imperatively below in __construct(). SearchEngineRegistry (used by
+            // SettingsController::schema(), app-en repo) only ever scans this
+            // static CONFIG_OVERLOAD array - it has no way to see anything a
+            // constructor sets - so leaving this empty was what made the
+            // mobile app's settings schema fall back to the raw engine name
+            // ("serper_web") instead of a real display name. Keep both in sync.
+            'infos' => [
+                'homepage' => 'https://metager.de/search-engine',
+                'index_name' => 'Google',
+                'display_name' => 'Serper',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => 'Serper',
+                'index_size' => '~500,000,000,000',
+            ],
         ],
     ];
     public $results = [];

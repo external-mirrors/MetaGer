@@ -9,11 +9,13 @@ use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
+use App;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
 use foroco\BrowserDetection;
 use \Illuminate\Http\Request;
+use LaravelLocalization;
 
 class SettingsController extends Controller
 {
@@ -405,9 +407,34 @@ class SettingsController extends Controller
      *
      * Intended for headless clients (e.g. the mobile app) that need to
      * render a settings UI without reverse-engineering the web page.
+     *
+     * `?lang=` overrides the locale `Localization::setLocale()` already
+     * resolved from the request (host, then URL path prefix, then a guess
+     * from `Accept-Language` - see that class). All three are built for a
+     * *browser* navigating pages, and get this endpoint wrong for a headless
+     * client with no URL path segment to carry a locale in: `metager3.de`
+     * does not literally equal `metager.de`, so the host check silently
+     * treats every non-production instance as English-first; and even on
+     * production, an `Accept-Language` other than German is ignored by
+     * design unless it *also* guesses German (`metager.de` is the
+     * German-first domain on purpose - `metager.org` is the English one).
+     * A client that already knows its own language, like this one, has no
+     * way to say so through any of that. Only the three languages this
+     * mobile app ships (`docs/09-roadmap.md` Phase 9 / D48) are accepted;
+     * an unrecognised or absent value changes nothing.
      */
     public function schema(Request $request)
     {
+        $localeOverride = [
+            "de" => "de-DE",
+            "en" => "en-US",
+            "es" => "es-ES",
+        ][$request->query("lang")] ?? null;
+        if ($localeOverride !== null) {
+            LaravelLocalization::setLocale($localeOverride);
+            App::setLocale($localeOverride);
+        }
+
         $registry = app(SearchEngineRegistry::class);
 
         $global = array_map(function ($setting) {

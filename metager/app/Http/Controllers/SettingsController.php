@@ -399,6 +399,29 @@ class SettingsController extends Controller
     }
 
     /**
+     * `?lang=` -> a default regional locale, one per `lang/` directory this
+     * MetaGer install ships translations for. Deliberately not derived from
+     * `LaravelLocalization::getSupportedLocales()` (~19 regional variants):
+     * `schema()` below needs exactly one *default* region per language, the
+     * same simplification `Localization::GET_PREFERRED_LOCALE()`'s own
+     * `$two_letter_locales` table already makes for its three entries - this
+     * is that idea, complete.
+     */
+    private const LANG_TO_LOCALE = [
+        "da" => "da-DK",
+        "de" => "de-DE",
+        "en" => "en-US",
+        "es" => "es-ES",
+        "fi" => "fi-FI",
+        "fr" => "fr-FR",
+        "it" => "it-IT",
+        "nl" => "nl-NL",
+        "pl" => "pl-PL",
+        "pt" => "pt-PT",
+        "sv" => "sv-SE",
+    ];
+
+    /**
      * Machine-readable description of every setting MetaGer understands:
      * global settings and, per fokus, its engines/filters/blacklist -
      * along with the {fokus}_engine_{name} / {fokus}_setting_{name} /
@@ -419,21 +442,25 @@ class SettingsController extends Controller
      * design unless it *also* guesses German (`metager.de` is the
      * German-first domain on purpose - `metager.org` is the English one).
      * A client that already knows its own language, like this one, has no
-     * way to say so through any of that. Only the three languages this
-     * mobile app ships (`docs/09-roadmap.md` Phase 9 / D48) are accepted;
-     * an unrecognised or absent value changes nothing.
+     * way to say so through any of that.
+     *
+     * Every language MetaGer itself ships a `lang/` directory for is
+     * accepted ([LANG_TO_LOCALE]) - not just the three this mobile app
+     * currently speaks (`docs/09-roadmap.md` Phase 9 / D48) - since this is
+     * a general headless-client endpoint, not a mobile-app-only one, and a
+     * future client (or a future version of this app) asking for e.g. `fr`
+     * should not need another backend change to get it. Unlike the fields
+     * above, an unrecognised or absent `lang` does not fall through to the
+     * guess - it resolves to English, deliberately: a predictable default
+     * for an API consumer, not "whatever the page-oriented heuristic
+     * happens to guess", which is the exact failure mode this parameter
+     * exists to avoid.
      */
     public function schema(Request $request)
     {
-        $localeOverride = [
-            "de" => "de-DE",
-            "en" => "en-US",
-            "es" => "es-ES",
-        ][$request->query("lang")] ?? null;
-        if ($localeOverride !== null) {
-            LaravelLocalization::setLocale($localeOverride);
-            App::setLocale($localeOverride);
-        }
+        $locale = self::LANG_TO_LOCALE[$request->query("lang")] ?? self::LANG_TO_LOCALE["en"];
+        LaravelLocalization::setLocale($locale);
+        App::setLocale($locale);
 
         $registry = app(SearchEngineRegistry::class);
 

@@ -102,3 +102,13 @@ Create the name of the service account to use
 {{- define "secret_name" -}}
 {{- printf "%s" .Release.Name }}
 {{- end -}}
+
+{{/*
+Name used to address the redis-sentinel subchart's resources. Must match
+whatever is passed as redis-sentinel.fullnameOverride so the two stay in
+sync; falls back to the subchart's own default naming scheme when no
+override is given (e.g. plain `helm install` without the CI script).
+*/}}
+{{- define "chart.redisSentinelFullname" -}}
+{{- default (printf "%s-redis-sentinel" .Release.Name) .Values.redisSentinelName | trunc 63 | trimSuffix "-" }}
+{{- end }}

@@ -97,7 +97,7 @@
                                 @foreach ($globalSettings['suggestion_provider']['values'] as $option)
                                     <option value="{{ $option['value'] }}"
                                         {{ (app(App\SearchSettings::class)->suggestion_provider ?? 'off') === $option['value'] ? 'disabled selected' : '' }}>
-                                        {{ $option['translate'] ? __($option['label']) : $option['label'] }}
+                                        {{ $option['translate'] ? __($option['label']) : $option['label'] }}{{ $option['cost'] === null ? '' : ' (' . __('settings.suggestions.provider.cost', ['cost' => $option['cost']]) . ')' }}
                                     </option>
                                 @endforeach
                             </select>

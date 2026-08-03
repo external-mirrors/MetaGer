@@ -40,6 +40,7 @@ return [
         'heading' => 'Search Suggestions',
         'provider' => [
             'label' => 'Provider',
+            'cost' => ':cost Token',
         ],
         'delay' => [
             'label' => 'Delay',

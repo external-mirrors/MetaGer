@@ -59,6 +59,7 @@ return [
         ],
         'provider' => [
             'label' => 'Fornecedor',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Sugestões na barra de endereços',

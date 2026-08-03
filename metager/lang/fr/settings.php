@@ -87,6 +87,7 @@ return [
         'heading' => 'Suggestions de recherche',
         'provider' => [
             'label' => 'Fournisseur',
+            'cost' => ':cost Token',
         ],
         'delay' => [
             'label' => 'Délai',

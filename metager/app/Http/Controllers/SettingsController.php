@@ -473,6 +473,11 @@ class SettingsController extends Controller
                 "values" => isset($setting["values"]) ? array_map(fn($option) => [
                     "value" => $option["value"],
                     "label" => $option["translate"] ? trans($option["label"]) : $option["label"],
+                    // Only `suggestion_provider`'s values set this (SettingsSchema::suggestionProviderValues) -
+                    // every other global setting's options have no per-choice cost, so this is
+                    // null for them rather than an omitted key, matching a per-engine cost of 0
+                    // being sent explicitly rather than left absent below.
+                    "cost" => $option["cost"] ?? null,
                 ], $setting["values"]) : null,
             ];
         }, SettingsSchema::forClients(["headless"]));

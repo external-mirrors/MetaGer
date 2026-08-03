@@ -44,6 +44,7 @@ return [
         'heading' => 'Suchvorschläge',
         'provider' => [
             'label' => 'Anbieter',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Vorschläge in der Adressleiste',

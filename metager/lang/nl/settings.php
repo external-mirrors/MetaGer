@@ -94,6 +94,7 @@ return [
         'heading' => 'Zoeken Suggesties',
         'provider' => [
             'label' => 'Aanbieder',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Suggesties in de adresbalk',

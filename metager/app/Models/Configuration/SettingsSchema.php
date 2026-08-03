@@ -154,13 +154,23 @@ class SettingsSchema
     private static function suggestionProviderValues(): array
     {
         $values = [
-            ["value" => "off", "label" => "settings.suggestions.off", "translate" => true],
+            ["value" => "off", "label" => "settings.suggestions.off", "translate" => true, "cost" => null],
         ];
         foreach (Suggestions::GET_AVAILABLE_PROVIDERS() as $name => $class) {
             $values[] = [
                 "value" => $name,
-                "label" => ucfirst($name) . " (" . $class::COST . " Token)",
+                // Plain provider name - the cost used to be baked into this
+                // string ("Serper (0.2 Token)"), hardcoding the German word
+                // "Token" regardless of locale and leaving headless clients
+                // nothing to lay out but one long, unsplittable run of text.
+                // `cost` below is the same per-provider constant, exposed as
+                // its own field the way an engine's cost already is
+                // (SearchEngineRegistry's per-engine "cost" in schema()) -
+                // a client formats it with its own locale-aware unit string
+                // instead of parsing one back out of ours.
+                "label" => ucfirst($name),
                 "translate" => false,
+                "cost" => $class::COST,
             ];
         }
         return $values;

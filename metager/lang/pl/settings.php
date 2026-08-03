@@ -94,6 +94,7 @@ return [
         'heading' => 'Sugestie wyszukiwania',
         'provider' => [
             'label' => 'Dostawca',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Sugestie na pasku adresu',

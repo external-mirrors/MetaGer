@@ -87,6 +87,7 @@ return [
         'heading' => 'Hakuehdotukset',
         'provider' => [
             'label' => 'Palveluntarjoaja',
+            'cost' => ':cost Token',
         ],
         'delay' => [
             'label' => 'Viive',

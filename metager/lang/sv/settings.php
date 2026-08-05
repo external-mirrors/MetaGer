@@ -99,6 +99,7 @@ return [
         'heading' => 'Sökförslag',
         'provider' => [
             'label' => 'Leverantör',
+            'cost' => ':cost Token',
         ],
     ],
     'limited' => 'begränsad',

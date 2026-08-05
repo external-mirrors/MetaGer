@@ -87,6 +87,7 @@ return [
         'heading' => 'Sugerencias de búsqueda',
         'provider' => [
             'label' => 'Proveedor',
+            'cost' => 'Ficha :cost',
         ],
         'delay' => [
             'label' => 'Retraso',

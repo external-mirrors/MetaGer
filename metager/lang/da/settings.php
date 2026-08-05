@@ -94,6 +94,7 @@ return [
         'heading' => 'Forslag til søgning',
         'provider' => [
             'label' => 'Udbyder',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Forslag i adresselinjen',

@@ -93,10 +93,30 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             "de.metager.metagerapp.fdroid" => $fdroidFingerprint,
         ];
 
+        /**
+         * The app's snapshot build — app-en's `debug_playstore`, which carries
+         * `applicationIdSuffix '.snapshot'` so a developer can keep a Play
+         * install on the same phone (app-en docs/08, "Testing a real device
+         * without Metro"). Being a debuggable build type is all it ever is:
+         * there is no release counterpart and therefore no release
+         * fingerprint to pair with, so the debug certificate is its only one.
+         *
+         * Added inside this check rather than to the list above, because the
+         * unconditional version is the one dangerous way to write this entry:
+         * it would publish a statement on metager.de trusting the committed,
+         * public debug key, which is exactly the "a sideloaded clone receives
+         * a real user's key" hole the comment above exists to keep shut. The
+         * other three packages can be listed unconditionally precisely
+         * because each has a real, private signing key of its own.
+         */
+        if (!App::environment("production")) {
+            $packages["de.metager.metagerapp.snapshot"] = $debugFingerprint;
+        }
+
         $statements = [];
         foreach ($packages as $packageName => $fingerprint) {
             $fingerprints = [$fingerprint];
-            if (!App::environment("production")) {
+            if (!App::environment("production") && $fingerprint !== $debugFingerprint) {
                 $fingerprints[] = $debugFingerprint;
             }
             $statements[] = [

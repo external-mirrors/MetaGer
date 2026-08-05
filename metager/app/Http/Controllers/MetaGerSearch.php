@@ -365,6 +365,36 @@ class MetaGerSearch extends Controller
             ], 60 * 60);
         }
 
+        # Nicht-Browser-Clients (die App) bekommen dieselben Ergebnisse im
+        # API-Schema statt als gerendertes HTML. Sonst müsste ein nativer
+        # Client die Ergebnisseite parsen, um an genau die Treffer zu kommen,
+        # die out=json ihm eine Anfrage vorher strukturiert geliefert hat.
+        #
+        # `results` enthält wie im HTML-Fall die **vollständige, neu gerankte**
+        # Liste, nicht nur die neu hinzugekommenen Treffer: das Nachladen kann
+        # die Reihenfolge ändern, und eine Differenz ließe sich nicht mehr
+        # einsortieren. Was ein Client damit macht, entscheidet er selbst.
+        #
+        # Quicktips bleiben außen vor — sie existieren nur als Blade-Fragment,
+        # und HTML in einer JSON-Antwort wäre wieder genau das Problem, das
+        # dieser Zweig löst.
+        if ($metager->getOut() === "json") {
+            return response()->json($metager->toApiArray([
+                # false heißt: es fehlen noch Engines, ein weiterer Aufruf
+                # lohnt sich. true heißt, der Suchzustand ist gerade verworfen
+                # worden — ein weiterer Aufruf antwortet dann finished ohne
+                # Ergebnisse.
+                "finished" => $finished,
+                # Engine-Name => hat geantwortet. Damit kann ein Client
+                # anzeigen, worauf er noch wartet.
+                "engines" => $enginesLoaded,
+            ]), 200, [
+                "Cache-Control" => $cacheControl,
+                "Last-Modified" => gmdate("D, d M Y H:i:s T"),
+                "Content-Type" => "application/json; charset=UTF-8",
+            ], MetaGer::JSON_API_FLAGS);
+        }
+
         $result["results"] = view('resultpages.results')
             ->with('results', $viewResults)
             ->with('eingabe', $metager->getEingabe())

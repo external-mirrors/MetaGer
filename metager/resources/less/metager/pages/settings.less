@@ -1,80 +1,378 @@
 #settings {
 
-  .no-key-actions,
-  .actions {
-    a:visited {
-      color: inherit;
-    }
+  // ---------- layout scaffolding ----------
 
-    a:hover {
-      color: red;
-    }
-  }
-
-  .actions {
-    margin-top: 1rem;
-  }
-
-  .sumas {
+  .masthead {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin: 1rem 0;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 
-    .no-engines {
-      color: rgba(255, 0, 0, 0.432);
-      padding: 0.5rem;
-      border: 1px solid;
-      border-radius: 5px;
+    @media (max-width: @screen-mobile) {
+      padding: 0 1rem;
+    }
+  }
+
+  .backlink {
+    align-self: flex-start;
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+    text-decoration: none;
+
+    &:hover {
+      color: @text-color;
+      text-decoration: underline;
+    }
+  }
+
+  .lede {
+    margin: 0;
+    max-width: 62ch;
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+  }
+
+  >section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 2rem 0;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+
+    @media (max-width: @screen-mobile) {
+      padding: 0 1rem;
+    }
+  }
+
+  .section-label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: lighten(@text-color, 40%);
+  }
+
+  h3.block-title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: bold;
+  }
+
+  p.help {
+    margin: 0;
+    max-width: 68ch;
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+
+    b,
+    strong {
+      color: @text-color;
+    }
+  }
+
+  // ---------- PRIMARY: focus configurator, the only raised panel ----------
+
+  .focus-config {
+    background-color: @card-background-color;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+
+    // The parent section gets side padding on mobile so its loose text
+    // isn't flush against the screen edge; this panel has its own
+    // border, so it stays flush instead of gaining unwanted inset.
+    @media (max-width: @screen-mobile) {
+      margin: 0 -1rem;
+    }
+  }
+
+  .focus-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid @border-color;
+
+    @media (min-width: 600px) {
+      grid-template-columns: repeat(6, 1fr);
+    }
+
+    >a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+      min-height: 44px;
+      padding: 0.7rem 0.4rem;
+      text-align: center;
+      font-size: 0.84375rem;
+      font-weight: 600;
+      color: lighten(@text-color, 40%);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      border-right: 1px solid @highlight-color;
+
+      &:nth-child(3n) {
+        border-right: 0;
+      }
+
+      &:nth-child(n+4) {
+        border-top: 1px solid @highlight-color;
+      }
+
+      @media (min-width: 600px) {
+        &:nth-child(3n) {
+          border-right: 1px solid @highlight-color;
+        }
+
+        &:nth-child(n+4) {
+          border-top: 0;
+        }
+
+        &:last-child {
+          border-right: 0;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        color: @text-color;
+        background-color: @highlight-color;
+      }
+
+      &.active {
+        color: @text-color;
+        border-bottom-color: @metager-orange;
+      }
+    }
+  }
+
+  .tab-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: @metager-orange;
+    flex: none;
+  }
+
+  .pane {
+    padding: 1rem;
+
+    @media (min-width: (@screen-mobile + 1)) {
+      padding: 1.5rem;
+    }
+  }
+
+  .subblock {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+
+    +.subblock {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid @highlight-color;
+    }
+  }
+
+  // ---------- engine pills ----------
+
+  .engine-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pill-form {
+    display: inline-flex;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    font-size: 0.84375rem;
+    color: @text-color;
+    cursor: pointer;
+
+    &:hover {
+      background-color: @highlight-color;
+    }
+
+    &.pill-off {
+      color: lighten(@text-color, 45%);
+      text-decoration: line-through;
+      cursor: copy;
+    }
+
+    &.pill-locked {
+      color: lighten(@text-color, 45%);
+      text-decoration: line-through;
+      cursor: not-allowed;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  p.group-note {
+    margin: 0.35rem 0 0;
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+  }
+
+  // calm informational notice - deliberately not an alarming error box
+  p.notice {
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+    background-color: @highlight-color;
+    border-left: 2px solid @border-color;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0 4px 4px 0;
+  }
+
+  p.cost {
+    font-size: 0.8125rem;
+    color: lighten(@text-color, 30%);
+    margin: 0;
+
+    strong {
+      color: @text-color;
+    }
+
+    .min-note {
       display: block;
-    }
-
-    .suma {
-      border: 1px solid;
-      border-radius: 10px;
-
-      >form {
-        display: grid;
-        place-content: center;
-
-        button {
-          color: @text-color;
-          padding: 0.7rem;
-          cursor: no-drop;
-        }
-      }
-
-      &.disabled-engine {
-        color: lighten(@text-color, 50%);
-
-        button {
-          text-decoration: line-through;
-          color: lighten(@text-color, 50%);
-          cursor: copy;
-        }
-      }
-
-      &.not-available {
-        button {
-          cursor: not-allowed;
-        }
-      }
-    }
-
-    .suma+.no-engines {
-      display: none;
+      margin-top: 0.15rem;
     }
   }
 
-  #filter-options {
+  // ---------- forms ----------
+
+  .field-label {
+    display: block;
+    font-size: 0.84375rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  select,
+  textarea,
+  input[type="text"] {
+    font-family: inherit;
+    font-size: 0.84375rem;
+    color: @input-text;
+    background-color: @input-bg;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    min-height: 36px;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 7.5rem;
+    line-height: 1.45;
+  }
+
+  .filter-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+
+    @media (min-width: 480px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    select {
+      width: 100%;
+    }
+  }
+
+  .form-actions {
+    margin-top: 0.25rem;
+  }
+
+  // ---------- flat row sections (account / preferences / backup) ----------
+
+  .rows {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid @highlight-color;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    padding: 0.9rem 0;
+    border-bottom: 1px solid @highlight-color;
+
+    @media (min-width: 600px) {
+      grid-template-columns: minmax(0, 1fr) minmax(160px, 15rem);
+      gap: 1.5rem;
+      align-items: center;
+
+      &.row-stacked {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .row-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 0;
+  }
+
+  .row-head {
+    padding: 1.1rem 0 0.5rem;
+    border-bottom: 1px solid @highlight-color;
+
+    &:first-child {
+      padding-top: 0.2rem;
+    }
+  }
+
+  .actions-inline {
     display: flex;
     flex-wrap: wrap;
-    margin-left: -8px;
+    gap: 0.5rem;
+  }
 
-    >div {
-      margin-left: 8px;
+  p.credit {
+    font-size: 0.9375rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  .copyLink {
+    display: flex;
+    gap: 0.5rem;
+    align-items: stretch;
+    margin-top: 0.25rem;
+
+    input[type="text"] {
+      flex: 1;
+      min-width: 0;
     }
   }
+
+  .danger-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 1.25rem;
+  }
+
+  // ---------- kept for the debug all-settings (cookie dump) page ----------
 
   #actions {
     display: flex;
@@ -93,56 +391,6 @@
 
   #no-settings {
     text-align: center;
-  }
-
-  #newentry {
-    #create {
-      display: flex;
-      align-items: left;
-      flex-direction: column;
-      gap: 1rem;
-      margin-bottom: 10px;
-
-      #blacklist {
-        width: fit-content;
-        font-size: 1.2rem;
-        line-height: 1.2;
-        background-color: @input-bg;
-        color: @input-text;
-      }
-
-      button {
-        width: 200px;
-      }
-    }
-  }
-
-  #deleteentry {
-    table {
-      border: 1px solid lightgray;
-      flex-grow: 1;
-      width: 100%;
-    }
-
-    tr:nth-child(odd) {
-      background-color: @blacklist-entries-odd;
-    }
-
-    tr:nth-child(even) {
-      background-color: @blacklist-entries-even;
-    }
-
-    td {
-      padding: 2px 0px;
-    }
-
-    td:first-child {
-      padding-left: 5px;
-    }
-
-    td:last-child {
-      width: 20px;
-    }
   }
 
   .allSettings-trashcan-icon {

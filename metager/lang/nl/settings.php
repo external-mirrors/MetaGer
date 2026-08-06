@@ -11,6 +11,13 @@ return [
         '3' => 'Zoekfilters',
         '4' => 'Zwarte lijst',
     ],
+    'section' => [
+        'focus' => 'Zoekfocus',
+        'account' => 'Account',
+        'preferences' => 'Voorkeuren',
+        'backup' => 'Back-up en reset',
+    ],
+    'resetDescription' => 'Verwijdert alle instellingen op deze pagina en zet MetaGer terug naar de standaardinstellingen.',
     'text' => [
         '1' => 'Om uw zoekinstellingen op te slaan, gebruiken we niet-persoonlijk identificeerbare cookies. Deze worden in platte tekst opgeslagen in uw browser.',
         '2' => 'Hieronder zie je alle zoekmachines die beschikbaar zijn voor deze focus. Je kunt ze aan- of uitzetten door op de naam te klikken.',
@@ -33,7 +40,7 @@ return [
     'add' => 'Voeg  toe',
     'clear' => 'Zwarte lijst wissen',
     'copy' => 'Kopie',
-    'darkmode' => 'Donkere modus inschakelen',
+    'darkmode' => 'Weergave',
     'system' => 'Standaard systeem',
     'dark' => 'Donker',
     'noSettings' => 'Momenteel zijn er geen instellingen ingesteld!',
@@ -87,6 +94,7 @@ return [
         'heading' => 'Zoeken Suggesties',
         'provider' => [
             'label' => 'Aanbieder',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Suggesties in de adresbalk',

@@ -14,6 +14,13 @@ return [
         '3' => 'Søg efter filtre',
         '4' => 'Sort liste',
     ],
+    'section' => [
+        'focus' => 'Søgefokus',
+        'account' => 'Konto',
+        'preferences' => 'Generelt',
+        'backup' => 'Sikkerhedskopiering og nulstilling',
+    ],
+    'resetDescription' => 'Fjerner alle indstillinger på denne side og gendanner MetaGer til standardindstillingerne.',
     'text' => [
         '1' => 'For at gemme dine søgeindstillinger bruger vi ikke-personligt identificerbare cookies. Disse gemmes i almindelig tekst i din browser.',
         '2' => 'Nedenfor kan du se alle søgemaskiner, der er tilgængelige for dette fokus. Du kan slå dem til og fra ved at klikke på navnet.',
@@ -28,7 +35,7 @@ return [
         'no-settings' => '- Der er ikke foretaget nogen indstillinger endnu.',
         'yahoo' => '<b>Bemærk</b>: Vi har desværre ikke længere lov til at vise Yahoo-søgeresultater sammen med resultater fra andre søgemaskiner. Derfor er alle andre søgemaskiner nu deaktiveret, så længe Yahoo er aktiveret.',
     ],
-    'darkmode' => 'Skift til mørk tilstand',
+    'darkmode' => 'Udseende',
     'system' => 'Systemets standard',
     'dark' => 'Mørk',
     'light' => 'Lys',
@@ -87,6 +94,7 @@ return [
         'heading' => 'Forslag til søgning',
         'provider' => [
             'label' => 'Udbyder',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Forslag i adresselinjen',

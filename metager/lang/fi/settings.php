@@ -6,6 +6,13 @@ return [
         '3' => 'Haku suodattimet',
         '4' => 'Musta lista',
     ],
+    'section' => [
+        'focus' => 'Hakufokus',
+        'account' => 'Tili',
+        'preferences' => 'Yleiset asetukset',
+        'backup' => 'Varmuuskopiointi ja palautus',
+    ],
+    'resetDescription' => 'Poistaa kaikki tämän sivun asetukset ja palauttaa MetaGerin oletusasetuksiin.',
     'metager-key' => [
         'manage' => 'Latausnäppäin',
         'logout' => 'Poista avain',
@@ -40,7 +47,7 @@ return [
     'add' => 'Lisää',
     'clear' => 'Tyhjennä musta lista',
     'copy' => 'Kopioi',
-    'darkmode' => 'Pimeän tilan vaihtaminen',
+    'darkmode' => 'Ulkoasu',
     'system' => 'Järjestelmän oletusarvo',
     'dark' => 'Tumma',
     'light' => 'Valo',
@@ -80,6 +87,7 @@ return [
         'heading' => 'Hakuehdotukset',
         'provider' => [
             'label' => 'Palveluntarjoaja',
+            'cost' => ':cost Token',
         ],
         'delay' => [
             'label' => 'Viive',

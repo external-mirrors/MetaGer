@@ -8,6 +8,41 @@ use Log;
 
 class Shopzilla extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'shopzilla' => [
+            'host' => 'catalog.shopzilla.de',
+            'path' => '/services/catalog/v1/api/product/5',
+            'port' => 80,
+            'query-parameter' => 'keyword',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'publisherId' => '631926',
+                'showRawUrl' => 'true',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1.1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'http://www.shopzilla.de',
+                'index_name' => null,
+                'display_name' => 'DailymShopzillaotion',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

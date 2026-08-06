@@ -1,0 +1,748 @@
+{
+  "query-filter": {
+    "multisite": {
+      "name": "metaGer.filter.sitesearch",
+      "description": "",
+      "regex": "(^|\\s)(\\((site:[\\S]+\\sOR\\s)+site:[^\\s\\)]+\\))",
+      "delete": "0",
+      "save": "2",
+      "match": "first",
+      "optional-parameter": "multisite",
+      "sumas": {
+        "brave": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_web": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_news": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_images": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_shopping": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        }
+      }
+    },
+    "sitesearch": {
+      "name": "metaGer.filter.sitesearch",
+      "description": "",
+      "regex": "(^|\\s)site:(\\S+)",
+      "delete": "0",
+      "save": "2",
+      "match": "first",
+      "optional-parameter": "site",
+      "sumas": {
+        "yandex": {
+          "type": "append",
+          "prefix": "site:",
+          "suffix": ""
+        },
+        "mojeek": {
+          "type": "append",
+          "prefix": "site:",
+          "suffix": ""
+        },
+        "brave": {
+          "type": "append",
+          "prefix": "site:",
+          "suffix": ""
+        },
+        "serper_web": {
+          "type": "append",
+          "prefix": "site:",
+          "suffix": ""
+        },
+        "serper_news": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_images": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        },
+        "serper_shopping": {
+          "type": "append",
+          "prefix": "",
+          "suffix": ""
+        }
+      }
+    }
+  },
+  "parameter-filter": {
+    "safesearch": {
+      "name": "metaGer.filter.safesearch.name",
+      "description": "",
+      "get-parameter": "s",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "s": "metaGer.filter.safesearch.strict",
+        "m": "metaGer.filter.safesearch.moderate",
+        "o": "metaGer.filter.safesearch.off"
+      },
+      "sumas": {
+        "pixabay": {
+          "get-parameter": "safesearch",
+          "values": {
+            "s": "true",
+            "o": "false"
+          }
+        },
+        "mojeek": {
+          "get-parameter": "safe",
+          "values": {
+            "s": "1",
+            "o": "0"
+          }
+        },
+        "brave": {
+          "get-parameter": "safesearch",
+          "values": {
+            "s": "strict",
+            "m": "moderate",
+            "o": "off"
+          }
+        }
+      }
+    },
+    "color": {
+      "name": "metaGer.filter.color.name",
+      "description": "",
+      "get-parameter": "c",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "c": "metaGer.filter.color.colorOnly",
+        "m": "metaGer.filter.color.monochrome",
+        "tr": "metaGer.filter.color.transparent",
+        "tu": "metaGer.filter.color.turquoise",
+        "b": "metaGer.filter.color.black",
+        "bl": "metaGer.filter.color.blue",
+        "br": "metaGer.filter.color.brown",
+        "g": "metaGer.filter.color.gray",
+        "gr": "metaGer.filter.color.green",
+        "o": "metaGer.filter.color.orange",
+        "p": "metaGer.filter.color.pink",
+        "pu": "metaGer.filter.color.purple",
+        "r": "metaGer.filter.color.red",
+        "t": "metaGer.filter.color.teal",
+        "w": "metaGer.filter.color.white",
+        "y": "metaGer.filter.color.yellow"
+      },
+      "sumas": {
+        "pixabay": {
+          "get-parameter": "colors",
+          "values": {
+            "m": "grayscale",
+            "tr": "transparent",
+            "r": "red",
+            "o": "orange",
+            "y": "yellow",
+            "gr": "green",
+            "tu": "turquoise",
+            "bl": "blue",
+            "pu": "lilac",
+            "p": "pink",
+            "w": "white",
+            "g": "gray",
+            "b": "black",
+            "br": "brown"
+          }
+        }
+      }
+    },
+    "imagetype": {
+      "name": "metaGer.filter.imagetype.name",
+      "description": "",
+      "get-parameter": "t",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "p": "metaGer.filter.imagetype.photo",
+        "c": "metaGer.filter.imagetype.clipart",
+        "s": "metaGer.filter.imagetype.strich",
+        "g": "metaGer.filter.imagetype.gif",
+        "t": "metaGer.filter.imagetype.transparent",
+        "v": "metaGer.filter.imagetype.vector"
+      },
+      "sumas": {
+        "pixabay": {
+          "get-parameter": "image_type",
+          "values": {
+            "p": "photo",
+            "c": "illustration",
+            "v": "vector"
+          }
+        }
+      }
+    },
+    "imageaspect": {
+      "name": "metaGer.filter.imageaspect.name",
+      "description": "",
+      "get-parameter": "a",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "s": "metaGer.filter.imageaspect.square",
+        "w": "metaGer.filter.imageaspect.wide",
+        "t": "metaGer.filter.imageaspect.tall"
+      },
+      "sumas": {
+        "pixabay": {
+          "get-parameter": "orientation",
+          "values": {
+            "w": "horizontal",
+            "t": "vertical"
+          }
+        }
+      }
+    },
+    "freshness": {
+      "name": "metaGer.filter.freshness.name",
+      "description": "",
+      "get-parameter": "f",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "h": "metaGer.filter.freshness.hour",
+        "d": "metaGer.filter.freshness.day",
+        "w": "metaGer.filter.freshness.week",
+        "m": "metaGer.filter.freshness.month",
+        "y": "metaGer.filter.freshness.year"
+      },
+      "htmlbelow": "parts.custom-daterange",
+      "sumas": {
+        "brave": {
+          "get-parameter": "freshness",
+          "values": {
+            "d": "pd",
+            "w": "pw",
+            "m": "pm",
+            "y": "py"
+          }
+        },
+        "serper_web": {
+          "get-parameter": "freshness",
+          "values": {
+            "h": "qdr:h",
+            "d": "qdr:d",
+            "w": "qdr:w",
+            "m": "qdr:m",
+            "y": "qdr:y"
+          }
+        },
+        "serper_news": {
+          "get-parameter": "freshness",
+          "values": {
+            "h": "qdr:h",
+            "d": "qdr:d",
+            "w": "qdr:w",
+            "m": "qdr:m",
+            "y": "qdr:y"
+          }
+        },
+        "serper_images": {
+          "get-parameter": "freshness",
+          "values": {
+            "h": "qdr:h",
+            "d": "qdr:d",
+            "w": "qdr:w",
+            "m": "qdr:m",
+            "y": "qdr:y"
+          }
+        },
+        "serper_shopping": {
+          "get-parameter": "freshness",
+          "values": {
+            "h": "qdr:h",
+            "d": "qdr:d",
+            "w": "qdr:w",
+            "m": "qdr:m",
+            "y": "qdr:y"
+          }
+        },
+        "infotiger": {
+          "get-parameter": "timerange",
+          "values": {
+            "d": "1",
+            "w": "7",
+            "m": "30",
+            "y": "365"
+          }
+        },
+        "mojeek": {
+          "get-parameter": "since",
+          "values": {
+            "d": "day",
+            "m": "month",
+            "y": "year"
+          }
+        }
+      }
+    },
+    "customfreshness": {
+      "hidden": true,
+      "name": "metaGer.filter.freshness",
+      "description": "",
+      "get-parameter": "fc",
+      "values": {
+        "on": "metaGer.filter.freshness.custom"
+      },
+      "sumas": {
+        "brave": {
+          "get-parameter": "freshness",
+          "values": {
+            "on": "dyn-FreshnessCustomBrave"
+          }
+        }
+      }
+    },
+    "language": {
+      "name": "metaGer.filter.market.name",
+      "description": "",
+      "get-parameter": "m",
+      "default-value": "de_DE",
+      "values": {
+        "de_AT": "metaGer.filter.market.ga",
+        "de_DE": "metaGer.filter.market.gg",
+        "de_CH": "metaGer.filter.market.gs",
+        "en_AU": "metaGer.filter.market.ea",
+        "en_CA": "metaGer.filter.market.ec",
+        "en_IN": "metaGer.filter.market.ei",
+        "en_ID": "metaGer.filter.market.ein",
+        "en_MY": "metaGer.filter.market.em",
+        "en_NZ": "metaGer.filter.market.enz",
+        "en_PH": "metaGer.filter.market.ep",
+        "en_ZA": "metaGer.filter.market.esa",
+        "en_GB": "metaGer.filter.market.euk",
+        "en_US": "metaGer.filter.market.eus",
+        "es_AR": "metaGer.filter.market.sa",
+        "es_CL": "metaGer.filter.market.sc",
+        "es_MX": "metaGer.filter.market.sm",
+        "es_ES": "metaGer.filter.market.ss",
+        "es_US": "metaGer.filter.market.sus",
+        "fr_BE": "metaGer.filter.market.fb",
+        "fr_CA": "metaGer.filter.market.fc",
+        "fr_FR": "metaGer.filter.market.ff",
+        "fr_CH": "metaGer.filter.market.fs",
+        "it_IT": "metaGer.filter.market.ii",
+        "nl_BE": "metaGer.filter.market.db",
+        "nl_NL": "metaGer.filter.market.dn",
+        "pl_PL": "metaGer.filter.market.pp",
+        "pt_BR": "metaGer.filter.market.pb",
+        "pt_PT": "metaGer.filter.market.ppt",
+        "da_DK": "metaGer.filter.market.dd",
+        "fi_FI": "metaGer.filter.market.fif",
+        "no_NO": "metaGer.filter.market.nn",
+        "sv_SE": "metaGer.filter.market.scs",
+        "ru_RU": "metaGer.filter.market.rr",
+        "ja_JP": "metaGer.filter.market.jj",
+        "ko_KR": "metaGer.filter.market.kk",
+        "tr_TR": "metaGer.filter.market.tt",
+        "zh_HK": "metaGer.filter.market.chk",
+        "zh_CN": "metaGer.filter.market.cc",
+        "zh_TW": "metaGer.filter.market.ct"
+      },
+      "sumas": {
+        "brave": {
+          "get-parameter": "country",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-br_BR",
+            "pt_PT": "pt-pt_PT",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-hant_HK",
+            "zh_CN": "zh-hans_CN",
+            "zh_TW": "zh-hant_TW"
+          }
+        },
+        "brave_news": {
+          "get-parameter": "country",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-br_BR",
+            "pt_PT": "pt-pt_PT",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-hant_HK",
+            "zh_CN": "zh-hans_CN",
+            "zh_TW": "zh-hant_TW"
+          }
+        },
+        "brave_images": {
+          "get-parameter": "country",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-br_BR",
+            "pt_PT": "pt-pt_PT",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-hant_HK",
+            "zh_CN": "zh-hans_CN",
+            "zh_TW": "zh-hant_TW"
+          }
+        },
+        "serper_web": {
+          "get-parameter": "gl",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-BR",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-HK",
+            "zh_CN": "zh-CN",
+            "zh_TW": "zh-TW"
+          }
+        },
+        "serper_images": {
+          "get-parameter": "gl",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-BR",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-HK",
+            "zh_CN": "zh-CN",
+            "zh_TW": "zh-TW"
+          }
+        },
+        "serper_news": {
+          "get-parameter": "gl",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-BR",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-HK",
+            "zh_CN": "zh-CN",
+            "zh_TW": "zh-TW"
+          }
+        },
+        "serper_shopping": {
+          "get-parameter": "gl",
+          "values": {
+            "de_AT": "de_AT",
+            "de_DE": "de_DE",
+            "de_CH": "de_CH",
+            "en_AU": "en_AU",
+            "en_CA": "en_CA",
+            "en_IN": "en_IN",
+            "en_ID": "en_ID",
+            "en_MY": "en_MY",
+            "en_NZ": "en_NZ",
+            "en_PH": "en_PH",
+            "en_ZA": "en_ZA",
+            "en_GB": "en_GB",
+            "en_US": "en_US",
+            "es_AR": "es_AR",
+            "es_CL": "es_CL",
+            "es_MX": "es_MX",
+            "es_ES": "es_ES",
+            "es_US": "es_US",
+            "fr_BE": "fr_BE",
+            "fr_CA": "fr_CA",
+            "fr_FR": "fr_FR",
+            "fr_CH": "fr_CH",
+            "it_IT": "it_IT",
+            "nl_BE": "nl_BE",
+            "nl_NL": "nl_NL",
+            "pl_PL": "pl_PL",
+            "pt_BR": "pt-BR",
+            "da_DK": "da_DK",
+            "fi_FI": "fi_FI",
+            "no_NO": "nb_NO",
+            "sv_SE": "sv_SE",
+            "ru_RU": "ru_RU",
+            "ja_JP": "ja_JP",
+            "ko_KR": "ko_KR",
+            "tr_TR": "tr_TR",
+            "zh_HK": "zh-HK",
+            "zh_CN": "zh-CN",
+            "zh_TW": "zh-TW"
+          }
+        },
+        "mojeek": {
+          "get-parameter": "lr",
+          "values": {
+            "de_DE": "DE",
+            "en_GB": "GB",
+            "fr_FR": "FR"
+          }
+        },
+        "pixabay": {
+          "get-parameter": "lang",
+          "values": {
+            "de_DE": "de",
+            "de_AT": "de",
+            "de_CH": "de",
+            "da_DK": "da",
+            "en_GB": "en",
+            "en_US": "en",
+            "es_ES": "es",
+            "it_IT": "it",
+            "nl_NL": "nl",
+            "no_NO": "no",
+            "sv_SE": "sv"
+          }
+        }
+      }
+    },
+    "sort": {
+      "name": "metaGer.filter.sort.name",
+      "description": "",
+      "get-parameter": "so",
+      "values": {
+        "nofilter": "metaGer.filter.noFilter",
+        "pa": "metaGer.filter.sort.priceascending",
+        "pd": "metaGer.filter.sort.pricedescending",
+        "tpa": "metaGer.filter.sort.totalpriceascending",
+        "tpd": "metaGer.filter.sort.totalpricedescending"
+      },
+      "sumas": {
+        "kelkoo": {
+          "get-parameter": "sort",
+          "values": {
+            "pa": "price_ascending",
+            "pd": "price_descending",
+            "tpa": "totalprice_ascending",
+            "tpd": "totalprice_descending"
+          }
+        }
+      }
+    },
+    "rabate": {
+      "name": "metaGer.filter.rabate",
+      "description": "",
+      "get-parameter": "r",
+      "values": {
+        "0": "0%",
+        "10": "10%",
+        "20": "20%",
+        "30": "30%",
+        "40": "40%",
+        "50": "50%",
+        "60": "60%",
+        "70": "70%",
+        "80": "80%",
+        "90": "90%",
+        "100": "100%",
+        "nofilter": "metaGer.filter.noFilter"
+      },
+      "sumas": {
+        "kelkoo": {
+          "get-parameter": "rebatePercentage",
+          "values": {
+            "0": "0",
+            "10": "10",
+            "20": "20",
+            "30": "30",
+            "40": "40",
+            "50": "50",
+            "60": "60",
+            "70": "70",
+            "80": "80",
+            "90": "90",
+            "100": "100"
+          }
+        }
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ Route::group(
     ],
     function () {
         Route::get('/', 'SettingsController@index')->name('settings');
+        Route::get('schema', 'SettingsController@schema')->name('settingsSchema');
         Route::post('de', 'SettingsController@disableSearchEngine')->name('disableEngine');
         Route::post('ee', 'SettingsController@enableSearchEngine')->name('enableEngine');
         Route::post('ef', 'SettingsController@enableFilter')->name('enableFilter');

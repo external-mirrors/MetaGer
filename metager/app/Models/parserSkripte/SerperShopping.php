@@ -14,31 +14,64 @@ use Log;
 class SerperShopping extends Searchengine
 {
     const CONFIG_OVERLOAD = [
-        "lang" => [
-            "parameter" => "gl",
-            "languages" => [],
-            "regions" => [
-                "de_DE" => "de",
-                "de_AT" => "at",
-                "en_US" => "us",
-                "en_GB" => "gb",
-                "en_AU" => "au",
-                "es_ES" => "es",
-                "es_MX" => "mx",
-                "da_DK" => "dk",
-                "at_AT" => "at",
-                "de_CH" => "ch",
-                "fi_FI" => "fi",
-                "it_IT" => "it",
-                "nl_NL" => "nl",
-                "sv_SE" => "se",
-                "fr_FR" => "fr",
-                "fr_CA" => "ca",
-                "pl_PL" => "pl",
-                "pt_PT" => "pt-pt_PT",
-                "pt_BR" => "pt-br_BR",
-            ]
-        ]
+        'serper_shopping' => [
+            'lang' => [
+                'parameter' => 'gl',
+                'languages' => [],
+                'regions' => [
+                    'de_DE' => 'de',
+                    'de_AT' => 'at',
+                    'en_US' => 'us',
+                    'en_GB' => 'gb',
+                    'en_AU' => 'au',
+                    'es_ES' => 'es',
+                    'es_MX' => 'mx',
+                    'da_DK' => 'dk',
+                    'at_AT' => 'at',
+                    'de_CH' => 'ch',
+                    'fi_FI' => 'fi',
+                    'it_IT' => 'it',
+                    'nl_NL' => 'nl',
+                    'sv_SE' => 'se',
+                    'fr_FR' => 'fr',
+                    'fr_CA' => 'ca',
+                    'pl_PL' => 'pl',
+                    'pt_PT' => 'pt-pt_PT',
+                    'pt_BR' => 'pt-br_BR',
+                ],
+            ],
+            'host' => 'google.serper.dev',
+            'path' => '/shopping',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'request-header' => [
+                'Accept' => 'application/json',
+            ],
+            'engine-boost' => 1.2,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'ads' => false,
+            'cost' => 0.2,
+            // Static equivalent of the SearchEngineInfos this class also sets
+            // imperatively below in __construct(). SearchEngineRegistry (used by
+            // SettingsController::schema(), app-en repo) only ever scans this
+            // static CONFIG_OVERLOAD array - it has no way to see anything a
+            // constructor sets - so leaving this empty was what made the
+            // mobile app's settings schema fall back to the raw engine name
+            // ("serper_web") instead of a real display name. Keep both in sync.
+            'infos' => [
+                'homepage' => 'https://metager.de/search-engine',
+                'index_name' => 'Google',
+                'display_name' => 'Serper',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => 'Serper',
+                'index_size' => '~500,000,000,000',
+            ],
+        ],
     ];
     public $results = [];
 

@@ -16,30 +16,60 @@ use Request;
 class Brave extends Searchengine
 {
     const CONFIG_OVERLOAD = [
-        "lang" => [
-            "parameter" => "country",
-            "languages" => [],
-            "regions" => [
-                "de_DE" => "de_DE",
-                "de_AT" => "de_AT",
-                "en_US" => "en_US",
-                "en_GB" => "en_GB",
-                "en_AU" => "en_AU",
-                "es_ES" => "es_ES",
-                "es_MX" => "es_MX",
-                "da_DK" => "da_DK",
-                "de_CH" => "de_CH",
-                "fi_FI" => "fi_FI",
-                "it_IT" => "it_IT",
-                "nl_NL" => "nl_NL",
-                "sv_SE" => "sv_SE",
-                "fr_FR" => "fr_FR",
-                "fr_CA" => "fr_CA",
-                "pl_PL" => "pl_PL",
-                "pt_PT" => "pt-pt_PT",
-                "pt_BR" => "pt-br_BR",
-            ]
-        ]
+        'brave' => [
+            'lang' => [
+                'parameter' => 'country',
+                'languages' => [],
+                'regions' => [
+                    'de_DE' => 'de_DE',
+                    'de_AT' => 'de_AT',
+                    'en_US' => 'en_US',
+                    'en_GB' => 'en_GB',
+                    'en_AU' => 'en_AU',
+                    'es_ES' => 'es_ES',
+                    'es_MX' => 'es_MX',
+                    'da_DK' => 'da_DK',
+                    'de_CH' => 'de_CH',
+                    'fi_FI' => 'fi_FI',
+                    'it_IT' => 'it_IT',
+                    'nl_NL' => 'nl_NL',
+                    'sv_SE' => 'sv_SE',
+                    'fr_FR' => 'fr_FR',
+                    'fr_CA' => 'fr_CA',
+                    'pl_PL' => 'pl_PL',
+                    'pt_PT' => 'pt-pt_PT',
+                    'pt_BR' => 'pt-br_BR',
+                ],
+            ],
+            'host' => 'api.search.brave.com',
+            'path' => '/res/v1/web/search',
+            'port' => 443,
+            'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
+            'output-encoding' => 'utf8',
+            'get-parameter' => [
+                'count' => 20,
+                'offset' => 0,
+            ],
+            'request-header' => [
+                'Accept' => 'application/json',
+            ],
+            'engine-boost' => 1.2,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'ads' => false,
+            'cost' => 0.8,
+            'infos' => [
+                'homepage' => 'https://search.brave.com/',
+                'index_name' => 'Brave Search',
+                'display_name' => 'Brave',
+                'founded' => 'Juni 2021',
+                'headquarter' => 'San Francisco',
+                'operator' => 'Brave San Francisco',
+                'index_size' => 'einige Milliarden',
+            ],
+        ],
     ];
     public $results = [];
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Localization;
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\DisabledReason;
 use LaravelLocalization;
@@ -11,16 +12,7 @@ class SearchEngineList extends Controller
 {
     function index()
     {
-
-        $suma_file = config_path() . "/sumas.json";
-
-        if (empty($suma_file)) {
-            abort(404);
-        }
-        $suma_file = json_decode(file_get_contents($suma_file));
-        if ($suma_file === null) {
-            abort(404);
-        }
+        $suma_file = app(SearchEngineRegistry::class);
 
         $locale = LaravelLocalization::getCurrentLocaleRegional();
         $lang = Localization::getLanguage();

@@ -6,6 +6,13 @@ return [
         '3' => 'Search Filters',
         '4' => 'Black list',
     ],
+    'section' => [
+        'focus' => 'Search focus',
+        'account' => 'Account',
+        'preferences' => 'Preferences',
+        'backup' => 'Backup and reset',
+    ],
+    'resetDescription' => 'Removes every setting on this page and returns MetaGer to its defaults.',
     'text' => [
         '1' => 'To save your search settings, we use non-personally identifiable cookies. These are stored in plain text in your browser.',
         '2' => 'Below you can see all search engines available for this focus. You can switch them on/off by clicking on the name.',
@@ -28,11 +35,12 @@ return [
     'add' => 'Add',
     'clear' => 'Clear black list',
     'copy' => 'Copy',
-    'darkmode' => 'Toggle dark mode',
+    'darkmode' => 'Appearance',
     'suggestions' => [
         'heading' => 'Search Suggestions',
         'provider' => [
             'label' => 'Provider',
+            'cost' => ':cost Token',
         ],
         'delay' => [
             'label' => 'Delay',

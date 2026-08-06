@@ -8,6 +8,43 @@ use Log;
 
 class Europeana extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'europeana' => [
+            'host' => 'www.europeana.eu',
+            'path' => '/api/v2/search.json',
+            'port' => 443,
+            'query-parameter' => 'query',
+            'input-encoding' => 'utf8',
+            'output-encoding' => '',
+            'get-parameter' => [
+                'rows' => '100',
+                'qf' => 'TYPE%3AIMAGE',
+                'profile' => 'minimal',
+                'thumbnail' => 'true',
+            ],
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 0.1,
+            'cache-duration' => -1,
+            'disabled' => true,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://metager.org/search-engine',
+                'index_name' => null,
+                'display_name' => 'Europeana',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

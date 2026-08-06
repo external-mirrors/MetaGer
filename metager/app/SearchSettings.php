@@ -2,7 +2,9 @@
 
 namespace App;
 
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
+use App\Models\Configuration\SettingsSchema;
 use Cookie;
 use LaravelLocalization;
 use \Request;
@@ -28,7 +30,7 @@ class SearchSettings
     public $page = 1;
     public $queryFilter = [];
     public $parameterFilter = [];
-    /** @var object */
+    /** @var SearchEngineRegistry */
     public $sumasJson;
     public $quicktips = true;
     public $theme = "system";    // Darkmode setting currently either one of 'system', 'light', 'dark'
@@ -45,11 +47,6 @@ class SearchSettings
 
     public $user_settings = []; // Stores user settings that are parsed
     private $ignore_user_settings = ["js_available"];
-    /**
-     * List of setting keys used independant of fokus
-     * @var array
-     */
-    private $global_setting_keys = ["zitate", "tips", "tiles_startpage", "dark_mode", "new_tab", "key", "suggestion_provider", "suggestion_delay", "suggestion_addressbar"];
     public function __construct()
     {
 
@@ -61,10 +58,7 @@ class SearchSettings
      */
     public function boot()
     {
-        $this->sumasJson = json_decode(file_get_contents(config_path("sumas.json")));
-        if ($this->sumasJson === null) {
-            throw new \Exception("Cannot load sumas.json file");
-        }
+        $this->sumasJson = app(SearchEngineRegistry::class);
         $this->q = trim(Request::input('eingabe', ''));
         $this->fokus = Request::input("focus", "web");
 
@@ -120,9 +114,9 @@ class SearchSettings
             $this->quicktips = false;
         }
         $this->theme = $this->getSettingValue("dark_mode", "system");
-        if ($this->theme === "1")
+        if ($this->theme === "1" || $this->theme === "light")
             $this->theme = "light";
-        else if ($this->theme === "2")
+        else if ($this->theme === "2" || $this->theme === "dark")
             $this->theme = "dark";
         else
             $this->theme = "system";
@@ -142,35 +136,7 @@ class SearchSettings
 
         // Parse the blacklist
         $blacklist_string = $this->getSettingValue($this->fokus . "_blpage");
-        if ($blacklist_string !== null) {
-            $blacklist_string = substr($blacklist_string, 0, 2048);
-
-            // Split the blacklist by all sorts of newlines
-            $blacklist = preg_split('/,/', $blacklist_string);
-
-            foreach ($blacklist as $blacklist_entry) {
-                if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
-                    $blacklist_entry = "https://" . $blacklist_entry;
-                }
-                // Only use hostname from url
-                $blacklist_entry = parse_url($blacklist_entry, PHP_URL_HOST);
-                if ($blacklist_entry === null || $blacklist_entry === false)
-                    continue;
-                $blacklist_entry = substr($blacklist_entry, 0, 255);
-
-                if (stripos($blacklist_entry, "*.") === 0) {
-                    $this->blacklist_tld[] = str_replace("*.", "", $blacklist_entry);
-                } else {
-                    $this->blacklist[] = $blacklist_entry;
-                }
-            }
-        }
-
-        $this->blacklist = array_unique($this->blacklist);
-        sort($this->blacklist);
-
-        $this->blacklist_tld = array_unique($this->blacklist_tld);
-        sort($this->blacklist_tld);
+        [$this->blacklist, $this->blacklist_tld] = self::parseBlacklistCookie($blacklist_string);
 
         foreach ($this->ignore_user_settings as $ignored_key) {
             unset($this->user_settings[$ignored_key]);
@@ -205,7 +171,7 @@ class SearchSettings
             if (sizeof(array_intersect(array_keys((array) $filter->sumas), $this->sumasJson->foki->{$this->fokus}->sumas)) === 0) {
                 continue;
             }
-            $this->parameterFilter[$filterName] = $filter;
+            $this->parameterFilter[$filterName] = clone $filter;
             if ($filterName === "language") {
                 // Update default Parameter for language
                 $current_locale = LaravelLocalization::getCurrentLocaleRegional();
@@ -363,7 +329,7 @@ class SearchSettings
         if (is_null($setting_value)) {
             $setting_value = "";
         }
-        if (in_array($setting_key, $this->global_setting_keys))
+        if (in_array($setting_key, SettingsSchema::globalSettingKeys()))
             return true;
         if (preg_match("/^([^_]+)_blpage$/", $setting_key, $matches) && in_array($matches[1], $this->available_foki))
             return true;
@@ -373,5 +339,50 @@ class SearchSettings
             return true;
 
         return false;
+    }
+
+    /**
+     * Parses a raw {fokus}_blpage cookie/setting value into hostname and
+     * wildcard-TLD blacklist entries. Used for the current fokus in boot(),
+     * and reused by the settings page to render every fokus' blacklist.
+     *
+     * @return array{0: string[], 1: string[]} [blacklist, blacklist_tld]
+     */
+    public static function parseBlacklistCookie(?string $blacklist_string): array
+    {
+        $blacklist = [];
+        $blacklist_tld = [];
+
+        if ($blacklist_string !== null) {
+            $blacklist_string = substr($blacklist_string, 0, 2048);
+
+            // Split the blacklist by all sorts of newlines
+            $entries = preg_split('/,/', $blacklist_string);
+
+            foreach ($entries as $blacklist_entry) {
+                if (!preg_match('/^https?:\/\//', $blacklist_entry)) {
+                    $blacklist_entry = "https://" . $blacklist_entry;
+                }
+                // Only use hostname from url
+                $blacklist_entry = parse_url($blacklist_entry, PHP_URL_HOST);
+                if ($blacklist_entry === null || $blacklist_entry === false)
+                    continue;
+                $blacklist_entry = substr($blacklist_entry, 0, 255);
+
+                if (stripos($blacklist_entry, "*.") === 0) {
+                    $blacklist_tld[] = str_replace("*.", "", $blacklist_entry);
+                } else {
+                    $blacklist[] = $blacklist_entry;
+                }
+            }
+        }
+
+        $blacklist = array_unique($blacklist);
+        sort($blacklist);
+
+        $blacklist_tld = array_unique($blacklist_tld);
+        sort($blacklist_tld);
+
+        return [$blacklist, $blacklist_tld];
     }
 }

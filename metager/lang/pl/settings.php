@@ -6,6 +6,13 @@ return [
         '2' => 'Używane wyszukiwarki',
         '3' => 'Filtry wyszukiwania',
     ],
+    'section' => [
+        'focus' => 'Fokus wyszukiwania',
+        'account' => 'Konto',
+        'preferences' => 'Preferencje',
+        'backup' => 'Kopia zapasowa i reset',
+    ],
+    'resetDescription' => 'Usuwa wszystkie ustawienia na tej stronie i przywraca domyślne ustawienia MetaGer.',
     'text' => [
         '1' => 'Aby zapisać ustawienia wyszukiwania, używamy plików cookie, które nie umożliwiają identyfikacji użytkownika. Są one przechowywane w przeglądarce w postaci zwykłego tekstu.',
         '2' => 'Poniżej znajdują się wszystkie wyszukiwarki dostępne dla tego fokusa. Można je włączać/wyłączać, klikając nazwę.',
@@ -28,7 +35,7 @@ return [
     'add' => 'Dodaj',
     'clear' => 'Wyczyść czarną listę',
     'copy' => 'Kopia',
-    'darkmode' => 'Przełączanie trybu ciemnego',
+    'darkmode' => 'Wygląd',
     'system' => 'Domyślne ustawienia systemu',
     'dark' => 'Ciemny',
     'light' => 'Światło',
@@ -87,6 +94,7 @@ return [
         'heading' => 'Sugestie wyszukiwania',
         'provider' => [
             'label' => 'Dostawca',
+            'cost' => ':cost Token',
         ],
         'addressbar' => [
             'label' => 'Sugestie na pasku adresu',

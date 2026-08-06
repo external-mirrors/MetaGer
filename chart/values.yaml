@@ -26,6 +26,13 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Overrides the name used to address the redis-sentinel subchart's resources
+# (must match redis-sentinel.fullnameOverride below). Kept as a separate
+# value because Kubernetes object names are capped at 63 chars and the
+# subchart appends up to "-headless" (9 chars) to its fullname without
+# re-truncating, so long release names need a shorter override here.
+redisSentinelName: ""
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

@@ -1,7 +1,7 @@
 import { removeSetting } from "./messaging";
 
 document
-  .querySelectorAll("#setting-form select, #filter-form select")
+  .querySelectorAll(".setting-form select, .filter-form select")
   .forEach((element) => {
     element.addEventListener("change", (e) => {
       e.target.form.submit();
@@ -20,11 +20,4 @@ document
     });
     return false;
   })
-})();
-
-(() => {
-  let params = new URLSearchParams(document.location.search);
-  if (params.get("anchor") != null) {
-    document.location.hash = "#" + params.get("anchor");
-  }
 })();

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Authorization\Authorization;
+use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Searchengine;
 use Arr;
@@ -24,6 +25,13 @@ class MetaGer
     # Schema-Version von `out=json`. Additive Änderungen (neue Felder) lassen
     # sie unverändert; Umbenennen oder Entfernen eines Feldes erhöht sie.
     const API_SCHEMA_VERSION = 1;
+
+    # JSON_INVALID_UTF8_SUBSTITUTE: die Texte stammen aus fremden Parsern und
+    # sind nicht garantiert sauberes UTF-8. Ohne das Flag gäbe json_encode
+    # false zurück, und eine einzige kaputte Beschreibung würde die ganze
+    # Suche zu einem Fehler machen. Gilt für jede Antwort im API-Schema, also
+    # auch für die des Nachlade-Pfads (MetaGerSearch@loadMore).
+    const JSON_API_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE;
 
     # Einstellungen für die Suche
     public $alteredQuery = "";
@@ -291,6 +299,21 @@ class MetaGer
      */
     private function createJsonView(): string
     {
+        return json_encode($this->toApiArray(), self::JSON_API_FLAGS);
+    }
+
+    /**
+     * Der Rumpf von `out=json` als Array.
+     *
+     * Getrennt von createJsonView(), weil MetaGerSearch@loadMore dieselbe
+     * Antwort um seine eigenen Felder (`finished`, `engines`) ergänzt und
+     * selbst kodiert. Zwei Stellen, die dasselbe Schema bauen, wären genau die
+     * Doppelung, die die Fokus-Weiche oben schon vermeidet.
+     *
+     * @param array $additional Zusätzliche Felder; überschreiben gleichnamige.
+     */
+    public function toApiArray(array $additional = []): array
+    {
         $results = [];
         foreach ($this->results as $result) {
             $results[] = $result->toApiArray();
@@ -307,14 +330,18 @@ class MetaGer
 
         $nextPage = $this->nextSearchLink();
 
-        # JSON_INVALID_UTF8_SUBSTITUTE: die Texte stammen aus fremden Parsern
-        # und sind nicht garantiert sauberes UTF-8. Ohne das Flag gäbe
-        # json_encode false zurück, und eine einzige kaputte Beschreibung würde
-        # die ganze Suche zu einem Fehler machen.
-        return json_encode([
+        return array_merge([
             "version" => self::API_SCHEMA_VERSION,
             "query" => $this->eingabe,
             "focus" => app(SearchSettings::class)->fokus,
+            # Die Such-UID, unter der der Suchzustand eine Stunde lang liegt.
+            # Ein Client braucht sie für den Nachlade-Pfad
+            # (MetaGerSearch@loadMore) — die Website liest denselben Wert aus
+            # <meta name="searchkey">. Aus `nextPage` wäre sie zwar auch zu
+            # holen, aber nur solange es eine nächste Seite gibt; ohne eigenes
+            # Feld verliert ein Client das Nachladen genau dann, wenn wenige
+            # Engines geantwortet haben — also wenn er es am nötigsten hat.
+            "searchUid" => $this->getSearchUid(),
             # Die Anzahl der Ergebnisse *in dieser Antwort*, keine Schätzung der
             # Gesamttreffer — die hat MetaGer nicht. Der Atom-Feed schreibt
             # denselben Wert in opensearch:totalResults, was dort irreführend
@@ -329,7 +356,7 @@ class MetaGer
             # Normale Zustände, keine Fehler: leere Ergebnisliste mit Hinweis.
             "warnings" => array_values($this->warnings),
             "errors" => array_values($this->errors),
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE);
+        ], $additional);
     }
 
     public function prepareResults()
@@ -768,15 +795,13 @@ class MetaGer
 
         # Suma-File
         if ($this->dummy) {
-            $this->sumaFile = \config_path("stress.json");
+            $stressFile = \config_path("stress.json");
+            if (!file_exists($stressFile)) {
+                die(trans('metaGer.formdata.cantLoad'));
+            }
+            $this->sumaFile = json_decode(file_get_contents($stressFile));
         } else {
-            $this->sumaFile = \config_path("sumas.json");
-        }
-
-        if (!file_exists($this->sumaFile)) {
-            die(trans('metaGer.formdata.cantLoad'));
-        } else {
-            $this->sumaFile = json_decode(file_get_contents($this->sumaFile));
+            $this->sumaFile = app(SearchEngineRegistry::class);
         }
         # Sucheingabe
         $this->eingabe = trim(\Request::input('eingabe', ''));
@@ -1450,11 +1475,6 @@ class MetaGer
     public function getLanguage()
     {
         return $this->language;
-    }
-
-    public static function getLanguageFile()
-    {
-        return config_path('sumas.json');
     }
 
     public function getLang()

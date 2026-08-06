@@ -7,6 +7,37 @@ use App\Models\SearchengineConfiguration;
 
 class Fairmondo extends Searchengine
 {
+    const CONFIG_OVERLOAD = [
+        'fairmondo' => [
+            'host' => 'www.fairmondo.de',
+            'path' => '/articles.json',
+            'port' => 443,
+            'query-parameter' => 'article_search_form[q]',
+            'input-encoding' => '',
+            'output-encoding' => '',
+            'lang' => [
+                'parameter' => '',
+                'languages' => [
+                    'de' => '',
+                ],
+                'regions' => [],
+            ],
+            'engine-boost' => 1.1,
+            'cache-duration' => -1,
+            'disabled' => false,
+            'filter-opt-in' => false,
+            'cost' => 0,
+            'infos' => [
+                'homepage' => 'https://www.fairmondo.de',
+                'index_name' => null,
+                'display_name' => 'Fairmondo',
+                'founded' => null,
+                'headquarter' => null,
+                'operator' => null,
+                'index_size' => null,
+            ],
+        ],
+    ];
     public $results = [];
 
     public function __construct($name, SearchengineConfiguration $configuration)

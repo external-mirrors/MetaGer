@@ -167,8 +167,13 @@ function updateWebExtensionStatus(time) {
   } else if (time == "no" && extension_cookie != undefined) {
     Cookies.remove("webextension");
   }
-  if (localStorage) {
+  try {
     localStorage.setItem("webextension", time);
+  } catch (e) {
+    // Browsers configured to block all cookies throw on any Web Storage access — even on
+    // reading the localStorage property itself. This is only a cache for the next page load;
+    // the window property and the event below are what the current page listens on, and they
+    // used to be skipped entirely because this line threw.
   }
   window.webextension = time;
   window.dispatchEvent(

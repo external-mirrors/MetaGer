@@ -32,7 +32,7 @@ fetch(url).then(result => {
 
 async function webextensioncheck() {
   return new Promise(resolve => {
-    if (localStorage && localStorage.getItem("webextension") != null) {
+    if (cachedWebextensionStatus() != null) {
       return resolve();
     } else if (window.webextension != undefined) {
       return resolve();
@@ -46,6 +46,17 @@ async function webextensioncheck() {
       });
     }
   });
+}
+
+// Reading localStorage throws in browsers configured to block all cookies, which would reject
+// this promise and stop verification before it starts. Those users simply have no cached status
+// and fall through to waiting for the live one below.
+function cachedWebextensionStatus() {
+  try {
+    return localStorage.getItem("webextension");
+  } catch (e) {
+    return null;
+  }
 }
 
 function getKey() {

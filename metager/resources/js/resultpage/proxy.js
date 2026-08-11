@@ -1,6 +1,11 @@
 const WS_TEST_STORAGE_KEY = "safebrowse-ws-ok";
 
 let wsTestInProgress = false;
+// Mirrors the sessionStorage cache in memory, for browsers that deny storage access outright
+// (Firefox "block all cookies" makes even reading sessionStorage throw a SecurityError). Without
+// it the test result would be forgotten the instant it is produced and no click would ever be
+// intercepted, silently sending exactly those users to the old proxy.
+let wsTestResult = null;
 
 export default function updateProxyLinks() {
     if (!browserSupportsSafebrowse()) {
@@ -20,11 +25,15 @@ export default function updateProxyLinks() {
 
         link.addEventListener("click", function (e) {
             const href = link.dataset.proxyLink;
-            // Only intercept when SafeBrowse is known to be reachable. window.open must be
-            // called synchronously within the click handler — popup blockers silently drop
-            // calls made after an async WebSocket test. In all other cases the browser
-            // follows the native href (old proxy) instead.
-            if (!href || getCachedWebsocketResult() !== "ok") return;
+            // Intercept unless the reachability test has actually come back negative. window.open
+            // must be called synchronously within the click handler — popup blockers silently drop
+            // calls made after an async WebSocket test — so a click landing before the test
+            // settles cannot wait for it. Guessing "reachable" is the better guess: SafeBrowse
+            // bounces a genuinely unreachable backend to the &fallback= URL in the hash (this same
+            // old-proxy link), whereas guessing the other way sends everyone who clicks early to
+            // the old proxy with no way back. That window is every page load for users whose
+            // browser denies storage, since the cached result cannot survive for them.
+            if (!href || getCachedWebsocketResult() === "failed") return;
             e.preventDefault();
             // Reuses the named tab if already open: since all SafeBrowse parameters travel in
             // the URL hash, this only fires hashchange there instead of reloading the app.
@@ -36,18 +45,18 @@ export default function updateProxyLinks() {
 
 /**
  * The SafeBrowse frontend needs more than WebSocket support to boot: its bundle constructs
- * EventTarget subclasses (Chrome 64+ / Safari 14+) and accesses globalThis and Web Storage.
- * Browsers failing any of these would hang on the SafeBrowse loading screen, so they keep
- * the native href instead.
+ * EventTarget subclasses (Chrome 64+ / Safari 14+) and accesses globalThis. Browsers failing
+ * either of these would hang on the SafeBrowse loading screen, so they keep the native href
+ * instead. Web Storage is deliberately not required: SafeBrowse treats it as optional, and
+ * merely touching window.localStorage throws in a browser configured to block all cookies —
+ * which used to make this whole check fail and send those users to the old proxy.
  */
 function browserSupportsSafebrowse() {
     try {
         new EventTarget();
         return (
             typeof globalThis !== "undefined" &&
-            typeof window.WebSocket !== "undefined" &&
-            typeof window.localStorage !== "undefined" &&
-            typeof window.sessionStorage !== "undefined"
+            typeof window.WebSocket !== "undefined"
         );
     } catch (e) {
         return false;
@@ -55,6 +64,7 @@ function browserSupportsSafebrowse() {
 }
 
 function getCachedWebsocketResult() {
+    if (wsTestResult !== null) return wsTestResult;
     try {
         return sessionStorage.getItem(WS_TEST_STORAGE_KEY);
     } catch (e) {
@@ -95,7 +105,12 @@ function testWebsocketConnection(proxyLink) {
         wsTestInProgress = false;
         clearTimeout(timeout);
         try { testWs.close(); } catch (e) { }
+        wsTestResult = ok ? "ok" : "failed";
         if (ok) {
+            // Persisting it only saves the retest on the next result page; when storage is
+            // blocked the in-memory result above still carries this page's clicks. A failure is
+            // deliberately not persisted — it may well be transient, and it is retested on the
+            // next page rather than disabling SafeBrowse for the rest of the browsing session.
             try { sessionStorage.setItem(WS_TEST_STORAGE_KEY, "ok"); } catch (e) { }
         }
     };

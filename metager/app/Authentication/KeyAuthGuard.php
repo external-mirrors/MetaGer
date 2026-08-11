@@ -43,6 +43,11 @@ class KeyAuthGuard implements StatefulGuard
 
         if ($key === "") {
             if (Request::hasHeader("anonymous-token-key")) {
+                // This is a header login like any other; without saying so it would keep the
+                // 'query' default and be mistaken for one — which makes the SafeBrowse link in
+                // layouts/result.blade.php hand out the key that the client already injects as a
+                // header on its own, putting it in access logs for no gain.
+                $this->login_method = "header";
                 $user = $this->provider->retrieveById(Request::header("anonymous-token-key"));
                 $user->temporary = true; // Mark as temporary user
                 return $this->user = $user;

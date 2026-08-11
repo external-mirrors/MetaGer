@@ -127,8 +127,16 @@
             @elseif (request()->header("is-proxy") !== "true")
                 {{-- All SafeBrowse parameters travel in the hash (never the query string): clicking
                      another result must only change the fragment of the already-open named tab, so
-                     the running SafeBrowse app receives a hashchange instead of a full reload. --}}
-                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->login_method === 'query' && auth()->guard("key")->user() !== null)&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif"
+                     the running SafeBrowse app receives a hashchange instead of a full reload.
+                     Only a query login carries the key here. SafeBrowse is same-origin, so a
+                     cookie login already sends the key on the WebSocket upgrade by itself, and a
+                     header login gets anonymous-token-key injected by the webextension the same
+                     way — neither needs it, and SafeBrowse forwards a hash key as ?key= on the
+                     socket URL, so emitting it anyway would write those keys into access logs.
+                     A query login has no other transport and its key is in the URL regardless.
+                     user() is evaluated first on purpose: it is what resolves login_method, which
+                     otherwise still holds its 'query' default and would match by accident. --}}
+                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif"
                     target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! trans('result.options.5') !!}
                 </a>

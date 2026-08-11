@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Middleware\HttpCache;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
@@ -167,7 +168,13 @@ class MetaGerSearch extends Controller
         }
 
         $headers = [
-            "Cache-Control" => "max-age=3600, must-revalidate, public",
+            // `private`: this page embeds per-user markup (the SafeBrowse link carries the key on
+            // a query login), so a shared cache must never hand it to a second user. The ETag is
+            // what lets the browser keep caching aggressively while still noticing a changed key
+            // or a redeployed frontend bundle — see HttpCache::resultPageEtag.
+            "Cache-Control" => HttpCache::resultPageCacheControl(true),
+            "ETag" => HttpCache::resultPageEtag($request),
+            "Vary" => HttpCache::resultPageVary(),
             "Content-Security-Policy" => "default-src $csp",
             "Last-Modified" => gmdate("D, d M Y H:i:s T"),
         ];
@@ -249,7 +256,9 @@ class MetaGerSearch extends Controller
         if ($cached === null) {
             if ($request->header("If-Modified-Since") !== null) {
                 return response("", 304, [
-                    "Cache-Control" => "max-age=3600, must-revalidate, public",
+                    // Loader state is per-user (it carries the caller's authorization), so a
+                    // shared cache must not store it.
+                    "Cache-Control" => HttpCache::resultPageCacheControl(true),
                     "Last-Modified" => gmdate("D, d M Y H:i:s T"),
                 ]);
             } else {
@@ -349,10 +358,10 @@ class MetaGerSearch extends Controller
         // Update new Engines
         $authorization = app(Authorization::class);
         $searchengines = app(Searchengines::class);
-        $cacheControl = "no-cache, must-revalidate, public";
+        $cacheControl = HttpCache::resultPageCacheControl(false);
         if ($finished) {
             Cache::forget("loader_" . $metager->getSearchUid());
-            $cacheControl = "max-age=3600, must-revalidate, public";
+            $cacheControl = HttpCache::resultPageCacheControl(true);
         } else {
             Cache::put("loader_" . $metager->getSearchUid(), [
                 "metager" => [

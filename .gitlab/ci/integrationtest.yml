@@ -27,6 +27,11 @@ integrationtest:
     - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
     - composer install
     - php artisan optimize
+    # `optimize` bakes the *production* .env into bootstrap/cache/config.php, and cached config is
+    # never re-read from env() — which silently defeats phpunit.xml's CACHE_STORE=array and points
+    # the tests at the production Redis sentinel, unreachable from a CI job. Keep optimize as the
+    # boot/route smoke check, then drop the config cache so the test env applies.
+    - php artisan config:clear
     - php artisan test --without-tty
   cache:
     paths:

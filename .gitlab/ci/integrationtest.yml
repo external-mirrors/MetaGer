@@ -20,6 +20,11 @@ integrationtest:
     # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
+    # config/sumas.json is gitignored (it only ever carries API secrets), so a fresh checkout has
+    # none, and anything that boots SearchEngineRegistry fatals without it. In a deployed pod the
+    # fpm image's entrypoint falls back to the example file for exactly this reason, but this job
+    # replaces that entrypoint with bash, so do the same thing here.
+    - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
     - composer install
     - php artisan optimize
     - php artisan test --without-tty

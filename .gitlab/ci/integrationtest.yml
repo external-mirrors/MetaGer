@@ -13,6 +13,18 @@ integrationtest:
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
     SELENIUM_HOST: selenium-standalone-firefox
     MATOMO_ENABLED: false
+    # phpunit.xml declares these for the test run, but `php artisan optimize` bakes the production
+    # .env into bootstrap/cache/config.php and cached config is never re-read through env() — so
+    # the phpunit values are silently ignored and the tests reach for the production Redis
+    # sentinel, unreachable from CI. Set them as real job variables instead: Laravel's dotenv is
+    # immutable, so they win over .env and land in the config cache itself.
+    # Note the fix is deliberately *not* `config:clear` — the Dusk tests derive their expected URLs
+    # from `app.locale`, which the config cache freezes at the value LaravelLocalization resolved
+    # while building it (en-US, matching Selenium Firefox's Accept-Language). Clearing the cache
+    # drops that to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
+    CACHE_STORE: array
+    SESSION_DRIVER: array
+    QUEUE_CONNECTION: sync
   dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
@@ -20,6 +32,11 @@ integrationtest:
     # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
+    # config/sumas.json is gitignored (it only ever carries API secrets), so a fresh checkout has
+    # none, and anything that boots SearchEngineRegistry fatals without it. In a deployed pod the
+    # fpm image's entrypoint falls back to the example file for exactly this reason, but this job
+    # replaces that entrypoint with bash, so do the same thing here.
+    - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
     - composer install
     - php artisan optimize
     - php artisan test --without-tty

@@ -464,6 +464,13 @@ class SettingsController extends Controller
         App::setLocale($locale);
 
         $registry = app(SearchEngineRegistry::class);
+        // Fully qualified rather than a second `use` - this file already imports
+        // `App\Models\Configuration\Searchengines` (the per-request, per-fokus
+        // engine list) under the same short name. This is the *other* one: a
+        // pure function of the locale just set above, with no auth/payment/fokus
+        // state of its own - the same one `index.blade.php`/`foki.blade.php` use
+        // to decide which fokus tabs the website itself shows for this language.
+        $availableFoki = app(\App\Searchengines::class)->available_foki;
 
         $global = array_map(function ($setting) {
             return [
@@ -551,6 +558,14 @@ class SettingsController extends Controller
             $foki[] = [
                 "fokus" => $fokus,
                 "displayName" => trans($fokusInfo->{"display-name"}),
+                // Whether at least one of this fokus's searchengines supports
+                // the requested language/region - the same test the website's
+                // own fokus tabs use ($availableFoki above). Additive rather
+                // than omitting the fokus outright: a client can still choose
+                // to expose the engine/filter settings below for a fokus it
+                // otherwise hides, e.g. while the user has it selected from
+                // before a language change.
+                "available" => in_array($fokus, $availableFoki, true),
                 "engines" => $engines,
                 "filters" => $filters,
                 "blacklistSettingKey" => "{$fokus}_blpage",

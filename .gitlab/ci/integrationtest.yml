@@ -13,6 +13,18 @@ integrationtest:
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
     SELENIUM_HOST: selenium-standalone-firefox
     MATOMO_ENABLED: false
+    # phpunit.xml declares these for the test run, but `php artisan optimize` bakes the production
+    # .env into bootstrap/cache/config.php and cached config is never re-read through env() — so
+    # the phpunit values are silently ignored and the tests reach for the production Redis
+    # sentinel, unreachable from CI. Set them as real job variables instead: Laravel's dotenv is
+    # immutable, so they win over .env and land in the config cache itself.
+    # Note the fix is deliberately *not* `config:clear` — the Dusk tests derive their expected URLs
+    # from `app.locale`, which the config cache freezes at the value LaravelLocalization resolved
+    # while building it (en-US, matching Selenium Firefox's Accept-Language). Clearing the cache
+    # drops that to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
+    CACHE_STORE: array
+    SESSION_DRIVER: array
+    QUEUE_CONNECTION: sync
   dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
@@ -27,11 +39,6 @@ integrationtest:
     - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
     - composer install
     - php artisan optimize
-    # `optimize` bakes the *production* .env into bootstrap/cache/config.php, and cached config is
-    # never re-read from env() — which silently defeats phpunit.xml's CACHE_STORE=array and points
-    # the tests at the production Redis sentinel, unreachable from a CI job. Keep optimize as the
-    # boot/route smoke check, then drop the config cache so the test env applies.
-    - php artisan config:clear
     - php artisan test --without-tty
   cache:
     paths:

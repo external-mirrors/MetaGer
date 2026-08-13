@@ -135,8 +135,14 @@
                      socket URL, so emitting it anyway would write those keys into access logs.
                      A query login has no other transport and its key is in the URL regardless.
                      user() is evaluated first on purpose: it is what resolves login_method, which
-                     otherwise still holds its 'query' default and would match by accident. --}}
-                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}"  data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif"
+                     otherwise still holds its 'query' default and would match by accident.
+
+                     Without data-proxy-link, resultpage/proxy.js leaves the click alone and the
+                     href (old proxy) is followed — which is the whole opt-out for clients that
+                     cannot authenticate against SafeBrowse (see ClientCapabilities). Rendering the
+                     link for them instead would boot the SafeBrowse app just to dead-end on
+                     "Kein Authentifizierungsschlüssel angegeben". --}}
+                <a class="result-open-proxy" title="@lang('result.proxytext')" href="{{ $result->proxyLink }}" @if (\App\Http\ClientCapabilities::supportsSafebrowse(request())) data-proxy-link="{{ LaravelLocalization::getLocalizedUrl(null, "/proxy/") }}#url={{ rawurlencode($result->link) }}&fallback={{ rawurlencode($result->proxyLink) }}@if (auth()->guard("key")->user() !== null && auth()->guard("key")->login_method === 'query')&key={{ rawurlencode(auth()->guard("key")->user()->key) }}@endif" @endif
                     target="{{ $metager->getNewtab() }}" @if ($metager->getNewtab() === '_blank') rel="noopener" @endif>
                     {!! trans('result.options.5') !!}
                 </a>

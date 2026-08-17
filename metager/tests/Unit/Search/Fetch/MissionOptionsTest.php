@@ -99,6 +99,35 @@ class MissionOptionsTest extends TestCase
         $this->assertSame(15, $options[CURLOPT_TCP_KEEPINTVL]);
     }
 
+    /**
+     * Every engine response used to arrive uncompressed, because nothing ever
+     * asked. An empty string is not "no encoding" — it tells curl to advertise
+     * every encoding it was built with (this image has gzip, brotli and zstd)
+     * and to decode the answer transparently, so the parsers keep seeing the
+     * same bytes.
+     */
+    public function testUpstreamIsAskedForACompressedResponse(): void
+    {
+        $options = MissionOptions::for($this->mission());
+
+        $this->assertArrayHasKey(CURLOPT_ACCEPT_ENCODING, $options, "Engine responses are being fetched uncompressed again.");
+        $this->assertSame("", $options[CURLOPT_ACCEPT_ENCODING]);
+    }
+
+    /**
+     * The escape hatch, in case an engine turns out to answer badly to one of
+     * the encodings curl offers. Narrowing it to `gzip` — or to "" via a header
+     * of its own — stays a per-engine decision.
+     */
+    public function testAnEngineCanNarrowTheEncodingsItIsOffered(): void
+    {
+        $options = MissionOptions::for($this->mission([
+            "curlopts" => [CURLOPT_ACCEPT_ENCODING => "gzip"],
+        ]));
+
+        $this->assertSame("gzip", $options[CURLOPT_ACCEPT_ENCODING]);
+    }
+
     public function testHeadersBecomeAFlatListOfHeaderLines(): void
     {
         $options = MissionOptions::for($this->mission([

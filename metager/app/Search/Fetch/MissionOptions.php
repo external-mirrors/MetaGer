@@ -38,6 +38,16 @@ class MissionOptions
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_USERAGENT => $mission["useragent"],
             CURLOPT_FOLLOWLOCATION => true,
+            // "" advertises every encoding this libcurl was built with and
+            // decodes the answer before we ever see it, so the parsers get the
+            // same bytes they always did. Until this line, MetaGer asked for
+            // none and every engine answered uncompressed.
+            //
+            // Set it here and not as a request header: an Accept-Encoding curl
+            // is not aware of is sent as-is and the body comes back encoded,
+            // which reaches the parser as binary and looks like an engine
+            // returning nonsense.
+            CURLOPT_ACCEPT_ENCODING => "",
             CURLOPT_CONNECTTIMEOUT => 8,
             CURLOPT_MAXCONNECTS => 500,
             CURLOPT_LOW_SPEED_LIMIT => 50000,

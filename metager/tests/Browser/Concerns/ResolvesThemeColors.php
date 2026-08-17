@@ -200,22 +200,19 @@ trait ResolvesThemeColors
         holder.style.visibility = "hidden";
 
         const probe = document.createElement("div");
-        probe.id = "palette-probe";
         holder.appendChild(probe);
         document.body.appendChild(holder);
 
-        const style = document.createElement("style");
-        document.head.appendChild(style);
-        const sheet = style.sheet;
-
+        // Declarations go onto the probe's own style, not into a <style> element
+        // we insert. The deployment sends style-src 'self', which blocks an
+        // injected <style> outright — its .sheet comes back null — while writing
+        // through the CSSOM is script, not markup, and is not governed by it.
+        //
+        // Assigning the fetched text is also lossless where copying a rule's
+        // declarations one by one is not: the text still says
+        // `border: 1px solid var(--border-color)` and the parser sees it whole.
         const apply = (declarations) => {
-            while (sheet.cssRules.length > 0) {
-                sheet.deleteRule(0);
-            }
-
-            if (declarations !== null) {
-                sheet.insertRule("#palette-probe{" + declarations + "}", 0);
-            }
+            probe.style.cssText = declarations ?? "";
         };
 
         // What the probe reads with no rule applied. Anything a rule leaves at
@@ -258,7 +255,6 @@ trait ResolvesThemeColors
 
         apply(null);
         holder.remove();
-        style.remove();
 
         // Sorted, so the snapshot diffs by colour rather than by load order.
         return Object.fromEntries(Object.entries(collected).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));

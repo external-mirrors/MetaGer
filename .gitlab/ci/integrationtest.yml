@@ -23,6 +23,24 @@
     # the default connection at the service below; the .env copied in leaves REDIS_HOST at
     # localhost, which is why this failed with "Connection refused [tcp://127.0.0.1:6379]".
     REDIS_HOST: redis
+    # Setting REDIS_HOST is not enough, because a handful of call sites do not use the default
+    # connection: the authorization path, the anonymous-token payments and the suggestion debt
+    # all reach Redis as `Redis::connection(config("cache.stores.redis.connection"))`, which
+    # bypasses CACHE_STORE=array entirely — an array cache store does not make those calls go
+    # away, it only makes them invisible until something asserts on them.
+    #
+    # The .env copied in above still points that connection at `sentinel`, so in CI it tried to
+    # autodiscover sentinels that do not exist. Every search then logged a full Predis stack
+    # trace and the accumulated traces exhausted the 256M memory_limit mid-suite, which is why
+    # this surfaced as "Allowed memory size exhausted" in a YAML parser rather than as the
+    # connection error it actually was.
+    #
+    # `default` is not a test-only convenience: it is what REDIS_CACHE_CONNECTION is set to in
+    # every deployed environment (see chart/values.yaml and chart/tests/assertions.sh, where the
+    # master-proxy Service exists precisely because the app talks to the default connection).
+    # Pinning it here makes the suite exercise the connection topology production actually runs.
+    REDIS_CACHE_CONNECTION: default
+    REDIS_CACHE_LOCK_CONNECTION: default
   # Every rendered page resolves its stylesheets and scripts through the Vite manifest, and
   # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
   # the built frontend as well as vendor/. Both arrive as artifacts: metager/public from npm,

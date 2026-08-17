@@ -59,41 +59,6 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.fpm | nindent 14 }}
             limits: {}
-        - name: queue
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
-          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
-          env:
-          {{- include "chart.env" (dict "root" .) | nindent 10 }}
-          volumeMounts:
-          {{- include "chart.mounts.env" . | nindent 10 }}
-          {{- include "chart.mounts.config" . | nindent 10 }}
-          {{- include "chart.mounts.storage" . | nindent 10 }}
-          livenessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - queue:work
-          readinessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - queue:work
-          startupProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - queue:work
-          resources:
-            requests:
-              {{- toYaml .Values.resources.requests.queue | nindent 14 }}
-            limits:
         - name: reverb
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

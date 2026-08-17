@@ -130,6 +130,12 @@ resources:
     reverb: {}
     queue: {}
 
+# Queue workers run in their own Deployment (templates/deployment-queue.yaml) with a
+# fixed replica count. They are not autoscaled: the HPA below watches CPU on the app
+# pods, which tracks web traffic and says nothing about queue depth.
+queue:
+  replicaCount: 2
+
 autoscaling:
   enabled: true
   minReplicas: 1

@@ -41,7 +41,7 @@
 			title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}"
 			href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
 	@endif
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
 	@if (isset($css) && is_array($css))
 		@foreach($css as $cssFile)
 			<link href="{{ $cssFile }}" rel="stylesheet" />
@@ -52,7 +52,7 @@
 			content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/{{LaravelLocalization::getCurrentLocale()}}" />
 	@endif
 	@if(app(App\SearchSettings::class)->theme === "dark")
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
+		<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
 		<meta name="color-scheme" content="dark light">
 		@if(!empty($darkcss) && is_array($darkcss))
 			@foreach($darkcss as $cssFile)
@@ -60,11 +60,11 @@
 			@endforeach
 		@endif
 	@elseif(app(App\SearchSettings::class)->theme === "light")
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+		<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
 		<meta name="color-scheme" content="light dark">
 	@else
 		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-			href="{{ mix('css/themes/metager-dark.css') }}" />
+			href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
 		<meta name="color-scheme" content="light dark">
 		@if(!empty($darkcss) && is_array($darkcss))
 			@foreach($darkcss as $cssFile)
@@ -72,9 +72,9 @@
 			@endforeach
 		@endif
 	@endif
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/utility.less') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-	<script src="{{ mix('js/utility.js') }}"></script>
+	<script src="{{ Vite::asset('resources/js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 		@foreach($js as $jsFile)
 			<script src="{{$jsFile}}" defer></script>

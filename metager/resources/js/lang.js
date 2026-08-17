@@ -1,4 +1,4 @@
-const { setSettings } = require("./messaging");
+import { setSettings } from "./messaging";
 
 (() => {
     window.setTimeout(() => {

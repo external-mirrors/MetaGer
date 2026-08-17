@@ -30,16 +30,16 @@
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 
-    <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
     @if (app(App\SearchSettings::class)->theme === 'dark')
-        <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
+        <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
     @elseif(app(App\SearchSettings::class)->theme === 'light')
-        <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+        <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
     @elseif(Request::input('out', '') !== 'results-with-style')
         <link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-            href="{{ mix('css/themes/metager-dark.css') }}" />
+            href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
     @endif
-    <script src="{{ mix('js/scriptResultPage.js') }}" defer></script>
+    <script src="{{ Vite::asset('resources/js/scriptResultPage.js') }}" defer></script>
     @if (!empty($js))
         @foreach ($js as $js_file)
             <script src="{{ $js_file }}" defer async></script>
@@ -94,7 +94,7 @@
     @if (!isset($suspendheader))
         @include('layouts.researchandtabs')
     @else
-        <link rel="stylesheet" href="/css/noheader.css">
+        <link rel="stylesheet" href="{{ Vite::asset('resources/css/noheader.css') }}">
         <div id="resultpage-container-noheader">
             <div id="results-container">
                 <span name="top"></span>

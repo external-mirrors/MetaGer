@@ -1,6 +1,3 @@
-require("es6-promise").polyfill();
-require("fetch-ie8");
-
 try {
   // Should get blocked by csp
   eval("window.sp = 1;");

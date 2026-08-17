@@ -6,7 +6,7 @@ npm:
   script:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
-    - npm run prod
+    - npm run build
   needs:
     - node_image
   artifacts:

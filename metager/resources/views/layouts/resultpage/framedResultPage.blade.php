@@ -10,18 +10,18 @@
 	<link rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
 	@endif
 	@endforeach
-    <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+    <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
 	@if(app(App\SearchSettings::class)->theme === "dark")
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
 	@elseif(app(App\SearchSettings::class)->theme === "light")
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
 	@elseif(Request::input('out', '') !== "results-with-style")
-	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ mix('css/themes/metager-dark.css') }}" />
+	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
 	@endif
-    <script src="{{ mix('js/index.js') }}"></script>
+    <script src="{{ Vite::asset('resources/js/verify.js') }}"></script>
     <link rel="stylesheet" href="{{ LaravelLocalization::getLocalizedURL(null, '/index.css?id=' . $mgv) }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <script src="{{mix('js/utility.js')}}"></script>
+    <script src="{{Vite::asset('resources/js/utility.js')}}"></script>
     <meta http-equiv="refresh" content="1">
 </head>
 <body>

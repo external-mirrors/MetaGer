@@ -1,8 +1,6 @@
-const { initializeSuggestions } = require("./suggest");
+import { initializeSuggestions } from "./suggest";
 import updateProxyLinks from "./resultpage/proxy";
-
-require("es6-promise").polyfill();
-require("fetch-ie8");
+import moment from "moment";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -283,7 +281,6 @@ function initialize() {
 })();
 
 (() => {
-  const moment = require("moment");
   document.addEventListener("boot", formatDates);
   document.addEventListener("resultsChanged", formatDates);
   // Format Dates relative to user time if possible

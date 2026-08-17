@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
@@ -134,7 +135,7 @@ class SettingsController extends Controller
                 'new_tab' => $settings->newtab ? 'on' : 'off',
                 'zitate' => $settings->zitate ? 'on' : 'off',
             ])
-            ->with('js', [mix('js/scriptSettings.js')]), 200, [
+            ->with('js', [Vite::asset('resources/js/scriptSettings.js')]), 200, [
             "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
         ]);
     }

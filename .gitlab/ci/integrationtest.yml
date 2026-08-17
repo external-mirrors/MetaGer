@@ -17,7 +17,14 @@
     CACHE_STORE: array
     SESSION_DRIVER: array
     QUEUE_CONNECTION: sync
-  dependencies: [] # No artifacts required
+  # Every rendered page resolves its stylesheets and scripts through the Vite manifest, and
+  # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
+  # the built frontend, not just vendor/. Pull the npm job's artifact; composer still runs in
+  # before_script because these jobs need the dev dependencies the composer job omits.
+  needs:
+    - npm
+  dependencies:
+    - npm
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
     - cd metager

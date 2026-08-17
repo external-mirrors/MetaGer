@@ -15,6 +15,6 @@
 	<textarea id="codesnippet" readonly>
 	{{ $template_webpage }}
 	</textarea>
-	<script src="{{ mix('js/widgets.js') }}"></script>
+	<script src="{{ Vite::asset('resources/js/widgets.js') }}"></script>
 </div>
 @endsection

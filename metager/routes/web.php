@@ -1,8 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
-use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
@@ -182,13 +182,13 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('to_mail', $to_mail)
             ->with('navbarFocus', 'kontakt')
             ->with('url', $url)
-            ->with('js', [mix('js/contact.js')])
-            ->with("css", [mix("css/contact.css")]);
+            ->with('js', [Vite::asset('resources/js/contact.js')])
+            ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')]);
     })->name("contact");
 
     //Route::post('kontakt', [MailController::class, 'contactMail']);
     Route::get('adblocker', function () {
-        return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
+        return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [Vite::asset('resources/less/metager/pages/adblocker.less')]]));
     })->name("adblocker");
 
     Route::group(["prefix" => "membership"], function () {
@@ -246,7 +246,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
 
     Route::get('datenschutz', function () {
         return view('privacy')
-            ->with('css', [mix('/css/privacy.css')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/privacy.less')])
             ->with('navbarFocus', 'datenschutz');
     });
 
@@ -268,7 +268,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.help'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -289,7 +289,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.help-mainpages'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -304,7 +304,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.help-functions'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -319,7 +319,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.help-services'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -334,7 +334,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.help-privacy-protection'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -359,7 +359,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('navbarFocus', 'hilfe')
             ->with("previous_url", $previous_url)
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -380,7 +380,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         return view('widget.websearch')
             ->with('title', trans('titles.websearch'))
             ->with('navbarFocus', 'dienste')
-            ->with('css', [mix('css/widget/widget.css'), mix('css/widget/widget-template.css')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/widget/widget.less'), Vite::asset('resources/less/metager/pages/widget/widget-template.less')])
             ->with('template_preview', view('widget.websearch-template')->render())
             ->with('template_webpage', view('widget.websearch-template', ["css" => $css])->render());
     });
@@ -396,7 +396,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::get('prevention', function () {
         return view('prevention-information')
             ->with('title', trans('titles.prevention'))
-            ->with('css', [mix('/css/prevention-information.css')]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/prevention-information.less')]);
     });
 
     Route::get('ad-info', function () {
@@ -423,7 +423,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('request', $request->input('request', 'GET'))
             ->with('browser', $browser->name())
             ->with('css', [
-                mix('/css/plugin-page.css'),
+                Vite::asset('resources/less/metager/pages/plugin-page.less'),
             ]);
     })->name("plugin");
 

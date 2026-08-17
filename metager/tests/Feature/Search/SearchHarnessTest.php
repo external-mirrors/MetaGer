@@ -121,6 +121,14 @@ class SearchHarnessTest extends TestCase
      * Worth pinning because D2 removes 28 parsers on the grounds that
      * config/foki.json governs what users can reach — this records that foki.json
      * is an upper bound, not the actual set.
+     *
+     * Quicktips is filtered out rather than asserted: it is not a search engine
+     * but rides the same fetch queue under the name "Quicktips"
+     * (Quicktips::…->rpush(MetaGer::FETCHQUEUE_KEY)), and it only queues a
+     * mission when its own answer is not already cached — so whether it appears
+     * depends on cache state left by earlier runs, not on this search. That it
+     * shares the queue at all is worth knowing before D7c touches the
+     * orchestration: the queue carries more than engines.
      */
     public function testADefaultWebSearchQueriesOnlyTheEnginesEnabledByDefault(): void
     {
@@ -131,9 +139,11 @@ class SearchHarnessTest extends TestCase
 
         $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web");
 
+        $engines = array_values(array_diff($fetcher->queuedEngines(), ["Quicktips"]));
+
         $this->assertSame(
             ["brave", "serper_web"],
-            $fetcher->queuedEngines(),
+            $engines,
             "The set of engines a default web search asks has changed."
         );
     }

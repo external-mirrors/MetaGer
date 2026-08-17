@@ -90,6 +90,13 @@ class SearchAuthorizationTest extends TestCase
         $claims = Redis::connection(config("cache.stores.redis.connection"))
             ->hgetall("keyserver:claims:test-key");
 
+        $why = [];
+        foreach ($engines->sumas as $name => $suma) {
+            $why[] = $name . ": " . ($suma->configuration->disabled
+                ? implode("+", array_map(fn($r) => $r->name ?? (string) $r, $suma->configuration->disabledReasons))
+                : "enabled");
+        }
+
         return sprintf(
             "The search was refused.\n"
                 . "  redirected to : %s\n"
@@ -98,7 +105,9 @@ class SearchAuthorizationTest extends TestCase
                 . "  search cost   : %s (raw %s)\n"
                 . "  suggestion debt: %s\n"
                 . "  claims on key : %s\n"
-                . "  engines enabled: %d",
+                . "  engines enabled: %d\n"
+                . "  locale        : regional=%s language=%s app.locale=%s app.url=%s\n"
+                . "  engines       : %s",
             $response->headers->get("Location") ?? "(no Location header)",
             $user === null ? "none — the key guard has no user, so the legacy path ran" : $user->key,
             var_export($user?->key_data["charge"] ?? null, true),
@@ -106,7 +115,12 @@ class SearchAuthorizationTest extends TestCase
             var_export($engines->getRawSearchCost(), true),
             var_export(SuggestionDebtAuthorization::GET_DEBT(), true),
             json_encode($claims),
-            count($engines->getEnabledSearchengines() ?: [])
+            count($engines->getEnabledSearchengines() ?: []),
+            \LaravelLocalization::getCurrentLocaleRegional(),
+            \App\Localization::getLanguage(),
+            config("app.locale"),
+            config("app.url"),
+            implode(", ", $why)
         );
     }
 

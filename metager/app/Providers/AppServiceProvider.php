@@ -6,6 +6,7 @@ use App\Localization;
 use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
+use App\Support\UpstreamUserAgent;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
@@ -51,6 +52,9 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LogsAccountProvider::class, function ($app) {
             return new LogsAccountProvider();
         });
+        // One per request: every engine of the fokus asks for it, and resolving
+        // it means parsing the client's User-Agent.
+        $this->app->singleton(UpstreamUserAgent::class);
         Auth::provider("logs", function ($app, array $config) {
             return new LogsUserProvider($app->make(LogsUser::class));
         });

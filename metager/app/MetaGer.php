@@ -68,7 +68,6 @@ class MetaGer
     protected $canCache = false;
     # Daten über die Abfrage$
     protected $ip;
-    protected $useragent;
     protected $language;
     protected $agent;
     protected $apiKey = "";
@@ -808,8 +807,6 @@ class MetaGer
         # IP
         $this->ip = $this->anonymizeIp(\Request::ip());
 
-        $this->useragent = \Request::header('User-Agent');
-
         # Language
         if (isset($_SERVER['HTTP_LANGUAGE'])) {
             $this->language = $_SERVER['HTTP_LANGUAGE'];
@@ -1435,11 +1432,6 @@ class MetaGer
     public function getIp()
     {
         return $this->ip;
-    }
-
-    public function getUserAgent()
-    {
-        return $this->useragent;
     }
 
     public function getEingabe()

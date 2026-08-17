@@ -8,6 +8,7 @@ use App\Models\Authorization\Authorization;
 use app\Models\parserSkripte\Overture;
 use App\PrometheusExporter;
 use App\SearchSettings;
+use App\Support\UpstreamUserAgent;
 use Auth;
 use Cache;
 use Carbon;
@@ -41,7 +42,7 @@ abstract class Searchengine
     public $homepage; # Die Homepage dieser Suchmaschine
     public $name; # Der Name dieser Suchmaschine
     public $disabled; # Ob diese Suchmaschine ausgeschaltet ist
-    public $useragent; # Der HTTP Useragent
+    public $useragent; # Der HTTP Useragent, den wir nach draußen senden
     public $startTime; # Die Zeit der Erstellung dieser Suchmaschine
 
     private $username; # Username für HTTP-Auth (falls angegeben)
@@ -67,9 +68,8 @@ abstract class Searchengine
 
 
         $metager = app(MetaGer::class);
-        // Thanks to our Middleware this is a almost completely random useragent
-        // which matches the correct device type
-        $this->useragent = $metager->getUserAgent();
+        // A generic User-Agent, not the visitor's own — see UpstreamUserAgent.
+        $this->useragent = app(UpstreamUserAgent::class)->value();
         $this->ip = $metager->getIp();
         $this->startTime = microtime(true);
 

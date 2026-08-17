@@ -42,7 +42,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])->group(function () {
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class])->group(function () {
 
     Route::get("robots.txt", function (Request $request) {
         $responseData = "";

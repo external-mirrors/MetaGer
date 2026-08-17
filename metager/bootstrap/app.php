@@ -32,15 +32,21 @@ return Application::configure(basePath: dirname(__DIR__))
             '144.76.88.77',
             '167.233.15.225',
         ]);
+        // PreventRequestForgery is Laravel 13's name for what used to be
+        // VerifyCsrfToken. The removals below must name the *new* class:
+        // VerifyCsrfToken survives only as a deprecated alias, and removal
+        // matches on the exact class name, so naming the alias silently leaves
+        // the real middleware in the stack. Web routes run without StartSession,
+        // so it then fatals on $request->session() — a 500 on every page.
         $middleware->remove([
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
         ]);
         $middleware->removeFromGroup('web', [
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class,
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\EncryptCookies::class,
             \App\Http\Middleware\VerifyCsrfToken::class,

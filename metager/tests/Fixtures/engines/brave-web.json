@@ -1,0 +1,29 @@
+{
+  "query": {
+    "original": "kaffee",
+    "altered": "kaffee",
+    "more_results_available": false
+  },
+  "web": {
+    "results": [
+      {
+        "title": "Kaffee &amp; Zubereitung",
+        "url": "https://example.org/kaffee",
+        "description": "Alles &uuml;ber Kaffee, R&ouml;stung und Zubereitung.",
+        "meta_url": { "netloc": "example.org", "path": "/kaffee" }
+      },
+      {
+        "title": "Kaffeesorten im Vergleich",
+        "url": "https://beispiel.de/sorten",
+        "description": "Arabica, Robusta und was sie unterscheidet.",
+        "meta_url": { "netloc": "beispiel.de", "path": "/sorten" }
+      },
+      {
+        "title": "Espresso richtig zubereiten",
+        "url": "https://example.org/espresso",
+        "description": "Mahlgrad, Druck und Brühtemperatur.",
+        "meta_url": { "netloc": "example.org", "path": "/espresso" }
+      }
+    ]
+  }
+}

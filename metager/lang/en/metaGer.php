@@ -160,12 +160,6 @@ return [
         'min' => 'Minimum sleep (in s)',
         'max' => 'Maximum sleep (in s)',
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Support MetaGer',
-            'description' => 'With your donation you support the maintenance and further development of the independent search engine metager.org and the work of the non-profit association SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Do you need help?</h2> Do you have negative thoughts or want to talk to someone? On our <a href=":prevurl" target="_blank"> prevention page</a> you will find a list of help facilities you can turn to.',
     ],

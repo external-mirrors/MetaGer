@@ -58,7 +58,6 @@ class Brave extends Searchengine
             'cache-duration' => -1,
             'disabled' => false,
             'filter-opt-in' => false,
-            'ads' => false,
             'cost' => 0.8,
             'infos' => [
                 'homepage' => 'https://search.brave.com/',

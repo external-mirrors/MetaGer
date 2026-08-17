@@ -131,12 +131,6 @@ return [
             'name' => 'Licens',
         ],
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Støt MetaGer',
-            'description' => 'Med din donation støtter du vedligeholdelsen og videreudviklingen af den uafhængige søgemaskine metager.org og arbejdet i den almennyttige forening SUMA-EV.',
-        ],
-    ],
     'results' => [
         'failed' => 'Vi har desværre ingen resultater for din søgning.',
         'failedSitesearch' => 'Vi har desværre ingen resultater til din søgning. Det kan skyldes, at din aktuelle søgning er begrænset til hjemmesiden ":site". Hvis du vil fjerne denne begrænsning, skal du klikke her: <a href=":altSearch">Ny søgning</a>',

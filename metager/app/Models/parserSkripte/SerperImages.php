@@ -54,7 +54,6 @@ class SerperImages extends Searchengine
             'cache-duration' => -1,
             'disabled' => false,
             'filter-opt-in' => false,
-            'ads' => false,
             'cost' => 0.2,
             // Static equivalent of the SearchEngineInfos this class also sets
             // imperatively below in __construct(). SearchEngineRegistry (used by

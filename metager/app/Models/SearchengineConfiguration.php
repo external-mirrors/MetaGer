@@ -46,8 +46,6 @@ class SearchengineConfiguration
     /** @var bool */
     public $disabledByDefault = false;
     /** @var bool */
-    public $ads = false;
-    /** @var bool */
     public $filterOptIn = false;
     /** @var int */
     public $monthlyRequests;
@@ -107,9 +105,6 @@ class SearchengineConfiguration
                 $this->filterOptIn = $engineConfigurationJson->{"filter-opt-in"};
             if (property_exists($engineConfigurationJson, "monthly-requests")) {
                 $this->monthlyRequests = $engineConfigurationJson->{"monthly-requests"};
-            }
-            if (property_exists($engineConfigurationJson, "ads")) {
-                $this->ads = $engineConfigurationJson->ads;
             }
             if (property_exists($engineConfigurationJson, "infos")) {
                 $infos = $engineConfigurationJson->infos;

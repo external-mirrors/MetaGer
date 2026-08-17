@@ -28,7 +28,6 @@ abstract class Searchengine
 
     public $totalResults = 0; # How many Results the Searchengine has found
     public $results = []; # Die geladenen Ergebnisse
-    public $ads = []; # Die geladenen Werbungen
     public $products = []; # Die geladenen Produkte
     /** @var Result[] */
     public $news = [];

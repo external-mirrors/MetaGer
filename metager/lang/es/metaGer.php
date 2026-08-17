@@ -28,12 +28,6 @@ return [
         'failed' => 'Habéis querido una búsqueda en ":site". Los motores de busqueda seleccioados no tienen resultados. Podéis hacer el sitesearch en el foco "Web":  <a href=":searchLink">hier</a>',
         'success' => 'Habéis querido una búsqueda "sitesearch". Recibís resultados solo de  <a href="http://:site" target="_blank" rel="noopener">":site"</a> .',
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Apoya a MetaGer',
-            'description' => 'Con tu donación apoyas el mantenimiento y desarrollo del motor de búsqueda independiente metager.org y el trabajo de la asociación sin ánimo de lucro SUMA-EV.',
-        ],
-    ],
     'feedback' => '¿No hay nada adecuado aquí? Danos tu opinión ',
     'filter' => [
         'noFilter' => 'Cualquier',

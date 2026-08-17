@@ -110,6 +110,3 @@
 		</div>
 	</form>
 </fieldset>
-@if(config("metager.metager.admitad.suggestions_enabled") && app(\App\SearchSettings::class)->suggestions !== "off")
-<script type="module" src="{{ Vite::asset('resources/js/suggest.js') }}"></script>
-@endif

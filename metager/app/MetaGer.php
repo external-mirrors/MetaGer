@@ -55,7 +55,6 @@ class MetaGer
     protected $results = [];
     protected $queryFilter = [];
     protected $parameterFilter = [];
-    protected $ads = [];
     public $news = [];
     public $videos = [];
     protected $infos = [];
@@ -81,9 +80,7 @@ class MetaGer
     protected $sprueche;
     protected $newtab;
     protected $domainsBlacklisted = [];
-    protected $adDomainsBlacklisted = [];
     protected $urlsBlacklisted = [];
-    protected $adUrlsBlacklisted = [];
     protected $blacklistDescriptionUrl = [];
     protected $url;
     protected $fullUrl;
@@ -112,17 +109,6 @@ class MetaGer
             # Re-index the array (array_filter preserves keys by default)
             $filtered_lines = array_values($filtered_lines);
             $this->urlsBlacklisted = $filtered_lines;
-        }
-
-        # Read blocklists
-        if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
-            $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
-            $this->adDomainsBlacklisted = explode("\n", $tmp);
-        }
-
-        if (file_exists(config_path() . "/adBlacklistUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
-            $this->adUrlsBlacklisted = explode("\n", $tmp);
         }
 
         if (file_exists(config_path() . "/blacklistDescriptionUrl.txt")) {
@@ -311,15 +297,6 @@ class MetaGer
             $results[] = $result->toApiArray();
         }
 
-        # Werbung ist eine eigene Liste, keine Ergebnisse. Ein Client muss sie
-        # als Werbung kennzeichnen können, und im Ergebnisarray wäre sie von
-        # einem organischen Treffer nicht zu unterscheiden. Der Atom-Feed löst
-        # dasselbe Problem über einen eigenen Namespace (ad:advertisement).
-        $ads = [];
-        while (($ad = $this->popAd()) !== null) {
-            $ads[] = $ad->toApiArray();
-        }
-
         $nextPage = $this->nextSearchLink();
 
         return array_merge([
@@ -344,7 +321,11 @@ class MetaGer
             "nextPage" => $nextPage === "#" ? null : $nextPage,
             "searchTime" => round(microtime(true) - $this->starttime, 2),
             "results" => $results,
-            "ads" => $ads,
+            # Immer leer. MetaGer zeigt keine Werbung mehr, und keine Suchmaschine
+            # liefert noch welche; das Feld bleibt nur, weil sein Wegfall die
+            # Schema-Version erhöht — das passiert in einem eigenen Commit, damit
+            # bestehende Clients nicht mit dem Aufräumen brechen.
+            "ads" => [],
             # Normale Zustände, keine Fehler: leere Ergebnisliste mit Hinweis.
             "warnings" => array_values($this->warnings),
             "errors" => array_values($this->errors),
@@ -392,25 +373,6 @@ class MetaGer
 
         $this->duplicationCheck();
 
-        # Validate Advertisements
-        $newResults = [];
-        foreach ($this->ads as $ad) {
-            if (
-                ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLink, $this->adUrlsBlacklisted)))
-            ) {
-                continue;
-            }
-            $newResults[] = $ad;
-        }
-
-        $this->ads = $newResults;
-
-        #Adgoal Implementation
-        if (empty($this->adgoalLoaded)) {
-            $this->adgoalLoaded = false;
-        }
-
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
                 $no_sitesearch_query = str_replace(urlencode("site:" . $this->site), "", $this->fullUrl);
@@ -442,9 +404,6 @@ class MetaGer
                 if ($result->valid) {
                     $this->results[] = clone $result;
                 }
-            }
-            foreach ($engine->ads as $ad) {
-                $this->ads[] = clone $ad;
             }
             foreach ($engine->news as $news) {
                 $this->news[] = clone $news;
@@ -508,17 +467,6 @@ class MetaGer
                             )
                         );
                 }
-                // The duplicate might already be an adgoal partnershop
-                if ($this->results[$i]->partnershop) {
-                    # Den Link hinzufügen:
-                    $arr[$link]->logo = $this->results[$i]->logo;
-                    $arr[$link]->image = $this->results[$i]->image;
-                    $arr[$link]->link = $this->results[$i]->link;
-                    $arr[$link]->partnershop = $this->results[$i]->partnershop;
-                }
-
-
-
                 array_splice($this->results, $i, 1);
                 $i--;
                 if ($arr[$link]->new === true || $this->results[$i]->new === true) {
@@ -528,51 +476,6 @@ class MetaGer
                 $arr[$link] = &$this->results[$i];
             }
         }
-    }
-
-    /**
-     * Modifies the already filled array of advertisements and
-     * includes an advertisement for our donation page.
-     * 
-     * It will do so everytime when there are other advertisments to mix it in
-     * and only in a percentage of cases when there are no other advertisements.
-     * 
-     * The Position at which our advertisement is placed is random within the other
-     * advertisements. In some cases it will be the first ad and in other cases in some
-     * other place.
-     *
-     * @param int $position Position to ad advertisement at or null if random
-     *
-     * @return int | null Position where advertisement was added
-     */
-    public function addDonationAdvertisement(?int $position = null)
-    {
-        return;
-        /**
-         * If there are no other advertisements we will only display our advertisements 
-         * every so often. ~33% in this case
-         * ToDo set back to 5 once we do not want to advertise donations as much anymore
-         */
-        if ($position === null && rand(1, 100) >= 34) {
-            return null;
-        }
-
-        $donationAd = new \App\Models\Result(
-            "MetaGer",
-            __("metaGer.ads.own.title"),
-            route("spende"),
-            route("spende"),
-            __("metaGer.ads.own.description"),
-            "MetaGer",
-            "https://metager.de",
-            1
-        );
-        $adCount = sizeof($this->ads);
-        // Put Donation Advertisement to random position
-        $position = $position !== null ? $position : random_int(0, $adCount);
-
-        array_splice($this->ads, $position, 0, [$donationAd]);
-        return $position;
     }
 
     public function startSearch()
@@ -651,35 +554,11 @@ class MetaGer
         return app(SearchSettings::class)->fokus === "bilder";
     }
 
-    public function sumaIsAdsuche($suma, $overtureEnabled)
-    {
-        $sumaName = $suma["name"]->__toString();
-        return
-            $sumaName === "qualigo"
-            || $sumaName === "similar_product_ads"
-            || (!$overtureEnabled && $sumaName === "overtureAds");
-    }
-
     public function sumaIsDisabled($suma)
     {
         return
             isset($suma['disabled'])
             && $suma['disabled']->__toString() === "1";
-    }
-
-    public function sumaIsOverture($suma)
-    {
-        return
-            $suma["name"]->__toString() === "overture"
-            || $suma["name"]->__toString() === "overtureAds";
-    }
-
-    public function sumaIsNotAdsuche($suma)
-    {
-        return
-            $suma["name"]->__toString() !== "qualigo"
-            && $suma["name"]->__toString() !== "similar_product_ads"
-            && $suma["name"]->__toString() !== "overtureAds";
     }
 
     public function waitForMainResults()
@@ -1231,15 +1110,6 @@ class MetaGer
             }
         }
         return false;
-    }
-
-    public function popAd()
-    {
-        if (count($this->results) > 0 && count($this->ads) > 0) {
-            return array_shift($this->ads);
-        } else {
-            return null;
-        }
     }
 
     public function canCache()

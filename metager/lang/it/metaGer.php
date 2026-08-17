@@ -160,12 +160,6 @@ return [
         'success' => 'Si sta effettuando una ricerca per sito. Verranno mostrati solo i risultati del sito web <a href=\"http://:site\" target=\"_blank\" rel="noopener\">":site\"</a>.',
     ],
     'feedback' => 'Non è quello che stavate cercando? Dateci un feedback: ',
-    'ads' => [
-        'own' => [
-            'title' => 'Sostenere MetaGer',
-            'description' => 'Con la vostra donazione sostenete il mantenimento e l\'ulteriore sviluppo del motore di ricerca indipendente metager.org e il lavoro dell\'associazione no-profit SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Avete bisogno di aiuto?</h2> Avete pensieri negativi o volete parlare con qualcuno? Sulla nostra pagina di prevenzione <a href=":prevurl" target="_blank"></a> troverete un elenco di strutture di aiuto a cui potete rivolgervi.',
     ],

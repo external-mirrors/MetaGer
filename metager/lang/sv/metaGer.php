@@ -160,12 +160,6 @@ return [
         'min' => 'Minsta sömn (i s)',
         'max' => 'Maximal sömn (i s)',
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Stöd MetaGer',
-            'description' => 'Med din donation stöder du underhållet och vidareutvecklingen av den oberoende sökmotorn metager.org och arbetet i den ideella föreningen SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Behöver du hjälp?</h2> Har du negativa tankar eller vill du prata med någon? På vår förebyggande sida <a href=":prevurl" target="_blank"></a> hittar du en lista över hjälpinstanser du kan vända dig till.',
     ],

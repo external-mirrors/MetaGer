@@ -17,8 +17,6 @@ Schedule::command("heartbeat")->everyMinute();
 Schedule::command("requests:gather")->everyFifteenMinutes();
 Schedule::command("logs:gather")->everyMinute();
 Schedule::command("logs:truncate")->daily()->onOneServer();
-Schedule::command("load:affiliate-blacklist")->everyMinute();
-Schedule::command("affilliates:store")->everyMinute()->onOneServer();
 Schedule::call(function () {
     DB::table('monthlyrequests')->truncate();
     DB::disconnect('mysql');

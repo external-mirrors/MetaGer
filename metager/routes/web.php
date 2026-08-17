@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Vite;
-use App\Http\Controllers\AdgoalController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
@@ -224,12 +223,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         Route::post('/{amount}/{interval}/paypal/{funding_source}/subscription', [DonationController::class, 'paypalCreateSubscription'])->name("paypal-subscription");
     });
 
-    Route::get('partnershops', function () {
-        return view('spende.partnershops')
-            ->with('title', trans('titles.partnershops'))
-            ->with('navbarFocus', 'foerdern');
-    })->name("partnershops");
-
     Route::get('beitritt', function () {
         if (Localization::getLanguage() === "de") {
             return response()->download(storage_path('app/public/aufnahmeantrag-de.pdf'), "SUMA-EV_Beitrittsformular_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
@@ -400,11 +393,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('css', [Vite::asset('resources/less/metager/pages/prevention-information.less')]);
     });
 
-    Route::get('ad-info', function () {
-        return view('ad-info')
-            ->with('title', trans('titles.ad-info'));
-    });
-
     Route::get('age.xml', function () {
         $response = Response::make(file_get_contents(resource_path('age/age.xml')));
         $response->header('Content-Type', "application/xml");
@@ -534,10 +522,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         $router->get('/', [Prometheus::class, "metrics"]);
     });
 
-
-    Route::group(['prefix' => 'partner'], function () {
-        Route::get('r', [AdgoalController::class, 'forward'])->name('adgoal-redirect');
-    });
 
     Route::group(['prefix' => 'health-check'], function () {
         Route::get('liveness', [HealthcheckController::class, 'liveness']);

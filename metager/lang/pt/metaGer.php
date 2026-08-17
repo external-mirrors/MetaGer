@@ -131,12 +131,6 @@ return [
             'name' => 'Pesquisa segura',
         ],
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Apoiar o MetaGer',
-            'description' => 'Com o seu donativo, apoia a manutenção e o desenvolvimento do motor de busca independente metager.org e o trabalho da associação sem fins lucrativos SUMA-EV.',
-        ],
-    ],
     'results' => [
         'failed' => 'Infelizmente, não temos resultados para a sua pesquisa.',
         'failedSitesearch' => 'Infelizmente, não temos resultados para a sua pesquisa. Isto pode acontecer porque a sua pesquisa atual está limitada ao sítio Web ":site". Se pretender remover esta restrição, clique aqui: <a href=":altSearch">Nova pesquisa</a>',

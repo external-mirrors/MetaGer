@@ -56,12 +56,6 @@
                     {{ $result->anzeigeLink }}
                 </a>
             @endif
-            @if (isset($result->partnershop) && $result->partnershop === true)
-                <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/partnershops') }}"
-                    target="_blank" class="badge" rel="noopener">
-                    <div>{!! trans('result.options.4') !!}</div>
-                </a>
-            @endif
         </div>
         @if (sizeof($result->deepResults['buttons']) > 0)
             <ul class="result-deep-buttons">
@@ -119,12 +113,7 @@
                     {!! trans('result.options.6') !!}
                 </a>
             @endif
-            @if (isset($result->partnershop) && $result->partnershop === true)
-                <a class="result-open-key" title="@lang('result.metagerkeytext')"
-                    href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}" target="_blank">
-                    @lang('result.options.8')
-                </a>
-            @elseif (request()->header("is-proxy") !== "true")
+            @if (request()->header("is-proxy") !== "true")
                 {{-- All SafeBrowse parameters travel in the hash (never the query string): clicking
                      another result must only change the fragment of the already-open named tab, so
                      the running SafeBrowse app receives a hashchange instead of a full reload.

@@ -85,7 +85,6 @@ const assets = laravel({
 
         // -- scripts ------------------------------------------------
         "resources/js/utility.js",
-        "resources/js/suggest.js",
         "resources/js/scriptResultPage.js",
         "resources/js/scriptSettings.js",
         "resources/js/imagesearch.js",

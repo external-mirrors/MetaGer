@@ -163,10 +163,4 @@ return [
     'prevention' => [
         'phrase' => '<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
     ],
-    'ads' => [
-        'own' => [
-            'title' => "Jetzt MetaGer unterstützen",
-            'description' => "Mit Ihrer Spende unterstützen Sie die Pflege und Weiterentwicklung der unabhängigen Suchmaschine metager.org und die Arbeit des gemeinnützigen Vereins SUMA-EV.",
-        ],
-    ],
 ];

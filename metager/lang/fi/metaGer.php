@@ -160,12 +160,6 @@ return [
         'success' => 'Teet sivustohakua. Vain sivuston <a href=\"http://:site\" target=\"_blank\" rel=\"noopener\">\":site\"</a> tulokset näytetään.',
     ],
     'feedback' => 'Etkö etsinyt sitä? Anna meille palautetta: ',
-    'ads' => [
-        'own' => [
-            'title' => 'Tuki MetaGer',
-            'description' => 'Lahjoituksellasi tuet riippumattoman hakukoneen metager.org ylläpitoa ja jatkokehitystä sekä voittoa tavoittelemattoman yhdistyksen SUMA-EV:n työtä.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Tarvitsetko apua?</h2> Onko sinulla negatiivisia ajatuksia tai haluatko puhua jonkun kanssa? Ehkäisysivuiltamme <a href=":prevurl" target="_blank"></a> löydät luettelon avustuslaitoksista, joiden puoleen voit kääntyä.',
     ],

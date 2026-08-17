@@ -49,7 +49,6 @@ class Mojeek extends Searchengine
             'cache-duration' => 0,
             'disabled' => false,
             'filter-opt-in' => false,
-            'ads' => false,
             'cost' => 0.3,
             'infos' => [
                 'homepage' => 'https://www.mojeek.com/',

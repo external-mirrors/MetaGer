@@ -1,7 +1,6 @@
 <?php
 
 return [
-    "affiliate_preference" => "adgoal",
     "botprotection" => [
         "enabled" => env("BOT_PROTECTION", false),
         "whitelist" => explode(",", env("BOT_PROTECTION_WHITELIST", "")),

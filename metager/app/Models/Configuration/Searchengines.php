@@ -73,12 +73,6 @@ class Searchengines
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
             }
-            // Disable searchengine if it serves ads and this request is authorized
-            if ($suma->configuration->ads && app(Authorization::class)->canDoAuthenticatedSearch()) {
-                $suma->configuration->disabled = true;
-                $suma->configuration->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
-                $this->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
-            }
             // Disable all searchengines not supported by this fokus
             if (!in_array($suma->name, $engines_in_fokus)) {
                 $suma->configuration->disabled = true;

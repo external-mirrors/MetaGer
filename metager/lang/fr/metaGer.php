@@ -160,12 +160,6 @@ return [
         'phrase' => 'Vous effectuez une recherche par chaîne de caractères : :phrase',
     ],
     'feedback' => 'Vous ne trouvez pas ce que vous cherchez ? Faites-nous part de vos commentaires : ',
-    'ads' => [
-        'own' => [
-            'title' => 'Soutenir MetaGer',
-            'description' => 'Par votre don, vous soutenez le maintien et le développement du moteur de recherche indépendant metager.org et le travail de l\'association sans but lucratif SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Avez-vous besoin d\'aide ?</h2> Vous avez des pensées négatives ou vous voulez parler à quelqu\'un ? Sur notre page de prévention <a href=":prevurl" target="_blank"></a> , vous trouverez une liste de services d\'aide auxquels vous pouvez vous adresser.',
     ],

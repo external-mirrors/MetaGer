@@ -17,6 +17,12 @@
     CACHE_STORE: array
     SESSION_DRIVER: array
     QUEUE_CONNECTION: sync
+    # Not every Redis call goes through the cache. SchedulerHeartbeat reads the stamp with
+    # Redis::get, and the search path will block on Redis::brpop, so an array cache store
+    # does not make the suite Redis-free — it only hides which parts still need one. Point
+    # the default connection at the service below; the .env copied in leaves REDIS_HOST at
+    # localhost, which is why this failed with "Connection refused [tcp://127.0.0.1:6379]".
+    REDIS_HOST: redis
   # Every rendered page resolves its stylesheets and scripts through the Vite manifest, and
   # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
   # the built frontend, not just vendor/. Pull the npm job's artifact; composer still runs in
@@ -57,6 +63,10 @@ test:
   needs:
     - npm
     - fpm
+  # Same image as docker-compose runs locally, so a test that passes on a laptop passes here.
+  services:
+    - name: redis:8.10
+      alias: redis
   script:
     - php artisan test --without-tty
 
@@ -69,9 +79,13 @@ test:
 # and has to stay behind it in stage order.
 browsertest:
   extends: .test_base
+  # `extends` replaces list values rather than merging them, so redis has to be repeated
+  # here — leaving it out would silently take it away from this job alone.
   services:
     - name: selenium/standalone-firefox:153.0
       alias: selenium-standalone-firefox
+    - name: redis:8.10
+      alias: redis
   variables:
     SELENIUM_HOST: selenium-standalone-firefox
     # The Dusk tests derive their expected URLs from `app.locale`, which the config cache

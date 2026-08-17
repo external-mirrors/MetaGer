@@ -50,9 +50,25 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 ->assertPresent("#searchbar-replacement a.startpage-create-btn")
                 ->assertPresent("#searchbar-replacement a.startpage-login-btn");
 
-            // Real navigable links, not script hooks.
-            $browser->click("#searchbar-replacement a.startpage-create-btn")
-                ->waitForLocation("/de-DE/keys");
+            // Real navigable links, not script hooks: an href a browser with no
+            // JavaScript can follow on its own, carrying the locale prefix that
+            // LaravelLocalization put on the current request.
+            //
+            // Asserted rather than clicked. /keys is not a MetaGer route — nginx
+            // proxies "^(/.*)?/keys" to the keymanager service — so following the
+            // link leaves the application under test, and its answer (today a 301
+            // to /de-DE/keys/) is that service's business, not this suite's.
+            // Clicking through without JavaScript is covered below, on a page
+            // MetaGer actually serves.
+            $this->assertStringEndsWith(
+                "/de-DE/keys",
+                $browser->attribute("#searchbar-replacement a.startpage-create-btn", "href")
+            );
+
+            $this->assertStringContainsString(
+                "/de-DE/keys/key/enter",
+                $browser->attribute("#searchbar-replacement a.startpage-login-btn", "href")
+            );
         });
     }
 

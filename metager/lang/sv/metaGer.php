@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'Det fanns ingen sökmotor som stödde ett av dina filteralternativ. Filter som för närvarande är aktiva: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Kunde inte hitta suma-filen',
         'noSearch' => 'Observera: Du har inte skrivit in något sökord. Vänligen skriv in sökord och försök igen',
         'dartEurope' => 'Tips: du har aktiverat Dart-Europe. Därför kan svarstiden vara längre och är inställd på 10 sek',
         'hostBlacklist' => 'Resultat för följande domäner kommer inte att visas: \":värd\"',

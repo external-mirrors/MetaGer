@@ -19,7 +19,6 @@ return [
         'domainBlacklist' => 'No recibís resultados del dominio: ":domain"',
         'stopwords' => 'Resultados sin ":stopwords"',
         'phrase' => 'Resultados ":phrase"',
-        'cantLoad' => 'No se ha podido encontrar el archivo Suma',
         'dartEurope' => 'Nota: Ha activado Dart-Europe. Por lo tanto, la búsqueda puede ser más larga y el tiempo máximo de búsqueda se ha aumentado a 10 segundos.',
         'hostBlacklistCount' => 'No se muestran los resultados de los hosts :count.',
         'domainBlacklistCount' => 'No se muestran los resultados de los dominios :count.',

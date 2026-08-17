@@ -143,7 +143,6 @@ return [
         'domainBlacklistCount' => ':count-verkkotunnusten tuloksia ei näytetä.',
         'urlBlacklist' => 'Tuloksia, jotka sisältävät \":url\", ei näytetä.',
         'stopwords' => 'Olet sulkenut pois tulokset, joissa on seuraavat sanat: \":stopwords\"',
-        'cantLoad' => 'Ei löytynyt suma-tiedostoa',
         'hostBlacklistCount' => 'Tuloksia :count hosts ei näytetä.',
         'domainBlacklist' => 'Nämä verkkotunnukset jätetään huomiotta: \":domain\"',
         'phrase' => 'Teet merkkijonohakua: :phrase',

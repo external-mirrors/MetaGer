@@ -145,7 +145,6 @@ return [
         'noSpecialSearch' => 'Non c\'era nessun motore di ricerca che supportasse una delle opzioni di filtro. Filtri attualmente attivi: ":filtro".',
     ],
     'formdata' => [
-        'cantLoad' => 'Impossibile trovare il file suma',
         'noSearch' => 'Attenzione: non è stata digitata alcuna parola di ricerca. Digitare le parole di ricerca e riprovare',
         'dartEurope' => 'Suggerimento: avete attivato Dart-Europe. Pertanto il tempo di risposta potrebbe essere più lungo ed è impostato su 10 sec.',
         'hostBlacklist' => 'I risultati dei seguenti domini non verranno visualizzati: \":host\"',

@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'Für eine Ihrer Filteroptionen gab es keine Suchmaschine im aktuellen Fokus (:fokus), welche diese unterstützen würde. Sie haben folgende(n) Filter aktiv: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Suma-File konnte nicht gefunden werden',
         'noSearch' => 'Achtung: Sie haben keinen Suchbegriff eingegeben. Sie können ihre Suchbegriffe oben eingeben und es erneut versuchen.',
         'dartEurope' => 'Hinweis: Sie haben Dart-Europe aktiviert. Die Suche kann deshalb länger dauern und die maximale Suchzeit wurde auf 10 Sekunden hochgesetzt.',
         'hostBlacklist' => 'Ergebnisse von folgenden Hosts werden nicht angezeigt: ":host"',

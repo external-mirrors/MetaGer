@@ -96,7 +96,6 @@ class MetaGer
     protected $redisEngineResult;
     protected $redisCurrentResultList;
     public $starttime;
-    protected $dummy = false;
 
     public function __construct($hash = "")
     {
@@ -788,15 +787,7 @@ class MetaGer
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
 
         # Suma-File
-        if ($this->dummy) {
-            $stressFile = \config_path("stress.json");
-            if (!file_exists($stressFile)) {
-                die(trans('metaGer.formdata.cantLoad'));
-            }
-            $this->sumaFile = json_decode(file_get_contents($stressFile));
-        } else {
-            $this->sumaFile = app(SearchEngineRegistry::class);
-        }
+        $this->sumaFile = app(SearchEngineRegistry::class);
         # Sucheingabe
         $this->eingabe = trim(\Request::input('eingabe', ''));
         $this->q = $this->eingabe;
@@ -1617,13 +1608,4 @@ class MetaGer
         return $this->framed;
     }
 
-    public function isDummy()
-    {
-        return $this->dummy;
-    }
-
-    public function setDummy($dummy)
-    {
-        $this->dummy = $dummy;
-    }
 }

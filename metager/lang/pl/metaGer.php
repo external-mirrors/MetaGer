@@ -8,7 +8,6 @@ return [
         'domainBlacklistCount' => 'Wyniki domen :count nie będą wyświetlane.',
         'urlBlacklist' => 'Wyniki zawierające \":url\" nie są wyświetlane.',
         'stopwords' => 'Wykluczono wyniki zawierające następujące słowa: \":stopwords\"',
-        'cantLoad' => 'Nie można znaleźć pliku suma',
         'noSearch' => 'Uwaga: nie wpisano wyszukiwanych słów. Wpisz wyszukiwane słowa i spróbuj ponownie',
         'phrase' => 'Wyszukujesz ciąg znaków: :phrase',
     ],

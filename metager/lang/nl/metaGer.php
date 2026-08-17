@@ -145,7 +145,6 @@ return [
         'noSpecialSearch' => 'Er was geen zoekmachine die een van je filteropties ondersteunde. Filters die momenteel actief zijn: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Kon suma-bestand niet vinden',
         'noSearch' => 'Let op: je hebt geen zoekwoord(en) ingevoerd. Typ zoekwoorden en probeer het opnieuw',
         'dartEurope' => 'Tip: je hebt Dart-Europe geactiveerd. Daarom kan de responstijd langer zijn en is deze ingesteld op 10 sec.',
         'hostBlacklist' => 'Resultaten van de volgende domeinen worden niet weergegeven: \":host"',

@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'There was no search engine supporting one of your filter options. Filters currently active: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Could not find suma-file',
         'noSearch' => 'Attention: you did not type in any search word/s. Please type search words and try again',
         'dartEurope' => 'Hint: you have activated Dart-Europe. Therefore the response time might be longer and is set to 10 sec',
         'hostBlacklist' => 'Results of the following domains will not be shown: \":host\"',

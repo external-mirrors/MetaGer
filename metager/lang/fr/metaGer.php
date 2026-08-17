@@ -149,7 +149,6 @@ return [
         'noSpecialSearch' => 'Aucun moteur de recherche ne prend en charge l\'une de vos options de filtre. Filtres actuellement actifs : ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Impossible de trouver le fichier suma',
         'noSearch' => 'Attention : vous n\'avez pas saisi de mot(s) de recherche. Veuillez saisir des mots de recherche et réessayer.',
         'dartEurope' => 'Conseil : vous avez activé Dart-Europe. Le temps de réponse peut donc être plus long et est fixé à 10 secondes.',
         'hostBlacklist' => 'Les résultats des domaines suivants ne seront pas affichés : \N":host\N":host\N":host\N":host\N":host\N".',

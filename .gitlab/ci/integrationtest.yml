@@ -115,7 +115,13 @@ test:
     # Kept out of .test_base on purpose: browsertest derives its expected URLs from the app.locale
     # the config cache froze, and it passes as it is.
     #
-    # Nothing deployed is affected — no entrypoint, Dockerfile or chart template runs `optimize`.
+    # This is not a CI-specific workaround. build/fpm/entrypoint/entrypoint_production.sh has run
+    # the same pair for as long as it has existed:
+    #
+    #     php artisan optimize
+    #     php artisan route:clear # Do not cache routes; Interferes with Localization
+    #
+    # This job was the only place that ran the first line without the second.
     - php artisan route:clear
     - php artisan test --without-tty
 

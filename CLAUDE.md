@@ -103,6 +103,25 @@ Under `artisan test` the console kernel's `SetRequestForConsole` builds that req
 `$this->get('/about')` works, `$this->get('/de-DE/about')` 404s. Per-locale URL coverage has to be
 a Dusk test.
 
+**Never leave routes cached — `php artisan optimize` must always be followed by `route:clear`.**
+Because the locale is resolved *while registering* routes, a route cache means `mapWebRoutes` never
+runs and `app.locale` stays the literal `'default'` from `config/app.php`. `entrypoint_production.sh`
+has done this since long before anyone wrote it down:
+
+```bash
+php artisan optimize
+php artisan route:clear # Do not cache routes; Interferes with Localization
+```
+
+It does not fail as a routing error, which is what makes it expensive to diagnose. Engines whose
+language map has no entry for the current locale are disabled, and the web engines declare
+`languages => []` with only exact regional keys — so *every* engine is disabled, `MetaGerSearch`
+answers "no enabled engines" with a redirect to `settings#engines`, and the whole search suite fails
+with `expected 200, got 302` and nothing in the log. The CI test job was the one place that ran
+`optimize` without the `route:clear`; that cost three pipeline round trips to find.
+`EngineReachabilityTest::testAWebSearchHasEnginesToQuery` now fails once and names the locale and
+the per-engine `DisabledReason`, instead of eighty tests failing identically.
+
 **`App\Support\Browser` is the only device-detection service.** It wraps `matomo/device-detector`
 and normalises names to the short forms the views branch on (`Edge`, not `Microsoft Edge`). It
 reads the Laravel Request, so `withHeader('User-Agent')` works from a test — unlike the three

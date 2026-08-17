@@ -32,6 +32,10 @@ class RecordingRedis
      */
     public function __call(string $method, array $arguments): mixed
     {
+        if (strtolower($method) === "pipeline") {
+            return $this->runPipeline($this->inner, $arguments);
+        }
+
         $this->record($method, $arguments);
 
         return $this->inner->{$method}(...$arguments);
@@ -51,11 +55,54 @@ class RecordingRedis
              */
             public function __call(string $method, array $arguments): mixed
             {
+                if (strtolower($method) === "pipeline") {
+                    return $this->recorder->runPipeline($this->inner, $arguments);
+                }
+
                 $this->recorder->recordFromConnection($method, $arguments);
 
                 return $this->inner->{$method}(...$arguments);
             }
         };
+    }
+
+    /**
+     * One round trip, recorded under the commands it carried — see
+     * PipelineProbe for why the contents rather than the key.
+     *
+     * @param array<int, mixed> $arguments
+     */
+    public function runPipeline(object $inner, array $arguments): mixed
+    {
+        $callbackAt = null;
+        foreach ($arguments as $index => $argument) {
+            if ($argument instanceof \Closure) {
+                $callbackAt = $index;
+            }
+        }
+
+        if ($callbackAt === null) {
+            // A pipeline used without a callback returns the raw pipeline
+            // object, and nothing here does that. Recorded as one round trip
+            // with nothing known about it rather than silently dropped.
+            $this->record("pipeline", []);
+
+            return $inner->pipeline(...$arguments);
+        }
+
+        $callback = $arguments[$callbackAt];
+        $probe = null;
+        $arguments[$callbackAt] = function ($pipe) use ($callback, &$probe) {
+            $probe = new PipelineProbe($pipe);
+
+            return $callback($probe);
+        };
+
+        $result = $inner->pipeline(...$arguments);
+
+        $this->record("pipeline", [implode(",", $probe?->commands ?? [])]);
+
+        return $result;
     }
 
     /**

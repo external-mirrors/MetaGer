@@ -126,8 +126,11 @@ class KeyUser implements Authenticatable
      */
     public function authorize(float $token_cost, $claim_duration_seconds = 30): bool
     {
+        // Read once per request. Other processes can add claims while this one
+        // runs, but re-reading would only narrow that window, not close it —
+        // there is no lock here by design.
         if ($this->claims === null) {
-            $this->claims = Redis::connection(config('cache.stores.redis.connection'))->hgetall("keyserver:claims:" . $this->key);
+            $this->claims = $this->claimsConnection()->hgetall($this->claimsKey());
         }
 
         $key_data = $this->getKeyData();
@@ -142,17 +145,25 @@ class KeyUser implements Authenticatable
         if ($claim_duration_seconds > 0) {
             $new_claim_amount = Arr::get($this->claims, $this->id, 0) + $token_cost;
             $this->claims[$this->id] = $new_claim_amount;
-            Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat("keyserver:claims:" . $this->key, $this->id, $token_cost);
-            Redis::connection(config('cache.stores.redis.connection'))->hexpireat("keyserver:claims:" . $this->key, now()->addSeconds($claim_duration_seconds)->timestamp, [$this->id]);
+
+            // The claim and the deadline it expires on are one statement about
+            // this request, and nothing between them depends on the other.
+            $this->claimsConnection()->pipeline(function ($pipe) use ($token_cost, $claim_duration_seconds) {
+                $pipe->hincrbyfloat($this->claimsKey(), $this->id, $token_cost);
+                $pipe->hexpireat($this->claimsKey(), now()->addSeconds($claim_duration_seconds)->timestamp, [$this->id]);
+            });
         }
         return $current_charge >= 0;
     }
 
     public function makePayment(float $token_cost): bool
     {
-        $claim_amount = Redis::connection(config('cache.stores.redis.connection'))->hget("keyserver:claims:" . $this->key, $this->id);
-        if ($claim_amount === null)
-            $claim_amount = 0;
+        // Our own claim, and only ever ours: $this->id is unique to this
+        // KeyUser, so no other process writes this field and $this->claims
+        // tracks every change we make to it. It used to be read back from Redis
+        // on every payment — once per paid engine — which asked the network for
+        // a number we had just written to it.
+        $claim_amount = Arr::get($this->claims ?? [], $this->id, 0);
 
         if ($claim_amount > 0 && $claim_amount < $token_cost) {
             if ($this->authorize($token_cost - $claim_amount, 30)) {
@@ -186,14 +197,34 @@ class KeyUser implements Authenticatable
             }
             Cache::put("keyserver:key:" . $this->key, $key_response, now()->addMinutes(30)); // Cache for 30 minutes
             $this->key_data = $key_response; // Store the key data for future use
-            $new_claim_amount = Arr::get($this->claims, $this->id, 0) - $token_cost;
+            $new_claim_amount = Arr::get($this->claims ?? [], $this->id, 0) - $token_cost;
             $this->claims[$this->id] = $new_claim_amount;
-            Redis::connection(config('cache.stores.redis.connection'))->hincrbyfloat("keyserver:claims:" . $this->key, $this->id, -$token_cost);
+            $this->claimsConnection()->hincrbyfloat($this->claimsKey(), $this->id, -$token_cost);
 
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Where this key's claims live. One hash per key, one field per request.
+     */
+    private function claimsKey(): string
+    {
+        return "keyserver:claims:" . $this->key;
+    }
+
+    /**
+     * Claims live on the cache connection, not the default one.
+     *
+     * Not memoized on the instance: the connection is a live socket and this
+     * object is reachable from things that get serialized. The manager already
+     * hands back the same connection each time.
+     */
+    private function claimsConnection(): mixed
+    {
+        return Redis::connection(config("cache.stores.redis.connection"));
     }
 
     private function getKeyData(): array|null

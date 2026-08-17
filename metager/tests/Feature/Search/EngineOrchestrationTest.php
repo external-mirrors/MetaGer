@@ -111,10 +111,24 @@ class EngineOrchestrationTest extends TestCase
         [, $recorder] = $this->searchRecording();
 
         $this->assertSame(
-            2,
-            $recorder->countOf("pipeline"),
-            "One pipeline to put the awaited answer back, one to read the rest.\n" . implode("\n", $recorder->trace())
+            1,
+            $recorder->countOfKey("pipeline", "lpush,expire"),
+            "The awaited answer is put back and re-expired in one round trip.\n" . implode("\n", $recorder->trace())
         );
+
+        // Whatever is left after the wait, read together. How many engines that
+        // is depends on which of them answered first, so the assertion is that
+        // there is one such round trip — not how many commands rode in it.
+        $reads = array_values(array_filter(
+            $recorder->trace(),
+            fn(string $line) => str_starts_with($line, "pipeline rpoplpush")
+        ));
+        $this->assertCount(
+            1,
+            $reads,
+            "The remaining engines were not all read in one round trip.\n" . implode("\n", $recorder->trace())
+        );
+
         $this->assertSame(
             0,
             $recorder->countOf("lpush"),
@@ -154,39 +168,48 @@ class EngineOrchestrationTest extends TestCase
      * The whole point of the recorder. Every one of these is serialized, and in
      * production each is a network hop rather than a socket on the same host.
      *
-     * Was 20 before EngineOrchestrator. The remaining slack is Quicktips, which
-     * queues and reads its own mission with three commands of its own when its
-     * answer is not already cached.
+     * Was 20 before EngineOrchestrator and the claims batching. The remaining
+     * slack is Quicktips, which queues and reads its own mission with three
+     * commands of its own when its answer is not already cached.
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertLessThanOrEqual(
-            17,
+            12,
             $recorder->total(),
             "A search got more expensive in round trips, not less. In order:\n" . implode("\n", $recorder->trace())
         );
     }
 
     /**
-     * Six of those twenty are the authorization talking to the same key, and
-     * four of them read the same hash. Noted rather than fixed: this is the
-     * path that charges a key, and it is not the orchestration.
+     * The authorization costs two round trips: one to read what other requests
+     * have claimed against this key, one to stake this request's own claim.
+     *
+     * It used to be six — the claim and its deadline were separate commands,
+     * and every paid engine read this request's own claim back out of Redis
+     * before discharging it, a number the process had just written there
+     * itself. See KeyUserClaimsTest for what the claims mean.
      */
-    public function testAuthorizationAccountsForSixOfTheRoundTrips(): void
+    public function testAuthorizationCostsTwoRoundTrips(): void
     {
         [, $recorder] = $this->searchRecording();
 
-        $claims = $recorder->countOfKey("hgetall", "keyserver:claims:test-key")
-            + $recorder->countOfKey("hget", "keyserver:claims:test-key")
-            + $recorder->countOfKey("hincrbyfloat", "keyserver:claims:test-key")
-            + $recorder->countOfKey("hexpireat", "keyserver:claims:test-key");
-
         $this->assertSame(
-            6,
-            $claims,
-            "The authorization path changed shape. It is not what these tests are about, but it is a third of the search's Redis traffic.\n"
+            1,
+            $recorder->countOfKey("hgetall", "keyserver:claims:test-key"),
+            "Other requests' claims are read once per request.\n" . implode("\n", $recorder->trace())
+        );
+        $this->assertSame(
+            1,
+            $recorder->countOfKey("pipeline", "hincrbyfloat,hexpireat"),
+            "The claim and its expiry go out together.\n" . implode("\n", $recorder->trace())
+        );
+        $this->assertSame(
+            0,
+            $recorder->countOfKey("hget", "keyserver:claims:test-key"),
+            "A payment read back a claim this process wrote itself, which Redis cannot know better than we do.\n"
                 . implode("\n", $recorder->trace())
         );
     }

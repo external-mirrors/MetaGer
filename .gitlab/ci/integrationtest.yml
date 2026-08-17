@@ -1,7 +1,4 @@
-integrationtest:
-  services:
-    - name: selenium/standalone-firefox:114.0
-      alias: selenium-standalone-firefox
+.test_base:
   tags:
     - kubernetes
   stage: integrationtest
@@ -11,25 +8,18 @@ integrationtest:
   variables:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
-    SELENIUM_HOST: selenium-standalone-firefox
     MATOMO_ENABLED: false
     # phpunit.xml declares these for the test run, but `php artisan optimize` bakes the production
     # .env into bootstrap/cache/config.php and cached config is never re-read through env() — so
     # the phpunit values are silently ignored and the tests reach for the production Redis
     # sentinel, unreachable from CI. Set them as real job variables instead: Laravel's dotenv is
     # immutable, so they win over .env and land in the config cache itself.
-    # Note the fix is deliberately *not* `config:clear` — the Dusk tests derive their expected URLs
-    # from `app.locale`, which the config cache freezes at the value LaravelLocalization resolved
-    # while building it (en-US, matching Selenium Firefox's Accept-Language). Clearing the cache
-    # drops that to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
     CACHE_STORE: array
     SESSION_DRIVER: array
     QUEUE_CONNECTION: sync
   dependencies: [] # No artifacts required
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
-  script:
-    # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
     # config/sumas.json is gitignored (it only ever carries API secrets), so a fresh checkout has
@@ -39,10 +29,33 @@ integrationtest:
     - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
     - composer install
     - php artisan optimize
-    - php artisan test --without-tty
   cache:
     paths:
       - metager/.composer/
   except:
     refs:
       - master
+
+# Unit + Feature suites. phpunit.xml deliberately excludes tests/Browser, so this job
+# needs no browser and no Selenium service — it is the fast gate that should stay fast.
+test:
+  extends: .test_base
+  script:
+    - php artisan test --without-tty
+
+# Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only
+# part of the suite that needs a real browser; keeping it separate means a Selenium
+# outage can no longer fail the unit tests.
+browsertest:
+  extends: .test_base
+  services:
+    - name: selenium/standalone-firefox:114.0
+      alias: selenium-standalone-firefox
+  variables:
+    SELENIUM_HOST: selenium-standalone-firefox
+    # The Dusk tests derive their expected URLs from `app.locale`, which the config cache
+    # freezes at the value LaravelLocalization resolved while building it (en-US, matching
+    # Selenium Firefox's Accept-Language). So do not add `config:clear` here — it drops the
+    # locale to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
+  script:
+    - php artisan dusk --without-tty

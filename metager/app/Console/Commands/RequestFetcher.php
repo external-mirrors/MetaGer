@@ -76,7 +76,7 @@ class RequestFetcher extends Command
                 $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
                 if ($newJobs === 0 && $answersRead === 0) {
-                    usleep(10 * 1000);
+                    $this->waitForActivity($operationsRunning);
                 }
 
                 if (!$this->shouldRun && $operationsRunning === 0 && Redis::get(FPMGracefulStop::REDIS_FPM_STOPPED_KEY) !== NULL) {
@@ -86,6 +86,53 @@ class RequestFetcher extends Command
         } finally {
             curl_multi_close($this->multicurl);
         }
+    }
+
+    /**
+     * Nothing happened this pass, so wait — but wait on the right thing.
+     *
+     * With transfers in flight, that is the multi handle's own sockets: it
+     * returns the moment an engine sends something. This used to be a flat
+     * usleep(10ms), which meant a response landing just after the check sat
+     * unnoticed for up to ten milliseconds. Nobody notices that on one engine,
+     * but a result page waits for the slowest of them, so it came off the top of
+     * every search.
+     *
+     * The ceiling stays at 10ms because that is also how long a *new job* can
+     * sit in the Redis queue unseen — curl_multi_select knows nothing about
+     * Redis, so the timeout is what brings us back to look.
+     *
+     * curl_multi_select answers -1 straight away when it has no socket to wait
+     * on, which happens while libcurl is sitting on a timer of its own rather
+     * than on the network. Sleeping briefly is what keeps that from spinning the
+     * CPU; it is the pattern libcurl's own documentation prescribes.
+     *
+     * With nothing in flight there is nothing to select on, and checkNewJobs has
+     * just spent up to a second blocked on Redis, so a plain short sleep is both
+     * enough and all that is left.
+     */
+    protected function waitForActivity(int $operationsRunning): void
+    {
+        if ($operationsRunning <= 0) {
+            $this->sleepMicroseconds(10 * 1000);
+            return;
+        }
+
+        if ($this->selectOnMultiHandle(0.01) === -1) {
+            $this->sleepMicroseconds(100);
+        }
+    }
+
+    /** Seam for the tests; see RequestFetcherWaitTest. */
+    protected function sleepMicroseconds(int $microseconds): void
+    {
+        usleep($microseconds);
+    }
+
+    /** Seam for the tests; see RequestFetcherWaitTest. */
+    protected function selectOnMultiHandle(float $timeoutSeconds): int
+    {
+        return curl_multi_select($this->multicurl, $timeoutSeconds);
     }
 
     /**

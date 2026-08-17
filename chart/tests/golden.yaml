@@ -445,6 +445,153 @@ spec:
     app.kubernetes.io/instance: golden
 
 ---
+# Source: chart/templates/deployment-scheduler.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golden-scheduler
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-scheduler
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+    app.kubernetes.io/component: scheduler
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-scheduler
+      app.kubernetes.io/instance: golden
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        helm.sh/chart: chart-0.1.0
+        app.kubernetes.io/name: golden-scheduler
+        app.kubernetes.io/instance: golden
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+        app: golden
+        app.kubernetes.io/component: scheduler
+    spec:
+      imagePullSecrets:
+        - name: registry-credentials
+      serviceAccountName: golden
+      securityContext:
+        fsGroup: 2000
+      # schedule:work-mg sleeps until the next minute boundary and handles SIGQUIT
+      # to finish the run in progress. Give it room to do that rather than being
+      # killed mid-task.
+      terminationGracePeriodSeconds: 90
+      volumes:
+        - name: secrets
+          secret:
+            secretName: golden
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: scheduler
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "schedule:work-mg"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: APP_URL
+            value: https://metager.de
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          # Exactly what the sidecar mounted: .env and the writable storage, no
+          # sumas.json. Nothing on the schedule reads the search configuration —
+          # if something did it would already be running on the example file the
+          # image entrypoint falls back to, and that is a separate problem to fix.
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          # As a sidecar this was an httpGet against port 8080 — nginx, in the same
+          # network namespace. There is no HTTP server in this pod, so the same
+          # check runs directly: schedule:healthcheck reads the heartbeat Redis key
+          # that /health-check/liveness-scheduler reads, through the same class.
+          #
+          # The heartbeat is written every minute and tolerated for one, so a single
+          # late run is absorbed here rather than by widening the check: three
+          # consecutive misses, 30s apart, before a restart.
+          livenessProbe:
+            exec:
+              command: ["/usr/local/bin/php", "artisan", "schedule:healthcheck"]
+            periodSeconds: 30
+            failureThreshold: 3
+          # No readinessProbe: nothing routes traffic here, and marking the only
+          # scheduler "not ready" would achieve nothing but noise.
+          startupProbe:
+            exec:
+              command: ["/usr/local/bin/php", "artisan", "schedule:healthcheck"]
+            # schedule:work-mg writes its first heartbeat on the first run, which is
+            # immediate, but the boot itself takes a moment.
+            periodSeconds: 5
+            failureThreshold: 24
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits: {}
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - effect: NoSchedule
+          key: node-role
+          operator: Equal
+          value: web
+
+---
 # Source: chart/templates/deployment-worker.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -714,76 +861,6 @@ spec:
             requests:
               cpu: 500m
               memory: 512Mi
-            limits: {}
-        - name: scheduler
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-          image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "schedule:work-mg"]
-          imagePullPolicy: IfNotPresent
-          env:
-          - name: APP_ENV
-            value: production
-          - name: APP_URL
-            value: https://metager.de
-          - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          - name: REVERB_HOST
-            value: metager.de
-          - name: LOG_CHANNEL
-            value: stderr
-          - name: MATOMO_ENABLED
-            value: true
-          volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
-          - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/metager
-            readOnly: false
-          - name: sqlite-databases
-            mountPath: /metager/metager_app/database/databases
-          - name: fast-logs
-            mountPath: /metager/metager_app/storage/metager/fast_dir
-          # ports removed: only nginx exposes 'http'
-          livenessProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          readinessProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          startupProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          resources:
-            requests:
-              cpu: 100m
-              memory: 256Mi
             limits: {}
         - name: queue
           securityContext:

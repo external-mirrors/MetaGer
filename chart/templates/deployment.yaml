@@ -59,35 +59,6 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.fpm | nindent 14 }}
             limits: {}
-        - name: scheduler
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "schedule:work-mg"]
-          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
-          env:
-          {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
-          volumeMounts:
-          {{- include "chart.mounts.env" . | nindent 10 }}
-          {{- include "chart.mounts.storage" . | nindent 10 }}
-          # ports removed: only nginx exposes 'http'
-          livenessProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          readinessProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          startupProbe:
-            httpGet:
-              path: /health-check/liveness-scheduler
-              port: 8080
-          resources:
-            requests:
-              {{- toYaml .Values.resources.requests.scheduler | nindent 14 }}
-            limits: {}
         - name: queue
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

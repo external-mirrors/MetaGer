@@ -229,3 +229,28 @@ scratch dir.
 - name: fast-logs
   mountPath: /metager/metager_app/storage/metager/fast_dir
 {{- end -}}
+
+{{/*
+Labels for a component with its own Deployment.
+
+    {{- include "chart.componentLabels" (dict "root" . "component" "scheduler") }}
+
+The app and worker Deployments predate this and keep their own hand-written
+helpers so their selector labels — which are immutable on a live Deployment —
+do not change.
+*/}}
+{{- define "chart.componentSelectorLabels" -}}
+app.kubernetes.io/name: {{ .root.Release.Name }}-{{ .component }}
+app.kubernetes.io/instance: {{ .root.Release.Name }}
+{{- end }}
+
+{{- define "chart.componentLabels" -}}
+helm.sh/chart: {{ include "chart.chart" .root }}
+{{ include "chart.componentSelectorLabels" . }}
+{{- if .root.Chart.AppVersion }}
+app.kubernetes.io/version: {{ .root.Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .root.Release.Service }}
+app: {{ .root.Release.Name }}
+app.kubernetes.io/component: {{ .component }}
+{{- end }}

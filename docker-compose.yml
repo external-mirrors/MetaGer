@@ -129,6 +129,13 @@ services:
       target: $APP_ENV
     restart: unless-stopped
     stop_signal: SIGKILL
+    environment:
+      # A local build is never the production deployment, whatever APP_ENV in
+      # your .env says — that value only picks the Dockerfile target above, and
+      # running the production target locally is a way to check the production
+      # build, not to serve it. Pinning it here keeps the source maps on for
+      # every local build; vite.config.js drops them only for APP_ENV=production.
+      APP_ENV: local
     depends_on:
       - nginx
     networks:

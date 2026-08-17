@@ -51,7 +51,7 @@ so every page-rendering test 500s on a fresh checkout until `npm run build` has 
 | `tests/Unit` | `phpunit.xml` | nothing | `artisan test` |
 | `tests/Feature` | `phpunit.xml` | a Vite build | `artisan test` |
 | `tests/Browser` | `phpunit.dusk.xml` | Selenium + running app | `artisan dusk` |
-| `resources/js/**/*.test.js` | `vite.config.js` | nothing | `npm test` |
+| `resources/js/**/*.test.js`, `vite.config.test.js` | `vite.config.js` | nothing | `npm test` |
 
 `phpunit.xml` deliberately excludes `tests/Browser` — keep it that way, so the default run never
 depends on a browser container. CI mirrors the split: the `test` job has no Selenium service, only

@@ -40,6 +40,21 @@ import laravel from "laravel-vite-plugin";
  */
 const underTest = Boolean(process.env.VITEST);
 
+/**
+ * Source maps everywhere except on the production deployment.
+ *
+ * The polarity is deliberate: production has to *opt out*, and it does so with
+ * the same variable that already marks it as production everywhere else.
+ * .gitlab-ci.yml sets APP_ENV=production only on master; review environments and
+ * metager3.de run as development, so they get maps without anyone remembering to
+ * ask. A bare `npm run build` on a laptop is not a deployment and gets them too.
+ *
+ * Only `build.sourcemap` is keyed off this — not Vite's mode. A review
+ * deployment exists to behave like production, and switching mode would also
+ * flip NODE_ENV, which changes what bundled dependencies compile to.
+ */
+const isProductionDeployment = process.env.APP_ENV === "production";
+
 const assets = laravel({
     input: [
         // -- stylesheets --------------------------------------------
@@ -93,7 +108,8 @@ export default defineConfig({
     test: {
         // Only the modules with tests next to them; everything else under
         // resources/js is browser glue that a DOM harness cannot say much about.
-        include: ["resources/js/**/*.test.js"],
+        // vite.config.test.js covers this file's own build decisions.
+        include: ["resources/js/**/*.test.js", "vite.config.test.js"],
         environment: "jsdom",
     },
     build: {
@@ -101,7 +117,6 @@ export default defineConfig({
         // targeted "firefox 50, IE 11" and shipped core-js into every bundle
         // to get there; the floor is now what the CSS already assumed.
         target: "baseline-widely-available",
-        // laravel-mix ran with sourceMaps(false), so neither build ships them.
-        sourcemap: false,
+        sourcemap: !isProductionDeployment,
     },
 });

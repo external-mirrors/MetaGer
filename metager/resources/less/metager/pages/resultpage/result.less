@@ -283,7 +283,11 @@
 
     .result-description {
       color: @result-description-color;
-      font-size: 1;
+      // No font-size here on purpose: the description inherits the result's.
+      // A `font-size: 1` used to stand in this spot — a length without a unit,
+      // which is invalid CSS, so every browser dropped the declaration and the
+      // size inherited anyway. lightningcss reads it as 1px instead and emits
+      // that, which rendered every description invisible.
       line-height: 1.3;
       max-height: 5.2em;
       clear: both;

@@ -168,10 +168,27 @@ Asset URLs are forced root-relative in `AppServiceProvider`; the same app answer
 
 FPM pushes fetch jobs onto a Redis list → the `requests:fetcher` worker (`artisan requests:fetcher`,
 multi-curl) fetches upstream → results go back onto Redis → FPM blocks on `Redis::brpop` in
-`MetaGer::waitForMainResults` (up to 6s) and renders.
+`Search\EngineOrchestrator::waitForMainResults` (up to 6s) and renders.
 
 Note `brpop` is called with a **multi-key array**, which rules out Redis/Valkey *cluster* mode
 (CROSSSLOT). HA has to be sentinel-based.
+
+The steps live in `app/Search/`, in the order a request runs them. `MetaGer` is what is left: the
+search state the blades bind to, plus ~70 getters.
+
+| | |
+|---|---|
+| `QueryParser` → `SearchQuery` | the operators in the query (`"phrase"`, `-wort`, `-site:`, `-url:`) and the `fc`/`ff`/`ft` date range |
+| `EngineOrchestrator` | what is cached, what to fetch, waiting for it, reading it back — one Redis round trip per phase, not per engine |
+| `ResultRanker` | each engine scores its own results, then the combined pile is ordered |
+| `ResultDeduplicator` | one page, one result, credited to every engine that found it |
+| `Blacklists` | the operator blacklists, read once per worker process |
+| `LinkBuilder` | every "this search again, with one thing changed" link |
+| `ResponseFactory` | which of the seven `out=` shapes answers |
+
+Two of these carry preserved quirks that look like bugs and are pinned as characterization tests
+rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encoded host in
+`LinkBuilder`. Read the class docblock before "fixing" one.
 
 ## Commits
 

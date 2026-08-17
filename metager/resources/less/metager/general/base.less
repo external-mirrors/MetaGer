@@ -288,23 +288,15 @@ i.fa {
 summary {
   cursor: pointer;
 
+  // Hiding the disclosure triangle takes exactly two selectors. ::-webkit-details-marker is
+  // Safari's, and list-style covers everyone else: the marker is a list marker, so Firefox and
+  // Chromium drop it with list-style-type alone. The four vendor-prefixed spellings that used
+  // to stand here besides the WebKit one (-moz-, -ms-, -o-, and unprefixed ::details-marker)
+  // are not selectors any browser has ever implemented, which is why Firefox has been drawing
+  // a triangle on every <details> in the sidebar and the search-engine groups.
+  list-style: none;
+
   &::-webkit-details-marker {
-    display: none;
-  }
-
-  &::-moz-details-marker {
-    display: none;
-  }
-
-  &::-ms-details-marker {
-    display: none;
-  }
-
-  &::-o-details-marker {
-    display: none;
-  }
-
-  &::details-marker {
     display: none;
   }
 

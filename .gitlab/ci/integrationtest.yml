@@ -65,7 +65,10 @@ test:
     - fpm
   # Same image as docker-compose runs locally, so a test that passes on a laptop passes here.
   services:
-    - name: redis:8.10
+    # Valkey, matching what the Helm chart deploys and what docker-compose.yml runs
+    # locally, so the suite exercises the datastore production actually uses. Keeps
+    # the `redis` alias because REDIS_HOST above names it.
+    - name: valkey/valkey:9.1.0-alpine
       alias: redis
   script:
     - php artisan test --without-tty
@@ -84,7 +87,7 @@ browsertest:
   services:
     - name: selenium/standalone-firefox:153.0
       alias: selenium-standalone-firefox
-    - name: redis:8.10
+    - name: valkey/valkey:9.1.0-alpine
       alias: redis
   variables:
     SELENIUM_HOST: selenium-standalone-firefox

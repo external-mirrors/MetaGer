@@ -27,7 +27,7 @@ docker compose run --rm --entrypoint /usr/bin/composer composer install
 For the browser suite you need the app and Selenium running:
 
 ```bash
-docker compose up -d nginx fpm redis reverb selenium_standalone_firefox
+docker compose up -d nginx fpm valkey reverb selenium_standalone_firefox
 docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/php fpm artisan dusk
 ```
 
@@ -43,6 +43,17 @@ docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node test
 
 **The feature suite needs a build.** `Vite::asset()` throws without `public/build/manifest.json`,
 so every page-rendering test 500s on a fresh checkout until `npm run build` has run once.
+
+**Tooling services sit behind compose profiles**, so `docker compose up` starts the application
+and nothing else. `selenium_standalone_firefox` is in the `test` profile, `composer` and `node` in
+`tools`. Neither `docker compose run` nor naming the service explicitly on `up` needs the profile
+flag — both enable it — so every command above works as written. `docker compose --profile tools up
+node` is the way to get the asset watcher.
+
+**The cache service is `valkey`**, matching what the Helm chart deploys. It keeps a `redis` network
+alias, so an existing gitignored `metager/.env` saying `REDIS_HOST=redis` still resolves;
+`.env.example` names `valkey` for fresh checkouts. After the rename, one
+`docker compose up --remove-orphans` clears the old `redis` container.
 
 ## Test layout
 

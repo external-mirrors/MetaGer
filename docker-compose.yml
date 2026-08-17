@@ -1,4 +1,19 @@
-version: "3.8"
+# No `version:` key — it has been obsolete since Compose v2 and only earns a
+# deprecation warning on every invocation.
+#
+# Profiles: `docker compose up` starts the application and nothing else. The
+# services that are tooling rather than application sit behind profiles, so they
+# neither start nor get rebuilt unless asked for:
+#
+#   docker compose up                        the app: fpm, nginx, workers, valkey
+#   docker compose --profile test up -d      adds selenium, for the dusk suite
+#   docker compose --profile tools up node   runs the asset watcher
+#
+# `docker compose run` starts a profiled service without naming its profile, so
+# the one-shot invocations in CLAUDE.md keep working unchanged:
+#
+#   docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node run build
+#   docker compose run --rm --entrypoint /usr/bin/composer composer install
 
 # Volumes
 volumes:
@@ -101,8 +116,11 @@ services:
       - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD", "pgrep",  "-f", "reverb:start"]
+  # Only the browser suite needs this, and it is a 2 GB-shm container that pulls
+  # a full Firefox image. See CLAUDE.md for the dusk workflow.
   selenium_standalone_firefox:
     image: ${SELENIUM_IMAGE}
+    profiles: ["test"]
     restart: always
     shm_size: 2GB
     networks:
@@ -111,6 +129,7 @@ services:
       - "7900:7900"
   composer:
     image: metager:latest
+    profiles: ["tools"]
     pull_policy: never
     entrypoint: /usr/bin/composer
     command: install
@@ -127,7 +146,14 @@ services:
       context: ./
       dockerfile: build/node/Dockerfile
       target: $APP_ENV
-    restart: unless-stopped
+    profiles: ["tools"]
+    # NOT `unless-stopped`. Whether this process is long-lived depends on the
+    # Dockerfile target: the development entrypoint runs `npm run watch` and
+    # stays up, but the production one runs `npm run build` and exits 0 — which
+    # under `unless-stopped` was restarted immediately, rebuilding the assets
+    # forever. `on-failure` restarts a watcher that crashed and lets a completed
+    # build stay completed.
+    restart: on-failure
     stop_signal: SIGKILL
     environment:
       # A local build is never the production deployment, whatever APP_ENV in
@@ -136,21 +162,28 @@ services:
       # build, not to serve it. Pinning it here keeps the source maps on for
       # every local build; vite.config.js drops them only for APP_ENV=production.
       APP_ENV: local
-    depends_on:
-      - nginx
     networks:
       - metager
     volumes:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
-  redis:
-    image: redis:8.10
+  # Valkey, matching the version the Helm chart deploys (chart/Chart.yaml pins
+  # cloudpirates/valkey, appVersion 9.1.0) so local behaviour matches production.
+  #
+  # The service is named `valkey`, but answers to `redis` on the network too: a
+  # developer's metager/.env is gitignored and will still say REDIS_HOST=redis,
+  # and there is no reason to make everyone edit it. .env.example names the new
+  # one for fresh checkouts.
+  valkey:
+    image: valkey/valkey:9.1.0-alpine
     restart: unless-stopped
-    user: "redis:redis"
+    user: "valkey:valkey"
     networks:
-      - metager
+      metager:
+        aliases:
+          - redis
     healthcheck:
-      test: "redis-cli ping"
+      test: "valkey-cli ping"
 networks:
   metager:
     name: metager_net

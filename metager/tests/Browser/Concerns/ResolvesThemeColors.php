@@ -249,7 +249,13 @@ trait ResolvesThemeColors
                     continue;
                 }
 
-                collected[rule.condition + rule.selector + " { " + property + " }"] = value;
+                // getComputedStyle resolves a url() against the document, so
+                // background-image comes back host-qualified — and the host is
+                // whatever ran the test: nginx:8080 on a laptop, the review
+                // domain in CI. Put it back the way the stylesheet wrote it, so
+                // the snapshot records the image and not the deployment.
+                collected[rule.condition + rule.selector + " { " + property + " }"] =
+                    value.split(window.location.origin + "/").join("/");
             }
         }
 

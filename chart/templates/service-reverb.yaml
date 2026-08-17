@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.fullname" . }}-reverb
+  labels:
+    {{- include "chart.componentLabels" (dict "root" . "component" "reverb") | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: reverb
+      protocol: TCP
+      name: reverb
+  selector:
+    {{- include "chart.componentSelectorLabels" (dict "root" . "component" "reverb") | nindent 4 }}

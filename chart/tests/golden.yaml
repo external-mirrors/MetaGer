@@ -421,6 +421,31 @@ spec:
     app.kubernetes.io/instance: golden
 
 ---
+# Source: chart/templates/service-reverb.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-reverb
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-reverb
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+    app.kubernetes.io/component: reverb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: reverb
+      protocol: TCP
+      name: reverb
+  selector:
+    app.kubernetes.io/name: golden-reverb
+    app.kubernetes.io/instance: golden
+
+---
 # Source: chart/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -605,6 +630,152 @@ spec:
                 labelSelector:
                   matchLabels:
                     app.kubernetes.io/name: golden-queue
+                    app.kubernetes.io/instance: golden
+                topologyKey: kubernetes.io/hostname
+      tolerations:
+        - effect: NoSchedule
+          key: node-role
+          operator: Equal
+          value: web
+
+---
+# Source: chart/templates/deployment-reverb.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golden-reverb
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-reverb
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+    app.kubernetes.io/component: reverb
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-reverb
+      app.kubernetes.io/instance: golden
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        helm.sh/chart: chart-0.1.0
+        app.kubernetes.io/name: golden-reverb
+        app.kubernetes.io/instance: golden
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+        app: golden
+        app.kubernetes.io/component: reverb
+    spec:
+      imagePullSecrets:
+        - name: registry-credentials
+      serviceAccountName: golden
+      securityContext:
+        fsGroup: 2000
+      # These are long-lived websockets. On a rollout the pod stops accepting new
+      # connections immediately, but existing clients should be given time to
+      # finish rather than being cut mid-session; the extension reconnects, so this
+      # is about avoiding a thundering reconnect, not about correctness.
+      terminationGracePeriodSeconds: 300
+      volumes:
+        - name: secrets
+          secret:
+            secretName: golden
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: reverb
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "reverb:start", "--port=8081"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          # The point of the exercise. config/reverb.php already reads this and
+          # already has the Redis connection under it; it was simply never on.
+          - name: REVERB_SCALING_ENABLED
+            value: "true"
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: reverb
+              containerPort: 8081
+              protocol: TCP
+          # Unchanged from the sidecar: pgrep proves the process is up. A real
+          # check would open a websocket and round-trip a message, which is worth
+          # doing but is not part of moving the container.
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
+          readinessProbe:
+            tcpSocket:
+              port: reverb
+          startupProbe:
+            tcpSocket:
+              port: reverb
+            periodSeconds: 2
+            failureThreshold: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+      nodeSelector:
+        kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: golden-reverb
                     app.kubernetes.io/instance: golden
                 topologyKey: kubernetes.io/hostname
       tolerations:
@@ -1031,76 +1202,6 @@ spec:
               cpu: 500m
               memory: 512Mi
             limits: {}
-        - name: reverb
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-          image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "reverb:start", "--port=8081", "--debug"]
-          imagePullPolicy: IfNotPresent
-          env:
-          - name: APP_ENV
-            value: production
-          - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          - name: REVERB_HOST
-            value: metager.de
-          - name: LOG_CHANNEL
-            value: stderr
-          - name: MATOMO_ENABLED
-            value: true
-          volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
-          ports:
-            - name: reverb
-              containerPort: 8081
-              protocol: TCP
-          livenessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          readinessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          startupProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          resources:
-            requests:
-              cpu: 100m
-              memory: 128Mi
-            limits:
         - name: nginx
           securityContext:
             runAsNonRoot: true
@@ -1423,6 +1524,46 @@ spec:
           emptyDir: {}
           sizeLimit: "1Mi"
 ---
+# Source: chart/templates/ingress-reverb.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: golden-ws
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-reverb
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+    app.kubernetes.io/component: reverb
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Websockets are idle for long stretches by design; the app's activity_timeout
+    # is 30s and its ping_interval 60s, so anything shorter than that here would
+    # cut healthy connections.
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "metager.de"
+      secretName: metager-tls
+  rules:
+    - host: "metager.de"
+      http:
+        paths:
+          - path: /ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: golden-reverb
+                port:
+                  number: 8081
+
+---
 # Source: chart/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -1491,6 +1632,18 @@ spec:
                 name: golden
                 port:
                   number: 80
+          # The Laravel backend POSTs broadcasts to https://{REVERB_HOST}/apps/{id}/events.
+          # It used to land on the app's nginx, which proxied to the Reverb in its own
+          # pod; now it goes straight to the Reverb Service, and Redis scaling fans the
+          # message out to every instance. No rewrite here on purpose — Reverb serves
+          # this path as-is, which is why /ws lives on its own Ingress.
+          - path: /apps
+            pathType: Prefix
+            backend:
+              service:
+                name: golden-reverb
+                port:
+                  number: 8081
           - path: /wsb
             pathType: Prefix
             backend:

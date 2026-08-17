@@ -59,43 +59,6 @@ spec:
             requests:
               {{- toYaml .Values.resources.requests.fpm | nindent 14 }}
             limits: {}
-        - name: reverb
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ template "fpm_image" . }}"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "reverb:start", "--port=8081", "--debug"]
-          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
-          env:
-          {{- include "chart.env" (dict "root" .) | nindent 10 }}
-          volumeMounts:
-          {{- include "chart.mounts.env" . | nindent 10 }}
-          ports:
-            - name: reverb
-              containerPort: 8081
-              protocol: TCP
-          livenessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          readinessProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          startupProbe:
-            exec:
-              command:
-              - pgrep
-              - -f
-              - reverb:start
-          resources:
-            requests:
-              {{- toYaml .Values.resources.requests.reverb | nindent 14 }}
-            limits:
         - name: nginx
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}

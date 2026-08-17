@@ -136,6 +136,15 @@ resources:
 queue:
   replicaCount: 2
 
+# Reverb runs in its own Deployment (templates/deployment-reverb.yaml) behind its own
+# Service, with REVERB_SCALING_ENABLED=true so a broadcast arriving at any instance is
+# fanned out to the others over Redis. That is what makes more than one replica safe.
+reverb:
+  replicaCount: 2
+  # Long-lived websockets: let existing clients finish rather than cutting them all at
+  # once on a rollout and inviting a reconnect storm.
+  terminationGracePeriodSeconds: 300
+
 autoscaling:
   enabled: true
   minReplicas: 1

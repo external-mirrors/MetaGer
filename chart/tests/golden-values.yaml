@@ -19,7 +19,7 @@ imagePullSecrets:
 environment: production
 app_url: https://metager.de
 
-redisSentinelName: golden-redis
+valkeyName: golden-valkey
 
 podAnnotations:
   prometheus.io/scrape: "true"
@@ -83,11 +83,11 @@ autoscaling:
   maxReplicas: 8
   targetCPUUtilizationPercentage: 85
 
-# Pin the subchart's generated passwords. Without these it mints a fresh
-# randAlphaNum on every render and the snapshot never matches itself.
-redis-sentinel:
-  redis:
-    redis:
-      password: golden-redis-password
-    sentinel:
-      password: golden-sentinel-password
+# Pin the subchart's generated password. Without this it mints a fresh
+# randAlphaNum on every render and the snapshot never matches itself. One
+# password, not the two the retired redis-sentinel chart used: this chart gives
+# Sentinel the same secret it gives Valkey.
+valkey:
+  fullnameOverride: golden-valkey
+  auth:
+    password: golden-valkey-password

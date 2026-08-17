@@ -24,6 +24,11 @@ chart:
     # dependencies at all, and render.sh is what fetches them. Linting first would
     # only report them as missing.
     - ./tests/render.sh
+    # Named assertions about the manifests the golden diff cannot make for you:
+    # which Service REDIS_HOST resolves to, that every secretKeyRef names a key
+    # that exists, that Sentinel is actually enabled, and that the 48-char valkey
+    # name budget still holds. See tests/assertions.sh for why each one matters.
+    - ./tests/assertions.sh
     - helm lint . --values tests/golden-values.yaml
   rules:
     - changes:

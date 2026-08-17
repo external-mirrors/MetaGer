@@ -58,14 +58,20 @@ ensure_dependencies() {
 
     echo "Fetching chart dependencies..." >&2
 
-    # helm 3 resolved a dependency straight from the absolute repository URL in
-    # Chart.yaml. helm 4 refuses ("no repository definition for …") unless that
-    # URL is registered first, so register it here rather than restating it: the
-    # URL lives in Chart.yaml and should stay in one place.
+    # An oci:// dependency resolves straight from the registry and must NOT be
+    # registered with `helm repo add` — that command only speaks the classic
+    # index.yaml protocol and fails on an OCI URL. A classic https:// repository
+    # does need registering: helm 3 resolved one straight from the absolute URL
+    # in Chart.yaml, helm 4 refuses ("no repository definition for …") unless it
+    # was added first. Branch on the scheme rather than restating the URL, which
+    # lives in Chart.yaml and should stay in one place.
     local repository
     repository="$(awk '/^ *repository: */ { print $2; exit }' Chart.yaml)"
 
-    helm repo add metager-charts "$repository" --force-update >&2
+    if [[ "$repository" != oci://* ]]; then
+        helm repo add metager-charts "$repository" --force-update >&2
+    fi
+
     helm dependency build . >&2
 }
 

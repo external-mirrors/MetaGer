@@ -91,26 +91,22 @@ Create the name of the service account to use
 {{- end -}}
 {{- end -}}
 
-{{- define "redis_image" -}}
-{{- if eq .Values.image.redis.tag "" -}}
-{{- .Values.image.redis.repository -}}
-{{- else -}}
-{{- printf "%s:%s" .Values.image.redis.repository .Values.image.redis.tag -}}
-{{- end -}}
-{{- end -}}
-
 {{- define "secret_name" -}}
 {{- printf "%s" .Release.Name }}
 {{- end -}}
 
 {{/*
-Name used to address the redis-sentinel subchart's resources. Must match
-whatever is passed as redis-sentinel.fullnameOverride so the two stay in
-sync; falls back to the subchart's own default naming scheme when no
-override is given (e.g. plain `helm install` without the CI script).
+Name used to address the valkey subchart's resources. Must match whatever is
+passed as valkey.fullnameOverride so the two stay in sync; falls back to the
+subchart's own default naming scheme when no override is given (e.g. plain
+`helm install` without the CI script).
+
+Truncated to 48, not 63: the subchart appends up to "-prestop-script" (15) to
+this name without re-truncating, and 48 + 15 is exactly the 63-char cap on a
+Kubernetes object name.
 */}}
-{{- define "chart.redisSentinelFullname" -}}
-{{- default (printf "%s-redis-sentinel" .Release.Name) .Values.redisSentinelName | trunc 63 | trimSuffix "-" }}
+{{- define "chart.valkeyFullname" -}}
+{{- default (printf "%s-valkey" .Release.Name) .Values.valkeyName | trunc 48 | trimSuffix "-" }}
 {{- end }}
 {{/*
 Environment shared by every MetaGer container.
@@ -129,25 +125,39 @@ generate absolute URLs; the queue, reverb and fetcher workers never do.
 - name: APP_URL
   value: {{ $root.Values.app_url }}
 {{- end }}
+{{/*
+  The `default` connection. Must resolve to whichever pod is currently master —
+  most of the app writes through this connection, and a replica answers a write
+  with -READONLY. `-master` is the HAProxy master-proxy Service, which is why
+  valkey.sentinel.masterProxy.enabled is not optional (see values.yaml).
+*/}}
 - name: REDIS_HOST
-  value: {{ include "chart.redisSentinelFullname" $root }}-redis.{{ $root.Release.Namespace }}.svc.cluster.local
+  value: {{ include "chart.valkeyFullname" $root }}-master.{{ $root.Release.Namespace }}.svc.cluster.local
 - name: REDIS_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ include "chart.redisSentinelFullname" $root }}
-      key: REDIS_PASSWORD
+      name: {{ include "chart.valkeyFullname" $root }}
+      key: password
+{{/*
+  The sentinel-aware connection (config/database.php: predis, replication =>
+  sentinel). All three passwords come from the same secret key: the subchart
+  gives Sentinel the same password it gives Valkey, for both `sentinel auth-pass`
+  and Sentinel's own `requirepass`. The retired chart minted two.
+*/}}
 - name: REDIS_SENTINEL_HOST
-  value: {{ include "chart.redisSentinelFullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
+  value: {{ include "chart.valkeyFullname" $root }}-sentinel.{{ $root.Release.Namespace }}.svc.cluster.local
 - name: REDIS_SENTINEL_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ include "chart.redisSentinelFullname" $root }}
-      key: SENTINEL_PASSWORD
+      name: {{ include "chart.valkeyFullname" $root }}
+      key: password
 - name: REDIS_SENTINEL_REDIS_PASSWORD
   valueFrom:
     secretKeyRef:
-      name: {{ include "chart.redisSentinelFullname" $root }}
-      key: REDIS_PASSWORD
+      name: {{ include "chart.valkeyFullname" $root }}
+      key: password
+- name: REDIS_SENTINEL_SERVICE
+  value: {{ $root.Values.valkey.sentinel.masterName }}
 - name: REDIS_PORT
   value: "6379"
 {{- if gt (len $root.Values.ingress.hosts) 0 }}

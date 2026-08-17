@@ -16,22 +16,19 @@ image:
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
-  redis:
-    repository: registry.metager.de/open-source/metager/redis
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# Overrides the name used to address the redis-sentinel subchart's resources
-# (must match redis-sentinel.fullnameOverride below). Kept as a separate
-# value because Kubernetes object names are capped at 63 chars and the
-# subchart appends up to "-headless" (9 chars) to its fullname without
-# re-truncating, so long release names need a shorter override here.
-redisSentinelName: ""
+# Overrides the name used to address the valkey subchart's resources (must match
+# valkey.fullnameOverride below). Kept as a separate value because Kubernetes
+# object names are capped at 63 chars and the subchart appends suffixes to its
+# fullname without re-truncating. The longest is "-prestop-script" (15 chars, on
+# the ConfigMap holding the Sentinel preStop hook), so anything set here must be
+# 48 characters or fewer. See .gitlab/deployment_scripts/update_deployment.sh,
+# which derives it from the release name.
+valkeyName: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -162,19 +159,65 @@ affinity: {}
 # A map, not a list: the templates iterate it with `range $name, $value`.
 env: {}
 
-redis-sentinel:
-  replicaCount: 1
-  redis:
-    persistence:
-      enabled: false
+# Valkey (cloudpirates/valkey), replacing the self-hosted redis-sentinel chart.
+#
+# This is a cache, not a store: nothing here survives a restart on purpose, which
+# is why persistence and both on-disk formats stay off. Everything the app keeps
+# in it — engine results, the loader_* object graphs, quicktips — is re-fetchable.
+valkey:
+  # Sentinel needs a quorum, so three. Anything less cannot fail over.
+  architecture: replication
+  replicaCount: 3
+
+  sentinel:
+    enabled: true
+    # 2 of 3. Left at the chart default, stated here because it has to move with
+    # replicaCount if that ever changes.
+    quorum: 2
+    # Matches config/database.php's REDIS_SENTINEL_SERVICE default. Stated rather
+    # than inherited because _helpers.tpl reads it to set that env var, and the
+    # two names have to agree or predis asks Sentinel for a master it never
+    # monitors.
+    masterName: mymaster
+    masterProxy:
+      # Not optional. The plain `<name>` Service selects every pod, replicas
+      # included, so a client writing through it gets -READONLY roughly two times
+      # in three. The retired chart avoided that with a sidecar that patched a
+      # `role: master` label onto whichever pod Sentinel promoted, and a Service
+      # selecting on it; this chart's equivalent is an HAProxy sidecar that
+      # resolves the master by asking each backend directly, published as
+      # `<name>-master`. That is what REDIS_HOST points at.
+      #
+      # It matters because most of the app talks to the `default` connection, not
+      # the sentinel-aware one — REDIS_CACHE_CONNECTION is `default` in every
+      # deployed environment, and the bare Redis:: facade calls on the search path
+      # (rpush/brpop/lpush/expire in MetaGer, Searchengine, Suggestions) are all
+      # writes.
+      enabled: true
+
+  auth:
+    enabled: true
+
+  persistence:
+    enabled: false
+
+  config:
+    maxMemory: 5gb
+    maxMemoryPolicy: allkeys-lru
+    # Empty disables RDB snapshots; the chart renders `save ""` for this.
+    save: ""
+    # A list of raw valkey.conf lines, unlike the retired chart's key/value map.
     extraConfig:
-      maxmemory: 5gb
-      maxmemory-policy: allkeys-lru
-      save: ""
-      repl-diskless-sync-delay: 5
-      repl-diskless-sync-max-replicas: 2
-      repl-diskless-load: swapdb
-      repl-timeout: 120
-      repl-backlog-size: 512mb
-      appendonly: "no"
-      shutdown-timeout: 10
+      - appendonly no
+      # Replicas sync from a socket rather than a dump file — there is no disk to
+      # dump to, persistence being off.
+      - repl-diskless-sync-delay 5
+      - repl-diskless-sync-max-replicas 2
+      - repl-diskless-load swapdb
+      - repl-timeout 120
+      - repl-backlog-size 512mb
+      - shutdown-timeout 10
+
+  # The retired chart ran a redis_exporter sidecar by default. Keep the metrics.
+  metrics:
+    enabled: true

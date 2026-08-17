@@ -1,23 +1,4 @@
 ---
-# Source: chart/charts/redis-sentinel/templates/pdb.yaml
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: golden-redis-sentinel
-  labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
-    app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
-    app.kubernetes.io/managed-by: Helm
-spec:
-  maxUnavailable: 1
-  selector:
-    matchLabels:
-      app: redis-sentinel
-      release: golden
-
----
 # Source: chart/templates/pdb.yaml
 apiVersion: policy/v1
 kind: PodDisruptionBudget
@@ -37,20 +18,6 @@ spec:
       app.kubernetes.io/instance: golden
   maxUnavailable: 1
 ---
-# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: golden-redis-sentinel
-  labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
-    app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
-    app.kubernetes.io/managed-by: Helm
-automountServiceAccountToken: true
-
----
 # Source: chart/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -65,364 +32,422 @@ metadata:
     app: golden
 
 ---
-# Source: chart/charts/redis-sentinel/templates/secret.yaml
+# Source: chart/charts/valkey/templates/secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: golden-redis-sentinel
+  name: golden-valkey
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
 type: Opaque
 data:
-  REDIS_PASSWORD: |
-      Z29sZGVuLXJlZGlzLXBhc3N3b3Jk
-  SENTINEL_PASSWORD: |
-      Z29sZGVuLXNlbnRpbmVsLXBhc3N3b3Jk
+  password: "Z29sZGVuLXZhbGtleS1wYXNzd29yZA=="
 ---
-# Source: chart/charts/redis-sentinel/templates/configmap.yaml
+# Source: chart/charts/valkey/templates/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: golden-redis-sentinel-scripts
+  name: golden-valkey
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
 data:
-  entrypoint-redis.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
-    mkdir -p /usr/local/etc/redis
-    touch /usr/local/etc/redis/redis.conf
-
-    if [[ -f /usr/local/etc/redis/redis-default.conf ]]; then
-        cat /usr/local/etc/redis/redis-default.conf >> /usr/local/etc/redis/redis.conf
-    fi
-
-    if [[ -f /usr/local/etc/redis/redis-extra.conf ]]; then
-        cat /usr/local/etc/redis/redis-extra.conf >> /usr/local/etc/redis/redis.conf
-    fi
-
-    echo "replica-announce-ip $REDIS_HOSTNAME" >> /usr/local/etc/redis/redis.conf
-    echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf
-    echo "masterauth $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf
-
-    COUNTER=0
-    while (( COUNTER < 10 )); do
-        echo "Waiting for master information from Sentinel..."
-        
-        set +e
-        readarray -t MASTER <<<$(redis-cli -p 26379 -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
-        set -e
-        ((COUNTER++)) || true
-        if [[ ${#MASTER[@]} == 2 ]]; then
-            break
-        else
-            sleep 1
-        fi
-    done
-
-    if (( COUNTER >= 9 )); then
-        echo "Failed to get master information from Sentinel"
-        exit 1
-    fi
-
-    if [[ ${MASTER[0]} != $REDIS_HOSTNAME ]]; then
-        echo "replicaof ${MASTER[0]} ${MASTER[1]}" >> /usr/local/etc/redis/redis.conf
-    fi
-
-    exec /usr/local/bin/docker-entrypoint.sh redis-server /usr/local/etc/redis/redis.conf
-  entrypoint-sentinel.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
-    SENTINEL_HOSTNAME=golden-redis-sentinel
-
-    mkdir -p /usr/local/etc/redis
-
-    set +e
-    [ -f /data/sentinel.conf ]
-    FIRST_START=$?
-    set -e
-
-    touch /data/sentinel.conf
-    chmod 660 /data/sentinel.conf
-
-    if [[ -f /usr/local/etc/redis/sentinel-default.conf ]]; then
-        cat /usr/local/etc/redis/sentinel-default.conf >> /data/sentinel.conf
-    fi
-
-    if [[ -f /usr/local/etc/redis/sentinel-extra.conf ]]; then
-        cat /usr/local/etc/redis/sentinel-extra.conf >> /data/sentinel.conf
-    fi
-
-    echo "requirepass $SENTINEL_PASSWORD" >> /data/sentinel.conf
-    echo "SENTINEL announce-ip $REDIS_HOSTNAME" >> /data/sentinel.conf
-    echo "SENTINEL auth-pass mymaster $REDIS_PASSWORD" >> /data/sentinel.conf
-
-    MASTER=()
-
-    # First check for an existing master
-    set +e
-    REDIS_RESPONSE=$(redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
-    if [[ $? == 0 ]]; then
-    readarray -t MASTER <<<$REDIS_RESPONSE
-    fi
-    set -e
-
-    if (( FIRST_START == 1 )); then
-        echo "First start of Sentinel, trying to discover master..."
-        # On first start, append the monitor line at the start of the file
-        if [[ ${#MASTER[@]} == 2 ]]; then
-            sed -i "1s/^/SENTINEL monitor mymaster ${MASTER[0]} ${MASTER[1]} 2\n/" /data/sentinel.conf
-        elif [[ $HOSTNAME == "golden-redis-sentinel-0" ]]; then
-          echo "No master found, starting with first ordinal as master"
-          MASTER[0]=golden-redis-sentinel-0.golden-redis-sentinel-headless
-          MASTER[1]=6379
-          sed -i "1s/^/SENTINEL monitor mymaster ${MASTER[0]} ${MASTER[1]} 2\n/" /data/sentinel.conf
-        else
-            echo "No master found, not starting"
-            exit 1
-        fi
-    fi
-
-    # Update the current master file
-    if [[ ${#MASTER[@]} == 2 ]]; then
-      echo ${MASTER[0]} > /shared/current-master
-    fi
-
-    chown -R redis:redis /data
-    chown -R redis:redis /shared
-
-    exec /usr/local/bin/docker-entrypoint.sh redis-sentinel /data/sentinel.conf
-  prestop.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
-    SENTINEL_HOSTNAME=golden-redis-sentinel
-
-    set +e
-    REDIS_RESPONSE=$(redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
-    if [[ $? == 0 ]]; then
-    readarray -t MASTER <<<$REDIS_RESPONSE
-    fi
-    set -e
-
-    if (( ${#MASTER[@]} == 2 )) && [[ ${MASTER[0]} == "${HOSTNAME}."* ]]; then
-        echo "Current node is master, promoting another replica to master"
-        redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD sentinel failover mymaster
-        sleep 5
-    fi
-  prestop-sentinel.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
-
-    # Wait until this redis node has quit
-    echo "Waiting until redis node has quit..."
-    while true; do
-      redis-cli -p 6379 -h $REDIS_HOSTNAME -a $REDIS_PASSWORD ping > /dev/null 2>&1
-      if [[ $? != 0 ]]; then
-        break
-      fi
-      sleep 1
-    done
-  failover.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    # This script is called by sentinel whenever a failover happened
-    NEW_MASTER=$6
-
-    echo "New master is $NEW_MASTER"
-    echo $NEW_MASTER > /shared/current-master
-  update-master.sh: |
-    #!/usr/bin/env bash
-    set -e
-
-    trap 'SIGTERM' sigterm
-
-    MASTER=""
-
-    while true; do
-      if [[ ! -f /shared/current-master ]]; then
-        sleep 5
-        continue
-      fi
-      mapfile -n1 -t < /shared/current-master CURRENT_MASTER
-      if [[ "$CURRENT_MASTER" != "$MASTER" ]]; then
-        echo "New master is $CURRENT_MASTER"
-        echo "Updating labels on this pod"
-        MASTER=$CURRENT_MASTER
-        if [[ $MASTER == $HOSTNAME.* ]]; then
-          echo "Setting label role to master"
-          kubectl label pod $HOSTNAME role=master --overwrite
-        else
-          echo "Setting label role to replica"
-          kubectl label pod $HOSTNAME role=replica --overwrite
-        fi
-      fi
-      sleep 5
-    done
-
-    sigterm() {
-      echo "Caught SIGTERM signal!"
-      exit 0
-    }
-
----
-# Source: chart/charts/redis-sentinel/templates/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: golden-redis-sentinel-config
-  labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
-    app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
-    app.kubernetes.io/managed-by: Helm
-data:
-  redis-default.conf: |
-    # Default Redis configuration
+  valkey.conf: |
+    # Valkey configuration file
+    
+    # Network
+    bind 0.0.0.0
+    port 6379
+    
+    # General
+    daemonize no
+    supervised no
+    
+    # Logging
+    loglevel notice
+    logfile ""
+    
+    # Persistence
     dir /data
-  redis-extra.conf: |
-    # Extra Redis configuration from values.yaml
-    appendonly no
+    save ""
+    
+    # Memory management
     maxmemory 5gb
     maxmemory-policy allkeys-lru
-    repl-backlog-size 512mb
-    repl-diskless-load swapdb
+    
+    # Security
+    protected-mode yes
+    
+    # Additional configuration
+    appendonly no
     repl-diskless-sync-delay 5
     repl-diskless-sync-max-replicas 2
+    repl-diskless-load swapdb
     repl-timeout 120
-    save 
+    repl-backlog-size 512mb
     shutdown-timeout 10
-  sentinel-default.conf: |
-    # Default Redis Sentinel configuration
-    dir /data
-    SENTINEL client-reconfig-script mymaster /usr/local/bin/failover.sh
-    SENTINEL resolve-hostnames yes
-    SENTINEL announce-hostnames yes
-    SENTINEL down-after-milliseconds mymaster 5000
-    SENTINEL failover-timeout mymaster 10000
-    SENTINEL parallel-syncs mymaster 1
-  sentinel-extra.conf: |
-    # Extra Redis Sentinel configuration from values.yaml
----
-# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: golden-redis-sentinel
-  labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
-    app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
-    app.kubernetes.io/managed-by: Helm
-rules:
-  - apiGroups: [""]
-    resources: ["pods"]
-    verbs: ["get", "list", "patch"]
 
 ---
-# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+# Source: chart/charts/valkey/templates/prestop-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: golden-redis-sentinel
+  name: golden-valkey-prestop-script
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
-subjects:
-  - kind: ServiceAccount
-    name: golden-redis-sentinel
-    namespace: metager
-roleRef:
-  kind: Role
-  name: golden-redis-sentinel
-  apiGroup: rbac.authorization.k8s.io
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
+data:
+  prestop.sh: |
+    #!/bin/sh
+
+    # Valkey master failover script for graceful shutdown
+    # Based on Redis/Bitnami charts failover handling
+
+    set -e
+
+    # Configuration
+    VALKEY_PORT="6379"
+    SENTINEL_PORT="26379"
+    MASTER_NAME="mymaster"
+    HEADLESS_SERVICE="golden-valkey-headless.metager.svc.cluster.local"
+
+    # Set authentication if enabled
+    export REDISCLI_AUTH="${VALKEY_PASSWORD}"
+
+    # Set loopback address based on ipFamily configuration
+    VALKEY_LOOPBACK="127.0.0.1"
+
+    # Function to run Valkey commands
+    run_valkey_command() {
+        valkey-cli -h "$VALKEY_LOOPBACK" -p "$VALKEY_PORT" "$@"
+    }
+
+    # Function to check if current instance is master
+    is_master() {
+        VALKEY_ROLE=$(run_valkey_command role | head -1)
+        [ "$VALKEY_ROLE" = "master" ]
+    }
+
+    # Function to get full hostname for a pod
+    get_full_hostname() {
+        hostname="$1"
+        full_hostname="${hostname}.${HEADLESS_SERVICE}"
+        echo "${full_hostname}"
+    }
+
+    # Function to run Sentinel commands against the local Sentinel sidecar
+    run_sentinel_command() {
+        valkey-cli -h "$VALKEY_LOOPBACK" -p "$SENTINEL_PORT" -a "${VALKEY_PASSWORD}" sentinel "$@"
+    }
+
+    # Function to check if sentinel failover has finished
+    sentinel_failover_finished() {
+        VALKEY_MASTER_HOST=$(run_sentinel_command get-master-addr-by-name "$MASTER_NAME" 2>/dev/null | head -1 || echo "")
+        if [ -n "$VALKEY_MASTER_HOST" ]; then
+            [ "$VALKEY_MASTER_HOST" != "$(get_full_hostname "$HOSTNAME")" ]
+        else
+            # If we can't get master info, assume failover is complete
+            return 0
+        fi
+    }
+
+    # Function to wait with retries
+    retry_while() {
+        condition="$1"
+        max_attempts="$2"
+        sleep_time="$3"
+        attempt=0
+
+        while [ "$attempt" -lt "$max_attempts" ]; do
+            if $condition; then
+                return 0
+            fi
+            sleep "$sleep_time"
+            attempt=$((attempt + 1))
+        done
+        return 1
+    }
+
+    echo "Valkey preStop hook starting for pod: $HOSTNAME"
+
+    # Whether to wait for failover on master shutdown (sentinel.valkeyShutdownWaitFailover)
+    WAIT_FOR_FAILOVER="true"
+
+    # Only proceed with failover if this instance is the master
+    if is_master && [ "$WAIT_FOR_FAILOVER" = "true" ]; then
+        echo "I am the master pod and I'm being stopped. Initiating graceful failover."
+
+        # Pause client write connections to prevent data loss during failover
+        echo "Pausing client write connections for 22 seconds to prevent data loss..."
+        if run_valkey_command CLIENT PAUSE "22000" WRITE; then
+            echo "Client write connections paused successfully"
+        else
+            echo "Warning: Failed to pause client connections, continuing anyway"
+        fi
+
+        # Issue failover command to Sentinel
+        echo "Issuing failover command to Sentinel..."
+        if run_sentinel_command failover "$MASTER_NAME"; then
+            echo "Failover command sent successfully"
+        else
+            echo "Warning: Failed to send failover command, Sentinel may handle this automatically"
+        fi
+
+        # Wait for Sentinel to complete the failover
+        echo "Waiting for Sentinel to complete failover (up to 20 seconds)..."
+        if retry_while "sentinel_failover_finished" "20" "1"; then
+            echo "Sentinel failover completed successfully"
+        else
+            echo "Warning: Failover may still be in progress or Sentinel unavailable"
+        fi
+
+        # Additional delay to ensure new master is fully established
+        echo "Allowing additional time for new master to stabilize..."
+        sleep 3
+
+    elif is_master; then
+        echo "I am the master but sentinel.valkeyShutdownWaitFailover is disabled, skipping failover wait"
+    else
+        echo "I am not the master, no failover needed"
+    fi
+
+    echo "Valkey preStop hook completed"
+    exit 0
+  prestop-sentinel.sh: |
+    #!/bin/sh
+
+    # Valkey Sentinel preStop hook for graceful shutdown during rolling updates.
+    # Keeps the local Sentinel alive until failover completes, so clients can
+    # still use it to discover the new master while this pod is terminating.
+
+    set -e
+
+    # Configuration
+    VALKEY_PORT="6379"
+    SENTINEL_PORT="26379"
+    MASTER_NAME="mymaster"
+    HEADLESS_SERVICE="golden-valkey-headless.metager.svc.cluster.local"
+
+    # Set authentication if enabled
+    export REDISCLI_AUTH="${VALKEY_PASSWORD}"
+
+    # Set loopback address based on ipFamily configuration
+    VALKEY_LOOPBACK="127.0.0.1"
+
+    # Function to run Valkey commands against the local instance
+    run_valkey_command() {
+        valkey-cli -h "$VALKEY_LOOPBACK" -p "$VALKEY_PORT" "$@"
+    }
+
+    # Function to run Sentinel commands against the local Sentinel sidecar
+    run_sentinel_command() {
+        valkey-cli -h "$VALKEY_LOOPBACK" -p "$SENTINEL_PORT" -a "${VALKEY_PASSWORD}" sentinel "$@"
+    }
+
+    # Function to get full hostname for a pod
+    get_full_hostname() {
+        echo "${1}.${HEADLESS_SERVICE}"
+    }
+
+    # Function to check if the local Valkey instance is master
+    is_valkey_master() {
+        VALKEY_ROLE=$(run_valkey_command role 2>/dev/null | head -1 || echo "")
+        [ "$VALKEY_ROLE" = "master" ]
+    }
+
+    # Function to check if sentinel failover has finished
+    sentinel_failover_finished() {
+        VALKEY_MASTER_HOST=$(run_sentinel_command get-master-addr-by-name "$MASTER_NAME" 2>/dev/null | head -1 || echo "")
+        if [ -n "$VALKEY_MASTER_HOST" ]; then
+            [ "$VALKEY_MASTER_HOST" != "$(get_full_hostname "$HOSTNAME")" ]
+        else
+            # Could not verify, assume failover is not finished yet and keep waiting
+            return 1
+        fi
+    }
+
+    # Function to wait with retries
+    retry_while() {
+        condition="$1"
+        max_attempts="$2"
+        sleep_time="$3"
+        attempt=0
+
+        while [ "$attempt" -lt "$max_attempts" ]; do
+            if $condition; then
+                return 0
+            fi
+            sleep "$sleep_time"
+            attempt=$((attempt + 1))
+        done
+        return 1
+    }
+
+    echo "Valkey Sentinel preStop hook starting for pod: $HOSTNAME"
+
+    # If the local Valkey is master, keep Sentinel up until failover completes so
+    # clients can still discover the new master through it.
+    if is_valkey_master; then
+        echo "Local Valkey is master. Waiting for failover to complete before Sentinel shuts down..."
+        if retry_while "sentinel_failover_finished" "25" "1"; then
+            echo "Failover completed, new master elected"
+        else
+            echo "Warning: Failover may still be in progress"
+        fi
+
+        # Additional delay to give clients time to discover the new master
+        echo "Allowing additional time for client discovery..."
+        sleep 5
+    else
+        echo "Local Valkey is replica, waiting briefly for stability..."
+        sleep 2
+    fi
+
+    echo "Valkey Sentinel preStop hook completed"
+    exit 0
+
 ---
-# Source: chart/charts/redis-sentinel/templates/service-headless.yaml
+# Source: chart/charts/valkey/templates/sentinel-master-proxy-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: golden-redis-sentinel-headless
+  name: golden-valkey-master
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
+    app.kubernetes.io/component: master-proxy
 spec:
-  clusterIP: None
+  # Selects every StatefulSet pod: the HAProxy sidecar runs in each one and forwards
+  # to whichever pod is currently master, so any pod can answer this Service.
+  type: ClusterIP
   ports:
     - port: 6379
-      name: redis
+      targetPort: haproxy
+      protocol: TCP
+      name: valkey
   selector:
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
+    app.kubernetes.io/name: valkey
 
 ---
-# Source: chart/charts/redis-sentinel/templates/service-redis.yaml
+# Source: chart/charts/valkey/templates/sentinel-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: golden-redis-sentinel-redis
+  name: golden-valkey-sentinel
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
+    app.kubernetes.io/component: sentinel
+spec:
+  type: ClusterIP
+  ports:
+    - port: 26379
+      targetPort: sentinel
+      protocol: TCP
+      name: sentinel
+  selector:
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/name: valkey
+
+---
+# Source: chart/charts/valkey/templates/service-metrics.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-valkey-metrics
+  namespace: metager
+  labels:
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 9121
+      protocol: TCP
+      targetPort: metrics
+  selector:
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/name: valkey
+
+---
+# Source: chart/charts/valkey/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-valkey
+  namespace: metager
+  labels:
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
 spec:
   type: ClusterIP
   ports:
     - port: 6379
       targetPort: 6379
-      name: redis
+      protocol: TCP
+      name: valkey
   selector:
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    role: master
+    app.kubernetes.io/name: valkey
 
 ---
-# Source: chart/charts/redis-sentinel/templates/service-sentinel.yaml
+# Source: chart/charts/valkey/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: golden-redis-sentinel
+  name: golden-valkey-headless
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
 spec:
   type: ClusterIP
+  clusterIP: None
   ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP
+      name: valkey
     - port: 26379
-      targetPort: 26379
+      targetPort: sentinel
+      protocol: TCP
       name: sentinel
   selector:
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-
+    app.kubernetes.io/name: valkey
 ---
 # Source: chart/templates/service-reverb.yaml
 apiVersion: v1
@@ -536,25 +561,29 @@ spec:
           env:
           - name: APP_ENV
             value: production
+          
           - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
+            value: golden-valkey-master.metager.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          
           - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
+            value: golden-valkey-sentinel.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
+                name: golden-valkey
+                key: password
           - name: REDIS_SENTINEL_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
@@ -707,25 +736,29 @@ spec:
           env:
           - name: APP_ENV
             value: production
+          
           - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
+            value: golden-valkey-master.metager.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          
           - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
+            value: golden-valkey-sentinel.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
+                name: golden-valkey
+                key: password
           - name: REDIS_SENTINEL_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
@@ -856,25 +889,29 @@ spec:
             value: production
           - name: APP_URL
             value: https://metager.de
+          
           - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
+            value: golden-valkey-master.metager.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          
           - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
+            value: golden-valkey-sentinel.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
+                name: golden-valkey
+                key: password
           - name: REDIS_SENTINEL_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
@@ -992,25 +1029,29 @@ spec:
           env:
           - name: APP_ENV
             value: production
+          
           - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
+            value: golden-valkey-master.metager.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          
           - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
+            value: golden-valkey-sentinel.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
+                name: golden-valkey
+                key: password
           - name: REDIS_SENTINEL_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
@@ -1126,25 +1167,29 @@ spec:
             value: production
           - name: APP_URL
             value: https://metager.de
+          
           - name: REDIS_HOST
-            value: golden-redis-redis.metager.svc.cluster.local
+            value: golden-valkey-master.metager.svc.cluster.local
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          
           - name: REDIS_SENTINEL_HOST
-            value: golden-redis.metager.svc.cluster.local
+            value: golden-valkey-sentinel.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: SENTINEL_PASSWORD
+                name: golden-valkey
+                key: password
           - name: REDIS_SENTINEL_REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: golden-redis
-                key: REDIS_PASSWORD
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
           - name: REDIS_PORT
             value: "6379"
           - name: REVERB_HOST
@@ -1296,236 +1341,550 @@ spec:
       stabilizationWindowSeconds: 30
 
 ---
-# Source: chart/charts/redis-sentinel/templates/statefulset.yaml
+# Source: chart/charts/valkey/templates/statefulset.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: golden-redis-sentinel
+  name: golden-valkey
+  namespace: metager
   labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
     app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
     app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: valkey
+    app.kubernetes.io/version: 9.1.0
+    helm.sh/chart: valkey-0.25.5
 spec:
-  serviceName: golden-redis-sentinel-headless
-  replicas: 1
+  replicas: 3
+  revisionHistoryLimit: 10
+  serviceName: golden-valkey-headless
   selector:
     matchLabels:
-      app.kubernetes.io/name: redis-sentinel
       app.kubernetes.io/instance: golden
+      app.kubernetes.io/name: valkey
   template:
     metadata:
       labels:
-        helm.sh/chart: redis-sentinel-0.1.5
-        app.kubernetes.io/name: redis-sentinel
         app.kubernetes.io/instance: golden
-        app.kubernetes.io/version: "8.2.1"
-        app.kubernetes.io/managed-by: Helm
-      annotations:
-        checksum/config: 64c09d75ba21f39b52b07b772c430c1280688f0baab886be76109a5d2505a64a
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9121"
-        prometheus.io/path: "/metrics"
+        app.kubernetes.io/name: valkey
     spec:
-      serviceAccountName: golden-redis-sentinel
-      automountServiceAccountToken: true
+      securityContext: 
+        fsGroup: 1000
+      serviceAccountName: default
+      initContainers:
+        - name: valkey-init
+          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              # Get pod ordinal from hostname
+              POD_ORDINAL=$(hostname | sed 's/.*-//')
+              MY_HOSTNAME=$(hostname)
+
+              # Create config file
+              touch /tmp/valkey/valkey.conf
+
+              echo "Pod ordinal: $POD_ORDINAL, hostname: $MY_HOSTNAME"
+              # Add Valkey configurations for better Sentinel failover tolerance
+              echo "" >> /tmp/valkey/valkey.conf
+              echo "# Configurations for Kubernetes force deletion tolerance" >> /tmp/valkey/valkey.conf
+              echo "min-slaves-to-write 0" >> /tmp/valkey/valkey.conf
+              echo "min-slaves-max-lag 0" >> /tmp/valkey/valkey.conf
+
+              # Try to determine current master from Sentinel (if any sentinel is available)
+              CURRENT_MASTER=""
+              SENTINEL_FOUND=false
+
+              # Check if any sentinel is already running and knows the master
+              for i in $(seq 0 2); do
+                SENTINEL_HOST="golden-valkey-${i}.golden-valkey-headless"
+                MASTER_INFO=$(valkey-cli -h "${SENTINEL_HOST}" -p 26379 -a "${VALKEY_PASSWORD}" sentinel get-master-addr-by-name mymaster 2>/dev/null | head -1 || echo "")
+                if [ -n "$MASTER_INFO" ] && [ "$MASTER_INFO" != "Could not connect" ]; then
+                  CURRENT_MASTER="$MASTER_INFO"
+                  SENTINEL_FOUND=true
+                  echo "Found current master from sentinel: $CURRENT_MASTER"
+                  break
+                fi
+              done
+
+              # Configuration logic
+              if [ "$SENTINEL_FOUND" = true ] && [ -n "$CURRENT_MASTER" ]; then
+                # Sentinel knows the master - configure accordingly
+                MY_HOSTNAME=$(hostname)
+                MY_HOSTNAME_FQDN="${MY_HOSTNAME}.golden-valkey-headless.metager.svc.cluster.local"
+                # `hostname -i` does AF_INET-only lookups in BusyBox/musl and exits
+                # non-zero on IPv6-only clusters; tolerate failure so `set -e`
+                # doesn't abort the script. The IP is one of three master checks.
+                MY_IP=$(hostname -i 2>/dev/null || echo "")
+
+                # Check if I am the master by hostname or IP
+                if [ "$MY_IP" = "$CURRENT_MASTER" ] || [ "$MY_HOSTNAME_FQDN" = "$CURRENT_MASTER" ] || [ "$MY_HOSTNAME" = "$CURRENT_MASTER" ]; then
+                  echo "I am the current master according to Sentinel"
+                else
+                  echo "Configuring as replica of current master: $CURRENT_MASTER"
+                  echo "replicaof $CURRENT_MASTER 6379" >> /tmp/valkey/valkey.conf
+                  echo "masterauth ${VALKEY_PASSWORD}" >> /tmp/valkey/valkey.conf
+                fi
+              else
+                # No sentinel available - use bootstrap logic
+                if [ "$POD_ORDINAL" != "0" ]; then
+                  echo "Bootstrap mode: configuring as replica of pod-0"
+                  # Use hostname-based replication for better resilience
+                  MASTER_HOSTNAME="golden-valkey-0.golden-valkey-headless"
+                  echo "replicaof $MASTER_HOSTNAME 6379" >> /tmp/valkey/valkey.conf
+                  echo "Bootstrap replica using pod-0 hostname: $MASTER_HOSTNAME"
+                  echo "masterauth ${VALKEY_PASSWORD}" >> /tmp/valkey/valkey.conf
+                else
+                  echo "Bootstrap mode: pod-0 starting as initial master"
+                fi
+              fi
+
+              # Configure for Sentinel discovery and force deletion tolerance
+              
+              echo "Using hostname: ${HOSTNAME}.golden-valkey-headless.metager.svc.cluster.local"
+              echo "replica-announce-ip ${HOSTNAME}.golden-valkey-headless.metager.svc.cluster.local" >> /tmp/valkey/valkey.conf
+              echo "replica-announce-port 6379" >> /tmp/valkey/valkey.conf
+              echo "slave-announce-ip ${HOSTNAME}.golden-valkey-headless.metager.svc.cluster.local" >> /tmp/valkey/valkey.conf
+              echo "slave-announce-port 6379" >> /tmp/valkey/valkey.conf
+
+              # Make slaves more eligible for promotion during force deletions
+              echo "slave-priority 100" >> /tmp/valkey/valkey.conf
+              echo "replica-read-only yes" >> /tmp/valkey/valkey.conf
+              # IMPORTANT: Always add masterauth for non-standalone architectures
+              # Even if this pod starts as master, it may become a replica after failover
+              # Without masterauth, REPLICAOF commands from sentinel will fail with NOAUTH
+              echo "" >> /tmp/valkey/valkey.conf
+              echo "# Authentication for replication (required for failover scenarios)" >> /tmp/valkey/valkey.conf
+              echo "masterauth ${VALKEY_PASSWORD}" >> /tmp/valkey/valkey.conf
+
+              # Add user provided settings at the end of file to ensure their precedence
+              echo "" >> /tmp/valkey/valkey.conf
+              # If there is existing config map or .Values.config value provided - use it
+              if [ -f "/etc/valkey/valkey.conf" ]; then
+                echo "# Content from provided config" >> /tmp/valkey/valkey.conf
+                cat /etc/valkey/valkey.conf >> /tmp/valkey/valkey.conf
+              else
+                # Create minimal config if no config exists
+                echo "# Default minimal config" >> /tmp/valkey/valkey.conf
+                cat >> /tmp/valkey/valkey.conf << EOF
+              bind 0.0.0.0
+              port 6379
+              EOF
+              fi
+              
+              # Add masterauth for external replica if enabled (for replication without sentinel)
+          env:
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
+          resources:
+            {}
+          volumeMounts:
+            - name: config
+              mountPath: /etc/valkey
+            - name: valkey-config
+              mountPath: /tmp/valkey
       containers:
-        - name: redis
-          image: "redis:8.2.1"
-          imagePullPolicy: IfNotPresent
-          command: ["/bin/bash", "/usr/local/bin/entrypoint-redis.sh"]
+        - name: valkey
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          imagePullPolicy: Always
+          command:
+            - /bin/sh
+            - -c
+            - |
+              CONFIG_FILE="/tmp/valkey/valkey.conf"
+
+              exec valkey-server "$CONFIG_FILE" --requirepass "${VALKEY_PASSWORD}"
           ports:
-            - containerPort: 6379
-              name: redis
-          envFrom:
-            - secretRef:
-                name: golden-redis-sentinel
-          resources:
-            {}
-          volumeMounts:
-            - name: scripts
-              mountPath: /usr/local/bin/entrypoint-redis.sh
-              readOnly: true
-              subPath: entrypoint-redis.sh
-            - name: config
-              mountPath: /usr/local/etc/redis/redis-default.conf
-              subPath: redis-default.conf
-              readOnly: true
-            - name: config
-              mountPath: /usr/local/etc/redis/redis-extra.conf
-              subPath: redis-extra.conf
-              readOnly: true
-            - name: scripts
-              mountPath: /usr/local/bin/prestop.sh
-              readOnly: true
-              subPath: prestop.sh
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/usr/local/bin/prestop.sh"]
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "redis-cli -a $REDIS_PASSWORD ping | grep PONG"
-            initialDelaySeconds: 5
-            periodSeconds: 2
-            timeoutSeconds: 5
-            failureThreshold: 5
-            successThreshold: 1
+            - name: valkey
+              containerPort: 6379
+              protocol: TCP
+          env:
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
+            - name: REDISCLI_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
           livenessProbe:
             exec:
               command:
-                - sh
+                - /bin/sh
                 - -c
-                - "redis-cli -a $REDIS_PASSWORD ping | grep PONG"
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 6
-            successThreshold: 1
-        - name: sentinel
-          image: "redis:8.2.1"
-          imagePullPolicy: IfNotPresent
-          command: ["/bin/bash", "/usr/local/bin/entrypoint-sentinel.sh"]
-          ports:
-            - containerPort: 26379
-              name: sentinel
-          envFrom:
-            - secretRef:
-                name: golden-redis-sentinel
-          resources:
-            {}
-          volumeMounts:
-            - name: scripts
-              mountPath: /usr/local/bin/entrypoint-sentinel.sh
-              readOnly: true
-              subPath: entrypoint-sentinel.sh
-            - name: scripts
-              mountPath: /usr/local/bin/prestop-sentinel.sh
-              readOnly: true
-              subPath: prestop-sentinel.sh
-            - name: config
-              mountPath: /usr/local/etc/redis/sentinel-default.conf
-              subPath: sentinel-default.conf
-              readOnly: true
-            - name: config
-              mountPath: /usr/local/etc/redis/sentinel-extra.conf
-              subPath: sentinel-extra.conf
-            - name: scripts
-              mountPath: /usr/local/bin/failover.sh
-              subPath: failover.sh
-              readOnly: false
-            - name: empty-dir
-              mountPath: /shared
-              readOnly: false
-          readinessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "redis-cli -p 26379 -a $SENTINEL_PASSWORD ping | grep PONG"
-            initialDelaySeconds: 5
-            periodSeconds: 2
-            timeoutSeconds: 5
-            failureThreshold: 6
-            successThreshold: 1
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - "redis-cli -p 26379 -a $SENTINEL_PASSWORD ping | grep PONG"
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 6
-            successThreshold: 1
-          lifecycle:
-            preStop:
-              exec:
-                command: ["/usr/local/bin/prestop-sentinel.sh"]
-        - name: master-updater
-          image: alpine/k8s:1.32.8
-          pullPolicy: IfNotPresent
-          command: ["/usr/local/bin/update-master.sh"]
-          volumeMounts:
-            - name: empty-dir
-              mountPath: /shared
-              readOnly: false
-            - name: scripts
-              mountPath: /usr/local/bin/update-master.sh
-              subPath: update-master.sh
-              readOnly: false
-          readinessProbe:
-            exec:
-              command:
-                - pgrep
-                - -f
-                - "/usr/local/bin/update-master.sh"
+                - valkey-cli -h "127.0.0.1" ping
+            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 6
+            failureThreshold: 3
             successThreshold: 1
-          livenessProbe:
+          readinessProbe:
             exec:
               command:
-                - pgrep
-                - -f
-                - "/usr/local/bin/update-master.sh"
-            periodSeconds: 20
-            timeoutSeconds: 5
-            failureThreshold: 6
+                - /bin/sh
+                - -c
+                - valkey-cli -h "127.0.0.1" ping  | grep -q PONG
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 1
+            failureThreshold: 3
             successThreshold: 1
-        - name: exporter
-          image: "oliver006/redis_exporter:v1.77.0"
-          imagePullPolicy: IfNotPresent
-          args:
-            - "--web.listen-address=0.0.0.0:9121"
-            - "--redis.addr=redis://:6379"
-            - "--redis.password=$(REDIS_PASSWORD)"
-          envFrom:
-            - secretRef:
-                name: golden-redis-sentinel
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - /scripts/prestop.sh
+          resources:
+            {}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: valkey-config
+              mountPath: /tmp/valkey
+            - name: prestop-script
+              mountPath: /scripts
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+        - name: sentinel
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          image: docker.io/valkey/valkey:9.1.0-alpine3.23@sha256:c9b77919daeba2c02ad954d0c844cc4e7142069d177b89c5fd771f405daf9e02
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: sentinel-config
+              mountPath: /tmp
+            - name: prestop-script
+              mountPath: /scripts
+              readOnly: true
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+
+              # Wait for Valkey to be ready
+              echo "Waiting for Valkey to start..."
+              VALKEY_HOST="127.0.0.1"
+              while ! valkey-cli -a "${VALKEY_PASSWORD}" -h "${VALKEY_HOST}" -p 6379 ping >/dev/null 2>&1; do
+                sleep 1
+              done
+              echo "Valkey is ready"
+
+              # Determine initial master: query existing Sentinels first, fallback to pod-0 only for bootstrap
+              POD_ORDINAL=$(hostname | sed 's/.*-//')
+              MASTER_HOST=""
+              SENTINEL_FOUND_MASTER=false
+
+              # First priority: Try to query other sentinels to find the current master
+              echo "Checking existing Sentinels for current master..."
+              for i in $(seq 0 2); do
+                if [ "$i" != "$POD_ORDINAL" ]; then
+                  SENTINEL_HOST="golden-valkey-${i}.golden-valkey-headless.metager.svc.cluster.local"
+                  EXISTING_MASTER=$(valkey-cli -h "${SENTINEL_HOST}" -p 26379 -a "${VALKEY_PASSWORD}" sentinel get-master-addr-by-name mymaster 2>/dev/null | head -1 || echo "")
+                  if [ -n "$EXISTING_MASTER" ] && [ "$EXISTING_MASTER" != "Could not connect" ]; then
+                    MASTER_HOST="$EXISTING_MASTER"
+                    SENTINEL_FOUND_MASTER=true
+                    echo "Found current master via sentinel: $MASTER_HOST"
+                    break
+                  fi
+                fi
+              done
+
+              # Second priority: If no Sentinels found master, check if any Valkey instance claims to be master
+              if [ "$SENTINEL_FOUND_MASTER" = false ]; then
+                echo "No Sentinels available, checking Valkey instances directly..."
+                for i in $(seq 0 2); do
+                  VALKEY_HOST="golden-valkey-${i}.golden-valkey-headless.metager.svc.cluster.local"
+                  ROLE_INFO=$(valkey-cli -h "${VALKEY_HOST}" -p 6379 -a "${VALKEY_PASSWORD}" info replication 2>/dev/null | grep "role:master" || echo "")
+                  if [ -n "$ROLE_INFO" ]; then
+                    MASTER_HOST="$VALKEY_HOST"
+                    echo "Found current master by role check: $MASTER_HOST"
+                    break
+                  fi
+                done
+              fi
+
+              # Final fallback: Use pod-0 hostname for initial bootstrap only
+              if [ -z "$MASTER_HOST" ]; then
+                MASTER_HOST="golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local"
+                echo "No existing master found, using pod-0 for initial bootstrap: $MASTER_HOST"
+              fi
+
+              # Create Sentinel config
+              cat > /tmp/sentinel.conf << EOF
+              port 26379
+              bind * -::*
+              # Enable hostname resolution for Valkey Sentinel
+              sentinel resolve-hostnames yes
+              sentinel announce-hostnames yes
+              sentinel monitor mymaster ${MASTER_HOST} 6379 2
+              sentinel down-after-milliseconds mymaster 1500
+              sentinel failover-timeout mymaster 15000
+              sentinel parallel-syncs mymaster 1
+              sentinel auth-pass mymaster "${VALKEY_PASSWORD}"
+              requirepass "${VALKEY_PASSWORD}"
+              # Make automatic failover more aggressive for Kubernetes force deletions
+              sentinel deny-scripts-reconfig yes
+              # Fix leader election issues during force deletions
+              protected-mode no
+              # Allow sentinels to discover each other
+              
+              sentinel announce-ip ${HOSTNAME}.golden-valkey-headless.metager.svc.cluster.local
+              sentinel announce-port 26379
+              logfile ""
+              loglevel notice
+              EOF
+
+              # Add known sentinels to help with discovery (using hostnames for resilience)
+              for i in $(seq 0 2); do
+                if [ "$i" != "$POD_ORDINAL" ]; then
+                  SENTINEL_HOST="golden-valkey-${i}.golden-valkey-headless.metager.svc.cluster.local"
+                  # Test if the host is resolvable before adding
+                  if getent hosts "$SENTINEL_HOST" >/dev/null 2>&1; then
+                    SENTINEL_IP=$(getent hosts "$SENTINEL_HOST" | awk '{print $1}' | head -1)
+                    if [ -n "$SENTINEL_IP" ]; then
+                      echo "sentinel known-sentinel mymaster ${SENTINEL_IP} 26379" >> /tmp/sentinel.conf
+                    fi
+                  fi
+                fi
+              done
+
+              echo "Starting Sentinel with config:"
+              cat /tmp/sentinel.conf
+
+              exec valkey-sentinel /tmp/sentinel.conf
           ports:
-            - containerPort: 9121
-              name: metrics
+            - name: sentinel
+              containerPort: 26379
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - valkey-cli -h "127.0.0.1" -p 26379 -a "${VALKEY_PASSWORD}" ping | grep -q PONG
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          env:
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - /scripts/prestop-sentinel.sh
+          resources:
+            {}
+        - name: haproxy
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          image: docker.io/haproxy:3.4-alpine@sha256:fb87fc81943143b9acaea7442973e6ba654035fff76ffe7af6829dd1bcb0f7a5
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: VALKEY_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
+          volumeMounts:
+            - name: haproxy-config
+              mountPath: /tmp
+          command:
+            - /bin/sh
+            - -c
+            - |
+              set -e
+              cat > /tmp/haproxy.cfg << 'EOF'
+              global
+                  maxconn 2000
+
+              defaults
+                  mode tcp
+                  timeout connect 2s
+                  timeout client 30s
+                  timeout server 30s
+
+              resolvers cluster_dns
+                  parse-resolv-conf
+                  hold valid 10s
+                  hold other 30s
+                  hold refused 30s
+                  hold nx 30s
+                  hold timeout 30s
+                  hold obsolete 30s
+
+              frontend valkey_master_fe
+                  bind *:6380
+                  use_backend valkey_master_strict if { nbsrv(valkey_master_strict) gt 0 }
+                  default_backend valkey_master_any
+
+              # Preferred: role:master, an attached replica, and not mid-failover.
+              # Excludes a pod that self-declared master on restart before Sentinel
+              # finished failing over (no replica ever attached to it), and one that
+              # knows it's still in the middle of a handoff.
+              backend valkey_master_strict
+                  mode tcp
+                  option tcp-check
+                  tcp-check connect
+                  tcp-check send "AUTH __VALKEY_PASSWORD__\r\n"
+                  tcp-check expect string +OK
+                  tcp-check send "PING\r\n"
+                  tcp-check expect string +PONG
+                  tcp-check send "INFO replication\r\n"
+                  tcp-check expect string role:master min-recv 100
+                  tcp-check expect rstring connected_slaves:[1-9][0-9]*
+                  tcp-check expect string master_failover_state:no-failover
+                  tcp-check send "QUIT\r\n"
+                  tcp-check expect string +OK
+                  server golden-valkey-0 golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+                  server golden-valkey-1 golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+                  server golden-valkey-2 golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+
+              # Fallback used only when no server qualifies for valkey_master_strict
+              # (e.g. right after a fresh install, or a replica mid-resync). Keeps the
+              # endpoint available instead of going dark, at the cost of trusting a
+              # role:master answer on its own.
+              backend valkey_master_any
+                  mode tcp
+                  option tcp-check
+                  tcp-check connect
+                  tcp-check send "AUTH __VALKEY_PASSWORD__\r\n"
+                  tcp-check expect string +OK
+                  tcp-check send "PING\r\n"
+                  tcp-check expect string +PONG
+                  tcp-check send "INFO replication\r\n"
+                  tcp-check expect string role:master min-recv 100
+                  tcp-check send "QUIT\r\n"
+                  tcp-check expect string +OK
+                  server golden-valkey-0 golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+                  server golden-valkey-1 golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+                  server golden-valkey-2 golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local:6379 check inter 1s rise 2 fall 2 resolvers cluster_dns resolve-prefer ipv4 init-addr none
+              EOF
+              ESCAPED_PASSWORD=$(printf '%s' "$VALKEY_PASSWORD" | sed -e 's/\\/\\\\/g' -e 's/[/&]/\\&/g')
+              sed -i "s/__VALKEY_PASSWORD__/${ESCAPED_PASSWORD}/" /tmp/haproxy.cfg
+              exec haproxy -f /tmp/haproxy.cfg -db
+          ports:
+            - name: haproxy
+              containerPort: 6380
+              protocol: TCP
+          readinessProbe:
+            tcpSocket:
+              port: haproxy
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 3
+          livenessProbe:
+            tcpSocket:
+              port: haproxy
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 2
+            failureThreshold: 3
+          resources:
+            {}
+        - name: metrics
+          image: "docker.io/oliver006/redis_exporter:v1.89.0-alpine@sha256:d4e0a0ad55fa4f968eea4519b518b16dac887debd06c790a6be2f60940538d82"
+          imagePullPolicy: Always
+          securityContext: 
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            readOnlyRootFilesystem: true
+            runAsGroup: 1000
+            runAsNonRoot: true
+            runAsUser: 999
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: golden-valkey
+                  key: password
+          ports:
+            - name: metrics
+              containerPort: 9121
+              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: metrics
           readinessProbe:
             httpGet:
-              path: /metrics
+              path: /
               port: metrics
           livenessProbe:
             httpGet:
-              path: /metrics
+              path: /
               port: metrics
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: app
-                    operator: In
-                    values:
-                      - redis-sentinel
-                  - key: release
-                    operator: In
-                    values:
-                      - golden
-              topologyKey: "kubernetes.io/hostname"
       volumes:
+        - name: data
+          emptyDir: {}
+        - name: valkey-config
+          emptyDir: {}
+        - name: sentinel-config
+          emptyDir: {}
+        - name: prestop-script
+          configMap:
+            name: golden-valkey-prestop-script
+            defaultMode: 0755
+        - name: haproxy-config
+          emptyDir: {}
         - name: config
           configMap:
-            name: golden-redis-sentinel-config
-            defaultMode: 288
-        - name: scripts
-          configMap:
-            name: golden-redis-sentinel-scripts
-            defaultMode: 365
-        - name: empty-dir
+            name: golden-valkey
+        - name: tmp
           emptyDir: {}
-          sizeLimit: "1Mi"
+      terminationGracePeriodSeconds: 30
+
 ---
 # Source: chart/templates/ingress-reverb.yaml
 apiVersion: networking.k8s.io/v1
@@ -1654,28 +2013,6 @@ spec:
                 name: wsb
                 port:
                   number: 80
----
-# Source: chart/charts/redis-sentinel/templates/tests/test-connection.yaml
-apiVersion: v1
-kind: Pod
-metadata:
-  name: "golden-redis-sentinel-test-connection"
-  labels:
-    helm.sh/chart: redis-sentinel-0.1.5
-    app.kubernetes.io/name: redis-sentinel
-    app.kubernetes.io/instance: golden
-    app.kubernetes.io/version: "8.2.1"
-    app.kubernetes.io/managed-by: Helm
-  annotations:
-    "helm.sh/hook": test
-spec:
-  containers:
-    - name: wget
-      image: busybox
-      command: ['wget']
-      args: ['golden-redis-sentinel:80']
-  restartPolicy: Never
-
 ---
 # Source: chart/templates/tests/test-connection.yaml
 apiVersion: v1

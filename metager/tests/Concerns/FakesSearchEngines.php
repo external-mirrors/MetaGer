@@ -144,11 +144,27 @@ trait FakesSearchEngines
      * request this trait has not accounted for into a failure rather than a
      * silent timeout — if the authentication path grows a new call, a test
      * should say so loudly.
+     *
+     * The discharge endpoint needs a body, not just a 200. KeyUser::makePayment
+     * reads `charge` out of the response and returns false when it is absent,
+     * and AuthenticationValidation turns that false into a redirect to the
+     * startpage — so a bare Http::fake() makes every search 302 the moment any
+     * real amount is paid. It stayed invisible for a long time because the only
+     * payment on this path is the suggestion debt, which is 0 on a machine where
+     * the debt is never recorded; makePayment(0.0) returns early without asking
+     * anyone. Where the debt is real, every search redirects instead.
+     *
+     * The charge does not go down across payments here. These tests are not
+     * about payment arithmetic — KeyUserClaimsTest is, with its own fake — and a
+     * key that stays solvent is what lets them be about something else.
      */
     protected function actingAsSearchUser(string $key = "test-key", float $charge = 1000.0): KeyUser
     {
         Http::preventStrayRequests();
-        Http::fake();
+        Http::fake([
+            "*/discharge" => Http::response(["key" => $key, "charge" => $charge]),
+            "*" => Http::response(""),
+        ]);
 
         Cache::put("keyserver:key:" . $key, [
             "key" => $key,

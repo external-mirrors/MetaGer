@@ -168,29 +168,55 @@ class EngineOrchestrationTest extends TestCase
      * The whole point of the recorder. Every one of these is serialized, and in
      * production each is a network hop rather than a socket on the same host.
      *
-     * Was 20 before EngineOrchestrator and the claims batching. The remaining
-     * slack is Quicktips, which queues and reads its own mission with three
-     * commands of its own when its answer is not already cached.
+     * Was 20 before EngineOrchestrator and the claims batching. Three parts
+     * make up what is left:
+     *
+     *   - the search itself: queue every mission in one push, wait, put the
+     *     awaited answer back, read the rest in one pipeline;
+     *   - Quicktips, which queues and reads its own mission with three commands
+     *     of its own when its answer is not already cached;
+     *   - the payments, which release each paid engine's claim after the page
+     *     has been built.
+     *
+     * The budget was 12 until the harness started faking the keyserver's
+     * discharge response properly. That is not a regression: makePayment was
+     * returning false on an empty response body and abandoning the payment
+     * before it touched Redis, so the old number was the cost of a search that
+     * never paid for itself. See FakesSearchEngines::actingAsSearchUser.
+     *
+     * The payments are also the expensive part in a way this recorder cannot
+     * show: each one is a synchronous HTTP POST to the keyserver, made while
+     * the user waits for the page. Batching or deferring those is worth more
+     * than any Redis round trip left here, and is a decision about money rather
+     * than a refactor.
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertLessThanOrEqual(
-            12,
+            15,
             $recorder->total(),
             "A search got more expensive in round trips, not less. In order:\n" . implode("\n", $recorder->trace())
         );
     }
 
     /**
-     * The authorization costs two round trips: one to read what other requests
-     * have claimed against this key, one to stake this request's own claim.
+     * Authorizing the search reads other requests' claims once and stakes this
+     * request's own claim once — two round trips, where it used to be six.
      *
-     * It used to be six — the claim and its deadline were separate commands,
-     * and every paid engine read this request's own claim back out of Redis
-     * before discharging it, a number the process had just written there
-     * itself. See KeyUserClaimsTest for what the claims mean.
+     * What went away: the claim and its deadline were separate commands, and
+     * every paid engine read this request's own claim back out of Redis before
+     * discharging it — a number the process had just written there itself and
+     * which no other process can touch, because the field is keyed by an id
+     * unique to this KeyUser. See KeyUserClaimsTest for what the claims mean.
+     *
+     * Deliberately not asserted as an exact number of claim writes. Paying
+     * stakes more claim when an engine costs more than is left of the original
+     * one, which happens because the middleware claims getSearchCost() while
+     * the controller pays each engine's own cost, and the former is capped. How
+     * often that lands is a pricing detail; that no payment *reads* is the
+     * property this commit is about.
      */
     public function testAuthorizationCostsTwoRoundTrips(): void
     {
@@ -202,15 +228,26 @@ class EngineOrchestrationTest extends TestCase
             "Other requests' claims are read once per request.\n" . implode("\n", $recorder->trace())
         );
         $this->assertSame(
-            1,
-            $recorder->countOfKey("pipeline", "hincrbyfloat,hexpireat"),
-            "The claim and its expiry go out together.\n" . implode("\n", $recorder->trace())
-        );
-        $this->assertSame(
             0,
             $recorder->countOfKey("hget", "keyserver:claims:test-key"),
             "A payment read back a claim this process wrote itself, which Redis cannot know better than we do.\n"
                 . implode("\n", $recorder->trace())
+        );
+
+        // Every claim write carries its own expiry in the same round trip. A
+        // bare hexpireat means one got split back out of its pipeline, which
+        // leaves a window where a claim exists with no deadline on it — and a
+        // request that dies in that window holds the charge until someone
+        // notices.
+        $this->assertSame(
+            0,
+            $recorder->countOf("hexpireat"),
+            "A claim's expiry travelled on its own instead of with the claim.\n" . implode("\n", $recorder->trace())
+        );
+        $this->assertGreaterThanOrEqual(
+            1,
+            $recorder->countOfKey("pipeline", "hincrbyfloat,hexpireat"),
+            "The request never staked a claim at all.\n" . implode("\n", $recorder->trace())
         );
     }
 

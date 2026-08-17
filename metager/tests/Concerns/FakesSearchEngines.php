@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Tests\Support\FakeFetcher;
+use Tests\Support\RecordingRedis;
 
 /**
  * Lets a test run a real search without a real search engine.
@@ -54,6 +55,53 @@ trait FakesSearchEngines
         });
 
         return $this->fakeFetcher;
+    }
+
+    /**
+     * Drop the services that only make sense for one request, so a test can
+     * make a second one.
+     *
+     * The container is not rebuilt between two $this->get() calls, and a
+     * search leans on several singletons that are really request-scoped: the
+     * settings parsed from the query string, the engines built from them, the
+     * MetaGer object itself. Left in place, a second search silently runs with
+     * the first one's query — and QueryTimer throws outright, because it
+     * refuses an event name it has already timed.
+     *
+     * Only for tests that genuinely need two searches, such as proving that the
+     * second one is served from the cache. One search per method remains the
+     * simpler thing to write.
+     */
+    protected function forgetRequestScopedServices(): void
+    {
+        foreach ([
+            \App\QueryTimer::class,
+            \App\QueryLogger::class,
+            \App\SearchSettings::class,
+            \App\Models\Configuration\Searchengines::class,
+            \App\Models\Authorization\Authorization::class,
+            \App\MetaGer::class,
+        ] as $service) {
+            $this->app->forgetInstance($service);
+        }
+    }
+
+    /**
+     * Record every Redis command the request issues from here on.
+     *
+     * Wraps whatever is currently bound, so calling it *after*
+     * fakeEngineResponses puts the recorder outside the fake — which is the way
+     * round that counts what FPM does and not what the fake does standing in
+     * for the fetcher worker.
+     */
+    protected function recordRedisTraffic(): RecordingRedis
+    {
+        $recorder = new RecordingRedis($this->app->make("redis"));
+
+        $this->app->instance("redis", $recorder);
+        Redis::clearResolvedInstances();
+
+        return $recorder;
     }
 
     /**

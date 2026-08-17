@@ -3,6 +3,7 @@
 namespace Tests\Support;
 
 use App\MetaGer;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Stands in for the `requests:fetcher` worker.
@@ -119,6 +120,15 @@ class FakeFetcher
                 json_encode(["info" => ["http_code" => 200], "body" => $body])
             );
             $this->inner->expire($mission["resulthash"], 60);
+
+            // And the second thing the worker does with an answer, which this
+            // used to skip: engines that declare a cacheDuration have their body
+            // put in the cache under the same hash, and MetaGer::checkCache
+            // looks there before queueing anything at all. Without this a test
+            // could never reach the branch that makes a repeated search cheap.
+            if (($mission["cacheDuration"] ?? 0) > 0) {
+                Cache::put($mission["resulthash"], $body, $mission["cacheDuration"] * 60);
+            }
         }
 
         return count($values);
@@ -139,6 +149,11 @@ class FakeFetcher
     {
         foreach ($this->missions as $mission) {
             $this->inner->del($mission["resulthash"]);
+            // The cache copy has to go with it, and for a sharper reason than
+            // the list: a cached body makes checkCache skip the engine
+            // altogether, so leaving one behind does not feed a later test
+            // stale results — it stops that test's search from asking for any.
+            Cache::forget($mission["resulthash"]);
         }
     }
 

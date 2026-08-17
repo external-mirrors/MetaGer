@@ -5,6 +5,9 @@ namespace App;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
+use App\Models\Result;
+use App\Search\ResultDeduplicator;
+use App\Search\ResultRanker;
 use Arr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -300,46 +303,26 @@ class MetaGer
         ], $additional);
     }
 
+    /**
+     * Turn what the engines answered into the list the page shows.
+     *
+     * Order matters and is not obvious, so it is spelled out here: results are
+     * ranked before they are filtered so that ranking sees every engine's view
+     * of a page, and filtered before they are deduplicated so that a blacklisted
+     * copy cannot become the surviving one.
+     */
     public function prepareResults()
     {
-        // combine
         $this->combineResults();
 
-        uasort($this->results, function ($a, $b) {
-            if ($a->getRank() == $b->getRank()) {
-                return 0;
-            }
+        $this->results = app(ResultRanker::class)->order($this->results);
 
-            return ($a->getRank() < $b->getRank()) ? 1 : -1;
-        });
+        $this->results = $this->validOnly($this->results);
+        $this->videos = $this->validOnly($this->videos);
+        $this->news = $this->validOnly($this->news);
 
-        # Validate Results
-        $newResults = [];
-        foreach ($this->results as $result) {
-            if ($result->isValid($this)) {
-                $newResults[] = $result;
-            }
-        }
-        $this->results = $newResults;
-
-        # Validate Videos
-        $newResults = [];
-        foreach ($this->videos as $video) {
-            if ($video->isValid($this)) {
-                $newResults[] = $video;
-            }
-        }
-        $this->videos = $newResults;
-        # Validate News
-        $newResults = [];
-        foreach ($this->news as $news) {
-            if ($news->isValid($this)) {
-                $newResults[] = $news;
-            }
-        }
-        $this->news = $newResults;
-
-        $this->duplicationCheck();
+        $this->results = app(ResultDeduplicator::class)
+            ->deduplicate($this->results, app(SearchSettings::class)->fokus);
 
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
@@ -362,7 +345,30 @@ class MetaGer
         }
     }
 
-    public function combineResults()
+    /**
+     * Drop everything this search is not allowed to show.
+     *
+     * Result::isValid needs the MetaGer to ask, because what is filtered out
+     * depends on the search: the user's own host/domain/url blacklists, the
+     * operator blacklists and the special-search restrictions all live here.
+     *
+     * @param Result[] $results
+     * @return Result[]
+     */
+    private function validOnly(array $results): array
+    {
+        return array_values(array_filter($results, fn(Result $result) => $result->isValid($this)));
+    }
+
+    /**
+     * Take the results off the engines and put them in one pile.
+     *
+     * Cloned, not referenced: the engine objects go into the loader cache for
+     * load-more to pick up again, so everything from here on has to be able to
+     * mutate a result — deduplication merges copies into one — without editing
+     * what that engine hands out next time.
+     */
+    private function combineResults()
     {
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (isset($engine->next)) {
@@ -378,70 +384,6 @@ class MetaGer
             }
             foreach ($engine->videos as $video) {
                 $this->videos[] = clone $video;
-            }
-        }
-    }
-
-    public function duplicationCheck()
-    {
-        $arr = [];
-
-        $fokus = app(SearchSettings::class)->fokus;
-
-        for ($i = 0; $i < count($this->results); $i++) {
-            if ($fokus === "bilder") {
-                $link = $this->results[$i]->image->thumbnail;
-            } else {
-                $link = $this->results[$i]->link;
-            }
-
-            $link = urldecode($link);
-
-            if (strpos($link, "http://") === 0) {
-                $link = substr($link, 7);
-            }
-
-            if (strpos($link, "https://") === 0) {
-                $link = substr($link, 8);
-            }
-
-            if (strpos($link, "www.") === 0) {
-                $link = substr($link, 4);
-            }
-
-            $link = trim($link, "/");
-
-            if (isset($arr[$link])) {
-                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
-                $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
-
-                if (!empty($this->results[$i]->image)) {
-                    $arr[$link]->image = $this->results[$i]->image;
-                }
-
-                if (!empty($this->results[$i]->inheritedResults)) {
-                    $arr[$link]->inheritedResults = $this->results[$i]->inheritedResults;
-                }
-
-                // Combine the deep results buttons of both results
-                if (!empty(Arr::get($this->results[$i]->deepResults, "buttons", []))) {
-                    $arr[$link]->deepResults =
-                        Arr::set(
-                            $arr[$link]->deepResults,
-                            "buttons",
-                            array_merge(
-                                Arr::get($arr[$link]->deepResults, "buttons", []),
-                                Arr::get($this->results[$i]->deepResults, "buttons", [])
-                            )
-                        );
-                }
-                array_splice($this->results, $i, 1);
-                $i--;
-                if ($arr[$link]->new === true || $this->results[$i]->new === true) {
-                    $arr[$link]->changed = true;
-                }
-            } else {
-                $arr[$link] = &$this->results[$i];
             }
         }
     }
@@ -950,29 +892,11 @@ class MetaGer
         return $link;
     }
 
-    public function rankAll()
-    {
-        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
-            $engine->rank();
-        }
-    }
-
     # Hilfsfunktionen
     public function startsWith($haystack, $needle)
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
-    }
-
-    public function removeInvalids()
-    {
-        $results = [];
-        foreach ($this->results as $result) {
-            if ($result->isValid($this)) {
-                $results[] = $result;
-            }
-        }
-        $this->results = $results;
     }
 
     public function atLeastOneSearchengineSelected(Request $request)

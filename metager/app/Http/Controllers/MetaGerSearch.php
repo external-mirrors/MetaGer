@@ -11,6 +11,7 @@ use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
 use App\Search\EngineOrchestrator;
+use App\Search\ResultRanker;
 use App\SearchSettings;
 use Auth;
 use Blade;
@@ -95,7 +96,7 @@ class MetaGerSearch extends Controller
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
-        $metager->rankAll();
+        app(ResultRanker::class)->rankEngineResults();
         $query_timer->observeEnd("Search_RankAll");
 
         # Ergebnisse der Suchmaschinen kombinieren:
@@ -323,7 +324,7 @@ class MetaGerSearch extends Controller
         $orchestrator->loadFromCache($metager);
         $orchestrator->collectResults($metager);
 
-        $metager->rankAll();
+        app(ResultRanker::class)->rankEngineResults();
         $metager->prepareResults();
 
         $result = [

@@ -137,7 +137,7 @@ services:
       - ./metager:/home/node/metager
       - node_cache:/home/node/.npm
   redis:
-    image: redis:8.0
+    image: redis:8.10
     restart: unless-stopped
     user: "redis:redis"
     networks:

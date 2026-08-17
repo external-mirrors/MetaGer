@@ -1,4 +1,4 @@
-FROM php:8.4.13-fpm-trixie AS composer
+FROM php:8.5.9-fpm-trixie AS composer
 
 # Add Composer installation to image
 ADD build/fpm/installcomposer.sh /usr/bin/installcomposer
@@ -30,8 +30,20 @@ RUN apt update && apt install --no-install-recommends -y \
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
-RUN yes 'y' | pecl install xdebug-3.4.6 igbinary-3.2.16 msgpack-3.0.0 redis-6.3.0RC1 imagick-3.8.0
-RUN docker-php-ext-enable msgpack igbinary redis imagick
+# igbinary and msgpack are deliberately absent. They were installed and enabled
+# but never referenced: nothing in the app, config, php.ini or chart selects
+# them as a serializer, and Laravel talks to Redis through predis (pure PHP,
+# REDIS_CLIENT is nowhere set and defaults to 'predis'). igbinary also has no
+# stable release that builds against PHP 8.5 — 3.2.16 fails on the removed
+# ext/standard/php_smart_string.h and only 3.2.17RC1 adds support — so keeping
+# them would have meant shipping a release candidate for an unused extension.
+RUN yes 'y' | pecl install xdebug-3.5.3 imagick-3.8.1
+# phpredis is configured explicitly rather than through `yes 'y'`: that answered
+# every prompt affirmatively, including the igbinary and msgpack serializers,
+# which now have no headers to build against. The compression backends stay on —
+# libzstd-dev and liblz4-dev are installed above for them.
+RUN pecl install --configureoptions 'enable-redis-igbinary="no" enable-redis-msgpack="no" enable-redis-lzf="yes" enable-redis-zstd="yes" enable-redis-lz4="yes" with-liblz4="yes"' redis-6.3.0
+RUN docker-php-ext-enable redis imagick
 RUN docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
 # Add working dir for the code base

@@ -25,8 +25,13 @@
     REDIS_HOST: redis
   # Every rendered page resolves its stylesheets and scripts through the Vite manifest, and
   # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
-  # the built frontend, not just vendor/. Pull the npm job's artifact; composer still runs in
-  # before_script because these jobs need the dev dependencies the composer job omits.
+  # the built frontend as well as vendor/. Both arrive as artifacts: metager/public from npm,
+  # metager/vendor from composer_dev.
+  #
+  # composer_dev exists so these jobs no longer run `composer install` themselves. They used
+  # to, because the `composer` job installs --no-dev and the suite needs the dev packages —
+  # which meant every test job re-fetched ~40 packages from codeload.github.com, and a GitHub
+  # rate limit or outage failed a suite that does not otherwise depend on GitHub at all.
   #
   # `dependencies` and not `needs`: needs would also rewire *when* these jobs run, releasing
   # them from stage order to start the moment npm finishes — before the fpm image they run on
@@ -34,8 +39,8 @@
   # `dependencies` alone only selects which artifacts to download.
   dependencies:
     - npm
+    - composer_dev
   before_script:
-    - export COMPOSER_HOME=$(pwd)/metager/.composer
     - cd metager
     - cp $ENV_PRODUCTION .env
     # config/sumas.json is gitignored (it only ever carries API secrets), so a fresh checkout has
@@ -43,11 +48,11 @@
     # fpm image's entrypoint falls back to the example file for exactly this reason, but this job
     # replaces that entrypoint with bash, so do the same thing here.
     - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
-    - composer install
     - php artisan optimize
-  cache:
-    paths:
-      - metager/.composer/
+  # No cache here any more. These jobs no longer run composer, so caching
+  # metager/.composer/ only uploaded an empty directory — and under the implicit
+  # "default" cache key it did so into the same slot the npm and composer jobs
+  # were using, wiping whichever of them had written last.
   except:
     refs:
       - master
@@ -60,9 +65,13 @@
 # it runs on, and nothing else.
 test:
   extends: .test_base
+  # composer_dev is listed here as well as in .test_base's `dependencies`: when a job
+  # declares `needs`, GitLab requires every job it takes artifacts from to be part of
+  # it. browsertest has no `needs` and reaches composer_dev through stage order.
   needs:
     - npm
     - fpm
+    - composer_dev
   # Same image as docker-compose runs locally, so a test that passes on a laptop passes here.
   services:
     # Valkey, matching what the Helm chart deploys and what docker-compose.yml runs

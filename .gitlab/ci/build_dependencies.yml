@@ -57,13 +57,29 @@ npm:
 # business in a deployed container.
 composer:
   extends: .composer_base
+  # Deliberately *after* composer_dev rather than beside it. Both jobs install the
+  # same packages — composer_dev's set is a superset — so running them in parallel
+  # means that on a cold cache both fetch the whole dependency set from GitHub at
+  # the same time, doubling the traffic in exactly the situation that already hurts.
+  # Sequenced, this one restores the cache composer_dev just pushed and downloads
+  # nothing. Costs one job's duration on the critical path; that job is fast
+  # precisely because the cache is warm.
+  #
+  # Naming composer_image explicitly as well: adding `needs` opts a job out of
+  # waiting for whole stages, so the image it runs in has to be stated rather than
+  # assumed from stage order.
+  needs:
+    - composer_image
+    - composer_dev
+  # Nothing to download — a clean install out of the warm cache is more predictable
+  # than pruning composer_dev's vendor artifact down to the production set.
+  dependencies: []
   script:
     - cd metager
     - composer install --optimize-autoloader --no-dev
   cache:
-    # Pull only. composer_dev installs these packages plus the dev ones, so its
-    # cache is a superset of this one; letting both push would have them race to
-    # replace the same archive and periodically drop the dev entries.
+    # Pull only. composer_dev's cache is the superset; letting both push would have
+    # them race to replace the same archive and periodically drop the dev entries.
     policy: pull
 
 # Dependencies including dev, for the test jobs.
@@ -76,6 +92,11 @@ composer:
 # only these two jobs reach for the network, and only when the cache misses.
 composer_dev:
   extends: .composer_base
+  # Runs first of the two, and is the one that populates the cache. Stated
+  # explicitly so it starts as soon as its image exists rather than waiting out
+  # every other job in the previous stage.
+  needs:
+    - composer_image
   script:
     - cd metager
     - composer install --optimize-autoloader

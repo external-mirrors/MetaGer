@@ -49,7 +49,7 @@ test:
 browsertest:
   extends: .test_base
   services:
-    - name: selenium/standalone-firefox:114.0
+    - name: selenium/standalone-firefox:153.0
       alias: selenium-standalone-firefox
   variables:
     SELENIUM_HOST: selenium-standalone-firefox

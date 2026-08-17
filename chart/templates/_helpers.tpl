@@ -112,3 +112,120 @@ override is given (e.g. plain `helm install` without the CI script).
 {{- define "chart.redisSentinelFullname" -}}
 {{- default (printf "%s-redis-sentinel" .Release.Name) .Values.redisSentinelName | trunc 63 | trimSuffix "-" }}
 {{- end }}
+{{/*
+Environment shared by every MetaGer container.
+
+Pass `appUrl: true` for the containers that need APP_URL — fpm and the scheduler
+generate absolute URLs; the queue, reverb and fetcher workers never do.
+
+    env:
+    {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
+*/}}
+{{- define "chart.env" -}}
+{{- $root := .root -}}
+- name: APP_ENV
+  value: {{ $root.Values.environment }}
+{{- if .appUrl }}
+- name: APP_URL
+  value: {{ $root.Values.app_url }}
+{{- end }}
+- name: REDIS_HOST
+  value: {{ include "chart.redisSentinelFullname" $root }}-redis.{{ $root.Release.Namespace }}.svc.cluster.local
+- name: REDIS_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "chart.redisSentinelFullname" $root }}
+      key: REDIS_PASSWORD
+- name: REDIS_SENTINEL_HOST
+  value: {{ include "chart.redisSentinelFullname" $root }}.{{ $root.Release.Namespace }}.svc.cluster.local
+- name: REDIS_SENTINEL_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "chart.redisSentinelFullname" $root }}
+      key: SENTINEL_PASSWORD
+- name: REDIS_SENTINEL_REDIS_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ include "chart.redisSentinelFullname" $root }}
+      key: REDIS_PASSWORD
+- name: REDIS_PORT
+  value: "6379"
+{{- if gt (len $root.Values.ingress.hosts) 0 }}
+{{- with (index $root.Values.ingress.hosts 0) }}
+- name: REVERB_HOST
+  value: {{ .host }}
+{{- end }}
+{{- end }}
+{{- range $name, $value := $root.Values.env }}
+- name: {{ $name }}
+  value: {{ $value }}
+{{- end }}
+{{- end -}}
+
+{{/*
+Pod-level volumes. Every MetaGer pod mounts the same four.
+*/}}
+{{- define "chart.volumes" -}}
+- name: secrets
+  secret:
+    secretName: {{ template "secret_name" . }}
+- name: mglogs-persistent-storage
+  persistentVolumeClaim:
+    claimName: mglogs
+- name: sqlite-databases
+  emptyDir: {}
+- name: fast-logs
+  emptyDir: {}
+{{- end -}}
+
+{{/*
+The .env file. Every container needs this one and nothing runs without it.
+*/}}
+{{- define "chart.mounts.env" -}}
+- name: secrets
+  mountPath: /metager/metager_app/.env
+  subPath: ENV_PRODUCTION
+  readOnly: true
+{{- end -}}
+
+{{/*
+Search configuration and blacklists — only the containers that run a search need
+these: fpm serves result pages, the queue runs jobs that touch the same config.
+*/}}
+{{- define "chart.mounts.config" -}}
+- name: secrets
+  mountPath: /metager/metager_app/config/sumas.json
+  subPath: SUMAS_JSON
+- name: secrets
+  mountPath: /metager/metager_app/config/suggestions.json
+  subPath: SUGGESTIONS
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistDomains.txt
+  subPath: BLACKLIST_DOMAINS
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistUrl.txt
+  subPath: BLACKLIST_URL
+- name: secrets
+  mountPath: /metager/metager_app/config/adBlacklistDomains.txt
+  subPath: ADBLACKLIST_DOMAINS
+- name: secrets
+  mountPath: /metager/metager_app/config/adBlacklistUrl.txt
+  subPath: ADBLACKLIST_URL
+- name: secrets
+  mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+  subPath: BLACKLIST_DESCRIPTION_URL
+{{- end -}}
+
+{{/*
+Writable storage: the shared log volume, the sqlite databases and the fast-log
+scratch dir.
+*/}}
+{{- define "chart.mounts.storage" -}}
+- name: mglogs-persistent-storage
+  mountPath: /metager/metager_app/storage/metager
+  readOnly: false
+- name: sqlite-databases
+  mountPath: /metager/metager_app/database/databases
+- name: fast-logs
+  mountPath: /metager/metager_app/storage/metager/fast_dir
+{{- end -}}

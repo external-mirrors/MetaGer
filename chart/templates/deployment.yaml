@@ -28,16 +28,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       volumes:
-        - name: secrets
-          secret:
-            secretName: {{ template "secret_name" . }}
-        - name: mglogs-persistent-storage
-          persistentVolumeClaim:
-            claimName: mglogs
-        - name: sqlite-databases
-          emptyDir: {}
-        - name: fast-logs
-          emptyDir: {}
+        {{- include "chart.volumes" . | nindent 8 }}
       containers:
         - name: fpm
           securityContext:
@@ -45,74 +36,11 @@ spec:
           image: "{{ template "fpm_image" . }}"
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
-          - name: APP_ENV
-            value: {{ .Values.environment }}
-          - name: APP_URL
-            value: {{ .Values.app_url }}
-          - name: REDIS_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}-redis.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          {{- if gt (len .Values.ingress.hosts) 0 -}}
-          {{- with (index .Values.ingress.hosts 0) }}
-          - name: REVERB_HOST
-            value: {{ .host }}
-          {{- end }}
-          {{- end }}
-          {{- range $name, $value := .Values.env }}
-          - name: {{ $name }}
-            value: {{ $value }}
-          {{- end }}
+          {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
           volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
-          - name: secrets
-            mountPath: /metager/metager_app/config/sumas.json
-            subPath: SUMAS_JSON
-          - name: secrets
-            mountPath: /metager/metager_app/config/suggestions.json
-            subPath: SUGGESTIONS
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistDomains.txt
-            subPath: BLACKLIST_DOMAINS
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistUrl.txt
-            subPath: BLACKLIST_URL
-          - name: secrets
-            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
-            subPath: ADBLACKLIST_DOMAINS
-          - name: secrets
-            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
-            subPath: ADBLACKLIST_URL
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
-            subPath: BLACKLIST_DESCRIPTION_URL
-          - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/metager
-            readOnly: false
-          - name: sqlite-databases
-            mountPath: /metager/metager_app/database/databases
-          - name: fast-logs
-            mountPath: /metager/metager_app/storage/metager/fast_dir
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.config" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
           # ports removed: only nginx exposes 'http'
           livenessProbe:
             httpGet:
@@ -139,53 +67,10 @@ spec:
           args: ["artisan", "schedule:work-mg"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
-          - name: APP_ENV
-            value: {{ .Values.environment }}
-          - name: APP_URL
-            value: {{ .Values.app_url }}
-          - name: REDIS_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}-redis.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          {{- if gt (len .Values.ingress.hosts) 0 -}}
-          {{- with (index .Values.ingress.hosts 0) }}
-          - name: REVERB_HOST
-            value: {{ .host }}
-          {{- end }}
-          {{- end }}
-          {{- range $name, $value := .Values.env }}
-          - name: {{ $name }}
-            value: {{ $value }}
-          {{- end }}
+          {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
           volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
-          - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/metager
-            readOnly: false
-          - name: sqlite-databases
-            mountPath: /metager/metager_app/database/databases
-          - name: fast-logs
-            mountPath: /metager/metager_app/storage/metager/fast_dir
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
           # ports removed: only nginx exposes 'http'
           livenessProbe:
             httpGet:
@@ -211,72 +96,11 @@ spec:
           args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
-          - name: APP_ENV
-            value: {{ .Values.environment }}
-          - name: REDIS_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}-redis.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          {{- if gt (len .Values.ingress.hosts) 0 -}}
-          {{- with (index .Values.ingress.hosts 0) }}
-          - name: REVERB_HOST
-            value: {{ .host }}
-          {{- end }}
-          {{- end }}
-          {{- range $name, $value := .Values.env }}
-          - name: {{ $name }}
-            value: {{ $value }}
-          {{- end }}
+          {{- include "chart.env" (dict "root" .) | nindent 10 }}
           volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
-          - name: secrets
-            mountPath: /metager/metager_app/config/sumas.json
-            subPath: SUMAS_JSON
-          - name: secrets
-            mountPath: /metager/metager_app/config/suggestions.json
-            subPath: SUGGESTIONS
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistDomains.txt
-            subPath: BLACKLIST_DOMAINS
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistUrl.txt
-            subPath: BLACKLIST_URL
-          - name: secrets
-            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
-            subPath: ADBLACKLIST_DOMAINS
-          - name: secrets
-            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
-            subPath: ADBLACKLIST_URL
-          - name: secrets
-            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
-            subPath: BLACKLIST_DESCRIPTION_URL
-          - name: mglogs-persistent-storage
-            mountPath: /metager/metager_app/storage/metager
-            readOnly: false
-          - name: sqlite-databases
-            mountPath: /metager/metager_app/database/databases
-          - name: fast-logs
-            mountPath: /metager/metager_app/storage/metager/fast_dir
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.config" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
           livenessProbe:
             exec:
               command:
@@ -307,44 +131,9 @@ spec:
           args: ["artisan", "reverb:start", "--port=8081", "--debug"]
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
-          - name: APP_ENV
-            value: {{ .Values.environment }}
-          - name: REDIS_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}-redis.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_SENTINEL_HOST
-            value: {{ include "chart.redisSentinelFullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-          - name: REDIS_SENTINEL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: SENTINEL_PASSWORD
-          - name: REDIS_SENTINEL_REDIS_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: {{ include "chart.redisSentinelFullname" . }}
-                key: REDIS_PASSWORD
-          - name: REDIS_PORT
-            value: "6379"
-          {{- if gt (len .Values.ingress.hosts) 0 -}}
-          {{- with (index .Values.ingress.hosts 0) }}
-          - name: REVERB_HOST
-            value: {{ .host }}
-          {{- end }}
-          {{- end }}
-          {{- range $name, $value := .Values.env }}
-          - name: {{ $name }}
-            value: {{ $value }}
-          {{- end }}
+          {{- include "chart.env" (dict "root" .) | nindent 10 }}
           volumeMounts:
-          - name: secrets
-            mountPath: /metager/metager_app/.env
-            subPath: ENV_PRODUCTION
-            readOnly: true
+          {{- include "chart.mounts.env" . | nindent 10 }}
           ports:
             - name: reverb
               containerPort: 8081

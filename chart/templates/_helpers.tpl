@@ -216,12 +216,6 @@ these: fpm serves result pages, the queue runs jobs that touch the same config.
   mountPath: /metager/metager_app/config/blacklistUrl.txt
   subPath: BLACKLIST_URL
 - name: secrets
-  mountPath: /metager/metager_app/config/adBlacklistDomains.txt
-  subPath: ADBLACKLIST_DOMAINS
-- name: secrets
-  mountPath: /metager/metager_app/config/adBlacklistUrl.txt
-  subPath: ADBLACKLIST_URL
-- name: secrets
   mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
   subPath: BLACKLIST_DESCRIPTION_URL
 {{- end -}}

@@ -1,0 +1,1393 @@
+---
+# Source: chart/charts/redis-sentinel/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: redis-sentinel
+      release: golden
+
+---
+# Source: chart/templates/pdb.yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: golden
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-app
+      app.kubernetes.io/instance: golden
+  maxUnavailable: 1
+---
+# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+automountServiceAccountToken: true
+---
+# Source: chart/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: golden
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+
+---
+# Source: chart/charts/redis-sentinel/templates/secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+type: Opaque
+data:
+  REDIS_PASSWORD: |
+      Z29sZGVuLXJlZGlzLXBhc3N3b3Jk
+  SENTINEL_PASSWORD: |
+      Z29sZGVuLXNlbnRpbmVsLXBhc3N3b3Jk
+---
+# Source: chart/charts/redis-sentinel/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: golden-redis-sentinel-scripts
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  entrypoint-redis.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
+    mkdir -p /usr/local/etc/redis
+    touch /usr/local/etc/redis/redis.conf
+
+    if [[ -f /usr/local/etc/redis/redis-default.conf ]]; then
+        cat /usr/local/etc/redis/redis-default.conf >> /usr/local/etc/redis/redis.conf
+    fi
+
+    if [[ -f /usr/local/etc/redis/redis-extra.conf ]]; then
+        cat /usr/local/etc/redis/redis-extra.conf >> /usr/local/etc/redis/redis.conf
+    fi
+
+    echo "replica-announce-ip $REDIS_HOSTNAME" >> /usr/local/etc/redis/redis.conf
+    echo "requirepass $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf
+    echo "masterauth $REDIS_PASSWORD" >> /usr/local/etc/redis/redis.conf
+
+    COUNTER=0
+    while (( COUNTER < 10 )); do
+        echo "Waiting for master information from Sentinel..."
+        
+        set +e
+        readarray -t MASTER <<<$(redis-cli -p 26379 -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
+        set -e
+        ((COUNTER++)) || true
+        if [[ ${#MASTER[@]} == 2 ]]; then
+            break
+        else
+            sleep 1
+        fi
+    done
+
+    if (( COUNTER >= 9 )); then
+        echo "Failed to get master information from Sentinel"
+        exit 1
+    fi
+
+    if [[ ${MASTER[0]} != $REDIS_HOSTNAME ]]; then
+        echo "replicaof ${MASTER[0]} ${MASTER[1]}" >> /usr/local/etc/redis/redis.conf
+    fi
+
+    exec /usr/local/bin/docker-entrypoint.sh redis-server /usr/local/etc/redis/redis.conf
+  entrypoint-sentinel.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
+    SENTINEL_HOSTNAME=golden-redis-sentinel
+
+    mkdir -p /usr/local/etc/redis
+
+    set +e
+    [ -f /data/sentinel.conf ]
+    FIRST_START=$?
+    set -e
+
+    touch /data/sentinel.conf
+    chmod 660 /data/sentinel.conf
+
+    if [[ -f /usr/local/etc/redis/sentinel-default.conf ]]; then
+        cat /usr/local/etc/redis/sentinel-default.conf >> /data/sentinel.conf
+    fi
+
+    if [[ -f /usr/local/etc/redis/sentinel-extra.conf ]]; then
+        cat /usr/local/etc/redis/sentinel-extra.conf >> /data/sentinel.conf
+    fi
+
+    echo "requirepass $SENTINEL_PASSWORD" >> /data/sentinel.conf
+    echo "SENTINEL announce-ip $REDIS_HOSTNAME" >> /data/sentinel.conf
+    echo "SENTINEL auth-pass mymaster $REDIS_PASSWORD" >> /data/sentinel.conf
+
+    MASTER=()
+
+    # First check for an existing master
+    set +e
+    REDIS_RESPONSE=$(redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
+    if [[ $? == 0 ]]; then
+    readarray -t MASTER <<<$REDIS_RESPONSE
+    fi
+    set -e
+
+    if (( FIRST_START == 1 )); then
+        echo "First start of Sentinel, trying to discover master..."
+        # On first start, append the monitor line at the start of the file
+        if [[ ${#MASTER[@]} == 2 ]]; then
+            sed -i "1s/^/SENTINEL monitor mymaster ${MASTER[0]} ${MASTER[1]} 2\n/" /data/sentinel.conf
+        elif [[ $HOSTNAME == "golden-redis-sentinel-0" ]]; then
+          echo "No master found, starting with first ordinal as master"
+          MASTER[0]=golden-redis-sentinel-0.golden-redis-sentinel-headless
+          MASTER[1]=6379
+          sed -i "1s/^/SENTINEL monitor mymaster ${MASTER[0]} ${MASTER[1]} 2\n/" /data/sentinel.conf
+        else
+            echo "No master found, not starting"
+            exit 1
+        fi
+    fi
+
+    # Update the current master file
+    if [[ ${#MASTER[@]} == 2 ]]; then
+      echo ${MASTER[0]} > /shared/current-master
+    fi
+
+    chown -R redis:redis /data
+    chown -R redis:redis /shared
+
+    exec /usr/local/bin/docker-entrypoint.sh redis-sentinel /data/sentinel.conf
+  prestop.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
+    SENTINEL_HOSTNAME=golden-redis-sentinel
+
+    set +e
+    REDIS_RESPONSE=$(redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD --raw sentinel get-master-addr-by-name mymaster)
+    if [[ $? == 0 ]]; then
+    readarray -t MASTER <<<$REDIS_RESPONSE
+    fi
+    set -e
+
+    if (( ${#MASTER[@]} == 2 )) && [[ ${MASTER[0]} == "${HOSTNAME}."* ]]; then
+        echo "Current node is master, promoting another replica to master"
+        redis-cli -p 26379 -h $SENTINEL_HOSTNAME -a $SENTINEL_PASSWORD sentinel failover mymaster
+        sleep 5
+    fi
+  prestop-sentinel.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    export REDIS_HOSTNAME=$(cat /etc/hostname).golden-redis-sentinel-headless
+
+    # Wait until this redis node has quit
+    echo "Waiting until redis node has quit..."
+    while true; do
+      redis-cli -p 6379 -h $REDIS_HOSTNAME -a $REDIS_PASSWORD ping > /dev/null 2>&1
+      if [[ $? != 0 ]]; then
+        break
+      fi
+      sleep 1
+    done
+  failover.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    # This script is called by sentinel whenever a failover happened
+    NEW_MASTER=$6
+
+    echo "New master is $NEW_MASTER"
+    echo $NEW_MASTER > /shared/current-master
+  update-master.sh: |
+    #!/usr/bin/env bash
+    set -e
+
+    trap 'SIGTERM' sigterm
+
+    MASTER=""
+
+    while true; do
+      if [[ ! -f /shared/current-master ]]; then
+        sleep 5
+        continue
+      fi
+      mapfile -n1 -t < /shared/current-master CURRENT_MASTER
+      if [[ "$CURRENT_MASTER" != "$MASTER" ]]; then
+        echo "New master is $CURRENT_MASTER"
+        echo "Updating labels on this pod"
+        MASTER=$CURRENT_MASTER
+        if [[ $MASTER == $HOSTNAME.* ]]; then
+          echo "Setting label role to master"
+          kubectl label pod $HOSTNAME role=master --overwrite
+        else
+          echo "Setting label role to replica"
+          kubectl label pod $HOSTNAME role=replica --overwrite
+        fi
+      fi
+      sleep 5
+    done
+
+    sigterm() {
+      echo "Caught SIGTERM signal!"
+      exit 0
+    }
+---
+# Source: chart/charts/redis-sentinel/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: golden-redis-sentinel-config
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+data:
+  redis-default.conf: |
+    # Default Redis configuration
+    dir /data
+  redis-extra.conf: |
+    # Extra Redis configuration from values.yaml
+    appendonly no
+    maxmemory 5gb
+    maxmemory-policy allkeys-lru
+    repl-backlog-size 512mb
+    repl-diskless-load swapdb
+    repl-diskless-sync-delay 5
+    repl-diskless-sync-max-replicas 2
+    repl-timeout 120
+    save 
+    shutdown-timeout 10
+  sentinel-default.conf: |
+    # Default Redis Sentinel configuration
+    dir /data
+    SENTINEL client-reconfig-script mymaster /usr/local/bin/failover.sh
+    SENTINEL resolve-hostnames yes
+    SENTINEL announce-hostnames yes
+    SENTINEL down-after-milliseconds mymaster 5000
+    SENTINEL failover-timeout mymaster 10000
+    SENTINEL parallel-syncs mymaster 1
+  sentinel-extra.conf: |
+    # Extra Redis Sentinel configuration from values.yaml
+---
+# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "patch"]
+---
+# Source: chart/charts/redis-sentinel/templates/serviceaccount.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+subjects:
+  - kind: ServiceAccount
+    name: golden-redis-sentinel
+    namespace: metager
+roleRef:
+  kind: Role
+  name: golden-redis-sentinel
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: chart/charts/redis-sentinel/templates/service-headless.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-redis-sentinel-headless
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  clusterIP: None
+  ports:
+    - port: 6379
+      name: redis
+  selector:
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+
+---
+# Source: chart/charts/redis-sentinel/templates/service-redis.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-redis-sentinel-redis
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      name: redis
+  selector:
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    role: master
+
+---
+# Source: chart/charts/redis-sentinel/templates/service-sentinel.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 26379
+      targetPort: 26379
+      name: sentinel
+  selector:
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+
+---
+# Source: chart/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: golden
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+
+---
+# Source: chart/templates/deployment-worker.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golden-worker
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-worker
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-worker
+      app.kubernetes.io/instance: golden
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        helm.sh/chart: chart-0.1.0
+        app.kubernetes.io/name: golden-worker
+        app.kubernetes.io/instance: golden
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+        app: golden
+    spec:
+      imagePullSecrets:
+        - name: registry-credentials
+      serviceAccountName: golden
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: secrets
+          secret:
+            secretName: golden
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: worker
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "requests:fetcher"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - requests:fetcher
+          resources:
+            requests:
+              cpu: 250m
+              memory: 256Mi
+            limits:
+      nodeSelector:
+        kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: golden-worker
+                topologyKey: kubernetes.io/hostname
+      tolerations:
+        - effect: NoSchedule
+          key: node-role
+          operator: Equal
+          value: web
+
+---
+# Source: chart/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golden-app
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: golden-app
+      app.kubernetes.io/instance: golden
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+      labels:
+        helm.sh/chart: chart-0.1.0
+        app.kubernetes.io/name: golden-app
+        app.kubernetes.io/instance: golden
+        app.kubernetes.io/version: "1.16.0"
+        app.kubernetes.io/managed-by: Helm
+        app: golden
+    spec:
+      imagePullSecrets:
+        - name: registry-credentials
+      serviceAccountName: golden
+      securityContext:
+        fsGroup: 2000
+      volumes:
+        - name: secrets
+          secret:
+            secretName: golden
+        - name: mglogs-persistent-storage
+          persistentVolumeClaim:
+            claimName: mglogs
+        - name: sqlite-databases
+          emptyDir: {}
+        - name: fast-logs
+          emptyDir: {}
+      containers:
+        - name: fpm
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: APP_URL
+            value: https://metager.de
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
+            subPath: ADBLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
+            subPath: ADBLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          # ports removed: only nginx exposes 'http'
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /health-check/liveness
+              port: 8080
+          startupProbe:
+            tcpSocket:
+              port: 9000
+            failureThreshold: 60
+            periodSeconds: 1
+          resources:
+            requests:
+              cpu: 500m
+              memory: 512Mi
+            limits: {}
+        - name: scheduler
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "schedule:work-mg"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: APP_URL
+            value: https://metager.de
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          # ports removed: only nginx exposes 'http'
+          livenessProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: 8080
+          startupProbe:
+            httpGet:
+              path: /health-check/liveness-scheduler
+              port: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits: {}
+        - name: queue
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistDomains.txt
+            subPath: ADBLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/adBlacklistUrl.txt
+            subPath: ADBLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+        - name: reverb
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "reverb:start", "--port=8081", "--debug"]
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: APP_ENV
+            value: production
+          - name: REDIS_HOST
+            value: golden-redis-redis.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_SENTINEL_HOST
+            value: golden-redis.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: SENTINEL_PASSWORD
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-redis
+                key: REDIS_PASSWORD
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: stderr
+          - name: MATOMO_ENABLED
+            value: true
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          ports:
+            - name: reverb
+              containerPort: 8081
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+        - name: nginx
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+          image: "registry.metager.de/open-source/metager/nginx:golden"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health-check/nginx
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health-check/nginx
+              port: http
+          startupProbe:
+            httpGet:
+              path: /health-check/nginx
+              port: http
+            failureThreshold: 60
+            periodSeconds: 1
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits: {}
+      nodeSelector:
+        kubernetes.io/os: linux
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/instance: golden-app
+                topologyKey: kubernetes.io/hostname
+      tolerations:
+        - effect: NoSchedule
+          key: node-role
+          operator: Equal
+          value: web
+---
+# Source: chart/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: golden
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: golden-app
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 85
+  behavior:
+    scaleDown:
+      policies:
+      - periodSeconds: 30
+        type: Percent
+        value: 50
+      selectPolicy: Max
+    scaleUp:
+      policies:
+      - periodSeconds: 30
+        type: Pods
+        value: 4
+      - periodSeconds: 30
+        type: Percent
+        value: 100
+      selectPolicy: Max
+      stabilizationWindowSeconds: 30
+
+---
+# Source: chart/charts/redis-sentinel/templates/statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: golden-redis-sentinel
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  serviceName: golden-redis-sentinel-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis-sentinel
+      app.kubernetes.io/instance: golden
+  template:
+    metadata:
+      labels:
+        helm.sh/chart: redis-sentinel-0.1.5
+        app.kubernetes.io/name: redis-sentinel
+        app.kubernetes.io/instance: golden
+        app.kubernetes.io/version: "8.2.1"
+        app.kubernetes.io/managed-by: Helm
+      annotations:
+        checksum/config: 64c09d75ba21f39b52b07b772c430c1280688f0baab886be76109a5d2505a64a
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9121"
+        prometheus.io/path: "/metrics"
+    spec:
+      serviceAccountName: golden-redis-sentinel
+      automountServiceAccountToken: true
+      containers:
+        - name: redis
+          image: "redis:8.2.1"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/bash", "/usr/local/bin/entrypoint-redis.sh"]
+          ports:
+            - containerPort: 6379
+              name: redis
+          envFrom:
+            - secretRef:
+                name: golden-redis-sentinel
+          resources:
+            {}
+          volumeMounts:
+            - name: scripts
+              mountPath: /usr/local/bin/entrypoint-redis.sh
+              readOnly: true
+              subPath: entrypoint-redis.sh
+            - name: config
+              mountPath: /usr/local/etc/redis/redis-default.conf
+              subPath: redis-default.conf
+              readOnly: true
+            - name: config
+              mountPath: /usr/local/etc/redis/redis-extra.conf
+              subPath: redis-extra.conf
+              readOnly: true
+            - name: scripts
+              mountPath: /usr/local/bin/prestop.sh
+              readOnly: true
+              subPath: prestop.sh
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/bin/prestop.sh"]
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "redis-cli -a $REDIS_PASSWORD ping | grep PONG"
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 5
+            successThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "redis-cli -a $REDIS_PASSWORD ping | grep PONG"
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+        - name: sentinel
+          image: "redis:8.2.1"
+          imagePullPolicy: IfNotPresent
+          command: ["/bin/bash", "/usr/local/bin/entrypoint-sentinel.sh"]
+          ports:
+            - containerPort: 26379
+              name: sentinel
+          envFrom:
+            - secretRef:
+                name: golden-redis-sentinel
+          resources:
+            {}
+          volumeMounts:
+            - name: scripts
+              mountPath: /usr/local/bin/entrypoint-sentinel.sh
+              readOnly: true
+              subPath: entrypoint-sentinel.sh
+            - name: scripts
+              mountPath: /usr/local/bin/prestop-sentinel.sh
+              readOnly: true
+              subPath: prestop-sentinel.sh
+            - name: config
+              mountPath: /usr/local/etc/redis/sentinel-default.conf
+              subPath: sentinel-default.conf
+              readOnly: true
+            - name: config
+              mountPath: /usr/local/etc/redis/sentinel-extra.conf
+              subPath: sentinel-extra.conf
+            - name: scripts
+              mountPath: /usr/local/bin/failover.sh
+              subPath: failover.sh
+              readOnly: false
+            - name: empty-dir
+              mountPath: /shared
+              readOnly: false
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "redis-cli -p 26379 -a $SENTINEL_PASSWORD ping | grep PONG"
+            initialDelaySeconds: 5
+            periodSeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "redis-cli -p 26379 -a $SENTINEL_PASSWORD ping | grep PONG"
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/usr/local/bin/prestop-sentinel.sh"]
+        - name: master-updater
+          image: alpine/k8s:1.32.8
+          pullPolicy: IfNotPresent
+          command: ["/usr/local/bin/update-master.sh"]
+          volumeMounts:
+            - name: empty-dir
+              mountPath: /shared
+              readOnly: false
+            - name: scripts
+              mountPath: /usr/local/bin/update-master.sh
+              subPath: update-master.sh
+              readOnly: false
+          readinessProbe:
+            exec:
+              command:
+                - pgrep
+                - -f
+                - "/usr/local/bin/update-master.sh"
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+          livenessProbe:
+            exec:
+              command:
+                - pgrep
+                - -f
+                - "/usr/local/bin/update-master.sh"
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+            successThreshold: 1
+        - name: exporter
+          image: "oliver006/redis_exporter:v1.77.0"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--web.listen-address=0.0.0.0:9121"
+            - "--redis.addr=redis://:6379"
+            - "--redis.password=$(REDIS_PASSWORD)"
+          envFrom:
+            - secretRef:
+                name: golden-redis-sentinel
+          ports:
+            - containerPort: 9121
+              name: metrics
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: metrics
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - redis-sentinel
+                  - key: release
+                    operator: In
+                    values:
+                      - golden
+              topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: config
+          configMap:
+            name: golden-redis-sentinel-config
+            defaultMode: 288
+        - name: scripts
+          configMap:
+            name: golden-redis-sentinel-scripts
+            defaultMode: 365
+        - name: empty-dir
+          emptyDir: {}
+          sizeLimit: "1Mi"
+---
+# Source: chart/templates/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: golden
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 30m
+    nginx.ingress.kubernetes.io/client-header-buffer-size: 256k
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      if ($arg_out = "results-with-style") {
+        more_set_headers "X-Frame-Options: allow-from https://scripts.zdv.uni-mainz.de/";
+      } if ($host = "www.metager.de") {
+          return 301 https://metager.de$request_uri;
+      } if ($host = "metager2.de") {
+          return 301 https://metager.de$request_uri;
+      } if ($host = "www.metager2.de") {
+          return 301 https://metager.de$request_uri;
+      } if ($host = "www.metager.org") {
+          return 301 https://metager.org$request_uri;
+      } if ($host = "metager.es") {
+          return 301 https://metager.org/es-ES$request_uri;
+      } if ($host = "www.metager.es") {
+          return 301 https://metager.org/es-ES$request_uri;
+      } if ($host = "metager.nl") {
+          return 301 https://metager.org/nl-NL$request_uri;
+      } if ($host = "www.metager.nl") {
+          return 301 https://metager.org/nl-NL$request_uri;
+      } if ($host = "metager.co.uk") {
+          return 301 https://metager.org/en-GB$request_uri;
+      } if ($host = "www.metager.co.uk") {
+          return 301 https://metager.org/en-GB$request_uri;
+      } if ($host = "www.metager3.de") {
+          return 301 https://metager3.de$request_uri;
+      }
+    nginx.ingress.kubernetes.io/proxy-body-size: 30m
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 256k
+    nginx.ingress.kubernetes.io/proxy-buffers: 32 256k
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server-snippet: |
+      client_header_buffer_size 256k;
+      large_client_header_buffers 32 256k;
+      underscores_in_headers on;
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - "metager.de"
+      secretName: metager-tls
+  rules:
+    - host: "metager.de"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: golden
+                port:
+                  number: 80
+          - path: /wsb
+            pathType: Prefix
+            backend:
+              service:
+                name: wsb
+                port:
+                  number: 80
+---
+# Source: chart/charts/redis-sentinel/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "golden-redis-sentinel-test-connection"
+  labels:
+    helm.sh/chart: redis-sentinel-0.1.5
+    app.kubernetes.io/name: redis-sentinel
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "8.2.1"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['golden-redis-sentinel:80']
+  restartPolicy: Never
+
+---
+# Source: chart/templates/tests/test-connection.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "golden-test-connection"
+  labels:
+    helm.sh/chart: chart-0.1.0
+    app.kubernetes.io/name: golden-app
+    app.kubernetes.io/instance: golden
+    app.kubernetes.io/version: "1.16.0"
+    app.kubernetes.io/managed-by: Helm
+    app: golden
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['golden:80']
+  restartPolicy: Never
+

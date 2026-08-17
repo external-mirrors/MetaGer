@@ -55,6 +55,7 @@ stages:
   - integrationtest
 
 include:
+  - local: /.gitlab/ci/chart.yml
   - local: /.gitlab/ci/build_dependency_images.yml
   - local: /.gitlab/ci/build_dependencies.yml
   - local: /.gitlab/ci/build_docker_images.yml

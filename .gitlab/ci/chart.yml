@@ -1,0 +1,17 @@
+# Chart checks. These run before anything is built or deployed: a broken template
+# should not cost a full image build to discover.
+chart:
+  stage: build_dependency_images
+  image: ${DEPLOY_KUBERNETES_IMAGE}
+  tags:
+    - kubernetes
+  needs: []
+  script:
+    - cd chart
+    - helm lint . --values tests/golden-values.yaml
+    # Golden-file check. `helm template` output is compared against tests/golden.yaml,
+    # so a chart change has to state what it changes in the manifests. See tests/render.sh.
+    - ./tests/render.sh
+  rules:
+    - changes:
+        - chart/**/*

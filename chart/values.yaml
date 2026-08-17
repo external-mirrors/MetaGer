@@ -143,7 +143,9 @@ tolerations: []
 
 affinity: {}
 
-env: []
+# Extra environment variables for every MetaGer container, as a name -> value map.
+# A map, not a list: the templates iterate it with `range $name, $value`.
+env: {}
 
 redis-sentinel:
   replicaCount: 1

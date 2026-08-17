@@ -2,16 +2,29 @@
 # should not cost a full image build to discover.
 chart:
   stage: build_dependency_images
-  image: ${DEPLOY_KUBERNETES_IMAGE}
+  # Not DEPLOY_KUBERNETES_IMAGE. That image carries helm 3.18, and the golden
+  # snapshot is byte-compared: helm 3 and 4 render these manifests identically
+  # except for a blank line before every `---`, which turns the check into a
+  # 119-line whitespace diff. Pin the version that generates the snapshot instead.
+  # The deploy jobs keep their own image — swapping the helm that performs real
+  # upgrades is a separate decision from the one that renders a test.
+  image:
+    name: alpine/helm:4.2.4
+    entrypoint: [""]
   tags:
     - kubernetes
   needs: []
   script:
     - cd chart
-    - helm lint . --values tests/golden-values.yaml
     # Golden-file check. `helm template` output is compared against tests/golden.yaml,
     # so a chart change has to state what it changes in the manifests. See tests/render.sh.
+    #
+    # It runs before lint because chart/charts/*.tgz is gitignored — the subchart
+    # comes from the Helm registry named in Chart.yaml — so a fresh checkout has no
+    # dependencies at all, and render.sh is what fetches them. Linting first would
+    # only report them as missing.
     - ./tests/render.sh
+    - helm lint . --values tests/golden-values.yaml
   rules:
     - changes:
         - chart/**/*

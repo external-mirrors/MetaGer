@@ -175,8 +175,8 @@ class EngineOrchestrationTest extends TestCase
      *     awaited answer back, read the rest in one pipeline;
      *   - Quicktips, which queues and reads its own mission with three commands
      *     of its own when its answer is not already cached;
-     *   - the payments, which release each paid engine's claim after the page
-     *     has been built.
+     *   - the payment, which releases the claim once the page has been built;
+     *   - settling the suggestion debt on the way in.
      *
      * The budget was 12 until the harness started faking the keyserver's
      * discharge response properly. That is not a regression: makePayment was
@@ -184,18 +184,19 @@ class EngineOrchestrationTest extends TestCase
      * before it touched Redis, so the old number was the cost of a search that
      * never paid for itself. See FakesSearchEngines::actingAsSearchUser.
      *
-     * The payments are also the expensive part in a way this recorder cannot
-     * show: each one is a synchronous HTTP POST to the keyserver, made while
-     * the user waits for the page. Batching or deferring those is worth more
-     * than any Redis round trip left here, and is a decision about money rather
-     * than a refactor.
+     * From there 15 -> 14: batching the engine discharges into one call took
+     * three claim round trips down to one, and settling the suggestion debt
+     * added one back. The Redis saving is the smaller half of that change —
+     * each discharge is also a synchronous HTTP POST to the keyserver made
+     * while the user waits, which this recorder cannot see. See
+     * SearchAuthorizationTest::testAllTheEnginesOfASearchArePaidForInOneCall.
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertLessThanOrEqual(
-            15,
+            14,
             $recorder->total(),
             "A search got more expensive in round trips, not less. In order:\n" . implode("\n", $recorder->trace())
         );

@@ -151,16 +151,34 @@ class MetaGerSearch extends Controller
         $rawCost = app(Searchengines::class)->getRawSearchCost();
         $searchCost = app(Searchengines::class)->getSearchCost();
         if (is_array($engines)) {
+            // One discharge for the whole search, not one per engine.
+            //
+            // makePayment() POSTs to the keyserver synchronously, and this runs
+            // while the user is waiting for the page — so paying engine by
+            // engine put a network round trip on the result path for every paid
+            // engine a fokus uses. The keyserver discharges an amount, not an
+            // engine, so the sum is the same money in one call.
+            //
+            // The metrics stay per engine: they are the record of which engine
+            // was used, which is the question they answer.
+            $due = 0.0;
             foreach ($engines as $engine) {
                 // Only pay for engines that are used, not loaded, and not cached
                 if (!$engine->cached && $engine->configuration->cost > 0) {
                     // Remove namespace before passing engine to exporter
                     PrometheusExporter::KeyUsed($engine->configuration->cost, preg_replace("/^.*\\\/", "", get_class($engine)), $engine->cached);
-                    if (($user = Auth::guard("key")->user()) !== null) {
-                        $user->makePayment($engine->configuration->cost);
-                    } else {
-                        app(Authorization::class)->makePayment($engine->configuration->cost);
-                    }
+                    $due += $engine->configuration->cost;
+                }
+            }
+            if ($due > 0) {
+                // All or nothing now, where each engine used to be refused on its
+                // own. That is the better failure too: the search has already
+                // happened by this point, so charging for part of it was never
+                // the more correct outcome.
+                if (($user = Auth::guard("key")->user()) !== null) {
+                    $user->makePayment($due);
+                } else {
+                    app(Authorization::class)->makePayment($due);
                 }
             }
             // If rawCost < 1, pay the difference between searchCost and rawCost

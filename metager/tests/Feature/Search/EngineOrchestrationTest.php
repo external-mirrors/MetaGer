@@ -11,18 +11,20 @@ use Tests\TestCase;
  * Characterization tests for the orchestration half of a search: asking the
  * engines, waiting for them, and reading what came back.
  *
- * Four methods on MetaGer do this today — startSearch, checkCache,
- * waitForMainResults and retrieveResults — and step D7c lifts them into a
- * Search\EngineOrchestrator. SearchHarnessTest and EngineReachabilityTest
- * already pin *which* engines get asked; this is about the mechanics around
- * that, and about what the mechanics cost.
+ * This was four methods on MetaGer — startSearch, checkCache,
+ * waitForMainResults and retrieveResults — each looping over the engines and
+ * talking to Redis one engine at a time; Search\EngineOrchestrator now does it a
+ * phase at a time. SearchHarnessTest and EngineReachabilityTest already pin
+ * *which* engines get asked; this is about the mechanics around that, and about
+ * what the mechanics cost.
  *
- * ## The cost assertions are characterization, not a target
+ * ## Several of these tests count round trips
  *
- * Several tests below count Redis commands. They pass today and they are
- * *meant* to be changed by the commit that reduces them — the point is that the
- * diff shows the change rather than leaving it to a claim in a message. Each one
- * says what it costs and why it costs that.
+ * They were written before the extraction, against the per-engine shape, so that
+ * the commit which batched them would have to change them — the diff shows the
+ * improvement rather than leaving it to a claim in a message. They are still
+ * ratchets: a change that makes a search chattier again has to come here and say
+ * so.
  *
  * The numbers matter because these round trips are serialized and because
  * production does not look like this test: here Valkey answers in 16µs over a
@@ -58,75 +60,110 @@ class EngineOrchestrationTest extends TestCase
     }
 
     /**
-     * One mission per engine, each its own round trip.
+     * Every engine's mission goes out in a single push.
      *
-     * Searchengine::startSearch pushes its own mission and is called in a loop
-     * over the enabled engines, so the count is the number of engines and each
-     * one is a separate wait for Valkey to answer. Nothing about the missions
-     * requires that — they are independent, and one rpush takes a list.
+     * This used to be one rpush per engine, because Searchengine::startSearch
+     * queued its own and was called in a loop. The missions are independent and
+     * the worker pops them in batches anyway, so nothing was gained by waiting
+     * for Valkey between them; EngineOrchestrator::queueMissions collects them
+     * and pushes once.
+     *
+     * Asserted through the fake rather than the command counter because
+     * Quicktips queues onto the same list separately, so counting rpush against
+     * `fetcher.queue` would measure Quicktips as much as the engines.
      */
-    public function testEveryEngineIsQueuedWithItsOwnRoundTrip(): void
+    public function testEveryEngineIsQueuedInOneRoundTrip(): void
     {
-        [, $recorder, $fake] = $this->searchRecording();
+        [, , $fake] = $this->searchRecording();
 
-        $queued = count($fake->queuedEngines());
+        $enginePushes = array_values(array_filter(array_map(
+            fn(array $names) => array_values(array_diff($names, ["Quicktips"])),
+            $fake->pushes()
+        )));
 
-        $this->assertGreaterThanOrEqual(2, $queued, "Fewer than two missions went out, so counting round trips against them proves little.");
+        $this->assertCount(
+            1,
+            $enginePushes,
+            "The engine missions went out in " . count($enginePushes) . " pushes, not one."
+        );
+        $this->assertGreaterThanOrEqual(
+            2,
+            count($enginePushes[0]),
+            "Fewer than two missions travelled together, so this proves nothing about batching."
+        );
+    }
+
+    /**
+     * Receiving and reading the engines' answers costs two round trips in total,
+     * not two per engine.
+     *
+     * One pipeline puts the awaited answer back where brpop took it from — brpop
+     * consumes, and load-more comes back for the same list — and one rotates and
+     * re-expires every remaining engine's list at once. Both used to be a pair
+     * of separate commands issued per engine.
+     *
+     * The commands inside a pipeline are not recorded individually, which is the
+     * point: `lpush` no longer appearing means it no longer costs a wait of its
+     * own.
+     */
+    public function testReceivingAndReadingTheAnswersIsTwoRoundTrips(): void
+    {
+        [, $recorder] = $this->searchRecording();
+
         $this->assertSame(
-            $queued,
-            $recorder->countOfKey("rpush", "fetcher.queue"),
-            "One push per mission. If this is 1 for $queued missions they are batched, which is the improvement — invert the assertion.\n"
+            2,
+            $recorder->countOf("pipeline"),
+            "One pipeline to put the awaited answer back, one to read the rest.\n" . implode("\n", $recorder->trace())
+        );
+        $this->assertSame(
+            0,
+            $recorder->countOf("lpush"),
+            "The awaited answer was put back with a round trip of its own instead of alongside its expiry.\n"
                 . implode("\n", $recorder->trace())
         );
     }
 
     /**
-     * Reading an engine's answer costs two commands: rpoplpush to rotate the
-     * list rather than consume it — load-more comes back for the same list —
-     * and then a fresh expiry. Nothing between them depends on the other, so
-     * they are two waits where one would do.
-     */
-    public function testReadingAnEngineAnswerTakesTwoRoundTrips(): void
-    {
-        [, $recorder] = $this->searchRecording();
-
-        $reads = $recorder->countOf("rpoplpush");
-
-        $this->assertGreaterThanOrEqual(1, $reads, "No engine answer was read at all.\n" . implode("\n", $recorder->trace()));
-        $this->assertSame(
-            $reads + $recorder->countOf("lpush"),
-            $recorder->countOf("expire"),
-            "Every list read gets its own separate expire.\n" . implode("\n", $recorder->trace())
-        );
-    }
-
-    /**
-     * The answer that ends the wait is taken with brpop and pushed straight
-     * back, because brpop consumes and the list has to survive for load-more:
-     * three commands — brpop, lpush, expire — to receive one answer.
+     * The awaited answer is still put back, whatever it costs.
+     *
+     * Load-more reads the same list later, so an answer consumed by brpop and
+     * not returned would leave that engine's results unreachable on the second
+     * page. Behaviour, not cost — this one is not meant to change.
      */
     public function testTheAwaitedAnswerIsPutBackAfterBeingTaken(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertSame(1, $recorder->countOf("brpop"));
-        $this->assertSame(
-            1,
-            $recorder->countOf("lpush"),
-            "Nothing put the awaited answer back; load-more will find an empty list.\n" . implode("\n", $recorder->trace())
-        );
+
+        $engines = app(\App\Models\Configuration\Searchengines::class)->getEnabledSearchengines();
+        foreach ($engines as $engine) {
+            if (!$engine->loaded) {
+                continue;
+            }
+            $this->assertNotSame(
+                0,
+                $this->app->make("redis")->llen($engine->getHash()),
+                "The list for {$engine->name} is empty after the search, so load-more will find nothing.\n"
+                    . implode("\n", $recorder->trace())
+            );
+        }
     }
 
     /**
      * The whole point of the recorder. Every one of these is serialized, and in
      * production each is a network hop rather than a socket on the same host.
+     *
+     * Was 20 before EngineOrchestrator. The remaining slack is Quicktips, which
+     * queues and reads its own mission with three commands of its own when its
+     * answer is not already cached.
      */
     public function testTheWholeSearchStaysWithinItsRoundTripBudget(): void
     {
         [, $recorder] = $this->searchRecording();
 
         $this->assertLessThanOrEqual(
-            20,
+            17,
             $recorder->total(),
             "A search got more expensive in round trips, not less. In order:\n" . implode("\n", $recorder->trace())
         );
@@ -240,20 +277,50 @@ class EngineOrchestrationTest extends TestCase
     }
 
     /**
-     * Cache lookups ask twice: once whether the key exists, once for its value.
-     * Cache::has followed by Cache::get, per engine, in checkCache.
+     * The cache is asked once for all the engines, not twice for each of them.
+     *
+     * checkCache used to do `Cache::has($hash)` and then `Cache::get($hash)` per
+     * engine — the first call only asking whether the second would find
+     * anything. EngineOrchestrator::loadFromCache reads them all together.
+     *
+     * Counted at the cache repository rather than through RecordingRedis: the
+     * suite runs with `CACHE_STORE=array` (phpunit.xml), so these never reach
+     * Redis in a test even though every one of them is a round trip in
+     * production. One `many` for N keys is one `mget`; a `has` plus a `get` per
+     * engine is 2N.
      */
-    public function testCheckingTheCacheAsksWhetherAKeyExistsBeforeReadingIt(): void
+    public function testTheCacheIsAskedOnceForEveryEngineAtATime(): void
     {
-        Cache::flush();
+        $bodies = [
+            "brave" => $this->engineFixture("brave-web.json"),
+            "serper_web" => $this->engineFixture("serper-web.json"),
+        ];
 
-        [, $recorder] = $this->searchRecording();
+        $this->actingAsSearchUser();
+        $first = $this->fakeEngineResponses($bodies);
+        $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
 
-        $this->assertGreaterThanOrEqual(
-            1,
-            $recorder->countOf("exists"),
-            "checkCache stopped asking `exists` first. If it now reads straight through, that is one round trip per engine saved.\n"
-                . implode("\n", $recorder->trace())
+        $engineHashes = array_values(array_unique(array_column(
+            array_filter($first->missions(), fn(array $m) => $m["name"] !== "Quicktips"),
+            "resulthash"
+        )));
+        $this->assertNotEmpty($engineHashes, "No engine was fetched, so there is nothing cached to read back.");
+
+        $this->forgetRequestScopedServices();
+        $this->fakeEngineResponses($bodies);
+        $cache = $this->recordCacheReads();
+        $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
+
+        $this->assertSame(
+            0,
+            $cache->countFor("has", $engineHashes),
+            "An engine's cached answer was asked about before being read, which is a round trip that returns nothing useful.\n"
+                . implode("\n", $cache->trace())
+        );
+        $this->assertSame(
+            $engineHashes,
+            array_values(array_intersect($cache->keysOfFirst("many"), $engineHashes)),
+            "The engines were not all read in one batch.\n" . implode("\n", $cache->trace())
         );
     }
 }

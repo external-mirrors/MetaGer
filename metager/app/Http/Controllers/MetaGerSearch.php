@@ -10,6 +10,7 @@ use App\Models\Configuration\Searchengines;
 use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
+use App\Search\EngineOrchestrator;
 use App\SearchSettings;
 use Auth;
 use Blade;
@@ -71,16 +72,18 @@ class MetaGerSearch extends Controller
         $quicktips = $metager->createQuicktips();
         $query_timer->observeEnd("Search_CreateQuicktips");
 
+        $orchestrator = app(EngineOrchestrator::class);
+
         $query_timer->observeStart("Search_StartSearch");
-        $metager->startSearch();
+        $orchestrator->start($metager);
         $query_timer->observeEnd("Search_StartSearch");
 
         $query_timer->observeStart("Search_WaitForMainResults");
-        $metager->waitForMainResults();
+        $orchestrator->waitForMainResults($metager);
         $query_timer->observeEnd("Search_WaitForMainResults");
 
         $query_timer->observeStart("Search_RetrieveResults");
-        $metager->retrieveResults();
+        $orchestrator->collectResults($metager);
         $query_timer->observeEnd("Search_RetrieveResults");
 
         // Versuchen die Ergebnisse der Quicktips zu laden
@@ -298,8 +301,9 @@ class MetaGerSearch extends Controller
         }
 
         # Checks Cache for engine Results
-        $metager->checkCache();
-        $metager->retrieveResults();
+        $orchestrator = app(EngineOrchestrator::class);
+        $orchestrator->loadFromCache($metager);
+        $orchestrator->collectResults($metager);
 
         $metager->rankAll();
         $metager->prepareResults();

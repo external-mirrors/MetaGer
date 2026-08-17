@@ -6,7 +6,7 @@ namespace App\Search\Fetch;
  * Turns one fetch mission into the curl options that carry it out.
  *
  * A mission is what FPM pushes onto the fetch queue for a single search engine
- * (see Searchengine::startSearch) and what the requests:fetcher worker pops off
+ * (see Searchengine::createMission) and what the requests:fetcher worker pops off
  * it: a url, the hash to store the answer under, the upstream user agent, and
  * whatever headers, credentials and curl overrides that engine needs.
  *

@@ -51,6 +51,18 @@ class FakeFetcher
     private array $missions = [];
 
     /**
+     * The engine names carried by each rpush, one entry per push.
+     *
+     * How many missions travelled together is not visible in $missions, and it
+     * is exactly what EngineOrchestrator batching changes — see
+     * EngineOrchestrationTest. Quicktips queues its own mission separately and
+     * shows up here as a push of its own.
+     *
+     * @var list<list<string>>
+     */
+    private array $pushes = [];
+
+    /**
      * @param object $inner the real redis manager, which everything else passes through to
      * @param array<string, string> $bodies
      */
@@ -98,6 +110,7 @@ class FakeFetcher
             ? $arguments[1]
             : array_slice($arguments, 1);
 
+        $push = [];
         foreach ($values as $mission) {
             $mission = json_decode($mission, true);
             if (!is_array($mission) || !isset($mission["resulthash"])) {
@@ -105,6 +118,7 @@ class FakeFetcher
             }
 
             $this->missions[] = $mission;
+            $push[] = $mission["name"];
 
             // An engine with no fixture gets "no-result", which is the literal
             // string the worker writes when upstream answers with anything
@@ -131,7 +145,19 @@ class FakeFetcher
             }
         }
 
+        $this->pushes[] = $push;
+
         return count($values);
+    }
+
+    /**
+     * The engine names carried by each rpush, one entry per push.
+     *
+     * @return list<list<string>>
+     */
+    public function pushes(): array
+    {
+        return $this->pushes;
     }
 
     /**

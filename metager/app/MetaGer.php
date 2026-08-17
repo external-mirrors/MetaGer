@@ -5,7 +5,6 @@ namespace App;
 use App\Models\Authorization\Authorization;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
-use App\Models\Searchengine;
 use Arr;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -13,7 +12,6 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Predis\Connection\ConnectionException;
 
@@ -448,29 +446,6 @@ class MetaGer
         }
     }
 
-    public function startSearch()
-    {
-        // Check all engines for Cached responses
-        $this->checkCache();
-
-        // Wir starten alle Suchen
-        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
-            $engine->startSearch();
-        }
-    }
-
-    public function checkCache()
-    {
-        if ($this->canCache()) {
-            foreach (app(Searchengines::class)->getEnabledSearchengines() as $suma) {
-                if (Cache::has($suma->getHash())) {
-                    $suma->cached = true;
-                    $suma->retrieveResults($this, Cache::get($suma->getHash()));
-                }
-            }
-        }
-    }
-
     // Spezielle Suchen und Sumas
 
     public function sumaIsSelected($suma, $request, $custom)
@@ -531,87 +506,15 @@ class MetaGer
             && $suma['disabled']->__toString() === "1";
     }
 
-    public function waitForMainResults()
+    /**
+     * Highest result count any engine reported, from Search\EngineOrchestrator.
+     *
+     * A maximum rather than a sum: engines overlap heavily, so adding them up
+     * would claim more distinct results than exist.
+     */
+    public function reportTotalResults(int $count): void
     {
-        $engines = app(Searchengines::class)->getEnabledSearchengines();
-        $enginesToWaitFor = [];
-        $mainEngines = $this->sumaFile->foki->{app(SearchSettings::class)->fokus}->main;
-        foreach ($mainEngines as $mainEngine) {
-            foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine) {
-                    $enginesToWaitFor[] = $engine->getHash();
-                }
-            }
-        }
-
-        # If no main engines are enabled by the user we will wait for all results
-        if (sizeof($enginesToWaitFor) === 0) {
-            foreach ($engines as $engine) {
-                $enginesToWaitFor[] = $engine->getHash();
-            }
-        } else {
-            $newEnginesToWaitFor = [];
-            // Don't wait for engines that are already loaded in Cache
-            foreach ($enginesToWaitFor as $engineToWaitFor) {
-                foreach ($engines as $engine) {
-                    if ($engine->getHash() === $engineToWaitFor && !$engine->loaded) {
-                        $newEnginesToWaitFor[] = $engineToWaitFor;
-                    }
-                }
-            }
-            $enginesToWaitFor = $newEnginesToWaitFor;
-        }
-
-        $timeStart = microtime(true);
-        while (sizeof($enginesToWaitFor) > 0) {
-            if ((microtime(true) - $timeStart) >= 6) {
-                break;
-            }
-            $answer = Redis::brpop($enginesToWaitFor, 6);
-
-            if ($answer === null) {
-                continue;
-            } else {
-                Redis::lpush($answer[0], $answer[1]);
-                Redis::expire($answer[0], 60);
-            }
-            foreach ($engines as $index => $engine) {
-                if ($engine->getHash() === $answer[0]) {
-                    $body = json_decode($answer[1]);
-                    if ($body !== null)
-                        $body = $body->body;
-                    $engine->retrieveResults($this, $body);
-                    foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
-                        if ($engineToWaitFor === $answer[0]) {
-                            unset($enginesToWaitFor[$waitIndex]);
-                            break 2;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public function retrieveResults()
-    {
-        $engines = app(Searchengines::class)->getEnabledSearchengines();
-        // Von geladenen Engines die Ergebnisse holen
-        foreach ($engines as $engine) {
-            if (!$engine->loaded) {
-                try {
-                    $engine->retrieveResults($this);
-                } catch (\ErrorException $e) {
-                    Log::error($e);
-                }
-            }
-            if (!empty($engine->totalResults) && $engine->totalResults > $this->totalResults) {
-                $this->totalResults = $engine->totalResults;
-            }
-            if (!empty($engine->alteredQuery) && !empty($engine->alterationOverrideQuery)) {
-                $this->alteredQuery = $engine->alteredQuery;
-                $this->alterationOverrideQuery = $engine->alterationOverrideQuery;
-            }
-        }
+        $this->totalResults = max($this->totalResults, $count);
     }
 
     /*

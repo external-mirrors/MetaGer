@@ -5,14 +5,12 @@ namespace App\Models;
 use App\Localization;
 use App\MetaGer;
 use App\Models\Authorization\Authorization;
-use app\Models\parserSkripte\Overture;
 use App\PrometheusExporter;
 use App\SearchSettings;
 use App\Support\UpstreamUserAgent;
 use Auth;
 use Cache;
 use Carbon;
-use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 
 abstract class Searchengine
@@ -56,7 +54,6 @@ abstract class Searchengine
     public $connection_time = 0; # Wird eventuell für Artefakte benötigt
     public $cacheDuration = 60; # Wie lange soll das Ergebnis im Cache bleiben (Minuten)
     public $new = true; # Important for loading results by JS
-    protected $failed = false; # Used to check if Overture search has failed
     protected $ratelimitKey = null;
 
     public function __construct($name, SearchengineConfiguration $configuration)
@@ -119,60 +116,65 @@ abstract class Searchengine
     {
     }
 
-    # Prüft, ob die Suche bereits gecached ist, ansonsted wird sie als Job dispatched
-    public function startSearch()
+    /**
+     * Describe the request this engine wants made, for the fetcher to make.
+     *
+     * Returning the mission rather than queueing it is what lets
+     * Search\EngineOrchestrator push every engine's mission in one round trip;
+     * this used to end in an rpush of its own, once per engine.
+     *
+     * Null means there is nothing to fetch, because the answer is already in the
+     * cache. Asking for a mission also books the engine's monthly usage, since
+     * that is the point at which the request is decided on.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function createMission(): ?array
     {
-        if (!$this->cached) {
-            // We need to submit a action that one of our workers can understand
-            // The missions are submitted to a redis queue in the following string format
-            // <ResultHash>;<URL to fetch>
-            // With <ResultHash> being the Hash Value where the fetcher will store the result.
-            // and <URL to fetch> being the full URL to the searchengine
-
-            $url = "";
-            if ($this->configuration->port === 443) {
-                $url = "https://";
-            } else {
-                $url = "http://";
-            }
-            $url .= $this->configuration->host;
-            if ($this->configuration->port !== 80 && $this->configuration->port !== 443) {
-                $url .= ":" . $this->configuration->port;
-            }
-            $url .= $this->generateGetString();
-
-            $mission = [
-                "resulthash" => $this->getHash(),
-                "url" => $url,
-                "useragent" => $this->useragent,
-                "username" => $this->configuration->httpAuthUsername,
-                "password" => $this->configuration->httpAuthPassword,
-                "headers" => (array) $this->configuration->requestHeader,
-                "cacheDuration" => $this->configuration->cacheDuration,
-                "name" => $this->name,
-            ];
-
-            if ($this->configuration->method === "post_json") {
-                $mission["headers"]["Content-Type"] = "application/json";
-                $mission["curlopts"] = [
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => json_encode($this->configuration->getParameter)
-                ];
-            }
-
-            $mission = json_encode($mission);
-
-            // Submit this mission to the corresponding Redis Queue
-            // Since each Searcher is dedicated to one specific search engine
-            // each Searcher has it's own queue lying under the redis key <name>.queue
-            Redis::rpush(MetaGer::FETCHQUEUE_KEY, $mission);
-
-            // Increase ratelimit counter
-            if (!$this->cached && $this->configuration->monthlyRequests !== null) {
-                // Increment counter for monthly searchengine usage
-                Cache::increment($this->ratelimitKey);
-            }
+        if ($this->cached) {
+            return null;
         }
+
+        $url = "";
+        if ($this->configuration->port === 443) {
+            $url = "https://";
+        } else {
+            $url = "http://";
+        }
+        $url .= $this->configuration->host;
+        if ($this->configuration->port !== 80 && $this->configuration->port !== 443) {
+            $url .= ":" . $this->configuration->port;
+        }
+        $url .= $this->generateGetString();
+
+        $mission = [
+            // Where the fetcher will put the answer. The orchestrator looks
+            // there for it, and nothing computes this hash twice.
+            "resulthash" => $this->getHash(),
+            "url" => $url,
+            "useragent" => $this->useragent,
+            "username" => $this->configuration->httpAuthUsername,
+            "password" => $this->configuration->httpAuthPassword,
+            "headers" => (array) $this->configuration->requestHeader,
+            "cacheDuration" => $this->configuration->cacheDuration,
+            "name" => $this->name,
+        ];
+
+        if ($this->configuration->method === "post_json") {
+            $mission["headers"]["Content-Type"] = "application/json";
+            $mission["curlopts"] = [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => json_encode($this->configuration->getParameter)
+            ];
+        }
+
+        // Increase ratelimit counter
+        if ($this->configuration->monthlyRequests !== null) {
+            // Increment counter for monthly searchengine usage
+            Cache::increment($this->ratelimitKey);
+        }
+
+        return $mission;
     }
 
     # Ruft die Ranking-Funktion aller Ergebnisse auf.
@@ -216,44 +218,40 @@ abstract class Searchengine
         return $displayName . " ($costLabel)";
     }
 
-    # Fragt die Ergebnisse von Redis ab und lädt Sie
-    public function retrieveResults(MetaGer $metager, ?string $body = null)
+    /**
+     * Parse an answer this engine's parser understands.
+     *
+     * The answer is fetched by Search\EngineOrchestrator, not here — reading it
+     * used to be part of this method, one rpoplpush and one expire per engine,
+     * and moving it out is what lets all of them be read together. What is left
+     * is the part that is actually this class' business: turning the engine's
+     * own response format into results.
+     *
+     * Null means the engine has nothing to say: no answer arrived, or none was
+     * asked for. "no-result" is the literal string the fetcher writes when
+     * upstream failed, and counts as an empty answer rather than no answer — the
+     * engine did report, it reported nothing.
+     */
+    public function loadResponse(MetaGer $metager, ?string $body): bool
     {
         if ($this->loaded) {
             return true;
         }
-        if (!$this->cached && empty($body)) {
-            $body = Redis::rpoplpush($this->getHash(), $this->getHash());
-            Redis::expire($this->getHash(), 60);
-            if ($body === false) {
-                return $body;
-            }
-            $body_json = json_decode($body);
-            if ($body_json !== null) {
-                $body = $body_json->body;
-            }
-            if ($body === false) {
-                return $body;
-            }
+
+        if ($body === null) {
+            return false;
         }
 
         if ($body === "no-result") {
             $body = "";
         }
 
-        if ($body !== null) {
-            $this->loadResults($body);
-            if ($this instanceof Overture && !$this->failed && sizeof($this->results) === 0) {
-                $this->failed = true;
-                return false;
-            }
-            $this->getNext($metager, $body);
-            $this->markNew();
-            $this->loaded = true;
-            return true;
-        } else {
-            return false;
-        }
+        $this->loadResults($body);
+        $this->getNext($metager, $body);
+        $this->markNew();
+        $this->loaded = true;
+
+        return true;
     }
 
     public function markNew()

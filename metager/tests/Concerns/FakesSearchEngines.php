@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Tests\Support\FakeFetcher;
+use Tests\Support\RecordingCache;
 use Tests\Support\RecordingRedis;
 
 /**
@@ -100,6 +101,22 @@ trait FakesSearchEngines
 
         $this->app->instance("redis", $recorder);
         Redis::clearResolvedInstances();
+
+        return $recorder;
+    }
+
+    /**
+     * Record every cache read the request makes from here on.
+     *
+     * Keeps the store that is already installed, so anything written before the
+     * swap is still readable after it. See RecordingCache for why the Redis
+     * recorder cannot answer this question.
+     */
+    protected function recordCacheReads(): RecordingCache
+    {
+        $recorder = new RecordingCache(Cache::getStore());
+
+        Cache::swap($recorder);
 
         return $recorder;
     }

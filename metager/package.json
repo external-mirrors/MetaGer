@@ -5,7 +5,7 @@
     "build": "vite build",
     "dev": "vite build --mode development",
     "prod": "vite build",
-    "test": "vitest run",
+    "test": "CI=1 vitest run",
     "test:watch": "vitest",
     "watch": "vite build --mode development --watch"
   },

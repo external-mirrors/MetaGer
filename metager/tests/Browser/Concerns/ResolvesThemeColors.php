@@ -94,6 +94,100 @@ trait ResolvesThemeColors
         ];
         const SENTINEL = "rgb(1, 2, 3)";
 
+        // The rules come from the stylesheet's own text, fetched over HTTP,
+        // rather than from the CSSOM.
+        //
+        // The CSSOM cannot be used for this: Firefox serialises a declaration
+        // that is still waiting on a custom property as an empty value, so
+        // `border: 1px solid var(--border-color)` reads back out of cssText as
+        // `border-top-color: ;` and the colour is simply gone. That is a
+        // property of the readout, not of the page — the same rule written by
+        // hand computes rgb(204, 204, 204) — but it would quietly hide every
+        // rule this refactor touches. The text is never lossy.
+        const fetchText = (url) => {
+            const request = new XMLHttpRequest();
+            request.open("GET", url, false);
+            request.send();
+            return request.status === 200 ? request.responseText : "";
+        };
+
+        // A rule splitter, not a CSS parser: it tracks brace depth to cut the
+        // text into (condition, selector, declarations) and knows just enough
+        // about at-rules to descend into the conditional ones and skip the rest.
+        const splitRules = (css, condition, out) => {
+            let index = 0;
+
+            while (index < css.length) {
+                const open = css.indexOf("{", index);
+                if (open === -1) {
+                    break;
+                }
+
+                // Statements ending in a semicolon (@charset, @import) are not
+                // blocks; drop them and keep what follows as the prelude.
+                let prelude = css.slice(index, open);
+                prelude = prelude.slice(prelude.lastIndexOf(";") + 1).trim();
+
+                let depth = 1;
+                let cursor = open + 1;
+                let quote = null;
+
+                while (cursor < css.length && depth > 0) {
+                    const character = css[cursor];
+
+                    if (quote !== null) {
+                        if (character === quote && css[cursor - 1] !== "\\") {
+                            quote = null;
+                        }
+                    } else if (character === '"' || character === "'") {
+                        quote = character;
+                    } else if (character === "{") {
+                        depth++;
+                    } else if (character === "}") {
+                        depth--;
+                    }
+
+                    cursor++;
+                }
+
+                const body = css.slice(open + 1, cursor - 1);
+
+                if (prelude.startsWith("@")) {
+                    const atRule = prelude.split(/[\s(]/)[0];
+
+                    if (atRule === "@media" || atRule === "@supports" || atRule === "@layer") {
+                        // The condition goes into the key, so a rule that only
+                        // applies at one breakpoint cannot collide with the same
+                        // selector outside it.
+                        splitRules(body, condition + prelude + " ", out);
+                    }
+                    // @font-face, @keyframes and @page paint nothing on their own.
+                } else if (prelude !== "") {
+                    out.push({ condition, selector: prelude, body });
+                }
+
+                index = cursor;
+            }
+        };
+
+        const rules = [];
+
+        for (const sheet of document.styleSheets) {
+            // A media attribute on the <link> itself, which is how the dark
+            // theme is attached today. A sheet the browser is not applying has
+            // to be skipped, or the light page would be read as the dark one.
+            const media = sheet.media?.mediaText;
+            if (media && !window.matchMedia(media).matches) {
+                continue;
+            }
+
+            const css = sheet.href
+                ? fetchText(sheet.href)
+                : (sheet.ownerNode?.textContent ?? "");
+
+            splitRules(css, "", rules);
+        }
+
         const holder = document.createElement("div");
         // Inherited properties get a value no stylesheet uses, so a rule that
         // asks for `inherit` or `currentColor` records something stable instead
@@ -106,71 +200,65 @@ trait ResolvesThemeColors
         holder.style.visibility = "hidden";
 
         const probe = document.createElement("div");
+        probe.id = "palette-probe";
         holder.appendChild(probe);
         document.body.appendChild(holder);
 
+        const style = document.createElement("style");
+        document.head.appendChild(style);
+        const sheet = style.sheet;
+
+        const apply = (declarations) => {
+            while (sheet.cssRules.length > 0) {
+                sheet.deleteRule(0);
+            }
+
+            if (declarations !== null) {
+                sheet.insertRule("#palette-probe{" + declarations + "}", 0);
+            }
+        };
+
+        // What the probe reads with no rule applied. Anything a rule leaves at
+        // these values, it did not paint.
+        //
+        // Relevance is decided by the computed value rather than by asking which
+        // properties a rule declares, because the CSSOM cannot answer that once
+        // a var() is in play. The cost is that a rule setting only `color` also
+        // records the border colours that follow currentColor; they are stable
+        // and correct, so the snapshot carries them.
+        const untouched = {};
+        for (const property of PROPERTIES) {
+            untouched[property] = getComputedStyle(probe).getPropertyValue(property);
+        }
+
         const collected = {};
 
-        const record = (prefix, rule) => {
-            probe.style.cssText = rule.style.cssText;
+        for (const rule of rules) {
+            try {
+                apply(rule.body);
+            } catch (e) {
+                // Declarations the parser will not take in this position.
+                continue;
+            }
+
             const computed = getComputedStyle(probe);
 
             for (const property of PROPERTIES) {
-                // Only what this rule actually declares. The inline style has
-                // shorthands already expanded, so `border: 1px solid @border-color`
-                // shows up here as its four longhands — while a rule that merely
-                // sets `color` does not drag in the border colours that default
-                // to currentColor.
-                if (probe.style.getPropertyValue(property) === "") {
+                // Computed, not authored: that is what turns var(--text-color)
+                // back into a colour, which is the whole point.
+                const value = computed.getPropertyValue(property);
+
+                if (value === untouched[property] || value === SENTINEL || value === "") {
                     continue;
                 }
 
-                // Read it computed rather than as authored: that is what turns
-                // var(--text-color) back into a colour, which is the whole point.
-                collected[prefix + rule.selectorText + " { " + property + " }"] =
-                    computed.getPropertyValue(property);
+                collected[rule.condition + rule.selector + " { " + property + " }"] = value;
             }
-
-            probe.style.cssText = "";
-        };
-
-        const walk = (rules, prefix) => {
-            for (const rule of rules) {
-                if (rule.constructor.name === "CSSStyleRule") {
-                    record(prefix, rule);
-                } else if (rule.cssRules) {
-                    // @media / @supports / @layer: the condition goes into the key,
-                    // so a rule that only applies at one breakpoint cannot collide
-                    // with the same selector outside it.
-                    const condition = rule.conditionText || rule.media?.mediaText || "";
-                    walk(rule.cssRules, prefix + "@" + condition + " ");
-                }
-            }
-        };
-
-        for (const sheet of document.styleSheets) {
-            // A media attribute on the <link> itself, which is how the dark
-            // theme is attached today. Unlike an @media rule inside a sheet
-            // there is no condition left in the CSSOM to key the result by, so
-            // a sheet the browser is not applying has to be skipped outright —
-            // reading it would report the dark palette to a light page.
-            const media = sheet.media?.mediaText;
-            if (media && !window.matchMedia(media).matches) {
-                continue;
-            }
-
-            let rules;
-            try {
-                rules = sheet.cssRules;
-            } catch (e) {
-                // A stylesheet the document may not read into. None of ours are
-                // cross-origin, so this would be a surprise worth seeing.
-                continue;
-            }
-            walk(rules, "");
         }
 
+        apply(null);
         holder.remove();
+        style.remove();
 
         // Sorted, so the snapshot diffs by colour rather than by load order.
         return Object.fromEntries(Object.entries(collected).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0));

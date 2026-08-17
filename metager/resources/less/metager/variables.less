@@ -1,6 +1,24 @@
-// MetaGer Brand Color
-@metager-orange: #ff8000;
-// Shades of Gray
+// ─────────────────────────────────────────────────────────────────────────────
+// Everything a theme changes is a CSS custom property.
+//
+// It used to be a LESS variable, which meant the dark theme could only be a
+// second compilation of the whole stylesheet — 89 KB of identical rules to
+// change 28 colours, downloaded alongside the light one. Custom properties are
+// resolved by the browser instead, so one stylesheet carries both palettes.
+//
+// The LESS names are kept as aliases onto the tokens, so the several hundred
+// places that say `color: @text-color` did not have to change. What could not
+// stay is a LESS colour function applied to a themed colour: darken(), fade()
+// and friends run at compile time and cannot see a var(). Those derivations
+// have tokens of their own, computed below from the literal colour by the same
+// functions as before, so the values are unchanged to the byte.
+//
+// Colours live in exactly two places: the :root block here, and its counterpart
+// in variables-dark.less. Everything else reads a token.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Shades of grey. Not themed — the greys are the same in both palettes, and are
+// what the themed colours are mixed from.
 @color-white: white;
 @color-almost-white: mix(@color-white, @color-black, 90%);
 @color-light-grey: mix(@color-white, @color-black, 75%);
@@ -8,19 +26,117 @@
 @color-strong-grey: mix(@color-white, @color-black, 25%);
 @color-almost-black: mix(@color-white, @color-black, 10%);
 @color-black: black;
-// Default Background Color
-@background-color: @color-white;
-@background-color-mobile: #fafafa;
-@sidebar-list-hover-color: @color-almost-white;
-@invert-state: invert(0%); // Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
+
+:root {
+  // The light palette. The @-variables here are local to this block; they exist
+  // so a derived colour is written against the colour it derives from rather
+  // than against a copy of it.
+  @orange: #ff8000;
+  @text: @color-black;
+  @highlight: #ececec;
+  @link: #06c;
+
+  --metager-orange: @orange;
+  --background-color: @color-white;
+  --background-color-mobile: #fafafa;
+  --text-color: @text;
+  --highlight-color: @highlight;
+  --link-color: @link;
+  --sidebar-list-hover-color: @color-almost-white;
+  --card-background-color: @color-white;
+  --border-color: #ccc;
+
+  // Our SVG icons are all black, so light leaves them alone and dark flips them.
+  --invert-state: invert(0%);
+  --icon-color: 0;
+  --searchbar-searchicon-brightness: 0;
+  --searchbar-key-brightness: 0.5;
+
+  --searchbar-background-color: white;
+  --input-background: #fff;
+  --input-text: #000;
+
+  --blacklist-entries-odd: rgb(240, 240, 240);
+  --blacklist-entries-even: rgb(255, 215, 200);
+
+  --story-privacy-background: @color-almost-white;
+  --story-privacy-color: @color-almost-black;
+  --story-ngo-background: white;
+  --story-ngo-color: #ad1a00;
+  --story-diversity-background: #edfdff;
+  --story-diversity-color: #0c4690;
+  --story-eco-background: #e3ffe9;
+  --story-eco-color: #0c621a;
+  --story-plugin-background: white;
+  --story-font-color: #474747;
+
+  // Derived colours. Each one replaces a LESS function call that can no longer
+  // reach a themed colour; the call itself is unchanged, only its home is.
+  --link-hover-color: darken(@link, 15%);
+  --text-color-alpha-50: fade(@text, 50%);
+  --text-color-alpha-60: fade(@text, 60%);
+  --text-color-alpha-70: fade(@text, 70%);
+  --text-color-lighter-25: lighten(@text, 25%);
+  --text-color-lighter-30: lighten(@text, 30%);
+  --text-color-lighter-40: lighten(@text, 40%);
+  --text-color-lighter-45: lighten(@text, 45%);
+  --highlight-color-alpha-60: fade(@highlight, 60%);
+  --metager-orange-alpha-80: fade(@orange, 80%);
+  --metager-orange-alpha-80-darker: darken(fade(@orange, 80%), 1%);
+
+  // Older name for --text-color, kept because pages/admin/membership.less and
+  // parts/searchbar.less already reach for these directly.
+  --font-color: @text;
+}
+
+// ── The tokens, under the names the stylesheets already use ──────────────────
+@metager-orange: var(--metager-orange);
+@background-color: var(--background-color);
+@background-color-mobile: var(--background-color-mobile);
+@text-color: var(--text-color);
+@highlight-color: var(--highlight-color);
+@link-color: var(--link-color);
+@sidebar-list-hover-color: var(--sidebar-list-hover-color);
+@card-background-color: var(--card-background-color);
+@border-color: var(--border-color);
+@invert-state: var(--invert-state);
+@icon-color: var(--icon-color);
+@searchbar-searchicon-brightness: var(--searchbar-searchicon-brightness);
+@searchbar-key-brightness: var(--searchbar-key-brightness);
+@searchbar-background-color: var(--searchbar-background-color);
+@input-background: var(--input-background);
+@input-text: var(--input-text);
+@blacklist-entries-odd: var(--blacklist-entries-odd);
+@blacklist-entries-even: var(--blacklist-entries-even);
+@story-privacy-background: var(--story-privacy-background);
+@story-privacy-color: var(--story-privacy-color);
+@story-ngo-background: var(--story-ngo-background);
+@story-ngo-color: var(--story-ngo-color);
+@story-diversity-background: var(--story-diversity-background);
+@story-diversity-color: var(--story-diversity-color);
+@story-eco-background: var(--story-eco-background);
+@story-eco-color: var(--story-eco-color);
+@story-plugin-background: var(--story-plugin-background);
+@story-font-color: var(--story-font-color);
+
+// Derived. bs-variables.less declares @link-hover-color as darken(@link-color)
+// and is imported before this file; this definition is the one that wins.
+@link-hover-color: var(--link-hover-color);
+@text-color-alpha-50: var(--text-color-alpha-50);
+@text-color-alpha-60: var(--text-color-alpha-60);
+@text-color-alpha-70: var(--text-color-alpha-70);
+@text-color-lighter-25: var(--text-color-lighter-25);
+@text-color-lighter-30: var(--text-color-lighter-30);
+@text-color-lighter-40: var(--text-color-lighter-40);
+@text-color-lighter-45: var(--text-color-lighter-45);
+@highlight-color-alpha-60: var(--highlight-color-alpha-60);
+@metager-orange-alpha-80: var(--metager-orange-alpha-80);
+@metager-orange-alpha-80-darker: var(--metager-orange-alpha-80-darker);
+
+// ── Not themed ───────────────────────────────────────────────────────────────
 // Default Font
 @metager-font: "Liberation Sans", "Helvetica Neue", "Helvetica", "Arial",
   sans-serif;
-// General text color.
-@text-color: @color-black;
-@highlight-color: #ececec;
-// Default textual link color.
-@link-color: #06c;
 // Default Mini-Padding
 @padding-small-default: 8px;
 // Screen sizes
@@ -30,15 +146,12 @@
 @screen-mobile: @screen-mobile-l;
 @screen-small: 1024px;
 @screen-medium: 1200px;
-// Card styles
-@card-background-color: @background-color;
-// Default Border Color
-@border-color: #ccc;
 
 @result-font-large: 18px;
 @result-font-medium: 16px;
 @result-font-url: 14px;
 @result-font-small: 12px;
+// Overridden in pages/resultpage/result.less, which points it at @text-color.
 @result-description-color: @color-black;
 @result-image-border-color: @color-almost-white;
 
@@ -63,33 +176,3 @@
 @quicktip-background-color: @color-white;
 // Color of the Spruch author
 @spruch-author-color: @color-strong-grey;
-
-@story-privacy-background: @color-almost-white;
-@story-privacy-color: @color-almost-black;
-@story-ngo-background: white;
-@story-ngo-color: #ad1a00;
-@story-diversity-background: #edfdff;
-@story-diversity-color: #0c4690;
-@story-eco-background: #e3ffe9;
-@story-eco-color: #0c621a;
-@story-plugin-background: white;
-@story-font-color: #474747;
-@icon-color: 0;
-
-@searchbar-background-color: white;
-
-@input-background: #fff;
-@input-text: #000;
-
-@blacklist-entries-odd: rgb(240, 240, 240);
-@blacklist-entries-even: rgb(255, 215, 200);
-
-@searchbar-searchicon-brightness: 0;
-@searchbar-key-brightness: 0.5;
-
-:root {
-  --background-color: @background-color;
-  --highlight-color: @highlight-color;
-  --font-color: @text-color;
-  --border-color: @border-color;
-}

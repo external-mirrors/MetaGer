@@ -24,7 +24,6 @@ use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
 use App\Models\Authorization\Authorization;
-use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
@@ -420,9 +419,9 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         return view('plugin-page')
             ->with('title', trans('titles.plugin'))
             ->with('navbarFocus', 'dienste')
-            ->with('agent', new Agent())
+            ->with('agent', $browser = \App\Support\Browser::fromRequest($request))
             ->with('request', $request->input('request', 'GET'))
-            ->with('browser', (new Agent())->browser())
+            ->with('browser', $browser->name())
             ->with('css', [
                 mix('/css/plugin-page.css'),
             ]);

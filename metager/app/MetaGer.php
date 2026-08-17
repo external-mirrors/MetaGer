@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Jenssegers\Agent\Agent;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Predis\Connection\ConnectionException;
 
@@ -210,8 +209,7 @@ class MetaGer
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
-                        ->with('imagesearch', true)
-                        ->with('browser', (new Agent())->browser());
+                        ->with('imagesearch', true);
                 default:
                     return view('resultpages.resultpage_images')
                         ->with('results', $viewResults)
@@ -222,7 +220,6 @@ class MetaGer
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
                         ->with('quicktips', $quicktipResults)
                         ->with('focus', app(SearchSettings::class)->fokus)
                         ->with('imagesearch', true)
@@ -240,7 +237,6 @@ class MetaGer
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
                         ->with('fokus', app(SearchSettings::class)->fokus);
                 case 'results-with-style':
                     return view('resultpages.resultpage')
@@ -253,7 +249,6 @@ class MetaGer
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
                         ->with('suspendheader', "yes")
-                        ->with('browser', (new Agent())->browser())
                         ->with('fokus', app(SearchSettings::class)->fokus);
                 case 'rss20':
                     return view('resultpages.metager3resultsrss20')
@@ -280,7 +275,6 @@ class MetaGer
                         ->with('errors', $this->errors)
                         ->with('apiAuthorized', $this->apiAuthorized)
                         ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
                         ->with('quicktips', $quicktipResults)
                         ->with('resultcount', count($this->results))
                         ->with('focus', app(SearchSettings::class)->fokus);
@@ -840,7 +834,7 @@ class MetaGer
             $this->lang = "all";
         }
 
-        $this->agent = new Agent();
+        $this->agent = \App\Support\Browser::fromRequest();
         $this->mobile = $this->agent->isMobile();
         # Sprüche
         if (app(\App\SearchSettings::class)->zitate) {

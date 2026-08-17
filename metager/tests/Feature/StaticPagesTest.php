@@ -131,35 +131,19 @@ class StaticPagesTest extends TestCase
      * deprecations via mobiledetectlib) with matomo/device-detector, and this
      * test is what proves the swap kept the same answers.
      *
-     * Note the $_SERVER assignment. routes/web.php builds the detector as
-     * `new Agent()` with no arguments, and jenssegers/agent then reads the
-     * $_SERVER superglobal directly rather than the Laravel Request — so a
-     * User-Agent set with withHeader() alone is invisible to it. Setting the
-     * header too keeps this honest about intent; the superglobal is what
-     * actually drives the assertion today. When A3 swaps the library, the
-     * detector should be handed $request->userAgent() instead, at which point
-     * the superglobal line here can go.
+     * These used to need the $_SERVER superglobal set by hand, because
+     * jenssegers/agent read it directly and never saw the Request. App\Support\Browser
+     * takes $request->userAgent(), so a plain header is enough now.
      */
     #[DataProvider("pluginBrowsers")]
     public function testPluginHeadlineFollowsTheDetectedBrowser(
         string $userAgent,
         string $expectedKey
     ): void {
-        $previous = $_SERVER["HTTP_USER_AGENT"] ?? null;
-        $_SERVER["HTTP_USER_AGENT"] = $userAgent;
+        $response = $this->withHeader("User-Agent", $userAgent)->get("/plugin");
 
-        try {
-            $response = $this->withHeader("User-Agent", $userAgent)->get("/plugin");
-
-            $response->assertOk();
-            $response->assertSeeText(trans($expectedKey));
-        } finally {
-            if ($previous === null) {
-                unset($_SERVER["HTTP_USER_AGENT"]);
-            } else {
-                $_SERVER["HTTP_USER_AGENT"] = $previous;
-            }
-        }
+        $response->assertOk();
+        $response->assertSeeText(trans($expectedKey));
     }
 
     /**
@@ -177,24 +161,13 @@ class StaticPagesTest extends TestCase
      */
     public function testUnlistedBrowserLosesTheSharedPluginMarkup(): void
     {
-        $previous = $_SERVER["HTTP_USER_AGENT"] ?? null;
-        $_SERVER["HTTP_USER_AGENT"] = "SomeBrowserWeDoNotKnow/1.0";
+        $response = $this->withHeader("User-Agent", "SomeBrowserWeDoNotKnow/1.0")->get("/plugin");
 
-        try {
-            $response = $this->get("/plugin");
-
-            $response->assertOk();
-            // The fallback block is rendered...
-            $response->assertSeeText(trans("plugin-page.browser-download"));
-            // ...but the headline that should have preceded it is gone.
-            $response->assertDontSeeText(trans("plugin-page.head.0"));
-        } finally {
-            if ($previous === null) {
-                unset($_SERVER["HTTP_USER_AGENT"]);
-            } else {
-                $_SERVER["HTTP_USER_AGENT"] = $previous;
-            }
-        }
+        $response->assertOk();
+        // The fallback block is rendered...
+        $response->assertSeeText(trans("plugin-page.browser-download"));
+        // ...but the headline that should have preceded it is gone.
+        $response->assertDontSeeText(trans("plugin-page.head.0"));
     }
 
     /**

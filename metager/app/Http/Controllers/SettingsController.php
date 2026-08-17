@@ -14,7 +14,7 @@ use App;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
-use foroco\BrowserDetection;
+use App\Support\Browser;
 use \Illuminate\Http\Request;
 use LaravelLocalization;
 
@@ -114,7 +114,7 @@ class SettingsController extends Controller
             $cookieLink = route('loadSettings', $settings_params);
         }
 
-        $agent = (new BrowserDetection())->getAll($request->userAgent());
+        $agent = Browser::fromRequest($request);
 
         return response(view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $foki[$originalFokus]['name']]))

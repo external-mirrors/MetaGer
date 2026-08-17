@@ -69,10 +69,44 @@ class SearchAuthorizationTest extends TestCase
 
         $response = $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json");
 
-        $response->assertOk();
+        $this->assertSame(200, $response->getStatusCode(), $this->whyRefused($response));
         $this->assertNotEmpty(
             $response->json("results"),
             "The search was authorized but returned nothing."
+        );
+    }
+
+    /**
+     * Every refusal on this path is a 302 with an empty body, so a failure here
+     * otherwise says only "expected 200, got 302" — the same message whichever
+     * of the four possible reasons fired, and with none of the numbers that
+     * decided it. The redirect target alone separates the authorization refusal
+     * in the middleware from the controller's "no engines are enabled" one.
+     */
+    private function whyRefused(\Illuminate\Testing\TestResponse $response): string
+    {
+        $user = \Auth::guard("key")->user();
+        $engines = app(\App\Models\Configuration\Searchengines::class);
+        $claims = Redis::connection(config("cache.stores.redis.connection"))
+            ->hgetall("keyserver:claims:test-key");
+
+        return sprintf(
+            "The search was refused.\n"
+                . "  redirected to : %s\n"
+                . "  key user      : %s\n"
+                . "  charge        : %s\n"
+                . "  search cost   : %s (raw %s)\n"
+                . "  suggestion debt: %s\n"
+                . "  claims on key : %s\n"
+                . "  engines enabled: %d",
+            $response->headers->get("Location") ?? "(no Location header)",
+            $user === null ? "none — the key guard has no user, so the legacy path ran" : $user->key,
+            var_export($user?->key_data["charge"] ?? null, true),
+            var_export($engines->getSearchCost(), true),
+            var_export($engines->getRawSearchCost(), true),
+            var_export(SuggestionDebtAuthorization::GET_DEBT(), true),
+            json_encode($claims),
+            count($engines->getEnabledSearchengines() ?: [])
         );
     }
 

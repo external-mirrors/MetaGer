@@ -376,7 +376,8 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::get('sitesearch', [SitesearchController::class, 'loadPage']);
 
     Route::get('websearch', function () {
-        $css = file_get_contents(public_path("css/widget/widget-template.css"));
+        // Inlined into the snippet users paste onto their own site — content, not a URL.
+        $css = Vite::content("resources/less/metager/pages/widget/widget-template.less");
         return view('widget.websearch')
             ->with('title', trans('titles.websearch'))
             ->with('navbarFocus', 'dienste')

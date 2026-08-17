@@ -76,6 +76,12 @@ export default defineConfig({
             refresh: false,
         }),
     ],
+    test: {
+        // Only the modules with tests next to them; everything else under
+        // resources/js is browser glue that a DOM harness cannot say much about.
+        include: ["resources/js/**/*.test.js"],
+        environment: "jsdom",
+    },
     build: {
         // Vite's default. Named explicitly because the build it replaces
         // targeted "firefox 50, IE 11" and shipped core-js into every bundle

@@ -51,8 +51,11 @@ class AssetPipelineTest extends TestCase
         $referenced = [];
 
         foreach (self::phpFiles() as $file) {
+            // Both accessors matter: asset() yields a URL, content() reads the built file
+            // (the widget pages inline their stylesheet into a copy-paste snippet). Either
+            // one throws if the entry is missing from the manifest.
             preg_match_all(
-                '/Vite::asset\(\s*[\'"]([^\'"]+)[\'"]/',
+                '/Vite::(?:asset|content)\(\s*[\'"]([^\'"]+)[\'"]/',
                 file_get_contents($file),
                 $matches
             );
@@ -214,6 +217,36 @@ class AssetPipelineTest extends TestCase
         }
 
         $this->assertSame([], $offenders, "mix() survived the Vite migration in these files.");
+    }
+
+    /**
+     * Build output must be reached through the manifest, never by guessing its path.
+     *
+     * Vite emits hashed filenames, so a hard-coded public_path("css/…") cannot resolve —
+     * and this is not hypothetical: the two widget pages read
+     * public_path("css/widget/widget-template.css") directly to inline it, and HttpCache
+     * hashed public_path("mix-manifest.json") to version its ETags. Neither went through
+     * mix(), so neither showed up in a search for mix() call sites; the feature suite
+     * caught them as 500s once the stale laravel-mix output was deleted.
+     */
+    public function testNothingReachesIntoTheBuildOutputByPath(): void
+    {
+        $offenders = [];
+
+        foreach (self::phpFiles() as $file) {
+            $contents = file_get_contents($file);
+
+            if (preg_match('/public_path\(\s*[\'"][^\'"]*(mix-manifest|\.css|\.js)/', $contents)) {
+                $offenders[] = str_replace(self::projectPath() . "/", "", $file);
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $offenders,
+            "These reach into the build output by path. Use Vite::asset() for a URL or "
+                . "Vite::content() for the file's contents."
+        );
     }
 
     /**

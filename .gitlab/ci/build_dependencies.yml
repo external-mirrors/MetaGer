@@ -6,6 +6,9 @@ npm:
   script:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
+    # Vitest runs here rather than in its own job: this is the only job with node_modules
+    # installed, and a failing frontend test should stop the pipeline before the images build.
+    - npm test
     - npm run build
   needs:
     - node_image

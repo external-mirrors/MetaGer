@@ -1,6 +1,6 @@
 import { initializeSuggestions } from "./suggest";
 import updateProxyLinks from "./resultpage/proxy";
-import moment from "moment";
+import { renderRelativeDates } from "./relative-time";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -283,23 +283,9 @@ function initialize() {
 (() => {
   document.addEventListener("boot", formatDates);
   document.addEventListener("resultsChanged", formatDates);
-  // Format Dates relative to user time if possible
-  function formatDates() {
-    let currentLocale = "en";
-    try {
-      let htmlContainer = document.querySelector("html");
-      currentLocale = htmlContainer.getAttribute("lang");
-      currentLocale = currentLocale.split("-")[0].toLowerCase();
-    } catch (error) { }
-    moment.locale(currentLocale);
 
-    document.querySelectorAll("span.date").forEach((element) => {
-      try {
-        let timestamp = element.dataset.timestamp;
-        let moment_instance = moment.unix(timestamp);
-        element.textContent = moment_instance.fromNow();
-      } catch (error) { }
-    });
+  function formatDates() {
+    renderRelativeDates();
   }
 })();
 

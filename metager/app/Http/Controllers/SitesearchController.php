@@ -9,7 +9,9 @@ class SitesearchController extends Controller
 {
     public function loadPage(Request $request)
     {
-        $css = file_get_contents(public_path("css/widget/widget-template.css"));
+        // Inlined into the snippet users paste onto their own site, so it has to be the
+        // stylesheet's *content*, not a URL. Vite::content() resolves it through the manifest.
+        $css = Vite::content("resources/less/metager/pages/widget/widget-template.less");
         return view('widget.sitesearch')
             ->with('title', trans('titles.sitesearch'))
             ->with('site', $request->input('site', ''))

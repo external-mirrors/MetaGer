@@ -79,9 +79,15 @@ FROM development AS production
 
 USER root:root
 
-# Disable xdebug extension and enable opcache
-RUN rm $PHP_INI_DIR/conf.d/xdebug.ini && \
-    docker-php-ext-install --ini-name=opcache.ini opcache
+# Disable xdebug.
+#
+# opcache used to be installed here as a shared extension. As of PHP 8.5 it is compiled into
+# the interpreter (`php -m` lists it in a bare php:8.5-fpm image, and there is no opcache.so),
+# so `docker-php-ext-install opcache` configures, builds nothing, and then fails on
+# `cp: cannot stat 'modules/*'`. Nothing replaces it: opcache is already loaded, and both
+# targets set their own policy — development.ini turns it off, production.ini turns it on and
+# tunes it.
+RUN rm $PHP_INI_DIR/conf.d/xdebug.ini
 
 # Reconfigure PHP with production values
 RUN mv $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini

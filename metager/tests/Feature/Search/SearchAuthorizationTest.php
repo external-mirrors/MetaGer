@@ -3,6 +3,7 @@
 namespace Tests\Feature\Search;
 
 use App\Models\Authorization\SuggestionDebtAuthorization;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redis;
 use Tests\Concerns\FakesSearchEngines;
 use Tests\TestCase;
@@ -125,31 +126,20 @@ class SearchAuthorizationTest extends TestCase
     }
 
     /**
-     * CHARACTERIZATION TEST — this pins a bug, not a behaviour worth keeping.
+     * Paying the debt settles it, so the next search does not pay it again.
      *
-     * A key user pays the suggestion debt and the debt is not written down. It
-     * is charged again on the next search, and the one after that, until the
-     * two-day expiry drops it.
+     * This was a characterization test until the bug behind it was fixed. The
+     * KeyUser branch of AuthenticationValidation discharged the debt through
+     * makePayment() and returned straight into the request, while only the
+     * legacy branch called clearSuggestionDebt() — so a key user paid the same
+     * outstanding debt on every search until its two-day expiry dropped it, and
+     * the users affected were the ones already migrated to the guard.
      *
-     * AuthenticationValidation has two authorization branches. The legacy one
-     * settles up:
-     *
-     *     if ($authorized === true) {
-     *         $this->clearSuggestionDebt($suggestion_debt);   // ADD_DEBT(-$debt)
-     *
-     * The KeyUser branch above it discharges the same amount through
-     * makePayment() and returns straight into the request, with no matching
-     * call. clearSuggestionDebt is referenced exactly once in the codebase, from
-     * the branch that is on its way out — so the users being overcharged are the
-     * ones already migrated to the guard.
-     *
-     * Not fixed here: this is real money moving, the amounts and the intended
-     * settlement point are a product decision, and it has nothing to do with the
-     * CI failure this commit is about. When it is fixed on purpose, this test
-     * fails and should be replaced with testPayingTheSuggestionDebtSettlesIt,
-     * asserting 0.0.
+     * The settling had to be written out on that branch rather than reusing
+     * clearSuggestionDebt(), because that method pays the debt itself and it is
+     * already paid by the time the branch gets there.
      */
-    public function testPayingTheSuggestionDebtDoesNotSettleItForAKeyUser(): void
+    public function testPayingTheSuggestionDebtSettlesIt(): void
     {
         $this->actingAsSearchUser();
         $this->fakeEngineResponses([
@@ -161,10 +151,98 @@ class SearchAuthorizationTest extends TestCase
         $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
 
         $this->assertSame(
-            0.5,
+            0.0,
             SuggestionDebtAuthorization::GET_DEBT(),
-            "The suggestion debt was settled after all. That is the correct behaviour — replace this "
-                . "characterization test with one asserting 0.0."
+            "The debt outlived the search that paid it, so the next search pays it over again."
+        );
+    }
+
+    /**
+     * A search discharges once, however many engines it paid for.
+     *
+     * makePayment() POSTs to the keyserver synchronously, and the payment loop
+     * runs while the user is waiting for the result page — so paying engine by
+     * engine put a network round trip on the result path for every paid engine
+     * in the fokus. Foki differ in how many that is, which made the tax
+     * invisible on the fokus anyone happened to be looking at.
+     *
+     * The keyserver discharges an amount rather than an engine, so one call for
+     * the sum is the same money. This asserts the count, because the amount
+     * being right is not the part that regresses.
+     */
+    public function testAllTheEnginesOfASearchArePaidForInOneCall(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+            "serper_web" => $this->engineFixture("serper-web.json"),
+        ]);
+
+        $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
+
+        $engines = app(\App\Models\Configuration\Searchengines::class);
+        $paidFor = array_filter(
+            $engines->getEnabledSearchengines() ?: [],
+            fn($engine) => !$engine->cached && $engine->configuration->cost > 0
+        );
+
+        $this->assertGreaterThan(
+            1,
+            count($paidFor),
+            "Only one engine was paid for, so this cannot tell one call per engine from one per search."
+        );
+
+        $discharges = [];
+        Http::assertSent(function ($request) use (&$discharges) {
+            if (str_contains($request->url(), "/discharge")) {
+                $discharges[] = $request->data()["amount"] ?? null;
+            }
+
+            return true;
+        });
+
+        $this->assertCount(
+            1,
+            $discharges,
+            sprintf(
+                "%d engines were paid for in %d keyserver calls. Each one is a synchronous POST on the "
+                    . "result path, made while the user waits.",
+                count($paidFor),
+                count($discharges)
+            )
+        );
+        $this->assertEqualsWithDelta(
+            array_sum(array_map(fn($engine) => $engine->configuration->cost, $paidFor)),
+            $discharges[0],
+            0.0001,
+            "Batching the discharges changed what the search costs."
+        );
+    }
+
+    /**
+     * The debt is settled once, not written off twice.
+     *
+     * The failure this guards against is the obvious way to fix the bug above:
+     * calling clearSuggestionDebt() on the KeyUser branch. That method pays the
+     * debt itself, so on a branch that has already paid it the key is charged
+     * twice and the debt goes negative — which then reads as credit on the next
+     * search.
+     */
+    public function testSettlingTheDebtDoesNotDriveItNegative(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        SuggestionDebtAuthorization::ADD_DEBT(0.5);
+
+        $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web&out=json")->assertOk();
+
+        $this->assertGreaterThanOrEqual(
+            0.0,
+            SuggestionDebtAuthorization::GET_DEBT(),
+            "The debt was written off more than once, so the key paid for suggestions it did not get."
         );
     }
 }

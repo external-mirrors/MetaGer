@@ -6,10 +6,10 @@ use App\Models\Authorization\Authorization;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Result;
+use App\Search\QueryParser;
 use App\Search\ResultDeduplicator;
 use App\Search\ResultRanker;
 use Arr;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
@@ -568,65 +568,7 @@ class MetaGer
         // Remove Inputs that are not used
         $this->request = \Request::replace(\Request::except(['uid']));
 
-        // Disable freshness filter if custom freshness filter isset
-        if ($this->request->filled("ff") && $this->request->filled("f")) {
-            $this->request = $this->request->replace($this->request->except(["f"]));
-        }
-        // Remove custom time filter if either of the dates isn't set or is not a date
-        if ($this->request->input("fc") === "on") {
-            if (!$this->request->filled("ff") || !$this->request->filled("ft")) {
-                $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-            } else {
-                $ff = $this->request->input("ff");
-                $ft = $this->request->input("ft");
-                if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $ff) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $ft)) {
-                    $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-                } else {
-                    // Now Check if there is something wrong with the dates
-                    $from = $this->request->input("ff");
-                    $to = $this->request->input("ft");
-                    $changed = false;
-                    $from = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
-                    $to = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
-
-                    if ($from > Carbon::now()) {
-                        $from = Carbon::now();
-                        $changed = true;
-                    }
-                    if ($to > Carbon::now()) {
-                        $to = Carbon::now();
-                        $changed = true;
-                    }
-                    if ($from > $to) {
-                        $tmp = $to;
-                        $to = $from;
-                        $from = $tmp;
-                        $changed = true;
-                    }
-
-                    # Bing only allows a maximum of 1 year in the past
-                    # Verify the parameters
-                    $yearAgo = Carbon::now()->subYear();
-                    if ($from < $yearAgo) {
-                        $from = clone $yearAgo;
-                        $changed = true;
-                    }
-                    if ($to < $yearAgo) {
-                        $to = clone $yearAgo;
-                        $changed = true;
-                    }
-
-                    if ($changed) {
-                        $oldParameters = $this->request->all();
-                        $oldParameters["ff"] = $from->format("Y-m-d");
-                        $oldParameters["ft"] = $to->format("Y-m-d");
-                        $this->request = $this->request->replace($oldParameters);
-                    }
-                }
-            }
-        } elseif ($this->request->filled("ff") || $this->request->filled("ft")) {
-            $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-        }
+        $this->request = app(QueryParser::class)->sanitizeFilters($this->request);
 
         $this->out = \Request::input('out', "html");
         # Standard output format html
@@ -710,171 +652,26 @@ class MetaGer
         }
     }
 
+    /**
+     * Read the operators out of the query and hand the results to the search.
+     *
+     * The parsing is in Search\QueryParser; what stays here is the assignment,
+     * because these eight fields are what the views and Result::isValid read
+     * off the MetaGer object.
+     */
     public function checkSpecialSearches(Request $request)
     {
-        $this->searchCheckPhrase();
+        $query = app(QueryParser::class)->parse($this->q, $request);
 
-        $this->searchCheckHostBlacklist($request);
-        $this->searchCheckDomainBlacklist($request);
-        $this->searchCheckUrlBlacklist();
-        $this->searchCheckStopwords($request);
-        $this->searchCheckNoSearch();
+        $this->q = $query->q;
+        $this->phrases = $query->phrases;
+        $this->hostBlacklist = $query->hostBlacklist;
+        $this->domainBlacklist = $query->domainBlacklist;
+        $this->urlBlacklist = $query->urlBlacklist;
+        $this->stopWords = $query->stopWords;
 
-        # Check for self-harm related searches
-        $triggers = ["suizid", "selbstmord", "Selbstmordgedanken", "selbsttötung", "Freitod", "Sterbehilfe", "umbringen", "suizidale", "depressionen", "depressiv", "selbstverletzung", "einsam", "einsamkeit", "self harm", "self injury", "suicidal", "suicidality", "self-murder", "self-slaughter", "self-destruction", "self-homocide", "self-murderer", "kill oneself", "lonely", "depression"];
-        foreach ($triggers as $i => $trigger) {
-            if (preg_match("/\b" . preg_quote($trigger, '/') . "\b/i", $this->q)) {
-                $this->htmlwarnings[] = trans('metaGer.prevention.phrase', ['prevurl' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "prevention")]);
-                break;
-            }
-        }
-    }
-
-    private function searchCheckPhrase()
-    {
-        $p = "";
-        $tmp = $this->q;
-        // matches '[... ]"test satz"[ ...]'
-        while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
-            $tmp = $match[1] . $match[3];
-            $this->phrases[] = $match[2];
-        }
-
-        foreach ($this->phrases as $phrase) {
-            $p .= "\"$phrase\", ";
-        }
-        $p = rtrim($p, ", ");
-        if (sizeof($this->phrases) > 0) {
-            $this->warnings[] = trans('metaGer.formdata.phrase', ['phrase' => $p]);
-        }
-    }
-
-    private function searchCheckHostBlacklist($request)
-    {
-        // matches '[... ]-site:test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-site:([^\*\s]\S*)(\s.*|$)/si", $this->q, $match)) {
-            $this->hostBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        # Overwrite Setting if it's submitted via Parameter
-        if ($request->has('blacklist')) {
-            $this->hostBlacklist = [];
-            $blacklistString = trim($request->input('blacklist'));
-            if (strpos($blacklistString, ",") !== false) {
-                $blacklistArray = explode(',', $blacklistString);
-                foreach ($blacklistArray as $blacklistElement) {
-                    $blacklistElement = trim($blacklistElement);
-                    if (strpos($blacklistElement, "*") !== 0) {
-                        $this->hostBlacklist[] = $blacklistElement;
-                    }
-                }
-            } elseif (strpos($blacklistString, "*") !== 0) {
-                $this->hostBlacklist[] = $blacklistString;
-            }
-        }
-
-        $this->hostBlacklist = array_merge($this->hostBlacklist, app(SearchSettings::class)->blacklist);
-        $this->hostBlacklist = array_unique($this->hostBlacklist);
-    }
-
-    private function searchCheckDomainBlacklist($request)
-    {
-        // matches '[... ]-site:*.test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-site:\*\.(\S+)(\s.*|$)/si", $this->q, $match)) {
-            $this->domainBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        # Overwrite Setting if it's submitted via Parameter
-        if ($request->has('blacklist')) {
-            $this->domainBlacklist = [];
-            $blacklistString = trim($request->input('blacklist'));
-            if (strpos($blacklistString, ",") !== false) {
-                $blacklistArray = explode(',', $blacklistString);
-                foreach ($blacklistArray as $blacklistElement) {
-                    $blacklistElement = trim($blacklistElement);
-                    if (strpos($blacklistElement, "*.") === 0) {
-                        $this->domainBlacklist[] = substr($blacklistElement, strpos($blacklistElement, "*.") + 2);
-                    }
-                }
-            } elseif (strpos($blacklistString, "*.") === 0) {
-                $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
-            }
-        }
-        $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist_tld);
-        $this->domainBlacklist = array_unique($this->domainBlacklist);
-    }
-
-    private function searchCheckUrlBlacklist()
-    {
-        // matches '[... ]-site:*.test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-url:(\S+)(\s.*|$)/si", $this->q, $match)) {
-            $this->urlBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        // print the url blacklist as a user warning
-        if (sizeof($this->urlBlacklist) > 0) {
-            $urlString = "";
-            foreach ($this->urlBlacklist as $url) {
-                $urlString .= $url . ", ";
-            }
-            $urlString = rtrim($urlString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.urlBlacklist', ['url' => $urlString]);
-        }
-    }
-
-    private function searchCheckStopwords($request)
-    {
-        $oldQ = $this->q;
-
-        $tmp = $this->q;
-        // matches '[... ]"test satz"[ ...]'
-        // In order to avoid "finding" stopwords inside of phrase searches only strings outside of quotation marks should be checked
-        while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
-            $tmp = $match[1] . $match[3];
-        }
-
-        // matches '[... ]-test[ ...]'
-        $words = preg_split("/\s+/si", $tmp);
-        $newQ = $this->q;
-        foreach ($words as $word) {
-            if (preg_match("/^-[a-zA-Z0-9]/", $word)) {
-                $this->stopWords[] = substr($word, 1);
-                $newQ = str_ireplace($word, "", $newQ);
-            }
-        }
-        $newQ = preg_replace("/(\s)\s+/", "$1", $newQ);
-        $this->q = trim($newQ);
-        # Overwrite Setting if submitted via Parameter
-        if ($request->has('stop')) {
-            $this->stopWords = [];
-            $stop = trim($request->input('stop'));
-            if (strpos($stop, ',') !== false) {
-                $stopArray = explode(',', $stop);
-                foreach ($stopArray as $stopElement) {
-                    $stopElement = trim($stopElement);
-                    $this->stopWords[] = $stopElement;
-                }
-            } else {
-                $this->stopWords[] = $stop;
-            }
-            $this->q = $oldQ;
-        }
-        // print the stopwords as a user warning
-        if (sizeof($this->stopWords) > 0) {
-            $stopwordsString = "";
-            foreach ($this->stopWords as $stopword) {
-                $stopwordsString .= $stopword . ", ";
-            }
-            $stopwordsString = rtrim($stopwordsString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.stopwords', ['stopwords' => $stopwordsString]);
-        }
-    }
-
-    private function searchCheckNoSearch()
-    {
-        if ($this->q === "") {
-            $this->warnings[] = trans('metaGer.formdata.noSearch');
-        }
+        $this->warnings = array_merge($this->warnings, $query->warnings);
+        $this->htmlwarnings = array_merge($this->htmlwarnings, $query->htmlWarnings);
     }
 
     public function nextSearchLink()

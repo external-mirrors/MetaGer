@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}"
+	@if(app(App\SearchSettings::class)->theme !== "system") data-theme="{{ app(App\SearchSettings::class)->theme }}" @endif>
 
 <head>
 	<meta charset="utf-8" />
@@ -51,26 +52,16 @@
 		<meta http-equiv="onion-location"
 			content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/{{LaravelLocalization::getCurrentLocale()}}" />
 	@endif
-	@if(app(App\SearchSettings::class)->theme === "dark")
-		<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-		<meta name="color-scheme" content="dark light">
-		@if(!empty($darkcss) && is_array($darkcss))
-			@foreach($darkcss as $cssFile)
-				<link rel="stylesheet" type="text/css" href="{{ $cssFile }}" />
-			@endforeach
-		@endif
-	@elseif(app(App\SearchSettings::class)->theme === "light")
-		<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-		<meta name="color-scheme" content="light dark">
-	@else
-		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-			href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-		<meta name="color-scheme" content="light dark">
-		@if(!empty($darkcss) && is_array($darkcss))
-			@foreach($darkcss as $cssFile)
-				<link rel="stylesheet" type="text/css" media="(prefers-color-scheme:dark)" href="{{ $cssFile }}" />
-			@endforeach
-		@endif
+	{{-- metager.less carries both palettes and picks between them itself, from the
+	     data-theme attribute above and prefers-color-scheme. No second stylesheet,
+	     and no script. The $darkcss pages below are the ones not yet converted. --}}
+	<meta name="color-scheme" content="{{ app(App\SearchSettings::class)->theme === "dark" ? "dark light" : "light dark" }}">
+	@if(!empty($darkcss) && is_array($darkcss) && app(App\SearchSettings::class)->theme !== "light")
+		@foreach($darkcss as $cssFile)
+			<link rel="stylesheet" type="text/css"
+				@if(app(App\SearchSettings::class)->theme !== "dark") media="(prefers-color-scheme:dark)" @endif
+				href="{{ $cssFile }}" />
+		@endforeach
 	@endif
 	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/utility.less') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">

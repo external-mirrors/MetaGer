@@ -46,9 +46,8 @@ class StartpageController extends Controller
             ->with('focus', $request->input('focus', 'web'))
             ->with('request', $request->input('request', 'GET'))
             ->with('tiles', $tiles)
-            ->with('css', [Vite::asset('resources/less/metager/pages/startpage/light.less')])
-            ->with('js', [Vite::asset('resources/js/startpage/app.js')])
-            ->with('darkcss', [Vite::asset('resources/less/metager/pages/startpage/dark.less')]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/startpage/startpage.less')])
+            ->with('js', [Vite::asset('resources/js/startpage/app.js')]);
     }
 
     /**

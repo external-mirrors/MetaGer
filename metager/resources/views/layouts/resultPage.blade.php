@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}"
+    @if(app(App\SearchSettings::class)->theme !== "system") data-theme="{{ app(App\SearchSettings::class)->theme }}" @endif>
 
 <head>
     <meta charset="utf-8">
@@ -30,15 +31,10 @@
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 
+    {{-- One stylesheet, both palettes: it picks between them from the data-theme
+         attribute on <html> and prefers-color-scheme. This used to be up to four
+         links, one of which loaded metager.less a second time. --}}
     <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-    @if (app(App\SearchSettings::class)->theme === 'dark')
-        <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-    @elseif(app(App\SearchSettings::class)->theme === 'light')
-        <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-    @elseif(Request::input('out', '') !== 'results-with-style')
-        <link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-            href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-    @endif
     <script src="{{ Vite::asset('resources/js/scriptResultPage.js') }}" defer></script>
     @if (!empty($js))
         @foreach ($js as $js_file)

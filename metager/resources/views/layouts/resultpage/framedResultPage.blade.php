@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}"
+    @if(app(App\SearchSettings::class)->theme !== "system") data-theme="{{ app(App\SearchSettings::class)->theme }}" @endif>
 <head>
     <meta charset="UTF-8">
     <title>{{ Request::input('eingabe', '') }} - MetaGer</title>
@@ -10,14 +11,8 @@
 	<link rel="alternate" hreflang="{{ $locale }}" href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
 	@endif
 	@endforeach
+    {{-- One stylesheet, both palettes; see the data-theme attribute above. --}}
     <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-	@if(app(App\SearchSettings::class)->theme === "dark")
-	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-	@elseif(app(App\SearchSettings::class)->theme === "light")
-	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-	@elseif(Request::input('out', '') !== "results-with-style")
-	<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)" href="{{ Vite::asset('resources/less/metager/metager-dark.less') }}" />
-	@endif
     <script src="{{ Vite::asset('resources/js/verify.js') }}"></script>
     <link rel="stylesheet" href="{{ LaravelLocalization::getLocalizedURL(null, '/index.css?id=' . $mgv) }}">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />

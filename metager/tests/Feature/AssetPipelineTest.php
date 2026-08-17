@@ -163,22 +163,68 @@ class AssetPipelineTest extends TestCase
     }
 
     /**
-     * The @vite directive cannot express this, which is why the pages pass URLs
-     * around by hand instead: without a stored theme the dark stylesheet is
-     * attached with a media query, so the browser picks a theme with no
-     * JavaScript involved. Losing the media attribute would make every visitor
-     * dark, and losing the link would make every visitor light — both silently.
+     * The theme costs one stylesheet, not two.
+     *
+     * It used to be two full compilations of the same 89 KB — the dark one
+     * attached with media="(prefers-color-scheme:dark)", which lowers a
+     * stylesheet's priority but still downloads it, so every visitor paid for
+     * both. metager.less now carries both palettes as custom properties and
+     * chooses between them itself.
      */
-    public function testDarkThemeIsAppliedByMediaQueryRatherThanScript(): void
+    public function testThemeCostsASingleStylesheet(): void
     {
         $response = $this->get("/about");
 
         $response->assertOk();
 
-        $dark = Vite::asset("resources/less/metager/metager-dark.less");
+        $main = Vite::asset("resources/less/metager/metager.less");
 
-        $response->assertSee('media="(prefers-color-scheme:dark)"', false);
-        $response->assertSee($dark, false);
+        $this->assertSame(
+            1,
+            substr_count($response->getContent(), $main),
+            "The main stylesheet is linked more than once. The light branch used to link it a " .
+                "second time on top of the unconditional link at the top of the layout."
+        );
+    }
+
+    /**
+     * With no theme chosen there is no attribute, so the media query in the
+     * stylesheet decides and the browser's own setting wins. This is what most
+     * visitors get, and it has to keep working without JavaScript — which is
+     * why the choice is an attribute the server renders rather than a class
+     * some script adds.
+     */
+    public function testNoThemeIsPinnedWhenTheVisitorHasNotChosenOne(): void
+    {
+        $response = $this->get("/about");
+
+        $response->assertOk();
+        $response->assertDontSee("data-theme", false);
+    }
+
+    /**
+     * A chosen theme has to beat the browser's, in both directions. Dark is the
+     * easy half; light is the one worth pinning, because it only works if the
+     * stylesheet's prefers-color-scheme block excludes data-theme="light".
+     */
+    #[DataProvider("chosenThemes")]
+    public function testAChosenThemeIsPinnedOnTheDocument(string $setting, string $expected): void
+    {
+        $response = $this->get("/about?dark_mode=" . $setting);
+
+        $response->assertOk();
+        $response->assertSee('data-theme="' . $expected . '"', false);
+    }
+
+    public static function chosenThemes(): array
+    {
+        return [
+            "dark" => ["dark", "dark"],
+            "light" => ["light", "light"],
+            // SearchSettings still accepts the numeric values older clients send.
+            "legacy numeric light" => ["1", "light"],
+            "legacy numeric dark" => ["2", "dark"],
+        ];
     }
 
     /**

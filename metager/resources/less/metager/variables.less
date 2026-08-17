@@ -89,6 +89,89 @@
   --font-color: @text;
 }
 
+// The dark palette. A mixin because the same tokens are needed in three places:
+// for a visitor whose system asks for dark, for one who picked dark, and — via
+// variables-dark.less — by the page stylesheets that are still light/dark pairs.
+.theme-tokens-dark() {
+  @orange: darken(#ff8000, 10%);
+  @text: @color-almost-white;
+  @highlight: #333;
+  @link: @orange;
+
+  --metager-orange: @orange;
+  --background-color: @color-almost-black;
+  --background-color-mobile: @color-almost-black;
+  --text-color: @text;
+  --highlight-color: @highlight;
+  --link-color: @link;
+  --sidebar-list-hover-color: @color-strong-grey;
+  --card-background-color: @color-strong-grey;
+  --border-color: #727272;
+
+  --invert-state: invert(100%);
+  --icon-color: 0.9;
+  --searchbar-searchicon-brightness: 0.5;
+  --searchbar-key-brightness: 0.7;
+
+  --searchbar-background-color: @color-almost-black;
+  --input-background: @color-almost-black;
+  --input-text: @color-almost-white;
+
+  --blacklist-entries-odd: @color-almost-black;
+  --blacklist-entries-even: rgb(30, 15, 0);
+
+  --story-privacy-background: @color-strong-grey;
+  --story-privacy-color: @color-almost-white;
+  --story-ngo-background: #200000;
+  --story-ngo-color: #ffaaaa;
+  --story-diversity-background: #000020;
+  --story-diversity-color: #aaaaff;
+  --story-eco-background: #002000;
+  --story-eco-color: #aaffaa;
+  --story-plugin-background: @color-almost-black;
+  --story-font-color: @color-almost-white;
+
+  // Derived colours, by the same functions as the light palette.
+  //
+  // Note what lighten() does here: the dark text colour is already at 90%
+  // lightness, so all four of these clamp to white and "muted" text comes out
+  // brighter than the text around it. That is what the site does today and is
+  // reproduced deliberately; changing it changes how the site looks and belongs
+  // in a commit that says so.
+  --link-hover-color: darken(@link, 15%);
+  --text-color-alpha-50: fade(@text, 50%);
+  --text-color-alpha-60: fade(@text, 60%);
+  --text-color-alpha-70: fade(@text, 70%);
+  --text-color-lighter-25: lighten(@text, 25%);
+  --text-color-lighter-30: lighten(@text, 30%);
+  --text-color-lighter-40: lighten(@text, 40%);
+  --text-color-lighter-45: lighten(@text, 45%);
+  --highlight-color-alpha-60: fade(@highlight, 60%);
+  --metager-orange-alpha-80: fade(@orange, 80%);
+  --metager-orange-alpha-80-darker: darken(fade(@orange, 80%), 1%);
+
+  --font-color: @text;
+}
+
+// Which theme applies is decided here, and only here.
+//
+// A visitor who has not chosen one gets what the browser asks for. A visitor who
+// has chosen gets that, whatever the browser asks for — the layouts put their
+// choice on <html> as data-theme, which is also why the media query has to
+// exclude data-theme="light": without that, choosing light on a dark desktop
+// would be ignored.
+//
+// Both are plain CSS, so the theme still resolves with client JavaScript off.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    .theme-tokens-dark();
+  }
+}
+
+:root[data-theme="dark"] {
+  .theme-tokens-dark();
+}
+
 // ── The tokens, under the names the stylesheets already use ──────────────────
 @metager-orange: var(--metager-orange);
 @background-color: var(--background-color);

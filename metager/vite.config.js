@@ -18,9 +18,11 @@ import laravel from "laravel-vite-plugin";
  *
  * 2. Entry points are referenced from PHP as Vite::asset('resources/…'), i.e.
  *    by *source* path, not by output path. The pages pass those URLs into
- *    layouts as $css / $js / $darkcss arrays, and the dark theme is applied by
- *    putting media="(prefers-color-scheme:dark)" on the link tag — which the
- *    @vite directive cannot express, and which must keep working without JS.
+ *    layouts as $css / $js / $darkcss arrays, which the @vite directive cannot
+ *    express. The main stylesheet carries both palettes and needs no $darkcss;
+ *    the spende, membership and count pages are still light/dark pairs attached
+ *    with media="(prefers-color-scheme:dark)" on the link tag, which has to keep
+ *    working without JS.
  *
  * Anything added to `input` below becomes reachable from PHP under its source
  * path; anything removed stops being built. Tests/Feature/AssetPipelineTest
@@ -61,9 +63,7 @@ const assets = laravel({
         "resources/css/noheader.css",
         "resources/less/utility.less",
         "resources/less/metager/metager.less",
-        "resources/less/metager/metager-dark.less",
-        "resources/less/metager/pages/startpage/light.less",
-        "resources/less/metager/pages/startpage/dark.less",
+        "resources/less/metager/pages/startpage/startpage.less",
         "resources/less/metager/pages/adblocker.less",
         "resources/less/metager/pages/contact.less",
         "resources/less/metager/pages/lang-selector.less",

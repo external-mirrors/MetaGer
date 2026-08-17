@@ -33,13 +33,25 @@ docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/php fpm artisan
 
 The app is then on `http://localhost:8080`, and Selenium's noVNC view on `http://localhost:7900`.
 
+Frontend assets go through the `node` service:
+
+```bash
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node install
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node run build
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node test
+```
+
+**The feature suite needs a build.** `Vite::asset()` throws without `public/build/manifest.json`,
+so every page-rendering test 500s on a fresh checkout until `npm run build` has run once.
+
 ## Test layout
 
 | suite | config | needs | run with |
 |---|---|---|---|
 | `tests/Unit` | `phpunit.xml` | nothing | `artisan test` |
-| `tests/Feature` | `phpunit.xml` | nothing | `artisan test` |
+| `tests/Feature` | `phpunit.xml` | a Vite build | `artisan test` |
 | `tests/Browser` | `phpunit.dusk.xml` | Selenium + running app | `artisan dusk` |
+| `resources/js/**/*.test.js` | `vite.config.js` | nothing | `npm test` |
 
 `phpunit.xml` deliberately excludes `tests/Browser` — keep it that way, so the default run never
 depends on a browser container. CI mirrors the split: the `test` job has no Selenium service, only
@@ -67,8 +79,37 @@ Under `artisan test` the console kernel's `SetRequestForConsole` builds that req
 `$this->get('/about')` works, `$this->get('/de-DE/about')` 404s. Per-locale URL coverage has to be
 a Dusk test.
 
-**`new Agent()` reads the `$_SERVER` superglobal**, not the Laravel Request — so `withHeader('User-Agent')`
-alone does not reach it from a test.
+**`App\Support\Browser` is the only device-detection service.** It wraps `matomo/device-detector`
+and normalises names to the short forms the views branch on (`Edge`, not `Microsoft Edge`). It
+reads the Laravel Request, so `withHeader('User-Agent')` works from a test — unlike the three
+libraries it replaced, one of which read the `$_SERVER` superglobal directly.
+
+## Assets
+
+Vite, not laravel-mix, and **no dev server**: `npm run watch` runs `vite build --watch` and writes
+real files. Vite's dev server would deliver stylesheets through a JS module that injects them at
+runtime, which breaks the no-JS requirement in development and hides the regressions
+`ProgressiveEnhancementTest` exists to catch. Because nothing writes `public/hot`, `Vite::asset()`
+always reads the manifest.
+
+Entries are referenced **by source path**, not by output path and not with `@vite`:
+
+```php
+Vite::asset('resources/less/metager/metager.less')   // a URL
+Vite::content('resources/less/…/widget-template.less') // the file's contents, for inlining
+```
+
+`@vite` is unusable here because pages pass asset URLs into layouts as `$css` / `$js` / `$darkcss`
+arrays, and the dark theme is applied by putting `media="(prefers-color-scheme:dark)"` on the link
+tag — which the directive cannot express and which has to work without JS.
+
+Anything added to `input` in `vite.config.js` becomes reachable; anything removed stops being
+built. `tests/Feature/AssetPipelineTest` cross-checks the `Vite::asset()` calls, that input list
+and the built manifest against each other, and fails on any `public_path()` reaching for a `.css`
+or `.js` — build output has hashed filenames, so it can only be reached through the manifest.
+
+Asset URLs are forced root-relative in `AppServiceProvider`; the same app answers on `metager.de`,
+`metager3.de` and a `.onion` address, so a host-qualified URL is only ever a way to get it wrong.
 
 ## Configuration
 

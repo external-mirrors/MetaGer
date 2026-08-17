@@ -227,6 +227,24 @@ class OutputFormatsTest extends TestCase
         $this->assertStringNotContainsString("<html", $fragment->getContent(), "out=results is a fragment; it must not carry a document.");
     }
 
+    /**
+     * The image search has a fragment of its own, rendered from a different
+     * blade than the web one — the only place the format switch branches on the
+     * fokus before it branches on `out`. Nothing else in the suite renders it,
+     * and step D7d rewrites that switch.
+     */
+    public function testTheImageSearchHasAFragmentOfItsOwn(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses(["brave_images" => $this->engineFixture("brave-images.json")]);
+
+        $fragment = $this->get("/meta/meta.ger3?eingabe=kaffee&focus=bilder&out=results");
+
+        $fragment->assertOk();
+        $this->assertStringNotContainsString("<html", $fragment->getContent(), "The image fragment carries a whole document.");
+        $this->assertStringContainsString("<img", $fragment->getContent(), "The image fragment carries no images.");
+    }
+
     public function testResultsWithStyleIsAWholeDocument(): void
     {
         $document = $this->search("results-with-style");

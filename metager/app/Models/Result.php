@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Http\Controllers\Pictureproxy;
 use App\Models\DeepResults\Button;
 use App\Models\DeepResults\Imagesearchdata;
+use App\Search\Blacklists;
 use App\SearchSettings;
 
 /* Die Klasse Result sammelt alle Informationen über ein einzelnes Suchergebnis.
@@ -295,22 +296,16 @@ class Result
 
     public function isBlackListed(\App\MetaGer $metager)
     {
-        if (
-            ($this->strippedHost !== "" && (in_array($this->strippedHost, $metager->getDomainBlacklist()) ||
-                in_array($this->strippedLink, $metager->getUrlBlacklist()) ||
-                in_array($this->strippedLink . "|" . strtolower(app(SearchSettings::class)->q), $metager->getUrlBlacklist())
-            )
-            )
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+        return app(Blacklists::class)->blocksResult(
+            $this->strippedHost,
+            $this->strippedLink,
+            app(SearchSettings::class)->q
+        );
     }
 
     public function isDescriptionBlackListed(\App\MetaGer $metager)
     {
-        return in_array($this->strippedLink, $metager->getBlacklistDescriptionUrl());
+        return app(Blacklists::class)->blocksDescription($this->strippedLink);
     }
 
     /* Liest aus einem Link den Host.

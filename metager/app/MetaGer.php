@@ -79,9 +79,6 @@ class MetaGer
     protected $resultCount;
     protected $sprueche;
     protected $newtab;
-    protected $domainsBlacklisted = [];
-    protected $urlsBlacklisted = [];
-    protected $blacklistDescriptionUrl = [];
     protected $url;
     protected $fullUrl;
     protected $enabledSearchengines = [];
@@ -97,33 +94,6 @@ class MetaGer
     {
         # start timer
         $this->starttime = microtime(true);
-        # Read blocklists
-        if (file_exists(config_path() . "/blacklistDomains.txt") && file_exists(config_path() . "/blacklistUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/blacklistDomains.txt");
-            $this->domainsBlacklisted = array_map('trim', explode("\n", $tmp));
-            $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
-            $lines = explode("\n", $tmp);
-            $filtered_lines = array_filter($lines, function ($line) {
-                return strpos(trim($line), '#') !== 0;
-            });
-            # Re-index the array (array_filter preserves keys by default)
-            $filtered_lines = array_values($filtered_lines);
-            $this->urlsBlacklisted = $filtered_lines;
-        }
-
-        if (file_exists(config_path() . "/blacklistDescriptionUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
-            $this->blacklistDescriptionUrl = explode("\n", $tmp);
-        }
-
-        # Parser Skripte einhängen
-        $dir = app_path() . "/Models/parserSkripte/";
-        foreach (scandir($dir) as $filename) {
-            $path = $dir . $filename;
-            if (is_file($path)) {
-                require_once $path;
-            }
-        }
 
         # Cachebarkeit testen
         try {
@@ -1386,21 +1356,6 @@ class MetaGer
     public function getUserUrlBlacklist()
     {
         return $this->urlBlacklist;
-    }
-
-    public function getDomainBlacklist()
-    {
-        return $this->domainsBlacklisted;
-    }
-
-    public function getBlacklistDescriptionUrl()
-    {
-        return $this->blacklistDescriptionUrl;
-    }
-
-    public function getUrlBlacklist()
-    {
-        return $this->urlsBlacklisted;
     }
 
     public function getLanguageDetect()

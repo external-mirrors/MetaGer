@@ -186,6 +186,18 @@ class LoaderCacheTest extends TestCase
      * The budget is deliberately a ceiling rather than an exact figure, so
      * ordinary changes to a fixture do not fail it. If a change pushes past it,
      * the question to answer is what got added to the cached graph.
+     *
+     * 81,640 bytes before SearchSettings stopped serializing the engine
+     * registry, 58,607 after. The saving is 23 KB rather than the registry's
+     * full 38,637, because SearchSettings::$parameterFilter holds objects
+     * reachable from the registry's filters: they used to be back-references
+     * inside the same serialize() call and are now written out in full, which
+     * is 13 KB of the remainder.
+     *
+     * What is left, in order of size: searchengines at 44 KB — one
+     * SearchengineConfiguration per engine, most of it the same config every
+     * search — and that parameterFilter. Both are reachable the same way the
+     * registry was, and neither is touched here.
      */
     public function testTheLoaderEntryStaysWithinItsSizeBudget(): void
     {
@@ -194,7 +206,7 @@ class LoaderCacheTest extends TestCase
         $bytes = strlen(serialize($entry));
 
         $this->assertLessThan(
-            95_000,
+            62_000,
             $bytes,
             sprintf(
                 "One in-flight search now costs %d bytes of cache. Breakdown: settings %d, searchengines %d, "

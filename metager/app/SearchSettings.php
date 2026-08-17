@@ -52,6 +52,53 @@ class SearchSettings
     }
 
     /**
+     * Leave the engine registry behind when this object is serialized.
+     *
+     * These settings are cached per search — MetaGerSearch stores them under
+     * "loader_<uid>" so the load-more request can rebuild the search — and
+     * $sumasJson is by far the largest thing they hold: 38,637 of the 81,640
+     * bytes one in-flight search occupied. It is also the same 38,637 bytes
+     * every time, because SearchEngineRegistry is assembled from config files
+     * and parser class constants and contains nothing about the request. So the
+     * cache was storing one copy of the engine configuration per search, for an
+     * hour each, in a 5 GB allkeys-lru cache shared with everything else.
+     *
+     * Rebuilding it costs 0.192 ms against the 0.046 ms it takes to unserialize
+     * the bytes this saves — a fifth of a millisecond of CPU on the load-more
+     * request, in exchange for not moving 38 KB to Valkey and back on every
+     * write and every poll.
+     *
+     * It also stops writing the engines' API credentials into the cache. The
+     * registry merges the secrets from config/sumas.json into itself, so every
+     * loader entry carried a copy of them.
+     */
+    public function __serialize(): array
+    {
+        $state = get_object_vars($this);
+        unset($state["sumasJson"]);
+
+        return $state;
+    }
+
+    public function __unserialize(array $data): void
+    {
+        foreach ($data as $property => $value) {
+            $this->{$property} = $value;
+        }
+
+        $this->sumasJson = app(SearchEngineRegistry::class);
+
+        // boot() guarantees the current fokus has an entry, and code that runs
+        // after this reads it without checking. The registry knows every fokus
+        // in foki.json but not "maps", which is routed elsewhere before a
+        // search happens and so never appears there.
+        if (!property_exists($this->sumasJson->foki, $this->fokus)) {
+            $this->sumasJson->foki->{$this->fokus} = new \stdClass;
+            $this->sumasJson->foki->{$this->fokus}->sumas = [];
+        }
+    }
+
+    /**
      * Initializes Settings that depend on Localization which
      * needs to be deferred as Localization is done in another ServiceProvider
      */

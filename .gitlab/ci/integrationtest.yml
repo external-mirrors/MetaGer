@@ -98,6 +98,25 @@ test:
     - name: valkey/valkey:9.1.0-alpine
       alias: redis
   script:
+    # Undo the route cache that `php artisan optimize` just wrote, and only that one.
+    #
+    # This app resolves its locale *while registering routes*: RouteServiceProvider::mapWebRoutes
+    # passes Localization::setLocale() as the route group's prefix, which is what turns
+    # config/app.php's literal 'locale' => 'default' into a real one. Cached routes mean
+    # mapWebRoutes never runs, so nothing resolves it and app.locale stays the string "default".
+    #
+    # That is not a routing problem, it is a search problem. SearchengineConfiguration::applyLocale
+    # disables any engine whose language map has no entry for the current locale, and the two web
+    # engines declare `languages => []` with only exact regional keys (en_US, de_DE, ...), so an
+    # unresolved locale disables all of them. MetaGerSearch then redirects to settings#engines
+    # because no engine is enabled — which is why the whole search suite failed with "expected 200,
+    # got 302" and no error in the log. Reproducible locally with `artisan optimize`.
+    #
+    # Kept out of .test_base on purpose: browsertest derives its expected URLs from the app.locale
+    # the config cache froze, and it passes as it is.
+    #
+    # Nothing deployed is affected — no entrypoint, Dockerfile or chart template runs `optimize`.
+    - php artisan route:clear
     - php artisan test --without-tty
 
 # Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only

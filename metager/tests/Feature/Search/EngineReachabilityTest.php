@@ -106,6 +106,59 @@ class EngineReachabilityTest extends TestCase
     }
 
     /**
+     * A web search has something to search with.
+     *
+     * This is the assertion that was missing when the whole search suite went
+     * red at once. Every test above reaches an engine through a rendered page,
+     * so when no engine is enabled they all fail together with "expected 200,
+     * got 302" — eighty times, naming neither the engines nor the reason,
+     * because MetaGerSearch answers "no enabled engines" with a redirect to the
+     * settings page rather than an error.
+     *
+     * The way it happened is worth keeping in view: `php artisan optimize`
+     * caches routes, this app resolves its locale while *registering* routes
+     * (RouteServiceProvider::mapWebRoutes passes Localization::setLocale() as
+     * the group prefix), and applyLocale() disables every engine whose language
+     * map has no entry for the resulting locale. The web engines declare
+     * `languages => []` and only exact regional keys, so an unresolved locale
+     * disables all of them. Nothing about that is a search bug, and nothing
+     * about the eighty failures said so.
+     */
+    public function testAWebSearchHasEnginesToQuery(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses(["brave" => $this->engineFixture("brave-web.json")]);
+
+        $this->get("/meta/meta.ger3?eingabe=kaffee&focus=web");
+
+        $engines = app(\App\Models\Configuration\Searchengines::class);
+        $enabled = $engines->getEnabledSearchengines() ?: [];
+
+        $why = [];
+        foreach ($engines->sumas as $name => $suma) {
+            if ($suma->configuration->disabled) {
+                $why[] = $name . ": " . implode("+", array_map(
+                    fn($reason) => $reason->name ?? (string) $reason,
+                    $suma->configuration->disabledReasons
+                ));
+            }
+        }
+
+        $this->assertNotEmpty(
+            $enabled,
+            sprintf(
+                "No engine is enabled for a web search, so every test that renders a result page will "
+                    . "fail with a redirect instead of a page.\n  locale: regional=%s language=%s app.locale=%s\n"
+                    . "  disabled: %s",
+                \LaravelLocalization::getCurrentLocaleRegional(),
+                \App\Localization::getLanguage(),
+                config("app.locale"),
+                implode(", ", $why)
+            )
+        );
+    }
+
+    /**
      * The public engine list is built from the foki, so a retired engine is not
      * on it. Checked against display names actually rendered on the page.
      */

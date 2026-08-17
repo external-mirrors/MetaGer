@@ -58,7 +58,20 @@ depends on a browser container. CI mirrors the split: the `test` job has no Sele
 `browsertest` does.
 
 Prefer a Feature test. Reach for Dusk only when a real rendering engine is genuinely required —
-today that means the no-JavaScript behaviour and the locale-prefixed URLs (see below).
+today that means the no-JavaScript behaviour, the locale-prefixed URLs (see below) and the theme
+palette, where only a browser resolves `var()`.
+
+`tests/Browser/ThemeColorsTest` snapshots every colour declaration in every loaded stylesheet,
+resolved through the browser, into `tests/Browser/snapshots/theme-colors-{light,dark}.json` — 808
+declarations per theme. If a change is meant to alter a colour, regenerate and read the diff:
+
+```bash
+docker compose run --rm --no-deps -T -e UPDATE_THEME_SNAPSHOTS=1 \
+    --entrypoint /usr/local/bin/php fpm artisan dusk --filter ThemeColors
+```
+
+Regenerating to make a red test green throws the safety net away. Every changed line is a colour
+that changed on the site.
 
 ## Constraints that bite
 

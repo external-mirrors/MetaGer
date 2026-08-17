@@ -21,8 +21,11 @@
   # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
   # the built frontend, not just vendor/. Pull the npm job's artifact; composer still runs in
   # before_script because these jobs need the dev dependencies the composer job omits.
-  needs:
-    - npm
+  #
+  # `dependencies` and not `needs`: needs would also rewire *when* these jobs run, releasing
+  # them from stage order to start the moment npm finishes — before the fpm image they run on
+  # has been built, and before the review environment browsertest points at exists.
+  # `dependencies` alone only selects which artifacts to download.
   dependencies:
     - npm
   before_script:
@@ -45,14 +48,25 @@
 
 # Unit + Feature suites. phpunit.xml deliberately excludes tests/Browser, so this job
 # needs no browser and no Selenium service — it is the fast gate that should stay fast.
+#
+# Unlike browsertest it runs entirely inside its own container, against nothing deployed,
+# so it does not have to wait out the deploy stage: it needs the npm build and the image
+# it runs on, and nothing else.
 test:
   extends: .test_base
+  needs:
+    - npm
+    - fpm
   script:
     - php artisan test --without-tty
 
 # Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only
 # part of the suite that needs a real browser; keeping it separate means a Selenium
 # outage can no longer fail the unit tests.
+#
+# No `needs` here on purpose. Dusk's base URL is config('app.url'), which the pipeline sets
+# to the review environment — so this job browses the deployment made in the previous stage
+# and has to stay behind it in stage order.
 browsertest:
   extends: .test_base
   services:

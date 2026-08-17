@@ -19,7 +19,6 @@
         "laravel/tinker": "^3.0",
         "matomo/device-detector": "^6.3",
         "mcamara/laravel-localization": "^2.4",
-        "mews/captcha": "^3.3.3",
         "mlocati/ip-lib": "^1.22",
         "nesbot/carbon": "^3.0",
         "predis/predis": "^3.2",

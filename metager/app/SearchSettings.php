@@ -16,7 +16,6 @@ class SearchSettings
     const SUGGESTION_DELAY_MEDIUM = 450;
     const SUGGESTION_DELAY_LONG = 600;
 
-    public $bv_key = null; // Cache Key where data of BV is temporarily stored
     public $javascript_enabled = false;
     /** @var string */
     public $q;

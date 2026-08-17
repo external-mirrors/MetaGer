@@ -10,6 +10,5 @@ return [
     App\Providers\MetaGerProvider::class,
     App\Providers\AuthorizationServiceProvider::class,
     Jenssegers\Agent\AgentServiceProvider::class,
-    Mews\Captcha\CaptchaServiceProvider::class,
     App\Providers\SearchSettingsProvider::class,
 ];

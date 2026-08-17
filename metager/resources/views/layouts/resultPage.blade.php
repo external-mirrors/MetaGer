@@ -35,10 +35,15 @@
          attribute on <html> and prefers-color-scheme. This used to be up to four
          links, one of which loaded metager.less a second time. --}}
     <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
-    <script src="{{ Vite::asset('resources/js/scriptResultPage.js') }}" defer></script>
+    {{-- type="module" is not optional: Vite emits ES modules, and a bundle that
+         imports a shared chunk is a syntax error when loaded as a classic
+         script, so the file downloads and never runs. Modules defer by
+         default, which is why the explicit defer below is gone; async is kept
+         where it was, since it still means what it meant. --}}
+    <script type="module" src="{{ Vite::asset('resources/js/scriptResultPage.js') }}"></script>
     @if (!empty($js))
         @foreach ($js as $js_file)
-            <script src="{{ $js_file }}" defer async></script>
+            <script type="module" src="{{ $js_file }}" async></script>
         @endforeach
     @endif
 

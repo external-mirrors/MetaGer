@@ -27,5 +27,5 @@
 	@else
 </div>
 @endif
-<script src="{{ Vite::asset('resources/js/widgets.js') }}"></script>
+<script type="module" src="{{ Vite::asset('resources/js/widgets.js') }}"></script>
 @endsection

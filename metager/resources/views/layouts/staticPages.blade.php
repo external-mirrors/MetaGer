@@ -65,10 +65,14 @@
 	@endif
 	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/utility.less') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-	<script src="{{ Vite::asset('resources/js/utility.js') }}"></script>
+	{{-- type="module" is not optional: Vite emits ES modules, and a bundle that
+	     imports a shared chunk is a syntax error when loaded as a classic
+	     script, so the file downloads and never runs. Modules defer by
+	     default, which is why the explicit defer below is gone. --}}
+	<script type="module" src="{{ Vite::asset('resources/js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 		@foreach($js as $jsFile)
-			<script src="{{$jsFile}}" defer></script>
+			<script type="module" src="{{$jsFile}}"></script>
 		@endforeach
 	@endif
 </head>

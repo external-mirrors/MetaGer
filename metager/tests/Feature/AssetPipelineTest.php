@@ -163,6 +163,67 @@ class AssetPipelineTest extends TestCase
     }
 
     /**
+     * Build output is loaded as a module, everywhere, without exception.
+     *
+     * Vite emits ES modules. A classic <script src> pointed at one is a syntax
+     * error the moment the bundle imports a shared chunk — the browser fetches
+     * the file and refuses to run it. Nothing surfaces: every enhanced control
+     * on this site has a no-JS fallback, so the page keeps working and simply
+     * stops being enhanced. That is what happened here. Six of thirteen entries,
+     * utility.js and scriptResultPage.js among them, ran on no page at all until
+     * a settings form that used to submit itself started needing its Save button.
+     *
+     * Which entries bundle a shared chunk is a build-time decision that changes
+     * as imports move, so "this one happens to be valid classic JavaScript
+     * today" is not a reason to leave a tag alone.
+     *
+     * tests/Browser/ScriptExecutionTest asserts the behaviour in a browser; this
+     * says which file to fix, without one.
+     */
+    public function testEveryBuiltScriptIsLoadedAsAModule(): void
+    {
+        $offenders = [];
+
+        foreach ($this->bladeFiles() as $file) {
+            preg_match_all('/<script\b[^>]*>/', file_get_contents($file), $tags);
+
+            foreach ($tags[0] as $tag) {
+                // Vite::asset() covers the direct references; $js/$jsFile the
+                // layouts' loops, which pages fill from Vite::asset() too. An
+                // external src (the PayPal SDK) is nobody's module.
+                if (!preg_match('/Vite::asset|\$js/', $tag)) {
+                    continue;
+                }
+
+                if (!str_contains($tag, 'type="module"')) {
+                    $offenders[] = str_replace(self::projectPath() . "/", "", $file) . ": " . trim($tag);
+                }
+            }
+        }
+
+        $this->assertSame([], $offenders, "These load a Vite bundle as a classic script:\n  " . implode("\n  ", $offenders));
+    }
+
+    /**
+     * The same rule, read off a rendered page rather than off the templates, so
+     * it holds regardless of how the tag got there.
+     */
+    public function testTheRenderedPageLoadsItsBundleAsAModule(): void
+    {
+        $response = $this->get("/about");
+
+        $response->assertOk();
+
+        preg_match_all('/<script\b[^>]*src="\/build\/[^>]*>/', $response->getContent(), $tags);
+
+        $this->assertNotEmpty($tags[0], "The page loaded no build script at all — the check would pass vacuously.");
+
+        foreach ($tags[0] as $tag) {
+            $this->assertStringContainsString('type="module"', $tag, "Not a module: $tag");
+        }
+    }
+
+    /**
      * The theme costs one stylesheet, not two.
      *
      * It used to be two full compilations of the same 89 KB — the dark one
@@ -293,6 +354,17 @@ class AssetPipelineTest extends TestCase
             "These reach into the build output by path. Use Vite::asset() for a URL or "
                 . "Vite::content() for the file's contents."
         );
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function bladeFiles(): array
+    {
+        return array_values(array_filter(
+            self::phpFiles(),
+            fn($file) => str_ends_with($file, ".blade.php")
+        ));
     }
 
     /**

@@ -314,4 +314,88 @@ class AssetPipelineTest extends TestCase
 
         return $files;
     }
+
+    /**
+     * Every stylesheet source is reachable: it is either a build entry or is
+     * imported by one.
+     *
+     * Fourteen were not. Some were pages that moved out of this application
+     * years ago — the key pages now live in the keymanager service — and some
+     * were superseded and left behind, like a page-level count-dark.less next to
+     * the pages/count/ pair that replaced it. None of them were built, so none
+     * could be reached, and nothing said so.
+     *
+     * A file that is genuinely wanted but not used yet fails this: add it to
+     * vite.config.js, or import it from a stylesheet that is already built.
+     */
+    public function testEveryStylesheetSourceIsReachable(): void
+    {
+        $sources = [];
+
+        foreach (["resources/less", "resources/css"] as $root) {
+            foreach ($this->stylesheetsUnder(self::projectPath($root)) as $file) {
+                $sources[] = $file;
+            }
+        }
+
+        $this->assertNotEmpty($sources, "No stylesheet sources found — the search is looking in the wrong place.");
+
+        $entries = array_map(fn($entry) => self::projectPath($entry), array_keys(self::configuredEntries()));
+
+        $imported = [];
+        foreach ($sources as $file) {
+            preg_match_all(
+                '/@import\s+(?:\(.*?\)\s*)?[\'"]([^\'"]+)[\'"]/',
+                file_get_contents($file),
+                $matches
+            );
+
+            foreach ($matches[1] as $target) {
+                $resolved = realpath(dirname($file) . "/" . $target);
+
+                if ($resolved !== false) {
+                    $imported[$resolved] = true;
+                }
+            }
+        }
+
+        $orphans = [];
+        foreach ($sources as $file) {
+            if (in_array($file, $entries, true) || isset($imported[$file])) {
+                continue;
+            }
+
+            $orphans[] = str_replace(self::projectPath() . "/", "", $file);
+        }
+
+        $this->assertSame(
+            [],
+            $orphans,
+            "Stylesheet sources that nothing builds and nothing imports:\n  " . implode("\n  ", $orphans)
+        );
+    }
+
+    /**
+     * @return list<string> absolute paths
+     */
+    private function stylesheetsUnder(string $directory): array
+    {
+        if (!is_dir($directory)) {
+            return [];
+        }
+
+        $found = [];
+
+        $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory));
+
+        foreach ($files as $file) {
+            if ($file->isFile() && in_array($file->getExtension(), ["less", "css"], true)) {
+                $found[] = $file->getPathname();
+            }
+        }
+
+        sort($found);
+
+        return $found;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App;
+use App\Search\Fetch\MissionOptions;
 use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -30,9 +31,6 @@ class RequestFetcher extends Command
 
     protected $shouldRun = true;
     protected $multicurl = null;
-    protected $proxyhost;
-    protected $proxyuser;
-    protected $proxypassword;
 
     /**
      * Create a new command instance.
@@ -43,10 +41,6 @@ class RequestFetcher extends Command
     {
         parent::__construct();
         $this->multicurl = curl_multi_init();
-        $this->proxyhost = config("metager.metager.fetcher.proxy.host");
-        $this->proxyport = config("metager.metager.fetcher.proxy.port");
-        $this->proxyuser = config("metager.metager.fetcher.proxy.user");
-        $this->proxypassword = config("metager.metager.fetcher.proxy.password");
     }
 
     /**
@@ -188,53 +182,7 @@ class RequestFetcher extends Command
     private function getCurlHandle($job)
     {
         $ch = curl_init();
-
-        curl_setopt_array(
-            $ch,
-            array(
-                CURLOPT_URL => $job["url"],
-                CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_USERAGENT => $job["useragent"],
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_CONNECTTIMEOUT => 8,
-                CURLOPT_MAXCONNECTS => 500,
-                CURLOPT_LOW_SPEED_LIMIT => 50000,
-                CURLOPT_LOW_SPEED_TIME => 10,
-                CURLOPT_TIMEOUT => 10,
-                CURLOPT_TCP_KEEPALIVE => 1,
-                CURLOPT_TCP_KEEPIDLE => 600,
-                CURLOPT_TCP_KEEPINTVL => 15,
-                // CURLOPT_TCP_KEEPCNT => 39 // Available only in php 8.4 onwards
-            )
-        );
-
-        if (!empty($job["curlopts"])) {
-            curl_setopt_array($ch, $job["curlopts"]);
-        }
-
-        if ((!array_key_exists("proxy", $job) || $job["proxy"] === true) && !empty($this->proxyhost) && !empty($this->proxyport)) {
-            curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
-            if (!empty($this->proxyuser) && !empty($this->proxypassword)) {
-                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
-            }
-            curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyport);
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        }
-
-        if (!empty($job["username"]) && !empty($job["password"])) {
-            curl_setopt($ch, CURLOPT_USERPWD, $job["username"] . ":" . $job["password"]);
-        }
-
-        if (!empty($job["headers"]) && sizeof($job["headers"]) > 0) {
-            $headers = [];
-            foreach ($job["headers"] as $key => $value) {
-                $headers[] = $key . ": " . $value;
-            }
-            # Headers are in the Form:
-            # <key>:<value>;<key>:<value>
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
+        curl_setopt_array($ch, MissionOptions::for($job));
 
         return $ch;
     }

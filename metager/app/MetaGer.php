@@ -2,18 +2,17 @@
 
 namespace App;
 
-use App\Models\Authorization\Authorization;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
 use App\Models\Result;
+use App\Search\LinkBuilder;
 use App\Search\QueryParser;
+use App\Search\ResponseFactory;
 use App\Search\ResultDeduplicator;
 use App\Search\ResultRanker;
-use Arr;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Predis\Connection\ConnectionException;
@@ -121,120 +120,17 @@ class MetaGer
         $this->parseFormData();
     }
 
-    # Erstellt aus den gesammelten Ergebnissen den View
+    /**
+     * Die fertige Suche in der angeforderten Form ausliefern.
+     *
+     * Die Formatweiche steckt in Search\ResponseFactory; hier bleibt der Log-
+     * Aufruf, weil er zur Suche gehört und nicht zur Antwort.
+     */
     public function createView($quicktipResults = [])
     {
-        # Hiermit werden die evtl. ausgewählten SuMas extrahiert, damit die Input-Boxen richtig gesetzt werden können
-        $focusPages = [];
+        App::make(QueryLogger::class)->createLog();
 
-        foreach ($this->request->all() as $key => $value) {
-            if (stripos($key, 'engine_') === 0 && $value === 'on') {
-                $focusPages[] = $key;
-            }
-        }
-
-        $viewResults = [];
-        # Wir extrahieren alle notwendigen Variablen und geben Sie an unseren View:
-        foreach ($this->results as $result) {
-            $viewResults[] = get_object_vars($result);
-        }
-        # Wir müssen natürlich noch den Log für die durchgeführte Suche schreiben:
-        /** @var QueryLogger */
-        $query_logger = App::make(QueryLogger::class);
-        $query_logger->createLog();
-
-        # json wird vor der Fokus-Weiche behandelt: die Antwort hat für jeden
-        # Fokus dieselbe Form (Bildersuche füllt lediglich das image-Feld), und
-        # unterhalb dieser Weiche gäbe es sonst zwei Stellen, die dasselbe
-        # Schema bauen müssten. Vorher war 'json' zwar in der Parameterprüfung
-        # erlaubt, hatte aber keinen case und fiel auf die HTML-Seite durch.
-        if ($this->out === "json") {
-            return $this->createJsonView();
-        }
-
-        if (app(SearchSettings::class)->fokus === "bilder") {
-            switch ($this->out) {
-                case 'results':
-                    return view('resultpages.results_images')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('imagesearch', true);
-                default:
-                    return view('resultpages.resultpage_images')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('quicktips', $quicktipResults)
-                        ->with('focus', app(SearchSettings::class)->fokus)
-                        ->with('imagesearch', true)
-                        ->with('resultcount', count($this->results));
-            }
-        } else {
-            switch ($this->out) {
-                case 'results':
-                    return view('resultpages.results')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'results-with-style':
-                    return view('resultpages.resultpage')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('suspendheader', "yes")
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'rss20':
-                    return view('resultpages.metager3resultsrss20')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('resultcount', sizeof($viewResults))
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'api':
-                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                case 'atom10':
-                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                case 'result-count':
-                    # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
-                    return sizeof($viewResults) . ";" . round((microtime(true) - $this->starttime), 2);
-                default:
-                    return view('resultpages.resultpage')
-                        ->with('eingabe', $this->eingabe)
-                        ->with('focusPages', $focusPages)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('quicktips', $quicktipResults)
-                        ->with('resultcount', count($this->results))
-                        ->with('focus', app(SearchSettings::class)->fokus);
-            }
-        }
+        return app(ResponseFactory::class)->make($this, $quicktipResults ?: []);
     }
 
     /**
@@ -246,11 +142,6 @@ class MetaGer
      * Das Schema ist versioniert. Neue Felder dürfen jederzeit dazukommen;
      * Umbenennen oder Entfernen erhöht `API_SCHEMA_VERSION`.
      */
-    private function createJsonView(): string
-    {
-        return json_encode($this->toApiArray(), self::JSON_API_FLAGS);
-    }
-
     /**
      * Der Rumpf von `out=json` als Array.
      *
@@ -676,17 +567,11 @@ class MetaGer
 
     public function nextSearchLink()
     {
-        if (isset($this->next) && isset($this->next['engines']) && count($this->next['engines']) > 0) {
-            $requestData = $this->request->except(['page', 'out', 'submit-query', 'mgv']);
-            if ($this->request->input('out', '') !== "results" && $this->request->input('out', '') !== '') {
-                $requestData["out"] = $this->request->input('out');
-            }
-            $requestData['next'] = $this->getSearchUid();
-            $link = action('MetaGerSearch@search', $requestData);
-        } else {
-            $link = "#";
+        if (!isset($this->next["engines"]) || count($this->next["engines"]) === 0) {
+            return "#";
         }
-        return $link;
+
+        return $this->links()->nextPage($this->getSearchUid());
     }
 
     # Hilfsfunktionen
@@ -761,76 +646,45 @@ class MetaGer
     }
 
     # Generators
+    #
+    # All of them are the same search with one thing changed, and all of them
+    # are built by Search\LinkBuilder. They stay here as one-liners because the
+    # blades call them on $metager.
 
     public function generateSearchLink($fokus, $results = true)
     {
-        $except = ['page', 'next', 'out', 'submit-query', 'mgv', 'ua'];
-        # Remove every Filter
-        foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
-            $except[] = $filter->{"get-parameter"};
-        }
-        $requestData = $this->request->except($except);
-        $requestData['focus'] = $fokus;
-
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->forFokus($fokus);
     }
 
     public function generateEingabeLink($eingabe)
     {
-        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
-        $requestData = $this->request->except($except);
-
-        $requestData['eingabe'] = $eingabe;
-
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
-    }
-
-    public function generateQuicktipLink()
-    {
-        $link = action('MetaGerSearch@quicktips');
-
-        return $link;
+        return $this->links()->forQuery($eingabe);
     }
 
     public function generateSiteSearchLink($host)
     {
-        $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " site:$host";
-        $requestData['focus'] = "web";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->restrictedToHost($host);
     }
 
     public function generateRemovedHostLink($host)
     {
-        $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " -site:$host";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->withoutHost($host);
     }
 
     public function generateRemovedDomainLink($domain)
     {
-        $domain = urlencode($domain);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " -site:*.$domain";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->withoutDomain($domain);
     }
 
     public function getUnFilteredLink()
     {
-        $requestData = $this->request->except(['lang']);
-        $requestData['lang'] = "all";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->everyLanguage();
     }
 
-    # Komplexe Getter
+    private function links(): LinkBuilder
+    {
+        return new LinkBuilder($this->request);
+    }
 
     public function getHostCount($host)
     {
@@ -858,6 +712,21 @@ class MetaGer
     public function getNext()
     {
         return $this->next;
+    }
+
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * The request as the search reads it — parameters already scrubbed, so not
+     * the same object as the incoming one. Search\ResponseFactory needs it to
+     * work out which engines the user ticked by hand.
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     public function getOut()

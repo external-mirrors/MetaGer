@@ -151,20 +151,18 @@ class SearchLinksTest extends TestCase
     }
 
     /**
-     * generateQuicktipLink() is dead and does not merely go unused — it cannot
-     * work. It asks for `MetaGerSearch@quicktips`, and no such route is
-     * registered, so calling it throws rather than returning a link. Nothing in
-     * app/ or resources/ calls it.
-     *
-     * Pinned as a failure so the D7d extraction does not carry it across into
-     * LinkBuilder, where it would look like a supported way to build a link.
+     * generateQuicktipLink() is gone, and this is what it was: a call to
+     * `action('MetaGerSearch@quicktips')` for a route that is not registered,
+     * so it threw rather than returning a link, and nothing in app/ or
+     * resources/ called it. It was pinned as throwing in the commit before the
+     * extraction and deleted rather than carried into LinkBuilder.
      */
-    public function testTheQuicktipLinkIsDeadAndThrows(): void
+    public function testTheDeadQuicktipLinkIsGone(): void
     {
-        $metager = $this->search();
-
-        $this->expectException(\InvalidArgumentException::class);
-        $metager->generateQuicktipLink();
+        $this->assertFalse(
+            method_exists(MetaGer::class, "generateQuicktipLink"),
+            "generateQuicktipLink is back. It points at a route that does not exist."
+        );
     }
 
     /**

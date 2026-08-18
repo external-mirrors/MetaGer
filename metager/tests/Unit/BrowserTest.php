@@ -183,4 +183,52 @@ class BrowserTest extends TestCase
 
         $this->assertSame("Firefox", Browser::fromUserAgent(self::FIREFOX)->name());
     }
+
+    /**
+     * libyaml has to agree with the parser it replaces, on every fact.
+     *
+     * Swapping the YAML parser under DeviceDetector is a change to how ~3,000
+     * detection regexes are read, and the two parsers are entirely different
+     * implementations — a quoting or escaping difference would not throw, it
+     * would quietly mis-detect some browsers. Cheap to rule out: parse the same
+     * User-Agents both ways and compare.
+     *
+     * Skipped where the extension is absent, which is any environment that has
+     * not built build/fpm/Dockerfile — and there Browser falls back to the
+     * bundled parser anyway, so there is nothing to compare.
+     */
+    #[DataProvider("browserNames")]
+    public function testLibyamlAgreesWithTheBundledParser(string $userAgent, ?string $ignored = null): void
+    {
+        if (!extension_loaded("yaml")) {
+            $this->markTestSkipped("ext-yaml is not installed, so nothing selects the libyaml parser here.");
+        }
+
+        $this->assertSame(
+            $this->detectWith($userAgent, new \DeviceDetector\Yaml\Spyc()),
+            $this->detectWith($userAgent, new \DeviceDetector\Yaml\Pecl()),
+            "libyaml and the bundled parser disagree about this User-Agent."
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function detectWith(string $userAgent, \DeviceDetector\Yaml\ParserInterface $parser): array
+    {
+        $detector = new \DeviceDetector\DeviceDetector($userAgent);
+        $detector->setYamlParser($parser);
+        $detector->parse();
+
+        return [
+            "client" => $detector->getClient("name"),
+            "version" => $detector->getClient("version"),
+            "engine" => $detector->getClient("engine"),
+            "engine_version" => $detector->getClient("engine_version"),
+            "os" => $detector->getOs("name"),
+            "desktop" => $detector->isDesktop(),
+            "mobile" => $detector->isMobile(),
+            "tablet" => $detector->isTablet(),
+        ];
+    }
 }

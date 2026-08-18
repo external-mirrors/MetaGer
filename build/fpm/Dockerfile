@@ -26,7 +26,8 @@ RUN apt update && apt install --no-install-recommends -y \
     libzstd-dev \
     libpq-dev \
     libmagickwand-dev \
-    liblz4-dev
+    liblz4-dev \
+    libyaml-dev
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
 RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
@@ -37,13 +38,25 @@ RUN docker-php-ext-install zip gd pcntl pdo_mysql pdo_pgsql intl
 # stable release that builds against PHP 8.5 — 3.2.16 fails on the removed
 # ext/standard/php_smart_string.h and only 3.2.17RC1 adds support — so keeping
 # them would have meant shipping a release candidate for an unused extension.
-RUN yes 'y' | pecl install xdebug-3.5.3 imagick-3.8.1
+# yaml is libyaml, and it is here for device detection. matomo/device-detector
+# keeps its ~3,000 detection regexes in YAML files and parses them with a
+# bundled pure-PHP parser; on this machine that is 98 ms of CPU every time the
+# parsed lists are not in the cache — after a deploy, or when Redis evicts them
+# — and every FPM worker that misses at the same moment pays it at the same
+# moment. Through libyaml the same parse is 10 ms.
+#
+# Do not reach for symfony/yaml instead, which is already installed and looks
+# like the obvious answer: measured against these files it is 180 ms, nearly
+# twice as slow as the parser it would replace. App\Support\Browser selects
+# the Pecl parser when the extension is present and falls back to the bundled
+# one when it is not, so a build without this still works, just slowly.
+RUN yes 'y' | pecl install xdebug-3.5.3 imagick-3.8.1 yaml
 # phpredis is configured explicitly rather than through `yes 'y'`: that answered
 # every prompt affirmatively, including the igbinary and msgpack serializers,
 # which now have no headers to build against. The compression backends stay on —
 # libzstd-dev and liblz4-dev are installed above for them.
 RUN pecl install --configureoptions 'enable-redis-igbinary="no" enable-redis-msgpack="no" enable-redis-lzf="yes" enable-redis-zstd="yes" enable-redis-lz4="yes" with-liblz4="yes"' redis-6.3.0
-RUN docker-php-ext-enable redis imagick
+RUN docker-php-ext-enable redis imagick yaml
 RUN docker-php-ext-enable --ini-name=xdebug.ini xdebug
 
 # Add working dir for the code base

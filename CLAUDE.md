@@ -201,9 +201,19 @@ client hints, and is resolved from the container so a request detects once. Befo
 did it twice — `MetaGer::__construct` for the mobile flag, `UpstreamUserAgent` for the header sent
 upstream — and each was 2.6 ms against Redis: twenty-six cache reads for DeviceDetector's regex
 lists, then ~3,000 `preg_match` calls. 5.3 ms per search became 0.04 ms. A User-Agent nobody has
-sent this hour still costs 6.75 ms, and the first request after the regex lists leave the cache
-costs 114 ms of pure-PHP YAML parsing — that one is shared by every client, not paid per client.
-Don't swap the YAML parser for symfony/yaml to fix it: measured, it is 60% *slower* than Spyc here.
+sent this hour still costs ~5 ms, and a worker that misses when the regex lists are not cached at
+all costs 30 ms — that one is shared by every client, not paid per client, but every worker that
+misses at the same moment pays it at the same moment.
+
+That last figure is 30 ms and not 121 ms because the fpm image installs **`ext-yaml`** and
+`Browser` selects DeviceDetector's `Yaml\Pecl` parser when it is loaded, falling back to the
+bundled one when it is not. The three parsers, measured on the same files, interleaved over three
+rounds: libyaml **10 ms**, bundled Spyc 98 ms, symfony/yaml 180 ms. So do not reach for
+symfony/yaml — it is already installed and looks like the obvious answer, and it is nearly twice as
+slow as the parser it would replace. `BrowserTest` asserts libyaml and Spyc agree on every fact for
+every fixture User-Agent, because a parser difference here would not throw, it would quietly
+mis-detect. This is also why `artisan test` takes 19 s rather than 89 s: the suite runs with
+`CACHE_STORE=array`, so every test process paid that parse.
 
 **Localized URLs.** `LaravelLocalization::extractAttributes` walked all 132 routes on every call,
 and a page makes about fifty. `App\Localization\MemoizingLaravelLocalization` memoises it per URL;

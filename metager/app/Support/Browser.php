@@ -5,6 +5,7 @@ namespace App\Support;
 use DeviceDetector\Cache\LaravelCache;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
+use DeviceDetector\Yaml\Pecl;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -119,6 +120,17 @@ class Browser
     {
         $detector = new DeviceDetector($userAgent, $hints);
         $detector->setCache(new LaravelCache());
+
+        // DeviceDetector's own default is a bundled pure-PHP YAML parser, and
+        // reading its ~3,000 detection regexes with it costs 98 ms whenever the
+        // parsed lists are not in the cache. libyaml does the same work in
+        // 10 ms. Conditional because the extension is a property of the image
+        // (see build/fpm/Dockerfile): without it this falls back to the
+        // bundled parser and is merely slow, not broken.
+        if (extension_loaded("yaml")) {
+            $detector->setYamlParser(new Pecl());
+        }
+
         $detector->parse();
 
         return [

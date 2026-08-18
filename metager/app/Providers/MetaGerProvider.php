@@ -11,6 +11,7 @@ use App\QueryTimer;
 use App\Searchengines;
 use App\SearchSettings;
 use App\Models\Configuration\SearchEngineRegistry;
+use App\Search\Blacklists;
 
 class MetaGerProvider extends ServiceProvider
 {
@@ -54,6 +55,8 @@ class MetaGerProvider extends ServiceProvider
         $this->app->singleton(SearchEngineRegistry::class, function ($app) {
             return new SearchEngineRegistry();
         });
+
+        $this->app->singleton(Blacklists::class);
     }
 
     // public function provides()

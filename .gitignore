@@ -4,4 +4,10 @@ metager/config/sumasEn.json
 metager/config/suggestions.json
 metager/.env.assistant
 .gitignore
-chart/charts/redis-sentinel-*.tgz
+# Helm subcharts are fetched from their registry, not vendored. Matched by
+# extension rather than by name so swapping the dependency does not leave the
+# replacement silently tracked.
+chart/charts/*.tgz
+
+# Sqlite databases left behind by the test suite (--parallel writes one per worker)
+metager/database/databases/

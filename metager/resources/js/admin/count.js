@@ -1,5 +1,3 @@
-require("es6-promise").polyfill();
-require("fetch-ie8");
 import Chart from "chart.js/auto"
 
 let parallel_fetches = 8;

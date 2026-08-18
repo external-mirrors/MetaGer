@@ -4,9 +4,18 @@
          bootstrap="vendor/autoload.php"
          colors="true"
 >
+    <!--
+        tests/Browser is deliberately absent here. Those are Dusk tests: they drive a real
+        browser and need a reachable Selenium, so sweeping them into `php artisan test` made
+        the default run depend on infrastructure it has no business needing. They live in
+        phpunit.dusk.xml and run via `php artisan dusk`.
+    -->
     <testsuites>
         <testsuite name="Unit">
-            <directory>tests</directory>
+            <directory suffix="Test.php">tests/Unit</directory>
+        </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">tests/Feature</directory>
         </testsuite>
     </testsuites>
     <source>

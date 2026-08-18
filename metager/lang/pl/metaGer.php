@@ -8,7 +8,6 @@ return [
         'domainBlacklistCount' => 'Wyniki domen :count nie będą wyświetlane.',
         'urlBlacklist' => 'Wyniki zawierające \":url\" nie są wyświetlane.',
         'stopwords' => 'Wykluczono wyniki zawierające następujące słowa: \":stopwords\"',
-        'cantLoad' => 'Nie można znaleźć pliku suma',
         'noSearch' => 'Uwaga: nie wpisano wyszukiwanych słów. Wpisz wyszukiwane słowa i spróbuj ponownie',
         'phrase' => 'Wyszukujesz ciąg znaków: :phrase',
     ],
@@ -160,12 +159,6 @@ return [
         'skip' => 'Pomiń',
         'min' => 'Minimalna długość snu (w s)',
         'max' => 'Maksymalny czas uśpienia (w s)',
-    ],
-    'ads' => [
-        'own' => [
-            'title' => 'Wsparcie dla MetaGer',
-            'description' => 'Przekazując darowiznę, wspierasz utrzymanie i dalszy rozwój niezależnej wyszukiwarki metager.org oraz pracę stowarzyszenia non-profit SUMA-EV.',
-        ],
     ],
     'prevention' => [
         'phrase' => '<h2>Potrzebujesz pomocy?</h2> Masz negatywne myśli lub chcesz z kimś porozmawiać? Na naszej stronie zapobiegania <a href=":prevurl" target="_blank"></a> znajdziesz listę placówek pomocy, do których możesz się zwrócić.',

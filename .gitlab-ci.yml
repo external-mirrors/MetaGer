@@ -1,6 +1,13 @@
 default:
   tags:
     - kubernetes
+  # Superseded pipelines are the whole reason the registry cleanup had to grow a
+  # guard: two pipelines on one ref, and the older one deletes images the newer
+  # one has just pushed and not yet deployed. The guard stops that being an
+  # outage; this stops it happening. Every job is interruptible by default and
+  # the deploy jobs opt back out, so a new commit cancels the build and test
+  # work but never a helm upgrade that has already started.
+  interruptible: true
 variables:
   DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
   BUILD_DOCKER_IMAGE: docker:24.0.5
@@ -8,10 +15,11 @@ variables:
   DOCKER_FPM_IMAGE_NAME: fpm
   DOCKER_NGINX_IMAGE_NAME: nginx
   DOCKER_NODE_IMAGE_NAME: node
-  DOCKER_REDIS_IMAGE_NAME: redis
   KUBE_NAMESPACE: metager-2
 
 workflow:
+  auto_cancel:
+    on_new_commit: interruptible
   rules:
     - if: ($CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != "development") || ($CI_PIPELINE_SOURCE == 'web' && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development")
       variables:
@@ -22,7 +30,6 @@ workflow:
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
-        DOCKER_REDIS_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         HELM_RELEASE_NAME: review-$DOCKER_IMAGE_TAG_PREFIX
     - if: $CI_COMMIT_BRANCH == "master"
       variables:
@@ -33,7 +40,6 @@ workflow:
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
-        DOCKER_REDIS_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
     - if: $CI_COMMIT_BRANCH == "development"
       variables:
@@ -44,7 +50,6 @@ workflow:
         DOCKER_FPM_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NGINX_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         DOCKER_NODE_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
-        DOCKER_REDIS_IMAGE_TAG: $DOCKER_IMAGE_TAG_PREFIX-$CI_COMMIT_SHA
         HELM_RELEASE_NAME: $DOCKER_IMAGE_TAG_PREFIX
 
 stages:
@@ -55,6 +60,8 @@ stages:
   - integrationtest
 
 include:
+  - local: /.gitlab/ci/chart.yml
+  - local: /.gitlab/ci/deployment_scripts.yml
   - local: /.gitlab/ci/build_dependency_images.yml
   - local: /.gitlab/ci/build_dependencies.yml
   - local: /.gitlab/ci/build_docker_images.yml

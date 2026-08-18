@@ -1,7 +1,8 @@
 import Echo from "laravel-echo";
+import Pusher from "pusher-js";
 
 (async () => {
-    window.Pusher = require("pusher-js");
+    window.Pusher = Pusher;
     window.Echo = new Echo({
         broadcaster: "reverb",
         key: "METAGER_TESTING", // ToDo use a real key

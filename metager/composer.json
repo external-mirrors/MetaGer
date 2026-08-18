@@ -8,20 +8,17 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "composer/class-map-generator": "^1.6",
         "endroid/qr-code": "^5.0",
-        "foroco/php-browser-detection": "^2.8",
         "globalcitizen/php-iban": "^4.2.3",
         "invoiceninja/sdk-php": "^1.4",
-        "jenssegers/agent": "^2.6.4",
-        "laravel/framework": "^12.0",
+        "laravel/framework": "^13.0",
         "laravel/reverb": "^1.6",
         "laravel/sanctum": "^4.2",
-        "laravel/tinker": "^2.10",
+        "laravel/tinker": "^3.0",
         "matomo/device-detector": "^6.3",
-        "mcamara/laravel-localization": "2.3.0",
-        "mews/captcha": "^3.3.3",
+        "mcamara/laravel-localization": "^2.4",
         "mlocati/ip-lib": "^1.22",
         "nesbot/carbon": "^3.0",
         "predis/predis": "^3.2",
@@ -73,7 +70,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [
+                "mcamara/laravel-localization"
+            ]
         }
     },
     "config": {

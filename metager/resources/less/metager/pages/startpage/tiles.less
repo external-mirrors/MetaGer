@@ -72,7 +72,7 @@ div#tiles-container {
                 width: @image_size;
                 height: @image_size;
                 padding: 0.5rem;
-                background-color: fade(@highlight-color, 60%);
+                background-color: @highlight-color-alpha-60;
                 border-radius: 5px;
                 transition: background-color 0.5s;
 
@@ -87,8 +87,8 @@ div#tiles-container {
             }
 
             &.orange>div.image {
-                @gradient-from: fade(@metager-orange, 80%);
-                @gradient-to: darken(fade(@metager-orange, 80%), 1%);
+                @gradient-from: @metager-orange-alpha-80;
+                @gradient-to: @metager-orange-alpha-80-darker;
 
                 background-color: @metager-orange;
                 background: linear-gradient(0deg, @gradient-from 0%, @gradient-to 100%);
@@ -96,7 +96,7 @@ div#tiles-container {
 
             >div.title {
                 font-size: .8rem;
-                color: fade(@text-color, 60%);
+                color: @text-color-alpha-60;
                 width: @tile_width;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -119,7 +119,7 @@ div#tiles-container {
                 }
 
                 &.orange>div.image {
-                    background-color: fade(@metager-orange, 80%);
+                    background-color: @metager-orange-alpha-80;
                 }
 
                 >div.title {

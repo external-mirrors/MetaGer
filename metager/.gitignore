@@ -9,12 +9,8 @@ Homestead.yaml
 .orig
 langfiles.zip
 npm-debug.log
-# The Files created by Webpack in the build process
-/public/**/*.css
-!/public/fonts/arimo/stylesheet.css
-!/public/fonts/liberationsans/stylesheet.css
-/public/**/*.js
-/public/mix-manifest.json
+# The files created by Vite in the build process
+/public/build
 public/**/*.LICENSE.txt
 
 **/*.map

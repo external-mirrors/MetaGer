@@ -1,7 +1,4 @@
-integrationtest:
-  services:
-    - name: selenium/standalone-firefox:114.0
-      alias: selenium-standalone-firefox
+.test_base:
   tags:
     - kubernetes
   stage: integrationtest
@@ -11,25 +8,57 @@ integrationtest:
   variables:
     BRANCH_NAME: $CI_COMMIT_REF_NAME
     COMMIT_NAME: $CI_COMMIT_REF_SLUG
-    SELENIUM_HOST: selenium-standalone-firefox
     MATOMO_ENABLED: false
     # phpunit.xml declares these for the test run, but `php artisan optimize` bakes the production
     # .env into bootstrap/cache/config.php and cached config is never re-read through env() — so
     # the phpunit values are silently ignored and the tests reach for the production Redis
     # sentinel, unreachable from CI. Set them as real job variables instead: Laravel's dotenv is
     # immutable, so they win over .env and land in the config cache itself.
-    # Note the fix is deliberately *not* `config:clear` — the Dusk tests derive their expected URLs
-    # from `app.locale`, which the config cache freezes at the value LaravelLocalization resolved
-    # while building it (en-US, matching Selenium Firefox's Accept-Language). Clearing the cache
-    # drops that to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
     CACHE_STORE: array
     SESSION_DRIVER: array
     QUEUE_CONNECTION: sync
-  dependencies: [] # No artifacts required
+    # Not every Redis call goes through the cache. SchedulerHeartbeat reads the stamp with
+    # Redis::get, and the search path will block on Redis::brpop, so an array cache store
+    # does not make the suite Redis-free — it only hides which parts still need one. Point
+    # the default connection at the service below; the .env copied in leaves REDIS_HOST at
+    # localhost, which is why this failed with "Connection refused [tcp://127.0.0.1:6379]".
+    REDIS_HOST: redis
+    # Setting REDIS_HOST is not enough, because a handful of call sites do not use the default
+    # connection: the authorization path, the anonymous-token payments and the suggestion debt
+    # all reach Redis as `Redis::connection(config("cache.stores.redis.connection"))`, which
+    # bypasses CACHE_STORE=array entirely — an array cache store does not make those calls go
+    # away, it only makes them invisible until something asserts on them.
+    #
+    # The .env copied in above still points that connection at `sentinel`, so in CI it tried to
+    # autodiscover sentinels that do not exist. Every search then logged a full Predis stack
+    # trace and the accumulated traces exhausted the 256M memory_limit mid-suite, which is why
+    # this surfaced as "Allowed memory size exhausted" in a YAML parser rather than as the
+    # connection error it actually was.
+    #
+    # `default` is not a test-only convenience: it is what REDIS_CACHE_CONNECTION is set to in
+    # every deployed environment (see chart/values.yaml and chart/tests/assertions.sh, where the
+    # master-proxy Service exists precisely because the app talks to the default connection).
+    # Pinning it here makes the suite exercise the connection topology production actually runs.
+    REDIS_CACHE_CONNECTION: default
+    REDIS_CACHE_LOCK_CONNECTION: default
+  # Every rendered page resolves its stylesheets and scripts through the Vite manifest, and
+  # Vite::asset() throws when public/build/manifest.json is absent — so the feature tests need
+  # the built frontend as well as vendor/. Both arrive as artifacts: metager/public from npm,
+  # metager/vendor from composer_dev.
+  #
+  # composer_dev exists so these jobs no longer run `composer install` themselves. They used
+  # to, because the `composer` job installs --no-dev and the suite needs the dev packages —
+  # which meant every test job re-fetched ~40 packages from codeload.github.com, and a GitHub
+  # rate limit or outage failed a suite that does not otherwise depend on GitHub at all.
+  #
+  # `dependencies` and not `needs`: needs would also rewire *when* these jobs run, releasing
+  # them from stage order to start the moment npm finishes — before the fpm image they run on
+  # has been built, and before the review environment browsertest points at exists.
+  # `dependencies` alone only selects which artifacts to download.
+  dependencies:
+    - npm
+    - composer_dev
   before_script:
-    - export COMPOSER_HOME=$(pwd)/metager/.composer
-  script:
-    # Install Dev Dependencies
     - cd metager
     - cp $ENV_PRODUCTION .env
     # config/sumas.json is gitignored (it only ever carries API secrets), so a fresh checkout has
@@ -37,12 +66,76 @@ integrationtest:
     # fpm image's entrypoint falls back to the example file for exactly this reason, but this job
     # replaces that entrypoint with bash, so do the same thing here.
     - test -f config/sumas.json || cp config/sumas.json.example config/sumas.json
-    - composer install
     - php artisan optimize
-    - php artisan test --without-tty
-  cache:
-    paths:
-      - metager/.composer/
+  # No cache here any more. These jobs no longer run composer, so caching
+  # metager/.composer/ only uploaded an empty directory — and under the implicit
+  # "default" cache key it did so into the same slot the npm and composer jobs
+  # were using, wiping whichever of them had written last.
   except:
     refs:
       - master
+
+# Unit + Feature suites. phpunit.xml deliberately excludes tests/Browser, so this job
+# needs no browser and no Selenium service — it is the fast gate that should stay fast.
+#
+# Unlike browsertest it runs entirely inside its own container, against nothing deployed,
+# so it does not have to wait out the deploy stage: it needs the npm build and the image
+# it runs on, and nothing else.
+test:
+  extends: .test_base
+  # composer_dev is listed here as well as in .test_base's `dependencies`: when a job
+  # declares `needs`, GitLab requires every job it takes artifacts from to be part of
+  # it. browsertest has no `needs` and reaches composer_dev through stage order.
+  needs:
+    - npm
+    - fpm
+    - composer_dev
+  # Same image as docker-compose runs locally, so a test that passes on a laptop passes here.
+  services:
+    # Valkey, matching what the Helm chart deploys and what docker-compose.yml runs
+    # locally, so the suite exercises the datastore production actually uses. Keeps
+    # the `redis` alias because REDIS_HOST above names it.
+    - name: valkey/valkey:9.1.0-alpine
+      alias: redis
+  script:
+    # Deliberately run with the route cache `php artisan optimize` just wrote, and
+    # not with `route:clear` in front of it as this job used to need.
+    #
+    # The locale used to be a route group prefix — RouteServiceProvider::mapWebRoutes passed
+    # Localization::setLocale() as the prefix — which is what turned config/app.php's literal
+    # 'locale' => 'default' into a real one. Cached routes meant mapWebRoutes never ran, so
+    # app.locale stayed the string "default", SearchengineConfiguration::applyLocale disabled every
+    # engine whose language map had no entry for it (the web engines declare `languages => []` with
+    # only exact regional keys), and MetaGerSearch redirected to settings#engines because nothing
+    # was enabled. The whole search suite failed with "expected 200, got 302" and nothing in the log.
+    #
+    # App\Http\Middleware\ResolveLocale decides the locale per request now and the route table is
+    # a constant, so the cache is safe — and running the suite against a warm one is the check that
+    # it stays that way, since production serves every request from it
+    # (build/fpm/entrypoint/entrypoint_production.sh).
+    - php artisan test --without-tty
+
+# Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only
+# part of the suite that needs a real browser; keeping it separate means a Selenium
+# outage can no longer fail the unit tests.
+#
+# No `needs` here on purpose. Dusk's base URL is config('app.url'), which the pipeline sets
+# to the review environment — so this job browses the deployment made in the previous stage
+# and has to stay behind it in stage order.
+browsertest:
+  extends: .test_base
+  # `extends` replaces list values rather than merging them, so redis has to be repeated
+  # here — leaving it out would silently take it away from this job alone.
+  services:
+    - name: selenium/standalone-firefox:153.0
+      alias: selenium-standalone-firefox
+    - name: valkey/valkey:9.1.0-alpine
+      alias: redis
+  variables:
+    SELENIUM_HOST: selenium-standalone-firefox
+    # The Dusk tests derive their expected URLs from `app.locale`, which the config cache
+    # freezes at the value LaravelLocalization resolved while building it (en-US, matching
+    # Selenium Firefox's Accept-Language). So do not add `config:clear` here — it drops the
+    # locale to config/app.php's literal 'default' and breaks the plugin and sitesearch tests.
+  script:
+    - php artisan dusk --without-tty

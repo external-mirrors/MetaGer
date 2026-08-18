@@ -42,6 +42,21 @@ class AuthenticationValidation
             $suggestion_debt = $this->getSuggestionDebt();
 
             if ($user->authorize($suma_cost + $suggestion_debt) && $user->makePayment($suggestion_debt)) {
+                // Write the debt off now that it has actually been discharged.
+                //
+                // Deliberately not clearSuggestionDebt(): that pays the debt
+                // itself, and it has just been paid on the line above — calling
+                // it here would charge the key a second time for the same
+                // suggestions. Only the settling half belongs on this branch.
+                //
+                // Without this the debt stays on the key and is charged again by
+                // every following search until its two-day expiry drops it.
+                SuggestionDebtAuthorization::ADD_CREDIT(0.1);
+                SuggestionDebtAuthorization::UPDATE_SETTINGS();
+                if ($suggestion_debt > 0) {
+                    SuggestionDebtAuthorization::ADD_DEBT($suggestion_debt * -1);
+                }
+
                 return $next($request);
             } else {
                 return redirect(route("startpage", $parameters));

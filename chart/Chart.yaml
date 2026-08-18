@@ -24,6 +24,9 @@ version: 0.1.0
 appVersion: "1.16.0"
 
 dependencies:
-  - name: redis-sentinel
-    repository: https://gitlab.metager.de/api/v4/projects/130/packages/helm/production
-    version: 0.1.5
+  # Valkey, in replication + Sentinel mode. Not Valkey *Cluster*: the search wait
+  # loop calls Redis::brpop() with a multi-key array (app/MetaGer.php), which is a
+  # CROSSSLOT error under cluster mode, so HA here has to be sentinel-based.
+  - name: valkey
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.25.5

@@ -1,4 +1,4 @@
-FROM nginx:1.29.2 AS setup
+FROM nginx:1.30.4 AS setup
 
 ARG UID=1000
 ARG GID=1000

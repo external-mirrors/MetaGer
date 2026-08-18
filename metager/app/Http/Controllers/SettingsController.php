@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
@@ -11,10 +12,12 @@ use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
 use App\Models\SearchengineConfiguration;
 use App;
+use App\Localization;
+use App\Localization\LocaleContext;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
-use foroco\BrowserDetection;
+use App\Support\Browser;
 use \Illuminate\Http\Request;
 use LaravelLocalization;
 
@@ -114,7 +117,7 @@ class SettingsController extends Controller
             $cookieLink = route('loadSettings', $settings_params);
         }
 
-        $agent = (new BrowserDetection())->getAll($request->userAgent());
+        $agent = Browser::fromRequest($request);
 
         return response(view('settings.index')
             ->with('title', trans('titles.settings', ['fokus' => $foki[$originalFokus]['name']]))
@@ -134,7 +137,7 @@ class SettingsController extends Controller
                 'new_tab' => $settings->newtab ? 'on' : 'off',
                 'zitate' => $settings->zitate ? 'on' : 'off',
             ])
-            ->with('js', [mix('js/scriptSettings.js')]), 200, [
+            ->with('js', [Vite::asset('resources/js/scriptSettings.js')]), 200, [
             "Cache-Control" => "no-store, no-cache, must-revalidate, max-age=0, private",
         ]);
     }
@@ -207,6 +210,21 @@ class SettingsController extends Controller
         }
 
         $newFilters = $request->except(["focus", "url"]);
+
+        /**
+         * Pin the interface language before touching a market.
+         *
+         * `web_setting_m` is written from here, and it is also where every
+         * pre-`mg_locale` browser's language still lives, so
+         * `LocaleContext::cookieLocale()` reads it as a language while no
+         * `mg_locale` exists. For a browser that never had one, a first-ever
+         * market change would therefore come back as an interface change —
+         * exactly the conflation being removed. Writing the current locale
+         * first makes the old cookie unambiguous from this point on.
+         */
+        if (Cookie::get(LocaleContext::cookieName()) === null) {
+            Localization::context()->persistCookie();
+        }
 
         $langFile = app(SearchEngineRegistry::class);
 
@@ -403,24 +421,14 @@ class SettingsController extends Controller
      * `?lang=` -> a default regional locale, one per `lang/` directory this
      * MetaGer install ships translations for. Deliberately not derived from
      * `LaravelLocalization::getSupportedLocales()` (~19 regional variants):
-     * `schema()` below needs exactly one *default* region per language, the
-     * same simplification `Localization::GET_PREFERRED_LOCALE()`'s own
-     * `$two_letter_locales` table already makes for its three entries - this
-     * is that idea, complete.
+     * `schema()` below needs exactly one *default* region per language.
+     *
+     * The same table `LocaleContext` resolves a bare `Accept-Language` with,
+     * and referenced rather than repeated: two copies of "which region does
+     * this language mean" is how they came to disagree about Catalan.
+     * `docs/locale-contract.md` §4 is the written form.
      */
-    private const LANG_TO_LOCALE = [
-        "da" => "da-DK",
-        "de" => "de-DE",
-        "en" => "en-US",
-        "es" => "es-ES",
-        "fi" => "fi-FI",
-        "fr" => "fr-FR",
-        "it" => "it-IT",
-        "nl" => "nl-NL",
-        "pl" => "pl-PL",
-        "pt" => "pt-PT",
-        "sv" => "sv-SE",
-    ];
+    private const LANG_TO_LOCALE = LocaleContext::HOME_REGION;
 
     /**
      * Machine-readable description of every setting MetaGer understands:
@@ -535,6 +543,22 @@ class SettingsController extends Controller
                     // already-off toggle (e.g. Mojeek) rather than defaulting
                     // everything to on and leaving a client to guess.
                     "enabledByDefault" => !$engine->configuration->disabledByDefault,
+                    // Whether this engine can serve the requested language at all.
+                    // Engines are indexed per language, not globally: `onenewspage`
+                    // only covers English, `onenewspagegermany` only German. A search
+                    // already drops the ones that cannot serve the current locale
+                    // (`SearchengineConfiguration::applyLocale()`), so without this a
+                    // client would show a toggle with nothing behind it — and for
+                    // `onenewspage` on a German device, one that implied German news
+                    // came out of an English-only index.
+                    //
+                    // Additive like the fokus-level `available` above, and for the
+                    // same reason (SettingsSchemaAvailableFokiTest): a client that
+                    // already had this engine switched off still needs to see it to
+                    // manage it. The same test `applyLocale()` makes — a supported
+                    // language may map to the empty string as its parameter value, so
+                    // only `null` means "cannot serve this locale".
+                    "available" => $engine->configuration->languages?->getParameterForLocale() !== null,
                 ];
             }
 

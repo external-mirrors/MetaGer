@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Jobs\CreateDirectDebit;
 use App\Jobs\DonationNotification;
 use App\Localization;
@@ -42,9 +43,9 @@ class DonationController extends Controller
         return view('spende.amount')
             ->with('banktransfer_qr_uri', $qr_uri)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')])
             ->with('navbarFocus', 'foerdern');
     }
 
@@ -81,9 +82,9 @@ class DonationController extends Controller
                 "amount" => $amount
             ])
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]);
     }
 
     function paymentMethod(Request $request, $amount, $interval)
@@ -127,9 +128,9 @@ class DonationController extends Controller
             ->with('nonce', $nonce)
             ->with('paypal_sdk', $paypal_sdk)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]), 200, ["Content-Security-Policy" => $csp]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200, ["Content-Security-Policy" => $csp]);
     }
 
     function banktransfer(Request $request, $amount, $interval)
@@ -171,9 +172,9 @@ class DonationController extends Controller
         return response(view('spende.payment.banktransfer')
             ->with('donation', $donation)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]));
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]));
     }
 
     function directdebit(Request $request, $amount, $interval)
@@ -200,9 +201,9 @@ class DonationController extends Controller
         return response(view('spende.payment.directdebit')
             ->with('donation', $donation)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]));
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]));
     }
 
     function directdebitExecute(Request $request, $amount, $interval)
@@ -229,9 +230,9 @@ class DonationController extends Controller
                     ->withErrors($validator)
                     ->with('donation', $donation)
                     ->with('title', trans('titles.spende'))
-                    ->with('css', [mix('/css/spende.css')])
-                    ->with('darkcss', [mix('/css/spende-dark.css')])
-                    ->with('js', [mix('/js/donation.js')]));
+                    ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+                    ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+                    ->with('js', [Vite::asset('resources/js/donation/base.js')]));
             }
         } else {
             $donation["fullname"] = $request->input("name");
@@ -349,9 +350,9 @@ class DonationController extends Controller
             ->with('nonce', $nonce)
             ->with('paypal_sdk', $paypal_sdk)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]), 200, ["Content-Security-Policy" => $csp]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200, ["Content-Security-Policy" => $csp]);
     }
 
     function paypalCreateSubscription(Request $request, $amount, $interval, $funding_source)
@@ -689,7 +690,7 @@ class DonationController extends Controller
             'amount' => 'required|numeric|min:1',
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
-        if ($validator->fails() || !$request->hasValidSignature()) {
+        if ($validator->fails() || !Localization::hasValidSignature()) {
             abort(404);
         } else {
             $donation = [
@@ -702,9 +703,9 @@ class DonationController extends Controller
         return response(view('spende.danke')
             ->with('donation', $donation)
             ->with('title', trans('titles.spende'))
-            ->with('css', [mix('/css/spende.css')])
-            ->with('darkcss', [mix('/css/spende-dark.css')])
-            ->with('js', [mix('/js/donation.js')]), 200);
+            ->with('css', [Vite::asset('resources/less/metager/pages/spende/base.less')])
+            ->with('darkcss', [Vite::asset('resources/less/metager/pages/spende/base-dark.less')])
+            ->with('js', [Vite::asset('resources/js/donation/base.js')]), 200);
     }
 
     private function generatePayPalAccessToken()

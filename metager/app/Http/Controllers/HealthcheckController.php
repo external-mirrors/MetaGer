@@ -2,33 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
-use Carbon\Carbon;
+use App\Support\SchedulerHeartbeat;
 
 class HealthcheckController extends Controller
 {
 
     /**
-     * Check if the server is ready 
+     * Check if the server is ready
      */
     public function liveness()
     {
         return response('ok', 200);
     }
 
+    /**
+     * The same check the scheduler's own exec probe runs (`schedule:healthcheck`);
+     * both go through App\Support\SchedulerHeartbeat so they cannot drift apart.
+     */
     public function livenessScheduler()
     {
-        $lastSchedule = Redis::get(\App\Console\Commands\Heartbeat::REDIS_KEY);
-        if (empty($lastSchedule)) {
-            abort(500, "No heartbeat yet");
-        }
-        $lastSchedule = Carbon::createFromFormat('Y-m-d H:i:s', $lastSchedule);
+        [$healthy, $reason] = SchedulerHeartbeat::check();
 
-        if (Carbon::now()->diffInMinutes($lastSchedule, true) > 1) {
-            abort(500, "Last heartbeat too long ago");
-        } else {
-            return response('ok', 200);
+        if (!$healthy) {
+            abort(500, $reason);
         }
+
+        return response('ok', 200);
     }
 }

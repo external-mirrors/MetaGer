@@ -90,6 +90,3 @@ resources:
     reverb:
       cpu: 50m
       memory: 50M
-
-redis-sentinel:
-  replicaCount: 3

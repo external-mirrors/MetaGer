@@ -40,6 +40,4 @@ Route::group(['middleware' => $auth_middleware, 'prefix' => 'admin'], function (
             dd($request->ip(), $_SERVER["AGENT"], $request->headers);
         }
     );
-    Route::get('stress', 'Stresstest@index');
-    Route::get('stress/verify', 'Stresstest@index');
 });

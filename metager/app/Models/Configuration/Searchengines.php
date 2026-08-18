@@ -66,18 +66,17 @@ class Searchengines
             }
         }
 
+        // Hoisted out of the loop: one visitor per request, so asking once per
+        // engine only made sense while the guard was answering from scratch
+        // every time. It memoises now (KeyAuthGuard), but asking sixteen times
+        // for one answer is still the wrong shape.
+        $user = Auth::guard("key")->user();
+
         foreach ($this->sumas as $suma) {
-            $user = Auth::guard("key")->user();
             if ($suma->configuration->cost > 0 && (($user !== null && !$user->authorize($suma->configuration->cost, 0)) || ($user === null && !app(Authorization::class)->canDoAuthenticatedSearch(false)))) {
                 $suma->configuration->disabled = true;
                 $suma->configuration->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
                 $this->disabledReasons[] = DisabledReason::PAYMENT_REQUIRED;
-            }
-            // Disable searchengine if it serves ads and this request is authorized
-            if ($suma->configuration->ads && app(Authorization::class)->canDoAuthenticatedSearch()) {
-                $suma->configuration->disabled = true;
-                $suma->configuration->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
-                $this->disabledReasons[] = DisabledReason::SERVES_ADVERTISEMENTS;
             }
             // Disable all searchengines not supported by this fokus
             if (!in_array($suma->name, $engines_in_fokus)) {

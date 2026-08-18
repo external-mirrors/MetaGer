@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App;
+use App\Search\Fetch\MissionOptions;
 use Cache;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Redis;
@@ -30,9 +31,6 @@ class RequestFetcher extends Command
 
     protected $shouldRun = true;
     protected $multicurl = null;
-    protected $proxyhost;
-    protected $proxyuser;
-    protected $proxypassword;
 
     /**
      * Create a new command instance.
@@ -43,10 +41,6 @@ class RequestFetcher extends Command
     {
         parent::__construct();
         $this->multicurl = curl_multi_init();
-        $this->proxyhost = config("metager.metager.fetcher.proxy.host");
-        $this->proxyport = config("metager.metager.fetcher.proxy.port");
-        $this->proxyuser = config("metager.metager.fetcher.proxy.user");
-        $this->proxypassword = config("metager.metager.fetcher.proxy.password");
     }
 
     /**
@@ -82,7 +76,7 @@ class RequestFetcher extends Command
                 $messagesLeft = $status[1];
                 $newJobs = $this->checkNewJobs($operationsRunning, $messagesLeft);
                 if ($newJobs === 0 && $answersRead === 0) {
-                    usleep(10 * 1000);
+                    $this->waitForActivity($operationsRunning);
                 }
 
                 if (!$this->shouldRun && $operationsRunning === 0 && Redis::get(FPMGracefulStop::REDIS_FPM_STOPPED_KEY) !== NULL) {
@@ -92,6 +86,53 @@ class RequestFetcher extends Command
         } finally {
             curl_multi_close($this->multicurl);
         }
+    }
+
+    /**
+     * Nothing happened this pass, so wait — but wait on the right thing.
+     *
+     * With transfers in flight, that is the multi handle's own sockets: it
+     * returns the moment an engine sends something. This used to be a flat
+     * usleep(10ms), which meant a response landing just after the check sat
+     * unnoticed for up to ten milliseconds. Nobody notices that on one engine,
+     * but a result page waits for the slowest of them, so it came off the top of
+     * every search.
+     *
+     * The ceiling stays at 10ms because that is also how long a *new job* can
+     * sit in the Redis queue unseen — curl_multi_select knows nothing about
+     * Redis, so the timeout is what brings us back to look.
+     *
+     * curl_multi_select answers -1 straight away when it has no socket to wait
+     * on, which happens while libcurl is sitting on a timer of its own rather
+     * than on the network. Sleeping briefly is what keeps that from spinning the
+     * CPU; it is the pattern libcurl's own documentation prescribes.
+     *
+     * With nothing in flight there is nothing to select on, and checkNewJobs has
+     * just spent up to a second blocked on Redis, so a plain short sleep is both
+     * enough and all that is left.
+     */
+    protected function waitForActivity(int $operationsRunning): void
+    {
+        if ($operationsRunning <= 0) {
+            $this->sleepMicroseconds(10 * 1000);
+            return;
+        }
+
+        if ($this->selectOnMultiHandle(0.01) === -1) {
+            $this->sleepMicroseconds(100);
+        }
+    }
+
+    /** Seam for the tests; see RequestFetcherWaitTest. */
+    protected function sleepMicroseconds(int $microseconds): void
+    {
+        usleep($microseconds);
+    }
+
+    /** Seam for the tests; see RequestFetcherWaitTest. */
+    protected function selectOnMultiHandle(float $timeoutSeconds): int
+    {
+        return curl_multi_select($this->multicurl, $timeoutSeconds);
     }
 
     /**
@@ -188,53 +229,7 @@ class RequestFetcher extends Command
     private function getCurlHandle($job)
     {
         $ch = curl_init();
-
-        curl_setopt_array(
-            $ch,
-            array(
-                CURLOPT_URL => $job["url"],
-                CURLOPT_PRIVATE => $job["resulthash"] . ";" . $job["cacheDuration"] . ";" . $job["name"],
-                CURLOPT_RETURNTRANSFER => 1,
-                CURLOPT_USERAGENT => $job["useragent"],
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_CONNECTTIMEOUT => 8,
-                CURLOPT_MAXCONNECTS => 500,
-                CURLOPT_LOW_SPEED_LIMIT => 50000,
-                CURLOPT_LOW_SPEED_TIME => 10,
-                CURLOPT_TIMEOUT => 10,
-                CURLOPT_TCP_KEEPALIVE => 1,
-                CURLOPT_TCP_KEEPIDLE => 600,
-                CURLOPT_TCP_KEEPINTVL => 15,
-                // CURLOPT_TCP_KEEPCNT => 39 // Available only in php 8.4 onwards
-            )
-        );
-
-        if (!empty($job["curlopts"])) {
-            curl_setopt_array($ch, $job["curlopts"]);
-        }
-
-        if ((!array_key_exists("proxy", $job) || $job["proxy"] === true) && !empty($this->proxyhost) && !empty($this->proxyport)) {
-            curl_setopt($ch, CURLOPT_PROXY, $this->proxyhost);
-            if (!empty($this->proxyuser) && !empty($this->proxypassword)) {
-                curl_setopt($ch, CURLOPT_PROXYUSERPWD, $this->proxyuser . ":" . $this->proxypassword);
-            }
-            curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyport);
-            curl_setopt($ch, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        }
-
-        if (!empty($job["username"]) && !empty($job["password"])) {
-            curl_setopt($ch, CURLOPT_USERPWD, $job["username"] . ":" . $job["password"]);
-        }
-
-        if (!empty($job["headers"]) && sizeof($job["headers"]) > 0) {
-            $headers = [];
-            foreach ($job["headers"] as $key => $value) {
-                $headers[] = $key . ": " . $value;
-            }
-            # Headers are in the Form:
-            # <key>:<value>;<key>:<value>
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        }
+        curl_setopt_array($ch, MissionOptions::for($job));
 
         return $ch;
     }

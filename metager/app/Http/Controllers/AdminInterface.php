@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\QueryLogger;
 use Carbon\Carbon;
 use DateTime;
@@ -45,10 +46,10 @@ class AdminInterface extends Controller
                 ->with('end', $end)
                 ->with("days", $start->diffInDays($end, true))
                 ->with('interface', $interface)
-                ->with('css', [mix('/css/count/style.css')])
-                ->with('darkcss', [mix('/css/count/dark.css')])
+                ->with('css', [Vite::asset('resources/less/metager/pages/count/style.less')])
+                ->with('darkcss', [Vite::asset('resources/less/metager/pages/count/style-dark.less')])
                 ->with('js', [
-                    mix('/js/admin/count.js')
+                    Vite::asset('resources/js/admin/count.js')
                 ]);
         }
     }

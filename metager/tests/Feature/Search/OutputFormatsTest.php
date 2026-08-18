@@ -254,28 +254,50 @@ class OutputFormatsTest extends TestCase
     }
 
     /**
-     * A characterization of a constraint that shapes every other test here: a
-     * process may run exactly one search.
+     * A second search in one process no longer fails.
      *
-     * QueryTimer is a singleton (MetaGerProvider) and observeStart() throws
-     * when a name is already registered, so the second search through
-     * MetaGerSearch@search dies on "Search_CheckSpecialSearches" and comes back
-     * as a 500. Under FPM this never happens — one request, one application
-     * instance — which is why it has survived; it surfaces only where one
-     * application handles two searches, i.e. in a test, or under a persistent
-     * worker such as Octane.
-     *
-     * Pinned rather than fixed: the fix is a decision about the timer's
-     * lifecycle, and this commit records behaviour rather than changing it.
-     * The consequence for every test downstream is one search per test.
+     * It used to 500. QueryTimer is a container singleton and observeStart()
+     * refused a name it had already timed, so the second search died on
+     * "Search_CheckSpecialSearches" — the first thing MetaGerSearch@search
+     * does. Under FPM that never happened, one request to one application
+     * instance, which is why it survived; it surfaced wherever one application
+     * handles two searches, which is to say in tests and under any persistent
+     * worker.
      */
-    public function testASecondSearchInTheSameProcessFails(): void
+    public function testASecondSearchInTheSameProcessSucceeds(): void
+    {
+        $this->search("json")->assertOk();
+
+        $this->get("/meta/meta.ger3?eingabe=tee&focus=web&out=json")->assertOk();
+    }
+
+    /**
+     * What is left of that constraint, and why every test here still runs one
+     * search.
+     *
+     * The timer no longer objects, but SearchSettings, Searchengines and
+     * MetaGer are container singletons too, and unlike the timer they carry the
+     * query itself. Nothing flushes them between two $this->get() calls, so the
+     * second search answers the first one's question. Tests that genuinely need
+     * two searches call forgetRequestScopedServices() in between — see
+     * Tests\Concerns\FakesSearchEngines.
+     *
+     * Pinned rather than fixed: making these request-scoped is a lifecycle
+     * decision, and a wrong answer is at least easier to see stated here than
+     * discovered in a test that quietly asserts the wrong query's results.
+     */
+    public function testASecondSearchStillAnswersTheFirstQuery(): void
     {
         $this->search("json")->assertOk();
 
         $second = $this->get("/meta/meta.ger3?eingabe=tee&focus=web&out=json");
+        $second->assertOk();
 
-        $second->assertStatus(500);
+        $this->assertSame(
+            "kaffee",
+            json_decode($second->getContent(), true)["query"] ?? null,
+            "The second search answered its own query, so the singletons are now request-scoped and this test should become a real two-search test."
+        );
     }
 
     /**

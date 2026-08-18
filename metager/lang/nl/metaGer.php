@@ -145,7 +145,6 @@ return [
         'noSpecialSearch' => 'Er was geen zoekmachine die een van je filteropties ondersteunde. Filters die momenteel actief zijn: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Kon suma-bestand niet vinden',
         'noSearch' => 'Let op: je hebt geen zoekwoord(en) ingevoerd. Typ zoekwoorden en probeer het opnieuw',
         'dartEurope' => 'Tip: je hebt Dart-Europe geactiveerd. Daarom kan de responstijd langer zijn en is deze ingesteld op 10 sec.',
         'hostBlacklist' => 'Resultaten van de volgende domeinen worden niet weergegeven: \":host"',
@@ -161,12 +160,6 @@ return [
         'success' => 'U zoekt op een site. Alleen de resultaten van de website <a href="http://:site" target="_blank" rel="noopener">:site"</a> worden getoond.',
     ],
     'feedback' => 'Niet wat je zocht? Geef ons feedback: ',
-    'ads' => [
-        'own' => [
-            'title' => 'Ondersteuning voor MetaGer',
-            'description' => 'Met je donatie steun je het onderhoud en de verdere ontwikkeling van de onafhankelijke zoekmachine metager.org en het werk van de non-profit vereniging SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Heb je hulp nodig?</h2> Heb je negatieve gedachten of wil je met iemand praten? Op onze <a href=":prevurl" target="_blank"> preventiepagina</a> vind je een lijst met hulpmogelijkheden waar je terecht kunt.',
     ],

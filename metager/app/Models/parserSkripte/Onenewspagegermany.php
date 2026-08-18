@@ -44,73 +44,6 @@ class Onenewspagegermany extends Searchengine
                 'index_size' => null,
             ],
         ],
-        'onenewspagegermanyAll' => [
-            'host' => 'suche.newsdeutschland.com',
-            'path' => '/suche.php',
-            'port' => 443,
-            'query-parameter' => 'q',
-            'input-encoding' => 'utf8',
-            'output-encoding' => 'utf8',
-            'get-parameter' => [
-                'e' => '1',
-                'f' => '1',
-                'n' => '100',
-            ],
-            'lang' => [
-                'parameter' => '',
-                'languages' => [
-                    'de' => '',
-                ],
-                'regions' => [],
-            ],
-            'engine-boost' => 1,
-            'cache-duration' => -1,
-            'disabled' => false,
-            'filter-opt-in' => false,
-            'cost' => 0,
-            'infos' => [
-                'homepage' => 'http://www.newsdeutschland.com/',
-                'index_name' => null,
-                'display_name' => 'OneNewspage (Deutschland, mit Archiv)',
-                'founded' => '2008',
-                'headquarter' => 'Wales, England',
-                'operator' => 'One News Page Ltd.',
-                'index_size' => null,
-            ],
-        ],
-        'onenewspagegermanyvideo' => [
-            'host' => 'suche.newsdeutschland.com',
-            'path' => '/videosuche.php',
-            'port' => 443,
-            'query-parameter' => 'q',
-            'input-encoding' => 'utf8',
-            'output-encoding' => 'utf8',
-            'get-parameter' => [
-                'e' => '1',
-                'n' => '10',
-            ],
-            'lang' => [
-                'parameter' => '',
-                'languages' => [
-                    'de' => '',
-                ],
-                'regions' => [],
-            ],
-            'engine-boost' => 1,
-            'cache-duration' => -1,
-            'disabled' => false,
-            'filter-opt-in' => false,
-            'cost' => 0,
-            'infos' => [
-                'homepage' => 'http://www.newsdeutschland.com/videos.htm',
-                'index_name' => null,
-                'display_name' => 'OneNewspage Video (Deutschland)',
-                'founded' => '2008',
-                'headquarter' => 'Wales, England',
-                'operator' => 'One News Page Ltd.',
-                'index_size' => null,
-            ],
-        ],
     ];
     public $results = [];
     public $resultCount = 0;
@@ -160,8 +93,19 @@ class Onenewspagegermany extends Searchengine
         }
 
         uasort($this->results, function (Result $a, Result $b) {
-            $diff = $a->getDate()->diffInSeconds($b->getDate(), false);
-            return $diff;
+            // Der Feed liefert den Zeitstempel nur für Zeilen mit mehr als drei
+            // Feldern, `Result::getDate()` ist deshalb `Carbon|null`. Eine
+            // einzige undatierte Zeile hat hier den kompletten Nachrichten-Fokus
+            // mit einem Aufruf auf null umgebracht — HTTP 500 für jede englische
+            // Nachrichtensuche, im Web genauso wie in der App. Undatierte Treffer
+            // sortieren jetzt hinter jeden datierten und behalten untereinander
+            // ihre Reihenfolge.
+            $dateA = $a->getDate();
+            $dateB = $b->getDate();
+            if ($dateA === null || $dateB === null) {
+                return ($dateA === null ? 1 : 0) <=> ($dateB === null ? 1 : 0);
+            }
+            return (int) $dateA->diffInSeconds($dateB, false);
         });
 
         foreach ($this->results as $index => $result) {

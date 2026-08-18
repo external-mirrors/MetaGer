@@ -67,4 +67,65 @@ class SettingsSchemaAvailableFokiTest extends TestCase
         $this->assertNotEmpty($entry['engines']);
         $this->assertSame('science_blpage', $entry['blacklistSettingKey']);
     }
+
+    /**
+     * @return array<string, bool> engine name => available
+     */
+    private function engineAvailability(string $lang, string $fokus): array
+    {
+        $engines = [];
+        foreach ($this->fokusEntry($lang, $fokus)['engines'] as $engine) {
+            $engines[$engine['name']] = $engine['available'];
+        }
+
+        return $engines;
+    }
+
+    #[Test]
+    public function marks_an_engine_unavailable_for_a_language_its_index_does_not_cover(): void
+    {
+        // The pair that made this necessary: `onenewspage` is an English-only
+        // index, `onenewspagegermany` a German one, and both sit in `nachrichten`
+        // for every language. A search already drops the wrong one
+        // (`SearchengineConfiguration::applyLocale()`), so a client offering it as
+        // a toggle was offering something that could never return a result.
+        $german = $this->engineAvailability('de', 'nachrichten');
+        $this->assertFalse($german['onenewspage']);
+        $this->assertTrue($german['onenewspagegermany']);
+
+        $english = $this->engineAvailability('en', 'nachrichten');
+        $this->assertTrue($english['onenewspage']);
+        $this->assertFalse($english['onenewspagegermany']);
+    }
+
+    #[Test]
+    public function keeps_an_engine_available_when_it_serves_the_language(): void
+    {
+        // Brave and Serper are configured for every language MetaGer offers, so
+        // they are the control: a bug that marked engines unavailable wholesale
+        // would still pass the assertions above.
+        foreach (['de', 'en', 'es'] as $lang) {
+            $engines = $this->engineAvailability($lang, 'nachrichten');
+            $this->assertTrue($engines['brave_news'], "brave_news for {$lang}");
+            $this->assertTrue($engines['serper_news'], "serper_news for {$lang}");
+        }
+    }
+
+    #[Test]
+    public function a_fokus_is_available_exactly_when_one_of_its_engines_is(): void
+    {
+        // The two flags are computed from different code (`App\Searchengines`
+        // for the fokus, the engine's own language config for the engine), and
+        // they contradicting each other is what a client cannot make sense of.
+        foreach (['de', 'en', 'es', 'fr'] as $lang) {
+            foreach ($this->get("/meta/settings/schema?lang={$lang}")->json()['foki'] as $entry) {
+                $anyEngine = in_array(true, array_column($entry['engines'], 'available'), true);
+                $this->assertSame(
+                    $entry['available'],
+                    $anyEngine,
+                    "fokus '{$entry['fokus']}' for lang={$lang}",
+                );
+            }
+        }
+    }
 }

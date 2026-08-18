@@ -6,7 +6,10 @@ npm:
   script:
     - cd metager
     - npm install --cache .npm --prefer-offline --no-audit
-    - npm run prod
+    # Vitest runs here rather than in its own job: this is the only job with node_modules
+    # installed, and a failing frontend test should stop the pipeline before the images build.
+    - npm test
+    - npm run build
   needs:
     - node_image
   artifacts:
@@ -14,24 +17,86 @@ npm:
       - metager/public
     expire_in: 2 hrs
   cache:
+    # Keyed on the lockfile. Without an explicit key GitLab uses the literal key
+    # "default" for every job in the project, so this cache and the composer one
+    # shared a single slot and overwrote each other on every pipeline: a cache
+    # upload carries only the paths its own job declares, so whichever finished
+    # last replaced the archive with one missing the other's directory. Both were
+    # configured, neither ever hit.
+    key:
+      files:
+        - metager/package-lock.json
+      prefix: npm
     paths:
       - metager/.npm/
 
-composer:
+# Shared by the two composer jobs below. Hidden job, pulled in with `extends`.
+.composer_base:
   stage: build_dependencies
   image: ${CI_REGISTRY_IMAGE}/$DOCKER_FPM_IMAGE_NAME:$DOCKER_COMPOSER_IMAGE_TAG
   tags:
     - kubernetes
   before_script:
     - export COMPOSER_HOME=$(pwd)/metager/.composer
-  script:
-    - cd metager
-    - echo $COMPOSER_HOME
-    - composer install --optimize-autoloader --no-dev
   artifacts:
     paths:
       - metager/vendor
     expire_in: 2 hrs
   cache:
+    key:
+      files:
+        - metager/composer.lock
+      prefix: composer
+    # Only the download cache, not all of $COMPOSER_HOME. Composer keeps the dist
+    # archives under cache/, which is the expensive part; anything else that lands
+    # in COMPOSER_HOME (an auth.json, say) has no business in shared cache storage.
     paths:
-      - metager/.composer/
+      - metager/.composer/cache/
+
+# Production dependencies, for the fpm image. No dev packages — they have no
+# business in a deployed container.
+composer:
+  extends: .composer_base
+  # Deliberately *after* composer_dev rather than beside it. Both jobs install the
+  # same packages — composer_dev's set is a superset — so running them in parallel
+  # means that on a cold cache both fetch the whole dependency set from GitHub at
+  # the same time, doubling the traffic in exactly the situation that already hurts.
+  # Sequenced, this one restores the cache composer_dev just pushed and downloads
+  # nothing. Costs one job's duration on the critical path; that job is fast
+  # precisely because the cache is warm.
+  #
+  # Naming composer_image explicitly as well: adding `needs` opts a job out of
+  # waiting for whole stages, so the image it runs in has to be stated rather than
+  # assumed from stage order.
+  needs:
+    - composer_image
+    - composer_dev
+  # Nothing to download — a clean install out of the warm cache is more predictable
+  # than pruning composer_dev's vendor artifact down to the production set.
+  dependencies: []
+  script:
+    - cd metager
+    - composer install --optimize-autoloader --no-dev
+  cache:
+    # Pull only. composer_dev's cache is the superset; letting both push would have
+    # them race to replace the same archive and periodically drop the dev entries.
+    policy: pull
+
+# Dependencies including dev, for the test jobs.
+#
+# Its own job rather than a `composer install` inside every test job: those ran it
+# in before_script on every pipeline, so the same ~40 packages were fetched from
+# codeload.github.com twice over per pipeline. That is what let a GitHub rate limit
+# — or, on 2026-08-17, a GitHub incident — fail a suite that has no business
+# talking to GitHub at all. The test jobs now download this artifact instead, so
+# only these two jobs reach for the network, and only when the cache misses.
+composer_dev:
+  extends: .composer_base
+  # Runs first of the two, and is the one that populates the cache. Stated
+  # explicitly so it starts as soon as its image exists rather than waiting out
+  # every other job in the previous stage.
+  needs:
+    - composer_image
+  script:
+    - cd metager
+    - composer install --optimize-autoloader

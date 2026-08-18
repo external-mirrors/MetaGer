@@ -1,0 +1,197 @@
+{
+  "$schema-note": "The canonical copy of this file lives at MetaGer/metager/tests/Fixtures/locale-cases.json and is described by MetaGer/docs/locale-contract.md. It is copied verbatim into app-en, metager-keymanager and SafeBrowse. Change it there first, then copy; a repo whose copy has drifted is a repo whose answer to 'what language is this user' has drifted.",
+  "version": 1,
+
+  "resolution": [
+    {
+      "name": "an explicit ?lang= outranks everything else",
+      "why": "A client that states its locale is not guessing, and nothing a browser carries should overrule it.",
+      "host": "metager.de",
+      "path": "/de-DE/",
+      "query": { "lang": "en-US" },
+      "cookies": { "mg_locale": "es-ES" },
+      "headers": { "accept-language": "de-DE,de;q=0.9" },
+      "expect": "en-US"
+    },
+    {
+      "name": "the MG-Locale header says the same thing for a client that cannot use a query string",
+      "why": "The WebExtension and the app keep their settings themselves and replay them as headers.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": { "mg_locale": "de-DE" },
+      "headers": { "mg-locale": "pl-PL" },
+      "expect": "pl-PL"
+    },
+    {
+      "name": "the path prefix outranks the stored locale",
+      "why": "A locale-prefixed URL is a link someone followed or typed; the cookie is what they last chose here.",
+      "host": "metager.org",
+      "path": "/es-ES/impressum",
+      "query": {},
+      "cookies": { "mg_locale": "de-DE" },
+      "headers": {},
+      "expect": "es-ES"
+    },
+    {
+      "name": "the stored locale outranks the browser's preference",
+      "why": "Choosing a language on the site has to survive a browser that never stopped asking for German.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": { "mg_locale": "fr-FR" },
+      "headers": { "accept-language": "de-DE,de;q=0.9" },
+      "expect": "fr-FR"
+    },
+    {
+      "name": "the old setting is read as a language while the new cookie is absent",
+      "why": "web_setting_m was the interface language until this contract; a returning browser must not lose its choice.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": { "web_setting_m": "fr_FR" },
+      "headers": { "accept-language": "de-DE,de;q=0.9" },
+      "expect": "fr-FR"
+    },
+    {
+      "name": "changing the result market does not move the interface",
+      "why": "The whole point of the split: web_setting_m is a search filter again, and only mg_locale says what to render in.",
+      "host": "metager.de",
+      "path": "/",
+      "query": {},
+      "cookies": { "mg_locale": "de-DE", "web_setting_m": "en_US" },
+      "headers": {},
+      "expect": "de-DE"
+    },
+    {
+      "name": "an English browser on the German domain is believed",
+      "why": "The rule this contract exists to delete. metager.de used to force German here, and metager.org used to bounce a German browser away.",
+      "host": "metager.de",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "en-US,en;q=0.9" },
+      "expect": "en-US"
+    },
+    {
+      "name": "a German browser on the other domain is believed too",
+      "why": "The same rule, in the direction that used to produce a cross-origin redirect and lose the user's key.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "de-DE,de;q=0.9" },
+      "expect": "de-DE"
+    },
+    {
+      "name": "every language we ship is negotiable, not just German, English and Spanish",
+      "why": "The old Accept-Language table listed three languages, so a French browser matched nothing and got the host default.",
+      "host": "metager.de",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "fr-FR,fr;q=0.9" },
+      "expect": "fr-FR"
+    },
+    {
+      "name": "Catalan is negotiable like any other language we ship",
+      "why": "ca-ES is a supported locale and an offered market; a Catalan browser should not land in Spanish by way of the q=0.8 fallback.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "ca-ES,ca;q=0.9,es;q=0.8" },
+      "expect": "ca-ES"
+    },
+    {
+      "name": "a Catalan path prefix resolves to Catalan",
+      "why": "Every supported locale is reachable by URL, whether or not the implementation ships a translation for it.",
+      "host": "metager.de",
+      "path": "/ca-ES/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "de-DE,de;q=0.9" },
+      "expect": "ca-ES"
+    },
+    {
+      "name": "a bare language gets its home region",
+      "why": "Accept-Language is allowed to name a language without a region; the market and the URL both need the full tag.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "de" },
+      "expect": "de-DE"
+    },
+    {
+      "name": "the German domain is the German fallback",
+      "why": "The last remaining use of the host, and the only one: a request that says nothing at all still has to be answered in something.",
+      "host": "metager.de",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": {},
+      "expect": "de-DE"
+    },
+    {
+      "name": "every other domain falls back to English",
+      "why": "The other half of the same rule.",
+      "host": "metager.org",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": {},
+      "expect": "en-US"
+    },
+    {
+      "name": "a language we do not ship falls through to the host fallback",
+      "why": "Reaching the fallback is not an error and never causes a redirect — it is the answer for a request that named nothing we have.",
+      "host": "metager.de",
+      "path": "/",
+      "query": {},
+      "cookies": {},
+      "headers": { "accept-language": "ja-JP,ja;q=0.9" },
+      "expect": "de-DE"
+    }
+  ],
+
+  "home_regions": {
+    "$comment": "The region a bare language stands for. MetaGer's LocaleContext::HOME_REGION, app-en's HOME_MARKET keys. Catalan's home region is Spain even though Catalan is also spoken in Andorra and France: ca_ES is the only Catalan market MetaGer offers.",
+    "ca": "ca-ES",
+    "da": "da-DK",
+    "de": "de-DE",
+    "en": "en-US",
+    "es": "es-ES",
+    "fi": "fi-FI",
+    "fr": "fr-FR",
+    "it": "it-IT",
+    "nl": "nl-NL",
+    "pl": "pl-PL",
+    "pt": "pt-PT",
+    "sv": "sv-SE"
+  },
+
+  "device_markets": {
+    "$comment": "Device locale -> the market a client asks for, or null when the device names nothing we have. Read from the device alone: the interface language plays no part, so a de-AT phone searches Austria whichever language it renders in. Consumed by app-en; MetaGer asserts every non-null value is an offered market in config/filters.json. A region is only used directly when it is one of the locales laravellocalization.php supports AND is not pinned as unsearchable in MarketFilterTest::UNSEARCHABLE_LOCALES — otherwise the language's home region is used instead.",
+    "de-DE": "de_DE",
+    "de-AT": "de_AT",
+    "de-CH": "de_CH",
+    "de-LU": "de_DE",
+    "en-US": "en_US",
+    "en-GB": "en_GB",
+    "en-AU": "en_AU",
+    "en-MY": "en_US",
+    "es-ES": "es_ES",
+    "es-MX": "es_MX",
+    "es-AR": "es_ES",
+    "ca-ES": "ca_ES",
+    "ca-AD": "ca_ES",
+    "fr-CA": "fr_CA",
+    "fr-FR": "fr_FR",
+    "pt-BR": "pt_BR",
+    "pt-PT": "pt_PT",
+    "sv-SE": "sv_SE",
+    "ja-JP": null,
+    "hu-HU": null
+  }
+}

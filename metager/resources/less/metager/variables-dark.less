@@ -1,51 +1,16 @@
+// The dark palette, applied unconditionally.
+//
+// This is no longer how the site picks a theme. variables.less does that now,
+// with a media query and a data-theme attribute, so metager.less carries both
+// palettes in one stylesheet and there is no dark twin of it to load.
+//
+// What is left here is for the page stylesheets that are still built as
+// light/dark pairs and attached with a media attribute on the <link>: spende,
+// membership and count. They can be collapsed the same way once they are covered
+// by the palette snapshot, which today only walks the pages a visitor can reach
+// without a key.
 @import "./variables.less";
 
-@metager-orange: darken(#ff8000, 10%);
-
-// Default Background Color
-@background-color: @color-almost-black;
-@background-color-mobile: @color-almost-black;
-// General text color.
-@text-color: @color-almost-white;
-@highlight-color: #333;
-// Default textual link color.
-@link-color: @metager-orange;
-// Sidebar styles
-@sidebar-list-hover-color: @color-strong-grey;
-// Card styles
-@card-background-color: @color-strong-grey;
-// Default Borde Color
-@border-color: #727272;
-// Inverts color of svgs. Our Svgs are all black which means 0% invert for light and 100% for dark.
-@invert-state: invert(100%);
-
-// Story coloring
-@story-privacy-background: @color-strong-grey;
-@story-privacy-color: @color-almost-white;
-@story-ngo-background: #200000;
-@story-ngo-color: #ffaaaa;
-@story-diversity-background: #000020;
-@story-diversity-color: #aaaaff;
-@story-eco-background: #002000;
-@story-eco-color: #aaffaa;
-@story-plugin-background: @color-almost-black;
-@story-font-color: @color-almost-white;
-@icon-color: 0.9;
-
-@searchbar-background-color: @color-almost-black;
-
-@input-background: @color-almost-black;
-@input-text: @color-almost-white;
-
-@blacklist-entries-odd: @color-almost-black;
-@blacklist-entries-even: rgb(30, 15, 0);
-
-@searchbar-searchicon-brightness: 0.5;
-@searchbar-key-brightness: 0.7;
-
 :root {
-    --background-color: @background-color;
-    --highlight-color: @highlight-color;
-    --font-color: @text-color;
-    --border-color: @border-color;
+  .theme-tokens-dark();
 }

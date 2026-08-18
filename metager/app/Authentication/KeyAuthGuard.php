@@ -16,6 +16,19 @@ class KeyAuthGuard implements StatefulGuard
     protected $lastAttempted;
     public string $login_method = 'query'; // Default to query parameter
 
+    /**
+     * Whether user() has already worked out who this is.
+     *
+     * Needed as well as $user because the answer is very often *nobody*, and
+     * GuardHelpers only memoises a hit: `is_null($this->user)` cannot tell "not
+     * looked yet" from "looked, and there is no key". So every Auth::check(),
+     * every Auth::guest() and every @auth in a blade used to go back to the
+     * cookie jar, the headers and the query string for an anonymous visitor —
+     * sixteen times over in Searchengines::__construct alone, which asks once
+     * per configured engine.
+     */
+    private bool $resolved = false;
+
     public function __construct(KeyUserProvider $provider)
     {
         $this->provider = $provider;
@@ -23,9 +36,11 @@ class KeyAuthGuard implements StatefulGuard
 
     public function user()
     {
-        if (!is_null($this->user)) {
+        if ($this->resolved || !is_null($this->user)) {
             return $this->user;
         }
+
+        $this->resolved = true;
 
         $key = "";
         if (Cookie::has('key')) {
@@ -128,6 +143,11 @@ class KeyAuthGuard implements StatefulGuard
     function logout()
     {
         $this->user = null;
+        // And stays logged out. Cookie::forget only *queues* the deletion for
+        // the response, so the cookie is still readable for the rest of this
+        // request — without this the next user() call would find it and log the
+        // visitor straight back in.
+        $this->resolved = true;
         if ($this->login_method === "cookie") {
             Cookie::queue(Cookie::forget('key'));
         }

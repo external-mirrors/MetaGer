@@ -1,0 +1,23 @@
+{
+  "query": {
+    "original": "kaffee",
+    "altered": "kaffee",
+    "more_results_available": false
+  },
+  "results": [
+    {
+      "title": "Kaffeetasse auf einem Tisch",
+      "url": "https://example.org/bilder/tasse",
+      "meta_url": { "netloc": "example.org", "path": "/bilder/tasse" },
+      "thumbnail": { "src": "https://example.org/thumbs/tasse.jpg" },
+      "properties": { "url": "https://example.org/bilder/tasse.jpg" }
+    },
+    {
+      "title": "Espressomaschine",
+      "url": "https://beispiel.de/bilder/maschine",
+      "meta_url": { "netloc": "beispiel.de", "path": "/bilder/maschine" },
+      "thumbnail": { "src": "https://beispiel.de/thumbs/maschine.jpg" },
+      "properties": { "url": "https://beispiel.de/bilder/maschine.jpg" }
+    }
+  ]
+}

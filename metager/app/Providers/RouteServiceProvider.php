@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Http\Middleware\LogsAuthentication;
-use App\Localization;
 use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Session\Middleware\StartSession;
@@ -13,9 +12,26 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Http\Request;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
+/**
+ * The route table is a constant.
+ *
+ * It used to be built per request: each group below carried
+ * `'prefix' => Localization::setLocale()`, so the URIs the router knew about
+ * depended on the locale segment of the URL being answered. That made
+ * `route:cache` impossible — there is no one table to cache — and it made
+ * `route()` produce different URLs for routes declared in different files,
+ * because only the files loaded inside a prefixed group ever got the prefix.
+ *
+ * The locale is now stripped from the request by `ResolveLocale` before route
+ * matching and put back by `AppServiceProvider`'s `URL::formatPathUsing` hook.
+ * Nothing here needs to know it exists.
+ *
+ * `Mcamara\LaravelLocalization\Traits\LoadsTranslatedCachedRoutes` went with
+ * it: it worked around the per-request table by writing one cache file per
+ * locale and picking one at boot. With a single table there is nothing to pick.
+ */
 class RouteServiceProvider extends ServiceProvider
 {
-    use \Mcamara\LaravelLocalization\Traits\LoadsTranslatedCachedRoutes;
     /**
      * This namespace is applied to your controller routes.
      *
@@ -61,7 +77,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'web',
-            'prefix' => Localization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/web.php');
@@ -79,7 +94,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'enableCookies',
-            'prefix' => Localization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/cookie.php');
@@ -97,7 +111,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'session',
-            'prefix' => Localization::setLocale(),
             'namespace' => $this->namespace,
         ], function ($router) {
             require base_path('routes/session.php');

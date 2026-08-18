@@ -2,4 +2,5 @@ sumas.json
 suggestions.json
 blacklistUrl.txt
 blacklistDomains.txt
+blacklistDescriptionUrl.txt
 spam.txt

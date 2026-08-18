@@ -131,12 +131,6 @@ return [
             'name' => 'Licens',
         ],
     ],
-    'ads' => [
-        'own' => [
-            'title' => 'Støt MetaGer',
-            'description' => 'Med din donation støtter du vedligeholdelsen og videreudviklingen af den uafhængige søgemaskine metager.org og arbejdet i den almennyttige forening SUMA-EV.',
-        ],
-    ],
     'results' => [
         'failed' => 'Vi har desværre ingen resultater for din søgning.',
         'failedSitesearch' => 'Vi har desværre ingen resultater til din søgning. Det kan skyldes, at din aktuelle søgning er begrænset til hjemmesiden ":site". Hvis du vil fjerne denne begrænsning, skal du klikke her: <a href=":altSearch">Ny søgning</a>',
@@ -151,7 +145,6 @@ return [
         'noSpecialSearch' => 'Der var ingen søgemaskine, der understøttede en af dine filterindstillinger. Filtre, der er aktive i øjeblikket: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Kunne ikke finde suma-fil',
         'noSearch' => 'OBS: du har ikke indtastet noget søgeord. Skriv venligst søgeord og prøv igen',
         'dartEurope' => 'Tip: Du har aktiveret Dart-Europe. Derfor kan svartiden være længere og er sat til 10 sek.',
         'hostBlacklist' => 'Resultater for følgende domæner vil ikke blive vist: \":host\"',

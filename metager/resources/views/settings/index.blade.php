@@ -61,7 +61,7 @@
                     <div class="row row-stacked">
                         <div class="actions-inline">
                             <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter') }}" class="btn btn-sm">@lang('settings.metager-key.manage')</a>
-                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(url()->full())) }}" class="btn btn-sm" id="remove-key">@lang('settings.metager-key.logout')</a>
+                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(App\Localization::currentFullUrl())) }}" class="btn btn-sm" id="remove-key">@lang('settings.metager-key.logout')</a>
                         </div>
                     </div>
                 @else
@@ -188,11 +188,11 @@
                                 <button class="js-only btn btn-sm">@lang('settings.copy')</button>
                             </div>
                         @endif
-                        @if($agent["browser_gecko_version"] > 0)
+                        @if($agent->geckoVersion() > 0)
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
-                        @elseif($agent["browser_name"] === "Edge")
+                        @elseif($agent->name() === "Edge")
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog"])</p>
-                        @elseif($agent["browser_chromium_version"] > 0 && $agent["device_type"] === "desktop" )
+                        @elseif($agent->chromiumVersion() > 0 && $agent->deviceType() === "desktop" )
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
                         @endif
                     </div>

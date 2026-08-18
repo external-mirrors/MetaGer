@@ -149,7 +149,6 @@ return [
         'noSpecialSearch' => 'Aucun moteur de recherche ne prend en charge l\'une de vos options de filtre. Filtres actuellement actifs : ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Impossible de trouver le fichier suma',
         'noSearch' => 'Attention : vous n\'avez pas saisi de mot(s) de recherche. Veuillez saisir des mots de recherche et réessayer.',
         'dartEurope' => 'Conseil : vous avez activé Dart-Europe. Le temps de réponse peut donc être plus long et est fixé à 10 secondes.',
         'hostBlacklist' => 'Les résultats des domaines suivants ne seront pas affichés : \N":host\N":host\N":host\N":host\N":host\N".',
@@ -161,12 +160,6 @@ return [
         'phrase' => 'Vous effectuez une recherche par chaîne de caractères : :phrase',
     ],
     'feedback' => 'Vous ne trouvez pas ce que vous cherchez ? Faites-nous part de vos commentaires : ',
-    'ads' => [
-        'own' => [
-            'title' => 'Soutenir MetaGer',
-            'description' => 'Par votre don, vous soutenez le maintien et le développement du moteur de recherche indépendant metager.org et le travail de l\'association sans but lucratif SUMA-EV.',
-        ],
-    ],
     'prevention' => [
         'phrase' => '<h2>Avez-vous besoin d\'aide ?</h2> Vous avez des pensées négatives ou vous voulez parler à quelqu\'un ? Sur notre page de prévention <a href=":prevurl" target="_blank"></a> , vous trouverez une liste de services d\'aide auxquels vous pouvez vous adresser.',
     ],

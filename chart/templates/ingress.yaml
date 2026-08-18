@@ -57,6 +57,18 @@ spec:
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
+          # The Laravel backend POSTs broadcasts to https://{REVERB_HOST}/apps/{id}/events.
+          # It used to land on the app's nginx, which proxied to the Reverb in its own
+          # pod; now it goes straight to the Reverb Service, and Redis scaling fans the
+          # message out to every instance. No rewrite here on purpose — Reverb serves
+          # this path as-is, which is why /ws lives on its own Ingress.
+          - path: /apps
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $fullName }}-reverb
+                port:
+                  number: 8081
           - path: /wsb
             pathType: Prefix
             backend:

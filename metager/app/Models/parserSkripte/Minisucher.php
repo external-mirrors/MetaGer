@@ -50,47 +50,6 @@ class Minisucher extends Searchengine
                 'index_size' => null,
             ],
         ],
-        'minism_news' => [
-            'host' => 'minisucher.suma-lab.de',
-            'path' => '/solr-minisucher/select/',
-            'port' => 80,
-            'query-parameter' => 'q',
-            'input-encoding' => 'ISO-8859-1',
-            'output-encoding' => '',
-            'get-parameter' => [
-                'version' => '2.2',
-                'start' => '0',
-                'rows' => '20',
-                'indent' => 'on',
-                'fl' => 'title,url,subcollection,documentDate',
-                'hl' => 'true',
-                'hl.fl' => 'content',
-                'hl.snippets' => '4',
-                'hl.mergeContiguous' => 'true',
-                'fq' => 'subcollection:(bundestagsdrucksache OR unisbundesratde OR twitter)',
-            ],
-            'lang' => [
-                'parameter' => '',
-                'languages' => [
-                    'de' => '',
-                ],
-                'regions' => [],
-            ],
-            'engine-boost' => 1,
-            'cache-duration' => -1,
-            'disabled' => false,
-            'filter-opt-in' => false,
-            'cost' => 0,
-            'infos' => [
-                'homepage' => 'https://metager.org/search-engine',
-                'index_name' => null,
-                'display_name' => 'Minisucher Nachrichten',
-                'founded' => null,
-                'headquarter' => null,
-                'operator' => null,
-                'index_size' => null,
-            ],
-        ],
     ];
     public function __construct($name, SearchengineConfiguration $configuration)
     {

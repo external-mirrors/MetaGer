@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}"
+	@if(app(App\SearchSettings::class)->theme !== "system") data-theme="{{ app(App\SearchSettings::class)->theme }}" @endif>
 
 <head>
 	<meta charset="utf-8" />
@@ -18,11 +19,9 @@
 	@endif
 	<link href="/favicon.ico" rel="icon" type="image/x-icon" />
 	<link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-	@foreach(LaravelLocalization::getSupportedLocales() as $locale => $locale_data)
-		@if(LaravelLocalization::getCurrentLocale() !== $locale)
-			<link rel="alternate" hreflang="{{ $locale }}"
-				href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
-		@endif
+	@foreach (App\Localization::getAlternateLocales() as $locale)
+		<link rel="alternate" hreflang="{{ $locale }}"
+			href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
 	@endforeach
 	@foreach(scandir(public_path("img/favicon")) as $file)
 		@if(in_array($file, [".", ".."]))
@@ -41,7 +40,7 @@
 			title="{{ \App\Http\Controllers\StartpageController::GET_PLUGIN_SHORT_NAME() }}"
 			href="{{  action([App\Http\Controllers\StartpageController::class, 'loadPlugin']) }}">
 	@endif
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
 	@if (isset($css) && is_array($css))
 		@foreach($css as $cssFile)
 			<link href="{{ $cssFile }}" rel="stylesheet" />
@@ -51,33 +50,27 @@
 		<meta http-equiv="onion-location"
 			content="http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion/{{LaravelLocalization::getCurrentLocale()}}" />
 	@endif
-	@if(app(App\SearchSettings::class)->theme === "dark")
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
-		<meta name="color-scheme" content="dark light">
-		@if(!empty($darkcss) && is_array($darkcss))
-			@foreach($darkcss as $cssFile)
-				<link rel="stylesheet" type="text/css" href="{{ $cssFile }}" />
-			@endforeach
-		@endif
-	@elseif(app(App\SearchSettings::class)->theme === "light")
-		<link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-		<meta name="color-scheme" content="light dark">
-	@else
-		<link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-			href="{{ mix('css/themes/metager-dark.css') }}" />
-		<meta name="color-scheme" content="light dark">
-		@if(!empty($darkcss) && is_array($darkcss))
-			@foreach($darkcss as $cssFile)
-				<link rel="stylesheet" type="text/css" media="(prefers-color-scheme:dark)" href="{{ $cssFile }}" />
-			@endforeach
-		@endif
+	{{-- metager.less carries both palettes and picks between them itself, from the
+	     data-theme attribute above and prefers-color-scheme. No second stylesheet,
+	     and no script. The $darkcss pages below are the ones not yet converted. --}}
+	<meta name="color-scheme" content="{{ app(App\SearchSettings::class)->theme === "dark" ? "dark light" : "light dark" }}">
+	@if(!empty($darkcss) && is_array($darkcss) && app(App\SearchSettings::class)->theme !== "light")
+		@foreach($darkcss as $cssFile)
+			<link rel="stylesheet" type="text/css"
+				@if(app(App\SearchSettings::class)->theme !== "dark") media="(prefers-color-scheme:dark)" @endif
+				href="{{ $cssFile }}" />
+		@endforeach
 	@endif
-	<link type="text/css" rel="stylesheet" href="{{ mix('css/utility.css') }}" />
+	<link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/utility.less') }}" />
 	<link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
-	<script src="{{ mix('js/utility.js') }}"></script>
+	{{-- type="module" is not optional: Vite emits ES modules, and a bundle that
+	     imports a shared chunk is a syntax error when loaded as a classic
+	     script, so the file downloads and never runs. Modules defer by
+	     default, which is why the explicit defer below is gone. --}}
+	<script type="module" src="{{ Vite::asset('resources/js/utility.js') }}"></script>
 	@if(!empty($js) && is_array($js))
 		@foreach($js as $jsFile)
-			<script src="{{$jsFile}}" defer></script>
+			<script type="module" src="{{$jsFile}}"></script>
 		@endforeach
 	@endif
 </head>

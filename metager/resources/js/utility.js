@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { statistics } from "./statistics";
 
 document.addEventListener("DOMContentLoaded", (event) => {
@@ -117,7 +118,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 reportJSAvailabilityForAuthenticatedSearch();
 function reportJSAvailabilityForAuthenticatedSearch() {
-  let Cookies = require("js-cookie");
   let key_cookie = Cookies.get("key");
 
   if (key_cookie !== undefined) {
@@ -160,7 +160,6 @@ document.addEventListener("readystatechange", (e) => {
 });
 
 function updateWebExtensionStatus(time) {
-  let Cookies = require("js-cookie");
   let extension_cookie = Cookies.get("webextension");
   if (time != "no" && extension_cookie == undefined) {
     Cookies.set("webextension", time, { sameSite: "Lax" });

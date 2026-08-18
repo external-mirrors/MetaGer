@@ -5,7 +5,7 @@ namespace App\Models\Authorization;
 use App;
 use App\Localization;
 use App\SearchSettings;
-use foroco\BrowserDetection;
+use App\Support\Browser;
 use Illuminate\Support\Facades\Redis;
 use LaravelLocalization;
 use RateLimiter;
@@ -171,8 +171,8 @@ class SuggestionDebtAuthorization extends Authorization
             if (!$stored_settings["addressbar"])
                 $settings->suggestion_provider = "off";
 
-            $agent = (new BrowserDetection())->getAll(\Request::userAgent());
-            if ($agent["browser_gecko_version"] > 0) {
+            $agent = Browser::fromRequest();
+            if ($agent->geckoVersion() > 0) {
                 $settings->suggestion_delay = 200;
             }
 

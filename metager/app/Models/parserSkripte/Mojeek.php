@@ -24,6 +24,8 @@ class Mojeek extends Searchengine
                 'parameter' => 'lb',
                 'languages' => [],
                 'regions' => [
+                    'ca_ES' => 'ca',
+                    'de_CH' => 'ch',
                     'de_DE' => 'de',
                     'de_AT' => 'at',
                     'en_US' => 'us',
@@ -33,7 +35,6 @@ class Mojeek extends Searchengine
                     'es_MX' => 'mx',
                     'da_DK' => 'dk',
                     'at_AT' => 'at',
-                    'de_CH' => 'ch',
                     'fi_FI' => 'fi',
                     'it_IT' => 'it',
                     'nl_NL' => 'nl',
@@ -49,7 +50,6 @@ class Mojeek extends Searchengine
             'cache-duration' => 0,
             'disabled' => false,
             'filter-opt-in' => false,
-            'ads' => false,
             'cost' => 0.3,
             'infos' => [
                 'homepage' => 'https://www.mojeek.com/',

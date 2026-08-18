@@ -1,0 +1,111 @@
+{{/*
+Reverb, on its own, with Redis pub/sub between instances.
+
+Two problems this fixes, both live:
+
+  1. Broadcasts did not reach every client. Reverb ran as a sidecar in the app
+     Deployment with REVERB_SCALING_ENABLED unset (i.e. false), and the app's
+     nginx proxied /apps/{id}/events to 127.0.0.1:8081 — its own pod. A
+     KeyChanged broadcast therefore landed on exactly one pod's Reverb, and
+     browser-extension clients holding a websocket to any other pod never saw it.
+     The extension listens on App.Models.Authorization.Key.{key} to update the
+     displayed key balance, so this was a user-visible loss.
+
+  2. Every web scale-down dropped websockets. The HPA sizes the app Deployment
+     from web CPU, and each terminated pod took its connected clients with it.
+
+Scaling through Redis means a broadcast arriving at any instance fans out to all
+of them, which is also what makes an independent replica count safe.
+*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-reverb
+  labels:
+    {{- include "chart.componentLabels" (dict "root" . "component" "reverb") | nindent 4 }}
+spec:
+  replicas: {{ .Values.reverb.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "chart.componentSelectorLabels" (dict "root" . "component" "reverb") | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.componentLabels" (dict "root" . "component" "reverb") | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # These are long-lived websockets. On a rollout the pod stops accepting new
+      # connections immediately, but existing clients should be given time to
+      # finish rather than being cut mid-session; the extension reconnects, so this
+      # is about avoiding a thundering reconnect, not about correctness.
+      terminationGracePeriodSeconds: {{ .Values.reverb.terminationGracePeriodSeconds }}
+      volumes:
+        {{- include "chart.volumes" . | nindent 8 }}
+      containers:
+        - name: reverb
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "reverb:start", "--port=8081"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          {{- include "chart.env" (dict "root" .) | nindent 10 }}
+          # The point of the exercise. config/reverb.php already reads this and
+          # already has the Redis connection under it; it was simply never on.
+          - name: REVERB_SCALING_ENABLED
+            value: "true"
+          volumeMounts:
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          ports:
+            - name: reverb
+              containerPort: 8081
+              protocol: TCP
+          # Unchanged from the sidecar: pgrep proves the process is up. A real
+          # check would open a websocket and round-trip a message, which is worth
+          # doing but is not part of moving the container.
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - reverb:start
+          readinessProbe:
+            tcpSocket:
+              port: reverb
+          startupProbe:
+            tcpSocket:
+              port: reverb
+            periodSeconds: 2
+            failureThreshold: 30
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.reverb | nindent 14 }}
+            limits:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "chart.componentSelectorLabels" (dict "root" . "component" "reverb") | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

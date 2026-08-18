@@ -1,0 +1,13 @@
+# The deployment scripts delete container images for real, with a token that is
+# allowed to. Their tests run before anything is built, for the same reason the
+# chart checks do: a mistake here is not worth an image build to discover, and
+# unlike a broken template it is not self-announcing — deleting one tag too many
+# surfaces as an ImagePullBackOff in an unrelated pipeline.
+deployment_scripts:
+  stage: build_dependency_images
+  image: $DEPLOY_KUBERNETES_IMAGE
+  tags:
+    - kubernetes
+  needs: []
+  script:
+    - .gitlab/deployment_scripts/tests/run.sh

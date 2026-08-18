@@ -1,0 +1,271 @@
+# MetaGer — working notes
+
+Laravel app for the MetaGer metasearch engine. The Laravel project lives in `metager/`;
+`build/` holds the Docker images, `chart/` the Helm chart.
+
+## Every change ships with tests
+
+Not aspirational — it is the rule. New behaviour gets a test, a bugfix gets a regression test, and
+a refactor gets characterization tests written *before* the refactor starts. If you are about to
+change code that nothing covers, write the covering test first and commit it separately.
+
+When you pin behaviour you believe is wrong, say so in the test: name it a characterization test,
+explain what is wrong, and let it fail loudly when someone later fixes it on purpose. There are
+existing examples in `tests/Unit/SearchSettingsBlacklistTest.php` and
+`tests/Feature/StaticPagesTest.php`.
+
+## Running things
+
+There is **no local PHP or Composer toolchain**. Everything runs through the compose services:
+
+```bash
+docker compose build fpm                     # build the image first
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/php fpm artisan test
+docker compose run --rm --entrypoint /usr/bin/composer composer install
+```
+
+For the browser suite you need the app and Selenium running:
+
+```bash
+docker compose up -d nginx fpm valkey reverb selenium_standalone_firefox
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/php fpm artisan dusk
+```
+
+The app is then on `http://localhost:8080`, and Selenium's noVNC view on `http://localhost:7900`.
+
+Frontend assets go through the `node` service:
+
+```bash
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node install
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node run build
+docker compose run --rm --no-deps -T --entrypoint /usr/local/bin/npm node test
+```
+
+**The feature suite needs a build.** `Vite::asset()` throws without `public/build/manifest.json`,
+so every page-rendering test 500s on a fresh checkout until `npm run build` has run once.
+
+**Tooling services sit behind compose profiles**, so `docker compose up` starts the application
+and nothing else. `selenium_standalone_firefox` is in the `test` profile, `composer` and `node` in
+`tools`. Neither `docker compose run` nor naming the service explicitly on `up` needs the profile
+flag — both enable it — so every command above works as written. `docker compose --profile tools up
+node` is the way to get the asset watcher.
+
+**The cache service is `valkey`**, matching what the Helm chart deploys. It keeps a `redis` network
+alias, so an existing gitignored `metager/.env` saying `REDIS_HOST=redis` still resolves;
+`.env.example` names `valkey` for fresh checkouts. After the rename, one
+`docker compose up --remove-orphans` clears the old `redis` container.
+
+## Test layout
+
+| suite | config | needs | run with |
+|---|---|---|---|
+| `tests/Unit` | `phpunit.xml` | nothing | `artisan test` |
+| `tests/Feature` | `phpunit.xml` | a Vite build | `artisan test` |
+| `tests/Browser` | `phpunit.dusk.xml` | Selenium + running app | `artisan dusk` |
+| `resources/js/**/*.test.js`, `vite.config.test.js` | `vite.config.js` | nothing | `npm test` |
+
+`phpunit.xml` deliberately excludes `tests/Browser` — keep it that way, so the default run never
+depends on a browser container. CI mirrors the split: the `test` job has no Selenium service, only
+`browsertest` does.
+
+Prefer a Feature test. Reach for Dusk only when a real rendering engine is genuinely required —
+today that means the no-JavaScript behaviour and the theme palette, where only a browser resolves
+`var()`. Locale-prefixed URLs used to be on that list and no longer are; see below.
+
+`tests/Browser/ThemeColorsTest` snapshots every colour declaration in every loaded stylesheet,
+resolved through the browser, into `tests/Browser/snapshots/theme-colors-{light,dark}.json` — 808
+declarations per theme. If a change is meant to alter a colour, regenerate and read the diff:
+
+```bash
+docker compose run --rm --no-deps -T -e UPDATE_THEME_SNAPSHOTS=1 \
+    --entrypoint /usr/local/bin/php fpm artisan dusk --filter ThemeColors
+```
+
+Regenerating to make a red test green throws the safety net away. Every changed line is a colour
+that changed on the site.
+
+## Constraints that bite
+
+**Progressive enhancement is mandatory.** The site must work with client JS disabled; JS only
+enhances. This rules out client-rendered UI frameworks. `tests/Browser/ProgressiveEnhancementTest`
+runs Firefox with `javascript.enabled=false` and is what keeps this honest.
+
+**Web routes have no session, so Laravel CSRF does not apply there.** `StartSession` is removed
+from the `web` group in `bootstrap/app.php`. A same-origin check stands in for CSRF.
+
+**Never let an HTML formatter touch `.blade.php` files.** It splits `{{--` markers and silently
+kills the page. Edit blades by hand.
+
+**The locale is middleware, and the route table never mentions it.**
+`App\Http\Middleware\ResolveLocale` runs globally, *before* route matching: it decides the locale
+(`App\Localization\LocaleContext`) and strips a leading `/{locale}` segment from the request.
+`AppServiceProvider`'s `URL::formatPathUsing` hook puts the prefix back on every generated path, so
+`route()`, `url()` and `redirect()` are localized by construction and no call site has to ask.
+`asset()` is the deliberate exception — `UrlGenerator` builds asset URLs without calling `format()`,
+which is right, because `/build/…` is served by nginx and exists at one path.
+
+Consequences worth knowing:
+
+- `$this->get('/de-DE/about')` works in a plain feature test. `tests/Feature/LocalizedRoutingTest`
+  is the ex-Dusk suite that proves it, and `tests/Feature/LocalePrefixedUrlGenerationTest` covers
+  URL generation. Do not reach for Dusk for locale work.
+- **`url()->full()` and `Request::url()` no longer answer "what URL is the user on"** — they read
+  the request the router was handed, which is the one with the prefix removed. Use
+  `App\Localization::currentUrl()` / `currentFullUrl()` for a link back to the current page.
+- Signed URLs: `URL::signedRoute()` signs the *prefixed* URL, so `$request->hasValidSignature()`
+  would compare against the stripped one and fail. `App\Localization::hasValidSignature()` is the
+  check to use; `tests/Feature/SignedUrlUnderLocalePrefixTest` pins it.
+- `getLocalizedURL()` is ours (`App\Localization\MetaGerLocalization`), not the package's. Its
+  contract lives in `tests/Feature/LocalizedUrlTest`.
+
+**Routes are cached in production, and the test job runs against a warm cache.** That is new, and it
+is the direct check on the paragraph above. It could not be done before: the locale was a route
+group prefix resolved *while registering* routes, so a route cache meant `mapWebRoutes` never ran
+and `app.locale` stayed the literal `'default'` from `config/app.php`. That failed as a *search*
+problem, not a routing one — engines whose language map has no entry for the current locale are
+disabled, the web engines declare `languages => []` with only exact regional keys, so every engine
+was disabled, `MetaGerSearch` answered "no enabled engines" with a redirect to `settings#engines`,
+and the whole search suite failed with `expected 200, got 302` and nothing in the log. The CI test
+job was the one place that ran `optimize` without a following `route:clear`; that cost three
+pipeline round trips to find. `EngineReachabilityTest::testAWebSearchHasEnginesToQuery` still stands
+guard, and now names the locale and the per-engine `DisabledReason` when something disables them
+all.
+
+**`App\Support\Browser` is the only device-detection service.** It wraps `matomo/device-detector`
+and normalises names to the short forms the views branch on (`Edge`, not `Microsoft Edge`). It
+reads the Laravel Request, so `withHeader('User-Agent')` works from a test — unlike the three
+libraries it replaced, one of which read the `$_SERVER` superglobal directly.
+
+## Assets
+
+Vite, not laravel-mix, and **no dev server**: `npm run watch` runs `vite build --watch` and writes
+real files. Vite's dev server would deliver stylesheets through a JS module that injects them at
+runtime, which breaks the no-JS requirement in development and hides the regressions
+`ProgressiveEnhancementTest` exists to catch. Because nothing writes `public/hot`, `Vite::asset()`
+always reads the manifest.
+
+Entries are referenced **by source path**, not by output path and not with `@vite`:
+
+```php
+Vite::asset('resources/less/metager/metager.less')   // a URL
+Vite::content('resources/less/…/widget-template.less') // the file's contents, for inlining
+```
+
+`@vite` is unusable here because pages pass asset URLs into layouts as `$css` / `$js` / `$darkcss`
+arrays, and the dark theme is applied by putting `media="(prefers-color-scheme:dark)"` on the link
+tag — which the directive cannot express and which has to work without JS.
+
+Anything added to `input` in `vite.config.js` becomes reachable; anything removed stops being
+built. `tests/Feature/AssetPipelineTest` cross-checks the `Vite::asset()` calls, that input list
+and the built manifest against each other, and fails on any `public_path()` reaching for a `.css`
+or `.js` — build output has hashed filenames, so it can only be reached through the manifest.
+
+Asset URLs are forced root-relative in `AppServiceProvider`; the same app answers on `metager.de`,
+`metager3.de` and a `.onion` address, so a host-qualified URL is only ever a way to get it wrong.
+
+## Configuration
+
+- `config/foki.json` is the authoritative list of which search engines belong to which fokus.
+  Engines themselves are discovered by scanning `app/Models/parserSkripte/*.php` for
+  `CONFIG_OVERLOAD` (see `SearchEngineRegistry`), so a parser file that exists is loaded and
+  instantiated whether or not any fokus uses it.
+- `config/sumas.json` is **gitignored and holds real API secrets**. It only ever carries
+  credentials; everything non-secret lives on the parser classes. A fresh checkout has none —
+  `cp config/sumas.json.example config/sumas.json` to boot.
+
+## Search request flow
+
+FPM pushes fetch jobs onto a Redis list → the `requests:fetcher` worker (`artisan requests:fetcher`,
+multi-curl) fetches upstream → results go back onto Redis → FPM blocks on `Redis::brpop` in
+`Search\EngineOrchestrator::waitForMainResults` (up to 6s) and renders.
+
+Note `brpop` is called with a **multi-key array**, which rules out Redis/Valkey *cluster* mode
+(CROSSSLOT). HA has to be sentinel-based.
+
+The steps live in `app/Search/`, in the order a request runs them. `MetaGer` is what is left: the
+search state the blades bind to, plus ~70 getters.
+
+| | |
+|---|---|
+| `QueryParser` → `SearchQuery` | the operators in the query (`"phrase"`, `-wort`, `-site:`, `-url:`) and the `fc`/`ff`/`ft` date range |
+| `EngineOrchestrator` | what is cached, what to fetch, waiting for it, reading it back — one Redis round trip per phase, not per engine |
+| `ResultRanker` | each engine scores its own results, then the combined pile is ordered |
+| `ResultDeduplicator` | one page, one result, credited to every engine that found it |
+| `Blacklists` | the operator blacklists, read once per worker process |
+| `LinkBuilder` | every "this search again, with one thing changed" link |
+| `ResponseFactory` | which of the seven `out=` shapes answers |
+
+Two of these carry preserved quirks that look like bugs and are pinned as characterization tests
+rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encoded host in
+`LinkBuilder`. Read the class docblock before "fixing" one.
+
+## What the result page actually spends its time on
+
+Profiled with xdebug tracing against a warm result page with engines faked, which is the only
+part of the request MetaGer controls — the rest is `waitForMainResults` blocking on Redis.
+Two things dominated, both of them work repeated within one request:
+
+**Device detection.** `App\Support\Browser` caches the facts it derives, keyed by User-Agent and
+client hints, and is resolved from the container so a request detects once. Before that a search
+did it twice — `MetaGer::__construct` for the mobile flag, `UpstreamUserAgent` for the header sent
+upstream — and each was 2.6 ms against Redis: twenty-six cache reads for DeviceDetector's regex
+lists, then ~3,000 `preg_match` calls. 5.3 ms per search became 0.04 ms. A User-Agent nobody has
+sent this hour still costs ~5 ms, and a worker that misses when the regex lists are not cached at
+all costs 30 ms — that one is shared by every client, not paid per client, but every worker that
+misses at the same moment pays it at the same moment.
+
+That last figure is 30 ms and not 121 ms because the fpm image installs **`ext-yaml`** and
+`Browser` selects DeviceDetector's `Yaml\Pecl` parser when it is loaded, falling back to the
+bundled one when it is not. The three parsers, measured on the same files, interleaved over three
+rounds: libyaml **10 ms**, bundled Spyc 98 ms, symfony/yaml 180 ms. So do not reach for
+symfony/yaml — it is already installed and looks like the obvious answer, and it is nearly twice as
+slow as the parser it would replace. `BrowserTest` asserts libyaml and Spyc agree on every fact for
+every fixture User-Agent, because a parser difference here would not throw, it would quietly
+mis-detect. This is also why `artisan test` takes 19 s rather than 89 s: the suite runs with
+`CACHE_STORE=array`, so every test process paid that parse.
+
+**Localized URLs.** `LaravelLocalization::extractAttributes` walked all 132 routes on every call,
+and a page makes about fifty. `App\Localization\MemoizingLaravelLocalization` memoises it per URL;
+19.4 ms → 15.2 ms median on a warm page.
+
+What is left is flat framework overhead — container resolutions and `Arr::get` — plus the blade
+render itself, which is most of it and is inherent. Two things measured and *not* worth doing:
+`Searchengines` builds 16 parser objects when a fokus enables 2, which is 1.2 ms and would mean
+restructuring how engines are configured. Route caching was also on that list, measured at 3.7 ms
+and judged not worth the risk; it has since been done anyway, because taking the locale out of the
+route table removed the risk rather than accepting it.
+
+## CI and the container registry
+
+The pipeline builds four images per push — `fpm`, `nginx`, `node` and a `composer`
+stage — and only `fpm` and `nginx` are ever deployed. Left alone that fills the registry up:
+before `.gitlab/deployment_scripts/cleanup_tags.sh` was rewritten it held 198 tags for branches
+that no longer existed, the oldest from 2022, and 163 of them were `node` images the teardown
+path could not even see because it read tags out of the helm history.
+
+The policy now lives in one place and is tested — `.gitlab/deployment_scripts/tests/run.sh`
+stubs `curl` and `helm` and asserts exactly which tags get deleted. Run it directly; it needs
+nothing but bash and jq.
+
+Two rules are load-bearing and easy to undo by accident:
+
+**A pipeline does not sweep its own ref unless its commit is that branch's HEAD.** Two commits a
+minute apart means two pipelines, and "delete every tag no helm revision names" is true of an
+image that was pushed thirty seconds ago. That is an `ImagePullBackOff` in the *other* pipeline,
+diagnosed nowhere near the job that caused it.
+
+**The signal is the branch list, not the pipeline list.** `GET /projects/:id/repository/branches`
+is on GitLab's `CI_JOB_TOKEN` allowlist; `GET /projects/:id/pipelines` is not. Written against
+the latter this fails closed with a 401 and silently stops cleaning up, which looks exactly like
+having nothing to clean up. The stubbed `curl` returns 401 for that endpoint on purpose.
+
+Deploy jobs carry `resource_group: helm-$CI_COMMIT_REF_SLUG` — helm locks per release, and
+without it two pushes a minute apart fail with "another operation (install/upgrade/rollback) is
+in progress". They are also the only jobs with `interruptible: false`: everything else is
+cancelled by `workflow:auto_cancel:on_new_commit`, but cancelling a helm upgrade halfway is how
+a release ends up wedged.
+
+## Commits
+
+Conventional style, as used in the repo: `feat(scope):`, `fix(scope):`, `refactor(scope):`,
+`test:`, `build(scope):`, `docs:`. Keep one concern per commit.

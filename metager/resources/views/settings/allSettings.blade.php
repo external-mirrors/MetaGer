@@ -43,7 +43,7 @@
                         <td>
                             <form action="{{ route('removeOneSetting') }}" method="post">
                                 <input type="hidden" name="key" value="{{ $key }}">
-                                <input type="hidden" name="url" value="{{ url()->full() }}">
+                                <input type="hidden" name="url" value="{{ App\Localization::currentFullUrl() }}">
                                 <button type="submit" title="@lang('settings.removeCookie')">
                                     <img class="mg-icon allSettings-trashcan-icon" src="/img/svg-icons/trashcan.svg" alt="{{ trans('trashcan.alt') }}">
                                 </button>
@@ -61,7 +61,7 @@
             <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
             @if(sizeof(Cookie::get()) > 0)
             <form action="{{ route('removeAllSettings')}}" method="post">
-                <input type="hidden" name="url" value="{{ url()->full() }}">
+                <input type="hidden" name="url" value="{{ App\Localization::currentFullUrl() }}">
                 <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>
             </form>
             @endif

@@ -1,0 +1,93 @@
+# Values used to render the golden snapshots in this directory.
+#
+# Chosen to exercise every conditional in the templates at once — an empty
+# ingress.hosts or env would silently skip the branches that surround them, and
+# those branches are exactly where a refactor goes wrong.
+replicaCount: 3
+
+image:
+  fpm:
+    repository: registry.metager.de/open-source/metager/fpm
+    tag: "golden"
+  nginx:
+    repository: registry.metager.de/open-source/metager/nginx
+    tag: "golden"
+
+imagePullSecrets:
+  - name: registry-credentials
+
+environment: production
+app_url: https://metager.de
+
+valkeyName: golden-valkey
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+
+ingress:
+  enabled: true
+  hosts:
+    - host: metager.de
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: metager-tls
+      hosts:
+        - metager.de
+
+env:
+  MATOMO_ENABLED: "true"
+  LOG_CHANNEL: stderr
+
+resources:
+  requests:
+    fpm:
+      cpu: 500m
+      memory: 512Mi
+    scheduler:
+      cpu: 100m
+      memory: 256Mi
+    worker:
+      cpu: 250m
+      memory: 256Mi
+    nginx:
+      cpu: 50m
+      memory: 64Mi
+    reverb:
+      cpu: 100m
+      memory: 128Mi
+    queue:
+      cpu: 100m
+      memory: 256Mi
+
+nodeSelector:
+  kubernetes.io/os: linux
+
+tolerations:
+  - key: node-role
+    operator: Equal
+    value: web
+    effect: NoSchedule
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 8
+  targetCPUUtilizationPercentage: 85
+
+# Pin the subchart's generated password. Without this it mints a fresh
+# randAlphaNum on every render and the snapshot never matches itself. One
+# password, not the two the retired redis-sentinel chart used: this chart gives
+# Sentinel the same secret it gives Valkey.
+valkey:
+  fullnameOverride: golden-valkey
+  auth:
+    password: golden-valkey-password

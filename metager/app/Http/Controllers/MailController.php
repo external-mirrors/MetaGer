@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Jobs\ContactMail;
 use App\Localization;
 use App\Mail\Sprachdatei;
@@ -53,8 +54,8 @@ class MailController extends Controller
                     ->with('title', trans('titles.kontakt'))
                     ->with('to_mail', $to_mail)
                     ->with('navbarFocus', 'kontakt')
-                    ->with("css", [mix("css/contact.css")])
-                    ->with("js", [mix("js/contact.js")])
+                    ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')])
+                    ->with("js", [Vite::asset('resources/js/contact.js')])
             );
         }
 
@@ -85,8 +86,8 @@ class MailController extends Controller
             ->with('title', 'Kontakt')
             ->with('to_mail', $to_mail)
             ->with($messageType, $returnMessage)
-            ->with("css", [mix("/css/contact.css")])
-            ->with("js", [mix('/js/contact.js')]));
+            ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')])
+            ->with("js", [Vite::asset('resources/js/contact.js')]));
     }
 
     // Ueberprueft ob ein bereits vorhandener Eintrag bearbeitet worden ist

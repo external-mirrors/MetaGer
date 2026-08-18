@@ -81,7 +81,7 @@ class TilesController extends Controller
             // Phase out old Authorization @deprecated 18.07.2025
             app(Authorization::class)->canDoAuthenticatedSearch(false)
         ) {
-            $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => url()->full()]), image_alt: "Settings Logo", image_classes: "invert-dm");
+            $tiles[] = new Tile(title: __('sidebar.nav28'), image: "/img/icon-settings.svg", url: route("settings", ["focus" => app(SearchSettings::class)->fokus, "url" => \App\Localization::currentFullUrl()]), image_alt: "Settings Logo", image_classes: "invert-dm");
         }
         return $tiles;
     }

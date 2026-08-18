@@ -23,11 +23,37 @@
 @import "./parts/dropdowns.less";
 @import "./parts/mg-icons.less";
 
-.dm-only{
-    display: none;
-    visibility: hidden;
+// Markup that belongs to one theme only. The rest of the theme is colour and
+// lives in the tokens; this is the part that is presence and absence, and it
+// follows the same two switches variables.less uses to pick a palette.
+.dm-only {
+  display: none;
+  visibility: hidden;
 }
-.lm-only{
+
+.lm-only {
+  display: initial;
+  visibility: visible;
+}
+
+.theme-only-dark() {
+  .dm-only {
     display: initial;
     visibility: visible;
+  }
+
+  .lm-only {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    .theme-only-dark();
+  }
+}
+
+:root[data-theme="dark"] {
+  .theme-only-dark();
 }

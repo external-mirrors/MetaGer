@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'There was no search engine supporting one of your filter options. Filters currently active: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Could not find suma-file',
         'noSearch' => 'Attention: you did not type in any search word/s. Please type search words and try again',
         'dartEurope' => 'Hint: you have activated Dart-Europe. Therefore the response time might be longer and is set to 10 sec',
         'hostBlacklist' => 'Results of the following domains will not be shown: \":host\"',
@@ -125,6 +124,7 @@ return [
             'sm' => 'Spanish (Mexiko)',
             'ss' => 'Spanish (Spain)',
             'sus' => 'Spanish (US)',
+            'caes' => 'Catalan (Spain)',
             'fb' => 'French (Belgien)',
             'fc' => 'French (Kanada)',
             'ff' => 'French (Frankreich)',
@@ -160,12 +160,6 @@ return [
         'skip' => 'Skip',
         'min' => 'Minimum sleep (in s)',
         'max' => 'Maximum sleep (in s)',
-    ],
-    'ads' => [
-        'own' => [
-            'title' => 'Support MetaGer',
-            'description' => 'With your donation you support the maintenance and further development of the independent search engine metager.org and the work of the non-profit association SUMA-EV.',
-        ],
     ],
     'prevention' => [
         'phrase' => '<h2>Do you need help?</h2> Do you have negative thoughts or want to talk to someone? On our <a href=":prevurl" target="_blank"> prevention page</a> you will find a list of help facilities you can turn to.',

@@ -9,9 +9,7 @@ return [
         '1' => 'Iniciar uma nova pesquisa neste domínio',
         '7' => 'ABERTO',
         'direct' => 'Abertura direta',
-        '4' => 'Parceiro',
         'togglelabel' => 'alternar opções de resultados',
-        '8' => 'ELIMINAR A PUBLICIDADE',
         '2' => 'Ocultar :host',
         '6' => 'ABRIR NUM NOVO SEPARADOR',
         '5' => 'ABRIR ANONIMAMENTE',
@@ -24,7 +22,6 @@ return [
     ],
     'videos' => 'Vídeos',
     'advertisement' => 'Anúncio',
-    'metagerkeytext' => 'Utilizar o MetaGer sem anúncios',
     'proxytext' => 'A ligação de resultados é aberta de forma anónima. Os seus dados não serão transferidos para os servidores de destino. Algumas páginas web podem não funcionar como habitualmente.',
     'gefVon' => 'por',
     'alt' => [

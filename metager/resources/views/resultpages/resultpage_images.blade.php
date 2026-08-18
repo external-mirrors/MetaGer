@@ -1,4 +1,4 @@
-@extends('layouts.resultPage', ['js' => [mix('/js/imagesearch.js')]])
+@extends('layouts.resultPage', ['js' => [Vite::asset('resources/js/imagesearch.js')]])
 
 @section('results')
     @include('resultpages.results_images')

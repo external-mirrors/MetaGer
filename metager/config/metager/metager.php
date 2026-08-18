@@ -17,6 +17,27 @@ return [
         "uni_mainz" => explode(separator: ",", string: env("mainz_keys")),
         "assoziator" => env("ASSO_KEY"),
     ],
+    /**
+     * Where the interface language lives, and whether the domain still has a
+     * say in it.
+     *
+     * With `decoupled` on, the locale is its own concern: it is read from
+     * `?lang=`/`MG-Locale`, the URL path prefix, the `mg_locale` cookie and
+     * `Accept-Language`, in that order, and the host is consulted only as the
+     * last-resort fallback - it never causes a redirect. Turning it off
+     * restores the previous rules, where `metager.de` forced German, a German
+     * user on `metager.org` was bounced across the domain boundary, and the
+     * `web_setting_m` search filter doubled as the interface language.
+     *
+     * It exists so the rollout can be reversed from the environment rather
+     * than by deploying, while the redirect rate is watched (docs/
+     * locale-contract.md). It is not meant to be a permanent fork: once the
+     * numbers hold, the `false` branch and this flag go.
+     */
+    "locale" => [
+        "decoupled" => env("LOCALE_DECOUPLED", true),
+        "cookie" => "mg_locale",
+    ],
     "tts" => [
         "base_url" => env("TTS_BASE_URL", ""),
     ],

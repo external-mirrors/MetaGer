@@ -4,6 +4,7 @@ namespace App\Localization;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Cookie;
 use LaravelLocalization;
 
 /**
@@ -29,11 +30,30 @@ use LaravelLocalization;
  * constant, and every generated URL carries the prefix by construction rather
  * than by remembering to ask for it.
  *
- * The resolution *rules* below are deliberately the ones this application has
- * always used, host exceptions and all — moving them and changing them in one
- * step would leave nothing to compare against. Changing them (`mg_locale`,
- * honouring `Accept-Language` on every host, no cross-domain redirects) is the
- * next step, and it happens here, in this one method.
+ * The rules themselves changed next, and this is where. The interface locale
+ * is now its own concern with its own storage — the `mg_locale` cookie — read
+ * in one fixed order that every MetaGer codebase implements the same way:
+ *
+ *   1. an explicit statement by the client: `?lang=` or the `MG-Locale` header
+ *   2. the URL path prefix
+ *   3. the `mg_locale` cookie
+ *   4. `Accept-Language`
+ *   5. the host — `de-DE` on metager.de, `en-US` everywhere else
+ *
+ * The host appears only at step 5, and reaching it never produces a redirect:
+ * both domains serve every locale. That is what retires the two rules this
+ * class used to carry — `metager.de` discounting a non-German
+ * `Accept-Language`, and the language deciding which domain you belong on —
+ * along with the cross-domain settings hand-off that existed to survive them.
+ *
+ * `web_setting_m` is a search filter again, and only that. It is still read at
+ * step 3 when no `mg_locale` exists, because that is where everyone's language
+ * currently lives; `ResolveLocale` writes the new cookie the first time it sees
+ * such a request, so each browser passes through that branch once.
+ *
+ * Reversible from the environment while the redirect rate is watched:
+ * `LOCALE_DECOUPLED=false` restores the previous behaviour wholesale
+ * ([resolveWithHostRules]).
  */
 final class LocaleContext
 {

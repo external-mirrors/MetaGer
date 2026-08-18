@@ -536,6 +536,22 @@ class SettingsController extends Controller
                     // already-off toggle (e.g. Mojeek) rather than defaulting
                     // everything to on and leaving a client to guess.
                     "enabledByDefault" => !$engine->configuration->disabledByDefault,
+                    // Whether this engine can serve the requested language at all.
+                    // Engines are indexed per language, not globally: `onenewspage`
+                    // only covers English, `onenewspagegermany` only German. A search
+                    // already drops the ones that cannot serve the current locale
+                    // (`SearchengineConfiguration::applyLocale()`), so without this a
+                    // client would show a toggle with nothing behind it — and for
+                    // `onenewspage` on a German device, one that implied German news
+                    // came out of an English-only index.
+                    //
+                    // Additive like the fokus-level `available` above, and for the
+                    // same reason (SettingsSchemaAvailableFokiTest): a client that
+                    // already had this engine switched off still needs to see it to
+                    // manage it. The same test `applyLocale()` makes — a supported
+                    // language may map to the empty string as its parameter value, so
+                    // only `null` means "cannot serve this locale".
+                    "available" => $engine->configuration->languages?->getParameterForLocale() !== null,
                 ];
             }
 

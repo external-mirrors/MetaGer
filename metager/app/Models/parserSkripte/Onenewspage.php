@@ -83,8 +83,19 @@ class Onenewspage extends Searchengine
         }
 
         uasort($this->results, function (Result $a, Result $b) {
-            $diff = $a->getDate()->diffInSeconds($b->getDate(), false);
-            return $diff;
+            // Der Feed liefert den Zeitstempel nur für Zeilen mit mehr als drei
+            // Feldern, `Result::getDate()` ist deshalb `Carbon|null`. Eine
+            // einzige undatierte Zeile hat hier den kompletten Nachrichten-Fokus
+            // mit einem Aufruf auf null umgebracht — HTTP 500 für jede englische
+            // Nachrichtensuche, im Web genauso wie in der App. Undatierte Treffer
+            // sortieren jetzt hinter jeden datierten und behalten untereinander
+            // ihre Reihenfolge.
+            $dateA = $a->getDate();
+            $dateB = $b->getDate();
+            if ($dateA === null || $dateB === null) {
+                return ($dateA === null ? 1 : 0) <=> ($dateB === null ? 1 : 0);
+            }
+            return (int) $dateA->diffInSeconds($dateB, false);
         });
 
         foreach ($this->results as $index => $result) {

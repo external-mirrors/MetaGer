@@ -118,7 +118,11 @@ read_branches() {
         head_sha["$slug"]="$head"
     done < <(printf '%s' "$branches" | jq -r '.[] | "\(.name) \(.commit.id)"')
 
-    releases="$(helm -n "$KUBE_NAMESPACE" list -o json 2>/dev/null | jq -r '.[].name' || true)"
+    # -a, so a release stuck in failed or pending-upgrade still counts as
+    # deployed. Its pods are running and will restart; `helm list` hides those
+    # states by default, which would make the release invisible here and its
+    # images fair game the moment the branch went away.
+    releases="$(helm -n "$KUBE_NAMESPACE" list -a -o json 2>/dev/null | jq -r '.[].name' || true)"
     declare -gA deployed_release=()
     for release in $releases; do
         deployed_release["$release"]=1

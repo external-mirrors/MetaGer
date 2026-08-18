@@ -190,6 +190,36 @@ Two of these carry preserved quirks that look like bugs and are pinned as charac
 rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encoded host in
 `LinkBuilder`. Read the class docblock before "fixing" one.
 
+## CI and the container registry
+
+The pipeline builds four images per push — `fpm`, `nginx`, `node` and a `composer`
+stage — and only `fpm` and `nginx` are ever deployed. Left alone that fills the registry up:
+before `.gitlab/deployment_scripts/cleanup_tags.sh` was rewritten it held 198 tags for branches
+that no longer existed, the oldest from 2022, and 163 of them were `node` images the teardown
+path could not even see because it read tags out of the helm history.
+
+The policy now lives in one place and is tested — `.gitlab/deployment_scripts/tests/run.sh`
+stubs `curl` and `helm` and asserts exactly which tags get deleted. Run it directly; it needs
+nothing but bash and jq.
+
+Two rules are load-bearing and easy to undo by accident:
+
+**A pipeline does not sweep its own ref unless its commit is that branch's HEAD.** Two commits a
+minute apart means two pipelines, and "delete every tag no helm revision names" is true of an
+image that was pushed thirty seconds ago. That is an `ImagePullBackOff` in the *other* pipeline,
+diagnosed nowhere near the job that caused it.
+
+**The signal is the branch list, not the pipeline list.** `GET /projects/:id/repository/branches`
+is on GitLab's `CI_JOB_TOKEN` allowlist; `GET /projects/:id/pipelines` is not. Written against
+the latter this fails closed with a 401 and silently stops cleaning up, which looks exactly like
+having nothing to clean up. The stubbed `curl` returns 401 for that endpoint on purpose.
+
+Deploy jobs carry `resource_group: helm-$CI_COMMIT_REF_SLUG` — helm locks per release, and
+without it two pushes a minute apart fail with "another operation (install/upgrade/rollback) is
+in progress". They are also the only jobs with `interruptible: false`: everything else is
+cancelled by `workflow:auto_cancel:on_new_commit`, but cancelling a helm upgrade halfway is how
+a release ends up wedged.
+
 ## Commits
 
 Conventional style, as used in the repo: `feat(scope):`, `fix(scope):`, `refactor(scope):`,

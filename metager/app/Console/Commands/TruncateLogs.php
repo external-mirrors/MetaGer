@@ -29,8 +29,6 @@ class TruncateLogs extends Command
     {
         $log_files = [
             \storage_path("metager/bv_fail.csv"),
-            \storage_path("metager/captcha_show.csv"),
-            \storage_path("metager/captcha_solve.csv"),
             \storage_path("metager/csp_fail.csv"),
             \storage_path("metager/yahoo_fail.csv"),
         ];

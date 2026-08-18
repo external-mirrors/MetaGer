@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App;
 use App\Localization;
 use App\Mail\Membership\ApplicationDeny;
@@ -145,14 +146,14 @@ class MembershipController extends Controller
                 [
                     "title" => __("titles.membership"),
                     'csrf_token' => $csrf_token,
-                    "css" => [mix("/css/membership.css")],
-                    "darkcss" => [mix("/css/membership-dark.css")],
-                    "js" => [mix("/js/membership.js")],
+                    "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
+                    "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')],
+                    "js" => [Vite::asset('resources/js/membership.js')],
                     "application" => $application
                 ]
             ), 200, ["Content-Security-Policy" => $csp]);
         } else {
-            return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [mix("/css/membership.css")], "darkcss" => [mix("/css/membership-dark.css")], "js" => [mix("/js/membership.js")]]));
+            return response(view("membership.nonGerman", ["title" => __("titles.membership"), "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')], "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')], "js" => [Vite::asset('resources/js/membership.js')]]));
         }
     }
 
@@ -181,8 +182,8 @@ class MembershipController extends Controller
             [
                 "application" => $application,
                 "title" => __("titles.membership"),
-                "css" => [mix("/css/membership.css")],
-                "darkcss" => [mix("/css/membership-dark.css")]
+                "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
+                "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')]
             ]
         ));
     }
@@ -312,9 +313,9 @@ class MembershipController extends Controller
                     [
                         'csrf_token' => $csrf_token,
                         "title" => __("titles.membership"),
-                        "css" => [mix("/css/membership.css")],
-                        "darkcss" => [mix("/css/membership-dark.css")],
-                        "js" => [mix("/js/membership.js")],
+                        "css" => [Vite::asset('resources/less/metager/pages/membership/base.less')],
+                        "darkcss" => [Vite::asset('resources/less/metager/pages/membership/base-dark.less')],
+                        "js" => [Vite::asset('resources/js/membership.js')],
                         "errors" => $validator->errors(),
                         "application" => $application
                     ]
@@ -635,8 +636,8 @@ class MembershipController extends Controller
                 "membership_update_requests" => $membership_update_requests,
                 "reduction_requests" => $reduction_requests,
                 "unfinished_applications" => $unfinished_applications,
-                "css" => [mix("/css/admin/membership.css")],
-                "js" => [mix("/js/admin/membership.js")]
+                "css" => [Vite::asset('resources/less/metager/pages/admin/membership.less')],
+                "js" => [Vite::asset('resources/js/admin/membership.js')]
             ]
         ));
     }

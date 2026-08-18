@@ -29,23 +29,30 @@
 		<h1>{{ trans('plugin-page.search-engine.1') }}</h1>
 		<p>{{ trans('plugin-page.search-engine.2') }}</p>
 	</div>
-	@if ($agent->isDesktop())
+	{{-- "not mobile" rather than isDesktop(): DeviceDetector reports an
+	     unrecognised User-Agent as neither desktop nor mobile, so branching on
+	     isDesktop() would drop such a client through both arms and leave it
+	     with no instructions at all. jenssegers/agent used to call that case
+	     desktop. Matching on !isMobile() reproduces the old outcome for all
+	     four cases: known desktop and unknown both take this arm, tablets and
+	     phones do not. --}}
+	@if (!$agent->isMobile())
 	@if ($browser === 'Firefox' || $browser === 'Mozilla')
-	@if (version_compare($agent->version($browser), '89.', '>='))
+	@if (version_compare($agent->version(), '89.', '>='))
 	@include ('plugin/desktop/firefox/v89')
-	@elseif (version_compare($agent->version($browser), '61.', '>='))
+	@elseif (version_compare($agent->version(), '61.', '>='))
 	@include ('plugin/desktop/firefox/v61')
-	@elseif (version_compare($agent->version($browser), '57.', '>='))
+	@elseif (version_compare($agent->version(), '57.', '>='))
 	@include ('plugin/desktop/firefox/v57')
 	@else
 	@include ('plugin/desktop/firefox/v52')
 	@endif
 
 	@elseif ($browser === 'Chrome')
-	@if (version_compare($agent->version($browser), '59.', '>='))
+	@if (version_compare($agent->version(), '59.', '>='))
 	@include ('plugin/desktop/chrome/v59')
 	@include ('plugin/desktop/vivaldi/v3-3')
-	@elseif (version_compare($agent->version($browser), '53.', '>='))
+	@elseif (version_compare($agent->version(), '53.', '>='))
 	@include ('plugin/desktop/chrome/v53')
 	@else
 	@include ('plugin/desktop/chrome/v49')
@@ -55,18 +62,18 @@
 	@include ('plugin/desktop/opera/v36')
 
 	@elseif ($browser === 'IE')
-	@if (version_compare($agent->version($browser), '11.', '>='))
+	@if (version_compare($agent->version(), '11.', '>='))
 	@include('plugin/desktop/ie/v11')
 	@else
 	@include('plugin/desktop/ie/v9')
 	@endif
 
 	@elseif ($browser === 'Edge')
-	@if (version_compare($agent->version($browser), '80.', '>='))
+	@if (version_compare($agent->version(), '80.', '>='))
 	@include('plugin/desktop/edge/v80')
-	@elseif (version_compare($agent->version($browser), '18.', '>='))
+	@elseif (version_compare($agent->version(), '18.', '>='))
 	@include('plugin/desktop/edge/v18')
-	@elseif (version_compare($agent->version($browser), '15.', '>='))
+	@elseif (version_compare($agent->version(), '15.', '>='))
 	@include('plugin/desktop/edge/v15')
 	@endif
 
@@ -91,7 +98,7 @@
 
 	@elseif ($agent->isPhone())
 	@if ($browser === 'Firefox')
-	@if (version_compare($agent->version($agent->browser()), '80.') >= 0))
+	@if (version_compare($agent->version(), '80.') >= 0)
 	@include ('plugin/mobile/firefox/v80')
 	@include ('plugin/mobile/firefox-klar/v8-8')
 	@else

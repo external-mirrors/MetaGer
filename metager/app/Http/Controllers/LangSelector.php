@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Localization;
 use Cookie;
 use Illuminate\Http\Request;
@@ -44,8 +45,8 @@ class LangSelector extends Controller
         return view('lang-selector')
             ->with("previous_url", $previous_url)
             ->with("title", trans("titles.lang-selector"))
-            ->with("js", [mix("js/lang.js")])
-            ->with('css', [mix('css/lang-selector.css')]);
+            ->with("js", [Vite::asset('resources/js/lang.js')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/lang-selector.less')]);
     }
 
     /**

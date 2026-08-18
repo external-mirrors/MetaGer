@@ -6,8 +6,13 @@ use App\Localization;
 use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
+use App\Localization\MemoizingLaravelLocalization;
+use App\Support\Browser;
+use Mcamara\LaravelLocalization\LaravelLocalization;
+use App\Support\UpstreamUserAgent;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Request;
 
@@ -22,6 +27,15 @@ class AppServiceProvider extends ServiceProvider
         if (Request::getHost() !== "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion" && (app()->environment("production") || app()->environment("development"))) {
             \URL::forceScheme("https");
         }
+
+        // Emit root-relative asset URLs, the way mix() did before Vite replaced it.
+        //
+        // Vite::asset() otherwise runs through asset(), which builds an absolute URL from the
+        // current request. The same application answers on metager.de, metager3.de and the
+        // .onion address above, so an absolute URL only ever adds a host that has to match —
+        // and a scheme that has to match too, which is why the forceScheme() call above exists
+        // at all. A root-relative path cannot get either wrong.
+        Vite::createAssetPathsUsing(fn(string $path): string => "/" . ltrim($path, "/"));
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
                 'host' => config("database.redis.default.host"),
@@ -41,6 +55,26 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LogsAccountProvider::class, function ($app) {
             return new LogsAccountProvider();
         });
+        // One per request: every engine of the fokus asks for it, and resolving
+        // it means parsing the client's User-Agent.
+        $this->app->singleton(UpstreamUserAgent::class);
+
+        // One device detection per request. A search asked for it twice — once
+        // in MetaGer::__construct for the mobile flag, once in
+        // UpstreamUserAgent for the User-Agent it sends upstream — and each
+        // ask was a cache read or, on a miss, a full parse. The answer cannot
+        // differ between the two: it is the same request and the same
+        // User-Agent. A singleton because under FPM a process handles one
+        // request; anything resolving this outside a request should use
+        // Browser::fromUserAgent directly, as the tests do.
+        $this->app->singleton(Browser::class, fn() => Browser::fromRequest());
+
+        // Swap in the memoizing localization. See
+        // App\Localization\MemoizingLaravelLocalization: every localized link
+        // on a page re-walked the whole route collection, and a result page has
+        // about fifty of them. Bound against the package's own key, so the
+        // facade and every type-hint pick it up.
+        $this->app->singleton(LaravelLocalization::class, MemoizingLaravelLocalization::class);
         Auth::provider("logs", function ($app, array $config) {
             return new LogsUserProvider($app->make(LogsUser::class));
         });

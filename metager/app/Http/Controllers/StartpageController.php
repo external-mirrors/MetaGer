@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Http\Request;
 use Response;
 
@@ -45,9 +46,8 @@ class StartpageController extends Controller
             ->with('focus', $request->input('focus', 'web'))
             ->with('request', $request->input('request', 'GET'))
             ->with('tiles', $tiles)
-            ->with('css', [mix('css/themes/startpage/light.css')])
-            ->with('js', [mix('js/startpage/app.js')])
-            ->with('darkcss', [mix('css/themes/startpage/dark.css')]);
+            ->with('css', [Vite::asset('resources/less/metager/pages/startpage/startpage.less')])
+            ->with('js', [Vite::asset('resources/js/startpage/app.js')]);
     }
 
     /**

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# Stands in for helm while the cleanup scripts are under test.
+#
+# Answers the two questions the scripts ask — which revisions a release has, and
+# which image tags a given revision deployed — from $FIXTURE_DIR:
+#
+#   helm-history.json          [{"revision": 1}, …]; absent means "no such release"
+#   helm-values-<revision>.json  the values that revision was deployed with
+#
+# "No such release" is a case worth being able to stage: it is what a first-ever
+# pipeline on a new branch sees, and a cleanup that mishandles it fails the very
+# first pipeline of every merge request.
+set -uo pipefail
+
+command="${1:-}"
+while [[ $# -gt 0 && "$1" != history && "$1" != get && "$1" != list ]]; do shift; done
+command="${1:-}"
+
+case "$command" in
+    history)
+        if [[ ! -f "$FIXTURE_DIR/helm-history.json" ]]; then
+            echo "Error: release: not found" >&2
+            exit 1
+        fi
+        cat "$FIXTURE_DIR/helm-history.json"
+        ;;
+    get)
+        revision=""
+        for argument in "$@"; do
+            [[ "$argument" == --revision=* ]] && revision="${argument#--revision=}"
+        done
+        cat "$FIXTURE_DIR/helm-values-$revision.json"
+        ;;
+    list)
+        cat "$FIXTURE_DIR/helm-list.json" 2>/dev/null || echo "[]"
+        ;;
+    *)
+        echo "stub helm: unrecognised command: $*" >&2
+        exit 99
+        ;;
+esac

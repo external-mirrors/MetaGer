@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Vite;
 use App\Mail\LogsLoginCode;
 use App\Models\Logs\LogsAccountProvider;
 use Artisan;
@@ -44,7 +45,7 @@ class LogsApiController extends Controller
 
         return view('logs.overview', ['title' => __('titles.logs.overview')])->with(
             [
-                "css" => [mix("/css/logs.css")],
+                "css" => [Vite::asset('resources/less/metager/pages/logs.less')],
                 "edit_invoice" => $edit_invoice,
                 "nda" => $nda
             ]
@@ -69,7 +70,7 @@ class LogsApiController extends Controller
     {
         return view('logs.abo_create', ['title' => __('titles.logs.overview')])->with(
             [
-                "css" => [mix("/css/logs.css")],
+                "css" => [Vite::asset('resources/less/metager/pages/logs.less')],
             ]
         );
     }
@@ -196,7 +197,7 @@ class LogsApiController extends Controller
                 }
             }
 
-            return view("logs.admin", ['title' => __('titles.logs.admin')])->with(["users" => $users, "css" => [mix("/css/admin/logs.css")]]);
+            return view("logs.admin", ['title' => __('titles.logs.admin')])->with(["users" => $users, "css" => [Vite::asset('resources/less/metager/pages/admin/logs.less')]]);
         }
     }
 
@@ -214,7 +215,7 @@ class LogsApiController extends Controller
             session()->flush();
             return redirect(route("logs:login"));
         }
-        return view("logs.login", ['title' => __('titles.logs.login')])->with(["css" => [mix("/css/logs.css")]]);
+        return view("logs.login", ['title' => __('titles.logs.login')])->with(["css" => [Vite::asset('resources/less/metager/pages/logs.less')]]);
     }
     public function login_post(Request $request)
     {

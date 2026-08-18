@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ LaravelLocalization::getCurrentLocale() }}">
+<html lang="{{ LaravelLocalization::getCurrentLocale() }}"
+    @if(app(App\SearchSettings::class)->theme !== "system") data-theme="{{ app(App\SearchSettings::class)->theme }}" @endif>
 
 <head>
     <meta charset="utf-8">
@@ -30,19 +31,19 @@
     <link href="/fonts/liberationsans/stylesheet.css" rel="stylesheet">
 
 
-    <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-    @if (app(App\SearchSettings::class)->theme === 'dark')
-        <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager-dark.css') }}" />
-    @elseif(app(App\SearchSettings::class)->theme === 'light')
-        <link type="text/css" rel="stylesheet" href="{{ mix('css/themes/metager.css') }}" />
-    @elseif(Request::input('out', '') !== 'results-with-style')
-        <link type="text/css" rel="stylesheet" media="(prefers-color-scheme:dark)"
-            href="{{ mix('css/themes/metager-dark.css') }}" />
-    @endif
-    <script src="{{ mix('js/scriptResultPage.js') }}" defer></script>
+    {{-- One stylesheet, both palettes: it picks between them from the data-theme
+         attribute on <html> and prefers-color-scheme. This used to be up to four
+         links, one of which loaded metager.less a second time. --}}
+    <link type="text/css" rel="stylesheet" href="{{ Vite::asset('resources/less/metager/metager.less') }}" />
+    {{-- type="module" is not optional: Vite emits ES modules, and a bundle that
+         imports a shared chunk is a syntax error when loaded as a classic
+         script, so the file downloads and never runs. Modules defer by
+         default, which is why the explicit defer below is gone; async is kept
+         where it was, since it still means what it meant. --}}
+    <script type="module" src="{{ Vite::asset('resources/js/scriptResultPage.js') }}"></script>
     @if (!empty($js))
         @foreach ($js as $js_file)
-            <script src="{{ $js_file }}" defer async></script>
+            <script type="module" src="{{ $js_file }}" async></script>
         @endforeach
     @endif
 
@@ -94,7 +95,7 @@
     @if (!isset($suspendheader))
         @include('layouts.researchandtabs')
     @else
-        <link rel="stylesheet" href="/css/noheader.css">
+        <link rel="stylesheet" href="{{ Vite::asset('resources/css/noheader.css') }}">
         <div id="resultpage-container-noheader">
             <div id="results-container">
                 <span name="top"></span>

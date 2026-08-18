@@ -2,19 +2,18 @@
 
 namespace App;
 
-use App\Models\Authorization\Authorization;
 use App\Models\Configuration\SearchEngineRegistry;
 use App\Models\Configuration\Searchengines;
-use App\Models\Searchengine;
-use Arr;
-use Carbon\Carbon;
+use App\Models\Result;
+use App\Search\LinkBuilder;
+use App\Search\QueryParser;
+use App\Search\ResponseFactory;
+use App\Search\ResultDeduplicator;
+use App\Search\ResultRanker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
-use Jenssegers\Agent\Agent;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use Predis\Connection\ConnectionException;
 
@@ -56,7 +55,6 @@ class MetaGer
     protected $results = [];
     protected $queryFilter = [];
     protected $parameterFilter = [];
-    protected $ads = [];
     public $news = [];
     public $videos = [];
     protected $infos = [];
@@ -69,7 +67,6 @@ class MetaGer
     protected $canCache = false;
     # Daten über die Abfrage$
     protected $ip;
-    protected $useragent;
     protected $language;
     protected $agent;
     protected $apiKey = "";
@@ -82,11 +79,6 @@ class MetaGer
     protected $resultCount;
     protected $sprueche;
     protected $newtab;
-    protected $domainsBlacklisted = [];
-    protected $adDomainsBlacklisted = [];
-    protected $urlsBlacklisted = [];
-    protected $adUrlsBlacklisted = [];
-    protected $blacklistDescriptionUrl = [];
     protected $url;
     protected $fullUrl;
     protected $enabledSearchengines = [];
@@ -97,50 +89,11 @@ class MetaGer
     protected $redisEngineResult;
     protected $redisCurrentResultList;
     public $starttime;
-    protected $dummy = false;
 
     public function __construct($hash = "")
     {
         # start timer
         $this->starttime = microtime(true);
-        # Read blocklists
-        if (file_exists(config_path() . "/blacklistDomains.txt") && file_exists(config_path() . "/blacklistUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/blacklistDomains.txt");
-            $this->domainsBlacklisted = array_map('trim', explode("\n", $tmp));
-            $tmp = file_get_contents(config_path() . "/blacklistUrl.txt");
-            $lines = explode("\n", $tmp);
-            $filtered_lines = array_filter($lines, function ($line) {
-                return strpos(trim($line), '#') !== 0;
-            });
-            # Re-index the array (array_filter preserves keys by default)
-            $filtered_lines = array_values($filtered_lines);
-            $this->urlsBlacklisted = $filtered_lines;
-        }
-
-        # Read blocklists
-        if (file_exists(config_path() . "/adBlacklistDomains.txt")) {
-            $tmp = file_get_contents(config_path() . "/adBlacklistDomains.txt");
-            $this->adDomainsBlacklisted = explode("\n", $tmp);
-        }
-
-        if (file_exists(config_path() . "/adBlacklistUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/adBlacklistUrl.txt");
-            $this->adUrlsBlacklisted = explode("\n", $tmp);
-        }
-
-        if (file_exists(config_path() . "/blacklistDescriptionUrl.txt")) {
-            $tmp = file_get_contents(config_path() . "/blacklistDescriptionUrl.txt");
-            $this->blacklistDescriptionUrl = explode("\n", $tmp);
-        }
-
-        # Parser Skripte einhängen
-        $dir = app_path() . "/Models/parserSkripte/";
-        foreach (scandir($dir) as $filename) {
-            $path = $dir . $filename;
-            if (is_file($path)) {
-                require_once $path;
-            }
-        }
 
         # Cachebarkeit testen
         try {
@@ -167,125 +120,17 @@ class MetaGer
         $this->parseFormData();
     }
 
-    # Erstellt aus den gesammelten Ergebnissen den View
+    /**
+     * Die fertige Suche in der angeforderten Form ausliefern.
+     *
+     * Die Formatweiche steckt in Search\ResponseFactory; hier bleibt der Log-
+     * Aufruf, weil er zur Suche gehört und nicht zur Antwort.
+     */
     public function createView($quicktipResults = [])
     {
-        # Hiermit werden die evtl. ausgewählten SuMas extrahiert, damit die Input-Boxen richtig gesetzt werden können
-        $focusPages = [];
+        App::make(QueryLogger::class)->createLog();
 
-        foreach ($this->request->all() as $key => $value) {
-            if (stripos($key, 'engine_') === 0 && $value === 'on') {
-                $focusPages[] = $key;
-            }
-        }
-
-        $viewResults = [];
-        # Wir extrahieren alle notwendigen Variablen und geben Sie an unseren View:
-        foreach ($this->results as $result) {
-            $viewResults[] = get_object_vars($result);
-        }
-        # Wir müssen natürlich noch den Log für die durchgeführte Suche schreiben:
-        /** @var QueryLogger */
-        $query_logger = App::make(QueryLogger::class);
-        $query_logger->createLog();
-
-        # json wird vor der Fokus-Weiche behandelt: die Antwort hat für jeden
-        # Fokus dieselbe Form (Bildersuche füllt lediglich das image-Feld), und
-        # unterhalb dieser Weiche gäbe es sonst zwei Stellen, die dasselbe
-        # Schema bauen müssten. Vorher war 'json' zwar in der Parameterprüfung
-        # erlaubt, hatte aber keinen case und fiel auf die HTML-Seite durch.
-        if ($this->out === "json") {
-            return $this->createJsonView();
-        }
-
-        if (app(SearchSettings::class)->fokus === "bilder") {
-            switch ($this->out) {
-                case 'results':
-                    return view('resultpages.results_images')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('imagesearch', true)
-                        ->with('browser', (new Agent())->browser());
-                default:
-                    return view('resultpages.resultpage_images')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', $quicktipResults)
-                        ->with('focus', app(SearchSettings::class)->fokus)
-                        ->with('imagesearch', true)
-                        ->with('resultcount', count($this->results));
-            }
-        } else {
-            switch ($this->out) {
-                case 'results':
-                    return view('resultpages.results')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'results-with-style':
-                    return view('resultpages.resultpage')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('suspendheader', "yes")
-                        ->with('browser', (new Agent())->browser())
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'rss20':
-                    return view('resultpages.metager3resultsrss20')
-                        ->with('results', $viewResults)
-                        ->with('eingabe', $this->eingabe)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('resultcount', sizeof($viewResults))
-                        ->with('fokus', app(SearchSettings::class)->fokus);
-                case 'api':
-                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                case 'atom10':
-                    return view('resultpages.metager3resultsatom10', ['eingabe' => $this->eingabe, 'resultcount' => sizeof($viewResults), 'key' => $this->apiKey, 'metager' => $this]);
-                case 'result-count':
-                    # Wir geben die Ergebniszahl und die benötigte Zeit zurück:
-                    return sizeof($viewResults) . ";" . round((microtime(true) - $this->starttime), 2);
-                default:
-                    return view('resultpages.resultpage')
-                        ->with('eingabe', $this->eingabe)
-                        ->with('focusPages', $focusPages)
-                        ->with('mobile', $this->mobile)
-                        ->with('warnings', $this->warnings)
-                        ->with('htmlwarnings', $this->htmlwarnings)
-                        ->with('errors', $this->errors)
-                        ->with('apiAuthorized', $this->apiAuthorized)
-                        ->with('metager', $this)
-                        ->with('browser', (new Agent())->browser())
-                        ->with('quicktips', $quicktipResults)
-                        ->with('resultcount', count($this->results))
-                        ->with('focus', app(SearchSettings::class)->fokus);
-            }
-        }
+        return app(ResponseFactory::class)->make($this, $quicktipResults ?: []);
     }
 
     /**
@@ -297,11 +142,6 @@ class MetaGer
      * Das Schema ist versioniert. Neue Felder dürfen jederzeit dazukommen;
      * Umbenennen oder Entfernen erhöht `API_SCHEMA_VERSION`.
      */
-    private function createJsonView(): string
-    {
-        return json_encode($this->toApiArray(), self::JSON_API_FLAGS);
-    }
-
     /**
      * Der Rumpf von `out=json` als Array.
      *
@@ -317,15 +157,6 @@ class MetaGer
         $results = [];
         foreach ($this->results as $result) {
             $results[] = $result->toApiArray();
-        }
-
-        # Werbung ist eine eigene Liste, keine Ergebnisse. Ein Client muss sie
-        # als Werbung kennzeichnen können, und im Ergebnisarray wäre sie von
-        # einem organischen Treffer nicht zu unterscheiden. Der Atom-Feed löst
-        # dasselbe Problem über einen eigenen Namespace (ad:advertisement).
-        $ads = [];
-        while (($ad = $this->popAd()) !== null) {
-            $ads[] = $ad->toApiArray();
         }
 
         $nextPage = $this->nextSearchLink();
@@ -352,72 +183,37 @@ class MetaGer
             "nextPage" => $nextPage === "#" ? null : $nextPage,
             "searchTime" => round(microtime(true) - $this->starttime, 2),
             "results" => $results,
-            "ads" => $ads,
+            # Immer leer. MetaGer zeigt keine Werbung mehr, und keine Suchmaschine
+            # liefert noch welche; das Feld bleibt nur, weil sein Wegfall die
+            # Schema-Version erhöht — das passiert in einem eigenen Commit, damit
+            # bestehende Clients nicht mit dem Aufräumen brechen.
+            "ads" => [],
             # Normale Zustände, keine Fehler: leere Ergebnisliste mit Hinweis.
             "warnings" => array_values($this->warnings),
             "errors" => array_values($this->errors),
         ], $additional);
     }
 
+    /**
+     * Turn what the engines answered into the list the page shows.
+     *
+     * Order matters and is not obvious, so it is spelled out here: results are
+     * ranked before they are filtered so that ranking sees every engine's view
+     * of a page, and filtered before they are deduplicated so that a blacklisted
+     * copy cannot become the surviving one.
+     */
     public function prepareResults()
     {
-        // combine
         $this->combineResults();
 
-        uasort($this->results, function ($a, $b) {
-            if ($a->getRank() == $b->getRank()) {
-                return 0;
-            }
+        $this->results = app(ResultRanker::class)->order($this->results);
 
-            return ($a->getRank() < $b->getRank()) ? 1 : -1;
-        });
+        $this->results = $this->validOnly($this->results);
+        $this->videos = $this->validOnly($this->videos);
+        $this->news = $this->validOnly($this->news);
 
-        # Validate Results
-        $newResults = [];
-        foreach ($this->results as $result) {
-            if ($result->isValid($this)) {
-                $newResults[] = $result;
-            }
-        }
-        $this->results = $newResults;
-
-        # Validate Videos
-        $newResults = [];
-        foreach ($this->videos as $video) {
-            if ($video->isValid($this)) {
-                $newResults[] = $video;
-            }
-        }
-        $this->videos = $newResults;
-        # Validate News
-        $newResults = [];
-        foreach ($this->news as $news) {
-            if ($news->isValid($this)) {
-                $newResults[] = $news;
-            }
-        }
-        $this->news = $newResults;
-
-        $this->duplicationCheck();
-
-        # Validate Advertisements
-        $newResults = [];
-        foreach ($this->ads as $ad) {
-            if (
-                ($ad->strippedHost !== "" && (in_array($ad->strippedHost, $this->adDomainsBlacklisted) ||
-                    in_array($ad->strippedLink, $this->adUrlsBlacklisted)))
-            ) {
-                continue;
-            }
-            $newResults[] = $ad;
-        }
-
-        $this->ads = $newResults;
-
-        #Adgoal Implementation
-        if (empty($this->adgoalLoaded)) {
-            $this->adgoalLoaded = false;
-        }
+        $this->results = app(ResultDeduplicator::class)
+            ->deduplicate($this->results, app(SearchSettings::class)->fokus);
 
         if (count($this->results) <= 0) {
             if (strlen($this->site) > 0) {
@@ -440,7 +236,30 @@ class MetaGer
         }
     }
 
-    public function combineResults()
+    /**
+     * Drop everything this search is not allowed to show.
+     *
+     * Result::isValid needs the MetaGer to ask, because what is filtered out
+     * depends on the search: the user's own host/domain/url blacklists, the
+     * operator blacklists and the special-search restrictions all live here.
+     *
+     * @param Result[] $results
+     * @return Result[]
+     */
+    private function validOnly(array $results): array
+    {
+        return array_values(array_filter($results, fn(Result $result) => $result->isValid($this)));
+    }
+
+    /**
+     * Take the results off the engines and put them in one pile.
+     *
+     * Cloned, not referenced: the engine objects go into the loader cache for
+     * load-more to pick up again, so everything from here on has to be able to
+     * mutate a result — deduplication merges copies into one — without editing
+     * what that engine hands out next time.
+     */
+    private function combineResults()
     {
         foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
             if (isset($engine->next)) {
@@ -451,157 +270,11 @@ class MetaGer
                     $this->results[] = clone $result;
                 }
             }
-            foreach ($engine->ads as $ad) {
-                $this->ads[] = clone $ad;
-            }
             foreach ($engine->news as $news) {
                 $this->news[] = clone $news;
             }
             foreach ($engine->videos as $video) {
                 $this->videos[] = clone $video;
-            }
-        }
-    }
-
-    public function duplicationCheck()
-    {
-        $arr = [];
-
-        $fokus = app(SearchSettings::class)->fokus;
-
-        for ($i = 0; $i < count($this->results); $i++) {
-            if ($fokus === "bilder") {
-                $link = $this->results[$i]->image->thumbnail;
-            } else {
-                $link = $this->results[$i]->link;
-            }
-
-            $link = urldecode($link);
-
-            if (strpos($link, "http://") === 0) {
-                $link = substr($link, 7);
-            }
-
-            if (strpos($link, "https://") === 0) {
-                $link = substr($link, 8);
-            }
-
-            if (strpos($link, "www.") === 0) {
-                $link = substr($link, 4);
-            }
-
-            $link = trim($link, "/");
-
-            if (isset($arr[$link])) {
-                $arr[$link]->gefVon[] = $this->results[$i]->gefVon[0];
-                $arr[$link]->gefVonLink[] = $this->results[$i]->gefVonLink[0];
-
-                if (!empty($this->results[$i]->image)) {
-                    $arr[$link]->image = $this->results[$i]->image;
-                }
-
-                if (!empty($this->results[$i]->inheritedResults)) {
-                    $arr[$link]->inheritedResults = $this->results[$i]->inheritedResults;
-                }
-
-                // Combine the deep results buttons of both results
-                if (!empty(Arr::get($this->results[$i]->deepResults, "buttons", []))) {
-                    $arr[$link]->deepResults =
-                        Arr::set(
-                            $arr[$link]->deepResults,
-                            "buttons",
-                            array_merge(
-                                Arr::get($arr[$link]->deepResults, "buttons", []),
-                                Arr::get($this->results[$i]->deepResults, "buttons", [])
-                            )
-                        );
-                }
-                // The duplicate might already be an adgoal partnershop
-                if ($this->results[$i]->partnershop) {
-                    # Den Link hinzufügen:
-                    $arr[$link]->logo = $this->results[$i]->logo;
-                    $arr[$link]->image = $this->results[$i]->image;
-                    $arr[$link]->link = $this->results[$i]->link;
-                    $arr[$link]->partnershop = $this->results[$i]->partnershop;
-                }
-
-
-
-                array_splice($this->results, $i, 1);
-                $i--;
-                if ($arr[$link]->new === true || $this->results[$i]->new === true) {
-                    $arr[$link]->changed = true;
-                }
-            } else {
-                $arr[$link] = &$this->results[$i];
-            }
-        }
-    }
-
-    /**
-     * Modifies the already filled array of advertisements and
-     * includes an advertisement for our donation page.
-     * 
-     * It will do so everytime when there are other advertisments to mix it in
-     * and only in a percentage of cases when there are no other advertisements.
-     * 
-     * The Position at which our advertisement is placed is random within the other
-     * advertisements. In some cases it will be the first ad and in other cases in some
-     * other place.
-     *
-     * @param int $position Position to ad advertisement at or null if random
-     *
-     * @return int | null Position where advertisement was added
-     */
-    public function addDonationAdvertisement(?int $position = null)
-    {
-        return;
-        /**
-         * If there are no other advertisements we will only display our advertisements 
-         * every so often. ~33% in this case
-         * ToDo set back to 5 once we do not want to advertise donations as much anymore
-         */
-        if ($position === null && rand(1, 100) >= 34) {
-            return null;
-        }
-
-        $donationAd = new \App\Models\Result(
-            "MetaGer",
-            __("metaGer.ads.own.title"),
-            route("spende"),
-            route("spende"),
-            __("metaGer.ads.own.description"),
-            "MetaGer",
-            "https://metager.de",
-            1
-        );
-        $adCount = sizeof($this->ads);
-        // Put Donation Advertisement to random position
-        $position = $position !== null ? $position : random_int(0, $adCount);
-
-        array_splice($this->ads, $position, 0, [$donationAd]);
-        return $position;
-    }
-
-    public function startSearch()
-    {
-        // Check all engines for Cached responses
-        $this->checkCache();
-
-        // Wir starten alle Suchen
-        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
-            $engine->startSearch();
-        }
-    }
-
-    public function checkCache()
-    {
-        if ($this->canCache()) {
-            foreach (app(Searchengines::class)->getEnabledSearchengines() as $suma) {
-                if (Cache::has($suma->getHash())) {
-                    $suma->cached = true;
-                    $suma->retrieveResults($this, Cache::get($suma->getHash()));
-                }
             }
         }
     }
@@ -659,15 +332,6 @@ class MetaGer
         return app(SearchSettings::class)->fokus === "bilder";
     }
 
-    public function sumaIsAdsuche($suma, $overtureEnabled)
-    {
-        $sumaName = $suma["name"]->__toString();
-        return
-            $sumaName === "qualigo"
-            || $sumaName === "similar_product_ads"
-            || (!$overtureEnabled && $sumaName === "overtureAds");
-    }
-
     public function sumaIsDisabled($suma)
     {
         return
@@ -675,102 +339,15 @@ class MetaGer
             && $suma['disabled']->__toString() === "1";
     }
 
-    public function sumaIsOverture($suma)
+    /**
+     * Highest result count any engine reported, from Search\EngineOrchestrator.
+     *
+     * A maximum rather than a sum: engines overlap heavily, so adding them up
+     * would claim more distinct results than exist.
+     */
+    public function reportTotalResults(int $count): void
     {
-        return
-            $suma["name"]->__toString() === "overture"
-            || $suma["name"]->__toString() === "overtureAds";
-    }
-
-    public function sumaIsNotAdsuche($suma)
-    {
-        return
-            $suma["name"]->__toString() !== "qualigo"
-            && $suma["name"]->__toString() !== "similar_product_ads"
-            && $suma["name"]->__toString() !== "overtureAds";
-    }
-
-    public function waitForMainResults()
-    {
-        $engines = app(Searchengines::class)->getEnabledSearchengines();
-        $enginesToWaitFor = [];
-        $mainEngines = $this->sumaFile->foki->{app(SearchSettings::class)->fokus}->main;
-        foreach ($mainEngines as $mainEngine) {
-            foreach ($engines as $engine) {
-                if ($engine->name === $mainEngine) {
-                    $enginesToWaitFor[] = $engine->getHash();
-                }
-            }
-        }
-
-        # If no main engines are enabled by the user we will wait for all results
-        if (sizeof($enginesToWaitFor) === 0) {
-            foreach ($engines as $engine) {
-                $enginesToWaitFor[] = $engine->getHash();
-            }
-        } else {
-            $newEnginesToWaitFor = [];
-            // Don't wait for engines that are already loaded in Cache
-            foreach ($enginesToWaitFor as $engineToWaitFor) {
-                foreach ($engines as $engine) {
-                    if ($engine->getHash() === $engineToWaitFor && !$engine->loaded) {
-                        $newEnginesToWaitFor[] = $engineToWaitFor;
-                    }
-                }
-            }
-            $enginesToWaitFor = $newEnginesToWaitFor;
-        }
-
-        $timeStart = microtime(true);
-        while (sizeof($enginesToWaitFor) > 0) {
-            if ((microtime(true) - $timeStart) >= 6) {
-                break;
-            }
-            $answer = Redis::brpop($enginesToWaitFor, 6);
-
-            if ($answer === null) {
-                continue;
-            } else {
-                Redis::lpush($answer[0], $answer[1]);
-                Redis::expire($answer[0], 60);
-            }
-            foreach ($engines as $index => $engine) {
-                if ($engine->getHash() === $answer[0]) {
-                    $body = json_decode($answer[1]);
-                    if ($body !== null)
-                        $body = $body->body;
-                    $engine->retrieveResults($this, $body);
-                    foreach ($enginesToWaitFor as $waitIndex => $engineToWaitFor) {
-                        if ($engineToWaitFor === $answer[0]) {
-                            unset($enginesToWaitFor[$waitIndex]);
-                            break 2;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public function retrieveResults()
-    {
-        $engines = app(Searchengines::class)->getEnabledSearchengines();
-        // Von geladenen Engines die Ergebnisse holen
-        foreach ($engines as $engine) {
-            if (!$engine->loaded) {
-                try {
-                    $engine->retrieveResults($this);
-                } catch (\ErrorException $e) {
-                    Log::error($e);
-                }
-            }
-            if (!empty($engine->totalResults) && $engine->totalResults > $this->totalResults) {
-                $this->totalResults = $engine->totalResults;
-            }
-            if (!empty($engine->alteredQuery) && !empty($engine->alterationOverrideQuery)) {
-                $this->alteredQuery = $engine->alteredQuery;
-                $this->alterationOverrideQuery = $engine->alterationOverrideQuery;
-            }
-        }
+        $this->totalResults = max($this->totalResults, $count);
     }
 
     /*
@@ -794,15 +371,7 @@ class MetaGer
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
 
         # Suma-File
-        if ($this->dummy) {
-            $stressFile = \config_path("stress.json");
-            if (!file_exists($stressFile)) {
-                die(trans('metaGer.formdata.cantLoad'));
-            }
-            $this->sumaFile = json_decode(file_get_contents($stressFile));
-        } else {
-            $this->sumaFile = app(SearchEngineRegistry::class);
-        }
+        $this->sumaFile = app(SearchEngineRegistry::class);
         # Sucheingabe
         $this->eingabe = trim(\Request::input('eingabe', ''));
         $this->q = $this->eingabe;
@@ -823,8 +392,6 @@ class MetaGer
         # IP
         $this->ip = $this->anonymizeIp(\Request::ip());
 
-        $this->useragent = \Request::header('User-Agent');
-
         # Language
         if (isset($_SERVER['HTTP_LANGUAGE'])) {
             $this->language = $_SERVER['HTTP_LANGUAGE'];
@@ -840,7 +407,7 @@ class MetaGer
             $this->lang = "all";
         }
 
-        $this->agent = new Agent();
+        $this->agent = app(\App\Support\Browser::class);
         $this->mobile = $this->agent->isMobile();
         # Sprüche
         if (app(\App\SearchSettings::class)->zitate) {
@@ -892,65 +459,7 @@ class MetaGer
         // Remove Inputs that are not used
         $this->request = \Request::replace(\Request::except(['uid']));
 
-        // Disable freshness filter if custom freshness filter isset
-        if ($this->request->filled("ff") && $this->request->filled("f")) {
-            $this->request = $this->request->replace($this->request->except(["f"]));
-        }
-        // Remove custom time filter if either of the dates isn't set or is not a date
-        if ($this->request->input("fc") === "on") {
-            if (!$this->request->filled("ff") || !$this->request->filled("ft")) {
-                $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-            } else {
-                $ff = $this->request->input("ff");
-                $ft = $this->request->input("ft");
-                if (!preg_match("/^\d{4}-\d{2}-\d{2}$/", $ff) || !preg_match("/^\d{4}-\d{2}-\d{2}$/", $ft)) {
-                    $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-                } else {
-                    // Now Check if there is something wrong with the dates
-                    $from = $this->request->input("ff");
-                    $to = $this->request->input("ft");
-                    $changed = false;
-                    $from = Carbon::createFromFormat("Y-m-d H:i:s", $from . " 00:00:00");
-                    $to = Carbon::createFromFormat("Y-m-d H:i:s", $to . " 00:00:00");
-
-                    if ($from > Carbon::now()) {
-                        $from = Carbon::now();
-                        $changed = true;
-                    }
-                    if ($to > Carbon::now()) {
-                        $to = Carbon::now();
-                        $changed = true;
-                    }
-                    if ($from > $to) {
-                        $tmp = $to;
-                        $to = $from;
-                        $from = $tmp;
-                        $changed = true;
-                    }
-
-                    # Bing only allows a maximum of 1 year in the past
-                    # Verify the parameters
-                    $yearAgo = Carbon::now()->subYear();
-                    if ($from < $yearAgo) {
-                        $from = clone $yearAgo;
-                        $changed = true;
-                    }
-                    if ($to < $yearAgo) {
-                        $to = clone $yearAgo;
-                        $changed = true;
-                    }
-
-                    if ($changed) {
-                        $oldParameters = $this->request->all();
-                        $oldParameters["ff"] = $from->format("Y-m-d");
-                        $oldParameters["ft"] = $to->format("Y-m-d");
-                        $this->request = $this->request->replace($oldParameters);
-                    }
-                }
-            }
-        } elseif ($this->request->filled("ff") || $this->request->filled("ft")) {
-            $this->request = $this->request->replace($this->request->except(["fc", "ff", "ft"]));
-        }
+        $this->request = app(QueryParser::class)->sanitizeFilters($this->request);
 
         $this->out = \Request::input('out', "html");
         # Standard output format html
@@ -1034,193 +543,35 @@ class MetaGer
         }
     }
 
+    /**
+     * Read the operators out of the query and hand the results to the search.
+     *
+     * The parsing is in Search\QueryParser; what stays here is the assignment,
+     * because these eight fields are what the views and Result::isValid read
+     * off the MetaGer object.
+     */
     public function checkSpecialSearches(Request $request)
     {
-        $this->searchCheckPhrase();
+        $query = app(QueryParser::class)->parse($this->q, $request);
 
-        $this->searchCheckHostBlacklist($request);
-        $this->searchCheckDomainBlacklist($request);
-        $this->searchCheckUrlBlacklist();
-        $this->searchCheckStopwords($request);
-        $this->searchCheckNoSearch();
+        $this->q = $query->q;
+        $this->phrases = $query->phrases;
+        $this->hostBlacklist = $query->hostBlacklist;
+        $this->domainBlacklist = $query->domainBlacklist;
+        $this->urlBlacklist = $query->urlBlacklist;
+        $this->stopWords = $query->stopWords;
 
-        # Check for self-harm related searches
-        $triggers = ["suizid", "selbstmord", "Selbstmordgedanken", "selbsttötung", "Freitod", "Sterbehilfe", "umbringen", "suizidale", "depressionen", "depressiv", "selbstverletzung", "einsam", "einsamkeit", "self harm", "self injury", "suicidal", "suicidality", "self-murder", "self-slaughter", "self-destruction", "self-homocide", "self-murderer", "kill oneself", "lonely", "depression"];
-        foreach ($triggers as $i => $trigger) {
-            if (preg_match("/\b" . preg_quote($trigger, '/') . "\b/i", $this->q)) {
-                $this->htmlwarnings[] = trans('metaGer.prevention.phrase', ['prevurl' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "prevention")]);
-                break;
-            }
-        }
-    }
-
-    private function searchCheckPhrase()
-    {
-        $p = "";
-        $tmp = $this->q;
-        // matches '[... ]"test satz"[ ...]'
-        while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
-            $tmp = $match[1] . $match[3];
-            $this->phrases[] = $match[2];
-        }
-
-        foreach ($this->phrases as $phrase) {
-            $p .= "\"$phrase\", ";
-        }
-        $p = rtrim($p, ", ");
-        if (sizeof($this->phrases) > 0) {
-            $this->warnings[] = trans('metaGer.formdata.phrase', ['phrase' => $p]);
-        }
-    }
-
-    private function searchCheckHostBlacklist($request)
-    {
-        // matches '[... ]-site:test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-site:([^\*\s]\S*)(\s.*|$)/si", $this->q, $match)) {
-            $this->hostBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        # Overwrite Setting if it's submitted via Parameter
-        if ($request->has('blacklist')) {
-            $this->hostBlacklist = [];
-            $blacklistString = trim($request->input('blacklist'));
-            if (strpos($blacklistString, ",") !== false) {
-                $blacklistArray = explode(',', $blacklistString);
-                foreach ($blacklistArray as $blacklistElement) {
-                    $blacklistElement = trim($blacklistElement);
-                    if (strpos($blacklistElement, "*") !== 0) {
-                        $this->hostBlacklist[] = $blacklistElement;
-                    }
-                }
-            } elseif (strpos($blacklistString, "*") !== 0) {
-                $this->hostBlacklist[] = $blacklistString;
-            }
-        }
-
-        $this->hostBlacklist = array_merge($this->hostBlacklist, app(SearchSettings::class)->blacklist);
-        $this->hostBlacklist = array_unique($this->hostBlacklist);
-    }
-
-    private function searchCheckDomainBlacklist($request)
-    {
-        // matches '[... ]-site:*.test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-site:\*\.(\S+)(\s.*|$)/si", $this->q, $match)) {
-            $this->domainBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        # Overwrite Setting if it's submitted via Parameter
-        if ($request->has('blacklist')) {
-            $this->domainBlacklist = [];
-            $blacklistString = trim($request->input('blacklist'));
-            if (strpos($blacklistString, ",") !== false) {
-                $blacklistArray = explode(',', $blacklistString);
-                foreach ($blacklistArray as $blacklistElement) {
-                    $blacklistElement = trim($blacklistElement);
-                    if (strpos($blacklistElement, "*.") === 0) {
-                        $this->domainBlacklist[] = substr($blacklistElement, strpos($blacklistElement, "*.") + 2);
-                    }
-                }
-            } elseif (strpos($blacklistString, "*.") === 0) {
-                $this->domainBlacklist[] = substr($blacklistString, strpos($blacklistString, "*.") + 2);
-            }
-        }
-        $this->domainBlacklist = array_merge($this->domainBlacklist, app(SearchSettings::class)->blacklist_tld);
-        $this->domainBlacklist = array_unique($this->domainBlacklist);
-    }
-
-    private function searchCheckUrlBlacklist()
-    {
-        // matches '[... ]-site:*.test.de[ ...]'
-        while (preg_match("/(^|.*?\s)-url:(\S+)(\s.*|$)/si", $this->q, $match)) {
-            $this->urlBlacklist[] = $match[2];
-            $this->q = $match[1] . $match[3];
-        }
-        // print the url blacklist as a user warning
-        if (sizeof($this->urlBlacklist) > 0) {
-            $urlString = "";
-            foreach ($this->urlBlacklist as $url) {
-                $urlString .= $url . ", ";
-            }
-            $urlString = rtrim($urlString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.urlBlacklist', ['url' => $urlString]);
-        }
-    }
-
-    private function searchCheckStopwords($request)
-    {
-        $oldQ = $this->q;
-
-        $tmp = $this->q;
-        // matches '[... ]"test satz"[ ...]'
-        // In order to avoid "finding" stopwords inside of phrase searches only strings outside of quotation marks should be checked
-        while (preg_match("/(^|.*?\s)\"(.+)\"(\s.*|$)/si", $tmp, $match)) {
-            $tmp = $match[1] . $match[3];
-        }
-
-        // matches '[... ]-test[ ...]'
-        $words = preg_split("/\s+/si", $tmp);
-        $newQ = $this->q;
-        foreach ($words as $word) {
-            if (preg_match("/^-[a-zA-Z0-9]/", $word)) {
-                $this->stopWords[] = substr($word, 1);
-                $newQ = str_ireplace($word, "", $newQ);
-            }
-        }
-        $newQ = preg_replace("/(\s)\s+/", "$1", $newQ);
-        $this->q = trim($newQ);
-        # Overwrite Setting if submitted via Parameter
-        if ($request->has('stop')) {
-            $this->stopWords = [];
-            $stop = trim($request->input('stop'));
-            if (strpos($stop, ',') !== false) {
-                $stopArray = explode(',', $stop);
-                foreach ($stopArray as $stopElement) {
-                    $stopElement = trim($stopElement);
-                    $this->stopWords[] = $stopElement;
-                }
-            } else {
-                $this->stopWords[] = $stop;
-            }
-            $this->q = $oldQ;
-        }
-        // print the stopwords as a user warning
-        if (sizeof($this->stopWords) > 0) {
-            $stopwordsString = "";
-            foreach ($this->stopWords as $stopword) {
-                $stopwordsString .= $stopword . ", ";
-            }
-            $stopwordsString = rtrim($stopwordsString, ", ");
-            $this->warnings[] = trans('metaGer.formdata.stopwords', ['stopwords' => $stopwordsString]);
-        }
-    }
-
-    private function searchCheckNoSearch()
-    {
-        if ($this->q === "") {
-            $this->warnings[] = trans('metaGer.formdata.noSearch');
-        }
+        $this->warnings = array_merge($this->warnings, $query->warnings);
+        $this->htmlwarnings = array_merge($this->htmlwarnings, $query->htmlWarnings);
     }
 
     public function nextSearchLink()
     {
-        if (isset($this->next) && isset($this->next['engines']) && count($this->next['engines']) > 0) {
-            $requestData = $this->request->except(['page', 'out', 'submit-query', 'mgv']);
-            if ($this->request->input('out', '') !== "results" && $this->request->input('out', '') !== '') {
-                $requestData["out"] = $this->request->input('out');
-            }
-            $requestData['next'] = $this->getSearchUid();
-            $link = action('MetaGerSearch@search', $requestData);
-        } else {
-            $link = "#";
+        if (!isset($this->next["engines"]) || count($this->next["engines"]) === 0) {
+            return "#";
         }
-        return $link;
-    }
 
-    public function rankAll()
-    {
-        foreach (app(Searchengines::class)->getEnabledSearchengines() as $engine) {
-            $engine->rank();
-        }
+        return $this->links()->nextPage($this->getSearchUid());
     }
 
     # Hilfsfunktionen
@@ -1228,17 +579,6 @@ class MetaGer
     {
         $length = strlen($needle);
         return (substr($haystack, 0, $length) === $needle);
-    }
-
-    public function removeInvalids()
-    {
-        $results = [];
-        foreach ($this->results as $result) {
-            if ($result->isValid($this)) {
-                $results[] = $result;
-            }
-        }
-        $this->results = $results;
     }
 
     public function atLeastOneSearchengineSelected(Request $request)
@@ -1249,15 +589,6 @@ class MetaGer
             }
         }
         return false;
-    }
-
-    public function popAd()
-    {
-        if (count($this->results) > 0 && count($this->ads) > 0) {
-            return array_shift($this->ads);
-        } else {
-            return null;
-        }
     }
 
     public function canCache()
@@ -1315,76 +646,45 @@ class MetaGer
     }
 
     # Generators
+    #
+    # All of them are the same search with one thing changed, and all of them
+    # are built by Search\LinkBuilder. They stay here as one-liners because the
+    # blades call them on $metager.
 
     public function generateSearchLink($fokus, $results = true)
     {
-        $except = ['page', 'next', 'out', 'submit-query', 'mgv', 'ua'];
-        # Remove every Filter
-        foreach ($this->sumaFile->filter->{"parameter-filter"} as $filterName => $filter) {
-            $except[] = $filter->{"get-parameter"};
-        }
-        $requestData = $this->request->except($except);
-        $requestData['focus'] = $fokus;
-
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->forFokus($fokus);
     }
 
     public function generateEingabeLink($eingabe)
     {
-        $except = ['page', 'next', 'out', 'eingabe', 'submit-query', 'mgv', 'ua'];
-        $requestData = $this->request->except($except);
-
-        $requestData['eingabe'] = $eingabe;
-
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
-    }
-
-    public function generateQuicktipLink()
-    {
-        $link = action('MetaGerSearch@quicktips');
-
-        return $link;
+        return $this->links()->forQuery($eingabe);
     }
 
     public function generateSiteSearchLink($host)
     {
-        $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " site:$host";
-        $requestData['focus'] = "web";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->restrictedToHost($host);
     }
 
     public function generateRemovedHostLink($host)
     {
-        $host = urlencode($host);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " -site:$host";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->withoutHost($host);
     }
 
     public function generateRemovedDomainLink($domain)
     {
-        $domain = urlencode($domain);
-        $requestData = $this->request->except(['page', 'out', 'next', 'submit-query', 'mgv', 'ua']);
-        $requestData['eingabe'] .= " -site:*.$domain";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->withoutDomain($domain);
     }
 
     public function getUnFilteredLink()
     {
-        $requestData = $this->request->except(['lang']);
-        $requestData['lang'] = "all";
-        $link = action('MetaGerSearch@search', $requestData);
-        return $link;
+        return $this->links()->everyLanguage();
     }
 
-    # Komplexe Getter
+    private function links(): LinkBuilder
+    {
+        return new LinkBuilder($this->request);
+    }
 
     public function getHostCount($host)
     {
@@ -1412,6 +712,21 @@ class MetaGer
     public function getNext()
     {
         return $this->next;
+    }
+
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * The request as the search reads it — parameters already scrubbed, so not
+     * the same object as the incoming one. Search\ResponseFactory needs it to
+     * work out which engines the user ticked by hand.
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
     }
 
     public function getOut()
@@ -1450,11 +765,6 @@ class MetaGer
     public function getIp()
     {
         return $this->ip;
-    }
-
-    public function getUserAgent()
-    {
-        return $this->useragent;
     }
 
     public function getEingabe()
@@ -1541,21 +851,6 @@ class MetaGer
         return $this->urlBlacklist;
     }
 
-    public function getDomainBlacklist()
-    {
-        return $this->domainsBlacklisted;
-    }
-
-    public function getBlacklistDescriptionUrl()
-    {
-        return $this->blacklistDescriptionUrl;
-    }
-
-    public function getUrlBlacklist()
-    {
-        return $this->urlsBlacklisted;
-    }
-
     public function getLanguageDetect()
     {
         return $this->languageDetect;
@@ -1623,13 +918,4 @@ class MetaGer
         return $this->framed;
     }
 
-    public function isDummy()
-    {
-        return $this->dummy;
-    }
-
-    public function setDummy($dummy)
-    {
-        $this->dummy = $dummy;
-    }
 }

@@ -188,11 +188,11 @@
                                 <button class="js-only btn btn-sm">@lang('settings.copy')</button>
                             </div>
                         @endif
-                        @if($agent["browser_gecko_version"] > 0)
+                        @if($agent->geckoVersion() > 0)
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://addons.mozilla.org/firefox/addon/metager-suche/"])</p>
-                        @elseif($agent["browser_name"] === "Edge")
+                        @elseif($agent->name() === "Edge")
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://microsoftedge.microsoft.com/addons/detail/fdckbcmhkcoohciclcedgjmchbdeijog"])</p>
-                        @elseif($agent["browser_chromium_version"] > 0 && $agent["device_type"] === "desktop" )
+                        @elseif($agent->chromiumVersion() > 0 && $agent->deviceType() === "desktop" )
                             <p class="help">@lang('settings.hint.addon', ["link" => "https://chromewebstore.google.com/detail/metager-suche/gjfllojpkdnjaiaokblkmjlebiagbphd"])</p>
                         @endif
                     </div>

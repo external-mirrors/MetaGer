@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+#
+# Stands in for curl while the cleanup scripts are under test.
+#
+# Serves the registry API out of $FIXTURE_DIR and appends every DELETE it is
+# asked to perform to $RECORD_FILE, one "<repository id> <tag>" per line. That
+# record is the whole point: what these scripts get wrong is *which tags they
+# delete*, and nothing else about them is worth asserting.
+#
+# Only the three shapes the scripts actually issue are understood — a paged tag
+# listing, a single tag lookup, a tag deletion — and anything else is a hard
+# error rather than an empty response, so a script that starts calling a fourth
+# endpoint fails the suite instead of silently receiving nothing.
+set -uo pipefail
+
+method="GET"
+url=""
+dump_header=""
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -X) method="$2"; shift 2 ;;
+        -D) dump_header="$2"; shift 2 ;;
+        -H) shift 2 ;;
+        --fail|--silent|-s|-f) shift ;;
+        -*) shift ;;
+        *) url="$1"; shift ;;
+    esac
+done
+
+path="${url%%\?*}"
+query="${url#"$path"}"
+query="${query#\?}"
+
+fail() { echo "stub curl: $*" >&2; exit 99; }
+
+# The two endpoints the safe sweep depends on. Either can be staged as
+# forbidden by touching "<name>-forbidden" in the fixture directory, which is
+# how the tests cover a job token that is not allowed to read them.
+# Always 401, because that is what the real one does: GET /projects/:id/pipelines
+# is not on GitLab's allowlist for CI_JOB_TOKEN. Stubbed explicitly rather than
+# left out so that a cleanup rewritten to depend on it fails here, where the
+# failure is one line of test output, instead of in production, where it looks
+# like a sweep that found nothing to do.
+if [[ "$path" == */pipelines ]]; then
+    exit 22
+fi
+
+if [[ "$path" == */repository/branches ]]; then
+    [[ -f "$FIXTURE_DIR/branches-forbidden" ]] && exit 22
+    page=1
+    for parameter in ${query//&/ }; do
+        [[ "$parameter" == page=* ]] && page="${parameter#page=}"
+    done
+    if [[ "$page" == "1" ]]; then
+        cat "$FIXTURE_DIR/branches.json"
+    else
+        echo "[]"
+    fi
+    [[ -n "$dump_header" ]] && printf 'HTTP/1.1 200 OK\r\nx-next-page: \r\n\r\n' >"$dump_header"
+    exit 0
+fi
+
+# .../registry/repositories/<id>/tags[/<tag>]
+if [[ "$path" =~ registry/repositories/([0-9]+)/tags/?(.*)$ ]]; then
+    repository="${BASH_REMATCH[1]}"
+    tag="${BASH_REMATCH[2]}"
+else
+    fail "unrecognised url: $url"
+fi
+
+if [[ "$method" == "DELETE" ]]; then
+    [[ -n "$tag" ]] || fail "DELETE without a tag: $url"
+    # A tag that is not there answers 404, and the scripts pass --fail, so the
+    # stub has to as well — otherwise a double delete looks like a success.
+    grep -qxF "$tag" "$FIXTURE_DIR/tags-$repository.txt" 2>/dev/null || exit 22
+    echo "$repository $tag" >>"$RECORD_FILE"
+    echo "DELETE $repository" >>"$ORDER_FILE"
+    # The tag really goes away, because that is what makes paging over a
+    # repository while deleting from it observably wrong: every delete shifts
+    # the remaining tags one place towards page 1, so the next page fetched
+    # skips as many entries as have been deleted since. A stub that only
+    # recorded deletions would page over a list that never moves and would
+    # report that bug as passing.
+    grep -vxF "$tag" "$FIXTURE_DIR/tags-$repository.txt" >"$FIXTURE_DIR/tags-$repository.tmp"
+    mv "$FIXTURE_DIR/tags-$repository.tmp" "$FIXTURE_DIR/tags-$repository.txt"
+    exit 0
+fi
+
+[[ -z "$tag" ]] || fail "single-tag GET is not stubbed (it 404s on this GitLab): $url"
+
+# Paged listing. The page size is deliberately small so the suite exercises the
+# pagination loop rather than always fitting in one response.
+page=1
+for parameter in ${query//&/ }; do
+    [[ "$parameter" == page=* ]] && page="${parameter#page=}"
+done
+
+echo "LIST $repository" >>"$ORDER_FILE"
+
+per_page=${STUB_PER_PAGE:-3}
+file="$FIXTURE_DIR/tags-$repository.txt"
+[[ -f "$file" ]] || file=/dev/null
+
+total=$(grep -c . "$file" 2>/dev/null || echo 0)
+offset=$(( (page - 1) * per_page ))
+
+if [[ $offset -ge $total ]]; then
+    echo "[]"
+    next=""
+else
+    sed -n "$((offset + 1)),$((offset + per_page))p" "$file" |
+        jq -R -s 'split("\n") | map(select(length > 0)) | map({name: .})'
+    next=$(( offset + per_page >= total ? 0 : page + 1 ))
+    [[ "$next" == "0" ]] && next=""
+fi
+
+# The scripts read x-next-page out of the dumped headers to drive the loop, and
+# an absent value is how the real API says "that was the last page".
+[[ -n "$dump_header" ]] && printf 'HTTP/1.1 200 OK\r\nx-next-page: %s\r\n\r\n' "$next" >"$dump_header"
+exit 0

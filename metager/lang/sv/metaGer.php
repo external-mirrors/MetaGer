@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'Det fanns ingen sökmotor som stödde ett av dina filteralternativ. Filter som för närvarande är aktiva: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Kunde inte hitta suma-filen',
         'noSearch' => 'Observera: Du har inte skrivit in något sökord. Vänligen skriv in sökord och försök igen',
         'dartEurope' => 'Tips: du har aktiverat Dart-Europe. Därför kan svarstiden vara längre och är inställd på 10 sek',
         'hostBlacklist' => 'Resultat för följande domäner kommer inte att visas: \":värd\"',
@@ -160,12 +159,6 @@ return [
         'skip' => 'Hoppa över',
         'min' => 'Minsta sömn (i s)',
         'max' => 'Maximal sömn (i s)',
-    ],
-    'ads' => [
-        'own' => [
-            'title' => 'Stöd MetaGer',
-            'description' => 'Med din donation stöder du underhållet och vidareutvecklingen av den oberoende sökmotorn metager.org och arbetet i den ideella föreningen SUMA-EV.',
-        ],
     ],
     'prevention' => [
         'phrase' => '<h2>Behöver du hjälp?</h2> Har du negativa tankar eller vill du prata med någon? På vår förebyggande sida <a href=":prevurl" target="_blank"></a> hittar du en lista över hjälpinstanser du kan vända dig till.',

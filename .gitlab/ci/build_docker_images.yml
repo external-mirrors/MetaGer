@@ -37,31 +37,38 @@ nginx:
   after_script:
     - docker logout $CI_REGISTRY
 
-.cleanup_revision_images:
+# Keeps the registry from growing without bound. See cleanup_tags.sh for the
+# policy; the short version is that a long-lived branch builds four images per
+# push and only the last few deployed ones are worth keeping, and that a merged
+# branch takes with it any chance of ever being swept again.
+#
+# `needs: []` rather than waiting on the builds: the script protects this
+# pipeline's tags by name, whether or not they have been pushed yet, so there is
+# nothing to wait for and no reason to sit on the critical path.
+#
+# REDIS_REPOSITORY_ID is gone with this: nothing has built a redis image since
+# the cache moved to the valkey subchart, and no script ever read the variable —
+# the 66 tags in that repository are all from branches that ended years ago.
+.cleanup_registry:
   stage: build_docker_images
   tags:
     - kubernetes
   image: $DEPLOY_KUBERNETES_IMAGE
-  needs:
-    - composer
-    - npm
+  needs: []
   variables:
     FPM_REPOSITORY_ID: 418
     NGINX_REPOSITORY_ID: 416
     NODE_REPOSITORY_ID: 419
-    REDIS_REPOSITORY_ID: 425
-    KEEP_N: 9 # Trim to the latest 9 revisions as the 10th will be deleted in the next stage
+    KEEP_N: 9 # Deployed revisions to keep, so a rollback has somewhere to go
   before_script:
     - kubectl config get-contexts
     - kubectl config use-context $CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME:metager
-    - kubectl config view
   script:
-    - .gitlab/deployment_scripts/cleanup_tags_revision.sh
-    - .gitlab/deployment_scripts/cleanup_tags_non_revision.sh
+    - .gitlab/deployment_scripts/cleanup_tags.sh
 
-cleanup_revision_images_review:
+cleanup_registry_review:
   extends:
-    - .cleanup_revision_images
+    - .cleanup_registry
   environment:
     name: review/$CI_COMMIT_REF_SLUG
     url: "https://${CI_COMMIT_REF_SLUG}.review.metager.de"
@@ -72,9 +79,9 @@ cleanup_revision_images_review:
       when: never
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
 
-cleanup_revision_images_development:
+cleanup_registry_development:
   extends:
-    - .cleanup_revision_images
+    - .cleanup_registry
   environment:
     name: development
     url: https://metager3.de
@@ -84,9 +91,9 @@ cleanup_revision_images_development:
       when: never
     - if: '$CI_COMMIT_BRANCH == "development"'
 
-cleanup_revision_images_production:
+cleanup_registry_production:
   extends:
-    - .cleanup_revision_images
+    - .cleanup_registry
   environment:
     name: production
     url: https://metager.de

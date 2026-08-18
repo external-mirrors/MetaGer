@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdgoalController;
+use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AnonymousToken;
-use App\Http\Controllers\Assoziator;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
@@ -24,7 +23,6 @@ use App\Http\Middleware\AuthenticationValidation;
 use App\Http\Middleware\LocalizationRedirect;
 use App\Localization;
 use App\Models\Authorization\Authorization;
-use Jenssegers\Agent\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\App;
@@ -42,7 +40,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 | to using a Closure or controller method. Build something great!
 |
 */
-Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class])->group(function () {
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestForgery::class])->group(function () {
 
     Route::get("robots.txt", function (Request $request) {
         $responseData = "";
@@ -183,13 +181,13 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('to_mail', $to_mail)
             ->with('navbarFocus', 'kontakt')
             ->with('url', $url)
-            ->with('js', [mix('js/contact.js')])
-            ->with("css", [mix("css/contact.css")]);
+            ->with('js', [Vite::asset('resources/js/contact.js')])
+            ->with("css", [Vite::asset('resources/less/metager/pages/contact.less')]);
     })->name("contact");
 
     //Route::post('kontakt', [MailController::class, 'contactMail']);
     Route::get('adblocker', function () {
-        return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [mix('/css/adblocker.css')]]));
+        return response(view('adblocker', ["title" => __("titles.adblocker"), 'css' => [Vite::asset('resources/less/metager/pages/adblocker.less')]]));
     })->name("adblocker");
 
     Route::group(["prefix" => "membership"], function () {
@@ -225,12 +223,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         Route::post('/{amount}/{interval}/paypal/{funding_source}/subscription', [DonationController::class, 'paypalCreateSubscription'])->name("paypal-subscription");
     });
 
-    Route::get('partnershops', function () {
-        return view('spende.partnershops')
-            ->with('title', trans('titles.partnershops'))
-            ->with('navbarFocus', 'foerdern');
-    })->name("partnershops");
-
     Route::get('beitritt', function () {
         if (Localization::getLanguage() === "de") {
             return response()->download(storage_path('app/public/aufnahmeantrag-de.pdf'), "SUMA-EV_Beitrittsformular_" . (new \DateTime())->format("Y_m_d") . ".pdf", ["Content-Type" => "application/pdf"]);
@@ -247,7 +239,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
 
     Route::get('datenschutz', function () {
         return view('privacy')
-            ->with('css', [mix('/css/privacy.css')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/privacy.less')])
             ->with('navbarFocus', 'datenschutz');
     });
 
@@ -269,7 +261,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('title', trans('titles.help'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -290,7 +282,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('title', trans('titles.help-mainpages'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -305,7 +297,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('title', trans('titles.help-functions'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -320,7 +312,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('title', trans('titles.help-services'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -335,7 +327,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('title', trans('titles.help-privacy-protection'))
             ->with('navbarFocus', 'hilfe')
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -360,7 +352,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
             ->with('navbarFocus', 'hilfe')
             ->with("previous_url", $previous_url)
             ->with('css', [
-                mix('/css/help-easy-language.css'),
+                Vite::asset('resources/less/metager/pages/help-easy-language.less'),
             ]);
     });
 
@@ -377,11 +369,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::get('sitesearch', [SitesearchController::class, 'loadPage']);
 
     Route::get('websearch', function () {
-        $css = file_get_contents(public_path("css/widget/widget-template.css"));
+        // Inlined into the snippet users paste onto their own site — content, not a URL.
+        $css = Vite::content("resources/less/metager/pages/widget/widget-template.less");
         return view('widget.websearch')
             ->with('title', trans('titles.websearch'))
             ->with('navbarFocus', 'dienste')
-            ->with('css', [mix('css/widget/widget.css'), mix('css/widget/widget-template.css')])
+            ->with('css', [Vite::asset('resources/less/metager/pages/widget/widget.less'), Vite::asset('resources/less/metager/pages/widget/widget-template.less')])
             ->with('template_preview', view('widget.websearch-template')->render())
             ->with('template_webpage', view('widget.websearch-template', ["css" => $css])->render());
     });
@@ -397,12 +390,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
     Route::get('prevention', function () {
         return view('prevention-information')
             ->with('title', trans('titles.prevention'))
-            ->with('css', [mix('/css/prevention-information.css')]);
-    });
-
-    Route::get('ad-info', function () {
-        return view('ad-info')
-            ->with('title', trans('titles.ad-info'));
+            ->with('css', [Vite::asset('resources/less/metager/pages/prevention-information.less')]);
     });
 
     Route::get('age.xml', function () {
@@ -420,11 +408,11 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         return view('plugin-page')
             ->with('title', trans('titles.plugin'))
             ->with('navbarFocus', 'dienste')
-            ->with('agent', new Agent())
+            ->with('agent', $browser = \App\Support\Browser::fromRequest($request))
             ->with('request', $request->input('request', 'GET'))
-            ->with('browser', (new Agent())->browser())
+            ->with('browser', $browser->name())
             ->with('css', [
-                mix('/css/plugin-page.css'),
+                Vite::asset('resources/less/metager/pages/plugin-page.less'),
             ]);
     })->name("plugin");
 
@@ -534,10 +522,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\ValidateCsrfTok
         $router->get('/', [Prometheus::class, "metrics"]);
     });
 
-
-    Route::group(['prefix' => 'partner'], function () {
-        Route::get('r', [AdgoalController::class, 'forward'])->name('adgoal-redirect');
-    });
 
     Route::group(['prefix' => 'health-check'], function () {
         Route::get('liveness', [HealthcheckController::class, 'liveness']);

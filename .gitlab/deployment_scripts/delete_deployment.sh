@@ -3,11 +3,16 @@
 HELM_RELEASE_NAME=${HELM_RELEASE_NAME:0:53}
 HELM_RELEASE_NAME=$(echo $HELM_RELEASE_NAME | sed 's/-$//')
 
-echo "Removing Image Tags..."
-.gitlab/deployment_scripts/cleanup_tags_revision.sh
-# For some reason an empty image tag gets created for this. We need to delete it until we find out why that is
-#'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$FPM_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
-#'curl --fail --silent -X DELETE -H "JOB-TOKEN: $CI_JOB_TOKEN" "$CI_API_V4_URL/projects/$CI_PROJECT_ID/registry/repositories/$NGINX_REPOSITORY_ID/tags/$DOCKER_IMAGE_TAG_PREFIX"'
+# Tear the deployment down first, then the images.
+#
+# The old order was the other way round, which left a window where the release
+# still referenced tags that had just been deleted — harmless for pods already
+# running, an ImagePullBackOff for any that restarted in between. There is no
+# reason to take that window: nothing about the purge needs the release to exist,
+# because it works from the ref prefix rather than from the helm history.
 echo "Stopping Deployment..."
 kubectl -n $KUBE_NAMESPACE delete secret $HELM_RELEASE_NAME ${HELM_RELEASE_NAME}-redis-sentinel
 helm -n $KUBE_NAMESPACE delete $HELM_RELEASE_NAME
+
+echo "Removing Image Tags..."
+.gitlab/deployment_scripts/purge_tags.sh

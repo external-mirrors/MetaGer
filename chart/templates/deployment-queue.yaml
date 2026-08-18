@@ -1,0 +1,101 @@
+{{/*
+Queue workers, on their own.
+
+As a sidecar in the app Deployment these scaled with web traffic: the HPA watches
+CPU across the app pods, which is dominated by fpm and nginx and says nothing
+about how deep the queue is. A quiet night with a backlog of donation jobs got the
+minimum number of workers; a traffic spike with an empty queue got the maximum.
+
+Now a fixed count under .Values.queue.replicaCount. Fixed rather than autoscaled
+because the useful signal is queue depth, which needs a metrics adapter this
+cluster does not have — and a wrong signal is worse than none.
+*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-queue
+  labels:
+    {{- include "chart.componentLabels" (dict "root" . "component" "queue") | nindent 4 }}
+spec:
+  replicas: {{ .Values.queue.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "chart.componentSelectorLabels" (dict "root" . "component" "queue") | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.componentLabels" (dict "root" . "component" "queue") | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # queue:work finishes the job in hand on SIGTERM and then exits. Jobs here
+      # send mail and talk to PayPal, so being killed part-way is worth avoiding.
+      terminationGracePeriodSeconds: 120
+      volumes:
+        {{- include "chart.volumes" . | nindent 8 }}
+      containers:
+        - name: queue
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "queue:work", "--backoff=60", "--tries=5", "--sleep=1", "--queue=donations,default,general"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          {{- include "chart.env" (dict "root" .) | nindent 10 }}
+          volumeMounts:
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.config" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
+          # Unchanged from the sidecar. pgrep only proves the process exists, not
+          # that it is draining anything — but a queue worker has no equivalent of
+          # the scheduler's heartbeat to check against, and inventing one is not
+          # part of moving it between pods.
+          livenessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          readinessProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          startupProbe:
+            exec:
+              command:
+              - pgrep
+              - -f
+              - queue:work
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.queue | nindent 14 }}
+            limits:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "chart.componentSelectorLabels" (dict "root" . "component" "queue") | nindent 20 }}
+                topologyKey: kubernetes.io/hostname
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

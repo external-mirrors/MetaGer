@@ -10,6 +10,8 @@ use App\Models\Configuration\Searchengines;
 use App\Models\Quicktips\Quicktips;
 use App\PrometheusExporter;
 use App\QueryTimer;
+use App\Search\EngineOrchestrator;
+use App\Search\ResultRanker;
 use App\SearchSettings;
 use Auth;
 use Blade;
@@ -71,16 +73,18 @@ class MetaGerSearch extends Controller
         $quicktips = $metager->createQuicktips();
         $query_timer->observeEnd("Search_CreateQuicktips");
 
+        $orchestrator = app(EngineOrchestrator::class);
+
         $query_timer->observeStart("Search_StartSearch");
-        $metager->startSearch();
+        $orchestrator->start($metager);
         $query_timer->observeEnd("Search_StartSearch");
 
         $query_timer->observeStart("Search_WaitForMainResults");
-        $metager->waitForMainResults();
+        $orchestrator->waitForMainResults($metager);
         $query_timer->observeEnd("Search_WaitForMainResults");
 
         $query_timer->observeStart("Search_RetrieveResults");
-        $metager->retrieveResults();
+        $orchestrator->collectResults($metager);
         $query_timer->observeEnd("Search_RetrieveResults");
 
         // Versuchen die Ergebnisse der Quicktips zu laden
@@ -92,7 +96,7 @@ class MetaGerSearch extends Controller
 
         # Alle Ergebnisse vor der Zusammenführung ranken:
         $query_timer->observeStart("Search_RankAll");
-        $metager->rankAll();
+        app(ResultRanker::class)->rankEngineResults();
         $query_timer->observeEnd("Search_RankAll");
 
         # Ergebnisse der Suchmaschinen kombinieren:
@@ -148,16 +152,34 @@ class MetaGerSearch extends Controller
         $rawCost = app(Searchengines::class)->getRawSearchCost();
         $searchCost = app(Searchengines::class)->getSearchCost();
         if (is_array($engines)) {
+            // One discharge for the whole search, not one per engine.
+            //
+            // makePayment() POSTs to the keyserver synchronously, and this runs
+            // while the user is waiting for the page — so paying engine by
+            // engine put a network round trip on the result path for every paid
+            // engine a fokus uses. The keyserver discharges an amount, not an
+            // engine, so the sum is the same money in one call.
+            //
+            // The metrics stay per engine: they are the record of which engine
+            // was used, which is the question they answer.
+            $due = 0.0;
             foreach ($engines as $engine) {
                 // Only pay for engines that are used, not loaded, and not cached
                 if (!$engine->cached && $engine->configuration->cost > 0) {
                     // Remove namespace before passing engine to exporter
                     PrometheusExporter::KeyUsed($engine->configuration->cost, preg_replace("/^.*\\\/", "", get_class($engine)), $engine->cached);
-                    if (($user = Auth::guard("key")->user()) !== null) {
-                        $user->makePayment($engine->configuration->cost);
-                    } else {
-                        app(Authorization::class)->makePayment($engine->configuration->cost);
-                    }
+                    $due += $engine->configuration->cost;
+                }
+            }
+            if ($due > 0) {
+                // All or nothing now, where each engine used to be refused on its
+                // own. That is the better failure too: the search has already
+                // happened by this point, so charging for part of it was never
+                // the more correct outcome.
+                if (($user = Auth::guard("key")->user()) !== null) {
+                    $user->makePayment($due);
+                } else {
+                    app(Authorization::class)->makePayment($due);
                 }
             }
             // If rawCost < 1, pay the difference between searchCost and rawCost
@@ -298,10 +320,11 @@ class MetaGerSearch extends Controller
         }
 
         # Checks Cache for engine Results
-        $metager->checkCache();
-        $metager->retrieveResults();
+        $orchestrator = app(EngineOrchestrator::class);
+        $orchestrator->loadFromCache($metager);
+        $orchestrator->collectResults($metager);
 
-        $metager->rankAll();
+        app(ResultRanker::class)->rankEngineResults();
         $metager->prepareResults();
 
         $result = [

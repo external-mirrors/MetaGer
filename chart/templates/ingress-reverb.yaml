@@ -1,0 +1,61 @@
+{{- if .Values.ingress.enabled -}}
+{{/*
+Websocket routing, as its own Ingress.
+
+Websockets used to reach Reverb through the app pod: the ingress sent them to the
+app Service, nginx matched `location /ws/app`, rewrote /ws/(.*) to /$1 and proxied
+to 127.0.0.1:8081 — whichever Reverb happened to share that pod. Now that Reverb
+has a Service, the app's nginx is not on the path at all and both of its websocket
+location blocks are gone.
+
+Separate from the main Ingress because of the rewrite. nginx.ingress rewrite-target
+applies to every path in the Ingress it is set on, and only /ws needs rewriting:
+the client connects to wss://host/ws/app/{key} and Reverb serves /app/{key}. The
+backend's own broadcast endpoint, /apps/{id}/events, must arrive unrewritten and so
+stays on the main Ingress.
+
+The client path is fixed by the browser extension, which sets wsPath "/ws" — that
+is a shipped artifact, so the server side is what has to match it.
+*/}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "chart.fullname" . }}-ws
+  labels:
+    {{- include "chart.componentLabels" (dict "root" . "component" "reverb") | nindent 4 }}
+  annotations:
+    cert-manager.io/cluster-issuer: {{ index .Values.ingress.annotations "cert-manager.io/cluster-issuer" | default "letsencrypt-prod" }}
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # Websockets are idle for long stretches by design; the app's activity_timeout
+    # is 30s and its ping_interval 60s, so anything shorter than that here would
+    # cut healthy connections.
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+spec:
+  {{- if .Values.ingress.className }}
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- end }}
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          - path: /ws(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ include "chart.fullname" $ }}-reverb
+                port:
+                  number: 8081
+    {{- end }}
+{{- end }}

@@ -1,0 +1,19 @@
+{
+  "organic": [
+    {
+      "title": "Kaffee und Zubereitung, anders geschrieben",
+      "link": "http://www.example.org/kaffee/",
+      "snippet": "Dieselbe Seite wie bei Brave, aber mit http, www und Slash am Ende."
+    },
+    {
+      "title": "Espresso richtig zubereiten",
+      "link": "https://example.org/espresso?utm_source=serper",
+      "snippet": "Dieselbe Seite wie bei Brave, aber mit Query-Parameter."
+    },
+    {
+      "title": "Nur bei Serper",
+      "link": "https://serper-example.net/nur-hier",
+      "snippet": "Kommt in keiner anderen Engine vor."
+    }
+  ]
+}

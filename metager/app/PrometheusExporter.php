@@ -7,27 +7,6 @@ use Prometheus\CollectorRegistry;
 class PrometheusExporter
 {
 
-    public static function CaptchaShown()
-    {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter('metager', 'captcha_shown', 'counts how often the captcha was shown', []);
-        $counter->inc();
-    }
-
-    public static function CaptchaCorrect()
-    {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter('metager', 'captcha_correct', 'counts how often the captcha was solved correctly', []);
-        $counter->inc();
-    }
-
-    public static function CaptchaAnswered()
-    {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter('metager', 'captcha_answered', 'counts how often the captcha was answered', []);
-        $counter->inc();
-    }
-
     public static function Duration($duration, $type)
     {
         $registry = CollectorRegistry::getDefault();

@@ -14,7 +14,6 @@ return [
         'noSpecialSearch' => 'Für eine Ihrer Filteroptionen gab es keine Suchmaschine im aktuellen Fokus (:fokus), welche diese unterstützen würde. Sie haben folgende(n) Filter aktiv: ":filter".',
     ],
     'formdata' => [
-        'cantLoad' => 'Suma-File konnte nicht gefunden werden',
         'noSearch' => 'Achtung: Sie haben keinen Suchbegriff eingegeben. Sie können ihre Suchbegriffe oben eingeben und es erneut versuchen.',
         'dartEurope' => 'Hinweis: Sie haben Dart-Europe aktiviert. Die Suche kann deshalb länger dauern und die maximale Suchzeit wurde auf 10 Sekunden hochgesetzt.',
         'hostBlacklist' => 'Ergebnisse von folgenden Hosts werden nicht angezeigt: ":host"',
@@ -163,11 +162,5 @@ return [
     ],
     'prevention' => [
         'phrase' => '<h2>Brauchen Sie Hilfe?</h2> Haben Sie negative Gedanken oder möchten mit jemandem reden? Auf unserer <a href=":prevurl" target="_blank"> Präventionsseite</a> finden Sie eine Liste von Hilfseinrichtungen, an die Sie sich wenden können.',
-    ],
-    'ads' => [
-        'own' => [
-            'title' => "Jetzt MetaGer unterstützen",
-            'description' => "Mit Ihrer Spende unterstützen Sie die Pflege und Weiterentwicklung der unabhängigen Suchmaschine metager.org und die Arbeit des gemeinnützigen Vereins SUMA-EV.",
-        ],
     ],
 ];

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Vite;
 
 class HttpCache
 {
@@ -76,9 +77,9 @@ class HttpCache
         if (self::$assetVersion !== null) {
             return self::$assetVersion;
         }
-        $manifest = public_path('mix-manifest.json');
-        // A missing manifest must not break rendering; it only costs cache precision.
-        return self::$assetVersion = is_readable($manifest) ? (string) md5_file($manifest) : 'no-manifest';
+        // Vite::manifestHash() is null when no build is present. A missing manifest must not
+        // break rendering; it only costs cache precision.
+        return self::$assetVersion = Vite::manifestHash() ?? 'no-manifest';
     }
 
     /**

@@ -1,3 +1,5 @@
+import Macy from "macy";
+
 (() => {
     // Polyfill for Browsers without Has selector
     let tries = 0;
@@ -48,7 +50,6 @@
         }
         console.log("CSS only Grid masonry is not supported by your browser. Enabling JS Polyfill.");
         gridContainer.classList.add("js-masonry");
-        const Macy = require("macy");
         let macy_layout = Macy({
             container: gridContainer,
             columns: 6,

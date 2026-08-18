@@ -142,9 +142,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Redis' => Illuminate\Support\Facades\Redis::class,
         'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
-        'Agent' => Jenssegers\Agent\Facades\Agent::class,
         'Form' => Collective\Html\FormFacade::class,
-        'Captcha' => Mews\Captcha\Facades\Captcha::class,
         'Carbon' => Carbon\Carbon::class,
     ])->toArray(),
 

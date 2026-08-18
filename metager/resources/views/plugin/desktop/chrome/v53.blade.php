@@ -1,4 +1,4 @@
-@if(!$agent->is('Linux'))
+@if(!$agent->isPlatform('Linux'))
 	<div class="card">
 		<h1>{!! trans('plugin-page.plugin') !!}</h1>
 		<p>

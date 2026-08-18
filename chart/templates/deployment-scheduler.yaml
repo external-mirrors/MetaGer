@@ -1,0 +1,98 @@
+{{/*
+The scheduler, on its own and exactly once.
+
+It used to be a sidecar in the app Deployment, which the HPA scales to
+.Values.autoscaling.maxReplicas — so `schedule:run` fired once per replica per
+minute. Only some entries in routes/console.php carry onOneServer(); `logs:gather`
+and the monthly monthlyrequests truncate do not, and ran N times over.
+
+replicas is fixed at 1 and not exposed as a value: two schedulers is the bug this
+Deployment exists to prevent. strategy Recreate for the same reason — RollingUpdate
+would briefly run the old and new pod together.
+*/}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}-scheduler
+  labels:
+    {{- include "chart.componentLabels" (dict "root" . "component" "scheduler") | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "chart.componentSelectorLabels" (dict "root" . "component" "scheduler") | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "chart.componentLabels" (dict "root" . "component" "scheduler") | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      # schedule:work-mg sleeps until the next minute boundary and handles SIGQUIT
+      # to finish the run in progress. Give it room to do that rather than being
+      # killed mid-task.
+      terminationGracePeriodSeconds: 90
+      volumes:
+        {{- include "chart.volumes" . | nindent 8 }}
+      containers:
+        - name: scheduler
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ template "fpm_image" . }}"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "schedule:work-mg"]
+          imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
+          env:
+          {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
+          # Exactly what the sidecar mounted: .env and the writable storage, no
+          # sumas.json. Nothing on the schedule reads the search configuration —
+          # if something did it would already be running on the example file the
+          # image entrypoint falls back to, and that is a separate problem to fix.
+          volumeMounts:
+          {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.storage" . | nindent 10 }}
+          # As a sidecar this was an httpGet against port 8080 — nginx, in the same
+          # network namespace. There is no HTTP server in this pod, so the same
+          # check runs directly: schedule:healthcheck reads the heartbeat Redis key
+          # that /health-check/liveness-scheduler reads, through the same class.
+          #
+          # The heartbeat is written every minute and tolerated for one, so a single
+          # late run is absorbed here rather than by widening the check: three
+          # consecutive misses, 30s apart, before a restart.
+          livenessProbe:
+            exec:
+              command: ["/usr/local/bin/php", "artisan", "schedule:healthcheck"]
+            periodSeconds: 30
+            failureThreshold: 3
+          # No readinessProbe: nothing routes traffic here, and marking the only
+          # scheduler "not ready" would achieve nothing but noise.
+          startupProbe:
+            exec:
+              command: ["/usr/local/bin/php", "artisan", "schedule:healthcheck"]
+            # schedule:work-mg writes its first heartbeat on the first run, which is
+            # immediate, but the boot itself takes a moment.
+            periodSeconds: 5
+            failureThreshold: 24
+          resources:
+            requests:
+              {{- toYaml .Values.resources.requests.scheduler | nindent 14 }}
+            limits: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

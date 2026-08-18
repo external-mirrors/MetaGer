@@ -7,6 +7,7 @@ return [
     // Regional languages are sorted by their base language, so "British English" sorts as "English, British"
     'supportedLocales' => [
         'default' => ['name' => 'Default Locale', 'script' => 'Latn', 'native' => 'Default', 'regional' => ''],
+        'ca-ES' => ['name' => 'Catalan (Spain)', 'script' => 'Latn', 'native' => 'Català (Espanya)', 'regional' => 'ca_ES'],
         'de-CH' => ['name' => 'German (Switzerland)', 'script' => 'Latn', 'native' => 'Deutsch (Schweiz)', 'regional' => 'de_CH'],
         'de-DE' => ['name' => 'German (Germany)', 'script' => 'Latn', 'native' => 'Deutsch (Deutschland)', 'regional' => 'de_DE'],
         'de-AT' => ['name' => 'German (Austria)', 'script' => 'Latn', 'native' => 'Deutsch (Österreich)', 'regional' => 'de_AT'],

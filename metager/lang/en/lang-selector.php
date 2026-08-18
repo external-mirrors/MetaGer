@@ -1,6 +1,7 @@
 <?php
 return [
     'lang' => [
+        'ca' => 'Catalan',
         'de' => 'German',
         'en' => 'English',
         'es' => 'Spanish',

@@ -134,7 +134,7 @@
       </details>
     </li>
     <li>
-      <a href="{{ route('settings', ['focus' => 'web', 'url' => url()->full()]) }}" id="navigationEinstellung" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <a href="{{ route('settings', ['focus' => 'web', 'url' => App\Localization::currentFullUrl()]) }}" id="navigationEinstellung" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/icon-settings.svg" alt="" aria-hidden="true" id="sidebar-img-settings">
         <span>{{ trans('sidebar.nav28') }}</span>
       </a>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AllowLocalOnly;
+use App\Http\Middleware\ResolveLocale;
 use App\Http\Middleware\HttpCache;
 use App\Http\Middleware\Statistics;
 use Illuminate\Foundation\Application;
@@ -9,8 +10,31 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\TrustProxies;
 
 return Application::configure(basePath: dirname(__DIR__))
+    /**
+     * `web:` is deliberately absent.
+     *
+     * `RouteServiceProvider::mapWebRoutes()` already loads `routes/web.php`,
+     * inside a group whose prefix is `Localization::setLocale()` - the locale
+     * segment this request actually carries. Naming the file here as well
+     * registers every one of those routes a *second* time, unprefixed, and
+     * `AppRouteServiceProvider` boots last, so the unprefixed copy wins the
+     * name lookup: `route('suggest')` on `/en-US` returned `/suggest`, while
+     * `route('settings')` - the same Blade file, the next line down, but
+     * declared in `routes/cookie.php`, which is loaded only once - correctly
+     * returned `/en-US/meta/settings`.
+     *
+     * That is not a cosmetic difference. An unprefixed URL is re-detected from
+     * scratch by `LocalizationRedirect`, which for a user whose browser
+     * language and chosen language disagree answers a cross-origin `302` to
+     * the other domain. `fetch()` cannot follow it under our own
+     * `connect-src 'self'`, so the start page's suggest endpoint threw, and
+     * with it the form submit that waited on it.
+     *
+     * Leftover from the Laravel 11 skeleton migration: `withRouting(web:)` is
+     * the modern way to register web routes, but it cannot express a
+     * per-request prefix, which is exactly what the provider is here for.
+     */
     ->withRouting(
-        web: __DIR__ . '/../routes/web.php',
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
@@ -23,6 +47,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\TrimStrings::class,
             \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
             TrustProxies::class,
+            // After TrustProxies, because the locale decision still reads the
+            // host and the host is only trustworthy once the proxy headers
+            // have been. Before route matching, because it strips the locale
+            // segment the static route table no longer contains.
+            ResolveLocale::class,
         ]);
         $middleware->trustProxies(at: [
             '10.0.0.0/8',

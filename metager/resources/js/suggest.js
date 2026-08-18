@@ -37,14 +37,16 @@ export function initializeSuggestions() {
     return;
   }
 
-  // Update cost for suggestion requests
+  // Update cost for suggestion requests.
+  // Suggestions are a nicety; if the cost lookup fails we keep the last known
+  // cost and carry on, rather than leaving an unhandled rejection behind.
   (() => {
     fetch(suggestion_url + "/cost").then(response => response.json()).then(async response => {
       last_cost = response.tokencost;
       if (document.activeElement == search_input) {
         await getAnonymousTokens(last_cost);
       }
-    })
+    }).catch(reason => console.error(reason));
   })();
 
   search_input.addEventListener("keyup", async (e) => {
@@ -77,18 +79,35 @@ export function initializeSuggestions() {
   });
   search_input.addEventListener("blur", e => {
     active = false;
-    cancelSuggest();
+    cancelSuggest().catch(reason => console.error(reason));
     setTimeout(() => {
       if (document.activeElement != search_input) {
         searchbar_container.dataset.suggest = "inactive";
       }
     }, 250);
   });
+  /**
+   * Submitting must never be able to fail.
+   *
+   * Cancelling the in-flight suggestion is a courtesy to the server - it
+   * returns the tokens we spent - and nothing about the search depends on it
+   * having happened. It used to be awaited with a bare `.then()`, so *any*
+   * rejection anywhere in `cancelSuggest()` left the form permanently
+   * unsubmittable with nothing on screen to say why: the search box simply
+   * stopped working. That was reachable in production through a locale
+   * redirect answering the suggest URL cross-origin, but a dropped connection
+   * or a 5xx that fails to parse as JSON does it just as well.
+   *
+   * So: `finally`, not `then`. The cancel still gets its chance to go out
+   * first, and the submit happens either way.
+   */
   search_input.form.addEventListener("submit", e => {
     active = false;
     e.preventDefault();
     let form = e.target;
-    cancelSuggest().then(() => form.submit());
+    cancelSuggest()
+      .catch(reason => console.error(reason))
+      .finally(() => form.submit());
   })
 
   async function suggest(iteration = 1, suggest_query = search_input.value.trim()) {
@@ -186,9 +205,19 @@ export function initializeSuggestions() {
 
   }
 
+  /**
+   * Best-effort: tells the server we no longer want the suggestion we asked
+   * for, so it can hand the tokens back.
+   *
+   * `keepalive` because the most common caller is the submit handler above,
+   * which is about to navigate away - without it the request is cancelled by
+   * the navigation roughly as often as it completes. Callers must treat a
+   * rejection as nothing more than "the tokens will expire on their own".
+   */
   async function cancelSuggest() {
     return putAnonymousTokens().then(() => {
       return fetch(suggestion_url + "/cancel", {
+        keepalive: true,
         headers: {
           id: suggest_id,
         }

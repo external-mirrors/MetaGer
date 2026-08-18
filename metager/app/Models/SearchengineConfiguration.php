@@ -82,6 +82,14 @@ class SearchengineConfiguration
             } else {
                 $this->addQueryParameters([]);
             }
+            // How the request is made. Only Serper needs anything but "get"
+            // (it posts a JSON body), and until this was read here it could be
+            // said only in a parser constructor — which is invisible to
+            // SearchEngineRegistry, and so was the last reason a parser needed
+            // a constructor at all.
+            if (property_exists($engineConfigurationJson, "method")) {
+                $this->method = $engineConfigurationJson->method;
+            }
             if (property_exists($engineConfigurationJson, "lang")) {
                 $this->setLanguages($engineConfigurationJson->lang->parameter, $engineConfigurationJson->lang->languages, $engineConfigurationJson->lang->regions);
             }

@@ -12,17 +12,15 @@ use Tests\TestCase;
  * This replaces the per-page Dusk tests that asserted the same thing by driving
  * Firefox through the sidebar. Those needed a Selenium container to learn that a
  * controller returns 200 and a view contains its title, which is not a good
- * trade. What genuinely needs a browser — the CSS-only sidebar, and the
- * per-locale URL prefix — stays in tests/Browser.
+ * trade. What genuinely needs a browser — the CSS-only sidebar — stays in
+ * tests/Browser.
  *
- * On the locale split: routes are registered inside a group whose prefix is
- * Localization::setLocale(), evaluated once per boot from request()->segment(1)
- * (see App\Providers\RouteServiceProvider::mapWebRoutes). Under `artisan test`
- * the console kernel's SetRequestForConsole bootstrapper builds that request from
- * config('app.url'), so the whole suite runs as a single locale with unprefixed
- * routes. Asserting /de-DE/about from here is therefore impossible by design, not
- * by oversight — the routing half of that belongs to Dusk, and the translation
- * half is covered by testEveryLanguageDefinesThePageTranslations below.
+ * These pages are requested without a locale prefix, which is a choice rather
+ * than a limitation: serving them under one is Tests\Feature\LocalizedRoutingTest's
+ * job, and every page here would only assert the same thing again. It used to be
+ * a limitation — the locale was a route group prefix evaluated once per boot, so
+ * /de-DE/about did not exist in-process at all — and that is why the per-locale
+ * coverage was a Dusk test until ResolveLocale replaced it.
  */
 class StaticPagesTest extends TestCase
 {

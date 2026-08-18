@@ -115,14 +115,20 @@ class EngineReachabilityTest extends TestCase
      * because MetaGerSearch answers "no enabled engines" with a redirect to the
      * settings page rather than an error.
      *
-     * The way it happened is worth keeping in view: `php artisan optimize`
-     * caches routes, this app resolves its locale while *registering* routes
-     * (RouteServiceProvider::mapWebRoutes passes Localization::setLocale() as
-     * the group prefix), and applyLocale() disables every engine whose language
-     * map has no entry for the resulting locale. The web engines declare
-     * `languages => []` and only exact regional keys, so an unresolved locale
-     * disables all of them. Nothing about that is a search bug, and nothing
-     * about the eighty failures said so.
+     * The way it happened is worth keeping in view, even though the cause has
+     * since been removed: `php artisan optimize` caches routes, this app used
+     * to resolve its locale while *registering* routes
+     * (RouteServiceProvider::mapWebRoutes passed Localization::setLocale() as
+     * the group prefix), so a warm route cache meant registration never ran and
+     * `app.locale` stayed the literal 'default'. applyLocale() then disables
+     * every engine whose language map has no entry for the resulting locale,
+     * and the web engines declare `languages => []` with only exact regional
+     * keys — so *every* engine was disabled. Nothing about that is a search
+     * bug, and nothing about the eighty failures said so.
+     *
+     * The locale is middleware now and the route table is cacheable, so this
+     * particular trap is gone. The assertion stays: "a web search has engines"
+     * is worth one named failure whatever the next cause turns out to be.
      */
     public function testAWebSearchHasEnginesToQuery(): void
     {
@@ -156,6 +162,39 @@ class EngineReachabilityTest extends TestCase
                 implode(", ", $why)
             )
         );
+    }
+
+    /**
+     * No engine may be registered by a class that only *inherited* its config.
+     *
+     * The scan reads `$fqcn::CONFIG_OVERLOAD` off every class in
+     * app/Models/parserSkripte, and a class constant is inherited when the
+     * child does not redeclare it. Since parser classes started sharing a base
+     * (BraveBase), a subclass that forgets its own CONFIG_OVERLOAD no longer
+     * fails — it silently re-registers its parent's engine name against itself,
+     * and `scanParserClasses()` walks scandir() in alphabetical order, so the
+     * later file wins. `BraveImages` would take over the `brave` engine and
+     * parse web results as images, on every web search, with no error anywhere.
+     *
+     * There is no way to notice that from the outside, which is why it is
+     * asserted from the inside instead.
+     */
+    public function testEveryEngineIsParsedByTheClassThatDeclaresIt(): void
+    {
+        $inherited = [];
+
+        foreach ((array) app(SearchEngineRegistry::class)->sumas as $engine => $config) {
+            $fqcn = "App\\Models\\parserSkripte\\" . $config->{"parser-class"};
+            $declaring = (new \ReflectionClassConstant($fqcn, "CONFIG_OVERLOAD"))->getDeclaringClass()->getName();
+
+            // Namespaces are declared inconsistently cased across the parsers
+            // and PHP resolves them case-insensitively, so compare that way.
+            if (strcasecmp($declaring, $fqcn) !== 0) {
+                $inherited[] = "$engine is registered to $fqcn, which inherits CONFIG_OVERLOAD from $declaring";
+            }
+        }
+
+        $this->assertSame([], $inherited, implode("; ", $inherited));
     }
 
     /**

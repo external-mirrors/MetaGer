@@ -124,6 +124,7 @@ return [
             'sm' => 'Spanish (Mexiko)',
             'ss' => 'Spanish (Spain)',
             'sus' => 'Spanish (US)',
+            'caes' => 'Catalan (Spain)',
             'fb' => 'French (Belgien)',
             'fc' => 'French (Kanada)',
             'ff' => 'French (Frankreich)',

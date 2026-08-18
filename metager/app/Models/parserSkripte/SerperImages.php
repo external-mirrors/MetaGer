@@ -2,110 +2,29 @@
 
 namespace app\Models\parserSkripte;
 
-use App\Localization;
-use App\Models\DeepResults\Button;
 use App\Models\DeepResults\Imagesearchdata;
+use App\Models\parserSkripte\Base\SerperBase;
 use App\Models\Result;
-use App\Models\Searchengine;
-use App\Models\SearchengineConfiguration;
-use App\Models\SearchEngineInfos;
-use LaravelLocalization;
 use Log;
 
-class SerperImages extends Searchengine
+/**
+ * Google's image search.
+ *
+ * Everything Serper-wide lives in [SerperBase]; this class is the `/images`
+ * endpoint and its response shape.
+ */
+class SerperImages extends SerperBase
 {
     const CONFIG_OVERLOAD = [
         'serper_images' => [
-            'lang' => [
-                'parameter' => 'gl',
-                'languages' => [],
-                'regions' => [
-                    'de_DE' => 'de',
-                    'de_AT' => 'at',
-                    'en_US' => 'us',
-                    'en_GB' => 'gb',
-                    'en_AU' => 'au',
-                    'es_ES' => 'es',
-                    'es_MX' => 'mx',
-                    'da_DK' => 'dk',
-                    'at_AT' => 'at',
-                    'de_CH' => 'ch',
-                    'fi_FI' => 'fi',
-                    'it_IT' => 'it',
-                    'nl_NL' => 'nl',
-                    'sv_SE' => 'se',
-                    'fr_FR' => 'fr',
-                    'fr_CA' => 'ca',
-                    'pl_PL' => 'pl',
-                    'pt_PT' => 'pt-pt_PT',
-                    'pt_BR' => 'pt-br_BR',
-                ],
-            ],
-            'host' => 'google.serper.dev',
+            ...parent::SHARED_CONFIG,
             'path' => '/images',
-            'port' => 443,
-            'query-parameter' => 'q',
-            'input-encoding' => 'utf8',
-            'output-encoding' => 'utf8',
-            'request-header' => [
-                'Accept' => 'application/json',
-            ],
-            'engine-boost' => 1.2,
-            'cache-duration' => -1,
-            'disabled' => false,
-            'filter-opt-in' => false,
-            'cost' => 0.2,
-            // Static equivalent of the SearchEngineInfos this class also sets
-            // imperatively below in __construct(). SearchEngineRegistry (used by
-            // SettingsController::schema(), app-en repo) only ever scans this
-            // static CONFIG_OVERLOAD array - it has no way to see anything a
-            // constructor sets - so leaving this empty was what made the
-            // mobile app's settings schema fall back to the raw engine name
-            // ("serper_web") instead of a real display name. Keep both in sync.
-            'infos' => [
-                'homepage' => 'https://metager.de/search-engine',
-                'index_name' => 'Google',
-                'display_name' => 'Serper',
-                'founded' => null,
-                'headquarter' => null,
-                'operator' => 'Serper',
-                'index_size' => '~500,000,000,000',
-            ],
         ],
     ];
-    public $results = [];
 
-    public function __construct($name, SearchengineConfiguration $configuration)
+    protected function resultsKey(): string
     {
-        parent::__construct($name, $configuration);
-
-        $this->configuration->engineBoost = 1.2;
-        $this->configuration->disabledByDefault = false;
-        $this->configuration->method = "post_json";
-
-        //$this->configuration->cost = 1;
-
-        $this->configuration->infos = new SearchEngineInfos("https://metager.de/search-engine", "Google", "Serper", null, null, "Serper", "~500,000,000,000");
-    }
-
-    public function applySettings()
-    {
-        parent::applySettings();
-
-        // Setup UI Lang to match users language
-        $locale = LaravelLocalization::getCurrentLocale();
-        $this->configuration->getParameter->hl = $locale;
-        // Brave has divided country search setting and language search setting
-        // MetaGer will configure something like de_DE
-        // We need to seperate both parameters and put them into their respective get parameters
-        if (property_exists($this->configuration->getParameter, "gl") && preg_match("/^[^_]+_[^_]+$/", $this->configuration->getParameter->gl)) {
-            $values = explode("_", $this->configuration->getParameter->gl);
-            $this->configuration->getParameter->hl = $values[0];
-            $this->configuration->getParameter->gl = strtolower($values[1]);
-        } else {
-            $this->configuration->getParameter->hl = Localization::getLanguage();
-            $this->configuration->getParameter->gl = strtolower(Localization::getRegion());
-        }
+        return "images";
     }
 
     public function loadResults($result)
@@ -190,38 +109,6 @@ class SerperImages extends Searchengine
             }
 
 
-        } catch (\Exception $e) {
-            Log::error("A problem occurred parsing results from $this->name:");
-            Log::error($e->getMessage());
-            return;
-        }
-    }
-
-    public function getNext(\App\MetaGer $metager, $result)
-    {
-        try {
-            $results = json_decode($result);
-            if ($results !== null) {
-                $web = $results->images;
-                $num = 10;
-                if (property_exists($this->configuration->getParameter, "num")) {
-                    $num = $this->configuration->getParameter->num;
-                }
-                if (sizeof($web) < $num)
-                    return;
-            }
-
-            /** @var SearchEngineConfiguration */
-            $newConfiguration = unserialize(serialize($this->configuration));
-            $page = 1;
-            if (property_exists($newConfiguration->getParameter, "page")) {
-                $page = $newConfiguration->getParameter->page;
-            }
-
-            $newConfiguration->getParameter->page = $page + 1;
-
-            $next = new Serper($this->name, $newConfiguration);
-            $this->next = $next;
         } catch (\Exception $e) {
             Log::error("A problem occurred parsing results from $this->name:");
             Log::error($e->getMessage());

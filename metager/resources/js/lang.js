@@ -8,9 +8,12 @@ import { setSettings } from "./messaging";
                 anchor.addEventListener("click", e => {
                     e.preventDefault();
                     let href = anchor.href;
+                    // The interface language, in the cookie that means only
+                    // that. It used to be written to web_setting_m, the web
+                    // fokus's market filter, which is why picking a language
+                    // also picked a search region.
                     let new_lang = anchor.hreflang;
-                    new_lang = new_lang.replace("-", "_");
-                    setSettings({ web_setting_m: new_lang }).then(() => {
+                    setSettings({ mg_locale: new_lang }).then(() => {
                         document.location.href = href;
                     });
                 });

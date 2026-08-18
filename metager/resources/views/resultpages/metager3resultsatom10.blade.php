@@ -3,7 +3,7 @@
       xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/"
       xmlns:mg="http://metager.de/opensearch/">
   <title>{{ htmlspecialchars($eingabe, ENT_XML1, 'UTF-8') }} - MetaGer</title>
-  <link href="{{ url()->full() }}"/>
+  <link href="{{ App\Localization::currentFullUrl() }}"/>
   <updated>{{ date('c') }}</updated>
   <opensearch:totalResults>{{ $resultcount }}</opensearch:totalResults>
   <opensearch:Query role="request" searchTerms="{{ htmlspecialchars($eingabe, ENT_QUOTES) }}" mg:key="{{ htmlspecialchars($key, ENT_QUOTES) }}"/>

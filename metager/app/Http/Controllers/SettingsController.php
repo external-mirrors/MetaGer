@@ -12,6 +12,8 @@ use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
 use App\Models\SearchengineConfiguration;
 use App;
+use App\Localization;
+use App\Localization\LocaleContext;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
@@ -209,6 +211,21 @@ class SettingsController extends Controller
 
         $newFilters = $request->except(["focus", "url"]);
 
+        /**
+         * Pin the interface language before touching a market.
+         *
+         * `web_setting_m` is written from here, and it is also where every
+         * pre-`mg_locale` browser's language still lives, so
+         * `LocaleContext::cookieLocale()` reads it as a language while no
+         * `mg_locale` exists. For a browser that never had one, a first-ever
+         * market change would therefore come back as an interface change —
+         * exactly the conflation being removed. Writing the current locale
+         * first makes the old cookie unambiguous from this point on.
+         */
+        if (Cookie::get(LocaleContext::cookieName()) === null) {
+            Localization::context()->persistCookie();
+        }
+
         $langFile = app(SearchEngineRegistry::class);
 
         $settings = app(SearchSettings::class);
@@ -404,24 +421,14 @@ class SettingsController extends Controller
      * `?lang=` -> a default regional locale, one per `lang/` directory this
      * MetaGer install ships translations for. Deliberately not derived from
      * `LaravelLocalization::getSupportedLocales()` (~19 regional variants):
-     * `schema()` below needs exactly one *default* region per language, the
-     * same simplification `Localization::GET_PREFERRED_LOCALE()`'s own
-     * `$two_letter_locales` table already makes for its three entries - this
-     * is that idea, complete.
+     * `schema()` below needs exactly one *default* region per language.
+     *
+     * The same table `LocaleContext` resolves a bare `Accept-Language` with,
+     * and referenced rather than repeated: two copies of "which region does
+     * this language mean" is how they came to disagree about Catalan.
+     * `docs/locale-contract.md` §4 is the written form.
      */
-    private const LANG_TO_LOCALE = [
-        "da" => "da-DK",
-        "de" => "de-DE",
-        "en" => "en-US",
-        "es" => "es-ES",
-        "fi" => "fi-FI",
-        "fr" => "fr-FR",
-        "it" => "it-IT",
-        "nl" => "nl-NL",
-        "pl" => "pl-PL",
-        "pt" => "pt-PT",
-        "sv" => "sv-SE",
-    ];
+    private const LANG_TO_LOCALE = LocaleContext::HOME_REGION;
 
     /**
      * Machine-readable description of every setting MetaGer understands:

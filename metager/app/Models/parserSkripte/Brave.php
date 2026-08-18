@@ -85,6 +85,7 @@ class Brave extends Searchengine
         ]);
 
         $this->configuration->setLanguages("country", [], [
+            "ca_ES" => "ca_ES",
             "de_DE" => "de_DE",
             "de_AT" => "de_AT",
             "en_US" => "en_US",

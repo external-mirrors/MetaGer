@@ -22,6 +22,7 @@ class BraveImages extends Searchengine
                 'parameter' => 'country',
                 'languages' => [],
                 'regions' => [
+                    'ca_ES' => 'ca_ES',
                     'de_DE' => 'de_DE',
                     'de_AT' => 'de_AT',
                     'en_US' => 'en_US',

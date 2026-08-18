@@ -20,6 +20,7 @@ class SerperImages extends Searchengine
                 'parameter' => 'gl',
                 'languages' => [],
                 'regions' => [
+                    'ca_ES' => 'ca',
                     'de_DE' => 'de',
                     'de_AT' => 'at',
                     'en_US' => 'us',

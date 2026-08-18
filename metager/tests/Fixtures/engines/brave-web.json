@@ -10,19 +10,74 @@
         "title": "Kaffee &amp; Zubereitung",
         "url": "https://example.org/kaffee",
         "description": "Alles &uuml;ber Kaffee, R&ouml;stung und Zubereitung.",
-        "meta_url": { "netloc": "example.org", "path": "/kaffee" }
+        "meta_url": {
+          "netloc": "example.org",
+          "path": "/kaffee"
+        }
       },
       {
         "title": "Kaffeesorten im Vergleich",
         "url": "https://beispiel.de/sorten",
         "description": "Arabica, Robusta und was sie unterscheidet.",
-        "meta_url": { "netloc": "beispiel.de", "path": "/sorten" }
+        "meta_url": {
+          "netloc": "beispiel.de",
+          "path": "/sorten"
+        }
       },
       {
         "title": "Espresso richtig zubereiten",
         "url": "https://example.org/espresso",
         "description": "Mahlgrad, Druck und Brühtemperatur.",
-        "meta_url": { "netloc": "example.org", "path": "/espresso" }
+        "meta_url": {
+          "netloc": "example.org",
+          "path": "/espresso"
+        },
+        "cluster": [
+          {
+            "title": "Espresso: Mahlgrad",
+            "url": "https://example.org/espresso/mahlgrad",
+            "description": "Wie fein der Kaffee f&uuml;r Espresso gemahlen sein muss."
+          },
+          {
+            "title": "Espresso: Brühtemperatur",
+            "url": "https://example.org/espresso/temperatur",
+            "description": "92 bis 96 Grad, und warum das eng ist."
+          }
+        ]
+      }
+    ]
+  },
+  "news": {
+    "results": [
+      {
+        "title": "Kaffeepreis auf Rekordhoch",
+        "url": "https://nachrichten.example.org/kaffeepreis",
+        "description": "Die Ernte f&auml;llt kleiner aus als erwartet.",
+        "meta_url": {
+          "netloc": "nachrichten.example.org",
+          "path": "/kaffeepreis"
+        },
+        "thumbnail": {
+          "src": "https://nachrichten.example.org/bild.jpg"
+        },
+        "age": "vor 3 Stunden"
+      }
+    ]
+  },
+  "videos": {
+    "results": [
+      {
+        "title": "Espresso zubereiten in 3 Minuten",
+        "url": "https://video.example.org/espresso",
+        "description": "Eine Anleitung.",
+        "meta_url": {
+          "netloc": "video.example.org",
+          "path": "/espresso"
+        },
+        "thumbnail": {
+          "src": "https://video.example.org/vorschau.jpg"
+        },
+        "age": "vor 2 Tagen"
       }
     ]
   }

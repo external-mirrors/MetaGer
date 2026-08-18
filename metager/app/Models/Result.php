@@ -498,15 +498,26 @@ class Result
      *
      * Bewusst eine kuratierte Auswahl statt `get_object_vars($this)`: die
      * Eigenschaften dieser Klasse sind Interna (`rank`, `engineBoost`, `new`,
-     * `changed`, `hash`, `inheritedResults`, …), die sich mit dem Ranking-Code
-     * ändern. Ein Dump davon würde jede dieser Änderungen zu einer
-     * Breaking Change der API machen. Hier steht nur, was ein Client auch
-     * anzeigen kann.
+     * `changed`, `hash`, …), die sich mit dem Ranking-Code ändern. Ein Dump
+     * davon würde jede dieser Änderungen zu einer Breaking Change der API
+     * machen. Hier steht nur, was ein Client auch anzeigen kann.
+     *
+     * `inheritedResults` stand lange mit auf dieser Liste und gehörte nicht
+     * dorthin: das sind keine Ranking-Interna, sondern der Cluster, den
+     * `layouts/result.blade.php` unter dem Ergebnis ausgibt. Nach außen heißt
+     * er `cluster` — der interne Name beschreibt, woher die Ergebnisse kommen,
+     * nicht, was ein Client mit ihnen anzeigt.
      *
      * Die Schema-Version steht in der Antwort-Hülle, nicht hier — siehe
      * `MetaGer::createView()`, `case 'json'`.
+     *
+     * @param bool $includeCluster Für die Cluster-Mitglieder selbst `false`:
+     *                             ein Cluster ist eine Ebene tief, und ein
+     *                             Parser, der das eines Tages verschachtelt,
+     *                             soll nicht die ganze Antwort in eine
+     *                             Endlosrekursion ziehen.
      */
-    public function toApiArray(): array
+    public function toApiArray(bool $includeCluster = true): array
     {
         return [
             "title" => $this->titel,
@@ -521,6 +532,10 @@ class Result
             "engines" => $this->enginesToApiArray(),
             "image" => $this->imageToApiArray(),
             "date" => $this->dateToApiArray(),
+            # Das Datum als Text, wenn es keins als Zeitstempel gibt — siehe
+            # dateStringToApiArray(). Für die Nachrichtensuche ist das der
+            # Normalfall, nicht die Ausnahme.
+            "dateString" => $this->dateStringToApiArray(),
             "host" => $this->strippedHost,
             "domain" => $this->strippedDomain,
             "partnershop" => (bool) $this->partnershop,
@@ -528,6 +543,7 @@ class Result
             # deklariert), deshalb hier defensiv gelesen.
             "price" => empty($this->price) ? null : ($this->price_text ?? null),
             "sitelinks" => $this->sitelinksToApiArray(),
+            "cluster" => $includeCluster ? $this->clusterToApiArray() : [],
         ];
     }
 
@@ -641,6 +657,58 @@ class Result
             ];
         }
         return $sitelinks;
+    }
+
+    /**
+     * Der Cluster unter einem Ergebnis: weitere Treffer derselben Seite, die
+     * die Engine mitgeliefert hat (Brave: `cluster`).
+     *
+     * Die Mitglieder bekommen dieselbe Struktur wie ein normales Ergebnis,
+     * damit ein Client sie mit demselben Code anzeigen kann, den er ohnehin
+     * hat — nur eben ohne eigenen Cluster.
+     */
+    private function clusterToApiArray(): array
+    {
+        $cluster = [];
+        foreach ($this->inheritedResults as $member) {
+            if (!($member instanceof Result)) {
+                continue;
+            }
+            $cluster[] = $member->toApiArray(false);
+        }
+        return $cluster;
+    }
+
+    /**
+     * Das Datum als Text, so wie die Engine es geliefert hat — "vor 3 Stunden",
+     * "2 days ago", "12. Aug. 2026".
+     *
+     * Das ist kein Notnagel neben `date`, sondern für die Nachrichtensuche der
+     * einzige Weg: BraveNews und SerperNews — die beiden Engines, die
+     * `fokus=nachrichten` tatsächlich bedienen — setzen ausschließlich
+     * `date_string`. Einen Zeitstempel legen nur Minisucher, Onenewspage und
+     * Onenewspagegermany ab, also gerade die, die dort nicht laufen. `date`
+     * war deshalb in jeder echten Nachrichten-Antwort null, und ein Client, der
+     * nur `date` kennt, zeigt bei Nachrichten nie ein Datum an.
+     *
+     * Nicht in `date` geparst: die Strings sind lokalisiert, formatfrei und
+     * ändern sich, wann immer eine Engine Lust dazu hat. Ein falsch geratener
+     * Zeitstempel wäre schlechter als ein ehrlicher Text.
+     *
+     * `age` trägt bei den Inline-Ergebnissen (news/videos in der Hülle) genau
+     * dieselbe Sorte Wert; die Parser legen ihn nur an einer anderen Stelle ab.
+     * Ein Ergebnis hat immer höchstens eins von beidem.
+     */
+    private function dateStringToApiArray(): string | null
+    {
+        $dateString = $this->additionalInformation["date_string"] ?? $this->age;
+
+        if (!is_string($dateString)) {
+            return null;
+        }
+        $dateString = trim($dateString);
+
+        return $dateString === "" ? null : $dateString;
     }
 
     public function getLangString()

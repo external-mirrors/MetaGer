@@ -194,10 +194,21 @@ class LoaderCacheTest extends TestCase
      * inside the same serialize() call and are now written out in full, which
      * is 13 KB of the remainder.
      *
-     * What is left, in order of size: searchengines at 44 KB — one
+     * What is left, in order of size: searchengines at 49 KB — one
      * SearchengineConfiguration per engine, most of it the same config every
      * search — and that parameterFilter. Both are reachable the same way the
      * registry was, and neither is touched here.
+     *
+     * 58,607 became 64,097 when the Brave fixture gained the news block, the
+     * video block and a cluster that a real Brave response has always
+     * returned, so this is the budget catching up with production rather than
+     * a regression. The interesting part is the rate: four extra Result
+     * objects cost about 5.5 KB, roughly 1.4 KB each, and they are cached
+     * because Searchengine::$news/$videos hang off the engine that goes into
+     * the loader entry. A query that Brave answers with five news items, five
+     * videos and a few clusters therefore costs several KB more than one it
+     * answers with none — which is worth knowing before reading the ceiling
+     * below as the cost of an average search.
      */
     public function testTheLoaderEntryStaysWithinItsSizeBudget(): void
     {
@@ -206,7 +217,7 @@ class LoaderCacheTest extends TestCase
         $bytes = strlen(serialize($entry));
 
         $this->assertLessThan(
-            62_000,
+            68_000,
             $bytes,
             sprintf(
                 "One in-flight search now costs %d bytes of cache. Breakdown: settings %d, searchengines %d, "

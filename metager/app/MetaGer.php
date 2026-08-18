@@ -159,6 +159,16 @@ class MetaGer
             $results[] = $result->toApiArray();
         }
 
+        $news = [];
+        foreach ($this->news as $newsResult) {
+            $news[] = $newsResult->toApiArray();
+        }
+
+        $videos = [];
+        foreach ($this->videos as $videoResult) {
+            $videos[] = $videoResult->toApiArray();
+        }
+
         $nextPage = $this->nextSearchLink();
 
         return array_merge([
@@ -183,6 +193,19 @@ class MetaGer
             "nextPage" => $nextPage === "#" ? null : $nextPage,
             "searchTime" => round(microtime(true) - $this->starttime, 2),
             "results" => $results,
+            # Passende Nachrichten und Videos zur Suche, die die Web-Engines
+            # nebenbei mitliefern (Brave, Serper). Kein zweiter Suchlauf: sie
+            # stehen ohnehin schon da. Auf der Website schiebt
+            # `resultpages/results.blade.php` sie zwischen Ergebnis 3 und 4
+            # bzw. 6 und 7 in die Liste; ein Client, der das nicht will, kann
+            # sie ignorieren, aber ohne dieses Feld hat er die Wahl nicht.
+            #
+            # Dieselbe Struktur wie ein Ergebnis. Sie sind Result-Objekte, und
+            # ein eigener Typ für "Ergebnis, aber mit weniger Feldern" würde
+            # den Clients nur zusätzlichen Code abverlangen, ohne ihnen etwas
+            # zu sagen. Ihr Datum steht in `dateString` (bei ihnen `age`).
+            "news" => $news,
+            "videos" => $videos,
             # Immer leer. MetaGer zeigt keine Werbung mehr, und keine Suchmaschine
             # liefert noch welche; das Feld bleibt nur, weil sein Wegfall die
             # Schema-Version erhöht — das passiert in einem eigenen Commit, damit

@@ -75,6 +75,8 @@ class OutputFormatsTest extends TestCase
             "nextPage",
             "searchTime",
             "results",
+            "news",
+            "videos",
             "ads",
             "warnings",
             "errors",
@@ -104,12 +106,113 @@ class OutputFormatsTest extends TestCase
             "engines",
             "image",
             "date",
+            "dateString",
             "host",
             "domain",
             "partnershop",
             "price",
             "sitelinks",
+            "cluster",
         ], array_keys($payload["results"][0]), "A field of the out=json result schema changed. Raise MetaGer::API_SCHEMA_VERSION if it is deliberate.");
+    }
+
+    /**
+     * The cluster is the group of further hits from the same page that an
+     * engine delivers alongside a result (Brave: `cluster`), which
+     * `layouts/result.blade.php` renders under it as `.result-inherited-results`.
+     *
+     * It was left out of `out=json` at first because `Result::$inheritedResults`
+     * was read as a ranking internal; it is not one. Pinned here because a
+     * client that shows the cluster needs the members to carry a result's own
+     * fields, and because the members must not carry a cluster themselves — one
+     * level deep, no recursion.
+     */
+    public function testAJsonResultCarriesItsCluster(): void
+    {
+        $payload = $this->search("json")->json();
+
+        $clustered = collect($payload["results"])
+            ->firstWhere(fn(array $result) => count($result["cluster"]) > 0);
+
+        $this->assertNotNull($clustered, "No result carried a cluster, though the Brave fixture has one.");
+        $this->assertSame("https://example.org/espresso", $clustered["link"]);
+        $this->assertSame(
+            ["Espresso: Mahlgrad", "Espresso: Brühtemperatur"],
+            array_column($clustered["cluster"], "title")
+        );
+
+        $member = $clustered["cluster"][0];
+        $this->assertSame("https://example.org/espresso/mahlgrad", $member["link"]);
+        $this->assertNotEmpty($member["description"]);
+        $this->assertSame([], $member["cluster"], "A cluster member must not open a cluster of its own.");
+    }
+
+    /**
+     * `sitelinks` is what the result page shows as `.result-deep-buttons`. The
+     * field has been in the schema from the start but no fixture ever filled
+     * it, so nothing would have noticed the parsers' `deepResults["buttons"]`
+     * drifting away from it.
+     */
+    public function testAJsonResultCarriesItsSitelinks(): void
+    {
+        $payload = $this->search("json")->json();
+
+        $withSitelinks = collect($payload["results"])
+            ->firstWhere(fn(array $result) => count($result["sitelinks"]) > 0);
+
+        $this->assertNotNull($withSitelinks, "No result carried sitelinks, though the Serper fixture has some.");
+        $this->assertSame(
+            ["Sorten", "Röstung"],
+            array_column($withSitelinks["sitelinks"], "title")
+        );
+        $this->assertSame(
+            "https://serper-example.net/kaffee/sorten",
+            $withSitelinks["sitelinks"][0]["link"]
+        );
+    }
+
+    /**
+     * News and videos the web engines hand over alongside the results. The
+     * result page splices them into the list after result 3 and 6; `out=json`
+     * keeps them in their own lists and lets the client decide.
+     */
+    public function testTheJsonEnvelopeCarriesRelevantNewsAndVideos(): void
+    {
+        $payload = $this->search("json")->json();
+
+        $this->assertCount(1, $payload["news"], "The Brave fixture's news block did not reach the JSON output.");
+        $this->assertCount(1, $payload["videos"], "The Brave fixture's video block did not reach the JSON output.");
+
+        $news = $payload["news"][0];
+        $this->assertSame("Kaffeepreis auf Rekordhoch", $news["title"]);
+        $this->assertSame("https://nachrichten.example.org/kaffeepreis", $news["link"]);
+        // Same shape as a result, so a client can render it with the code it
+        // already has.
+        $this->assertSame(array_keys($payload["results"][0]), array_keys($news));
+        $this->assertSame("https://nachrichten.example.org/bild.jpg", $news["image"]["url"]);
+
+        $this->assertSame("Espresso zubereiten in 3 Minuten", $payload["videos"][0]["title"]);
+    }
+
+    /**
+     * The date an engine reports as free text rather than as a timestamp.
+     *
+     * This is the normal case, not a fallback: of the parsers that run today
+     * only Minisucher and the two Onenewspage engines produce a real timestamp,
+     * while BraveNews and SerperNews — the two that actually serve
+     * `focus=nachrichten` — set `date_string` alone. `date` was therefore null
+     * in every real news response, and a client reading only `date` never had a
+     * date to show on the one focus where it matters most.
+     */
+    public function testAJsonResultCarriesTheEnginesDateStringWhenThereIsNoTimestamp(): void
+    {
+        $payload = $this->search("json")->json();
+
+        $news = $payload["news"][0];
+        $this->assertNull($news["date"], "The fixture has no timestamp, only Brave's `age` string.");
+        $this->assertSame("vor 3 Stunden", $news["dateString"]);
+
+        $this->assertSame("vor 2 Tagen", $payload["videos"][0]["dateString"]);
     }
 
     /**

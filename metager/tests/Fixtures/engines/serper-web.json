@@ -3,7 +3,17 @@
     {
       "title": "Kaffee bei Serper",
       "link": "https://serper-example.net/kaffee",
-      "snippet": "Ein Ergebnis, das nur diese Engine liefert."
+      "snippet": "Ein Ergebnis, das nur diese Engine liefert.",
+      "sitelinks": [
+        {
+          "title": "Sorten",
+          "link": "https://serper-example.net/kaffee/sorten"
+        },
+        {
+          "title": "Röstung",
+          "link": "https://serper-example.net/kaffee/roestung"
+        }
+      ]
     },
     {
       "title": "Kaffee & Zubereitung",

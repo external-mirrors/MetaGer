@@ -1,6 +1,13 @@
 default:
   tags:
     - kubernetes
+  # Superseded pipelines are the whole reason the registry cleanup had to grow a
+  # guard: two pipelines on one ref, and the older one deletes images the newer
+  # one has just pushed and not yet deployed. The guard stops that being an
+  # outage; this stops it happening. Every job is interruptible by default and
+  # the deploy jobs opt back out, so a new commit cancels the build and test
+  # work but never a helm upgrade that has already started.
+  interruptible: true
 variables:
   DOCKER_HOST: "tcp://docker-dind.gitlab-suma:2375"
   BUILD_DOCKER_IMAGE: docker:24.0.5
@@ -11,6 +18,8 @@ variables:
   KUBE_NAMESPACE: metager-2
 
 workflow:
+  auto_cancel:
+    on_new_commit: interruptible
   rules:
     - if: ($CI_PIPELINE_SOURCE == 'merge_request_event' && $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME != "development") || ($CI_PIPELINE_SOURCE == 'web' && $CI_COMMIT_BRANCH != "master" && $CI_COMMIT_BRANCH != "development")
       variables:

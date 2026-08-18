@@ -5,6 +5,15 @@
     - fpm
     - nginx
   dependencies: [] # No Artifacts required
+  # Helm takes a lock per release, and two pipelines upgrading the same release
+  # at once means the second one fails with "another operation (install/upgrade/
+  # rollback) is in progress" — which is what happens when two commits land a
+  # minute apart. A resource group serialises them instead.
+  resource_group: helm-$CI_COMMIT_REF_SLUG
+  # Not interruptible, unlike everything else. Cancelling a helm upgrade midway
+  # is how a release ends up wedged in a pending state, and the auto-cancel this
+  # opts out of exists to save build minutes, not to race a deploy.
+  interruptible: false
   variables:
     DEPLOYMENT_CHART_NAME: ${CI_COMMIT_REF_SLUG}
     BRANCH_NAME: $CI_COMMIT_REF_NAME
@@ -79,6 +88,8 @@ stop_review:
   environment:
     name: review/${CI_COMMIT_REF_SLUG}
     action: stop
+  resource_group: helm-$CI_COMMIT_REF_SLUG
+  interruptible: false
   variables:
     DEPLOYMENT_CHART_NAME: review-${CI_COMMIT_REF_SLUG}
     FPM_REPOSITORY_ID: 418

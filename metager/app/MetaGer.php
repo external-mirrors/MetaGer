@@ -389,8 +389,11 @@ class MetaGer
             \Request::replace($input);
         }
 
-        $this->url = \Request::url();
-        $this->fullUrl = \Request::fullUrl();
+        // The URL as the user sees it, locale prefix and all: ResolveLocale
+        // strips the prefix from the request before routing, so \Request::url()
+        // would drop it from the 'search again without site:' link below.
+        $this->url = \App\Localization::currentUrl();
+        $this->fullUrl = \App\Localization::currentFullUrl();
         # Zunächst überprüfen wir die eingegebenen Einstellungen:
 
         # Suma-File

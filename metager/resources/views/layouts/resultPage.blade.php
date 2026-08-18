@@ -4,11 +4,9 @@
 
 <head>
     <meta charset="utf-8">
-    @foreach (LaravelLocalization::getSupportedLocales() as $locale => $locale_data)
-        @if (LaravelLocalization::getCurrentLocale() !== $locale)
-            <link rel="alternate" hreflang="{{ $locale }}"
-                href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
-        @endif
+    @foreach (App\Localization::getAlternateLocales() as $locale)
+        <link rel="alternate" hreflang="{{ $locale }}"
+            href="{{ LaravelLocalization::getLocalizedUrl($locale, null, [], true) }}">
     @endforeach
     <link href="/favicon.ico" rel="icon" type="image/x-icon" />
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />

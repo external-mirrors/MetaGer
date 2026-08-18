@@ -690,7 +690,7 @@ class DonationController extends Controller
             'amount' => 'required|numeric|min:1',
             'interval' => Rule::in(["once", "monthly", "quarterly", "six-monthly", "annual"])
         ]);
-        if ($validator->fails() || !$request->hasValidSignature()) {
+        if ($validator->fails() || !Localization::hasValidSignature()) {
             abort(404);
         } else {
             $donation = [

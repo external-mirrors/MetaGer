@@ -69,8 +69,8 @@ depends on a browser container. CI mirrors the split: the `test` job has no Sele
 `browsertest` does.
 
 Prefer a Feature test. Reach for Dusk only when a real rendering engine is genuinely required —
-today that means the no-JavaScript behaviour, the locale-prefixed URLs (see below) and the theme
-palette, where only a browser resolves `var()`.
+today that means the no-JavaScript behaviour and the theme palette, where only a browser resolves
+`var()`. Locale-prefixed URLs used to be on that list and no longer are; see below.
 
 `tests/Browser/ThemeColorsTest` snapshots every colour declaration in every loaded stylesheet,
 resolved through the browser, into `tests/Browser/snapshots/theme-colors-{light,dark}.json` — 808
@@ -96,31 +96,40 @@ from the `web` group in `bootstrap/app.php`. A same-origin check stands in for C
 **Never let an HTML formatter touch `.blade.php` files.** It splits `{{--` markers and silently
 kills the page. Edit blades by hand.
 
-**Locale routing is resolved once per boot, not per request.** `RouteServiceProvider::mapWebRoutes`
-registers routes under `prefix => Localization::setLocale()`, which reads `request()->segment(1)`.
-Under `artisan test` the console kernel's `SetRequestForConsole` builds that request from
-`config('app.url')`, so the whole feature suite runs as a single locale with unprefixed routes:
-`$this->get('/about')` works, `$this->get('/de-DE/about')` 404s. Per-locale URL coverage has to be
-a Dusk test.
+**The locale is middleware, and the route table never mentions it.**
+`App\Http\Middleware\ResolveLocale` runs globally, *before* route matching: it decides the locale
+(`App\Localization\LocaleContext`) and strips a leading `/{locale}` segment from the request.
+`AppServiceProvider`'s `URL::formatPathUsing` hook puts the prefix back on every generated path, so
+`route()`, `url()` and `redirect()` are localized by construction and no call site has to ask.
+`asset()` is the deliberate exception — `UrlGenerator` builds asset URLs without calling `format()`,
+which is right, because `/build/…` is served by nginx and exists at one path.
 
-**Never leave routes cached — `php artisan optimize` must always be followed by `route:clear`.**
-Because the locale is resolved *while registering* routes, a route cache means `mapWebRoutes` never
-runs and `app.locale` stays the literal `'default'` from `config/app.php`. `entrypoint_production.sh`
-has done this since long before anyone wrote it down:
+Consequences worth knowing:
 
-```bash
-php artisan optimize
-php artisan route:clear # Do not cache routes; Interferes with Localization
-```
+- `$this->get('/de-DE/about')` works in a plain feature test. `tests/Feature/LocalizedRoutingTest`
+  is the ex-Dusk suite that proves it, and `tests/Feature/LocalePrefixedUrlGenerationTest` covers
+  URL generation. Do not reach for Dusk for locale work.
+- **`url()->full()` and `Request::url()` no longer answer "what URL is the user on"** — they read
+  the request the router was handed, which is the one with the prefix removed. Use
+  `App\Localization::currentUrl()` / `currentFullUrl()` for a link back to the current page.
+- Signed URLs: `URL::signedRoute()` signs the *prefixed* URL, so `$request->hasValidSignature()`
+  would compare against the stripped one and fail. `App\Localization::hasValidSignature()` is the
+  check to use; `tests/Feature/SignedUrlUnderLocalePrefixTest` pins it.
+- `getLocalizedURL()` is ours (`App\Localization\MetaGerLocalization`), not the package's. Its
+  contract lives in `tests/Feature/LocalizedUrlTest`.
 
-It does not fail as a routing error, which is what makes it expensive to diagnose. Engines whose
-language map has no entry for the current locale are disabled, and the web engines declare
-`languages => []` with only exact regional keys — so *every* engine is disabled, `MetaGerSearch`
-answers "no enabled engines" with a redirect to `settings#engines`, and the whole search suite fails
-with `expected 200, got 302` and nothing in the log. The CI test job was the one place that ran
-`optimize` without the `route:clear`; that cost three pipeline round trips to find.
-`EngineReachabilityTest::testAWebSearchHasEnginesToQuery` now fails once and names the locale and
-the per-engine `DisabledReason`, instead of eighty tests failing identically.
+**Routes are cached in production, and the test job runs against a warm cache.** That is new, and it
+is the direct check on the paragraph above. It could not be done before: the locale was a route
+group prefix resolved *while registering* routes, so a route cache meant `mapWebRoutes` never ran
+and `app.locale` stayed the literal `'default'` from `config/app.php`. That failed as a *search*
+problem, not a routing one — engines whose language map has no entry for the current locale are
+disabled, the web engines declare `languages => []` with only exact regional keys, so every engine
+was disabled, `MetaGerSearch` answered "no enabled engines" with a redirect to `settings#engines`,
+and the whole search suite failed with `expected 200, got 302` and nothing in the log. The CI test
+job was the one place that ran `optimize` without a following `route:clear`; that cost three
+pipeline round trips to find. `EngineReachabilityTest::testAWebSearchHasEnginesToQuery` still stands
+guard, and now names the locale and the per-engine `DisabledReason` when something disables them
+all.
 
 **`App\Support\Browser` is the only device-detection service.** It wraps `matomo/device-detector`
 and normalises names to the short forms the views branch on (`Edge`, not `Microsoft Edge`). It
@@ -222,8 +231,9 @@ and a page makes about fifty. `App\Localization\MemoizingLaravelLocalization` me
 What is left is flat framework overhead — container resolutions and `Arr::get` — plus the blade
 render itself, which is most of it and is inherent. Two things measured and *not* worth doing:
 `Searchengines` builds 16 parser objects when a fokus enables 2, which is 1.2 ms and would mean
-restructuring how engines are configured; and making routes cacheable is 3.7 ms, against the part
-of the codebase that fails silently and catastrophically (see the `artisan optimize` note above).
+restructuring how engines are configured. Route caching was also on that list, measured at 3.7 ms
+and judged not worth the risk; it has since been done anyway, because taking the locale out of the
+route table removed the risk rather than accepting it.
 
 ## CI and the container registry
 

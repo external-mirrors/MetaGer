@@ -115,14 +115,20 @@ class EngineReachabilityTest extends TestCase
      * because MetaGerSearch answers "no enabled engines" with a redirect to the
      * settings page rather than an error.
      *
-     * The way it happened is worth keeping in view: `php artisan optimize`
-     * caches routes, this app resolves its locale while *registering* routes
-     * (RouteServiceProvider::mapWebRoutes passes Localization::setLocale() as
-     * the group prefix), and applyLocale() disables every engine whose language
-     * map has no entry for the resulting locale. The web engines declare
-     * `languages => []` and only exact regional keys, so an unresolved locale
-     * disables all of them. Nothing about that is a search bug, and nothing
-     * about the eighty failures said so.
+     * The way it happened is worth keeping in view, even though the cause has
+     * since been removed: `php artisan optimize` caches routes, this app used
+     * to resolve its locale while *registering* routes
+     * (RouteServiceProvider::mapWebRoutes passed Localization::setLocale() as
+     * the group prefix), so a warm route cache meant registration never ran and
+     * `app.locale` stayed the literal 'default'. applyLocale() then disables
+     * every engine whose language map has no entry for the resulting locale,
+     * and the web engines declare `languages => []` with only exact regional
+     * keys — so *every* engine was disabled. Nothing about that is a search
+     * bug, and nothing about the eighty failures said so.
+     *
+     * The locale is middleware now and the route table is cacheable, so this
+     * particular trap is gone. The assertion stays: "a web search has engines"
+     * is worth one named failure whatever the next cause turns out to be.
      */
     public function testAWebSearchHasEnginesToQuery(): void
     {

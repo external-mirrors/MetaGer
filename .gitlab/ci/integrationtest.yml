@@ -98,31 +98,21 @@ test:
     - name: valkey/valkey:9.1.0-alpine
       alias: redis
   script:
-    # Undo the route cache that `php artisan optimize` just wrote, and only that one.
+    # Deliberately run with the route cache `php artisan optimize` just wrote, and
+    # not with `route:clear` in front of it as this job used to need.
     #
-    # This app resolves its locale *while registering routes*: RouteServiceProvider::mapWebRoutes
-    # passes Localization::setLocale() as the route group's prefix, which is what turns
-    # config/app.php's literal 'locale' => 'default' into a real one. Cached routes mean
-    # mapWebRoutes never runs, so nothing resolves it and app.locale stays the string "default".
+    # The locale used to be a route group prefix — RouteServiceProvider::mapWebRoutes passed
+    # Localization::setLocale() as the prefix — which is what turned config/app.php's literal
+    # 'locale' => 'default' into a real one. Cached routes meant mapWebRoutes never ran, so
+    # app.locale stayed the string "default", SearchengineConfiguration::applyLocale disabled every
+    # engine whose language map had no entry for it (the web engines declare `languages => []` with
+    # only exact regional keys), and MetaGerSearch redirected to settings#engines because nothing
+    # was enabled. The whole search suite failed with "expected 200, got 302" and nothing in the log.
     #
-    # That is not a routing problem, it is a search problem. SearchengineConfiguration::applyLocale
-    # disables any engine whose language map has no entry for the current locale, and the two web
-    # engines declare `languages => []` with only exact regional keys (en_US, de_DE, ...), so an
-    # unresolved locale disables all of them. MetaGerSearch then redirects to settings#engines
-    # because no engine is enabled — which is why the whole search suite failed with "expected 200,
-    # got 302" and no error in the log. Reproducible locally with `artisan optimize`.
-    #
-    # Kept out of .test_base on purpose: browsertest derives its expected URLs from the app.locale
-    # the config cache froze, and it passes as it is.
-    #
-    # This is not a CI-specific workaround. build/fpm/entrypoint/entrypoint_production.sh has run
-    # the same pair for as long as it has existed:
-    #
-    #     php artisan optimize
-    #     php artisan route:clear # Do not cache routes; Interferes with Localization
-    #
-    # This job was the only place that ran the first line without the second.
-    - php artisan route:clear
+    # App\Http\Middleware\ResolveLocale decides the locale per request now and the route table is
+    # a constant, so the cache is safe — and running the suite against a warm one is the check that
+    # it stays that way, since production serves every request from it
+    # (build/fpm/entrypoint/entrypoint_production.sh).
     - php artisan test --without-tty
 
 # Dusk browser suite (phpunit.dusk.xml). Split out from `test` because it is the only

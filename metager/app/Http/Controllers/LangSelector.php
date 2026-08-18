@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
-use App\Localization;
+use App\Localization\LocaleContext;
 use Cookie;
 use Illuminate\Http\Request;
 use LaravelLocalization;
@@ -62,8 +62,11 @@ class LangSelector extends Controller
             return;
         }
 
-        // Parse the new locale from the request
-        $path_locale = $request->segment(1);
+        // The locale the user picked, which reached us as the path prefix of
+        // /{locale}/lang?switch=1. Read from the resolved context rather than
+        // from segment(1): ResolveLocale strips the segment before routing, so
+        // by now the path is just /lang.
+        $path_locale = app(LocaleContext::class)->pathLocale;
         if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             $path_locale = null;
         }

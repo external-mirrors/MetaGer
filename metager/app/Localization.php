@@ -2,78 +2,43 @@
 
 namespace App;
 
-use App;
+use App\Localization\LocaleContext;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 use LaravelLocalization;
 
 /**
- * Applies our custom localization rules including localized domain names
- * 
+ * The application-facing view of the request's locale.
+ *
+ * The decision itself lives in `App\Localization\LocaleContext` and is taken
+ * once, by the `ResolveLocale` middleware, before route matching. What used to
+ * be `Localization::setLocale()` — a static called from `RouteServiceProvider`
+ * to produce a route group prefix — is gone; see LocaleContext for why that
+ * shape could not be kept.
  */
 class Localization
 {
-    public static function setLocale(?string $locale = null)
+    /** The locale decided for this request, e.g. `en-US`. */
+    public static function context(): LocaleContext
     {
-        // Ignore healthchecks
-        if (request()->is(['metrics', 'health-check/*'])) {
-            return;
-        }
-        /**
-         * metager.org is our english Domain
-         * We will change the Locale to en
-         */
-        $host = request()->getHost();
-        $locale = "en-US";
-        $language = "en";
-        if ($host === "metager.de") {
-            $locale = "de-DE";
-            $language = "de";
-        }
-        $fallback_locale = $language;
+        return app(LocaleContext::class);
+    }
 
-        $legacy_path_locales = [
-            "uk" => "en-GB",
-            "ie" => "en-IE",
-            "es" => "es-ES",
-            "at" => "de-AT"
-        ];
+    /** The URL of the page being served, locale prefix included, without the query string. */
+    public static function currentUrl(): string
+    {
+        return self::context()->currentUrl();
+    }
 
-        $path_locale = request()->segment(1);
-
-        $guessed_locale = self::GET_PREFERRED_LOCALE($locale);
-        $default_locale = $locale;
-        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
-            $locale = $path_locale;
-        } else {
-            if (array_key_exists($path_locale, $legacy_path_locales)) {
-                $locale = $legacy_path_locales[$path_locale];
-            } else {
-                $path_locale = "";
-            }
-            // We will guess a locale only for metager.org or if the guessed locale is a german language
-            // There is a lot of traffic on metager.de with a en_US agent and I don't know yet if that's
-            // a misconfigured useragent or indeed the correct language setting
-            if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
-                $locale = $guessed_locale;
-            }
-        }
-
-        if (request()->getHost() !== "metager.de" || strpos($guessed_locale, "de") === 0) {
-            $default_locale = $guessed_locale;
-        }
-
-        // Update default Locale so it can be stripped from the path
-        config(["app.locale" => $locale, "app.default_locale" => $default_locale, "laravellocalization.localesMapping" => [$default_locale => ""]]);
-        App::setLocale($locale);
-
-        App::setFallbackLocale($fallback_locale);
-        LaravelLocalization::setLocale($locale);
-
-        return $path_locale;
+    /** The same, with the query string — what `url()->full()` used to return. */
+    public static function currentFullUrl(): string
+    {
+        return self::context()->originalUrl;
     }
 
     /**
      * Extracts the language part from our current locale
-     * 
+     *
      * @return string language (i.e. de,en,es,...)
      */
     public static function getLanguage()
@@ -87,7 +52,7 @@ class Localization
 
     /**
      * Extracts the region part from our current locale
-     * 
+     *
      * @return string region (i.e. de,us,...)
      */
     public static function getRegion()
@@ -97,6 +62,27 @@ class Localization
             $current_region = $matches[1];
         }
         return $current_region;
+    }
+
+    /**
+     * The locales an `hreflang` alternate should be emitted for: everything we
+     * serve except the one being rendered.
+     *
+     * `getSupportedLocales()` also contains the synthetic `default` entry that
+     * exists only to satisfy the package's constructor. Emitted verbatim it
+     * produced `<link hreflang="default" href=".../default/en-US">` on every
+     * page — not a language tag, and not a URL that resolves.
+     *
+     * @return list<string>
+     */
+    public static function getAlternateLocales(): array
+    {
+        $current = LaravelLocalization::getCurrentLocale();
+
+        return array_values(array_filter(
+            array_keys(LaravelLocalization::getSupportedLocales()),
+            fn(string $locale): bool => $locale !== "default" && $locale !== $current
+        ));
     }
 
     /**
@@ -124,44 +110,22 @@ class Localization
     }
 
     /**
-     * Returns an array of available Locales in the format xx_XX
+     * Whether the URL the client actually asked for carries a valid signature.
      *
-     * @param string $default Default Locale if no matches were found
-     *
-     * @return string
+     * Not `$request->hasValidSignature()`, and the difference matters:
+     * `ResolveLocale` hands the router a request whose locale prefix has been
+     * removed, so `$request->url()` is no longer the URL the signature was
+     * computed over. `URL::signedRoute()` signs what `route()` produces, and
+     * `route()` produces the prefixed URL — so the check has to be made against
+     * the URL as it arrived.
      */
-    public static function GET_PREFERRED_LOCALE(?string $default = null)
+    public static function hasValidSignature(): bool
     {
-        $default = str_replace("-", "_", $default);
-        $regional_locales = [];
-        $available_locales = LaravelLocalization::getSupportedLocales();
-        foreach ($available_locales as $locale => $locale_data) {
-            $regional_locales[] = $locale_data["regional"];
+        $original = self::context()->originalUrl;
+        if ($original === "") {
+            return false;
         }
 
-        // Add some two letter country codes to the list
-        $two_letter_locales = [
-            "de" => "de_DE",
-            "en" => "en_US",
-            "es" => "es_ES",
-            "en_UK" => "en_GB",
-        ];
-        $regional_locales = array_merge(array_keys($two_letter_locales), $regional_locales);
-
-        // Make sure default locale is at array index 0 of available locales
-        if ($default !== null) {
-            if (in_array($default, $regional_locales)) {
-                $regional_locales = array_diff($regional_locales, [$default]);
-            }
-            array_unshift($regional_locales, $default);
-        }
-
-        $preferred_locale = request()->getPreferredLanguage($regional_locales);
-
-        if (in_array($preferred_locale, array_keys($two_letter_locales))) {
-            $preferred_locale = $two_letter_locales[$preferred_locale];
-        }
-
-        return str_replace("_", "-", $preferred_locale);
+        return URL::hasValidSignature(Request::create($original));
     }
 }

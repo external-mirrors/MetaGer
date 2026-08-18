@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Localization;
+use App\Localization\LocaleContext;
 use App\SearchSettings;
 use Closure;
 use Cookie;
@@ -22,6 +23,31 @@ class LocalizationRedirect
     {
         // Ignore healthchecks
         if ($request->is(['metrics', 'health-check/*'])) {
+            return $next($request);
+        }
+
+        /**
+         * Only ever redirect a *navigation*.
+         *
+         * Everything below this line answers with a redirect, and several of
+         * those redirects cross to the other domain. A browser following that
+         * on a page load is the whole point; a `fetch()` following it is not
+         * possible at all - our own CSP is `connect-src 'self'`, so the request
+         * fails outright, and the calling script sees a rejected promise rather
+         * than an answer.
+         *
+         * That is not hypothetical. The start page's suggest endpoint hit
+         * exactly this for any user whose browser language and chosen language
+         * disagreed, and because the submit handler waited on that request, the
+         * search box stopped working with nothing on screen to explain it.
+         *
+         * A subresource has no business being relocated to a different locale
+         * anyway: whatever locale the page it belongs to resolved is the one
+         * that matters, and it is already in the URL the page generated. So the
+         * rule is the general one rather than a patch for the suggest route -
+         * answer non-navigation requests, never redirect them.
+         */
+        if (!$this->isNavigation($request)) {
             return $next($request);
         }
         if ($request->routeIs('loadSettings')) {
@@ -47,7 +73,7 @@ class LocalizationRedirect
         $lang = Localization::getLanguage();
         $host = $request->getHost();
         if ($lang === "de" && $host === "metager.org") {
-            $new_uri = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", url()->full());
+            $new_uri = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $this->context()->originalUrl);
             $new_uri = $this->migrateSettingsLink($new_uri);
             return redirect($new_uri);
         }
@@ -63,7 +89,9 @@ class LocalizationRedirect
             $setting_locale = str_replace("_", "-", $setting);
             $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
             $current_locale = LaravelLocalization::getCurrentLocale();
-            $new_url = preg_replace("/^\/$current_locale\/?/", "/", $request->getRequestUri());
+            // Already free of any locale segment: ResolveLocale took it off
+            // before the router ever saw this request.
+            $new_url = $request->getRequestUri();
 
             if (in_array($setting_locale, $availableLocales)) {
                 $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $new_url);
@@ -96,6 +124,32 @@ class LocalizationRedirect
     }
 
     /**
+     * Whether this request is a page load, as opposed to a subresource,
+     * `fetch()`/XHR or API call.
+     *
+     * `Sec-Fetch-Mode` is the authoritative answer and every current browser
+     * sends it on every request; it is a forbidden header name, so a page
+     * cannot forge it. When it is absent - an older browser, a crawler, curl,
+     * or one of our own API clients - we fall back to the two signals that
+     * predate it, and otherwise assume a navigation, which keeps the previous
+     * behaviour for crawlers (`verifyPathLocaleNeeded()` deliberately pushes
+     * them onto a locale-prefixed URL).
+     */
+    private function isNavigation(Request $request): bool
+    {
+        $mode = $request->header("Sec-Fetch-Mode");
+        if (!empty($mode)) {
+            return $mode === "navigate";
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Some Localizations were set to two letter country codes in the past
      * we switched to 4 letters at some point and created this legacy redirection
      * so old URLs remain working
@@ -104,7 +158,7 @@ class LocalizationRedirect
      */
     private function redirectTwoLetterCountryCode($request)
     {
-        $path_locale = $request->segment(1);
+        $path_locale = $this->context()->pathLocale;
         $legacy_country_codes = [
             "uk" => "en-GB",
             "ie" => "en-GB",
@@ -112,8 +166,10 @@ class LocalizationRedirect
             "at" => "de-AT"
         ];
         if (array_key_exists($path_locale, $legacy_country_codes)) {
-            $old_url = str_replace("/" . $path_locale, "", url()->full());
-            $new_url = LaravelLocalization::getLocalizedUrl($legacy_country_codes[$path_locale], $old_url);
+            // getLocalizedUrl() drops a leading locale segment of its own
+            // accord, legacy two-letter ones included, so the URL as it
+            // arrived is exactly the right thing to hand it.
+            $new_url = LaravelLocalization::getLocalizedUrl($legacy_country_codes[$path_locale], $this->context()->originalUrl);
             return redirect($new_url);
         }
         return null;
@@ -130,31 +186,29 @@ class LocalizationRedirect
      */
     private function verifyPathLocaleNeeded(Request $request)
     {
-        if (preg_match("/^[a-z]{2}-[A-Z]{2}$/", $request->segment(1))) {
-            $path_locale = $request->segment(1);
-        } else {
-            $path_locale = "";
-        }
+        $context = $this->context();
+        $path_locale = preg_match("/^[a-z]{2}-[A-Z]{2}$/", $context->pathLocale) ? $context->pathLocale : "";
 
-
-        $default_locale = config("app.default_locale");
+        $default_locale = $context->defaultLocale;
         $crawler = preg_match('/bot|crawl|slurp|spider|mediapartners/i', $request->header("User-Agent"));
+
+        // $request->getRequestUri() is the path with the locale already
+        // removed, which is precisely the URL the first branch wants to send
+        // the user to and the one the second branch wants to prefix.
         if (!empty($path_locale) && $default_locale === $path_locale && !$crawler) {
             // The user landed on a URL with path locale although it's his default language
-            $path = $request->getRequestUri();
-            $new_path = preg_replace("/^\/$path_locale/", "", $path);
-            if ($path !== $new_path) {
-                return redirect($new_path, 302, ["Vary" => "Accept-Language"]);
-            }
+            return redirect($request->getRequestUri(), 302, ["Vary" => "Accept-Language"]);
         } else if ($crawler && empty($path_locale)) {
-            $path = $request->getRequestUri();
-            $new_path = "/$default_locale" . $path;
-            if ($path !== $new_path) {
-                return redirect($new_path, 302, ["Vary" => "Accept-Language"]);
-            }
+            return redirect("/$default_locale" . $request->getRequestUri(), 302, ["Vary" => "Accept-Language"]);
         }
 
         return null;
+    }
+
+    /** The locale decided for this request, before route matching. */
+    private function context(): LocaleContext
+    {
+        return app(LocaleContext::class);
     }
 
     /**
@@ -199,6 +253,27 @@ class LocalizationRedirect
 
         if (!array_key_exists("web_setting_m", $settings)) {
             $settings["web_setting_m"] = str_replace("-", "_", LaravelLocalization::getCurrentLocale());
+        }
+
+        /**
+         * The key travels too.
+         *
+         * Without this, switching language across the domain boundary signed
+         * the user out: the loop above collects `*_setting_*` and `*_engine_*`
+         * only, so a user's search settings arrived on the new domain intact
+         * while the credential that pays for their searches was left behind on
+         * the old one. `loadSettings()` has always had a branch for `key` -
+         * `SettingsController::index()`'s own migration link sends it - so this
+         * was an omission here rather than a policy.
+         *
+         * Read from the raw transports rather than through the key guard: this
+         * is middleware, the guard has not necessarily resolved yet, and all we
+         * need is the value to hand on. The resulting URL is HMAC-signed and
+         * expires in five minutes (see the `signature` below).
+         */
+        $user_key = request()->cookie("key") ?? request()->header("key") ?? request()->query("key");
+        if (is_string($user_key) && $user_key !== "") {
+            $settings["key"] = $user_key;
         }
 
         $settings["signature"] = hash_hmac("sha256", $settings["redirect_url"] . $settings["expires"], config("app.key"));

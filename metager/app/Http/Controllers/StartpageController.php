@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Localization;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Http\Request;
 use Response;
@@ -30,7 +31,7 @@ class StartpageController extends Controller
              * Chrome only adds opensearch descriptions when visiting the startpage
              * turns out a redirect also works.
              */
-            if ($eingabe === "opensearch" && $request->hasValidSignature()) {
+            if ($eingabe === "opensearch" && Localization::hasValidSignature()) {
                 if ($request->filled("url")) {
                     return redirect($request->input("url"));
                 }

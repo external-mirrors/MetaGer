@@ -61,7 +61,7 @@
                     <div class="row row-stacked">
                         <div class="actions-inline">
                             <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter') }}" class="btn btn-sm">@lang('settings.metager-key.manage')</a>
-                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(url()->full())) }}" class="btn btn-sm" id="remove-key">@lang('settings.metager-key.logout')</a>
+                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(App\Localization::currentFullUrl())) }}" class="btn btn-sm" id="remove-key">@lang('settings.metager-key.logout')</a>
                         </div>
                     </div>
                 @else

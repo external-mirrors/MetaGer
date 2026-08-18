@@ -75,6 +75,15 @@ if [[ "$method" == "DELETE" ]]; then
     # stub has to as well — otherwise a double delete looks like a success.
     grep -qxF "$tag" "$FIXTURE_DIR/tags-$repository.txt" 2>/dev/null || exit 22
     echo "$repository $tag" >>"$RECORD_FILE"
+    echo "DELETE $repository" >>"$ORDER_FILE"
+    # The tag really goes away, because that is what makes paging over a
+    # repository while deleting from it observably wrong: every delete shifts
+    # the remaining tags one place towards page 1, so the next page fetched
+    # skips as many entries as have been deleted since. A stub that only
+    # recorded deletions would page over a list that never moves and would
+    # report that bug as passing.
+    grep -vxF "$tag" "$FIXTURE_DIR/tags-$repository.txt" >"$FIXTURE_DIR/tags-$repository.tmp"
+    mv "$FIXTURE_DIR/tags-$repository.tmp" "$FIXTURE_DIR/tags-$repository.txt"
     exit 0
 fi
 
@@ -87,7 +96,9 @@ for parameter in ${query//&/ }; do
     [[ "$parameter" == page=* ]] && page="${parameter#page=}"
 done
 
-per_page=3
+echo "LIST $repository" >>"$ORDER_FILE"
+
+per_page=${STUB_PER_PAGE:-3}
 file="$FIXTURE_DIR/tags-$repository.txt"
 [[ -f "$file" ]] || file=/dev/null
 

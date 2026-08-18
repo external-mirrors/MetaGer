@@ -56,8 +56,10 @@ scenario() {
     WORK="$(mktemp -d)"
     FIXTURE_DIR="$WORK/fixtures"
     RECORD_FILE="$WORK/deleted.txt"
+    ORDER_FILE="$WORK/calls.txt"
     mkdir -p "$FIXTURE_DIR"
     : >"$RECORD_FILE"
+    : >"$ORDER_FILE"
 
     cat >"$FIXTURE_DIR/tags-418.txt" <<EOF
 $PREFIX-$SHA_CURRENT
@@ -112,7 +114,7 @@ run() {
     (
         cd "$WORK" || exit 1
         export PATH="$STUBS:$PATH"
-        export FIXTURE_DIR RECORD_FILE
+        export FIXTURE_DIR RECORD_FILE ORDER_FILE
         export CI_API_V4_URL="https://gitlab.example/api/v4"
         export CI_PROJECT_ID=1
         export CI_JOB_TOKEN=token
@@ -389,6 +391,85 @@ test_purge_does_not_match_a_longer_branch_name() {
     else
         pass "purge does not reach a branch whose name merely starts the same"
     fi
+    cleanup
+}
+
+# Regression: the first run of this sweep against the real registry cleared 288
+# tags down to 93 and left two dead branches behind — in the one repository big
+# enough to need a second page.
+#
+# Deleting a tag shifts every later tag one place towards page 1, so a loop that
+# fetches page 2 *after* deleting from page 1 skips exactly as many tags as it
+# deleted. The whole listing has to be in hand before the first delete.
+#
+# Asserted on call order rather than on the surviving tags, because at fixture
+# size the bug hides: jq buffers its output, so with a few tags the listing
+# happens to finish before the first delete and the wrong code passes. At 186
+# tags the buffer flushes mid-walk and it does not.
+assert_listing_precedes_deletion() {
+    local name="$1" repository offending=""
+    tests=$((tests + 1))
+
+    for repository in 418 416 419; do
+        # The last LIST must come before the first DELETE, per repository.
+        local last_list first_delete
+        last_list="$(grep -n "^LIST $repository$" "$ORDER_FILE" | tail -1 | cut -d: -f1)"
+        first_delete="$(grep -n "^DELETE $repository$" "$ORDER_FILE" | head -1 | cut -d: -f1)"
+        [[ -n "$last_list" && -n "$first_delete" ]] || continue
+        [[ "$last_list" -lt "$first_delete" ]] || offending="$offending $repository"
+    done
+
+    if [[ -z "$offending" ]]; then
+        pass "$name"
+    else
+        fail "$name" \
+            "repository$offending was still being paged over after tags had been deleted from it." \
+            "Every delete shifts the remaining tags towards page 1, so the next page fetched" \
+            "skips as many tags as have been deleted. Snapshot the listing first."
+    fi
+}
+
+# The faithful reproduction. Two hundred dead tags at a hundred per page is more
+# than four kilobytes of names, which is what it takes to push jq past its output
+# buffer and let the delete loop start running while the next page is still being
+# fetched. Below that threshold the buggy code passes by luck, which is precisely
+# why this went out and had to be found against the live registry.
+test_a_repository_larger_than_one_page_is_swept_completely() {
+    scenario; live_branches; no_review_releases
+
+    local dead=()
+    for i in $(seq -w 1 200); do
+        dead+=("$ORPHAN_PREFIX-$(printf '%s' "$i$i$i$i$i$i$i$i$i$i$i$i$i$i" | cut -c1-40 | tr ' ' '0')")
+    done
+    printf '%s\n' "${dead[@]}" >"$FIXTURE_DIR/tags-419.txt"
+
+    run cleanup_tags.sh KEEP_N=2 STUB_PER_PAGE=100
+
+    tests=$((tests + 1))
+    local survivors
+    survivors=$(grep -c . "$FIXTURE_DIR/tags-419.txt" || true)
+    if [[ "$survivors" == "0" ]]; then
+        pass "a repository larger than one page is swept completely"
+    else
+        fail "a repository larger than one page is swept completely" \
+            "$survivors of 200 dead tags survived." \
+            "Deleting from page 1 shifts page 2 back, so the second fetch skips" \
+            "exactly as many tags as were already deleted."
+    fi
+    cleanup
+}
+
+test_the_whole_listing_is_read_before_anything_is_deleted() {
+    scenario; live_branches; no_review_releases
+    run cleanup_tags.sh KEEP_N=2
+    assert_listing_precedes_deletion "the sweep reads a repository fully before deleting from it"
+    cleanup
+}
+
+test_purge_reads_the_whole_listing_before_deleting() {
+    scenario; live_branches; no_review_releases
+    run purge_tags.sh
+    assert_listing_precedes_deletion "the purge reads a repository fully before deleting from it"
     cleanup
 }
 

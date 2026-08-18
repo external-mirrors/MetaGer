@@ -204,7 +204,15 @@ for repository in "${REPOSITORIES[@]}"; do
     echo
     echo "Sweeping repository $repository..."
 
-    while read -r tag; do
+# mapfile, not a `while read` over a process substitution. The listing is
+# paginated, and deleting a tag shifts every later one towards page 1 — so a
+# loop that consumes the listing as it arrives fetches page 2 after page 1's
+# tags are already gone, and skips exactly as many as it deleted. The first run
+# of this against the live registry cleared 288 tags to 93 and left two dead
+# branches behind, in the one repository big enough to need a second page.
+    mapfile -t tags < <(registry_tags "$repository")
+
+    for tag in "${tags[@]}"; do
         [[ -n "$tag" ]] || continue
         [[ -v protected["$repository $tag"] ]] && continue
 
@@ -218,5 +226,5 @@ for repository in "${REPOSITORIES[@]}"; do
         fi
 
         registry_delete_tag "$repository" "$tag"
-    done < <(registry_tags "$repository")
+    done
 done

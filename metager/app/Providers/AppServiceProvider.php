@@ -6,7 +6,9 @@ use App\Localization;
 use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
+use App\Localization\MemoizingLaravelLocalization;
 use App\Support\Browser;
+use Mcamara\LaravelLocalization\LaravelLocalization;
 use App\Support\UpstreamUserAgent;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -66,6 +68,13 @@ class AppServiceProvider extends ServiceProvider
         // request; anything resolving this outside a request should use
         // Browser::fromUserAgent directly, as the tests do.
         $this->app->singleton(Browser::class, fn() => Browser::fromRequest());
+
+        // Swap in the memoizing localization. See
+        // App\Localization\MemoizingLaravelLocalization: every localized link
+        // on a page re-walked the whole route collection, and a result page has
+        // about fifty of them. Bound against the package's own key, so the
+        // facade and every type-hint pick it up.
+        $this->app->singleton(LaravelLocalization::class, MemoizingLaravelLocalization::class);
         Auth::provider("logs", function ($app, array $config) {
             return new LogsUserProvider($app->make(LogsUser::class));
         });

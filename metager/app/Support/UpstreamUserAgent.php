@@ -34,10 +34,13 @@ class UpstreamUserAgent
      * Memoised because one search builds one engine object per engine in the
      * fokus, and each of them asks. Bound as a singleton in AppServiceProvider,
      * so the User-Agent is parsed once per request rather than once per engine.
+     * The Browser is resolved from the container for the same reason one level
+     * up: MetaGer wants the same detection for its mobile flag, and there is no
+     * sense in doing it twice for one request.
      */
     public function value(): string
     {
-        return $this->value ??= self::for(Browser::fromRequest());
+        return $this->value ??= self::for(app(Browser::class));
     }
 
     /**

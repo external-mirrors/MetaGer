@@ -407,7 +407,7 @@ class MetaGer
             $this->lang = "all";
         }
 
-        $this->agent = \App\Support\Browser::fromRequest();
+        $this->agent = app(\App\Support\Browser::class);
         $this->mobile = $this->agent->isMobile();
         # Sprüche
         if (app(\App\SearchSettings::class)->zitate) {

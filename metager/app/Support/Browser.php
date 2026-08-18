@@ -6,6 +6,7 @@ use DeviceDetector\Cache\LaravelCache;
 use DeviceDetector\ClientHints;
 use DeviceDetector\DeviceDetector;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Browser and device facts about the current client.
@@ -19,6 +20,27 @@ use Illuminate\Http\Request;
  * Names are normalised to the short forms the views have always branched on
  * ("Edge", not "Microsoft Edge"), so the view logic did not have to change
  * shape when the library underneath did.
+ *
+ * ## Why the answers are cached, and not the regexes
+ *
+ * DeviceDetector is handed a LaravelCache, which caches the regex lists it
+ * parses out of its YAML files. That is worth having — without it a parse costs
+ * about 110 ms, all of it in a pure-PHP YAML parser — but it is not enough:
+ * with those lists cached a single parse still costs ~2.6 ms, being twenty-six
+ * round trips to fetch the lists plus some three thousand preg_match calls
+ * against one User-Agent string.
+ *
+ * So what gets cached here is the handful of facts the application actually
+ * asks for, keyed by the User-Agent and client hints that produced them. One
+ * cache read replaces the lot. User-Agent strings repeat heavily across a
+ * search engine's traffic, so the hit rate is close to one.
+ *
+ * The key carries DeviceDetector::VERSION, so upgrading the library retires
+ * every cached answer rather than serving last version's opinion. The TTL is
+ * deliberately short for something this immutable: the User-Agent is
+ * client-controlled, so a flood of distinct ones would otherwise take up room
+ * in a cache that is shared with search results and evicts by LRU. An hour is
+ * far longer than a real User-Agent needs to be seen twice.
  */
 class Browser
 {
@@ -44,20 +66,29 @@ class Browser
         "UC Browser" => "UCBrowser",
     ];
 
-    private function __construct(private readonly DeviceDetector $detector)
+    private const CACHE_TTL = 3600;
+
+    /**
+     * @param array<string, mixed> $facts
+     */
+    private function __construct(private readonly array $facts)
     {
     }
 
     public static function fromUserAgent(?string $userAgent, array $clientHints = []): self
     {
-        $detector = new DeviceDetector(
-            $userAgent ?? "",
-            ClientHints::factory($clientHints)
-        );
-        $detector->setCache(new LaravelCache());
-        $detector->parse();
+        $userAgent ??= "";
+        $hints = ClientHints::factory($clientHints);
+        $key = self::cacheKey($userAgent, $hints);
 
-        return new self($detector);
+        $facts = Cache::get($key);
+
+        if (!is_array($facts)) {
+            $facts = self::detect($userAgent, $hints);
+            Cache::put($key, $facts, self::CACHE_TTL);
+        }
+
+        return new self($facts);
     }
 
     public static function fromRequest(?Request $request = null): self
@@ -68,11 +99,49 @@ class Browser
     }
 
     /**
+     * Keyed off the ClientHints object rather than the headers it came from.
+     * Those headers arrive as the whole of $_SERVER, most of which the hints
+     * ignore; keying on the input would give two identical clients two cache
+     * entries for the sake of an environment variable.
+     */
+    private static function cacheKey(string $userAgent, ClientHints $hints): string
+    {
+        return "browser:" . sha1(DeviceDetector::VERSION . "\0" . $userAgent . "\0" . serialize($hints));
+    }
+
+    /**
+     * The full parse — everything below this line reads the result of one of
+     * these, never a detector.
+     *
+     * @return array<string, mixed>
+     */
+    private static function detect(string $userAgent, ClientHints $hints): array
+    {
+        $detector = new DeviceDetector($userAgent, $hints);
+        $detector->setCache(new LaravelCache());
+        $detector->parse();
+
+        return [
+            // The library's own name, not the short one: NAMES is applied on
+            // read, so adding a browser to that map does not have to wait for
+            // every cached answer to expire.
+            "client" => $detector->getClient("name"),
+            "version" => $detector->getClient("version"),
+            "engine" => $detector->getClient("engine"),
+            "engine_version" => $detector->getClient("engine_version"),
+            "os" => $detector->getOs("name"),
+            "desktop" => $detector->isDesktop(),
+            "mobile" => $detector->isMobile(),
+            "tablet" => $detector->isTablet(),
+        ];
+    }
+
+    /**
      * Short browser name, or null when the browser is not one we branch on.
      */
     public function name(): ?string
     {
-        $name = $this->detector->getClient("name");
+        $name = $this->facts["client"];
 
         if (!is_string($name)) {
             return null;
@@ -83,12 +152,12 @@ class Browser
 
     public function version(): ?string
     {
-        return $this->stringOrNull($this->detector->getClient("version"));
+        return $this->stringOrNull($this->facts["version"]);
     }
 
     public function engine(): ?string
     {
-        return $this->stringOrNull($this->detector->getClient("engine"));
+        return $this->stringOrNull($this->facts["engine"]);
     }
 
     /**
@@ -132,12 +201,12 @@ class Browser
             return 0.0;
         }
 
-        return (float) ($this->detector->getClient("engine_version") ?: 0);
+        return (float) ($this->facts["engine_version"] ?: 0);
     }
 
     public function platform(): ?string
     {
-        $os = $this->detector->getOs("name");
+        $os = $this->facts["os"];
 
         return is_string($os) && $os !== "" ? $os : null;
     }
@@ -157,22 +226,22 @@ class Browser
 
     public function isDesktop(): bool
     {
-        return $this->detector->isDesktop();
+        return $this->facts["desktop"];
     }
 
     public function isMobile(): bool
     {
-        return $this->detector->isMobile();
+        return $this->facts["mobile"];
     }
 
     public function isTablet(): bool
     {
-        return $this->detector->isTablet();
+        return $this->facts["tablet"];
     }
 
     public function isPhone(): bool
     {
-        return $this->detector->isMobile() && !$this->detector->isTablet();
+        return $this->facts["mobile"] && !$this->facts["tablet"];
     }
 
     public function deviceType(): string

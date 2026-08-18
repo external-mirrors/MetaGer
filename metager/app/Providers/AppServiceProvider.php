@@ -6,6 +6,7 @@ use App\Localization;
 use App\Models\Authorization\LogsAuthGuard;
 use App\Models\Authorization\LogsUser;
 use App\Models\Logs\LogsAccountProvider;
+use App\Support\Browser;
 use App\Support\UpstreamUserAgent;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Auth;
@@ -55,6 +56,16 @@ class AppServiceProvider extends ServiceProvider
         // One per request: every engine of the fokus asks for it, and resolving
         // it means parsing the client's User-Agent.
         $this->app->singleton(UpstreamUserAgent::class);
+
+        // One device detection per request. A search asked for it twice — once
+        // in MetaGer::__construct for the mobile flag, once in
+        // UpstreamUserAgent for the User-Agent it sends upstream — and each
+        // ask was a cache read or, on a miss, a full parse. The answer cannot
+        // differ between the two: it is the same request and the same
+        // User-Agent. A singleton because under FPM a process handles one
+        // request; anything resolving this outside a request should use
+        // Browser::fromUserAgent directly, as the tests do.
+        $this->app->singleton(Browser::class, fn() => Browser::fromRequest());
         Auth::provider("logs", function ($app, array $config) {
             return new LogsUserProvider($app->make(LogsUser::class));
         });

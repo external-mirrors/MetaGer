@@ -84,6 +84,29 @@ class RecordingCache extends Repository
     }
 
     /**
+     * Every distinct key touched that starts with the given prefix.
+     *
+     * For asserting how a namespace of keys is used — that two different
+     * clients got two entries, say — without a test having to know how the key
+     * is built.
+     *
+     * @return list<string>
+     */
+    public function keysMatching(string $prefix): array
+    {
+        $matching = [];
+        foreach ($this->calls as $call) {
+            foreach ($call["keys"] as $key) {
+                if (str_starts_with($key, $prefix)) {
+                    $matching[$key] = true;
+                }
+            }
+        }
+
+        return array_keys($matching);
+    }
+
+    /**
      * Every call in order, as "method key,key" strings, for a failure message.
      *
      * @return list<string>

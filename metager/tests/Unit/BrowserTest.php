@@ -3,7 +3,9 @@
 namespace Tests\Unit;
 
 use App\Support\Browser;
+use Illuminate\Support\Facades\Cache;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Support\RecordingCache;
 use Tests\TestCase;
 
 /**
@@ -101,5 +103,84 @@ class BrowserTest extends TestCase
         $this->assertFalse($linux->isPlatform("Windows"));
 
         $this->assertTrue(Browser::fromUserAgent(self::CHROME)->isPlatform("Windows"));
+    }
+
+    /**
+     * The cache is the point of the class, so this is the assertion that has to
+     * hold: a User-Agent seen before costs one cache read.
+     *
+     * Not "fewer reads" — exactly one. A parse fetches twenty-six regex lists
+     * out of the cache before it starts matching, and those twenty-six are what
+     * this exists to avoid; a change that quietly went back to parsing would
+     * still look fast in a test with an array store, and would cost twenty-six
+     * Redis round trips per request in production.
+     */
+    public function testAUserAgentSeenBeforeCostsOneCacheRead(): void
+    {
+        Cache::swap($recorder = new RecordingCache(Cache::getStore()));
+
+        Browser::fromUserAgent(self::FIREFOX)->isMobile();
+        $afterFirst = $recorder->countOf("get");
+
+        Browser::fromUserAgent(self::FIREFOX)->isMobile();
+
+        $this->assertSame(
+            $afterFirst + 1,
+            $recorder->countOf("get"),
+            "The second lookup for a User-Agent already seen went back to DeviceDetector."
+        );
+        $this->assertGreaterThan(
+            2,
+            $afterFirst,
+            "The first lookup did not parse at all, so this test is not measuring what it claims."
+        );
+    }
+
+    /**
+     * The obvious way to get a cache wrong. Two clients, one answer.
+     */
+    public function testTwoUserAgentsDoNotShareAnAnswer(): void
+    {
+        $this->assertSame("Firefox", Browser::fromUserAgent(self::FIREFOX)->name());
+        $this->assertSame("Chrome", Browser::fromUserAgent(self::CHROME)->name());
+        $this->assertSame("Firefox", Browser::fromUserAgent(self::FIREFOX)->name());
+    }
+
+    /**
+     * Client hints change the answer, so they have to change the key. Asserted
+     * on the key rather than on the detection result, because what is being
+     * tested is that the two are kept apart — not what DeviceDetector concludes
+     * from a Sec-CH-UA-Mobile header, which is its business and may change.
+     */
+    public function testClientHintsArePartOfTheCacheKey(): void
+    {
+        Cache::swap($recorder = new RecordingCache(Cache::getStore()));
+
+        Browser::fromUserAgent(self::CHROME, ["HTTP_SEC_CH_UA_MOBILE" => "?0"]);
+        Browser::fromUserAgent(self::CHROME, ["HTTP_SEC_CH_UA_MOBILE" => "?1"]);
+
+        $this->assertCount(
+            2,
+            $recorder->keysMatching("browser:"),
+            "The same cache entry answered for two different sets of client hints."
+        );
+    }
+
+    /**
+     * A cached value that is not what this class wrote — a leftover from an
+     * older shape, or another key collision — is ignored rather than fatal.
+     */
+    public function testAnUnusableCachedValueIsIgnored(): void
+    {
+        Cache::swap($recorder = new RecordingCache(Cache::getStore()));
+        Browser::fromUserAgent(self::FIREFOX);
+
+        $keys = $recorder->keysMatching("browser:");
+        $this->assertCount(1, $keys, "No browser: key was read, so this test cannot poison one.");
+        $key = $keys[0];
+
+        Cache::put($key, "not an array of facts", 60);
+
+        $this->assertSame("Firefox", Browser::fromUserAgent(self::FIREFOX)->name());
     }
 }

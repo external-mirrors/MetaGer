@@ -190,6 +190,31 @@ Two of these carry preserved quirks that look like bugs and are pinned as charac
 rather than fixed — `ResultDeduplicator`'s `changed` flag and the double-encoded host in
 `LinkBuilder`. Read the class docblock before "fixing" one.
 
+## What the result page actually spends its time on
+
+Profiled with xdebug tracing against a warm result page with engines faked, which is the only
+part of the request MetaGer controls — the rest is `waitForMainResults` blocking on Redis.
+Two things dominated, both of them work repeated within one request:
+
+**Device detection.** `App\Support\Browser` caches the facts it derives, keyed by User-Agent and
+client hints, and is resolved from the container so a request detects once. Before that a search
+did it twice — `MetaGer::__construct` for the mobile flag, `UpstreamUserAgent` for the header sent
+upstream — and each was 2.6 ms against Redis: twenty-six cache reads for DeviceDetector's regex
+lists, then ~3,000 `preg_match` calls. 5.3 ms per search became 0.04 ms. A User-Agent nobody has
+sent this hour still costs 6.75 ms, and the first request after the regex lists leave the cache
+costs 114 ms of pure-PHP YAML parsing — that one is shared by every client, not paid per client.
+Don't swap the YAML parser for symfony/yaml to fix it: measured, it is 60% *slower* than Spyc here.
+
+**Localized URLs.** `LaravelLocalization::extractAttributes` walked all 132 routes on every call,
+and a page makes about fifty. `App\Localization\MemoizingLaravelLocalization` memoises it per URL;
+19.4 ms → 15.2 ms median on a warm page.
+
+What is left is flat framework overhead — container resolutions and `Arr::get` — plus the blade
+render itself, which is most of it and is inherent. Two things measured and *not* worth doing:
+`Searchengines` builds 16 parser objects when a fokus enables 2, which is 1.2 ms and would mean
+restructuring how engines are configured; and making routes cacheable is 3.7 ms, against the part
+of the codebase that fails silently and catastrophically (see the `artisan optimize` note above).
+
 ## CI and the container registry
 
 The pipeline builds four images per push — `fpm`, `nginx`, `node` and a `composer`

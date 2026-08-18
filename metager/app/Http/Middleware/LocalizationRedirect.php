@@ -58,12 +58,6 @@ class LocalizationRedirect
             return $next($request);
         }
 
-        // Check for Localization in form of the old two letter country code and redirect to correct URL in that case
-        // This can be removed at some point
-        if (($redirect = $this->redirectTwoLetterCountryCode($request)) !== null) {
-            return $this->record("legacy_path", $redirect);
-        }
-
         // Check if the locale present in the path is optional
         if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
             return $this->record("prefix_correction", $redirect);
@@ -170,32 +164,6 @@ class LocalizationRedirect
         }
 
         return true;
-    }
-
-    /**
-     * Some Localizations were set to two letter country codes in the past
-     * we switched to 4 letters at some point and created this legacy redirection
-     * so old URLs remain working
-     *
-     * 04.07.2023 Dominik
-     */
-    private function redirectTwoLetterCountryCode($request)
-    {
-        $path_locale = $this->context()->pathLocale;
-        $legacy_country_codes = [
-            "uk" => "en-GB",
-            "ie" => "en-GB",
-            "es" => "es-ES",
-            "at" => "de-AT"
-        ];
-        if (array_key_exists($path_locale, $legacy_country_codes)) {
-            // getLocalizedUrl() drops a leading locale segment of its own
-            // accord, legacy two-letter ones included, so the URL as it
-            // arrived is exactly the right thing to hand it.
-            $new_url = LaravelLocalization::getLocalizedUrl($legacy_country_codes[$path_locale], $this->context()->originalUrl);
-            return redirect($new_url);
-        }
-        return null;
     }
 
     /**

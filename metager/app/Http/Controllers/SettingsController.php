@@ -421,24 +421,14 @@ class SettingsController extends Controller
      * `?lang=` -> a default regional locale, one per `lang/` directory this
      * MetaGer install ships translations for. Deliberately not derived from
      * `LaravelLocalization::getSupportedLocales()` (~19 regional variants):
-     * `schema()` below needs exactly one *default* region per language, the
-     * same simplification `Localization::GET_PREFERRED_LOCALE()`'s own
-     * `$two_letter_locales` table already makes for its three entries - this
-     * is that idea, complete.
+     * `schema()` below needs exactly one *default* region per language.
+     *
+     * The same table `LocaleContext` resolves a bare `Accept-Language` with,
+     * and referenced rather than repeated: two copies of "which region does
+     * this language mean" is how they came to disagree about Catalan.
+     * `docs/locale-contract.md` §4 is the written form.
      */
-    private const LANG_TO_LOCALE = [
-        "da" => "da-DK",
-        "de" => "de-DE",
-        "en" => "en-US",
-        "es" => "es-ES",
-        "fi" => "fi-FI",
-        "fr" => "fr-FR",
-        "it" => "it-IT",
-        "nl" => "nl-NL",
-        "pl" => "pl-PL",
-        "pt" => "pt-PT",
-        "sv" => "sv-SE",
-    ];
+    private const LANG_TO_LOCALE = LocaleContext::HOME_REGION;
 
     /**
      * Machine-readable description of every setting MetaGer understands:

@@ -50,13 +50,21 @@ class LocalizedRoutingTest extends TestCase
 
     /**
      * Two-letter prefixes were what we handed out before switching to BCP-47 in
-     * July 2023; `LocalizationRedirect::redirectTwoLetterCountryCode()` keeps
-     * those URLs working.
+     * July 2023, and a redirect kept them working for three years afterwards.
+     * They are gone: `/es` is an ordinary path segment again, and there is no
+     * route by that name.
+     *
+     * Pinned rather than simply deleted because the segment is *nearly* a
+     * locale — `es` is the language half of `es-ES`, and `isLocaleSegment()`
+     * matches on the full regional keys alone. A change that loosened that to
+     * language keys would silently resurrect the old behaviour in a shape
+     * nothing else expects: a bare `es` locale, which is neither a URL prefix
+     * we hand out nor a market anything can search.
      */
-    public function testALegacyTwoLetterPrefixRedirectsToItsLocale(): void
+    public function testATwoLetterPrefixIsNoLongerALocale(): void
     {
         $this->get("/es/about", ["Sec-Fetch-Mode" => "navigate"])
-            ->assertRedirect(rtrim(config("app.url"), "/") . "/es-ES/about");
+            ->assertNotFound();
     }
 
     /**

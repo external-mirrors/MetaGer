@@ -70,8 +70,6 @@ class LocaleResolutionTest extends TestCase
                 => ["http://metager.org/", "kl-GL", "en-US", "en-US", ""],
             "and the German domain is still the German fallback"
                 => ["http://metager.de/", "kl-GL", "de-DE", "de-DE", ""],
-            "a legacy two-letter segment names the locale it stood for"
-                => ["http://metager.de/at/about", "de-DE,de;q=0.9", "de-AT", "de-DE", "at"],
         ];
     }
 
@@ -207,8 +205,8 @@ class LocaleResolutionTest extends TestCase
             "the site root" => ["http://metager.org/en-US", "/"],
             "the site root with a slash" => ["http://metager.org/en-US/", "/"],
             "the site root with a query" => ["http://metager.org/en-US?a=1", "/?a=1"],
-            "a legacy segment" => ["http://metager.org/at/about", "/about"],
             "a path that merely starts alike" => ["http://metager.org/en-USA/about", "/en-USA/about"],
+            "a retired two-letter prefix, which is now just a path" => ["http://metager.org/at/about", "/at/about"],
         ];
     }
 

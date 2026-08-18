@@ -88,11 +88,18 @@ class LocalizedUrlTest extends TestCase
         );
     }
 
-    /** Legacy two-letter prefixes count as a locale for that purpose too. */
-    public function testALegacyPrefixIsReplacedAsWell(): void
+    /**
+     * A retired two-letter prefix is not a locale and is not replaced — it is
+     * part of the path now, and prefixing is all that happens to it.
+     *
+     * The counterpart of `LocalizedRoutingTest`'s own retirement test, on the
+     * generating side: nothing may quietly keep treating `/at` as German
+     * Austria while the routing half has stopped.
+     */
+    public function testARetiredTwoLetterPrefixIsJustPath(): void
     {
         $this->assertSame(
-            $this->origin() . "/de-AT/about",
+            $this->origin() . "/de-AT/at/about",
             $this->localization()->getLocalizedURL("de-AT", $this->origin() . "/at/about"),
         );
     }

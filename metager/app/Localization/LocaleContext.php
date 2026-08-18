@@ -57,20 +57,6 @@ use LaravelLocalization;
  */
 final class LocaleContext
 {
-    /**
-     * Locales we handed out as two-letter path segments before switching to
-     * BCP-47 in July 2023. `LocalizationRedirect` bounces them to the canonical
-     * four-letter form; they are listed here so that a URL carrying one is
-     * still recognised as *having* a locale segment, and the segment is
-     * stripped rather than being taken for the first path component.
-     */
-    public const LEGACY_PATH_LOCALES = [
-        "uk" => "en-GB",
-        "ie" => "en-IE",
-        "es" => "es-ES",
-        "at" => "de-AT",
-    ];
-
     /** Paths answered before any locale work — scraped continuously, never rendered. */
     private const UNLOCALIZED_PATHS = ["metrics", "health-check/*", "up"];
 
@@ -79,7 +65,7 @@ final class LocaleContext
         public readonly string $locale,
         /** The locale that needs no path prefix on this request. */
         public readonly string $defaultLocale,
-        /** Translation fallback — the language of the *host*, not of [locale]. */
+        /** Translation fallback — the language of [locale], e.g. `en` for `en-US`. */
         public readonly string $fallbackLanguage,
         /** The locale segment actually present in the URL, or `""`. */
         public readonly string $pathLocale,
@@ -93,12 +79,14 @@ final class LocaleContext
      * name a language without one — an `Accept-Language` of `de`, a client
      * sending `?lang=es`.
      *
-     * The same table as `SettingsController::LANG_TO_LOCALE` and `HOME_MARKET`
-     * in the app's `src/search/market.ts`; Phase 3 gives the three of them one
-     * source. Kept here rather than in config because it is a property of the
-     * translations we ship, not something an operator sets.
+     * The one copy: `SettingsController::LANG_TO_LOCALE` is now this constant,
+     * and the app's `HOME_MARKET` (`src/search/market.ts`) is checked against
+     * it by the shared `tests/Fixtures/locale-cases.json`. Kept here rather
+     * than in config because it is a property of the translations we ship,
+     * not something an operator sets. `docs/locale-contract.md` §4.
      */
     public const HOME_REGION = [
+        "ca" => "ca-ES",
         "da" => "da-DK",
         "de" => "de-DE",
         "en" => "en-US",
@@ -131,9 +119,7 @@ final class LocaleContext
             return self::resolveWithHostRules($request, $host, $host_locale, $segment);
         }
 
-        $path_locale = self::isLocaleSegment($segment) || array_key_exists($segment, self::LEGACY_PATH_LOCALES)
-            ? $segment
-            : "";
+        $path_locale = self::isLocaleSegment($segment) ? $segment : "";
 
         $stated = self::statedLocale($request);
 
@@ -147,11 +133,7 @@ final class LocaleContext
             ?? self::cookieLocale($request)
             ?? self::preferredLocale($request, $host_locale);
 
-        $locale = $stated ?? match (true) {
-            array_key_exists($segment, self::LEGACY_PATH_LOCALES) => self::LEGACY_PATH_LOCALES[$segment],
-            $path_locale !== "" => $path_locale,
-            default => $default_locale,
-        };
+        $locale = $stated ?? ($path_locale !== "" ? $path_locale : $default_locale);
 
         /**
          * Translations fall back along the locale, not along the host.
@@ -190,11 +172,6 @@ final class LocaleContext
 
         if (self::isLocaleSegment($segment)) {
             return new self($segment, $default_locale, $host_language, $segment, $request->fullUrl());
-        }
-
-        if (array_key_exists($segment, self::LEGACY_PATH_LOCALES)) {
-            $locale = $guess_trusted ? $guess : self::LEGACY_PATH_LOCALES[$segment];
-            return new self($locale, $default_locale, $host_language, $segment, $request->fullUrl());
         }
 
         return new self($default_locale, $default_locale, $host_language, "", $request->fullUrl());
@@ -410,14 +387,14 @@ final class LocaleContext
             || in_array($segment, LaravelLocalization::getSupportedLanguagesKeys(), true);
     }
 
-    /** `$path` without a leading locale segment, whether current-style or legacy. */
+    /** `$path` without a leading locale segment. */
     public static function withoutLocaleSegment(string $path): string
     {
         if (!preg_match("~^/([^/?#]+)~", $path, $matches)) {
             return $path;
         }
         $segment = $matches[1];
-        if (!self::isLocaleSegment($segment) && !array_key_exists($segment, self::LEGACY_PATH_LOCALES)) {
+        if (!self::isLocaleSegment($segment)) {
             return $path;
         }
         $stripped = substr($path, strlen($matches[0]));

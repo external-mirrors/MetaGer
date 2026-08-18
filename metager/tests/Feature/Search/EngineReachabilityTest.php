@@ -165,6 +165,39 @@ class EngineReachabilityTest extends TestCase
     }
 
     /**
+     * No engine may be registered by a class that only *inherited* its config.
+     *
+     * The scan reads `$fqcn::CONFIG_OVERLOAD` off every class in
+     * app/Models/parserSkripte, and a class constant is inherited when the
+     * child does not redeclare it. Since parser classes started sharing a base
+     * (BraveBase), a subclass that forgets its own CONFIG_OVERLOAD no longer
+     * fails — it silently re-registers its parent's engine name against itself,
+     * and `scanParserClasses()` walks scandir() in alphabetical order, so the
+     * later file wins. `BraveImages` would take over the `brave` engine and
+     * parse web results as images, on every web search, with no error anywhere.
+     *
+     * There is no way to notice that from the outside, which is why it is
+     * asserted from the inside instead.
+     */
+    public function testEveryEngineIsParsedByTheClassThatDeclaresIt(): void
+    {
+        $inherited = [];
+
+        foreach ((array) app(SearchEngineRegistry::class)->sumas as $engine => $config) {
+            $fqcn = "App\\Models\\parserSkripte\\" . $config->{"parser-class"};
+            $declaring = (new \ReflectionClassConstant($fqcn, "CONFIG_OVERLOAD"))->getDeclaringClass()->getName();
+
+            // Namespaces are declared inconsistently cased across the parsers
+            // and PHP resolves them case-insensitively, so compare that way.
+            if (strcasecmp($declaring, $fqcn) !== 0) {
+                $inherited[] = "$engine is registered to $fqcn, which inherits CONFIG_OVERLOAD from $declaring";
+            }
+        }
+
+        $this->assertSame([], $inherited, implode("; ", $inherited));
+    }
+
+    /**
      * The public engine list is built from the foki, so a retired engine is not
      * on it. Checked against display names actually rendered on the page.
      */

@@ -30,9 +30,10 @@ return [
      * `web_setting_m` search filter doubled as the interface language.
      *
      * It exists so the rollout can be reversed from the environment rather
-     * than by deploying, while the redirect rate is watched (docs/
-     * locale-contract.md). It is not meant to be a permanent fork: once the
-     * numbers hold, the `false` branch and this flag go.
+     * than by deploying, while the redirect rate is watched — that is the
+     * `metager_locale_decisions` counter, whose `domain_language` series
+     * should go to zero and stay there. It is not meant to be a permanent
+     * fork: once the numbers hold, the `false` branch and this flag go.
      */
     "locale" => [
         "decoupled" => env("LOCALE_DECOUPLED", true),

@@ -21,9 +21,27 @@ use Tests\TestCase;
  * redirected away from. `loadSettings()` has always had a branch for `key`,
  * and `SettingsController::index()`'s own migration link has always sent it,
  * which is what makes this an omission rather than a policy.
+ *
+ * **This entire hand-off is retired.** With the locale decoupled from the
+ * domain, no language switch crosses a domain boundary, so nothing triggers
+ * it: `LocalizationRedirect::matchDomainToLanguage()` returns immediately and
+ * `migrateSettingsLink()` is unreachable. What is being tested here is
+ * therefore the `LOCALE_DECOUPLED=false` branch — the switch the rollout is
+ * reversed with — and it is tested for the same reason a backup is restored
+ * once before it is needed. When the flag goes, this file goes with it.
+ *
+ * (`loadSettings()` itself stays either way: the WebExtension and the
+ * membership flow both build their own links to it.)
  */
 class CrossDomainSettingsMigrationTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        config(["metager.metager.locale.decoupled" => false]);
+    }
+
     public function testTheKeyIsCarriedToTheOtherDomain(): void
     {
         $location = $this->migrationRedirectLocation();

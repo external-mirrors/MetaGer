@@ -70,14 +70,27 @@ class LangSelector extends Controller
         if (!preg_match("/^[a-z]{2}-[A-Z]{2}$/", $path_locale) || !in_array($path_locale, LaravelLocalization::getSupportedLanguagesKeys())) {
             $path_locale = null;
         }
+        /**
+         * The language selector writes the language cookie, and only that.
+         *
+         * It used to write `web_setting_m`, which is the web fokus's *market*
+         * filter — so choosing to read MetaGer in Spanish also silently
+         * narrowed every search to Spain, and choosing a market silently
+         * changed the interface. The two are separate settings again: the
+         * market still follows the interface locale by default, because
+         * `SearchSettings::loadParameterFilter()` derives that filter's default
+         * from the current locale, but it does so per request and the user can
+         * override it without their language moving.
+         */
         $secure = !app()->environment("local");
+        $locale_cookie = LocaleContext::cookieName();
         if (empty($path_locale)) {
             // Path locale might not be present if the user is switching to the default language
             // of the browser
-            Cookie::queue(Cookie::forget("web_setting_m", "/", null));
+            Cookie::queue(Cookie::forget($locale_cookie, "/", null));
             $new_locale = config("app.default_locale");
         } else {
-            Cookie::queue(Cookie::forever("web_setting_m", str_replace("-", "_", $path_locale), "/", null, $secure, true));
+            Cookie::queue(Cookie::forever($locale_cookie, $path_locale, "/", null, $secure, false));
             $new_locale = $path_locale;
         }
 

@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Localization;
 use App\Localization\LocaleContext;
+use App\PrometheusExporter;
 use App\SearchSettings;
 use Closure;
 use Cookie;
@@ -60,67 +61,89 @@ class LocalizationRedirect
         // Check for Localization in form of the old two letter country code and redirect to correct URL in that case
         // This can be removed at some point
         if (($redirect = $this->redirectTwoLetterCountryCode($request)) !== null) {
-            return $redirect;
+            return $this->record("legacy_path", $redirect);
         }
 
         // Check if the locale present in the path is optional
         if (($redirect = $this->verifyPathLocaleNeeded($request)) !== null) {
-            return $redirect;
+            return $this->record("prefix_correction", $redirect);
         }
 
-        // Check if the current domain matches the language
-        // It's metager.de for everything german and metager.org for everything else
-        $lang = Localization::getLanguage();
+        // Send the user to the domain their language belongs on, and their
+        // stored language to the URL that names it. Both are no-ops once the
+        // locale is decoupled from the domain.
+        if (($redirect = $this->matchDomainToLanguage($request)) !== null) {
+            return $this->record("domain_language", $redirect);
+        }
+
         $host = $request->getHost();
-        if ($lang === "de" && $host === "metager.org") {
-            $new_uri = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $this->context()->originalUrl);
-            $new_uri = $this->migrateSettingsLink($new_uri);
-            return redirect($new_uri);
-        }
-
-        $setting = Cookie::get("web_setting_m");
-        if ($setting === null) {
-            $setting = $request->header("web_setting_m");
-        }
-
-        if ($setting !== null) {
-            // No locale defined in the path
-            // Check if the user defined a permanent language setting matching one of our supported locales
-            $setting_locale = str_replace("_", "-", $setting);
-            $availableLocales = LaravelLocalization::getSupportedLanguagesKeys();
-            $current_locale = LaravelLocalization::getCurrentLocale();
-            // Already free of any locale segment: ResolveLocale took it off
-            // before the router ever saw this request.
-            $new_url = $request->getRequestUri();
-
-            if (in_array($setting_locale, $availableLocales)) {
-                $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $new_url);
-                $redirect_necessary = false;
-                if ($current_locale !== $setting_locale) {
-                    $redirect_necessary = true;
-                }
-                // Also redirect if the user is on the wrong URL for the defined setting locale
-                if ($host === "metager.de" && strpos($setting_locale, "de") !== 0) {
-                    $redirect_necessary = true;
-                    $new_url = preg_replace("/^(https?:\/\/)metager.de/", "$1metager.org", $new_url);
-                    $new_url = $this->migrateSettingsLink($new_url);
-                } else if ($host === "metager.org" && strpos($setting_locale, "de") === 0) {
-                    $redirect_necessary = true;
-                    $new_url = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $new_url);
-                    $new_url = $this->migrateSettingsLink($new_url);
-                }
-                if ($redirect_necessary) {
-                    return redirect($new_url);
-                }
-            }
-        }
 
         // Redirect from v2 onion to v3 onion
         if ($host === "b7cxf4dkdsko6ah2.onion") {
-            return redirect("http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion");
+            return $this->record("onion", redirect("http://metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion"));
         }
 
-        return $next($request);
+        return $this->record("served", $next($request));
+    }
+
+    /**
+     * The two redirects that made the domain and the language the same
+     * question — retired, and kept only so `LOCALE_DECOUPLED=false` can put
+     * them back while the rollout is watched.
+     *
+     * They were: a German page on metager.org bounces to metager.de, and a
+     * `web_setting_m` naming a language bounces to that language's URL, across
+     * the domain boundary if the language and the domain disagreed. Crossing
+     * that boundary is what needed [migrateSettingsLink] — separate origins,
+     * separate cookie jars — and carrying a user's whole settings jar through
+     * a signed URL on every language switch is a lot of machinery to own for a
+     * redirect that no longer has a reason to happen.
+     *
+     * Nothing replaces them. Both domains serve every locale, the locale is in
+     * the path when it differs from this browser's default, and `mg_locale`
+     * says what that default is — none of which needs the user moved.
+     */
+    private function matchDomainToLanguage(Request $request)
+    {
+        if (config("metager.metager.locale.decoupled", true)) {
+            return null;
+        }
+
+        $host = $request->getHost();
+
+        if (Localization::getLanguage() === "de" && $host === "metager.org") {
+            $new_uri = preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $this->context()->originalUrl);
+            return redirect($this->migrateSettingsLink($new_uri));
+        }
+
+        $setting = Cookie::get("web_setting_m") ?? $request->header("web_setting_m");
+        if ($setting === null) {
+            return null;
+        }
+
+        $setting_locale = str_replace("_", "-", $setting);
+        if (!in_array($setting_locale, LaravelLocalization::getSupportedLanguagesKeys(), true)) {
+            return null;
+        }
+
+        // Already free of any locale segment: ResolveLocale took it off before
+        // the router ever saw this request.
+        $new_url = LaravelLocalization::getLocalizedUrl($setting_locale, $request->getRequestUri());
+        $redirect_necessary = LaravelLocalization::getCurrentLocale() !== $setting_locale;
+
+        if ($host === "metager.de" && !str_starts_with($setting_locale, "de")) {
+            $redirect_necessary = true;
+            $new_url = $this->migrateSettingsLink(
+                preg_replace("/^(https?:\/\/)metager.de/", "$1metager.org", $new_url)
+            );
+        } elseif ($host === "metager.org" && str_starts_with($setting_locale, "de")) {
+            $redirect_necessary = true;
+            $new_url = $this->migrateSettingsLink(
+                preg_replace("/^(https?:\/\/)metager.org/", "$1metager.de", $new_url)
+            );
+        }
+
+        return $redirect_necessary ? redirect($new_url) : null;
     }
 
     /**
@@ -203,6 +226,24 @@ class LocalizationRedirect
         }
 
         return null;
+    }
+
+    /**
+     * Count how this request's locale was answered, and hand the response
+     * back unchanged.
+     *
+     * The point of the counter is the ratio, so the non-redirect case has to
+     * be counted too — a redirect count on its own falls just as convincingly
+     * when traffic drops. `domain_language` is the series that should go to
+     * zero and stay there once `LOCALE_DECOUPLED` is on everywhere; it is the
+     * rule this change removed, and the only one whose reappearance would mean
+     * the rollout had come undone.
+     */
+    private function record(string $reason, $response)
+    {
+        PrometheusExporter::LocaleDecision($reason);
+
+        return $response;
     }
 
     /** The locale decided for this request, before route matching. */

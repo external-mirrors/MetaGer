@@ -58,6 +58,26 @@ class PrometheusExporter
         $counter->inc([$httpcode]);
     }
 
+    /**
+     * Every locale decision, and whether it moved the user.
+     *
+     * The number the `LOCALE_DECOUPLED` rollout is watched on. Decoupling the
+     * interface language from the domain removes two whole classes of redirect
+     * — language-to-domain and stored-setting-to-prefixed-URL — so the
+     * redirect share of this counter should fall and stay fallen. A rise means
+     * a rule is firing that was supposed to be gone, which is the one failure
+     * mode that costs a user a page load rather than merely a wrong word.
+     *
+     * `$reason` is a fixed vocabulary, never user input: Prometheus keeps one
+     * time series per label value, so a free-form label is a memory leak.
+     */
+    public static function LocaleDecision(string $reason)
+    {
+        $registry = CollectorRegistry::getDefault();
+        $counter = $registry->getOrRegisterCounter("metager", "locale_decisions", "Locale resolutions, by what the request was answered with", ["reason"]);
+        $counter->inc([$reason]);
+    }
+
     public static function SuggestionSessionCounter()
     {
         $registry = CollectorRegistry::getDefault();

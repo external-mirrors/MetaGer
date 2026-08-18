@@ -12,6 +12,8 @@ use App\Models\Configuration\SettingsSchema;
 use App\Models\DisabledReason;
 use App\Models\SearchengineConfiguration;
 use App;
+use App\Localization;
+use App\Localization\LocaleContext;
 use App\SearchSettings;
 use App\Suggestions;
 use Cookie;
@@ -208,6 +210,21 @@ class SettingsController extends Controller
         }
 
         $newFilters = $request->except(["focus", "url"]);
+
+        /**
+         * Pin the interface language before touching a market.
+         *
+         * `web_setting_m` is written from here, and it is also where every
+         * pre-`mg_locale` browser's language still lives, so
+         * `LocaleContext::cookieLocale()` reads it as a language while no
+         * `mg_locale` exists. For a browser that never had one, a first-ever
+         * market change would therefore come back as an interface change —
+         * exactly the conflation being removed. Writing the current locale
+         * first makes the old cookie unambiguous from this point on.
+         */
+        if (Cookie::get(LocaleContext::cookieName()) === null) {
+            Localization::context()->persistCookie();
+        }
 
         $langFile = app(SearchEngineRegistry::class);
 

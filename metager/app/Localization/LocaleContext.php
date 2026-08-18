@@ -89,31 +89,103 @@ final class LocaleContext
     }
 
     /**
-     * The locale for a request, by the order: URL path segment, then the
-     * `Accept-Language` guess, then the host's own default.
+     * The one region we treat as a language's home, for the many inputs that
+     * name a language without one — an `Accept-Language` of `de`, a client
+     * sending `?lang=es`.
+     *
+     * The same table as `SettingsController::LANG_TO_LOCALE` and `HOME_MARKET`
+     * in the app's `src/search/market.ts`; Phase 3 gives the three of them one
+     * source. Kept here rather than in config because it is a property of the
+     * translations we ship, not something an operator sets.
+     */
+    public const HOME_REGION = [
+        "da" => "da-DK",
+        "de" => "de-DE",
+        "en" => "en-US",
+        "es" => "es-ES",
+        "fi" => "fi-FI",
+        "fr" => "fr-FR",
+        "it" => "it-IT",
+        "nl" => "nl-NL",
+        "pl" => "pl-PL",
+        "pt" => "pt-PT",
+        "sv" => "sv-SE",
+    ];
+
+    /**
+     * The locale for a request: stated, then path, then cookie, then
+     * `Accept-Language`, then the host.
      */
     public static function resolve(Request $request): self
     {
         $host = $request->getHost();
         $host_locale = $host === "metager.de" ? "de-DE" : "en-US";
-        $host_language = $host === "metager.de" ? "de" : "en";
 
         if ($request->is(self::UNLOCALIZED_PATHS)) {
-            return new self($host_locale, $host_locale, $host_language, "", $request->fullUrl());
+            return new self($host_locale, $host_locale, self::languageOf($host_locale), "", $request->fullUrl());
         }
 
         $segment = (string) $request->segment(1);
-        $guess = self::preferredLocale($request, $host_locale);
+
+        if (!self::decoupled()) {
+            return self::resolveWithHostRules($request, $host, $host_locale, $segment);
+        }
+
+        $path_locale = self::isLocaleSegment($segment) || array_key_exists($segment, self::LEGACY_PATH_LOCALES)
+            ? $segment
+            : "";
+
+        $stated = self::statedLocale($request);
 
         /**
-         * There is a lot of traffic on metager.de from browsers announcing
-         * `en-US`, and we do not know whether that is a misconfigured
-         * user-agent or a genuine language preference, so on that one host the
-         * guess is only trusted when it agrees with the host anyway. This is
-         * the rule the next step removes.
+         * What an unprefixed URL renders as — which is also what
+         * `LocalizationRedirect` uses to decide that a prefix is redundant.
+         * Deliberately excludes the path: a link to `/fi-FI/about` must not
+         * make Finnish this browser's default for everything else.
          */
-        $guess_trusted = $host !== "metager.de" || str_starts_with($guess, "de");
+        $default_locale = $stated
+            ?? self::cookieLocale($request)
+            ?? self::preferredLocale($request, $host_locale);
 
+        $locale = $stated ?? match (true) {
+            array_key_exists($segment, self::LEGACY_PATH_LOCALES) => self::LEGACY_PATH_LOCALES[$segment],
+            $path_locale !== "" => $path_locale,
+            default => $default_locale,
+        };
+
+        /**
+         * Translations fall back along the locale, not along the host.
+         * `lang/` ships both `en-US` and `en`, so a string missing from the
+         * regional catalogue is answered by its language's — which is the
+         * relationship the fallback is for. The host used to supply this,
+         * which meant a missing English string on metager.de rendered German.
+         */
+        return new self($locale, $default_locale, self::languageOf($locale), $path_locale, $request->fullUrl());
+    }
+
+    /** Whether the locale is decoupled from the domain — `LOCALE_DECOUPLED`. */
+    private static function decoupled(): bool
+    {
+        return (bool) config("metager.metager.locale.decoupled", true);
+    }
+
+    /**
+     * The pre-decoupling rules, kept whole so the rollout can be undone from
+     * the environment rather than by deploying. `metager.de` discounts an
+     * `Accept-Language` it does not agree with, and the host supplies both the
+     * fallback locale and the translation fallback language.
+     *
+     * Deleted together with the config flag once the redirect rate has held.
+     */
+    private static function resolveWithHostRules(
+        Request $request,
+        string $host,
+        string $host_locale,
+        string $segment,
+    ): self {
+        $host_language = $host === "metager.de" ? "de" : "en";
+        $guess = self::preferredLocale($request, $host_locale);
+        $guess_trusted = $host !== "metager.de" || str_starts_with($guess, "de");
         $default_locale = $guess_trusted ? $guess : $host_locale;
 
         if (self::isLocaleSegment($segment)) {
@@ -126,6 +198,110 @@ final class LocaleContext
         }
 
         return new self($default_locale, $default_locale, $host_language, "", $request->fullUrl());
+    }
+
+    /**
+     * A locale the client stated outright: `?lang=`, or the `MG-Locale`
+     * header for a client that cannot put it in the URL.
+     *
+     * This is the entry point for everything that is not a browser — the
+     * mobile app, the WebExtension — and it outranks the path because such a
+     * client knows its own language, whereas a path prefix may be whatever
+     * happened to be in the link it was handed.
+     */
+    private static function statedLocale(Request $request): ?string
+    {
+        foreach ([$request->query("lang"), $request->header("MG-Locale")] as $stated) {
+            if (is_string($stated) && ($locale = self::normalize($stated)) !== null) {
+                return $locale;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * The locale this browser has stored.
+     *
+     * `web_setting_m` is consulted only while `mg_locale` is missing, and only
+     * because it is where every existing user's language currently lives — it
+     * is a market filter that was doubling as the interface language, which is
+     * the conflation this whole change exists to end. `ResolveLocale` writes
+     * `mg_locale` on any request that lands here, so a browser takes this
+     * branch once and then stops.
+     */
+    private static function cookieLocale(Request $request): ?string
+    {
+        // The header is how the WebExtension stores settings — it keeps them
+        // itself and replays them, rather than letting us set cookies.
+        $stored = $request->cookie(self::cookieName()) ?? $request->header(self::cookieName());
+        if (is_string($stored) && ($locale = self::normalize($stored)) !== null) {
+            return $locale;
+        }
+
+        $legacy = $request->cookie("web_setting_m") ?? $request->header("web_setting_m");
+
+        return is_string($legacy) ? self::normalize($legacy) : null;
+    }
+
+    /** The name of the interface-locale cookie. */
+    public static function cookieName(): string
+    {
+        return (string) config("metager.metager.locale.cookie", "mg_locale");
+    }
+
+    /**
+     * `$value` as a locale we actually serve, or `null`.
+     *
+     * Accepts both separators because the inputs disagree — `mg_locale` and
+     * the URL are hyphenated BCP-47, `web_setting_m` is underscored — and a
+     * bare language, which is what an `Accept-Language`-shaped `?lang=de`
+     * gives us.
+     */
+    private static function normalize(string $value): ?string
+    {
+        $value = str_replace("_", "-", trim($value));
+        if ($value === "" || $value === "default") {
+            return null;
+        }
+
+        if (in_array($value, LaravelLocalization::getSupportedLanguagesKeys(), true)) {
+            return $value;
+        }
+
+        return self::HOME_REGION[strtolower($value)] ?? null;
+    }
+
+    /** The language part of a locale — `en-US` becomes `en`. */
+    private static function languageOf(string $locale): string
+    {
+        return explode("-", $locale)[0];
+    }
+
+    /**
+     * Persists this request's locale in `mg_locale`, if the browser has no
+     * such cookie yet.
+     *
+     * Two callers, one reason each, and both write [defaultLocale] rather than
+     * [locale]: what is being recorded is what this browser should get for an
+     * unprefixed URL, not the prefix of whichever link it happened to follow.
+     *
+     *  - `ResolveLocale`, when the language was found in `web_setting_m` — the
+     *    one-time migration onto the new cookie.
+     *  - `SettingsController::enableFilter()`, when the user changes the market
+     *    filter, so that the value stops being ambiguous before it can be
+     *    misread as a language by the branch above.
+     */
+    public function persistCookie(): void
+    {
+        Cookie::queue(Cookie::forever(
+            self::cookieName(),
+            $this->defaultLocale,
+            "/",
+            null,
+            !App::environment("local"),
+            false,
+        ));
     }
 
     /**
@@ -264,14 +440,21 @@ final class LocaleContext
             $regional_locales[] = $locale_data["regional"];
         }
 
-        // Bare language tags the header is far more likely to carry than a
-        // regional one, mapped to the region we treat as their home.
-        $two_letter_locales = [
-            "de" => "de_DE",
-            "en" => "en_US",
-            "es" => "es_ES",
-            "en_UK" => "en_GB",
-        ];
+        /**
+         * Bare language tags the header is far more likely to carry than a
+         * regional one, mapped to the region we treat as their home, plus the
+         * one region code browsers get wrong.
+         *
+         * Offered for every language we ship rather than for German, English
+         * and Spanish alone: a browser asking for `fr` used to match nothing
+         * here and fall through to the host default, which on metager.de meant
+         * German. Honouring the header on every host is only half the change
+         * if the header can only be honoured in three languages.
+         */
+        $two_letter_locales = ["en_UK" => "en_GB"];
+        foreach (self::HOME_REGION as $language => $locale) {
+            $two_letter_locales[$language] = str_replace("-", "_", $locale);
+        }
         $regional_locales = array_merge(array_keys($two_letter_locales), $regional_locales);
 
         $regional_locales = array_values(array_diff($regional_locales, [$default]));

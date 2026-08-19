@@ -1,0 +1,45 @@
+<?php
+return [
+    'subject' => "[SUMA-EV & MetaGer] Us donem la benvinguda a SUMA-EV",
+    'general' => "Us donem la benvinguda a SUMA-EV! Abans de res, us puc preguntar com ens vau conèixer? Suposo que a través del nostre cercador MetaGer. Amb vosaltres, l'associació té ara :member_count membres dels àmbits més diversos. A continuació trobareu algunes explicacions i consells més que útils sobre SUMA-EV.",
+    'membership' => [
+        'title' => 'Afiliació',
+        'description' => 'Aquest correu també és la confirmació de la vostra afiliació. Confirmeu-nos breument que l\'heu rebut. La vostra propera quota, de **:amount**, venç el **:due**.',
+        'banktransfer' => 'Transferiu aquest import **:interval** al compte següent, indicant-hi el concepte (**:mandate**):',
+        'directdebit' => 'Cobrarem aquest import **:interval** amb la referència de mandat **:mandate** del vostre compte **:iban**.',
+        'paypal' => 'Cobrarem aquest import **:interval** del compte de PayPal indicat.',
+        'card' => 'Cobrarem aquest import **:interval** de la targeta de crèdit indicada.',
+        'mandate' => 'Concepte',
+        'next_payments' => 'Les properes quotes',
+        'next_payments_hint' => 'El proper pagament pot incloure imports addicionals de pagaments anteriors fallits. Si teniu preguntes sobre la vostra quota, escriviu-nos un correu.',
+        'due' => 'Data de venciment',
+        'amount' => 'Quota',
+        'now' => 'Ara',
+        'interval' => [
+            'monatlich' => 'mensualment',
+            'vierteljährlich' => 'trimestralment',
+            'halbjährlich' => 'semestralment',
+            'jährlich' => 'anualment',
+        ],
+        'cancel' => 'Podeu donar de baixa la vostra afiliació en qualsevol moment abans de la propera data de pagament, si cal.',
+        'websites' => 'Trobareu moltes de les circulars i butlletins anteriors a [suma-ev.de/beitraege/](https://suma-ev.de/beitraege/). Els comunicats de premsa anteriors de SUMA-EV són a [suma-ev.de/presse/](https://suma-ev.de/presse/). També us podem afegir a la nostra [llista pública de membres](https://suma-ev.de/mitglieder/liste-unserer-mitglieder/). Si us interessa, feu-nos-ho saber.'
+    ],
+    'key' => [
+        'title' => 'Cercar amb MetaGer',
+        'extension' => 'Les nostres extensions web per a',
+        'banktransfer' => 'La primera recàrrega completa es fa un cop registrem el primer pagament de la vostra quota. Mentrestant, ja s\'ha afegit un petit saldo a la vostra clau.',
+        'description_first' => 'Per configurar la cerca amb MetaGer necessiteu la clau següent, que podeu fer servir per iniciar la sessió en tants dispositius com vulgueu. Es pot utilitzar immediatament. En trobareu tota la informació a les nostres [pàgines informatives](:infos). Cada mes recarregarem automàticament la vostra clau de membre amb un valor de **:amount** sense cap cost addicional. La clau és',
+        'description_second' => 'El dispositiu amb què heu enviat la sol·licitud ha iniciat la sessió automàticament. Per iniciar la sessió en més dispositius, aneu a la nostra [pàgina d\'inici](:startpage_link). Introduïu-hi la clau anterior i envieu-la fent clic a «Registra\'t amb la clau». També podeu fer el mateix obrint l\'URL de configuració següent al navegador:',
+        'description_third' => 'Si teniu les galetes desactivades al navegador o esborreu regularment totes les dades dels llocs web, us recomanem instal·lar la nostra extensió de navegador',
+        'description_fourth' => 'En aquest cas, això garanteix que podeu continuar fent servir MetaGer sense tornar a iniciar la sessió i permet un anonimat verificable a les cerques web mitjançant el [testimoni anònim](:anonymous_token_link).',
+        'description_fifth' => 'Alternativament, també podeu desar l\'URL anterior com a adreça d\'interès per accedir-hi ràpidament o desar la clau en un gestor de contrasenyes. Tanmateix, amb la configuració predeterminada de la majoria de navegadors mantindreu la sessió iniciada permanentment fins i tot sense extensió.',
+        'description_sixth' => 'Si tot ha anat bé, veureu el camp de cerca de MetaGer i una icona de clau verda. Feu clic un cop a aquesta icona. Aleshores veureu totes les propietats de la vostra clau. També hi veureu diverses opcions per transferir la clau a altres dispositius. El nombre de dispositius no està limitat. I reviseu també la configuració a què podeu accedir des del menú de MetaGer: altres cercadors, llistes negres, mode nocturn i molt més.',
+    ],
+    'mastodon' => [
+        'title' => 'Mastodon: part d\'una gran família',
+        'description_first' => 'SUMA-EV és present a la xarxa social alternativa i distribuïda Mastodon amb un [compte](https://suma-ev.social/@MetaGer) propi. Amb aquesta finalitat gestionem una [instància](https://suma-ev.social/) als nostres propis servidors. Com a membre, també teniu l\'oportunitat exclusiva d\'unir-vos al [Fedivers](https://ca.wikipedia.org/wiki/Mastodon_(programari)) a través d\'aquesta instància. Rebreu un compte d\'usuari acabat en @suma-ev.social.',
+        'description_second' => 'L\'objectiu és facilitar un intercanvi viu: per exemple, sobre tots els temes relacionats amb la llibertat del coneixement, la vigilància i la privadesa, però és clar que també sobre temes generals que no tinguin res a veure amb SUMA-EV, MetaGer i la protecció de la privadesa.',
+        'description_third' => 'Per començar, podeu crear un compte a suma-ev.social amb l\'adreça electrònica **:email**.',
+    ],
+    'greeting' => 'Salutacions cordials',
+];

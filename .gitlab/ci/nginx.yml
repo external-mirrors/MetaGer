@@ -1,0 +1,20 @@
+# nginx config checks. Same stage and same reasoning as the chart and
+# deployment-script checks: these cost nothing and a mistake here is not
+# self-announcing.
+#
+# An image build would catch a syntax error — nginx would refuse to start and
+# the healthcheck would fail. It would not catch the thing this job is for: a
+# config that loads, passes `nginx -t`, serves the site, and proxies to an
+# address that stopped being right when a container was recreated. See
+# build/nginx/tests/run.sh.
+nginx:
+  stage: build_dependency_images
+  image: $DEPLOY_KUBERNETES_IMAGE
+  tags:
+    - kubernetes
+  needs: []
+  script:
+    - build/nginx/tests/run.sh
+  rules:
+    - changes:
+        - build/nginx/**/*

@@ -62,6 +62,7 @@ stages:
 include:
   - local: /.gitlab/ci/chart.yml
   - local: /.gitlab/ci/deployment_scripts.yml
+  - local: /.gitlab/ci/nginx.yml
   - local: /.gitlab/ci/build_dependency_images.yml
   - local: /.gitlab/ci/build_dependencies.yml
   - local: /.gitlab/ci/build_docker_images.yml

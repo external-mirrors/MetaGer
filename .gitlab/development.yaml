@@ -34,3 +34,29 @@ env:
   REDIS_CACHE_LOCK_CONNECTION: default
   REDIS_SESSION_CONNECTION: default
   SESSION_CONNECTION: default
+
+# One of everything. The chart defaults are sized for production — two queue
+# workers, two Reverb instances and a three-node Valkey — and none of that buys
+# anything on a single-user test deployment. It is the same cluster as
+# production, so the spare pods are real reserved CPU and memory.
+queue:
+  replicaCount: 1
+
+# Reverb is the one worth spelling out: production runs two so a rollout does not
+# drop every websocket at once, and REVERB_SCALING_ENABLED fans a broadcast
+# between them over Redis. With a single instance there is nothing to fan out to
+# and the scaling flag is simply inert — it stays on so development still
+# exercises the same code path that production runs.
+reverb:
+  replicaCount: 1
+
+valkey:
+  # Still `architecture: replication` with Sentinel on, because REDIS_HOST points
+  # at the `-master` Service and the Valkey subchart only renders that Service
+  # when Sentinel is enabled. Turning Sentinel off here would leave the app
+  # pointing at a hostname that does not resolve.
+  replicaCount: 1
+  sentinel:
+    # Has to move with replicaCount. The chart default is 2 (of 3); left at 2
+    # against a single node, Sentinel could never reach quorum.
+    quorum: 1

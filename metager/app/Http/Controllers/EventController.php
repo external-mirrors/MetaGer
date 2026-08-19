@@ -4,18 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Events\UserLogin;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
 /**
  * Handles routes to trigger websocket events from external apps.
  * This controller is protected by the EventAuthorization middleware.
  * It ensures that only authorized requests can trigger events.
  * The authorization token is configured in the metager configuration file.
+ *
+ * `implements HasMiddleware` is load-bearing, not decoration. Laravel only
+ * calls the static middleware() method on controllers that declare the
+ * interface — App\Http\Controllers\Controller is an empty abstract class and
+ * does not — so without it the method below is never read and both routes
+ * answer *unauthenticated*. Anyone who knew the paths could forge a KeyChanged
+ * for any key, or a UserLogin for any login token.
+ *
+ * EventBroadcastAuthorizationTest covers this: the wrong-token and missing-token
+ * cases fail with 200 if the interface is dropped again.
  */
-class EventController extends Controller
+class EventController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {
-        return ['auth.events'];
+        return [new Middleware('auth.events')];
     }
 
     /**

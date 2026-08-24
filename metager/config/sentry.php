@@ -41,8 +41,10 @@ return [
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#enable_logs
     'enable_logs' => env('SENTRY_ENABLE_LOGS', false),
 
+    // Off: GlitchTip's metrics-envelope support is partial, so this is pure
+    // cost on a self-hosted instance.
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#enable_metrics
-    'enable_metrics' => env('SENTRY_ENABLE_METRICS', true),
+    'enable_metrics' => env('SENTRY_ENABLE_METRICS', false),
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#log_flush_threshold
     'log_flush_threshold' => env('SENTRY_LOG_FLUSH_THRESHOLD') === null ? null : (int) env('SENTRY_LOG_FLUSH_THRESHOLD'),
@@ -82,8 +84,12 @@ return [
         // Capture Laravel logs as breadcrumbs
         'logs' => env('SENTRY_BREADCRUMBS_LOGS_ENABLED', true),
 
-        // Capture Laravel cache events (hits, writes etc.) as breadcrumbs
-        'cache' => env('SENTRY_BREADCRUMBS_CACHE_ENABLED', true),
+        // Off: cache breadcrumbs record the raw key, and SuggestionController
+        // builds its cache key as "suggestion:cache:...:$query" -- the literal
+        // autocomplete text a user has typed so far. SentryEventScrubber only
+        // cleans $event->getRequest(), not breadcrumbs, so this has to stay off
+        // instead. See the privacy policy's "no content of forms or messages" promise.
+        'cache' => env('SENTRY_BREADCRUMBS_CACHE_ENABLED', false),
 
         // Capture Livewire components like routes as breadcrumbs
         'livewire' => env('SENTRY_BREADCRUMBS_LIVEWIRE_ENABLED', true),
@@ -100,8 +106,11 @@ return [
         // Capture command information as breadcrumbs
         'command_info' => env('SENTRY_BREADCRUMBS_COMMAND_JOBS_ENABLED', true),
 
-        // Capture HTTP client request information as breadcrumbs
-        'http_client_requests' => env('SENTRY_BREADCRUMBS_HTTP_CLIENT_REQUESTS_ENABLED', true),
+        // Off: the breadcrumb includes the request URL, and KeyUser discharges
+        // tokens against "$keyserver/key/$this->key/discharge" -- the user's
+        // authentication key sits directly in the path. That's an identifier
+        // this promises not to attach to error reports, logged in or not.
+        'http_client_requests' => env('SENTRY_BREADCRUMBS_HTTP_CLIENT_REQUESTS_ENABLED', false),
 
         // Capture send notifications as breadcrumbs
         'notifications' => env('SENTRY_BREADCRUMBS_NOTIFICATIONS_ENABLED', true),
@@ -133,11 +142,15 @@ return [
         // Capture Livewire components as spans
         'livewire' => env('SENTRY_TRACE_LIVEWIRE_ENABLED', true),
 
-        // Capture HTTP client requests as spans
-        'http_client_requests' => env('SENTRY_TRACE_HTTP_CLIENT_REQUESTS_ENABLED', true),
+        // Off for the same reason as breadcrumbs.http_client_requests above: the
+        // span description is the request URL, and KeyUser's discharge call puts
+        // the user's authentication key in the path.
+        'http_client_requests' => env('SENTRY_TRACE_HTTP_CLIENT_REQUESTS_ENABLED', false),
 
-        // Capture Laravel cache events (hits, writes etc.) as spans
-        'cache' => env('SENTRY_TRACE_CACHE_ENABLED', true),
+        // Off for the same reason as breadcrumbs.cache above: the span
+        // description is the raw cache key, and SuggestionController's carries
+        // the user's in-progress search text.
+        'cache' => env('SENTRY_TRACE_CACHE_ENABLED', false),
 
         // Capture Redis operations as spans (this enables Redis events in Laravel)
         'redis_commands' => env('SENTRY_TRACE_REDIS_COMMANDS', false),

@@ -14,6 +14,7 @@ class Tootnews extends Searchengine
             'path' => '/search',
             'port' => 443,
             'query-parameter' => 'q',
+            'input-encoding' => 'utf8',
             'output-encoding' => 'utf8',
             'lang' => [
                 'parameter' => '',

@@ -34,6 +34,12 @@ env:
   REDIS_CACHE_LOCK_CONNECTION: default
   REDIS_SESSION_CONNECTION: default
   SESSION_CONNECTION: default
+  # GlitchTip (self-hosted, Sentry-protocol-compatible). The DSN is a public
+  # identifier by design -- it ships in client-side JS regardless -- so it lives
+  # here rather than in the ENV_PRODUCTION secret. Not set in review.yaml on
+  # purpose: review apps are short-lived and would just add noise to project 36.
+  SENTRY_LARAVEL_DSN: https://ada7fd926fac4b36b83c1292a95ec14f@errors.metager.de/36
+  SENTRY_TRACES_SAMPLE_RATE: "0.01"
 
 # One of everything. The chart defaults are sized for production — two queue
 # workers, two Reverb instances and a three-node Valkey — and none of that buys

@@ -59,7 +59,7 @@ class Tootnews extends Searchengine
             foreach ($results as $result) {
                 $title = strip_tags($result->{"title"}->asXML());
                 $link = $result->{"link"}['href'];
-                $anzeigeLink = strip_tags($result->{"http://metager.de/opensearch/anzeigeLink"}->asXML());
+                $anzeigeLink = $link;
                 $descr = strip_tags($result->{"content"}->asXML());
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(

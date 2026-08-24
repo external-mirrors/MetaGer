@@ -20,3 +20,16 @@ env:
   REDIS_CACHE_LOCK_CONNECTION: default
   REDIS_SESSION_CONNECTION: default
   SESSION_CONNECTION: default
+
+# One of everything, same as development.yaml: the chart defaults are sized for
+# production and a review app is a single-user throwaway deployment.
+queue:
+  replicaCount: 1
+
+reverb:
+  replicaCount: 1
+
+valkey:
+  replicaCount: 1
+  sentinel:
+    quorum: 1

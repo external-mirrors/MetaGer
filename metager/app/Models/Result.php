@@ -219,6 +219,13 @@ class Result
     # Überprüft ob das Ergebnis aus irgendwelchen Gründen unerwünscht ist.
     public function isValid(\App\MetaGer $metager)
     {
+        // A link that never parsed to a host (see getUrlElements()) is a
+        // parser handing us garbage, not a real result -- render nothing
+        // rather than a card with an empty host and a dead link.
+        if ($this->strippedHost === "") {
+            return false;
+        }
+
         $bl = $metager->getUserDomainBlacklist();
         # Perönliche Host und Domain Blacklist
         if (
@@ -400,14 +407,20 @@ class Result
             $url = "http://" . $url;
         }
 
-        $parts = parse_url($url);
+        // parse_url() returns false outright for a malformed URL, rather than
+        // an array missing some keys -- a garbage $link (a parser mistaking
+        // some other line of upstream markup for the link field) must not
+        // turn "trying to read an offset off false" into a request-ending
+        // exception here, since this runs unconditionally from the
+        // constructor for every result of every engine.
+        $parts = parse_url($url) ?: [];
         $re = [];
 
         $re["schema"] = empty($parts["scheme"]) ? "" : $parts["scheme"];
         $re["username"] = empty($parts["user"]) ? "" : $parts["user"];
         $re["password"] = empty($parts["pass"]) ? "" : $parts["pass"];
         $re["web"] = "";
-        $re["host"] = $parts["host"];
+        $re["host"] = $parts["host"] ?? "";
         if (stripos($re["host"], "www.") === 0) {
             $re["web"] = "www.";
             $re["host"] = substr($re["host"], strpos($re["host"], ".") + 1);

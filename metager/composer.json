@@ -23,6 +23,7 @@
         "nesbot/carbon": "^3.0",
         "predis/predis": "^3.2",
         "promphp/prometheus_client_php": "^2.14",
+        "sentry/sentry-laravel": "^4.27",
         "smhg/sepa-qr-data": "^3.0",
         "vizir/laravel-keycloak-web-guard": "^4.0"
     },

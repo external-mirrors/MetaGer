@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Authentication\KeyUser;
 use App\Http\Controllers\SuggestionController;
 use App\Models\Authorization\AnonymousTokenPayment;
 use App\Models\Authorization\Authorization;
@@ -37,6 +38,8 @@ class AuthenticationValidation
          * @var \App\Authentication\KeyUser|null $user
          */
         if (($user = Auth::guard("key")->user()) !== null) {
+            $this->renewKeyCookie($user);
+
             // Initialize searchengines and settings so we can estimate the cost of the search
             $suma_cost = app(Searchengines::class)->getSearchCost();
             $suggestion_debt = $this->getSuggestionDebt();
@@ -140,6 +143,29 @@ class AuthenticationValidation
         } else {
             return redirect(route("startpage", $parameters));
         }
+    }
+
+    /**
+     * A key cookie is only ever stamped with its 5-year expiry once, at login
+     * (SettingsController::loadSettings, or keymanager's own /key routes) and
+     * never touched again afterwards - so a user who searches daily but never
+     * revisits a login page still has that clock quietly running out from the
+     * day they first signed in. Since most daily traffic passes through here
+     * (a search), sliding the expiry forward on every cookie-authenticated
+     * search turns it into a rolling 5-years-since-last-use window instead.
+     *
+     * Restricted to $guard->login_method === "cookie": that's only set when
+     * no header or query `key` was present on this request (KeyAuthGuard::user),
+     * so a shared `?key=...` link can never overwrite a visitor's own cookie
+     * with someone else's key.
+     */
+    private function renewKeyCookie(KeyUser $user): void
+    {
+        if (Auth::guard("key")->login_method !== "cookie") {
+            return;
+        }
+        $secure = app()->environment("local") ? false : true;
+        Cookie::queue(Cookie::forever("key", $user->getAuthIdentifier(), '/', null, $secure, true));
     }
 
     private function getSuggestionDebt(): float

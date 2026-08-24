@@ -168,7 +168,7 @@ generate absolute URLs; the queue, reverb and fetcher workers never do.
 {{- end }}
 {{- range $name, $value := $root.Values.env }}
 - name: {{ $name }}
-  value: {{ $value }}
+  value: {{ $value | quote }}
 {{- end }}
 {{- end -}}
 
@@ -232,6 +232,48 @@ scratch dir.
   mountPath: /metager/metager_app/database/databases
 - name: fast-logs
   mountPath: /metager/metager_app/storage/metager/fast_dir
+{{- end -}}
+
+{{/*
+Creates each pod's own database.sqlite before its main container starts.
+
+`sqlite-databases` is an emptyDir, not shared storage — each pod gets its own,
+empty on every (re)start. The app Deployment gets a populated one for free
+because it runs the image's normal entrypoint (`migrate --force`, among other
+things). The scheduler and queue Deployments mount the same volume but override
+`command`/`args` directly to invoke their artisan command, which replaces the
+image's ENTRYPOINT rather than running alongside it - so nothing ever created
+their copy of the file, and every local write (QueryLogger, the `logs_partitioned`
+table `logs:gather` drains into) threw SQLiteDatabaseDoesNotExistException.
+
+Needs `chart.env` passed through, same as the container it precedes gets -
+without it this container has no DB_CONNECTION, so it falls through to
+whatever the mounted `.env` secret's own default connection is. In this
+chart that default is `pgsql`, a real shared database: migrate --force ran
+against that instead of the local sqlite file, found it already fully
+migrated, and reported "Nothing to migrate" - silently, with exit 0, having
+touched neither the sqlite file nor (fortunately, this time) anything in
+Postgres that wasn't already applied. `touch` first is kept anyway, now
+harmless: once the connection is actually sqlite, migrate's own
+createMissingSqliteDatabase() would create the file just as reliably, but
+being explicit costs nothing. Relative to database/databases/ because that's
+Docker's WORKDIR, unaffected by the command/args override below.
+
+    initContainers:
+    {{- include "chart.migrateInitContainer" (dict "root" . "appUrl" true) | nindent 8 }}
+*/}}
+{{- define "chart.migrateInitContainer" -}}
+{{- $root := .root -}}
+- name: migrate
+  image: "{{ template "fpm_image" $root }}"
+  command: ["/bin/sh", "-c"]
+  args:
+    - touch database/databases/database.sqlite && php artisan migrate --force
+  env:
+  {{- include "chart.env" (dict "root" $root "appUrl" .appUrl) | nindent 2 }}
+  volumeMounts:
+  {{- include "chart.mounts.env" $root | nindent 2 }}
+  {{- include "chart.mounts.storage" $root | nindent 2 }}
 {{- end -}}
 
 {{/*

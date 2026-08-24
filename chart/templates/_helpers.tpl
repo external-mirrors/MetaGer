@@ -168,7 +168,7 @@ generate absolute URLs; the queue, reverb and fetcher workers never do.
 {{- end }}
 {{- range $name, $value := $root.Values.env }}
 - name: {{ $name }}
-  value: {{ $value }}
+  value: {{ $value | quote }}
 {{- end }}
 {{- end -}}
 

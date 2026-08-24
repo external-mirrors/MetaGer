@@ -246,14 +246,28 @@ image's ENTRYPOINT rather than running alongside it - so nothing ever created
 their copy of the file, and every local write (QueryLogger, the `logs_partitioned`
 table `logs:gather` drains into) threw SQLiteDatabaseDoesNotExistException.
 
+`migrate --force` alone was tried first and observed, live, not to be enough:
+it can report "Nothing to migrate" and exit 0 on a pod whose emptyDir is
+provably still empty afterward (confirmed both via `ls` from the pod's own
+main container and by the exact same command working correctly locally,
+against the same image, every time). MigrateCommand's own
+createMissingSqliteDatabase() touches the file when it catches
+SQLiteDatabaseDoesNotExistException, and that path clearly isn't firing
+reliably in this cluster - root cause not pinned down. `touch` first, as its
+own step, sidesteps that entirely: migrate then only ever sees a file that
+already exists, so it never depends on that fallback at all. Relative to
+database/databases/ because that's Docker's WORKDIR, unaffected by the
+command/args override above.
+
     initContainers:
     {{- include "chart.migrateInitContainer" . | nindent 8 }}
 */}}
 {{- define "chart.migrateInitContainer" -}}
 - name: migrate
   image: "{{ template "fpm_image" . }}"
-  command: ["/usr/local/bin/php"]
-  args: ["artisan", "migrate", "--force"]
+  command: ["/bin/sh", "-c"]
+  args:
+    - touch database/databases/database.sqlite && php artisan migrate --force
   volumeMounts:
   {{- include "chart.mounts.env" . | nindent 2 }}
   {{- include "chart.mounts.storage" . | nindent 2 }}

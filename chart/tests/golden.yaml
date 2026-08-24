@@ -552,8 +552,9 @@ spec:
       initContainers:
         - name: migrate
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "migrate", "--force"]
+          command: ["/bin/sh", "-c"]
+          args:
+            - touch database/databases/database.sqlite && php artisan migrate --force
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -889,8 +890,9 @@ spec:
       initContainers:
         - name: migrate
           image: "registry.metager.de/open-source/metager/fpm:golden"
-          command: ["/usr/local/bin/php"]
-          args: ["artisan", "migrate", "--force"]
+          command: ["/bin/sh", "-c"]
+          args:
+            - touch database/databases/database.sqlite && php artisan migrate --force
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

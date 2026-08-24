@@ -555,6 +555,40 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - touch database/databases/database.sqlite && php artisan migrate --force
+          env:
+          - name: APP_ENV
+            value: production
+          
+          - name: REDIS_HOST
+            value: golden-valkey-master.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          
+          - name: REDIS_SENTINEL_HOST
+            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: "stderr"
+          - name: MATOMO_ENABLED
+            value: "true"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -893,6 +927,42 @@ spec:
           command: ["/bin/sh", "-c"]
           args:
             - touch database/databases/database.sqlite && php artisan migrate --force
+          env:
+          - name: APP_ENV
+            value: production
+          - name: APP_URL
+            value: https://metager.de
+          
+          - name: REDIS_HOST
+            value: golden-valkey-master.metager.svc.cluster.local
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          
+          - name: REDIS_SENTINEL_HOST
+            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: golden-valkey
+                key: password
+          - name: REDIS_SENTINEL_SERVICE
+            value: mymaster
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REVERB_HOST
+            value: metager.de
+          - name: LOG_CHANNEL
+            value: "stderr"
+          - name: MATOMO_ENABLED
+            value: "true"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

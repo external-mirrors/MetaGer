@@ -46,7 +46,7 @@ spec:
       volumes:
         {{- include "chart.volumes" . | nindent 8 }}
       initContainers:
-        {{- include "chart.migrateInitContainer" . | nindent 8 }}
+        {{- include "chart.migrateInitContainer" (dict "root" . "appUrl" true) | nindent 8 }}
       containers:
         - name: scheduler
           securityContext:

@@ -246,31 +246,34 @@ image's ENTRYPOINT rather than running alongside it - so nothing ever created
 their copy of the file, and every local write (QueryLogger, the `logs_partitioned`
 table `logs:gather` drains into) threw SQLiteDatabaseDoesNotExistException.
 
-`migrate --force` alone was tried first and observed, live, not to be enough:
-it can report "Nothing to migrate" and exit 0 on a pod whose emptyDir is
-provably still empty afterward (confirmed both via `ls` from the pod's own
-main container and by the exact same command working correctly locally,
-against the same image, every time). MigrateCommand's own
-createMissingSqliteDatabase() touches the file when it catches
-SQLiteDatabaseDoesNotExistException, and that path clearly isn't firing
-reliably in this cluster - root cause not pinned down. `touch` first, as its
-own step, sidesteps that entirely: migrate then only ever sees a file that
-already exists, so it never depends on that fallback at all. Relative to
-database/databases/ because that's Docker's WORKDIR, unaffected by the
-command/args override above.
+Needs `chart.env` passed through, same as the container it precedes gets -
+without it this container has no DB_CONNECTION, so it falls through to
+whatever the mounted `.env` secret's own default connection is. In this
+chart that default is `pgsql`, a real shared database: migrate --force ran
+against that instead of the local sqlite file, found it already fully
+migrated, and reported "Nothing to migrate" - silently, with exit 0, having
+touched neither the sqlite file nor (fortunately, this time) anything in
+Postgres that wasn't already applied. `touch` first is kept anyway, now
+harmless: once the connection is actually sqlite, migrate's own
+createMissingSqliteDatabase() would create the file just as reliably, but
+being explicit costs nothing. Relative to database/databases/ because that's
+Docker's WORKDIR, unaffected by the command/args override below.
 
     initContainers:
-    {{- include "chart.migrateInitContainer" . | nindent 8 }}
+    {{- include "chart.migrateInitContainer" (dict "root" . "appUrl" true) | nindent 8 }}
 */}}
 {{- define "chart.migrateInitContainer" -}}
+{{- $root := .root -}}
 - name: migrate
-  image: "{{ template "fpm_image" . }}"
+  image: "{{ template "fpm_image" $root }}"
   command: ["/bin/sh", "-c"]
   args:
     - touch database/databases/database.sqlite && php artisan migrate --force
+  env:
+  {{- include "chart.env" (dict "root" $root "appUrl" .appUrl) | nindent 2 }}
   volumeMounts:
-  {{- include "chart.mounts.env" . | nindent 2 }}
-  {{- include "chart.mounts.storage" . | nindent 2 }}
+  {{- include "chart.mounts.env" $root | nindent 2 }}
+  {{- include "chart.mounts.storage" $root | nindent 2 }}
 {{- end -}}
 
 {{/*

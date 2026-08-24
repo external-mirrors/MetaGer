@@ -2,12 +2,18 @@
 
 namespace app\Models\parserSkripte;
 
+use App\Localization;
 use App\Models\Searchengine;
 use App\Models\SearchengineConfiguration;
+use Carbon;
 use Log;
 
 class Tootnews extends Searchengine
 {
+    /** troetnews.suma-ev.de instead of toot.suma-lab.de for a German search; see __construct(). */
+    const GERMAN_HOST = 'troetnews.suma-ev.de';
+    const GERMAN_DISPLAY_NAME = 'TroetNews';
+
     const CONFIG_OVERLOAD = [
         'tootnews' => [
             'host' => 'toot.suma-lab.de',
@@ -20,6 +26,7 @@ class Tootnews extends Searchengine
                 'parameter' => '',
                 'languages' => [
                     'en' => '',
+                    'de' => '',
                 ],
                 'regions' => [],
             ],
@@ -43,8 +50,18 @@ class Tootnews extends Searchengine
 
     public function __construct($name, SearchengineConfiguration $configuration)
     {
-
         parent::__construct($name, $configuration);
+
+        // Same feed, same API, just a separate host (and brand) for the
+        // German index. SearchengineConfiguration only ever reads a single
+        // 'host'/'infos' from CONFIG_OVERLOAD, so the language-specific
+        // values are swapped in here rather than expressed in the config
+        // itself.
+        if (Localization::getLanguage() === 'de') {
+            $this->configuration->host = self::GERMAN_HOST;
+            $this->configuration->infos->displayName = self::GERMAN_DISPLAY_NAME;
+            $this->configuration->infos->homepage = 'https://' . self::GERMAN_HOST;
+        }
     }
 
     public function loadResults($result)
@@ -72,6 +89,20 @@ class Tootnews extends Searchengine
                     $anzeigeLink = $link;
                 }
                 $descr = $this->text($result->{"content"});
+                $additionalInformation = [];
+                $published = (string) $result->{"published"};
+                if ($published !== '') {
+                    // RFC3339 (e.g. "2026-08-23T10:15:00+02:00"), which
+                    // Carbon::parse() reads natively. A malformed date is
+                    // dropped rather than left to Result::getDate() -- its
+                    // return type is Carbon|null, so anything else stored
+                    // under 'date' would TypeError there instead of here.
+                    try {
+                        $additionalInformation['date'] = Carbon::parse($published);
+                    } catch (\Exception $e) {
+                        Log::error("Could not parse the published date '$published' from $this->name:\n" . $e->getMessage());
+                    }
+                }
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -81,7 +112,8 @@ class Tootnews extends Searchengine
                     $descr,
                     $this->configuration->infos->displayName,
                     $this->configuration->infos->homepage,
-                    $this->counter
+                    $this->counter,
+                    $additionalInformation
                 );
             }
         } catch (\Exception $e) {

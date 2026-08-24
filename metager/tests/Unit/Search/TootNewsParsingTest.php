@@ -65,6 +65,26 @@ class TootNewsParsingTest extends TestCase
         return new Tootnews("tootnews", $configuration);
     }
 
+    /**
+     * `tootnews` is one engine name serving two hosts, chosen in
+     * `Tootnews::__construct()` off the current locale -- see
+     * `tests/Feature/Search/TootNewsLocaleTest.php` for the host itself.
+     * This is the sibling check that the brand attributed to a result
+     * (`Result::$gefVon`/`$gefVonLink`, i.e. `infos->displayName`/
+     * `infos->homepage`) switches to "TroetNews" alongside the host, rather
+     * than a German result staying labelled with the English brand.
+     */
+    public function testAttributesResultsToTroetNewsForAGermanSearch(): void
+    {
+        \LaravelLocalization::setLocale('de-DE');
+        $engine = $this->engine();
+
+        $engine->loadResults(self::REAL_FEED);
+
+        $this->assertSame("TroetNews", $engine->results[0]->gefVon[0]);
+        $this->assertStringContainsString("troetnews.suma-ev.de", $engine->results[0]->gefVonLink[0]);
+    }
+
     /** @return array<int, array{titel: string, link: string, anzeigeLink: string}> */
     private function summarize(Tootnews $engine): array
     {
@@ -248,5 +268,78 @@ class TootNewsParsingTest extends TestCase
         $engine->loadResults('<?xml version="1.0" encoding="UTF-8"?><feed xmlns="http://www.w3.org/2005/Atom"></feed>');
 
         $this->assertSame([], $engine->results);
+    }
+
+    /**
+     * `<published>` is RFC3339, and `Result::getDate()` is typed
+     * `Carbon|null` -- storing anything but a real `Carbon` instance under
+     * `additionalInformation['date']` would TypeError there instead of here.
+     * `Carbon::parse()` reads RFC3339 natively, so this pins that the parsed
+     * instant matches the feed rather than just "some Carbon or other".
+     */
+    public function testParsesThePublishedDateIntoAMachineReadableDate(): void
+    {
+        $engine = $this->engine();
+
+        $engine->loadResults(<<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <feed xmlns="http://www.w3.org/2005/Atom" xmlns:mg="http://metager.de/opensearch/">
+              <entry>
+                <title>Mit Datum</title>
+                <link href="https://example.org/mit-datum"/>
+                <published>2026-08-23T10:15:00+02:00</published>
+                <content type="text">Beschreibung.</content>
+              </entry>
+            </feed>
+            XML);
+
+        $this->assertCount(1, $engine->results);
+        $date = $engine->results[0]->getDate();
+        $this->assertNotNull($date);
+        $this->assertTrue($date->equalTo(\Carbon\Carbon::parse('2026-08-23T10:15:00+02:00')));
+    }
+
+    public function testAnEntryWithoutAPublishedDateLeavesTheDateUnset(): void
+    {
+        $engine = $this->engine();
+
+        $engine->loadResults(<<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <feed xmlns="http://www.w3.org/2005/Atom" xmlns:mg="http://metager.de/opensearch/">
+              <entry>
+                <title>Ohne Datum</title>
+                <link href="https://example.org/ohne-datum"/>
+                <content type="text">Beschreibung.</content>
+              </entry>
+            </feed>
+            XML);
+
+        $this->assertCount(1, $engine->results);
+        $this->assertNull($engine->results[0]->getDate());
+    }
+
+    /**
+     * Same defensive posture as testAnUnescapedAmpersandInTheUpstreamResponseDoesNotThrow:
+     * an upstream field MetaGer does not control can be malformed, and that
+     * must degrade to "no date" for this one entry, not kill parsing.
+     */
+    public function testAnUnparsablePublishedDateLeavesTheDateUnsetRatherThanThrowing(): void
+    {
+        $engine = $this->engine();
+
+        $engine->loadResults(<<<'XML'
+            <?xml version="1.0" encoding="UTF-8"?>
+            <feed xmlns="http://www.w3.org/2005/Atom" xmlns:mg="http://metager.de/opensearch/">
+              <entry>
+                <title>Kaputtes Datum</title>
+                <link href="https://example.org/kaputtes-datum"/>
+                <published>not-a-date</published>
+                <content type="text">Beschreibung.</content>
+              </entry>
+            </feed>
+            XML);
+
+        $this->assertCount(1, $engine->results);
+        $this->assertNull($engine->results[0]->getDate());
     }
 }

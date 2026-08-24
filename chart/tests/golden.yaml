@@ -419,7 +419,6 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
-
 ---
 # Source: chart/charts/valkey/templates/service.yaml
 apiVersion: v1
@@ -589,9 +588,9 @@ spec:
           - name: REVERB_HOST
             value: metager.de
           - name: LOG_CHANNEL
-            value: stderr
+            value: "stderr"
           - name: MATOMO_ENABLED
-            value: true
+            value: "true"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -758,9 +757,9 @@ spec:
           - name: REVERB_HOST
             value: metager.de
           - name: LOG_CHANNEL
-            value: stderr
+            value: "stderr"
           - name: MATOMO_ENABLED
-            value: true
+            value: "true"
           # The point of the exercise. config/reverb.php already reads this and
           # already has the Redis connection under it; it was simply never on.
           - name: REVERB_SCALING_ENABLED
@@ -911,9 +910,9 @@ spec:
           - name: REVERB_HOST
             value: metager.de
           - name: LOG_CHANNEL
-            value: stderr
+            value: "stderr"
           - name: MATOMO_ENABLED
-            value: true
+            value: "true"
           # Exactly what the sidecar mounted: .env and the writable storage, no
           # sumas.json. Nothing on the schedule reads the search configuration —
           # if something did it would already be running on the example file the
@@ -1051,9 +1050,9 @@ spec:
           - name: REVERB_HOST
             value: metager.de
           - name: LOG_CHANNEL
-            value: stderr
+            value: "stderr"
           - name: MATOMO_ENABLED
-            value: true
+            value: "true"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
@@ -1189,9 +1188,9 @@ spec:
           - name: REVERB_HOST
             value: metager.de
           - name: LOG_CHANNEL
-            value: stderr
+            value: "stderr"
           - name: MATOMO_ENABLED
-            value: true
+            value: "true"
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env

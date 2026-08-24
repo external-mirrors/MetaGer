@@ -9,7 +9,7 @@ use Log;
 class Tootnews extends Searchengine
 {
     const CONFIG_OVERLOAD = [
-        'yandex' => [
+        'tootnews' => [
             'host' => 'toot.suma-lab.de',
             'path' => '/search',
             'port' => 443,

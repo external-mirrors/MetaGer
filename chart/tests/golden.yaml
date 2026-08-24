@@ -419,6 +419,7 @@ spec:
   selector:
     app.kubernetes.io/instance: golden
     app.kubernetes.io/name: valkey
+
 ---
 # Source: chart/charts/valkey/templates/service.yaml
 apiVersion: v1

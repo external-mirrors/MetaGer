@@ -549,6 +549,23 @@ spec:
           emptyDir: {}
         - name: fast-logs
           emptyDir: {}
+      initContainers:
+        - name: migrate
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "migrate", "--force"]
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
       containers:
         - name: queue
           securityContext:
@@ -869,6 +886,23 @@ spec:
           emptyDir: {}
         - name: fast-logs
           emptyDir: {}
+      initContainers:
+        - name: migrate
+          image: "registry.metager.de/open-source/metager/fpm:golden"
+          command: ["/usr/local/bin/php"]
+          args: ["artisan", "migrate", "--force"]
+          volumeMounts:
+          - name: secrets
+            mountPath: /metager/metager_app/.env
+            subPath: ENV_PRODUCTION
+            readOnly: true
+          - name: mglogs-persistent-storage
+            mountPath: /metager/metager_app/storage/metager
+            readOnly: false
+          - name: sqlite-databases
+            mountPath: /metager/metager_app/database/databases
+          - name: fast-logs
+            mountPath: /metager/metager_app/storage/metager/fast_dir
       containers:
         - name: scheduler
           securityContext:

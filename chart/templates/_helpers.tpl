@@ -235,6 +235,31 @@ scratch dir.
 {{- end -}}
 
 {{/*
+Creates each pod's own database.sqlite before its main container starts.
+
+`sqlite-databases` is an emptyDir, not shared storage — each pod gets its own,
+empty on every (re)start. The app Deployment gets a populated one for free
+because it runs the image's normal entrypoint (`migrate --force`, among other
+things). The scheduler and queue Deployments mount the same volume but override
+`command`/`args` directly to invoke their artisan command, which replaces the
+image's ENTRYPOINT rather than running alongside it - so nothing ever created
+their copy of the file, and every local write (QueryLogger, the `logs_partitioned`
+table `logs:gather` drains into) threw SQLiteDatabaseDoesNotExistException.
+
+    initContainers:
+    {{- include "chart.migrateInitContainer" . | nindent 8 }}
+*/}}
+{{- define "chart.migrateInitContainer" -}}
+- name: migrate
+  image: "{{ template "fpm_image" . }}"
+  command: ["/usr/local/bin/php"]
+  args: ["artisan", "migrate", "--force"]
+  volumeMounts:
+  {{- include "chart.mounts.env" . | nindent 2 }}
+  {{- include "chart.mounts.storage" . | nindent 2 }}
+{{- end -}}
+
+{{/*
 Labels for a component with its own Deployment.
 
     {{- include "chart.componentLabels" (dict "root" . "component" "scheduler") }}

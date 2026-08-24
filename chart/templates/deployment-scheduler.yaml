@@ -45,6 +45,8 @@ spec:
       terminationGracePeriodSeconds: 90
       volumes:
         {{- include "chart.volumes" . | nindent 8 }}
+      initContainers:
+        {{- include "chart.migrateInitContainer" . | nindent 8 }}
       containers:
         - name: scheduler
           securityContext:

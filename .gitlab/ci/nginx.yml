@@ -7,7 +7,7 @@
 # config that loads, passes `nginx -t`, serves the site, and proxies to an
 # address that stopped being right when a container was recreated. See
 # build/nginx/tests/run.sh.
-nginx:
+nginx_config:
   stage: build_dependency_images
   image: $DEPLOY_KUBERNETES_IMAGE
   tags:

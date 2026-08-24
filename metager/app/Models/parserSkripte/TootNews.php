@@ -55,12 +55,23 @@ class Tootnews extends Searchengine
                 return;
             }
 
-            $results = $content->xpath("//feed[1]/entry");
+            // The feed declares a default Atom namespace (xmlns="..." with no
+            // prefix), so an unprefixed xpath query never matches: XPath 1.0
+            // only matches unprefixed names against elements that have no
+            // namespace at all. local-name() sidesteps registering the
+            // namespace and keeps working if the feed's namespace URI changes.
+            $results = $content->xpath("//*[local-name()='feed'][1]/*[local-name()='entry']") ?: [];
             foreach ($results as $result) {
-                $title = strip_tags($result->{"title"}->asXML());
-                $link = $result->{"link"}['href'];
-                $anzeigeLink = $link;
-                $descr = strip_tags($result->{"content"}->asXML());
+                $title = $this->text($result->{"title"});
+                $link = (string) $result->{"link"}['href'];
+                if ($title === '' || $link === '') {
+                    continue;
+                }
+                $anzeigeLink = (string) $result->children('http://metager.de/opensearch/')->anzeigeLink;
+                if ($anzeigeLink === '') {
+                    $anzeigeLink = $link;
+                }
+                $descr = $this->text($result->{"content"});
                 $this->counter++;
                 $this->results[] = new \App\Models\Result(
                     $this->configuration->engineBoost,
@@ -83,5 +94,21 @@ class Tootnews extends Searchengine
     public function getNext(\App\MetaGer $metager, $result)
     {
         return;
+    }
+
+    /**
+     * Tags stripped, then entities decoded -- in that order.
+     *
+     * asXML() re-serialises the node, which re-escapes any "&", "<", ">" that
+     * were entities in the source (`&amp;` back to `&amp;`) rather than
+     * leaving them decoded, so strip_tags() alone still leaves "&amp;"
+     * sitting in the text users see. html_entity_decode() alone has the
+     * opposite problem: cast to string, a node with real nested markup
+     * (`<b>text</b>`) loses that markup's text outright instead of just its
+     * tags, because (string) only reads the node's own direct text.
+     */
+    private function text(\SimpleXMLElement $node): string
+    {
+        return html_entity_decode(strip_tags($node->asXML() ?: ''), ENT_QUOTES | ENT_XML1, 'UTF-8');
     }
 }

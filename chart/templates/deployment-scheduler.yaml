@@ -57,12 +57,18 @@ spec:
           imagePullPolicy: {{ .Values.image.fpm.pullPolicy }}
           env:
           {{- include "chart.env" (dict "root" . "appUrl" true) | nindent 10 }}
-          # Exactly what the sidecar mounted: .env and the writable storage, no
-          # sumas.json. Nothing on the schedule reads the search configuration —
-          # if something did it would already be running on the example file the
-          # image entrypoint falls back to, and that is a separate problem to fix.
+          # More than the sidecar mounted (.env and the writable storage): this
+          # container skips the image's normal entrypoint, so nothing ever falls
+          # back to sumas.json.example the way it would there. requests:gather
+          # does read the search configuration — it builds a SearchEngineRegistry
+          # to read each engine's monthly-requests limit — so without this mount
+          # every run of requests:gather threw "file_get_contents(...sumas.json):
+          # No such file or directory" and exited 1 (GlitchTip METAGER-5/METAGER-6,
+          # ~350 events each, every 15 minutes since the scheduler Deployment
+          # split from the sidecar).
           volumeMounts:
           {{- include "chart.mounts.env" . | nindent 10 }}
+          {{- include "chart.mounts.config" . | nindent 10 }}
           {{- include "chart.mounts.storage" . | nindent 10 }}
           # As a sidecar this was an httpGet against port 8080 — nginx, in the same
           # network namespace. There is no HTTP server in this pod, so the same

@@ -304,9 +304,11 @@ class MetaGerSearch extends Controller
         app()->singleton(Searchengines::class, function ($app) use ($searchengines) {
             return $searchengines;
         });
-        /** @var Quicktips */
+        /** @var Quicktips|null */
         $quicktips = $mg["quicktips"];
-        $quicktips->loadResults();
+        if ($quicktips !== null) {
+            $quicktips->loadResults();
+        }
 
 
         # Nach Spezialsuchen überprüfen:
@@ -334,7 +336,7 @@ class MetaGerSearch extends Controller
             'imagesearch' => false,
         ];
 
-        if ($quicktips->new) {
+        if ($quicktips !== null && $quicktips->new) {
             $result["quicktips"] = Blade::render("parts.quicktips", ["quicktips" => $quicktips->quicktips]);
         }
 

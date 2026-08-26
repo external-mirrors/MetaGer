@@ -2,7 +2,9 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Log;
 use Prometheus\CollectorRegistry;
+use Prometheus\Exception\StorageException;
 
 class PrometheusExporter
 {
@@ -73,9 +75,17 @@ class PrometheusExporter
      */
     public static function LocaleDecision(string $reason)
     {
-        $registry = CollectorRegistry::getDefault();
-        $counter = $registry->getOrRegisterCounter("metager", "locale_decisions", "Locale resolutions, by what the request was answered with", ["reason"]);
-        $counter->inc([$reason]);
+        // Runs in LocalizationRedirect on every request, before routing. A
+        // metrics backend hiccup (GlitchTip METAGER-K/H/E: the Redis storing
+        // Prometheus counters timed out) must not turn into a 500 for every
+        // visitor — losing this counter's tick is far cheaper than that.
+        try {
+            $registry = CollectorRegistry::getDefault();
+            $counter = $registry->getOrRegisterCounter("metager", "locale_decisions", "Locale resolutions, by what the request was answered with", ["reason"]);
+            $counter->inc([$reason]);
+        } catch (StorageException $e) {
+            Log::warning("Failed to record locale decision metric: " . $e->getMessage());
+        }
     }
 
     public static function SuggestionSessionCounter()

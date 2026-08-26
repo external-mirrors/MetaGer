@@ -37,7 +37,7 @@ class SerperShopping extends SerperBase
                 $title = $result->title;
                 $link = $result->link;
                 $anzeigeLink = $link;
-                $descr = $result->delivery;
+                $descr = property_exists($result, "delivery") ? $result->delivery : "";
                 $this->counter++;
 
                 $additionalInformation = [];

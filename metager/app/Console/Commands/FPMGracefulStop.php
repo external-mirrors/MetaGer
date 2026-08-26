@@ -4,11 +4,9 @@ namespace App\Console\Commands;
 
 use ErrorException;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Redis;
 
 class FPMGracefulStop extends Command
 {
-    const REDIS_FPM_STOPPED_KEY = "fpm_stopped";
     /**
      * The name and signature of the console command.
      *
@@ -36,11 +34,6 @@ class FPMGracefulStop extends Command
         } while ($active_fpm_processes === null || $active_fpm_processes > 1);
 
         $this->info("Only one FPM process left. Ready to stop fpm...");
-        // The Request fetcher won't stop before FPM is not stopped with processing requests
-        // because there could be last jobs flying in
-        // This Redis Value will tell him that it's good to stop
-        Redis::set(self::REDIS_FPM_STOPPED_KEY, "true");
-        $this->info("Set Redis Key");
         return 0;
     }
 

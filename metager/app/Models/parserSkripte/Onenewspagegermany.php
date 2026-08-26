@@ -31,7 +31,12 @@ class Onenewspagegermany extends Searchengine
             ],
             'engine-boost' => 1,
             'cache-duration' => -1,
-            'disabled' => false,
+            // suche.newsdeutschland.com accepts TCP and completes TLS but never
+            // answers the HTTP request on any path, over IPv4 or IPv6 (Cloudflare
+            // edge alive, origin dead). Every nachrichten search used to burn the
+            // full EngineOrchestrator::WAIT_SECONDS (6s) waiting on this "main"
+            // engine. Disabled 2026-08-26 until One News Page Ltd. restores it.
+            'disabled' => true,
             'filter-opt-in' => false,
             'cost' => 0,
             'infos' => [

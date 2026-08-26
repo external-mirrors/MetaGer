@@ -29,7 +29,13 @@ class Onenewspage extends Searchengine
             ],
             'engine-boost' => 1,
             'cache-duration' => -1,
-            'disabled' => false,
+            // search.onenewspage.com/search.php no longer serves the plaintext
+            // "e=1" feed this parser expects — it 301s to the ordinary HTML
+            // search page, which loadResults() then misparses into garbage
+            // results (e.g. JS snippets picked up as titles/links). Disabled
+            // 2026-08-26 until One News Page Ltd. restores the feed or the
+            // parser is rewritten against the HTML page.
+            'disabled' => true,
             'filter-opt-in' => false,
             'cost' => 0,
             'infos' => [

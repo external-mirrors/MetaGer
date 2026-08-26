@@ -1,0 +1,13 @@
+{
+  "organic": [
+    {
+      "title": "Kaffeeröster ohne Snippet",
+      "link": "https://serper-example.net/ohne-snippet"
+    },
+    {
+      "title": "Kaffee bei Serper",
+      "link": "https://serper-example.net/kaffee",
+      "snippet": "Ein Ergebnis mit Snippet, direkt nach einem ohne."
+    }
+  ]
+}

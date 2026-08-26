@@ -38,7 +38,7 @@ class Serper extends SerperBase
                 $title = $result->title;
                 $link = $result->link;
                 $anzeigeLink = $link;
-                $descr = $result->snippet;
+                $descr = property_exists($result, "snippet") ? $result->snippet : "";
                 $this->counter++;
 
                 $additionalInformation = [];

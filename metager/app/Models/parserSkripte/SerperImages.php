@@ -42,7 +42,14 @@ class SerperImages extends SerperBase
                 $this->counter++;
 
                 $additionalInformation = [
-                    "image" => new Imagesearchdata($result->thumbnailUrl, $result->thumbnailWidth, $result->thumbnailHeight, $result->imageUrl, $result->imageWidth, $result->imageHeight)
+                    "image" => new Imagesearchdata(
+                        property_exists($result, "thumbnailUrl") ? $result->thumbnailUrl : "",
+                        property_exists($result, "thumbnailWidth") ? $result->thumbnailWidth : 0,
+                        property_exists($result, "thumbnailHeight") ? $result->thumbnailHeight : 0,
+                        property_exists($result, "imageUrl") ? $result->imageUrl : "",
+                        property_exists($result, "imageWidth") ? $result->imageWidth : 0,
+                        property_exists($result, "imageHeight") ? $result->imageHeight : 0
+                    )
                 ];
 
                 $newResult = new Result(

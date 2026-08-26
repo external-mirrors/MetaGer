@@ -5,6 +5,7 @@
 <head>
 	<meta charset="utf-8" />
 	<title>@yield('title')</title>
+	@yield('meta_refresh')
 	<meta name="description" content="{!! trans('staticPages.meta.Description') !!}" />
 	<meta name="keywords" content="{!! trans('staticPages.meta.Keywords') !!}" />
 	<meta name="page-topic" content="Dienstleistung" />

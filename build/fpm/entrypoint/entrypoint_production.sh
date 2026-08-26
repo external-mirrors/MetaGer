@@ -9,7 +9,14 @@ _trap() {
   kill -s SIGQUIT $FPM_PID
 }
 
-trap _trap SIGQUIT
+# Docker sends SIGQUIT by default (this image's STOPSIGNAL, inherited from the
+# php-fpm base image), but Kubernetes always sends SIGTERM to pod containers
+# regardless of image metadata. Without trapping SIGTERM too, a pod
+# termination reaches this untrapped signal on the bash PID 1, the shell dies
+# immediately, and the kernel SIGKILLs the backgrounded php-fpm the instant
+# PID 1 exits — skipping fpm:graceful-stop and dropping in-flight requests on
+# every rollout.
+trap _trap SIGQUIT SIGTERM
 
 validate_laravel
 

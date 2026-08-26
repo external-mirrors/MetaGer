@@ -1,0 +1,78 @@
+// Shared layout for resources/views/errors/*.blade.php. One card, centered in
+// the page, with an oversized status code in the brand colour so the six
+// error pages (403/404/410/429/500/503) read as one family instead of six
+// independent designs.
+//
+// The debug <pre> (500/503, app.debug only) is the reason this exists as much
+// as the visual: a raw exception is arbitrarily wide, and without a scroll
+// boundary of its own it pushes the whole page into horizontal overflow.
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 32rem;
+  margin: 3rem auto;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  box-sizing: border-box;
+
+  border: 1px solid @border-color;
+  border-radius: 8px;
+  background-color: @card-background-color;
+  box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.12), 0px 0px 1px 0px rgba(0, 0, 0, 0.24);
+}
+
+.error-page__code {
+  font-size: 3rem;
+  font-weight: bold;
+  line-height: 1;
+  color: @metager-orange;
+}
+
+.error-page__title {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.error-page__text {
+  margin: 0;
+  color: @text-color-alpha-70;
+}
+
+.error-page__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+// A <details> rather than a plain block so the trace can still be collapsed —
+// it renders open (see the blade views) because app.debug is a
+// development-only setting; production never reaches this markup at all.
+.error-page__debug {
+  width: 100%;
+  margin-top: 1rem;
+  border: 1px solid @border-color;
+  border-radius: 4px;
+  text-align: left;
+
+  summary {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  pre {
+    margin: 0;
+    padding: 0.75rem;
+    max-height: 24rem;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.8rem;
+    border-top: 1px solid @border-color;
+  }
+}

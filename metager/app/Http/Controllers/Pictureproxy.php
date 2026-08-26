@@ -9,6 +9,7 @@ use Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Http\Request;
 use LaravelLocalization;
+use Predis\PredisException;
 use Response;
 use Validator;
 
@@ -42,7 +43,15 @@ class Pictureproxy extends Controller
         }
 
         $image_hash = md5($input_data["url"] . $thumbnail_width);
-        if (Cache::has($image_hash)) {
+        // A Redis/sentinel hiccup here is just a cache miss, not a reason to
+        // fail the whole proxied image (GlitchTip METAGER-I): fetching the
+        // image fresh is exactly what an actual cache miss already does.
+        try {
+            $cacheHit = Cache::has($image_hash);
+        } catch (PredisException $e) {
+            $cacheHit = false;
+        }
+        if ($cacheHit) {
             $response = Cache::get($image_hash);
         } else {
             try {
@@ -86,6 +95,9 @@ class Pictureproxy extends Controller
                 Cache::put($image_hash, $response, now()->addMinutes(15));
             } catch (\ErrorException $e) {
                 $response = Response::make("", 404);
+            } catch (PredisException $e) {
+                // The image was fetched fine; only caching it failed. Serve
+                // it anyway rather than 500ing over a lost cache write.
             }
         }
         return $response;

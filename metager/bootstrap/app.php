@@ -8,7 +8,10 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\TrustProxies;
+use Predis\PredisException;
+use Prometheus\Exception\StorageException;
 use Sentry\Laravel\Integration;
+use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     /**
@@ -118,4 +121,21 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         Integration::handles($exceptions);
+
+        /**
+         * Redis backs almost everything a search does — the fetch queue, the
+         * wait for results, the load-more cache — so an outage here isn't a
+         * case for a partial degrade, it's "the site can't do its job right
+         * now." Two production incidents (GlitchTip METAGER-I/L,
+         * METAGER-K/H/E) reached call sites that had never been written to
+         * expect either exception type and 500ed. This turns both into the
+         * same, deliberate answer: 503 with a short Retry-After, which
+         * resources/views/errors/503.blade.php pairs with a zero-JS
+         * meta-refresh — Redis outages of this kind are typically over
+         * within seconds, so telling the browser to just try again shortly
+         * is more useful to a user than a dead-end error page.
+         */
+        $exceptions->renderable(function (PredisException|StorageException $e) {
+            throw new ServiceUnavailableHttpException(5, $e->getMessage(), $e);
+        });
     })->create();

@@ -28,18 +28,79 @@ class ScheduleWorker extends Command
      */
     public function handle()
     {
-        pcntl_signal(SIGQUIT, array(&$this, "onExit"));
+        // pcntl_signal() alone only installs the handler at the OS level; it
+        // needs async signals on (or an explicit pcntl_signal_dispatch() call)
+        // to actually be invoked. Symfony Console's own Application constructor
+        // already turns this on unconditionally for every artisan command (it
+        // builds a SignalRegistry whether or not the command subscribes to
+        // anything), so this call is a no-op in practice today — kept explicit
+        // rather than depending on that framework internal.
+        pcntl_async_signals(true);
+        // The previous bug here was not signal dispatch (that part already
+        // worked) — it was that this command only ever registered SIGQUIT.
+        // Docker's default stop signal for this image is SIGQUIT (inherited
+        // STOPSIGNAL from the php-fpm base image), but Kubernetes always sends
+        // SIGTERM, which had no handler at all and so hit PHP's default
+        // (immediate, ungraceful) disposition — the "finish the run in
+        // progress" contract onExit() implements silently never applied there.
+        // See tests/Feature/ScheduleWorkerSignalTest.php.
+        $this->installSignalHandlers();
         $this->info("Starting Scheduler");
         $this->call('schedule:run');
-        do {
+        // schedule:run just replaced our handlers with its own: every
+        // Illuminate\Console\Scheduling\Event installs a SIGTERM/SIGINT/SIGQUIT
+        // handler of its own before running (ensureMutexIsReleasedOnSignal(),
+        // gated on $releaseOnTerminationSignals, which defaults to true for
+        // every event, not just ones using withoutOverlapping()) so a kill
+        // mid-task still releases its mutex — and that handler just does
+        // exit(1), permanently, since it is never restored afterward. Without
+        // re-installing ours here, a signal arriving anywhere after the first
+        // schedule:run — including the whole time this process spends asleep —
+        // hits that handler instead of onExit(), and the worker dies with a
+        // bare exit code 1 instead of the graceful shutdown this class exists
+        // to provide.
+        $this->installSignalHandlers();
+        while (!$this->should_exit) {
             // Nothing here uses Redis for the next minute, and something in
             // front of it will hang up in less than that. See
             // releaseIdleConnections().
             $this->releaseIdleConnections();
             sleep(seconds: 60 - now()->second + 1);
+            // sleep() being interrupted by a signal does not reliably run the
+            // registered handler on its own — confirmed empirically: with
+            // pcntl_async_signals(true) on, a long sleep() returns early on
+            // signal but the process can reach the end of the script before
+            // the handler ever fires, so should_exit is still false here
+            // without this. A usleep()-based polling loop does not have this
+            // problem; only a single long-blocking sleep() does.
+            pcntl_signal_dispatch();
+            // Check right after waking, before starting another run: a signal
+            // arriving during the sleep above must stop the worker once it
+            // wakes, not send it into one more full schedule:run first.
+            if ($this->should_exit) {
+                break;
+            }
             $this->call('schedule:run');
-        } while (!$this->should_exit);
+            $this->installSignalHandlers();
+        }
         return 0;
+    }
+
+    /**
+     * (Re-)install this worker's own termination handlers.
+     *
+     * Has to be called again after every schedule:run() — see the comment at
+     * the call sites in handle().
+     */
+    private function installSignalHandlers(): void
+    {
+        pcntl_async_signals(true);
+        // Docker's default stop signal for this image is SIGQUIT (inherited
+        // STOPSIGNAL from the php-fpm base image); Kubernetes always sends
+        // SIGTERM. Both are handled so the graceful path in onExit() runs in
+        // either place.
+        pcntl_signal(SIGQUIT, [$this, "onExit"]);
+        pcntl_signal(SIGTERM, [$this, "onExit"]);
     }
 
     /**
@@ -77,14 +138,20 @@ class ScheduleWorker extends Command
     {
         $redis = app("redis");
 
-        foreach (array_keys($redis->connections()) as $name) {
+        // connections() is null, not [], when the manager has never resolved
+        // one yet — nothing on this path guarantees schedule:run touched Redis
+        // (it may have found nothing due, or hit a non-Redis cache store) —
+        // found via CACHE_STORE=array in the test environment, where it
+        // crashed here on every run before the process ever reached the
+        // signal-handling this method sits next to.
+        foreach (array_keys($redis->connections() ?? []) as $name) {
             $redis->purge($name);
         }
     }
 
     public function onExit()
     {
-        $this->info("Stopping Scheduler on SIGQUIT");
+        $this->info("Stopping Scheduler");
         $this->should_exit = true;
     }
 }

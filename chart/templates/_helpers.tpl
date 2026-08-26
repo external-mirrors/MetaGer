@@ -143,9 +143,19 @@ generate absolute URLs; the queue, reverb and fetcher workers never do.
   sentinel). All three passwords come from the same secret key: the subchart
   gives Sentinel the same password it gives Valkey, for both `sentinel auth-pass`
   and Sentinel's own `requirepass`. The retired chart minted two.
+
+  REDIS_SENTINEL_HOSTS names every sentinel replica's own stable DNS name
+  (the subchart's headless Service), not the load-balancing `-sentinel`
+  Service: Predis tries these one at a time and does not retry the
+  ClientException it throws when the one it is trying fails to connect (see
+  App\MetaGer's PredisException catch) — with a single, load-balanced entry,
+  a transient blip reaching whichever pod that Service happened to route to
+  was fatal for the whole request even though the other two sentinels were
+  healthy (GlitchTip METAGER-I/L). Naming every replica lets a bad
+  connection just move on to the next one instead.
 */}}
-- name: REDIS_SENTINEL_HOST
-  value: {{ include "chart.valkeyFullname" $root }}-sentinel.{{ $root.Release.Namespace }}.svc.cluster.local
+- name: REDIS_SENTINEL_HOSTS
+  value: {{ range $i := until (int $root.Values.valkey.replicaCount) }}{{ if $i }},{{ end }}{{ include "chart.valkeyFullname" $root }}-{{ $i }}.{{ include "chart.valkeyFullname" $root }}-headless.{{ $root.Release.Namespace }}.svc.cluster.local{{ end }}
 - name: REDIS_SENTINEL_PASSWORD
   valueFrom:
     secretKeyRef:

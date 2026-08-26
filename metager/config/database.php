@@ -87,6 +87,22 @@ return [
             'prefix' => '',
             'search_path' => 'public',
             'sslmode' => 'prefer',
+            // Search-facing requests never touch this connection (see
+            // App\QueryLogger — search logging only ever writes to Redis;
+            // the SQL write is a separate, scheduled batch job), but the
+            // scheduler and the settings/membership/donation pages do, and
+            // PDO has no connect timeout by default: a Postgres outage left
+            // those hang for the OS's own TCP timeout rather than failing
+            // fast. On the scheduler that delay pushed the next `heartbeat`
+            // past SchedulerHeartbeat::MAX_AGE_IN_MINUTES, so the liveness
+            // probe restarted the pod over a problem a restart cannot fix
+            // (GlitchTip METAGER-M/N — the trigger, `logs:create-invoice`,
+            // not the mechanism). On the app pod, enough requests each
+            // hanging this long exhausts FPM's shared worker pool, taking
+            // down unrelated routes and the health-check probe with it.
+            'options' => [
+                \PDO::ATTR_TIMEOUT => env('DB_CONNECT_TIMEOUT', 3),
+            ],
         ],
     ],
 
@@ -136,13 +152,34 @@ return [
             'password' => env('REDIS_CACHE_PASSWORD', null),
         ],
 
+        // Predis tries these one at a time and gives up with
+        // "No sentinel server available for autodiscovery" the moment the
+        // one it is currently trying fails to connect — it does not retry
+        // that exception (see App\MetaGer's PredisException catch), so with
+        // a single entry any transient blip reaching it is fatal even
+        // though the other two sentinels are perfectly healthy (GlitchTip
+        // METAGER-I/L). REDIS_SENTINEL_HOSTS is a comma-separated list of
+        // `host[:port]` so the chart can name every replica's own stable
+        // DNS name (the subchart's headless Service) instead of the load-
+        // balancing Service — falls back to the single-host vars for
+        // docker-compose, where there is exactly one sentinel.
         'sentinel' => [
-            [
-                'host' => env("REDIS_SENTINEL_HOST", 'localhost'),
-                'port' => env('REDIS_SENTINEL_PORT', 26379),
-                'password' => env('REDIS_SENTINEL_PASSWORD', null),
-                'timeout' => env('REDIS_CONNECT_TIMEOUT', 0.2),
-            ],
+            ...collect(explode(',', env('REDIS_SENTINEL_HOSTS', env('REDIS_SENTINEL_HOST', 'localhost'))))
+                ->map(fn($entry) => trim($entry))
+                ->filter()
+                ->map(function ($entry) {
+                    [$host, $port] = str_contains($entry, ':')
+                        ? explode(':', $entry, 2)
+                        : [$entry, env('REDIS_SENTINEL_PORT', 26379)];
+
+                    return [
+                        'host' => $host,
+                        'port' => (int) $port,
+                        'password' => env('REDIS_SENTINEL_PASSWORD', null),
+                        'timeout' => env('REDIS_CONNECT_TIMEOUT', 0.2),
+                    ];
+                })
+                ->all(),
             'options' => [
                 'service' => env('REDIS_SENTINEL_SERVICE', 'mymaster'),
                 'replication' => 'sentinel',

@@ -108,6 +108,14 @@ services:
     restart: unless-stopped
     entrypoint: /usr/local/bin/php
     command: artisan reverb:start --debug
+    # The metager image inherits STOPSIGNAL SIGQUIT from the php-fpm base image
+    # (it is the right default for the fpm service, which does run php-fpm).
+    # Reverb is a plain PHP process, not fpm, and only subscribes to
+    # SIGINT/SIGTERM/SIGTSTP (Laravel\Reverb's StartServer::getSubscribedSignals())
+    # — SIGQUIT is not among them, so without this override `docker compose
+    # stop`/`down` send a signal Reverb never handles and it hangs until
+    # forcibly SIGKILLed at the end of the grace period.
+    stop_signal: SIGTERM
     networks:
       - metager
     volumes:

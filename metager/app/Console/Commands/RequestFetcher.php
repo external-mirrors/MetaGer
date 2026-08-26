@@ -50,7 +50,23 @@ class RequestFetcher extends Command
      */
     public function handle()
     {
+        // pcntl_signal() alone only installs the handler at the OS level; without
+        // async signals turned on (or an explicit pcntl_signal_dispatch() call)
+        // it is never actually invoked. Symfony Console's own Application
+        // constructor already turns this on unconditionally for every artisan
+        // command (it builds a SignalRegistry whether or not the command
+        // subscribes to anything), so this call is a no-op in practice today —
+        // kept explicit rather than depending on that framework internal.
+        pcntl_async_signals(true);
+        // The previous bug here was not signal dispatch (that part already
+        // worked) — it was that this command only ever registered SIGQUIT.
+        // Docker's default stop signal for this image is SIGQUIT (inherited
+        // STOPSIGNAL from the php-fpm base image), but Kubernetes always sends
+        // SIGTERM, which had no handler at all and so hit PHP's default
+        // (immediate, ungraceful) disposition. Both are handled here now so the
+        // drain below runs in either place.
         pcntl_signal(SIGQUIT, [$this, "sig_handler"]);
+        pcntl_signal(SIGTERM, [$this, "sig_handler"]);
 
         // Redis might not be available now
         for ($count = 0; $count < 10; $count++) {
@@ -79,7 +95,13 @@ class RequestFetcher extends Command
                     $this->waitForActivity($operationsRunning);
                 }
 
-                if (!$this->shouldRun && $operationsRunning === 0 && Redis::get(FPMGracefulStop::REDIS_FPM_STOPPED_KEY) !== NULL) {
+                // Drain whatever this process's own multicurl handle is still
+                // carrying before exiting; no need to wait on any fpm pod's
+                // lifecycle (see the removed FPMGracefulStop handshake below —
+                // this worker is its own Deployment now, decoupled from fpm's,
+                // and any other worker replica already services the shared
+                // fetch queue).
+                if (!$this->shouldRun && $operationsRunning === 0) {
                     break;
                 }
             }

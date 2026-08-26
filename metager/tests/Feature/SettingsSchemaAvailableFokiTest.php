@@ -84,18 +84,39 @@ class SettingsSchemaAvailableFokiTest extends TestCase
     #[Test]
     public function marks_an_engine_unavailable_for_a_language_its_index_does_not_cover(): void
     {
-        // The pair that made this necessary: `onenewspage` is an English-only
-        // index, `onenewspagegermany` a German one, and both sit in `nachrichten`
-        // for every language. A search already drops the wrong one
-        // (`SearchengineConfiguration::applyLocale()`), so a client offering it as
-        // a toggle was offering something that could never return a result.
+        // `tuhh` and `minism_science` are German-only indexes sitting in
+        // `science` alongside `BASE`, which covers both. A search already
+        // drops the ones that cannot serve the current locale
+        // (`SearchengineConfiguration::applyLocale()`), so a client offering
+        // one as a toggle for a language it cannot serve was offering
+        // something that could never return a result.
+        //
+        // This used to be exercised with `onenewspage`/`onenewspagegermany`
+        // (English-only / German-only, both in `nachrichten`), until both were
+        // disabled outright at the config level (One News Page Ltd.'s feed
+        // broke, see their CONFIG_OVERLOAD) and dropped from the schema
+        // response entirely - see keeps_disabled_engines_out_of_the_schema.
+        $german = $this->engineAvailability('de', 'science');
+        $this->assertTrue($german['tuhh']);
+
+        $english = $this->engineAvailability('en', 'science');
+        $this->assertFalse($english['tuhh']);
+    }
+
+    #[Test]
+    public function keeps_disabled_engines_out_of_the_schema(): void
+    {
+        // onenewspage/onenewspagegermany are disabled at the config level
+        // (One News Page Ltd.'s feed API broke on both hosts) rather than
+        // merely unavailable for a language, so - like Yandex, like any other
+        // retired integration - they are never offered as a toggle at all.
         $german = $this->engineAvailability('de', 'nachrichten');
-        $this->assertFalse($german['onenewspage']);
-        $this->assertTrue($german['onenewspagegermany']);
+        $this->assertArrayNotHasKey('onenewspage', $german);
+        $this->assertArrayNotHasKey('onenewspagegermany', $german);
 
         $english = $this->engineAvailability('en', 'nachrichten');
-        $this->assertTrue($english['onenewspage']);
-        $this->assertFalse($english['onenewspagegermany']);
+        $this->assertArrayNotHasKey('onenewspage', $english);
+        $this->assertArrayNotHasKey('onenewspagegermany', $english);
     }
 
     #[Test]

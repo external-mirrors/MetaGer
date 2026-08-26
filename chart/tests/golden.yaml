@@ -567,8 +567,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -622,8 +622,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -791,8 +791,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -941,8 +941,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -998,8 +998,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -1158,8 +1158,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -1296,8 +1296,8 @@ spec:
                 name: golden-valkey
                 key: password
           
-          - name: REDIS_SENTINEL_HOST
-            value: golden-valkey-sentinel.metager.svc.cluster.local
+          - name: REDIS_SENTINEL_HOSTS
+            value: golden-valkey-0.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-1.golden-valkey-headless.metager.svc.cluster.local,golden-valkey-2.golden-valkey-headless.metager.svc.cluster.local
           - name: REDIS_SENTINEL_PASSWORD
             valueFrom:
               secretKeyRef:

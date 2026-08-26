@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
-use Predis\Connection\ConnectionException;
+use Predis\PredisException;
 
 class MetaGer
 {
@@ -96,10 +96,19 @@ class MetaGer
         $this->starttime = microtime(true);
 
         # Cachebarkeit testen
+        //
+        // Catches PredisException, not just Connection\ConnectionException: a
+        // sentinel-backed connection with only one sentinel configured (the
+        // k8s Service, not each replica) throws the sibling ClientException
+        // "No sentinel server available for autodiscovery" the moment that
+        // one connection attempt fails once — Predis has nothing left to
+        // retry, and its own retry layer only catches CommunicationException
+        // anyway. ConnectionException alone let that slip through as an
+        // uncaught 500 on every request (GlitchTip METAGER-L/I).
         try {
             Cache::has('test');
             $this->canCache = true;
-        } catch (ConnectionException $e) {
+        } catch (PredisException $e) {
             $this->canCache = false;
         }
         if ($hash === "") {

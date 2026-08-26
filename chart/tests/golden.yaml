@@ -1020,15 +1020,35 @@ spec:
             value: "stderr"
           - name: MATOMO_ENABLED
             value: "true"
-          # Exactly what the sidecar mounted: .env and the writable storage, no
-          # sumas.json. Nothing on the schedule reads the search configuration —
-          # if something did it would already be running on the example file the
-          # image entrypoint falls back to, and that is a separate problem to fix.
+          # More than the sidecar mounted (.env and the writable storage): this
+          # container skips the image's normal entrypoint, so nothing ever falls
+          # back to sumas.json.example the way it would there. requests:gather
+          # does read the search configuration — it builds a SearchEngineRegistry
+          # to read each engine's monthly-requests limit — so without this mount
+          # every run of requests:gather threw "file_get_contents(...sumas.json):
+          # No such file or directory" and exited 1 (GlitchTip METAGER-5/METAGER-6,
+          # ~350 events each, every 15 minutes since the scheduler Deployment
+          # split from the sidecar).
           volumeMounts:
           - name: secrets
             mountPath: /metager/metager_app/.env
             subPath: ENV_PRODUCTION
             readOnly: true
+          - name: secrets
+            mountPath: /metager/metager_app/config/sumas.json
+            subPath: SUMAS_JSON
+          - name: secrets
+            mountPath: /metager/metager_app/config/suggestions.json
+            subPath: SUGGESTIONS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDomains.txt
+            subPath: BLACKLIST_DOMAINS
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistUrl.txt
+            subPath: BLACKLIST_URL
+          - name: secrets
+            mountPath: /metager/metager_app/config/blacklistDescriptionUrl.txt
+            subPath: BLACKLIST_DESCRIPTION_URL
           - name: mglogs-persistent-storage
             mountPath: /metager/metager_app/storage/metager
             readOnly: false

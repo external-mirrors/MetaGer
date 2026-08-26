@@ -128,23 +128,7 @@ class AnonymousTokenPayment
         if (empty($payload["tokens"]) && empty($payload["decitokens"]))
             return true;
 
-        $url = $this->key_api_server . "/token/check";
-
-        $ch = curl_init($url);
-        curl_setopt_array($ch, [
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HTTPHEADER => [
-                "Authorization: Bearer " . config("metager.metager.keymanager.access_token"),
-                "Content-Type: application/json"
-            ],
-            CURLOPT_TIMEOUT => 5,
-            CURLOPT_POST => true,
-            CURLOPT_POSTFIELDS => json_encode($payload),
-            CURLOPT_USERAGENT => "MetaGer"
-        ]);
-
-        $result = curl_exec($ch);
-        $response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        ["code" => $response_code, "body" => $result] = $this->sendTokenCheckRequest($payload);
 
         if ($response_code === 200) {
             foreach ($payload["tokens"] as $token) {
@@ -162,9 +146,9 @@ class AnonymousTokenPayment
                 return false;
             }
             foreach ($result->errors as $error) {
-                if (!in_array($error->param, ["tokens", "decitokens"]))
+                if (!property_exists($error, "param") || !in_array($error->param, ["tokens", "decitokens"]))
                     continue;
-                if (!in_array($error->msg, ["Invalid Signatures", "Token structure is invalid"]))
+                if (!property_exists($error, "msg") || !in_array($error->msg, ["Invalid Signatures", "Token structure is invalid"]))
                     continue;
                 $tokens = [];
                 if (property_exists($error, "values")) {
@@ -194,6 +178,34 @@ class AnonymousTokenPayment
             $this->updateCookie();
         }
         return false;
+    }
+
+    /**
+     * Posts the check payload to the keymanager and returns its response.
+     * Overridden in tests to avoid a real network call.
+     * @return array{code: int, body: string|false}
+     */
+    protected function sendTokenCheckRequest(array $payload): array
+    {
+        $url = $this->key_api_server . "/token/check";
+
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => [
+                "Authorization: Bearer " . config("metager.metager.keymanager.access_token"),
+                "Content-Type: application/json"
+            ],
+            CURLOPT_TIMEOUT => 5,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => json_encode($payload),
+            CURLOPT_USERAGENT => "MetaGer"
+        ]);
+
+        $body = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        return ["code" => $code, "body" => $body];
     }
 
     public function makePayment(float $cost)

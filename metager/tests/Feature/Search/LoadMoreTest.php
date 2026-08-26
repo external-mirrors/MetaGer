@@ -183,6 +183,36 @@ class LoadMoreTest extends TestCase
     }
 
     /**
+     * The image fokus has no quicktips (MetaGer::createQuicktips returns null
+     * for "bilder"), and that null is cached wholesale in the "loader_<uid>"
+     * graph alongside Authorization/Searchengines/SearchSettings. search()
+     * guards every use of it with `if ($quicktips !== null)`, but
+     * loadMoreJS() calls `$quicktips->loadResults()` unconditionally — so
+     * every load-more request on an image search fatals with "Call to a
+     * member function loadResults() on null" (GlitchTip METAGER-F).
+     */
+    public function testLoadMoreOnAnImageSearchDoesNotFatal(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave_images" => $this->engineFixture("brave-images.json"),
+        ]);
+
+        $query = "eingabe=kaffee&focus=bilder";
+        $page = $this->get("/meta/meta.ger3?" . $query);
+        $page->assertOk();
+
+        $searchkey = $this->searchKeyOf($page->getContent(), "");
+
+        $response = $this->get("/meta/loadMore?" . $query . "&loadMore=loader_" . $searchkey . "&script=yes");
+
+        $response->assertOk();
+        // Not just "didn't 500": pin that the null-guard doesn't also skip
+        // rendering the image results it guards.
+        $this->assertTrue($response->json("imagesearch"));
+    }
+
+    /**
      * The load-more response is per-user and must not be stored by a shared
      * cache, for the same reason the result page must not be.
      */

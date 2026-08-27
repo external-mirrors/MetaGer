@@ -180,6 +180,7 @@ class KeyUser implements Authenticatable
         $key_response = Http::withHeaders([
             "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
             "Content-Type" => "application/json",
+            "X-Forwarded-For" => Request::ip(),
         ])->post($this->keyserver . "/key/" . urlencode($this->key) . "/discharge", [
                     "amount" => $token_cost,
                 ]);
@@ -235,7 +236,8 @@ class KeyUser implements Authenticatable
         if (!$key_response = Cache::get("keyserver:key:" . $this->key)) {
             // Fetch key data from the keyserver
             $key_response = Http::withHeaders([
-                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")
+                "Authorization" => "Bearer " . config("metager.metager.keymanager.access_token"),
+                "X-Forwarded-For" => Request::ip(),
             ])->get($this->keyserver . "/key/" . urlencode($this->key));
 
             if ($key_response->successful()) {

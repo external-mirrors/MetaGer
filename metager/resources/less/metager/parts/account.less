@@ -270,9 +270,19 @@
   padding: 6px 10px;
   border: 1px solid transparent;
   border-radius: 4px;
+  font-family: inherit;
   font-size: 0.8rem;
   text-align: center;
   text-decoration: none;
+  cursor: pointer;
+
+  // One of these is a <button> — the one only the webextension can make work,
+  // which the site renders hidden. Said here rather than relied upon from the
+  // UA stylesheet, because anything that gives .account-btn a `display` would
+  // silently show it to every visitor who does not have the extension.
+  &[hidden] {
+    display: none;
+  }
 
   &.account-btn--primary {
     background-color: @metager-orange;

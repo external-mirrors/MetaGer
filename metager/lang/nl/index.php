@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Advertentievrij. Anoniem.',
         'hook' => 'De zoekmachine die je niet volgt.',
-        'message' => 'In plaats van een account met jouw gegevens volstaat een anonieme sleutel met tegoed.',
-        'start' => 'Meer weten',
-        'or' => 'of',
-        'have_key' => 'Heb je al een sleutel?',
+        'message' => 'Je sleutel is je toegang – geen account, geen e-mailadres. Je saldo en instellingen hangen eraan.',
+        'first_time' => 'Voor het eerst hier?',
+        'start' => 'Een sleutel instellen',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Welkom terug.',
+        'welcome_back_message' => 'Je was op dit apparaat al eens aangemeld. Meld je aan met dezelfde sleutel – je saldo staat er nog.',
+        'welcome_back_button' => 'Opnieuw aanmelden',
+        'have_key' => 'Aanmelden met mijn sleutel',
         'login' => 'Inloggen',
         'key_error' => "De ingevoerde sleutel is ongeldig. Controleer de invoer.",
         'login_code_error' => "De ingevoerde inlogcode was niet geldig. Tip: Inlogcodes zijn alleen geldig als ze zichtbaar zijn op een ander apparaat!",

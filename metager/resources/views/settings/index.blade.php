@@ -33,49 +33,6 @@
             </div>
         </section>
 
-        {{-- ============ Account / MetaGer key ============ --}}
-        <section>
-            <h2 class="section-label">@lang('settings.section.account')</h2>
-            <div class="rows" id="metager-key">
-                <div class="row row-stacked">
-                    <div class="row-text">
-                        <h3 class="block-title">@lang('settings.metager-key.header')</h3>
-                        @if (!empty($authorization->key))
-                            <p class="credit">@lang('settings.metager-key.charge', ['token' => max($authorization->availableTokens, 0)])</p>
-                        @else
-                            <p class="help">@lang('settings.metager-key.no-key')</p>
-                        @endif
-                    </div>
-                </div>
-
-                @if (!empty($authorization->key))
-                    <div class="row row-stacked">
-                        <div class="row-text">
-                            <label class="field-label" for="key">@lang('settings.key')</label>
-                            <div class="copyLink">
-                                <input type="text" name="key" id="key" readonly value="{{ $authorization->key }}" size="30">
-                                <button class="btn btn-sm">@lang('settings.copy')</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row row-stacked">
-                        <div class="actions-inline">
-                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter') }}" class="btn btn-sm">@lang('settings.metager-key.manage')</a>
-                            <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/remove?url=' . urlencode(App\Localization::currentFullUrl())) }}" class="btn btn-sm" id="remove-key">@lang('settings.metager-key.logout')</a>
-                        </div>
-                    </div>
-                @else
-                    <div class="row row-stacked">
-                        <div class="actions-inline">
-                            <a class="btn btn-sm" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys') }}">@lang('settings.metager-key.actions.info')</a>
-                            <a class="btn btn-sm" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter') }}">@lang('settings.metager-key.actions.login')</a>
-                            <a class="btn btn-sm" href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/create') }}">@lang('settings.metager-key.actions.create')</a>
-                        </div>
-                    </div>
-                @endif
-            </div>
-        </section>
-
         {{-- ============ Preferences (suggestions + more settings) ============ --}}
         <section>
             <h2 class="section-label">@lang('settings.section.preferences')</h2>

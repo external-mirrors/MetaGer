@@ -33,4 +33,6 @@ return [
     'nav17' => 'Osto affiliate-kaupoista',
     'close' => 'Siirry navigointipalkin vaihtopainike',
     'toggle' => 'avaa/sulje navigointipalkki',
+    'opener' => 'Avaa navigointipalkki',
+    'opener_close' => 'Sulje navigointipalkki',
 ];

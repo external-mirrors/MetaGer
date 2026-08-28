@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Senza pubblicità. Anonimo.',
         'hook' => 'Il motore di ricerca che non vi traccia.',
-        'message' => 'Invece di un account con i vostri dati, basta una chiave anonima con credito.',
-        'start' => 'Scopri di più',
-        'or' => 'oppure',
-        'have_key' => 'Avete già una chiave?',
+        'message' => 'La tua chiave è il tuo accesso – nessun account, nessun indirizzo e-mail. Il credito e le impostazioni dipendono da essa.',
+        'first_time' => 'Prima volta qui?',
+        'start' => 'Configura una chiave',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Bentornato.',
+        'welcome_back_message' => "Su questo dispositivo hai già effettuato l'accesso. Accedi con la stessa chiave: il tuo credito è ancora lì.",
+        'welcome_back_button' => 'Accedi di nuovo',
+        'have_key' => 'Accedi con la mia chiave',
         'login' => 'Accedi',
         'key_error' => "La chiave inserita non è valida. Controllare l'immissione.",
         'login_code_error' => "Il codice di accesso inserito non è valido. Suggerimento: i codici di accesso sono validi solo quando sono visibili su un altro dispositivo!",

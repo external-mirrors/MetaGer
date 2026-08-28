@@ -34,6 +34,9 @@ return [
         'create' => 'Configura',
         'logged_out' => 'No heu iniciat la sessió. Amb una clau cerqueu sense publicitat i de manera anònima.',
         'anonymous_hint' => "Sense publicitat · gestionat per l'extensió web",
+        // The webextension holds the key, so the account lives in its popup.
+        // The button this labels is hidden until the extension reveals it.
+        'extension_settings' => "Gestiona a l'extensió",
     ],
     'empty' => [
         'message' => 'Heu exhaurit les fitxes.',

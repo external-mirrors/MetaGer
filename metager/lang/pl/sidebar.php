@@ -33,4 +33,6 @@ return [
     'nav3' => 'Prywatność',
     'close' => 'Przycisk przełączania do paska nawigacji',
     'toggle' => 'Otwórz/zamknij pasek nawigacji',
+    'opener' => 'Otwórz pasek nawigacji',
+    'opener_close' => 'Zamknij pasek nawigacji',
 ];

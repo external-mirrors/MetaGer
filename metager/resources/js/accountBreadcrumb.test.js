@@ -114,14 +114,30 @@ describe("enhanceLoggedOutStartpage", () => {
 });
 
 describe("bindLogoutClears", () => {
-    it("forgets the breadcrumb when a logout link is clicked", () => {
+    it("forgets the breadcrumb when the logout link is clicked", () => {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ seen: true, ts: 1 }));
+        document.body.innerHTML = `<a id="sidebar-key-remove" href="#">log out</a>`;
+
+        bindLogoutClears(document);
+        document.querySelector("#sidebar-key-remove").dispatchEvent(new Event("click"));
+
+        expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
+    });
+
+    /**
+     * The settings page used to carry its own logout button, `#remove-key`, and
+     * this module bound that too. The page no longer has an account block at
+     * all — the sidebar's is on it like on every other page — so a second
+     * selector here would only describe markup that does not exist.
+     */
+    it("does not go looking for the settings page's old logout button", () => {
         window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ seen: true, ts: 1 }));
         document.body.innerHTML = `<a id="remove-key" href="#">log out</a>`;
 
         bindLogoutClears(document);
         document.querySelector("#remove-key").dispatchEvent(new Event("click"));
 
-        expect(window.localStorage.getItem(STORAGE_KEY)).toBeNull();
+        expect(window.localStorage.getItem(STORAGE_KEY)).not.toBeNull();
     });
 });
 

@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Avoin lähdekoodi. Mainokseton. Anonyymi.',
         'hook' => 'Hakukone, joka ei seuraa sinua.',
-        'message' => 'Tilin ja siihen liittyvien tietojesi sijaan riittää anonyymi avain, jolla on saldoa.',
-        'start' => 'Lue lisää',
-        'or' => 'tai',
-        'have_key' => 'Onko sinulla jo avain?',
+        'message' => 'Avaimesi on pääsysi – ei tiliä, ei sähköpostiosoitetta. Saldo ja asetukset ovat siinä kiinni.',
+        'first_time' => 'Ensimmäistä kertaa täällä?',
+        'start' => 'Ota avain käyttöön',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Tervetuloa takaisin.',
+        'welcome_back_message' => 'Olet ollut kirjautuneena tällä laitteella aiemmin. Kirjaudu sisään samalla avaimella – saldosi on yhä tallessa.',
+        'welcome_back_button' => 'Kirjaudu uudelleen',
+        'have_key' => 'Kirjaudu sisään avaimellani',
         'login' => 'Kirjaudu sisään',
         'key_error' => "Syötetty avain ei ollut kelvollinen. Tarkista syöttö.",
         'login_code_error' => "Syötetty kirjautumiskoodi ei ollut voimassa. Vihje: Kirjautumiskoodit ovat voimassa vain silloin, kun ne näkyvät toisessa laitteessa!",

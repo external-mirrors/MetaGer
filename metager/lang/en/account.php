@@ -34,6 +34,9 @@ return [
         'create' => 'Set up',
         'logged_out' => 'Not logged in. With a key you search ad-free and anonymously.',
         'anonymous_hint' => 'Ad-free · managed by the web extension',
+        // The webextension holds the key, so the account lives in its popup.
+        // The button this labels is hidden until the extension reveals it.
+        'extension_settings' => 'Manage in the extension',
     ],
     'empty' => [
         'message' => 'Your tokens are used up.',

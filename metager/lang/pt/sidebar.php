@@ -15,6 +15,8 @@ return [
     'nav15' => 'Ferramentas',
     'navigationToggle' => 'mostrar a navegação',
     'toggle' => 'abrir/fechar a barra de navegação',
+    'opener' => 'Abrir a barra de navegação',
+    'opener_close' => 'Fechar a barra de navegação',
     'plugin' => 'Plugin MetaGer',
     'navFactcheck' => 'verificação dos factos',
     'nav14' => 'TOR-Hidden-Service',

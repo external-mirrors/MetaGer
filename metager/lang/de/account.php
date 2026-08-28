@@ -34,6 +34,9 @@ return [
         'create' => 'Einrichten',
         'logged_out' => 'Nicht angemeldet. Mit einem Schlüssel suchen Sie werbefrei und anonym.',
         'anonymous_hint' => 'Werbefrei · verwaltet von der Web-Erweiterung',
+        // The webextension holds the key, so the account lives in its popup.
+        // The button this labels is hidden until the extension reveals it.
+        'extension_settings' => 'In der Erweiterung verwalten',
     ],
     'empty' => [
         'message' => 'Ihre Token sind aufgebraucht.',

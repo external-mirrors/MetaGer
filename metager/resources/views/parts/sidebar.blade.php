@@ -47,6 +47,18 @@
             <span class="sidebar-account__balance">@lang('account.sidebar.anonymous_hint')</span>
           </div>
         </div>
+        {{-- Hidden until the extension reveals it, because only the extension can
+             make it do anything: its content script (contentScripts/metagerPage.js)
+             unhides this and opens its own settings from the click. Rendered on
+             the server rather than by our own JS so that it is one element with
+             one owner — the same arrangement as #plugin-btn, which the extension
+             removes, and which is how our scripts detect it at all.
+
+             A link would need a URL, and there is no URL for "the extension's
+             settings" that a page is allowed to navigate to. --}}
+        <div class="sidebar-account__actions">
+          <button type="button" class="btn account-btn account-btn--primary" id="account-extension-settings" hidden>@lang('account.sidebar.extension_settings')</button>
+        </div>
       @else
         <div class="sidebar-account__identity">
           {!! \App\Authentication\KeyIdenticon::render($sidebarFingerprint) !!}

@@ -1,7 +1,9 @@
-import { removeSetting } from "./messaging";
 import { bindLogoutClears } from "./accountBreadcrumb";
 
-// Forget the returning-user breadcrumb when the key is removed from here.
+// The settings page has no account block of its own any more — the pill and the
+// site menu carry it on every page, including this one. What is left here is the
+// sidebar's logout link, which still has to forget the returning-user
+// breadcrumb.
 bindLogoutClears();
 
 document
@@ -11,17 +13,3 @@ document
       e.target.form.submit();
     });
   });
-
-(() => {
-  let removeKeyBtn = document.getElementById("remove-key");
-  if (removeKeyBtn == null) return;
-  removeKeyBtn.addEventListener("click", e => {
-    if (document.getElementById("plugin-btn") != null) return;
-    let url = new URL(e.target.href);
-    e.preventDefault();
-    removeSetting("key").then((answer) => {
-      document.location.href = url;
-    });
-    return false;
-  })
-})();

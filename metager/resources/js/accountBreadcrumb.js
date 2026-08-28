@@ -100,12 +100,16 @@ export function enhanceLoggedOutStartpage(doc = document) {
     return true;
 }
 
-/** Deliberate logout must forget the breadcrumb. */
+/**
+ * Deliberate logout must forget the breadcrumb.
+ *
+ * One selector, not two: `#remove-key` was the settings page's own logout
+ * button, and the settings page no longer has an account block — the sidebar's
+ * is on that page like every other.
+ */
 export function bindLogoutClears(doc = document) {
-    ["#sidebar-key-remove", "#remove-key"].forEach((selector) => {
-        const el = doc.querySelector(selector);
-        if (el) el.addEventListener("click", forgetAccount);
-    });
+    const el = doc.querySelector("#sidebar-key-remove");
+    if (el) el.addEventListener("click", forgetAccount);
 }
 
 export function initAccountBreadcrumb(doc = document) {

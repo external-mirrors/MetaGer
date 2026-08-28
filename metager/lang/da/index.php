@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Reklamefri. Anonym.',
         'hook' => 'Søgemaskinen, der ikke sporer dig.',
-        'message' => 'I stedet for en konto med dine data er en anonym nøgle med saldo nok.',
-        'start' => 'Læs mere',
-        'or' => 'eller',
-        'have_key' => 'Har du allerede en nøgle?',
+        'message' => 'Din nøgle er din adgang – ingen konto, ingen e-mailadresse. Saldo og indstillinger hænger på den.',
+        'first_time' => 'Første gang her?',
+        'start' => 'Opret en nøgle',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Velkommen tilbage.',
+        'welcome_back_message' => 'Du har været logget ind på denne enhed før. Log ind med den samme nøgle – din saldo er der stadig.',
+        'welcome_back_button' => 'Log ind igen',
+        'have_key' => 'Log ind med min nøgle',
         'login' => 'Log ind',
         'key_error' => "Den indtastede nøgle var ikke gyldig. Kontroller venligst indtastningen.",
         'login_code_error' => "Den indtastede login-kode var ikke gyldig. Tip: Login-koder er kun gyldige, når de er synlige på en anden enhed!",

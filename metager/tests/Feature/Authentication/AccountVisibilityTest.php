@@ -121,6 +121,35 @@ class AccountVisibilityTest extends TestCase
         $response->assertSeeText(__("account.sidebar.anonymous_hint"));
         // Nothing to log out of: we never held the key.
         $response->assertDontSee('id="sidebar-key-remove"', false);
+
+        // The one thing this visitor *can* be offered: the extension's own
+        // settings, where the account it is holding for them actually is.
+        // Rendered hidden, because without the extension nothing would happen —
+        // its content script is what reveals it and answers the click.
+        $response->assertSee('id="account-extension-settings" hidden>', false);
+    }
+
+    /**
+     * The settings page used to carry the account itself: the full key in a
+     * copy field, the balance, and its own logout button. All three now live in
+     * the menu, which that page has like every other — and one logout link is
+     * worth more than three, because each one needs the webextension to
+     * intercept it (contentScripts/metagerPage.js) or it clears a cookie the
+     * extension is not using and leaves the user signed in.
+     */
+    public function testTheSettingsPageDefersToTheMenuForTheAccount(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/meta/settings?focus=web")->assertOk();
+
+        $response->assertDontSee('id="remove-key"', false);
+        $response->assertDontSee('id="metager-key"', false);
+        $response->assertDontSee(self::KEY, false);
+
+        // What replaces it, on the same page.
+        $response->assertSee('id="account-pill"', false);
+        $response->assertSee('id="sidebar-key-remove"', false);
     }
 
     public function testANonUuidKeyIsShownWithoutAnUnstableFingerprint(): void

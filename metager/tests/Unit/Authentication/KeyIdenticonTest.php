@@ -96,15 +96,21 @@ class KeyIdenticonTest extends TestCase
     }
 
     /**
-     * The hue is the only thing that crosses into the markup; saturation,
-     * lightness and both theme palettes live in variables.less. If this starts
-     * emitting a colour, the dark theme has silently stopped working.
+     * The hue is the only thing that crosses into the markup, and it arrives as
+     * a class rather than an inline `style`: metager.de's CSP is
+     * `style-src-attr 'self'` (build/nginx/configuration/nginx.conf), which has
+     * no `'unsafe-inline'` for style attributes and drops one silently — an
+     * inline `--account-mark-hue` here would render every mark on the fallback
+     * hue, one colour regardless of key. Saturation, lightness and both theme
+     * palettes live in variables.less. If this starts emitting a colour or an
+     * inline style, the dark theme (or the CSP) has silently stopped working.
      */
-    public function testOnlyTheHueReachesTheMarkup(): void
+    public function testOnlyTheHueReachesTheMarkupAndAsAClassNotAnInlineStyle(): void
     {
         $html = KeyIdenticon::render("a1b2c3")->toHtml();
 
-        $this->assertStringContainsString("--account-mark-hue:90", $html);
+        $this->assertStringContainsString("account-mark--hue-90", $html);
+        $this->assertStringNotContainsString("style=", $html);
         $this->assertStringNotContainsString("hsl(", $html);
         $this->assertStringNotContainsString("fill=", $html);
         $this->assertStringContainsString('aria-hidden="true"', $html, "The mark is decorative; the label lives on the pill.");
@@ -113,7 +119,7 @@ class KeyIdenticonTest extends TestCase
     public function testAnExtraClassIsCarriedOntoTheElement(): void
     {
         $this->assertStringContainsString(
-            'class="account-mark sidebar-mark"',
+            'class="account-mark sidebar-mark account-mark--hue-90"',
             KeyIdenticon::render("a1b2c3", "sidebar-mark")->toHtml()
         );
     }

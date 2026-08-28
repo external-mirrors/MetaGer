@@ -90,8 +90,14 @@ class KeyIdenticon
      * slot: with no fingerprint it is the hatched "identity is not ours to
      * know" placeholder, which is a statement rather than a missing asset.
      *
-     * The hue rides in as a custom property so the stylesheet owns every colour
-     * decision and the same markup serves both themes.
+     * The hue rides in as a class, not an inline `style`. It is one of twelve
+     * fixed values ((n % 12) * 30), so a bounded set of `account-mark--hue-*`
+     * rules in the stylesheet can carry it while the stylesheet still owns every
+     * colour decision and the same markup serves both themes. An inline
+     * `style="--account-mark-hue:…"` is what this used to emit, and metager.de's
+     * CSP (`style-src-attr 'self'`, set in build/nginx/configuration/nginx.conf)
+     * silently drops it — so every mark on the site rendered with the fallback
+     * hue and one sandy colour regardless of the key.
      */
     public static function render(?string $fingerprint, string $class = ''): HtmlString
     {
@@ -110,7 +116,7 @@ class KeyIdenticon
         }
 
         return new HtmlString(
-            '<span class="' . e($classes) . '" style="--account-mark-hue:' . $hue . '" aria-hidden="true">'
+            '<span class="' . e($classes) . ' account-mark--hue-' . $hue . '" aria-hidden="true">'
             . '<svg viewBox="0 0 ' . self::GRID . ' ' . self::GRID . '" xmlns="http://www.w3.org/2000/svg" focusable="false">'
             . '<rect class="account-mark__ground" width="' . self::GRID . '" height="' . self::GRID . '"/>'
             . '<g class="account-mark__cells">' . $rects . '</g>'

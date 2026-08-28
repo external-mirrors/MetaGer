@@ -127,6 +127,30 @@ class AccountVisibilityTest extends TestCase
         // Rendered hidden, because without the extension nothing would happen —
         // its content script is what reveals it and answers the click.
         $response->assertSee('id="account-extension-settings" hidden>', false);
+
+        // And the pill goes to the same place. It leads to /keys/key/enter in
+        // every other state, which is exactly the page this visitor must not be
+        // sent to: they have no key to enter, and entering one here would hand
+        // us the identity the anonymous token exists to keep from us.
+        $response->assertSee('data-extension-settings', false);
+        $response->assertSee('/keys/help/anonymous-token', false);
+        $response->assertDontSee('/keys/key/enter', false);
+    }
+
+    /**
+     * The other side of the pill's destination: a visitor whose key we do hold
+     * is managed on the website, and there is nothing about their pill for the
+     * extension to take over.
+     */
+    public function testTheAccountPillLeadsToKeyManagementForAnOrdinaryVisitor(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/")->assertOk();
+
+        $response->assertSee('id="account-pill"', false);
+        $response->assertSee('/keys/key/enter', false);
+        $response->assertDontSee('data-extension-settings', false);
     }
 
     /**
@@ -150,6 +174,41 @@ class AccountVisibilityTest extends TestCase
         // What replaces it, on the same page.
         $response->assertSee('id="account-pill"', false);
         $response->assertSee('id="sidebar-key-remove"', false);
+    }
+
+    /**
+     * And so the settings page has no use for the master key at all.
+     *
+     * That matters on the other side of the wire: the webextension used to put
+     * the real key on every `/meta/settings` request and strip the anonymous
+     * token from it, because the account section could not be drawn without it
+     * (MASTER_KEY_ROUTES, build/js/RequestTargets.js). It no longer does, so
+     * this page is now reached with a temporary key like any other page — and
+     * everything on it still has to work.
+     *
+     * The failure this guards against is quiet in both repositories. Adding
+     * anything here that reads `Auth::guard("key")` for an identity, or
+     * $authorization->key, renders blank or wrong for every extension user, and
+     * looks perfectly fine in a browser that keeps its key in a cookie.
+     */
+    public function testTheSettingsPageWorksWithoutTheMasterKey(): void
+    {
+        $this->signInAs("aaaaaaaa-bbbb-cccc-dddd-eeeeee999999", 142.0, temporary: true);
+
+        $response = $this->get("/meta/settings?focus=web")->assertOk();
+
+        // The page itself: the engine pills and the blacklist are what people
+        // come here for, and neither depends on who is asking.
+        $response->assertSee(__("settings.header.2"), false);
+        $response->assertSee(__("settings.header.4"), false);
+
+        // The account, in the state the extension puts it in: no identity, no
+        // balance, and the menu offering the extension's own popup instead of
+        // a logout that would clear a cookie the extension is not using.
+        $response->assertSee("account-pill--anonymous", false);
+        $response->assertSeeText(__("account.pill.anonymous"));
+        $response->assertSee('id="account-extension-settings" hidden>', false);
+        $response->assertDontSee('id="sidebar-key-remove"', false);
     }
 
     public function testANonUuidKeyIsShownWithoutAnUnstableFingerprint(): void

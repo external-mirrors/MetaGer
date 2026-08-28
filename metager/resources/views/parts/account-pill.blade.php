@@ -32,9 +32,28 @@
     never reached us, so there is no balance and nothing to draw. Saying
     "anonym angemeldet" is the honest answer, and the extension shows the real
     account in its own popup.
+
+    Which is also where the pill goes in that state. Everywhere else it leads to
+    /keys/key/enter, because that is where the account is managed — but a user
+    who is signed in anonymously has no key to enter and would not want to enter
+    it here if they had: handing it to us is the one thing the arrangement exists
+    to avoid. The extension is the only party that can show that account, so the
+    pill opens the extension's popup, the same way the "manage in the extension"
+    button in the site menu does.
+
+    `data-extension-settings` is the hook it does that through
+    (contentScripts/metagerPage.js in the webextension repo). An attribute rather
+    than an id: the result page renders two pills — one in the research bar, one
+    in the navigation cluster — and shows whichever the viewport calls for.
+
+    The href is a fallback and has to stand on its own, because a content script
+    is not guaranteed to run. It points at the page explaining what an anonymous
+    token is, which is the best answer this site can give without the extension.
   --}}
-  <a href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}"
+  @php($accountHref = $accountAnonymous ? "/keys/help/anonymous-token" : "/keys/key/enter")
+  <a href="{{ LaravelLocalization::getLocalizedURL(null, $accountHref) }}"
     id="account-pill"
+    @if($accountAnonymous) data-extension-settings @endif
     class="account-pill account-pill--{{ $accountDensity }} @if($accountAnonymous) account-pill--anonymous @else account-pill--{{ strtolower($accountState->name) }} @endif {{ $class ?? '' }}"
     @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top" @endif
     aria-label="{{ $accountAnonymous

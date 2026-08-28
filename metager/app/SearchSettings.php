@@ -388,6 +388,37 @@ class SearchSettings
     }
 
     /**
+     * The blacklist a fokus is configured with, wherever it was configured.
+     *
+     * The settings page renders every fokus at once, not just the one being
+     * searched, so it cannot use `$this->blacklist` — that is boot()'s answer
+     * for the current fokus alone. It read the cookie directly instead, and a
+     * cookie is only one of the three places a setting can come from.
+     *
+     * The webextension sends them as request headers: it keeps the settings in
+     * its own storage so the browser is not carrying them, and attaches them
+     * per request. `Cookie::get("web_blpage")` is therefore empty for every
+     * extension user by design, and the blacklist they had just saved came back
+     * as an empty box — while still being stored, and still being applied to
+     * their searches. Nothing about that looks like a display bug from the
+     * outside; it looks like Save not working.
+     *
+     * @return array{0: string[], 1: string[]} [blacklist, blacklist_tld]
+     */
+    public function blacklistFor(string $fokus): array
+    {
+        // getSettingValue answers for whichever fokus is current, and the
+        // caller is walking all of them.
+        $previous_fokus = $this->fokus;
+        $this->fokus = $fokus;
+        try {
+            return self::parseBlacklistCookie($this->getSettingValue($fokus . "_blpage"));
+        } finally {
+            $this->fokus = $previous_fokus;
+        }
+    }
+
+    /**
      * Parses a raw {fokus}_blpage cookie/setting value into hostname and
      * wildcard-TLD blacklist entries. Used for the current fokus in boot(),
      * and reused by the settings page to render every fokus' blacklist.

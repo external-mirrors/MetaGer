@@ -51,7 +51,7 @@ class AccountVisibilityTest extends TestCase
         // The pill: mark, key code, balance. 0x123456 = 1193046; % 12 = 6; * 30 = 180.
         $response->assertSee('id="account-pill"', false);
         $response->assertSee("account-pill--full", false);
-        $response->assertSee("--account-mark-hue:180", false);
+        $response->assertSee("account-mark--hue-180", false);
         $response->assertSee("123456", false);
         $response->assertSee("142", false);
 
@@ -116,7 +116,7 @@ class AccountVisibilityTest extends TestCase
         $response->assertSee("account-pill--anonymous", false);
         $response->assertSee("account-mark--anonymous", false);
         $response->assertSeeText(__("account.pill.anonymous"));
-        $response->assertDontSee("--account-mark-hue", false);
+        $response->assertDontSee("account-mark--hue-", false);
         $response->assertDontSee("999999", false);
         $response->assertSeeText(__("account.sidebar.anonymous_hint"));
         // Nothing to log out of: we never held the key.
@@ -225,7 +225,7 @@ class AccountVisibilityTest extends TestCase
         $response->assertSee("account-mark--anonymous", false);
         $response->assertSeeText(__("account.pill.signed_in"));
         $response->assertSee("999", false);
-        $response->assertDontSee("--account-mark-hue", false);
+        $response->assertDontSee("account-mark--hue-", false);
     }
 
     public function testSignedOutStartpageLeadsWithLogIn(): void

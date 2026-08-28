@@ -33,4 +33,6 @@ return [
     'plugin' => 'MetaGer Plugin',
     'close' => 'Zur Navigationsleiste springen Umschalttaste',
     'toggle' => 'Navigationsleiste öffnen/schließen',
+    'opener' => 'Navigationsleiste öffnen',
+    'opener_close' => 'Navigationsleiste schließen',
 ];

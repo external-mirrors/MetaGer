@@ -24,6 +24,20 @@
         </include>
     </source>
     <php>
+        <!--
+            The whole suite runs in one PHP process, and the fpm image ships the
+            default memory_limit of 128M. That was never a deliberate budget for
+            it, and the suite had quietly grown to within a few page renders of
+            the ceiling: adding tests would fail with "Allowed memory size
+            exhausted" somewhere unrelated to the test that tipped it over —
+            usually inside endroid/qr-code rendering /spende, or inside PHPUnit's
+            own metadata parser, neither of which is the culprit.
+
+            Diagnosing that costs an hour every time, and the answer is always
+            "raise the limit", so it is raised here once. Note this is a ceiling,
+            not an allocation: a run that needs 200M still only uses 200M.
+        -->
+        <ini name="memory_limit" value="512M"/>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_STORE" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>

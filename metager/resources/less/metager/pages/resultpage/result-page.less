@@ -17,6 +17,11 @@
 @logo-size-breakpoint: (@results-width-min + @padding-small-default * 2);
 // The point upon which the sidebar opener switches place
 @sidebar-opener-breakpoint: 920px;
+// Phones, portrait — 430px is the widest of them (iPhone Pro Max), and 480px
+// clears that with room to spare while leaving every tablet and the narrow
+// desktop window alone. This is where the research bar stops trying to carry
+// six things and gives the width to the query.
+@research-bar-phone-breakpoint: 480px;
 // Quicktip background color
 @quicktip-background-color: @resultpage-background-color;
 // Color of the Spruch author
@@ -847,6 +852,20 @@ a {
   }
 }
 
+// The research bar with nothing in it but the query: everything else steps out
+// of the row and the search field takes the whole width. Two states ask for
+// this — suggestions are open, or the field simply has the caret on a phone —
+// and they are two rules with two different conditions, so the declarations
+// live here rather than being written twice.
+.research-bar-query-only() {
+  grid-template-columns: 1fr;
+  grid-template-areas: "research-searchbar";
+
+  >:not(#header-searchbar) {
+    display: none;
+  }
+}
+
 #research-bar-container {
   position: sticky;
   z-index: 5;
@@ -903,35 +922,71 @@ a {
       }
     }
 
+    // Only the ≡ is in the bar. The ✕ that closes the sidebar again is rendered
+    // beside the checkbox in parts/sidebar.blade.php and floats over the open
+    // panel from there, so the `:not(.close)` these rules used to carry no
+    // longer distinguishes anything.
     >label.sidebar-opener {
       display: none;
+      position: initial;
+      height: 100%;
+      padding-inline: 0.5rem;
+      place-content: center;
+    }
 
-      &:not(.close) {
-        position: initial;
-        height: 100%;
-        padding-inline: 0.5rem;
-        place-content: center;
+    @media(max-width: @navigation-cluster-breakpoint) {
+      // Below the breakpoint the menu button moves into the bar, and the account
+      // pill comes with it — above it, both float top right instead. Exactly one
+      // copy of each is ever visible; see parts/account.less.
+      grid-template-columns: max-content 1fr max-content max-content;
+      grid-template-areas: "research-logo research-searchbar account sidebar-opener";
+
+      >label.sidebar-opener {
+        display: grid;
       }
     }
 
-    @media(max-width: 920px) {
-      grid-template-columns: max-content 1fr max-content;
-      grid-template-areas: "research-logo research-searchbar sidebar-opener";
+    // ── Phones ─────────────────────────────────────────────────────────────
+    // Six things share this row — the logo, the language badge, the query, the
+    // submit button, the account pill and the menu — and on a 390px phone the
+    // five that are not the query take about 160px of it. The query, which is
+    // the thing the page is about and the thing people came here to read and
+    // edit, gets what is left: 196px, in which "bundesgartenschau termine 2026"
+    // is already clipped on arrival.
+    //
+    // Two of them have a full-size twin one tap away in the menu and neither is
+    // something anyone reaches for while reading results: the language badge is
+    // the sidebar's last entry, and the pill's mark is the sidebar's account
+    // block, which says the key code and the balance rather than just a colour.
+    // They stand down here and the query takes their width. What is left is the
+    // logo, the query, submit and the menu.
+    @media (max-width: @research-bar-phone-breakpoint) {
+      >#header-logo a.lang {
+        display: none;
+      }
 
-      >label.sidebar-opener {
-        &:not(.close) {
-          display: grid;
-        }
+      >.account-pill--in-bar {
+        display: none;
       }
     }
 
     /* Create enough space for the search input on small screens */
     &:has(#header-searchbar .searchbar[data-suggest="active"] .search-input:focus-within) {
-      grid-template-columns: 1fr;
-      grid-template-areas: "research-searchbar";
+      .research-bar-query-only();
+    }
 
-      >:not(#header-searchbar) {
-        display: none;
+    // The same collapse, but the moment the caret lands in the field rather than
+    // when the first suggestion comes back.
+    //
+    // The rule above waits for `data-suggest="active"`, which suggest.js sets
+    // only once a suggestion request has returned — so the row stayed crowded
+    // for a network round trip, and stayed crowded for good with suggestions
+    // switched off or scripting disabled. On a phone that is the difference
+    // between editing a query in 230px and editing it in the whole bar, so
+    // there it cannot be conditional on anything.
+    @media (max-width: @research-bar-phone-breakpoint) {
+      &:has(#header-searchbar .search-input:focus-within) {
+        .research-bar-query-only();
       }
     }
   }
@@ -1165,11 +1220,11 @@ a {
   }
 }
 
-@media(max-width: @sidebar-opener-breakpoint) {
-  body#resultpage-body>.sidebar-opener:not(.close) {
-    display: none;
-  }
-}
+// The floating ≡ used to be a direct child of body here and had to be hidden
+// below the breakpoint, where the bar renders its own copy. It is now inside
+// .navigation-cluster--wide-only, which hides both it and the pill together —
+// see parts/account.less. The only body-level .sidebar-opener left is the ✕,
+// which must stay reachable at every width, so there is nothing to hide here.
 
 footer.resultPageFooter {
   max-width: @results-width-max;

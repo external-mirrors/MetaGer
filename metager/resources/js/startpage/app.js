@@ -1,5 +1,8 @@
 import "./tiles";
 import { initializeSuggestions } from "../suggest";
+import { initAccountBreadcrumb } from "../accountBreadcrumb";
+
+initAccountBreadcrumb();
 
 // Register Keyboard listener for quicklinks on startpage
 (async () => {

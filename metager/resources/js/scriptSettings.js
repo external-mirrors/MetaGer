@@ -1,4 +1,8 @@
 import { removeSetting } from "./messaging";
+import { bindLogoutClears } from "./accountBreadcrumb";
+
+// Forget the returning-user breadcrumb when the key is removed from here.
+bindLogoutClears();
 
 document
   .querySelectorAll(".setting-form select, .filter-form select")

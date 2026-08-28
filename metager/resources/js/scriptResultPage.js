@@ -1,6 +1,7 @@
 import { initializeSuggestions } from "./suggest";
 import updateProxyLinks from "./resultpage/proxy";
 import { renderRelativeDates } from "./relative-time";
+import { initAccountBreadcrumb } from "./accountBreadcrumb";
 
 let bootEvent = new Event("boot");
 let resultLoaderEvent = new Event("resultsChanged");
@@ -15,6 +16,10 @@ function initialize() {
 
   updateProxyLinks();
 }
+
+(() => {
+  document.addEventListener("boot", () => initAccountBreadcrumb());
+})();
 
 // Submit search form when filters change
 (() => {
@@ -191,94 +196,21 @@ function initialize() {
   }
 })();
 
-(() => {
-  document.addEventListener("boot", loadSelectTier);
-  document.addEventListener("resultsChanged", initSelectTier);
-  function loadSelectTier() {
-    // Don't try to load select Tier for authenticated searches
-    let key_element = document.querySelector("#key-link");
-    if (key_element && key_element.classList.contains("authorized")) return;
-
-    (function (w, d, t, x, m, l, p) {
-      w["XMLPlusSTObject"] = m;
-      w[m] =
-        w[m] ||
-        function () {
-          (w[m].q = w[m].q || []).push(arguments);
-        };
-      w[m].l = 1 * new Date();
-      l = d.createElement(t);
-      p = d.getElementsByTagName(t)[0];
-      l.type = "text/javascript";
-      l.async = 1;
-      l.defer = 1;
-      l.src = x;
-      p.parentNode.insertBefore(l, p);
-    })(
-      window,
-      document,
-      "script",
-      "https://s.yimg.com/ds/scripts/selectTier.js",
-      "selectTier"
-    );
-    initSelectTier();
-  }
-  function initSelectTier() {
-    let source_tag = document.querySelector("meta[name=source_tag]");
-    if (source_tag) {
-      source_tag = source_tag.content;
-    } else {
-      return;
-    }
-    let ysid = document.querySelector("meta[name=ysid]");
-    if (ysid) {
-      ysid = ysid.content;
-    } else {
-      return;
-    }
-    let cid = document.querySelector("meta[name=cid]");
-    if (cid) {
-      cid = cid.content;
-    } else {
-      return;
-    }
-    let ig = document.querySelector("meta[name=ig]");
-    if (ig) {
-      ig = ig.content;
-    } else {
-      return;
-    }
-    let clarityId = document.querySelector("meta[name=clarityId]");
-    if (clarityId) {
-      clarityId = clarityId.content;
-    } else {
-      return;
-    }
-    let rguid = document.querySelector("meta[name=rguid]");
-    if (rguid) {
-      rguid = rguid.content;
-    } else {
-      return;
-    }
-    let test_mode = document.querySelector("meta[name=test_mode]");
-    if (test_mode) {
-      test_mode = test_mode.content;
-    } else {
-      return;
-    }
-    selectTier("init", {
-      source_tag: source_tag,
-      ysid: ysid,
-      cid: cid,
-      ig: ig,
-      select_tier: {
-        clarityId: clarityId,
-        rguid: rguid,
-      },
-      test_mode: test_mode,
-    });
-  }
-})();
+/*
+ * The Yahoo `selectTier` advertising loader used to live here, guarded by
+ * "return if #key-link is authorized".
+ *
+ * It could not run. Every route to the result page carries
+ * App\Http\Middleware\AuthenticationValidation (routes/web.php), and every
+ * unauthorised branch of it — the key guard's and the legacy Authorization
+ * one's — returns redirect(route("startpage")). A result page is therefore only
+ * ever rendered for an authorised search, the guard was always true, and the
+ * loader below it was dead. It was also the only reader of #key-link, which is
+ * why the search bar's key markup counted as untouchable; both are gone now.
+ *
+ * Removed together with #search-key, its icon and its three LESS blocks.
+ * tests/Feature/Search/AdvertisingRemovedTest and the asset test keep it gone.
+ */
 
 (() => {
   document.addEventListener("boot", formatDates);

@@ -43,7 +43,7 @@
         background-color: @sidebar-list-hover-color;
       }
 
-      &>label,
+        &>label,
       &>a {
         padding: 10px 0px;
 
@@ -255,10 +255,8 @@
 }
 
 /* Sidebar opener */
-
-// Top right starting position of the sidebar icon
-@sidebar-opener-position-top: 21px;
-@sidebar-opener-position-right: 20px;
+// Its position and line height live in variables.less: parts/account.less pins
+// the account pill to this corner and centres on this line box.
 
 .sidebar-opener {
   position: fixed;
@@ -268,7 +266,7 @@
   margin: 0px;
   z-index: 20;
   font-size: 36px;
-  line-height: 23px;
+  line-height: @sidebar-opener-line-height;
   border-radius: 5px;
   color: grey;
   background-color: transparent;
@@ -310,6 +308,13 @@
     display: none;
   }
 
+  // The one control that has to be there while the sidebar is open, and the
+  // reason parts/sidebar.blade.php renders it rather than
+  // parts/sidebar-opener.blade.php: a sibling combinator only reaches siblings,
+  // and the ≡ now lives one level down inside .navigation-cluster. Rendered
+  // beside the checkbox, this keeps working on every page and at every width —
+  // the cluster is display:none both when the sidebar is open and, on the result
+  // page, below 920px.
   &~.sidebar-opener.close {
     display: initial;
   }

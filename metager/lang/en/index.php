@@ -32,11 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open Source. Ad-Free. Anonymous.',
         'hook' => "The search engine that doesn't track you.",
-        'message' => 'All you need is an anonymous key – no account, no email address, no personal data.',
-        'not_logged_in' => "You're not currently logged in.",
-        'start' => 'Learn more',
-        'or' => 'or',
-        'have_key' => 'I already have a key',
+        'message' => 'Your key is your access – no account, no email address. Your balance and settings hang off it.',
+        'have_key' => 'Log in with my key',
+        'first_time' => 'First time here?',
+        'start' => 'Set up a key',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Welcome back.',
+        'welcome_back_message' => 'You have been logged in on this device before. Log in with the same key – your balance is still there.',
+        'welcome_back_button' => 'Log in again',
         'new_key' => 'No key yet?',
         'extension' => 'Stay logged in and anonymous with our webextension',
         "key_error" => "The entered key was not valid. Please check the input.",

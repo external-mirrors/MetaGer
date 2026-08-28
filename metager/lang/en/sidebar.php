@@ -32,5 +32,7 @@ return [
     ],
     'plugin' => 'MetaGer Plugin',
     'close' => 'Jump to navigation bar toggle button',
-    'toggle' => 'open/close navigation bar'
+    'toggle' => 'open/close navigation bar',
+    'opener' => 'open navigation bar',
+    'opener_close' => 'close navigation bar',
 ];

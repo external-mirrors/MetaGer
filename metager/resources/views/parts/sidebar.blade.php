@@ -1,11 +1,95 @@
 <input id="sidebarToggle" type="checkbox" aria-labelledby="sidebarToggle-label">
 <div id="sidebarToggle-label">@lang('sidebar.toggle')</div>
+{{-- The ✕ belongs to the open sidebar, not to the menu button that opened it.
+
+     It used to ship inside parts/sidebar-opener.blade.php, next to the ≡, and
+     the swap between them was `#sidebarToggle:checked ~ .sidebar-opener` — which
+     worked only while both labels were siblings of the checkbox. Once the ≡
+     moved into .navigation-cluster the combinator stopped at the cluster, so the
+     ✕ was never revealed, and the cluster hides itself when the sidebar covers
+     that corner: an open menu with nothing in the page that could close it.
+
+     Here it is a sibling of the checkbox again, on every page that has a
+     sidebar, at every width — including below 920px, where the result page's
+     cluster is display:none and could not have carried it. --}}
+<label aria-label="@lang('sidebar.opener_close')" class="sidebar-opener close navigation-element" for="sidebarToggle">×</label>
 <div class="sidebar">
   <a class="sidebar-logo" href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
     <span>
       <img src="/img/metager.svg" alt="MetaGer">
     </span>
   </a>
+  {{-- The account is not a navigation entry.
+
+       It used to be one: an <li> styled exactly like "Suchen" and "Spenden",
+       with the balance and a bare "Abmelden" link hanging underneath it, aligned
+       to the panel edge rather than to the label they belonged to. Signed out it
+       carried the longest label in the menu — "Werbefreie Suche einrichten" — in
+       the row with the least room for it, and clipped.
+
+       So it is a block now, between the logo and the list, ruled off from both.
+       It is the same block on the startpage and the result page, because the
+       sidebar is shared, and the result page is where people actually spend
+       their time. --}}
+  @php($sidebarKeyUser = \Auth::guard("key")->user())
+  <div class="sidebar-account">
+    @if($sidebarKeyUser !== null)
+      @php($sidebarFingerprint = $sidebarKeyUser->getKeyFingerprint())
+      @php($sidebarCharge = $sidebarKeyUser->getCharge())
+      @php($sidebarState = $sidebarKeyUser->getKeyState())
+      @if($sidebarFingerprint === null && $sidebarCharge === null)
+        {{-- The webextension. We hold no key and no balance, and saying so is the
+             whole point of the arrangement — see KeyUser::getKeyFingerprint(). --}}
+        <div class="sidebar-account__identity">
+          {!! \App\Authentication\KeyIdenticon::render(null) !!}
+          <div class="sidebar-account__names">
+            <span class="sidebar-account__code sidebar-account__code--wordy">@lang('account.pill.anonymous')</span>
+            <span class="sidebar-account__balance">@lang('account.sidebar.anonymous_hint')</span>
+          </div>
+        </div>
+      @else
+        <div class="sidebar-account__identity">
+          {!! \App\Authentication\KeyIdenticon::render($sidebarFingerprint) !!}
+          <div class="sidebar-account__names">
+            @if($sidebarFingerprint !== null)
+              <span class="sidebar-account__code">{{ strtoupper($sidebarFingerprint) }}</span>
+            @else
+              <span class="sidebar-account__code sidebar-account__code--wordy">@lang('account.pill.signed_in')</span>
+            @endif
+            @if($sidebarCharge !== null)
+              <span class="sidebar-account__balance @if($sidebarState === \App\Authentication\KeyState::LOW) is-low @elseif($sidebarState === \App\Authentication\KeyState::EMPTY) is-empty @endif">
+                @if($sidebarState === \App\Authentication\KeyState::EMPTY)
+                  @lang('account.sidebar.balance_empty')
+                @else
+                  {{ __('account.sidebar.balance', ['charge' => (int) floor($sidebarCharge)]) }}
+                @endif
+              </span>
+            @endif
+          </div>
+        </div>
+        <div class="sidebar-account__actions">
+          <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+            @if($sidebarState === \App\Authentication\KeyState::FULL)
+              @lang('account.sidebar.manage')
+            @else
+              @lang('account.sidebar.topup')
+            @endif
+          </a>
+          {{-- Keeps its id: resources/js/accountBreadcrumb.js clears the
+               returning-user flag on it, and the webextension's own
+               contentScripts/keys.js needs a stable hook to catch a logout and
+               drop the master key from extension storage. --}}
+          <a class="btn account-btn account-btn--quiet" id="sidebar-key-remove" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/remove?url=" . urlencode(App\Localization::currentFullUrl())) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.logout')</a>
+        </div>
+      @endif
+    @else
+      <div class="sidebar-account__lede">@lang('account.sidebar.logged_out')</div>
+      <div class="sidebar-account__actions">
+        <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
+        <a class="btn account-btn account-btn--quiet" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
+      </div>
+    @endif
+  </div>
   <ul class="sidebar-list" role="presentation">
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/") }}"  id="navigationSuche" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>

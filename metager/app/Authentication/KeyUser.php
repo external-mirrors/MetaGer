@@ -116,6 +116,76 @@ class KeyUser implements Authenticatable
     }
 
     /**
+     * The key's current token balance, or null when it cannot be determined
+     * (a temporary webextension user, or the keyserver did not answer).
+     *
+     * Reads the same 10s-cached {@see getKeyData()} the guard already touched
+     * this request, so calling it from a blade costs nothing extra.
+     */
+    public function getCharge(): ?float
+    {
+        if ($this->temporary) {
+            return null;
+        }
+        $charge = Arr::get($this->getKeyData(), "charge");
+
+        return $charge === null ? null : (float) $charge;
+    }
+
+    /**
+     * The last six characters of the key — enough for a user to tell two of
+     * their own keys apart, and the input {@see KeyIdenticon} derives the
+     * account's mark from, without ever putting the full secret on a page that
+     * is not /keys or the settings page.
+     *
+     * The keyserver canonicalises non-UUID keys (a legacy string or a short code
+     * is MD5-folded into a UUID), and getKeyData() writes that canonical form
+     * back onto $this->key. So this forces getKeyData() first: a UUID key is
+     * already canonical and this changes nothing, but for a legacy key it means
+     * the fingerprint is the *account's* fingerprint — the same six characters
+     * the /keys dashboard shows — and not "whatever was in the cookie", which
+     * would differ between a page that has talked to the keyserver and one that
+     * has not.
+     *
+     * Null is the answer whenever we cannot name an account we would still be
+     * naming next request: an unreachable keyserver, a non-UUID key, and — the
+     * one that matters — a temporary user. See below.
+     */
+    public function getKeyFingerprint(): ?string
+    {
+        // A temporary user is the webextension, and $this->key is then the
+        // *anonymous token key* it sent as a header, not the user's key. That
+        // token is short-lived by design: KeyAuthGuard mints a KeyUser from it,
+        // the extension rotates it on expiry or when its charge is spent, and
+        // the whole point of the arrangement is that we never learn the real
+        // key behind it.
+        //
+        // So there is no account here we can name. Returning six characters of
+        // the token would look like an identity and behave like a session id —
+        // the user would watch their "account" change several times a day, and
+        // the mark drawn from it would change with it. The extension is the
+        // only party that can answer this question, and it answers it in its
+        // own UI.
+        if ($this->temporary) {
+            return null;
+        }
+
+        // The canonical key off the key data, not $this->key: getKeyData() only
+        // writes the canonical form back onto $this->key on a cache *miss*, so
+        // reading $this->key would still flip between the raw cookie and the
+        // UUID across requests. The cached payload always carries the canonical
+        // "key", so this is stable whether the data came from the cache or the
+        // keyserver.
+        $canonical = Arr::get($this->getKeyData(), "key", $this->key);
+
+        if (!is_string($canonical) || !\Illuminate\Support\Str::isUuid($canonical)) {
+            return null;
+        }
+
+        return substr($canonical, -6);
+    }
+
+    /**
      * Authorize the user for a specific token cost. The amount will be claimed on the key for
      * this process for the specified duration and is not available for other processes
      * during that time.

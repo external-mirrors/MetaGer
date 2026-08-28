@@ -173,5 +173,43 @@ class AdvertisingRemovedTest extends TestCase
         $page->assertDontSee("/partnershops", false);
         $page->assertDontSee("result-open-key", false);
         $page->assertSee("result-open", false);
+
+        // This is the one place a result page is rendered for a signed-in key,
+        // so the account cues are checked here rather than paying for a second
+        // search render. See Tests\Feature\Authentication\AccountVisibilityTest.
+        $page->assertSee("resultpage-searchbar", false);
+        $page->assertSee('id="account-pill"', false);
+        $page->assertSee("account-pill--compact", false);
+        $page->assertSee('class="sidebar-account"', false);
+
+        // The key indicator is gone from the search bar. On this page it could
+        // only ever have been green: every route here runs
+        // AuthenticationValidation, whose unauthorised branches all redirect to
+        // the startpage — so it was an indicator with one possible value.
+        $page->assertDontSee('id="search-key"', false);
+        $page->assertDontSee('id="key-link"', false);
+    }
+
+    /**
+     * And the ad loader it was guarding is gone with it.
+     *
+     * scriptResultPage.js wrapped the Yahoo `selectTier` script in "return if
+     * #key-link is authorized", which — per the test above — it always was. The
+     * loader could not run, and it was the only reader of #key-link, which is
+     * why the search bar's key markup counted as untouchable for so long.
+     *
+     * Asserted on the built bundle rather than the source: the source could stop
+     * importing it while the bundle still shipped it.
+     */
+    public function testTheYahooAdvertisingLoaderIsNotInTheBuiltBundle(): void
+    {
+        $manifest = json_decode(file_get_contents(public_path("build/manifest.json")), true);
+        $entry = $manifest["resources/js/scriptResultPage.js"]["file"] ?? null;
+        $this->assertNotNull($entry, "scriptResultPage.js is not in the manifest; the assertion below would prove nothing.");
+
+        $bundle = file_get_contents(public_path("build/" . $entry));
+
+        $this->assertStringNotContainsString("selectTier", $bundle);
+        $this->assertStringNotContainsString("s.yimg.com", $bundle);
     }
 }

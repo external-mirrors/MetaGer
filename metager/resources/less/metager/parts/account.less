@@ -15,11 +15,14 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── The mark ─────────────────────────────────────────────────────────────────
-// Rendered by App\Authentication\KeyIdenticon. The hue arrives inline on the
-// element as --account-mark-hue; everything else is a palette decision and lives
-// in variables.less, so the same markup serves light and dark. The fallback hue
-// exists so the declaration always resolves even if the attribute is missing —
-// an unresolvable var() would silently drop the fill.
+// Rendered by App\Authentication\KeyIdenticon. The hue is one of twelve fixed
+// values ((n % 12) * 30) and arrives as a class, `account-mark--hue-N`, not an
+// inline `style`: metager.de's CSP is `style-src-attr 'self'` (see
+// build/nginx/configuration/nginx.conf), which has no `'unsafe-inline'` for
+// style *attributes* and silently drops one, leaving every mark on the fallback
+// hue below — one colour regardless of key. Twelve rules cost nothing next to
+// that. Saturation and lightness stay a palette decision in variables.less, so
+// the same markup still serves both themes.
 .account-mark {
   display: block;
   flex: 0 0 auto;
@@ -35,19 +38,32 @@
     height: 100%;
   }
 
-  // The fallback hue belongs at the use site, not on a parent rule. It has to
-  // resolve for an element that does not inherit --account-mark-hue from
-  // anywhere: an unresolvable var() drops the whole declaration, which would
-  // mean a mark with no colour — and it would also drop out of
-  // tests/Browser/ThemeColorsTest, whose collector resolves each rule on its own
-  // probe element and so never sees an inherited custom property.
+  // The fallback hue is for an element that carries none of the
+  // account-mark--hue-* classes below — none should ever reach here, since
+  // KeyIdenticon::render() always emits one alongside a drawable mark, but an
+  // unresolvable var() would drop the fill declaration entirely rather than
+  // just look wrong, and would also drop out of tests/Browser/ThemeColorsTest,
+  // whose collector resolves each rule on its own probe element.
   .account-mark__ground {
-    fill: hsl(var(--account-mark-hue, 30), @account-mark-ground-saturation, @account-mark-ground-lightness);
+    fill: hsl(30, @account-mark-ground-saturation, @account-mark-ground-lightness);
   }
 
   .account-mark__cells {
-    fill: hsl(var(--account-mark-hue, 30), @account-mark-saturation, @account-mark-lightness);
+    fill: hsl(30, @account-mark-saturation, @account-mark-lightness);
   }
+
+  // One rule per hue on the wheel — see KeyIdenticon::hue().
+  each(range(0, 330, 30), {
+      &.account-mark--hue-@{value} {
+        .account-mark__ground {
+          fill: hsl(@value, @account-mark-ground-saturation, @account-mark-ground-lightness);
+        }
+
+        .account-mark__cells {
+          fill: hsl(@value, @account-mark-saturation, @account-mark-lightness);
+        }
+      }
+    });
 
   // No fingerprint, and that is an answer rather than a gap: a webextension
   // visitor's key never reaches us, and a legacy non-UUID key has none we would

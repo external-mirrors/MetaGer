@@ -3,10 +3,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Sem anúncios. Anónimo.',
         'hook' => 'O motor de busca que não o rastreia.',
-        'message' => 'Em vez de uma conta com os seus dados, basta uma chave anónima com saldo.',
-        'start' => 'Saiba mais',
-        'or' => 'ou',
-        'have_key' => 'Já tem uma chave?',
+        'message' => 'A sua chave é o seu acesso – sem conta, sem endereço de e-mail. O saldo e as definições dependem dela.',
+        'first_time' => 'É a primeira vez aqui?',
+        'start' => 'Configurar uma chave',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Bem-vindo de volta.',
+        'welcome_back_message' => 'Já iniciou sessão neste dispositivo. Inicie sessão com a mesma chave – o seu saldo continua lá.',
+        'welcome_back_button' => 'Iniciar sessão novamente',
+        'have_key' => 'Iniciar sessão com a minha chave',
         'payment_id_error' => "Introduziu um ID de pagamento que não é uma chave correta. A sua chave tem 36 caracteres.",
         'key_error' => "A chave introduzida não é válida. Por favor, verifique a entrada.",
         'login_code_error' => "O código de início de sessão introduzido não era válido. Dica: os códigos de início de sessão só são válidos enquanto estiverem visíveis noutro dispositivo!",

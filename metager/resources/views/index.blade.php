@@ -14,13 +14,19 @@
 <div id="search-content">
   @if(Auth::guard("key")->user() !== null || app(App\Models\Authorization\Authorization::class)->loggedIn)
   <ul id="foki-switcher">
+    {{-- Which of these survive a narrow screen is decided in
+         pages/startpage/startpage.less, by position: the first three are the
+         ones people use, and the active one is never dropped whatever its
+         position. It used to be an $index > 4 check here paired with a .hide-xs
+         rule that only fired below 350px — by which point the row had been
+         running underneath the navigation cluster for 250px of viewport. --}}
     @foreach(app()->make(\App\Searchengines::class)->available_foki as $index => $fokus)
-    <li @if($index > 4) class="hide-xs" @endif>
+    <li>
       <a href="{{ route('startpage', ['focus' => $fokus]) }}" @if(app(\App\SearchSettings::class)->fokus === $fokus)
     class="active" aria-current="page" @endif>@lang("index.foki.$fokus")</a>
     </li>
   @endforeach
-    <li class="hide-xs">
+    <li>
       <a href="{{ route('startpage', ['focus' => "maps"]) }}" @if(app(\App\SearchSettings::class)->fokus === "maps")
   class="active" aria-current="page" @endif>@lang("index.foki.maps")</a>
     </li>
@@ -38,35 +44,52 @@
     </h1>
 
     @if(Auth::guard("key")->user() === null &&!app(App\Models\Authorization\Authorization::class)->loggedIn)
-    <div id="searchbar-replacement">
+    {{-- Five blocks, one action. Everything here used to be said three times: a
+         status line stating the obvious, a helper paragraph, and a small-print
+         warning below the buttons that was the only text that mattered.
+
+         The strings marked data-* are rewritten in place by
+         resources/js/accountBreadcrumb.js when this browser has rendered a
+         signed-in page before. Rewritten, not revealed — nothing is inserted or
+         hidden, so the layout does not move and there is no CSS rule that can
+         accidentally take a sibling with it. Without JS this is what everyone
+         gets, and it already leads with "log in". --}}
+    <div id="searchbar-replacement"
+      data-welcome-back-hook="@lang('index.searchbar-replacement.welcome_back')"
+      data-welcome-back-message="@lang('index.searchbar-replacement.welcome_back_message')"
+      data-welcome-back-button="@lang('index.searchbar-replacement.welcome_back_button')">
       <div class="tagline">@lang('index.searchbar-replacement.tagline')</div>
-      <div class="hook-line">@lang('index.searchbar-replacement.hook')</div>
-      <div class="login-status">
-        <img src="/img/svg-icons/key-empty.svg" alt="" aria-hidden="true">
-        @lang('index.searchbar-replacement.not_logged_in')
-      </div>
-      <div class="helper-line">@lang('index.searchbar-replacement.message')</div>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys') }}" class="btn btn-primary startpage-create-btn">
-        @lang('index.searchbar-replacement.start')
-      </a>
-      <div class="divider-row"><span class="line"></span><span class="divider-label">@lang('index.searchbar-replacement.or')</span><span class="line"></span></div>
-      <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}" class="btn btn-default startpage-login-btn">
+      <div class="hook-line" data-hook-line>@lang('index.searchbar-replacement.hook')</div>
+      {{-- Log in is the primary action: most people on this page have used MetaGer before and
+           just lost the cookie. Creating a second key splits their token balance, and the
+           warning about that now lives on the keymanager's create page, which is where the
+           second key actually gets made. --}}
+      <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys/key/enter?redirect_success=' . urlencode(route('startpage'))) }}" class="btn startpage-login-btn" data-login-button>
         @lang('index.searchbar-replacement.have_key')
       </a>
+      <div class="helper-line" data-helper-line>@lang('index.searchbar-replacement.message')</div>
+      <div class="first-time-line">
+        @lang('index.searchbar-replacement.first_time')
+        <a href="{{ LaravelLocalization::getLocalizedURL(null, '/keys') }}" class="startpage-create-link">@lang('index.searchbar-replacement.start')</a>
+      </div>
     </div>
   @else
   @include('parts.searchbar', ['class' => 'startpage-searchbar'])
 @endif
-    @if((\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY) || 
-    {{-- Phase out old Authorization @deprecated 18.07.2025 --}}
-    (app(\App\Models\Authorization\Authorization::class)->availableTokens >= 0 && !app(\App\Models\Authorization\Authorization::class)->canDoAuthenticatedSearch(false)))
-    <div id="startpage-quicklinks">
-      <a class="metager-key" href="{{ app(\App\Models\Authorization\Authorization::class)->getAdfreeLink() }}">
-      <img src="/img/svg-icons/key-empty.svg" alt="Key Icon" />
-      <span>
-        @lang("index.key.tooltip.empty")
-      </span>
-      </a>
+    {{-- The only place an exhausted key can be told about it. A search with no
+         tokens never reaches a result page: every route to /meta/meta.ger3 runs
+         AuthenticationValidation, and every unauthorised branch of it redirects
+         back here. So the warning belongs before the search, not after it.
+
+         This replaces #startpage-quicklinks, whose second clause read the legacy
+         Authorization service and was not gated on the key guard — which is how
+         "142 Token" and "Token aufgebraucht" came to render for the same
+         visitor on the same screen. --}}
+    @if(\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY)
+    <div id="account-empty-alert">
+      {!! \App\Authentication\KeyIdenticon::render(\Auth::guard("key")->user()->getKeyFingerprint()) !!}
+      <span class="account-empty-alert__message">@lang('account.empty.message')</span>
+      <a class="account-empty-alert__action" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}">@lang('account.empty.action')</a>
     </div>
   @endif
   </div>

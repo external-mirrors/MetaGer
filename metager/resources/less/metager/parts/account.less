@@ -1,0 +1,434 @@
+@import "../variables.less";
+
+// ─────────────────────────────────────────────────────────────────────────────
+// The account: one mark, one pill, one sidebar block, one alert.
+//
+// These four replace six things that each answered part of "am I signed in, as
+// whom, with how much left?" and none of it well — the text label inside the
+// startpage search bar, the key icon inside both search bars, the orange dot on
+// the menu button, the three loose lines in the sidebar, and the
+// #startpage-quicklinks row that contradicted the search bar beside it.
+//
+// The rule they follow: a border is a promise. Boxes read as controls, so the
+// pill is a control and gets one; status is information and does not — until it
+// becomes an alert, which is the one time a box is the right signal.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── The mark ─────────────────────────────────────────────────────────────────
+// Rendered by App\Authentication\KeyIdenticon. The hue arrives inline on the
+// element as --account-mark-hue; everything else is a palette decision and lives
+// in variables.less, so the same markup serves light and dark. The fallback hue
+// exists so the declaration always resolves even if the attribute is missing —
+// an unresolvable var() would silently drop the fill.
+.account-mark {
+  display: block;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: @highlight-color;
+
+  > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  // The fallback hue belongs at the use site, not on a parent rule. It has to
+  // resolve for an element that does not inherit --account-mark-hue from
+  // anywhere: an unresolvable var() drops the whole declaration, which would
+  // mean a mark with no colour — and it would also drop out of
+  // tests/Browser/ThemeColorsTest, whose collector resolves each rule on its own
+  // probe element and so never sees an inherited custom property.
+  .account-mark__ground {
+    fill: hsl(var(--account-mark-hue, 30), @account-mark-ground-saturation, @account-mark-ground-lightness);
+  }
+
+  .account-mark__cells {
+    fill: hsl(var(--account-mark-hue, 30), @account-mark-saturation, @account-mark-lightness);
+  }
+
+  // No fingerprint, and that is an answer rather than a gap: a webextension
+  // visitor's key never reaches us, and a legacy non-UUID key has none we would
+  // still be showing next request. Hatching says "not ours to know" where an
+  // empty square would just look broken.
+  &.account-mark--anonymous {
+    background-image: repeating-linear-gradient(45deg,
+        transparent 0 2px,
+        @text-color-alpha-50 2px 3px);
+  }
+}
+
+// ── The pill ─────────────────────────────────────────────────────────────────
+// Top right, beside the menu button, on every page. It sheds detail as space
+// runs out rather than disappearing: balance first, then the key code, and the
+// mark last — the mark is the part that answers "is this mine?".
+.account-pill {
+  position: relative;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.18rem 0.55rem 0.18rem 0.2rem;
+  border: 1px solid @border-color;
+  border-radius: 999px;
+  background-color: @background-color;
+  color: @text-color;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    border-color: @metager-orange;
+    color: @text-color;
+  }
+
+  // Positioning is the cluster's job, not the pill's — see .navigation-cluster
+  // below. The pill only decides how much of itself to show.
+
+  .account-pill__code {
+    font-family: monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+
+    // The fallback for a key whose fingerprint we cannot name: a word, not a
+    // code, so it must not wear the code's typography.
+    &.account-pill__code--wordy {
+      font-family: inherit;
+      font-size: 0.74rem;
+      letter-spacing: 0;
+      text-transform: none;
+      color: @text-color-alpha-70;
+    }
+  }
+
+  .account-pill__separator {
+    color: @border-color;
+  }
+
+  .account-pill__charge {
+    font-variant-numeric: tabular-nums;
+    color: @text-color-alpha-70;
+  }
+
+  .account-pill__anonymous {
+    font-size: 0.74rem;
+    color: @text-color-alpha-70;
+  }
+
+  // A low balance is worth noticing and not worth interrupting for.
+  &.account-pill--low .account-pill__charge {
+    color: @account-low-color;
+    font-weight: 700;
+  }
+
+  // Empty means the next search will not run. On the startpage that is also
+  // spelled out under the search bar; here it is the glance version.
+  &.account-pill--empty {
+    border-color: @metager-orange;
+    background-color: @account-alert-background;
+
+    .account-pill__charge {
+      color: @metager-orange;
+      font-weight: 700;
+    }
+  }
+
+  // ── Densities ──────────────────────────────────────────────────────────────
+  // The blade sets the widest form a surface can afford; these take it down as
+  // the viewport shrinks. Two mechanisms, one component.
+  &.account-pill--compact,
+  &.account-pill--mark {
+    .account-pill__code,
+    .account-pill__separator {
+      display: none;
+    }
+  }
+
+  &.account-pill--mark {
+    padding: 0.18rem;
+
+    .account-pill__charge,
+    .account-pill__anonymous {
+      display: none;
+    }
+  }
+
+  // Narrow screens get the mark alone. Not only for the pill's own sake: the
+  // startpage's fokus row reserves a fixed strip on the right for the menu
+  // button, and two controls have to fit in a strip that was sized for one —
+  // see the matching rule in pages/startpage/startpage.less.
+  @media (max-width: 34rem) {
+    padding: 0.18rem;
+
+    .account-pill__code,
+    .account-pill__separator,
+    .account-pill__charge,
+    .account-pill__anonymous {
+      display: none;
+    }
+  }
+
+  // The result page renders the pill twice for the same reason it renders the
+  // menu button twice: given room beside the results column both float top right
+  // as a cluster, and without it both become grid items in the sticky research
+  // bar. Exactly one of each is ever visible.
+  &.account-pill--in-bar {
+    position: static;
+    display: none;
+    grid-area: account;
+
+    @media (max-width: @navigation-cluster-breakpoint) {
+      display: inline-flex;
+    }
+
+    // The blade asks the bar for the narrowest density, from when the bar only
+    // ever carried the pill on a phone. It now carries it on every window
+    // narrower than the cluster's gutter — most of a laptop screen — and by
+    // 700px the row has room for the number again. The mark answers "is this
+    // mine?"; the balance is the thing people are actually checking, and it is
+    // the reason the pill exists.
+    @media (min-width: 700px) {
+      padding: 0.18rem 0.55rem 0.18rem 0.2rem;
+
+      .account-pill__charge,
+      .account-pill__anonymous {
+        display: inline;
+      }
+    }
+  }
+}
+
+
+// ── The cluster ──────────────────────────────────────────────────────────────
+// The pill and the menu button, pinned to the top-right corner as one element.
+//
+// They used to be two independently fixed elements a few pixels apart, which
+// made their vertical alignment a sum of two unrelated box models — a 36px glyph
+// in a 23px line box next to a bordered, padded pill — and left anything else on
+// that row reserving space against two moving targets. As one flex row they
+// centre on each other by construction, hide together, and present a single
+// footprint for the fokus switcher to keep clear of.
+.navigation-cluster {
+  position: fixed;
+  top: @sidebar-opener-position-top;
+  right: @sidebar-opener-position-right;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+
+  // The band's height, declared rather than inferred. The cluster is as tall as
+  // its tallest child either way; saying so here is what lets the startpage's
+  // fokus row centre on the same line without measuring anything, and a
+  // min-height means a child that outgrows @navigation-band-height widens the
+  // band instead of hanging out of it.
+  min-height: @navigation-band-height;
+
+  // The button gives up its own `fixed` inside here; the cluster is what is
+  // pinned. Everything else about it — the glyph, the hover colour, the
+  // open/close swap — is unchanged.
+  > .sidebar-opener {
+    position: static;
+  }
+
+  // The open sidebar covers this corner, so the whole cluster stands down: the
+  // pill would be floating over a panel whose first block says all of it and
+  // more, and the ≡ has nothing left to open.
+  //
+  // What replaces it is the ✕, and that is why the ✕ is not in here — it is a
+  // sibling of #sidebarToggle in parts/sidebar.blade.php. `:checked ~ &` reaches
+  // this cluster but cannot descend into it, so a close button living here would
+  // be hidden by this very rule.
+  #sidebarToggle:checked ~ & {
+    display: none;
+  }
+
+  // The result page floats this only while there is a gutter wide enough to
+  // hold it; narrower than that it moves both controls into its research bar.
+  // The threshold is arithmetic, not taste — see @navigation-cluster-breakpoint.
+  &.navigation-cluster--wide-only {
+    @media (max-width: @navigation-cluster-breakpoint) {
+      display: none;
+    }
+  }
+}
+
+// ── Buttons inside the account block ─────────────────────────────────────────
+// Deliberately not .btn-primary: that is Bootstrap blue (#337ab7) on a brand
+// that is orange, and repainting it globally would move every primary button in
+// the app — settings, donation, membership — and a great many lines of the theme
+// snapshot with them. That is its own commit.
+.account-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 0.8rem;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+
+  // One of these is a <button> — the one only the webextension can make work,
+  // which the site renders hidden. Said here rather than relied upon from the
+  // UA stylesheet, because anything that gives .account-btn a `display` would
+  // silently show it to every visitor who does not have the extension.
+  &[hidden] {
+    display: none;
+  }
+
+  &.account-btn--primary {
+    background-color: @metager-orange;
+    border-color: @metager-orange;
+    color: @color-white;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @color-white;
+    }
+  }
+
+  &.account-btn--quiet {
+    background-color: transparent;
+    border-color: @border-color;
+    color: @text-color;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @text-color;
+    }
+  }
+}
+
+// The sidebar sets `a { width: 100%; text-indent: 12px; font-size: 1.1em }` on
+// every link inside it, which is right for navigation rows and wrong for two
+// buttons sharing a row. Scoped to beat it rather than loosening the rule.
+.sidebar .sidebar-account a.account-btn {
+  width: auto;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-indent: 0;
+}
+
+// ── The sidebar block ────────────────────────────────────────────────────────
+// Between the logo and the navigation list, ruled off from both, because an
+// account and a list of destinations are different kinds of thing and sharing a
+// row style is what made the old version read as three loose lines.
+.sidebar-account {
+  display: grid;
+  gap: 0.7rem;
+  padding: 0.85rem 1rem 1rem;
+  background-color: @highlight-color-alpha-60;
+  border-top: 1px solid @border-color;
+  border-bottom: 1px solid @border-color;
+
+  .sidebar-account__identity {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    > .account-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+    }
+  }
+
+  .sidebar-account__names {
+    display: grid;
+    gap: 0.08rem;
+    min-width: 0;
+  }
+
+  .sidebar-account__code {
+    font-family: monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: @text-color;
+
+    &.sidebar-account__code--wordy {
+      font-family: inherit;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+  }
+
+  .sidebar-account__balance {
+    font-size: 0.76rem;
+    color: @text-color-alpha-70;
+
+    &.is-low {
+      color: @account-low-color;
+      font-weight: 700;
+    }
+
+    &.is-empty {
+      color: @metager-orange;
+      font-weight: 700;
+    }
+  }
+
+  // Signed out, and for the webextension, the block leads with a sentence
+  // instead of an identity. It wraps here, which the old navigation row could
+  // not do — "Werbefreie Suche einrichten" ran straight off the panel edge.
+  .sidebar-account__lede {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: @text-color-alpha-70;
+  }
+
+  .sidebar-account__actions {
+    display: flex;
+    gap: 0.45rem;
+  }
+}
+
+// ── The empty-key alert ──────────────────────────────────────────────────────
+// Startpage only, and only when the key is spent. It cannot happen anywhere
+// else: every route to the result page runs AuthenticationValidation, which
+// sends an unauthorised search back here. So this is the one chance to say it,
+// and it is said before the search rather than after it.
+#account-empty-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: 600px;
+  margin: 0.6rem auto 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid @metager-orange;
+  border-radius: 4px;
+  background-color: @account-alert-background;
+  font-size: 0.82rem;
+  text-align: left;
+
+  .account-empty-alert__message {
+    color: @text-color;
+  }
+
+  .account-empty-alert__action {
+    margin-left: auto;
+    color: @metager-orange;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 26rem) {
+    flex-wrap: wrap;
+
+    .account-empty-alert__action {
+      margin-left: 0;
+    }
+  }
+}

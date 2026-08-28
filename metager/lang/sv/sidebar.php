@@ -33,4 +33,6 @@ return [
     'plugin' => 'MetaGer-plugin',
     'close' => 'Hoppa till navigeringsfältet växlingsknapp',
     'toggle' => 'öppna/stäng navigeringsfält',
+    'opener' => 'Öppna navigeringsfältet',
+    'opener_close' => 'Stäng navigeringsfältet',
 ];

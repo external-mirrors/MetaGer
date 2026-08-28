@@ -50,7 +50,19 @@
   --invert-state: invert(0%);
   --icon-color: 0;
   --searchbar-searchicon-brightness: 0;
-  --searchbar-key-brightness: 0.5;
+
+  // The account mark (App\Authentication\KeyIdenticon). The *hue* is per key and
+  // arrives inline on the element; saturation and lightness are a theme
+  // decision and live here, so one piece of markup serves both palettes and
+  // no mark can ever outshout the brand.
+  --account-mark-saturation: 58%;
+  --account-mark-lightness: 42%;
+  --account-mark-ground-saturation: 58%;
+  --account-mark-ground-lightness: 94%;
+  // A low balance is a warning, not an error: amber, and distinct from the
+  // orange that means "you cannot search any more".
+  --account-low-color: #8a6508;
+  --account-alert-background: #fff4e8;
 
   --searchbar-background-color: white;
   --input-background: #fff;
@@ -111,7 +123,15 @@
   --invert-state: invert(100%);
   --icon-color: 0.9;
   --searchbar-searchicon-brightness: 0.5;
-  --searchbar-key-brightness: 0.7;
+
+  // Lighter and less saturated than the light palette: the same hue has to read
+  // as the same account on a near-black ground.
+  --account-mark-saturation: 52%;
+  --account-mark-lightness: 62%;
+  --account-mark-ground-saturation: 20%;
+  --account-mark-ground-lightness: 16%;
+  --account-low-color: #d0a53a;
+  --account-alert-background: #2b1f11;
 
   --searchbar-background-color: @color-almost-black;
   --input-background: @color-almost-black;
@@ -185,7 +205,12 @@
 @invert-state: var(--invert-state);
 @icon-color: var(--icon-color);
 @searchbar-searchicon-brightness: var(--searchbar-searchicon-brightness);
-@searchbar-key-brightness: var(--searchbar-key-brightness);
+@account-mark-saturation: var(--account-mark-saturation);
+@account-mark-lightness: var(--account-mark-lightness);
+@account-mark-ground-saturation: var(--account-mark-ground-saturation);
+@account-mark-ground-lightness: var(--account-mark-ground-lightness);
+@account-low-color: var(--account-low-color);
+@account-alert-background: var(--account-alert-background);
 @searchbar-background-color: var(--searchbar-background-color);
 @input-background: var(--input-background);
 @input-text: var(--input-text);
@@ -220,6 +245,40 @@
 // Default Font
 @metager-font: "Liberation Sans", "Helvetica Neue", "Helvetica", "Arial",
   sans-serif;
+// ── The top band ─────────────────────────────────────────────────────────────
+// The strip across the top of the page that the navigation cluster occupies,
+// and the line that anything else reaching into that strip has to centre on.
+//
+// It is expressed in pixels and not in viewport units for one reason: the
+// cluster is `position: fixed`, so it stays exactly here whatever the window is.
+// Anything sharing the band that positions itself proportionally — the
+// startpage's fokus row used to, with `padding: 2dvh 0` — agrees with it at one
+// window height and drifts everywhere else.
+@sidebar-opener-position-top: 21px;
+@sidebar-opener-position-right: 20px;
+@sidebar-opener-line-height: 23px;
+// The tallest thing in the band, which is the account pill's border box
+// (0.76rem × 1.5 line-height + 2×0.18rem padding + 2×1px border). The cluster
+// carries it as a min-height rather than a height, so a pill that outgrows this
+// makes the band grow with it instead of overflowing it — and
+// tests/Feature/NavigationBandAlignmentTest fails on the drift.
+@navigation-band-height: 26px;
+// Symmetric: the same gap below the cluster as above it. This is the height the
+// fokus row reserves so its text lands on the cluster's centre line.
+@navigation-band-outer-height: (@sidebar-opener-position-top * 2 + @navigation-band-height);
+// How much room beside the results column the floating cluster needs before it
+// is allowed to float at all: its own width (mark + balance + the menu button,
+// about 127px at the result page's `compact` density), the 20px it sits in from
+// the window edge, and enough air that it never crowds what it floats beside.
+//
+// It is `position: fixed` and the results column is centred, so the two close on
+// each other as the window narrows and nothing stops them touching: at 1000px
+// the pill sat 40px inside the research bar, over the search field. Below this
+// width the result page moves both controls into the bar instead — see
+// .navigation-cluster--wide-only in parts/account.less. Everything above the
+// results column's own width is gutter, hence the doubling.
+@navigation-cluster-gutter: 175px;
+@navigation-cluster-breakpoint: (@results-width-max + 2 * @navigation-cluster-gutter);
 // Default Mini-Padding
 @padding-small-default: 8px;
 // Screen sizes

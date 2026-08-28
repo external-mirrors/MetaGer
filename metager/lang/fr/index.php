@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open-source. Sans publicité. Anonyme.',
         'hook' => 'Le moteur de recherche qui ne vous suit pas.',
-        'message' => 'Au lieu d\'un compte avec vos données, une clé anonyme avec du crédit suffit.',
-        'start' => 'En savoir plus',
-        'or' => 'ou',
-        'have_key' => 'Vous avez déjà une clé ?',
+        'message' => "Votre clé est votre accès – pas de compte, pas d'adresse e-mail. Votre crédit et vos réglages y sont attachés.",
+        'first_time' => 'Première visite ?',
+        'start' => 'Configurer une clé',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Bon retour.',
+        'welcome_back_message' => 'Vous vous êtes déjà connecté sur cet appareil. Connectez-vous avec la même clé – votre crédit est toujours là.',
+        'welcome_back_button' => 'Se reconnecter',
+        'have_key' => 'Se connecter avec ma clé',
         'login' => 'Connexion',
         'key_error' => "La clé introduite n'était pas valide. Veuillez vérifier la saisie.",
         'login_code_error' => "Le code de connexion saisi n'était pas valide. Conseil : les codes de connexion ne sont valables que lorsqu'ils sont visibles sur un autre appareil !",

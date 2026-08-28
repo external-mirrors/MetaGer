@@ -32,11 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Codi obert. Sense publicitat. Anònim.',
         'hook' => "El cercador que no us rastreja.",
-        'message' => 'Només necessiteu una clau anònima: sense compte, sense adreça electrònica, sense dades personals.',
-        'not_logged_in' => "Actualment no heu iniciat la sessió.",
-        'start' => 'Més informació',
-        'or' => 'o',
-        'have_key' => 'Ja tinc una clau',
+        'message' => 'La clau és el vostre accés: sense compte, sense adreça electrònica. El saldo i la configuració hi van lligats.',
+        'have_key' => 'Inicia la sessió amb la meva clau',
+        'first_time' => 'És el primer cop que hi sou?',
+        'start' => 'Configura una clau',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Ben tornat.',
+        'welcome_back_message' => "En aquest dispositiu ja hi havíeu iniciat la sessió. Torneu-hi amb la mateixa clau: el saldo encara hi és.",
+        'welcome_back_button' => 'Torna a iniciar la sessió',
         'new_key' => 'Encara no teniu clau?',
         'extension' => 'Mantingueu la sessió iniciada i l\'anonimat amb la nostra extensió web',
         "key_error" => "La clau introduïda no és vàlida. Reviseu el que heu escrit.",

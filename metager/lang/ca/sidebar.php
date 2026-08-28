@@ -32,5 +32,7 @@ return [
     ],
     'plugin' => 'Complement de MetaGer',
     'close' => 'Ves al botó de la barra de navegació',
-    'toggle' => 'obre/tanca la barra de navegació'
+    'toggle' => 'obre/tanca la barra de navegació',
+    'opener' => 'obre la barra de navegació',
+    'opener_close' => 'tanca la barra de navegació',
 ];

@@ -33,4 +33,6 @@ return [
     'nav5' => 'Neem contact op met',
     'close' => 'Ga naar de navigatiebalk om te schakelen',
     'toggle' => 'navigatiebalk openen/sluiten',
+    'opener' => 'Navigatiebalk openen',
+    'opener_close' => 'Navigatiebalk sluiten',
 ];

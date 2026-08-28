@@ -103,7 +103,7 @@
 		</main>
 	</div>
 	@include('parts.sidebar', ['id' => 'staticPagesSideBar'])
-	@include('parts.sidebar-opener', ['class' => 'fixed'])
+	@include('parts.navigation-cluster', ['density' => 'full'])
 	@if (isset($page) && $page === 'startpage')
 		@include('parts.footer', ['type' => 'startpage', 'id' => 'startPageFooter'])
 	@else

@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Annonsfri. Anonym.',
         'hook' => 'Sökmotorn som inte spårar dig.',
-        'message' => 'Istället för ett konto med dina uppgifter räcker det med en anonym nyckel med saldo.',
-        'start' => 'Läs mer',
-        'or' => 'eller',
-        'have_key' => 'Har du redan en nyckel?',
+        'message' => 'Din nyckel är din åtkomst – inget konto, ingen e-postadress. Saldo och inställningar hänger på den.',
+        'first_time' => 'Första gången här?',
+        'start' => 'Skapa en nyckel',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Välkommen tillbaka.',
+        'welcome_back_message' => 'Du har varit inloggad på den här enheten tidigare. Logga in med samma nyckel – ditt saldo finns kvar.',
+        'welcome_back_button' => 'Logga in igen',
+        'have_key' => 'Logga in med min nyckel',
         'login' => 'Logga in',
         'key_error' => "Den inmatade nyckeln var inte giltig. Vänligen kontrollera inmatningen.",
         'login_code_error' => "Den angivna inloggningskoden var inte giltig. Tips: Inloggningskoder är endast giltiga när de är synliga på en annan enhet!",

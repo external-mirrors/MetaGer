@@ -22,6 +22,7 @@
                     'request' => Request::method(),
                 ])
             </div>
+            @include('parts.account-pill', ['density' => 'mark', 'class' => 'account-pill--in-bar'])
             @include('parts.sidebar-opener', ['class' => 'fixed'])
         </div>
     </div>

@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Bez reklam. Anonimowo.',
         'hook' => 'Wyszukiwarka, która Cię nie śledzi.',
-        'message' => 'Zamiast konta z Twoimi danymi wystarczy anonimowy klucz z saldem.',
-        'start' => 'Dowiedz się więcej',
-        'or' => 'lub',
-        'have_key' => 'Masz już klucz?',
+        'message' => 'Twój klucz to Twój dostęp – bez konta, bez adresu e-mail. Saldo i ustawienia są z nim powiązane.',
+        'first_time' => 'Pierwszy raz tutaj?',
+        'start' => 'Skonfiguruj klucz',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Witamy ponownie.',
+        'welcome_back_message' => 'Na tym urządzeniu byłeś już zalogowany. Zaloguj się tym samym kluczem – Twoje saldo nadal tam jest.',
+        'welcome_back_button' => 'Zaloguj się ponownie',
+        'have_key' => 'Zaloguj się moim kluczem',
         'login' => 'Zaloguj się',
         'key_error' => "Wprowadzony klucz był nieprawidłowy. Sprawdź wprowadzone dane.",
         'login_code_error' => "Wprowadzony kod logowania był nieprawidłowy. Wskazówka: Kody logowania są ważne tylko wtedy, gdy są widoczne na innym urządzeniu!",

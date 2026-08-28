@@ -107,7 +107,7 @@
         @include('parts.footer', ['type' => 'resultpage', 'id' => 'resultPageFooter'])
     @endif
     @include('parts.sidebar', ['id' => 'resultPageSideBar'])
-    @include('parts.sidebar-opener', ['class' => 'fixed'])
+    @include('parts.navigation-cluster', ['density' => 'compact', 'class' => 'navigation-cluster--wide-only'])
 </body>
 
 </html>

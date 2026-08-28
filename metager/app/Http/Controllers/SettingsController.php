@@ -60,7 +60,7 @@ class SettingsController extends Controller
                 }
             }
 
-            [$blacklist_entries, $blacklist_tld] = SearchSettings::parseBlacklistCookie(Cookie::get($fokus . "_blpage"));
+            [$blacklist_entries, $blacklist_tld] = $settings->blacklistFor($fokus);
             $blacklist = array_merge(array_map(fn($value) => "*." . $value, $blacklist_tld), $blacklist_entries);
 
             $hasCustomFilter = false;
@@ -700,8 +700,19 @@ class SettingsController extends Controller
         sort($valid_blacklist_entries);
 
         $cookieName = $fokus . '_blpage';
-        $secure = app()->environment("local") ? false : true;
-        Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
+        if (sizeof($valid_blacklist_entries) === 0) {
+            // A blacklist with nothing left in it is not a setting with an
+            // empty value, it is no setting — and the difference is visible.
+            // An empty cookie still counts as something set, so "reset all
+            // settings" stays on a page where nothing is; and the webextension
+            // only forgets a setting it is told to forget, so an empty value is
+            // a value it keeps attaching to every request. Deleting the last
+            // entry of a blacklist came straight back on the next page load.
+            Cookie::queue(Cookie::forget($cookieName, "/"));
+        } else {
+            $secure = app()->environment("local") ? false : true;
+            Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
+        }
 
 
         $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-bl";
@@ -735,9 +746,22 @@ class SettingsController extends Controller
         //function to clear the whole black list
         $fokus = $request->input('focus', '');
         $url = $request->input('url', '');
-        $cookies = Cookie::get();
+        $settings = Cookie::get();
+        if ($request->wantsJson()) {
+            // The webextension keeps the settings in its own storage and sends
+            // them as request headers, so there is no cookie here to find and
+            // forget — and a setting nothing forgets is one it never hears
+            // about, because what it acts on is the list of expired cookies in
+            // the response. deleteSettings() already merges them in for exactly
+            // this reason; this method was the exception, so "reset all
+            // settings" cleared every engine and filter and left the blacklist.
+            // Symfony normalises a header name's underscores to dashes.
+            foreach ($request->header() as $key => $value) {
+                $settings[str_replace("-", "_", $key)] = $value;
+            }
+        }
 
-        foreach ($cookies as $key => $value) {
+        foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . '_blpage') === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
             }

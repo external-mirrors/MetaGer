@@ -33,4 +33,6 @@ return [
     'nav28' => 'Indstillinger',
     'close' => 'Spring til navigationsbjælkens skifteknap',
     'toggle' => 'Åbn/luk navigationslinjen',
+    'opener' => 'Åbn navigationslinjen',
+    'opener_close' => 'Luk navigationslinjen',
 ];

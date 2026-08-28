@@ -32,10 +32,16 @@ return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Sin publicidad. Anónimo.',
         'hook' => 'El buscador que no te rastrea.',
-        'message' => 'En lugar de una cuenta con tus datos, basta una clave anónima con saldo.',
-        'start' => 'Más información',
-        'or' => 'o',
-        'have_key' => '¿Ya tienes una clave?',
+        'message' => 'Su clave es su acceso: sin cuenta, sin dirección de correo. Su saldo y sus ajustes dependen de ella.',
+        'first_time' => '¿Es la primera vez que viene?',
+        'start' => 'Configurar una clave',
+        // Swapped in by resources/js/accountBreadcrumb.js when this browser has
+        // rendered a signed-in page before. Three strings, replacing three
+        // elements in place — nothing appears, nothing moves.
+        'welcome_back' => 'Bienvenido de nuevo.',
+        'welcome_back_message' => 'Ya había iniciado sesión en este dispositivo. Inicie sesión con la misma clave: su saldo sigue ahí.',
+        'welcome_back_button' => 'Volver a iniciar sesión',
+        'have_key' => 'Iniciar sesión con mi clave',
         'login' => 'Iniciar sesión',
         'key_error' => "La clave introducida no es válida. Por favor, compruebe la entrada.",
         'login_code_error' => "El código de inicio de sesión introducido no era válido. Sugerencia: ¡Los códigos de inicio de sesión sólo son válidos mientras están visibles en otro dispositivo!",

@@ -17,25 +17,20 @@ html {
   grid-area: search;
   text-align: center;
   display: grid;
-  row-gap: 0.7rem;
+  row-gap: 0.85rem;
 
   @media (max-height: 700px) {
-    row-gap: 0.4rem;
+    row-gap: 0.5rem;
   }
 
   @media (max-height: 550px) {
-    row-gap: 0.25rem;
+    row-gap: 0.3rem;
   }
 
   >.tagline {
     font-size: 0.8rem;
     letter-spacing: 0.02em;
     color: @text-color-alpha-60;
-    margin-bottom: 0.3rem;
-
-    @media (max-height: 700px) {
-      margin-bottom: 0;
-    }
 
     @media (max-height: 550px) {
       display: none;
@@ -53,62 +48,54 @@ html {
   }
 
   >.helper-line {
-    font-size: 0.88rem;
+    font-size: 0.875rem;
     color: @text-color-alpha-70;
     line-height: 1.45;
-    margin-bottom: 0.2rem;
 
     @media (max-height: 550px) {
       font-size: 0.8rem;
-      margin-bottom: 0;
     }
   }
 
-  >.login-status {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: @text-color-alpha-60;
-    margin-bottom: 0.1rem;
-
-    >img {
-      width: 14px;
-      height: 14px;
-    }
-  }
-
-  >.startpage-create-btn {
-    width: 100%;
-    color: @color-white;
-  }
-
-  >.divider-row {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.2rem 0;
-
-    >.line {
-      flex: 1;
-      height: 1px;
-      background: @border-color;
-    }
-
-    >.divider-label {
-      font-size: 0.72rem;
-      color: @text-color-alpha-50;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-  }
-
+  // Log in is the primary action, and it wears the brand rather than the
+  // Bootstrap blue .btn-primary inherits. Most people landing here have used
+  // MetaGer before and only lost the cookie; a second key would split their
+  // balance.
   >.startpage-login-btn {
     width: 100%;
+    padding: 11px 14px;
+    border: 1px solid @metager-orange;
+    border-radius: 5px;
+    background-color: @metager-orange;
+    color: @color-white;
+    font-size: 15px;
+    font-weight: 700;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @color-white;
+    }
+  }
+
+  // Creating a key is a real path and stays reachable — as one quiet row under
+  // a rule, not a second full-width button separated by an "oder" divider that
+  // gave the two actions equal weight.
+  >.first-time-line {
+    padding-top: 0.6rem;
+    border-top: 1px solid @border-color;
+    font-size: 0.82rem;
+    color: @text-color-alpha-70;
+
+    >.startpage-create-link {
+      font-weight: 700;
+      color: @text-color;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
   }
 }
+
 
 div.startpage {
   margin: 0;
@@ -152,8 +139,22 @@ div.startpage {
         }
 
         width: 100%;
-        padding-block: 1.5rem;
-        padding: 2dvh 0;
+
+        // This row shares the top band with the navigation cluster, so it has to
+        // sit on the cluster's centre line — not near it. It used to be
+        // `padding: 2dvh 0`, which is a proportion of the window, while the
+        // cluster is fixed at a pixel offset and does not move: on a 900px-tall
+        // window the fokus labels landed 6px above the pill's centre, and the
+        // gap changed with every window height. Reserving the band and centring
+        // in it makes the two agree by construction, at every size.
+        //
+        // The reservation is symmetric around the cluster, so it is also the
+        // row's own breathing room — hence no padding-block. Note box-sizing is
+        // border-box here (Bootstrap sets it globally), so padding would come
+        // out of this height rather than adding to it.
+        min-height: @navigation-band-outer-height;
+        align-items: center;
+        padding: 0;
         margin: 0;
         font-size: 1rem;
         overflow: auto;
@@ -168,11 +169,57 @@ div.startpage {
           }
         }
 
-        @media (max-width: 540px) {
-          width: calc(100% - 61px);
+        // The row shares its line with the navigation cluster in the top-right
+        // corner, so it has to stop short of it. Above 900px there is room for
+        // both and the row stays truly centred; below, it gives up the strip the
+        // cluster occupies and centres in what is left.
+        //
+        // The reservation is sized for the cluster at its widest at each step:
+        // the pill carries its key code and balance down to 34rem and is the
+        // bare mark below that (parts/account.less).
+        @media (max-width: 900px) {
+          width: calc(100% - 220px);
           padding-left: 20px;
-          margin-right: 61px;
+          margin-right: 220px;
           justify-content: flex-start;
+        }
+
+        @media (max-width: 540px) {
+          width: calc(100% - 96px);
+          margin-right: 96px;
+        }
+
+        // Signed out there is no pill, only the menu button.
+        body:not(:has(.account-pill)) & {
+          @media (max-width: 900px) {
+            width: calc(100% - 61px);
+            margin-right: 61px;
+          }
+        }
+
+        // Which foki survive the squeeze, by position rather than by name: the
+        // first three are the ones people actually use. The active one is never
+        // dropped, whatever its position — a visitor searching Wissenschaft must
+        // still be able to see that is where they are.
+        //
+        // The row keeps `overflow: auto`, so nothing here makes a fokus
+        // unreachable on a screen wide enough to show it.
+        @media (max-width: 760px) {
+          >li:nth-child(n + 6):not(:has(.active)) {
+            display: none;
+          }
+        }
+
+        @media (max-width: 600px) {
+          >li:nth-child(n + 5):not(:has(.active)) {
+            display: none;
+          }
+        }
+
+        @media (max-width: 430px) {
+          >li:nth-child(n + 4):not(:has(.active)) {
+            display: none;
+          }
         }
       }
 
@@ -196,61 +243,12 @@ div.startpage {
         grid-template-columns: 1fr;
         place-content: center;
 
-        >#startpage-quicklinks {
+        // Takes the slot #startpage-quicklinks used to hold. That row read the
+        // legacy Authorization service and was not gated on the key guard,
+        // which is how "142 Token" and "Token aufgebraucht" came to render on
+        // the same screen for the same visitor.
+        >#account-empty-alert {
           grid-area: quicklinks;
-          display: flex;
-          justify-content: center;
-          gap: 1rem;
-
-          @supports not (selector(:first-child)) {
-            gap: 0;
-
-            >*:not(:nth-child(1)) {
-              padding: 0 0.5rem;
-            }
-          }
-
-          flex-wrap: wrap;
-          padding: 1rem;
-
-          >.metager-key {
-            color: inherit;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-
-            @supports not (selector(:first-child)) {
-              gap: 0;
-
-              >* {
-                padding: 0 0.5rem;
-              }
-            }
-
-            >img {
-              height: 1em;
-              rotate: -90deg;
-            }
-
-            &.no-key {
-              >img {
-                rotate: 0deg;
-              }
-            }
-          }
-
-          #plugin-btn {
-            color: @text-color;
-            display: flex;
-            align-items: center;
-
-            >img {
-              // sets the size for the plugin button
-              max-width: 15px;
-              max-height: 15px;
-              margin-right: 8px;
-            }
-          }
         }
 
         >#startpage-logo {
@@ -569,7 +567,12 @@ div.startpage {
   }
 }
 
-label.sidebar-opener {
-  top: 2dvh;
-  width: 21px;
-}
+// The startpage used to pull the menu button down to `top: 2dvh` so it would
+// line up with the fokus row, which was padded by the same 2dvh. That is the
+// other half of the drift the band fixes: it aligned the button to the row by
+// moving the button, in viewport units, on one page only — and the account pill
+// that later joined it in the corner was pinned in pixels and could not follow.
+//
+// Both now sit in .navigation-cluster, which is what is positioned; `top` on the
+// button inside it is inert, and its width is its glyph. Nothing startpage-
+// specific is left to say about it.

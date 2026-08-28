@@ -31,33 +31,6 @@
     padding: 0.7rem 1rem;
     gap: 1rem;
 
-    #search-key {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 1.25rem;
-
-      @supports not (selector(:first-child)) {
-        padding-right: 1rem;
-      }
-
-      >a {
-        color: #585858;
-        display: block;
-        height: 100%;
-
-        >img {
-          height: 100%;
-          display: block;
-          transform: rotate(-90deg);
-        }
-
-        &.authorized {
-          color: green;
-        }
-      }
-    }
-
     >#suggest-exit {
       color: @text-color;
       font-size: 2rem;
@@ -206,10 +179,6 @@
   &[data-suggest="active"]:focus-within {
     display: grid;
 
-    #search-key {
-      display: none;
-    }
-
     #suggest-exit {
       display: block;
     }
@@ -305,10 +274,6 @@
       overflow: auto;
     }
 
-    #search-key {
-      display: none;
-    }
-
     #suggest-exit {
       display: block;
     }
@@ -352,14 +317,6 @@
 
 #searchForm {
   margin: 0;
-}
-
-#key-link {
-  &.unauthorized {
-    #searchbar-img-key {
-      filter: invert(1) brightness(@searchbar-key-brightness);
-    }
-  }
 }
 
 #searchbar-img-lupe {

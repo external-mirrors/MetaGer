@@ -33,4 +33,6 @@ return [
     'plugin' => 'Plugin MetaGer',
     'close' => 'Pulsante di commutazione della barra di navigazione',
     'toggle' => 'aprire/chiudere la barra di navigazione',
+    'opener' => 'Apri la barra di navigazione',
+    'opener_close' => 'Chiudi la barra di navigazione',
 ];

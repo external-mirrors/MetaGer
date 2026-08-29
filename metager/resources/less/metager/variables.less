@@ -49,6 +49,11 @@
   // Our SVG icons are all black, so light leaves them alone and dark flips them.
   --invert-state: invert(0%);
   --icon-color: 0;
+  // The landing page's benefit icons are flat #808080 line art, which is too
+  // pale against a white card and too dark against a dark one. A filter rather
+  // than a second set of files, and a token rather than a rule inside a
+  // `dark/` stylesheet — those load in both themes and would win in both.
+  --landing-icon-filter: brightness(0.5);
   --searchbar-searchicon-brightness: 0;
 
   // The account mark (App\Authentication\KeyIdenticon). The *hue* is per key and
@@ -70,17 +75,6 @@
 
   --blacklist-entries-odd: rgb(240, 240, 240);
   --blacklist-entries-even: rgb(255, 215, 200);
-
-  --story-privacy-background: @color-almost-white;
-  --story-privacy-color: @color-almost-black;
-  --story-ngo-background: white;
-  --story-ngo-color: #ad1a00;
-  --story-diversity-background: #edfdff;
-  --story-diversity-color: #0c4690;
-  --story-eco-background: #e3ffe9;
-  --story-eco-color: #0c621a;
-  --story-plugin-background: white;
-  --story-font-color: #474747;
 
   // Derived colours. Each one replaces a LESS function call that can no longer
   // reach a themed colour; the call itself is unchanged, only its home is.
@@ -122,6 +116,7 @@
 
   --invert-state: invert(100%);
   --icon-color: 0.9;
+  --landing-icon-filter: brightness(1.75);
   --searchbar-searchicon-brightness: 0.5;
 
   // Lighter and less saturated than the light palette: the same hue has to read
@@ -139,17 +134,6 @@
 
   --blacklist-entries-odd: @color-almost-black;
   --blacklist-entries-even: rgb(30, 15, 0);
-
-  --story-privacy-background: @color-strong-grey;
-  --story-privacy-color: @color-almost-white;
-  --story-ngo-background: #200000;
-  --story-ngo-color: #ffaaaa;
-  --story-diversity-background: #000020;
-  --story-diversity-color: #aaaaff;
-  --story-eco-background: #002000;
-  --story-eco-color: #aaffaa;
-  --story-plugin-background: @color-almost-black;
-  --story-font-color: @color-almost-white;
 
   // Derived colours, by the same functions as the light palette.
   //
@@ -204,6 +188,7 @@
 @border-color: var(--border-color);
 @invert-state: var(--invert-state);
 @icon-color: var(--icon-color);
+@landing-icon-filter: var(--landing-icon-filter);
 @searchbar-searchicon-brightness: var(--searchbar-searchicon-brightness);
 @account-mark-saturation: var(--account-mark-saturation);
 @account-mark-lightness: var(--account-mark-lightness);
@@ -216,16 +201,6 @@
 @input-text: var(--input-text);
 @blacklist-entries-odd: var(--blacklist-entries-odd);
 @blacklist-entries-even: var(--blacklist-entries-even);
-@story-privacy-background: var(--story-privacy-background);
-@story-privacy-color: var(--story-privacy-color);
-@story-ngo-background: var(--story-ngo-background);
-@story-ngo-color: var(--story-ngo-color);
-@story-diversity-background: var(--story-diversity-background);
-@story-diversity-color: var(--story-diversity-color);
-@story-eco-background: var(--story-eco-background);
-@story-eco-color: var(--story-eco-color);
-@story-plugin-background: var(--story-plugin-background);
-@story-font-color: var(--story-font-color);
 
 // Derived. bs-variables.less declares @link-hover-color as darken(@link-color)
 // and is imported before this file; this definition is the one that wins.

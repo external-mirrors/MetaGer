@@ -80,7 +80,7 @@
           </div>
         </div>
         <div class="sidebar-account__actions">
-          <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+          <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::enter() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
             @if($sidebarState === \App\Authentication\KeyState::FULL)
               @lang('account.sidebar.manage')
             @else
@@ -96,9 +96,19 @@
       @endif
     @else
       <div class="sidebar-account__lede">@lang('account.sidebar.logged_out')</div>
+      {{-- Both go through App\Landing\KeymanagerLinks, which re-emits the
+           MetaGer app's callback markers. The app opens the landing page in a
+           Custom Tab, and the landing page is now this page — which has a menu
+           the keymanager's own page did not. A visitor who signs in from here
+           rather than from the button in the hero must not lose the handback,
+           or the key they create never reaches the app.
+
+           "Create" used to point at /keys. That was the landing page; /keys now
+           redirects here, so the old target sent people back where they came
+           from. --}}
       <div class="sidebar-account__actions">
-        <a class="btn account-btn account-btn--primary" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/enter") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
-        <a class="btn account-btn account-btn--quiet" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
+        <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::enter() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
+        <a class="btn account-btn account-btn--quiet" href="{{ App\Landing\KeymanagerLinks::create() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
       </div>
     @endif
   </div>

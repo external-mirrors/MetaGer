@@ -31,7 +31,10 @@ class StaticPagesTest extends TestCase
     public static function pages(): array
     {
         return [
-            "startpage" => ["/", "titles.index", "mg-story.privacy.title"],
+            // The landing page's own claim. It used to be mg-story.privacy.title,
+            // which is the story section the benefit cards replaced — see
+            // Tests\Feature\StartpageLandingTest.
+            "startpage" => ["/", "titles.index", "index.landing.title"],
             "about" => ["/about", "titles.about", "about.head.3"],
             "app" => ["/app", "titles.app", "app.metager.1"],
             "datenschutz" => ["/datenschutz", "titles.datenschutz", "privacy.title"],

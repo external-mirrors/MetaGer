@@ -29,7 +29,7 @@ class ProgressiveEnhancementTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->visit("/de-DE")
                 ->assertTitle(trans("titles.index", [], "de"))
-                ->assertSee(trans("mg-story.privacy.title", [], "de"));
+                ->assertSee(trans("index.landing.title", [], "de"));
         });
     }
 
@@ -63,12 +63,15 @@ class ProgressiveEnhancementTest extends DuskTestCase
             //
             // Asserted rather than clicked. /keys is not a MetaGer route — nginx
             // proxies "^(/.*)?/keys" to the keymanager service — so following the
-            // link leaves the application under test, and its answer (today a 301
-            // to /de-DE/keys/) is that service's business, not this suite's.
-            // Clicking through without JavaScript is covered below, on a page
-            // MetaGer actually serves.
-            $this->assertStringEndsWith(
-                "/de-DE/keys",
+            // link leaves the application under test, and its answer is that
+            // service's business, not this suite's. Clicking through without
+            // JavaScript is covered below, on a page MetaGer actually serves.
+            //
+            // It points at the create page and not at /keys, which is what it
+            // used to be: /keys is now this very page, so the old target would
+            // bounce the visitor straight back to where they clicked.
+            $this->assertStringContainsString(
+                "/de-DE/keys/key/create",
                 $browser->attribute("#searchbar-replacement a.startpage-create-link", "href")
             );
 

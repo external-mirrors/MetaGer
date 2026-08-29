@@ -50,8 +50,10 @@
     is not guaranteed to run. It points at the page explaining what an anonymous
     token is, which is the best answer this site can give without the extension.
   --}}
-  @php($accountHref = $accountAnonymous ? "/keys/help/anonymous-token" : "/keys/key/enter")
-  <a href="{{ LaravelLocalization::getLocalizedURL(null, $accountHref) }}"
+  @php($accountHref = $accountAnonymous
+    ? App\Landing\KeymanagerLinks::anonymousToken()
+    : App\Landing\KeymanagerLinks::enter())
+  <a href="{{ $accountHref }}"
     id="account-pill"
     @if($accountAnonymous) data-extension-settings @endif
     class="account-pill account-pill--{{ $accountDensity }} @if($accountAnonymous) account-pill--anonymous @else account-pill--{{ strtolower($accountState->name) }} @endif {{ $class ?? '' }}"

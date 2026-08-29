@@ -1,0 +1,533 @@
+// The landing page: everything a visitor without a key sees, plus the two
+// bands (who runs MetaGer, how to install it) that both states share.
+//
+// It replaces #searchbar-replacement's 420px card and the five #story-*
+// sections that each filled a viewport. One band rhythm now, one container
+// width, and the tint that separates alternating bands is derived from the
+// brand orange rather than from five hand-picked pastel backgrounds — which is
+// also why five --story-*-background tokens no longer have a reader.
+
+@import "../../variables.less";
+
+@landing-container: 960px;
+@landing-tint: color-mix(in srgb, @metager-orange 5%, @background-color);
+@landing-tint-strong: color-mix(in srgb, @metager-orange 10%, @background-color);
+
+.landing-section {
+  padding-block: 4rem;
+
+  & + .landing-section {
+    border-top: 1px solid @border-color;
+  }
+
+  &--tinted {
+    background-color: @landing-tint;
+  }
+}
+
+.landing-container {
+  max-width: @landing-container;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+.landing-section__heading {
+  font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+// Buttons and link rows, shared by every band. `.btn` comes from bootstrap and
+// brings its own padding and border-radius; these override both rather than
+// fighting them from a more specific selector.
+.landing-btn {
+  display: inline-block;
+  padding: 11px 22px;
+  border-radius: 6px;
+  border: 1px solid @metager-orange;
+  font-size: 0.95rem;
+  font-weight: 700;
+
+  &--solid {
+    background-color: @metager-orange;
+    color: @color-white;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @color-white;
+    }
+  }
+
+  &--ghost {
+    color: @metager-orange;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @metager-orange;
+    }
+  }
+}
+
+.landing-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.4rem 0 0;
+  padding: 0;
+  list-style: none;
+
+  > li > a {
+    display: block;
+    padding: 5px 12px;
+    border: 1px solid @border-color;
+    border-radius: 999px;
+    background-color: @card-background-color;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Hero ─────────────────────────────────────────────────────────────────────
+
+#landing-hero {
+  // Reserve the band the navigation cluster is pinned in, the same way the
+  // fokus row does on the signed-in page, so the language chip never runs under
+  // the menu button.
+  // px, not rem: @navigation-band-outer-height is in px and LESS takes the
+  // left operand's unit for the whole sum, so `+ 1.5rem` silently added 1.5px.
+  padding-top: @navigation-band-outer-height + 24px;
+  padding-bottom: 3rem;
+  text-align: center;
+
+  > #startpage-logo {
+    margin: 0 0 1.5rem;
+  }
+}
+
+#searchbar-replacement {
+  max-width: 640px;
+  margin-inline: auto;
+  display: grid;
+  row-gap: 0.9rem;
+  justify-items: center;
+
+  > .tagline {
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: @text-color-alpha-60;
+  }
+
+  // The <h1> of the old card was a one-line hook; this is the page's actual
+  // claim, and it is what accountBreadcrumb.js rewrites to "Willkommen zurück."
+  > .landing-hero__title {
+    margin: 0;
+    max-width: 26ch;
+    font-size: clamp(1.5rem, 4.5vw, 2.15rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  > .landing-hero__description {
+    margin: 0;
+    max-width: 54ch;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: @text-color-alpha-70;
+  }
+
+  > .landing-hero__checks {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.2rem 0 0;
+    padding: 0;
+    list-style: none;
+
+    > li {
+      padding: 5px 13px;
+      border-radius: 999px;
+      background-color: @landing-tint-strong;
+      font-size: 0.85rem;
+      font-weight: 600;
+
+      &::before {
+        content: "✓";
+        margin-right: 0.45rem;
+        font-weight: 700;
+        color: #2e7d4f;
+      }
+    }
+  }
+
+  > .landing-hero__actions {
+    display: grid;
+    row-gap: 0.8rem;
+    width: 100%;
+    max-width: 404px;
+    margin-top: 0.6rem;
+  }
+}
+
+// Log in is the primary action, and it wears the brand rather than the
+// Bootstrap blue .btn-primary inherits. Most people landing here have used
+// MetaGer before and only lost the cookie; a second key would split their
+// balance.
+.startpage-login-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid @metager-orange;
+  border-radius: 5px;
+  background-color: @metager-orange;
+  color: @color-white;
+  font-size: 15px;
+  font-weight: 700;
+
+  &:hover,
+  &:focus-visible,
+  &:visited {
+    color: @color-white;
+  }
+}
+
+.helper-line {
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+  line-height: 1.45;
+}
+
+// Creating a key is a real path and stays reachable — as one quiet row under
+// a rule, not a second full-width button that would give the two actions equal
+// weight. It gets its own solid button at the end of "how it works", where a
+// visitor who needed the explanation comes out.
+.first-time-line {
+  padding-top: 0.6rem;
+  border-top: 1px solid @border-color;
+  font-size: 0.82rem;
+  color: @text-color-alpha-70;
+
+  > .startpage-create-link {
+    font-weight: 700;
+    color: @text-color;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+}
+
+.landing-hero__cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  margin-top: 2.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: @text-color-alpha-60;
+
+  > .landing-hero__cue-arrow {
+    font-size: 1rem;
+    line-height: 1;
+  }
+}
+
+// ── How it works ─────────────────────────────────────────────────────────────
+
+.landing-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: landing-step;
+
+  @media (max-width: 780px) {
+    grid-template-columns: 1fr;
+  }
+
+  > li {
+    display: grid;
+    align-content: start;
+    gap: 0.55rem;
+    padding: 1.4rem 1.25rem 1.5rem;
+    border: 1px solid @border-color;
+    border-radius: 12px;
+    background-color: @card-background-color;
+
+    &::before {
+      counter-increment: landing-step;
+      content: counter(landing-step);
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background-color: @metager-orange;
+      color: @color-white;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    > h3 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    > p {
+      margin: 0;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: @text-color-alpha-70;
+    }
+  }
+}
+
+.landing-steps__membership {
+  margin: 1.1rem 0 0;
+  padding: 0.85rem 1rem;
+  border: 1px dashed @metager-orange;
+  border-radius: 10px;
+  background-color: @landing-tint;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: @text-color-alpha-70;
+  text-align: center;
+}
+
+.landing-steps__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+}
+
+.landing-steps__login {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: @text-color-alpha-70;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+// ── Benefits ─────────────────────────────────────────────────────────────────
+
+.landing-benefits {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.landing-benefit {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 16px;
+  background-color: @landing-tint;
+
+  // Alternating sides, so five cards of running text do not read as one column.
+  &:nth-child(even) {
+    grid-template-columns: 1fr 132px;
+
+    > .landing-benefit__badge {
+      order: 2;
+    }
+  }
+
+  @media (max-width: 780px) {
+    &,
+    &:nth-child(even) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      text-align: center;
+      gap: 1.1rem;
+    }
+
+    &:nth-child(even) > .landing-benefit__badge {
+      order: 0;
+    }
+  }
+}
+
+.landing-benefit__badge {
+  display: grid;
+  place-items: center;
+  width: 132px;
+  height: 132px;
+  border-radius: 20px;
+  background-color: @landing-tint-strong;
+  justify-self: center;
+
+  > img {
+    width: 62%;
+    height: 62%;
+    object-fit: contain;
+    // Flat #808080 line art: too pale on a light card, too dark on a dark one.
+    filter: @landing-icon-filter;
+  }
+
+  // The lock is brand orange on purpose and is the one accent in the set.
+  &--brand > img {
+    filter: none;
+  }
+
+  @media (max-width: 780px) {
+    width: 104px;
+    height: 104px;
+  }
+}
+
+.landing-benefit__text {
+  display: grid;
+  gap: 0.6rem;
+  max-width: 44em;
+
+  > h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  > p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: @text-color-alpha-70;
+  }
+
+  @media (max-width: 780px) {
+    justify-items: center;
+  }
+}
+
+.landing-benefit__nots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+
+  > li::before {
+    content: "✕";
+    margin-right: 0.4rem;
+    font-weight: 700;
+    color: #c0392b;
+  }
+}
+
+// ── Who runs MetaGer ─────────────────────────────────────────────────────────
+
+.landing-org {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.landing-org__card {
+  display: grid;
+  align-content: start;
+  gap: 0.6rem;
+  padding: 1.4rem 1.25rem 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  > .landing-org__icon {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+  }
+
+  > h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  > p {
+    margin: 0;
+    font-size: 0.87rem;
+    line-height: 1.5;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Install ──────────────────────────────────────────────────────────────────
+
+.landing-install {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 1.75rem;
+  border: 1px solid @border-color;
+  border-radius: 16px;
+  background-color: @landing-tint;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+.landing-install__text {
+  display: grid;
+  gap: 0.55rem;
+
+  > h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 700;
+  }
+
+  > p {
+    margin: 0;
+    max-width: 56ch;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: @text-color-alpha-70;
+  }
+}
+
+.landing-install__figure {
+  margin: 0;
+
+  > img {
+    width: 120px;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.landing-install__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  @media (max-width: 860px) {
+    justify-content: center;
+  }
+}

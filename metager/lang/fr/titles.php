@@ -35,4 +35,8 @@ return [
         'overview' => 'Journaux - MetaGer',
         'login' => "Logs Admin - MetaGer",
     ],
+    'price' => 'Tarifs - MetaGer',
+    'agb' => 'Conditions générales - MetaGer',
+    'help-key' => 'La clé MetaGer - MetaGer',
+    'anonymous-token' => 'Jetons anonymes - MetaGer',
 ];

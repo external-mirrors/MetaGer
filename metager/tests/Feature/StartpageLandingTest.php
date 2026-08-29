@@ -28,7 +28,9 @@ use Tests\TestCase;
  * because the way this change goes wrong later is that the marketing quietly
  * leaks into the page people use every day.
  *
- * The `/keys` links are still the keymanager's, and still carry the MetaGer
+ * The `/keys` links left are the key flow only — creating and entering a key.
+ * Prices and the two help pages moved here in the second migration step.
+ * Those that remain still carry the MetaGer
  * app's callback markers — see {@see App\Landing\KeymanagerLinks}.
  */
 class StartpageLandingTest extends TestCase
@@ -232,7 +234,7 @@ class StartpageLandingTest extends TestCase
         $this->assertNotEmpty($matches[0]);
         foreach ($matches[0] as $href) {
             if (!str_contains($href, "/keys/key/")) {
-                continue; // /keys/cost and /keys/help are not part of the handback.
+                continue; // /keys/c is not part of the handback.
             }
             $this->assertStringContainsString("keystore=fdroid", $href, $href);
         }
@@ -244,8 +246,11 @@ class StartpageLandingTest extends TestCase
 
         $response->assertSee("/de-DE/keys/key/create", false);
         $response->assertSee("/de-DE/keys/key/enter", false);
-        $response->assertSee("/de-DE/keys/cost", false);
-        $response->assertSee("/de-DE/keys/help/anonymous-token", false);
+        // Preise und die Token-Erklärung sind seit dem zweiten Umzugsschritt
+        // MetaGer-Routen; das Präfix kommt jetzt von URL::formatPathUsing statt
+        // von LaravelLocalization::getLocalizedURL, aber es muss da sein.
+        $response->assertSee("/de-DE/preise", false);
+        $response->assertSee("/de-DE/hilfe/anonyme-token", false);
 
         // German copy, to prove the landing block is translated rather than
         // falling back — pt was missing from the keymanager entirely and eight
@@ -309,15 +314,17 @@ class StartpageLandingTest extends TestCase
 
     /**
      * The link in mg-story.plugin.p used to be built with
-     * `url('/help/anonymous-token')`, which is not a MetaGer route — every other
-     * reference in the codebase is `/keys/help/anonymous-token`. It had been a
-     * 404 on the startpage for as long as the string has existed.
+     * `url('/help/anonymous-token')`, which was not a MetaGer route at all — it
+     * had been a 404 on the startpage for as long as the string has existed.
+     * The fix pointed it at `/keys/help/anonymous-token`; since the second
+     * migration step that page is a MetaGer route, and the link names it.
      */
     public function testTheAnonymousTokenLinkInTheInstallBandIsNotA404(): void
     {
         $response = $this->get("/")->assertOk();
 
-        $response->assertSee("/keys/help/anonymous-token", false);
+        $response->assertSee(url("/hilfe/anonyme-token"), false);
         $response->assertDontSee('href="/help/anonymous-token"', false);
+        $response->assertDontSee("/keys/help/", false);
     }
 }

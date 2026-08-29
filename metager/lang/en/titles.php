@@ -35,4 +35,8 @@ return [
         "overview" => 'Logs – MetaGer',
         "login" => "Login – MetaGer",
     ],
+    'price' => 'Prices – MetaGer',
+    'agb' => 'Terms and Conditions – MetaGer',
+    'help-key' => 'The MetaGer key – MetaGer',
+    'anonymous-token' => 'Anonymous tokens – MetaGer',
 ];

@@ -8,7 +8,7 @@
     <div class="landing-install">
       <div class="landing-install__text">
         <h2>@lang('mg-story.plugin.title')</h2>
-        <p>@lang('mg-story.plugin.p', ['anonymousTokenLink' => App\Landing\KeymanagerLinks::anonymousToken()])</p>
+        <p>@lang('mg-story.plugin.p', ['anonymousTokenLink' => route('anonymous-token')])</p>
       </div>
       <figure class="landing-install__figure">
         <img src="/img/story-plugin.svg" alt="{{ trans('mg-story.plugin.image.alt') }}">

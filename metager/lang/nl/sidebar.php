@@ -35,4 +35,6 @@ return [
     'toggle' => 'navigatiebalk openen/sluiten',
     'opener' => 'Navigatiebalk openen',
     'opener_close' => 'Navigatiebalk sluiten',
+    'navPrice' => 'Prijzen',
+    'navAgb' => 'Algemene voorwaarden',
 ];

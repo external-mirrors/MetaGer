@@ -35,4 +35,8 @@ return [
         'overview' => 'Lokit - MetaGer',
         'login' => "Lokit Admin - MetaGer",
     ],
+    'price' => 'Hinnat - MetaGer',
+    'agb' => 'Yleiset sopimusehdot - MetaGer',
+    'help-key' => 'MetaGer-avain - MetaGer',
+    'anonymous-token' => 'Anonyymit tokenit - MetaGer',
 ];

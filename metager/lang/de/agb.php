@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
+ *
+ * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
+ * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
+ * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
+ * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
+ * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ */
+
+return [
+    "heading" => "Allgemeine Geschäftsbedingungen für Aufladung von Token (auf Schlüssel)",
+    "date" => "Stand: November 2025",
+    "translationNotice" => "Hinweis: Dies ist eine Übersetzung der gültigen deutschen AGB. Die rechtsverbindliche Version finden Sie <a href=\":linkGerman\">hier</a>",
+    "paragraphs" => [
+        [
+            "heading" => "Anbieter, Geltungsbereich und Änderungen",
+            "paragraphs" => [
+                "Die nachfolgenden Allgemeinen Geschäftsbedingungen gelten für die Geschäftsbeziehungen zwischen den Verwendern der Dienste der Website metager.de und metager.org, insbesondere der Aufladung von Token auf den Schlüssel, und dem Betreiber SUMA-EV. Im Folgenden werden die 'Nutzer' der Tokenaufladung / des Schlüssels auch 'Verwender' genannt, der SUMA-EV wird im Folgenden 'MetaGer' genannt.",
+                "Diese AGB sind jederzeit unter :agburl einsehbar, jederzeit abrufbar sowie speicherbar und druckbar. Die vergangenen Bestellungen können im Kundenbereich im Schlüssel unter 'Schlüssel verwalten – Bestellungen' durch Eingabe der ZahlungsID eingesehen werden. Dies ist nur innerhalb 30 Tagen vom Kaufdatum an möglich.",
+                "Diese Bedingungen gelten ausschließlich für Verwender, die Verbraucher im Sinne des § 13 des Bürgerlichen Gesetzbuches sind. Ein Verbraucher stellt demnach jede natürliche Person dar, welche ein Rechtsgeschäft zu Zwecken abschließt, die überwiegend weder ihrer gewerblichen noch ihrer selbstständigen, beruflichen Tätigkeit zugerechnet werden können.",
+                "MetaGer behält sich vor, den Nutzungskreis und den Kreis der Teilnahmeberechtigten zu erweitern oder zu beschränken und behält sich ferner vor, diese allgemeinen Geschäftsbedingungen für 'Verwender' bei Bedarf jederzeit zu ändern oder zu ergänzen, wenn dies im Interesse einer einfachen oder sicheren Abwicklung oder zur Verhinderung von Missbräuchen geboten ist. Änderungen der allgemeinen Geschäftsbedingungen werden durch Veröffentlichung auf der Website von MetaGer bekannt gegeben. Sollte der Nutzer mit entsprechenden Änderungen oder Ergänzungen der AGB nicht einverstanden sein, so hat er innerhalb von 4 Wochen schriftlich an MetaGer der Änderung zu widersprechen. Ansonsten gelten die geänderten AGB als genehmigt und werden somit wirksamer Vertragsbestandteil.",
+                "Die Online-Suchmaschine metager.de, deren Partnerseiten sowie zugehörige Software werden von dem SUMA-EV betrieben. Sitz des SUMA-EV ist Henniesruh 28D, 30655 Hannover. Vertreten wird der SUMA-EV durch den Vorstand, dieser wiederum durch den Geschäftsführer Dominik Hebeler. Registernummer: VR200033, Registergericht: Amtsgericht Hannover.",
+                "Es gelten folgende Kontaktdaten:\nTelefon: +49 511 34000070\nTelefax: +49 511 34001023\nKontaktformular: metager.de/kontakt\n*inländische Festnetztelefonnummer.\n",
+                "Gemäß der Verordnung über Online-Streitbeilegung in Verbraucherangelegenheiten verweisen wir auf folgenden Link: http://ec.europa.eu/consumers/odr/",
+            ],
+        ],
+        [
+            "heading" => "Vertragsschluss und Zahlungsbedingungen",
+            "paragraphs" => [
+                "Das Zurverfügungstellen der verschiedenen Tokenpakete durch MetaGer stellt kein rechtlich bindendes Vertragsangebot, sondern nur eine unverbindliche Aufforderung an den Verwender, eine Aufladung bzw einen Kauf durchzuführen, dar. Mit dem Anklicken des Buttons 'Zahlung durchführen' oder gegebenenfalls vergleichbarem Text gibt der Verwender ein für ihn rechtlich verbindliches Angebot auf Abschluss eines Kaufvertrages gegenüber MetaGer ab.",
+                "Der Verwender kann vor dem verbindlichen Absenden der Bestellung durch Betätigen der in dem von ihm verwendeten Internet-Browser enthaltenen 'Zurück' Taste nach Kontrolle seiner Angaben wieder zu der Website gelangen, auf der die Angaben erfasst werden und Eingabefehler berichtigen bzw. durch Schließen des Internet-Browsers den Vorgang abbrechen.",
+                "Die angegebenen Preise enthalten die gesetzliche Umsatzsteuer und sonstige Preisbestandteile. Da es sich um eine Dienstleistung handelt, ist kein Versand erforderlich und die Token werden nach erfolgtem Zahlungsvorgang sofort zur Verfügung gestellt. Es besteht die Möglichkeit der Zahlung per Vorkasse. Hat der Verwender die Zahlung per Vorkasse gewählt, so verpflichtet dieser sich, den Kaufpreis unverzüglich nach Vertragsschluss zu zahlen.",
+            ],
+        ],
+        [
+            "heading" => "Gewährleistung, Vertragssprache und Kundendienst",
+            "paragraphs" => [
+                "Es gelten die gesetzlichen Gewährleistungsregelungen.",
+                "Die Vertragssprache ist Deutsch.",
+                "Es steht ein Kundendienst für Fragen, Reklamationen und Beanstandungen werktags von 9.00 Uhr bis 16.00 Uhr unter den Kontaktdetails des SUMA-EV zur Verfügung.",
+            ],
+        ],
+        [
+            "heading" => "Schlüssel, Zahlungsoptionen und Aufladung",
+            "paragraphs" => [
+                "Der Verwender kann ein Guthaben-Konto, im folgenden Schlüssel, einrichten, darauf Guthaben aufladen und somit die Token erwerben. Als Zahlungsoptionen stehen hierfür unter anderem Kreditkarte und PayPal zur Verfügung. Zudem ist auch eine Barzahlung per Postversand an den Sitz von MetaGer unter oben angegebener Adresse möglich.",
+                "Zur Nutzung eines MetaGer Schlüssels und der Aufladung von Token hierauf ist eine vorherige Erstellung des jeweiligen individuellen Schlüssels auf der Website von MetaGer erforderlich.",
+                "Der Verwender erhält je nach ausgewähltem Paket exakt die erworbenen Token zur freien (unbegrenzten) Verwendung. Dabei stehen nachfolgend die angebotenen Kaufoptionen zur Verfügung:",
+                [
+                    "1000 Token : 10 Euro",
+                    "2000 Token : 20 Euro",
+                    "3000 Token : 30 Euro",
+                    "4000 Token : 40 Euro",
+                    "6000 Token : 60 Euro",
+                    "12000 Token: 120 Euro",
+                ],
+                "Durch Vermarktungsaktionen mit Dritten im Rahmen von Partner-Aktionen und Kundenbindungsprogrammen kann der Nutzer ebenfalls Schlüssel erhalten. Hierbei gelten immer diese AGB sowie gegebenenfalls die jeweiligen Aktionsbedingungen.",
+            ],
+        ],
+        [
+            "heading" => "Gültigkeit und Einlösung der Token",
+            "paragraphs" => [
+                "Die Tokens können pro Verwender innerhalb des angegebenen Gültigkeitsintervalls unbegrenzt eingelöst werden. Die Verfügbarkeit der erworbenen Token und wie oft diese innerhalb eines bestimmten Zeitraumes eingelöst werden können ist auf der Übersichtsseite im Schlüssel angegeben.",
+                "Ab Kauf der Token sind diese zwei Kalenderjahre gültig. Das Gültigkeitsdatum ist immer auf der Übersicht vermerkt. Nach Ablauf der Gültigkeit verfällt auch das Angebot.",
+                "Nach Kauf eines Tokenpaketes wird dieses direkt auf den Schlüssel aufgeladen.",
+                "Sämtliche Aufladungen sowie der gesamte Prozess von Schlüsselerstellung bis hin zur Einlösung der Token erfolgen vollständig anonym. Hiervon ausgenommen sind die für die Verarbeitung der Zahlung notwendigen Daten.",
+                "Als Nachweis für die Aufladung ist MetaGer berechtigt, den Zahlungsvorgang zu prüfen.",
+                "Der Verwender ist bei der Aufladung des Schlüssels zu keinem Zeitpunkt zur Angabe seiner personenbezogenen Daten verpflichtet. Alle Angaben seinerseits hierzu erfolgen lediglich auf freiwilliger Basis. Zur Rechnungsstellung sowie zur Zahlungsverarbeitung kann jedoch die Angabe gewisser personenbezogener Daten erforderlich sein. Dementsprechend hat der Verwender sämtliche Angaben diesbezüglich wahrheitsgemäß zu treffen.",
+                "Die erworbenen Tokenpakete sowie die daraus resultierenden und auf einem MetaGer Schlüssel befindlichen Token sind nicht übertragbar. Die Weitergabe des jeweiligen Schlüssels durch den Verwender ist jedoch ausdrücklich seitens MetaGer erlaubt.",
+            ],
+        ],
+        [
+            "heading" => "Haftung",
+            "paragraphs" => [
+                "MetaGer haftet nicht für Schäden, die aus der Benutzung des Dienstes entstehen. MetaGer übernimmt keine Gewähr oder Verantwortung für die Korrektheit, Vollständigkeit, Zuverlässigkeit, Qualität und Aktualität anderer Seiten, welche sich durch Verwendung der Dienste ergeben.",
+                "MetaGer stellt eine Onlinedienstleistung zur Verfügung.",
+                "MetaGer bietet auf freiwilliger Basis die Möglichkeit, den Kaufpreis unverbrauchter Token zurückzuerstatten, soweit die durch den Verwender genutzte Zahlungsmethode dies unterstützt. Hiervon ausgenommen sind Zahlungsvorgänge durch Bargeldzahlung. Die Rückerstattung ist innerhalb von 30 Tagen ab Abschluss des Kaufvorganges durch den Verwender zu beantragen. Dazu ist auf der Übersichtsseite die Eingabe der zugehörigen ZahlungsID notwendig.",
+                "Durch Zeitablauf verfallene Token sind nicht erstattungsfähig.",
+                "MetaGer ist immer bemüht, die Funktionen so weit wie möglich aufrecht zu erhalten. MetaGer übernimmt für die Verfügbarkeit von Internet oder Mobilfunknetz keine Gewähr oder Haftung.",
+                "MetaGer haftet lediglich für Vorsatz und grobe Fahrlässigkeit. Diese und vorstehende Haftungsbeschränkungen gelten nicht für die Haftung für Personenschäden, die Haftung nach dem Produkthaftungsgesetz oder für die Haftung für die Verletzung wesentlicher Vertragspflichten. Als wesentliche Pflichten eines Vertrages werden solche bezeichnet, die für die ordnungsgemäße Durchführung eines Vertrages unbedingt erforderlich sind, damit das Erreichen des Vertragszweckes nicht gefährdet wird und auf deren Einhaltung der Kunde regelmäßig vertrauen darf. Wenn eine solche wesentliche Vertragspflicht schuldhaft verletzt wird, so ist die Haftung auf den vertragstypischen und bei Vertragsabschluss vorhersehbaren Schaden beschränkt.",
+                "Alle Beschränkungen und Haftungsausschlüsse gelten entsprechend auch für Vertreter, leitende Angestellte, Organe und sonstige Verrichtungs- und Erfüllungsgehilfen von MetaGer.",
+                "Der Verwender verpflichtet sich, die angebotenen Dienste nicht zu missbräuchlichen Zwecken zu nutzen. Missbräuchlich ist insbesondere die Angabe fremder, personenbezogener Daten zum Zwecke der Täuschung oder der Erschleichung von Vorteilen.",
+                "Wird eine Nutzung des Dienstes seitens des Verwenders über ein haushaltsübliches Maß hinaus beabsichtigt, so ist dies bei Beginn dieser Nutzung MetaGer formlos bevorzugt über das Kontaktformular anzuzeigen.",
+            ],
+        ],
+        [
+            "heading" => "Schlussbestimmungen",
+            "paragraphs" => [
+                "Es gilt deutsches Recht. Die Anwendung des UN-Kaufrechts ist ausgeschlossen.",
+                "Sollten einzelne oder mehrere Bestimmungen dieser Allgemeinen Geschäftsbedingungen unwirksam sein oder werden, so berührt dies die Gültigkeit der übrigen Bestimmungen dieser AGB nicht. Die Parteien verpflichten sich, unwirksame oder nichtige Bestimmungen durch neue Bestimmungen zu ersetzen, die dem in den unwirksamen oder nichtigen Bestimmungen enthaltenen wirtschaftlichen Regelungsgehalt in rechtlich zulässiger Weise gerecht werden. Entsprechendes gilt, wenn sich in dem Vertrag eine Lücke herausstellen sollte. Zur Ausfüllung der Lücke verpflichten sich die Parteien auf die Etablierung angemessener Regelungen in diesem Vertrag hinzuwirken, die dem am nächsten kommen, was die Parteien nach Sinn und Zweck dieses Vertrags bestimmt hätten, wenn der Punkt von ihnen bedacht worden wäre. Kommt keine Einigung zustande, gilt ergänzend das Gesetz.",
+            ],
+        ],
+    ],
+];

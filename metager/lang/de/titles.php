@@ -35,4 +35,8 @@ return [
         'overview' => 'Protokolle – MetaGer',
         'login' => "Protokolle Verwaltung – MetaGer",
     ],
+    'price' => 'Preise – MetaGer',
+    'agb' => 'AGB – MetaGer',
+    'help-key' => 'Der MetaGer-Schlüssel – MetaGer',
+    'anonymous-token' => 'Anonyme Token – MetaGer',
 ];

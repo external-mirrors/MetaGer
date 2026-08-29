@@ -35,4 +35,8 @@ return [
         "overview" => 'Registres – MetaGer',
         "login" => "Inici de sessió – MetaGer",
     ],
+    'price' => 'Preus – MetaGer',
+    'agb' => 'Condicions generals – MetaGer',
+    'help-key' => 'La clau MetaGer – MetaGer',
+    'anonymous-token' => 'Tokens anònims – MetaGer',
 ];

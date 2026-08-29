@@ -373,7 +373,7 @@
         <h3>MetaGer Schlüssel inklusive</h3>
         <div>Sie erhalten einen Schlüssel für werbefreie Suchen im Gegenwert Ihres Mitgliedsbeitrags. Dieser wird
             automatisch jeden Monat aufgefüllt. Dank <a
-                href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/help/anonymous-token") }}" target="_blank">anonymer Token</a> können wir die
+                href="{{ route('anonymous-token') }}" target="_blank">anonymer Token</a> können wir die
             anonyme Suche auch im Zusammenhang mit einer Mitgliedschaft beweisbar versprechen.</div>
     </div>
     <div>

@@ -69,6 +69,8 @@ const assets = laravel({
         "resources/less/metager/pages/lang-selector.less",
         "resources/less/metager/pages/plugin-page.less",
         "resources/less/metager/pages/privacy.less",
+        "resources/less/metager/pages/price.less",
+        "resources/less/metager/pages/agb.less",
         "resources/less/metager/pages/logs.less",
         "resources/less/metager/pages/help-easy-language.less",
         "resources/less/metager/pages/prevention-information.less",

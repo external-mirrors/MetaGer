@@ -35,4 +35,8 @@ return [
         'overview' => 'Loggar - MetaGer',
         'login' => "Loggar Admin - MetaGer",
     ],
+    'price' => 'Priser - MetaGer',
+    'agb' => 'Allmänna villkor - MetaGer',
+    'help-key' => 'MetaGer-nyckeln - MetaGer',
+    'anonymous-token' => 'Anonyma tokens - MetaGer',
 ];

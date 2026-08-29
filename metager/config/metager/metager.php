@@ -11,7 +11,19 @@ return [
     ],
     "keymanager" => [
         "server" => env("KEY_SERVER", config("app.url") . "/keys"),
-        "access_token" => env("KEY_ACCESS_TOKEN", "no-auth")
+        "access_token" => env("KEY_ACCESS_TOKEN", "no-auth"),
+        /**
+         * The last resort for App\Landing\KeyPrice, not a second source of
+         * truth: the keymanager states the price, this is only what /preise
+         * renders on a cold cache while the keymanager is unreachable. If these
+         * numbers ever have to be edited, the keymanager's config/default.json
+         * is the file that actually changed.
+         */
+        "price" => [
+            "per_token" => 0.01,
+            "vat" => 7,
+            "purchasable" => [500, 1000, 2000, 3000, 4000, 6000],
+        ],
     ],
     "keys" => [
         "uni_mainz" => explode(separator: ",", string: env("mainz_keys")),

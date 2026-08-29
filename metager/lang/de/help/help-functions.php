@@ -24,19 +24,7 @@ return [
     'key' => [
         'title' => 'MetaGer Schlüssel hinzufügen <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#eh-keyexplain" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'Der MetaGer Schlüssel wird automatisch im Browser eingerichtet und verwendet. Sie müssen also nichts weiter tun. Wenn Sie den MetaGer Schlüssel auf weiteren Geräten nutzen möchten, gibt es mehrere Möglichkeiten, den MetaGer-Schlüssel einzurichten:',
-        '2' => 'Login Code <br>Auf der <a href = "/keys/key/enter">Verwaltungsseite</a> des MetaGer Schlüssels können Sie den Login-Code verwenden, um Ihren Schlüssel zu einem weiteren Gerät hinzuzufügen. Dafür geben Sie den sechsstelligen Zahlencode ganz einfach beim Login ein. Der Login Code ist nur einmalig nutzbar und nur so lange gültig, wie das Fenster geöffnet ist.',
-        '3' => 'URL kopieren <br>Wenn Sie auf der <a href = "/keys/key/enter">Verwaltungsseite</a> des MetaGer Schlüssels sind, gibt es die Möglichkeit eine URL zu kopieren. Mit dieser URL lassen sich alle Einstellungen von MetaGer, sowie der MetaGer Schlüssel auf einem weiteren Gerät speichern.',
-        '4' => 'Datei sichern <br>Wenn Sie auf der <a href = "/keys/key/enter">Verwaltungsseite</a> des MetaGer Schlüssels sind, gibt es die Möglichkeit eine Datei zu sichern. Damit speichern Sie Ihren MetaGer-Schlüssel als Datei ab. Diese Datei können Sie dann auf einem anderen Gerät verwenden, um sich dort mit Ihrem Schlüssel einzuloggen.',
-        '5' => 'QR Code scannen <br>Alternativ können Sie außerdem den QR Code, der auf der <a href = "/keys/key/enter">Verwaltungsseite</a> angezeigt wird, scannen um sich bei einem weiteren Gerät einzuloggen',
-        '6' => 'MetaGer Schlüssel manuell eingeben <br>Sie können natürlich auch den Schlüssel manuell auf einem weiteren Gerät eingeben.',
-        'colors' => [
-            'title' => 'Farbiger MetaGer Schlüssel',
-            '1' => 'Um auf einem Blick erkennen zu können, ob Sie werbefrei suchen, haben wir unserem Schlüsselsymbol Farben verpasst. Im Folgenden finden Sie die Erläuterungen für die entsprechenden Farben:',
-            'grey' => 'Grau: Sie haben keinen Schlüssel eingerichtet. Sie nutzen die kostenlose Suche.',
-            'red' => 'Rot: Wenn Ihr Schlüsselsymbol rot ist, ist dieser Schlüssel leer. Sie haben alle werbefreien Suchen aufgebraucht. Den Schlüssel können Sie auf der Verwaltungsseite des Schlüssels aufladen.',
-            'green' => 'Grün: Wenn Ihr Schlüsselsymbol grün ist, dann verwenden Sie einen aufgeladenen Schlüssel.',
-            'yellow' => 'Gelb: Sollten Sie einen gelben Schlüssel sehen, dann haben Sie noch ein Guthaben von 30 Token. Ihre Suchen sind bald aufgebraucht. Es wird empfohlen den Schlüssel bald aufzuladen.',
-        ],
+        'more' => 'Alle Einrichtungswege und weitere Fragen zum Schlüssel',
     ],
     'multiwordsearch' => [
         'title' => 'Mehrwortsuche <a title="Zur einfachen Hilfe" href="/hilfe/easy-language/functions#eh-severalwords" ><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

@@ -133,7 +133,7 @@ class AccountVisibilityTest extends TestCase
         // sent to: they have no key to enter, and entering one here would hand
         // us the identity the anonymous token exists to keep from us.
         $response->assertSee('data-extension-settings', false);
-        $response->assertSee('/keys/help/anonymous-token', false);
+        $response->assertSee(url("/hilfe/anonyme-token"), false);
         $response->assertDontSee('/keys/key/enter', false);
     }
 

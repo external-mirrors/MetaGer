@@ -63,9 +63,9 @@
         <div class="landing-benefit__text">
           <h2>@lang('index.landing.benefits.compromise.heading')</h2>
           <p>{!! __('index.landing.benefits.compromise.description', [
-            'linkPaymentMethods' => App\Landing\KeymanagerLinks::paymentMethods(),
+            'linkPaymentMethods' => route('price') . '#payment-methods',
             'linkApp' => LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), '/app'),
-            'linkToken' => App\Landing\KeymanagerLinks::anonymousToken(),
+            'linkToken' => route('anonymous-token'),
           ]) !!}</p>
           <ul class="landing-benefit__nots">
             <li>@lang('index.landing.benefits.compromise.compromise')</li>

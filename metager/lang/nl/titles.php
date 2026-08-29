@@ -35,4 +35,8 @@ return [
         'overview' => 'Logboeken - MetaGer',
         'login' => "Logboeken beheerder - MetaGer",
     ],
+    'price' => 'Prijzen - MetaGer',
+    'agb' => 'Algemene voorwaarden - MetaGer',
+    'help-key' => 'De MetaGer-sleutel - MetaGer',
+    'anonymous-token' => 'Anonieme tokens - MetaGer',
 ];

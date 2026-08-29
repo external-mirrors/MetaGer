@@ -35,4 +35,8 @@ return [
         'overview' => 'Logfiler - MetaGer',
         'login' => "Administrator af logfiler - MetaGer",
     ],
+    'price' => 'Priser - MetaGer',
+    'agb' => 'Almindelige forretningsbetingelser - MetaGer',
+    'help-key' => 'MetaGer-nøglen - MetaGer',
+    'anonymous-token' => 'Anonyme tokens - MetaGer',
 ];

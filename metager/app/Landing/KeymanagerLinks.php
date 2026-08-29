@@ -16,7 +16,12 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  * about to be spelled out across five blades, which is exactly the shape that
  * makes the next migration step expensive.
  *
- * They are also the only links on the page that a *URL* has to be built for
+ * What is left here is the key flow itself — creating a key, entering one,
+ * signing out, redeeming a voucher. `/preise`, `/agb` and the two help pages
+ * used to be built here too and are MetaGer routes now, so their call sites
+ * name a route like every other page does.
+ *
+ * These are the only links on the page that a *URL* has to be built for
  * rather than a route named: `URL::formatPathUsing` in AppServiceProvider puts
  * the locale prefix on everything `route()` and `url()` produce, but there is
  * no route to name here, so LaravelLocalization::getLocalizedURL does it.
@@ -145,20 +150,15 @@ final class KeymanagerLinks
             . $fragment;
     }
 
-    /** What a key costs, and the payment methods section of that page. */
-    public static function cost(): string
+    /**
+     * Redeeming a voucher code — the campaign pages, which stay here.
+     *
+     * The last of the reader-facing `/keys` paths still linked from a MetaGer
+     * page: the key FAQ explains what to do with a promotional card. It moves
+     * in step 3 with the rest of the key flow.
+     */
+    public static function voucher(): string
     {
-        return self::url("/cost");
-    }
-
-    public static function paymentMethods(): string
-    {
-        return self::url("/cost", [], "#payment-methods");
-    }
-
-    /** What an anonymous token is — the page the account pill also falls back to. */
-    public static function anonymousToken(): string
-    {
-        return self::url("/help/anonymous-token");
+        return self::url("/c");
     }
 }

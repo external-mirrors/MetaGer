@@ -35,4 +35,6 @@ return [
     'toggle' => 'öppna/stäng navigeringsfält',
     'opener' => 'Öppna navigeringsfältet',
     'opener_close' => 'Stäng navigeringsfältet',
+    'navPrice' => 'Priser',
+    'navAgb' => 'Allmänna villkor',
 ];

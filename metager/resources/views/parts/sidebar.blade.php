@@ -125,6 +125,16 @@
       </a>
     </li>
     <hr>
+    {{-- Die eine Frage, die ein abgemeldeter Besucher hat und die die
+         Startseite nicht beantwortet. Erste Ebene, kein Untermenü: in der
+         Navigation des Keymanagers stand „Preis“ ebenfalls ganz oben, und die
+         Seite ist mit /keys/cost von dort hierher gezogen. --}}
+    <li>
+      <a href="{{ route('price') }}" id="navigationPrice" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+      <img src="/img/svg-icons/price-icon.svg" alt="" aria-hidden="true" id="sidebar-img-price">
+        <span>{{ trans('sidebar.navPrice') }}</span>
+      </a>
+    </li>
     <li>
       <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/datenschutz/") }}" id="navigationPrivacy" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
       <img src="/img/svg-icons/lock.svg" alt="" aria-hidden="true" id="sidebar-img-lock"> 
@@ -209,6 +219,12 @@
           </li>
           <li>
             <a href="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/impressum/") }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.nav8') }}</a>
+          </li>
+          {{-- Rechtliches steht beisammen: die AGB für die Token-Aufladung
+               lagen als /keys/agb im Keymanager und waren aus MetaGers
+               Navigation gar nicht erreichbar. --}}
+          <li>
+            <a href="{{ route('agb') }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>{{ trans('sidebar.navAgb') }}</a>
           </li>
         </ul>
       </details>

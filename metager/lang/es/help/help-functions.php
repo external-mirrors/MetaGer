@@ -31,19 +31,7 @@ return [
     'key' => [
         'title' => 'Añadir clave MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'La clave MetaGer se configura automáticamente en tu navegador y se utiliza. No necesitas hacer nada más. Si quieres utilizar la llave MetaGer en otros dispositivos, hay varias maneras de configurar la llave MetaGer:',
-        '2' => 'Código de inicio de sesión <br>En la <a href = "/keys/key/enter">página de gestión</a> de la llave MetaGer, puede utilizar el código de inicio de sesión para añadir su llave a otro dispositivo. Simplemente introduzca el código numérico de seis dígitos al iniciar sesión. El código de acceso sólo puede utilizarse una vez y sólo es válido mientras la ventana esté abierta.',
-        '3' => 'Copiar URL <br>Cuando estás en la <a href = "/keys/key/enter">página de gestión</a> de la llave MetaGer, hay una opción para copiar una URL. Esta URL se puede utilizar para guardar todos los ajustes de MetaGer, incluyendo la llave MetaGer, en otro dispositivo.',
-        '4' => 'Guardar archivo <br>Cuando estás en la <a href = "/keys/key/enter">página de gestión</a> de la llave MetaGer, hay una opción para guardar un archivo. Esto guarda su clave MetaGer como un archivo. A continuación, puede utilizar este archivo en otro dispositivo para iniciar sesión con su clave.',
-        '5' => 'Escanear código QR <br>Alternativamente, también puede escanear el código QR que aparece en la <a href = "/keys/key/enter">página de gestión</a> para iniciar sesión con otro dispositivo.',
-        '6' => 'Introducir manualmente la clave MetaGer <br>También puedes introducir manualmente la clave en otro dispositivo.',
-        'colors' => [
-            'title' => 'Llave MetaGer de color',
-            '1' => 'Para reconocer fácilmente si está buscando sin anuncios, hemos dado a nuestros símbolos clave colores. A continuación se explican los colores correspondientes:',
-            'grey' => 'Gris: No ha configurado una clave. Está utilizando la búsqueda libre.',
-            'red' => 'Rojo: Si el símbolo de tu llave es rojo, significa que esta llave está vacía. Ha agotado todas las búsquedas sin publicidad. Puedes recargar la llave en la página de gestión de llaves.',
-            'green' => 'Verde: Si el símbolo de la llave es verde, significa que está utilizando una llave cargada.',
-            'yellow' => 'Amarilla: Si ves una llave amarilla, aún te quedan 30 fichas de saldo. Tus búsquedas se están agotando. Se recomienda recargar la llave pronto.',
-        ],
+        'more' => 'Todas las formas de configurarla y más preguntas sobre la llave',
     ],
     'multiwordsearch' => [
         'title' => 'Búsqueda multipalabra <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

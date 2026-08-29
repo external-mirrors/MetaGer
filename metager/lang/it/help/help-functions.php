@@ -30,21 +30,9 @@ return [
         '3' => 'Esempio: ',
     ],
     'key' => [
-        '4' => 'Salva file <br>Quando ci si trova nella pagina <a href = "/chiavi/chiave/enter">di gestione</a> della chiave MetaGer, c\'è un\'opzione per salvare un file. In questo modo la chiave MetaGer viene salvata in un file. È possibile utilizzare questo file su un altro dispositivo per accedere alla chiave.',
-        '5' => 'Scansione del codice QR <br>In alternativa, è possibile scansionare il codice QR visualizzato nella pagina di <a href = "/keys/key/enter">gestione</a> per accedere con un altro dispositivo.',
-        '2' => 'Codice di accesso <br>Sulla <a href = "/keys/key/enter">pagina di gestione</a> della chiave MetaGer, è possibile utilizzare il codice di accesso per aggiungere la chiave a un altro dispositivo. È sufficiente inserire il codice numerico di sei cifre al momento dell\'accesso. Il codice di accesso può essere utilizzato una sola volta ed è valido solo finché la finestra è aperta.',
-        '6' => 'Inserire manualmente la chiave MetaGer <br>È possibile inserire manualmente la chiave anche su un altro dispositivo.',
-        'colors' => [
-            'title' => 'Chiave MetaGer colorata',
-            '1' => 'Per riconoscere facilmente se si sta effettuando una ricerca priva di pubblicità, abbiamo assegnato i colori ai nostri simboli chiave. Di seguito sono riportate le spiegazioni dei colori corrispondenti:',
-            'grey' => 'Grigio: non è stata impostata una chiave. Si sta utilizzando la ricerca libera.',
-            'red' => 'Rosso: se il simbolo della chiave è rosso, significa che la chiave è vuota. Sono state esaurite tutte le ricerche senza pubblicità. È possibile ricaricare la chiave nella pagina di gestione delle chiavi.',
-            'green' => 'Verde: Se il simbolo della chiave è verde, significa che si sta utilizzando una chiave carica.',
-            'yellow' => 'Giallo: Se vedete un tasto giallo, avete ancora un saldo di 30 gettoni. Le ricerche si stanno esaurendo. Si consiglia di ricaricare presto la chiave.',
-        ],
         'title' => 'Aggiungi la chiave MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'La chiave MetaGer viene impostata automaticamente nel browser e utilizzata. Non è necessario fare altro. Se si desidera utilizzare la chiave MetaGer su altri dispositivi, esistono diversi modi per configurarla:',
-        '3' => 'Copia URL <br>Quando ci si trova nella pagina <a href = "/chiavi/chiave/enter">di gestione</a> della chiave MetaGer, è disponibile un\'opzione per copiare un URL. Questo URL può essere utilizzato per salvare tutte le impostazioni di MetaGer, compresa la chiave MetaGer, su un altro dispositivo.',
+        'more' => 'Tutti i modi per configurarla e altre domande sulla chiave',
     ],
     'multiwordsearch' => [
         'title' => 'Ricerca di più parole <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

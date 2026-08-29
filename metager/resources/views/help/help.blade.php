@@ -64,4 +64,20 @@
 		</a>
 		
 	</div>
+
+{{-- Der fünfte Themenblock kam mit dem Umzug von /keys dazu. Die drei Karten
+     sind die drei Seiten, die der Keymanager zum Schlüssel hatte: seine FAQ,
+     die Token-Erklärung und die Preisseite. --}}
+<h2>{!! trans('help/help.tableofcontents.5.0') !!}</h2>
+<div class="help-topic-row">
+	<a id=help-topic-keyfaq href="{{ route('key-faq') }}" class="help-topic">
+		<p>{!! trans('help/help.tableofcontents.5.1') !!}</p>
+	</a>
+	<a id=help-topic-anonymous-token href="{{ route('anonymous-token') }}" class="help-topic">
+		<p>{!! trans('help/help.tableofcontents.5.2') !!}</p>
+	</a>
+	<a id=help-topic-price href="{{ route('price') }}" class="help-topic">
+		<p>{!! trans('help/help.tableofcontents.5.3') !!}</p>
+	</a>
+</div>
 @endsection

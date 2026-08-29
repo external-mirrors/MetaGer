@@ -51,7 +51,7 @@
     token is, which is the best answer this site can give without the extension.
   --}}
   @php($accountHref = $accountAnonymous
-    ? App\Landing\KeymanagerLinks::anonymousToken()
+    ? route('anonymous-token')
     : App\Landing\KeymanagerLinks::enter())
   <a href="{{ $accountHref }}"
     id="account-pill"

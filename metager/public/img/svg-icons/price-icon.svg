@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Preisschild für den Seitenleisten-Eintrag "Preise".
+
+  Einfarbig schwarz wie jedes andere Symbol in parts/sidebar.less: die dunkle
+  Palette dreht sie über filter: invert(@icon-color) um, was nur bei
+  einfarbigen Vorlagen funktioniert. Deshalb nicht money.svg aus dem
+  Keymanager — das ist grün und käme im Dunkelmodus magenta heraus.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#000000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M20.6 12.1 12.4 3.9a1.9 1.9 0 0 0-1.4-.6H4.5a1.2 1.2 0 0 0-1.2 1.2v6.5c0 .5.2 1 .6 1.4l8.2 8.2c.7.7 1.9.7 2.6 0l5.9-5.9c.7-.7.7-1.9 0-2.6z"/>
+  <circle cx="7.6" cy="7.6" r="1.5"/>
+</svg>

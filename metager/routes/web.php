@@ -1,5 +1,6 @@
 <?php
 
+use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\DonationController;
@@ -248,6 +249,45 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.transparency'))
             ->with('navbarFocus', 'info');
     })->name('transparency');
+
+    /**
+     * Die Seiten, die aus dem Keymanager hierher gezogen sind.
+     *
+     * /preise, /agb und die beiden Hilfeseiten lagen unter /keys; der
+     * Keymanager leitet die alten Pfade dauerhaft hierher weiter
+     * (pass/app/StaticPageRedirects.js). Namen tragen sie, weil der
+     * Bezahlvorgang im anderen Repository und mehrere Blades hier auf sie
+     * verlinken — App\Landing\KeymanagerLinks ist danach nur noch für den
+     * Schlüsselvorgang zuständig.
+     */
+    Route::get('preise', function () {
+        return view('price')
+            ->with('title', trans('titles.price'))
+            ->with('navbarFocus', 'info')
+            ->with('tiers', KeyPrice::tiers())
+            ->with('linkApp', LaravelLocalization::getLocalizedURL(null, "/app"))
+            ->with('linkToken', route('anonymous-token'))
+            ->with('css', [Vite::asset('resources/less/metager/pages/price.less')]);
+    })->name('price');
+
+    Route::get('agb', function () {
+        return view('agb')
+            ->with('title', trans('titles.agb'))
+            ->with('navbarFocus', 'info')
+            ->with('css', [Vite::asset('resources/less/metager/pages/agb.less')]);
+    })->name('agb');
+
+    Route::get('hilfe/schluessel', function () {
+        return view('help.key')
+            ->with('title', trans('titles.help-key'))
+            ->with('navbarFocus', 'hilfe');
+    })->name('key-faq');
+
+    Route::get('hilfe/anonyme-token', function () {
+        return view('help.anonymous-token')
+            ->with('title', trans('titles.anonymous-token'))
+            ->with('navbarFocus', 'hilfe');
+    })->name('anonymous-token');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

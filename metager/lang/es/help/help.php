@@ -32,6 +32,12 @@ Dado que desarrollamos y mejoramos nuestro motor de búsqueda  constantemente, p
             '5' => 'Protección de menores',
             '0' => 'Protección de datos',
         ],
+        '5' => [
+            '0' => 'La llave MetaGer',
+            '1' => 'Preguntas sobre la llave',
+            '2' => 'Tokens anónimos',
+            '3' => 'Lo que cuesta la llave',
+        ],
     ],
     'easy.language' => "para una ayuda fácil",
 ];

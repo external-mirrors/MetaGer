@@ -32,5 +32,11 @@ return [
             '5' => 'Youth protection',
             '0' => 'Privacy',
         ],
+        '5' => [
+            '0' => 'The MetaGer key',
+            '1' => 'Questions about the key',
+            '2' => 'Anonymous tokens',
+            '3' => 'What the key costs',
+        ],
     ],
 ];

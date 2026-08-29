@@ -35,4 +35,8 @@ return [
     'settings' => 'Definições',
     'index' => 'MetaGer: Pesquisa e localização protegidas pela privacidade',
     'lang-selector' => 'Seleção da língua',
+    'price' => 'Preços - MetaGer',
+    'agb' => 'Condições gerais - MetaGer',
+    'help-key' => 'A chave MetaGer - MetaGer',
+    'anonymous-token' => 'Tokens anónimos - MetaGer',
 ];

@@ -23,7 +23,7 @@
       </li>
       <li>
         <h3>@lang('index.landing.howitworks.steps.1.heading')</h3>
-        <p>{!! __('index.landing.howitworks.steps.1.description', ['linkCost' => App\Landing\KeymanagerLinks::cost()]) !!}</p>
+        <p>{!! __('index.landing.howitworks.steps.1.description', ['linkCost' => route('price')]) !!}</p>
       </li>
       <li>
         <h3>@lang('index.landing.howitworks.steps.2.heading')</h3>

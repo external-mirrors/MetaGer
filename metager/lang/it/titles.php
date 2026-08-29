@@ -35,4 +35,8 @@ return [
         'admin' => "Log Admin - MetaGer",
         'overview' => 'Registri - MetaGer',
     ],
+    'price' => 'Prezzi - MetaGer',
+    'agb' => 'Condizioni generali - MetaGer',
+    'help-key' => 'La chiave MetaGer - MetaGer',
+    'anonymous-token' => 'Token anonimi - MetaGer',
 ];

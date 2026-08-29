@@ -31,6 +31,12 @@ return [
             '5' => 'Beskyttelse af unge',
             '0' => 'Privatlivets fred',
         ],
+        '5' => [
+            '0' => 'MetaGer-nøglen',
+            '1' => 'Spørgsmål om nøglen',
+            '2' => 'Anonyme tokens',
+            '3' => 'Hvad nøglen koster',
+        ],
     ],
     'easy.language' => "for nem hjælp",
 ];

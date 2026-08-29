@@ -31,19 +31,7 @@ return [
     'key' => [
         'title' => 'Ajouter la clé MetaGer <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-keyexplain"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',
         '1' => 'La clé MetaGer est automatiquement installée dans votre navigateur et utilisée. Vous n\'avez rien d\'autre à faire. Si vous souhaitez utiliser la clé MetaGer sur d\'autres appareils, il existe plusieurs façons de configurer la clé MetaGer :',
-        '2' => 'Code de connexion <br>Sur la <a href = "/keys/key/enter">page de gestion</a> de la clé MetaGer, vous pouvez utiliser le code de connexion pour ajouter votre clé à un autre appareil. Il suffit d\'entrer le code à six chiffres lors de la connexion. Le code de connexion ne peut être utilisé qu\'une seule fois et n\'est valable que tant que la fenêtre est ouverte.',
-        '3' => 'Copier l\'URL <br>Lorsque vous êtes sur la <a href = "/keys/key/enter">page de gestion</a> de la clé MetaGer, il y a une option pour copier une URL. Cette URL peut être utilisée pour sauvegarder tous les paramètres de MetaGer, y compris la clé MetaGer, sur un autre appareil.',
-        '4' => 'Enregistrer un fichier <br>Lorsque vous êtes sur la <a href = "/keys/key/enter">page de gestion</a> de la clé MetaGer, vous avez la possibilité d\'enregistrer un fichier. Cette option permet d\'enregistrer votre clé MetaGer dans un fichier. Vous pouvez ensuite utiliser ce fichier sur un autre appareil pour vous connecter avec votre clé.',
-        '5' => 'Scanner le code QR <br>Vous pouvez également scanner le code QR affiché sur la <a href = "/keys/key/enter">page de gestion</a> pour vous connecter à l\'aide d\'un autre appareil.',
-        '6' => 'Saisir manuellement la clé MetaGer <br>Vous pouvez également saisir manuellement la clé sur un autre appareil.',
-        'colors' => [
-            '1' => 'Pour que vous puissiez facilement savoir si votre recherche est exempte de publicité, nous avons donné à nos symboles clés des couleurs. Vous trouverez ci-dessous des explications sur les couleurs correspondantes :',
-            'grey' => 'Gris : Vous n\'avez pas configuré de clé. Vous utilisez la recherche libre.',
-            'red' => 'Rouge : Si le symbole de votre clé est rouge, cela signifie que cette clé est vide. Vous avez utilisé toutes les recherches sans publicité. Vous pouvez recharger la clé sur la page de gestion des clés.',
-            'green' => 'Vert : Si le symbole de votre clé est vert, vous utilisez une clé chargée.',
-            'yellow' => 'Jaune : Si vous voyez une clé jaune, il vous reste un solde de 30 jetons. Vos recherches sont en train de s\'épuiser. Il est recommandé de recharger la clé rapidement.',
-            'title' => 'Clé colorée MetaGer',
-        ],
+        'more' => 'Toutes les façons de la configurer et d\'autres questions sur la clé',
     ],
     'multiwordsearch' => [
         'title' => 'Recherche multi-mots <a title="For easy help, click here" href="/hilfe/easy-language/functions#eh-severalwords"><img class="easy-help-icon lm-only" src="/img/help-questionmark-icon-lm.svg"/><img class="easy-help-icon dm-only" src="/img/help-questionmark-icon-dm.svg"/></a>',

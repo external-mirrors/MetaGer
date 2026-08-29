@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Allgemeine Geschäftsbedingungen für Aufladung von Token (auf Schlüssel)",
-    "date" => "Stand: November 2025",
+    "date" => "Stand: August 2026",
     "translationNotice" => "Hinweis: Dies ist eine Übersetzung der gültigen deutschen AGB. Die rechtsverbindliche Version finden Sie <a href=\":linkGerman\">hier</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Zur Nutzung eines MetaGer Schlüssels und der Aufladung von Token hierauf ist eine vorherige Erstellung des jeweiligen individuellen Schlüssels auf der Website von MetaGer erforderlich.",
                 "Der Verwender erhält je nach ausgewähltem Paket exakt die erworbenen Token zur freien (unbegrenzten) Verwendung. Dabei stehen nachfolgend die angebotenen Kaufoptionen zur Verfügung:",
                 [
-                    "1000 Token : 10 Euro",
-                    "2000 Token : 20 Euro",
-                    "3000 Token : 30 Euro",
-                    "4000 Token : 40 Euro",
-                    "6000 Token : 60 Euro",
-                    "12000 Token: 120 Euro",
+                    "500 Token: 5 Euro",
+                    "1000 Token: 10 Euro",
+                    "2000 Token: 20 Euro",
+                    "3000 Token: 30 Euro",
+                    "4000 Token: 40 Euro",
+                    "6000 Token: 60 Euro",
                 ],
                 "Durch Vermarktungsaktionen mit Dritten im Rahmen von Partner-Aktionen und Kundenbindungsprogrammen kann der Nutzer ebenfalls Schlüssel erhalten. Hierbei gelten immer diese AGB sowie gegebenenfalls die jeweiligen Aktionsbedingungen.",
             ],

@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Ogólne warunki doładowania tokena (na klucz)",
-    "date" => "Status: Listopad 2025 r.",
+    "date" => "Status: Sierpień 2026 r.",
     "translationNotice" => "Uwaga: To jest tłumaczenie obowiązujących niemieckich warunków. Prawnie wiążącą wersję można znaleźć na stronie <a href=\":linkGerman\">tutaj.</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Aby korzystać z klucza MetaGer i doładowywać tokeny, należy najpierw utworzyć odpowiedni klucz indywidualny na stronie internetowej MetaGer.",
                 "W zależności od wybranego pakietu, użytkownik otrzymuje dokładnie tyle zakupionych tokenów do bezpłatnego (nieograniczonego) użytku. Dostępne są następujące opcje zakupu:",
                 [
-                    "1000 żetonów: 10 euro",
-                    "2000 żetonów: 20 euro",
-                    "3000 żetonów: 30 euro",
-                    "4000 żetonów: 40 euro",
-                    "6000 żetonów: 60 euro",
-                    "12000 tokenów: 120 euro",
+                    "500 tokenów: 5 euro",
+                    "1000 tokenów: 10 euro",
+                    "2000 tokenów: 20 euro",
+                    "3000 tokenów: 30 euro",
+                    "4000 tokenów: 40 euro",
+                    "6000 tokenów: 60 euro",
                 ],
                 "Poprzez kampanie marketingowe z osobami trzecimi w ramach kampanii partnerskich i programów lojalnościowych użytkownik może również otrzymywać klucze. W takim przypadku zawsze obowiązują niniejsze OWH oraz, w stosownych przypadkach, odpowiednie warunki kampanii.",
             ],

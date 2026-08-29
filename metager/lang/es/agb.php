@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Condiciones generales de recarga de fichas (en Key)",
-    "date" => "Estado: Noviembre 2025",
+    "date" => "Estado: Agosto 2026",
     "translationNotice" => "Nota: Esta es una traducción de los términos y condiciones válidos en alemán. La versión jurídicamente vinculante puede consultarse en <a href=\":linkGerman\">aquí.</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Para utilizar una clave MetaGer y recargar tokens en ella, primero hay que crear la respectiva clave individual en el sitio web de MetaGer.",
                 "Dependiendo del paquete seleccionado, el usuario recibe exactamente las fichas adquiridas para uso gratuito (ilimitado). Están disponibles las siguientes opciones de compra:",
                 [
-                    "1000 fichas : 10 euros",
-                    "2000 fichas : 20 euros",
-                    "3000 fichas : 30 euros",
-                    "4000 fichas : 40 euros",
-                    "6000 fichas : 60 euros",
-                    "12000 fichas: 120 euros",
+                    "500 fichas: 5 euros",
+                    "1000 fichas: 10 euros",
+                    "2000 fichas: 20 euros",
+                    "3000 fichas: 30 euros",
+                    "4000 fichas: 40 euros",
+                    "6000 fichas: 60 euros",
                 ],
                 "A través de campañas de marketing con terceros como parte de campañas de socios y programas de fidelización de clientes, el usuario también puede recibir claves. En este caso, se aplicarán siempre las presentes CGC y, en su caso, las respectivas condiciones de la campaña.",
             ],

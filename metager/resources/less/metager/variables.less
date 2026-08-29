@@ -69,6 +69,13 @@
   --account-low-color: #8a6508;
   --account-alert-background: #fff4e8;
 
+  // Die Zahlungsart-Kacheln auf /preise. Markenzeichen dürfen weder umgefärbt
+  // noch abgedunkelt werden, also brauchen sie in beiden Paletten einen hellen
+  // Grund — im Dunkelmodus aber keinen weißen: elf Kacheln in #fff auf fast
+  // schwarzem Grund sind eine Leuchtwand und das Hellste auf der ganzen Seite.
+  --payment-tile-background: @color-white;
+  --payment-tile-text: @color-black;
+
   --searchbar-background-color: white;
   --input-background: #fff;
   --input-text: #000;
@@ -127,6 +134,11 @@
   --account-mark-ground-lightness: 16%;
   --account-low-color: #d0a53a;
   --account-alert-background: #2b1f11;
+
+  // Hell genug für schwarze Wortmarken (PayPal, Bancontact, MyBank), dunkel
+  // genug, um nicht zu blenden — und aus der Palette statt frei gewählt.
+  --payment-tile-background: @color-light-grey;
+  --payment-tile-text: @color-black;
 
   --searchbar-background-color: @color-almost-black;
   --input-background: @color-almost-black;
@@ -197,6 +209,8 @@
 @account-low-color: var(--account-low-color);
 @account-alert-background: var(--account-alert-background);
 @searchbar-background-color: var(--searchbar-background-color);
+@payment-tile-background: var(--payment-tile-background);
+@payment-tile-text: var(--payment-tile-text);
 @input-background: var(--input-background);
 @input-text: var(--input-text);
 @blacklist-entries-odd: var(--blacklist-entries-odd);

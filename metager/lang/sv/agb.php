@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Allmänna villkor för påfyllning av Token (on Key)",
-    "date" => "Status: November 2025",
+    "date" => "Status: Augusti 2026",
     "translationNotice" => "Obs: Detta är en översättning av de giltiga tyska villkoren. Den juridiskt bindande versionen finns på <a href=\":linkGerman\">här</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "För att använda en MetaGer-nyckel och för att fylla på tokens på den måste respektive individuell nyckel först skapas på MetaGer-webbplatsen.",
                 "Beroende på det valda paketet får användaren exakt de köpta tokens för gratis (obegränsad) användning. Följande köpalternativ finns tillgängliga:",
                 [
-                    "1000 polletter : 10 euro",
-                    "2000 polletter : 20 euro",
-                    "3000 tokens : 30 euro",
-                    "4000 polletter : 40 euro",
-                    "6000 tokens : 60 euro",
-                    "12000 tokens: 120 euro",
+                    "500 tokens: 5 euro",
+                    "1000 tokens: 10 euro",
+                    "2000 tokens: 20 euro",
+                    "3000 tokens: 30 euro",
+                    "4000 tokens: 40 euro",
+                    "6000 tokens: 60 euro",
                 ],
                 "Genom marknadsföringskampanjer med tredje part som en del av partnerkampanjer och kundlojalitetsprogram kan användaren också få nycklar. I detta fall gäller alltid dessa allmänna villkor och, om tillämpligt, respektive kampanjvillkor.",
             ],

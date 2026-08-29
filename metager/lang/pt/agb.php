@@ -11,7 +11,7 @@
 
 return [
     "heading" => "Condições gerais para o carregamento de tokens (numa chave)",
-    "date" => "Versão: novembro de 2025",
+    "date" => "Versão: agosto de 2026",
     "translationNotice" => "Nota: esta é uma tradução das condições gerais alemãs em vigor. A versão juridicamente vinculativa encontra-se <a href=\":linkGerman\">aqui</a>",
     "paragraphs" => [
         [
@@ -49,12 +49,12 @@ return [
                 "Para utilizar uma chave MetaGer e nela carregar tokens é necessária a criação prévia da respetiva chave individual no sítio da MetaGer.",
                 "Consoante o pacote escolhido, o utilizador recebe exatamente os tokens adquiridos para utilização livre (ilimitada). Estão disponíveis as seguintes opções de compra:",
                 [
-                    "1000 tokens : 10 euros",
-                    "2000 tokens : 20 euros",
-                    "3000 tokens : 30 euros",
-                    "4000 tokens : 40 euros",
-                    "6000 tokens : 60 euros",
-                    "12000 tokens: 120 euros",
+                    "500 tokens: 5 euros",
+                    "1000 tokens: 10 euros",
+                    "2000 tokens: 20 euros",
+                    "3000 tokens: 30 euros",
+                    "4000 tokens: 40 euros",
+                    "6000 tokens: 60 euros",
                 ],
                 "Através de ações de comercialização com terceiros no âmbito de parcerias e de programas de fidelização, o utilizador pode igualmente receber chaves. Nesses casos aplicam-se sempre as presentes condições gerais e, se for caso disso, as respetivas condições da ação.",
             ],

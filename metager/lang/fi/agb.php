@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Yleiset ehdot Tokenien lataamiselle (avaimella)",
-    "date" => "Tilanne: Marraskuu 2025",
+    "date" => "Tilanne: Elokuu 2026",
     "translationNotice" => "Huomautus: Tämä on käännös voimassa olevista saksankielisistä käyttöehdoista. Oikeudellisesti sitova versio löytyy <a href=\":linkGerman\">täältä.</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "MetaGer-avaimen käyttäminen ja siihen liittyvien merkkien lataaminen edellyttää, että kyseinen yksittäinen avain on ensin luotu MetaGerin verkkosivustolla.",
                 "Valitusta paketista riippuen käyttäjä saa juuri ostetut kupongit ilmaiseksi (rajattomasti) käyttöönsä. Seuraavat ostovaihtoehdot ovat käytettävissä:",
                 [
-                    "1000 merkkiä : 10 euroa",
-                    "2000 kuponkia : 20 euroa",
-                    "3000 kuponkia : 30 euroa",
-                    "4000 polettia : 40 euroa",
-                    "6000 kuponkia : 60 euroa",
-                    "12000 kuponkia: 120 euroa",
+                    "500 kuponkia: 5 euroa",
+                    "1000 kuponkia: 10 euroa",
+                    "2000 kuponkia: 20 euroa",
+                    "3000 kuponkia: 30 euroa",
+                    "4000 kuponkia: 40 euroa",
+                    "6000 kuponkia: 60 euroa",
                 ],
                 "Käyttäjä voi saada avaimia myös kolmansien osapuolten markkinointikampanjoiden kautta osana kumppanikampanjoita ja asiakasuskollisuusohjelmia. Tällöin sovelletaan aina näitä yleisiä sopimusehtoja ja tarvittaessa kampanjaehtoja.",
             ],

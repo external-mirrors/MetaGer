@@ -11,7 +11,10 @@
 // umgefärbt noch abgedunkelt werden, und die schwarzen Wortmarken (PayPal,
 // Bancontact, MyBank) verschwänden auf MetaGers fast schwarzem Grund ganz.
 // Ein heller Grund pro Kachel löst beides, und es ist das, was
-// Zahlungsleisten üblicherweise tun.
+// Zahlungsleisten üblicherweise tun. Welcher helle Grund, entscheidet die
+// Palette: @payment-tile-background ist im Hellmodus weiß und im Dunkelmodus
+// ein helles Grau — elf weiße Kacheln auf fast schwarzem Grund waren das
+// Hellste auf der Seite und zogen den Blick von allem anderen ab.
 
 #price-page {
   max-width: 980px;
@@ -116,8 +119,16 @@
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(9em, 10em));
-    place-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(9.5em, 12em));
+    // Am linken Rand der Textspalte statt mittig: bei zentrierten Spuren
+    // landet eine einzelne Kachel in der letzten Zeile — und die anonyme
+    // Zahlungsart ist genau eine — irgendwo neben ihrer eigenen Überschrift.
+    justify-content: start;
+    // Alle Kacheln gleich hoch, auch über Zeilen hinweg: "Kredit- /
+    // Debitkarte" bricht auf zwei Zeilen um und machte damit nur seine eigene
+    // Zeile hoch. Bei automatischen Zeilen ist jede so hoch wie ihr Inhalt,
+    // bei 1fr sind alle so hoch wie die höchste.
+    grid-auto-rows: 1fr;
     gap: 1rem;
 
     @media (max-width: 368px) {
@@ -125,24 +136,32 @@
     }
 
     > .payment-method {
+      // Spalte statt Zeile: das Logo sitzt in jeder Kachel an derselben
+      // Stelle, egal ob eine Beschriftung darunter steht.
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 0.6rem;
       text-align: center;
       line-height: 1.2;
-      min-height: 5rem;
-      padding: 1rem;
+      padding: 1rem 0.75rem;
       border: 1px solid @border-color;
       border-radius: 10px;
-      // Markenzeichen sitzen in beiden Paletten auf Weiß, siehe oben.
-      background-color: #fff;
-      color: #1a1a1a;
+      // Markenzeichen sitzen in beiden Paletten auf einem hellen Grund, siehe
+      // oben.
+      background-color: @payment-tile-background;
+      color: @payment-tile-text;
 
-      img {
-        max-width: 100%;
-        max-height: 35px;
+      > img {
+        // Ein Kasten fester Höhe statt max-height: die Marken reichen von
+        // quadratisch (BLIK) bis 6:1 (Online Banking), und mit max-height plus
+        // max-width kam die breite Marke bei 18px Höhe an, während die
+        // quadratische die vollen 35px bekam. object-fit lässt jede Marke den
+        // Kasten so weit ausfüllen, wie ihr Seitenverhältnis es zulässt.
+        width: 100%;
+        height: 2.5rem;
+        object-fit: contain;
       }
     }
   }

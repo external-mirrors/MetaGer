@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Termini e condizioni generali per la ricarica dei gettoni (su chiave)",
-    "date" => "Stato: Novembre 2025",
+    "date" => "Stato: Agosto 2026",
     "translationNotice" => "Nota: questa è una traduzione dei termini e delle condizioni validi in Germania. La versione giuridicamente vincolante è disponibile all'indirizzo <a href=\":linkGerman\">.</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Per utilizzare una chiave MetaGer e ricaricare i token su di essa, è necessario creare la rispettiva chiave individuale sul sito web di MetaGer.",
                 "A seconda del pacchetto selezionato, l'utente riceve esattamente i token acquistati per un uso gratuito (illimitato). Sono disponibili le seguenti opzioni di acquisto:",
                 [
-                    "1000 gettoni: 10 euro",
-                    "2000 gettoni: 20 euro",
-                    "3000 gettoni: 30 euro",
-                    "4000 gettoni: 40 euro",
-                    "6000 gettoni: 60 euro",
-                    "12000 gettoni: 120 euro",
+                    "500 token: 5 euro",
+                    "1000 token: 10 euro",
+                    "2000 token: 20 euro",
+                    "3000 token: 30 euro",
+                    "4000 token: 40 euro",
+                    "6000 token: 60 euro",
                 ],
                 "Attraverso campagne di marketing con terzi nell'ambito di campagne partner e programmi di fidelizzazione dei clienti, l'utente può anche ricevere chiavi. In questo caso si applicano sempre le presenti CG e, se del caso, le condizioni della rispettiva campagna.",
             ],

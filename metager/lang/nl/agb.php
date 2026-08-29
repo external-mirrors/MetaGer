@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Algemene voorwaarden voor het opwaarderen van tokens (on Key)",
-    "date" => "Status: November 2025",
+    "date" => "Status: Augustus 2026",
     "translationNotice" => "Opmerking: Dit is een vertaling van de geldige Duitse algemene voorwaarden. De wettelijk bindende versie vindt u <a href=\":linkGerman\">hier</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Om een MetaGer-sleutel te gebruiken en tokens op te waarderen, moet de respectievelijke individuele sleutel eerst worden aangemaakt op de MetaGer-website.",
                 "Afhankelijk van het gekozen pakket ontvangt de gebruiker precies de gekochte tokens voor gratis (onbeperkt) gebruik. De volgende aankoopopties zijn beschikbaar:",
                 [
-                    "1000 munten : 10 euro",
-                    "2000 munten: 20 euro",
-                    "3000 lopers : 30 euro",
-                    "4000 lopers: 40 euro",
-                    "6000 lopers: 60 euro",
-                    "12000 lopers: 120 euro",
+                    "500 tokens: 5 euro",
+                    "1000 tokens: 10 euro",
+                    "2000 tokens: 20 euro",
+                    "3000 tokens: 30 euro",
+                    "4000 tokens: 40 euro",
+                    "6000 tokens: 60 euro",
                 ],
                 "Via marketingcampagnes met derden in het kader van partnercampagnes en klantenbindingsprogramma's kan de gebruiker ook sleutels ontvangen. In dit geval zijn deze AV en, indien van toepassing, de respectievelijke campagnevoorwaarden altijd van toepassing.",
             ],

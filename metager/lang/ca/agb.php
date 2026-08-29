@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Condicions generals per a la recàrrega de fitxes (a la clau)",
-    "date" => "Versió: novembre de 2025",
+    "date" => "Versió: agost de 2026",
     "translationNotice" => "Nota: aquesta és una traducció de les condicions generals vigents en alemany. La versió jurídicament vinculant es pot consultar <a href=\":linkGerman\">aquí</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Per fer servir una clau de MetaGer i recarregar-hi fitxes, primer cal crear la clau individual corresponent al lloc web de MetaGer.",
                 "Segons el paquet seleccionat, l'usuari rep exactament les fitxes comprades per fer-ne un ús lliure (il·limitat). Hi ha les opcions de compra següents:",
                 [
+                    "500 fitxes: 5 euros",
                     "1000 fitxes: 10 euros",
                     "2000 fitxes: 20 euros",
                     "3000 fitxes: 30 euros",
                     "4000 fitxes: 40 euros",
                     "6000 fitxes: 60 euros",
-                    "12000 fitxes: 120 euros",
                 ],
                 "Mitjançant accions de màrqueting amb tercers en el marc de campanyes amb socis i programes de fidelització, l'usuari també pot rebre claus. En aquest cas s'apliquen sempre aquestes condicions generals i, si escau, les condicions de la campanya corresponent.",
             ],

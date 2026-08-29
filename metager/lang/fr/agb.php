@@ -3,16 +3,25 @@
 /**
  * Allgemeine Geschäftsbedingungen für die Token-Aufladung — /agb.
  *
- * Vertragstext. Aus pass/lang/<locale>/agb.json übernommen und beim Umzug
- * inhaltlich NICHT angefasst; die einzige Ausnahme ist die Stelle, an der der
- * Text seine eigene Adresse nennt — die stand als "metager.de/keys/agb"
- * wörtlich im Vertrag und ist jetzt der Platzhalter :agburl, damit sie immer
- * stimmt. Tests\Feature\AgbTextUnchangedTest hält den Rest fest.
+ * Vertragstext, aus pass/lang/<locale>/agb.json des Keymanagers übernommen.
+ * Tests\Feature\AgbTest vergleicht die gerenderte deutsche Fassung Zeile für
+ * Zeile mit einem Abzug der alten Seite; jede Abweichung steht dort
+ * ausgeschrieben, damit sie mit rechtlichem Blick nachlesbar bleibt. Es sind
+ * drei:
+ *
+ *   - Der Text nennt seine eigene Fundstelle. Die stand wörtlich als
+ *     "metager.de/keys/agb" im Vertrag und ist jetzt der Platzhalter :agburl.
+ *   - Die Paketliste in §4 nannte 12000 Token, die es nicht zu kaufen gibt,
+ *     und verschwieg die 500, die es gibt. Sie zählt jetzt genau das auf, was
+ *     der Checkout verkauft — AgbTest::testTheTokenPackagesAreTheOnesThatCanBeBought
+ *     vergleicht sie in allen Sprachen mit App\Landing\KeyPrice.
+ *   - Weil sich der Vertragstext damit geändert hat, ist auch das "Stand:"-
+ *     Datum weitergerückt.
  */
 
 return [
     "heading" => "Conditions générales pour le rechargement de jetons (sur la clé)",
-    "date" => "Statut : Novembre 2025",
+    "date" => "Statut : Août 2026",
     "translationNotice" => "Note : Il s'agit d'une traduction des conditions générales allemandes en vigueur. La version juridiquement contraignante peut être consultée à l'adresse suivante : <a href=\":linkGerman\">.</a>",
     "paragraphs" => [
         [
@@ -50,12 +59,12 @@ return [
                 "Pour utiliser une clé MetaGer et y recharger des jetons, la clé individuelle correspondante doit d'abord être créée sur le site Web de MetaGer.",
                 "En fonction du forfait choisi, l'utilisateur reçoit exactement les jetons achetés pour une utilisation gratuite (illimitée). Les options d'achat suivantes sont disponibles :",
                 [
+                    "500 jetons : 5 euros",
                     "1000 jetons : 10 euros",
                     "2000 jetons : 20 euros",
                     "3000 jetons : 30 euros",
                     "4000 jetons : 40 euros",
                     "6000 jetons : 60 euros",
-                    "12000 jetons : 120 euros",
                 ],
                 "Par le biais de campagnes de marketing avec des tiers dans le cadre de campagnes de partenariat et de programmes de fidélisation de la clientèle, l'utilisateur peut également recevoir des clés. Dans ce cas, les présentes CGV et, le cas échéant, les conditions de la campagne en question sont toujours d'application.",
             ],

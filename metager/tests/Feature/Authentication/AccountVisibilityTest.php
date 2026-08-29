@@ -154,6 +154,74 @@ class AccountVisibilityTest extends TestCase
     }
 
     /**
+     * Logging out has to log the user out — including from the URL they are on.
+     *
+     * Reported as "the logout button removes the cookie but I still land on an
+     * authenticated version of the landing page". Entering a key redirects to
+     * `<page>?key=<uuid>` so the guard picks it up on the next request, and
+     * `KeyAuthGuard` reads the query string ahead of the cookie. The sidebar
+     * built its logout link out of the URL as it arrived, so the round trip
+     * cleared the cookie and handed the credential straight back. Nothing about
+     * it was visible: resources/js/utility.js rewrites `key` out of the address
+     * bar as soon as the page has loaded, so the URL looks clean while the link
+     * underneath it is not, and a second unassisted load does log the user out —
+     * which is why it reads as the cookie "not sticking" rather than as a link
+     * carrying a key.
+     *
+     * The merged startpage is what made it visible: signed in and signed out
+     * used to differ by a pill, and now they are two different pages.
+     */
+    public function testLoggingOutDoesNotHandTheKeyBackThroughTheReturnUrl(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/?key=" . self::KEY)->assertOk();
+
+        $logout = $this->logoutHref($response->getContent());
+
+        $this->assertNotNull($logout, "the signed-in startpage renders no logout link");
+        $this->assertStringContainsString("/keys/key/remove", $logout);
+        $this->assertStringNotContainsString(self::KEY, urldecode($logout));
+        $this->assertStringContainsString("url=" . urlencode(url("/")), $logout);
+    }
+
+    /** Everything else about the page the user was on survives the round trip. */
+    public function testTheLogoutLinkKeepsTheRestOfTheUrlItReturnsTo(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/meta/settings?focus=web&key=" . self::KEY)->assertOk();
+
+        $logout = urldecode($this->logoutHref($response->getContent()) ?? "");
+
+        $this->assertStringContainsString("/meta/settings", $logout);
+        $this->assertStringContainsString("focus=web", $logout);
+        $this->assertStringNotContainsString(self::KEY, $logout);
+    }
+
+    /** The locale prefix is part of "the page the user was on" too. */
+    public function testTheLogoutLinkReturnsToTheLocalePrefixedPage(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/ca-ES/?key=" . self::KEY)->assertOk();
+
+        $logout = $this->logoutHref($response->getContent());
+
+        $this->assertStringContainsString("/ca-ES/keys/key/remove", $logout);
+        $this->assertStringContainsString("url=" . urlencode(url("/")), $logout);
+        $this->assertStringNotContainsString(self::KEY, urldecode($logout));
+    }
+
+    /** The `href` of `#sidebar-key-remove`, or null when the page has none. */
+    private function logoutHref(string $html): ?string
+    {
+        return preg_match('/id="sidebar-key-remove" href="([^"]*)"/', $html, $matches)
+            ? html_entity_decode($matches[1])
+            : null;
+    }
+
+    /**
      * The settings page used to carry the account itself: the full key in a
      * copy field, the balance, and its own logout button. All three now live in
      * the menu, which that page has like every other — and one logout link is

@@ -90,8 +90,13 @@
           {{-- Keeps its id: resources/js/accountBreadcrumb.js clears the
                returning-user flag on it, and the webextension's own
                contentScripts/keys.js needs a stable hook to catch a logout and
-               drop the master key from extension storage. --}}
-          <a class="btn account-btn account-btn--quiet" id="sidebar-key-remove" href="{{ LaravelLocalization::getLocalizedURL(null, "/keys/key/remove?url=" . urlencode(App\Localization::currentFullUrl())) }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.logout')</a>
+               drop the master key from extension storage.
+
+               The return URL goes through KeymanagerLinks::remove() rather
+               than App\Localization::currentFullUrl() directly, because a
+               visitor who just entered their key is standing on `?key=<uuid>`
+               and handing that straight back logs them in again. --}}
+          <a class="btn account-btn account-btn--quiet" id="sidebar-key-remove" href="{{ App\Landing\KeymanagerLinks::remove() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.logout')</a>
         </div>
       @endif
     @else

@@ -2,6 +2,7 @@
 
 namespace App\Landing;
 
+use App\Localization;
 use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -87,6 +88,61 @@ final class KeymanagerLinks
         }
 
         return self::url("/key/enter", $query);
+    }
+
+    /**
+     * Signing out, and coming back to the page the user is standing on.
+     *
+     * The return URL has to have `key` taken out of it first, and that is the
+     * whole reason this method exists rather than the blade building the link.
+     * Entering a key redirects to `…/?key=<uuid>` — routes/key.js puts it there
+     * so the guard picks the key up on the very next request — and
+     * resources/js/utility.js then rewrites it back out of the address bar. The
+     * sidebar, though, was rendered from the URL as it arrived, so its logout
+     * link still carried the parameter. Signing out cleared the cookie and
+     * bounced straight back to a URL that still held the credential, and
+     * `KeyAuthGuard` reads the query string ahead of the cookie: the visitor
+     * landed signed in again, on a URL that looked clean. Only a second,
+     * unassisted load of the page finally logged them out.
+     *
+     * The keymanager strips it a second time (pass/app/LogoutRedirect.js),
+     * because `/key/remove` also falls back to the Referer when no `url` is
+     * given, and a Referer is not ours to sanitise.
+     */
+    public static function remove(?string $returnTo = null): string
+    {
+        $returnTo ??= Localization::currentFullUrl();
+
+        return self::url("/key/remove", ["url" => self::withoutKey($returnTo)]);
+    }
+
+    /**
+     * `$url` minus its `key` parameter.
+     *
+     * Split by hand rather than through `parse_url()`/`http_build_url()`: the
+     * value comes from the request we are serving, so it is already a URL, and
+     * reassembling one from eight optional parts is the step that drops a port
+     * or an empty path.
+     */
+    private static function withoutKey(string $url): string
+    {
+        $fragment = "";
+        if (($hash = strpos($url, "#")) !== false) {
+            $fragment = substr($url, $hash);
+            $url = substr($url, 0, $hash);
+        }
+
+        $mark = strpos($url, "?");
+        if ($mark === false) {
+            return $url . $fragment;
+        }
+
+        parse_str(substr($url, $mark + 1), $query);
+        unset($query["key"]);
+
+        return substr($url, 0, $mark)
+            . ($query === [] ? "" : "?" . http_build_query($query))
+            . $fragment;
     }
 
     /** What a key costs, and the payment methods section of that page. */

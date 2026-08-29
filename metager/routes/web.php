@@ -291,11 +291,14 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     })->name('anonymous-token');
 
     /**
-     * Die Anmeldeseite, aus /keys/key/enter hierher gezogen.
+     * Die Anmeldung, aus /keys/key/enter hierher gezogen — Seite und Vorgang.
      *
-     * Steht bei den anderen umgezogenen Seiten, ist aber die erste, die nicht
-     * nur Text ist: das Formular schickt weiter an den Keymanager ab. Warum,
-     * steht an App\Landing\KeymanagerLinks::submitKey().
+     * Steht bei den anderen umgezogenen Seiten, ist aber die einzige, die nicht
+     * nur Text ist. Was beim Keymanager blieb, ist eine einzige Frage über die
+     * API: was eine Eingabe ist (App\Authentication\KeyResolver).
+     *
+     * Dieselbe Adresse für beide Richtungen, damit das Formular auf sich selbst
+     * zeigt und ein Fehlversuch ohne zweiten URL zurückfindet.
      *
      * `login` als Name ist der, auf den Laravels Authenticate-Middleware ohne
      * weiteres Zutun zeigt. Das ist hier richtig und trotzdem eine Notiz wert:
@@ -303,6 +306,7 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * haben nichts miteinander zu tun.
      */
     Route::get('anmelden', [LoginController::class, 'show'])->name('login');
+    Route::post('anmelden', [LoginController::class, 'submit'])->name('login.submit');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

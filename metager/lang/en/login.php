@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'That is a payment id, not a key. Your key has 36 characters and does not start with a Z.',
         'no_input' => 'Please enter a key or choose a backup file.',
         'file_unreadable' => 'No key could be read from that file. It should contain the QR code you saved when you set your key up.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'We could not check the key just now. That says nothing about your key — try again in a moment.',
+        'too_many_attempts' => 'Too many attempts from this connection. Wait a few minutes and try again.',
     ],
 
     'validation' => [

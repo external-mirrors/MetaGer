@@ -11,7 +11,7 @@ import {
  * The sign-in field, pinned against the keymanager's own rules.
  *
  * These are not our rules to choose: `Key.IS_VALID_UUID` in pass/app/Key.js is
- * a v4-strict match, and `POST /key/enter` accepts a dashed UUID, the same 32
+ * a v4-strict match, and the sign-in accepts a dashed UUID, the same 32
  * hex digits undashed, or a six-character short code. If this field starts
  * refusing something that route accepts, the only symptom is a visitor who
  * cannot sign in with a key that works — and no error anywhere.

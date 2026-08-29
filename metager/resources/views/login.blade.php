@@ -6,10 +6,10 @@
 {{--
 	Bei MetaGer anmelden.
 
-	Lag als /keys/key/enter im Keymanager und ist die erste umgezogene Seite,
-	die nicht nur Text ist: das Formular schickt weiterhin dorthin ab. Warum,
-	steht an App\Landing\KeymanagerLinks::submitKey(); wie ein abgewiesener
-	Versuch wieder hier landet, an App\Http\Controllers\LoginController.
+	Lag als /keys/key/enter im Keymanager. Das Formular schickt inzwischen
+	hierher zurück — an dieselbe Adresse, unter der die Seite steht; nur die
+	Frage, was eine Eingabe eigentlich ist, geht noch an den Keyserver.
+	App\Http\Controllers\LoginController hat die Gründe.
 
 	Die Seite kommt ohne Javascript aus. Getippter Schlüssel, Anmeldecode und
 	Sicherungsdatei sind einfache Formularfelder; die Gruppierung der Ziffern,
@@ -88,10 +88,14 @@
 		</div>
 
 		{{--
-			Was der Keymanager zurückgeben muss und nicht selbst kennt. Versteckte
-			Felder und kein Serverzustand: Webrouten haben keine Session.
+			Was einen Fehlversuch überleben muss und nirgends sonst steht.
+			Versteckte Felder und kein Serverzustand: Webrouten haben keine
+			Session.
+
+			Ein `redirect_error` steht nicht mehr dabei. Den brauchte der
+			Keymanager, um den Besucher wieder hierher zu schicken; das Ziel
+			eines Fehlversuchs ist jetzt diese Seite selbst.
 		--}}
-		<input type="hidden" name="redirect_error" value="{{ $redirectError }}">
 		@if($redirectSuccess !== null)
 			<input type="hidden" name="redirect_success" value="{{ $redirectSuccess }}">
 		@endif

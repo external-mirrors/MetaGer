@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'Det är ett betalningsnummer, inte en nyckel. Din nyckel har 36 tecken och börjar inte med Z.',
         'no_input' => 'Ange en nyckel eller välj en säkerhetskopia.',
         'file_unreadable' => 'Ingen nyckel kunde läsas ur den filen. Den ska innehålla QR-koden du sparade när du skapade nyckeln.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'Vi kunde inte kontrollera nyckeln just nu. Det säger ingenting om din nyckel — försök igen om en stund.',
+        'too_many_attempts' => 'För många försök från den här anslutningen. Vänta några minuter och försök igen.',
     ],
 
     'validation' => [

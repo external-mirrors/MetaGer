@@ -92,7 +92,7 @@ function enhanceKeyField() {
 /**
  * Choosing a file clears the key field.
  *
- * The form carries both and `POST /key/enter` reads the key first, so a
+ * The form carries both and LoginController::submit reads the key first, so a
  * leftover half-typed key silently wins over the file the visitor just picked —
  * they would watch themselves be told their key is invalid after uploading a
  * backup.

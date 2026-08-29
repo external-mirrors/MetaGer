@@ -4,7 +4,7 @@
  * Pure functions, separate from the DOM glue in ../login.js, because this is
  * the only part of the sign-in page with rules of its own — and the rules are
  * the keymanager's, not ours. `Key.IS_VALID_UUID` in pass/app/Key.js is a
- * v4-strict, dash-separated match, and `POST /key/enter` accepts three shapes:
+ * v4-strict, dash-separated match, and the sign-in accepts three shapes:
  * that UUID, the same 32 hex digits without dashes (it inserts them itself),
  * and a six-character short code.
  *

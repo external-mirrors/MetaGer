@@ -66,6 +66,10 @@ return [
         'invalid_key_payment_id' => 'Das ist eine Zahlungsnummer, kein Schlüssel. Ihr Schlüssel hat 36 Zeichen und keine Z am Anfang.',
         'no_input' => 'Bitte geben Sie einen Schlüssel ein oder wählen Sie eine Sicherungsdatei.',
         'file_unreadable' => 'Aus dieser Datei ließ sich kein Schlüssel lesen. Sie sollte den QR-Code enthalten, den Sie beim Einrichten gespeichert haben.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'Der Schlüssel ließ sich gerade nicht prüfen. Das sagt nichts über Ihren Schlüssel — versuchen Sie es gleich noch einmal.',
+        'too_many_attempts' => 'Zu viele Versuche von diesem Anschluss. Warten Sie ein paar Minuten und versuchen Sie es dann noch einmal.',
     ],
 
     /**

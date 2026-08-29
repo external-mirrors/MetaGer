@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'Això és un número de pagament, no una clau. La vostra clau té 36 caràcters i no comença per Z.',
         'no_input' => 'Introduïu una clau o trieu un fitxer de còpia de seguretat.',
         'file_unreadable' => 'No s\'ha pogut llegir cap clau d\'aquest fitxer. Hauria de contenir el codi QR que vau desar en configurar la clau.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'Ara mateix no hem pogut comprovar la clau. No és culpa de la vostra clau: torneu-ho a provar d\'aquí a un moment.',
+        'too_many_attempts' => 'Massa intents des d\'aquesta connexió. Espereu uns minuts i torneu-ho a provar.',
     ],
 
     'validation' => [

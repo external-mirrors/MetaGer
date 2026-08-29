@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'Tuo on maksunumero, ei avain. Avaimessasi on 36 merkkiä eikä se ala Z-kirjaimella.',
         'no_input' => 'Syötä avain tai valitse varmuuskopiotiedosto.',
         'file_unreadable' => 'Tuosta tiedostosta ei voitu lukea avainta. Sen pitäisi sisältää QR-koodi, jonka tallensit avainta luodessasi.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'Avainta ei juuri nyt voitu tarkistaa. Se ei kerro avaimestasi mitään — yritä hetken kuluttua uudelleen.',
+        'too_many_attempts' => 'Liian monta yritystä tästä yhteydestä. Odota muutama minuutti ja yritä uudelleen.',
     ],
 
     'validation' => [

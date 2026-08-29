@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'Dat is een betalingsnummer, geen sleutel. Uw sleutel heeft 36 tekens en begint niet met een Z.',
         'no_input' => 'Voer een sleutel in of kies een back-upbestand.',
         'file_unreadable' => 'Uit dat bestand kon geen sleutel worden gelezen. Het zou de QR-code moeten bevatten die u bij het instellen van uw sleutel hebt opgeslagen.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'We konden de sleutel op dit moment niet controleren. Dat zegt niets over uw sleutel — probeer het zo meteen opnieuw.',
+        'too_many_attempts' => 'Te veel pogingen vanaf deze verbinding. Wacht een paar minuten en probeer het opnieuw.',
     ],
 
     'validation' => [

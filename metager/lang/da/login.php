@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'Det er et betalingsnummer, ikke en nøgle. Din nøgle har 36 tegn og begynder ikke med Z.',
         'no_input' => 'Indtast en nøgle, eller vælg en backup-fil.',
         'file_unreadable' => 'Der kunne ikke læses nogen nøgle fra den fil. Den skal indeholde den QR-kode, du gemte, da du oprettede nøglen.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'Vi kunne ikke tjekke nøglen lige nu. Det siger intet om din nøgle — prøv igen om et øjeblik.',
+        'too_many_attempts' => 'For mange forsøg fra denne forbindelse. Vent et par minutter, og prøv igen.',
     ],
 
     'validation' => [

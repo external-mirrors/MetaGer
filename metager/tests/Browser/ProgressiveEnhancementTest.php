@@ -76,9 +76,9 @@ class ProgressiveEnhancementTest extends DuskTestCase
             );
 
             // Anmelden zeigt seit dem dritten Umzugsschritt auf MetaGers eigene
-            // /anmelden. /keys/key/enter antwortet weiterhin — dorthin schickt
-            // das Formular auf dieser Seite ab —, aber für einen abgemeldeten
-            // Besucher wäre der alte Pfad nur eine Weiterleitung hierher.
+            // /anmelden. /keys/key/enter antwortet weiterhin — mit Schlüssel ist
+            // es der Weg zum Konto —, aber für einen abgemeldeten Besucher wäre
+            // der alte Pfad nur eine Weiterleitung hierher.
             $this->assertStringContainsString(
                 "/de-DE/anmelden",
                 $browser->attribute("#searchbar-replacement a.startpage-login-btn", "href")
@@ -117,9 +117,10 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 ->assertMissing("#login-qr");
 
             // Ein echtes Formular an eine echte Adresse, nicht ein Skripthaken:
-            // ohne beides käme die Eingabe nirgendwo an.
+            // ohne beides käme die Eingabe nirgendwo an. Die Adresse ist die
+            // Seite selbst, seit auch der Vorgang hier liegt.
             $this->assertStringContainsString(
-                "/de-DE/keys/key/enter",
+                "/de-DE/anmelden",
                 $browser->attribute("#login-form", "action")
             );
             $this->assertSame("post", strtolower($browser->attribute("#login-form", "method")));

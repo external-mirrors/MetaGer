@@ -44,6 +44,10 @@ return [
         'invalid_key_payment_id' => 'To jest numer płatności, a nie klucz. Twój klucz ma 36 znaków i nie zaczyna się od Z.',
         'no_input' => 'Wpisz klucz albo wybierz plik kopii zapasowej.',
         'file_unreadable' => 'Z tego pliku nie udało się odczytać klucza. Powinien zawierać kod QR zapisany przy zakładaniu klucza.',
+        // Der Keyserver hat nicht geantwortet, und zu viele Versuche von einer
+        // Adresse. Beides sind Aussagen über uns und nicht über die Eingabe.
+        'keyserver_unreachable' => 'W tej chwili nie udało się sprawdzić klucza. To nic nie mówi o twoim kluczu — spróbuj ponownie za chwilę.',
+        'too_many_attempts' => 'Zbyt wiele prób z tego połączenia. Odczekaj kilka minut i spróbuj ponownie.',
     ],
 
     'validation' => [

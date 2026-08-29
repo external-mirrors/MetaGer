@@ -2,29 +2,36 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\KeyResolver;
 use App\Landing\KeymanagerLinks;
 use App\Support\Browser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Vite;
 
 /**
- * Die Anmeldeseite — /anmelden.
+ * Die Anmeldung — /anmelden, beide Richtungen.
  *
- * Lag als /keys/key/enter im Keymanager. Was hierher gezogen ist, ist die
- * Seite; das Formular schickt weiterhin dorthin ab
- * ({@see KeymanagerLinks::submitKey()}), und die Gründe dafür stehen an der
- * Methode. Die Naht dazwischen ist der `redirect_error`-Parameter: den kannte
- * routes/key.js schon, weil die Startseite ihn brauchte, und er ist jetzt der
- * Weg, auf dem ein abgewiesener Versuch wieder auf dieser Seite landet statt
- * auf einer zweiten Fassung derselben Seite im anderen Repository.
+ * Lag als /keys/key/enter im Keymanager, erst nur als Seite, inzwischen auch
+ * als Vorgang. Was dort bleiben musste, ist eine einzige Frage — was eine
+ * Eingabe überhaupt ist ({@see KeyResolver}) —, und die wird über die API
+ * gestellt. Alles andere passiert hier: Formular, Prüfung, Cookie, Ziel.
  *
- * Der Keymanager bekommt damit von dieser Seite drei Dinge mit, die er
- * zurückgeben muss und nicht selbst kennt: wohin bei Erfolg
- * (`redirect_success`), wohin bei Fehler (`redirect_error`) und die beiden
- * Callback-Marker der MetaGer-App. Alle vier sind versteckte Felder im
- * Formular, nicht Serverzustand — es gibt auf Webrouten keine Session.
+ * Der Umzug des Vorgangs ist nicht Ordnungsliebe. Solange der Keymanager das
+ * Cookie setzte, musste er den Besucher anschließend zurückreichen, und der
+ * Schlüssel reiste dafür als `?key=` durch die Adresszeile — in den Verlauf,
+ * in jeden Referer der nächsten Seite, und ohne JavaScript blieb er dort
+ * stehen, weil erst resources/js/utility.js ihn wieder herausnimmt. Das
+ * Cookie hier zu setzen macht diesen Umweg überflüssig: der Schlüssel steht
+ * in keinem URL mehr. Mit ihm entfallen `redirect_error` und dessen
+ * Herkunftsprüfung.
+ *
+ * Zwei Dinge muss das Formular trotzdem weiterreichen, weil es auf Webrouten
+ * keine Session gibt: wohin bei Erfolg (`redirect_success`) und die beiden
+ * Callback-Marker der MetaGer-App.
  */
 final class LoginController extends Controller
 {
@@ -44,9 +51,16 @@ final class LoginController extends Controller
         "no_input",
         "file_unreadable",
         // Sechs Zeichen, die kein Schlüssel sind — fast immer das Kürzel neben
-        // dem Guthaben, das der Keymanager seit der Prüfung in POST /key/enter
-        // abweist statt daraus ein leeres Phantomkonto zu machen.
+        // dem Guthaben, das der Keyserver seit der Prüfung in resolve abweist
+        // statt daraus ein leeres Phantomkonto zu machen.
         "key_mark",
+        // Der Keyserver hat nicht geantwortet. Kein Urteil über die Eingabe,
+        // und deshalb der einzige Fehler hier, bei dem „noch einmal versuchen“
+        // ein sinnvoller Rat ist.
+        "keyserver_unreachable",
+        // Zu viele Versuche von dieser Adresse. Sechs Ziffern sind wenig, und
+        // ohne Bremse wäre das Formular eine Maschine, an der man sie durchgeht.
+        "too_many_attempts",
     ];
 
     /**
@@ -93,14 +107,14 @@ final class LoginController extends Controller
                 "css" => [Vite::asset("resources/less/metager/pages/login.less")],
                 "js" => [Vite::asset("resources/js/login.js")],
 
-                "action" => KeymanagerLinks::submitKey(),
+                // Auf sich selbst, und als Pfad: dieselbe Anwendung antwortet
+                // auf metager.de, metager.org, metager3.de und einer
+                // .onion-Adresse, und ein Formular, das den Host nennt, ist nur
+                // eine Art, den Besucher von seinem herunterzuschicken. Den
+                // absoluten URL brauchte der Keymanager für seine
+                // Herkunftsprüfung; die ist mit ihm entfallen.
+                "action" => route("login", [], false),
                 "chargeEndpoint" => KeymanagerLinks::keyApi(),
-                // Absolut, und deshalb nicht route('login') mit der halben
-                // Query dran: routes/key.js nimmt den Wert nur an, wenn dessen
-                // Hostname der der Anfrage ist, und vergleicht dafür einen
-                // geparsten URL. Ein Pfad allein wird dort verworfen und der
-                // Besucher landet wieder beim Keymanager.
-                "redirectError" => $this->selfUrl($callback, $redirectSuccess),
                 "redirectSuccess" => $redirectSuccess,
                 "callback" => $callback,
 
@@ -120,6 +134,199 @@ final class LoginController extends Controller
             // Eingabe des Besuchers. Nichts davon gehört in einen Cache, weder
             // in einen gemeinsamen noch in den des Browsers.
             ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Wie oft von einer Adresse aus geraten werden darf, und in welchem Fenster.
+     *
+     * Ein Anmeldecode ist sechs Ziffern und zehn Sekunden gültig. Das ist eine
+     * Million Möglichkeiten, aber zu jedem Zeitpunkt sind einige davon echt,
+     * und ohne Bremse ist das Formular die Maschine, die sie durchprobiert.
+     * Vorher gab es hier gar nichts — POST /key/enter im Keymanager war
+     * ungebremst, und die API dahinter ist es immer noch, weil dort jeder
+     * Aufruf derselbe Aufrufer ist. Wessen Browser fragt, weiß nur diese Seite.
+     *
+     * Großzügig genug, dass niemand es bemerkt, der einen Schlüssel abtippt und
+     * sich dabei zweimal vertut.
+     */
+    private const MAX_ATTEMPTS = 20;
+    private const ATTEMPT_WINDOW_SECONDS = 300;
+
+    /**
+     * Ein Anmeldeversuch.
+     *
+     * Was die Eingabe ist, beantwortet der Keyserver ({@see KeyResolver});
+     * was daraufhin geschieht, steht hier. Bei Erfolg wird das Cookie hier
+     * gesetzt — das ist der ganze Grund, warum der Vorgang umgezogen ist, und
+     * es ist der Grund, warum in keiner Weiterleitung mehr ein `?key=` steht.
+     */
+    public function submit(Request $request, KeyResolver $resolver): RedirectResponse
+    {
+        $callback = KeymanagerLinks::appCallback($request);
+        $redirectSuccess = $request->input("redirect_success");
+        $redirectSuccess = is_string($redirectSuccess) && trim($redirectSuccess) !== ""
+            ? $redirectSuccess
+            : null;
+
+        // Webrouten laufen ohne Session, es gibt also kein CSRF-Token. Für ein
+        // Anmeldeformular ist das nicht gleichgültig: ein fremdes Formular, das
+        // hierher abschickt, meldet den Besucher an *seinem* Schlüssel an, und
+        // von da an zahlt und liest der Angreifer mit. Also die Herkunft, so
+        // wie sie der Browser selbst mitschickt.
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        if (RateLimiter::tooManyAttempts($this->attemptKey($request), self::MAX_ATTEMPTS)) {
+            return $this->back($callback, $redirectSuccess, "too_many_attempts");
+        }
+        RateLimiter::hit($this->attemptKey($request), self::ATTEMPT_WINDOW_SECONDS);
+
+        $entered = $request->input("key");
+        $entered = is_string($entered) ? trim($entered) : "";
+        $file = $request->file("file");
+
+        if ($entered !== "") {
+            $answer = $resolver->resolve($entered);
+        } elseif ($file !== null && $file->isValid()) {
+            $answer = $resolver->resolveImage($file);
+        } else {
+            return $this->back($callback, $redirectSuccess, "no_input");
+        }
+
+        return match ($answer["result"]) {
+            KeyResolver::KEY => $this->signIn($request, $answer["key"], $callback, $redirectSuccess),
+            // Der Gutschein wird auf der Kampagnenseite des Keymanagers
+            // eingelöst; die kennt die Kampagne, das Budget und die Bremse
+            // dafür. Hier ist nur bekannt, dass die Eingabe einer war.
+            KeyResolver::VOUCHER => redirect()->away(KeymanagerLinks::voucher() . "/" . $answer["code"]),
+            KeyResolver::UNREACHABLE
+                => $this->back($callback, $redirectSuccess, "keyserver_unreachable", $entered),
+            default => $this->back($callback, $redirectSuccess, $answer["error"], $entered),
+        };
+    }
+
+    /**
+     * Angemeldet: das Cookie setzen und den Besucher dorthin schicken, wo er
+     * hin wollte.
+     *
+     * Das Cookie so, wie der Keymanager es gesetzt hat — fünf Jahre, `lax`,
+     * und lesbar für Skripte, weil die Web-Erweiterung es über die
+     * Cookie-Schnittstelle des Browsers verfolgt (TokenManager.js). Es wird
+     * nicht verschlüsselt: `key` steht in EncryptCookies::$except, weil auch
+     * der Keymanager unter demselben Host es lesen können muss.
+     *
+     * @param array<string, string> $callback
+     */
+    private function signIn(
+        Request $request,
+        string $key,
+        array $callback,
+        ?string $redirectSuccess
+    ): RedirectResponse {
+        Cookie::queue(Cookie::forever(
+            "key",
+            $key,
+            "/",
+            null,
+            $request->isSecure(),
+            false
+        ));
+
+        return redirect()
+            ->away($this->afterSignIn($request, $key, $callback, $redirectSuccess))
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Wohin nach einer erfolgreichen Anmeldung.
+     *
+     * Drei Ziele, in dieser Reihenfolge:
+     *
+     * 1. Die App. Trägt die Anfrage die Callback-Marker, dann läuft das hier in
+     *    einem Custom Tab, und der Schlüssel muss zurück in die App. Das kann
+     *    nur das Konto im Keymanager — dort steht die Weiche, die daraus einen
+     *    App-Link macht, und dort steht auch die Ladung, an der sie entscheidet,
+     *    ob die App gleich zum Aufladen weiterschicken soll.
+     * 2. Die Seite, von der der Besucher kam, wenn sie unsere ist. Ohne `?key=`:
+     *    das Cookie liegt schon in derselben Antwort, die diese Weiterleitung
+     *    ist, also ist der nächste Aufruf angemeldet.
+     * 3. Sonst das Konto.
+     *
+     * @param array<string, string> $callback
+     */
+    private function afterSignIn(
+        Request $request,
+        string $key,
+        array $callback,
+        ?string $redirectSuccess
+    ): string {
+        if ($callback !== []) {
+            return KeymanagerLinks::account($key, $callback);
+        }
+
+        if ($redirectSuccess !== null && $this->isOurs($request, $redirectSuccess)) {
+            return $redirectSuccess;
+        }
+
+        return KeymanagerLinks::account($key);
+    }
+
+    /**
+     * Ob ein URL auf denselben Host zeigt, unter dem diese Anfrage ankam.
+     *
+     * Gegen den Host der Anfrage und nicht gegen config('app.url'): dieselbe
+     * Anwendung antwortet auf metager.de, metager.org, metager3.de und einer
+     * .onion-Adresse, und wer über eine davon hereinkommt, soll auf ihr bleiben.
+     */
+    private function isOurs(Request $request, string $url): bool
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if ($host === null || $host === false) {
+            // Ein reiner Pfad. Der ist unserer.
+            return str_starts_with($url, "/") && !str_starts_with($url, "//");
+        }
+
+        $port = parse_url($url, PHP_URL_PORT);
+
+        return ($host . ($port === null ? "" : ":" . $port)) === $request->getHttpHost();
+    }
+
+    /**
+     * Ob dieses Formular von unserer eigenen Seite abgeschickt wurde.
+     *
+     * `Origin` ist die Antwort, wenn sie da ist: bei einem seitenübergreifenden
+     * Formular schickt der Browser sie mit, und sie ist dann eine fremde.
+     * Fehlt sie, entscheidet `Sec-Fetch-Site`; `none` heißt „direkt eingegeben“
+     * und ist ebenfalls in Ordnung.
+     *
+     * Fehlen beide, wird durchgelassen. Das ist kein Loch, das jemand von einer
+     * fremden Seite aus aufmachen kann — genau diese Kopfzeilen sind die, die
+     * ein Browser nicht unterdrücken lässt. Es ist die Nachsicht gegenüber
+     * einem sehr alten Browser, der beide nicht kennt.
+     */
+    private function sameOrigin(Request $request): bool
+    {
+        $origin = $request->header("Origin");
+
+        if (is_string($origin) && $origin !== "" && $origin !== "null") {
+            return $this->isOurs($request, $origin);
+        }
+
+        $site = $request->header("Sec-Fetch-Site");
+
+        if (is_string($site) && $site !== "") {
+            return in_array($site, ["same-origin", "same-site", "none"], true);
+        }
+
+        return true;
+    }
+
+    /** Gezählt wird pro Adresse; einen Benutzer gibt es hier ja noch nicht. */
+    private function attemptKey(Request $request): string
+    {
+        return "login:" . $request->ip();
     }
 
     /**
@@ -159,23 +366,39 @@ final class LoginController extends Controller
     }
 
     /**
-     * Diese Seite als absoluter URL, mit allem, was einen zweiten Versuch
-     * überstehen muss — sonst verliert genau der Besucher die Callback-Marker
-     * der App, der sich beim ersten Mal vertippt hat.
+     * Zurück auf diese Seite nach einem abgewiesenen Versuch.
      *
-     * `key_error` und `invalid_key` stehen bewusst nicht drin: die setzt der
-     * Keymanager selbst dazu, und beide gehören zu diesem einen Versuch.
+     * Alles, was einen zweiten Versuch überstehen muss, steht wieder in der
+     * Query — sonst verliert genau der Besucher die Callback-Marker der App
+     * und sein Rückkehrziel, der sich beim ersten Mal vertippt hat.
+     *
+     * 303 und nicht 302: das Ziel ist ein Formular, und der Browser soll es
+     * mit GET holen statt den fehlgeschlagenen Versuch zu wiederholen. Ohne
+     * Zwischenspeicher, weil in der Query die Eingabe des Besuchers steht.
      *
      * @param array<string, string> $callback
      */
-    private function selfUrl(array $callback, ?string $redirectSuccess): string
-    {
+    private function back(
+        array $callback,
+        ?string $redirectSuccess,
+        string $error,
+        string $entered = ""
+    ): RedirectResponse {
         $query = $callback;
 
         if ($redirectSuccess !== null) {
             $query["redirect_success"] = $redirectSuccess;
         }
 
-        return route("login", $query);
+        $query["key_error"] = $error;
+
+        $entered = trim($entered);
+        if ($entered !== "") {
+            $query["invalid_key"] = mb_substr($entered, 0, self::MAX_PREFILL);
+        }
+
+        return redirect()
+            ->to(route("login", $query), 303)
+            ->header("Cache-Control", "no-store, private");
     }
 }

@@ -27,10 +27,11 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  * no route to name for them, so LaravelLocalization::getLocalizedURL does it.
  *
  * {@see login()} is the exception and is here anyway. The sign-in page *is* a
- * MetaGer route now, so it needs none of that — but it is the one destination
- * in the key flow that every call site reaches through the same two markers
- * ({@see appCallback()}), and splitting it off would mean the callers had to
- * remember them. Which link goes where, in one file, is the point of the file.
+ * MetaGer route now, and so is the sign-in itself — it needs none of that. But
+ * it is the one destination in the key flow that every call site reaches
+ * through the same two markers ({@see appCallback()}), and splitting it off
+ * would mean the callers had to remember them. Which link goes where, in one
+ * file, is the point of the file.
  */
 final class KeymanagerLinks
 {
@@ -53,14 +54,19 @@ final class KeymanagerLinks
     {
         $request ??= request();
 
-        $keystore = $request->query("keystore");
+        // input() und nicht query(): auf der Anmeldeseite stehen die beiden als
+        // versteckte Felder im Formular, weil sie einen Fehlversuch überleben
+        // müssen und es keine Session gibt. Beim Abschicken kommen sie also im
+        // Body an. query() sah dort nichts, und die Marker gingen genau in dem
+        // Schritt verloren, für den sie mitgeführt werden.
+        $keystore = $request->input("keystore");
         if (!is_string($keystore) || trim($keystore) === "") {
             return [];
         }
 
         $callback = ["keystore" => $keystore];
 
-        $variant = $request->query("variant");
+        $variant = $request->input("variant");
         if (is_string($variant) && trim($variant) !== "") {
             $callback["variant"] = $variant;
         }
@@ -93,13 +99,13 @@ final class KeymanagerLinks
      * Signing in with a key that already exists — MetaGer's own `/anmelden`.
      *
      * This used to be `/keys/key/enter`, and that URL still answers: it is
-     * where the form posts to, and it is where a visitor who *already* has a
-     * key is sent ({@see dashboard()}). What moved here is the page.
+     * where a visitor who *already* has a key is sent ({@see dashboard()}), and
+     * the MetaGer app opens it directly. What moved here is the page — and, in
+     * a second step, the sign-in itself.
      *
      * `$redirectSuccess` rides along as a query parameter and the page puts it
-     * back on the form, because it is the keymanager's POST handler that acts
-     * on it — the visitor is not signed in until that request, so nothing on
-     * this side could honour it.
+     * back on the form, because the visitor is not signed in until that POST
+     * and there is no session to keep it in.
      */
     public static function login(?string $redirectSuccess = null, ?Request $request = null): string
     {
@@ -113,20 +119,25 @@ final class KeymanagerLinks
     }
 
     /**
-     * Where the sign-in form posts to.
+     * One key's account page.
      *
-     * The page moved and the handler did not, for three reasons that are all
-     * the keymanager's alone: the six-digit login code lives in its Redis
-     * keyspace, a campaign voucher typed into the key field is normalised by
-     * its CampaignVoucher, and a QR code inside an uploaded image is decoded
-     * with Jimp. None of the three has an API this side could call, and moving
-     * them is a different piece of work from moving a page.
+     * Where a sign-in ends up. Built from the resolved UUID rather than gone
+     * through `/key/enter`, because by this point the key *is* canonical — the
+     * keyserver said so when it resolved the input
+     * ({@see \App\Authentication\KeyResolver}), which is the one thing
+     * `/key/enter` was still being used for.
      *
-     * Same origin, so nginx's `form-action 'self'` covers it.
+     * `$callback` carries the app's markers when there are any, and they are
+     * why this is the destination at all in that case: the dashboard is where
+     * the Custom Tab handback happens, and it is the only place that knows the
+     * key's charge, which decides whether the app should open on the top-up
+     * step (docs/10-open-decisions.md#d55 in app-en).
+     *
+     * @param array<string, string> $callback
      */
-    public static function submitKey(): string
+    public static function account(string $key, array $callback = []): string
     {
-        return self::url("/key/enter");
+        return self::url("/key/" . urlencode($key), $callback);
     }
 
     /**

@@ -7,23 +7,22 @@ use Tests\TestCase;
 /**
  * Die Anmeldeseite, /anmelden.
  *
- * Sie ist die erste umgezogene Seite, die nicht nur Text ist, und damit die
- * erste, bei der ein Umzugsfehler nicht wie ein Textfehler aussieht, sondern
- * wie ein Konto, in das niemand mehr hineinkommt. Vier Dinge müssen stimmen,
- * und keines davon fällt beim Ansehen der Seite auf:
+ * Die einzige umgezogene Seite, die nicht nur Text ist, und damit die einzige,
+ * bei der ein Umzugsfehler nicht wie ein Textfehler aussieht, sondern wie ein
+ * Konto, in das niemand mehr hineinkommt. Drei Dinge müssen stimmen, und
+ * keines davon fällt beim Ansehen der Seite auf:
  *
- *   - **Wohin das Formular abschickt.** Der Anmeldecode steht in Redis des
- *     Keymanagers, ein Gutscheincode wird dort normalisiert, und der QR-Code in
- *     einer hochgeladenen Datei wird dort gelesen. Die Seite ist hier, der
- *     Vorgang ist es nicht.
- *   - **Was sie mitschickt.** `redirect_error` ist der Weg zurück auf diese
- *     Seite — ohne ihn landet ein Tippfehler auf einer Vorlage, die es im
- *     anderen Repository nicht mehr gibt. `redirect_success` und die beiden
- *     Callback-Marker der MetaGer-App müssen einen Fehlversuch überleben.
+ *   - **Wohin das Formular abschickt.** Auf sich selbst, seit der Vorgang
+ *     mitgezogen ist; nur die Frage, was eine Eingabe ist, geht noch an den
+ *     Keyserver. Der Vorgang selbst steht in LoginSubmitTest.
+ *   - **Was sie mitschickt.** `redirect_success` und die beiden Callback-Marker
+ *     der MetaGer-App müssen einen Fehlversuch überleben — es gibt keine
+ *     Session, in der sie sonst stehen könnten.
  *   - **Wer sie gar nicht sehen soll.** Mit Schlüssel ist das Ziel das Konto,
  *     nicht das Formular.
- *   - **Dass sie nirgends zwischengespeichert wird.** Im Fehlerfall steht in
- *     ihrer Query, was jemand eben eingetippt hat.
+ *
+ * Und dass sie nirgends zwischengespeichert wird: im Fehlerfall steht in ihrer
+ * Query, was jemand eben eingetippt hat.
  */
 class LoginPageTest extends TestCase
 {
@@ -37,49 +36,43 @@ class LoginPageTest extends TestCase
             ->assertSeeText(__("login.key.label"));
     }
 
-    /**
-     * Das Formular schickt an den Keymanager ab. Siehe
-     * App\Landing\KeymanagerLinks::submitKey() für die drei Gründe.
-     */
-    public function testTheFormPostsToTheKeymanager(): void
+    /** Das Formular schickt auf die Seite zurück, auf der es steht. */
+    public function testTheFormPostsToItself(): void
     {
         $response = $this->get("/de-DE/anmelden")->assertOk();
 
         // Nicht url(): unter einem de-DE-Request setzt URL::formatPathUsing das
         // Präfix noch einmal davor. Der Pfad ist die Aussage.
-        $response->assertSee('/de-DE/keys/key/enter"', false);
+        $response->assertSee('action="/de-DE/anmelden"', false);
         $response->assertSee('method="post"', false);
         // Ohne das kommt die Sicherungsdatei nie an: ein Formular ohne
         // multipart schickt nur den Dateinamen mit.
         $response->assertSee('enctype="multipart/form-data"', false);
     }
 
-    /**
-     * Der Rückweg. routes/key.js im Keymanager nimmt den Wert nur an, wenn
-     * dessen Host der der Anfrage ist — ein Pfad allein wird dort verworfen,
-     * und der Besucher landet auf der Rückfallseite statt auf der, von der er
-     * kam.
-     */
-    public function testTheFormCarriesAnAbsoluteWayBackToItself(): void
-    {
-        $response = $this->get("/de-DE/anmelden")->assertOk();
-
-        $response->assertSee(
-            '<input type="hidden" name="redirect_error" value="'
-            . config("app.url") . '/de-DE/anmelden">',
-            false
-        );
-    }
-
     /** Und zwar in der Sprache, in der der Besucher steht. */
-    public function testTheWayBackKeepsTheLocale(): void
+    public function testTheFormPostsToItselfInTheVisitorsLanguage(): void
     {
         $this->get("/ca-ES/anmelden")
             ->assertOk()
-            ->assertSee(
-                'name="redirect_error" value="' . config("app.url") . '/ca-ES/anmelden"',
-                false
-            );
+            ->assertSee('action="/ca-ES/anmelden"', false);
+    }
+
+    /**
+     * Ein `redirect_error` steht nicht mehr im Formular.
+     *
+     * Er war die Naht zum Keymanager: der brauchte einen absoluten URL, um zu
+     * wissen, wohin ein Fehlversuch zurückgehört, und prüfte ihn gegen den Host
+     * der Anfrage, weil er sonst eine offene Weiterleitung mit dem eingegebenen
+     * Schlüssel in der Query gewesen wäre. Beides entfällt, wenn das Ziel eines
+     * Fehlversuchs die Seite selbst ist — und es soll nicht als totes
+     * verstecktes Feld liegen bleiben, das noch aussieht, als würde es gelesen.
+     */
+    public function testTheFormNoLongerCarriesAWayBack(): void
+    {
+        $this->get("/de-DE/anmelden")
+            ->assertOk()
+            ->assertDontSee("redirect_error", false);
     }
 
     /**

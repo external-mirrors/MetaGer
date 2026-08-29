@@ -17,8 +17,14 @@ return [
         'anonymous' => 'kirjautunut sisään nimettömästi',
         // The mark is decorative and the code is styled shorthand, so the whole
         // answer has to be in the label for anyone not reading the pixels.
-        'aria' => 'Oma tili – avain :fingerprint, :charge Token',
-        'aria_nocharge' => 'Oma tili – avain :fingerprint',
+        //
+        // "ending in", not a bare "key :fingerprint": these are the last six
+        // characters of the key (KeyUser::getKeyFingerprint()), and calling them
+        // the key invited people to type them into the sign-in form — where,
+        // until the guard in the keymanager's POST /key/enter, they resolved to
+        // an empty phantom account.
+        'aria' => 'Oma tili – avain, joka päättyy :fingerprint, :charge Token',
+        'aria_nocharge' => 'Oma tili – avain, joka päättyy :fingerprint',
         'aria_nofingerprint' => 'Oma tili – :charge Token',
         'aria_anonymous' => 'Oma tili – kirjautunut sisään nimettömästi selainlaajennuksen kautta',
     ],

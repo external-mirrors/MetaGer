@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'That is not a valid key. A key has 36 characters, a login code has six digits.',
-        'invalid_login_code' => 'That login code is no longer valid. It lasts a few seconds and works for one login only — have the logged-in device show you a new one.',
+        'invalid_login_code' => 'That login code is no longer valid. It lasts a few seconds and works for one login only — have the logged-in device show you a new one. The short mark next to your balance is not a login code.',
+        // Six characters that are not a key. Nearly always the short mark shown
+        // next to the balance — see KeyIdenticon.
+        'key_mark' => 'Those six characters are your key\'s short mark — the one shown next to your balance. It names your account, it does not open it. To sign in you need the full 36-character key, or a login code from a device that is already signed in.',
         'invalid_key_payment_id' => 'That is a payment id, not a key. Your key has 36 characters and does not start with a Z.',
         'no_input' => 'Please enter a key or choose a backup file.',
         'file_unreadable' => 'No key could be read from that file. It should contain the QR code you saved when you set your key up.',

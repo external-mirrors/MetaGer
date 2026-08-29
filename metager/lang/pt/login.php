@@ -41,7 +41,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Isso não é uma chave válida. Uma chave tem 36 caracteres e um código de acesso tem seis dígitos.',
-        'invalid_login_code' => 'Esse código de acesso já não é válido. Dura alguns segundos e serve para um único início de sessão — peça um novo ao dispositivo com sessão iniciada.',
+        'invalid_login_code' => 'Esse código de acesso já não é válido. Dura alguns segundos e serve para um único início de sessão — peça um novo ao dispositivo com sessão iniciada. A abreviatura ao lado do seu saldo não é um código de acesso.',
+        // Seis caracteres que não são uma chave. Quase sempre a abreviatura ao
+        // lado do saldo — ver KeyIdenticon.
+        'key_mark' => 'Esses seis caracteres são a abreviatura da sua chave — a que aparece ao lado do seu saldo. Identifica a sua conta, mas não a abre. Para iniciar sessão precisa da chave completa de 36 caracteres ou de um código de acesso de um dispositivo com sessão já iniciada.',
         'invalid_key_payment_id' => 'Isso é um número de pagamento, não uma chave. A sua chave tem 36 caracteres e não começa por Z.',
         'no_input' => 'Introduza uma chave ou escolha um ficheiro de cópia de segurança.',
         'file_unreadable' => 'Não foi possível ler nenhuma chave desse ficheiro. Deveria conter o código QR que guardou ao criar a sua chave.',

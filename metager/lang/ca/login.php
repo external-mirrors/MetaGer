@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Això no és una clau vàlida. Una clau té 36 caràcters i un codi d\'inici de sessió en té sis.',
-        'invalid_login_code' => 'Aquest codi d\'inici de sessió ja no és vàlid. Dura uns segons i només serveix per a un inici de sessió: feu que el dispositiu connectat us en mostri un de nou.',
+        'invalid_login_code' => 'Aquest codi d\'inici de sessió ja no és vàlid. Dura uns segons i només serveix per a un inici de sessió: feu que el dispositiu connectat us en mostri un de nou. L\'abreujament que hi ha al costat del vostre saldo no és un codi d\'inici de sessió.',
+        // Sis caràcters que no són cap clau. Gairebé sempre és l\'abreujament
+        // que hi ha al costat del saldo: vegeu KeyIdenticon.
+        'key_mark' => 'Aquests sis caràcters són l\'abreujament de la vostra clau: el que apareix al costat del vostre saldo. Identifica el compte, però no l\'obre. Per iniciar la sessió necessiteu la clau completa de 36 caràcters o un codi d\'inici de sessió d\'un dispositiu ja connectat.',
         'invalid_key_payment_id' => 'Això és un número de pagament, no una clau. La vostra clau té 36 caràcters i no comença per Z.',
         'no_input' => 'Introduïu una clau o trieu un fitxer de còpia de seguretat.',
         'file_unreadable' => 'No s\'ha pogut llegir cap clau d\'aquest fitxer. Hauria de contenir el codi QR que vau desar en configurar la clau.',

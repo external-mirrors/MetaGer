@@ -17,8 +17,14 @@ return [
         'anonymous' => 'sessió iniciada anònimament',
         // The mark is decorative and the code is styled shorthand, so the whole
         // answer has to be in the label for anyone not reading the pixels.
-        'aria' => 'El meu compte – clau :fingerprint, :charge fitxes',
-        'aria_nocharge' => 'El meu compte – clau :fingerprint',
+        //
+        // "ending in", not a bare "key :fingerprint": these are the last six
+        // characters of the key (KeyUser::getKeyFingerprint()), and calling them
+        // the key invited people to type them into the sign-in form — where,
+        // until the guard in the keymanager's POST /key/enter, they resolved to
+        // an empty phantom account.
+        'aria' => 'El meu compte – clau acabada en :fingerprint, :charge fitxes',
+        'aria_nocharge' => 'El meu compte – clau acabada en :fingerprint',
         'aria_nofingerprint' => 'El meu compte – :charge fitxes',
         'aria_anonymous' => "El meu compte – sessió iniciada anònimament amb l'extensió web",
     ],

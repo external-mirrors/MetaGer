@@ -59,7 +59,10 @@ return [
      */
     'errors' => [
         'invalid_key' => 'Das ist kein gültiger Schlüssel. Ein Schlüssel hat 36 Zeichen, ein Anmeldecode sechs Ziffern.',
-        'invalid_login_code' => 'Dieser Anmeldecode gilt nicht mehr. Er ist nur wenige Sekunden gültig und nur für eine einzige Anmeldung — lassen Sie sich auf dem angemeldeten Gerät einen neuen anzeigen.',
+        'invalid_login_code' => 'Dieser Anmeldecode gilt nicht mehr. Er ist nur wenige Sekunden gültig und nur für eine einzige Anmeldung — lassen Sie sich auf dem angemeldeten Gerät einen neuen anzeigen. Das Kürzel neben Ihrem Guthaben ist kein Anmeldecode.',
+        // Sechs Zeichen, die kein Schlüssel sind. Fast immer das Kürzel neben
+        // dem Guthaben — siehe KeyIdenticon.
+        'key_mark' => 'Diese sechs Zeichen sind das Kürzel Ihres Schlüssels — das, was neben Ihrem Guthaben steht. Es benennt Ihr Konto, es öffnet es nicht. Zum Anmelden brauchen Sie den vollständigen Schlüssel mit 36 Zeichen oder einen Anmeldecode von einem angemeldeten Gerät.',
         'invalid_key_payment_id' => 'Das ist eine Zahlungsnummer, kein Schlüssel. Ihr Schlüssel hat 36 Zeichen und keine Z am Anfang.',
         'no_input' => 'Bitte geben Sie einen Schlüssel ein oder wählen Sie eine Sicherungsdatei.',
         'file_unreadable' => 'Aus dieser Datei ließ sich kein Schlüssel lesen. Sie sollte den QR-Code enthalten, den Sie beim Einrichten gespeichert haben.',

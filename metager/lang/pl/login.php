@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'To nie jest prawidłowy klucz. Klucz ma 36 znaków, a kod logowania sześć cyfr.',
-        'invalid_login_code' => 'Ten kod logowania już nie obowiązuje. Trwa kilka sekund i działa tylko dla jednego logowania — poproś zalogowane urządzenie o nowy.',
+        'invalid_login_code' => 'Ten kod logowania już nie obowiązuje. Trwa kilka sekund i działa tylko dla jednego logowania — poproś zalogowane urządzenie o nowy. Skrót obok twojego salda nie jest kodem logowania.',
+        // Sześć znaków, które nie są kluczem. Prawie zawsze skrót obok salda —
+        // zobacz KeyIdenticon.
+        'key_mark' => 'Te sześć znaków to skrót twojego klucza — ten, który widnieje obok twojego salda. Nazywa konto, ale go nie otwiera. Aby się zalogować, potrzebujesz pełnego klucza z 36 znaków albo kodu logowania z urządzenia, które jest już zalogowane.',
         'invalid_key_payment_id' => 'To jest numer płatności, a nie klucz. Twój klucz ma 36 znaków i nie zaczyna się od Z.',
         'no_input' => 'Wpisz klucz albo wybierz plik kopii zapasowej.',
         'file_unreadable' => 'Z tego pliku nie udało się odczytać klucza. Powinien zawierać kod QR zapisany przy zakładaniu klucza.',

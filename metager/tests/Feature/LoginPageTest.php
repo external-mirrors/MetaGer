@@ -185,6 +185,24 @@ class LoginPageTest extends TestCase
     }
 
     /**
+     * Das Kürzel neben dem Guthaben ist kein Schlüssel, und wer es abtippt,
+     * bekommt das gesagt.
+     *
+     * Der Zusammenfall ist vollständig: getKeyFingerprint() sind die letzten
+     * sechs Zeichen des Schlüssels, also immer [0-9a-f]{6}, und sechs Zeichen
+     * nahm das Anmeldeformular als alten Schlüssel an. Der Keymanager weist das
+     * jetzt ab (resolve_legacy_short_key in pass/routes/key.js), statt daraus
+     * per MD5 ein leeres Phantomkonto zu falten — hier steht nur, dass diese
+     * Seite den Code auch benennen kann.
+     */
+    public function testTheKeyMarkIsNotAKeyAndSaysSo(): void
+    {
+        $this->get("/de-DE/anmelden?key_error=key_mark&invalid_key=3f9a1c")
+            ->assertOk()
+            ->assertSeeText(__("login.errors.key_mark"));
+    }
+
+    /**
      * Der Code kommt aus der Query und wird zu einem Übersetzungsschlüssel.
      * Ohne Aufzählung wäre `?key_error=irgendwas` ein Weg, „login.errors.
      * irgendwas“ nachzuschlagen — Laravel gibt dann den Schlüssel selbst aus,

@@ -17,8 +17,14 @@ return [
         'anonymous' => 'anoniem aangemeld',
         // The mark is decorative and the code is styled shorthand, so the whole
         // answer has to be in the label for anyone not reading the pixels.
-        'aria' => 'Mijn account – sleutel :fingerprint, :charge Token',
-        'aria_nocharge' => 'Mijn account – sleutel :fingerprint',
+        //
+        // "ending in", not a bare "key :fingerprint": these are the last six
+        // characters of the key (KeyUser::getKeyFingerprint()), and calling them
+        // the key invited people to type them into the sign-in form — where,
+        // until the guard in the keymanager's POST /key/enter, they resolved to
+        // an empty phantom account.
+        'aria' => 'Mijn account – sleutel eindigend op :fingerprint, :charge Token',
+        'aria_nocharge' => 'Mijn account – sleutel eindigend op :fingerprint',
         'aria_nofingerprint' => 'Mijn account – :charge Token',
         'aria_anonymous' => 'Mijn account – anoniem aangemeld via de webextensie',
     ],

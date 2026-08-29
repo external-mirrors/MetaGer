@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Det er ikke en gyldig nøgle. En nøgle har 36 tegn, en login-kode har seks cifre.',
-        'invalid_login_code' => 'Den login-kode gælder ikke længere. Den varer få sekunder og virker kun til én enkelt login — få den enhed, der er logget ind, til at vise dig en ny.',
+        'invalid_login_code' => 'Den login-kode gælder ikke længere. Den varer få sekunder og virker kun til én enkelt login — få den enhed, der er logget ind, til at vise dig en ny. Det korte mærke ved siden af din saldo er ikke en login-kode.',
+        // Seks tegn, der ikke er en nøgle. Næsten altid det korte mærke ved
+        // siden af saldoen — se KeyIdenticon.
+        'key_mark' => 'De seks tegn er din nøgles korte mærke — det, der står ved siden af din saldo. Det navngiver din konto, men åbner den ikke. For at logge ind skal du bruge hele nøglen på 36 tegn eller en login-kode fra en enhed, der allerede er logget ind.',
         'invalid_key_payment_id' => 'Det er et betalingsnummer, ikke en nøgle. Din nøgle har 36 tegn og begynder ikke med Z.',
         'no_input' => 'Indtast en nøgle, eller vælg en backup-fil.',
         'file_unreadable' => 'Der kunne ikke læses nogen nøgle fra den fil. Den skal indeholde den QR-kode, du gemte, da du oprettede nøglen.',

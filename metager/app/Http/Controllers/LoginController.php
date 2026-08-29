@@ -43,6 +43,10 @@ final class LoginController extends Controller
         "invalid_key_payment_id",
         "no_input",
         "file_unreadable",
+        // Sechs Zeichen, die kein Schlüssel sind — fast immer das Kürzel neben
+        // dem Guthaben, das der Keymanager seit der Prüfung in POST /key/enter
+        // abweist statt daraus ein leeres Phantomkonto zu machen.
+        "key_mark",
     ];
 
     /**

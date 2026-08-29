@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Ce n\'est pas une clé valide. Une clé compte 36 caractères, un code de connexion six chiffres.',
-        'invalid_login_code' => 'Ce code de connexion n\'est plus valable. Il dure quelques secondes et ne sert qu\'à une seule connexion — faites-en afficher un nouveau sur l\'appareil connecté.',
+        'invalid_login_code' => 'Ce code de connexion n\'est plus valable. Il dure quelques secondes et ne sert qu\'à une seule connexion — faites-en afficher un nouveau sur l\'appareil connecté. L\'abrégé affiché à côté de votre solde n\'est pas un code de connexion.',
+        // Six caractères qui ne sont pas une clé. Presque toujours l\'abrégé
+        // affiché à côté du solde — voir KeyIdenticon.
+        'key_mark' => 'Ces six caractères sont l\'abrégé de votre clé — celui qui s\'affiche à côté de votre solde. Il nomme votre compte, il ne l\'ouvre pas. Pour vous connecter, il vous faut la clé complète de 36 caractères ou un code de connexion depuis un appareil déjà connecté.',
         'invalid_key_payment_id' => 'C\'est un numéro de paiement, pas une clé. Votre clé compte 36 caractères et ne commence pas par un Z.',
         'no_input' => 'Saisissez une clé ou choisissez un fichier de sauvegarde.',
         'file_unreadable' => 'Aucune clé n\'a pu être lue dans ce fichier. Il devrait contenir le code QR que vous avez enregistré lors de la création de votre clé.',

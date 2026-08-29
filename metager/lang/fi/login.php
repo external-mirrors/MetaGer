@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Tuo ei ole kelvollinen avain. Avaimessa on 36 merkkiä, kirjautumiskoodissa kuusi numeroa.',
-        'invalid_login_code' => 'Tuo kirjautumiskoodi ei ole enää voimassa. Se kestää muutaman sekunnin ja toimii vain yhteen kirjautumiseen — pyydä kirjautuneelta laitteelta uusi.',
+        'invalid_login_code' => 'Tuo kirjautumiskoodi ei ole enää voimassa. Se kestää muutaman sekunnin ja toimii vain yhteen kirjautumiseen — pyydä kirjautuneelta laitteelta uusi. Saldosi vieressä oleva lyhenne ei ole kirjautumiskoodi.',
+        // Kuusi merkkiä, jotka eivät ole avain. Lähes aina saldon vieressä
+        // näkyvä lyhenne — katso KeyIdenticon.
+        'key_mark' => 'Nämä kuusi merkkiä ovat avaimesi lyhenne — se, joka näkyy saldosi vieressä. Se nimeää tilisi, mutta ei avaa sitä. Kirjautumiseen tarvitset koko 36-merkkisen avaimen tai kirjautumiskoodin laitteelta, joka on jo kirjautunut sisään.',
         'invalid_key_payment_id' => 'Tuo on maksunumero, ei avain. Avaimessasi on 36 merkkiä eikä se ala Z-kirjaimella.',
         'no_input' => 'Syötä avain tai valitse varmuuskopiotiedosto.',
         'file_unreadable' => 'Tuosta tiedostosta ei voitu lukea avainta. Sen pitäisi sisältää QR-koodi, jonka tallensit avainta luodessasi.',

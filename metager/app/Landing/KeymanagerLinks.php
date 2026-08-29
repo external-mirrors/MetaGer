@@ -137,8 +137,14 @@ final class KeymanagerLinks
      * through App\Authentication\KeyUser: this question is asked *before* the
      * visitor is signed in, about a key this side has never seen, and the
      * answer only decides whether to show a confirmation. `GET /api/json/key/:key`
-     * needs no bearer token for exactly that reason — it is rate limited per IP
-     * instead (keyIpLimitMiddleware).
+     * needs no bearer token for exactly that reason: it answers about a key the
+     * caller already holds, and says only what it is worth.
+     *
+     * It is not rate limited. `keyIpLimitMiddleware`, which sits on that route
+     * and reads like one, is an IP allowlist for the handful of keys named in
+     * the keymanager's `key_ip_limits` config — it lets every other key through
+     * untouched. The only brake is a deliberate 250 ms delay on unauthorized
+     * callers.
      */
     public static function keyApi(): string
     {

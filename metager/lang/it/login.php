@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Questa non è una chiave valida. Una chiave ha 36 caratteri, un codice di accesso sei cifre.',
-        'invalid_login_code' => 'Questo codice di accesso non è più valido. Dura pochi secondi e vale per un solo accesso: si faccia mostrare un codice nuovo dal dispositivo connesso.',
+        'invalid_login_code' => 'Questo codice di accesso non è più valido. Dura pochi secondi e vale per un solo accesso: si faccia mostrare un codice nuovo dal dispositivo connesso. La sigla accanto al suo saldo non è un codice di accesso.',
+        // Sei caratteri che non sono una chiave. Quasi sempre la sigla accanto
+        // al saldo — vedi KeyIdenticon.
+        'key_mark' => 'Questi sei caratteri sono la sigla della sua chiave: quella che compare accanto al suo saldo. Identifica il suo account, ma non lo apre. Per accedere serve la chiave completa di 36 caratteri oppure un codice di accesso da un dispositivo già connesso.',
         'invalid_key_payment_id' => 'Questo è un numero di pagamento, non una chiave. La sua chiave ha 36 caratteri e non comincia con una Z.',
         'no_input' => 'Inserisca una chiave o scelga un file di backup.',
         'file_unreadable' => 'Da quel file non è stato possibile leggere alcuna chiave. Dovrebbe contenere il codice QR che ha salvato quando ha creato la chiave.',

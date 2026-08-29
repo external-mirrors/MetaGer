@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Det är inte en giltig nyckel. En nyckel har 36 tecken, en inloggningskod sex siffror.',
-        'invalid_login_code' => 'Den inloggningskoden gäller inte längre. Den varar några sekunder och fungerar bara för en enda inloggning — låt den inloggade enheten visa dig en ny.',
+        'invalid_login_code' => 'Den inloggningskoden gäller inte längre. Den varar några sekunder och fungerar bara för en enda inloggning — låt den inloggade enheten visa dig en ny. Det korta märket bredvid ditt saldo är ingen inloggningskod.',
+        // Sex tecken som inte är någon nyckel. Nästan alltid det korta märket
+        // bredvid saldot — se KeyIdenticon.
+        'key_mark' => 'De sex tecknen är din nyckels korta märke — det som står bredvid ditt saldo. Det namnger ditt konto, men öppnar det inte. För att logga in behöver du hela nyckeln på 36 tecken eller en inloggningskod från en enhet som redan är inloggad.',
         'invalid_key_payment_id' => 'Det är ett betalningsnummer, inte en nyckel. Din nyckel har 36 tecken och börjar inte med Z.',
         'no_input' => 'Ange en nyckel eller välj en säkerhetskopia.',
         'file_unreadable' => 'Ingen nyckel kunde läsas ur den filen. Den ska innehålla QR-koden du sparade när du skapade nyckeln.',

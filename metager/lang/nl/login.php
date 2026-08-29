@@ -37,7 +37,10 @@ return [
 
     'errors' => [
         'invalid_key' => 'Dat is geen geldige sleutel. Een sleutel heeft 36 tekens, een inlogcode zes cijfers.',
-        'invalid_login_code' => 'Die inlogcode geldt niet meer. Hij duurt enkele seconden en werkt voor één inlog — laat het ingelogde apparaat u een nieuwe tonen.',
+        'invalid_login_code' => 'Die inlogcode geldt niet meer. Hij duurt enkele seconden en werkt voor één inlog — laat het ingelogde apparaat u een nieuwe tonen. Het kenmerk naast uw saldo is geen inlogcode.',
+        // Zes tekens die geen sleutel zijn. Bijna altijd het kenmerk naast het
+        // saldo — zie KeyIdenticon.
+        'key_mark' => 'Die zes tekens zijn het kenmerk van uw sleutel — dat wat naast uw saldo staat. Het benoemt uw account, maar opent het niet. Om in te loggen hebt u de volledige sleutel van 36 tekens nodig, of een inlogcode van een apparaat dat al is ingelogd.',
         'invalid_key_payment_id' => 'Dat is een betalingsnummer, geen sleutel. Uw sleutel heeft 36 tekens en begint niet met een Z.',
         'no_input' => 'Voer een sleutel in of kies een back-upbestand.',
         'file_unreadable' => 'Uit dat bestand kon geen sleutel worden gelezen. Het zou de QR-code moeten bevatten die u bij het instellen van uw sleutel hebt opgeslagen.',

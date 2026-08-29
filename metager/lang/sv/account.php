@@ -17,8 +17,14 @@ return [
         'anonymous' => 'inloggad anonymt',
         // The mark is decorative and the code is styled shorthand, so the whole
         // answer has to be in the label for anyone not reading the pixels.
-        'aria' => 'Mitt konto – nyckel :fingerprint, :charge Token',
-        'aria_nocharge' => 'Mitt konto – nyckel :fingerprint',
+        //
+        // "ending in", not a bare "key :fingerprint": these are the last six
+        // characters of the key (KeyUser::getKeyFingerprint()), and calling them
+        // the key invited people to type them into the sign-in form — where,
+        // until the guard in the keymanager's POST /key/enter, they resolved to
+        // an empty phantom account.
+        'aria' => 'Mitt konto – nyckel som slutar på :fingerprint, :charge Token',
+        'aria_nocharge' => 'Mitt konto – nyckel som slutar på :fingerprint',
         'aria_nofingerprint' => 'Mitt konto – :charge Token',
         'aria_anonymous' => 'Mitt konto – inloggad anonymt via webbtillägget',
     ],

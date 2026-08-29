@@ -17,8 +17,14 @@ return [
         'anonymous' => 'connesso in modo anonimo',
         // The mark is decorative and the code is styled shorthand, so the whole
         // answer has to be in the label for anyone not reading the pixels.
-        'aria' => 'Il mio account – chiave :fingerprint, :charge Token',
-        'aria_nocharge' => 'Il mio account – chiave :fingerprint',
+        //
+        // "ending in", not a bare "key :fingerprint": these are the last six
+        // characters of the key (KeyUser::getKeyFingerprint()), and calling them
+        // the key invited people to type them into the sign-in form — where,
+        // until the guard in the keymanager's POST /key/enter, they resolved to
+        // an empty phantom account.
+        'aria' => 'Il mio account – chiave che termina con :fingerprint, :charge Token',
+        'aria_nocharge' => 'Il mio account – chiave che termina con :fingerprint',
         'aria_nofingerprint' => 'Il mio account – :charge Token',
         'aria_anonymous' => "Il mio account – connesso in modo anonimo tramite l'estensione web",
     ],

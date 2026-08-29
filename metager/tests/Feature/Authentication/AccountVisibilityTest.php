@@ -63,6 +63,31 @@ class AccountVisibilityTest extends TestCase
     }
 
     /**
+     * The pill does not tell anyone the mark is their key.
+     *
+     * It used to: "My account – key 123456", which is the one sentence most
+     * likely to make someone type those six characters into the sign-in form.
+     * Doing that landed them in an empty phantom account, because six
+     * characters were accepted as a legacy key and MD5-folded into a fresh UUID
+     * (resolve_legacy_short_key in the keymanager's pass/routes/key.js now
+     * refuses it). The wording is the other half of that fix: the mark is the
+     * *end* of the key, and saying so costs two words.
+     */
+    public function testThePillCallsTheMarkTheEndOfTheKeyAndNotTheKey(): void
+    {
+        $this->signInAs(self::KEY, 142.0);
+
+        $response = $this->get("/")->assertOk();
+
+        $response->assertSee(
+            __("account.pill.aria", ["fingerprint" => "123456", "charge" => 142]),
+            false
+        );
+        $response->assertDontSee("Schlüssel 123456", false);
+        $response->assertDontSee("key 123456", false);
+    }
+
+    /**
      * The search bar carries nothing but the search.
      *
      * The key indicator inside it is gone from every page — see finding 13 in

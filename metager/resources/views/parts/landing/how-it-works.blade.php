@@ -44,7 +44,7 @@
         class="btn landing-btn landing-btn--solid startpage-create-link">
         @lang('index.landing.howitworks.start')
       </a>
-      <a href="{{ App\Landing\KeymanagerLinks::enter(route('startpage')) }}" class="landing-steps__login">
+      <a href="{{ App\Landing\KeymanagerLinks::login(route('startpage')) }}" class="landing-steps__login">
         @lang('index.landing.howitworks.login')
       </a>
     </div>

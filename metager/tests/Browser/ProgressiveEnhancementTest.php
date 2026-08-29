@@ -75,10 +75,54 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 $browser->attribute("#searchbar-replacement a.startpage-create-link", "href")
             );
 
+            // Anmelden zeigt seit dem dritten Umzugsschritt auf MetaGers eigene
+            // /anmelden. /keys/key/enter antwortet weiterhin — dorthin schickt
+            // das Formular auf dieser Seite ab —, aber für einen abgemeldeten
+            // Besucher wäre der alte Pfad nur eine Weiterleitung hierher.
             $this->assertStringContainsString(
-                "/de-DE/keys/key/enter",
+                "/de-DE/anmelden",
                 $browser->attribute("#searchbar-replacement a.startpage-login-btn", "href")
             );
+        });
+    }
+
+    /**
+     * Die Anmeldeseite ohne Javascript.
+     *
+     * Sie ist der einzige Ort auf der Seite, an dem ein Besucher etwas eingibt,
+     * das über einen Klick hinausgeht, und sie hat drei Wege hinein — getippter
+     * Schlüssel, Sicherungsdatei, Kamera. Zwei davon müssen ohne Javascript
+     * funktionieren, und der dritte darf nicht angeboten werden.
+     *
+     * Ein Feature-Test sieht das `hidden`-Attribut im Quelltext; was er nicht
+     * sieht, ist, ob resources/js/login.js es entfernt hat — und genau das ist
+     * hier die Aussage. Ohne Javascript bleibt es stehen.
+     */
+    public function testTheLoginPageWorksWithoutJavascript(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/anmelden")
+                ->assertTitle(trans("titles.login", [], "de"))
+                // Das Feld ist type="text" und nicht type="password": die alte
+                // Seite deckte es per Javascript beim Fokus auf, hier tippte
+                // man seinen Schlüssel also blind.
+                ->assertAttribute("#login-key", "type", "text")
+                ->assertVisible(".login-submit")
+                // Das Dateifeld bleibt sichtbar, statt hinter einem Label zu
+                // stecken: nur so nennt der Browser die gewählte Datei von
+                // selbst, und das ist genau das, was hier kein Skript tun kann.
+                ->assertVisible("#login-file")
+                // Und der Kamera-Scanner wird nicht angeboten. Ein Knopf, der
+                // ohne Javascript nichts tut, ist schlechter als keiner.
+                ->assertMissing("#login-qr");
+
+            // Ein echtes Formular an eine echte Adresse, nicht ein Skripthaken:
+            // ohne beides käme die Eingabe nirgendwo an.
+            $this->assertStringContainsString(
+                "/de-DE/keys/key/enter",
+                $browser->attribute("#login-form", "action")
+            );
+            $this->assertSame("post", strtolower($browser->attribute("#login-form", "method")));
         });
     }
 

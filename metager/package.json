@@ -22,6 +22,7 @@
     "js-cookie": "^3.0.8",
     "laravel-echo": "^2.4.0",
     "macy": "^2.5.1",
-    "pusher-js": "^8.6.0"
+    "pusher-js": "^8.6.0",
+    "qr-scanner": "^1.4.2"
   }
 }

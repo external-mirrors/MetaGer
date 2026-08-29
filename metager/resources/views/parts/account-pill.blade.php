@@ -52,7 +52,7 @@
   --}}
   @php($accountHref = $accountAnonymous
     ? route('anonymous-token')
-    : App\Landing\KeymanagerLinks::enter())
+    : App\Landing\KeymanagerLinks::dashboard())
   <a href="{{ $accountHref }}"
     id="account-pill"
     @if($accountAnonymous) data-extension-settings @endif

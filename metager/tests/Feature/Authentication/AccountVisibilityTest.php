@@ -128,10 +128,10 @@ class AccountVisibilityTest extends TestCase
         // its content script is what reveals it and answers the click.
         $response->assertSee('id="account-extension-settings" hidden>', false);
 
-        // And the pill goes to the same place. It leads to /keys/key/enter in
-        // every other state, which is exactly the page this visitor must not be
-        // sent to: they have no key to enter, and entering one here would hand
-        // us the identity the anonymous token exists to keep from us.
+        // And the pill goes to the same place. It leads to the account page in
+        // every other state, which is exactly where this visitor must not be
+        // sent: they have no key of ours to manage, and entering one here would
+        // hand us the identity the anonymous token exists to keep from us.
         $response->assertSee('data-extension-settings', false);
         $response->assertSee(url("/hilfe/anonyme-token"), false);
         $response->assertDontSee('/keys/key/enter', false);
@@ -301,7 +301,11 @@ class AccountVisibilityTest extends TestCase
         $response = $this->get("/")->assertOk();
 
         $response->assertSee("startpage-login-btn", false);
-        $response->assertSee("/keys/key/enter", false);
+        // /anmelden and not /keys/key/enter: the sign-in page is a MetaGer
+        // route since it moved out of the keymanager. The old path still
+        // answers, and is where that page's form posts to, but a link for a
+        // signed-out visitor pointing at it would only redirect here.
+        $response->assertSee("/anmelden", false);
         $response->assertSeeText(__("index.searchbar-replacement.have_key"));
         $response->assertSeeText(__("index.searchbar-replacement.first_time"));
 

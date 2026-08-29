@@ -202,13 +202,18 @@ class StartpageLandingTest extends TestCase
      * It used to go to `/keys`, which was the landing page; `/keys` now
      * redirects back to this one, so the old target would bounce a visitor
      * straight back to the page they clicked from.
+     *
+     * Signing in no longer goes to the keymanager at all: `/anmelden` is a
+     * MetaGer route since the login page moved. `/keys/key/enter` still
+     * answers, and is where the form on that page posts to, but a link for a
+     * signed-out visitor pointing there would only redirect.
      */
     public function testTheCreateLinkPointsAtTheKeymanagerAndNotAtTheOldLandingPage(): void
     {
         $response = $this->get("/")->assertOk();
 
         $response->assertSee("/keys/key/create", false);
-        $response->assertSee("/keys/key/enter", false);
+        $response->assertSee("/anmelden", false);
         $response->assertDontSee('href="/keys"', false);
     }
 
@@ -227,7 +232,7 @@ class StartpageLandingTest extends TestCase
         $response = $this->get("/?keystore=fdroid")->assertOk();
 
         $response->assertSee("/keys/key/create?keystore=fdroid", false);
-        $response->assertSee("/keys/key/enter?keystore=fdroid", false);
+        $response->assertSee("/anmelden?keystore=fdroid", false);
 
         // Every /keys link on the page, not just the hero's two.
         preg_match_all('~href="[^"]*?/keys/[^"]*"~', $response->getContent(), $matches);
@@ -245,7 +250,7 @@ class StartpageLandingTest extends TestCase
         $response = $this->get("/de-DE/")->assertOk();
 
         $response->assertSee("/de-DE/keys/key/create", false);
-        $response->assertSee("/de-DE/keys/key/enter", false);
+        $response->assertSee("/de-DE/anmelden", false);
         // Preise und die Token-Erklärung sind seit dem zweiten Umzugsschritt
         // MetaGer-Routen; das Präfix kommt jetzt von URL::formatPathUsing statt
         // von LaravelLocalization::getLocalizedURL, aber es muss da sein.

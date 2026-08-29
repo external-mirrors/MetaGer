@@ -84,7 +84,7 @@
     <div id="account-empty-alert">
       {!! \App\Authentication\KeyIdenticon::render(\Auth::guard("key")->user()->getKeyFingerprint()) !!}
       <span class="account-empty-alert__message">@lang('account.empty.message')</span>
-      <a class="account-empty-alert__action" href="{{ App\Landing\KeymanagerLinks::enter() }}">@lang('account.empty.action')</a>
+      <a class="account-empty-alert__action" href="{{ App\Landing\KeymanagerLinks::dashboard() }}">@lang('account.empty.action')</a>
     </div>
   @endif
   </div>

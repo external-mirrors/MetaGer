@@ -7,6 +7,7 @@ use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
 use App\Http\Controllers\LangSelector;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MetaGerSearch;
@@ -288,6 +289,20 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
             ->with('title', trans('titles.anonymous-token'))
             ->with('navbarFocus', 'hilfe');
     })->name('anonymous-token');
+
+    /**
+     * Die Anmeldeseite, aus /keys/key/enter hierher gezogen.
+     *
+     * Steht bei den anderen umgezogenen Seiten, ist aber die erste, die nicht
+     * nur Text ist: das Formular schickt weiter an den Keymanager ab. Warum,
+     * steht an App\Landing\KeymanagerLinks::submitKey().
+     *
+     * `login` als Name ist der, auf den Laravels Authenticate-Middleware ohne
+     * weiteres Zutun zeigt. Das ist hier richtig und trotzdem eine Notiz wert:
+     * die Logs-API hat ihre eigene Anmeldung unter `logs:login`, und die beiden
+     * haben nichts miteinander zu tun.
+     */
+    Route::get('anmelden', [LoginController::class, 'show'])->name('login');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

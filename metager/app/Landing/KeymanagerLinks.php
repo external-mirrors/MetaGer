@@ -16,15 +16,21 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  * about to be spelled out across five blades, which is exactly the shape that
  * makes the next migration step expensive.
  *
- * What is left here is the key flow itself — creating a key, entering one,
- * signing out, redeeming a voucher. `/preise`, `/agb` and the two help pages
- * used to be built here too and are MetaGer routes now, so their call sites
- * name a route like every other page does.
+ * What is left here is the key flow itself — creating a key, signing out,
+ * redeeming a voucher, and the account page. `/preise`, `/agb` and the two help
+ * pages used to be built here too and are MetaGer routes now, so their call
+ * sites name a route like every other page does.
  *
- * These are the only links on the page that a *URL* has to be built for
+ * Those are the only links on the page that a *URL* has to be built for
  * rather than a route named: `URL::formatPathUsing` in AppServiceProvider puts
  * the locale prefix on everything `route()` and `url()` produce, but there is
- * no route to name here, so LaravelLocalization::getLocalizedURL does it.
+ * no route to name for them, so LaravelLocalization::getLocalizedURL does it.
+ *
+ * {@see login()} is the exception and is here anyway. The sign-in page *is* a
+ * MetaGer route now, so it needs none of that — but it is the one destination
+ * in the key flow that every call site reaches through the same two markers
+ * ({@see appCallback()}), and splitting it off would mean the callers had to
+ * remember them. Which link goes where, in one file, is the point of the file.
  */
 final class KeymanagerLinks
 {
@@ -83,8 +89,19 @@ final class KeymanagerLinks
         return self::url("/key/create", self::appCallback($request), "#second-nav");
     }
 
-    /** Signing in with a key that already exists. */
-    public static function enter(?string $redirectSuccess = null, ?Request $request = null): string
+    /**
+     * Signing in with a key that already exists — MetaGer's own `/anmelden`.
+     *
+     * This used to be `/keys/key/enter`, and that URL still answers: it is
+     * where the form posts to, and it is where a visitor who *already* has a
+     * key is sent ({@see dashboard()}). What moved here is the page.
+     *
+     * `$redirectSuccess` rides along as a query parameter and the page puts it
+     * back on the form, because it is the keymanager's POST handler that acts
+     * on it — the visitor is not signed in until that request, so nothing on
+     * this side could honour it.
+     */
+    public static function login(?string $redirectSuccess = null, ?Request $request = null): string
     {
         $query = self::appCallback($request);
 
@@ -92,7 +109,62 @@ final class KeymanagerLinks
             $query["redirect_success"] = $redirectSuccess;
         }
 
-        return self::url("/key/enter", $query);
+        return route("login", $query);
+    }
+
+    /**
+     * Where the sign-in form posts to.
+     *
+     * The page moved and the handler did not, for three reasons that are all
+     * the keymanager's alone: the six-digit login code lives in its Redis
+     * keyspace, a campaign voucher typed into the key field is normalised by
+     * its CampaignVoucher, and a QR code inside an uploaded image is decoded
+     * with Jimp. None of the three has an API this side could call, and moving
+     * them is a different piece of work from moving a page.
+     *
+     * Same origin, so nginx's `form-action 'self'` covers it.
+     */
+    public static function submitKey(): string
+    {
+        return self::url("/key/enter");
+    }
+
+    /**
+     * Where the sign-in page asks what a key is worth, ending in a slash so the
+     * key itself can be appended.
+     *
+     * The one place the browser talks to the keymanager directly rather than
+     * through App\Authentication\KeyUser: this question is asked *before* the
+     * visitor is signed in, about a key this side has never seen, and the
+     * answer only decides whether to show a confirmation. `GET /api/json/key/:key`
+     * needs no bearer token for exactly that reason — it is rate limited per IP
+     * instead (keyIpLimitMiddleware).
+     */
+    public static function keyApi(): string
+    {
+        // Der Schrägstrich wird angehängt und nicht mitgegeben:
+        // LaravelLocalization::getLocalizedURL normalisiert einen abschließenden
+        // Schrägstrich weg, und die Seite hängt den Schlüssel direkt an.
+        return rtrim(self::url("/api/json/key"), "/") . "/";
+    }
+
+    /**
+     * The account page — where a visitor who is already signed in goes.
+     *
+     * Still `/key/enter`, which sounds like the sign-in page and is not: given
+     * a key, that route has always resolved it to its canonical form and
+     * redirected to `/keys/key/<uuid>`. Only its no-key branch rendered a page,
+     * and that branch now redirects here to {@see login()}.
+     *
+     * Named as the destination rather than as the path, because the path is the
+     * part that is wrong. Going through it rather than building
+     * `/keys/key/<uuid>` here is deliberate: the cookie may hold a legacy
+     * non-UUID key, and the keymanager is the only party that can fold one into
+     * the account it belongs to.
+     */
+    public static function dashboard(?Request $request = null): string
+    {
+        return self::url("/key/enter", self::appCallback($request));
     }
 
     /**

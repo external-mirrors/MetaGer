@@ -76,6 +76,13 @@
   --payment-tile-background: @color-white;
   --payment-tile-text: @color-black;
 
+  // Ein abgewiesenes Formular. Bootstraps .alert-danger färbt seinen Text
+  // #a94442 und lässt den Grund durchscheinen; auf der dunklen Karte der
+  // Anmeldeseite sind das 1,9:1 und damit nicht mehr lesbar. Dieses Paar ist in
+  // beiden Paletten gegen die Kartenfarbe geprüft, auf der es steht.
+  --form-error-color: #a94442;
+  --form-error-background: #fdf0f0;
+
   --searchbar-background-color: white;
   --input-background: #fff;
   --input-text: #000;
@@ -139,6 +146,11 @@
   // genug, um nicht zu blenden — und aus der Palette statt frei gewählt.
   --payment-tile-background: @color-light-grey;
   --payment-tile-text: @color-black;
+
+  // Aufgehellt und der Grund abgedunkelt statt hell: derselbe Rotton, der im
+  // Hellmodus auf Weiß funktioniert, verschwindet auf der dunklen Karte.
+  --form-error-color: #ff9f9a;
+  --form-error-background: #3a2422;
 
   --searchbar-background-color: @color-almost-black;
   --input-background: @color-almost-black;
@@ -211,6 +223,8 @@
 @searchbar-background-color: var(--searchbar-background-color);
 @payment-tile-background: var(--payment-tile-background);
 @payment-tile-text: var(--payment-tile-text);
+@form-error-color: var(--form-error-color);
+@form-error-background: var(--form-error-background);
 @input-background: var(--input-background);
 @input-text: var(--input-text);
 @blacklist-entries-odd: var(--blacklist-entries-odd);

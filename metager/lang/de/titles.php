@@ -39,4 +39,7 @@ return [
     'agb' => 'AGB – MetaGer',
     'help-key' => 'Der MetaGer-Schlüssel – MetaGer',
     'anonymous-token' => 'Anonyme Token – MetaGer',
+    // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
+    // die Logs-API, nicht der Schlüssel.
+    'login' => 'Anmelden – MetaGer',
 ];

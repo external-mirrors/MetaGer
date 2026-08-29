@@ -142,6 +142,118 @@ class RenderedStyleTest extends DuskTestCase
     }
 
     /**
+     * Die beiden Nebenwege auf der Anmeldeseite sind gleich hoch.
+     *
+     * Dieselbe Sache wie bei den Zahlungsart-Kacheln und aus demselben Grund:
+     * „Sicherungsdatei wählen“ trägt ein Feld und zwei Zeilen Hinweis,
+     * „QR-Code scannen“ einen Knopf und eine — und wie viele Zeilen es wirklich
+     * werden, entscheidet die Sprache. Zwei Rahmen, die auf verschiedenen
+     * Linien enden, sehen aus wie ein Fehler.
+     *
+     * Der QR-Block steht `hidden` in der Auslieferung; diese Klasse fährt mit
+     * Javascript, also ist er hier aufgedeckt — und genau dann muss es stimmen.
+     */
+    #[DataProvider("themes")]
+    public function testBothWaysIntoTheLoginPageAreTheSameHeight(string $theme): void
+    {
+        $this->browse(function (Browser $browser) use ($theme) {
+            $browser->visit("/de-DE/anmelden?dark_mode={$theme}")
+                ->waitFor("#login-qr:not([hidden])");
+
+            $heights = $browser->script(
+                "return Array.from(document.querySelectorAll('.login-alternative'))"
+                    . ".map((tile) => Math.round(tile.getBoundingClientRect().height));"
+            )[0];
+
+            $this->assertCount(2, $heights, "Auf /anmelden stehen nicht zwei Nebenwege.");
+            $this->assertCount(
+                1,
+                array_unique($heights),
+                "Die beiden Nebenwege sind unterschiedlich hoch (" . implode(", ", $heights)
+                    . " px). Das Raster in resources/less/metager/pages/login.less braucht "
+                    . "grid-auto-rows: 1fr, und der Hinweis darin margin-top: auto."
+            );
+        });
+    }
+
+    /**
+     * Ein abgewiesener Anmeldeversuch ist auf der Karte lesbar.
+     *
+     * Bootstraps .alert-danger — womit diese Meldung naheliegenderweise
+     * ausgezeichnet worden wäre — färbt ihren Text #a94442 und lässt den Grund
+     * durchscheinen. Auf der dunklen Karte der Anmeldeseite (#404040) sind das
+     * 1,9:1, also unlesbar; deswegen hat der Fehler ein eigenes Tokenpaar.
+     *
+     * Nur ein Browser kann das beantworten: gefragt sind zwei var(), die erst
+     * er zu Farben auflöst, und der Grund kommt von einem anderen Element als
+     * die Schrift.
+     */
+    #[DataProvider("themes")]
+    public function testARejectedLoginIsLegibleInBothPalettes(string $theme): void
+    {
+        $this->browse(function (Browser $browser) use ($theme) {
+            $browser->visit("/de-DE/anmelden?dark_mode={$theme}&key_error=invalid_key")
+                ->assertVisible(".login-card__error");
+
+            $colours = $browser->script(
+                "const error = document.querySelector('.login-card__error');"
+                    . "const style = getComputedStyle(error);"
+                    . "return [style.color, style.backgroundColor];"
+            )[0];
+
+            $ratio = $this->contrast($colours[0], $colours[1]);
+
+            $this->assertGreaterThanOrEqual(
+                4.5,
+                $ratio,
+                sprintf(
+                    "Die Fehlermeldung steht in %s auf %s — das sind %.1f:1. --form-error-color "
+                        . "und --form-error-background in resources/less/metager/variables.less "
+                        . "müssen für die Palette „%s“ nachgezogen werden.",
+                    $colours[0],
+                    $colours[1],
+                    $ratio,
+                    $theme
+                )
+            );
+        });
+    }
+
+    /**
+     * Das Kontrastverhältnis zweier `rgb(...)`-Angaben nach WCAG 2.
+     *
+     * Beide Farben kommen deckend aus getComputedStyle, weil beide auf
+     * denselben Kasten gesetzt sind — ein Alphakanal wäre hier eine andere
+     * Rechnung und ist an dieser Stelle keiner.
+     */
+    private function contrast(string $foreground, string $background): float
+    {
+        $luminance = static function (string $colour): float {
+            preg_match_all("/\\d+/", $colour, $matches);
+            $channels = array_map(
+                static function (string $value): float {
+                    $channel = ((int) $value) / 255;
+
+                    return $channel <= 0.03928
+                        ? $channel / 12.92
+                        : (($channel + 0.055) / 1.055) ** 2.4;
+                },
+                array_slice($matches[0], 0, 3)
+            );
+
+            return 0.2126 * $channels[0] + 0.7152 * $channels[1] + 0.0722 * $channels[2];
+        };
+
+        $lighter = $luminance($foreground);
+        $darker = $luminance($background);
+        if ($lighter < $darker) {
+            [$lighter, $darker] = [$darker, $lighter];
+        }
+
+        return ($lighter + 0.05) / ($darker + 0.05);
+    }
+
+    /**
      * Beide Paletten, so wie ThemeColorsTest sie benennt.
      */
     public static function themes(): array

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Die vier aus dem Keymanager übernommenen Seiten sind überall übersetzt.
+ * Die fünf aus dem Keymanager übernommenen Seiten sind überall übersetzt.
  *
  * Gleiche Bauart wie {@see AccountTranslationsTest} und aus demselben Grund:
  * eine fehlende Sprachdatei fällt nicht auf, sie fällt auf `fallback_locale`
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * von Anfang an grün sein — anders als bei den gewachsenen Dateien, über die
  * {@see CatalanTranslationsTest} Buch führt.
  *
- * Portugiesisch ist der Sonderfall: der Keymanager hatte es nie, alle vier
+ * Portugiesisch ist der Sonderfall: der Keymanager hatte es nie, alle fünf
  * Dateien sind für pt aus de/en neu geschrieben.
  */
 class KeyPagesTranslationsTest extends TestCase
@@ -28,6 +28,10 @@ class KeyPagesTranslationsTest extends TestCase
         "agb.php",
         "help/key.php",
         "help/anonymous-token.php",
+        // Die Anmeldeseite. Anders als die vier davor stand ihr Text im
+        // Keymanager schon in elf Sprachen; übernommen ist er trotzdem nicht
+        // wörtlich — lang/de/login.php sagt, was neu ist und warum.
+        "login.php",
     ];
 
     public function testEveryLocaleTranslatesEveryString(): void
@@ -130,11 +134,11 @@ class KeyPagesTranslationsTest extends TestCase
     }
 
     /**
-     * Kein Text zeigt noch auf /keys. Die vier Seiten sind umgezogen; ein
+     * Kein Text zeigt noch auf /keys. Die fünf Seiten sind umgezogen; ein
      * Verweis auf den alten Pfad funktioniert nur, solange die Weiterleitung
      * steht, und liest sich dann als Umweg.
      *
-     * Ausgenommen ist der Schlüsselvorgang selbst — /keys/key/enter und
+     * Ausgenommen ist der Schlüsselvorgang selbst — /keys/key/create und
      * /keys/c bleiben vorerst dort und werden bewusst verlinkt.
      */
     public function testNoTranslationPointsAtAMovedKeysPath(): void
@@ -148,7 +152,7 @@ class KeyPagesTranslationsTest extends TestCase
                     continue;
                 }
                 foreach ($this->flatten(require $path) as $key => $value) {
-                    foreach (["/keys/cost", "/keys/agb", "/keys/help/"] as $moved) {
+                    foreach (["/keys/cost", "/keys/agb", "/keys/help/", "/keys/key/enter"] as $moved) {
                         if (str_contains($value, $moved)) {
                             $problems[] = "$locale/$file: $key zeigt noch auf $moved";
                         }

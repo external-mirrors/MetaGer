@@ -70,4 +70,52 @@ class ScriptExecutionTest extends DuskTestCase
                 ->waitUntil("document.documentElement.dataset.theme === 'dark'");
         });
     }
+
+    /**
+     * Der QR-Scanner der Anmeldeseite darf seinen Worker bauen.
+     *
+     * qr-scanner erzeugt seinen Decoder als `new Worker(URL.createObjectURL(
+     * new Blob([...])))` und kann das nicht anders — `WORKER_PATH` warnt seit
+     * 1.4 und tut nichts. Unter `default-src 'self'` ohne `worker-src` ist eine
+     * blob:-URL keine erlaubte Quelle, der Worker wird stillschweigend
+     * blockiert, und der Scanner öffnet die Kamera und erkennt dann nie etwas.
+     * Deswegen trägt build/nginx/configuration/nginx.conf `worker-src 'self'
+     * blob:`.
+     *
+     * Unter /keys fiel das nicht an: keine location dort setzt eine Richtlinie.
+     * Der Umzug hat die Seite unter MetaGers Richtlinie gestellt, und das ist
+     * der Preis dafür.
+     *
+     * Geprüft wird genau die Operation der Bibliothek, nicht die Bibliothek:
+     * die braucht eine Kamera, und `navigator.mediaDevices` gibt es nur in
+     * einem sicheren Kontext — den hat diese Testumgebung über http nicht.
+     */
+    public function testTheLoginPageMayBuildABlobWorker(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/anmelden")->assertPresent("#login-qr-open");
+
+            $allowed = $browser->script(
+                "return new Promise((resolve) => {"
+                    . "  try {"
+                    . "    const source = new Blob(['self.onmessage = () => postMessage(1)'],"
+                    . "      { type: 'text/javascript' });"
+                    . "    const worker = new Worker(URL.createObjectURL(source));"
+                    . "    worker.onmessage = () => resolve(true);"
+                    . "    worker.onerror = () => resolve(false);"
+                    . "    worker.postMessage(1);"
+                    . "    setTimeout(() => resolve(false), 3000);"
+                    . "  } catch (blocked) { resolve(false); }"
+                    . "});"
+            )[0];
+
+            $this->assertTrue(
+                $allowed,
+                "Ein Worker aus einer blob:-URL wird auf /anmelden blockiert. Damit kann "
+                    . "qr-scanner seinen Decoder nicht bauen: die Kamera geht auf und der "
+                    . "Scanner erkennt nie einen Code. `worker-src 'self' blob:` in "
+                    . "build/nginx/configuration/nginx.conf ist wieder weg."
+            );
+        });
+    }
 }

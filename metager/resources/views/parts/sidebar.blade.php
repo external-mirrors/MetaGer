@@ -80,7 +80,7 @@
           </div>
         </div>
         <div class="sidebar-account__actions">
-          <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::enter() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
+          <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::dashboard() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>
             @if($sidebarState === \App\Authentication\KeyState::FULL)
               @lang('account.sidebar.manage')
             @else
@@ -112,7 +112,7 @@
            redirects here, so the old target sent people back where they came
            from. --}}
       <div class="sidebar-account__actions">
-        <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::enter() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
+        <a class="btn account-btn account-btn--primary" href="{{ App\Landing\KeymanagerLinks::login() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.login')</a>
         <a class="btn account-btn account-btn--quiet" href="{{ App\Landing\KeymanagerLinks::create() }}" @if(Request::header("Sec-Fetch-Dest") === "iframe")target="_top"@endif>@lang('account.sidebar.create')</a>
       </div>
     @endif

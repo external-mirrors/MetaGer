@@ -1,0 +1,422 @@
+@import "../variables.less";
+
+// /anmelden — bei MetaGer anmelden.
+//
+// Lag als /keys/key/enter im Keymanager und sah aus wie der Keymanager: eigene
+// Navigation, eigene Farbvariablen, ein 340 Pixel breiter Kasten mit einem
+// orangenen Streifen obendrauf. Die Seite steht jetzt im MetaGer-Layout und
+// benutzt dessen Tokens; was hier steht, ist nur, was diese eine Seite braucht.
+//
+// Drei Entscheidungen, die nicht aus der alten Seite kommen:
+//
+// **Der orangene Streifen über der Karte ist weg.** Die Seite hat genau eine
+// Hauptaktion, und die trägt die Markenfarbe. Ein zweites Orange auf derselben
+// Karte macht aus einer Hierarchie eine Fläche.
+//
+// **Die drei Wege sind nicht mehr gleichrangig.** Vorher standen Schlüsselfeld,
+// Datei und QR-Code untereinander, jeder mit einem eigenen „oder“ dazwischen,
+// jeder gleich groß. Neunundneunzig von hundert Besuchern tippen ihren
+// Schlüssel; das Feld ist deshalb oben und breit, und die beiden anderen stehen
+// unter einem einzigen Trenner nebeneinander.
+//
+// **Beide Alternativen sind gleich hoch**, auch wenn eine mehr Text trägt —
+// derselbe Griff wie bei den Zahlungsart-Kacheln auf /preise: `grid-auto-rows:
+// 1fr` für die Zeile und `margin-top: auto` am Hinweis, damit die Fußzeilen
+// beider Kacheln auf einer Linie liegen.
+
+#login-page {
+  // Die Karte ist so breit wie ihr Inhalt: ein Schlüssel hat 36 Zeichen, und
+  // mehr Platz als das braucht diese Seite an keiner Stelle. `main` darf 1000
+  // Pixel, was für ein Anmeldeformular eine Fläche und keine Spalte wäre.
+  max-width: 30rem;
+  margin: 0 auto;
+
+  .page-title {
+    // Kleiner als die 2.5em der Klasse: über einer 30rem-Spalte ist das eine
+    // Überschrift, die breiter sein will als die Seite unter ihr.
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .login-lede {
+    margin: 0 0 2rem;
+    text-align: center;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Die Karte ────────────────────────────────────────────────────────────────
+// Ein Rahmen ist ein Versprechen (siehe parts/account.less): Kästen lesen sich
+// als Bedienelemente, und das hier ist eins.
+.login-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .login-card__error {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+}
+
+// ── Das Schlüsselfeld ────────────────────────────────────────────────────────
+.login-field {
+  display: grid;
+  gap: 0.35rem;
+
+  .login-field__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .login-field__input {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    // Ein Schlüssel ist keine Sprache, sondern eine Zeichenfolge, die Zeichen
+    // für Zeichen mit einer Vorlage verglichen wird. Dafür ist die Schrift da,
+    // in der jedes Zeichen gleich breit ist.
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+
+    // 36 einfarbige Zeichen sind in einem 30rem-Feld knapp und darunter zu
+    // breit. Kleiner werden ist besser als abgeschnitten werden.
+    @media (max-width: 26rem) {
+      font-size: 0.8rem;
+    }
+
+    &::placeholder {
+      color: @text-color-alpha-50;
+    }
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .login-field__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+
+  .login-field__message {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @form-error-color;
+
+    // resources/js/login.js blendet die Meldung über das hidden-Attribut ein
+    // und aus; ohne diese Regel gewönne jedes display aus dem UA-Stylesheet.
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+// ── Die Hauptaktion ──────────────────────────────────────────────────────────
+.login-submit {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1px solid @metager-orange;
+  border-radius: 6px;
+  background-color: @metager-orange;
+  // Nicht @text-color: der Grund ist in beiden Paletten orange, also muss die
+  // Schrift darauf in beiden dieselbe sein. Dasselbe Argument wie bei den
+  // Preiskacheln in pages/price.less.
+  color: @color-white;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid @text-color;
+    outline-offset: 2px;
+  }
+}
+
+// ── „oder“ ───────────────────────────────────────────────────────────────────
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: @text-color-alpha-60;
+  font-size: 0.85rem;
+
+  &::before,
+  &::after {
+    content: "";
+    flex: 1 1 0;
+    height: 1px;
+    background-color: @border-color;
+  }
+}
+
+// ── Datei und QR-Code ────────────────────────────────────────────────────────
+.login-alternatives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  // Beide Kacheln so hoch wie die höhere. Ohne das ist jede so hoch wie ihr
+  // eigener Text, und die beiden Rahmen enden auf verschiedenen Linien.
+  grid-auto-rows: 1fr;
+  gap: 0.75rem;
+
+  // Nebeneinander lohnt sich nur, solange in eine Spalte mehr als ein Wort
+  // passt. Der Umbruchpunkt ist die Kartenbreite, nicht ein Gerät.
+  @media (max-width: 30rem) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.login-alternative {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.75rem;
+  border: 1px solid @border-color;
+  border-radius: 8px;
+
+  // Der QR-Code-Block steht `hidden` in der Vorlage und wird erst von
+  // resources/js/login.js aufgedeckt. Ohne diese Regel gewönne das display
+  // oben und der Block stünde für jeden da — mit einem Knopf, der nichts tut.
+  &[hidden] {
+    display: none;
+  }
+
+  .login-alternative__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  // Das Dateifeld bleibt sichtbar, statt versteckt hinter einem Label zu
+  // stehen: nur so nennt der Browser die gewählte Datei von selbst, und zwar
+  // auch ohne Javascript.
+  .login-alternative__file {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.8rem;
+    color: @text-color;
+
+    &::file-selector-button {
+      margin-right: 0.5rem;
+      padding: 0.35rem 0.7rem;
+      border: 1px solid @border-color;
+      border-radius: 4px;
+      background-color: transparent;
+      color: @text-color;
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+  }
+
+  .login-alternative__button {
+    padding: 0.45rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    color: @text-color;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .login-alternative__hint {
+    // Nach unten gedrückt, damit die Hinweise beider Kacheln auf einer Linie
+    // stehen, auch wenn der eine zwei Zeilen braucht und der andere eine.
+    margin: auto 0 0;
+    font-size: 0.75rem;
+    color: @text-color-alpha-70;
+  }
+
+  .login-alternative__message {
+    margin: 0;
+    font-size: 0.75rem;
+    color: @form-error-color;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+// ── „Noch keinen Schlüssel?“ ─────────────────────────────────────────────────
+// Unter der Karte und nicht darin: einen Schlüssel einzurichten ist nicht ein
+// dritter Weg, sich anzumelden, sondern das, was man stattdessen tut.
+.login-create {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: @text-color-alpha-70;
+}
+
+// ── Der Erweiterungs-Kasten ──────────────────────────────────────────────────
+// Getönt statt gerahmt, wie der Kontoblock in der Seitenleiste: das hier ist
+// ein Hinweis und kein Bedienelement — bis auf den Knopf darin, der einen
+// Rahmen bekommt und deshalb einer ist.
+.login-extension {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  margin-top: 2.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+
+  .login-extension__heading {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .login-extension__text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  .login-extension__action {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: @background-color;
+    color: @text-color;
+    font-size: 0.85rem;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible,
+    &:visited {
+      color: @text-color;
+      border-color: @metager-orange;
+    }
+  }
+}
+
+// ── Die Rückfrage bei leerem Schlüssel ───────────────────────────────────────
+.login-dialog {
+  max-width: min(26rem, 92vw);
+  padding: 1.25rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  color: @text-color;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .login-dialog__form {
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .login-dialog__message {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .login-dialog__value {
+    margin: 0;
+    display: grid;
+    gap: 0.15rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+    // Ein Schlüssel kann hier umbrechen müssen; abgeschnitten wäre er als
+    // Kontrolle wertlos, und genau als Kontrolle steht er da.
+    overflow-wrap: anywhere;
+
+    .login-dialog__value-label {
+      font-family: @metager-font;
+      font-size: 0.75rem;
+      color: @text-color-alpha-70;
+    }
+  }
+
+  .login-dialog__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    > .login-dialog__button {
+      flex: 1 1 0;
+      min-width: 0;
+      padding: 0.5rem 0.8rem;
+      border: 1px solid @border-color;
+      border-radius: 4px;
+      background-color: transparent;
+      color: @text-color;
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+
+      &.login-dialog__button--primary {
+        border-color: @metager-orange;
+        background-color: @metager-orange;
+        color: @color-white;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+// ── Der Kamera-Scanner ───────────────────────────────────────────────────────
+// Ein <dialog> und kein eigenes Overlay: das bringt Escape, den Fokusfang und
+// den Backdrop mit, und resources/js/login.js hört auf ein einziges Ereignis,
+// egal ob geschlossen, abgebrochen oder gescannt wurde.
+.login-scanner {
+  width: min(32rem, 92vw);
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  // Der Kasten ist in beiden Paletten schwarz: darin steht ein Kamerabild.
+  background-color: @color-black;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.75);
+  }
+
+  .login-scanner__video {
+    display: block;
+    width: 100%;
+    max-height: 70vh;
+  }
+
+  .login-scanner__close {
+    width: 100%;
+    padding: 0.6rem;
+    border: 0;
+    background-color: @metager-orange;
+    color: @color-white;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}

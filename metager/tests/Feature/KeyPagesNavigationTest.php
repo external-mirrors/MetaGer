@@ -150,7 +150,10 @@ class KeyPagesNavigationTest extends TestCase
     {
         $response = $this->get("/hilfe/schluessel")->assertOk();
 
-        $response->assertSee("/keys/key/enter", false);
+        // /anmelden statt /keys/key/enter: die Anmeldeseite ist seit dem
+        // dritten Umzugsschritt eine MetaGer-Route. Der Gutschein-Einlöser
+        // unter /keys/c ist es nicht und bleibt vorerst dort.
+        $response->assertSee("/anmelden", false);
         $response->assertSee("/keys/c", false);
     }
 }

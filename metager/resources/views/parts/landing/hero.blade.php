@@ -43,7 +43,7 @@
       <li>@lang('index.landing.advantages.compromise')</li>
     </ul>
     <div class="landing-hero__actions">
-      <a href="{{ App\Landing\KeymanagerLinks::enter(route('startpage')) }}" class="btn startpage-login-btn"
+      <a href="{{ App\Landing\KeymanagerLinks::login(route('startpage')) }}" class="btn startpage-login-btn"
         data-login-button>
         @lang('index.searchbar-replacement.have_key')
       </a>

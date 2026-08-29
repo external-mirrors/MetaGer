@@ -16,7 +16,7 @@
 @php
 	$vars = [
 		"tokenlink" => LaravelLocalization::getLocalizedURL(null, "/hilfe/anonyme-token"),
-		"keylink" => App\Landing\KeymanagerLinks::enter(),
+		"keylink" => App\Landing\KeymanagerLinks::login(),
 		"voucherlink" => App\Landing\KeymanagerLinks::voucher(),
 		"contactlink" => LaravelLocalization::getLocalizedURL(null, "/kontakt"),
 	];

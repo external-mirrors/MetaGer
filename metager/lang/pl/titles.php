@@ -43,4 +43,7 @@ return [
     // die Logs-API, nicht der Schlüssel.
     'login' => 'Zaloguj się - MetaGer',
     'key-create' => 'Utwórz klucz - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'Moje konto – MetaGer',
 ];

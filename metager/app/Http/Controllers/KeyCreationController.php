@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\KeyBackup;
 use App\Authentication\KeyIssuer;
 use App\Landing\KeymanagerLinks;
-use App\SearchSettings;
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\ErrorCorrectionLevel;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -83,7 +81,7 @@ final class KeyCreationController extends Controller
             || $request->hasHeader("key")
             || $request->cookie("key") !== null
         ) {
-            return redirect()->away(KeymanagerLinks::dashboard($request));
+            return redirect()->to(KeymanagerLinks::accountForVisitor($request));
         }
 
         // Was mitgebracht wurde, gilt nur, solange nichts Aktuelleres dazukommt:
@@ -105,17 +103,9 @@ final class KeyCreationController extends Controller
             }
         }
 
-        // Zwei URLs, und dass es zwei sind, ist der Punkt.
-        //
-        // Das Lesezeichen richtet diesen Browser andernorts wieder ein und
-        // trägt deshalb auch dessen Einstellungen. Der QR-Code trägt nur den
-        // Schlüssel: er wird abfotografiert, und ein QR-Code wächst mit dem,
-        // was in ihm steht — wer seine Suchmaschinen einzeln abgewählt hat,
-        // bekäme sonst ein Bild, das kein Telefon mehr vom Bildschirm liest.
-        // Was er leisten muss, ist der Weg zurück ins Konto, und dafür reicht
-        // der Schlüssel.
-        $settingsUrl = $key === null ? null : $this->settingsUrl($request, $key);
-        $qrUrl = $key === null ? null : route("loadSettings", ["key" => $key]);
+        // Zwei URLs, und dass es zwei sind, ist der Punkt — die Begründung
+        // steht in {@see KeyBackup}, weil das Konto dieselben beiden anbietet.
+        $settingsUrl = $key === null ? null : KeyBackup::settingsUrl($request, $key);
 
         return response()
             ->view("key-create", [
@@ -131,7 +121,7 @@ final class KeyCreationController extends Controller
                 "key" => $key,
                 "keyError" => $error,
                 "settingsUrl" => $settingsUrl,
-                "qrUri" => $qrUrl === null ? null : $this->qr($qrUrl),
+                "qrUri" => $key === null ? null : KeyBackup::qrDataUri($key),
                 "callback" => KeymanagerLinks::appCallback($request),
                 "loginUrl" => KeymanagerLinks::login(null, $request),
             ])
@@ -176,60 +166,8 @@ final class KeyCreationController extends Controller
         // Callback-Marker der App reisen mit — das Konto ist die Stelle, an der
         // ein Custom Tab den Schlüssel zurückgibt.
         return redirect()
-            ->away(KeymanagerLinks::account($key, KeymanagerLinks::appCallback($request)) . "#charge")
+            ->away(KeymanagerLinks::account(KeymanagerLinks::appCallback($request)) . "#charge")
             ->header("Cache-Control", "no-store, private");
-    }
-
-    /**
-     * Der URL, der diesen Schlüssel und die Einstellungen dieses Browsers
-     * wieder einrichtet.
-     *
-     * `meta/settings/load-settings` ist eine MetaGer-Route und war es immer;
-     * der Keymanager baute sie sich mit einer eigenen Liste von Cookie-Namen
-     * zusammen, die neben der Liste stand, nach der die Route selbst filtert.
-     * Jetzt fragt der Seitenaufbau dieselbe Stelle wie der Empfänger:
-     * {@see SearchSettings::isValidSetting()}.
-     */
-    private function settingsUrl(Request $request, string $key): string
-    {
-        $parameters = ["key" => $key];
-        $settings = app(SearchSettings::class);
-
-        foreach ($request->cookies->all() as $name => $value) {
-            if ($name === "key" || !is_string($value) || $value === "") {
-                continue;
-            }
-            if ($settings->isValidSetting($name, $value)) {
-                $parameters[$name] = $value;
-            }
-        }
-
-        return route("loadSettings", $parameters);
-    }
-
-    /**
-     * Der QR-Code zum Schlüssel — als Bild in der Seite selbst.
-     *
-     * Ein `data:`-URI und keine eigene Route: eine Route müsste den Schlüssel
-     * in ihrem Pfad oder ihrer Query tragen, und das ist genau der Umweg, den
-     * dieser Umzug abschafft. Im Dokument steht der Schlüssel ohnehin schon.
-     *
-     * Der Inhalt ist ein URL und nicht der Schlüssel für sich: die
-     * Anmeldeseite nimmt eine Bilddatei entgegen und liest den Schlüssel aus
-     * dem `key`-Parameter des URLs im QR-Code
-     * (`POST /api/json/key/resolve-image` beim Keyserver). Ein QR-Code, in dem
-     * nur die UUID stünde, wäre dort unlesbar.
-     */
-    private function qr(string $url): string
-    {
-        return Builder::create()
-            ->data($url)
-            // Hoch, wie beim Spenden-QR: dieses Bild wird abfotografiert,
-            // ausgedruckt und in Ordnern aufbewahrt, und was es trägt, ist der
-            // einzige Weg zurück in ein Konto.
-            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
-            ->build()
-            ->getDataUri();
     }
 
     /** Zurück auf die Seite, mit einer Meldung und ohne verlorene Marker. */

@@ -43,4 +43,7 @@ return [
     // die Logs-API, nicht der Schlüssel.
     'login' => 'Iniciar sessão - MetaGer',
     'key-create' => 'Criar uma chave - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'A minha conta – MetaGer',
 ];

@@ -46,7 +46,7 @@ class KeyCreateSubmitTest extends TestCase
     public function testTheKeyLeadsToItsAccount(): void
     {
         $this->submit(["key" => self::A_KEY])
-            ->assertRedirectContains("/de-DE/keys/key/" . self::A_KEY);
+            ->assertRedirectContains("/de-DE/konto");
     }
 
     /**

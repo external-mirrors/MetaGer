@@ -61,7 +61,7 @@ class LoginSubmitTest extends TestCase
         $this->keyserverAnswers(["result" => "key", "key" => self::A_KEY]);
 
         $this->submit(["key" => self::A_KEY])
-            ->assertRedirectContains("/de-DE/keys/key/" . self::A_KEY);
+            ->assertRedirectContains("/de-DE/konto");
     }
 
     /**
@@ -110,7 +110,7 @@ class LoginSubmitTest extends TestCase
         $this->submit([
             "key" => self::A_KEY,
             "redirect_success" => "https://boese.example/",
-        ])->assertRedirectContains("/de-DE/keys/key/" . self::A_KEY);
+        ])->assertRedirectContains("/de-DE/konto");
     }
 
     /**

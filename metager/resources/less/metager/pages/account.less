@@ -1,0 +1,539 @@
+@import "../variables.less";
+
+// /konto — das Konto.
+//
+// Lag als /keys/key/<uuid> im Keymanager und sah aus wie der Keymanager: eine
+// eigene Navigation, eigene Farbvariablen, ein QR-Code als erstes Element der
+// Seite. Die Seite steht jetzt im MetaGer-Layout, benutzt dessen Tokens und ist
+// die dritte Schwester von pages/login.less und pages/key-create.less —
+// dieselbe Spaltenbreite, dieselben Karten, dieselben Abstände, damit der Weg
+// „anmelden, erstellen, verwalten“ nicht zwischen drei Gestaltungen springt.
+//
+// Vier Entscheidungen, die nicht aus der alten Seite kommen:
+//
+// **Eine Spalte, in jeder Breite.** Es gibt keinen Umbruch zwischen einer
+// Telefon- und einer Bildschirmfassung, nur Kacheln, die sich innerhalb ihres
+// Abschnitts umlegen. Die alte Seite hatte ein Raster, das über etwa 900px
+// zweispaltig wurde, und die Reihenfolge der Abschnitte war dann eine andere als
+// darunter — was auf einem Telefon zuoberst stand, stand daneben in der zweiten
+// Spalte.
+//
+// **Die Zahl ist die Überschrift.** `clamp()` statt einer festen Größe: 3rem auf
+// einem schmalen Telefon, 4.5rem auf einem Bildschirm, und dazwischen mit der
+// Breite. Vier Ziffern müssen in jeder Größe in eine Zeile passen, deshalb
+// `font-variant-numeric: tabular-nums` — proportionale Ziffern lassen die Zahl
+// beim Nachladen springen.
+//
+// **Der Zustand färbt den Rahmen, nicht die Zahl.** Ein leeres Guthaben ist eine
+// Warnung und keine Fehlermeldung; die Zahl selbst muss in jedem Zustand gleich
+// gut lesbar bleiben. Dieselbe Regel, der auch parts/account.less folgt: ein
+// Rahmen ist ein Versprechen.
+//
+// **Kein zweites Orange.** Die Seite hat genau eine Hauptaktion — aufladen —,
+// und die trägt die Markenfarbe. Alles andere ist umrandet.
+
+#account-page {
+  // Breiter als die Anmeldeseite (30rem): dort geht es um ein Feld, hier um ein
+  // Raster aus sechs Paketen, das darunter zu einer Spalte zusammenfiele.
+  max-width: 42rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+// ── Kopf: wer bin ich ────────────────────────────────────────────────────────
+.account-head {
+  display: grid;
+  gap: 0.5rem;
+  justify-items: center;
+  text-align: center;
+
+  .page-title {
+    font-size: 1.8rem;
+    margin: 0;
+  }
+
+  .account-head__id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Etwas größer als in der Kontokachel: hier ist die Marke nicht nur eine
+  // Erinnerung, sondern die Antwort auf „welches Konto ist das“.
+  .account-mark {
+    width: 24px;
+    height: 24px;
+  }
+
+  .account-head__fingerprint {
+    // Die sechs Zeichen sind hexadezimal und werden verglichen, nicht gelesen.
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Das Guthaben ─────────────────────────────────────────────────────────────
+.account-balance {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.5rem 1.1rem;
+  }
+
+  // Der Zustand steht im Rahmen. `full` bekommt keine eigene Regel — alles in
+  // Ordnung ist kein Signal.
+  &.account-balance--low {
+    border-color: @account-low-color;
+  }
+
+  &.account-balance--empty {
+    border-color: @metager-orange;
+    background-color: @account-alert-background;
+  }
+
+  .account-balance__figure {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .account-balance__number {
+    font-size: clamp(3rem, 12vw, 4.5rem);
+    line-height: 1;
+    font-weight: bold;
+    // Sonst springt die Zahl in der Breite, sobald sich eine Ziffer ändert.
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-balance__unit {
+    font-size: 1.1rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-balance__note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+
+    &.account-balance__note--low {
+      color: @account-low-color;
+      font-weight: bold;
+    }
+
+    &.account-balance__note--empty {
+      color: @text-color;
+      font-weight: bold;
+    }
+  }
+
+  .account-balance__unknown {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+
+  .account-balance__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+}
+
+// ── Die Verfallsdaten ────────────────────────────────────────────────────────
+// Ein <details> und kein Tooltip: die alte Seite hängte die Liste an ein
+// Fragezeichen mit `:hover`, und auf einem Telefon gibt es nichts, worauf man
+// zeigen kann.
+.account-expiry {
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+  max-width: 100%;
+
+  &.account-expiry--single {
+    margin: 0;
+  }
+
+  .account-expiry__summary {
+    cursor: pointer;
+    display: grid;
+    gap: 0.15rem;
+    justify-items: center;
+
+    &::marker {
+      // Das Dreieck sitzt neben einer zentrierten Zeile und zieht sie aus der
+      // Mitte; der Hinweis darunter sagt ohnehin, dass es hier mehr gibt.
+      content: "";
+    }
+  }
+
+  .account-expiry__hint {
+    text-decoration: underline dotted;
+  }
+
+  .account-expiry__list {
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.25rem;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Abschnitte ───────────────────────────────────────────────────────────────
+.account-section {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  // Ohne das laufen die Kacheln und das readonly-Feld über den Rand ihrer
+  // eigenen Karte hinaus: Rasterelemente schrumpfen nicht unter ihren Inhalt.
+  min-width: 0;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  .account-section__heading {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+
+  .account-section__lede {
+    margin: 0;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-section__more {
+    font-size: 0.85rem;
+    justify-self: start;
+  }
+}
+
+// Wenn gerade nicht aufgeladen werden kann. Getönt und nicht gerahmt: ein
+// Hinweis, kein Bedienelement — dieselbe Behandlung wie der „Sie hatten schon
+// einmal einen?“-Kasten auf der Seite zum Erstellen.
+.account-blocked {
+  margin: 0;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+  font-size: 0.9rem;
+}
+
+// ── Die Pakete ───────────────────────────────────────────────────────────────
+.account-tiers {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  // Kein `repeat(3, …)`: die Zahl der Pakete kommt vom Keyserver
+  // (App\Landing\KeyPrice) und ist keine Gestaltungsentscheidung.
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+}
+
+.account-tier {
+  display: grid;
+  gap: 0.25rem;
+  justify-items: center;
+  padding: 1rem 0.75rem;
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  text-align: center;
+  color: @text-color;
+  text-decoration: none;
+
+  &:hover,
+  &:focus-visible {
+    border-color: @metager-orange;
+    text-decoration: none;
+    color: @text-color;
+  }
+
+  .account-tier__amount {
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-tier__price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Zugang sichern ───────────────────────────────────────────────────────────
+// ── Der Schlüssel selbst ─────────────────────────────────────────────────────
+// Zugeklappt, weil diese Seite fotografiert wird, und trotzdem da, weil das
+// Anmeldeformular in erster Linie nach ihm fragt. Ein <details> und kein
+// Skript-Schalter: aufklappen muss auch ohne Javascript gehen.
+.account-key {
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+  // Ein Schlüssel hat 36 Zeichen; ohne dies läuft das Feld aus der Karte.
+  min-width: 0;
+
+  .account-key__summary {
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    // Anders als bei den Verfallsdaten steht hier ein Dreieck: dieser Abschnitt
+    // ist links ausgerichtet, und der Marker ist das, was ihn als aufklappbar
+    // ausweist.
+    list-style: disclosure-closed;
+  }
+
+  &[open] > .account-key__summary {
+    list-style: disclosure-open;
+    margin-bottom: 0.75rem;
+  }
+
+  .account-key__body {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    min-width: 0;
+  }
+
+  .account-key__label {
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .account-key__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    // Ein Schlüssel wird abgetippt und Zeichen für Zeichen verglichen.
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+
+  .account-key__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+.account-save {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1.25rem;
+  // Kein `grid-auto-rows: 1fr` wie bei den zwei Kacheln auf der Seite zum
+  // Erstellen. Hier sind es drei, die QR-Kachel ist deutlich höher als die
+  // beiden anderen, und sobald der Platz nur für zwei Spalten reicht, streckt
+  // eine gleich hohe zweite Reihe die einzelne Kachel darin auf die Höhe der
+  // ersten — eine halbe Bildschirmhöhe Leerraum am Fuß der Karte.
+  align-items: start;
+}
+
+.account-save__option {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+  // Dieselbe Falle wie in .account-section: ein Rasterelement schrumpft nicht
+  // unter seinen Inhalt, und der Inhalt hier ist ein Feld mit einem langen URL.
+  min-width: 0;
+
+  .account-save__label {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .account-save__qr {
+    display: grid;
+    gap: 0.5rem;
+    justify-items: start;
+    color: @text-color;
+
+    img {
+      // Der QR-Code braucht einen hellen Grund, um lesbar zu bleiben — im
+      // Dunkelmodus ebenso, wo die Karte fast schwarz ist.
+      background-color: white;
+      padding: 6px;
+      border-radius: 6px;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  .account-save__action {
+    font-size: 0.85rem;
+  }
+
+  .account-save__input {
+    width: 100%;
+    min-width: 0;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    font-size: 0.8rem;
+  }
+
+  .account-save__button {
+    justify-self: start;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: transparent;
+    color: @text-color;
+    font-size: 0.85rem;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      border-color: @metager-orange;
+    }
+  }
+
+  .account-save__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Weiteres ─────────────────────────────────────────────────────────────────
+.account-more {
+  .account-more__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .account-more__logout {
+    display: grid;
+    gap: 0.15rem;
+    margin-top: 0.4rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid @border-color;
+  }
+
+  .account-more__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Knöpfe ───────────────────────────────────────────────────────────────────
+.account-btn {
+  display: inline-block;
+  padding: 0.6rem 1.4rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: none;
+  }
+
+  &.account-btn--primary {
+    background-color: @metager-orange;
+    color: @color-black;
+
+    &:hover,
+    &:focus-visible {
+      background-color: @metager-orange-alpha-80-darker;
+      color: @color-black;
+    }
+  }
+
+  &.account-btn--quiet {
+    border-color: @border-color;
+    background-color: transparent;
+    color: @text-color;
+
+    &:hover,
+    &:focus-visible {
+      border-color: @metager-orange;
+      color: @text-color;
+    }
+  }
+}
+
+// ── Der Dialog für ein weiteres Gerät ────────────────────────────────────────
+.account-dialog {
+  max-width: 26rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+  color: @text-color;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .account-dialog__title {
+    margin: 0 0 0.75rem;
+    font-size: 1.2rem;
+  }
+
+  .account-dialog__text,
+  .account-dialog__note {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    color: @text-color-alpha-70;
+  }
+
+  .account-dialog__note {
+    font-size: 0.8rem;
+  }
+
+  // Der Code wird abgetippt, oft von einem Bildschirm auf ein Telefon. Groß,
+  // gesperrt und mit Ziffern gleicher Breite, damit sich beim Lesen keine Stelle
+  // verschiebt.
+  .account-dialog__code {
+    margin: 0 0 1rem;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .account-dialog__failed {
+    margin: 0 0 1rem;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.9rem;
+  }
+}

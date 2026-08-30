@@ -21,6 +21,16 @@ return [
 
     'working' => 'Een moment: we dobbelen een nieuwe sleutel voor u …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'Hieraan herkent u uw account: dit merkteken staat vanaf nu rechtsboven op elke pagina.',
+
     'key' => [
         'label' => 'Uw nieuwe sleutel',
         'hint' => '36 tekens. Daarmee logt u op elk ander apparaat in.',

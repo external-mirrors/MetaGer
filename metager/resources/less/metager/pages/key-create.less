@@ -125,6 +125,35 @@
   }
 }
 
+// ── Die Kennung des neuen Kontos ─────────────────────────────────────────────
+// Marke und die letzten sechs Zeichen, genau wie sie von hier an in der Ecke
+// jeder Seite stehen (parts/account.less). Etwas größer als dort: hier wird sie
+// zum ersten Mal gezeigt und soll gemerkt werden, dort wird sie nur wiedererkannt.
+.create-identity {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 0.15rem 0.6rem;
+  margin: 0;
+
+  .account-mark {
+    width: 28px;
+    height: 28px;
+    grid-row: span 2;
+  }
+
+  .create-identity__code {
+    font-weight: bold;
+    // Sechs Hexzeichen, die verglichen und nicht gelesen werden.
+    font-variant-numeric: tabular-nums;
+  }
+
+  .create-identity__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
 // ── Der Knopf, der den Schlüssel aufdeckt ────────────────────────────────────
 .create-offer {
   display: grid;

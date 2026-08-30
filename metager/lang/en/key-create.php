@@ -21,6 +21,16 @@ return [
 
     'working' => 'One moment: we are rolling a new key for you …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'This is how you will recognise your account: from now on, this mark sits in the top right corner of every page.',
+
     'key' => [
         'label' => 'Your new key',
         'hint' => '36 characters. They are what logs you in on every further device.',

@@ -21,6 +21,16 @@ return [
 
     'working' => 'Et øjeblik: vi slår en ny nøgle til dig …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'Sådan genkender du din konto: fra nu af står dette mærke øverst til højre på hver side.',
+
     'key' => [
         'label' => 'Din nye nøgle',
         'hint' => '36 tegn. Det er dem, du logger ind med på enhver anden enhed.',

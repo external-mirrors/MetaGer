@@ -85,7 +85,7 @@ final class LoginController extends Controller
             || $request->hasHeader("key")
             || $request->cookie("key") !== null
         ) {
-            return redirect()->away(KeymanagerLinks::dashboard($request));
+            return redirect()->to(KeymanagerLinks::accountForVisitor($request));
         }
 
         $callback = KeymanagerLinks::appCallback($request);
@@ -244,10 +244,10 @@ final class LoginController extends Controller
      * Drei Ziele, in dieser Reihenfolge:
      *
      * 1. Die App. Trägt die Anfrage die Callback-Marker, dann läuft das hier in
-     *    einem Custom Tab, und der Schlüssel muss zurück in die App. Das kann
-     *    nur das Konto im Keymanager — dort steht die Weiche, die daraus einen
-     *    App-Link macht, und dort steht auch die Ladung, an der sie entscheidet,
-     *    ob die App gleich zum Aufladen weiterschicken soll.
+     *    einem Custom Tab, und der Schlüssel muss zurück in die App. Das tut das
+     *    Konto — dort steht die Weiche, die daraus einen App-Link macht, und
+     *    dort steht auch die Ladung, an der sie entscheidet, ob die App gleich
+     *    zum Aufladen weiterschicken soll.
      * 2. Die Seite, von der der Besucher kam, wenn sie unsere ist. Ohne `?key=`:
      *    das Cookie liegt schon in derselben Antwort, die diese Weiterleitung
      *    ist, also ist der nächste Aufruf angemeldet.
@@ -262,14 +262,14 @@ final class LoginController extends Controller
         ?string $redirectSuccess
     ): string {
         if ($callback !== []) {
-            return KeymanagerLinks::account($key, $callback);
+            return KeymanagerLinks::account($callback);
         }
 
         if ($redirectSuccess !== null && $this->isOurs($request, $redirectSuccess)) {
             return $redirectSuccess;
         }
 
-        return KeymanagerLinks::account($key);
+        return KeymanagerLinks::account();
     }
 
     /**

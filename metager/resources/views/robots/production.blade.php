@@ -3,5 +3,7 @@ Disallow: /meta/
 Disallow: /*/meta/
 Disallow: /qt
 Disallow: /en/qt
+Disallow: /konto
+Disallow: /*/konto
 Disallow: /keys/key/
 Disallow: /keys/admin/

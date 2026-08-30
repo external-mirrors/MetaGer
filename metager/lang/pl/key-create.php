@@ -21,6 +21,16 @@ return [
 
     'working' => 'Chwileczkę: losujemy dla ciebie nowy klucz …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'Po tym rozpoznasz swoje konto: od teraz ten znak znajduje się w prawym górnym rogu każdej strony.',
+
     'key' => [
         'label' => 'Twój nowy klucz',
         'hint' => '36 znaków. To nimi logujesz się na każdym kolejnym urządzeniu.',

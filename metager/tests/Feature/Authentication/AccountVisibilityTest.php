@@ -159,7 +159,7 @@ class AccountVisibilityTest extends TestCase
         // hand us the identity the anonymous token exists to keep from us.
         $response->assertSee('data-extension-settings', false);
         $response->assertSee(url("/hilfe/anonyme-token"), false);
-        $response->assertDontSee('/keys/key/enter', false);
+        $response->assertDontSee(route('account'), false);
     }
 
     /**
@@ -174,7 +174,7 @@ class AccountVisibilityTest extends TestCase
         $response = $this->get("/")->assertOk();
 
         $response->assertSee('id="account-pill"', false);
-        $response->assertSee('/keys/key/enter', false);
+        $response->assertSee(route('account'), false);
         $response->assertDontSee('data-extension-settings', false);
     }
 

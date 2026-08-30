@@ -45,6 +45,16 @@ return [
 
     'working' => 'Einen Moment: Wir würfeln einen neuen Schlüssel für Sie …',
 
+    /**
+     * Die Kennung, die von hier an in der Ecke jeder Seite steht.
+     *
+     * Aus dem Schlüssel abgeleitet und nirgends gespeichert
+     * ({@see \App\Authentication\KeyIdenticon}). Sie steht hier, weil eine
+     * Marke, die man wiedererkennt, beim ersten Mal gezeigt werden muss —
+     * sonst ist sie beim zweiten Mal nur ein buntes Quadrat.
+     */
+    'identity' => 'Daran erkennen Sie Ihr Konto wieder: Diese Marke steht von jetzt an oben rechts auf jeder Seite.',
+
     'key' => [
         'label' => 'Ihr neuer Schlüssel',
         'hint' => '36 Zeichen. Mit ihnen melden Sie sich auf jedem weiteren Gerät an.',

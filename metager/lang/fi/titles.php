@@ -43,4 +43,7 @@ return [
     // die Logs-API, nicht der Schlüssel.
     'login' => 'Kirjaudu sisään - MetaGer',
     'key-create' => 'Luo avain - MetaGer',
+
+    // The account page, moved here from /keys/key/<uuid>.
+    'account' => 'Oma tili – MetaGer',
 ];

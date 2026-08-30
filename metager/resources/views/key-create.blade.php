@@ -54,6 +54,23 @@
 		<p class="create-working">@lang('key-create.working')</p>
 
 		<div class="create-result">
+			{{--
+				Die Kennung des neuen Kontos: die Marke und die letzten sechs
+				Zeichen — genau das, was von jetzt an in der Ecke jeder Seite
+				steht (parts/account-pill.blade.php) und was das Konto selbst
+				oben zeigt. Hier zum ersten Mal, damit sie wiedererkannt wird
+				statt beim ersten Auftauchen erklärt werden zu müssen.
+
+				Steht innerhalb von .create-result und damit erst nach dem
+				Aufdecken: die Marke ist aus dem Schlüssel abgeleitet, und vor
+				der Nachfrage soll von ihm nichts zu sehen sein.
+			--}}
+			<p class="create-identity">
+				{!! \App\Authentication\KeyIdenticon::render(substr($key, -6)) !!}
+				<span class="create-identity__code">@lang('account.page.fingerprint', ['fingerprint' => strtoupper(substr($key, -6))])</span>
+				<span class="create-identity__hint">@lang('key-create.identity')</span>
+			</p>
+
 			<div class="create-key">
 				<label class="create-key__label" for="new-key">@lang('key-create.key.label')</label>
 				{{--

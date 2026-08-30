@@ -21,6 +21,16 @@ return [
 
     'working' => 'Um momento: estamos a sortear uma chave nova para si …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'É assim que reconhecerá a sua conta: a partir de agora esta marca aparece no canto superior direito de cada página.',
+
     'key' => [
         'label' => 'A sua chave nova',
         'hint' => '36 caracteres. É com eles que inicia sessão em qualquer outro dispositivo.',

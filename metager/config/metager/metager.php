@@ -30,6 +30,28 @@ return [
         "assoziator" => env("ASSO_KEY"),
     ],
     /**
+     * Die MetaGer-App, soweit diese Anwendung sie kennt.
+     *
+     * Nur zwei Adressen, und dass es zwei sind, ist der ganze Punkt. Meldet
+     * sich jemand im Custom Tab der App an, gibt das Konto den Schlüssel über
+     * einen verifizierten Android App Link zurück; welcher Host den Link
+     * beglaubigt, entscheidet die Signatur der Build-Variante
+     * ({@see \App\Landing\AppCallback}).
+     *
+     * `debug.keystore` liegt offen im App-Repository, sein privater Schlüssel
+     * ist also öffentlich. Nur metager3.de darf das Zertifikat beglaubigen —
+     * stünde es in der assetlinks.json von metager.de, könnte eine
+     * nachgebaute, gleich signierte App den Schlüssel eines echten Benutzers
+     * entgegennehmen. Deshalb steht hier eine feste Produktionsadresse und
+     * nicht `config("app.url")`: dieselbe Anwendung antwortet auch auf
+     * metager.org und einer .onion-Adresse, und keine davon beglaubigt einen
+     * App Link.
+     */
+    "app" => [
+        "callback_url" => env("APP_CALLBACK_URL", "https://metager.de"),
+        "callback_dev_url" => env("APP_CALLBACK_DEV_URL", "https://metager3.de"),
+    ],
+    /**
      * Where the interface language lives, and whether the domain still has a
      * say in it.
      *

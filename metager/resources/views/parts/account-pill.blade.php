@@ -34,7 +34,7 @@
     account in its own popup.
 
     Which is also where the pill goes in that state. Everywhere else it leads to
-    /keys/key/enter, because that is where the account is managed — but a user
+    /konto, because that is where the account is managed — but a user
     who is signed in anonymously has no key to enter and would not want to enter
     it here if they had: handing it to us is the one thing the arrangement exists
     to avoid. The extension is the only party that can show that account, so the

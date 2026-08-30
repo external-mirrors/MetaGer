@@ -44,4 +44,7 @@ return [
     'login' => 'Anmelden – MetaGer',
     // Die Seite zum Erstellen eines Schlüssels, aus /keys/key/create.
     'key-create' => 'Schlüssel erstellen – MetaGer',
+
+    // Das Konto, aus /keys/key/<uuid> hierher gezogen.
+    'account' => 'Mein Konto – MetaGer',
 ];

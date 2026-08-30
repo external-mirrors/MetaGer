@@ -7,71 +7,51 @@ use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 /**
- * The `/keys` links the startpage points at, in one place.
+ * Wohin die Links des Schlüsselvorgangs zeigen, in einer Datei.
  *
- * `/keys` is not a MetaGer route: nginx proxies it to the keymanager service,
- * which still owns everything about a key — creating one, entering one, paying
- * for one. What it no longer owns is the page that explains any of that, and
- * the explaining page is the one that carries most of these links. So they were
- * about to be spelled out across five blades, which is exactly the shape that
- * makes the next migration step expensive.
+ * `/keys` ist keine MetaGer-Route: nginx reicht sie an den Keymanager weiter.
+ * Was der noch besitzt, schrumpft mit jedem Umzugsschritt — inzwischen ist es
+ * der Bezahlvorgang, die Bestellungen, die Gutscheinaktionen, das Abmelden und
+ * die API. Erklärt, angemeldet, erstellt und verwaltet wird hier.
  *
- * What is left here is the key flow itself — signing out, redeeming a voucher,
- * and the account page. `/preise`, `/agb` and the two help pages used to be
- * built here too and are MetaGer routes now, so their call sites name a route
- * like every other page does.
+ * Diese Datei ist deshalb keine Sammlung von `/keys`-URLs mehr, sondern die
+ * Antwort auf „welcher Link im Schlüsselvorgang geht wohin“ — und die Hälfte
+ * der Antworten lautet inzwischen: auf eine MetaGer-Route.
  *
- * Those are the only links on the page that a *URL* has to be built for
- * rather than a route named: `URL::formatPathUsing` in AppServiceProvider puts
- * the locale prefix on everything `route()` and `url()` produce, but there is
- * no route to name for them, so LaravelLocalization::getLocalizedURL does it.
+ *   {@see login()}, {@see create()}, {@see account()}, {@see dashboard()},
+ *   {@see accountForVisitor()}   MetaGer-Routen
  *
- * {@see login()} and {@see create()} are the exceptions and are here anyway.
- * Both pages *are* MetaGer routes now, and so are the two things they do — they
- * need none of that. But they are the destinations in the key flow that every
- * call site reaches through the same two markers ({@see appCallback()}), and
- * splitting them off would mean the callers had to remember them. Which link
- * goes where, in one file, is the point of the file.
+ *   {@see checkout()}, {@see orders()}, {@see campaigns()}, {@see remove()},
+ *   {@see voucher()}, {@see keyApi()}   noch drüben
+ *
+ * Dass die MetaGer-Routen hier stehen, obwohl sie `route()` nur weiterreichen,
+ * hat einen Grund: jeder Aufrufer erreicht sie über dieselben zwei Marker
+ * ({@see appCallback()}), und {@see accountForVisitor()} trifft dabei eine
+ * Fallunterscheidung, die kein Aufrufer wiederholen soll. Welcher Link wohin
+ * geht, in einer Datei — das ist der Zweck der Datei.
+ *
+ * Für die Pfade drüben muss ein *URL* gebaut werden statt eine Route benannt:
+ * `URL::formatPathUsing` im AppServiceProvider setzt das Sprachpräfix vor alles,
+ * was `route()` und `url()` erzeugen, aber für sie gibt es keine Route zu
+ * benennen — das erledigt LaravelLocalization::getLocalizedURL.
  */
 final class KeymanagerLinks
 {
     /**
-     * The MetaGer app opens the landing page in a Custom Tab and appends these,
-     * so the key it is about to be handed can find its way back into the app
-     * (docs/10-open-decisions.md#d52 in app-en). The keymanager re-emits them on
-     * every in-`/keys` link for the same reason; now that the page a visitor
-     * reads first is served from here, this side has to re-emit them too, or
-     * the two links out of it drop the callback and the key silently never
-     * reaches the app.
+     * Die Callback-Marker der MetaGer-App, weitergereicht.
      *
-     * Only ever re-emitted, never acted on — routes/key.js in the keymanager
-     * validates both against its own allowlists before either reaches a
-     * redirect target.
+     * Steht hier nur noch als Name: die Sache selbst ist
+     * {@see AppCallback::markers()}, seit das Konto und damit auch die Rückgabe
+     * des Schlüssels an die App hierher gezogen sind. Die Aufrufer sind alle
+     * Links im Schlüsselvorgang, und die stehen in dieser Datei — der eine
+     * Namensraum, in dem „welcher Link wohin geht“ steht, soll nicht zwei
+     * Klassen nennen müssen.
      *
      * @return array<string, string>
      */
     public static function appCallback(?Request $request = null): array
     {
-        $request ??= request();
-
-        // input() und nicht query(): auf der Anmeldeseite stehen die beiden als
-        // versteckte Felder im Formular, weil sie einen Fehlversuch überleben
-        // müssen und es keine Session gibt. Beim Abschicken kommen sie also im
-        // Body an. query() sah dort nichts, und die Marker gingen genau in dem
-        // Schritt verloren, für den sie mitgeführt werden.
-        $keystore = $request->input("keystore");
-        if (!is_string($keystore) || trim($keystore) === "") {
-            return [];
-        }
-
-        $callback = ["keystore" => $keystore];
-
-        $variant = $request->input("variant");
-        if (is_string($variant) && trim($variant) !== "") {
-            $callback["variant"] = $variant;
-        }
-
-        return $callback;
+        return AppCallback::markers($request);
     }
 
     /** @param array<string, string> $query */
@@ -129,25 +109,31 @@ final class KeymanagerLinks
     }
 
     /**
-     * One key's account page.
+     * Das Konto — MetaGers eigenes `/konto`.
      *
-     * Where a sign-in ends up. Built from the resolved UUID rather than gone
-     * through `/key/enter`, because by this point the key *is* canonical — the
-     * keyserver said so when it resolved the input
-     * ({@see \App\Authentication\KeyResolver}), which is the one thing
-     * `/key/enter` was still being used for.
+     * Lag als `/keys/key/<uuid>` im Keymanager und ist die dritte Seite des
+     * Schlüsselvorgangs, die hierher gezogen ist. Der Schlüssel steht nicht
+     * mehr im Pfad und in keinem Parameter: das Konto liest ihn aus dem
+     * Cookie, so wie jede andere Seite hier auch
+     * ({@see \App\Authentication\KeyAuthGuard}).
      *
-     * `$callback` carries the app's markers when there are any, and they are
-     * why this is the destination at all in that case: the dashboard is where
-     * the Custom Tab handback happens, and it is the only place that knows the
-     * key's charge, which decides whether the app should open on the top-up
-     * step (docs/10-open-decisions.md#d55 in app-en).
+     * Deshalb nimmt diese Methode auch keinen Schlüssel mehr entgegen. Ihre
+     * beiden Aufrufer im Anmelde- und Erstellvorgang setzen das Cookie in
+     * derselben Antwort, die diese Weiterleitung ist — der nächste Aufruf ist
+     * angemeldet, ganz ohne dass die Zugangsberechtigung durch die Adresszeile
+     * reist.
+     *
+     * `$callback` trägt die Marker der App, wenn es welche gibt, und sie sind
+     * der Grund, warum das Konto in dem Fall überhaupt das Ziel ist: dort
+     * geschieht die Rückgabe an den Custom Tab, und dort ist die Ladung
+     * bekannt, an der sich entscheidet, ob die App gleich zum Aufladen
+     * weiterschicken soll ({@see AppCallback::handbackUrl()}).
      *
      * @param array<string, string> $callback
      */
-    public static function account(string $key, array $callback = []): string
+    public static function account(array $callback = []): string
     {
-        return self::url("/key/" . urlencode($key), $callback);
+        return route("account", $callback);
     }
 
     /**
@@ -176,22 +162,62 @@ final class KeymanagerLinks
     }
 
     /**
-     * The account page — where a visitor who is already signed in goes.
+     * Das Konto für *diesen* Besucher — mit dem Schlüssel, den er mitbringt.
      *
-     * Still `/key/enter`, which sounds like the sign-in page and is not: given
-     * a key, that route has always resolved it to its canonical form and
-     * redirected to `/keys/key/<uuid>`. Only its no-key branch rendered a page,
-     * and that branch now redirects here to {@see login()}.
+     * Der Unterschied zu {@see dashboard()} ist ein Fall, der leicht zu
+     * übersehen ist und sich als Endlosschleife zeigt: die Anmelde- und die
+     * Erstellen-Seite schicken einen Besucher, der schon einen Schlüssel hat,
+     * ins Konto — und „hat einen Schlüssel“ heißt dort auch „hat ihn in der
+     * Query oder in einem Header“, etwa aus einem gespeicherten Anmelde-URL.
+     * Ein solcher Schlüssel steht in keinem Cookie. Das Konto fände ihn nicht
+     * und schickte den Besucher zurück zum Anmelden.
      *
-     * Named as the destination rather than as the path, because the path is the
-     * part that is wrong. Going through it rather than building
-     * `/keys/key/<uuid>` here is deliberate: the cookie may hold a legacy
-     * non-UUID key, and the keymanager is the only party that can fold one into
-     * the account it belongs to.
+     * Solange das Konto im Keymanager lag, fiel das nicht auf: `/key/enter`
+     * las notfalls den *Referer* der Anfrage und fischte den Schlüssel aus dem
+     * URL, von dem der Besucher kam. Das ist hier nicht nachgebaut — ein
+     * Referer ist nichts, worauf eine Anmeldung sich stützen sollte. Der
+     * Schlüssel wird stattdessen weitergereicht, und das Konto nimmt ihn aus
+     * der Adresse heraus, sobald es sein Cookie gesetzt hat.
+     *
+     * Die Reihenfolge ist die des {@see \App\Authentication\KeyAuthGuard}:
+     * Query vor Header vor Cookie. Kam der Schlüssel aus dem Cookie, reist er
+     * gar nicht — das Cookie gilt für /konto ohnehin.
+     */
+    public static function accountForVisitor(Request $request): string
+    {
+        $query = self::appCallback($request);
+
+        $carried = $request->input("key");
+        if (!is_string($carried) || trim($carried) === "") {
+            $carried = $request->header("key");
+        }
+
+        if (is_string($carried) && trim($carried) !== "") {
+            $query["key"] = trim($carried);
+        }
+
+        return self::account($query);
+    }
+
+    /**
+     * Wohin ein bereits angemeldeter Besucher geht — dasselbe `/konto`.
+     *
+     * Zwei Namen für eine Adresse, und der Unterschied ist die Frage, die der
+     * Aufrufer stellt: {@see account()} ist „das Konto“, das hier ist „wo bin
+     * ich, wenn ich schon angemeldet bin“. Solange das Konto im Keymanager
+     * lag, waren es zwei verschiedene URLs — `/keys/key/<uuid>` und
+     * `/keys/key/enter`, weil nur jener Dienst einen alten Nicht-UUID-Schlüssel
+     * auf sein Konto abbilden konnte. Diese Umrechnung macht inzwischen
+     * {@see \App\Authentication\KeyUser::getKeyData()} über die API, und damit
+     * fällt die Unterscheidung weg.
+     *
+     * Der Name bleibt, weil die Kontokachel, die Seitenleiste und der Hinweis
+     * auf der Startseite ihn benutzen und „das Konto“ und „dorthin, wo ich
+     * angemeldet bin“ an diesen Stellen verschiedene Sätze sind.
      */
     public static function dashboard(?Request $request = null): string
     {
-        return self::url("/key/enter", self::appCallback($request));
+        return self::account(self::appCallback($request));
     }
 
     /**
@@ -247,6 +273,51 @@ final class KeymanagerLinks
         return substr($url, 0, $mark)
             . ($query === [] ? "" : "?" . http_build_query($query))
             . $fragment;
+    }
+
+    /**
+     * Der Bezahlvorgang für eine Menge Token, endend vor der Menge.
+     *
+     * Bleibt dauerhaft im Keymanager: dort liegen PayPal, micropayment,
+     * VR Payment, die Barzahlung und die Bestellnummern, die dabei entstehen.
+     * Das Konto wählt nur noch das Paket ({@see \App\Landing\KeyPrice}).
+     *
+     * **Der letzte Link im Schlüsselvorgang, der einen Schlüssel durch eine
+     * Adresszeile trägt.** Er ist hier nicht zu vermeiden — die Kasse drüben
+     * kennt keine Sitzung und liest den Schlüssel aus ihrem eigenen Pfad —,
+     * und er verschwindet, wenn der Bezahlvorgang nachzieht. Bis dahin steht
+     * er an genau einer Stelle statt an sieben.
+     *
+     * Der Anker `#payment` gehört zur Zielseite und wird deshalb dort
+     * angehängt, wo die Menge angehängt wird.
+     */
+    public static function checkout(string $key): string
+    {
+        return self::url("/key/" . urlencode($key) . "/checkout");
+    }
+
+    /**
+     * Die Bestellungen zu einem Schlüssel — Rechnungen, Belege, Erstattungen.
+     *
+     * Noch nicht umgezogen; das Konto verlinkt dorthin, so wie es vorher einen
+     * Reiter dafür hatte.
+     */
+    public static function orders(string $key): string
+    {
+        return self::url("/key/" . urlencode($key) . "/orders");
+    }
+
+    /**
+     * Die Aktionen zu einem Schlüssel — Gutscheinkarten, die jemand für andere
+     * anlegt und deren Guthaben von diesem Schlüssel getragen wird.
+     *
+     * Ebenfalls noch nicht umgezogen. Das Konto verlinkt sie unauffälliger als
+     * der alte Reiter es tat: die allermeisten Schlüssel haben keine, und ein
+     * gleichrangiger dritter Reiter behauptete etwas anderes.
+     */
+    public static function campaigns(string $key): string
+    {
+        return self::url("/key/" . urlencode($key) . "/campaigns");
     }
 
     /**

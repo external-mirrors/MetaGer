@@ -123,22 +123,23 @@ class LoginPageTest extends TestCase
     /**
      * Wer schon angemeldet ist, will sein Konto und nicht das Formular.
      *
-     * Über /keys/key/enter und nicht direkt auf /keys/key/<uuid>: im Cookie
-     * kann ein alter, nicht-UUID-förmiger Schlüssel stehen, und nur der
-     * Keymanager kann den auf das Konto abbilden, zu dem er gehört.
+     * Auf /konto, das den Schlüssel aus dem Cookie liest. Steht er statt dessen
+     * in der Query, reist er als Parameter mit — sonst fände das Konto ihn
+     * nicht und schickte den Besucher hierher zurück
+     * ({@see \App\Landing\KeymanagerLinks::accountForVisitor()}).
      */
     public function testAVisitorWithAKeyGoesToTheirAccount(): void
     {
         $this->withUnencryptedCookie("key", self::A_KEY)
             ->get("/de-DE/anmelden")
-            ->assertRedirectContains("/de-DE/keys/key/enter");
+            ->assertRedirectContains("/de-DE/konto");
     }
 
     /** Auch der Schlüssel aus der Query — ein gespeicherter Anmelde-URL. */
     public function testAKeyInTheQueryIsAlsoALogin(): void
     {
         $this->get("/de-DE/anmelden?key=" . self::A_KEY)
-            ->assertRedirectContains("/de-DE/keys/key/enter");
+            ->assertRedirectContains("/de-DE/konto");
     }
 
     /** Und die Callback-Marker gehen dabei nicht verloren. */
@@ -146,7 +147,7 @@ class LoginPageTest extends TestCase
     {
         $this->withUnencryptedCookie("key", self::A_KEY)
             ->get("/de-DE/anmelden?keystore=release&variant=playstore")
-            ->assertRedirectContains("/de-DE/keys/key/enter?keystore=release&variant=playstore");
+            ->assertRedirectContains("/de-DE/konto?keystore=release&variant=playstore");
     }
 
     /**

@@ -2,6 +2,7 @@
 
 use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
@@ -325,6 +326,30 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      */
     Route::get('schluessel-erstellen', [KeyCreationController::class, 'show'])->name('key-create');
     Route::post('schluessel-erstellen', [KeyCreationController::class, 'submit'])->name('key-create.submit');
+
+    /**
+     * Das Konto, aus /keys/key/<uuid> hierher gezogen.
+     *
+     * Die dritte Seite des Schlüsselvorgangs und die, bei der der Umzug am
+     * meisten einbringt: die alte Adresse trug den Schlüssel im *Pfad*, also in
+     * der Verlaufsliste, im Referer jeder von dort verlinkten Seite und in
+     * jedem Bildschirmfoto einer Supportanfrage. Diese hier trägt nichts — wer
+     * gemeint ist, steht im Cookie (App\Authentication\KeyAuthGuard).
+     *
+     * `konto` und nicht `dashboard`: es ist die Seite, auf die die Kontokachel
+     * in der Ecke zeigt, und die heißt in jeder Sprache nach dem Konto.
+     */
+    Route::get('konto', [AccountController::class, 'show'])->name('account');
+
+    /**
+     * Der Anmeldecode für den Übertragen-Dialog, im Sekundentakt abgefragt.
+     *
+     * Unter /konto und nicht unter /api, weil er nur dort einen Sinn hat und
+     * weil er den angemeldeten Besucher voraussetzt: welcher Schlüssel gemeint
+     * ist, steht im Cookie. Die entsprechende Route im Keymanager hatte ihn im
+     * Pfad.
+     */
+    Route::get('konto/anmeldecode', [AccountController::class, 'loginCode'])->name('account.logincode');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

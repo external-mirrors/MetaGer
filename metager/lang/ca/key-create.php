@@ -21,6 +21,16 @@ return [
 
     'working' => 'Un moment: estem sortejant una clau nova per a vosaltres …',
 
+    /**
+     * The mark that sits in the corner of every page from here on.
+     *
+     * Derived from the key and stored nowhere
+     * ({@see \App\Authentication\KeyIdenticon}). It is here because a mark you
+     * are meant to recognise has to be shown the first time — otherwise it is
+     * just a coloured square the second time.
+     */
+    'identity' => 'Així reconeixereu el vostre compte: a partir d\'ara aquesta marca apareix a dalt a la dreta de cada pàgina.',
+
     'key' => [
         'label' => 'La vostra clau nova',
         'hint' => '36 caràcters. Són el que us permet iniciar la sessió a qualsevol altre dispositiu.',

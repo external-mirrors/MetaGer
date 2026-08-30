@@ -259,4 +259,85 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 ->assertTitle(trans("titles.widget", [], "de"));
         });
     }
+
+    /**
+     * Das Konto ohne Javascript.
+     *
+     * Es ist die Seite mit den meisten Bequemlichkeiten und deshalb die, bei
+     * der am leichtesten etwas *nur* mit Skript funktioniert. Zwei Dinge dürfen
+     * ohne fehlen — die Kopierknöpfe und der Dialog für ein weiteres Gerät —,
+     * und alles andere muss stehen: das Guthaben, die Verfallsdaten, die
+     * Pakete, der QR-Code, das Lesezeichen. Wer sein Cookie gleich verliert,
+     * braucht genau die letzten beiden.
+     *
+     * Ein Feature-Test sieht das `hidden`-Attribut im Quelltext; was er nicht
+     * sieht, ist, ob resources/js/account.js es entfernt hat — und genau das
+     * ist hier die Aussage.
+     *
+     * Der Keyserver antwortet in dieser Umgebung nicht, das Guthaben ist also
+     * unbekannt. Das ist kein Mangel des Tests, sondern der schwierigere Fall:
+     * er zeigt, dass die Wege zurück zum Schlüssel gerade dann stehen, wenn
+     * sonst nichts geht.
+     */
+    public function testTheAccountPageWorksWithoutJavascript(): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key) {
+            // false: `key` steht in EncryptCookies::$except, weil auch der
+            // Keymanager unter demselben Host es lesen können muss.
+            $browser->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto")
+                ->assertTitle(trans("titles.account", [], "de"))
+
+                // Die Kennung des Kontos — dieselbe Marke wie in der Ecke.
+                ->assertVisible(".account-head .account-mark")
+
+                // Der Schlüssel selbst — hinter einem <details>, das ohne
+                // Javascript aufgeht wie mit. Das Anmeldeformular fragt in
+                // erster Linie nach ihm, und wer auf einem Gerät ohne Kamera
+                // sitzt, hat sonst nichts einzugeben.
+                ->assertPresent(".account-key")
+                ->click(".account-key__summary")
+                ->waitFor("#account-key")
+                ->assertVisible("#account-key")
+
+                // Und die beiden Wege, ihn mitzunehmen.
+                ->assertVisible(".account-save__qr img")
+                ->assertVisible("#restore-url")
+
+                // Und die Pakete, die aus verlinkten Kacheln bestehen und
+                // deshalb ohne Skript vollständig benutzbar sind.
+                ->assertVisible(".account-tier")
+
+                // Die beiden Bequemlichkeiten werden nicht angeboten: ein
+                // Kopierknopf ohne Zwischenablage täte nichts, und einen
+                // Anmeldecode kann nur eine Abfrage holen.
+                ->assertMissing(".account-save__button[data-copies]")
+                ->assertMissing("#account-transfer-open");
+
+            $this->assertSame(
+                $key,
+                $browser->value("#account-key"),
+                "Im aufgeklappten Feld steht nicht der Schlüssel — dann kann ihn "
+                    . "niemand ins Anmeldeformular des zweiten Geräts eintippen."
+            );
+
+            // Der Lesezeichen-URL trägt den Schlüssel — er ist der Weg zurück,
+            // und ohne ihn wäre das Feld eine leere Geste.
+            $this->assertStringContainsString(
+                "key=" . $key,
+                $browser->value("#restore-url"),
+                "Der Lesezeichen-URL führt nicht zum Schlüssel — dann führt er nirgendwohin."
+            );
+
+            // Und der Weg zum Aufladen ist ein echter Link, kein Skripthaken.
+            $this->assertStringContainsString(
+                "/checkout/",
+                $browser->attribute(".account-tier", "href")
+            );
+        });
+    }
+
 }

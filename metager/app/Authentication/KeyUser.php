@@ -186,6 +186,136 @@ class KeyUser implements Authenticatable
     }
 
     /**
+     * Der Schlüssel in der Form, unter der der Keyserver ihn führt.
+     *
+     * Für eine UUID ist das der Schlüssel selbst. Für einen alten
+     * Nicht-UUID-Schlüssel ist es die UUID, in die `Key.GET_KEY` ihn faltet —
+     * und die ist es, die auf das Konto gehört: sie ist das, was auf einem
+     * zweiten Gerät eingegeben funktioniert.
+     *
+     * Aus den Schlüsseldaten und nicht aus `$this->key`, aus demselben Grund
+     * wie in {@see getKeyFingerprint()}: `$this->key` wird nur bei einem
+     * Cache-*Miss* zurückgeschrieben und schwankte sonst zwischen Cookie-Wert
+     * und kanonischer Form.
+     */
+    public function getCanonicalKey(): ?string
+    {
+        if ($this->temporary) {
+            return null;
+        }
+
+        $canonical = Arr::get($this->getKeyData(), "key");
+
+        return is_string($canonical) ? $canonical : null;
+    }
+
+    /**
+     * Wann die letzte Ladung dieses Schlüssels verfällt, oder null, wenn es
+     * dazu nichts zu sagen gibt.
+     *
+     * Der Keyserver rechnet das aus (`Key.get_expiration_date()`) und es ist
+     * mehr als „die späteste Bestellung“: ein leerer Schlüssel hängt an einem
+     * festen Anker statt an *jetzt*, sonst schöbe jede Berührung sein Verfallen
+     * weiter hinaus, und eine laufende Mitgliedschaft hält ihn ohnehin am
+     * Leben. Deshalb wird gefragt und nicht selbst gerechnet.
+     */
+    public function getExpiration(): ?\Illuminate\Support\Carbon
+    {
+        $expiration = Arr::get($this->getKeyData(), "expiration");
+
+        if (!is_string($expiration) || $expiration === "") {
+            return null;
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse($expiration);
+        } catch (\Throwable $e) {
+            // Ein Datum, das wir nicht lesen können, ist kein Grund, die
+            // Kontoseite scheitern zu lassen — sie zeigt dann eben keines.
+            return null;
+        }
+    }
+
+    /**
+     * Die einzelnen Ladungen, jede mit ihrem eigenen Verfallsdatum.
+     *
+     * Der Keyserver liefert sie nur an einen authentifizierten Aufrufer, und
+     * das ist diese Anwendung immer ({@see getKeyData()}). Sie sind der Grund,
+     * warum das Konto überhaupt mehr sagen kann als ein einzelnes Datum: wer
+     * dreimal aufgeladen hat, hat drei Töpfe, die nacheinander ablaufen.
+     *
+     * Aufsteigend nach Verfallsdatum, weil das die Reihenfolge ist, in der sie
+     * verbraucht werden — und damit die, in der eine Liste sie lesbar macht.
+     *
+     * @return list<array{amount: float, expiration: \Illuminate\Support\Carbon|null}>
+     */
+    public function getChargeOrders(): array
+    {
+        $orders = Arr::get($this->getKeyData(), "charge_orders");
+
+        if (!is_array($orders)) {
+            return [];
+        }
+
+        $parsed = [];
+        foreach ($orders as $order) {
+            if (!is_array($order) || !isset($order["amount"]) || !is_numeric($order["amount"])) {
+                continue;
+            }
+
+            $expiration = Arr::get($order, "expiration");
+            try {
+                $expiration = is_string($expiration) && $expiration !== ""
+                    ? \Illuminate\Support\Carbon::parse($expiration)
+                    : null;
+            } catch (\Throwable $e) {
+                $expiration = null;
+            }
+
+            $parsed[] = [
+                "amount" => (float) $order["amount"],
+                "expiration" => $expiration,
+            ];
+        }
+
+        usort($parsed, static function (array $a, array $b): int {
+            if ($a["expiration"] === null || $b["expiration"] === null) {
+                return $a["expiration"] === $b["expiration"] ? 0 : ($a["expiration"] === null ? 1 : -1);
+            }
+            return $a["expiration"] <=> $b["expiration"];
+        });
+
+        return $parsed;
+    }
+
+    /**
+     * Ob an diesem Schlüssel eine laufende Mitgliedschaft im SUMA-EV hängt.
+     *
+     * Mitglieder suchen ohne weitere Kosten, und die Kontoseite bietet ihnen
+     * deshalb kein Token-Paket an. Das Feld heißt in der Antwort des
+     * Keyservers `key_config` — die API-Dokumentation nannte es jahrelang
+     * `config`, was schlicht falsch war.
+     *
+     * Die Regel („Enddatum plus ein Monat liegt in der Zukunft“) ist die des
+     * Keyservers, `KeyConfig.isMember()`, hier nachgebildet: er liefert das
+     * Datum, nicht das Urteil.
+     */
+    public function isMember(): bool
+    {
+        $end = Arr::get($this->getKeyData(), "key_config.membershipEndDate");
+
+        if (!is_string($end) || $end === "") {
+            return false;
+        }
+
+        try {
+            return \Illuminate\Support\Carbon::parse($end)->addMonth()->isFuture();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
      * Authorize the user for a specific token cost. The amount will be claimed on the key for
      * this process for the specified duration and is not available for other processes
      * during that time.

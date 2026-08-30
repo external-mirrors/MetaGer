@@ -351,4 +351,51 @@ class RenderedStyleTest extends DuskTestCase
             "dark" => ["dark"],
         ];
     }
+
+    /**
+     * Und derselbe QR-Code auf dem Konto.
+     *
+     * Dieselbe Aussage wie oben, an einer zweiten Stelle — was hier billig
+     * aussieht, ist es nicht: die Regel steht in einer eigenen Datei
+     * (pages/account.less), und ein QR-Code auf dunklem Grund ist kein Fehler,
+     * den man beim Ansehen bemerkt. Man bemerkt ihn ein Jahr später, wenn
+     * jemand sein Cookie verloren hat und die Kamera das ausgedruckte Bild
+     * nicht liest.
+     *
+     * Das Konto ist die Stelle, an der jemand den QR-Code sucht, der ihn beim
+     * Einrichten übersprungen hat — also gerade der Besucher, dem er am
+     * wichtigsten ist.
+     */
+    #[DataProvider("themes")]
+    public function testTheAccountQrCodeStaysReadableInBothPalettes(string $theme): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($theme, $key) {
+            $browser->visit("/de-DE")
+                // false: `key` steht in EncryptCookies::$except.
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto?dark_mode={$theme}")
+                ->assertVisible(".account-save__qr img");
+
+            $background = $browser->script(
+                "return getComputedStyle(document.querySelector('.account-save__qr img'))"
+                    . ".backgroundColor;"
+            )[0];
+
+            preg_match_all("/\\d+/", $background, $matches);
+            $channels = array_map("intval", array_slice($matches[0], 0, 3));
+
+            $this->assertGreaterThan(
+                200,
+                min($channels),
+                "Der Grund hinter dem QR-Code des Kontos ist in der Palette „{$theme}“ "
+                    . "{$background}. Die Module des Codes sind schwarz — auf einem dunklen "
+                    . "Grund liest ihn keine Kamera mehr. "
+                    . "resources/less/metager/pages/account.less setzt dafür ein festes Weiß "
+                    . "hinter das Bild."
+            );
+        });
+    }
+
 }

@@ -120,7 +120,7 @@ class KeyCreatePageTest extends TestCase
 
         $this->withUnencryptedCookie("key", self::A_KEY)
             ->get("/de-DE/schluessel-erstellen")
-            ->assertRedirectContains("/keys/key/enter");
+            ->assertRedirectContains("/de-DE/konto");
     }
 
     /**
@@ -258,4 +258,30 @@ class KeyCreatePageTest extends TestCase
             ->assertOk()
             ->assertHeader("Cache-Control", "no-store, private");
     }
+
+    /**
+     * Die Kennung des neuen Kontos steht schon hier.
+     *
+     * Marke und die letzten sechs Zeichen — dieselben, die von jetzt an in der
+     * Ecke jeder Seite stehen (parts/account-pill.blade.php) und die das Konto
+     * selbst oben zeigt. Eine Marke, die wiedererkannt werden soll, muss beim
+     * ersten Mal gezeigt werden; sonst ist sie beim zweiten Mal nur ein buntes
+     * Quadrat.
+     *
+     * Abgeleitet aus dem Schlüssel und nirgends gespeichert, also muss sie hier
+     * dieselbe sein wie dort — was der Test prüft, indem er den Farbton aus
+     * demselben Fingerabdruck rechnet.
+     */
+    public function testTheNewKeyAlreadyCarriesItsAccountMark(): void
+    {
+        $this->keyserverIssues();
+
+        $fingerprint = substr(self::A_KEY, -6);
+
+        $this->get("/de-DE/schluessel-erstellen")
+            ->assertOk()
+            ->assertSeeText(strtoupper($fingerprint))
+            ->assertSee("account-mark--hue-" . \App\Authentication\KeyIdenticon::hue($fingerprint), false);
+    }
+
 }

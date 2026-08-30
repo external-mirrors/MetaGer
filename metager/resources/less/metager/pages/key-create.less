@@ -1,0 +1,425 @@
+@import "../variables.less";
+
+// /schluessel-erstellen — einen Schlüssel erstellen.
+//
+// Lag als /keys/key/create im Keymanager und sah aus wie der Keymanager: eine
+// eigene Navigation, eigene Farbvariablen, drei nummerierte Abschnitte
+// untereinander. Die Seite steht jetzt im MetaGer-Layout, benutzt dessen Tokens
+// und ist die Schwester von pages/login.less — dieselbe Spaltenbreite, dieselbe
+// Karte, dieselben Abstände, damit der Weg „anmelden oder erstellen“ nicht
+// zwischen zwei Gestaltungen hin- und herspringt.
+//
+// Drei Entscheidungen, die nicht aus der alten Seite kommen:
+//
+// **Der Schlüssel steht im Markup, nicht im Skript.** Ohne Javascript ist er
+// sofort da; das Skript blendet ihn weg und stellt den Knopf davor. Deshalb
+// laufen alle Zustände über `[data-state]` am Wrapper und nicht über das
+// `hidden`-Attribut — das Markup soll den *fertigen* Zustand tragen, und der
+// Zustand, den es nicht trägt, ist der, den es ohne Skript nie gibt.
+//
+// **Der Abschnitt zum Aufbewahren ist zwei gleichrangige Kacheln.** Vorher gab
+// es nur den URL zum Kopieren, in voller Breite, ohne Beschriftung. QR-Code und
+// Lesezeichen sind zwei Antworten auf dieselbe Frage; sie stehen deshalb
+// nebeneinander, mit demselben `grid-auto-rows: 1fr`-Griff wie die beiden
+// Alternativen auf der Anmeldeseite.
+//
+// **Kein zweites Orange.** Die Seite hat genau eine Hauptaktion — den Weg zum
+// Aufladen —, und die trägt die Markenfarbe. Der Knopf, der den Schlüssel
+// aufdeckt, ist der Anfang desselben Weges und trägt sie ebenfalls; alles
+// andere ist umrandet.
+
+#key-create-page {
+  // Wie auf der Anmeldeseite: ein Schlüssel hat 36 Zeichen, und breiter als
+  // das will diese Spalte nirgends sein.
+  max-width: 30rem;
+  margin: 0 auto;
+
+  .page-title {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .create-lede {
+    margin: 0 0 1.5rem;
+    text-align: center;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Fehlermeldungen ──────────────────────────────────────────────────────────
+.create-error {
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: 6px;
+  background-color: @form-error-background;
+  color: @form-error-color;
+  font-size: 0.9rem;
+}
+
+// ── „Sie hatten schon einmal einen?“ ─────────────────────────────────────────
+// Getönt und nicht gerahmt, wie der Erweiterungs-Kasten auf der Anmeldeseite:
+// ein Hinweis, kein Bedienelement. Über der Karte, weil die Frage vor der
+// Handlung kommt — und weil dies der Fall ist, den der Support am häufigsten
+// zu hören bekommt.
+.create-existing {
+  display: grid;
+  justify-items: start;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 10px;
+  background-color: @highlight-color-alpha-60;
+
+  .create-existing__text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  .create-existing__action {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+}
+
+// ── Die Karte ────────────────────────────────────────────────────────────────
+.create-card {
+  display: grid;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  @media (max-width: @screen-mobile-l) {
+    padding: 1.1rem;
+  }
+
+  // Die drei Zustände. `ready` steht im Markup und ist der ohne Javascript.
+  .create-working {
+    display: none;
+  }
+
+  &[data-state="offer"] {
+    .create-result {
+      display: none;
+    }
+  }
+
+  &[data-state="working"] {
+    .create-offer,
+    .create-save,
+    .create-continue {
+      display: none;
+    }
+
+    .create-working {
+      display: block;
+    }
+  }
+
+  &[data-state="ready"] {
+    .create-offer {
+      display: none;
+    }
+  }
+}
+
+// ── Der Knopf, der den Schlüssel aufdeckt ────────────────────────────────────
+.create-offer {
+  display: grid;
+  gap: 1rem;
+  justify-items: center;
+  text-align: center;
+
+  .create-offer__text {
+    margin: 0;
+    color: @text-color-alpha-70;
+  }
+
+  .create-offer__button {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid @metager-orange;
+    border-radius: 6px;
+    background-color: @metager-orange;
+    // Nicht @text-color: der Grund ist in beiden Paletten orange.
+    color: @color-white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid @text-color;
+      outline-offset: 2px;
+    }
+  }
+}
+
+.create-working {
+  margin: 0;
+  text-align: center;
+  color: @text-color-alpha-70;
+}
+
+// ── Der Schlüssel ────────────────────────────────────────────────────────────
+.create-result {
+  display: grid;
+  gap: 1.25rem;
+  // Ein Rasterelement schrumpft von sich aus nicht unter seinen Inhalt. Die
+  // Karte hat aber eine feste Höchstbreite, und ohne diese Zeile schiebt der
+  // längste Hinweis darin die ganze Karte darüber hinaus — sichtbar als ein
+  // Schlüsselfeld, das rechts aus seinem eigenen Rahmen läuft.
+  min-width: 0;
+}
+
+.create-key {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+
+  .create-key__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .create-key__input {
+    width: 100%;
+    padding: 0.7rem 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 6px;
+    background-color: @input-background;
+    color: @input-text;
+    // Wie im Anmeldefeld: eine Zeichenfolge, die Zeichen für Zeichen mit einer
+    // Vorlage verglichen wird, gehört in eine Schrift mit gleich breiten
+    // Zeichen. Hier zusätzlich, weil sie beim Würfeln zeichenweise wechselt und
+    // ohne feste Breite die ganze Zeile zappeln würde.
+    font-family: monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+
+    @media (max-width: 26rem) {
+      font-size: 0.8rem;
+    }
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .create-key__copy {
+    justify-self: start;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    color: @text-color;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    // Steht `hidden` in der Vorlage: ohne Zwischenablage wäre er ein Knopf, der
+    // nichts tut, und das Feld daneben lässt sich von Hand markieren.
+    &[hidden] {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .create-key__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Aufbewahren ──────────────────────────────────────────────────────────────
+.create-save {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid @border-color;
+
+  .create-save__heading {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .create-save__text {
+    margin: 0;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  .create-save__options {
+    display: grid;
+    // Zwei gleiche Spalten und nicht `max-content 1fr`: der QR-Code ist
+    // schmal, sein Hinweis ist es nicht, und `max-content` misst den Hinweis
+    // als eine einzige Zeile.
+    grid-template-columns: 1fr 1fr;
+    // Beide Kacheln so hoch wie die höhere, damit ihre Rahmen auf einer Linie
+    // enden — derselbe Griff wie bei den Alternativen auf der Anmeldeseite.
+    grid-auto-rows: 1fr;
+    gap: 0.75rem;
+
+    @media (max-width: 30rem) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .create-save__option {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+    padding: 0.75rem;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+  }
+
+  // Bild und Herunterladen in einem: der ganze Block ist der Link.
+  .create-save__qr {
+    display: grid;
+    justify-items: center;
+    gap: 0.4rem;
+    text-decoration: none;
+
+    > img {
+      display: block;
+      width: 140px;
+      height: 140px;
+      // Ein QR-Code ist schwarz auf weiß und bleibt es auch im dunklen Thema —
+      // ohne diesen Grund stünden die dunklen Module auf der dunklen Karte.
+      background-color: @color-white;
+      padding: 6px;
+      border-radius: 4px;
+    }
+
+    .create-save__action {
+      font-size: 0.85rem;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  }
+
+  .create-save__label {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .create-save__input {
+    width: 100%;
+    // Ein 100 % breites Feld in einer Rasterspalte misst sich trotzdem an
+    // seinem Inhalt, und der Inhalt ist hier ein URL ohne eine einzige Stelle
+    // zum Umbrechen.
+    min-width: 0;
+    padding: 0.45rem 0.6rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: @input-background;
+    color: @input-text;
+    font-family: monospace;
+    font-size: 0.75rem;
+
+    &:focus-visible {
+      border-color: @metager-orange;
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .create-save__copy {
+    align-self: start;
+    padding: 0.4rem 0.7rem;
+    border: 1px solid @border-color;
+    border-radius: 4px;
+    background-color: transparent;
+    color: @text-color;
+    font-family: inherit;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &[hidden] {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid @metager-orange;
+      outline-offset: 1px;
+    }
+  }
+
+  .create-save__hint {
+    // Nach unten gedrückt, damit die Hinweise beider Kacheln auf einer Linie
+    // stehen, auch wenn der eine zwei Zeilen braucht und der andere eine.
+    margin: auto 0 0;
+    font-size: 0.75rem;
+    color: @text-color-alpha-70;
+  }
+
+  .create-save__no-cookies {
+    margin: 0;
+    padding: 0.7rem 0.9rem;
+    border-radius: 6px;
+    background-color: @form-error-background;
+    color: @form-error-color;
+    font-size: 0.8rem;
+
+    &[hidden] {
+      display: none;
+    }
+  }
+}
+
+// ── Weiter zum Aufladen ──────────────────────────────────────────────────────
+.create-continue {
+  display: grid;
+  gap: 0.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid @border-color;
+
+  .create-continue__button {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid @metager-orange;
+    border-radius: 6px;
+    background-color: @metager-orange;
+    color: @color-white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid @text-color;
+      outline-offset: 2px;
+    }
+  }
+
+  .create-continue__hint {
+    margin: 0;
+    text-align: center;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}

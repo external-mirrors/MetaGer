@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Die fünf aus dem Keymanager übernommenen Seiten sind überall übersetzt.
+ * Die sechs aus dem Keymanager übernommenen Seiten sind überall übersetzt.
  *
  * Gleiche Bauart wie {@see AccountTranslationsTest} und aus demselben Grund:
  * eine fehlende Sprachdatei fällt nicht auf, sie fällt auf `fallback_locale`
@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
  * von Anfang an grün sein — anders als bei den gewachsenen Dateien, über die
  * {@see CatalanTranslationsTest} Buch führt.
  *
- * Portugiesisch ist der Sonderfall: der Keymanager hatte es nie, alle fünf
+ * Portugiesisch ist der Sonderfall: der Keymanager hatte es nie, alle sechs
  * Dateien sind für pt aus de/en neu geschrieben.
  */
 class KeyPagesTranslationsTest extends TestCase
@@ -32,6 +32,13 @@ class KeyPagesTranslationsTest extends TestCase
         // Keymanager schon in elf Sprachen; übernommen ist er trotzdem nicht
         // wörtlich — lang/de/login.php sagt, was neu ist und warum.
         "login.php",
+        // Die Seite zum Erstellen. Im Keymanager stand ihr Text als
+        // `generate.*` in derselben login.json wie der der Anmeldung, in elf
+        // Sprachen — und mit denselben Weblate-Schäden: „Copy key“ war in fünf
+        // Sprachen zu einem Substantiv geworden („Chiave di copia“), im
+        // Französischen sogar zur Tastatur-Taste („Touche de copie“). Neu
+        // geschrieben statt übernommen.
+        "key-create.php",
     ];
 
     public function testEveryLocaleTranslatesEveryString(): void
@@ -138,8 +145,8 @@ class KeyPagesTranslationsTest extends TestCase
      * Verweis auf den alten Pfad funktioniert nur, solange die Weiterleitung
      * steht, und liest sich dann als Umweg.
      *
-     * Ausgenommen ist der Schlüsselvorgang selbst — /keys/key/create und
-     * /keys/c bleiben vorerst dort und werden bewusst verlinkt.
+     * Ausgenommen ist, was vom Schlüsselvorgang noch dort liegt — /keys/c und
+     * das Konto bleiben vorerst und werden bewusst verlinkt.
      */
     public function testNoTranslationPointsAtAMovedKeysPath(): void
     {
@@ -152,7 +159,13 @@ class KeyPagesTranslationsTest extends TestCase
                     continue;
                 }
                 foreach ($this->flatten(require $path) as $key => $value) {
-                    foreach (["/keys/cost", "/keys/agb", "/keys/help/", "/keys/key/enter"] as $moved) {
+                    foreach ([
+                        "/keys/cost",
+                        "/keys/agb",
+                        "/keys/help/",
+                        "/keys/key/enter",
+                        "/keys/key/create",
+                    ] as $moved) {
                         if (str_contains($value, $moved)) {
                             $problems[] = "$locale/$file: $key zeigt noch auf $moved";
                         }

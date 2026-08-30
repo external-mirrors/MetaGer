@@ -42,4 +42,6 @@ return [
     // Die Anmeldeseite. 'logs.login' oben ist eine andere — das Konto für
     // die Logs-API, nicht der Schlüssel.
     'login' => 'Anmelden – MetaGer',
+    // Die Seite zum Erstellen eines Schlüssels, aus /keys/key/create.
+    'key-create' => 'Schlüssel erstellen – MetaGer',
 ];

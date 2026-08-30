@@ -197,23 +197,22 @@ class StartpageLandingTest extends TestCase
     // ── The links back into the keymanager ───────────────────────────────────
 
     /**
-     * Creating a key goes to the keymanager's create page, not to `/keys`.
+     * Neither of the two account links goes to the keymanager any more.
      *
-     * It used to go to `/keys`, which was the landing page; `/keys` now
-     * redirects back to this one, so the old target would bounce a visitor
-     * straight back to the page they clicked from.
-     *
-     * Signing in no longer goes to the keymanager at all: `/anmelden` is a
-     * MetaGer route since the login page moved. `/keys/key/enter` still
-     * answers, and is where the form on that page posts to, but a link for a
-     * signed-out visitor pointing there would only redirect.
+     * Both pages have moved here — `/anmelden` first, `/schluessel-erstellen`
+     * with the second step — and both old paths still answer only to redirect.
+     * A link for a signed-out visitor pointing at either would be one hop that
+     * exists for no reason, and `/keys` itself would be worse than that: it is
+     * the landing page that redirects back to *this* one, so the visitor would
+     * come back where they clicked from.
      */
-    public function testTheCreateLinkPointsAtTheKeymanagerAndNotAtTheOldLandingPage(): void
+    public function testTheAccountLinksNoLongerLeaveMetaGer(): void
     {
         $response = $this->get("/")->assertOk();
 
-        $response->assertSee("/keys/key/create", false);
+        $response->assertSee("/schluessel-erstellen", false);
         $response->assertSee("/anmelden", false);
+        $response->assertDontSee("/keys/key/create", false);
         $response->assertDontSee('href="/keys"', false);
     }
 
@@ -227,19 +226,23 @@ class StartpageLandingTest extends TestCase
      * page and is now this page: the old target sent people back where they
      * came from.
      */
-    public function testTheMenuAccountLinksGoToTheKeymanagerAndKeepTheCallback(): void
+    public function testTheMenuAccountLinksKeepTheCallback(): void
     {
         $response = $this->get("/?keystore=fdroid")->assertOk();
 
-        $response->assertSee("/keys/key/create?keystore=fdroid", false);
+        $response->assertSee("/schluessel-erstellen?keystore=fdroid", false);
         $response->assertSee("/anmelden?keystore=fdroid", false);
 
-        // Every /keys link on the page, not just the hero's two.
-        preg_match_all('~href="[^"]*?/keys/[^"]*"~', $response->getContent(), $matches);
+        // Every link into the key flow on the page, not just the hero's two.
+        preg_match_all(
+            '~href="[^"]*?(/keys/|/anmelden|/schluessel-erstellen)[^"]*"~',
+            $response->getContent(),
+            $matches
+        );
         $this->assertNotEmpty($matches[0]);
         foreach ($matches[0] as $href) {
-            if (!str_contains($href, "/keys/key/")) {
-                continue; // /keys/c is not part of the handback.
+            if (str_contains($href, "/keys/c")) {
+                continue; // Die Gutscheinseite ist nicht Teil der Rückgabe.
             }
             $this->assertStringContainsString("keystore=fdroid", $href, $href);
         }
@@ -249,7 +252,7 @@ class StartpageLandingTest extends TestCase
     {
         $response = $this->get("/de-DE/")->assertOk();
 
-        $response->assertSee("/de-DE/keys/key/create", false);
+        $response->assertSee("/de-DE/schluessel-erstellen", false);
         $response->assertSee("/de-DE/anmelden", false);
         // Preise und die Token-Erklärung sind seit dem zweiten Umzugsschritt
         // MetaGer-Routen; das Präfix kommt jetzt von URL::formatPathUsing statt
@@ -273,7 +276,7 @@ class StartpageLandingTest extends TestCase
     {
         $response = $this->get("/?keystore=playstore&variant=release")->assertOk();
 
-        $response->assertSee("/keys/key/create?keystore=playstore&amp;variant=release", false);
+        $response->assertSee("/schluessel-erstellen?keystore=playstore&amp;variant=release", false);
         $response->assertSee("keystore=playstore&amp;variant=release", false);
     }
 

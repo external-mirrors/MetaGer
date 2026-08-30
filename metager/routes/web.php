@@ -6,6 +6,7 @@ use App\Http\Controllers\AnonymousToken;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
+use App\Http\Controllers\KeyCreationController;
 use App\Http\Controllers\LangSelector;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MailController;
@@ -307,6 +308,23 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      */
     Route::get('anmelden', [LoginController::class, 'show'])->name('login');
     Route::post('anmelden', [LoginController::class, 'submit'])->name('login.submit');
+
+    /**
+     * Das Erstellen eines Schlüssels, aus /keys/key/create hierher gezogen.
+     *
+     * Der Zwilling der Anmeldung, und derselbe Schnitt: beim Keyserver blieb
+     * eine UUID, die noch niemandem gehört (App\Authentication\KeyIssuer),
+     * alles andere steht hier. Anders als bei /keys/key/enter ist der alte Pfad
+     * vollständig weitergeleitet — auch der Zweig für einen bereits
+     * angemeldeten Besucher, weil diese Seite die Fallunterscheidung selbst
+     * trifft.
+     *
+     * `key-create` und nicht `create`: der Name steht neben `key-faq` und
+     * `anonymous-token` in derselben Tabelle, und was hier erstellt wird, ist
+     * genau eines.
+     */
+    Route::get('schluessel-erstellen', [KeyCreationController::class, 'show'])->name('key-create');
+    Route::post('schluessel-erstellen', [KeyCreationController::class, 'submit'])->name('key-create.submit');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

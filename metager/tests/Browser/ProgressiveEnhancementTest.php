@@ -67,11 +67,12 @@ class ProgressiveEnhancementTest extends DuskTestCase
             // service's business, not this suite's. Clicking through without
             // JavaScript is covered below, on a page MetaGer actually serves.
             //
-            // It points at the create page and not at /keys, which is what it
-            // used to be: /keys is now this very page, so the old target would
-            // bounce the visitor straight back to where they clicked.
+            // Es zeigt seit dem vierten Umzugsschritt auf MetaGers eigene
+            // Seite. /keys/key/create antwortet weiterhin, aber nur noch mit
+            // einer Weiterleitung hierher — und /keys, worauf es davor zeigte,
+            // ist inzwischen genau diese Seite.
             $this->assertStringContainsString(
-                "/de-DE/keys/key/create",
+                "/de-DE/schluessel-erstellen",
                 $browser->attribute("#searchbar-replacement a.startpage-create-link", "href")
             );
 
@@ -124,6 +125,63 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 $browser->attribute("#login-form", "action")
             );
             $this->assertSame("post", strtolower($browser->attribute("#login-form", "method")));
+        });
+    }
+
+    /**
+     * Die Seite zum Erstellen ohne Javascript.
+     *
+     * Sie ist die einzige Seite, deren Markup *nicht* den Zustand zeigt, den
+     * ein Besucher mit Javascript zuerst sieht: der Schlüssel steht schon da,
+     * und resources/js/key-create.js blendet ihn wieder weg und stellt den
+     * Knopf davor. Das ist die richtige Richtung — ohne Skript fehlt die
+     * Nachfrage, nicht der Schlüssel —, aber sie ist auch die, die man beim
+     * Umbauen versehentlich umdreht, und dann liefert die Seite ohne Javascript
+     * nichts als einen Knopf, der nichts tut.
+     *
+     * Ein Feature-Test sieht `data-state="ready"` im Quelltext. Was er nicht
+     * sieht, ist, ob das Feld darunter tatsächlich sichtbar ist: die Zustände
+     * hängen an CSS-Regeln zu diesem Attribut, und eine falsche Regel versteckt
+     * genau das, was hier stehen bleiben muss.
+     */
+    public function testTheKeyCreationPageWorksWithoutJavascript(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/schluessel-erstellen")
+                ->assertTitle(trans("titles.key-create", [], "de"))
+                // Der Schlüssel ist da und lesbar.
+                ->assertVisible("#new-key")
+                // Und der Weg weiter ist da. Ohne ihn wäre der Schlüssel
+                // sichtbar und trotzdem unbenutzbar.
+                ->assertVisible(".create-continue__button")
+                // Der Knopf, der ohne Javascript nur zeigen würde, was schon
+                // dasteht, wird nicht angeboten.
+                ->assertMissing("#key-create-start")
+                // Ebenso wenig die Kopierknöpfe: ohne Zwischenablage täten sie
+                // nichts, und die Felder daneben lassen sich von Hand
+                // markieren.
+                ->assertMissing(".create-key__copy");
+
+            $key = $browser->value("#new-key");
+            $this->assertMatchesRegularExpression(
+                "/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/",
+                $key,
+                "Ohne Javascript steht im Feld kein Schlüssel — dann hat die Seite nichts hergegeben."
+            );
+
+            // Was im Feld steht, ist auch das, was abgeschickt wird. Zwei
+            // verschiedene Werte hier wären ein Besucher mit einem Schlüssel
+            // auf dem Zettel und einem anderen im Konto.
+            $this->assertSame(
+                $key,
+                $browser->attribute(".create-continue input[name=key]", "value")
+            );
+
+            $this->assertStringContainsString(
+                "/de-DE/schluessel-erstellen",
+                $browser->attribute(".create-continue", "action")
+            );
+            $this->assertSame("post", strtolower($browser->attribute(".create-continue", "method")));
         });
     }
 

@@ -72,6 +72,53 @@ class ScriptExecutionTest extends DuskTestCase
     }
 
     /**
+     * Die Seite zum Erstellen deckt den Schlüssel erst auf Nachfrage auf.
+     *
+     * Das ist die eine Stelle auf dieser Seite, an der das Skript etwas
+     * *wegnimmt* statt etwas hinzuzufügen, und sie ist deshalb die, an der ein
+     * Skript, das nicht läuft, unsichtbar bleibt: der Schlüssel steht dann eben
+     * sofort da, alles funktioniert, und die Nachfrage vor dem zweiten
+     * Schlüssel ist lautlos verschwunden — genau die, wegen der der Support
+     * regelmäßig Menschen erklärt, dass ihr Guthaben am alten Schlüssel hängt.
+     *
+     * Ein Feature-Test kann das nicht sehen: im Quelltext steht in beiden
+     * Fällen dasselbe. Der Unterschied ist ein Attribut, das ein Browser
+     * gesetzt haben muss.
+     */
+    public function testTheKeyCreationPageAsksBeforeHandingOutASecondKey(): void
+    {
+        $this->browse(function (Browser $browser) {
+            $browser->visit("/de-DE/schluessel-erstellen")
+                ->waitFor("#key-create-start")
+                // Das Skript läuft: der Schlüssel ist weg, der Knopf ist da.
+                ->assertVisible("#key-create-start")
+                ->assertMissing("#new-key")
+                ->click("#key-create-start")
+                // Und danach ist er da, mitsamt dem Weg weiter. Gewartet wird
+                // auf den Knopf und nicht auf das Feld: das Feld ist schon
+                // während des Trommelwirbels sichtbar, und dann steht darin
+                // noch nicht der Schlüssel.
+                ->waitFor(".create-continue__button")
+                ->assertVisible("#new-key");
+
+            // Die Kopierknöpfe bleiben hier verborgen und das ist richtig:
+            // navigator.clipboard gibt es nur in einem sicheren Kontext, und
+            // den hat diese Testumgebung über http nicht — dasselbe, was den
+            // Kamera-Scanner der Anmeldeseite unprüfbar macht.
+
+            // Der Trommelwirbel läuft eine gute Sekunde und muss auf dem
+            // echten Schlüssel enden — key-create/scramble.js hält das für
+            // sich fest, hier zählt, dass der Aufrufer ihn auch zu Ende
+            // laufen lässt.
+            $browser->waitUntil(
+                "document.getElementById('new-key').value ==="
+                    . " document.querySelector('.create-continue input[name=key]').value",
+                5
+            );
+        });
+    }
+
+    /**
      * Der QR-Scanner der Anmeldeseite darf seinen Worker bauen.
      *
      * qr-scanner erzeugt seinen Decoder als `new Worker(URL.createObjectURL(

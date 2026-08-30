@@ -16,22 +16,22 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  * about to be spelled out across five blades, which is exactly the shape that
  * makes the next migration step expensive.
  *
- * What is left here is the key flow itself — creating a key, signing out,
- * redeeming a voucher, and the account page. `/preise`, `/agb` and the two help
- * pages used to be built here too and are MetaGer routes now, so their call
- * sites name a route like every other page does.
+ * What is left here is the key flow itself — signing out, redeeming a voucher,
+ * and the account page. `/preise`, `/agb` and the two help pages used to be
+ * built here too and are MetaGer routes now, so their call sites name a route
+ * like every other page does.
  *
  * Those are the only links on the page that a *URL* has to be built for
  * rather than a route named: `URL::formatPathUsing` in AppServiceProvider puts
  * the locale prefix on everything `route()` and `url()` produce, but there is
  * no route to name for them, so LaravelLocalization::getLocalizedURL does it.
  *
- * {@see login()} is the exception and is here anyway. The sign-in page *is* a
- * MetaGer route now, and so is the sign-in itself — it needs none of that. But
- * it is the one destination in the key flow that every call site reaches
- * through the same two markers ({@see appCallback()}), and splitting it off
- * would mean the callers had to remember them. Which link goes where, in one
- * file, is the point of the file.
+ * {@see login()} and {@see create()} are the exceptions and are here anyway.
+ * Both pages *are* MetaGer routes now, and so are the two things they do — they
+ * need none of that. But they are the destinations in the key flow that every
+ * call site reaches through the same two markers ({@see appCallback()}), and
+ * splitting them off would mean the callers had to remember them. Which link
+ * goes where, in one file, is the point of the file.
  */
 final class KeymanagerLinks
 {
@@ -87,12 +87,22 @@ final class KeymanagerLinks
     }
 
     /**
-     * Creating a key. `#second-nav` is the keymanager's own anchor, kept from
-     * the page this one replaces.
+     * Creating a key — MetaGer's own `/schluessel-erstellen`.
+     *
+     * This used to be `/keys/key/create`, and unlike the sign-in page nothing
+     * of it stayed behind: that route redirects here in both of its branches,
+     * the one for a visitor with a cookie included. Deciding whether somebody
+     * should be creating a key at all is a question about the visitor, and this
+     * is the side that has the visitor.
+     *
+     * Kept here rather than spelled out at its five call sites for the same
+     * reason {@see login()} is: both are reached through the app's two markers.
+     * The `#second-nav` anchor the old link carried is gone with the page that
+     * had a second nav.
      */
     public static function create(?Request $request = null): string
     {
-        return self::url("/key/create", self::appCallback($request), "#second-nav");
+        return route("key-create", self::appCallback($request));
     }
 
     /**

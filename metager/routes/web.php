@@ -4,6 +4,7 @@ use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AnonymousToken;
+use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HealthcheckController;
@@ -350,6 +351,61 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * Pfad.
      */
     Route::get('konto/anmeldecode', [AccountController::class, 'loginCode'])->name('account.logincode');
+
+    /**
+     * Aufladen, der zweite Schritt des Bezahlvorgangs, der aus dem Keymanager
+     * hierher zieht — App\Http\Controllers\ChargeController hat den Grund.
+     * Wie bei /konto trägt keine dieser Adressen den Schlüssel; er kommt aus
+     * dem Cookie.
+     *
+     * `{amount}` ist auf Ziffern beschränkt, nicht weil eine andere Eingabe
+     * hier gefährlich wäre — der Controller prüft ohnehin gegen
+     * App\Landing\KeyPrice::tiers() —, sondern damit ein nicht-numerischer
+     * Wert eine 404 statt einer 400 ist: die Adresse existiert dann schlicht
+     * nicht, so wie /konto/aufladen/aci4T87k7DmMXVLmJ auch für einen
+     * type-juggling-Versuch keine Auskunft geben soll.
+     *
+     * `cash`, micropayment (drei Unterarten hinter einer eigenen Wahl-Seite)
+     * und die Entwicklungs-Zahlungsart (nur unter app()->environment('local')
+     * erreichbar) laufen lokal; VR Payment und PayPal verlinken von der
+     * Wahl-Seite aus noch weiter zum Keymanager
+     * (App\Landing\KeymanagerLinks::checkout()).
+     */
+    Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
+        ->whereNumber('amount')
+        ->name('account.checkout');
+    Route::get('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash');
+    Route::post('konto/aufladen/{amount}/bar', [ChargeController::class, 'cashSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash.submit');
+    Route::get('konto/aufladen/{amount}/bar/{reference}', [ChargeController::class, 'cashCreated'])
+        ->whereNumber('amount')
+        ->name('account.checkout.cash.created');
+    Route::get('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.manual');
+    Route::post('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.manual.submit');
+    Route::get('konto/aufladen/{amount}/micropayment', [ChargeController::class, 'micropaymentShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.micropayment');
+    Route::get('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentServiceShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.micropayment.service');
+    Route::post('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.micropayment.submit');
+    /**
+     * Die Rückkehr von einer weiterleitenden Zahlungsart — bewusst ohne
+     * {amount}, die öffentliche Nummer der Ladung reicht, um sie
+     * nachzuschlagen. Micropayment ist die erste, die hierher zurückkommt;
+     * VR Payment und PayPal teilen sich dieselbe Seite, sobald sie folgen.
+     */
+    Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
+        ->name('account.checkout.returned');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

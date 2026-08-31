@@ -38,16 +38,7 @@
 <div id="account-page">
 	<header class="account-head">
 		<h1 class="page-title">@lang('account.page.heading')</h1>
-		<p class="account-head__id">
-			{!! \App\Authentication\KeyIdenticon::render($fingerprint) !!}
-			<span class="account-head__fingerprint">
-				@if($fingerprint !== null)
-					@lang('account.page.fingerprint', ['fingerprint' => strtoupper($fingerprint)])
-				@else
-					@lang('account.page.fingerprint_unknown')
-				@endif
-			</span>
-		</p>
+		@include('partials.key-fingerprint')
 	</header>
 
 	{{--
@@ -117,8 +108,10 @@
 	</section>
 
 	{{--
-		Aufladen. Die Kacheln sind Links in den Bezahlvorgang, der im Keymanager
-		bleibt — `#payment` ist der Anker der Zielseite.
+		Aufladen. Die Kacheln sind Links auf die lokale Aufladeseite
+		(App\Http\Controllers\ChargeController) — cash und die
+		Entwicklungs-Zahlungsart laufen dort inzwischen selbst, alles andere
+		verlinkt von dort aus weiter in den Keymanager, bis es nachzieht.
 	--}}
 	<section class="account-section" id="charge">
 		<h2 class="account-section__heading">@lang('account.page.charge.heading')</h2>
@@ -135,7 +128,7 @@
 			<ul class="account-tiers">
 				@foreach($tiers as $amount => $price)
 					<li>
-						<a class="account-tier" href="{{ $checkoutUrl }}/{{ $amount }}#payment">
+						<a class="account-tier" href="{{ route('account.checkout', ['amount' => $amount]) }}">
 							<span class="account-tier__amount">@lang('account.page.charge.tokens', ['amount' => \Illuminate\Support\Number::format($amount, locale: app()->getLocale())])</span>
 							<span class="account-tier__price">@lang('account.page.charge.price', ['price' => $price])</span>
 						</a>
@@ -147,87 +140,13 @@
 	</section>
 
 	{{--
-		Zugang sichern. Drei Wege, gleichrangig nebeneinander: das Bild zum
-		Abfotografieren, der URL zum Ablegen, der Code für das zweite Gerät.
+		Zugang sichern. Die Kernsektion (Schlüssel, QR, Lesezeichen-URL, und —
+		nur hier, weil nur das Konto den Anmeldecode kennt — das zweite Gerät)
+		steht jetzt in partials/key-backup.blade.php, geteilt mit den
+		Aufladeseiten.
 	--}}
 	@if($key !== null)
-	<section class="account-section" id="save">
-		<h2 class="account-section__heading">@lang('account.page.save.heading')</h2>
-		<p class="account-section__lede">@lang('account.page.save.text')</p>
-
-		{{--
-			Der Schlüssel selbst.
-
-			Er muss hier stehen: das Anmeldeformular fragt in erster Linie nach
-			ihm, und wer auf einem Gerät ohne Kamera und ohne Lesezeichen landet,
-			hat sonst nichts, was er dort eintippen könnte. Die alte Seite zeigte
-			ihn groß und immer; das ist die andere Übertreibung — diese Seite
-			wird für Supportanfragen fotografiert.
-
-			Also ein <details>, zugeklappt. Ein Klick, und er steht da; ohne
-			Javascript genauso, weil <details> nichts davon braucht. Was der
-			Klick kostet, ist nichts gegen einen Schlüssel, der auf jedem
-			Bildschirmfoto dieser Seite mitgeht.
-		--}}
-		<details class="account-key">
-			<summary class="account-key__summary">@lang('account.page.save.key.summary')</summary>
-			<div class="account-key__body">
-				<label class="account-key__label" for="account-key">@lang('account.page.save.key.label')</label>
-				<input class="account-key__input" type="text" id="account-key" name="account-key"
-					value="{{ $key }}" readonly autocomplete="off" spellcheck="false"
-					aria-describedby="account-key-hint"
-					data-1p-ignore="true" data-lpignore="true" data-form-type="other" data-bwignore>
-				<button class="account-save__button" type="button" data-copies="account-key"
-					data-done="@lang('key-create.copy.done')" hidden>@lang('account.page.save.key.action')</button>
-				<p class="account-key__hint" id="account-key-hint">@lang('account.page.save.key.hint')</p>
-			</div>
-		</details>
-
-		<div class="account-save">
-			<div class="account-save__option">
-				<h3 class="account-save__label">@lang('account.page.save.qr.label')</h3>
-				{{--
-					Bild und Herunterladen sind derselbe data:-URI, einmal
-					angezeigt und einmal gespeichert. Eine eigene Route müsste
-					den Schlüssel in ihrer Adresse tragen, und das ist der Umweg,
-					den dieser Umzug abschafft.
-				--}}
-				<a class="account-save__qr" href="{{ $qrUri }}" download="metager-schluessel.png">
-					<img src="{{ $qrUri }}" alt="@lang('account.page.save.qr.alt')" width="140" height="140">
-					<span class="account-save__action">@lang('account.page.save.qr.action')</span>
-				</a>
-				<p class="account-save__hint">@lang('account.page.save.qr.hint')</p>
-			</div>
-
-			<div class="account-save__option">
-				<h3 class="account-save__label"><label for="restore-url">@lang('account.page.save.url.label')</label></h3>
-				{{--
-					readonly und nicht disabled: ein deaktiviertes Feld lässt sich
-					weder markieren noch vorlesen, und beides ist hier genau das,
-					was jemand ohne Zwischenablage tun will.
-				--}}
-				<input class="account-save__input" type="text" id="restore-url" name="restore-url"
-					value="{{ $settingsUrl }}" readonly autocomplete="off" spellcheck="false"
-					data-1p-ignore="true" data-lpignore="true" data-form-type="other" data-bwignore>
-				<button class="account-save__button" type="button" data-copies="restore-url"
-					data-done="@lang('key-create.copy.done')" hidden>@lang('account.page.save.url.action')</button>
-				<p class="account-save__hint">@lang('account.page.save.url.hint')</p>
-			</div>
-
-			<div class="account-save__option">
-				<h3 class="account-save__label">@lang('account.page.save.transfer.label')</h3>
-				{{--
-					Ohne Skript gibt es keinen Code — er ist zehn Sekunden gültig
-					und müsste sonst bei jedem Seitenaufruf neu geholt werden,
-					auch von jemandem, der ihn gar nicht will. Der Knopf bleibt
-					deshalb verborgen, bis resources/js/account.js ihn aufdeckt.
-				--}}
-				<button class="account-save__button account-save__button--transfer" type="button"
-					id="account-transfer-open" hidden>@lang('account.page.save.transfer.action')</button>
-				<p class="account-save__hint">@lang('account.page.save.transfer.hint')</p>
-			</div>
-		</div>
-	</section>
+		@include('partials.key-backup', ['loginCodeUrl' => $loginCodeUrl])
 	@endif
 
 	<section class="account-section account-more">

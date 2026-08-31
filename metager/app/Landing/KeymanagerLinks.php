@@ -276,17 +276,22 @@ final class KeymanagerLinks
     }
 
     /**
-     * Der Bezahlvorgang für eine Menge Token, endend vor der Menge.
+     * Der Bezahlvorgang für eine Menge Token, für die Zahlarten, die noch
+     * nicht umgezogen sind — endend vor der Menge und der Zahlart.
      *
-     * Bleibt dauerhaft im Keymanager: dort liegen PayPal, micropayment,
-     * VR Payment, die Barzahlung und die Bestellnummern, die dabei entstehen.
-     * Das Konto wählt nur noch das Paket ({@see \App\Landing\KeyPrice}).
+     * Bar und die Entwicklungs-Zahlart laufen inzwischen lokal
+     * (App\Http\Controllers\ChargeController, /konto/aufladen); PayPal,
+     * micropayment und VR Payment bleiben vorerst hier, weil dort die
+     * eigentliche Abwicklung und die Bestellnummern liegen, die dabei
+     * entstehen. Die lokale Aufladeseite verlinkt für diese Zahlarten hierher
+     * weiter — derselbe schrittweise Umzug wie bei jedem vorherigen Schritt,
+     * der Keymanager beantwortet, was noch nicht umgezogen ist.
      *
-     * **Der letzte Link im Schlüsselvorgang, der einen Schlüssel durch eine
-     * Adresszeile trägt.** Er ist hier nicht zu vermeiden — die Kasse drüben
-     * kennt keine Sitzung und liest den Schlüssel aus ihrem eigenen Pfad —,
-     * und er verschwindet, wenn der Bezahlvorgang nachzieht. Bis dahin steht
-     * er an genau einer Stelle statt an sieben.
+     * **Trägt den Schlüssel durch eine Adresszeile.** Nicht zu vermeiden — die
+     * Kasse drüben kennt keine Sitzung und liest den Schlüssel aus ihrem
+     * eigenen Pfad —, und es betrifft nur noch die Zahlarten, die diese
+     * Methode baut. Jede Zahlart, die umzieht, nimmt sich selbst aus dieser
+     * Liste heraus.
      *
      * Der Anker `#payment` gehört zur Zielseite und wird deshalb dort
      * angehängt, wo die Menge angehängt wird.

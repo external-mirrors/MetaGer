@@ -47,4 +47,5 @@ return [
 
     // Das Konto, aus /keys/key/<uuid> hierher gezogen.
     'account' => 'Mein Konto – MetaGer',
+    'checkout' => 'Guthaben aufladen – MetaGer',
 ];

@@ -46,4 +46,5 @@ return [
 
     // The account page, moved here from /keys/key/<uuid>.
     'account' => 'El meu compte – MetaGer',
+    'checkout' => 'Recarregar saldo – MetaGer',
 ];

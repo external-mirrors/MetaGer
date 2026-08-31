@@ -74,6 +74,7 @@ const assets = laravel({
         "resources/less/metager/pages/login.less",
         "resources/less/metager/pages/key-create.less",
         "resources/less/metager/pages/account.less",
+        "resources/less/metager/pages/checkout.less",
         "resources/less/metager/pages/logs.less",
         "resources/less/metager/pages/help-easy-language.less",
         "resources/less/metager/pages/prevention-information.less",

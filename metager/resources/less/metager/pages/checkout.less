@@ -1,0 +1,189 @@
+@import "../variables.less";
+
+// /konto/aufladen — Aufladen: Zahlungsart wählen, Bar, micropayment, die
+// Entwicklungs-Zahlungsart.
+//
+// Dieselbe Spalte, dieselben Karten wie pages/account.less — #checkout-page
+// spiegelt #account-page bewusst, und account.less wird auf dieser Seite
+// mitgeladen (App\Http\Controllers\ChargeController::render()), weil
+// partials/key-fingerprint.blade.php genau die Klassen von dort benutzt. Was
+// hier steht, ist nur, was auf dieser Seite neu ist: die Paketkurzfassung
+// oben, das Raster der Zahlungsarten, die geteilte Zustimmung, die
+// Barzahlung mit ihrer Auftragsnummer, und micropayments E-Mail-Feld.
+//
+// checkout/returned.blade.php — die Landeseite nach einer Weiterleitung zu
+// micropayment (und später VR Payment/PayPal) — braucht nichts von hier:
+// #account-page und .account-section aus account.less reichen ihr.
+
+#checkout-page {
+  max-width: 42rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 1.5rem;
+}
+
+// ── Die gewählte Menge, kurz ─────────────────────────────────────────────────
+// Keine zweite Paketwahl — die steht auf /konto — nur eine Erinnerung daran,
+// was gerade aufgeladen wird, mit einem Weg zurück.
+.checkout-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  background-color: @card-background-color;
+
+  .checkout-summary__amount {
+    font-size: 1.4rem;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .checkout-summary__price {
+    font-size: 1.1rem;
+    color: @text-color-alpha-70;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .checkout-summary__change {
+    font-size: 0.85rem;
+  }
+}
+
+// ── Zahlungsart wählen ───────────────────────────────────────────────────────
+// Dieselben Kacheln wie die Pakete auf /konto (.account-tiers/.account-tier
+// aus account.less), unverändert übernommen und mit Absicht: nur der Name der
+// Zahlungsart steht darauf, keine Beschreibung. Eine Kachel mit einem langen
+// Satz fällt neben den kurzen der anderen auf, und das wird auffälliger, je
+// mehr Zahlungsarten dazukommen — die Entscheidung, welche Zahlungsart, soll
+// hier fallen, nicht die, wie sie im Einzelnen funktioniert.
+
+// ── Zurück ───────────────────────────────────────────────────────────────────
+// Zwei Wege, die auf der ursprünglichen Kasse im Keymanager fehlten: zurück
+// zur Zahlungswahl (Bar, die Entwicklungs-Zahlungsart — dieselbe Menge,
+// andere Zahlungsart) und ganz zurück zum Konto (jede Seite hier — "ich will
+// gar nicht mehr aufladen", nicht "ich will ein anderes Paket").
+.checkout-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+
+.checkout-back {
+  font-size: 0.85rem;
+}
+
+// ── Zustimmung ───────────────────────────────────────────────────────────────
+// Geteilt von Bar und micropayment — beide legen einen Auftrag erst an, wenn
+// das Widerrufsrecht bewusst aufgegeben wurde (lang/*/checkout.php's
+// consent.label).
+.checkout-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+
+  input {
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+  }
+}
+
+.checkout-consent__error {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 6px;
+  background-color: @form-error-background;
+  color: @form-error-color;
+  font-size: 0.9rem;
+}
+
+// ── Barzahlung ───────────────────────────────────────────────────────────────
+.checkout-cash {
+  .checkout-cash__notes {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+  }
+
+  // Die erzeugte Auftragsnummer. Dieselbe Kachel-Optik wie .account-key aus
+  // account.less, nur immer offen — es gibt hier nichts zu verbergen, das
+  // fotografiert würde.
+  .checkout-cash__order {
+    padding: 1.1rem 1.25rem;
+    border-radius: 10px;
+    background-color: @highlight-color-alpha-60;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .checkout-cash__order-id {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+
+    input {
+      flex: 1 1 10rem;
+      min-width: 0;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  .checkout-cash__address {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid @border-color;
+    border-radius: 8px;
+    background-color: @card-background-color;
+    font-family: monospace;
+    white-space: pre-line;
+  }
+
+  .checkout-cash__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+// ── Micropayment ─────────────────────────────────────────────────────────────
+// Nur das Formular drumherum — Zustimmung und Fehlermeldung teilt sich
+// micropayment mit Bar (.checkout-consent/.checkout-consent__error oben).
+.checkout-micropayment {
+  display: grid;
+  gap: 1rem;
+
+  .checkout-micropayment__field {
+    display: grid;
+    gap: 0.3rem;
+
+    input {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+    }
+  }
+
+  .checkout-micropayment__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}

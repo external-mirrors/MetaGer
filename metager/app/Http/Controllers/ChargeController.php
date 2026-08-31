@@ -1,0 +1,483 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Authentication\ChargeOrderIssuer;
+use App\Authentication\KeyIssuer;
+use App\Authentication\KeyUser;
+use App\Authentication\ManualChargeIssuer;
+use App\Authentication\MicropaymentChargeIssuer;
+use App\Landing\ChargeEligibility;
+use App\Landing\KeymanagerLinks;
+use App\Landing\KeyPrice;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Vite;
+
+/**
+ * Aufladen — /konto/aufladen/<menge>, ohne Schlüssel im Pfad.
+ *
+ * Der zweite Schritt des Bezahlvorgangs, der aus dem Keymanager hierher
+ * zieht; {@see AccountController} bleibt der erste (die Wahl des Pakets). Wie
+ * bei jedem Schritt davor steht der Schlüssel in keiner Adresse — er kommt
+ * aus dem Cookie, über {@see \App\Authentication\KeyAuthGuard}.
+ *
+ * **Bar, micropayment und die Entwicklungs-Zahlart laufen hier.** PayPal und
+ * VR Payment bleiben vorerst drüben ({@see KeymanagerLinks::checkout()}) —
+ * {@see show()} verlinkt für sie dorthin weiter, mit dem Schlüssel im URL, so
+ * wie das Konto es vorher für alle Zahlarten tat.
+ *
+ * **Bar braucht zwei Seiten statt einer.** `cashShow`/`cashSubmit` legen den
+ * Auftrag an; `cashCreated` zeigt ihn. Dazwischen steht eine Weiterleitung
+ * (POST/redirect/GET), keine erneut gerenderte POST-Antwort — die alte
+ * Kasse im Keymanager rendert nach dem Anlegen dieselbe Adresse noch einmal,
+ * und ein Neuladen legt dort einen zweiten Auftrag an. Ohne Sitzung trägt die
+ * Weiterleitung nichts als die öffentliche Auftragsnummer; `cashCreated`
+ * fragt die Ladung darüber noch einmal beim Keyserver nach, statt etwas zu
+ * glauben, das nur durch den Redirect mitgereist wäre, und prüft dabei, dass
+ * die Ladung wirklich dem angemeldeten Schlüssel gehört — die Nummer ist
+ * klein und fortlaufend, kein Geheimnis.
+ *
+ * **Micropayment verlässt MetaGer für die Zahlung selbst.** Drei Unterarten
+ * (`prepay`, `lastschrift`, `directbanking`) hinter einer eigenen Wahl-Seite
+ * ({@see micropaymentShow()}); `micropaymentSubmit` legt den Auftrag an und
+ * leitet direkt auf die von drüben gelieferte, bereits mit dem Anbieter-
+ * Siegel versehene Zahlungsseite weiter (303, kein lokales Ziel). Der Rückweg
+ * von dort landet nicht wieder bei MetaGer im laufenden Vorgang, sondern auf
+ * {@see returned()} — derselben Landeseite, die VR Payment und PayPal später
+ * teilen, sobald sie folgen. Kein Beleg, nur "bezahlt" oder "wird noch
+ * bearbeitet", anhand des `paid`-Felds, das {@see ChargeOrderIssuer::find()}
+ * mitbringt.
+ *
+ * **Wer zahlt, steht auf jeder Seite hier** — partials/key-fingerprint.blade.php,
+ * dasselbe Kürzel wie auf /konto. "Zugang sichern" (partials/key-backup.blade.php)
+ * dagegen bewusst nicht: dieser Vorgang ist eine Entscheidung, kein Ort zum
+ * Verwalten, und die Sicherung bleibt auf /konto, wo sie hingehört.
+ *
+ * **Drei Wege zurück, nicht einer.** "Menge ändern" (jede Seite) und "andere
+ * Zahlungsart" (Bar, die Entwicklungs-Zahlart) bleiben im Vorgang; "Zurück
+ * zum Konto" (`cancelUrl`, jede Seite) verlässt ihn ganz — bewusst ohne
+ * `#charge`-Anker, weil das hier "ich will gar nicht (mehr) aufladen" heißt
+ * und nicht "ich will ein anderes Paket".
+ */
+final class ChargeController extends Controller
+{
+    public function show(Request $request, int $amount): Response|RedirectResponse
+    {
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $tiers = KeyPrice::tiers();
+        if (!array_key_exists($amount, $tiers)) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        $blocked = ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders());
+        if ($blocked !== null) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        return $this->render("checkout.index", $request, $key, $amount, [
+            "price" => $tiers[$amount],
+            "checkoutUrl" => KeymanagerLinks::checkout($key) . "/" . $amount,
+        ]);
+    }
+
+    public function cashShow(Request $request, int $amount): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        // Die zwei Fehler, die cashSubmit hierher zurückschickt — der
+        // Keyserver hat nicht geantwortet, oder die Zustimmung fehlte. Wie
+        // bei KeyCreationController::ERRORS steht die Liste dafür extra hier,
+        // statt jede Zeichenkette aus der Query ungeprüft in eine Vorlage zu
+        // reichen.
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
+
+        return $this->render("checkout.cash", $request, $key, $amount, [
+            "reference" => null,
+            "error" => $error,
+        ]);
+    }
+
+    public function cashSubmit(Request $request, int $amount, ChargeOrderIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        if (!$request->boolean("revocation")) {
+            return redirect()
+                ->to(route("account.checkout.cash", ["amount" => $amount]) . "?error=consent", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        $order = $issuer->create($key, $amount);
+
+        // 303: das Ziel ist eine Seite, die der Browser mit GET holen soll,
+        // statt den Auftrag bei einem Neuladen zu wiederholen.
+        if ($order === null) {
+            return redirect()
+                ->to(route("account.checkout.cash", ["amount" => $amount]) . "?error=unreachable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        return redirect()
+            ->to(route("account.checkout.cash.created", [
+                "amount" => $amount,
+                "reference" => $order["public_id"],
+            ]), 303)
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function cashCreated(Request $request, int $amount, string $reference, ChargeOrderIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $order = $issuer->find($reference);
+
+        // Weder eine fremde Ladung noch eine, die es nicht gibt, ist etwas,
+        // das diese Seite anzeigen darf — die Nummer ist zwar kein Geheimnis,
+        // aber wessen Auftrag es ist, entscheidet sich hier und nicht drüben.
+        if ($order === null || $order["key"] !== $key) {
+            abort(404);
+        }
+
+        return $this->render("checkout.cash", $request, $key, $amount, [
+            "reference" => [
+                "public_id" => $order["public_id"],
+                "expiration" => Carbon::parse($order["expires_at"]),
+            ],
+        ]);
+    }
+
+    public function manualShow(Request $request, int $amount): Response|RedirectResponse
+    {
+        if (!app()->environment("local")) {
+            abort(404);
+        }
+
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        return $this->render("checkout.manual", $request, $key, $amount, []);
+    }
+
+    public function manualSubmit(Request $request, int $amount, ManualChargeIssuer $issuer): RedirectResponse
+    {
+        if (!app()->environment("local")) {
+            abort(404);
+        }
+
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        $issuer->charge($key, $amount);
+
+        return redirect()
+            ->to(route("account") . "#charge")
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function micropaymentShow(Request $request, int $amount): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        return $this->render("checkout.micropayment-index", $request, $key, $amount, []);
+    }
+
+    public function micropaymentServiceShow(Request $request, int $amount, string $service): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
+            return redirect()->to(route("account.checkout.micropayment", ["amount" => $amount]));
+        }
+
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
+
+        return $this->render("checkout.micropayment", $request, $key, $amount, [
+            "service" => $service,
+            "error" => $error,
+            "privacyUrl" => MicropaymentChargeIssuer::PRIVACY_URLS[$service],
+        ]);
+    }
+
+    public function micropaymentSubmit(Request $request, int $amount, string $service, MicropaymentChargeIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
+            return redirect()->to(route("account.checkout.micropayment", ["amount" => $amount]));
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        if (!$request->boolean("revocation")) {
+            return redirect()
+                ->to(route("account.checkout.micropayment.service", ["amount" => $amount, "service" => $service]) . "?error=consent", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        $email = $request->input("email");
+        $order = $issuer->create($key, $amount, $service, is_string($email) && $email !== "" ? $email : null);
+
+        if ($order === null) {
+            return redirect()
+                ->to(route("account.checkout.micropayment.service", ["amount" => $amount, "service" => $service]) . "?error=unreachable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        // Ein fremder Host, kein lokales Ziel — die Zahlung selbst findet bei
+        // micropayment statt, nicht bei uns.
+        return redirect()
+            ->away($order["redirect_url"], 303)
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function returned(Request $request, string $reference, ChargeOrderIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKeyForReturn($request, $reference);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $order = $issuer->find($reference);
+
+        if ($order === null || $order["key"] !== $key) {
+            abort(404);
+        }
+
+        /** @var KeyUser $user */
+        $user = Auth::guard("key")->user();
+
+        return response()
+            ->view("checkout.returned", [
+                "title" => trans("titles.checkout"),
+                "navbarFocus" => "login",
+                "css" => [Vite::asset("resources/less/metager/pages/account.less")],
+                "fingerprint" => $user->getKeyFingerprint(),
+                "amount" => $order["amount"],
+                "paid" => $order["paid"],
+                "accountUrl" => route("account"),
+            ])
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Gemeinsamer Rahmen für die drei gerenderten Seiten dieses Vorgangs:
+     * Titel, Assets, wer zahlt, und der Weg zurück zur Paketwahl.
+     *
+     * @param array<string, mixed> $extra
+     */
+    private function render(string $view, Request $request, string $key, int $amount, array $extra): Response
+    {
+        /** @var KeyUser $user */
+        $user = Auth::guard("key")->user();
+
+        return response()
+            ->view($view, array_merge([
+                "title" => trans("titles.checkout"),
+                "navbarFocus" => "login",
+                // account.less trägt die Klassen der geteilten Bausteine
+                // (partials/key-fingerprint, partials/key-backup); checkout.less
+                // ergänzt nur, was auf dieser Seite neu ist.
+                "css" => [
+                    Vite::asset("resources/less/metager/pages/account.less"),
+                    Vite::asset("resources/less/metager/pages/checkout.less"),
+                ],
+                "js" => [Vite::asset("resources/js/account.js")],
+
+                "key" => $key,
+                "amount" => $amount,
+                "fingerprint" => $user->getKeyFingerprint(),
+                "changeAmountUrl" => route("account") . "#charge",
+                // Der Ausstieg — bewusst ohne #charge: das ist "ich will gar
+                // nicht (mehr) aufladen", nicht "ich will ein anderes Paket".
+                "cancelUrl" => route("account"),
+            ], $extra))
+            // Wie /konto: eine Seite mit einer Ladung darauf gehört in
+            // keinen Cache, weder in einen gemeinsamen noch in den des
+            // Browsers.
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    /**
+     * Meldet den Besucher an, oder liefert eine Weiterleitung, die an ihrer
+     * statt zurückgegeben werden soll.
+     *
+     * Dieselbe Reihenfolge wie {@see AccountController::show()}: kein
+     * Schlüssel geht zur Anmeldung, ein anonymes Token zur Erklärungsseite
+     * der Erweiterung, und ein Schlüssel, den der Keyserver gerade nicht
+     * kanonisch beantworten kann, zurück zum Konto — hier gibt es ohne einen
+     * verlässlichen Schlüssel nichts aufzuladen.
+     *
+     * @return array{0: KeyUser, 1: string, 2: null}|array{0: null, 1: null, 2: RedirectResponse}
+     */
+    private function requireKey(Request $request, int $amount): array
+    {
+        /** @var KeyUser|null $user */
+        $user = Auth::guard("key")->user();
+
+        if ($user === null) {
+            return [null, null, redirect()
+                ->to(KeymanagerLinks::login(route("account.checkout", ["amount" => $amount]), $request))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        if ($user->temporary) {
+            return [null, null, redirect()
+                ->to(route("anonymous-token"))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        $key = $this->keyOf($user);
+        if ($key === null) {
+            return [null, null, redirect()
+                ->to(route("account"))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        return [$user, $key, null];
+    }
+
+    /**
+     * Wortgleich zu {@see requireKey()}, nur mit einem anderen Rücksprungziel
+     * nach der Anmeldung — `returned()` kennt keine Menge, nur die öffentliche
+     * Nummer der Ladung, die es anzeigen will.
+     *
+     * @return array{0: KeyUser, 1: string, 2: null}|array{0: null, 1: null, 2: RedirectResponse}
+     */
+    private function requireKeyForReturn(Request $request, string $reference): array
+    {
+        /** @var KeyUser|null $user */
+        $user = Auth::guard("key")->user();
+
+        if ($user === null) {
+            return [null, null, redirect()
+                ->to(KeymanagerLinks::login(route("account.checkout.returned", ["reference" => $reference]), $request))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        if ($user->temporary) {
+            return [null, null, redirect()
+                ->to(route("anonymous-token"))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        $key = $this->keyOf($user);
+        if ($key === null) {
+            return [null, null, redirect()
+                ->to(route("account"))
+                ->header("Cache-Control", "no-store, private")];
+        }
+
+        return [$user, $key, null];
+    }
+
+    /** Wortgleich zu AccountController::keyOf() — siehe dort für das Warum. */
+    private function keyOf(KeyUser $user): ?string
+    {
+        $canonical = $user->getCanonicalKey();
+        if ($canonical !== null && KeyIssuer::isKey($canonical)) {
+            return strtolower($canonical);
+        }
+
+        return KeyIssuer::isKey($user->key) ? strtolower($user->key) : null;
+    }
+
+    /**
+     * Ob dieses Formular von unserer eigenen Seite abgeschickt wurde.
+     *
+     * Wortgleich zu {@see KeyCreationController::sameOrigin()} und aus
+     * demselben Grund; die Begründung steht dort.
+     */
+    private function sameOrigin(Request $request): bool
+    {
+        $origin = $request->header("Origin");
+
+        if (is_string($origin) && $origin !== "" && $origin !== "null") {
+            return $this->isOurs($request, $origin);
+        }
+
+        $site = $request->header("Sec-Fetch-Site");
+
+        if (is_string($site) && $site !== "") {
+            return in_array($site, ["same-origin", "same-site", "none"], true);
+        }
+
+        return true;
+    }
+
+    /** Ob ein URL auf den Host zeigt, unter dem diese Anfrage ankam. */
+    private function isOurs(Request $request, string $url): bool
+    {
+        $host = parse_url($url, PHP_URL_HOST);
+
+        if ($host === null || $host === false) {
+            return str_starts_with($url, "/") && !str_starts_with($url, "//");
+        }
+
+        $port = parse_url($url, PHP_URL_PORT);
+
+        return ($host . ($port === null ? "" : ":" . $port)) === $request->getHttpHost();
+    }
+}

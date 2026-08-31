@@ -268,20 +268,22 @@ class AccountPageTest extends TestCase
     }
 
     /**
-     * Und sie führen in den Bezahlvorgang, der im Keymanager bleibt.
+     * Und sie führen auf die lokale Aufladeseite — kein Schlüssel im URL.
      *
-     * Der einzige Link auf dieser Seite, der noch einen Schlüssel trägt. Die
-     * Kasse drüben kennt keine Sitzung und liest ihn aus ihrem eigenen Pfad;
-     * er verschwindet, wenn sie nachzieht.
+     * Bis App\Http\Controllers\ChargeController hierher zog, war dies der
+     * einzige Link auf dieser Seite, der noch einen Schlüssel trug: die
+     * Kasse drüben kannte keine Sitzung und las ihn aus ihrem eigenen Pfad.
+     * Für Bar und die Entwicklungs-Zahlungsart gilt das nicht mehr — beide
+     * lesen den Schlüssel wie /konto selbst aus dem Cookie.
      */
-    public function testATierLeadsIntoTheKeymanagerCheckout(): void
+    public function testATierLeadsIntoTheLocalChargePage(): void
     {
         $this->keyserverKnows();
 
         $this->signedIn()
             ->get("/de-DE/konto")
             ->assertOk()
-            ->assertSee("/de-DE/keys/key/" . self::A_KEY . "/checkout/1000#payment", false);
+            ->assertSee("/de-DE/konto/aufladen/1000", false);
     }
 
     /**

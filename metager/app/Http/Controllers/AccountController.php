@@ -7,6 +7,7 @@ use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Authentication\LoginCodeIssuer;
 use App\Landing\AppCallback;
+use App\Landing\ChargeEligibility;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
 use Illuminate\Http\JsonResponse;
@@ -38,11 +39,13 @@ use Illuminate\Support\Facades\Vite;
  * ({@see KeyUser::getKeyData()}, zehn Sekunden zwischengespeichert). Die
  * Kontoseite kostet damit keinen Aufruf mehr als jede andere Seite auch.
  *
- * **Der Bezahlvorgang bleibt drüben.** Was hier steht, ist die Wahl des
- * Pakets — Zahlen und Links, deren Preise {@see KeyPrice} vom Keyserver
- * erfragt. Ab `#payment` übernimmt `/keys/key/<uuid>/checkout/<menge>`, und
- * dieser eine Link ist die letzte Stelle, an der ein Schlüssel noch durch eine
- * Adresszeile geht. Er verschwindet, wenn der Bezahlvorgang nachzieht.
+ * **Die Wahl des Pakets bleibt hier, der Bezahlvorgang selbst zieht um.**
+ * Die Kacheln sind Preise, die {@see KeyPrice} vom Keyserver erfragt; ein
+ * Klick geht auf `App\Http\Controllers\ChargeController` — /konto/aufladen,
+ * ohne Schlüssel im Pfad. Bar- und die Entwicklungs-Zahlungsart laufen dort
+ * inzwischen lokal, alles andere verlinkt von dort noch einmal weiter in
+ * `/keys/key/<uuid>/checkout/<menge>`, bis es nachzieht — siehe
+ * {@see KeymanagerLinks::checkout()} für den aktuellen Stand.
  */
 final class AccountController extends Controller
 {
@@ -56,15 +59,6 @@ final class AccountController extends Controller
      */
     private const CODE_MAX_PER_WINDOW = 600;
     private const CODE_WINDOW_SECONDS = 300;
-
-    /**
-     * Ab wie vielen offenen Ladungen der Keyserver keine weitere annimmt.
-     *
-     * `Key.isChargable()` drüben. Hier gespiegelt, um gar nicht erst Pakete
-     * anzubieten, die an der Kasse abgewiesen würden — die alte Seite zeigte
-     * dafür einen Satz *statt* der Pakete, und das bleibt so.
-     */
-    private const MAX_CHARGE_ORDERS = 3;
 
     public function show(Request $request): Response|RedirectResponse
     {
@@ -156,8 +150,7 @@ final class AccountController extends Controller
                 "qrUri" => $key === null ? null : KeyBackup::qrDataUri($key),
 
                 "tiers" => $key === null ? [] : KeyPrice::tiers(),
-                "checkoutUrl" => $key === null ? null : KeymanagerLinks::checkout($key),
-                "topupBlocked" => $this->topupBlocked($request, $user, $orders),
+                "topupBlocked" => ChargeEligibility::blockedReason($request, $user, $orders),
 
                 "ordersUrl" => $key === null ? null : KeymanagerLinks::orders($key),
                 "campaignsUrl" => $key === null ? null : KeymanagerLinks::campaigns($key),
@@ -239,35 +232,4 @@ final class AccountController extends Controller
         return KeyIssuer::isKey($user->key) ? strtolower($user->key) : null;
     }
 
-    /**
-     * Warum gerade kein Paket angeboten wird — oder null, wenn eines darf.
-     *
-     * Drei Gründe, und alle drei standen schon auf der alten Seite. Der Wert
-     * wird zu einem Übersetzungsschlüssel, ist deshalb keine freie Zeichenkette
-     * und kommt aus keiner Eingabe.
-     *
-     * @param list<array{amount: float, expiration: \Illuminate\Support\Carbon|null}> $orders
-     */
-    private function topupBlocked(Request $request, KeyUser $user, array $orders): ?string
-    {
-        // Eine Proxy-Sitzung ist die eine Stelle, an der eine Bezahlseite dem
-        // Besucher schaden könnte: sie führt zu einem Zahlungsdienstleister,
-        // und der sieht dann eine Sitzung, die gerade anonym sein sollte.
-        // Der Header kommt von unserem eigenen Proxy.
-        if ($request->header("is-proxy") === "true") {
-            return "proxy";
-        }
-
-        // Mitglieder suchen ohne weitere Kosten; ein Token-Paket wäre für sie
-        // ein Angebot, für etwas zu zahlen, das sie schon bezahlt haben.
-        if ($user->isMember()) {
-            return "member";
-        }
-
-        if (count($orders) >= self::MAX_CHARGE_ORDERS) {
-            return "full";
-        }
-
-        return null;
-    }
 }

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Die sechs aus dem Keymanager übernommenen Seiten sind überall übersetzt.
+ * Die sieben aus dem Keymanager übernommenen Seiten sind überall übersetzt.
  *
  * Gleiche Bauart wie {@see AccountTranslationsTest} und aus demselben Grund:
  * eine fehlende Sprachdatei fällt nicht auf, sie fällt auf `fallback_locale`
@@ -16,8 +16,12 @@ use PHPUnit\Framework\TestCase;
  * von Anfang an grün sein — anders als bei den gewachsenen Dateien, über die
  * {@see CatalanTranslationsTest} Buch führt.
  *
- * Portugiesisch ist der Sonderfall: der Keymanager hatte es nie, alle sechs
- * Dateien sind für pt aus de/en neu geschrieben.
+ * Portugiesisch ist der Sonderfall: der Keymanager hatte kein `pt`. Für
+ * `login.php` bis `key-create.php` wurden alle sechs Dateien für pt aus de/en
+ * neu geschrieben; `checkout.php` trägt für Bar und die Zustimmung zwar
+ * wörtlich übernommenen Text aus den elf Sprachen, die der Keymanager hatte —
+ * nur eben nicht aus einer zwölften, die es dort nie gab, und die deshalb wie
+ * die anderen sechs Dateien neu übersetzt ist.
  */
 class KeyPagesTranslationsTest extends TestCase
 {
@@ -39,6 +43,10 @@ class KeyPagesTranslationsTest extends TestCase
         // Französischen sogar zur Tastatur-Taste („Touche de copie“). Neu
         // geschrieben statt übernommen.
         "key-create.php",
+        // Aufladen — App\Http\Controllers\ChargeController. cash/consent sind
+        // wortgleich aus checkout.json/order.json des Keymanagers übernommen
+        // (siehe lang/de/checkout.php); page/manual sind neu.
+        "checkout.php",
     ];
 
     public function testEveryLocaleTranslatesEveryString(): void

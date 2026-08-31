@@ -8,11 +8,11 @@
 	braucht. Ohne Javascript zeigt diese Seite nur die Zustimmung und einen
 	Hinweis (#checkout-paypal-noscript), keine leeren SDK-Container — genau
 	wie #login-qr in login.blade.php gilt hier: etwas anzubieten, das nichts
-	tut, ist schlechter, als es nicht anzubieten. Deshalb bietet /konto/
-	aufladen/<menge>/paypal (checkout/index.blade.php) diese Zahlart ohne
-	Javascript erst gar nicht an — wer diese Seite ohne Javascript trotzdem
-	erreicht (Lesezeichen, direkt eingegeben), sieht den Hinweis statt eines
-	funktionslosen Formulars.
+	tut, ist schlechter, als es nicht anzubieten. Deshalb bieten die sieben
+	PayPal-Kacheln auf /konto/aufladen/<menge> (checkout/index.blade.php)
+	diese Zahlart ohne Javascript erst gar nicht an — wer diese Seite ohne
+	Javascript trotzdem erreicht (Lesezeichen, direkt eingegeben), sieht den
+	Hinweis statt eines funktionslosen Formulars.
 
 	Konfiguration (Client-ID, Client-Token, ob Kartenzahlung erlaubt ist) geht
 	als data-Attribute an resources/js/checkout-paypal.js, nicht als
@@ -31,14 +31,14 @@
 	</section>
 
 	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.checkout.paypal', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
+		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
 		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 
 	<section class="account-section">
 		<noscript>
 			<p class="checkout-consent__error" role="alert">@lang('checkout.paypal.noscript')</p>
-			<a class="account-btn account-btn--primary" href="{{ route('account.checkout.paypal', ['amount' => $amount]) }}">@lang('checkout.page.methods.back')</a>
+			<a class="account-btn account-btn--primary" href="{{ route('account.checkout', ['amount' => $amount]) }}">@lang('checkout.page.methods.back')</a>
 		</noscript>
 
 		@if($error === 'unreachable')
@@ -57,7 +57,7 @@
 			@if($clientToken) data-client-token="{{ $clientToken }}" @endif
 			data-order-create-url="{{ route('account.checkout.paypal.order.create', ['amount' => $amount, 'fundingSource' => $fundingSource]) }}"
 			data-order-capture-url="{{ route('account.checkout.paypal.order.capture', ['amount' => $amount, 'fundingSource' => $fundingSource]) }}"
-			data-not-eligible-url="{{ route('account.checkout.paypal', ['amount' => $amount]) }}?error=funding_source_not_eligible"
+			data-not-eligible-url="{{ route('account.checkout', ['amount' => $amount]) }}?error=funding_source_not_eligible"
 			data-cancel-message="@lang('checkout.paypal.cancel')"
 			data-error-message="@lang('checkout.paypal.error.generic')"
 		>
@@ -73,7 +73,7 @@
 
 			<div id="checkout-paypal-message" class="checkout-consent__error" role="alert" hidden></div>
 
-			@if($fundingSource === 'card')
+			@if($fundingSource === 'card' && $directCardEnabled)
 				<template id="checkout-paypal-card-form-skeleton">
 					<form id="checkout-paypal-card-form">
 						<div id="checkout-paypal-card-errors" hidden>
@@ -105,7 +105,7 @@
 				<div id="checkout-paypal-card-container"></div>
 			@else
 				<div id="checkout-paypal-payment-fields" hidden></div>
-				<div id="checkout-paypal-payment-button" hidden></div>
+				<div id="checkout-paypal-payment-button" class="checkout-paypal-widget" hidden></div>
 			@endif
 
 			<p id="checkout-paypal-loading">@lang('checkout.paypal.loading')</p>

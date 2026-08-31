@@ -350,7 +350,16 @@ class ProgressiveEnhancementTest extends DuskTestCase
      * `display`-Regel könnte es überstimmen — genau das prüft ein
      * Feature-Test nicht, nur eine echte Layout-Engine.
      */
-    public function testThePaypalTileStaysHiddenWithoutJavascript(): void
+    /**
+     * Sieben Kacheln, eine pro PayPal-Zahlweise (checkout/index.blade.php),
+     * nicht eine einzige mehr hinter einer eigenen Wahl-Seite — jede von
+     * ihnen muss ohne Javascript unsichtbar bleiben, nicht nur die erste.
+     * Und die anderen acht Kacheln (Bargeld, Wero, drei Micropayment-
+     * Zahlweisen, die Entwicklungs-Zahlart lokal ausgenommen) müssen
+     * trotzdem sichtbar sein — sonst zeigt "nichts hat .checkout-paypal-tile"
+     * auch dann grün, wenn versehentlich die ganze Liste verschwunden ist.
+     */
+    public function testThePaypalTilesStayHiddenWithoutJavascript(): void
     {
         $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
 
@@ -359,7 +368,17 @@ class ProgressiveEnhancementTest extends DuskTestCase
                 ->addCookie("key", $key, null, [], false)
                 ->visit("/de-DE/konto/aufladen/1000")
                 ->assertVisible(".account-tier")
-                ->assertMissing("#checkout-paypal-tile");
+                ->assertMissing(".checkout-paypal-tile");
+
+            $this->assertCount(
+                7,
+                $browser->elements(".checkout-paypal-tile"),
+                "es sollen alle sieben PayPal-Kacheln im Markup stehen, nur unsichtbar"
+            );
+
+            foreach (["/bar", "/vrpayment", "/micropayment/prepay", "/micropayment/lastschrift", "/micropayment/directbanking"] as $path) {
+                $browser->assertVisible("a.account-tier[href*=\"$path\"]");
+            }
         });
     }
 }

@@ -59,12 +59,18 @@ class ChargeMicropaymentTest extends TestCase
             ->post("/de-DE/konto/aufladen/1000/micropayment/{$service}", $fields);
     }
 
+    /**
+     * Es gibt keine eigene Micropayment-Wahl-Seite mehr — die drei Zahlweisen
+     * sind Kacheln auf dem allgemeinen Zahlungsarten-Chooser, wie jede andere
+     * Zahlweise auch (Feedback: "Micropayment" allein sagt niemandem, der den
+     * Anbieter nicht kennt, was sich dahinter verbirgt).
+     */
     public function testTheChooserLinksToAllThreeServices(): void
     {
         $this->keyserverKnows();
 
         $response = $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000/micropayment")
+            ->get("/de-DE/konto/aufladen/1000")
             ->assertOk();
 
         foreach (["prepay", "lastschrift", "directbanking"] as $service) {
@@ -170,6 +176,6 @@ class ChargeMicropaymentTest extends TestCase
 
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/1000/micropayment/not-a-service")
-            ->assertRedirect(route("account.checkout.micropayment", ["amount" => 1000]));
+            ->assertRedirect(route("account.checkout", ["amount" => 1000]));
     }
 }

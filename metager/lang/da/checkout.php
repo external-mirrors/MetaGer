@@ -18,6 +18,7 @@ return [
             'heading' => 'Vælg betalingsmetode',
             'more' => 'Flere betalingsmetoder',
             'back' => 'Vælg en anden betalingsmetode',
+            'cash_note' => 'Anonymt',
         ],
         'cancel' => 'Tilbage til kontoen',
     ],
@@ -61,7 +62,6 @@ Tyskland',
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Bankoverførsel',
             'email' => [
@@ -76,7 +76,7 @@ Tyskland',
     ],
 
     'vrpayment' => [
-        'label' => 'VR-betaling',
+        'label' => 'Wero',
         'submit' => 'Foretag betaling',
         'privacy' => 'Ved at klikke på "Foretag betaling" vil du blive omdirigeret til vores betalingstjenesteudbyder <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> for at gennemføre købet. Mere om <a href=":link" target="_blank">privatliv på VR Payment</a>.',
         'error' => [
@@ -85,7 +85,6 @@ Tyskland',
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Foretag betaling',
         'submit' => 'Foretag betaling',
         'loading' => 'Betalingsmetode er indlæst',

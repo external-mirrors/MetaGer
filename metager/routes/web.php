@@ -365,13 +365,22 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * nicht, so wie /konto/aufladen/aci4T87k7DmMXVLmJ auch für einen
      * type-juggling-Versuch keine Auskunft geben soll.
      *
-     * `cash`, micropayment (drei Unterarten hinter einer eigenen Wahl-Seite),
-     * VR Payment, PayPal (sieben Zahlweisen hinter einer eigenen Wahl-Seite,
-     * SDK-getrieben statt eines einfachen POST-Formulars — siehe
-     * App\Authentication\PayPalChargeIssuer) und die Entwicklungs-Zahlungsart
-     * (nur unter app()->environment('local') erreichbar) laufen inzwischen
-     * alle hier; App\Landing\KeymanagerLinks::checkout() bleibt nur noch als
-     * Infrastruktur für Zahlarten stehen, die künftig dazukommen.
+     * `cash`, die drei Micropayment-Zahlweisen, Wero (vrpayment), die sieben
+     * PayPal-Zahlweisen (SDK-getrieben statt eines einfachen POST-Formulars —
+     * siehe App\Authentication\PayPalChargeIssuer) und die Entwicklungs-
+     * Zahlungsart (nur unter app()->environment('local') erreichbar) laufen
+     * inzwischen alle hier; App\Landing\KeymanagerLinks::checkout() bleibt
+     * nur noch als Infrastruktur für Zahlarten stehen, die künftig
+     * dazukommen.
+     *
+     * Keine eigene Wahl-Seite mehr pro Anbieter: `show()` verlinkt direkt auf
+     * jede einzelne Zahlweise, PayPal und Micropayment eingeschlossen. Wer
+     * bezahlen will, sucht eine Zahlweise, die er kennt — "Micropayment" oder
+     * "PayPal" als Zwischenschritt sagt ihm das nicht. `account.checkout.
+     * micropayment` und `account.checkout.paypal` (ohne fundingSource/service)
+     * gibt es deshalb nicht mehr; alles, was früher dorthin zurückführte
+     * (ungültige Auswahl, nicht erreichbarer Keyserver, "zurück"), führt jetzt
+     * zu `show()` selbst.
      */
     Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
         ->whereNumber('amount')
@@ -391,9 +400,6 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::post('konto/aufladen/{amount}/entwicklung', [ChargeController::class, 'manualSubmit'])
         ->whereNumber('amount')
         ->name('account.checkout.manual.submit');
-    Route::get('konto/aufladen/{amount}/micropayment', [ChargeController::class, 'micropaymentShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.micropayment');
     Route::get('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentServiceShow'])
         ->whereNumber('amount')
         ->name('account.checkout.micropayment.service');
@@ -408,15 +414,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.checkout.vrpayment.submit');
     /**
      * PayPal — die einzige Zahlart, deren Seite vom SDK im Browser getrieben
-     * wird statt von einem einfachen POST-Formular. Sieben Zahlweisen hinter
-     * einer eigenen Wahl-Seite wie bei micropayment; App\Authentication\
-     * PayPalChargeIssuer hat die drei Schritte (Konfiguration, Anlegen,
-     * Einlösen), die resources/js/checkout-paypal.js in dieser Reihenfolge
-     * aufruft.
+     * wird statt von einem einfachen POST-Formular. Sieben Zahlweisen, jede
+     * eine eigene Kachel auf `show()` statt hinter einer eigenen Wahl-Seite;
+     * App\Authentication\PayPalChargeIssuer hat die drei Schritte
+     * (Konfiguration, Anlegen, Einlösen), die resources/js/checkout-paypal.js
+     * in dieser Reihenfolge aufruft.
      */
-    Route::get('konto/aufladen/{amount}/paypal', [ChargeController::class, 'paypalShow'])
-        ->whereNumber('amount')
-        ->name('account.checkout.paypal');
     Route::get('konto/aufladen/{amount}/paypal/{fundingSource}', [ChargeController::class, 'paypalServiceShow'])
         ->whereNumber('amount')
         ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')

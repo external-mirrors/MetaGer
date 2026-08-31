@@ -272,6 +272,13 @@
   color: @text-color;
   text-decoration: none;
 
+  // Ohne dies gewinnt die UA-Regel für besuchte Links (a:visited, Spezifität
+  // 0,1,1) gegen die Klasse hier (0,1,0) — genau das Orange, das @link im
+  // dunklen Thema ist. .account-tier:visited liegt bei 0,2,0 und gewinnt.
+  &:visited {
+    color: @text-color;
+  }
+
   &:hover,
   &:focus-visible {
     border-color: @metager-orange;
@@ -289,6 +296,35 @@
     font-size: 1.5rem;
     font-weight: bold;
     font-variant-numeric: tabular-nums;
+  }
+}
+
+// Die Zahlungsarten teilen sich .account-tier mit den Paketen oben, brauchen
+// aber eine feste statt einer inhaltsbestimmten Höhe: eine zweizeilige
+// Beschriftung wie "Kredit-/Debitkarte" macht sonst nur ihre eigene
+// Grid-Zeile höher (CSS Grid dehnt jede Kachel einer Zeile auf deren Höhe),
+// und in einem Raster mit mehreren Zeilen sehen die Kacheln dann zufällig
+// unterschiedlich groß aus, statt gleichmäßig.
+.account-tier--method {
+  height: 7rem;
+  justify-content: center;
+  overflow: hidden;
+
+  .account-tier__icon {
+    height: 1.75rem;
+    width: auto;
+    max-width: 100%;
+  }
+
+  // Für einfarbige Icons (z. B. das Briefsymbol, die Kreditkarte): dieselbe
+  // Umkehrung, die auch die Quicktipps-Icons im dunklen Thema tragen.
+  .account-tier__icon--invert {
+    filter: @invert-state;
+  }
+
+  .account-tier__note {
+    font-size: 0.75rem;
+    color: @text-color-alpha-70;
   }
 }
 

@@ -25,7 +25,7 @@
 	</section>
 
 	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ route('account.checkout.micropayment', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
+		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
 		<a class="checkout-back" href="{{ $cancelUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>
 

@@ -32,6 +32,21 @@ use Illuminate\Support\Str;
  * **Jede Zahlart läuft inzwischen hier** — Bar, micropayment, VR Payment, die
  * Entwicklungs-Zahlart, und zuletzt PayPal.
  *
+ * **`show()` verlinkt jede einzelne Zahlweise direkt, flach, keine
+ * Zwischen-Wahl-Seite pro Anbieter.** Micropayment (`prepay`, `lastschrift`,
+ * `directbanking`) und PayPal (sieben Zahlweisen) hatten je eine eigene
+ * Wahl-Seite, auf der zuerst der Anbieter stand und erst danach die
+ * eigentliche Zahlweise — Feedback dazu: wer bezahlen will, sucht eine
+ * Zahlweise, die er kennt ("Kreditkarte", "Lastschrift"), keinen Anbieter,
+ * den er nicht kennt ("Micropayment"). `show()` listet darum alle elf
+ * Zahlweisen selbst, sortiert nach Datenschutzfreundlichkeit: Bar (anonym),
+ * Wero, die drei Micropayment-Zahlweisen, dann die sieben PayPal-Zahlweisen.
+ * `account.checkout.micropayment` und `account.checkout.paypal` (ohne
+ * `service`/`fundingSource`) gibt es deshalb nicht mehr — jede Weiterleitung,
+ * die früher dorthin zurückführte (ungültige Auswahl, nicht erreichbarer
+ * Keyserver, "zurück"), führt jetzt zu `show()` selbst, mit `?error=` für den
+ * Fall, dass etwas mitzuteilen ist.
+ *
  * **Bar braucht zwei Seiten statt einer.** `cashShow`/`cashSubmit` legen den
  * Auftrag an; `cashCreated` zeigt ihn. Dazwischen steht eine Weiterleitung
  * (POST/redirect/GET), keine erneut gerenderte POST-Antwort — die alte
@@ -43,47 +58,49 @@ use Illuminate\Support\Str;
  * die Ladung wirklich dem angemeldeten Schlüssel gehört — die Nummer ist
  * klein und fortlaufend, kein Geheimnis.
  *
- * **Micropayment verlässt MetaGer für die Zahlung selbst.** Drei Unterarten
- * (`prepay`, `lastschrift`, `directbanking`) hinter einer eigenen Wahl-Seite
- * ({@see micropaymentShow()}); `micropaymentSubmit` legt den Auftrag an und
- * leitet direkt auf die von drüben gelieferte, bereits mit dem Anbieter-
- * Siegel versehene Zahlungsseite weiter (303, kein lokales Ziel). Der Rückweg
- * von dort landet nicht wieder bei MetaGer im laufenden Vorgang, sondern auf
+ * **Micropayment verlässt MetaGer für die Zahlung selbst.** `micropayment
+ * ServiceShow` rendert die Zustimmungsseite einer der drei Zahlweisen direkt
+ * (wie `cashShow`); `micropaymentSubmit` legt den Auftrag an und leitet
+ * direkt auf die von drüben gelieferte, bereits mit dem Anbieter-Siegel
+ * versehene Zahlungsseite weiter (303, kein lokales Ziel). Der Rückweg von
+ * dort landet nicht wieder bei MetaGer im laufenden Vorgang, sondern auf
  * {@see returned()} — derselben Landeseite, die VR Payment ebenfalls nutzt.
  * Kein Beleg, nur "bezahlt" oder "wird noch bearbeitet", anhand des
  * `paid`-Felds, das {@see ChargeOrderIssuer::find()} mitbringt.
  *
- * **VR Payment (Wero) verlässt MetaGer ebenso.** Nur eine Zahlart, keine
- * Wahl-Seite davor ({@see vrpaymentShow()} rendert die Zustimmungsseite
- * direkt, wie `cashShow`); `vrpaymentSubmit` legt den Auftrag an und leitet
- * genauso weiter wie micropayment. Der Rückweg landet, ohne dass diese
- * Klasse etwas dafür tun muss, auf derselben {@see returned()}, die
- * micropayment schon nutzt — dafür wurde sie generisch gebaut.
+ * **VR Payment (Wero) verlässt MetaGer ebenso.** Nur eine Zahlart
+ * ({@see vrpaymentShow()} rendert die Zustimmungsseite direkt, wie
+ * `cashShow`); `vrpaymentSubmit` legt den Auftrag an und leitet genauso
+ * weiter wie micropayment. Der Rückweg landet, ohne dass diese Klasse etwas
+ * dafür tun muss, auf derselben {@see returned()}, die micropayment schon
+ * nutzt — dafür wurde sie generisch gebaut. Die Kachel auf `show()` heißt
+ * "Wero", nicht "VR Payment" — VR Payment ist der Anbieter dahinter, Wero die
+ * einzige Zahlweise, die er hier anbietet, und die Zahlweise ist es, die auf
+ * der Kachel stehen soll.
  *
  * **Wer zahlt, steht auf jeder Seite hier** — partials/key-fingerprint.blade.php,
  * dasselbe Kürzel wie auf /konto. "Zugang sichern" (partials/key-backup.blade.php)
  * dagegen bewusst nicht: dieser Vorgang ist eine Entscheidung, kein Ort zum
  * Verwalten, und die Sicherung bleibt auf /konto, wo sie hingehört.
  *
- * **PayPal ist SDK-getrieben, nicht formularbasiert.** Sieben Zahlweisen
- * hinter einer eigenen Wahl-Seite wie micropayment ({@see paypalShow()});
- * `paypalServiceShow` holt vor dem Rendern die Konfiguration (Client-ID,
- * ob Kartenzahlung gerade erlaubt ist) drüben ab — der einzige Seitenaufruf
- * in dieser Klasse, der selbst schon zum Keyserver spricht — und setzt eine
- * Content-Security-Policy fürs PayPal-SDK. `paypalOrderCreate`/
- * `paypalOrderCapture` sind JSON-Ziele, die resources/js/checkout-paypal.js
- * per fetch aufruft (das SDK ruft `createOrder`/`onApprove` auf, nicht ein
- * Formular-Submit) — nie mit dem Bearer-Token, das diese Klasse für
- * {@see \App\Authentication\PayPalChargeIssuer} hält; das bleibt serverseitig.
- * Ohne Javascript bietet die Wahl-Seite auf /konto die PayPal-Kachel gar
- * nicht erst an (dieselbe `hidden`-Vorlage wie `#login-qr`), statt eine Seite
- * zu zeigen, die nichts tut.
+ * **PayPal ist SDK-getrieben, nicht formularbasiert.** Sieben Zahlweisen,
+ * jede eine eigene Kachel auf `show()`; `paypalServiceShow` holt vor dem
+ * Rendern die Konfiguration (Client-ID, ob Kartenzahlung gerade erlaubt ist)
+ * drüben ab — der einzige Seitenaufruf in dieser Klasse, der selbst schon
+ * zum Keyserver spricht — und setzt eine Content-Security-Policy fürs
+ * PayPal-SDK. `paypalOrderCreate`/`paypalOrderCapture` sind JSON-Ziele, die
+ * resources/js/checkout-paypal.js per fetch aufruft (das SDK ruft
+ * `createOrder`/`onApprove` auf, nicht ein Formular-Submit) — nie mit dem
+ * Bearer-Token, das diese Klasse für {@see \App\Authentication\
+ * PayPalChargeIssuer} hält; das bleibt serverseitig. Ohne Javascript bietet
+ * `show()` die sieben PayPal-Kacheln gar nicht erst an (dieselbe
+ * `hidden`-Vorlage wie `#login-qr`), statt Seiten zu zeigen, die nichts tun.
  *
  * **Drei Wege zurück, nicht einer.** "Menge ändern" (jede Seite) und "andere
- * Zahlungsart" (Bar, die Entwicklungs-Zahlart) bleiben im Vorgang; "Zurück
- * zum Konto" (`cancelUrl`, jede Seite) verlässt ihn ganz — bewusst ohne
- * `#charge`-Anker, weil das hier "ich will gar nicht (mehr) aufladen" heißt
- * und nicht "ich will ein anderes Paket".
+ * Zahlungsart" (jede Zahlweisen-Seite führt zurück zu `show()`) bleiben im
+ * Vorgang; "Zurück zum Konto" (`cancelUrl`, jede Seite) verlässt ihn ganz —
+ * bewusst ohne `#charge`-Anker, weil das hier "ich will gar nicht (mehr)
+ * aufladen" heißt und nicht "ich will ein anderes Paket".
  */
 final class ChargeController extends Controller
 {
@@ -104,8 +121,19 @@ final class ChargeController extends Controller
             return redirect()->to(route("account") . "#charge");
         }
 
+        // Kommt von einer Zahlweisen-Seite zurück, deren Auswahl ungültig war
+        // oder deren Keyserver nicht antwortete (micropaymentServiceShow,
+        // paypalServiceShow), oder vom SDK, wenn PayPal eine Zahlweise beim
+        // Laden als hier nicht anbietbar meldet (resources/js/checkout-
+        // paypal.js). Es gibt keine Zwischen-Wahl-Seite pro Anbieter mehr, zu
+        // der das früher zurückführte — diese Seite ist jetzt das einzige
+        // "zurück".
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "funding_source_not_eligible"], true) ? $error : null;
+
         return $this->render("checkout.index", $request, $key, $amount, [
             "price" => $tiers[$amount],
+            "error" => $error,
         ]);
     }
 
@@ -239,16 +267,6 @@ final class ChargeController extends Controller
             ->header("Cache-Control", "no-store, private");
     }
 
-    public function micropaymentShow(Request $request, int $amount): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        return $this->render("checkout.micropayment-index", $request, $key, $amount, []);
-    }
-
     public function micropaymentServiceShow(Request $request, int $amount, string $service): Response|RedirectResponse
     {
         [, $key, $redirect] = $this->requireKey($request, $amount);
@@ -257,7 +275,7 @@ final class ChargeController extends Controller
         }
 
         if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
-            return redirect()->to(route("account.checkout.micropayment", ["amount" => $amount]));
+            return redirect()->to(route("account.checkout", ["amount" => $amount]));
         }
 
         $error = $request->query("error");
@@ -282,7 +300,7 @@ final class ChargeController extends Controller
         }
 
         if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
-            return redirect()->to(route("account.checkout.micropayment", ["amount" => $amount]));
+            return redirect()->to(route("account.checkout", ["amount" => $amount]));
         }
 
         if (
@@ -372,32 +390,14 @@ final class ChargeController extends Controller
             ->header("Cache-Control", "no-store, private");
     }
 
-    public function paypalShow(Request $request, int $amount): Response|RedirectResponse
-    {
-        [, $key, $redirect] = $this->requireKey($request, $amount);
-        if ($redirect !== null) {
-            return $redirect;
-        }
-
-        // Kommt vom SDK auf der Zahlweisen-Seite zurück, wenn PayPal diese
-        // Zahlweise beim Laden als hier nicht anbietbar meldet — resources/
-        // js/checkout-paypal.js's einziger eigener Redirect.
-        $error = $request->query("error");
-        $error = $error === "funding_source_not_eligible" ? $error : null;
-
-        return $this->render("checkout.paypal-index", $request, $key, $amount, [
-            "error" => $error,
-        ]);
-    }
-
     /**
      * Rendert die Zustimmungs-/SDK-Seite für eine PayPal-Zahlweise.
      *
      * Anders als jede andere Seite in dieser Klasse spricht diese vorm
      * Rendern selbst schon zum Keyserver — {@see PayPalChargeIssuer::show()}
      * holt Client-ID und (nur für "card") ob Kartenzahlung gerade erlaubt
-     * ist samt Client-Token. Ohne Antwort landet der Besucher auf der
-     * Wahl-Seite mit `?error=unreachable`, statt eine Seite zu sehen, deren
+     * ist samt Client-Token. Ohne Antwort landet der Besucher auf `show()`
+     * mit `?error=unreachable`, statt eine Seite zu sehen, deren
      * SDK-Bausteine nie funktionieren.
      */
     public function paypalServiceShow(Request $request, int $amount, string $fundingSource): Response|RedirectResponse
@@ -408,13 +408,13 @@ final class ChargeController extends Controller
         }
 
         if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
-            return redirect()->to(route("account.checkout.paypal", ["amount" => $amount]));
+            return redirect()->to(route("account.checkout", ["amount" => $amount]));
         }
 
         $config = (new PayPalChargeIssuer())->show($request, $key, $fundingSource);
         if ($config === null) {
             return redirect()
-                ->to(route("account.checkout.paypal", ["amount" => $amount]) . "?error=unreachable", 303)
+                ->to(route("account.checkout", ["amount" => $amount]) . "?error=unreachable", 303)
                 ->header("Cache-Control", "no-store, private");
         }
 
@@ -423,8 +423,8 @@ final class ChargeController extends Controller
         // Seite nie, ein abgelehnter Versuch zeigt sich als Inline-Meldung
         // im SDK selbst (resources/js/checkout-paypal.js). Stellt das SDK
         // beim Laden fest, dass diese Zahlweise hier gar nicht angeboten
-        // wird, geht es zurück zur Wahl-Seite (?error=funding_source_not_
-        // eligible dort, nicht hier — siehe paypalShow()).
+        // wird, geht es zurück zu show() (?error=funding_source_not_eligible
+        // dort, nicht hier).
         $error = $request->query("error");
         $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
 
@@ -435,13 +435,30 @@ final class ChargeController extends Controller
         // gegenüber der Spende-CSP erweitert: Advanced Card Fields (die
         // "card"-Zahlweise) braucht beides für seine eigenen Hintergrund-
         // aufrufe und eingebetteten Iframes.
+        //
+        // c.paypal.com, www.paypalobjects.com (als script-, nicht nur
+        // img-src) und cors.api.sandbox.paypal.com/cors.api.paypal.com sind
+        // keine Vermutung — das eigentliche, von www.paypal.com/sdk/js
+        // ausgelieferte Bundle referenziert alle drei wörtlich:
+        // "https://c.paypal.com/da/r/fb.js" (Fraudnet, das PayPals eigene
+        // Betrugserkennung speist — ohne dieses Skript sieht PayPal weniger
+        // Signal für eine Transaktion, kein harter Fehler, aber ein
+        // stillschweigender Qualitätsverlust), ".../upstream/bizcomponents/
+        // js/modal.js" (ein echtes Skript, nicht nur die Logos/Icons, für
+        // die paypalobjects.com schon in img-src stand) und
+        // "cors.api.sandbox.paypal.com" (der Token-Endpunkt, den das SDK
+        // ruft, wenn die aufrufende Seite nicht selbst auf paypal.com liegt
+        // — unser Fall). cors.api.paypal.com ergänzt dieselbe Umgehung für
+        // den Produktivmodus, ungeprüft, weil ihn nur ein Produktiv-Client-
+        // ID auslöst.
         $csp = "default-src 'self'; "
-            . "script-src 'self' 'nonce-$nonce' https://www.paypal.com; "
-            . "script-src-elem 'self' 'nonce-$nonce' https://www.paypal.com; "
+            . "script-src 'self' 'nonce-$nonce' https://www.paypal.com https://www.paypalobjects.com https://c.paypal.com; "
+            . "script-src-elem 'self' 'nonce-$nonce' https://www.paypal.com https://www.paypalobjects.com https://c.paypal.com; "
             . "style-src 'self' 'unsafe-inline'; "
             . "img-src 'self' www.paypalobjects.com data:; "
             . "font-src 'self'; "
-            . "connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; "
+            . "connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com https://c.paypal.com "
+            . "https://cors.api.paypal.com https://cors.api.sandbox.paypal.com; "
             . "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; "
             . "frame-ancestors 'self'; "
             . "form-action 'self' www.paypal.com";

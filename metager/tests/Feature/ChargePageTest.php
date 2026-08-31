@@ -186,29 +186,71 @@ class ChargePageTest extends TestCase
     }
 
     /**
-     * Die PayPal-Kachel steht `hidden` im Markup — PayPal ist die einzige
-     * Zahlart, deren Seite ein SDK im Browser braucht, und eine Kachel, die
-     * zu einer ohne Javascript funktionslosen Seite führt, ist schlechter
-     * als keine Kachel. resources/js/account.js deckt sie auf; ein
+     * Die sieben PayPal-Kacheln stehen `hidden` im Markup — PayPal ist der
+     * einzige Anbieter, dessen Seiten ein SDK im Browser brauchen, und eine
+     * Kachel, die zu einer ohne Javascript funktionslosen Seite führt, ist
+     * schlechter als keine Kachel. resources/js/account.js deckt sie auf; ein
      * Feature-Test kann nur sehen, dass das `hidden`-Attribut im Quelltext
      * steht — ob es ohne Javascript auch wirklich unsichtbar bleibt, prüft
      * tests/Browser/ProgressiveEnhancementTest.
+     *
+     * Alle sieben, nicht nur eine: eine frühere Fassung dieser Seite hatte
+     * eine einzige PayPal-Kachel hinter einer eigenen Wahl-Seite, und ein
+     * Test, der nur diese eine prüfte, hätte nicht bemerkt, wenn von sieben
+     * flachen Kacheln nur die erste `hidden` bekäme.
      */
-    public function testThePaypalTileIsPresentButHiddenInMarkup(): void
+    public function testEveryPaypalTileIsPresentButHiddenInMarkup(): void
     {
         $this->keyserverKnows();
 
         $response = $this->signedIn()->get("/de-DE/konto/aufladen/1000");
-
-        $response->assertSee(route("account.checkout.paypal", ["amount" => 1000]), false);
-
         $content = $response->getContent();
-        $tileStart = strpos($content, 'id="checkout-paypal-tile"');
-        $this->assertNotFalse($tileStart, "die PayPal-Kachel fehlt im Markup");
-        $this->assertStringContainsString(
-            "hidden",
-            substr($content, max(0, $tileStart - 40), 80),
-            "die PayPal-Kachel steht nicht `hidden` im Markup"
-        );
+
+        foreach (["paypal", "card", "p24", "bancontact", "blik", "eps", "mybank"] as $fundingSource) {
+            $url = route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => $fundingSource]);
+            $response->assertSee($url, false);
+
+            $tileStart = strpos($content, $url);
+            $this->assertNotFalse($tileStart, "die PayPal-Kachel für $fundingSource fehlt im Markup");
+            $this->assertStringContainsString(
+                "hidden",
+                substr($content, max(0, $tileStart - 200), 200),
+                "die PayPal-Kachel für $fundingSource steht nicht `hidden` im Markup"
+            );
+        }
+    }
+
+    /**
+     * Die Reihenfolge ist Datenschutzfreundlichkeit, nicht Einführungsdatum:
+     * Bargeld (anonym), Wero, die drei Micropayment-Zahlweisen, dann die
+     * sieben PayPal-Zahlweisen. Feedback dazu: eine frühere Fassung gruppierte
+     * erst nach Anbieter ("Micropayment", "PayPal") statt nach Zahlweise, was
+     * niemandem etwas sagte, der den Anbieter nicht kennt — seitdem ist jede
+     * Zahlweise ihre eigene, flache Kachel.
+     */
+    public function testTheMethodsAppearInOrderOfPrivacyFriendliness(): void
+    {
+        $this->keyserverKnows();
+
+        $content = $this->signedIn()->get("/de-DE/konto/aufladen/1000")->getContent();
+
+        $positions = [
+            "cash" => strpos($content, route("account.checkout.cash", ["amount" => 1000])),
+            "vrpayment" => strpos($content, route("account.checkout.vrpayment", ["amount" => 1000])),
+            "micropayment.prepay" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "prepay"])),
+            "micropayment.lastschrift" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "lastschrift"])),
+            "micropayment.directbanking" => strpos($content, route("account.checkout.micropayment.service", ["amount" => 1000, "service" => "directbanking"])),
+            "paypal.paypal" => strpos($content, route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => "paypal"])),
+            "paypal.mybank" => strpos($content, route("account.checkout.paypal.service", ["amount" => 1000, "fundingSource" => "mybank"])),
+        ];
+
+        foreach ($positions as $name => $position) {
+            $this->assertNotFalse($position, "Zahlart $name fehlt im Markup");
+        }
+
+        $this->assertTrue($positions["cash"] < $positions["vrpayment"], "Bargeld muss vor Wero stehen");
+        $this->assertTrue($positions["vrpayment"] < $positions["micropayment.prepay"], "Wero muss vor Micropayment stehen");
+        $this->assertTrue($positions["micropayment.directbanking"] < $positions["paypal.paypal"], "Micropayment muss vor PayPal stehen");
+        $this->assertTrue($positions["paypal.paypal"] < $positions["paypal.mybank"], "innerhalb PayPal: Wallet/Karte vor den regionalen Zahlweisen");
     }
 }

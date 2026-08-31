@@ -18,6 +18,7 @@ return [
             'heading' => 'Betaalmethode kiezen',
             'more' => 'Meer betaalmethoden',
             'back' => 'Kies een andere betaalmethode',
+            'cash_note' => 'Anoniem',
         ],
         'cancel' => 'Terug naar account',
     ],
@@ -61,7 +62,6 @@ Duitsland',
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Overschrijving',
             'email' => [
@@ -76,7 +76,7 @@ Duitsland',
     ],
 
     'vrpayment' => [
-        'label' => 'VR Betaling',
+        'label' => 'Wero',
         'submit' => 'Betalen',
         'privacy' => 'Door op "Betaling verrichten" te klikken, wordt u doorgestuurd naar onze betalingsdienstaanbieder <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> om de aankoop te voltooien. Meer over <a href=":link" target="_blank">privacy bij VR Payment</a>.',
         'error' => [
@@ -85,7 +85,6 @@ Duitsland',
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Betalen',
         'submit' => 'Betalen',
         'loading' => 'Betalingsmethode is geladen',

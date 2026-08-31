@@ -64,31 +64,33 @@ function initializePaypalPayments(container) {
             } else if (fundingSource === "paypal") {
                 paypal.Buttons(getPaypalCheckoutData(container, null)).render("#checkout-paypal-payment-button");
             } else {
-                const paymentFieldsContainer = document.getElementById("checkout-paypal-payment-fields");
-                if (paymentFieldsContainer) {
-                    paymentFieldsContainer.hidden = false;
-                }
+                if (needsPaymentFieldsWidget(fundingSource)) {
+                    const paymentFieldsContainer = document.getElementById("checkout-paypal-payment-fields");
+                    if (paymentFieldsContainer) {
+                        paymentFieldsContainer.hidden = false;
+                    }
 
-                const { backgroundColor, textColor } = themeColors();
-                paypal
-                    .PaymentFields({
-                        fundingSource,
-                        style: {
-                            input: {
-                                background: backgroundColor,
-                                color: textColor,
-                                "font-size": "16px",
-                                padding: "0.4rem 0.75rem",
+                    const { backgroundColor, textColor } = themeColors();
+                    paypal
+                        .PaymentFields({
+                            fundingSource,
+                            style: {
+                                input: {
+                                    background: backgroundColor,
+                                    color: textColor,
+                                    "font-size": "16px",
+                                    padding: "0.4rem 0.75rem",
+                                },
+                                body: {
+                                    background: backgroundColor,
+                                    color: textColor,
+                                    padding: 0,
+                                },
                             },
-                            body: {
-                                background: backgroundColor,
-                                color: textColor,
-                                padding: 0,
-                            },
-                        },
-                        fields: {},
-                    })
-                    .render("#checkout-paypal-payment-fields");
+                            fields: {},
+                        })
+                        .render("#checkout-paypal-payment-fields");
+                }
 
                 paypal.Buttons(getPaypalCheckoutData(container, fundingSource)).render("#checkout-paypal-payment-button");
             }
@@ -96,6 +98,19 @@ function initializePaypalPayments(container) {
         .catch((err) => {
             console.error("failed to load the PayPal JS SDK script", err);
         });
+}
+
+/**
+ * PaymentFields renders a funding source's own brand mark/extra input (e.g.
+ * BLIK's 6-digit code field) above its Buttons — "card" has neither: the
+ * button itself already reads "Debit or Credit Card", and any card entry
+ * either goes through loadCardPayment() or PayPal's own hosted checkout.
+ * Asking PaymentFields for "card" anyway doesn't error, it just mounts an
+ * iframe with nothing to show — an empty box the size the layout still
+ * reserves for it.
+ */
+export function needsPaymentFieldsWidget(fundingSource) {
+    return fundingSource !== "card";
 }
 
 /**
@@ -146,16 +161,48 @@ export function mapCardSubmitError(error) {
     };
 }
 
+/**
+ * Whether the *site* is currently dark — not whether the OS is. A visitor
+ * can override the OS with the theme switch (`data-theme` on <html>,
+ * App\AppServiceProvider/resources/less/metager/variables.less), and
+ * `matchMedia("(prefers-color-scheme: dark)")` alone misses that override
+ * entirely: it only answers for the OS. Mirrors variables.less's own two
+ * rules (`:root[data-theme="dark"]`, and system dark unless overridden to
+ * light) instead of re-deriving them differently here.
+ */
+function isDarkTheme() {
+    const chosen = document.documentElement.dataset.theme;
+    if (chosen === "dark") {
+        return true;
+    }
+    if (chosen === "light") {
+        return false;
+    }
+    return Boolean(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+}
+
+/**
+ * Colors for the SDK-styled inputs we fully control (Advanced Card Fields,
+ * PaymentFields) — these are ours to theme, unlike the Buttons widget
+ * (see .checkout-paypal-widget in checkout.less), so they should track the
+ * page's own theme, not a fixed light panel. Read the resolved custom
+ * properties straight off <html> rather than re-deriving light/dark in JS
+ * (isDarkTheme() below still has to do that, but only for the one place —
+ * the PayPal button's own `style.color` — that takes a discrete choice
+ * instead of a CSS value): a custom property is resolved by the browser
+ * against whichever selector actually matched (`[data-theme]` or the
+ * `prefers-color-scheme` media query), so it is correct even where a
+ * JS media-query check alone would miss a manually chosen theme.
+ */
 function themeColors() {
-    const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     const rootStyle = window.getComputedStyle(document.documentElement);
-    const backgroundColor = (rootStyle.getPropertyValue("--background-color") || (isDarkMode ? "#222" : "#fff")).trim();
-    const textColor = (rootStyle.getPropertyValue("--font-color") || (isDarkMode ? "#fff" : "#000")).trim();
+    const backgroundColor = rootStyle.getPropertyValue("--background-color").trim() || (isDarkTheme() ? "#222" : "#fff");
+    const textColor = rootStyle.getPropertyValue("--text-color").trim() || (isDarkTheme() ? "#fff" : "#000");
     return { backgroundColor, textColor };
 }
 
-function getPaypalCheckoutData(container, fundingSource) {
-    const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+export function getPaypalCheckoutData(container, fundingSource, cardForm = null) {
+    const isDarkMode = isDarkTheme();
     const directCardEnabled = container.dataset.directCardEnabled === "1";
 
     const checkoutData = {
@@ -230,9 +277,11 @@ function getPaypalCheckoutData(container, fundingSource) {
                 }
             });
             document.getElementById("checkout-paypal-loading").hidden = true;
-            const paymentFields = document.getElementById("checkout-paypal-payment-fields");
-            if (paymentFields) {
-                paymentFields.hidden = false;
+            if (needsPaymentFieldsWidget(fundingSource)) {
+                const paymentFields = document.getElementById("checkout-paypal-payment-fields");
+                if (paymentFields) {
+                    paymentFields.hidden = false;
+                }
             }
             const paymentButton = document.getElementById("checkout-paypal-payment-button");
             if (paymentButton) {
@@ -244,11 +293,11 @@ function getPaypalCheckoutData(container, fundingSource) {
 
     if (fundingSource === "card" && directCardEnabled) {
         checkoutData.onCancel = () => {
-            lockForm(false);
+            lockForm(false, cardForm);
             showPaypalMessage(container.dataset.cancelMessage);
         };
         checkoutData.onError = () => {
-            lockForm(false);
+            lockForm(false, cardForm);
             showPaypalMessage(container.dataset.errorMessage);
         };
     }
@@ -265,7 +314,7 @@ function loadCardPayment(paypal, container) {
 
     const { backgroundColor, textColor } = themeColors();
 
-    const cardFieldsOptions = getPaypalCheckoutData(container, "card");
+    const cardFieldsOptions = getPaypalCheckoutData(container, "card", cardForm);
     cardFieldsOptions.style = {
         body: { padding: 0, background: backgroundColor },
         input: { background: backgroundColor, color: textColor, "font-size": "16px", padding: "0.4rem 0.75rem" },

@@ -160,6 +160,42 @@
   }
 }
 
+// ── PayPal ───────────────────────────────────────────────────────────────────
+// #checkout-paypal-payment-button — Smart Buttons, gerendert von PayPal
+// selbst — bekommt dieses helle Feld, #checkout-paypal-card-container und
+// #checkout-paypal-payment-fields nicht: der Unterschied ist, wem die Farbe
+// gehört. Advanced Card Fields und PaymentFields sind eigene Eingabefelder,
+// deren Hintergrund/Textfarbe checkout-paypal.js selbst per `style` setzt
+// (themeColors() dort) — die folgen dem Thema der Seite wie jedes andere
+// Formularfeld auch. Die Buttons dagegen sind PayPals eigenes Widget: nur
+// der Haupt-"PayPal"-Knopf nimmt eine Farbe entgegen (getPaypalCheckoutData
+// setzt "black" im dunklen, "gold" im hellen Thema), die Knöpfe der übrigen
+// Zahlungsarten (z. B. SEPA-Lastschrift) bleiben grundsätzlich hell, ganz
+// gleich welches Thema die Seite hat. Ohne dieses Feld läge ein helles
+// Widget direkt auf der dunklen Karte, wie ein Darstellungsfehler und nicht
+// wie Absicht — deshalb ein eigenes, bewusst helles Feld nur darum.
+.checkout-paypal-widget {
+  // Kein border-radius: die von PayPal gerenderten Knöpfe füllen die Breite
+  // fast randlos und selbst eckig — eine gerundete Karte darum zeigt an den
+  // Ecken dann ihre eigene Rundung neben dem eckigen Knopf, zwei
+  // unabhängige Formen, die nicht zusammenpassen. Ein Rechteck vermeidet
+  // das, statt beide Rundungen aufeinander abzustimmen.
+  padding: 1rem;
+  background-color: @color-almost-white;
+}
+
+// PaymentFields rendert in ein eigenes, grenzenlos transparentes Iframe
+// (PayPal selbst setzt background-color:transparent darauf) — bis dessen
+// eigenes Dokument geladen ist und unser per `style`-Objekt gesetztes
+// Hintergrundgrau tatsächlich anwendet, zeigt sich, was hinter dem Iframe
+// liegt. Ohne eigene Hintergrundfarbe hier ist das die Standardfarbe des
+// umschließenden .account-section — im dunklen Thema also nicht dessen
+// eigene dunkle Kartenfarbe, sondern was auch immer sonst durchscheint —
+// kurz ein heller Fleck genau dort, wo gleich das Formularfeld erscheint.
+#checkout-paypal-payment-fields {
+  background-color: @card-background-color;
+}
+
 // ── Micropayment ─────────────────────────────────────────────────────────────
 // Nur das Formular drumherum — Zustimmung und Fehlermeldung teilt sich
 // micropayment mit Bar (.checkout-consent/.checkout-consent__error oben).

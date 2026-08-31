@@ -168,8 +168,10 @@ function enhanceTransferDialog() {
 }
 
 function revealPaypalTile() {
-    const tile = document.getElementById("checkout-paypal-tile");
-    if (tile) {
+    // Sieben Kacheln, eine pro Zahlweise (checkout/index.blade.php) — nicht
+    // eine gemeinsame Wahl-Seite mehr, deshalb alle mit derselben Klasse statt
+    // einer einzigen id.
+    document.querySelectorAll(".checkout-paypal-tile").forEach((tile) => {
         tile.hidden = false;
-    }
+    });
 }

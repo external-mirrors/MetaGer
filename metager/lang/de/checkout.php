@@ -14,9 +14,20 @@
  * `paypal.heading`/`submit`/`loading`/`cancel`/`error.generic`/`card.*` sind
  * wortgleich aus dem Keymanager übernommen (dessen checkout.json unter
  * `paypal`); `paypal.privacy` und `paypal.error.not_available` ebenso
- * (dessen `charge.paypal-privacy`/`charge.not-available`). `paypal.label`,
- * `paypal.funding.*` (die sieben Kachelbeschriftungen der neuen Wahl-Seite)
+ * (dessen `charge.paypal-privacy`/`charge.not-available`). `paypal.funding.*`
  * und `paypal.noscript` sind neu.
+ *
+ * checkout/index.blade.php zeigt alle Zahlweisen einzeln und flach — nicht
+ * erst den Anbieter (PayPal, Micropayment), dann die Zahlweise: wer bezahlen
+ * will, sucht eine Zahlweise, die er kennt, keinen Anbieter, den er nicht
+ * kennt. `vrpayment.label` heißt deshalb "Wero", nicht "VR Payment" — die
+ * einzige Zahlweise dahinter. `micropayment.label`/`paypal.label` gibt es
+ * darum nicht mehr; `checkout.paypal.funding.*` beschriftet die sieben
+ * PayPal-Kacheln direkt in der flachen Liste. `page.methods.cash_note` ist
+ * die einzige Notiz, die geblieben ist — die anderen Zahlweisen sagen mit
+ * ihrem eigenen Namen schon, was sie sind. Reihenfolge der Kacheln:
+ * Datenschutzfreundlichkeit vor Einführungsreihenfolge — Bargeld (anonym),
+ * Wero, die drei Micropayment-Zahlweisen, dann die sieben PayPal-Zahlweisen.
  */
 return [
     'page' => [
@@ -25,6 +36,7 @@ return [
             'heading' => 'Zahlungsart wählen',
             'more' => 'Weitere Zahlungsarten',
             'back' => 'Andere Zahlungsart wählen',
+            'cash_note' => 'Anonym',
         ],
         'cancel' => 'Zurück zum Konto',
     ],
@@ -67,7 +79,6 @@ Postfach 51 01 43
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Überweisung',
             'email' => [
@@ -82,7 +93,7 @@ Postfach 51 01 43
     ],
 
     'vrpayment' => [
-        'label' => 'VR Payment',
+        'label' => 'Wero',
         'submit' => 'Zahlung durchführen',
         'privacy' => 'Wenn Sie auf "Zahlung durchführen" klicken, werden Sie zu unserem Zahlungsdienstleister <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> weitergeleitet, um den Kauf abzuschließen. Mehr über <a href=":link" target="_blank">Datenschutz bei VR Payment</a>.',
         'error' => [
@@ -91,7 +102,6 @@ Postfach 51 01 43
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Zahlung durchführen',
         'submit' => 'Zahlung durchführen',
         'loading' => 'Zahlungsmethode wird geladen',

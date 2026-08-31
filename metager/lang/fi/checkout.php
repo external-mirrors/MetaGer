@@ -18,6 +18,7 @@ return [
             'heading' => 'Valitse maksutapa',
             'more' => 'Muut maksutavat',
             'back' => 'Valitse toinen maksutapa',
+            'cash_note' => 'Anonyymi',
         ],
         'cancel' => 'Takaisin tilille',
     ],
@@ -61,7 +62,6 @@ Saksa',
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Pankkisiirto',
             'email' => [
@@ -76,7 +76,7 @@ Saksa',
     ],
 
     'vrpayment' => [
-        'label' => 'VR-maksu',
+        'label' => 'Wero',
         'submit' => 'Suorita maksu',
         'privacy' => 'Klikkaamalla "Suorita maksu" sinut ohjataan maksupalveluntarjoajallemme <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> ostoksen suorittamista varten. Lisätietoja <a href=":link" target="_blank">tietosuojasta osoitteessa VR Payment</a>.',
         'error' => [
@@ -85,7 +85,6 @@ Saksa',
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Suorita maksu',
         'submit' => 'Suorita maksu',
         'loading' => 'Maksutapa on ladattu',

@@ -18,6 +18,7 @@ return [
             'heading' => 'Välj betalningsmetod',
             'more' => 'Fler betalningsmetoder',
             'back' => 'Välj en annan betalningsmetod',
+            'cash_note' => 'Anonymt',
         ],
         'cancel' => 'Tillbaka till kontot',
     ],
@@ -61,7 +62,6 @@ Tyskland',
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Banköverföring',
             'email' => [
@@ -76,7 +76,7 @@ Tyskland',
     ],
 
     'vrpayment' => [
-        'label' => 'VR Betalning',
+        'label' => 'Wero',
         'submit' => 'Göra betalning',
         'privacy' => 'Genom att klicka på "Gör betalning" kommer du att omdirigeras till vår betaltjänstleverantör <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> för att slutföra köpet. Mer om <a href=":link" target="_blank">integritet på VR Payment</a>.',
         'error' => [
@@ -85,7 +85,6 @@ Tyskland',
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Göra betalning',
         'submit' => 'Göra betalning',
         'loading' => 'Betalningsmetod är laddad',

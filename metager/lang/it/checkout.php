@@ -18,6 +18,7 @@ return [
             'heading' => 'Scegliere il metodo di pagamento',
             'more' => 'Altri metodi di pagamento',
             'back' => 'Scegli un altro metodo di pagamento',
+            'cash_note' => 'Anonimo',
         ],
         'cancel' => 'Torna al conto',
     ],
@@ -61,7 +62,6 @@ Germania',
     ],
 
     'micropayment' => [
-        'label' => 'Micropayment',
         'prepay' => [
             'label' => 'Bonifico bancario',
             'email' => [
@@ -76,7 +76,7 @@ Germania',
     ],
 
     'vrpayment' => [
-        'label' => 'Pagamento VR',
+        'label' => 'Wero',
         'submit' => 'Effettuare il pagamento',
         'privacy' => 'Facendo clic su "Effettuare il pagamento" si verrà reindirizzati al nostro fornitore di servizi di pagamento <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> per completare l\'acquisto. Maggiori informazioni su <a href=":link" target="_blank">privacy su VR Payment</a>.',
         'error' => [
@@ -85,7 +85,6 @@ Germania',
     ],
 
     'paypal' => [
-        'label' => 'PayPal',
         'heading' => 'Effettuare il pagamento',
         'submit' => 'Effettuare il pagamento',
         'loading' => 'Il metodo di pagamento è caricato',

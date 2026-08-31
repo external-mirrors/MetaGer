@@ -59,12 +59,19 @@ class ChargePayPalTest extends TestCase
             ->post($path, $fields);
     }
 
+    /**
+     * Es gibt keine eigene PayPal-Wahl-Seite mehr — die sieben Zahlweisen
+     * sind Kacheln auf dem allgemeinen Zahlungsarten-Chooser, wie jede andere
+     * Zahlweise auch. ChargePageTest::testEveryPaypalTileIsPresentButHidden
+     * InMarkup prüft dasselbe Markup zusätzlich in der allgemeinen Chooser-
+     * Testklasse; hier steht es noch einmal, spezifisch für PayPal.
+     */
     public function testTheChooserLinksToAllSevenFundingSources(): void
     {
         $this->keyserverKnows();
 
         $response = $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000/paypal")
+            ->get("/de-DE/konto/aufladen/1000")
             ->assertOk();
 
         foreach (["paypal", "card", "p24", "bancontact", "blik", "eps", "mybank"] as $fundingSource) {
@@ -73,18 +80,6 @@ class ChargePayPalTest extends TestCase
                 false
             );
         }
-    }
-
-    public function testTheChooserTileOnTheMainPageIsHiddenInMarkup(): void
-    {
-        $this->keyserverKnows();
-
-        $response = $this->signedIn()->get("/de-DE/konto/aufladen/1000");
-
-        $content = $response->getContent();
-        $tileStart = strpos($content, 'id="checkout-paypal-tile"');
-        $this->assertNotFalse($tileStart);
-        $this->assertStringContainsString("hidden", substr($content, max(0, $tileStart - 40), 80));
     }
 
     public function testTheServicePageRendersWithTheKeyserverConfig(): void
@@ -118,6 +113,54 @@ class ChargePayPalTest extends TestCase
         $this->assertNotSame($first, $second, "jede Anfrage muss ihre eigene Nonce bekommen");
     }
 
+    /**
+     * Regression test: resources/js/checkout-paypal.js only calls
+     * loadCardPayment() — which renders into #checkout-paypal-card-container
+     * — when `fundingSource === "card" && directCardEnabled`. Everywhere
+     * else, including `fundingSource === "card"` with direct card mode
+     * switched off, it renders PaymentFields/Buttons into
+     * #checkout-paypal-payment-fields/#checkout-paypal-payment-button
+     * instead. The blade used to branch on `$fundingSource === 'card'`
+     * alone, so a "card" page with direct card mode off shipped the
+     * Advanced-Card-Fields markup while the JS looked for the
+     * PaymentFields/Buttons containers that were never rendered —
+     * `paypal.PaymentFields(...).render("#checkout-paypal-payment-fields")`
+     * then throws because its target selector matches nothing.
+     */
+    public function testTheCardPageRendersThePaymentFieldsContainerWhenDirectCardModeIsOff(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/key/*/checkout/paypal/card" => Http::response([
+                "client_id" => "test-client-id",
+                "direct_card_enabled" => false,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000/paypal/card")
+            ->assertOk()
+            ->assertSee('id="checkout-paypal-payment-fields"', false)
+            ->assertSee('id="checkout-paypal-payment-button"', false)
+            ->assertDontSee('id="checkout-paypal-card-container"', false);
+    }
+
+    public function testTheCardPageRendersTheCardContainerWhenDirectCardModeIsOn(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/key/*/checkout/paypal/card" => Http::response([
+                "client_id" => "test-client-id",
+                "direct_card_enabled" => true,
+                "client_token" => "test-client-token",
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000/paypal/card")
+            ->assertOk()
+            ->assertSee('id="checkout-paypal-card-container"', false)
+            ->assertDontSee('id="checkout-paypal-payment-fields"', false);
+    }
+
     public function testAnUnknownFundingSourceBouncesBackToTheChooser(): void
     {
         $this->keyserverKnows();
@@ -135,7 +178,7 @@ class ChargePayPalTest extends TestCase
 
         $this->signedIn()
             ->get("/de-DE/konto/aufladen/1000/paypal/paypal")
-            ->assertRedirect(route("account.checkout.paypal", ["amount" => 1000]) . "?error=unreachable");
+            ->assertRedirect(route("account.checkout", ["amount" => 1000]) . "?error=unreachable");
     }
 
     public function testOrderCreateCreatesAnOrderAndReturnsThePaypalOrderId(): void

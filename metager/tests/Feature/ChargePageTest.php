@@ -186,16 +186,29 @@ class ChargePageTest extends TestCase
     }
 
     /**
-     * Zahlungsarten, die noch nicht umgezogen sind, verlinken weiter zum
-     * Keymanager — dieselbe Adresse, die /konto vorher für jede Zahlungsart
-     * benutzt hat.
+     * Die PayPal-Kachel steht `hidden` im Markup — PayPal ist die einzige
+     * Zahlart, deren Seite ein SDK im Browser braucht, und eine Kachel, die
+     * zu einer ohne Javascript funktionslosen Seite führt, ist schlechter
+     * als keine Kachel. resources/js/account.js deckt sie auf; ein
+     * Feature-Test kann nur sehen, dass das `hidden`-Attribut im Quelltext
+     * steht — ob es ohne Javascript auch wirklich unsichtbar bleibt, prüft
+     * tests/Browser/ProgressiveEnhancementTest.
      */
-    public function testOtherPaymentMethodsLinkOnToTheKeymanager(): void
+    public function testThePaypalTileIsPresentButHiddenInMarkup(): void
     {
         $this->keyserverKnows();
 
-        $this->signedIn()
-            ->get("/de-DE/konto/aufladen/1000")
-            ->assertSee("/keys/key/" . self::A_KEY . "/checkout/1000#payment", false);
+        $response = $this->signedIn()->get("/de-DE/konto/aufladen/1000");
+
+        $response->assertSee(route("account.checkout.paypal", ["amount" => 1000]), false);
+
+        $content = $response->getContent();
+        $tileStart = strpos($content, 'id="checkout-paypal-tile"');
+        $this->assertNotFalse($tileStart, "die PayPal-Kachel fehlt im Markup");
+        $this->assertStringContainsString(
+            "hidden",
+            substr($content, max(0, $tileStart - 40), 80),
+            "die PayPal-Kachel steht nicht `hidden` im Markup"
+        );
     }
 }

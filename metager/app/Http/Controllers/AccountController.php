@@ -42,10 +42,7 @@ use Illuminate\Support\Facades\Vite;
  * **Die Wahl des Pakets bleibt hier, der Bezahlvorgang selbst zieht um.**
  * Die Kacheln sind Preise, die {@see KeyPrice} vom Keyserver erfragt; ein
  * Klick geht auf `App\Http\Controllers\ChargeController` — /konto/aufladen,
- * ohne Schlüssel im Pfad. Bar- und die Entwicklungs-Zahlungsart laufen dort
- * inzwischen lokal, alles andere verlinkt von dort noch einmal weiter in
- * `/keys/key/<uuid>/checkout/<menge>`, bis es nachzieht — siehe
- * {@see KeymanagerLinks::checkout()} für den aktuellen Stand.
+ * ohne Schlüssel im Pfad. Alle Zahlarten laufen inzwischen dort.
  */
 final class AccountController extends Controller
 {

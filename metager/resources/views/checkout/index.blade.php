@@ -8,16 +8,21 @@
 	/konto — App\Http\Controllers\ChargeController hat die Gründe für den
 	Umzug hierher.
 
-	Bar, micropayment (eine eigene Wahl-Seite für die drei Unterarten
-	dahinter), VR Payment und die Entwicklungs-Zahlungsart sind lokale
-	Kacheln; alles andere (PayPal) verlinkt auf dieselbe Weise weiter, wie
-	/konto es vorher für jede Zahlungsart tat — nur einen Schritt später.
-
 	Bewusst ohne "Zugang sichern": diese Seite ist eine Entscheidung, keine
 	Verwaltung, und die Kacheln sollen kurz und gleich groß bleiben — je mehr
 	Zahlungsarten dazukommen, desto mehr fällt eine lange Beschreibung auf.
 	Nur der Name der Zahlungsart steht hier; wie sie funktioniert, steht auf
 	ihrer eigenen Seite.
+
+	Die PayPal-Kachel steht `hidden` im Markup, wie #login-qr in
+	login.blade.php — PayPal ist die einzige Zahlart, deren Seite ein SDK im
+	Browser braucht, und eine Kachel, die zu einer Seite führt, die ohne
+	Javascript nichts tut, ist schlechter als keine Kachel. resources/js/
+	account.js deckt sie auf, sobald Javascript tatsächlich läuft; das SDK
+	selbst lädt erst auf der Zielseite, nicht schon hier. `[hidden]` allein
+	reicht nicht — .account-tier hat kein eigenes display, aber ein
+	unerwartetes Elternelement könnte eins setzen, deshalb steht die Regel
+	auch explizit in account.less.
 --}}
 <div id="checkout-page">
 	<header class="account-head">
@@ -53,6 +58,11 @@
 					<span>@lang('checkout.vrpayment.label')</span>
 				</a>
 			</li>
+			<li id="checkout-paypal-tile" hidden>
+				<a class="account-tier" href="{{ route('account.checkout.paypal', ['amount' => $amount]) }}">
+					<span>@lang('checkout.paypal.label')</span>
+				</a>
+			</li>
 			@if(app()->environment('local'))
 				<li>
 					<a class="account-tier" href="{{ route('account.checkout.manual', ['amount' => $amount]) }}">
@@ -61,7 +71,6 @@
 				</li>
 			@endif
 		</ul>
-		<a class="account-section__more" href="{{ $checkoutUrl }}#payment">@lang('checkout.page.methods.more')</a>
 	</section>
 </div>
 @endsection

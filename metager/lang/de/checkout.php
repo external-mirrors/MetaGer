@@ -10,6 +10,13 @@
  * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
  * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
  * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
+ *
+ * `paypal.heading`/`submit`/`loading`/`cancel`/`error.generic`/`card.*` sind
+ * wortgleich aus dem Keymanager übernommen (dessen checkout.json unter
+ * `paypal`); `paypal.privacy` und `paypal.error.not_available` ebenso
+ * (dessen `charge.paypal-privacy`/`charge.not-available`). `paypal.label`,
+ * `paypal.funding.*` (die sieben Kachelbeschriftungen der neuen Wahl-Seite)
+ * und `paypal.noscript` sind neu.
  */
 return [
     'page' => [
@@ -80,6 +87,52 @@ Postfach 51 01 43
         'privacy' => 'Wenn Sie auf "Zahlung durchführen" klicken, werden Sie zu unserem Zahlungsdienstleister <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> weitergeleitet, um den Kauf abzuschließen. Mehr über <a href=":link" target="_blank">Datenschutz bei VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment hat diese Zahlung abgelehnt. Bitte versuchen Sie es erneut oder wählen Sie eine andere Zahlungsart.',
+        ],
+    ],
+
+    'paypal' => [
+        'label' => 'PayPal',
+        'heading' => 'Zahlung durchführen',
+        'submit' => 'Zahlung durchführen',
+        'loading' => 'Zahlungsmethode wird geladen',
+        'cancel' => 'Der Zahlungsvorgang wurde storniert. Wenn Ihre Zahlung vor der Stornierung durchgeführt wurde, wird Ihre Bestellung bearbeitet, sobald die Zahlung vom Zahlungsdienstleister bestätigt wurde. Andernfalls versuchen Sie es bitte erneut.',
+        'privacy' => 'Zahlungsmethoden in dieser Gruppe erfordern zwar meist keinen PayPal Account, werden aber dort verarbeitet. Mehr zum <a href=":link" target="_blank">Datenschutz bei PayPal</a>.',
+        // Nicht angeboten, ohne Javascript aufgerufen (Lesezeichen, direkt
+        // eingegeben) — /konto/aufladen/<menge>/paypal bietet die Kachel
+        // ohne Javascript gar nicht erst an.
+        'noscript' => 'Diese Zahlungsart benötigt Javascript. Bitte wählen Sie eine andere Zahlungsart oder aktivieren Sie Javascript.',
+        'funding' => [
+            'paypal' => 'PayPal',
+            'card' => 'Kredit-/Debitkarte',
+            'p24' => 'Przelewy24',
+            'bancontact' => 'Bancontact',
+            'blik' => 'BLIK',
+            'eps' => 'EPS',
+            'mybank' => 'MyBank',
+        ],
+        'error' => [
+            'not_available' => 'Die gewählte Zahlungsart ist in Ihrer Region leider nicht verfügbar.',
+            'generic' => 'Der Zahlungsvorgang wurde aufgrund eines Fehlers abgebrochen. Wenn Ihre Zahlung vor der Stornierung durchgeführt wurde, wird Ihre Bestellung bearbeitet, sobald die Zahlung vom Zahlungsdienstleister bestätigt wurde. Andernfalls versuchen Sie es bitte erneut.',
+        ],
+        'card' => [
+            'label' => 'Kredit- / Debitkarte',
+            'name' => 'Name des Karteninhabers (optional)',
+            'number' => 'Kartennummer',
+            'expiration' => 'Gültig bis',
+            'cvv' => 'CVV',
+            'error' => [
+                'generic' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '9500' => 'Kreditkarte als betrügerisch abgelehnt',
+                '5100' => 'Die Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '00N7' => 'Falsche CVV. Bitte Eingabe überprüfen',
+                '5400' => 'Kreditkarte abgelaufen',
+                '5180' => 'Luhn Überprüfung fehlgeschlagen',
+                '5120' => 'Kreditkarte wurde wegen nicht ausreichender Deckung abgelehnt.',
+                '9520' => 'Kreditkarte als verloren/gestohlen abgelehnt',
+                '0500' => 'Kreditkarte wurde vom Kreditinstitut abgelehnt',
+                '1330' => 'Kreditkarte ungültig. Bitte überprüfen Sie Ihre Eingabe',
+                '3ds' => '3D Authentifizierung fehlgeschlagen',
+            ],
         ],
     ],
 

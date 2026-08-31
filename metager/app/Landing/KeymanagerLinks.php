@@ -21,7 +21,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  *   {@see login()}, {@see create()}, {@see account()}, {@see dashboard()},
  *   {@see accountForVisitor()}   MetaGer-Routen
  *
- *   {@see checkout()}, {@see orders()}, {@see campaigns()}, {@see remove()},
+ *   {@see orders()}, {@see campaigns()}, {@see remove()},
  *   {@see voucher()}, {@see keyApi()}   noch drüben
  *
  * Dass die MetaGer-Routen hier stehen, obwohl sie `route()` nur weiterreichen,
@@ -273,32 +273,6 @@ final class KeymanagerLinks
         return substr($url, 0, $mark)
             . ($query === [] ? "" : "?" . http_build_query($query))
             . $fragment;
-    }
-
-    /**
-     * Der Bezahlvorgang für eine Menge Token, für die Zahlarten, die noch
-     * nicht umgezogen sind — endend vor der Menge und der Zahlart.
-     *
-     * Bar und die Entwicklungs-Zahlart laufen inzwischen lokal
-     * (App\Http\Controllers\ChargeController, /konto/aufladen); PayPal,
-     * micropayment und VR Payment bleiben vorerst hier, weil dort die
-     * eigentliche Abwicklung und die Bestellnummern liegen, die dabei
-     * entstehen. Die lokale Aufladeseite verlinkt für diese Zahlarten hierher
-     * weiter — derselbe schrittweise Umzug wie bei jedem vorherigen Schritt,
-     * der Keymanager beantwortet, was noch nicht umgezogen ist.
-     *
-     * **Trägt den Schlüssel durch eine Adresszeile.** Nicht zu vermeiden — die
-     * Kasse drüben kennt keine Sitzung und liest den Schlüssel aus ihrem
-     * eigenen Pfad —, und es betrifft nur noch die Zahlarten, die diese
-     * Methode baut. Jede Zahlart, die umzieht, nimmt sich selbst aus dieser
-     * Liste heraus.
-     *
-     * Der Anker `#payment` gehört zur Zielseite und wird deshalb dort
-     * angehängt, wo die Menge angehängt wird.
-     */
-    public static function checkout(string $key): string
-    {
-        return self::url("/key/" . urlencode($key) . "/checkout");
     }
 
     /**

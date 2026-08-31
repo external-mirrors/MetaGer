@@ -7,16 +7,19 @@ use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Authentication\ManualChargeIssuer;
 use App\Authentication\MicropaymentChargeIssuer;
+use App\Authentication\PayPalChargeIssuer;
 use App\Authentication\VRPaymentChargeIssuer;
 use App\Landing\ChargeEligibility;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Vite;
+use Illuminate\Support\Str;
 
 /**
  * Aufladen — /konto/aufladen/<menge>, ohne Schlüssel im Pfad.
@@ -26,10 +29,8 @@ use Illuminate\Support\Facades\Vite;
  * bei jedem Schritt davor steht der Schlüssel in keiner Adresse — er kommt
  * aus dem Cookie, über {@see \App\Authentication\KeyAuthGuard}.
  *
- * **Bar, micropayment, VR Payment und die Entwicklungs-Zahlart laufen hier.**
- * PayPal bleibt vorerst drüben ({@see KeymanagerLinks::checkout()}) —
- * {@see show()} verlinkt dafür dorthin weiter, mit dem Schlüssel im URL, so
- * wie das Konto es vorher für alle Zahlarten tat.
+ * **Jede Zahlart läuft inzwischen hier** — Bar, micropayment, VR Payment, die
+ * Entwicklungs-Zahlart, und zuletzt PayPal.
  *
  * **Bar braucht zwei Seiten statt einer.** `cashShow`/`cashSubmit` legen den
  * Auftrag an; `cashCreated` zeigt ihn. Dazwischen steht eine Weiterleitung
@@ -48,10 +49,9 @@ use Illuminate\Support\Facades\Vite;
  * leitet direkt auf die von drüben gelieferte, bereits mit dem Anbieter-
  * Siegel versehene Zahlungsseite weiter (303, kein lokales Ziel). Der Rückweg
  * von dort landet nicht wieder bei MetaGer im laufenden Vorgang, sondern auf
- * {@see returned()} — derselben Landeseite, die VR Payment und PayPal später
- * teilen, sobald sie folgen. Kein Beleg, nur "bezahlt" oder "wird noch
- * bearbeitet", anhand des `paid`-Felds, das {@see ChargeOrderIssuer::find()}
- * mitbringt.
+ * {@see returned()} — derselben Landeseite, die VR Payment ebenfalls nutzt.
+ * Kein Beleg, nur "bezahlt" oder "wird noch bearbeitet", anhand des
+ * `paid`-Felds, das {@see ChargeOrderIssuer::find()} mitbringt.
  *
  * **VR Payment (Wero) verlässt MetaGer ebenso.** Nur eine Zahlart, keine
  * Wahl-Seite davor ({@see vrpaymentShow()} rendert die Zustimmungsseite
@@ -64,6 +64,20 @@ use Illuminate\Support\Facades\Vite;
  * dasselbe Kürzel wie auf /konto. "Zugang sichern" (partials/key-backup.blade.php)
  * dagegen bewusst nicht: dieser Vorgang ist eine Entscheidung, kein Ort zum
  * Verwalten, und die Sicherung bleibt auf /konto, wo sie hingehört.
+ *
+ * **PayPal ist SDK-getrieben, nicht formularbasiert.** Sieben Zahlweisen
+ * hinter einer eigenen Wahl-Seite wie micropayment ({@see paypalShow()});
+ * `paypalServiceShow` holt vor dem Rendern die Konfiguration (Client-ID,
+ * ob Kartenzahlung gerade erlaubt ist) drüben ab — der einzige Seitenaufruf
+ * in dieser Klasse, der selbst schon zum Keyserver spricht — und setzt eine
+ * Content-Security-Policy fürs PayPal-SDK. `paypalOrderCreate`/
+ * `paypalOrderCapture` sind JSON-Ziele, die resources/js/checkout-paypal.js
+ * per fetch aufruft (das SDK ruft `createOrder`/`onApprove` auf, nicht ein
+ * Formular-Submit) — nie mit dem Bearer-Token, das diese Klasse für
+ * {@see \App\Authentication\PayPalChargeIssuer} hält; das bleibt serverseitig.
+ * Ohne Javascript bietet die Wahl-Seite auf /konto die PayPal-Kachel gar
+ * nicht erst an (dieselbe `hidden`-Vorlage wie `#login-qr`), statt eine Seite
+ * zu zeigen, die nichts tut.
  *
  * **Drei Wege zurück, nicht einer.** "Menge ändern" (jede Seite) und "andere
  * Zahlungsart" (Bar, die Entwicklungs-Zahlart) bleiben im Vorgang; "Zurück
@@ -92,7 +106,6 @@ final class ChargeController extends Controller
 
         return $this->render("checkout.index", $request, $key, $amount, [
             "price" => $tiers[$amount],
-            "checkoutUrl" => KeymanagerLinks::checkout($key) . "/" . $amount,
         ]);
     }
 
@@ -357,6 +370,166 @@ final class ChargeController extends Controller
         return redirect()
             ->away($order["redirect_url"], 303)
             ->header("Cache-Control", "no-store, private");
+    }
+
+    public function paypalShow(Request $request, int $amount): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        // Kommt vom SDK auf der Zahlweisen-Seite zurück, wenn PayPal diese
+        // Zahlweise beim Laden als hier nicht anbietbar meldet — resources/
+        // js/checkout-paypal.js's einziger eigener Redirect.
+        $error = $request->query("error");
+        $error = $error === "funding_source_not_eligible" ? $error : null;
+
+        return $this->render("checkout.paypal-index", $request, $key, $amount, [
+            "error" => $error,
+        ]);
+    }
+
+    /**
+     * Rendert die Zustimmungs-/SDK-Seite für eine PayPal-Zahlweise.
+     *
+     * Anders als jede andere Seite in dieser Klasse spricht diese vorm
+     * Rendern selbst schon zum Keyserver — {@see PayPalChargeIssuer::show()}
+     * holt Client-ID und (nur für "card") ob Kartenzahlung gerade erlaubt
+     * ist samt Client-Token. Ohne Antwort landet der Besucher auf der
+     * Wahl-Seite mit `?error=unreachable`, statt eine Seite zu sehen, deren
+     * SDK-Bausteine nie funktionieren.
+     */
+    public function paypalServiceShow(Request $request, int $amount, string $fundingSource): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
+            return redirect()->to(route("account.checkout.paypal", ["amount" => $amount]));
+        }
+
+        $config = (new PayPalChargeIssuer())->show($request, $key, $fundingSource);
+        if ($config === null) {
+            return redirect()
+                ->to(route("account.checkout.paypal", ["amount" => $amount]) . "?error=unreachable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        // Anders als bei VR Payment gibt es kein "die Zahlung wurde
+        // abgelehnt" über eine Weiterleitung hierher — PayPal verlässt diese
+        // Seite nie, ein abgelehnter Versuch zeigt sich als Inline-Meldung
+        // im SDK selbst (resources/js/checkout-paypal.js). Stellt das SDK
+        // beim Laden fest, dass diese Zahlweise hier gar nicht angeboten
+        // wird, geht es zurück zur Wahl-Seite (?error=funding_source_not_
+        // eligible dort, nicht hier — siehe paypalShow()).
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
+
+        $nonce = Str::random(16);
+        // script-src/img-src/form-action nach dem Vorbild von
+        // DonationController::paymentMethod() — dort mit `time()` als Nonce,
+        // was hier bewusst nicht übernommen ist. connect-src/frame-src sind
+        // gegenüber der Spende-CSP erweitert: Advanced Card Fields (die
+        // "card"-Zahlweise) braucht beides für seine eigenen Hintergrund-
+        // aufrufe und eingebetteten Iframes.
+        $csp = "default-src 'self'; "
+            . "script-src 'self' 'nonce-$nonce' https://www.paypal.com; "
+            . "script-src-elem 'self' 'nonce-$nonce' https://www.paypal.com; "
+            . "style-src 'self' 'unsafe-inline'; "
+            . "img-src 'self' www.paypalobjects.com data:; "
+            . "font-src 'self'; "
+            . "connect-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; "
+            . "frame-src 'self' https://www.paypal.com https://www.sandbox.paypal.com; "
+            . "frame-ancestors 'self'; "
+            . "form-action 'self' www.paypal.com";
+
+        return $this->render("checkout.paypal", $request, $key, $amount, [
+            "fundingSource" => $fundingSource,
+            "clientId" => $config["client_id"],
+            "directCardEnabled" => $config["direct_card_enabled"],
+            "clientToken" => $config["client_token"],
+            "nonce" => $nonce,
+            "error" => $error,
+            "privacyUrl" => "https://www.paypal.com/us/legalhub/privacy-full",
+            // Zusätzlich zum gemeinsamen account.js dieser Klasse — das SDK
+            // selbst lädt checkout-paypal.js, nicht umgekehrt, deshalb steht
+            // es hier und nicht im gemeinsamen render()-Rahmen, der jede
+            // Seite dieser Klasse bekommt.
+            "js" => [Vite::asset("resources/js/account.js"), Vite::asset("resources/js/checkout-paypal.js")],
+        ])->header("Content-Security-Policy", $csp);
+    }
+
+    /**
+     * JSON-Ziel für resources/js/checkout-paypal.js's `createOrder`-Callback
+     * — legt den Auftrag an und gibt die PayPal-Bestellnummer zurück, die
+     * das SDK direkt weiterreicht.
+     */
+    public function paypalOrderCreate(Request $request, int $amount, string $fundingSource, PayPalChargeIssuer $issuer): JsonResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return response()->json(["error" => "unauthenticated"], 401);
+        }
+
+        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
+            return response()->json(["error" => "invalid_funding_source"], 400);
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return response()->json(["error" => "not_eligible"], 409);
+        }
+
+        $order = $issuer->createOrder($request, $key, $amount, $fundingSource);
+        if ($order === null) {
+            return response()->json(["error" => "unreachable"], 502);
+        }
+
+        return response()->json([
+            "payment_reference" => $order["public_id"],
+            "paypal_order_id" => $order["paypal_order_id"],
+        ], 201);
+    }
+
+    /**
+     * JSON-Ziel für resources/js/checkout-paypal.js's `onApprove`-Callback
+     * — löst den Auftrag ein. Die Antwort wird nahezu unverändert
+     * durchgereicht: das Skript kennt PayPals eigene Fehlerform bereits
+     * (Kartenfehlercodes, die 3-D-Secure-Kennung), eine hier vereinfachte
+     * Form wäre für das Skript unbrauchbar.
+     */
+    public function paypalOrderCapture(Request $request, int $amount, string $fundingSource, PayPalChargeIssuer $issuer): JsonResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return response()->json(["errors" => [["msg" => "unauthenticated"]]], 401);
+        }
+
+        if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
+            return response()->json(["error" => "invalid_funding_source"], 400);
+        }
+
+        $paymentReference = $request->input("payment_reference");
+        if (!is_string($paymentReference) || !preg_match('/^(Z)?(\d+)$/', $paymentReference)) {
+            return response()->json(["errors" => [["msg" => "invalid_payment_reference"]]], 400);
+        }
+
+        $result = $issuer->captureOrder($request, $key, $fundingSource, $paymentReference);
+
+        return response()->json($result["body"], $result["status"]);
     }
 
     public function returned(Request $request, string $reference, ChargeOrderIssuer $issuer): Response|RedirectResponse

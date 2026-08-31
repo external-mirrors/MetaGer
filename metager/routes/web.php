@@ -366,10 +366,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * type-juggling-Versuch keine Auskunft geben soll.
      *
      * `cash`, micropayment (drei Unterarten hinter einer eigenen Wahl-Seite),
-     * VR Payment und die Entwicklungs-Zahlungsart (nur unter
-     * app()->environment('local') erreichbar) laufen lokal; PayPal verlinkt
-     * von der Wahl-Seite aus noch weiter zum Keymanager
-     * (App\Landing\KeymanagerLinks::checkout()).
+     * VR Payment, PayPal (sieben Zahlweisen hinter einer eigenen Wahl-Seite,
+     * SDK-getrieben statt eines einfachen POST-Formulars — siehe
+     * App\Authentication\PayPalChargeIssuer) und die Entwicklungs-Zahlungsart
+     * (nur unter app()->environment('local') erreichbar) laufen inzwischen
+     * alle hier; App\Landing\KeymanagerLinks::checkout() bleibt nur noch als
+     * Infrastruktur für Zahlarten stehen, die künftig dazukommen.
      */
     Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
         ->whereNumber('amount')
@@ -405,10 +407,35 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->whereNumber('amount')
         ->name('account.checkout.vrpayment.submit');
     /**
+     * PayPal — die einzige Zahlart, deren Seite vom SDK im Browser getrieben
+     * wird statt von einem einfachen POST-Formular. Sieben Zahlweisen hinter
+     * einer eigenen Wahl-Seite wie bei micropayment; App\Authentication\
+     * PayPalChargeIssuer hat die drei Schritte (Konfiguration, Anlegen,
+     * Einlösen), die resources/js/checkout-paypal.js in dieser Reihenfolge
+     * aufruft.
+     */
+    Route::get('konto/aufladen/{amount}/paypal', [ChargeController::class, 'paypalShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.paypal');
+    Route::get('konto/aufladen/{amount}/paypal/{fundingSource}', [ChargeController::class, 'paypalServiceShow'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.service');
+    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/create', [ChargeController::class, 'paypalOrderCreate'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.order.create');
+    Route::post('konto/aufladen/{amount}/paypal/{fundingSource}/order/capture', [ChargeController::class, 'paypalOrderCapture'])
+        ->whereNumber('amount')
+        ->where('fundingSource', 'paypal|card|p24|bancontact|blik|eps|mybank')
+        ->name('account.checkout.paypal.order.capture');
+    /**
      * Die Rückkehr von einer weiterleitenden Zahlungsart — bewusst ohne
      * {amount}, die öffentliche Nummer der Ladung reicht, um sie
      * nachzuschlagen. Micropayment und VR Payment kommen hierher zurück;
-     * PayPal teilt sich dieselbe Seite, sobald es folgt.
+     * PayPal braucht sie nicht — sein Rückweg bleibt im eigenen Ursprung,
+     * die "capture"-Antwort trägt dieselbe Adresse nur als JSON statt als
+     * Weiterleitung.
      */
     Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
         ->name('account.checkout.returned');

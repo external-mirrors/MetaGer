@@ -249,6 +249,16 @@
   // (App\Landing\KeyPrice) und ist keine Gestaltungsentscheidung.
   grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
   gap: 0.75rem;
+
+  // Die PayPal-Kachel (checkout/index.blade.php) steht `hidden` im Markup,
+  // bis resources/js/account.js sie aufdeckt. Ein Grid-Kind hat kein
+  // eigenes display, das [hidden] überstimmen könnte — aber .account-btn in
+  // parts/account.less hatte genau dieses Problem mit einem anderen
+  // Elternelement, deshalb steht die Regel hier explizit statt sich auf die
+  // UA-Vorgabe zu verlassen.
+  li[hidden] {
+    display: none;
+  }
 }
 
 .account-tier {

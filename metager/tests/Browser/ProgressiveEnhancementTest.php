@@ -334,10 +334,32 @@ class ProgressiveEnhancementTest extends DuskTestCase
 
             // Und der Weg zum Aufladen ist ein echter Link, kein Skripthaken.
             $this->assertStringContainsString(
-                "/checkout/",
+                "/konto/aufladen/",
                 $browser->attribute(".account-tier", "href")
             );
         });
     }
 
+    /**
+     * PayPal ist die einzige Zahlart in diesem Vorgang, die ein SDK im
+     * Browser braucht — checkout/index.blade.php bietet ihre Kachel deshalb
+     * ohne Javascript gar nicht erst an (`hidden`, aufgedeckt erst von
+     * resources/js/account.js), statt zu einer Seite zu führen, deren
+     * SDK-Bausteine nie funktionieren. Diese Prüfung hier ist der Grund,
+     * warum das `hidden`-Attribut nicht ausreicht: eine ererbte
+     * `display`-Regel könnte es überstimmen — genau das prüft ein
+     * Feature-Test nicht, nur eine echte Layout-Engine.
+     */
+    public function testThePaypalTileStaysHiddenWithoutJavascript(): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key) {
+            $browser->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto/aufladen/1000")
+                ->assertVisible(".account-tier")
+                ->assertMissing("#checkout-paypal-tile");
+        });
+    }
 }

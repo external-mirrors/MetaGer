@@ -59,8 +59,12 @@ final class KeymanagerLinks
     {
         $url = LaravelLocalization::getLocalizedURL(null, "/keys" . $path);
 
+        // Not always the first query parameter any more: getLocalizedURL()
+        // itself now appends `?key=...` for a cookie-blind visitor
+        // (CookieSupport::carryIntoUrl()). A bare `?query` here would have
+        // produced a second `?`, corrupting the URL.
         if ($query !== []) {
-            $url .= "?" . http_build_query($query);
+            $url .= (str_contains($url, "?") ? "&" : "?") . http_build_query($query);
         }
 
         return $url . $fragment;
@@ -113,9 +117,12 @@ final class KeymanagerLinks
      *
      * Lag als `/keys/key/<uuid>` im Keymanager und ist die dritte Seite des
      * Schlüsselvorgangs, die hierher gezogen ist. Der Schlüssel steht nicht
-     * mehr im Pfad und in keinem Parameter: das Konto liest ihn aus dem
-     * Cookie, so wie jede andere Seite hier auch
-     * ({@see \App\Authentication\KeyAuthGuard}).
+     * mehr im Pfad und in keinem Parameter, den diese Methode entgegennimmt:
+     * das Konto liest ihn aus dem Cookie, so wie jede andere Seite hier auch
+     * ({@see \App\Authentication\KeyAuthGuard}). Für einen Besucher ohne
+     * Cookie-Unterstützung setzt {@see \App\Routing\CookieCarryingUrlGenerator}
+     * ihn trotzdem wieder auf die von `route()` gebaute URL — absichtlich,
+     * nicht als Rest eines alten Wegs.
      *
      * Deshalb nimmt diese Methode auch keinen Schlüssel mehr entgegen. Ihre
      * beiden Aufrufer im Anmelde- und Erstellvorgang setzen das Cookie in
@@ -306,8 +313,16 @@ final class KeymanagerLinks
      * page: the key FAQ explains what to do with a promotional card. It moves
      * in step 3 with the rest of the key flow.
      */
-    public static function voucher(): string
+    /**
+     * `$code` is optional — the key FAQ links here with none, to the generic
+     * redemption page. Takes it as a parameter rather than leaving it to the
+     * caller to append (as `LoginController` used to): `self::url()` can now
+     * return a URL carrying `?key=...` for a cookie-blind visitor, and
+     * `voucher() . "/" . $code` worked only because it never had one before —
+     * appending a path segment after a query string is not a URL.
+     */
+    public static function voucher(?string $code = null): string
     {
-        return self::url("/c");
+        return self::url("/c" . ($code === null ? "" : "/" . urlencode($code)));
     }
 }

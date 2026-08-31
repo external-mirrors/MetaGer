@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\CookieSupport;
 use App\Authentication\KeyResolver;
 use App\Landing\KeymanagerLinks;
 use App\Support\Browser;
@@ -22,12 +23,22 @@ use Illuminate\Support\Facades\Vite;
  *
  * Der Umzug des Vorgangs ist nicht Ordnungsliebe. Solange der Keymanager das
  * Cookie setzte, musste er den Besucher anschließend zurückreichen, und der
- * Schlüssel reiste dafür als `?key=` durch die Adresszeile — in den Verlauf,
- * in jeden Referer der nächsten Seite, und ohne JavaScript blieb er dort
- * stehen, weil erst resources/js/utility.js ihn wieder herausnimmt. Das
- * Cookie hier zu setzen macht diesen Umweg überflüssig: der Schlüssel steht
- * in keinem URL mehr. Mit ihm entfallen `redirect_error` und dessen
- * Herkunftsprüfung.
+ * Schlüssel reiste dafür als `?key=` durch die Adresszeile — in den Verlauf
+ * und in jeden Referer der nächsten Seite. Das Cookie hier zu setzen macht
+ * diesen Umweg für jeden überflüssig, dessen Browser es behält. Mit ihm
+ * entfallen `redirect_error` und dessen Herkunftsprüfung.
+ *
+ * **Für einen Besucher, dessen Browser das Cookie nicht behält, bleibt der
+ * Schlüssel jetzt absichtlich sichtbar in der Adresse** — nicht nur auf
+ * diesem einen Sprung, sondern auf jeder folgenden Seite, solange
+ * {@see \App\Authentication\CookieSupport::keyMissingCookie()} das so sieht.
+ * Es gibt kein Skript mehr, das ihn nachträglich aus der Adressleiste nimmt
+ * (resources/js/utility.js tat das früher ungeprüft, unabhängig davon, ob das
+ * Cookie tatsächlich gesetzt wurde — das hätte einem Besucher ohne
+ * Cookie-Unterstützung nach einem Neuladen genau den Schlüssel wieder
+ * entzogen, mit dem er angemeldet war). Cookieloses Arbeiten mit sichtbarem
+ * Schlüssel ist die akzeptierte Alternative, nicht ein Zustand, der noch
+ * wegzuräumen wäre.
  *
  * Zwei Dinge muss das Formular trotzdem weiterreichen, weil es auf Webrouten
  * keine Session gibt: wohin bei Erfolg (`redirect_success`) und die beiden
@@ -199,7 +210,7 @@ final class LoginController extends Controller
             // Der Gutschein wird auf der Kampagnenseite des Keymanagers
             // eingelöst; die kennt die Kampagne, das Budget und die Bremse
             // dafür. Hier ist nur bekannt, dass die Eingabe einer war.
-            KeyResolver::VOUCHER => redirect()->away(KeymanagerLinks::voucher() . "/" . $answer["code"]),
+            KeyResolver::VOUCHER => redirect()->away(KeymanagerLinks::voucher($answer["code"])),
             KeyResolver::UNREACHABLE
                 => $this->back($callback, $redirectSuccess, "keyserver_unreachable", $entered),
             default => $this->back($callback, $redirectSuccess, $answer["error"], $entered),
@@ -233,8 +244,20 @@ final class LoginController extends Controller
             false
         ));
 
+        // One hop only: this Set-Cookie may not survive the round trip, and
+        // the only way to know — or to keep a visitor whose browser drops it
+        // authenticated on the very next page — is to hand them the key back
+        // here. See CookieSupport's docblock. Every branch of afterSignIn()
+        // resolves to one of our own routes, never an external app link, so
+        // this is safe to apply unconditionally.
+        //
+        // withKeyCheck() is called by hand rather than left to
+        // CookieCarryingUrlGenerator: this response is built with
+        // redirect()->away(), which never touches the URL generator, so a
+        // future change to redirect()->route() here would need to drop this
+        // call rather than silently losing it.
         return redirect()
-            ->away($this->afterSignIn($request, $key, $callback, $redirectSuccess))
+            ->away(CookieSupport::withKeyCheck($this->afterSignIn($request, $key, $callback, $redirectSuccess), $key))
             ->header("Cache-Control", "no-store, private");
     }
 

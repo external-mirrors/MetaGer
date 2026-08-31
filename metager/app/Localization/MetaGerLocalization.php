@@ -2,6 +2,7 @@
 
 namespace App\Localization;
 
+use App\Authentication\CookieSupport;
 use Mcamara\LaravelLocalization\Exceptions\UnsupportedLocaleException;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 
@@ -84,6 +85,14 @@ class MetaGerLocalization extends LaravelLocalization
             ? ""
             : app(LocaleContext::class)->prefixFor((string) $locale, (bool) $forceDefaultLocation);
 
-        return rtrim(rtrim($root, "/") . $prefix . rtrim($path, "/"), "/") . $suffix;
+        $url = rtrim(rtrim($root, "/") . $prefix . rtrim($path, "/"), "/") . $suffix;
+
+        // This method never goes through route()/to(), so it never passes
+        // through CookieCarryingUrlGenerator — every sidebar link, the logo,
+        // and the rest of the nav are built by calling this directly with a
+        // bare path. Carry the key here explicitly instead; see
+        // CookieSupport::carryIntoUrl()'s docblock for why request() rather
+        // than $this->request.
+        return CookieSupport::carryIntoUrl($url, request());
     }
 }

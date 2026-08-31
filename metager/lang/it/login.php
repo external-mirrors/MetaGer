@@ -69,4 +69,6 @@ return [
         'install' => 'Installare per :browser',
         'install_generic' => "Installare l'estensione",
     ],
+
+    'no_cookies_notice' => "Il suo browser non conserva il cookie di accesso. MetaGer può ricordare la sua chiave solo finché l'indirizzo di questa pagina la contiene ancora — salvi questa pagina nei preferiti, oppure installi l'estensione MetaGer per rimanere connesso senza cookie.",
 ];

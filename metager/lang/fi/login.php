@@ -69,4 +69,6 @@ return [
         'install' => 'Asenna selaimeen :browser',
         'install_generic' => 'Asenna laajennus',
     ],
+
+    'no_cookies_notice' => 'Selaimesi ei säilytä kirjautumisevästettä. MetaGer voi muistaa avaimesi vain niin kauan kuin tämän sivun osoite sisältää sen — lisää tämä sivu kirjanmerkkeihin tai asenna MetaGer-laajennus pysyäksesi kirjautuneena ilman evästeitä.',
 ];

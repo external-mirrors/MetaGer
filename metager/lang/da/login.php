@@ -69,4 +69,6 @@ return [
         'install' => 'Installer til :browser',
         'install_generic' => 'Installer udvidelsen',
     ],
+
+    'no_cookies_notice' => 'Din browser gemmer ikke login-cookien. MetaGer kan kun huske din nøgle, så længe denne sides adresse stadig indeholder den — sæt et bogmærke til denne side, eller installer MetaGer-udvidelsen for at forblive logget ind uden cookies.',
 ];

@@ -69,4 +69,6 @@ return [
         'install' => 'Installer pour :browser',
         'install_generic' => "Installer l'extension",
     ],
+
+    'no_cookies_notice' => "Votre navigateur ne conserve pas le cookie de connexion. MetaGer ne peut se souvenir de votre clé que tant que l'adresse de cette page la contient encore — ajoutez cette page à vos favoris, ou installez l'extension MetaGer pour rester connecté sans cookies.",
 ];

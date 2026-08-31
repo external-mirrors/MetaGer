@@ -69,4 +69,6 @@ return [
         'install' => 'Installeren voor :browser',
         'install_generic' => 'De extensie installeren',
     ],
+
+    'no_cookies_notice' => 'Uw browser bewaart het inlogcookie niet. MetaGer kan uw sleutel alleen onthouden zolang het adres van deze pagina die nog bevat — voeg deze pagina toe aan uw bladwijzers, of installeer de MetaGer-extensie om zonder cookies ingelogd te blijven.',
 ];

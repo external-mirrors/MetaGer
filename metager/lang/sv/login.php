@@ -69,4 +69,6 @@ return [
         'install' => 'Installera för :browser',
         'install_generic' => 'Installera tillägget',
     ],
+
+    'no_cookies_notice' => 'Din webbläsare sparar inte inloggningskakan. MetaGer kan bara komma ihåg din nyckel så länge den här sidans adress fortfarande innehåller den — bokmärk den här sidan, eller installera MetaGer-tillägget för att förbli inloggad utan kakor.',
 ];

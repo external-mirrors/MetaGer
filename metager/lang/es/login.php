@@ -69,4 +69,6 @@ return [
         'install' => 'Instalar para :browser',
         'install_generic' => 'Instalar la extensión',
     ],
+
+    'no_cookies_notice' => 'Su navegador no guarda la cookie de inicio de sesión. MetaGer solo puede recordar su clave mientras la dirección de esta página la siga conteniendo — guarde esta página en marcadores, o instale la extensión de MetaGer para permanecer conectado sin cookies.',
 ];

@@ -71,22 +71,31 @@
 
     @include('parts.searchbar', ['class' => 'startpage-searchbar'])
 
-    {{-- The only place an exhausted key can be told about it. A search with no
-         tokens never reaches a result page: every route to /meta/meta.ger3 runs
-         AuthenticationValidation, and every unauthorised branch of it redirects
-         back here. So the warning belongs before the search, not after it.
+    {{-- Both banners this row can show — the cookie notice and the exhausted-key
+         alert — share one grid area (#search-wrapper-notices in startpage.less)
+         so a visitor who somehow hits both at once gets them stacked, not
+         overlapping. See parts/cookie-notice.blade.php for why the cookie
+         notice isn't just the shared layout's block on this page. --}}
+    <div id="search-wrapper-notices">
+      @include('parts.cookie-notice')
 
-         This replaces #startpage-quicklinks, whose second clause read the legacy
-         Authorization service and was not gated on the key guard — which is how
-         "142 Token" and "Token aufgebraucht" came to render for the same
-         visitor on the same screen. --}}
-    @if(\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY)
-    <div id="account-empty-alert">
-      {!! \App\Authentication\KeyIdenticon::render(\Auth::guard("key")->user()->getKeyFingerprint()) !!}
-      <span class="account-empty-alert__message">@lang('account.empty.message')</span>
-      <a class="account-empty-alert__action" href="{{ App\Landing\KeymanagerLinks::dashboard() }}">@lang('account.empty.action')</a>
+      {{-- The only place an exhausted key can be told about it. A search with no
+           tokens never reaches a result page: every route to /meta/meta.ger3 runs
+           AuthenticationValidation, and every unauthorised branch of it redirects
+           back here. So the warning belongs before the search, not after it.
+
+           This replaces #startpage-quicklinks, whose second clause read the legacy
+           Authorization service and was not gated on the key guard — which is how
+           "142 Token" and "Token aufgebraucht" came to render for the same
+           visitor on the same screen. --}}
+      @if(\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY)
+      <div id="account-empty-alert">
+        {!! \App\Authentication\KeyIdenticon::render(\Auth::guard("key")->user()->getKeyFingerprint()) !!}
+        <span class="account-empty-alert__message">@lang('account.empty.message')</span>
+        <a class="account-empty-alert__action" href="{{ App\Landing\KeymanagerLinks::dashboard() }}">@lang('account.empty.action')</a>
+      </div>
+    @endif
     </div>
-  @endif
   </div>
   <div id="tiles-container">
     <div id="tiles">

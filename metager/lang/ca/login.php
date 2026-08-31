@@ -69,4 +69,6 @@ return [
         'install' => 'Instal·la-la per a :browser',
         'install_generic' => "Instal·la l'extensió",
     ],
+
+    'no_cookies_notice' => 'El vostre navegador no manté la galeta d\'inici de sessió. MetaGer només pot recordar la vostra clau mentre l\'adreça d\'aquesta pàgina la contingui — deseu aquesta pàgina a les adreces d\'interès, o instal·leu l\'extensió de MetaGer per mantenir la sessió iniciada sense galetes.',
 ];

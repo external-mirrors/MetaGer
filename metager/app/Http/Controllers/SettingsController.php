@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
+use App\Authentication\CookieSupport;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
@@ -809,6 +810,20 @@ class SettingsController extends Controller
 
         // Check if a redirect url is defined
         $url = route("startpage", $params_for_startpage);
+
+        // The cookies just queued above may not survive the round trip — this
+        // is the mechanism a visitor whose cookies never stuck in the first
+        // place actually uses to get back in (SettingsController::index()'s
+        // $cookieLink), so it gets the same one-hop marker as sign-in and key
+        // creation. Only when this request actually carried a key: a
+        // settings-only sync (no key among $settings) has nothing to check.
+        // Left off the redirect_url branch below on purpose — a validated
+        // signed redirect_url is a different, already-authenticated flow
+        // (e.g. SafeBrowse), not part of this one.
+        if (isset($params_for_startpage["key"])) {
+            $url = CookieSupport::withKeyCheck($url, $params_for_startpage["key"]);
+        }
+
         if ($request->filled("redirect_url") && $request->filled("expires")) {
             $redirect_url = $request->input("redirect_url");
             $expires = filter_var($request->input("expires"), FILTER_VALIDATE_INT);

@@ -21,7 +21,10 @@ use Tests\TestCase;
  * solange der Keymanager das Cookie setzte, musste er den Besucher
  * zurückreichen, und der Schlüssel reiste dafür als `?key=` durch die
  * Adresszeile — in den Verlauf, in jeden Referer der nächsten Seite, und ohne
- * Javascript blieb er dort stehen. Jetzt steht er in keinem URL mehr.
+ * Javascript blieb er dort stehen. Das Cookie hier zu setzen macht das für
+ * jeden überflüssig, dessen Browser es behält — und für einen Besucher, dessen
+ * Browser es nicht tut, reist der Schlüssel absichtlich weiterhin mit, siehe
+ * App\Authentication\CookieSupport.
  */
 class LoginSubmitTest extends TestCase
 {
@@ -80,16 +83,19 @@ class LoginSubmitTest extends TestCase
     }
 
     /**
-     * Der Schlüssel steht in keinem URL.
+     * Der Schlüssel und der Marker reisen auf genau diesem einen Sprung mit.
      *
-     * Vorher hängte der Keymanager ihn als `?key=` an das Rückkehrziel, damit
-     * die nächste Seite schon angemeldet war. Das Cookie liegt in derselben
-     * Antwort wie diese Weiterleitung, also braucht es das nicht mehr — und der
-     * Schlüssel landet nicht mehr in der Adresszeile, im Verlauf und im Referer
-     * der nächsten Seite. Ohne Javascript blieb er dort sogar stehen: erst
-     * resources/js/utility.js nimmt ihn wieder heraus.
+     * Vorher hängte der Keymanager den Schlüssel als `?key=` an das
+     * Rückkehrziel; das Cookie in derselben Antwort machte das überflüssig,
+     * *solange der Browser es behielt*. Für einen Besucher, dessen Browser
+     * das nicht tut, ist dieser eine Sprung die einzige Gelegenheit, ihn
+     * trotzdem angemeldet auf die nächste Seite zu schicken — ohne ihn hier
+     * wäre die nächste Anfrage weder per Cookie noch per Query angemeldet.
+     * `key_check` reist mit, damit genau diese Seite (und nur sie) erkennt,
+     * ob das Cookie hielt, und den Hinweis zeigt, wenn nicht — siehe
+     * App\Authentication\CookieSupport.
      */
-    public function testTheKeyNeverAppearsInTheRedirect(): void
+    public function testTheKeyAndTheOneTimeMarkerRideOnThisOneRedirect(): void
     {
         $this->keyserverAnswers(["result" => "key", "key" => self::A_KEY]);
 
@@ -98,8 +104,10 @@ class LoginSubmitTest extends TestCase
             "redirect_success" => config("app.url") . "/de-DE/",
         ]);
 
-        $response->assertRedirect(config("app.url") . "/de-DE/");
-        $this->assertStringNotContainsString("key=", $response->headers->get("Location"));
+        $location = $response->headers->get("Location");
+        $this->assertStringStartsWith(config("app.url") . "/de-DE/?", $location);
+        $this->assertStringContainsString("key=" . self::A_KEY, $location);
+        $this->assertStringContainsString("key_check=1", $location);
     }
 
     /** Ein fremdes Rückkehrziel wird nicht angenommen. */

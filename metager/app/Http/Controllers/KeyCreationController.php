@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\CookieSupport;
 use App\Authentication\KeyBackup;
 use App\Authentication\KeyIssuer;
 use App\Landing\KeymanagerLinks;
@@ -165,8 +166,17 @@ final class KeyCreationController extends Controller
         // kein Guthaben, und ohne Guthaben ist er noch nichts wert. Die
         // Callback-Marker der App reisen mit — das Konto ist die Stelle, an der
         // ein Custom Tab den Schlüssel zurückgibt.
+        //
+        // withKeyCheck() rides along for the same reason it does in
+        // LoginController::signIn(): the cookie just queued above may not
+        // survive the round trip, and this is the one hop that can still hand
+        // a cookie-blind visitor their brand-new key back. See
+        // CookieSupport's docblock.
         return redirect()
-            ->away(KeymanagerLinks::account(KeymanagerLinks::appCallback($request)) . "#charge")
+            ->away(CookieSupport::withKeyCheck(
+                KeymanagerLinks::account(KeymanagerLinks::appCallback($request)) . "#charge",
+                $key
+            ))
             ->header("Cache-Control", "no-store, private");
     }
 

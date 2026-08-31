@@ -104,4 +104,10 @@ return [
         'install' => 'Für :browser installieren',
         'install_generic' => 'Erweiterung installieren',
     ],
+
+    // Erscheint einmalig, direkt nach der Anmeldung oder dem Erstellen eines
+    // Schlüssels, wenn das dabei gesetzte Cookie auf der nächsten Seite schon
+    // wieder fehlt. Siehe
+    // App\Authentication\CookieSupport::justAuthenticatedWithoutCookie().
+    'no_cookies_notice' => 'Ihr Browser speichert das Anmelde-Cookie nicht. MetaGer merkt sich Ihren Schlüssel deshalb nur, solange die Adresse dieser Seite ihn noch enthält — merken Sie sich diese Seite als Lesezeichen, oder installieren Sie die MetaGer-Erweiterung, um ohne Cookies angemeldet zu bleiben.',
 ];

@@ -69,4 +69,9 @@ return [
         'install' => 'Install for :browser',
         'install_generic' => 'Install the extension',
     ],
+
+    // Shown once, right after signing in or creating a key, when the cookie
+    // that login just set is not there on the very next page. See
+    // App\Authentication\CookieSupport::justAuthenticatedWithoutCookie().
+    'no_cookies_notice' => 'Your browser isn\'t keeping the sign-in cookie. MetaGer can only remember your key while this page\'s address still contains it — bookmark this page, or install the MetaGer extension to stay signed in without cookies.',
 ];

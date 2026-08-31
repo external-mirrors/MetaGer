@@ -188,16 +188,24 @@ class AccountAppCallbackTest extends TestCase
     }
 
     /**
-     * Die Marker überleben den Schritt, in dem der Schlüssel aus der Adresse
-     * genommen wird.
+     * Die Marker überleben den Schritt, in dem das Cookie gesetzt wird — und
+     * der Schlüssel bleibt jetzt absichtlich mit auf diesem einen Sprung.
      *
      * Der gefährlichste Punkt der ganzen Kette: /keys/key/enter leitet mit
      * `?key=` hierher, diese Seite setzt das Cookie und leitet auf sich selbst
      * weiter — und genau dort gingen die Marker verloren, wenn niemand sie
      * mitnimmt. Der Schlüssel käme dann nie in der App an, und niemand sähe,
      * warum.
+     *
+     * Früher nahm dieser Sprung den Schlüssel dabei auch aus der Adresse: das
+     * Cookie in derselben Antwort machte das überflüssig, solange der Browser
+     * es behielt. Für einen Besucher, dessen Browser das nicht tut, wäre genau
+     * das der Moment gewesen, an dem die Anmeldung verlorenging — die zweite
+     * Anfrage hätte weder Cookie noch Query gehabt. `key` und der einmalige
+     * `key_check`-Marker reisen jetzt deshalb mit; siehe
+     * App\Authentication\CookieSupport.
      */
-    public function testTheMarkersSurviveTheStepThatRemovesTheKeyFromTheUrl(): void
+    public function testTheMarkersAndKeyRideTogetherOnThisOneRedirect(): void
     {
         $this->keyserverKnows(248);
 
@@ -206,7 +214,7 @@ class AccountAppCallbackTest extends TestCase
         $response->assertRedirectContains("keystore=release");
         $response->assertRedirectContains("variant=fdroid");
         $response->assertRedirectContains("/de-DE/konto");
-        // Und der Schlüssel ist heraus.
-        $this->assertStringNotContainsString(self::A_KEY, $response->headers->get("Location"));
+        $response->assertRedirectContains("key=" . self::A_KEY);
+        $response->assertRedirectContains("key_check=1");
     }
 }

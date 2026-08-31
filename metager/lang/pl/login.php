@@ -69,4 +69,6 @@ return [
         'install' => 'Zainstaluj dla :browser',
         'install_generic' => 'Zainstaluj rozszerzenie',
     ],
+
+    'no_cookies_notice' => 'Twoja przeglądarka nie zachowuje ciasteczka logowania. MetaGer może zapamiętać twój klucz tylko tak długo, jak adres tej strony go zawiera — dodaj tę stronę do zakładek albo zainstaluj rozszerzenie MetaGer, aby pozostać zalogowanym bez ciasteczek.',
 ];

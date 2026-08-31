@@ -157,8 +157,29 @@ div.startpage {
         // legacy Authorization service and was not gated on the key guard,
         // which is how "142 Token" and "Token aufgebraucht" came to render on
         // the same screen for the same visitor.
-        >#account-empty-alert {
+        //
+        // One grid area for both banners this row can show, not one each:
+        // two elements given the same named area do not stack, they overlap —
+        // this wrapper is what turns "both happen to be present" into a
+        // vertical list instead of two boxes of text on top of each other.
+        >#search-wrapper-notices {
           grid-area: quicklinks;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+
+          // The shared layout's version of this notice (parts/cookie-notice.blade.php,
+          // included as-is by layouts/staticPages.blade.php on every other page)
+          // is a full-width block meant to sit above a page's content. Sized down
+          // here to match #account-empty-alert, its neighbour in this row.
+          >.cookie-notice {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 0.5rem 0.7rem;
+            font-size: 0.82rem;
+            text-align: left;
+          }
         }
 
         >#startpage-logo {

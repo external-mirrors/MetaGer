@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\CookieSupport;
 use App\Localization;
 use Illuminate\Support\Facades\Vite;
 use Illuminate\Http\Request;
@@ -48,7 +49,11 @@ class StartpageController extends Controller
             ->with('request', $request->input('request', 'GET'))
             ->with('tiles', $tiles)
             ->with('css', [Vite::asset('resources/less/metager/pages/startpage/startpage.less')])
-            ->with('js', [Vite::asset('resources/js/startpage/app.js')]);
+            ->with('js', [Vite::asset('resources/js/startpage/app.js')])
+            // Not $warning/$info — see the same note on AccountController::show().
+            ->with('cookieNotice', CookieSupport::justAuthenticatedWithoutCookie($request)
+                ? trans('login.no_cookies_notice')
+                : null);
     }
 
     /**

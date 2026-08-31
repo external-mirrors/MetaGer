@@ -144,19 +144,30 @@ class AccountPageTest extends TestCase
         $response->assertSeeText(__("account.page.save.key.summary"));
     }
 
-    /** Und schon gar nicht in der Adresse dieser Seite. */
-    public function testAKeyInTheQueryIsTakenOutOfTheAddress(): void
+    /**
+     * Ins Cookie — und der Schlüssel reist trotzdem mit auf diesen einen
+     * Sprung, zusammen mit dem einmaligen `key_check`-Marker.
+     *
+     * Der Schlüssel stand hier nur, weil eine alte Adresse ihn mitgebracht hat
+     * (/keys/key/<uuid>). Früher verschwand er auf diesem Sprung ganz — das
+     * Cookie in derselben Antwort machte das überflüssig, solange der Browser
+     * es behielt. Für einen Besucher, dessen Browser das nicht tut, ist genau
+     * dieser Sprung die einzige Gelegenheit, ihn trotzdem auf der nächsten
+     * Seite angemeldet zu lassen; siehe App\Authentication\CookieSupport.
+     */
+    public function testAKeyInTheQueryRidesOnToTheNextRequestWithTheMarker(): void
     {
         $this->keyserverKnows();
 
         $response = $this->get("/de-DE/konto?key=" . self::A_KEY);
 
-        // Ins Cookie, und dann fort damit. Der Schlüssel stand hier nur, weil
-        // eine alte Adresse ihn mitgebracht hat (/keys/key/<uuid>).
-        // Nicht assertRedirect("/de-DE/konto"): das reicht den Pfad durch
+        // Nicht assertRedirect("/de-DE/konto?..."): das reicht den Pfad durch
         // url(), und unter einer de-DE-Anfrage setzt URL::formatPathUsing das
         // Präfix noch einmal davor.
-        $response->assertRedirect(config("app.url") . "/de-DE/konto");
+        $location = $response->headers->get("Location");
+        $this->assertStringStartsWith(config("app.url") . "/de-DE/konto?", $location);
+        $this->assertStringContainsString("key=" . self::A_KEY, $location);
+        $this->assertStringContainsString("key_check=1", $location);
         $response->assertCookie("key", self::A_KEY, false);
     }
 

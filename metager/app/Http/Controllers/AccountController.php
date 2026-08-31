@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Authentication\CookieSupport;
 use App\Authentication\KeyBackup;
 use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
@@ -26,12 +27,17 @@ use Illuminate\Support\Facades\Vite;
  * Seite des Schlüsselvorgangs, die hierher zieht; vorher die Anmeldung
  * ({@see LoginController}) und das Erstellen ({@see KeyCreationController}).
  *
- * **Der Schlüssel steht nicht mehr in der Adresse.** Das ist der Ertrag, und
- * hier ist er größer als bei den beiden Seiten davor: die alte Kontoadresse
- * trug ihn im *Pfad*. Sie stand damit in der Verlaufsliste, im Referer jeder
- * von dort verlinkten Seite und in jedem Bildschirmfoto einer Supportanfrage.
- * Diese Seite liest ihn aus dem Cookie, so wie jede andere hier
- * ({@see \App\Authentication\KeyAuthGuard}).
+ * **Der Schlüssel steht nicht mehr in der Adresse — für jeden, dessen
+ * Browser das Cookie behält.** Das ist der Ertrag, und hier ist er größer als
+ * bei den beiden Seiten davor: die alte Kontoadresse trug ihn im *Pfad*. Sie
+ * stand damit in der Verlaufsliste, im Referer jeder von dort verlinkten
+ * Seite und in jedem Bildschirmfoto einer Supportanfrage. Diese Seite liest
+ * ihn aus dem Cookie, so wie jede andere hier
+ * ({@see \App\Authentication\KeyAuthGuard}). Für einen Besucher ohne
+ * Cookie-Unterstützung steht er absichtlich weiterhin in der Adresse —
+ * {@see \App\Authentication\CookieSupport} trägt ihn von hier aus in jeden
+ * weiteren Link und jedes Formular der Seite, statt ihn zu verstecken und
+ * die Anmeldung beim nächsten Laden zu verlieren.
  *
  * **Es wird nichts nachgeladen, was nicht schon da wäre.** Ladung,
  * Verfallsdatum und die einzelnen Ladungen stehen alle in derselben Antwort,
@@ -87,16 +93,34 @@ final class AccountController extends Controller
         // Der Schlüssel kam durch die Adresszeile — aus /keys/key/<uuid>, aus
         // einem alten Lesezeichen, aus dem Weiterleiten von /keys/key/enter.
         // Er bekommt hier sein Cookie und wird dann aus dem URL genommen: die
-        // Seite, auf der jemand stehen bleibt, soll ihn nicht mehr tragen.
-        if ($request->filled("key") && $key !== null) {
+        // Seite, auf der jemand stehen bleibt, soll ihn nicht mehr tragen —
+        // wenn das Cookie hält.
+        //
+        // Ohne die Marker-Prüfung wäre das eine Endlosschleife: withKeyCheck()
+        // unten setzt den Schlüssel zusammen mit dem Marker wieder auf dieses
+        // Ziel — /konto selbst —, und ohne haltendes Cookie träfe die nächste
+        // Anfrage exakt dieselbe Bedingung wieder. Ist der Marker schon da,
+        // wurde diese Prüfung bereits einmal gemacht; ein zweites Mal
+        // umzuleiten sagt nichts Neues — die Cookie-Unterstützung des
+        // Browsers ändert sich nicht zwischen zwei Aufrufen desselben
+        // Controllers. Die Seite wird dann direkt gerendert, der Schlüssel
+        // bleibt in der Adresse stehen, und CookieSupport::justAuthenticatedWithoutCookie()
+        // entscheidet dort über den Hinweis.
+        if ($request->filled("key") && $key !== null && $request->query(CookieSupport::MARKER) !== "1") {
             Cookie::queue(Cookie::forever("key", $key, "/", null, $request->isSecure(), false));
 
             // 302 und nicht 303: dies ist bereits ein GET, und das Ziel ist
             // derselbe Ort ohne die Zugangsberechtigung im URL. Die Marker der
             // App müssen mit, sonst geht der Rückweg in die App genau hier
             // verloren.
+            //
+            // withKeyCheck() adds the one-hop marker on top of whatever
+            // CookieCarryingUrlGenerator already carried into route()'s
+            // result: the cookie just queued above may not have survived,
+            // and this is the hop that lets the account page notice and tell
+            // a cookie-blind visitor so. See CookieSupport's docblock.
             return redirect()
-                ->to(route("account", AppCallback::markers($request)))
+                ->to(CookieSupport::withKeyCheck(route("account", AppCallback::markers($request)), $key))
                 ->header("Cache-Control", "no-store, private");
         }
 
@@ -132,6 +156,14 @@ final class AccountController extends Controller
                 "js" => [Vite::asset("resources/js/account.js")],
 
                 "key" => $key,
+                // Not $warning/$info: those are the layout's generic flash
+                // slots (@extends passes every view variable up through
+                // get_defined_vars(), and a page-local $warning would render
+                // there a second time, raw and untranslated). See
+                // CookieSupport::justAuthenticatedWithoutCookie().
+                "cookieNotice" => CookieSupport::justAuthenticatedWithoutCookie($request)
+                    ? trans("login.no_cookies_notice")
+                    : null,
                 "fingerprint" => $user->getKeyFingerprint(),
                 "charge" => $charge,
                 "state" => $user->getKeyState(),

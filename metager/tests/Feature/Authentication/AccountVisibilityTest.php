@@ -186,15 +186,28 @@ class AccountVisibilityTest extends TestCase
      * `<page>?key=<uuid>` so the guard picks it up on the next request, and
      * `KeyAuthGuard` reads the query string ahead of the cookie. The sidebar
      * built its logout link out of the URL as it arrived, so the round trip
-     * cleared the cookie and handed the credential straight back. Nothing about
-     * it was visible: resources/js/utility.js rewrites `key` out of the address
-     * bar as soon as the page has loaded, so the URL looks clean while the link
-     * underneath it is not, and a second unassisted load does log the user out —
-     * which is why it reads as the cookie "not sticking" rather than as a link
-     * carrying a key.
+     * cleared the cookie and handed the credential straight back — a second
+     * unassisted load did log the user out, which is why it read as the
+     * cookie "not sticking" rather than as a link carrying a key.
      *
      * The merged startpage is what made it visible: signed in and signed out
      * used to differ by a pill, and now they are two different pages.
+     *
+     * The return URL is checked against a value built from `config("app.url")`
+     * and the locale prefix directly, not by calling `url("/")` in this test —
+     * this dispatch's own `?key=` (with no cookie backing it) is exactly the
+     * shape App\Routing\CookieCarryingUrlGenerator now carries the key
+     * forward for, so `url("/")` called after it no longer returns a clean
+     * URL.
+     *
+     * The logout link's own `key=` parameter is expected to carry the key
+     * now too — this dispatch is cookie-blind, and `KeymanagerLinks::remove()`
+     * is `self::url()` like every other link in that file, which now carries
+     * for exactly this visitor (CookieSupport::carryIntoUrl(), reached via
+     * MetaGerLocalization::getLocalizedURL()). What must stay clean
+     * regardless is the `url=` parameter's own value — the page logout
+     * returns to — which `KeymanagerLinks::remove()` strips on purpose; see
+     * its docblock.
      */
     public function testLoggingOutDoesNotHandTheKeyBackThroughTheReturnUrl(): void
     {
@@ -206,8 +219,7 @@ class AccountVisibilityTest extends TestCase
 
         $this->assertNotNull($logout, "the signed-in startpage renders no logout link");
         $this->assertStringContainsString("/keys/key/remove", $logout);
-        $this->assertStringNotContainsString(self::KEY, urldecode($logout));
-        $this->assertStringContainsString("url=" . urlencode(url("/")), $logout);
+        $this->assertSame(config("app.url") . "/", $this->returnUrlOf($logout));
     }
 
     /** Everything else about the page the user was on survives the round trip. */
@@ -217,14 +229,20 @@ class AccountVisibilityTest extends TestCase
 
         $response = $this->get("/meta/settings?focus=web&key=" . self::KEY)->assertOk();
 
-        $logout = urldecode($this->logoutHref($response->getContent()) ?? "");
+        $logout = $this->logoutHref($response->getContent());
 
-        $this->assertStringContainsString("/meta/settings", $logout);
-        $this->assertStringContainsString("focus=web", $logout);
-        $this->assertStringNotContainsString(self::KEY, $logout);
+        $returnUrl = $this->returnUrlOf($logout);
+        $this->assertStringContainsString("/meta/settings", $returnUrl);
+        $this->assertStringContainsString("focus=web", $returnUrl);
+        $this->assertStringNotContainsString(self::KEY, $returnUrl);
     }
 
-    /** The locale prefix is part of "the page the user was on" too. */
+    /**
+     * The locale prefix is part of "the page the user was on" too.
+     *
+     * Same reason as testLoggingOutDoesNotHandTheKeyBackThroughTheReturnUrl
+     * for not comparing against `url("/")` directly here.
+     */
     public function testTheLogoutLinkReturnsToTheLocalePrefixedPage(): void
     {
         $this->signInAs(self::KEY, 142.0);
@@ -234,8 +252,7 @@ class AccountVisibilityTest extends TestCase
         $logout = $this->logoutHref($response->getContent());
 
         $this->assertStringContainsString("/ca-ES/keys/key/remove", $logout);
-        $this->assertStringContainsString("url=" . urlencode(url("/")), $logout);
-        $this->assertStringNotContainsString(self::KEY, urldecode($logout));
+        $this->assertSame(config("app.url") . "/ca-ES", $this->returnUrlOf($logout));
     }
 
     /** The `href` of `#sidebar-key-remove`, or null when the page has none. */
@@ -244,6 +261,14 @@ class AccountVisibilityTest extends TestCase
         return preg_match('/id="sidebar-key-remove" href="([^"]*)"/', $html, $matches)
             ? html_entity_decode($matches[1])
             : null;
+    }
+
+    /** The `url` query parameter's decoded value — the page logout returns to. */
+    private function returnUrlOf(string $logout): ?string
+    {
+        parse_str((string) parse_url($logout, PHP_URL_QUERY), $params);
+
+        return $params["url"] ?? null;
     }
 
     /**

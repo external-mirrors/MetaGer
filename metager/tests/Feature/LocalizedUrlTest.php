@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Localization\MetaGerLocalization;
+use Illuminate\Http\Request;
 use Mcamara\LaravelLocalization\LaravelLocalization;
 use Tests\TestCase;
 
@@ -140,6 +141,38 @@ class LocalizedUrlTest extends TestCase
         $this->assertSame(
             $this->origin() . "/es-ES",
             $this->localization()->getLocalizedURL("es-ES", "/"),
+        );
+    }
+
+    /**
+     * This method is the one every sidebar link, the logo, and the rest of
+     * the nav are built with — none of them go through `route()`/`to()`, so
+     * none of them pass through `CookieCarryingUrlGenerator`. A cookie-blind
+     * visitor's key has to be carried here explicitly (CookieSupport::
+     * carryIntoUrl(), called at the end of getLocalizedURL()) or the entire
+     * sidebar silently signs them out one click after landing on any page.
+     */
+    public function testTheKeyIsCarriedForACookieBlindVisitor(): void
+    {
+        $key = "aaaaaaaa-bbbb-4ccc-9ddd-eeeeee123456";
+        $this->app->instance('request', Request::create($this->origin() . "/?key=" . $key));
+
+        $this->assertSame(
+            $this->origin() . "/hilfe?key=" . $key,
+            $this->localization()->getLocalizedURL(null, "/hilfe"),
+        );
+    }
+
+    public function testTheKeyIsNotCarriedWhenTheCookieDidArrive(): void
+    {
+        $key = "aaaaaaaa-bbbb-4ccc-9ddd-eeeeee123456";
+        $request = Request::create($this->origin() . "/?key=" . $key);
+        $request->cookies->set("key", $key);
+        $this->app->instance('request', $request);
+
+        $this->assertSame(
+            $this->origin() . "/hilfe",
+            $this->localization()->getLocalizedURL(null, "/hilfe"),
         );
     }
 

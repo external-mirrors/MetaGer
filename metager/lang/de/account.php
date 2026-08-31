@@ -33,7 +33,12 @@ return [
         // Not "0 Token · werbefrei": at zero the searches are not ad-free,
         // they do not happen at all.
         'balance_empty' => 'Keine Token mehr',
-        'manage' => 'Konto verwalten',
+        // Ein einzelnes Verb wie die Nachbarn 'topup'/'logout' — nicht "Konto
+        // verwalten": das Konto ist hier schon der Kontext (Kachel direkt
+        // darüber zeigt Guthaben und Schlüssel), und der zweite lange
+        // deutsche Zusammensatz war im Sidebar-Knopf einzeilig zu breit, um
+        // noch mittig zu stehen.
+        'manage' => 'Verwalten',
         'topup' => 'Aufladen',
         'logout' => 'Abmelden',
         'login' => 'Anmelden',

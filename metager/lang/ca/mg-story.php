@@ -1,6 +1,6 @@
 <?php
 return [
-    'four-reasons' => 'Quatre motius per utilitzar MetaGer',
+    'four-reasons' => 'Qui hi ha darrere de MetaGer?',
     'privacy' => [
         'image' => [
             'alt' => 'cadenat',

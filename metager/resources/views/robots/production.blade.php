@@ -5,5 +5,9 @@ Disallow: /qt
 Disallow: /en/qt
 Disallow: /konto
 Disallow: /*/konto
+Disallow: /anmelden
+Disallow: /*/anmelden
+Disallow: /schluessel-erstellen
+Disallow: /*/schluessel-erstellen
 Disallow: /keys/key/
 Disallow: /keys/admin/

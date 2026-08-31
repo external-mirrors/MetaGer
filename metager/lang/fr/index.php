@@ -31,7 +31,7 @@ return [
     'searchreset' => 'supprimer la recherche',
     'searchbar-replacement' => [
         'tagline' => 'Open-source. Sans publicité. Anonyme.',
-        'message' => "Votre clé est votre accès – pas de compte, pas d'adresse e-mail. Votre crédit et vos réglages y sont attachés.",
+        'message' => "Votre clé est votre accès – pas de compte, pas d'adresse e-mail. Seul votre crédit y est attaché.",
         'first_time' => 'Première visite ?',
         'start' => 'Configurer une clé',
         // Swapped in by resources/js/accountBreadcrumb.js when this browser has
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer : chercher et naviguer sur le web sans être observé',
-        'description' => 'MetaGer respecte votre vie privée : sans publicité, sans pistage, sans journalisation. Et vous pouvez désormais visiter n\'importe quel site web de manière anonyme.',
+        'title' => 'Chercher et naviguer sur le web sans être observé',
+        'description' => 'MetaGer respecte votre vie privée et vous permet de visiter n\'importe quel site web de manière anonyme.',
         'advantages' => [
             'ads' => 'Sans publicité',
             'tracking' => 'Sans pistage',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Comment ça marche',
             'steps' => [
                 [
-                    'heading' => 'Obtenez votre clé gratuite',
+                    'heading' => 'La clé est générée automatiquement',
                     'description' => 'Votre clé MetaGer est générée automatiquement. Aucune inscription, aucune donnée personnelle nécessaire. C\'est tout ce dont vous avez besoin pour utiliser MetaGer.',
                 ],
                 [

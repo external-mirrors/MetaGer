@@ -281,6 +281,16 @@
 // the app — settings, donation, membership — and a great many lines of the theme
 // snapshot with them. That is its own commit.
 .account-btn {
+  // flex, not the block a plain <a>/<button> would default to: a row with a
+  // sibling whose label wraps to two lines (e.g. "Guthaben aufladen" next to
+  // "Zur Suche") stretches every button in the row to that height, and a
+  // block element's single line of text stays pinned to its top padding edge
+  // rather than re-centring in the extra space — text-align only ever
+  // centred it horizontally. align-items centres the (possibly wrapped)
+  // label vertically too.
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex: 1 1 0;
   min-width: 0;
   padding: 6px 10px;

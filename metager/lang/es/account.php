@@ -33,7 +33,7 @@ return [
         // Not "0 fichas · …": at zero the searches are not ad-free, they do
         // not happen at all.
         'balance_empty' => 'No quedan fichas',
-        'manage' => 'Gestionar la cuenta',
+        'manage' => 'Gestionar',
         'topup' => 'Recargar',
         'logout' => 'Cerrar sesión',
         'login' => 'Iniciar sesión',

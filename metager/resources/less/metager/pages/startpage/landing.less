@@ -446,8 +446,8 @@
 }
 
 .landing-org__card {
-  display: grid;
-  align-content: start;
+  display: flex;
+  flex-direction: column;
   gap: 0.6rem;
   padding: 1.4rem 1.25rem 1.5rem;
   border: 1px solid @border-color;
@@ -471,6 +471,15 @@
     font-size: 0.87rem;
     line-height: 1.5;
     color: @text-color-alpha-70;
+  }
+
+  // The three cards carry a different number of links (SUMA-EV: four, code:
+  // two, eco: one), so their paragraphs run to different lengths above them.
+  // Pinning the row to the bottom of the (equal-height, per .landing-org's
+  // grid) card keeps all three link rows on one line across the section
+  // instead of trailing off wherever that card's own text happened to end.
+  > .landing-links {
+    margin-top: auto;
   }
 }
 

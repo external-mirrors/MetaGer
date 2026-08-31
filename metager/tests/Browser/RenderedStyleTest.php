@@ -398,4 +398,60 @@ class RenderedStyleTest extends DuskTestCase
         });
     }
 
+    /**
+     * "Zur Suche" steht senkrecht mittig, auch neben einem zweizeiligen Nachbarn.
+     *
+     * "Guthaben aufladen" ist die einzige der beiden Beschriftungen, die
+     * umbricht, und zieht die ganze Reihe (align-items: stretch, der
+     * Flexbox-Standard) auf ihre Höhe. Ein Knopf mit display: inline-block
+     * bliebe mit seiner einzeiligen Beschriftung an der oberen Innenkante
+     * kleben — text-align zentriert nur waagerecht, nie senkrecht. Nur eine
+     * Layout-Engine kann das nachmessen.
+     */
+    public function testTheSearchButtonIsVerticallyCentredNextToATwoLineNeighbour(): void
+    {
+        $key = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+
+        $this->browse(function (Browser $browser) use ($key) {
+            $browser->visit("/de-DE")
+                ->addCookie("key", $key, null, [], false)
+                ->visit("/de-DE/konto")
+                ->waitFor(".account-balance__actions");
+
+            $result = $browser->script(
+                "const [primary, quiet] = document.querySelectorAll('.account-balance__actions .account-btn');"
+                    . "const primaryRange = document.createRange();"
+                    . "primaryRange.selectNodeContents(primary);"
+                    . "const quietRange = document.createRange();"
+                    . "quietRange.selectNodeContents(quiet);"
+                    . "const textRect = quietRange.getBoundingClientRect();"
+                    . "const buttonRect = quiet.getBoundingClientRect();"
+                    // A range's client rects fragment per line, unlike the (flex)
+                    // element's own — which is always a single box regardless of
+                    // how its text content wraps inside it.
+                    . "return {primaryLines: primaryRange.getClientRects().length, textTop: textRect.top, "
+                    . "textBottom: textRect.bottom, buttonTop: buttonRect.top, buttonBottom: buttonRect.bottom};"
+            )[0];
+
+            $this->assertSame(
+                2,
+                $result["primaryLines"],
+                "„Guthaben aufladen“ bricht nicht mehr in zwei Zeilen um, also prüft dieser "
+                    . "Test gerade nichts — die Voraussetzung für den eigentlichen Vergleich fehlt."
+            );
+
+            $topGap = $result["textTop"] - $result["buttonTop"];
+            $bottomGap = $result["buttonBottom"] - $result["textBottom"];
+
+            $this->assertEqualsWithDelta(
+                $topGap,
+                $bottomGap,
+                1.0,
+                "„Zur Suche“ steht nicht mittig im Knopf (oben {$topGap}px, unten {$bottomGap}px "
+                    . "Abstand zum Rand). .account-btn in resources/less/metager/pages/account.less "
+                    . "braucht display: flex; align-items: center statt inline-block."
+            );
+        });
+    }
+
 }

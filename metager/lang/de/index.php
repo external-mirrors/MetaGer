@@ -31,7 +31,7 @@ return [
     'searchreset' => 'Eingabe der Suchanfrage löschen',
     'searchbar-replacement' => [
         'tagline' => 'Open-Source. Werbefrei. Anonym.',
-        'message' => 'Ihr Schlüssel ist Ihr Zugang – kein Konto, keine E-Mail-Adresse. Guthaben und Einstellungen hängen daran.',
+        'message' => 'Ihr Schlüssel ist Ihr Zugang – kein Konto, keine E-Mail-Adresse. Nur Ihr Guthaben hängt daran.',
         'have_key' => 'Mit meinem Schlüssel anmelden',
         'first_time' => 'Zum ersten Mal hier?',
         'start' => 'Schlüssel einrichten',
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: Suchen und surfen, ohne beobachtet zu werden',
-        'description' => 'MetaGer respektiert Ihre Privatsphäre: ohne Werbung, ohne Tracking, ohne Logging. Und jetzt können Sie auch jede Webseite anonym besuchen.',
+        'title' => 'Suchen und surfen, ohne beobachtet zu werden',
+        'description' => 'MetaGer respektiert Ihre Privatsphäre und lässt Sie auch anonym auf jeder Webseite surfen.',
         'advantages' => [
             'ads' => 'Keine Werbung',
             'tracking' => 'Kein Tracking',
@@ -98,7 +98,7 @@ return [
             'heading' => 'So funktioniert es',
             'steps' => [
                 [
-                    'heading' => 'Kostenlosen Schlüssel erhalten',
+                    'heading' => 'Schlüssel automatisch erzeugen',
                     'description' => 'Ihr MetaGer-Schlüssel wird automatisch erzeugt. Keine Anmeldung, keine persönlichen Daten nötig. Er ist alles, was Sie für die Nutzung von MetaGer brauchen.',
                 ],
                 [

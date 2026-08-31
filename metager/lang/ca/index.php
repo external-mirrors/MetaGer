@@ -31,7 +31,7 @@ return [
     'adfree' => 'MetaGer sense publicitat',
     'searchbar-replacement' => [
         'tagline' => 'Codi obert. Sense publicitat. Anònim.',
-        'message' => 'La clau és el vostre accés: sense compte, sense adreça electrònica. El saldo i la configuració hi van lligats.',
+        'message' => 'La clau és el vostre accés: sense compte, sense adreça electrònica. Només el saldo hi va lligat.',
         'have_key' => 'Inicia la sessió amb la meva clau',
         'first_time' => 'És el primer cop que hi sou?',
         'start' => 'Configura una clau',
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: cerqueu i navegueu pel web sense que us vigilin',
-        'description' => 'MetaGer respecta la vostra privadesa: sense publicitat, sense rastreig, sense registres. I ara també podeu navegar per qualsevol lloc web de manera anònima.',
+        'title' => 'Cerqueu i navegueu pel web sense que us vigilin',
+        'description' => 'MetaGer respecta la vostra privadesa i us permet navegar per qualsevol lloc web de manera anònima.',
         'advantages' => [
             'ads' => 'Sense publicitat',
             'tracking' => 'Sense rastreig',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Com funciona',
             'steps' => [
                 [
-                    'heading' => 'Obteniu la vostra clau gratuïta',
+                    'heading' => 'La clau es genera automàticament',
                     'description' => 'La vostra clau de MetaGer es genera automàticament. Sense registre ni dades personals. És l\'única cosa que necessiteu per fer servir MetaGer.',
                 ],
                 [

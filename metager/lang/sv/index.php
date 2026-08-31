@@ -31,7 +31,7 @@ return [
     'searchreset' => 'radera sökfråga inmatning',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Annonsfri. Anonym.',
-        'message' => 'Din nyckel är din åtkomst – inget konto, ingen e-postadress. Saldo och inställningar hänger på den.',
+        'message' => 'Din nyckel är din åtkomst – inget konto, ingen e-postadress. Endast ditt saldo hänger på den.',
         'first_time' => 'Första gången här?',
         'start' => 'Skapa en nyckel',
         // Swapped in by resources/js/accountBreadcrumb.js when this browser has
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: sök och surfa på webben utan att bli övervakad',
-        'description' => 'MetaGer respekterar din integritet: utan annonser, utan spårning, utan loggning. Och nu kan du även besöka vilken webbplats som helst anonymt.',
+        'title' => 'Sök och surfa på webben utan att bli övervakad',
+        'description' => 'MetaGer respekterar din integritet och låter dig även besöka vilken webbplats som helst anonymt.',
         'advantages' => [
             'ads' => 'Inga annonser',
             'tracking' => 'Ingen spårning',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Så fungerar det',
             'steps' => [
                 [
-                    'heading' => 'Hämta din kostnadsfria nyckel',
+                    'heading' => 'Nyckeln skapas automatiskt',
                     'description' => 'Din MetaGer-nyckel genereras automatiskt. Ingen registrering, inga personuppgifter behövs. Den är allt du behöver för att använda MetaGer.',
                 ],
                 [

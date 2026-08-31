@@ -33,7 +33,7 @@ return [
         // Not "0 fitxes · sense publicitat": at zero the searches are not
         // ad-free, they do not happen at all.
         'balance_empty' => 'No queden fitxes',
-        'manage' => 'Gestiona el compte',
+        'manage' => 'Gestiona',
         'topup' => 'Recarrega',
         'logout' => 'Tanca la sessió',
         'login' => 'Inicia la sessió',

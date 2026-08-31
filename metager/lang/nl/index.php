@@ -31,7 +31,7 @@ return [
     'searchreset' => 'invoer zoekopdracht verwijderen',
     'searchbar-replacement' => [
         'tagline' => 'Open source. Advertentievrij. Anoniem.',
-        'message' => 'Je sleutel is je toegang – geen account, geen e-mailadres. Je saldo en instellingen hangen eraan.',
+        'message' => 'Je sleutel is je toegang – geen account, geen e-mailadres. Alleen je saldo hangt eraan.',
         'first_time' => 'Voor het eerst hier?',
         'start' => 'Een sleutel instellen',
         // Swapped in by resources/js/accountBreadcrumb.js when this browser has
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: zoeken en surfen op het web zonder bekeken te worden',
-        'description' => 'MetaGer respecteert je privacy: zonder advertenties, zonder tracking, zonder logging. En nu kun je ook elke website anoniem bezoeken.',
+        'title' => 'Zoeken en surfen op het web zonder bekeken te worden',
+        'description' => 'MetaGer respecteert je privacy en laat je ook elke website anoniem bezoeken.',
         'advantages' => [
             'ads' => 'Geen advertenties',
             'tracking' => 'Geen tracking',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Hoe het werkt',
             'steps' => [
                 [
-                    'heading' => 'Ontvang je gratis sleutel',
+                    'heading' => 'Je sleutel wordt automatisch aangemaakt',
                     'description' => 'Je MetaGer-sleutel wordt automatisch gegenereerd. Geen registratie, geen persoonsgegevens nodig. Het is het enige wat je nodig hebt om MetaGer te gebruiken.',
                 ],
                 [

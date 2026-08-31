@@ -449,7 +449,14 @@
 
 // ── Knöpfe ───────────────────────────────────────────────────────────────────
 .account-btn {
-  display: inline-block;
+  // flex, not inline-block: .account-balance__actions can hold this button
+  // alone next to "Guthaben aufladen", whose label wraps to two lines and
+  // stretches the row to match — an inline-block's line box stays pinned to
+  // the top padding edge in the extra height, so a one-line neighbour like
+  // "Zur Suche" only ever looked centred horizontally, never vertically.
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 0.6rem 1.4rem;
   border-radius: 8px;
   font-size: 0.95rem;

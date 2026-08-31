@@ -33,7 +33,7 @@ return [
         // Not "0 Token · …": at zero the searches are not ad-free, they do
         // not happen at all.
         'balance_empty' => 'Plus de Token',
-        'manage' => 'Gérer le compte',
+        'manage' => 'Gérer',
         'topup' => 'Recharger',
         'logout' => 'Se déconnecter',
         'login' => 'Se connecter',

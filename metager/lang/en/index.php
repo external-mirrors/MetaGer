@@ -31,7 +31,7 @@ return [
     'adfree' => 'MetaGer ad-free',
     'searchbar-replacement' => [
         'tagline' => 'Open Source. Ad-Free. Anonymous.',
-        'message' => 'Your key is your access – no account, no email address. Your balance and settings hang off it.',
+        'message' => 'Your key is your access – no account, no email address. Only your balance hangs off it.',
         'have_key' => 'Log in with my key',
         'first_time' => 'First time here?',
         'start' => 'Set up a key',
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: search and browse the web without being watched',
-        'description' => 'MetaGer respects your privacy: no ads, no tracking, no logging. And now, you can browse any website anonymously too.',
+        'title' => 'Search and browse the web without being watched',
+        'description' => 'MetaGer respects your privacy and lets you browse any website anonymously too.',
         'advantages' => [
             'ads' => 'No ads',
             'tracking' => 'No tracking',
@@ -98,7 +98,7 @@ return [
             'heading' => 'How it works',
             'steps' => [
                 [
-                    'heading' => 'Get your free key',
+                    'heading' => 'Your key is generated automatically',
                     'description' => 'Your MetaGer key is generated automatically. No sign-up, no personal details needed. It\'s the only thing you need to use MetaGer.',
                 ],
                 [

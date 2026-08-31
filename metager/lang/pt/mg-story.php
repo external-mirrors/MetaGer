@@ -45,5 +45,5 @@ return [
     'btn-mg-algorithm' => 'O nosso algoritmo',
     'btn-member-advantage' => 'Filiação',
     'btn-donate' => 'Formulário de donativo',
-    'four-reasons' => 'Quatro razões para utilizar o MetaGer',
+    'four-reasons' => 'Quem está por trás do MetaGer?',
 ];

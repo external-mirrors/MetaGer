@@ -9,7 +9,7 @@ return [
         'title' => 'Installare MetaGer ora',
         'btn-add' => 'Aggiungere il plugin MetaGer',
     ],
-    'four-reasons' => 'Quattro motivi per utilizzare MetaGer',
+    'four-reasons' => 'Chi c\'è dietro MetaGer?',
     'privacy' => [
         'image' => [
             'alt' => 'serratura',

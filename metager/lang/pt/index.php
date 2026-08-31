@@ -2,7 +2,7 @@
 return [
     'searchbar-replacement' => [
         'tagline' => 'Open source. Sem anúncios. Anónimo.',
-        'message' => 'A sua chave é o seu acesso – sem conta, sem endereço de e-mail. O saldo e as definições dependem dela.',
+        'message' => 'A sua chave é o seu acesso – sem conta, sem endereço de e-mail. Só o saldo depende dela.',
         'first_time' => 'É a primeira vez aqui?',
         'start' => 'Configurar uma chave',
         // Swapped in by resources/js/accountBreadcrumb.js when this browser has
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: pesquise e navegue na web sem ser observado',
-        'description' => 'O MetaGer respeita a sua privacidade: sem anúncios, sem rastreio, sem registos. E agora também pode visitar qualquer site de forma anónima.',
+        'title' => 'Pesquise e navegue na web sem ser observado',
+        'description' => 'O MetaGer respeita a sua privacidade e permite-lhe visitar qualquer site de forma anónima.',
         'advantages' => [
             'ads' => 'Sem anúncios',
             'tracking' => 'Sem rastreio',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Como funciona',
             'steps' => [
                 [
-                    'heading' => 'Obtenha a sua chave gratuita',
+                    'heading' => 'A chave é gerada automaticamente',
                     'description' => 'A sua chave MetaGer é gerada automaticamente. Sem registo, sem dados pessoais. É tudo o que precisa para utilizar o MetaGer.',
                 ],
                 [

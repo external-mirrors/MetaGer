@@ -1,6 +1,6 @@
 <?php
 return [
-    'four-reasons' => 'Fire grunde til at bruge MetaGer',
+    'four-reasons' => 'Hvem står bag MetaGer?',
     'privacy' => [
         'image' => [
             'alt' => 'lås',

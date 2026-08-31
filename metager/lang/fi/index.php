@@ -31,7 +31,7 @@ return [
     'searchreset' => 'poista hakukyselyn syöttö',
     'searchbar-replacement' => [
         'tagline' => 'Avoin lähdekoodi. Mainokseton. Anonyymi.',
-        'message' => 'Avaimesi on pääsysi – ei tiliä, ei sähköpostiosoitetta. Saldo ja asetukset ovat siinä kiinni.',
+        'message' => 'Avaimesi on pääsysi – ei tiliä, ei sähköpostiosoitetta. Vain saldo on siinä kiinni.',
         'first_time' => 'Ensimmäistä kertaa täällä?',
         'start' => 'Ota avain käyttöön',
         // Swapped in by resources/js/accountBreadcrumb.js when this browser has
@@ -57,8 +57,8 @@ return [
     // are passed in from parts/landing/* so the locale prefix and the /keys
     // paths stay in one place.
     'landing' => [
-        'title' => 'MetaGer: hae ja selaa verkkoa ilman että sinua seurataan',
-        'description' => 'MetaGer kunnioittaa yksityisyyttäsi: ei mainoksia, ei seurantaa, ei lokitusta. Ja nyt voit myös vierailla millä tahansa sivustolla nimettömästi.',
+        'title' => 'Hae ja selaa verkkoa ilman että sinua seurataan',
+        'description' => 'MetaGer kunnioittaa yksityisyyttäsi ja antaa sinun vierailla millä tahansa sivustolla nimettömästi.',
         'advantages' => [
             'ads' => 'Ei mainoksia',
             'tracking' => 'Ei seurantaa',
@@ -98,7 +98,7 @@ return [
             'heading' => 'Näin se toimii',
             'steps' => [
                 [
-                    'heading' => 'Hanki ilmainen avaimesi',
+                    'heading' => 'Avain luodaan automaattisesti',
                     'description' => 'MetaGer-avaimesi luodaan automaattisesti. Ei rekisteröitymistä, ei henkilötietoja. Se on ainoa asia, jonka tarvitset MetaGerin käyttöön.',
                 ],
                 [

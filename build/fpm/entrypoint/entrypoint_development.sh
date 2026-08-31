@@ -25,7 +25,15 @@ then
   cp .env.example .env
 fi
 
-sed -i 's/^APP_ENV=.*/APP_ENV=local/g' .env; 
+sed -i 's/^APP_ENV=.*/APP_ENV=local/g' .env;
+
+# bootstrap/cache is bind-mounted from the host and gitignored, so it survives
+# `git checkout` untouched. A route/config/view cache written by an earlier
+# `artisan optimize` (or a stint with APP_ENV=production) sits there stale
+# across branch switches — Laravel prefers a cached route file whenever one
+# exists, regardless of environment, so a checkout with a renamed or new route
+# boots with the old route table and no error until something calls route().
+php artisan optimize:clear
 
 # Make sure App Key is set
 php artisan key:generate

@@ -7,8 +7,9 @@
  * übernommen (dessen checkout.json unter payments.cash/payments.prepay/
  * micropayment, dessen order.json unter agb und revocation, je Sprache) —
  * dieselbe Kasse, jetzt hier gerendert. `page`, `manual`,
- * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte) und
- * `returned` sind neu.
+ * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
+ * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
+ * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
  */
 return [
     'page' => [
@@ -71,6 +72,15 @@ Postfach 51 01 43
         'directbanking' => ['label' => 'Sofortüberweisung'],
         'submit' => 'Zahlung durchführen',
         'privacy' => 'Mit dem Klick auf "Zahlung durchführen" werden Sie zu unserem Zahlungsdienstleister <a href="https://micropayment.de" target="_blank">MicroPayment</a> weitergeleitet, um den Kauf abzuschließen. Mehr zum <a href=":link" target="_blank">Datenschutz bei :link_text</a>.',
+    ],
+
+    'vrpayment' => [
+        'label' => 'VR Payment',
+        'submit' => 'Zahlung durchführen',
+        'privacy' => 'Wenn Sie auf "Zahlung durchführen" klicken, werden Sie zu unserem Zahlungsdienstleister <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> weitergeleitet, um den Kauf abzuschließen. Mehr über <a href=":link" target="_blank">Datenschutz bei VR Payment</a>.',
+        'error' => [
+            'failed' => 'VR Payment hat diese Zahlung abgelehnt. Bitte versuchen Sie es erneut oder wählen Sie eine andere Zahlungsart.',
+        ],
     ],
 
     'returned' => [

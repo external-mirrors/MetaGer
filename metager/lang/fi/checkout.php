@@ -7,8 +7,9 @@
  * übernommen (dessen checkout.json unter payments.cash/payments.prepay/
  * micropayment, dessen order.json unter agb und revocation, je Sprache) —
  * dieselbe Kasse, jetzt hier gerendert. `page`, `manual`,
- * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte) und
- * `returned` sind neu.
+ * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
+ * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
+ * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
  */
 return [
     'page' => [
@@ -72,6 +73,15 @@ Saksa',
         'directbanking' => ['label' => 'Pikapankkisiirto'],
         'submit' => 'Suorita maksu',
         'privacy' => 'Klikkaamalla "Suorita maksu" sinut ohjataan maksupalveluntarjoajallemme <a href="https://micropayment.de" target="_blank">MicroPayment</a> ostoksen suorittamista varten. Lisätietoja <a href=":link" target="_blank">tietosuojasta osoitteessa :link_text</a>.',
+    ],
+
+    'vrpayment' => [
+        'label' => 'VR-maksu',
+        'submit' => 'Suorita maksu',
+        'privacy' => 'Klikkaamalla "Suorita maksu" sinut ohjataan maksupalveluntarjoajallemme <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> ostoksen suorittamista varten. Lisätietoja <a href=":link" target="_blank">tietosuojasta osoitteessa VR Payment</a>.',
+        'error' => [
+            'failed' => 'VR Payment hylkäsi tämän maksun. Yritä uudelleen tai valitse toinen maksutapa.',
+        ],
     ],
 
     'returned' => [

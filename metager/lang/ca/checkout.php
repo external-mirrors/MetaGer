@@ -7,8 +7,9 @@
  * übernommen (dessen checkout.json unter payments.cash/payments.prepay/
  * micropayment, dessen order.json unter agb und revocation, je Sprache) —
  * dieselbe Kasse, jetzt hier gerendert. `page`, `manual`,
- * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte) und
- * `returned` sind neu.
+ * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
+ * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
+ * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
  */
 return [
     'page' => [
@@ -72,6 +73,15 @@ Alemanya',
         'directbanking' => ['label' => 'Transferència bancària instantània'],
         'submit' => 'Fes el pagament',
         'privacy' => 'Fent clic a «Fes el pagament» sereu redirigits al nostre proveïdor de pagaments <a href="https://micropayment.de" target="_blank">MicroPayment</a> per completar la compra. Més informació sobre la <a href=":link" target="_blank">privadesa a :link_text</a>.',
+    ],
+
+    'vrpayment' => [
+        'label' => 'VR Payment',
+        'submit' => 'Fes el pagament',
+        'privacy' => 'Fent clic a «Fes el pagament» sereu redirigits al nostre proveïdor de pagaments <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> per completar la compra. Més informació sobre la <a href=":link" target="_blank">privadesa a VR Payment</a>.',
+        'error' => [
+            'failed' => 'VR Payment ha rebutjat aquest pagament. Torneu-ho a provar o trieu un altre mètode de pagament.',
+        ],
     ],
 
     'returned' => [

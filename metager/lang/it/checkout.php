@@ -7,8 +7,9 @@
  * übernommen (dessen checkout.json unter payments.cash/payments.prepay/
  * micropayment, dessen order.json unter agb und revocation, je Sprache) —
  * dieselbe Kasse, jetzt hier gerendert. `page`, `manual`,
- * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte) und
- * `returned` sind neu.
+ * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
+ * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
+ * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
  */
 return [
     'page' => [
@@ -72,6 +73,15 @@ Germania',
         'directbanking' => ['label' => 'Bonifico bancario istantaneo'],
         'submit' => 'Effettuare il pagamento',
         'privacy' => 'Facendo clic su "Effettuare il pagamento" si verrà reindirizzati al nostro fornitore di servizi di pagamento <a href="https://micropayment.de" target="_blank">MicroPayment</a> per completare l\'acquisto. Per saperne di più sulla privacy <a href=":link" target="_blank"> :link_text</a> .',
+    ],
+
+    'vrpayment' => [
+        'label' => 'Pagamento VR',
+        'submit' => 'Effettuare il pagamento',
+        'privacy' => 'Facendo clic su "Effettuare il pagamento" si verrà reindirizzati al nostro fornitore di servizi di pagamento <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> per completare l\'acquisto. Maggiori informazioni su <a href=":link" target="_blank">privacy su VR Payment</a>.',
+        'error' => [
+            'failed' => 'VR Payment ha rifiutato questo pagamento. Riprova o scegli un altro metodo di pagamento.',
+        ],
     ],
 
     'returned' => [

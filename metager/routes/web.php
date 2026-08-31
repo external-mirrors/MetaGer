@@ -365,10 +365,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      * nicht, so wie /konto/aufladen/aci4T87k7DmMXVLmJ auch für einen
      * type-juggling-Versuch keine Auskunft geben soll.
      *
-     * `cash`, micropayment (drei Unterarten hinter einer eigenen Wahl-Seite)
-     * und die Entwicklungs-Zahlungsart (nur unter app()->environment('local')
-     * erreichbar) laufen lokal; VR Payment und PayPal verlinken von der
-     * Wahl-Seite aus noch weiter zum Keymanager
+     * `cash`, micropayment (drei Unterarten hinter einer eigenen Wahl-Seite),
+     * VR Payment und die Entwicklungs-Zahlungsart (nur unter
+     * app()->environment('local') erreichbar) laufen lokal; PayPal verlinkt
+     * von der Wahl-Seite aus noch weiter zum Keymanager
      * (App\Landing\KeymanagerLinks::checkout()).
      */
     Route::get('konto/aufladen/{amount}', [ChargeController::class, 'show'])
@@ -398,11 +398,17 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
     Route::post('konto/aufladen/{amount}/micropayment/{service}', [ChargeController::class, 'micropaymentSubmit'])
         ->whereNumber('amount')
         ->name('account.checkout.micropayment.submit');
+    Route::get('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentShow'])
+        ->whereNumber('amount')
+        ->name('account.checkout.vrpayment');
+    Route::post('konto/aufladen/{amount}/vrpayment', [ChargeController::class, 'vrpaymentSubmit'])
+        ->whereNumber('amount')
+        ->name('account.checkout.vrpayment.submit');
     /**
      * Die Rückkehr von einer weiterleitenden Zahlungsart — bewusst ohne
      * {amount}, die öffentliche Nummer der Ladung reicht, um sie
-     * nachzuschlagen. Micropayment ist die erste, die hierher zurückkommt;
-     * VR Payment und PayPal teilen sich dieselbe Seite, sobald sie folgen.
+     * nachzuschlagen. Micropayment und VR Payment kommen hierher zurück;
+     * PayPal teilt sich dieselbe Seite, sobald es folgt.
      */
     Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
         ->name('account.checkout.returned');

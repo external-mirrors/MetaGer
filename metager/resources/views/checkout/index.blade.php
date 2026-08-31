@@ -9,9 +9,9 @@
 	Umzug hierher.
 
 	Bar, micropayment (eine eigene Wahl-Seite für die drei Unterarten
-	dahinter) und die Entwicklungs-Zahlungsart sind lokale Kacheln; alles
-	andere verlinkt auf dieselbe Weise weiter, wie /konto es vorher für jede
-	Zahlungsart tat — nur einen Schritt später.
+	dahinter), VR Payment und die Entwicklungs-Zahlungsart sind lokale
+	Kacheln; alles andere (PayPal) verlinkt auf dieselbe Weise weiter, wie
+	/konto es vorher für jede Zahlungsart tat — nur einen Schritt später.
 
 	Bewusst ohne "Zugang sichern": diese Seite ist eine Entscheidung, keine
 	Verwaltung, und die Kacheln sollen kurz und gleich groß bleiben — je mehr
@@ -46,6 +46,11 @@
 			<li>
 				<a class="account-tier" href="{{ route('account.checkout.micropayment', ['amount' => $amount]) }}">
 					<span>@lang('checkout.micropayment.label')</span>
+				</a>
+			</li>
+			<li>
+				<a class="account-tier" href="{{ route('account.checkout.vrpayment', ['amount' => $amount]) }}">
+					<span>@lang('checkout.vrpayment.label')</span>
 				</a>
 			</li>
 			@if(app()->environment('local'))

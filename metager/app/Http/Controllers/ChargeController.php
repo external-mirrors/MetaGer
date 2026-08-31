@@ -7,6 +7,7 @@ use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Authentication\ManualChargeIssuer;
 use App\Authentication\MicropaymentChargeIssuer;
+use App\Authentication\VRPaymentChargeIssuer;
 use App\Landing\ChargeEligibility;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
@@ -25,9 +26,9 @@ use Illuminate\Support\Facades\Vite;
  * bei jedem Schritt davor steht der Schlüssel in keiner Adresse — er kommt
  * aus dem Cookie, über {@see \App\Authentication\KeyAuthGuard}.
  *
- * **Bar, micropayment und die Entwicklungs-Zahlart laufen hier.** PayPal und
- * VR Payment bleiben vorerst drüben ({@see KeymanagerLinks::checkout()}) —
- * {@see show()} verlinkt für sie dorthin weiter, mit dem Schlüssel im URL, so
+ * **Bar, micropayment, VR Payment und die Entwicklungs-Zahlart laufen hier.**
+ * PayPal bleibt vorerst drüben ({@see KeymanagerLinks::checkout()}) —
+ * {@see show()} verlinkt dafür dorthin weiter, mit dem Schlüssel im URL, so
  * wie das Konto es vorher für alle Zahlarten tat.
  *
  * **Bar braucht zwei Seiten statt einer.** `cashShow`/`cashSubmit` legen den
@@ -51,6 +52,13 @@ use Illuminate\Support\Facades\Vite;
  * teilen, sobald sie folgen. Kein Beleg, nur "bezahlt" oder "wird noch
  * bearbeitet", anhand des `paid`-Felds, das {@see ChargeOrderIssuer::find()}
  * mitbringt.
+ *
+ * **VR Payment (Wero) verlässt MetaGer ebenso.** Nur eine Zahlart, keine
+ * Wahl-Seite davor ({@see vrpaymentShow()} rendert die Zustimmungsseite
+ * direkt, wie `cashShow`); `vrpaymentSubmit` legt den Auftrag an und leitet
+ * genauso weiter wie micropayment. Der Rückweg landet, ohne dass diese
+ * Klasse etwas dafür tun muss, auf derselben {@see returned()}, die
+ * micropayment schon nutzt — dafür wurde sie generisch gebaut.
  *
  * **Wer zahlt, steht auf jeder Seite hier** — partials/key-fingerprint.blade.php,
  * dasselbe Kürzel wie auf /konto. "Zugang sichern" (partials/key-backup.blade.php)
@@ -288,6 +296,64 @@ final class ChargeController extends Controller
 
         // Ein fremder Host, kein lokales Ziel — die Zahlung selbst findet bei
         // micropayment statt, nicht bei uns.
+        return redirect()
+            ->away($order["redirect_url"], 303)
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function vrpaymentShow(Request $request, int $amount): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        // "failed" kommt von VR Payment selbst zurück (failedUrl), nicht von
+        // dieser Anwendung — anders als "unreachable"/"consent" ist es nicht
+        // "wir konnten nicht", sondern "die Zahlung wurde abgelehnt".
+        $error = $request->query("error");
+        $error = in_array($error, ["unreachable", "consent", "vrpayment_failed"], true) ? $error : null;
+
+        return $this->render("checkout.vrpayment", $request, $key, $amount, [
+            "error" => $error,
+            "privacyUrl" => VRPaymentChargeIssuer::PRIVACY_URL,
+        ]);
+    }
+
+    public function vrpaymentSubmit(Request $request, int $amount, VRPaymentChargeIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [$user, $key, $redirect] = $this->requireKey($request, $amount);
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (
+            !array_key_exists($amount, KeyPrice::tiers())
+            || ChargeEligibility::blockedReason($request, $user, $user->getChargeOrders()) !== null
+        ) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
+        if (!$request->boolean("revocation")) {
+            return redirect()
+                ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=consent", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        $order = $issuer->create($key, $amount);
+
+        if ($order === null) {
+            return redirect()
+                ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=unreachable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        // Ein fremder Host, kein lokales Ziel — die Zahlung selbst findet bei
+        // VR Payment statt, nicht bei uns.
         return redirect()
             ->away($order["redirect_url"], 303)
             ->header("Cache-Control", "no-store, private");

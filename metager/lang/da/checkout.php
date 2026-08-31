@@ -7,8 +7,9 @@
  * übernommen (dessen checkout.json unter payments.cash/payments.prepay/
  * micropayment, dessen order.json unter agb und revocation, je Sprache) —
  * dieselbe Kasse, jetzt hier gerendert. `page`, `manual`,
- * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte) und
- * `returned` sind neu.
+ * micropayment.lastschrift/directbanking (dort nur Logos, keine Texte),
+ * `returned` und vrpayment.label/submit/error.failed sind neu; vrpayment.privacy
+ * ist wortgleich aus dem Keymanager übernommen wie cash/consent/micropayment.
  */
 return [
     'page' => [
@@ -72,6 +73,15 @@ Tyskland',
         'directbanking' => ['label' => 'Øjeblikkelig bankoverførsel'],
         'submit' => 'Foretag betaling',
         'privacy' => 'Ved at klikke på "Foretag betaling" vil du blive omdirigeret til vores betalingstjenesteudbyder <a href="https://micropayment.de" target="_blank">MicroPayment</a> for at gennemføre købet. Mere om <a href=":link" target="_blank">privatliv på :link_text</a>.',
+    ],
+
+    'vrpayment' => [
+        'label' => 'VR-betaling',
+        'submit' => 'Foretag betaling',
+        'privacy' => 'Ved at klikke på "Foretag betaling" vil du blive omdirigeret til vores betalingstjenesteudbyder <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> for at gennemføre købet. Mere om <a href=":link" target="_blank">privatliv på VR Payment</a>.',
+        'error' => [
+            'failed' => 'VR Payment afviste denne betaling. Prøv igen, eller vælg en anden betalingsmetode.',
+        ],
     ],
 
     'returned' => [

@@ -51,8 +51,25 @@ use App\Models\Configuration\SettingsSchema;
  */
 class SettingsCarry
 {
-    /** @var array<string,string>|null null = not yet booted for this request */
+    /** @var array<string,string>|null null = not yet booted */
     private ?array $params = null;
+
+    /**
+     * The request `$params` was last computed against, by identity. Rebound
+     * more than once for a single real request — `ResolveLocale` rebinds
+     * `request` after stripping the locale prefix, and the test harness's
+     * `prepareUrlForRequest()` triggers a `route()`/`url()` call (which
+     * resolves this singleton and calls `boot()`) before the request it
+     * belongs to is even dispatched — so a plain "already booted" flag can
+     * latch onto the wrong request and never let go for the rest of the
+     * (correct) one. Comparing object identity here, rather than a boolean,
+     * makes a later rebind force a fresh boot while a same-request
+     * `route()` → `redirect()` double hop (no rebind in between) still
+     * shares one computed map, preserving whatever `set()`/`forget()`
+     * already did to it — see this class's own docblock on why that sharing
+     * is load-bearing.
+     */
+    private ?object $bootedRequest = null;
 
     /** The settings currently being carried forward, as route()/url() parameters. */
     public function all(): array
@@ -77,21 +94,27 @@ class SettingsCarry
 
     private function boot(): void
     {
-        if ($this->params !== null) {
-            return;
-        }
-        $this->params = [];
-
         if (!app()->bound('request')) {
+            $this->params = [];
+            $this->bootedRequest = null;
             return;
         }
         $request = app('request');
+        if ($this->params !== null && $this->bootedRequest === $request) {
+            return;
+        }
+        $this->bootedRequest = $request;
+        $this->params = [];
+
         $availableFoki = array_keys(get_object_vars(app(SearchEngineRegistry::class)->foki));
 
         foreach ($request->query() as $name => $value) {
             if (is_array($value)) {
                 $value = $value[0] ?? '';
             }
+            // A bare `?name` with no `=value` (also `?name=`, which query()
+            // already normalises to '') comes through as null.
+            $value ??= '';
             // `key` is one of SettingsSchema::globalSettingKeys(), so
             // isValidSetting() would otherwise accept it too — it has its
             // own, separate carrying mechanism (CookieSupport::keyMissingCookie()),

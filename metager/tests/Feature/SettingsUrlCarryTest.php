@@ -264,4 +264,40 @@ class SettingsUrlCarryTest extends TestCase
         $this->assertStringContainsString("dark_mode=dark", $tabLink);
         $this->assertStringNotContainsString("new_tab=on", $tabLink);
     }
+
+    // ── The webextension's JSON path is unaffected ──────────────────────
+
+    /**
+     * The webextension sends settings as headers, never as query
+     * parameters — `SettingsCarry::boot()` only ever reads `$request->query()`
+     * — so its JSON responses must come out exactly as they did before this
+     * feature existed. Extends `SettingsPageHeaderSettingsTest`'s coverage
+     * (which already pins `nb`/`ds`) to `de`/`ee`/`ef`/`es`.
+     */
+    #[Test]
+    public function disabling_an_engine_via_json_is_unaffected_by_settings_carrying(): void
+    {
+        $response = $this->postJson("/meta/settings/de", ["suma" => self::ENGINE, "focus" => self::ENGINE_FOKUS])
+            ->assertOk();
+
+        $this->assertSame("off", $response->json("set." . self::ENGINE_FOKUS . "_engine_" . self::ENGINE));
+    }
+
+    #[Test]
+    public function changing_a_filter_via_json_is_unaffected_by_settings_carrying(): void
+    {
+        $response = $this->postJson("/meta/settings/ef", ["focus" => "web", "m" => "fr_FR"])
+            ->assertOk();
+
+        $this->assertSame("fr_FR", $response->json("set.web_setting_m"));
+    }
+
+    #[Test]
+    public function changing_a_global_setting_via_json_is_unaffected_by_settings_carrying(): void
+    {
+        $response = $this->postJson("/meta/settings/es", ["focus" => "web", "dark_mode" => "dark"])
+            ->assertOk();
+
+        $this->assertSame("dark", $response->json("set.dark_mode"));
+    }
 }

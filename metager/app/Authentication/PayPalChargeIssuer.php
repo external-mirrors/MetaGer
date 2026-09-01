@@ -2,6 +2,7 @@
 
 namespace App\Authentication;
 
+use App\Support\AppHosts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
@@ -72,6 +73,13 @@ final class PayPalChargeIssuer
     }
 
     /**
+     * `return_origin` rides along here so keymanager stores it on the order at
+     * creation time: PayPal's capture response and its async webhook both hand
+     * back a "back to MetaGer" URL, and the keymanager only knows the host it
+     * was called on server-to-server, not the one the user is on
+     * ({@see \App\Support\AppHosts::currentOrigin()}). Null lets the keymanager
+     * fall back to its own configured MetaGer URL.
+     *
      * @return array{public_id: string, paypal_order_id: string}|null
      */
     public function createOrder(Request $request, string $key, int $amount, string $fundingSource): ?array
@@ -81,7 +89,10 @@ final class PayPalChargeIssuer
                 ->withHeaders($this->headers($request))
                 ->post(
                     $this->keyserver . "/key/" . urlencode($key) . "/checkout/paypal/" . urlencode($fundingSource) . "/order/create",
-                    ["amount" => $amount]
+                    array_filter([
+                        "amount" => $amount,
+                        "return_origin" => AppHosts::currentOrigin($request),
+                    ], fn ($value) => $value !== null)
                 );
         } catch (\Throwable $e) {
             Log::warning("keymanager paypal order/create unreachable: " . $e->getMessage());

@@ -81,6 +81,7 @@ Allemagne',
         'privacy' => 'En cliquant sur "Effectuer le paiement", vous serez redirigé vers notre prestataire de services de paiement <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> pour finaliser l\'achat. Pour en savoir plus sur la protection de la vie privée, consultez le site <a href=":link" target="_blank">VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment a refusé ce paiement. Veuillez réessayer ou choisir un autre mode de paiement.',
+            'onion' => 'Wero n’est pas disponible via notre adresse onion : le prestataire de paiement ne peut pas vous renvoyer ici ensuite. Veuillez choisir un autre mode de paiement.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Allemagne',
     'returned' => [
         'heading' => 'Rechargement terminé',
         'paid' => 'Merci ! Votre clé a été rechargée de :amount jetons.',
+        'next' => 'Votre solde est disponible immédiatement : vous pouvez poursuivre vos recherches.',
+        'details' => 'Voir les détails de la commande',
         'pending' => 'Votre paiement est encore en cours de traitement. Dès qu\'il nous parviendra, votre clé sera rechargée automatiquement.',
     ],
 ];

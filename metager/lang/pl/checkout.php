@@ -81,6 +81,7 @@ Niemcy',
         'privacy' => 'Kliknięcie przycisku "Dokonaj płatności" spowoduje przekierowanie do naszego dostawcy usług płatniczych <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> w celu sfinalizowania zakupu. Więcej o prywatności <a href=":link" target="_blank">na stronie VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment odrzucił tę płatność. Spróbuj ponownie lub wybierz inną metodę płatności.',
+            'onion' => 'Wero nie jest dostępne pod naszym adresem onion — dostawca płatności nie może później odesłać Cię z powrotem tutaj. Wybierz inną metodę płatności.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Niemcy',
     'returned' => [
         'heading' => 'Doładowanie zakończone',
         'paid' => 'Dziękujemy! Twój klucz został doładowany o :amount tokenów.',
+        'next' => 'Twoje środki są dostępne od razu — możesz już dalej wyszukiwać.',
+        'details' => 'Zobacz szczegóły zamówienia',
         'pending' => 'Twoja płatność jest jeszcze przetwarzana. Gdy tylko do nas dotrze, Twój klucz zostanie automatycznie doładowany.',
     ],
 ];

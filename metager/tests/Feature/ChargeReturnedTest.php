@@ -85,6 +85,53 @@ class ChargeReturnedTest extends TestCase
             ->assertSee(trans("checkout.returned.pending"));
     }
 
+    /**
+     * Nach geglückter Zahlung ist "suchen" der nächste Schritt — die Seite bot
+     * ihn bisher nicht an, nur den Weg zurück zum Konto.
+     */
+    public function testAPaidOrderPointsOnToTheStartpage(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/checkout/*" => Http::response([
+                "public_id" => "Z1",
+                "amount" => 1000,
+                "price" => "10.00",
+                "expires_at" => "2027-05-14T00:00:00.000Z",
+                "key" => self::A_KEY,
+                "paid" => true,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/abschluss/Z1")
+            ->assertOk()
+            ->assertSee(trans("checkout.returned.next"))
+            ->assertSee('href="' . route("startpage") . '"', false);
+    }
+
+    /**
+     * Auch solange die Zahlung noch bearbeitet wird, führt ein Weg zur Suche —
+     * dort nur nicht als primärer.
+     */
+    public function testAPendingOrderStillOffersTheStartpage(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/checkout/*" => Http::response([
+                "public_id" => "Z1",
+                "amount" => 1000,
+                "price" => "10.00",
+                "expires_at" => "2027-05-14T00:00:00.000Z",
+                "key" => self::A_KEY,
+                "paid" => false,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/abschluss/Z1")
+            ->assertOk()
+            ->assertSee('href="' . route("startpage") . '"', false);
+    }
+
     public function testTheResponseIsNeverCached(): void
     {
         $this->keyserverKnows([

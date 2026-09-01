@@ -81,6 +81,7 @@ Saksa',
         'privacy' => 'Klikkaamalla "Suorita maksu" sinut ohjataan maksupalveluntarjoajallemme <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> ostoksen suorittamista varten. Lisätietoja <a href=":link" target="_blank">tietosuojasta osoitteessa VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment hylkäsi tämän maksun. Yritä uudelleen tai valitse toinen maksutapa.',
+            'onion' => 'Wero ei ole käytettävissä onion-osoitteemme kautta – maksupalveluntarjoaja ei voi ohjata sinua takaisin tänne maksun jälkeen. Valitse toinen maksutapa.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Saksa',
     'returned' => [
         'heading' => 'Lataus valmis',
         'paid' => 'Kiitos! Avaimesi on ladattu :amount tokenilla.',
+        'next' => 'Saldosi on heti käytettävissä – voit jatkaa hakua nyt.',
+        'details' => 'Näytä tilauksen tiedot',
         'pending' => 'Maksuasi käsitellään vielä. Heti kun se saapuu meille, avaimesi ladataan automaattisesti.',
     ],
 ];

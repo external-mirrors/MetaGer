@@ -31,16 +31,26 @@ final class VRPaymentChargeIssuer
     }
 
     /**
+     * @param string|null $returnOrigin the browser-facing scheme-and-host this
+     *   request arrived on ({@see \App\Support\AppHosts::currentOrigin()}). VR
+     *   Payment's success/failure redirects, and its async webhook's redirect,
+     *   are built from this on the keymanager side — the same deployment
+     *   answers on several hosts and the keymanager only knows the one it was
+     *   called on server-to-server, which is not the user's. Null lets the
+     *   keymanager fall back to its own configured MetaGer URL.
      * @return array{public_id: string, redirect_url: string}|null
      */
-    public function create(string $key, int $amount): ?array
+    public function create(string $key, int $amount, ?string $returnOrigin = null): ?array
     {
         try {
             $response = Http::timeout(5)
                 ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")])
                 ->post(
                     $this->keyserver . "/key/" . urlencode($key) . "/checkout/vrpayment/" . self::METHOD,
-                    ["amount" => $amount]
+                    array_filter([
+                        "amount" => $amount,
+                        "return_origin" => $returnOrigin,
+                    ], fn ($value) => $value !== null)
                 );
         } catch (\Throwable $e) {
             Log::warning("keymanager vrpayment checkout unreachable: " . $e->getMessage());

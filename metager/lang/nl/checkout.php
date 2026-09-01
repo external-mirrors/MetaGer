@@ -81,6 +81,7 @@ Duitsland',
         'privacy' => 'Door op "Betaling verrichten" te klikken, wordt u doorgestuurd naar onze betalingsdienstaanbieder <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> om de aankoop te voltooien. Meer over <a href=":link" target="_blank">privacy bij VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment heeft deze betaling geweigerd. Probeer het opnieuw of kies een andere betaalmethode.',
+            'onion' => 'Wero is niet beschikbaar via ons onion-adres — de betaaldienst kan je daarna niet terugsturen naar hier. Kies een andere betaalmethode.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Duitsland',
     'returned' => [
         'heading' => 'Opwaarderen voltooid',
         'paid' => 'Bedankt! Uw sleutel is opgewaardeerd met :amount tokens.',
+        'next' => 'Uw tegoed is meteen beschikbaar — u kunt nu verder zoeken.',
+        'details' => 'Bestelgegevens bekijken',
         'pending' => 'Uw betaling wordt nog verwerkt. Zodra deze bij ons binnenkomt, wordt uw sleutel automatisch opgewaardeerd.',
     ],
 ];

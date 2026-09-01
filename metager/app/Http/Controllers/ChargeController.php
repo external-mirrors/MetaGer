@@ -3,15 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Authentication\ChargeOrderIssuer;
-use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Authentication\ManualChargeIssuer;
 use App\Authentication\MicropaymentChargeIssuer;
 use App\Authentication\PayPalChargeIssuer;
 use App\Authentication\VRPaymentChargeIssuer;
+use App\Http\Controllers\Concerns\HandlesKeyCheckout;
 use App\Landing\ChargeEligibility;
-use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
+use App\Support\AppHosts;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -104,6 +104,8 @@ use Illuminate\Support\Str;
  */
 final class ChargeController extends Controller
 {
+    use HandlesKeyCheckout;
+
     public function show(Request $request, int $amount): Response|RedirectResponse
     {
         [$user, $key, $redirect] = $this->requireKey($request, $amount);
@@ -129,10 +131,11 @@ final class ChargeController extends Controller
         // der das früher zurückführte — diese Seite ist jetzt das einzige
         // "zurück".
         $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "funding_source_not_eligible"], true) ? $error : null;
+        $error = in_array($error, ["unreachable", "funding_source_not_eligible", "wero_unavailable"], true) ? $error : null;
 
         return $this->render("checkout.index", $request, $key, $amount, [
             "error" => $error,
+            "weroAvailable" => $this->weroAvailable($request),
         ]);
     }
 
@@ -332,7 +335,13 @@ final class ChargeController extends Controller
         }
 
         $email = $request->input("email");
-        $order = $issuer->create($key, $amount, $service, is_string($email) && $email !== "" ? $email : null);
+        $order = $issuer->create(
+            $key,
+            $amount,
+            $service,
+            is_string($email) && $email !== "" ? $email : null,
+            AppHosts::currentOrigin($request),
+        );
 
         if ($order === null) {
             return redirect()
@@ -356,6 +365,15 @@ final class ChargeController extends Controller
 
         if (!$this->knownTier($amount)) {
             return redirect()->to(route("account") . "#charge");
+        }
+
+        // Wero über eine .onion-Adresse: VR Payment lehnt eine .onion-
+        // Rückkehradresse rundheraus ab (der Space kann nicht darauf zeigen),
+        // die Zahlung käme also nie zu Ende. Statt sie stumm scheitern zu
+        // lassen, führt jeder Weg hierher — auch ein Lesezeichen — zurück zur
+        // Zahlweisenwahl mit einer Erklärung.
+        if (!$this->weroAvailable($request)) {
+            return redirect()->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable");
         }
 
         // "failed" kommt von VR Payment selbst zurück (failedUrl), nicht von
@@ -388,13 +406,19 @@ final class ChargeController extends Controller
             return redirect()->to(route("account") . "#charge");
         }
 
+        if (!$this->weroAvailable($request)) {
+            return redirect()
+                ->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
         if (!$request->boolean("revocation")) {
             return redirect()
                 ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=consent", 303)
                 ->header("Cache-Control", "no-store, private");
         }
 
-        $order = $issuer->create($key, $amount);
+        $order = $issuer->create($key, $amount, AppHosts::currentOrigin($request));
 
         if ($order === null) {
             return redirect()
@@ -592,11 +616,23 @@ final class ChargeController extends Controller
             ->view("checkout.returned", [
                 "title" => trans("titles.checkout"),
                 "navbarFocus" => "login",
-                "css" => [Vite::asset("resources/less/metager/pages/account.less")],
+                "css" => [
+                    Vite::asset("resources/less/metager/pages/account.less"),
+                    Vite::asset("resources/less/metager/pages/checkout.less"),
+                ],
                 "fingerprint" => $user->getKeyFingerprint(),
                 "amount" => $order["amount"],
                 "paid" => $order["paid"],
                 "accountUrl" => route("account"),
+                // Wo die Auftragsbestätigung liegt: auf der Bestelldetailseite,
+                // die diese Nummer nachschlägt. Nur wenn schon bezahlt wurde —
+                // vorher gibt es dort nichts herunterzuladen.
+                "orderUrl" => route("account.orders.show", ["reference" => $order["public_id"]]),
+                // Der eigentliche nächste Schritt nach einer geglückten
+                // Aufladung: suchen. Die Seite bot ihn bisher nicht an, nur
+                // den Weg zurück zum Konto — wer hier landet, ist fertig mit
+                // dem Bezahlen und will los.
+                "startpageUrl" => route("startpage"),
             ])
             ->header("Cache-Control", "no-store, private");
     }
@@ -660,29 +696,7 @@ final class ChargeController extends Controller
      */
     private function requireKey(Request $request, int $amount): array
     {
-        /** @var KeyUser|null $user */
-        $user = Auth::guard("key")->user();
-
-        if ($user === null) {
-            return [null, null, redirect()
-                ->to(KeymanagerLinks::login(route("account.checkout", ["amount" => $amount]), $request))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        if ($user->temporary) {
-            return [null, null, redirect()
-                ->to(route("anonymous-token"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        $key = $this->keyOf($user);
-        if ($key === null) {
-            return [null, null, redirect()
-                ->to(route("account"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        return [$user, $key, null];
+        return $this->resolveKey($request, route("account.checkout", ["amount" => $amount]));
     }
 
     /**
@@ -694,29 +708,26 @@ final class ChargeController extends Controller
      */
     private function requireKeyForReturn(Request $request, string $reference): array
     {
-        /** @var KeyUser|null $user */
-        $user = Auth::guard("key")->user();
+        return $this->resolveKey($request, route("account.checkout.returned", ["reference" => $reference]));
+    }
 
-        if ($user === null) {
-            return [null, null, redirect()
-                ->to(KeymanagerLinks::login(route("account.checkout.returned", ["reference" => $reference]), $request))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        if ($user->temporary) {
-            return [null, null, redirect()
-                ->to(route("anonymous-token"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        $key = $this->keyOf($user);
-        if ($key === null) {
-            return [null, null, redirect()
-                ->to(route("account"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        return [$user, $key, null];
+    /**
+     * Ob Wero (VR Payment) für diese Anfrage angeboten werden kann.
+     *
+     * VR Payments Space nimmt keine .onion-Rückkehradresse an — die Zahlung
+     * würde starten und nie zurückfinden. Über eine .onion-Adresse ist Wero
+     * darum keine Option; jede andere Zahlweise bleibt es. {@see show()}
+     * blendet die Kachel aus, {@see vrpaymentShow()}/{@see vrpaymentSubmit()}
+     * weisen einen Direktaufruf zur Zahlweisenwahl zurück.
+     *
+     * Nur die zwei .onion-Adressen, nicht localhost/127.0.0.1: dort lässt der
+     * Keymanager (pass/app/payment_processor/VRPayment.js) die success/failed-
+     * URLs bewusst weg und die Zahlung läuft im Testmodus trotzdem durch — das
+     * ist eine Entwicklungsbequemlichkeit, kein Fall, den ein Nutzer je sieht.
+     */
+    private function weroAvailable(Request $request): bool
+    {
+        return !AppHosts::isOnion($request->getHost());
     }
 
     /**
@@ -732,53 +743,5 @@ final class ChargeController extends Controller
     private function knownTier(int $amount): bool
     {
         return array_key_exists($amount, KeyPrice::tiers());
-    }
-
-    /** Wortgleich zu AccountController::keyOf() — siehe dort für das Warum. */
-    private function keyOf(KeyUser $user): ?string
-    {
-        $canonical = $user->getCanonicalKey();
-        if ($canonical !== null && KeyIssuer::isKey($canonical)) {
-            return strtolower($canonical);
-        }
-
-        return KeyIssuer::isKey($user->key) ? strtolower($user->key) : null;
-    }
-
-    /**
-     * Ob dieses Formular von unserer eigenen Seite abgeschickt wurde.
-     *
-     * Wortgleich zu {@see KeyCreationController::sameOrigin()} und aus
-     * demselben Grund; die Begründung steht dort.
-     */
-    private function sameOrigin(Request $request): bool
-    {
-        $origin = $request->header("Origin");
-
-        if (is_string($origin) && $origin !== "" && $origin !== "null") {
-            return $this->isOurs($request, $origin);
-        }
-
-        $site = $request->header("Sec-Fetch-Site");
-
-        if (is_string($site) && $site !== "") {
-            return in_array($site, ["same-origin", "same-site", "none"], true);
-        }
-
-        return true;
-    }
-
-    /** Ob ein URL auf den Host zeigt, unter dem diese Anfrage ankam. */
-    private function isOurs(Request $request, string $url): bool
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if ($host === null || $host === false) {
-            return str_starts_with($url, "/") && !str_starts_with($url, "//");
-        }
-
-        $port = parse_url($url, PHP_URL_PORT);
-
-        return ($host . ($port === null ? "" : ":" . $port)) === $request->getHttpHost();
     }
 }

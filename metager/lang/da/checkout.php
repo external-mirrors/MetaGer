@@ -81,6 +81,7 @@ Tyskland',
         'privacy' => 'Ved at klikke på "Foretag betaling" vil du blive omdirigeret til vores betalingstjenesteudbyder <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> for at gennemføre købet. Mere om <a href=":link" target="_blank">privatliv på VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment afviste denne betaling. Prøv igen, eller vælg en anden betalingsmetode.',
+            'onion' => 'Wero er ikke tilgængelig via vores onion-adresse – betalingsudbyderen kan ikke sende dig tilbage hertil bagefter. Vælg en anden betalingsmetode.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Tyskland',
     'returned' => [
         'heading' => 'Opladning gennemført',
         'paid' => 'Tak! Din nøgle er blevet opladet med :amount tokens.',
+        'next' => 'Din saldo er klar med det samme – du kan søge videre nu.',
+        'details' => 'Se ordredetaljer',
         'pending' => 'Din betaling behandles stadig. Så snart den når frem til os, bliver din nøgle automatisk opladet.',
     ],
 ];

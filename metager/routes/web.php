@@ -14,6 +14,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MailController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\MetaGerSearch;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Pictureproxy;
 use App\Http\Controllers\Prometheus;
 use App\Http\Controllers\SearchEngineList;
@@ -442,6 +443,27 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
      */
     Route::get('konto/aufladen/abschluss/{reference}', [ChargeController::class, 'returned'])
         ->name('account.checkout.returned');
+
+    /**
+     * Bestellungen und Rechnungen, aus dem Keymanager (`/keys/key/<uuid>/orders`)
+     * hierher gezogen — App\Http\Controllers\OrderController hat den Grund.
+     * Kein {amount} und kein Schlüssel im Pfad: eine Bestellung wird über ihre
+     * öffentliche Nummer nachgeschlagen, und wem sie gehört, prüft der
+     * Controller gegen den Cookie-Schlüssel.
+     *
+     * `bestellungen` und nicht unter `aufladen`: das Aufladen ist der Kauf und
+     * endet, wenn die Zahlung ankommt; das hier ist der Blick zurück auf eine
+     * abgeschlossene Bestellung. Es ist die Seite, auf die die Kontokachel
+     * „Bestellungen und Rechnungen" zeigt.
+     */
+    Route::get('konto/bestellungen', [OrderController::class, 'lookup'])
+        ->name('account.orders');
+    Route::post('konto/bestellungen', [OrderController::class, 'find'])
+        ->name('account.orders.find');
+    Route::get('konto/bestellungen/{reference}', [OrderController::class, 'show'])
+        ->name('account.orders.show');
+    Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'confirmation'])
+        ->name('account.orders.confirmation');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

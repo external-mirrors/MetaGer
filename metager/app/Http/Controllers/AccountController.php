@@ -181,7 +181,7 @@ final class AccountController extends Controller
                 "tiers" => $key === null ? [] : KeyPrice::tiers(),
                 "topupBlocked" => ChargeEligibility::blockedReason($request, $user, $orders),
 
-                "ordersUrl" => $key === null ? null : KeymanagerLinks::orders($key),
+                "ordersUrl" => $key === null ? null : route("account.orders"),
                 "campaignsUrl" => $key === null ? null : KeymanagerLinks::campaigns($key),
                 "logoutUrl" => KeymanagerLinks::remove(route("startpage")),
                 "loginCodeUrl" => route("account.logincode", [], false),

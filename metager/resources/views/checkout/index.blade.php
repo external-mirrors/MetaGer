@@ -60,6 +60,8 @@
 			<p class="checkout-consent__error" role="alert">@lang('checkout.cash.error.unreachable')</p>
 		@elseif($error === 'funding_source_not_eligible')
 			<p class="checkout-consent__error" role="alert">@lang('checkout.paypal.error.not_available')</p>
+		@elseif($error === 'wero_unavailable')
+			<p class="checkout-consent__error" role="alert">@lang('checkout.vrpayment.error.onion')</p>
 		@endif
 
 		<ul class="account-tiers">
@@ -70,12 +72,20 @@
 					<span class="account-tier__note">@lang('checkout.page.methods.cash_note')</span>
 				</a>
 			</li>
-			<li>
-				<a class="account-tier account-tier--method" href="{{ route('account.checkout.vrpayment', ['amount' => $amount]) }}">
-					<img class="account-tier__icon account-tier__icon--invert" src="/img/payment/vrpayment/wero_black.svg" alt="">
-					<span>@lang('checkout.vrpayment.label')</span>
-				</a>
-			</li>
+			@if($weroAvailable)
+				{{--
+					Über eine .onion-Adresse fehlt diese Kachel: VR Payment nimmt
+					keine .onion-Rückkehradresse an (ChargeController::weroAvailable).
+					Nicht bloß ausgeblendet wie die PayPal-Kacheln ohne Javascript —
+					ganz weggelassen, weil sie hier nie funktionieren könnte.
+				--}}
+				<li>
+					<a class="account-tier account-tier--method" href="{{ route('account.checkout.vrpayment', ['amount' => $amount]) }}">
+						<img class="account-tier__icon account-tier__icon--invert" src="/img/payment/vrpayment/wero_black.svg" alt="">
+						<span>@lang('checkout.vrpayment.label')</span>
+					</a>
+				</li>
+			@endif
 			<li>
 				<a class="account-tier account-tier--method" href="{{ route('account.checkout.micropayment.service', ['amount' => $amount, 'service' => 'prepay']) }}">
 					<img class="account-tier__icon" src="/img/price/money.svg" alt="">

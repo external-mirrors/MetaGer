@@ -47,6 +47,11 @@ class KeyPagesTranslationsTest extends TestCase
         // wortgleich aus checkout.json/order.json des Keymanagers übernommen
         // (siehe lang/de/checkout.php); page/manual sind neu.
         "checkout.php",
+        // Bestellungen — App\Http\Controllers\OrderController. lookup/* und die
+        // Zeilenbeschriftungen stammen aus order.json des Keymanagers (dessen
+        // beschädigtes „Load orders" ausgenommen); show.heading/lookup_hint
+        // sind neu, pt ist wie immer neu übersetzt.
+        "orders.php",
     ];
 
     public function testEveryLocaleTranslatesEveryString(): void

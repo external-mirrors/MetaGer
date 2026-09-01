@@ -81,6 +81,7 @@ Germany',
         'privacy' => 'By clicking "Make payment" you will be redirected to our payment service provider <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> to complete the purchase. More about <a href=":link" target="_blank">privacy at VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment declined this payment. Please try again or choose a different payment method.',
+            'onion' => 'Wero is not available over our onion address — the payment provider cannot send you back here afterwards. Please choose a different payment method.',
         ],
     ],
 
@@ -128,6 +129,8 @@ Germany',
     'returned' => [
         'heading' => 'Charge complete',
         'paid' => 'Thank you! Your key has been topped up by :amount tokens.',
+        'next' => 'Your balance is ready right away — you can keep searching now.',
+        'details' => 'View order details',
         'pending' => 'Your payment is still being processed. As soon as it reaches us, your key will be topped up automatically.',
     ],
 ];

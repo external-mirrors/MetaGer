@@ -137,6 +137,29 @@ class ChargeMicropaymentTest extends TestCase
             ->assertRedirect("https://prepayment.micropayment.de/prepay/event?seal=abc123");
     }
 
+    /**
+     * The browser-facing origin travels to the keymanager as `return_origin`,
+     * which micropayment's own async webhook builds the "back to MetaGer"
+     * redirect from — see App\Support\AppHosts and ChargeVRPaymentTest for why
+     * the keymanager cannot work this out on its own.
+     */
+    public function testTheBrowserOriginIsForwardedAsReturnOrigin(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/key/*/checkout/micropayment/*" => Http::response([
+                "public_id" => "Z1",
+                "redirect_url" => "https://prepayment.micropayment.de/prepay/event?seal=abc123",
+            ], 201),
+        ]);
+
+        $this->signedIn()
+            ->withHeaders(["Origin" => "https://metager.org"])
+            ->post("https://metager.org/de-DE/konto/aufladen/1000/micropayment/prepay", ["revocation" => "on"]);
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), "/checkout/micropayment/prepay")
+            && $request["return_origin"] === "https://metager.org");
+    }
+
     public function testTheOptionalEmailIsForwarded(): void
     {
         $this->keyserverKnows([

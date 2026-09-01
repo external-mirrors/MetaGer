@@ -88,6 +88,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \App\Http\Middleware\LocalizationRedirect::class,
+            \App\Http\Middleware\StripKeyOnceCookieConfirmed::class,
         ]);
         $middleware->appendToGroup("api", [
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',

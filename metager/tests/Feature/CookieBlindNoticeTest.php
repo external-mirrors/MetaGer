@@ -113,14 +113,27 @@ class CookieBlindNoticeTest extends TestCase
         $response->assertDontSeeText(trans("login.no_cookies_notice"));
     }
 
+    /**
+     * Once the cookie is confirmed working, `StripKeyOnceCookieConfirmed`
+     * bounces once more to the same page without `key`/the marker — the
+     * page the visitor actually settles on never carries the key at all, so
+     * there is no notice to not-show there either. Pinned as a two-step
+     * assertion: this request itself must redirect (it used to render
+     * directly, key still in the address bar), and the page it points to
+     * must be the clean one with no notice.
+     */
     public function testTheStartpageDoesNotShowTheNoticeWhenTheCookieDidArrive(): void
     {
         $this->keyserverKnows();
 
-        $response = $this->withCookie("key", self::KEY)
+        $bounce = $this->withCookie("key", self::KEY)
             ->get("/?key=" . self::KEY . "&" . CookieSupport::MARKER . "=1")
-            ->assertOk();
+            ->assertRedirect();
+        $location = $bounce->headers->get("Location");
+        $this->assertStringNotContainsString("key=", $location);
+        $this->assertStringNotContainsString(CookieSupport::MARKER, $location);
 
+        $response = $this->withCookie("key", self::KEY)->get($location)->assertOk();
         $response->assertDontSeeText(trans("login.no_cookies_notice"));
     }
 
@@ -180,15 +193,24 @@ class CookieBlindNoticeTest extends TestCase
         $this->get("/konto?key=" . self::KEY)->assertRedirect();
     }
 
-    /** Once the cookie is confirmed working, the notice never shows. */
+    /**
+     * Once the cookie is confirmed working, `StripKeyOnceCookieConfirmed`
+     * bounces once more to /konto without `key`/the marker — see the
+     * startpage's equivalent test above for why this is now a two-step
+     * assertion rather than a single `assertOk()`.
+     */
     public function testTheAccountPageDoesNotShowTheNoticeWhenTheCookieDidArrive(): void
     {
         $this->keyserverKnows();
 
-        $response = $this->withCookie("key", self::KEY)
+        $bounce = $this->withCookie("key", self::KEY)
             ->get("/konto?key=" . self::KEY . "&" . CookieSupport::MARKER . "=1")
-            ->assertOk();
+            ->assertRedirect();
+        $location = $bounce->headers->get("Location");
+        $this->assertStringNotContainsString("key=", $location);
+        $this->assertStringNotContainsString(CookieSupport::MARKER, $location);
 
+        $response = $this->withCookie("key", self::KEY)->get($location)->assertOk();
         $response->assertDontSeeText(trans("login.no_cookies_notice"));
     }
 }

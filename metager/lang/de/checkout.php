@@ -151,6 +151,7 @@ Postfach 51 01 43
         'heading' => 'Aufladen abgeschlossen',
         'paid' => 'Vielen Dank! Ihr Schlüssel wurde um :amount Token aufgeladen.',
         'next' => 'Ihr Guthaben steht sofort bereit — Sie können direkt weitersuchen.',
+        'details' => 'Bestelldetails ansehen',
         'pending' => 'Ihre Zahlung wird noch bearbeitet. Sobald sie bei uns eingegangen ist, wird Ihr Schlüssel automatisch aufgeladen.',
     ],
 ];

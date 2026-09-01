@@ -232,3 +232,81 @@
   flex-wrap: wrap;
   gap: 0.6rem 1rem;
 }
+
+// ── Bestellungen (/konto/bestellungen) ──────────────────────────────────────
+// App\Http\Controllers\OrderController. Wie die Aufladeseiten: #account-page
+// und .account-section aus account.less tragen den Rahmen, hier steht nur das
+// Nachschlagformular und die Zeilentabelle einer Bestellung.
+.orders-lookup {
+  display: grid;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+
+  .orders-lookup__label {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .orders-lookup__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+
+    input {
+      flex: 1 1 12rem;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+}
+
+.orders-detail {
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid @border-color;
+
+  &:last-of-type {
+    border-bottom: 0;
+  }
+}
+
+.orders-lines {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+
+  th,
+  td {
+    padding: 0.4rem 0.25rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: normal;
+  }
+
+  .orders-lines__count,
+  .orders-lines__price {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .orders-lines__total {
+    th,
+    td {
+      border-top: 1px solid @border-color;
+      font-weight: bold;
+    }
+  }
+
+  .orders-lines__exchange {
+    color: @text-color-alpha-70;
+    font-size: 0.9rem;
+  }
+}

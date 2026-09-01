@@ -130,6 +130,7 @@ Tyskland',
         'heading' => 'Opladning gennemført',
         'paid' => 'Tak! Din nøgle er blevet opladet med :amount tokens.',
         'next' => 'Din saldo er klar med det samme – du kan søge videre nu.',
+        'details' => 'Se ordredetaljer',
         'pending' => 'Din betaling behandles stadig. Så snart den når frem til os, bliver din nøgle automatisk opladet.',
     ],
 ];

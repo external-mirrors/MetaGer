@@ -130,6 +130,7 @@ Duitsland',
         'heading' => 'Opwaarderen voltooid',
         'paid' => 'Bedankt! Uw sleutel is opgewaardeerd met :amount tokens.',
         'next' => 'Uw tegoed is meteen beschikbaar — u kunt nu verder zoeken.',
+        'details' => 'Bestelgegevens bekijken',
         'pending' => 'Uw betaling wordt nog verwerkt. Zodra deze bij ons binnenkomt, wordt uw sleutel automatisch opgewaardeerd.',
     ],
 ];

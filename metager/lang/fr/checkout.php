@@ -130,6 +130,7 @@ Allemagne',
         'heading' => 'Rechargement terminé',
         'paid' => 'Merci ! Votre clé a été rechargée de :amount jetons.',
         'next' => 'Votre solde est disponible immédiatement : vous pouvez poursuivre vos recherches.',
+        'details' => 'Voir les détails de la commande',
         'pending' => 'Votre paiement est encore en cours de traitement. Dès qu\'il nous parviendra, votre clé sera rechargée automatiquement.',
     ],
 ];

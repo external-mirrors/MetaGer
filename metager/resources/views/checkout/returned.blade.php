@@ -39,6 +39,7 @@
 		<div class="checkout-returned__actions">
 			@if($paid)
 				<a class="account-btn account-btn--primary" href="{{ $startpageUrl }}">@lang('account.page.actions.search')</a>
+				<a class="account-btn account-btn--quiet" href="{{ $orderUrl }}">@lang('checkout.returned.details')</a>
 				<a class="account-btn account-btn--quiet" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 			@else
 				<a class="account-btn account-btn--primary" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>

@@ -130,6 +130,7 @@ Tyskland',
         'heading' => 'Uppladdning slutförd',
         'paid' => 'Tack! Din nyckel har laddats med :amount tokens.',
         'next' => 'Ditt saldo är tillgängligt direkt – du kan fortsätta söka nu.',
+        'details' => 'Visa beställningsdetaljer',
         'pending' => 'Din betalning behandlas fortfarande. Så snart den når oss laddas din nyckel automatiskt.',
     ],
 ];

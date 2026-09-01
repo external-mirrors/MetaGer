@@ -616,11 +616,18 @@ final class ChargeController extends Controller
             ->view("checkout.returned", [
                 "title" => trans("titles.checkout"),
                 "navbarFocus" => "login",
-                "css" => [Vite::asset("resources/less/metager/pages/account.less")],
+                "css" => [
+                    Vite::asset("resources/less/metager/pages/account.less"),
+                    Vite::asset("resources/less/metager/pages/checkout.less"),
+                ],
                 "fingerprint" => $user->getKeyFingerprint(),
                 "amount" => $order["amount"],
                 "paid" => $order["paid"],
                 "accountUrl" => route("account"),
+                // Wo die Auftragsbestätigung liegt: auf der Bestelldetailseite,
+                // die diese Nummer nachschlägt. Nur wenn schon bezahlt wurde —
+                // vorher gibt es dort nichts herunterzuladen.
+                "orderUrl" => route("account.orders.show", ["reference" => $order["public_id"]]),
                 // Der eigentliche nächste Schritt nach einer geglückten
                 // Aufladung: suchen. Die Seite bot ihn bisher nicht an, nur
                 // den Weg zurück zum Konto — wer hier landet, ist fertig mit

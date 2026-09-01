@@ -130,6 +130,7 @@ Germany',
         'heading' => 'Charge complete',
         'paid' => 'Thank you! Your key has been topped up by :amount tokens.',
         'next' => 'Your balance is ready right away — you can keep searching now.',
+        'details' => 'View order details',
         'pending' => 'Your payment is still being processed. As soon as it reaches us, your key will be topped up automatically.',
     ],
 ];

@@ -130,6 +130,7 @@ Alemania',
         'heading' => 'Recarga completada',
         'paid' => '¡Gracias! Su clave se ha recargado con :amount tokens.',
         'next' => 'Su saldo está disponible de inmediato: puede seguir buscando ahora.',
+        'details' => 'Ver detalles del pedido',
         'pending' => 'Su pago aún se está procesando. En cuanto lo recibamos, su clave se recargará automáticamente.',
     ],
 ];

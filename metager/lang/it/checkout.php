@@ -130,6 +130,7 @@ Germania',
         'heading' => 'Ricarica completata',
         'paid' => 'Grazie! La tua chiave è stata ricaricata con :amount token.',
         'next' => 'Il tuo credito è subito disponibile: puoi continuare a cercare ora.',
+        'details' => 'Vedi i dettagli dell\'ordine',
         'pending' => 'Il pagamento è ancora in fase di elaborazione. Non appena lo riceveremo, la tua chiave verrà ricaricata automaticamente.',
     ],
 ];

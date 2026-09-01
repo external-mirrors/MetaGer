@@ -111,4 +111,66 @@ class CookieCarryingUrlGeneratorTest extends TestCase
 
         $this->assertSame("https://example.com/foo", url("https://example.com/foo"));
     }
+
+    // ── Settings carrying (App\Http\SettingsCarry) ──────────────────────
+
+    /**
+     * Unlike `key`, a carried setting needs no key at all in the request —
+     * `keyMissingCookie()` cannot gate it, since an anonymous cookie-blind
+     * visitor never has a key in the query.
+     */
+    public function testASettingIsCarriedWhenItsCookieIsMissing(): void
+    {
+        $this->asRequest(Request::create("/?dark_mode=dark"));
+
+        $this->assertStringContainsString("dark_mode=dark", route("account"));
+        $this->assertStringContainsString("dark_mode=dark", url("/about"));
+    }
+
+    public function testASettingIsAbsentWhenItsCookieIsPresent(): void
+    {
+        $request = Request::create("/?dark_mode=dark");
+        $request->cookies->set("dark_mode", "dark");
+        $this->asRequest($request);
+
+        $this->assertStringNotContainsString("dark_mode=", route("account"));
+        $this->assertStringNotContainsString("dark_mode=", url("/about"));
+    }
+
+    /** An explicit route parameter always wins, same as for `key`. */
+    public function testAnExplicitSettingParameterIsNotOverwritten(): void
+    {
+        $this->asRequest(Request::create("/?dark_mode=dark"));
+
+        $this->assertStringContainsString(
+            "dark_mode=light",
+            route("account", ["dark_mode" => "light"])
+        );
+    }
+
+    /**
+     * Same reasoning as `testASignedUrlNeverContainsTheKey`: a signed URL
+     * must not embed a value that could later mismatch (or leak) whatever
+     * the visitor's settings happen to be at signing time.
+     */
+    public function testASignedUrlNeverContainsACarriedSetting(): void
+    {
+        $this->asRequest(Request::create("/?dark_mode=dark"));
+
+        $signed = URL::signedRoute("thankyou", [
+            "amount" => 5,
+            "interval" => "once",
+            "funding_source" => "banktransfer",
+            "timestamp" => time(),
+        ]);
+
+        $this->assertStringNotContainsString("dark_mode=", $signed);
+    }
+
+    public function testAnExternalUrlIsLeftUntouchedByCarriedSettings(): void
+    {
+        $this->asRequest(Request::create("/?dark_mode=dark"));
+
+        $this->assertSame("https://example.com/foo", url("https://example.com/foo"));
+    }
 }

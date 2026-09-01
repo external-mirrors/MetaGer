@@ -3,14 +3,31 @@
 namespace App\Http;
 
 use App\Authentication\CookieSupport;
-use App\SearchSettings;
+use App\Models\Configuration\SearchEngineRegistry;
+use App\Models\Configuration\SettingsSchema;
 
 /**
  * The settings, arrived by query with no matching cookie, that a cookie-blind
  * visitor needs carried into every generated same-origin URL on this
  * request — the query-string counterpart to `CookieSupport::keyMissingCookie()`
- * for `key`, generalised from one hardcoded name to any setting
- * `SearchSettings::isValidSetting()` recognises.
+ * for `key`, generalised from one hardcoded name to any setting matching
+ * `SearchSettings::isValidSetting()`'s validation rules.
+ *
+ * Deliberately reimplements those rules rather than calling
+ * `app(SearchSettings::class)->isValidSetting()`: `SearchSettings` is a
+ * container singleton whose *first* resolution runs its full, request-reading
+ * `boot()` (`SearchSettingsProvider`) and then never runs it again for the
+ * rest of the request. This class is reached from `route()`/`url()`
+ * (`CookieCarryingUrlGenerator`, `CookieSupport::carryIntoUrl()`), which fire
+ * far earlier and far more often than a page's own settings logic expects —
+ * including, concretely, Laravel's own test harness normalising a test URL
+ * via `url()` *before* dispatching the request it belongs to. Resolving
+ * `SearchSettings` there boots it against the wrong request and — being a
+ * singleton — that wrong `$q`/`$fokus` then sticks for the request that
+ * follows. `isValidSetting()`'s only real dependency is `available_foki`
+ * (`array_keys($registry->foki)`, from the request-independent
+ * `SearchEngineRegistry`), so deriving that directly avoids the whole
+ * failure mode instead of working around one call site of it.
  *
  * `keyMissingCookie()` cannot be reused here: it requires a key already in
  * the query, which an anonymous cookie-blind visitor never has. Settings
@@ -69,7 +86,7 @@ class SettingsCarry
             return;
         }
         $request = app('request');
-        $settings = app(SearchSettings::class);
+        $availableFoki = array_keys(get_object_vars(app(SearchEngineRegistry::class)->foki));
 
         foreach ($request->query() as $name => $value) {
             if (is_array($value)) {
@@ -85,10 +102,32 @@ class SettingsCarry
             if ($request->cookie($name) !== null) {
                 continue;
             }
-            if (!$settings->isValidSetting($name, $value)) {
+            if (!self::isValidSetting($name, $value, $availableFoki)) {
                 continue;
             }
             $this->params[$name] = $value;
         }
+    }
+
+    /**
+     * `SearchSettings::isValidSetting()`'s validation rules, reimplemented
+     * against a directly-derived `$availableFoki` rather than that stateful
+     * singleton — see this class's docblock for why. Keep the two in sync.
+     */
+    private static function isValidSetting(string $name, string $value, array $availableFoki): bool
+    {
+        if (in_array($name, SettingsSchema::globalSettingKeys(), true)) {
+            return true;
+        }
+        if (preg_match("/^([^_]+)_blpage$/", $name, $matches) && in_array($matches[1], $availableFoki, true)) {
+            return true;
+        }
+        if (preg_match("/^([^_]+)_engine_(.*)$/", $name, $matches) && in_array($matches[1], $availableFoki, true) && in_array($value, ["on", "off"], true)) {
+            return true;
+        }
+        if (preg_match("/^([^_]+)_setting_(.*)$/", $name, $matches) && in_array($matches[1], $availableFoki, true)) {
+            return true;
+        }
+        return false;
     }
 }

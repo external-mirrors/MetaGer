@@ -223,3 +223,12 @@
     color: @text-color-alpha-70;
   }
 }
+
+// Die zwei Wege von der Landeseite weg (App\Http\Controllers\ChargeController::
+// returned()): weitersuchen und zurück zum Konto. Nebeneinander, solange Platz
+// ist, sonst untereinander — wie .checkout-nav.
+.checkout-returned__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+}

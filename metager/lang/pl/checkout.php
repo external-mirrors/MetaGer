@@ -129,6 +129,7 @@ Niemcy',
     'returned' => [
         'heading' => 'Doładowanie zakończone',
         'paid' => 'Dziękujemy! Twój klucz został doładowany o :amount tokenów.',
+        'next' => 'Twoje środki są dostępne od razu — możesz już dalej wyszukiwać.',
         'pending' => 'Twoja płatność jest jeszcze przetwarzana. Gdy tylko do nas dotrze, Twój klucz zostanie automatycznie doładowany.',
     ],
 ];

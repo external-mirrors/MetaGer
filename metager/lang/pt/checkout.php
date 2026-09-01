@@ -129,6 +129,7 @@ Alemanha',
     'returned' => [
         'heading' => 'Carregamento concluído',
         'paid' => 'Obrigado! A sua chave foi carregada com :amount tokens.',
+        'next' => 'O seu saldo está disponível de imediato — pode continuar a pesquisar agora.',
         'pending' => 'O seu pagamento ainda está a ser processado. Assim que chegar até nós, a sua chave será carregada automaticamente.',
     ],
 ];

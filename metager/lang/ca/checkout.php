@@ -129,6 +129,7 @@ Alemanya',
     'returned' => [
         'heading' => 'Recàrrega completada',
         'paid' => 'Gràcies! La vostra clau s\'ha recarregat amb :amount tokens.',
+        'next' => 'El vostre saldo ja està disponible: podeu continuar cercant de seguida.',
         'pending' => 'El vostre pagament encara s\'està processant. Tan bon punt ens arribi, la vostra clau es recarregarà automàticament.',
     ],
 ];

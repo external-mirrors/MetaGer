@@ -620,6 +620,11 @@ final class ChargeController extends Controller
                 "amount" => $order["amount"],
                 "paid" => $order["paid"],
                 "accountUrl" => route("account"),
+                // Der eigentliche nächste Schritt nach einer geglückten
+                // Aufladung: suchen. Die Seite bot ihn bisher nicht an, nur
+                // den Weg zurück zum Konto — wer hier landet, ist fertig mit
+                // dem Bezahlen und will los.
+                "startpageUrl" => route("startpage"),
             ])
             ->header("Cache-Control", "no-store, private");
     }

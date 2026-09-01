@@ -25,11 +25,26 @@
 	<section class="account-section">
 		@if($paid)
 			<p class="account-section__lede">@lang('checkout.returned.paid', ['amount' => \Illuminate\Support\Number::format($amount, locale: app()->getLocale())])</p>
+			<p class="account-section__lede">@lang('checkout.returned.next')</p>
 		@else
 			<p class="account-blocked">@lang('checkout.returned.pending')</p>
 		@endif
 
-		<a class="account-btn account-btn--primary" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+		{{--
+			Nach geglückter Zahlung ist "suchen" der nächste Schritt, nicht
+			"zurück zum Konto" — deshalb steht die Suche vorn und primär. Solange
+			die Zahlung noch bearbeitet wird, führt der primäre Weg zum Konto,
+			wo der Stand sichtbar wird; die Suche bleibt als ruhiger Zweitweg.
+		--}}
+		<div class="checkout-returned__actions">
+			@if($paid)
+				<a class="account-btn account-btn--primary" href="{{ $startpageUrl }}">@lang('account.page.actions.search')</a>
+				<a class="account-btn account-btn--quiet" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+			@else
+				<a class="account-btn account-btn--primary" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+				<a class="account-btn account-btn--quiet" href="{{ $startpageUrl }}">@lang('account.page.actions.search')</a>
+			@endif
+		</div>
 	</section>
 </div>
 @endsection

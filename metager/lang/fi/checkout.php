@@ -129,6 +129,7 @@ Saksa',
     'returned' => [
         'heading' => 'Lataus valmis',
         'paid' => 'Kiitos! Avaimesi on ladattu :amount tokenilla.',
+        'next' => 'Saldosi on heti käytettävissä – voit jatkaa hakua nyt.',
         'pending' => 'Maksuasi käsitellään vielä. Heti kun se saapuu meille, avaimesi ladataan automaattisesti.',
     ],
 ];

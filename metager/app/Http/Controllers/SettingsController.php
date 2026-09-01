@@ -210,7 +210,25 @@ class SettingsController extends Controller
             abort(404);
         }
 
-        $newFilters = $request->except(["focus", "url"]);
+        $langFile = app(SearchEngineRegistry::class);
+
+        // Not $request->except(["focus", "url"]): that trusted everything
+        // else in the merged query+body input to be a filter this form
+        // posted. Once this form's own `action` URL can carry settings
+        // forward for a cookie-blind visitor (App\Http\SettingsCarry), an
+        // unrelated carried setting — e.g. `web_engine_bing=off` sitting in
+        // the query string — would land here too and get treated as a
+        // filter with an unrecognised name, which the empty-value branch
+        // below would then Cookie::forget() under a garbage key. Iterating
+        // the known parameter-filters instead means only an actual filter
+        // get-parameter is ever read.
+        $newFilters = [];
+        foreach ($langFile->filter->{"parameter-filter"} as $filter) {
+            $param = $filter->{"get-parameter"};
+            if ($request->has($param)) {
+                $newFilters[$param] = $request->input($param);
+            }
+        }
 
         /**
          * Pin the interface language before touching a market.
@@ -226,8 +244,6 @@ class SettingsController extends Controller
         if (Cookie::get(LocaleContext::cookieName()) === null) {
             Localization::context()->persistCookie();
         }
-
-        $langFile = app(SearchEngineRegistry::class);
 
         $settings = app(SearchSettings::class);
         app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated

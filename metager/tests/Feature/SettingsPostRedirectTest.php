@@ -106,6 +106,31 @@ class SettingsPostRedirectTest extends TestCase
         $this->assertTrue($this->isForgotten($response, "web_setting_m"));
     }
 
+    /**
+     * Regression test for a bug in `enableFilter`, surfaced while adding
+     * settings-in-URL carrying: it used to build its filter list from
+     * `$request->except(["focus", "url"])` and then, for *any* key in that
+     * list with an empty value, unconditionally forgot a cookie named
+     * `{fokus}_setting_{key}` — with no check that `{key}` was an actual
+     * filter's get-parameter first. Harmless as long as every extra request
+     * parameter had a non-empty value, which held until this form's own
+     * `action` URL could start carrying settings forward for a cookie-blind
+     * visitor: nothing stops an unrelated, empty-valued query parameter
+     * (accidental or crafted) from riding along next to `focus`/`url` and
+     * being read as "reset this filter to its default". Fixed by only ever
+     * reading the request for get-parameters `SearchEngineRegistry` actually
+     * lists as filters.
+     */
+    #[Test]
+    public function an_unrelated_empty_query_parameter_does_not_forget_an_unrelated_cookie(): void
+    {
+        $response = $this->post("/meta/settings/ef?junk=", ["focus" => "web", "m" => "fr_FR"]);
+
+        $response->assertRedirect();
+        $this->assertFalse($this->isForgotten($response, "web_setting_junk"));
+        $this->assertSame("fr_FR", $this->cookieFrom($response, "web_setting_m"));
+    }
+
     #[Test]
     public function changing_a_global_setting_redirects_to_more_settings(): void
     {

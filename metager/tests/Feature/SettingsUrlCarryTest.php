@@ -300,6 +300,37 @@ class SettingsUrlCarryTest extends TestCase
         $page->assertSee("id=\"loadSettings\"", false);
     }
 
+    /**
+     * The "settings on :root" overview (`settings/allSettings.blade.php`)
+     * gated its table and its "reset all" button on `sizeof(Cookie::get())`
+     * alone, so a cookie-blind visitor whose settings only ever rode in the
+     * query saw "no settings" and had no way to reset them from that page.
+     */
+    #[Test]
+    public function the_all_settings_overview_lists_a_setting_that_only_arrived_by_query(): void
+    {
+        $page = $this->get("/meta/settings/all-settings?dark_mode=dark")->assertOk();
+
+        $page->assertDontSee('id="no-settings"', false);
+        $page->assertSee("dark_mode = dark", false);
+        $page->assertSee(route("removeAllSettings"), false);
+    }
+
+    /**
+     * `index()`'s backup-link builder walks `header ∪ cookie ∪ query` and
+     * takes the first value of any array-shaped entry. A query like
+     * `?dark_mode[x]=y` has no element 0, which used to raise an "undefined
+     * array key" warning and fold a null into the link; it is now skipped.
+     */
+    #[Test]
+    public function the_backup_link_survives_an_array_shaped_query_parameter(): void
+    {
+        $page = $this->get("/meta/settings?focus=web&dark_mode[x]=y&tips=off")->assertOk();
+
+        $page->assertSee("id=\"loadSettings\"", false);
+        $page->assertSee("tips", false);
+    }
+
     // ── loadSettings() forwards to the startpage ────────────────────────
 
     #[Test]

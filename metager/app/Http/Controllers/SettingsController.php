@@ -119,7 +119,14 @@ class SettingsController extends Controller
         # link entirely.
         foreach (array_merge($request->header(), $request->cookie(), $request->query()) as $key => $value) {
             if (is_array($value)) {
-                $value = $value[0];
+                // `?dark_mode[foo]=bar` gives an associative array with no [0]
+                // — reach for the first value by position, not the literal
+                // key 0, so an odd query shape is ignored rather than raising
+                // an "undefined array key" warning.
+                $value = reset($value);
+                if ($value === false) {
+                    continue;
+                }
             }
             if ($settings->isValidSetting($key, $value)) {
                 $settings_params[$key] = $value;
@@ -685,9 +692,16 @@ class SettingsController extends Controller
     {
         $sumaFile = app(SearchEngineRegistry::class);
 
+        // A cookie-blind visitor's settings live only in the query and never
+        // in Cookie::get() — merge in whatever is currently carried so this
+        // overview lists (and can reset) what is actually active, not just
+        // what happens to have stuck as a cookie.
+        $settings = array_merge(Cookie::get(), app(SettingsCarry::class)->all());
+
         return view('settings.allSettings')
             ->with('title', trans('titles.allSettings'))
             ->with('url', $request->input('url', ''))
+            ->with('settings', $settings)
             ->with('sumaFile', $sumaFile);
     }
 

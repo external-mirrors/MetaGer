@@ -7,7 +7,7 @@
     <h1 class="page-title">@lang('settings.allSettings.header', ["root" => Request::root()])</h1>
     <div class="card">
         <p>@lang('settings.allSettings.text')</p>
-        @if(sizeof(Cookie::get()) > 0)
+        @if(sizeof($settings) > 0)
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach(Cookie::get() as $key => $value)
+                    @foreach($settings as $key => $value)
                     <tr>
                         <td>{{ $key . " = " . $value }}</td>
                         <td>
@@ -59,7 +59,7 @@
         </div>
         <div id="actions">
             <a href="{{ $url }}" class="btn btn-sm btn-default">@lang('settings.back')</a>
-            @if(sizeof(Cookie::get()) > 0)
+            @if(sizeof($settings) > 0)
             <form action="{{ route('removeAllSettings')}}" method="post">
                 <input type="hidden" name="url" value="{{ App\Localization::currentFullUrl() }}">
                 <button type="submit" class="btn btn-sm btn-danger">@lang('settings.reset')</button>

@@ -33,7 +33,18 @@ class SettingsController extends Controller
         $settings = app(SearchSettings::class);
         $originalFokus = $settings->fokus;
         $authorization = app(Authorization::class);
-        $url = $request->input('url', '');
+        // The "back to the last page" link, rendered verbatim as $url below —
+        // never through route()/to(), so a setting changed on this very page
+        // load (SettingsCarry::set()/forget(), called by the POST handler
+        // that redirected here) would otherwise never reach it: the visitor
+        // navigates back to the page they came from and the change they just
+        // made is gone again. carryIntoUrl() is a no-op for an empty $url and
+        // for one that already carries everything current, so this is safe
+        // to call unconditionally.
+        // ConvertEmptyStringsToNull turns an empty `?url=` into a present-but-
+        // null input, which `input('url', '')`'s default does not catch —
+        // the default only applies when the key is missing entirely.
+        $url = CookieSupport::carryIntoUrl((string) $request->input('url', ''), $request);
 
         // Check if any setting is active. Populated further as we build
         // per-fokus data below (loadParameterFilter()/engine settings touch

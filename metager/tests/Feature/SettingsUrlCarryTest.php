@@ -110,6 +110,35 @@ class SettingsUrlCarryTest extends TestCase
     }
 
     /**
+     * `SettingsController::index()`'s "back to the last page" link
+     * (`settings/index.blade.php`'s `href="{{ $url }}"`) renders `$url`
+     * verbatim — it is a plain string from `$request->input('url')`, never
+     * built through `route()`/`to()`, so it never picked up a setting a POST
+     * handler just carried on this very visit. Without carrying it here too,
+     * clicking "back" the moment after changing a setting silently reverted
+     * that change: the page you land on is the one from before you changed
+     * anything.
+     */
+    #[Test]
+    public function the_back_to_last_page_link_carries_a_setting_just_changed_on_this_visit(): void
+    {
+        // Same-origin, matching how App\Localization::currentFullUrl() (the
+        // real source of this 'url' parameter) builds it — carryIntoUrl()
+        // only ever touches a same-origin URL, exactly like CookieSupport's
+        // other call sites.
+        $previousPage = url("/meta/meta.ger3") . "?eingabe=test&focus=web";
+        $response = $this->post("/meta/settings/es?url=" . urlencode($previousPage), [
+            "focus" => "web",
+            "dark_mode" => "dark",
+        ]);
+        $response->assertRedirect();
+
+        $page = $this->get($this->locationOf($response))->assertOk();
+        $page->assertSee('class="backlink"', false);
+        $page->assertSee('href="' . e($previousPage . "&dark_mode=dark") . '"', false);
+    }
+
+    /**
      * The startpage's own search form (`parts/searchbar.blade.php`) is
      * `method="GET"`: submitting it replaces `action`'s query string
      * outright rather than merging with it, unlike a `route()` link — so a

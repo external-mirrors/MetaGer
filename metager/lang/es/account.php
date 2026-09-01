@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Ha agotado sus fichas.',
         'action' => 'Recargar ahora',
+        'message_anonymous' => 'Ha agotado sus fichas anónimas.',
     ],
 ];

@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Je Token zijn op.',
         'action' => 'Nu opwaarderen',
+        'message_anonymous' => 'Je anonieme Token zijn op.',
     ],
 ];

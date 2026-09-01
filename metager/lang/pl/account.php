@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Twoje Token zostały wyczerpane.',
         'action' => 'Doładuj teraz',
+        'message_anonymous' => 'Twoje anonimowe Token zostały wyczerpane.',
     ],
 ];

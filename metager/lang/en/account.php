@@ -178,5 +178,9 @@ return [
     'empty' => [
         'message' => 'Your tokens are used up.',
         'action' => 'Top up now',
+        // The webextension holds the account, so a spent balance is topped
+        // up there, not on a key dashboard the anonymous visitor has no key
+        // for. The action reuses account.sidebar.extension_settings.
+        'message_anonymous' => 'Your anonymous tokens are used up.',
     ],
 ];

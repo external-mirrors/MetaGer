@@ -88,11 +88,21 @@
            Authorization service and was not gated on the key guard — which is how
            "142 Token" and "Token aufgebraucht" came to render for the same
            visitor on the same screen. --}}
-      @if(\Auth::guard("key")->user() !== null && \Auth::guard("key")->user()->getKeyState() === \App\Authentication\KeyState::EMPTY)
+      @php($emptyUser = \Auth::guard("key")->user())
+      @if($emptyUser !== null && $emptyUser->getKeyState() === \App\Authentication\KeyState::EMPTY)
+      {{-- A webextension visitor holds an anonymous token, not a key of ours:
+           there is no balance for us to top up, and "top up now" only ever
+           redirected on to the anonymous-token help page. Point them where
+           the account actually is — the extension's own settings, with the
+           help page as the no-script fallback — the same way the pill does
+           (parts/account-pill.blade.php). --}}
+      @php($emptyAnonymous = $emptyUser->temporary)
       <div id="account-empty-alert">
-        {!! \App\Authentication\KeyIdenticon::render(\Auth::guard("key")->user()->getKeyFingerprint()) !!}
-        <span class="account-empty-alert__message">@lang('account.empty.message')</span>
-        <a class="account-empty-alert__action" href="{{ App\Landing\KeymanagerLinks::dashboard() }}">@lang('account.empty.action')</a>
+        {!! \App\Authentication\KeyIdenticon::render($emptyUser->getKeyFingerprint()) !!}
+        <span class="account-empty-alert__message">@lang($emptyAnonymous ? 'account.empty.message_anonymous' : 'account.empty.message')</span>
+        <a class="account-empty-alert__action"
+          href="{{ $emptyAnonymous ? route('anonymous-token') : App\Landing\KeymanagerLinks::dashboard() }}"
+          @if($emptyAnonymous) data-extension-settings @endif>@lang($emptyAnonymous ? 'account.sidebar.extension_settings' : 'account.empty.action')</a>
       </div>
     @endif
     </div>

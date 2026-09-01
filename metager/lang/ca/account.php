@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Heu exhaurit les fitxes.',
         'action' => 'Recarrega ara',
+        'message_anonymous' => 'Heu exhaurit les fitxes anònimes.',
     ],
 ];

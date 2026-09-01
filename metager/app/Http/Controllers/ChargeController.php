@@ -3,14 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Authentication\ChargeOrderIssuer;
-use App\Authentication\KeyIssuer;
 use App\Authentication\KeyUser;
 use App\Authentication\ManualChargeIssuer;
 use App\Authentication\MicropaymentChargeIssuer;
 use App\Authentication\PayPalChargeIssuer;
 use App\Authentication\VRPaymentChargeIssuer;
+use App\Http\Controllers\Concerns\HandlesKeyCheckout;
 use App\Landing\ChargeEligibility;
-use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
 use App\Support\AppHosts;
 use Illuminate\Http\JsonResponse;
@@ -105,6 +104,8 @@ use Illuminate\Support\Str;
  */
 final class ChargeController extends Controller
 {
+    use HandlesKeyCheckout;
+
     public function show(Request $request, int $amount): Response|RedirectResponse
     {
         [$user, $key, $redirect] = $this->requireKey($request, $amount);
@@ -688,29 +689,7 @@ final class ChargeController extends Controller
      */
     private function requireKey(Request $request, int $amount): array
     {
-        /** @var KeyUser|null $user */
-        $user = Auth::guard("key")->user();
-
-        if ($user === null) {
-            return [null, null, redirect()
-                ->to(KeymanagerLinks::login(route("account.checkout", ["amount" => $amount]), $request))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        if ($user->temporary) {
-            return [null, null, redirect()
-                ->to(route("anonymous-token"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        $key = $this->keyOf($user);
-        if ($key === null) {
-            return [null, null, redirect()
-                ->to(route("account"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        return [$user, $key, null];
+        return $this->resolveKey($request, route("account.checkout", ["amount" => $amount]));
     }
 
     /**
@@ -722,29 +701,7 @@ final class ChargeController extends Controller
      */
     private function requireKeyForReturn(Request $request, string $reference): array
     {
-        /** @var KeyUser|null $user */
-        $user = Auth::guard("key")->user();
-
-        if ($user === null) {
-            return [null, null, redirect()
-                ->to(KeymanagerLinks::login(route("account.checkout.returned", ["reference" => $reference]), $request))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        if ($user->temporary) {
-            return [null, null, redirect()
-                ->to(route("anonymous-token"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        $key = $this->keyOf($user);
-        if ($key === null) {
-            return [null, null, redirect()
-                ->to(route("account"))
-                ->header("Cache-Control", "no-store, private")];
-        }
-
-        return [$user, $key, null];
+        return $this->resolveKey($request, route("account.checkout.returned", ["reference" => $reference]));
     }
 
     /**
@@ -779,53 +736,5 @@ final class ChargeController extends Controller
     private function knownTier(int $amount): bool
     {
         return array_key_exists($amount, KeyPrice::tiers());
-    }
-
-    /** Wortgleich zu AccountController::keyOf() — siehe dort für das Warum. */
-    private function keyOf(KeyUser $user): ?string
-    {
-        $canonical = $user->getCanonicalKey();
-        if ($canonical !== null && KeyIssuer::isKey($canonical)) {
-            return strtolower($canonical);
-        }
-
-        return KeyIssuer::isKey($user->key) ? strtolower($user->key) : null;
-    }
-
-    /**
-     * Ob dieses Formular von unserer eigenen Seite abgeschickt wurde.
-     *
-     * Wortgleich zu {@see KeyCreationController::sameOrigin()} und aus
-     * demselben Grund; die Begründung steht dort.
-     */
-    private function sameOrigin(Request $request): bool
-    {
-        $origin = $request->header("Origin");
-
-        if (is_string($origin) && $origin !== "" && $origin !== "null") {
-            return $this->isOurs($request, $origin);
-        }
-
-        $site = $request->header("Sec-Fetch-Site");
-
-        if (is_string($site) && $site !== "") {
-            return in_array($site, ["same-origin", "same-site", "none"], true);
-        }
-
-        return true;
-    }
-
-    /** Ob ein URL auf den Host zeigt, unter dem diese Anfrage ankam. */
-    private function isOurs(Request $request, string $url): bool
-    {
-        $host = parse_url($url, PHP_URL_HOST);
-
-        if ($host === null || $host === false) {
-            return str_starts_with($url, "/") && !str_starts_with($url, "//");
-        }
-
-        $port = parse_url($url, PHP_URL_PORT);
-
-        return ($host . ($port === null ? "" : ":" . $port)) === $request->getHttpHost();
     }
 }

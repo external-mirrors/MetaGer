@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\Test;
+use Tests\Concerns\FakesSearchEngines;
 use Tests\TestCase;
 
 /**
@@ -20,9 +21,17 @@ use Tests\TestCase;
  */
 class SettingsUrlCarryTest extends TestCase
 {
+    use FakesSearchEngines;
+
     /** Same choice as SettingsPostRedirectTest, and for the same reason: free, enabled by default, real fokus. */
     private const ENGINE = "pixabay";
     private const ENGINE_FOKUS = "bilder";
+
+    protected function tearDown(): void
+    {
+        $this->forgetSearchUserClaims();
+        parent::tearDown();
+    }
 
     private function locationOf($response): string
     {
@@ -98,6 +107,44 @@ class SettingsUrlCarryTest extends TestCase
 
         $page->assertSee('id="subpage-logo"', false);
         $page->assertSee("dark_mode=dark", false);
+    }
+
+    /**
+     * The startpage's own search form (`parts/searchbar.blade.php`) is
+     * `method="GET"`: submitting it replaces `action`'s query string
+     * outright rather than merging with it, unlike a `route()` link — so a
+     * carried setting needs an explicit hidden input here, the same way
+     * `key` already has one just above it in that partial.
+     */
+    /**
+     * The signed-out startpage is the landing page and does not render the
+     * search form at all (`StartpageLandingTest`), so this needs a signed-in
+     * visitor to reach it — `actingAsSearchUser()`'s own KeyUser sign-in,
+     * matching `StartpageLandingTest::signIn()`'s pattern.
+     */
+    #[Test]
+    public function a_setting_is_carried_as_a_hidden_input_on_the_startpage_search_form(): void
+    {
+        $this->actingAsSearchUser();
+
+        $page = $this->get("/?dark_mode=dark")->assertOk();
+
+        $page->assertSee('id="searchForm"', false);
+        $page->assertSee('name="dark_mode" value="dark"', false);
+    }
+
+    #[Test]
+    public function a_setting_is_carried_as_a_hidden_input_on_the_result_page_search_form(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        $page = $this->get("/meta/meta.ger3?eingabe=test&focus=web&dark_mode=dark")->assertOk();
+
+        $page->assertSee('id="searchForm"', false);
+        $page->assertSee('name="dark_mode" value="dark"', false);
     }
 
     // ── Turning a setting back off ───────────────────────────────────────

@@ -64,6 +64,19 @@
 				@if(Request::filled('key'))
 				<input type="hidden" name="key" value="{{ Request::input('key', '') }}" form="searchForm">
 				@endif
+				{{--
+					This form is method="GET": submitting it replaces the
+					query string on `action` outright, it does not merge
+					with it — unlike a route() link, which App\Http\SettingsCarry
+					already gets folded into. Without these, a cookie-blind
+					visitor's settings would silently reset the moment they
+					actually searched. SettingsCarry excludes `key` itself
+					(handled above) and CookieSupport::MARKER, so there is no
+					collision with the input just above.
+				--}}
+				@foreach (app(\App\Http\SettingsCarry::class)->all() as $carryName => $carryValue)
+				<input type="hidden" name="{{ $carryName }}" value="{{ $carryValue }}" form="searchForm">
+				@endforeach
 				@if (isset($option_values))
 				@foreach($option_values as $option => $value)
 				<input type="hidden" name={{ $option }} value={{ $value }}>

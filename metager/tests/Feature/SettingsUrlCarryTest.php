@@ -147,6 +147,45 @@ class SettingsUrlCarryTest extends TestCase
         $page->assertSee('name="dark_mode" value="dark"', false);
     }
 
+    /**
+     * `searchbar.blade.php`'s form action used to be built from the literal
+     * string "/meta/meta.ger3 " — a stray trailing space, harmless on its
+     * own because a browser trims trailing whitespace off a URL, but only
+     * when the space is actually at the end of the string. The moment
+     * anything is carried after it, `CookieSupport::mergeQuery()` appends
+     * "?..." right after that space instead of at the true end of the
+     * string, so the space lands in the middle of the URL and survives —
+     * `.../meta.ger3 ?dark_mode=dark`, which 404s. Pinning the well-formed
+     * action here, on both forms, so a future re-introduction of stray
+     * whitespace in that literal is caught the moment anything is carried.
+     */
+    #[Test]
+    public function the_startpage_search_forms_action_has_no_stray_space_before_the_query_string(): void
+    {
+        $this->actingAsSearchUser();
+
+        $page = $this->get("/?dark_mode=dark")->assertOk();
+
+        $page->assertSee('meta.ger3?dark_mode=dark"', false);
+        $page->assertDontSee("meta.ger3 ?", false);
+        $page->assertDontSee("meta.ger3 %3F", false);
+    }
+
+    #[Test]
+    public function the_result_pages_search_forms_action_has_no_stray_space_before_the_query_string(): void
+    {
+        $this->actingAsSearchUser();
+        $this->fakeEngineResponses([
+            "brave" => $this->engineFixture("brave-web.json"),
+        ]);
+
+        $page = $this->get("/meta/meta.ger3?eingabe=test&focus=web&dark_mode=dark")->assertOk();
+
+        $page->assertSee('meta.ger3?dark_mode=dark"', false);
+        $page->assertDontSee("meta.ger3 ?", false);
+        $page->assertDontSee("meta.ger3 %3F", false);
+    }
+
     // ── Turning a setting back off ───────────────────────────────────────
 
     #[Test]

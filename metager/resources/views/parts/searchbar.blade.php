@@ -1,5 +1,5 @@
 <fieldset>
-	<form id="searchForm" method={{ $request }} @if(!empty($metager) && $metager->isFramed())target="_top" @endif action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/meta.ger3 ") }}" accept-charset="UTF-8">
+	<form id="searchForm" method={{ $request }} @if(!empty($metager) && $metager->isFramed())target="_top" @endif action="{{ LaravelLocalization::getLocalizedURL(LaravelLocalization::getCurrentLocale(), "/meta/meta.ger3") }}" accept-charset="UTF-8">
 		<div class="searchbar {{$class ?? ''}}">
 			<div class="search-input-submit">
 				<div id="suggest-exit">&larr;</div>

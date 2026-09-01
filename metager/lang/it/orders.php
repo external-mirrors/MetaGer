@@ -26,5 +26,29 @@ return [
         'total' => 'Importo totale',
         'exchange_rate' => 'Tasso di cambio',
         'download_confirmation' => 'Scarica la conferma d\'ordine',
+        'request_invoice' => 'Creare la fattura',
+    ],
+
+    'invoice' => [
+        'heading' => 'Fattura',
+        'breadcrumb' => 'Ordine :reference',
+        'description' => 'Se avete bisogno di una fattura, inserite i vostri dati di fatturazione nel modulo sottostante.',
+        'ready' => 'Per questo ordine esiste già una fattura.',
+        'download' => 'Scarica la fattura',
+        'submit' => 'Creare la fattura',
+        'storage' => 'Siamo obbligati per legge a conservare le fatture emesse <span class="bold">per 10 anni</span>. Poiché la fattura deve essere emessa personalmente, essa contiene necessariamente dati personali (nome, indirizzo).',
+        'error' => [
+            'invalid' => 'Controllate i vostri dati — alcuni campi obbligatori mancano o sono troppo lunghi.',
+        ],
+        'field' => [
+            'company' => 'Nome della società (facoltativo)',
+            'first_name' => 'Nome',
+            'last_name' => 'Cognome',
+            'address1' => 'Indirizzo 1',
+            'address2' => 'Indirizzo 2 (opzionale)',
+            'zip' => 'Codice postale',
+            'city' => 'Città',
+            'state' => 'Stato (opzionale)',
+        ],
     ],
 ];

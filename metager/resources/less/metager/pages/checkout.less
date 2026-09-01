@@ -310,3 +310,47 @@
     font-size: 0.9rem;
   }
 }
+
+// Das Rechnungsformular (InvoiceNinja) — App\Http\Controllers\OrderController::
+// invoice()/invoiceRequest(). Zwei Felder pro Zeile ab genug Breite, sonst
+// gestapelt; Straße/Adresszusatz und PLZ/Ort sitzen bewusst nebeneinander.
+.orders-invoice {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .orders-invoice__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+
+  .orders-invoice__field {
+    display: grid;
+    gap: 0.3rem;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    &.orders-invoice__field--error label {
+      color: @form-error-color;
+    }
+
+    input {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+    }
+  }
+}
+
+.orders-invoice__storage {
+  margin: 0 0 1rem;
+  font-size: 0.8rem;
+  color: @text-color-alpha-70;
+}

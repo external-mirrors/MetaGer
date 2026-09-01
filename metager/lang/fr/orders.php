@@ -26,5 +26,29 @@ return [
         'total' => 'Montant total',
         'exchange_rate' => 'Taux de change',
         'download_confirmation' => 'Télécharger la confirmation de commande',
+        'request_invoice' => 'Créer une facture',
+    ],
+
+    'invoice' => [
+        'heading' => 'Facture',
+        'breadcrumb' => 'Commande :reference',
+        'description' => 'Si vous avez besoin d\'une facture, veuillez saisir vos informations de facturation dans le formulaire ci-dessous.',
+        'ready' => 'Une facture existe déjà pour cette commande.',
+        'download' => 'Télécharger la facture',
+        'submit' => 'Créer une facture',
+        'storage' => 'Nous sommes légalement tenus de conserver les factures émises une fois <span class="bold">10 ans</span>. Étant donné qu\'une facture doit vous être délivrée personnellement, elle contient nécessairement des données à caractère personnel (nom, adresse).',
+        'error' => [
+            'invalid' => 'Veuillez vérifier vos informations — certains champs obligatoires sont manquants ou trop longs.',
+        ],
+        'field' => [
+            'company' => 'Nom de l\'entreprise (facultatif)',
+            'first_name' => 'Prénom',
+            'last_name' => 'Nom de famille',
+            'address1' => 'Adresse 1',
+            'address2' => 'Adresse 2 (facultatif)',
+            'zip' => 'Code postal',
+            'city' => 'Ville',
+            'state' => 'État (facultatif)',
+        ],
     ],
 ];

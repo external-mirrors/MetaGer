@@ -242,4 +242,168 @@ class OrdersTest extends TestCase
             ->get("/de-DE/konto/bestellungen/Z1/auftragsbestaetigung.pdf")
             ->assertNotFound();
     }
+
+    public function testTheInvoiceFormRenders(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/rechnung")
+            ->assertOk()
+            ->assertSee(trans("orders.invoice.heading"))
+            ->assertSee('name="first_name"', false);
+    }
+
+    public function testTheInvoiceFormIsGoneOnceAnOrderHasNoPayments(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["paid" => false, "payments" => []])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/rechnung")
+            ->assertNotFound();
+    }
+
+    public function testTheInvoiceFormOffersADownloadLinkOnceOneAlreadyExists(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order([
+                "payments" => [array_merge($this->order()["payments"][0], ["invoice_available" => true])],
+            ])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/rechnung")
+            ->assertOk()
+            ->assertSee(trans("orders.invoice.ready"))
+            ->assertSee(route("account.orders.invoice.pdf", ["reference" => "Z1"]), false)
+            ->assertDontSee('name="first_name"', false);
+    }
+
+    public function testAnInvoiceFormForAnotherKeysOrderIs404(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["key" => self::OTHER_KEY])),
+        ]);
+
+        $this->signedIn()->get("/de-DE/konto/bestellungen/Z1/rechnung")->assertNotFound();
+    }
+
+    public function testSubmittingTheInvoiceFormForwardsItAndRedirectsOnSuccess(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/invoice" => Http::response(["receipt_public_id" => "R1"], 201),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $response = $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/rechnung", [
+                "first_name" => "Max",
+                "last_name" => "Mustermann",
+                "address1" => "Hauptstraße 1",
+                "zip" => "12345",
+                "city" => "Musterstadt",
+            ]);
+
+        $response->assertRedirect(route("account.orders.invoice", ["reference" => "Z1"]));
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), "/invoice")
+            && !str_contains($request->url(), "invoice.pdf")
+            && $request["first_name"] === "Max"
+            && $request["city"] === "Musterstadt");
+    }
+
+    public function testSubmittingTheInvoiceFormShowsKeyserverValidationErrors(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/invoice" => Http::response([
+                "code" => 422,
+                "errors" => [["path" => "last_name", "msg" => "Invalid value"]],
+            ], 422),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/rechnung", [
+                "first_name" => "Max",
+                "last_name" => "",
+                "address1" => "Hauptstraße 1",
+                "zip" => "12345",
+                "city" => "Musterstadt",
+            ])
+            ->assertOk()
+            ->assertSee(trans("orders.invoice.error.invalid"));
+    }
+
+    public function testSubmittingTheInvoiceFormForAnotherKeysOrderIs404(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["key" => self::OTHER_KEY])),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/rechnung", ["first_name" => "Max"])
+            ->assertNotFound();
+    }
+
+    public function testSubmittingTheInvoiceFormWithAForeignOriginIsRejected(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", "https://evil.example")
+            ->post("/de-DE/konto/bestellungen/Z1/rechnung", ["first_name" => "Max"])
+            ->assertForbidden();
+    }
+
+    public function testTheInvoicePdfIsProxiedThrough(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/invoice.pdf*" => Http::response(
+                "%PDF-1.7 invoice",
+                200,
+                ["Content-Type" => "application/pdf"],
+            ),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $response = $this->signedIn()->get("/de-DE/konto/bestellungen/Z1/rechnung.pdf");
+
+        $response->assertOk();
+        $this->assertSame("application/pdf", $response->headers->get("Content-Type"));
+        $this->assertStringStartsWith("%PDF-", $response->getContent());
+        $response->assertHeader("Content-Disposition", 'inline; filename="Z1-rechnung.pdf"');
+    }
+
+    public function testTheInvoicePdfForAnotherKeysOrderIs404(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/invoice.pdf*" => Http::response("%PDF-1.7", 200, ["Content-Type" => "application/pdf"]),
+            "*/api/json/checkout/*" => Http::response($this->order(["key" => self::OTHER_KEY])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/rechnung.pdf")
+            ->assertNotFound();
+    }
+
+    public function testTheInvoicePdfIs404WhenTheKeyserverHasNoPdfYet(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/invoice.pdf*" => Http::response(["code" => 404, "error" => "not_found"], 404),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/rechnung.pdf")
+            ->assertNotFound();
+    }
 }

@@ -464,6 +464,12 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.orders.show');
     Route::get('konto/bestellungen/{reference}/auftragsbestaetigung.pdf', [OrderController::class, 'confirmation'])
         ->name('account.orders.confirmation');
+    Route::get('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoice'])
+        ->name('account.orders.invoice');
+    Route::post('konto/bestellungen/{reference}/rechnung', [OrderController::class, 'invoiceRequest'])
+        ->name('account.orders.invoice.request');
+    Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'invoiceDownload'])
+        ->name('account.orders.invoice.pdf');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

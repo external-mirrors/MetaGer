@@ -26,5 +26,29 @@ return [
         'total' => 'Całkowita kwota',
         'exchange_rate' => 'Kurs wymiany',
         'download_confirmation' => 'Pobierz potwierdzenie zamówienia',
+        'request_invoice' => 'Tworzenie faktury',
+    ],
+
+    'invoice' => [
+        'heading' => 'Faktura',
+        'breadcrumb' => 'Zamówienie :reference',
+        'description' => 'Jeśli potrzebujesz faktury, wprowadź swoje dane rozliczeniowe w poniższym formularzu.',
+        'ready' => 'Dla tego zamówienia istnieje już faktura.',
+        'download' => 'Pobierz fakturę',
+        'submit' => 'Tworzenie faktury',
+        'storage' => 'Jesteśmy prawnie zobowiązani do przechowywania raz wystawionych faktur <span class="bold">10 lat</span> długo. Ponieważ faktura musi być wystawiona osobiście na użytkownika, z konieczności zawiera dane osobowe (imię i nazwisko, adres).',
+        'error' => [
+            'invalid' => 'Sprawdź swoje dane — brakuje niektórych wymaganych pól lub są one zbyt długie.',
+        ],
+        'field' => [
+            'company' => 'Nazwa firmy (opcjonalnie)',
+            'first_name' => 'Imię',
+            'last_name' => 'Nazwisko',
+            'address1' => 'Adres 1',
+            'address2' => 'Adres 2 (opcjonalnie)',
+            'zip' => 'Kod pocztowy',
+            'city' => 'Miasto',
+            'state' => 'Państwo (opcjonalnie)',
+        ],
     ],
 ];

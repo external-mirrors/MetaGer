@@ -26,5 +26,29 @@ return [
         'total' => 'Import total',
         'exchange_rate' => 'Tipus de canvi',
         'download_confirmation' => 'Baixa la confirmació de la comanda',
+        'request_invoice' => 'Crea la factura',
+    ],
+
+    'invoice' => [
+        'heading' => 'Factura',
+        'breadcrumb' => 'Comanda :reference',
+        'description' => 'Si necessiteu una factura, introduïu les vostres dades de facturació al formulari de sota.',
+        'ready' => 'Ja existeix una factura per a aquesta comanda.',
+        'download' => 'Baixa la factura',
+        'submit' => 'Crea la factura',
+        'storage' => 'Estem legalment obligats a conservar les factures emeses durant <span class="bold">10 anys</span>. Com que la factura se us ha d\'emetre nominalment, necessàriament conté dades personals (nom, adreça).',
+        'error' => [
+            'invalid' => 'Comproveu les vostres dades — falten alguns camps obligatoris o són massa llargs.',
+        ],
+        'field' => [
+            'company' => 'Nom de l\'empresa (opcional)',
+            'first_name' => 'Nom',
+            'last_name' => 'Cognoms',
+            'address1' => 'Adreça 1',
+            'address2' => 'Adreça 2 (opcional)',
+            'zip' => 'Codi postal',
+            'city' => 'Població',
+            'state' => 'Província (opcional)',
+        ],
     ],
 ];

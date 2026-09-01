@@ -9,8 +9,8 @@
 	$order kommt validiert aus OrderHistoryIssuer; wem sie gehört, hat der
 	Controller schon gegen den Cookie-Schlüssel geprüft. Pro Zahlung eine
 	Zeilengruppe (netto / MwSt. / gesamt, plus Wechselkurs bei Fremdwährung),
-	darunter die Auftragsbestätigung als PDF. Die Rechnung (InvoiceNinja)
-	folgt später und wird hier noch nicht angeboten.
+	darunter die Auftragsbestätigung als PDF und der Link zur Rechnung
+	(InvoiceNinja, App\Http\Controllers\OrderController::invoice()).
 --}}
 <div id="account-page">
 	<header class="account-head">
@@ -67,7 +67,10 @@
 
 		@if(count($order['payments']) > 0)
 			<p class="account-section__lede">@lang('orders.show.thanks')</p>
-			<a class="account-btn account-btn--primary" href="{{ $confirmationUrl }}" target="_blank" rel="noopener">@lang('orders.show.download_confirmation')</a>
+			<div class="checkout-returned__actions">
+				<a class="account-btn account-btn--primary" href="{{ $confirmationUrl }}" target="_blank" rel="noopener">@lang('orders.show.download_confirmation')</a>
+				<a class="account-btn account-btn--quiet" href="{{ route('account.orders.invoice', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_invoice')</a>
+			</div>
 		@endif
 
 		<p class="account-section__lede">@lang('orders.show.lookup_hint', ['reference' => $order['public_id']])</p>

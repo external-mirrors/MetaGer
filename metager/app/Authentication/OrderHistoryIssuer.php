@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Eine bezahlte Bestellung nachschlagen und ihre Auftragsbestätigung holen —
- * der Unterbau von {@see \App\Http\Controllers\OrderController}.
+ * Eine bezahlte Bestellung nachschlagen und ihre Auftragsbestätigung oder
+ * Rechnung holen — der Unterbau von {@see \App\Http\Controllers\OrderController}.
  *
  * Getrennt von {@see ChargeOrderIssuer}, obwohl beide denselben Endpunkt
  * (`GET /api/json/checkout/<public_id>`) rufen: `ChargeOrderIssuer` gehört zum
@@ -116,6 +116,87 @@ final class OrderHistoryIssuer
         $contentType = $response->header("Content-Type");
         if (!is_string($contentType) || !str_starts_with($contentType, "application/pdf")) {
             Log::warning("keymanager confirmation PDF answered with " . ($contentType ?: "no content type"));
+
+            return null;
+        }
+
+        return [
+            "body" => $response->body(),
+            "content_type" => "application/pdf",
+        ];
+    }
+
+    /**
+     * Requests a tax invoice ("Rechnung") for a paid checkout, or the
+     * reason it could not be created.
+     *
+     * Idempotent on the keymanager side — a resubmit of the same form
+     * (a reload, a slow connection) gets back the same receipt rather than
+     * a second invoice, and this returns success either way; the caller
+     * cannot tell the two apart and does not need to.
+     *
+     * @param array{
+     *     company: string, first_name: string, last_name: string,
+     *     address1: string, address2: string, zip: string, city: string,
+     *     state: string
+     * } $fields
+     * @return array{ok: true}|array{ok: false, errors: list<string>}
+     */
+    public function requestInvoice(string $publicId, array $fields): array
+    {
+        try {
+            $response = Http::timeout(8)
+                ->withHeaders(["Authorization" => "Bearer " . config("metager.metager.keymanager.access_token")])
+                ->post($this->keyserver . "/checkout/" . urlencode($publicId) . "/invoice", $fields);
+        } catch (\Throwable $e) {
+            Log::warning("keymanager invoice request unreachable: " . $e->getMessage());
+
+            return ["ok" => false, "errors" => ["unreachable"]];
+        }
+
+        if ($response->successful()) {
+            return ["ok" => true];
+        }
+
+        if ($response->status() === 422) {
+            $errors = $response->json("errors");
+            $fieldNames = [];
+            if (is_array($errors)) {
+                foreach ($errors as $error) {
+                    $name = is_array($error) ? (Arr::get($error, "path") ?? Arr::get($error, "param")) : null;
+                    if (is_string($name)) {
+                        $fieldNames[] = $name;
+                    }
+                }
+            }
+
+            return ["ok" => false, "errors" => $fieldNames];
+        }
+
+        Log::warning("keymanager invoice request failed with status " . $response->status());
+
+        return ["ok" => false, "errors" => ["unreachable"]];
+    }
+
+    /**
+     * Holt die Rechnung (PDF) einer bezahlten Bestellung, oder null — wortgleich
+     * zu {@see confirmationPdf()}, nur ein anderer Pfad, weil der Keyserver hier
+     * je nach Zustand entweder InvoiceNinjas eigenes PDF weiterreicht oder eine
+     * ältere, selbst gespeicherte Rechnung ausliefert.
+     *
+     * @return array{body: string, content_type: string}|null
+     */
+    public function invoicePdf(string $publicId): ?array
+    {
+        $response = $this->get("/checkout/" . urlencode($publicId) . "/invoice.pdf");
+
+        if ($response === null || !$response->successful()) {
+            return null;
+        }
+
+        $contentType = $response->header("Content-Type");
+        if (!is_string($contentType) || !str_starts_with($contentType, "application/pdf")) {
+            Log::warning("keymanager invoice PDF answered with " . ($contentType ?: "no content type"));
 
             return null;
         }

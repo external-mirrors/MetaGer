@@ -26,5 +26,29 @@ return [
         'total' => 'Totaalbedrag',
         'exchange_rate' => 'Wisselkoers',
         'download_confirmation' => 'Orderbevestiging downloaden',
+        'request_invoice' => 'Factuur maken',
+    ],
+
+    'invoice' => [
+        'heading' => 'Factuur',
+        'breadcrumb' => 'Bestelling :reference',
+        'description' => 'Als u een factuur nodig heeft, vul dan uw factuurgegevens in op het onderstaande formulier.',
+        'ready' => 'Er bestaat al een factuur voor deze bestelling.',
+        'download' => 'Factuur downloaden',
+        'submit' => 'Factuur maken',
+        'storage' => 'We zijn wettelijk verplicht om eenmaal uitgereikte facturen <span class="bold">10 jaar</span> lang te bewaren. Aangezien een factuur persoonlijk aan u moet worden uitgereikt, bevat deze noodzakelijkerwijs persoonlijke gegevens (naam, adres).',
+        'error' => [
+            'invalid' => 'Controleer uw gegevens — sommige verplichte velden ontbreken of zijn te lang.',
+        ],
+        'field' => [
+            'company' => 'Bedrijfsnaam (optioneel)',
+            'first_name' => 'Voornaam',
+            'last_name' => 'Achternaam',
+            'address1' => 'Adres 1',
+            'address2' => 'Adres 2 (optioneel)',
+            'zip' => 'Postcode',
+            'city' => 'Stad',
+            'state' => 'Staat (optioneel)',
+        ],
     ],
 ];

@@ -167,6 +167,36 @@ class ChargeCashTest extends TestCase
      * vor diesem Umzug gab — deshalb reicht ein Aufruf, um zu zeigen, dass er
      * den POST-Endpunkt nicht berührt.)
      */
+    /**
+     * Nach dem Erzeugen der Nummer muss noch dastehen, *was* in den Brief
+     * gehört und *was danach* geschieht — der Port zeigte die Beschreibung und
+     * die Hinweise nur im Formular-Zustand, sodass die einzige Stelle, die je
+     * erklärt, wie der Brief aussehen muss ("die Auftragsnummer muss leserlich
+     * sein"), mit dem Absenden verschwand. Die alte Kasse im Keymanager
+     * (pass/views/checkout/cash.ejs) hielt beide Blöcke durchgehend sichtbar.
+     */
+    public function testTheCreatedOrderPageStillExplainsWhatTheLetterNeeds(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/checkout/*" => Http::response([
+                "public_id" => "Z1",
+                "amount" => 1000,
+                "price" => "10.00",
+                "expires_at" => "2027-05-14T00:00:00.000Z",
+                "key" => self::A_KEY,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/aufladen/1000/bar/Z1")
+            ->assertOk()
+            // „was in den Brief gehört" — die Beschreibung, ganz.
+            ->assertSee(trans("checkout.cash.description"))
+            // „was danach geschieht" — ein Teilstück von no_refund vor dem
+            // Anführungszeichen, das @lang zu &quot; macht.
+            ->assertSee("Sobald die Aufladung von uns verbucht wurde");
+    }
+
     public function testTheCreatedOrderPageNeverCreatesAnOrder(): void
     {
         $this->keyserverKnows([

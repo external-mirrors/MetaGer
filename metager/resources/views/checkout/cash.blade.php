@@ -29,10 +29,7 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<section class="checkout-summary">
-		<span class="checkout-summary__amount">@lang('account.page.charge.tokens', ['amount' => \Illuminate\Support\Number::format($amount, locale: app()->getLocale())])</span>
-		<a class="checkout-summary__change" href="{{ $changeAmountUrl }}">@lang('checkout.page.change')</a>
-	</section>
+	@include('partials.checkout-summary')
 
 	<nav class="checkout-nav">
 		<a class="checkout-back" href="{{ route('account.checkout', ['amount' => $amount]) }}">← @lang('checkout.page.methods.back')</a>
@@ -40,20 +37,31 @@
 	</nav>
 
 	<section class="account-section checkout-cash">
+		{{--
+			Beschreibung und Hinweise stehen in *beiden* Zuständen — sie sagen,
+			was in den Brief gehört (Auftragsnummer plus Bargeld, leserlich) und
+			was danach geschieht (checkout.cash.no_refund: sobald die Ladung
+			verbucht ist, gibt es über die Auftragsnummer eine Übersicht und
+			eine Rechnung). Der Port hatte sie nur im Formular-Zustand gezeigt;
+			nach dem Erzeugen der Nummer war die einzige Stelle, die je erklärt,
+			wie der Brief aussehen muss, wieder verschwunden. Die alte Kasse im
+			Keymanager (pass/views/checkout/cash.ejs) hielt sie durchgehend
+			sichtbar.
+		--}}
+		<p class="account-section__lede">@lang('checkout.cash.description')</p>
+
+		<div>
+			<p>@lang('checkout.cash.note')</p>
+			<ul class="checkout-cash__notes">
+				<li>@lang('checkout.cash.no_large_values')</li>
+				<li>@lang('checkout.cash.no_coins')</li>
+				<li>@lang('checkout.cash.accepted_currencies')</li>
+				<li>@lang('checkout.cash.currency_translation')</li>
+				<li>@lang('checkout.cash.no_refund')</li>
+			</ul>
+		</div>
+
 		@if($reference === null)
-			<p class="account-section__lede">@lang('checkout.cash.description')</p>
-
-			<div>
-				<p>@lang('checkout.cash.note')</p>
-				<ul class="checkout-cash__notes">
-					<li>@lang('checkout.cash.no_large_values')</li>
-					<li>@lang('checkout.cash.no_coins')</li>
-					<li>@lang('checkout.cash.accepted_currencies')</li>
-					<li>@lang('checkout.cash.currency_translation')</li>
-					<li>@lang('checkout.cash.no_refund')</li>
-				</ul>
-			</div>
-
 			@if($error === 'unreachable')
 				<p class="checkout-consent__error" role="alert">@lang('checkout.cash.error.unreachable')</p>
 			@elseif($error === 'consent')

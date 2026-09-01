@@ -48,4 +48,5 @@ return [
     'account' => 'Il mio account – MetaGer',
     'checkout' => 'Ricaricare il credito – MetaGer',
     'orders' => 'Ordini – MetaGer',
+    'campaigns' => 'Campagne di buoni – MetaGer',
 ];

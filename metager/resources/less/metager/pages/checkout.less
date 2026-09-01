@@ -354,3 +354,144 @@
   font-size: 0.8rem;
   color: @text-color-alpha-70;
 }
+
+// ── Gutscheinaktionen (/konto/gutscheinaktionen) ────────────────────────────
+// App\Http\Controllers\CampaignController. Eine Liste von Karten (eine pro
+// Kampagne) über einem Anlegeformular, dessen Felder dieselbe Optik wie
+// .orders-invoice__field tragen.
+.campaigns-list {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.campaigns-item {
+  padding: 1.1rem 1.25rem;
+  border: 1px solid @border-color;
+  border-radius: 10px;
+  background-color: @card-background-color;
+  display: grid;
+  gap: 0.6rem;
+
+  .campaigns-item__head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+  }
+
+  .campaigns-item__name {
+    font-weight: bold;
+  }
+
+  .campaigns-item__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 0.85rem;
+    color: @text-color-alpha-70;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .campaigns-item__link {
+    display: grid;
+    gap: 0.3rem;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .campaigns-item__link-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .campaigns-item__link-input {
+      flex: 1 1 14rem;
+      min-width: 0;
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 0.9rem;
+    }
+  }
+
+  .campaigns-item__hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+
+  .campaigns-item__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+// Aktiv/deaktiviert/abgelaufen — dieselbe Dreiteilung wie
+// views/campaign/manage.ejs vorher inline berechnete (Campaign.isActive()
+// gegen disabled_at !== null).
+.campaigns-status {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+
+  &.campaigns-status--active {
+    background-color: @metager-orange-alpha-80;
+    color: @color-black;
+  }
+
+  &.campaigns-status--disabled,
+  &.campaigns-status--expired {
+    background-color: @highlight-color-alpha-60;
+    color: @text-color-alpha-70;
+  }
+}
+
+.campaigns-create {
+  display: grid;
+  gap: 1rem;
+  max-width: 28rem;
+
+  .campaigns-create__row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+
+  .campaigns-create__field {
+    display: grid;
+    gap: 0.3rem;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 0.5rem 0.6rem;
+      border: 1px solid @border-color;
+      border-radius: 6px;
+      background-color: @input-background;
+      color: @input-text;
+      font-size: 1rem;
+    }
+  }
+
+  .campaigns-create__hint {
+    font-size: 0.8rem;
+    color: @text-color-alpha-70;
+  }
+}
+
+.campaigns-create__intro {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  color: @text-color-alpha-70;
+}

@@ -52,6 +52,12 @@ class KeyPagesTranslationsTest extends TestCase
         // beschädigtes „Load orders" ausgenommen); show.heading/lookup_hint
         // sind neu, pt ist wie immer neu übersetzt.
         "orders.php",
+        // Gutscheinaktionen — App\Http\Controllers\CampaignController. Der
+        // Wortlaut ist der von campaign.json's manage.* (der Keymanager hatte
+        // das nur für ca/de/en; die übrigen neun sind neu übersetzt, wie
+        // orders.php's pt); unreachable und create.error.* sind neu, weil
+        // Fehler jetzt als Code statt als vorformulierter Fließtext ankommen.
+        "campaigns.php",
     ];
 
     public function testEveryLocaleTranslatesEveryString(): void

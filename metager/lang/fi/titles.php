@@ -48,4 +48,5 @@ return [
     'account' => 'Oma tili – MetaGer',
     'checkout' => 'Lataa saldoa – MetaGer',
     'orders' => 'Tilaukset – MetaGer',
+    'campaigns' => 'Lahjakorttikampanjat – MetaGer',
 ];

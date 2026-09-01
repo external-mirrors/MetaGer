@@ -11,8 +11,8 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  *
  * `/keys` ist keine MetaGer-Route: nginx reicht sie an den Keymanager weiter.
  * Was der noch besitzt, schrumpft mit jedem Umzugsschritt — inzwischen ist es
- * der Bezahlvorgang, die Bestellungen, die Gutscheinaktionen, das Abmelden und
- * die API. Erklärt, angemeldet, erstellt und verwaltet wird hier.
+ * nur noch das Abmelden, das Einlösen von Gutscheincodes und die API.
+ * Erklärt, angemeldet, erstellt und verwaltet wird hier.
  *
  * Diese Datei ist deshalb keine Sammlung von `/keys`-URLs mehr, sondern die
  * Antwort auf „welcher Link im Schlüsselvorgang geht wohin“ — und die Hälfte
@@ -21,8 +21,7 @@ use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
  *   {@see login()}, {@see create()}, {@see account()}, {@see dashboard()},
  *   {@see accountForVisitor()}   MetaGer-Routen
  *
- *   {@see orders()}, {@see campaigns()}, {@see remove()},
- *   {@see voucher()}, {@see keyApi()}   noch drüben
+ *   {@see remove()}, {@see voucher()}, {@see keyApi()}   noch drüben
  *
  * Dass die MetaGer-Routen hier stehen, obwohl sie `route()` nur weiterreichen,
  * hat einen Grund: jeder Aufrufer erreicht sie über dieselben zwei Marker
@@ -280,30 +279,6 @@ final class KeymanagerLinks
         return substr($url, 0, $mark)
             . ($query === [] ? "" : "?" . http_build_query($query))
             . $fragment;
-    }
-
-    /**
-     * Die Bestellungen zu einem Schlüssel — Rechnungen, Belege, Erstattungen.
-     *
-     * Noch nicht umgezogen; das Konto verlinkt dorthin, so wie es vorher einen
-     * Reiter dafür hatte.
-     */
-    public static function orders(string $key): string
-    {
-        return self::url("/key/" . urlencode($key) . "/orders");
-    }
-
-    /**
-     * Die Aktionen zu einem Schlüssel — Gutscheinkarten, die jemand für andere
-     * anlegt und deren Guthaben von diesem Schlüssel getragen wird.
-     *
-     * Ebenfalls noch nicht umgezogen. Das Konto verlinkt sie unauffälliger als
-     * der alte Reiter es tat: die allermeisten Schlüssel haben keine, und ein
-     * gleichrangiger dritter Reiter behauptete etwas anderes.
-     */
-    public static function campaigns(string $key): string
-    {
-        return self::url("/key/" . urlencode($key) . "/campaigns");
     }
 
     /**

@@ -182,7 +182,7 @@ final class AccountController extends Controller
                 "topupBlocked" => ChargeEligibility::blockedReason($request, $user, $orders),
 
                 "ordersUrl" => $key === null ? null : route("account.orders"),
-                "campaignsUrl" => $key === null ? null : KeymanagerLinks::campaigns($key),
+                "campaignsUrl" => $key === null ? null : route("account.campaigns"),
                 "logoutUrl" => KeymanagerLinks::remove(route("startpage")),
                 "loginCodeUrl" => route("account.logincode", [], false),
                 "searchUrl" => route("startpage"),

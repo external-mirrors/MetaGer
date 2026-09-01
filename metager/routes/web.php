@@ -4,6 +4,7 @@ use App\Landing\KeyPrice;
 use Illuminate\Support\Facades\Vite;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AnonymousToken;
+use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\ChargeController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\EventController;
@@ -470,6 +471,29 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.orders.invoice.request');
     Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'invoiceDownload'])
         ->name('account.orders.invoice.pdf');
+
+    /**
+     * Gutscheinaktionen, aus dem Keymanager (`/keys/key/<uuid>/campaigns`)
+     * hierher gezogen — App\Http\Controllers\CampaignController hat den
+     * Grund. Eine Liste plus ein Anlegeformular statt einer Detailseite pro
+     * Kampagne; wem eine Kampagne gehört, prüft ausschließlich der Keyserver
+     * gegen den Schlüssel im Pfad, nicht dieser Controller — anders als bei
+     * Bestellungen gibt es hier keinen Schlüssel im Antwortkörper, den man
+     * vergleichen könnte.
+     */
+    Route::get('konto/gutscheinaktionen', [CampaignController::class, 'index'])
+        ->name('account.campaigns');
+    Route::post('konto/gutscheinaktionen', [CampaignController::class, 'store'])
+        ->name('account.campaigns.store');
+    Route::post('konto/gutscheinaktionen/{id}/deaktivieren', [CampaignController::class, 'disable'])
+        ->whereNumber('id')
+        ->name('account.campaigns.disable');
+    Route::post('konto/gutscheinaktionen/{id}/loeschen', [CampaignController::class, 'destroy'])
+        ->whereNumber('id')
+        ->name('account.campaigns.delete');
+    Route::get('konto/gutscheinaktionen/{id}/karten.pdf', [CampaignController::class, 'cardsPdf'])
+        ->whereNumber('id')
+        ->name('account.campaigns.cards');
 
     Route::get('search-engine', [SearchEngineList::class, 'index']);
     Route::get('hilfe', function () {

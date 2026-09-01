@@ -538,6 +538,20 @@
       color: @text-color;
     }
   }
+
+  // A destructive action (deleting a campaign) — quiet's own outline, but
+  // in the same color as a form error, so it reads as "be careful" rather
+  // than as just another neutral choice next to it.
+  &.account-btn--danger {
+    border-color: @form-error-color;
+    background-color: transparent;
+    color: @form-error-color;
+
+    &:hover,
+    &:focus-visible {
+      background-color: @form-error-background;
+    }
+  }
 }
 
 // ── Der Dialog für ein weiteres Gerät ────────────────────────────────────────

@@ -49,4 +49,5 @@ return [
     'account' => 'Mein Konto – MetaGer',
     'checkout' => 'Guthaben aufladen – MetaGer',
     'orders' => 'Bestellungen – MetaGer',
+    'campaigns' => 'Gutscheinaktionen – MetaGer',
 ];

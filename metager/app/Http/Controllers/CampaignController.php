@@ -1,0 +1,204 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Authentication\CampaignIssuer;
+use App\Authentication\KeyUser;
+use App\Http\Controllers\Concerns\HandlesKeyCheckout;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Vite;
+
+/**
+ * Gutscheinaktionen — /konto/gutscheinaktionen, ohne Schlüssel im Pfad.
+ *
+ * Aus dem Keymanager (`/keys/key/<uuid>/campaigns`) hierher gezogen, im
+ * selben Schnitt wie {@see OrderController}: was drüben blieb, ist die API
+ * ({@see CampaignIssuer}); hier steht die Seite. Eine Liste plus ein
+ * Anlegeformular, wie `views/campaign/manage.ejs` es zeigte — keine eigene
+ * Detailseite pro Kampagne, es gibt nichts, das eine bräuchte.
+ *
+ * **Wem eine Kampagne gehört, prüft ausschließlich der Keyserver.** Anders
+ * als bei Bestellungen liefert die Kampagnen-API keinen Schlüssel im
+ * Antwortkörper zurück, der sich hier vergleichen ließe — `:id` steht immer
+ * neben `$key` im Pfad, und eine fremde Kampagne ist dort eine 404, nie ein
+ * Datensatz, den diese Seite je zu sehen bekäme. Dieselbe Vertrauensgrenze
+ * wie bei jedem `/key/:key/...`-Schreibzugriff: MetaGer hat `$key` bereits
+ * gegen das Cookie geprüft, bevor es hier ankommt.
+ *
+ * **Nicht hier:** die OIDC-geschützte Admin-Oberfläche und der öffentliche
+ * Einlöseweg (`/c/...`) — beide bleiben auf dem Keymanager.
+ */
+final class CampaignController extends Controller
+{
+    use HandlesKeyCheckout;
+
+    public function index(Request $request, CampaignIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->resolveKey($request, route("account.campaigns"));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $data = $issuer->list($key);
+
+        return $this->render("campaigns.index", $key, [
+            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? []),
+            "maxCampaignVolume" => $data["max_campaign_volume"] ?? 0,
+            "fields" => $this->emptyFields(),
+            "errorCode" => null,
+            "unreachable" => $data === null,
+        ]);
+    }
+
+    public function store(Request $request, CampaignIssuer $issuer): Response|RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [, $key, $redirect] = $this->resolveKey($request, route("account.campaigns"));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $fields = [
+            "name" => trim((string) $request->input("name", "")),
+            "tokens_per_key" => trim((string) $request->input("tokens_per_key", "")),
+            "total_volume" => trim((string) $request->input("total_volume", "")),
+        ];
+        $voucherCount = trim((string) $request->input("voucher_count", ""));
+        $payload = $voucherCount === "" ? $fields : array_merge($fields, ["voucher_count" => $voucherCount]);
+
+        $result = $issuer->create($key, $payload);
+
+        if ($result["ok"]) {
+            return redirect()
+                ->to(route("account.campaigns"))
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        $data = $issuer->list($key);
+
+        return $this->render("campaigns.index", $key, [
+            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? []),
+            "maxCampaignVolume" => $data["max_campaign_volume"] ?? 0,
+            "fields" => array_merge($fields, ["voucher_count" => $voucherCount]),
+            "errorCode" => $result["code"],
+            "unreachable" => false,
+        ]);
+    }
+
+    public function disable(Request $request, int $id, CampaignIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [, $key, $redirect] = $this->resolveKey($request, route("account.campaigns"));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $issuer->disable($key, $id);
+
+        return redirect()
+            ->to(route("account.campaigns"))
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function destroy(Request $request, int $id, CampaignIssuer $issuer): RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [, $key, $redirect] = $this->resolveKey($request, route("account.campaigns"));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $issuer->delete($key, $id);
+
+        return redirect()
+            ->to(route("account.campaigns"))
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    public function cardsPdf(Request $request, int $id, CampaignIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->resolveKey($request, route("account.campaigns"));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        $pdf = $issuer->cardsPdf($key, $id);
+        if ($pdf === null) {
+            abort(404);
+        }
+
+        return response($pdf["body"], 200)
+            ->header("Content-Type", $pdf["content_type"])
+            ->header("Content-Disposition", 'inline; filename="campaign-' . $id . '-cards.pdf"')
+            ->header("Cache-Control", "no-store, private");
+    }
+
+    /** @return array<string, string> */
+    private function emptyFields(): array
+    {
+        return ["name" => "", "tokens_per_key" => "", "total_volume" => "", "voucher_count" => ""];
+    }
+
+    /**
+     * Adds each campaign's public redemption link — deliberately not built
+     * with `url()`: `AppServiceProvider`'s `URL::formatPathUsing` hook puts
+     * the current *visitor's* locale prefix on every `url()`/`route()` call,
+     * and this link is meant to be pasted into a chat or email for someone
+     * else to open. `config('app.url')` is the same canonical, locale-free
+     * base `OrderHistoryIssuer` falls back to for the keyserver URL itself —
+     * matches the reasoning `cards.pdf`'s own `redeem_base` uses on the
+     * keymanager side (see `routes/api.js`'s docblock there).
+     *
+     * @param list<array<string, mixed>> $campaigns
+     * @return list<array<string, mixed>>
+     */
+    private function withPublicLinks(array $campaigns): array
+    {
+        $base = rtrim((string) config("app.url"), "/") . "/keys/c/campaign/";
+
+        return array_map(
+            fn (array $campaign) => $campaign + ["public_link" => $base . urlencode((string) $campaign["public_token"])],
+            $campaigns,
+        );
+    }
+
+    /**
+     * Gemeinsamer Rahmen für die gerenderte Seite: Titel, Assets, wer zahlt.
+     * Wortgleich zu OrderController::render() — dieselben zwei Stylesheets,
+     * dieselbe Kontokachel.
+     *
+     * @param array<string, mixed> $extra
+     */
+    private function render(string $view, string $key, array $extra): Response
+    {
+        /** @var KeyUser $user */
+        $user = Auth::guard("key")->user();
+
+        return response()
+            ->view($view, array_merge([
+                "title" => trans("titles.campaigns"),
+                "navbarFocus" => "login",
+                "css" => [
+                    Vite::asset("resources/less/metager/pages/account.less"),
+                    Vite::asset("resources/less/metager/pages/checkout.less"),
+                ],
+                "js" => [Vite::asset("resources/js/account.js")],
+                "key" => $key,
+                "fingerprint" => $user->getKeyFingerprint(),
+                "accountUrl" => route("account"),
+            ], $extra))
+            ->header("Cache-Control", "no-store, private");
+    }
+}

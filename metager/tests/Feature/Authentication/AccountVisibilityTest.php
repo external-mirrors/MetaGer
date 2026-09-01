@@ -163,6 +163,46 @@ class AccountVisibilityTest extends TestCase
     }
 
     /**
+     * The exhausted-key alert, for a webextension visitor whose anonymous
+     * tokens are spent. It used to offer "top up now" pointing at the key
+     * dashboard — but an anonymous visitor holds no key of ours to top up,
+     * and the link only ever redirected on to the anonymous-token help
+     * page. It now mirrors the pill's anonymous state: the extension's own
+     * settings, with the help page as the no-script fallback.
+     */
+    public function testTheExhaustedAlertPointsAWebextensionVisitorToTheExtension(): void
+    {
+        $this->signInAs("aaaaaaaa-bbbb-cccc-dddd-eeeeee999999", 0.0, temporary: true);
+
+        $response = $this->withHeader("tokenauthorization", "empty")->get("/")->assertOk();
+
+        $response->assertSee('id="account-empty-alert"', false);
+        $response->assertSeeText(__("account.empty.message_anonymous"));
+        $response->assertDontSeeText(__("account.empty.action"));
+        $response->assertSeeText(__("account.sidebar.extension_settings"));
+        // The alert's action carries the extension hook and the help-page
+        // fallback, the same pair the pill uses in this state.
+        $response->assertSee('class="account-empty-alert__action"', false);
+        $response->assertSee('href="' . route('anonymous-token') . '"', false);
+        $response->assertSee('data-extension-settings', false);
+    }
+
+    /**
+     * The same alert for a real key with a spent balance is unchanged: it
+     * still says "top up" and still points at the key dashboard.
+     */
+    public function testTheExhaustedAlertStillOffersATopUpForARealKey(): void
+    {
+        $this->signInAs(self::KEY, 0.0);
+
+        $response = $this->get("/")->assertOk();
+
+        $response->assertSee('id="account-empty-alert"', false);
+        $response->assertSeeText(__("account.empty.action"));
+        $response->assertDontSee('data-extension-settings', false);
+    }
+
+    /**
      * The other side of the pill's destination: a visitor whose key we do hold
      * is managed on the website, and there is nothing about their pill for the
      * extension to take over.

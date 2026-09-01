@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Dina Token är slut.',
         'action' => 'Fyll på nu',
+        'message_anonymous' => 'Dina anonyma Token är slut.',
     ],
 ];

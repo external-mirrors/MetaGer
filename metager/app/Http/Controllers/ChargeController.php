@@ -132,7 +132,6 @@ final class ChargeController extends Controller
         $error = in_array($error, ["unreachable", "funding_source_not_eligible"], true) ? $error : null;
 
         return $this->render("checkout.index", $request, $key, $amount, [
-            "price" => $tiers[$amount],
             "error" => $error,
         ]);
     }
@@ -149,6 +148,10 @@ final class ChargeController extends Controller
         // bei KeyCreationController::ERRORS steht die Liste dafür extra hier,
         // statt jede Zeichenkette aus der Query ungeprüft in eine Vorlage zu
         // reichen.
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
         $error = $request->query("error");
         $error = in_array($error, ["unreachable", "consent"], true) ? $error : null;
 
@@ -207,6 +210,10 @@ final class ChargeController extends Controller
             return $redirect;
         }
 
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
+        }
+
         $order = $issuer->find($reference);
 
         // Weder eine fremde Ladung noch eine, die es nicht gibt, ist etwas,
@@ -233,6 +240,10 @@ final class ChargeController extends Controller
         [, $key, $redirect] = $this->requireKey($request, $amount);
         if ($redirect !== null) {
             return $redirect;
+        }
+
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
         }
 
         return $this->render("checkout.manual", $request, $key, $amount, []);
@@ -276,6 +287,10 @@ final class ChargeController extends Controller
 
         if (!in_array($service, MicropaymentChargeIssuer::SERVICES, true)) {
             return redirect()->to(route("account.checkout", ["amount" => $amount]));
+        }
+
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
         }
 
         $error = $request->query("error");
@@ -337,6 +352,10 @@ final class ChargeController extends Controller
         [, $key, $redirect] = $this->requireKey($request, $amount);
         if ($redirect !== null) {
             return $redirect;
+        }
+
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
         }
 
         // "failed" kommt von VR Payment selbst zurück (failedUrl), nicht von
@@ -409,6 +428,10 @@ final class ChargeController extends Controller
 
         if (!in_array($fundingSource, PayPalChargeIssuer::FUNDING_SOURCES, true)) {
             return redirect()->to(route("account.checkout", ["amount" => $amount]));
+        }
+
+        if (!$this->knownTier($amount)) {
+            return redirect()->to(route("account") . "#charge");
         }
 
         $config = (new PayPalChargeIssuer())->show($request, $key, $fundingSource);
@@ -604,6 +627,13 @@ final class ChargeController extends Controller
 
                 "key" => $key,
                 "amount" => $amount,
+                // Der Euro-Betrag des Pakets für partials/checkout-summary.
+                // Jeder Aufrufer von render() hat $amount schon gegen
+                // knownTier() geprüft, und das liest dieselbe Liste — der
+                // Schlüssel ist hier also immer gesetzt. Das `?? null` ist die
+                // Absicherung, die das Partial dann als „nur Tokenzahl"
+                // rendert statt als „ €".
+                "price" => KeyPrice::tiers()[$amount] ?? null,
                 "fingerprint" => $user->getKeyFingerprint(),
                 "changeAmountUrl" => route("account") . "#charge",
                 // Der Ausstieg — bewusst ohne #charge: das ist "ich will gar
@@ -687,6 +717,21 @@ final class ChargeController extends Controller
         }
 
         return [$user, $key, null];
+    }
+
+    /**
+     * Ob $amount eines der kaufbaren Pakete ist.
+     *
+     * {@see show()} prüft das für die Übersichtsseite; die Zahlweisen-Seiten
+     * ({@see cashShow()}, {@see micropaymentServiceShow()} und die anderen)
+     * werden direkt über ihre Adresse erreicht und brauchen dieselbe Prüfung,
+     * sonst rendert `/konto/aufladen/999/bar` eine Seite für einen Betrag, den
+     * es nicht zu kaufen gibt — und {@see render()} müsste einen Preis für ihn
+     * finden.
+     */
+    private function knownTier(int $amount): bool
+    {
+        return array_key_exists($amount, KeyPrice::tiers());
     }
 
     /** Wortgleich zu AccountController::keyOf() — siehe dort für das Warum. */

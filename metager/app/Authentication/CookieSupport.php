@@ -103,8 +103,8 @@ final class CookieSupport
     }
 
     /**
-     * `$url` with `key` silently carried in, same-origin only, when this
-     * visitor's key is missing its cookie — the shared implementation behind
+     * `$url` with `key` and any carried settings (see `App\Http\SettingsCarry`)
+     * silently added, same-origin only — the shared implementation behind
      * {@see \App\Routing\CookieCarryingUrlGenerator::to()} and
      * {@see \App\Localization\MetaGerLocalization::getLocalizedURL()}.
      *
@@ -126,16 +126,24 @@ final class CookieSupport
      */
     public static function carryIntoUrl(string $url, Request $request): string
     {
-        if (!self::keyMissingCookie($request)) {
-            return $url;
-        }
-
         $host = parse_url($url, PHP_URL_HOST);
         if ($host !== null && $host !== $request->getHost()) {
             return $url;
         }
 
-        return self::mergeQuery($url, ["key" => $request->query("key")]);
+        // Two independent sources, not one merged predicate:
+        // keyMissingCookie() requires a key already in the query, which an
+        // anonymous cookie-blind visitor never has, so it cannot gate
+        // settings carrying too.
+        $extra = app(\App\Http\SettingsCarry::class)->all();
+        if (self::keyMissingCookie($request)) {
+            $extra["key"] = $request->query("key");
+        }
+        if ($extra === []) {
+            return $url;
+        }
+
+        return self::mergeQuery($url, $extra);
     }
 
     /**

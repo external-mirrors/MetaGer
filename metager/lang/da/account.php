@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Dine Token er brugt op.',
         'action' => 'Fyld op nu',
+        'message_anonymous' => 'Dine anonyme Token er brugt op.',
     ],
 ];

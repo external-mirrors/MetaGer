@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Vos Token sont épuisés.',
         'action' => 'Recharger maintenant',
+        'message_anonymous' => 'Vos Token anonymes sont épuisés.',
     ],
 ];

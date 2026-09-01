@@ -172,5 +172,12 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LocaleContext::class, function ($app): LocaleContext {
             return $app->bound("request") ? LocaleContext::resolve($app["request"]) : LocaleContext::neutral();
         });
+
+        // One instance per request, mutated by SettingsController's POST
+        // handlers as they queue/forget cookies, and read by both
+        // CookieCarryingUrlGenerator::route() and CookieSupport::carryIntoUrl()
+        // — see SettingsCarry's own docblock for why a shared singleton
+        // rather than each deriving its own list from the request.
+        $this->app->singleton(\App\Http\SettingsCarry::class);
     }
 }

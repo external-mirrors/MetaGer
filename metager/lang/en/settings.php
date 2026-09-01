@@ -13,6 +13,8 @@ return [
         'backup' => 'Backup and reset',
     ],
     'resetDescription' => 'Removes every setting on this page and returns MetaGer to its defaults.',
+    'resetAll' => 'Reset every focus',
+    'resetAllDescription' => 'Clears every setting in every focus — engine choices, filters and blacklists included — not just this page.',
     'text' => [
         '1' => 'To save your search settings, we use non-personally identifiable cookies. These are stored in plain text in your browser.',
         '2' => 'Below you can see all search engines available for this focus. You can switch them on/off by clicking on the name.',

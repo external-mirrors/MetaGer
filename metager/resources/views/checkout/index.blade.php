@@ -47,11 +47,7 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<section class="checkout-summary">
-		<span class="checkout-summary__amount">@lang('account.page.charge.tokens', ['amount' => \Illuminate\Support\Number::format($amount, locale: app()->getLocale())])</span>
-		<span class="checkout-summary__price">@lang('account.page.charge.price', ['price' => $price])</span>
-		<a class="checkout-summary__change" href="{{ $changeAmountUrl }}">@lang('checkout.page.change')</a>
-	</section>
+	@include('partials.checkout-summary')
 
 	<nav class="checkout-nav">
 		<a class="checkout-back" href="{{ $cancelUrl }}">← @lang('checkout.page.cancel')</a>

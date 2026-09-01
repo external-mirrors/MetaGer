@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Vite;
 use App\Authentication\CookieSupport;
+use App\Http\SettingsCarry;
 use App\Models\Authorization\Authorization;
 use App\Models\Authorization\KeyAuthorization;
 use App\Models\Authorization\SuggestionDebtAuthorization;
@@ -32,7 +33,18 @@ class SettingsController extends Controller
         $settings = app(SearchSettings::class);
         $originalFokus = $settings->fokus;
         $authorization = app(Authorization::class);
-        $url = $request->input('url', '');
+        // The "back to the last page" link, rendered verbatim as $url below —
+        // never through route()/to(), so a setting changed on this very page
+        // load (SettingsCarry::set()/forget(), called by the POST handler
+        // that redirected here) would otherwise never reach it: the visitor
+        // navigates back to the page they came from and the change they just
+        // made is gone again. carryIntoUrl() is a no-op for an empty $url and
+        // for one that already carries everything current, so this is safe
+        // to call unconditionally.
+        // ConvertEmptyStringsToNull turns an empty `?url=` into a present-but-
+        // null input, which `input('url', '')`'s default does not catch —
+        // the default only applies when the key is missing entirely.
+        $url = CookieSupport::carryIntoUrl((string) $request->input('url', ''), $request);
 
         // Check if any setting is active. Populated further as we build
         // per-fokus data below (loadParameterFilter()/engine settings touch
@@ -93,16 +105,34 @@ class SettingsController extends Controller
                 // Drives the "this focus has custom settings" tab indicator.
                 'hasCustomSettings' => sizeof($searchengines->user_settings) > 0 || sizeof($blacklist) > 0 || $hasCustomFilter,
             ];
+            // $settingActive already covers global settings and, via the
+            // loop above, engine/filter settings in any fokus — but not a
+            // fokus that only has blacklist entries. hasCustomSettings does.
+            if ($foki[$fokus]['hasCustomSettings']) {
+                $settingActive = true;
+            }
         }
         $settings->fokus = $originalFokus;
 
         # Generating link with set cookies
         $settings_params = [];
 
-        # Add Settings for searchengines supplied in cookies and headers
-        foreach (array_merge($request->header(), $request->cookie()) as $key => $value) {
+        # Add Settings for searchengines supplied in cookies, headers, and the
+        # query — query last, so a query override wins over a stale cookie,
+        # matching SearchSettings::getSettingValue()'s own GET -> cookie ->
+        # header precedence. Without this, a cookie-blind visitor's settings
+        # (query only, no cookie ever stuck) were invisible to this backup
+        # link entirely.
+        foreach (array_merge($request->header(), $request->cookie(), $request->query()) as $key => $value) {
             if (is_array($value)) {
-                $value = $value[0];
+                // `?dark_mode[foo]=bar` gives an associative array with no [0]
+                // — reach for the first value by position, not the literal
+                // key 0, so an odd query shape is ignored rather than raising
+                // an "undefined array key" warning.
+                $value = reset($value);
+                if ($value === false) {
+                    continue;
+                }
             }
             if ($settings->isValidSetting($key, $value)) {
                 $settings_params[$key] = $value;
@@ -155,11 +185,14 @@ class SettingsController extends Controller
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
         $secure = app()->environment("local") ? false : true;
+        $cookieName = $settings->fokus . "_engine_" . $sumaName;
         if (!$engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
-                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+                Cookie::queue(Cookie::forget($cookieName, "/"));
+                app(SettingsCarry::class)->forget($cookieName);
             } else {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "off", "/", null, $secure, true));
+                Cookie::queue(Cookie::forever($cookieName, "off", "/", null, $secure, true));
+                app(SettingsCarry::class)->set($cookieName, "off");
             }
         }
 
@@ -185,11 +218,14 @@ class SettingsController extends Controller
         $settings = app(SearchSettings::class);
         $engines = app(Searchengines::class)->getSearchEnginesForFokus();
         $secure = app()->environment("local") ? false : true;
+        $cookieName = $settings->fokus . "_engine_" . $sumaName;
         if ($engines[$sumaName]->configuration->disabled) {
             if ($engines[$sumaName]->configuration->disabledByDefault) {
-                Cookie::queue(Cookie::forever($settings->fokus . "_engine_" . $sumaName, "on", "/", null, $secure, true));
+                Cookie::queue(Cookie::forever($cookieName, "on", "/", null, $secure, true));
+                app(SettingsCarry::class)->set($cookieName, "on");
             } else {
-                Cookie::queue(Cookie::forget($settings->fokus . "_engine_" . $sumaName, "/"));
+                Cookie::queue(Cookie::forget($cookieName, "/"));
+                app(SettingsCarry::class)->forget($cookieName);
             }
         }
 
@@ -210,7 +246,25 @@ class SettingsController extends Controller
             abort(404);
         }
 
-        $newFilters = $request->except(["focus", "url"]);
+        $langFile = app(SearchEngineRegistry::class);
+
+        // Not $request->except(["focus", "url"]): that trusted everything
+        // else in the merged query+body input to be a filter this form
+        // posted. Once this form's own `action` URL can carry settings
+        // forward for a cookie-blind visitor (App\Http\SettingsCarry), an
+        // unrelated carried setting — e.g. `web_engine_bing=off` sitting in
+        // the query string — would land here too and get treated as a
+        // filter with an unrecognised name, which the empty-value branch
+        // below would then Cookie::forget() under a garbage key. Iterating
+        // the known parameter-filters instead means only an actual filter
+        // get-parameter is ever read.
+        $newFilters = [];
+        foreach ($langFile->filter->{"parameter-filter"} as $filter) {
+            $param = $filter->{"get-parameter"};
+            if ($request->has($param)) {
+                $newFilters[$param] = $request->input($param);
+            }
+        }
 
         /**
          * Pin the interface language before touching a market.
@@ -226,8 +280,6 @@ class SettingsController extends Controller
         if (Cookie::get(LocaleContext::cookieName()) === null) {
             Localization::context()->persistCookie();
         }
-
-        $langFile = app(SearchEngineRegistry::class);
 
         $settings = app(SearchSettings::class);
         app(Searchengines::class); // Needs to be loaded for parameterfilters to be populated
@@ -245,6 +297,7 @@ class SettingsController extends Controller
                 $path = \Request::path();
                 $cookiePath = "/";
                 Cookie::queue(Cookie::forget($fokus . "_setting_" . $key, "/"));
+                app(SettingsCarry::class)->forget($fokus . "_setting_" . $key);
             } else {
                 # Check if this filter and its value exists:
                 foreach ($langFile->filter->{"parameter-filter"} as $name => $filter) {
@@ -253,6 +306,7 @@ class SettingsController extends Controller
                         $cookiePath = "/";
                         $secure = app()->environment("local") ? false : true;
                         Cookie::queue(Cookie::forever($fokus . "_setting_" . $key, $value, "/", null, $secure, true));
+                        app(SettingsCarry::class)->set($fokus . "_setting_" . $key, $value);
                         break;
                     }
                 }
@@ -281,12 +335,19 @@ class SettingsController extends Controller
             $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#suggest-settings";
         } else {
             // All Settings behind "More Settings"
-            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
+            //
+            // route() is called after every PROCESS_GLOBAL_SETTING_CHANGE
+            // below, not before: it reads App\Http\SettingsCarry, which
+            // those calls just mutated, and a URL built first would still
+            // carry whatever value was current before this request changed
+            // it — silently undoing the change for a cookie-blind visitor
+            // the moment they followed their own redirect.
             self::PROCESS_GLOBAL_SETTING_CHANGE("tips", $request->input('tips', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("tiles_startpage", $request->input('tiles_startpage', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("zitate", $request->input('zitate', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("dark_mode", $request->input('dark_mode', ''));
             self::PROCESS_GLOBAL_SETTING_CHANGE("new_tab", $request->input('new_tab', ''));
+            $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#more-settings";
         }
 
         $headers = [
@@ -313,13 +374,17 @@ class SettingsController extends Controller
         $secure = app()->environment("local") ? false : true;
         $valid_suggest_providers = array_merge(["off"], array_keys(Suggestions::GET_AVAILABLE_PROVIDERS()));
 
+        $carry = app(SettingsCarry::class);
+
         if ($key === "suggestion_provider" && !empty($value) && in_array($value, $valid_suggest_providers)) {
             $settings->suggestion_provider = $value;
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('suggestion_provider', '/'));
+                $carry->forget('suggestion_provider');
                 SuggestionDebtAuthorization::REMOVE_SETTINGS();
             } else {
                 Cookie::queue(Cookie::forever('suggestion_provider', $value, '/', null, $secure, true));
+                $carry->set('suggestion_provider', $value);
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             }
             return true;
@@ -328,8 +393,10 @@ class SettingsController extends Controller
             SuggestionDebtAuthorization::UPDATE_SETTINGS();
             if ($value === "medium") {
                 Cookie::queue(Cookie::forget("suggestion_delay", "/"));
+                $carry->forget('suggestion_delay');
             } else {
                 Cookie::queue(Cookie::forever('suggestion_delay', $value, '/', null, $secure, true));
+                $carry->set('suggestion_delay', $value);
             }
             $settings->suggestion_delay = $value;
             return true;
@@ -337,45 +404,57 @@ class SettingsController extends Controller
             $settings->suggestion_addressbar = $value === "on" ? true : false;
             if ($value === "on") {
                 Cookie::queue(Cookie::forever('suggestion_addressbar', 'on', '/', null, $secure, true));
+                $carry->set('suggestion_addressbar', 'on');
                 SuggestionDebtAuthorization::UPDATE_SETTINGS(true);
             } elseif ($value === "off") {
                 Cookie::queue(Cookie::forget("suggestion_addressbar", "/"));
+                $carry->forget('suggestion_addressbar');
                 SuggestionDebtAuthorization::REMOVE_SETTINGS();
             }
             return true;
         } else if ($key === "tips" && !empty($value)) {
             if ($value === "off") {
                 Cookie::queue(Cookie::forever('tips', 'off', '/', null, $secure, true));
+                $carry->set('tips', 'off');
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("tips", "/"));
+                $carry->forget('tips');
             }
             return true;
         } else if ($key === "tiles_startpage" && !empty($value)) {
             if ($value === "off") {
                 Cookie::queue(Cookie::forever('tiles_startpage', 'off', '/', null, $secure, true));
+                $carry->set('tiles_startpage', 'off');
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("tiles_startpage", "/"));
+                $carry->forget('tiles_startpage');
             }
             return true;
         } else if ($key === "zitate" && !empty($value)) {
             if ($value === "off") {
                 Cookie::queue(Cookie::forever('zitate', 'off', '/', null, $secure, true));
+                $carry->set('zitate', 'off');
             } elseif ($value === "on") {
                 Cookie::queue(Cookie::forget("zitate", "/"));
+                $carry->forget('zitate');
             }
             return true;
         } else if ($key === "dark_mode" && in_array($value, ["system", "light", "dark"])) {
             if ($value === "system") {
                 Cookie::queue(Cookie::forget('dark_mode', '/'));
+                $carry->forget('dark_mode');
             } else {
                 Cookie::queue(Cookie::forever('dark_mode', $value, '/', null, $secure, true));
+                $carry->set('dark_mode', $value);
             }
             return true;
         } else if ($key === "new_tab" && in_array($value, ["on", "off"])) {
             if ($value === "off") {
                 Cookie::queue(Cookie::forget('new_tab', '/'));
+                $carry->forget('new_tab');
             } else {
                 Cookie::queue(Cookie::forever('new_tab', 'on', '/', null, $secure, true));
+                $carry->set('new_tab', 'on');
             }
             return true;
         }
@@ -398,13 +477,20 @@ class SettingsController extends Controller
                 $settings[str_replace("-", "_", $key)] = $value;
             }
         }
+        // Cookie::get() alone is also empty for a cookie-blind visitor —
+        // nothing ever stuck — so merge in whatever is currently carried by
+        // query too, and "reset all settings" actually resets what is
+        // active rather than only what happens to be in a cookie.
+        $settings = array_merge($settings, app(SettingsCarry::class)->all());
         foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . "_engine_") === 0 || stripos($key, $fokus . "_setting_") === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
+                app(SettingsCarry::class)->forget($key);
             }
 
             if (in_array($key, $global_settings)) {
                 Cookie::queue(Cookie::forget($key, "/"));
+                app(SettingsCarry::class)->forget($key);
             }
         }
         $this->clearBlacklist($request);
@@ -612,9 +698,16 @@ class SettingsController extends Controller
     {
         $sumaFile = app(SearchEngineRegistry::class);
 
+        // A cookie-blind visitor's settings live only in the query and never
+        // in Cookie::get() — merge in whatever is currently carried so this
+        // overview lists (and can reset) what is actually active, not just
+        // what happens to have stuck as a cookie.
+        $settings = array_merge(Cookie::get(), app(SettingsCarry::class)->all());
+
         return view('settings.allSettings')
             ->with('title', trans('titles.allSettings'))
             ->with('url', $request->input('url', ''))
+            ->with('settings', $settings)
             ->with('sumaFile', $sumaFile);
     }
 
@@ -622,6 +715,7 @@ class SettingsController extends Controller
     {
         $key = $request->input('key', '');
         Cookie::queue(Cookie::forget($key, "/"));
+        app(SettingsCarry::class)->forget($key);
 
         $redirect_url = $request->input('url', 'https://metager.de');
         if ($request->wantsJson()) {
@@ -634,17 +728,51 @@ class SettingsController extends Controller
 
     public function removeAllSettings(Request $request)
     {
-        foreach (app(SearchSettings::class)->user_settings as $key => $value) {
+        $settings = app(SearchSettings::class);
+        $carry = app(SettingsCarry::class);
+
+        // Never forget the auth key — it has its own lifecycle — or
+        // suggestion_addressbar, which has server-side stored state behind
+        // it. Same exclusion deleteSettings() applies.
+        $excluded = ["key", "suggestion_addressbar"];
+
+        // SearchSettings::user_settings only ever holds global settings and
+        // the *current* fokus's blacklist: SearchSettings::boot() fills it
+        // one getSettingValue() call at a time, and engine toggles / filter
+        // settings live on Searchengines instead. So "reset all settings"
+        // used to silently leave every engine toggle, every filter, and
+        // every other fokus's blacklist in place. Widen the source the way
+        // deleteSettings()/clearBlacklist() already do, and match names
+        // against isValidSetting() (which checks every fokus, not just the
+        // current one) rather than a single fokus prefix.
+        $known = array_merge(Cookie::get(), $carry->all());
+        if ($request->wantsJson()) {
+            // The webextension keeps settings in its own storage and sends
+            // them as headers; Symfony normalises underscores to dashes.
+            foreach ($request->header() as $header => $value) {
+                $known[str_replace("-", "_", $header)] = $value;
+            }
+        }
+
+        foreach (array_merge($settings->user_settings, $known) as $key => $value) {
+            if (in_array($key, $excluded, true)) {
+                continue;
+            }
+            if (is_array($value)) {
+                $value = reset($value);
+            }
+            if ($value === false || !$settings->isValidSetting($key, (string) $value)) {
+                continue;
+            }
             Cookie::queue(Cookie::forget($key, "/"));
+            $carry->forget($key);
         }
 
         $redirect_url = $request->input('url', 'https://metager.de');
         if ($request->wantsJson()) {
-            $response = $this->cookiesToJsonResponse($redirect_url);
-            return response()->json($response);
-        } else {
-            return redirect($request->input('url', 'https://metager.de'));
+            return response()->json($this->cookiesToJsonResponse($redirect_url));
         }
+        return redirect($redirect_url);
     }
 
     public function newBlacklist(Request $request)
@@ -694,6 +822,7 @@ class SettingsController extends Controller
         foreach ($cookies as $key => $value) {
             if (preg_match('/_blpage[0-9]+$/', $key) === 1 && stripos($key, $fokus) !== false) {
                 Cookie::queue(Cookie::forget($key, "/"));
+                app(SettingsCarry::class)->forget($key);
             }
         }
 
@@ -710,9 +839,11 @@ class SettingsController extends Controller
             // a value it keeps attaching to every request. Deleting the last
             // entry of a blacklist came straight back on the next page load.
             Cookie::queue(Cookie::forget($cookieName, "/"));
+            app(SettingsCarry::class)->forget($cookieName);
         } else {
             $secure = app()->environment("local") ? false : true;
             Cookie::queue(Cookie::forever($cookieName, implode(",", $valid_blacklist_entries), "/", null, $secure, true));
+            app(SettingsCarry::class)->set($cookieName, implode(",", $valid_blacklist_entries));
         }
 
 
@@ -732,6 +863,7 @@ class SettingsController extends Controller
         $cookieKey = $request->input('cookieKey');
 
         Cookie::queue(Cookie::forget($cookieKey, "/"));
+        app(SettingsCarry::class)->forget($cookieKey);
 
         $redirect_url = route('settings', ["focus" => $fokus, "url" => $url]) . "#" . $fokus . "-bl";
         if ($request->wantsJson()) {
@@ -762,9 +894,14 @@ class SettingsController extends Controller
             }
         }
 
+        // Also empty for a cookie-blind visitor for the same reason as
+        // above — nothing ever stuck as a cookie.
+        $settings = array_merge($settings, app(SettingsCarry::class)->all());
+
         foreach ($settings as $key => $value) {
             if (stripos($key, $fokus . '_blpage') === 0) {
                 Cookie::queue(Cookie::forget($key, "/"));
+                app(SettingsCarry::class)->forget($key);
             }
         }
 

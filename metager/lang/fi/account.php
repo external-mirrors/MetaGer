@@ -178,5 +178,6 @@ return [
     'empty' => [
         'message' => 'Token ovat loppuneet.',
         'action' => 'Lataa nyt',
+        'message_anonymous' => 'Anonyymit tokenisi ovat loppuneet.',
     ],
 ];

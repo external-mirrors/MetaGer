@@ -3,13 +3,15 @@
 namespace App\Routing;
 
 use App\Authentication\CookieSupport;
+use App\Http\SettingsCarry;
 use Illuminate\Routing\UrlGenerator;
 
 /**
- * Carries `key` into every generated same-origin URL when the visitor's key
- * arrived by query without a matching cookie — the counterpart, for query
- * strings, to `URL::formatPathUsing` in AppServiceProvider, which carries the
- * locale prefix into every generated path.
+ * Carries `key` and, separately, any settings a cookie-blind visitor is
+ * carrying (see `App\Http\SettingsCarry`) into every generated same-origin
+ * URL — the counterpart, for query strings, to `URL::formatPathUsing` in
+ * AppServiceProvider, which carries the locale prefix into every generated
+ * path.
  *
  * There is no `formatQueryUsing` hook: `UrlGenerator::format()` never sees
  * the query string, only the path — `to()` builds it separately and appends
@@ -21,11 +23,14 @@ use Illuminate\Routing\UrlGenerator;
  * untouched, same as it is by the locale hook: it builds asset URLs without
  * calling either.
  *
- * Only `key` is ever added — an allowlist of one, not "everything except a
- * blocklist". A blocklist would risk smearing unrelated request parameters
- * (the search query, admin/log params, the `key_check` marker itself) into
- * links that have nothing to do with them; growing this to cover settings
- * later means adding a name here, not redesigning the approach.
+ * `key` is still its own explicit merge, not folded into `SettingsCarry`:
+ * `CookieSupport::keyMissingCookie()` requires a key already present in the
+ * query, which an anonymous cookie-blind visitor never has, so it answers a
+ * different question than "is any setting worth carrying" and stays a
+ * separate check. Beyond those two sources nothing else is ever added —
+ * still not "everything except a blocklist", which would risk smearing
+ * unrelated request parameters (the search query, admin/log params, the
+ * `key_check` marker itself) into links that have nothing to do with them.
  *
  * Bound in place of the framework's own `UrlGenerator` in
  * AppServiceProvider::boot(), mirroring
@@ -49,8 +54,14 @@ class CookieCarryingUrlGenerator extends UrlGenerator
 
     public function route($name, $parameters = [], $absolute = true)
     {
-        if (!$this->suppressCarry && is_array($parameters) && CookieSupport::keyMissingCookie($this->request)) {
-            $parameters += ["key" => $this->request->query("key")];
+        if (!$this->suppressCarry && is_array($parameters)) {
+            if (CookieSupport::keyMissingCookie($this->request)) {
+                $parameters += ["key" => $this->request->query("key")];
+            }
+            // += : an explicit caller-supplied parameter (a handler's own
+            // new value, or route-specific ones like `focus`/`url`) always
+            // wins over whatever is being carried forward.
+            $parameters += app(SettingsCarry::class)->all();
         }
 
         return parent::route($name, $parameters, $absolute);

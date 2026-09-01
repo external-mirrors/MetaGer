@@ -296,6 +296,20 @@ class SearchSettings
      */
     private function getSettingValue(string $setting_name, $default = null): ?string
     {
+        $value = $this->resolveSettingValue($setting_name, $default);
+        if (is_array($value)) {
+            // A malformed `?name[x]=y` (or a header/cookie of the same
+            // shape) carries no single value — treat the setting as absent
+            // rather than letting an array escape this ?string method and
+            // 500 every page that reads settings.
+            unset($this->user_settings[$setting_name]);
+            return $default;
+        }
+        return $value;
+    }
+
+    private function resolveSettingValue(string $setting_name, $default = null)
+    {
         /**
          * Check GET-Parameter in all variations
          */

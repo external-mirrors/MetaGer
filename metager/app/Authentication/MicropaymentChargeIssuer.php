@@ -43,9 +43,16 @@ final class MicropaymentChargeIssuer
     }
 
     /**
+     * @param string|null $returnOrigin the browser-facing scheme-and-host this
+     *   request arrived on ({@see \App\Support\AppHosts::currentOrigin()}).
+     *   Micropayment's own async webhook builds the "back to MetaGer" redirect
+     *   from this — the same deployment answers on several hosts and the
+     *   keymanager only knows the one it was called on server-to-server, which
+     *   is not the user's. Null lets the keymanager fall back to its own
+     *   configured MetaGer URL.
      * @return array{public_id: string, redirect_url: string}|null
      */
-    public function create(string $key, int $amount, string $service, ?string $email = null): ?array
+    public function create(string $key, int $amount, string $service, ?string $email = null, ?string $returnOrigin = null): ?array
     {
         try {
             $response = Http::timeout(5)
@@ -55,6 +62,7 @@ final class MicropaymentChargeIssuer
                     array_filter([
                         "amount" => $amount,
                         "email" => $email,
+                        "return_origin" => $returnOrigin,
                     ], fn ($value) => $value !== null)
                 );
         } catch (\Throwable $e) {

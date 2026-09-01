@@ -101,6 +101,31 @@ class ChargeVRPaymentTest extends TestCase
             ->assertRedirect("https://checkout.vr-payment.de/s/95151/payment/page/abc123");
     }
 
+    /**
+     * The browser-facing origin travels to the keymanager as `return_origin`.
+     * The same deployment answers on metager.de, metager.org, metager3.de and
+     * the review previews; the keymanager only sees the host it was called on
+     * server-to-server (KEY_SERVER), which is not the user's — so without this
+     * a payment started from metager.org comes back to whatever KEY_SERVER
+     * names. See App\Support\AppHosts.
+     */
+    public function testTheBrowserOriginIsForwardedAsReturnOrigin(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/key/*/checkout/vrpayment/*" => Http::response([
+                "public_id" => "Z1",
+                "redirect_url" => "https://checkout.vr-payment.de/s/95151/payment/page/abc123",
+            ], 201),
+        ]);
+
+        $this->signedIn()
+            ->withHeaders(["Origin" => "https://metager.org"])
+            ->post("https://metager.org/de-DE/konto/aufladen/1000/vrpayment", ["revocation" => "on"]);
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), "/checkout/vrpayment/")
+            && $request["return_origin"] === "https://metager.org");
+    }
+
     public function testAnUnreachableKeyserverBouncesBackWithAnError(): void
     {
         $this->keyserverKnows([

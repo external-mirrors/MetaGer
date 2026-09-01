@@ -195,6 +195,29 @@ class ChargePayPalTest extends TestCase
             ->assertJson(["payment_reference" => "Z1", "paypal_order_id" => "PAYPAL-ORDER-1"]);
     }
 
+    /**
+     * The browser-facing origin travels to the keymanager as `return_origin`
+     * on order create, so the keymanager can store it on the order and build
+     * PayPal's capture-response redirect (and its async webhook redirect) from
+     * it — see App\Support\AppHosts.
+     */
+    public function testOrderCreateForwardsTheBrowserOriginAsReturnOrigin(): void
+    {
+        $this->keyserverKnows([
+            "*/api/json/key/*/checkout/paypal/paypal/order/create" => Http::response([
+                "public_id" => "Z1",
+                "paypal_order_id" => "PAYPAL-ORDER-1",
+            ], 201),
+        ]);
+
+        $this->signedIn()
+            ->withHeaders(["Origin" => "https://metager.org"])
+            ->post("https://metager.org/de-DE/konto/aufladen/1000/paypal/paypal/order/create", []);
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), "/checkout/paypal/paypal/order/create")
+            && $request["return_origin"] === "https://metager.org");
+    }
+
     public function testOrderCreateRefusesAForeignOrigin(): void
     {
         $this->keyserverKnows();

@@ -12,6 +12,7 @@ use App\Authentication\VRPaymentChargeIssuer;
 use App\Landing\ChargeEligibility;
 use App\Landing\KeymanagerLinks;
 use App\Landing\KeyPrice;
+use App\Support\AppHosts;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -129,10 +130,11 @@ final class ChargeController extends Controller
         // der das früher zurückführte — diese Seite ist jetzt das einzige
         // "zurück".
         $error = $request->query("error");
-        $error = in_array($error, ["unreachable", "funding_source_not_eligible"], true) ? $error : null;
+        $error = in_array($error, ["unreachable", "funding_source_not_eligible", "wero_unavailable"], true) ? $error : null;
 
         return $this->render("checkout.index", $request, $key, $amount, [
             "error" => $error,
+            "weroAvailable" => $this->weroAvailable($request),
         ]);
     }
 
@@ -332,7 +334,13 @@ final class ChargeController extends Controller
         }
 
         $email = $request->input("email");
-        $order = $issuer->create($key, $amount, $service, is_string($email) && $email !== "" ? $email : null);
+        $order = $issuer->create(
+            $key,
+            $amount,
+            $service,
+            is_string($email) && $email !== "" ? $email : null,
+            AppHosts::currentOrigin($request),
+        );
 
         if ($order === null) {
             return redirect()
@@ -356,6 +364,15 @@ final class ChargeController extends Controller
 
         if (!$this->knownTier($amount)) {
             return redirect()->to(route("account") . "#charge");
+        }
+
+        // Wero über eine .onion-Adresse: VR Payment lehnt eine .onion-
+        // Rückkehradresse rundheraus ab (der Space kann nicht darauf zeigen),
+        // die Zahlung käme also nie zu Ende. Statt sie stumm scheitern zu
+        // lassen, führt jeder Weg hierher — auch ein Lesezeichen — zurück zur
+        // Zahlweisenwahl mit einer Erklärung.
+        if (!$this->weroAvailable($request)) {
+            return redirect()->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable");
         }
 
         // "failed" kommt von VR Payment selbst zurück (failedUrl), nicht von
@@ -388,13 +405,19 @@ final class ChargeController extends Controller
             return redirect()->to(route("account") . "#charge");
         }
 
+        if (!$this->weroAvailable($request)) {
+            return redirect()
+                ->to(route("account.checkout", ["amount" => $amount]) . "?error=wero_unavailable", 303)
+                ->header("Cache-Control", "no-store, private");
+        }
+
         if (!$request->boolean("revocation")) {
             return redirect()
                 ->to(route("account.checkout.vrpayment", ["amount" => $amount]) . "?error=consent", 303)
                 ->header("Cache-Control", "no-store, private");
         }
 
-        $order = $issuer->create($key, $amount);
+        $order = $issuer->create($key, $amount, AppHosts::currentOrigin($request));
 
         if ($order === null) {
             return redirect()
@@ -717,6 +740,25 @@ final class ChargeController extends Controller
         }
 
         return [$user, $key, null];
+    }
+
+    /**
+     * Ob Wero (VR Payment) für diese Anfrage angeboten werden kann.
+     *
+     * VR Payments Space nimmt keine .onion-Rückkehradresse an — die Zahlung
+     * würde starten und nie zurückfinden. Über eine .onion-Adresse ist Wero
+     * darum keine Option; jede andere Zahlweise bleibt es. {@see show()}
+     * blendet die Kachel aus, {@see vrpaymentShow()}/{@see vrpaymentSubmit()}
+     * weisen einen Direktaufruf zur Zahlweisenwahl zurück.
+     *
+     * Nur die zwei .onion-Adressen, nicht localhost/127.0.0.1: dort lässt der
+     * Keymanager (pass/app/payment_processor/VRPayment.js) die success/failed-
+     * URLs bewusst weg und die Zahlung läuft im Testmodus trotzdem durch — das
+     * ist eine Entwicklungsbequemlichkeit, kein Fall, den ein Nutzer je sieht.
+     */
+    private function weroAvailable(Request $request): bool
+    {
+        return !AppHosts::isOnion($request->getHost());
     }
 
     /**

@@ -81,6 +81,7 @@ Germania',
         'privacy' => 'Facendo clic su "Effettuare il pagamento" si verrà reindirizzati al nostro fornitore di servizi di pagamento <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> per completare l\'acquisto. Maggiori informazioni su <a href=":link" target="_blank">privacy su VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment ha rifiutato questo pagamento. Riprova o scegli un altro metodo di pagamento.',
+            'onion' => 'Wero non è disponibile tramite il nostro indirizzo onion: il fornitore di pagamento non può reindirizzarti qui dopo il pagamento. Scegli un altro metodo di pagamento.',
         ],
     ],
 

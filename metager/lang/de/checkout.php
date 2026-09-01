@@ -98,6 +98,7 @@ Postfach 51 01 43
         'privacy' => 'Wenn Sie auf "Zahlung durchführen" klicken, werden Sie zu unserem Zahlungsdienstleister <a href="https://www.vr-payment.de" target="_blank">VR Payment</a> weitergeleitet, um den Kauf abzuschließen. Mehr über <a href=":link" target="_blank">Datenschutz bei VR Payment</a>.',
         'error' => [
             'failed' => 'VR Payment hat diese Zahlung abgelehnt. Bitte versuchen Sie es erneut oder wählen Sie eine andere Zahlungsart.',
+            'onion' => 'Wero ist über unsere Onion-Adresse nicht verfügbar — der Zahlungsdienstleister kann Sie danach nicht hierher zurückschicken. Bitte wählen Sie eine andere Zahlungsart.',
         ],
     ],
 

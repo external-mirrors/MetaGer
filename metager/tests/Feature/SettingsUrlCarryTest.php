@@ -55,6 +55,40 @@ class SettingsUrlCarryTest extends TestCase
         $page->assertSee("dark_mode=dark", false);
     }
 
+    /**
+     * `enableSetting`'s six `PROCESS_GLOBAL_SETTING_CHANGE` branches each got
+     * their own `SettingsCarry::set()`/`forget()` call; only `dark_mode` was
+     * covered end-to-end above. These pin the non-default value riding into
+     * the redirect, and the reverse — a setting reset to its default drops
+     * out of the carried set — for the toggle-shaped ones.
+     *
+     * @param string $name  the setting's parameter/cookie name
+     * @param string $set    a value that persists (rides forward)
+     * @param string $unset  the value that resets it to default (drops out)
+     */
+    #[Test]
+    #[\PHPUnit\Framework\Attributes\DataProvider('togglingGlobalSettings')]
+    public function a_toggled_global_setting_is_carried_and_can_be_reset(string $name, string $set, string $unset): void
+    {
+        $response = $this->post("/meta/settings/es", ["focus" => "web", $name => $set]);
+        $response->assertRedirect();
+        $this->assertStringContainsString("$name=$set", $this->locationOf($response));
+
+        $reset = $this->post("/meta/settings/es?$name=$set", ["focus" => "web", $name => $unset]);
+        $reset->assertRedirect();
+        $this->assertStringNotContainsString($name, $this->locationOf($reset));
+    }
+
+    public static function togglingGlobalSettings(): array
+    {
+        return [
+            "tips" => ["tips", "off", "on"],
+            "tiles_startpage" => ["tiles_startpage", "off", "on"],
+            "zitate" => ["zitate", "off", "on"],
+            "new_tab" => ["new_tab", "on", "off"],
+        ];
+    }
+
     #[Test]
     public function an_engine_toggle_survives_into_the_redirect_and_the_next_page(): void
     {

@@ -219,26 +219,52 @@ class SettingsPostRedirectTest extends TestCase
     }
 
     /**
-     * Characterization test for a pre-existing gap, unrelated to
-     * cookie-blindness: `removeAllSettings` loops `SearchSettings::user_settings`,
-     * which `SearchSettings::boot()` only ever populates with global settings
-     * and the *current* fokus's blacklist (via `getSettingValue()`). Engine
-     * toggles are tracked in a separate `user_settings` array that lives on
-     * `Searchengines` instead, which `removeAllSettings` never constructs —
-     * so "remove all settings" silently leaves every engine toggle in place.
-     * Pinned as-is rather than fixed: fixing it is a separate concern from
-     * settings-in-URL.
+     * "Reset all settings" forgets every setting, in every fokus — global
+     * settings, engine toggles, filters and blacklists alike. It used to
+     * loop only `SearchSettings::user_settings`, which `boot()` fills one
+     * `getSettingValue()` call at a time with global settings and the
+     * *current* fokus's blacklist, so engine toggles (tracked on
+     * `Searchengines`) and any other fokus's settings were silently left in
+     * place. `SettingsUrlCarryTest` covers the same widening for the
+     * cookie-blind (query-carried) case.
      */
     #[Test]
-    public function removing_all_settings_forgets_global_settings_but_not_engine_toggles(): void
+    public function removing_all_settings_forgets_every_fokus_setting(): void
     {
         $response = $this->withUnencryptedCookies([
             "tips" => "off",
-            "web_engine_" . self::ENABLED_ENGINE => "off",
+            "web_engine_" . self::DISABLED_BY_DEFAULT_ENGINE => "on",
+            "web_setting_m" => "fr_FR",
+            "nachrichten_engine_" . self::DISABLED_BY_DEFAULT_ENGINE => "on",
+            "bilder_blpage" => "blocked.test",
         ])->post("/meta/settings/all-settings/removeAll", ["url" => "https://metager.de"]);
 
         $response->assertRedirect("https://metager.de");
         $this->assertTrue($this->isForgotten($response, "tips"));
-        $this->assertFalse($this->isForgotten($response, "web_engine_" . self::ENABLED_ENGINE));
+        $this->assertTrue($this->isForgotten($response, "web_engine_" . self::DISABLED_BY_DEFAULT_ENGINE));
+        $this->assertTrue($this->isForgotten($response, "web_setting_m"));
+        // A fokus other than the request's — the case the old user_settings
+        // loop could never reach.
+        $this->assertTrue($this->isForgotten($response, "nachrichten_engine_" . self::DISABLED_BY_DEFAULT_ENGINE));
+        $this->assertTrue($this->isForgotten($response, "bilder_blpage"));
+    }
+
+    /**
+     * The auth cookie is literally named `key` and `key` is one of
+     * `SettingsSchema::globalSettingKeys()`, so a naive "forget every valid
+     * setting" loop would log the visitor out. `removeAllSettings` must
+     * leave it alone, the same way `deleteSettings` does.
+     */
+    #[Test]
+    public function removing_all_settings_does_not_forget_the_auth_key(): void
+    {
+        $response = $this->withUnencryptedCookies([
+            "key" => "aaaaaaaa-bbbb-4ccc-9ddd-eeeeee123456",
+            "tips" => "off",
+        ])->post("/meta/settings/all-settings/removeAll", ["url" => "https://metager.de"]);
+
+        $response->assertRedirect("https://metager.de");
+        $this->assertTrue($this->isForgotten($response, "tips"));
+        $this->assertFalse($this->isForgotten($response, "key"));
     }
 }

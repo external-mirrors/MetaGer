@@ -306,6 +306,24 @@ class SettingsUrlCarryTest extends TestCase
         $this->assertStringNotContainsString("web_setting_m", $location);
     }
 
+    /**
+     * "Reset all settings" for a cookie-blind visitor: every setting it
+     * knows about rides only in the query, across more than one fokus, and
+     * none of it survives the redirect.
+     */
+    #[Test]
+    public function remove_all_settings_drops_every_carried_setting_across_foki(): void
+    {
+        $query = "web_engine_bing=off&web_setting_m=fr_FR&bilder_blpage=blocked.test&dark_mode=dark";
+        $reset = $this->post("/meta/settings/all-settings/removeAll?$query", ["url" => "https://metager.de"]);
+
+        $reset->assertRedirect();
+        $location = $this->locationOf($reset);
+        foreach (["web_engine_bing", "web_setting_m", "bilder_blpage", "dark_mode"] as $name) {
+            $this->assertStringNotContainsString($name, $location);
+        }
+    }
+
     #[Test]
     public function removing_one_setting_drops_it_from_the_redirect_with_no_cookie_present(): void
     {

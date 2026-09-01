@@ -722,18 +722,51 @@ class SettingsController extends Controller
 
     public function removeAllSettings(Request $request)
     {
-        foreach (app(SearchSettings::class)->user_settings as $key => $value) {
+        $settings = app(SearchSettings::class);
+        $carry = app(SettingsCarry::class);
+
+        // Never forget the auth key — it has its own lifecycle — or
+        // suggestion_addressbar, which has server-side stored state behind
+        // it. Same exclusion deleteSettings() applies.
+        $excluded = ["key", "suggestion_addressbar"];
+
+        // SearchSettings::user_settings only ever holds global settings and
+        // the *current* fokus's blacklist: SearchSettings::boot() fills it
+        // one getSettingValue() call at a time, and engine toggles / filter
+        // settings live on Searchengines instead. So "reset all settings"
+        // used to silently leave every engine toggle, every filter, and
+        // every other fokus's blacklist in place. Widen the source the way
+        // deleteSettings()/clearBlacklist() already do, and match names
+        // against isValidSetting() (which checks every fokus, not just the
+        // current one) rather than a single fokus prefix.
+        $known = array_merge(Cookie::get(), $carry->all());
+        if ($request->wantsJson()) {
+            // The webextension keeps settings in its own storage and sends
+            // them as headers; Symfony normalises underscores to dashes.
+            foreach ($request->header() as $header => $value) {
+                $known[str_replace("-", "_", $header)] = $value;
+            }
+        }
+
+        foreach (array_merge($settings->user_settings, $known) as $key => $value) {
+            if (in_array($key, $excluded, true)) {
+                continue;
+            }
+            if (is_array($value)) {
+                $value = reset($value);
+            }
+            if ($value === false || !$settings->isValidSetting($key, (string) $value)) {
+                continue;
+            }
             Cookie::queue(Cookie::forget($key, "/"));
-            app(SettingsCarry::class)->forget($key);
+            $carry->forget($key);
         }
 
         $redirect_url = $request->input('url', 'https://metager.de');
         if ($request->wantsJson()) {
-            $response = $this->cookiesToJsonResponse($redirect_url);
-            return response()->json($response);
-        } else {
-            return redirect($request->input('url', 'https://metager.de'));
+            return response()->json($this->cookiesToJsonResponse($redirect_url));
         }
+        return redirect($redirect_url);
     }
 
     public function newBlacklist(Request $request)

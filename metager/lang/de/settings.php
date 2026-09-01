@@ -69,6 +69,8 @@ return [
         'backup' => 'Sicherung und Zurücksetzen',
     ],
     'resetDescription' => 'Entfernt alle Einstellungen auf dieser Seite und setzt MetaGer auf die Standardeinstellungen zurück.',
+    'resetAll' => 'Alle Fokusse zurücksetzen',
+    'resetAllDescription' => 'Setzt sämtliche Einstellungen in allen Fokussen zurück – Suchmaschinen-Auswahl, Filter und Blacklists eingeschlossen, nicht nur diese Seite.',
     'hint' => [
         'hint' => 'Diese Einstellungen betreffen alle Fokusse und Unterseiten übergreifend!',
         'header' => 'Wiederherstellen aller aktuellen Einstellungen',

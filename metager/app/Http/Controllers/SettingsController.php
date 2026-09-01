@@ -105,6 +105,12 @@ class SettingsController extends Controller
                 // Drives the "this focus has custom settings" tab indicator.
                 'hasCustomSettings' => sizeof($searchengines->user_settings) > 0 || sizeof($blacklist) > 0 || $hasCustomFilter,
             ];
+            // $settingActive already covers global settings and, via the
+            // loop above, engine/filter settings in any fokus — but not a
+            // fokus that only has blacklist entries. hasCustomSettings does.
+            if ($foki[$fokus]['hasCustomSettings']) {
+                $settingActive = true;
+            }
         }
         $settings->fokus = $originalFokus;
 

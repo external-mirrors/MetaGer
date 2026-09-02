@@ -45,6 +45,19 @@ final class CampaignIssuer
      *     }>,
      *     max_campaign_volume: int
      * }|null
+     *
+     * `max_campaign_volume` kommt als **Bruchzahl** herüber und wird hier auf
+     * ganze Token abgerundet. Der Keyserver rechnet `Key.get_non_relay_charge()`
+     * als `Math.round(summe * 10) / 10` — ein Schlüssel, von dem je ein
+     * Dezitoken abgebucht wurde (`/api/json/token`, `tokens + decitokens/10`),
+     * antwortet also mit `459.5` und nicht mit `459`. Ein `is_int()` darauf war
+     * für jeden benutzten Schlüssel falsch: die Seite behauptete „0 Token“ über
+     * einem vollen Guthaben und setzte `max="0"` ins Formular, womit sich gar
+     * keine Kampagne mehr anlegen ließ.
+     *
+     * Abgerundet und nicht als Bruchzahl weitergereicht, weil beide Abnehmer
+     * ganze Token wollen: die Anlege-Route drüben validiert `total_volume` mit
+     * `isInt()`, und die Kontoseite zeigt Guthaben ohnehin als `floor($charge)`.
      */
     public function list(string $key): ?array
     {
@@ -59,7 +72,7 @@ final class CampaignIssuer
 
         return [
             "campaigns" => $this->campaigns(Arr::get($body, "campaigns")),
-            "max_campaign_volume" => is_int($maxVolume) ? $maxVolume : 0,
+            "max_campaign_volume" => is_numeric($maxVolume) ? (int) floor((float) $maxVolume) : 0,
         ];
     }
 

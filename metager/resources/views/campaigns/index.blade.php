@@ -13,15 +13,36 @@
 	ausschließlich der Keyserver geprüft (siehe CampaignController's
 	Klassenkommentar) — anders als bei Bestellungen gibt es hier keinen
 	Schlüssel im Antwortkörper, den man selbst noch vergleichen könnte.
+
+	**Zwei Karten und nicht eine.** „Was ich verschenkt habe“ und „etwas
+	verschenken“ sind zwei Dinge, und sie standen in einer einzigen
+	.account-section untereinander — die Überschrift „Kampagne erstellen“
+	tauchte mitten in der Kachel auf, unter einer Liste, die je nach Anzahl
+	beliebig lang ist. Dieselbe Zweiteilung wie auf der Kontoseite: Bestand
+	oben, Handlung darunter, jede in ihrer eigenen Kachel.
+
+	**Zahlen gehen durch Number::format().** Sie standen als rohe Ziffern da,
+	auf einer Seite, die in zwölf Sprachen ausgeliefert wird und deren
+	Geschwisterseiten (Konto, Bestellungen) ihre Beträge längst mit der Sprache
+	der Anfrage setzen — `1000` heißt dort `1.000` bzw. `1,000`.
 --}}
+@php
+	$number = fn (int|float $value) => \Illuminate\Support\Number::format($value, locale: app()->getLocale());
+@endphp
 <div id="account-page">
 	<header class="account-head">
 		<h1 class="page-title">@lang('campaigns.heading')</h1>
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="checkout-nav">
-		<a class="checkout-back" href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
+	{{--
+		Eine Brotkrume und keine Notausfahrt: diese Seite liegt unter dem Konto,
+		genau wie die Bestellseiten, und trägt deshalb deren Idiom (oben, links,
+		mit Trenner). .checkout-nav stand hier — die ist seit dem Umbau des
+		Bezahlvorgangs zentriert und gehört an einen Seitenfuß.
+	--}}
+	<nav class="account-breadcrumb">
+		<a href="{{ $accountUrl }}">← @lang('checkout.page.cancel')</a>
 	</nav>
 
 	<section class="account-section">
@@ -46,11 +67,23 @@
 							@endif
 						</div>
 
+						{{--
+							Bis zu vier Angaben, im Raster jede in ihrer eigenen
+							Zelle. Als umbrechende Zeile lasen sie sich als ein
+							Satz — „10 Token pro Schlüssel 2 von 10 eingelöst 80
+							von 100 Token übrig".
+						--}}
 						<div class="campaigns-item__facts">
-							<span>@lang('campaigns.facts.tokens_per_key', ['tokens' => $campaign['tokens_per_key']])</span>
+							<span>@lang('campaigns.facts.tokens_per_key', ['tokens' => $number($campaign['tokens_per_key'])])</span>
 							@if($campaign['stats'] !== null)
-								<span>@lang('campaigns.facts.redeemed', ['redeemed' => $campaign['stats']['vouchers_redeemed'], 'total' => $campaign['stats']['vouchers_total']])</span>
-								<span>@lang('campaigns.facts.budget', ['left' => $campaign['stats']['backing_charge'], 'total' => $campaign['total_volume']])</span>
+								<span>@lang('campaigns.facts.redeemed', [
+									'redeemed' => $number($campaign['stats']['vouchers_redeemed']),
+									'total' => $number($campaign['stats']['vouchers_total']),
+								])</span>
+								<span>@lang('campaigns.facts.budget', [
+									'left' => $number($campaign['stats']['backing_charge']),
+									'total' => $number($campaign['total_volume']),
+								])</span>
 							@endif
 							@if($campaign['backing_expires_at'] !== null)
 								<span>@lang('campaigns.facts.expires', ['date' => \Illuminate\Support\Carbon::parse($campaign['backing_expires_at'])->isoFormat('L')])</span>
@@ -88,14 +121,24 @@
 				@endforeach
 			</div>
 		@endif
+	</section>
 
+	<section class="account-section">
 		<h2 class="account-section__heading">@lang('campaigns.create.heading')</h2>
-		<p class="campaigns-create__intro">@lang('campaigns.create.info')</p>
+		<p class="account-section__lede">@lang('campaigns.create.info')</p>
 
 		@if($errorCode !== null)
 			<p class="checkout-consent__error" role="alert">@lang('campaigns.create.error.' . $errorCode)</p>
 		@endif
 
+		{{--
+			„Token pro Schlüssel" und „Maximale Token insgesamt" stehen
+			nebeneinander, weil sie zusammen einen Satz ergeben; die Beschriftung
+			des einen ist doppelt so lang wie die des anderen und bricht auf
+			schmalen Spalten um. Dass die beiden Felder trotzdem auf einer Höhe
+			sitzen, macht das Raster (subgrid in .campaigns-create__row), nicht
+			der Zufall gleich langer Wörter.
+		--}}
 		<form method="post" action="{{ route('account.campaigns.store') }}" class="campaigns-create">
 			<div class="campaigns-create__field">
 				<label for="campaigns-name">@lang('campaigns.create.name')</label>
@@ -105,12 +148,12 @@
 			<div class="campaigns-create__row">
 				<div class="campaigns-create__field">
 					<label for="campaigns-tokens-per-key">@lang('campaigns.create.tokens_per_key')</label>
-					<input type="number" name="tokens_per_key" id="campaigns-tokens-per-key" required min="1" step="1" value="{{ $fields['tokens_per_key'] }}">
+					<input type="number" name="tokens_per_key" id="campaigns-tokens-per-key" required min="1" step="1" max="{{ $maxCampaignVolume }}" value="{{ $fields['tokens_per_key'] }}">
 				</div>
 				<div class="campaigns-create__field">
 					<label for="campaigns-total-volume">@lang('campaigns.create.total_volume')</label>
 					<input type="number" name="total_volume" id="campaigns-total-volume" required min="1" step="1" max="{{ $maxCampaignVolume }}" value="{{ $fields['total_volume'] }}">
-					<div class="campaigns-create__hint">@lang('campaigns.create.total_volume_hint', ['charge' => $maxCampaignVolume])</div>
+					<div class="campaigns-create__hint">@lang('campaigns.create.total_volume_hint', ['charge' => $number($maxCampaignVolume)])</div>
 				</div>
 			</div>
 
@@ -120,7 +163,7 @@
 				<div class="campaigns-create__hint">@lang('campaigns.create.voucher_count_hint')</div>
 			</div>
 
-			<button type="submit" class="account-btn account-btn--primary">@lang('campaigns.create.submit')</button>
+			<button type="submit" class="account-btn account-btn--primary campaigns-create__submit">@lang('campaigns.create.submit')</button>
 		</form>
 	</section>
 </div>

@@ -28,7 +28,7 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="orders-breadcrumb">
+	<nav class="account-breadcrumb">
 		<a href="{{ $lookupUrl }}">← @lang('orders.show.breadcrumb')</a>
 		<a href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>

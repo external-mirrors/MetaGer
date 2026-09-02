@@ -29,7 +29,7 @@
 		@include('partials.key-fingerprint')
 	</header>
 
-	<nav class="orders-breadcrumb">
+	<nav class="account-breadcrumb">
 		<a href="{{ route('account.orders.show', ['reference' => $order['public_id']]) }}">← @lang('orders.refund.breadcrumb', ['reference' => $order['public_id']])</a>
 		<a href="{{ $accountUrl }}">@lang('checkout.page.cancel')</a>
 	</nav>

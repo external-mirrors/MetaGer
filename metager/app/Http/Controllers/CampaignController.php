@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Authentication\CampaignIssuer;
 use App\Authentication\KeyUser;
 use App\Http\Controllers\Concerns\HandlesKeyCheckout;
+use App\Support\AppHosts;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,7 +46,7 @@ final class CampaignController extends Controller
         $data = $issuer->list($key);
 
         return $this->render("campaigns.index", $key, [
-            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? []),
+            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? [], AppHosts::shareableOrigin($request)),
             "maxCampaignVolume" => $data["max_campaign_volume"] ?? 0,
             "fields" => $this->emptyFields(),
             "errorCode" => null,
@@ -83,7 +84,7 @@ final class CampaignController extends Controller
         $data = $issuer->list($key);
 
         return $this->render("campaigns.index", $key, [
-            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? []),
+            "campaigns" => $this->withPublicLinks($data["campaigns"] ?? [], AppHosts::shareableOrigin($request)),
             "maxCampaignVolume" => $data["max_campaign_volume"] ?? 0,
             "fields" => array_merge($fields, ["voucher_count" => $voucherCount]),
             "errorCode" => $result["code"],
@@ -152,21 +153,30 @@ final class CampaignController extends Controller
     }
 
     /**
-     * Adds each campaign's public redemption link — deliberately not built
-     * with `url()`: `AppServiceProvider`'s `URL::formatPathUsing` hook puts
-     * the current *visitor's* locale prefix on every `url()`/`route()` call,
-     * and this link is meant to be pasted into a chat or email for someone
-     * else to open. `config('app.url')` is the same canonical, locale-free
-     * base `OrderHistoryIssuer` falls back to for the keyserver URL itself —
-     * matches the reasoning `cards.pdf`'s own `redeem_base` uses on the
-     * keymanager side (see `routes/api.js`'s docblock there).
+     * Adds each campaign's public redemption link — the one thing on this page
+     * that is meant to leave it, pasted into a chat or an email for somebody
+     * else to open. Two things it must not pick up on the way out:
+     *
+     * **The visitor's locale.** So not `url()`/`route()`:
+     * `AppServiceProvider`'s `URL::formatPathUsing` hook stamps the current
+     * request's `/{locale}` prefix on every path those generate, and the
+     * recipient gets their own locale from `ResolveLocale` anyway.
+     *
+     * **The keymanager's internal address.** This used to read
+     * `config("app.url")`, which is not the public address of anything:
+     * `config("metager.metager.keymanager.server")` defaults to
+     * `app.url . "/keys"`, so `app.url` is where *this application* reaches the
+     * keyserver — `http://nginx:8080` in the compose stack. Every link the page
+     * handed out pointed at a Docker-internal name. {@see AppHosts::shareableOrigin()}
+     * is the origin the visitor is actually on instead, and carries the onion
+     * exception with it.
      *
      * @param list<array<string, mixed>> $campaigns
      * @return list<array<string, mixed>>
      */
-    private function withPublicLinks(array $campaigns): array
+    private function withPublicLinks(array $campaigns, string $origin): array
     {
-        $base = rtrim((string) config("app.url"), "/") . "/keys/c/campaign/";
+        $base = $origin . "/keys/c/campaign/";
 
         return array_map(
             fn (array $campaign) => $campaign + ["public_link" => $base . urlencode((string) $campaign["public_token"])],

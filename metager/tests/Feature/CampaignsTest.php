@@ -20,6 +20,7 @@ use Tests\TestCase;
 class CampaignsTest extends TestCase
 {
     private const A_KEY = "5e9c1a2b-4f6d-4c3e-9a71-2b8d0f4e6c15";
+    private const ONION = "metagerv65pwclop2rsfzg4jwowpavpwd6grhhlvdgsswvo6ii4akgyd.onion";
 
     private function signedIn(): self
     {
@@ -97,10 +98,114 @@ class CampaignsTest extends TestCase
         ]);
 
         $this->signedIn()
-            ->get("/pl-PL/konto/gutscheinaktionen")
+            ->get("https://metager.org/pl-PL/konto/gutscheinaktionen")
             ->assertOk()
-            ->assertSee(rtrim(config("app.url"), "/") . "/keys/c/campaign/TESTTOKEN", false)
+            ->assertSee("https://metager.org/keys/c/campaign/TESTTOKEN", false)
             ->assertDontSee("/pl-PL/keys/c/campaign", false);
+    }
+
+    /**
+     * Regression: the link pointed at `config("app.url")`, and `app.url` is
+     * not a public address. `config("metager.metager.keymanager.server")`
+     * defaults to `app.url . "/keys"`, so `app.url` is where this application
+     * reaches the *keyserver* — `http://nginx:8080` in the compose stack, a
+     * name that resolves inside the Docker network and nowhere else. Every
+     * link the page offered for copying was one nobody could open.
+     *
+     * The visitor's own origin is what it uses now
+     * ({@see \App\Support\AppHosts::shareableOrigin()}), so the assertion is
+     * that the configured value is exactly what does *not* appear.
+     */
+    public function testThePublicLinkIsNotTheInternalKeyserverAddress(): void
+    {
+        config(["app.url" => "http://nginx:8080"]);
+
+        $this->keyserver([
+            "*/api/json/key/*/campaigns" => Http::response([
+                "campaigns" => [$this->campaign(["public_token" => "TESTTOKEN"])],
+                "max_campaign_volume" => 248,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("https://metager.de/de-DE/konto/gutscheinaktionen")
+            ->assertOk()
+            ->assertSee("https://metager.de/keys/c/campaign/TESTTOKEN", false)
+            ->assertDontSee("nginx:8080");
+    }
+
+    /**
+     * From an onion address the link deliberately falls back to the canonical
+     * host: it is handed to a third party, and an address only Tor can open is
+     * worse for them than the clearnet one. Same call the keymanager makes for
+     * the printed voucher cards (`redeem_base` in its `routes/api.js`).
+     */
+    public function testThePublicLinkOffAnOnionAddressUsesTheCanonicalHost(): void
+    {
+        config(["app.url" => "https://metager.de"]);
+
+        $this->keyserver([
+            "*/api/json/key/*/campaigns" => Http::response([
+                "campaigns" => [$this->campaign(["public_token" => "TESTTOKEN"])],
+                "max_campaign_volume" => 248,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("http://" . self::ONION . "/de-DE/konto/gutscheinaktionen")
+            ->assertOk()
+            ->assertSee("https://metager.de/keys/c/campaign/TESTTOKEN", false)
+            ->assertDontSee(self::ONION . "/keys/c/campaign", false);
+    }
+
+    /**
+     * Regression: „Dein Schlüssel enthält aktuell 0 Token" über einem vollen
+     * Guthaben, und `max="0"` im Formular — womit sich überhaupt keine
+     * Kampagne mehr anlegen ließ.
+     *
+     * `max_campaign_volume` ist `Key.get_non_relay_charge()` drüben, gerechnet
+     * als `Math.round(summe * 10) / 10`. Ein Schlüssel, von dem je ein
+     * Dezitoken abgebucht wurde, antwortet damit `459.5` — JSON-Bruchzahl,
+     * kein `int`, und {@see \App\Authentication\CampaignIssuer::list()} prüfte
+     * mit `is_int()`. Das traf jeden benutzten Schlüssel.
+     */
+    public function testAFractionalBalanceIsTheBudgetAndNotZero(): void
+    {
+        $this->keyserver([
+            "*/api/json/key/*/campaigns" => Http::response([
+                "campaigns" => [],
+                "max_campaign_volume" => 459.5,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/gutscheinaktionen")
+            ->assertOk()
+            // Abgerundet: die Anlege-Route drüben validiert `total_volume` mit
+            // `isInt()`, und die Kontoseite zeigt Guthaben als `floor($charge)`.
+            ->assertSee('max="459"', false)
+            ->assertSee(trans("campaigns.create.total_volume_hint", ["charge" => "459"]))
+            ->assertDontSee('max="0"', false);
+    }
+
+    /**
+     * Wenn der Keyserver gar keine Zahl liefert, bleibt es bei 0 — kein
+     * geratenes Budget, und der Hinweis darüber sagt ohnehin schon, dass
+     * gerade nichts zu laden war.
+     */
+    public function testANonNumericBudgetStaysZero(): void
+    {
+        $this->keyserver([
+            "*/api/json/key/*/campaigns" => Http::response([
+                "campaigns" => [],
+                "max_campaign_volume" => null,
+            ]),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/gutscheinaktionen")
+            ->assertOk()
+            ->assertSee('max="0"', false);
     }
 
     public function testAVisitorWithoutAKeyIsSentToSignIn(): void

@@ -99,6 +99,41 @@ final class AppHosts
     }
 
     /**
+     * The origin for a link that leaves this browser — one a visitor copies out
+     * of the page and hands to somebody else (a campaign's public redemption
+     * link, {@see \App\Http\Controllers\CampaignController}).
+     *
+     * Not `config("app.url")`, which is the mistake this replaces.
+     * `config("metager.metager.keymanager.server")` defaults to `app.url . "/keys"`,
+     * so `app.url` is the address this application reaches the *keymanager* on —
+     * in the compose stack `http://nginx:8080`, a name that resolves inside the
+     * Docker network and nowhere else. A shareable link built from it was a link
+     * nobody could open, which is exactly what the campaign page handed out.
+     *
+     * The visitor's own origin is right instead, with two exceptions:
+     *
+     *  - a host that is not ours ({@see isOurs()}) — `TrustHosts` has already
+     *    rejected one by the time this runs, so this is a second guard;
+     *  - an onion address, deliberately: the link is for a third party, and
+     *    handing them an address only Tor can open is worse for them than the
+     *    clearnet one. The keymanager makes the same call the same way for the
+     *    printed voucher cards (`redeem_base` in its `routes/api.js`).
+     *
+     * Both fall back to `app.url` — the canonical host in every deployed
+     * environment, and the best guess left when the request cannot supply one.
+     */
+    public static function shareableOrigin(\Illuminate\Http\Request $request): string
+    {
+        $host = $request->getHost();
+
+        if (self::isOurs($host) && !self::isOnion($host)) {
+            return $request->getSchemeAndHttpHost();
+        }
+
+        return rtrim((string) config("app.url"), "/");
+    }
+
+    /**
      * The `Host`-header patterns for `Request::setTrustedHosts()` — anchored
      * regular expressions, which is the shape that middleware wants.
      *

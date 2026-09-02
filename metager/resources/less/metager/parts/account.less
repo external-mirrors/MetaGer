@@ -297,6 +297,15 @@
   border: 1px solid transparent;
   border-radius: 4px;
   font-family: inherit;
+  // Wie font-family: der UA-Stylesheet gibt einem <button> eigene Werte, die
+  // ein <a> von der Seite erbt — hier `line-height: normal` gegen die 1.428
+  // des Bodys. Beide tragen dieselbe Klasse und standen deshalb, wo sie in
+  // einer Reihe nebeneinander auftauchen, verschieden hoch da: auf den
+  // Gutscheinaktionen ist „Karten drucken (PDF)" ein Link und „Deaktivieren"
+  // ein Knopf, und der Link war fünf Pixel höher als sein Nachbar. Ein
+  // ausgeschriebenes Verhältnis nimmt beiden die Herkunft ab und gilt für
+  // jede Schriftgröße, die eine Seite dieser Klasse sonst noch gibt.
+  line-height: 1.4;
   font-size: 0.8rem;
   text-align: center;
   text-decoration: none;

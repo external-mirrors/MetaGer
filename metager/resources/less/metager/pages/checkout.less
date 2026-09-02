@@ -543,18 +543,19 @@
   gap: 0.6rem 1rem;
 }
 
-// ── Bestellungen (/konto/bestellungen) ──────────────────────────────────────
-// App\Http\Controllers\OrderController. Wie die Aufladeseiten: #account-page
-// und .account-section aus account.less tragen den Rahmen, hier steht nur das
-// Nachschlagformular und die Zeilentabelle einer Bestellung.
-
-// Der Weg zurück auf den Bestellseiten ist eine Hierarchie („diese Bestellung“
-// liegt unter „Bestellungen“ liegt unter „Konto“) und keine Notausfahrt wie im
-// Bezahlvorgang — deshalb oben und links statt unten und mittig, mit einem
-// Trenner zwischen den Stufen. Die Bestellseiten benutzten dafür .checkout-nav
-// mit; seit die im Bezahlvorgang an den Fuß gewandert und zentriert ist, wäre
-// eine zentrierte Brotkrume am Kopf dieser Seiten dabei herausgekommen.
-.orders-breadcrumb {
+// ── Der Weg zurück auf den Unterseiten des Kontos ───────────────────────────
+// Eine Hierarchie („diese Bestellung“ liegt unter „Bestellungen“ liegt unter
+// „Konto“) und keine Notausfahrt wie im Bezahlvorgang — deshalb oben und links
+// statt unten und mittig, mit einem Trenner zwischen den Stufen. Die
+// Bestellseiten benutzten dafür .checkout-nav mit; seit die im Bezahlvorgang an
+// den Fuß gewandert und zentriert ist, wäre eine zentrierte Brotkrume am Kopf
+// dieser Seiten dabei herausgekommen.
+//
+// Hieß .orders-breadcrumb, solange nur die Bestellseiten sie trugen. Die
+// Gutscheinaktionen liegen genauso unter dem Konto und trugen trotzdem die
+// zentrierte .checkout-nav — der Name war der Grund, warum niemand nach ihr
+// gegriffen hat.
+.account-breadcrumb {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -576,6 +577,11 @@
     color: @border-color;
   }
 }
+
+// ── Bestellungen (/konto/bestellungen) ──────────────────────────────────────
+// App\Http\Controllers\OrderController. Wie die Aufladeseiten: #account-page
+// und .account-section aus account.less tragen den Rahmen, hier steht nur das
+// Nachschlagformular und die Zeilentabelle einer Bestellung.
 .orders-lookup {
   display: grid;
   gap: 0.4rem;
@@ -740,10 +746,22 @@
     font-weight: bold;
   }
 
+  // Bis zu vier kurze Angaben, jede in ihrer eigenen Zelle. Sie standen als
+  // umbrechende Zeile da, nur durch Abstand getrennt, und liefen dabei zu
+  // einem Satz zusammen — „10 Token pro Schlüssel 2 von 10 eingelöst 80 von
+  // 100 Token übrig". Ein Trenner dazwischen behebt das nur halb: die Zeile
+  // bricht um, und dann steht er entweder am Anfang der zweiten Zeile oder
+  // als einzelnes Zeichen am Ende der ersten.
+  //
+  // Als Raster braucht es keinen: zwei Spalten, solange die Karte breit genug
+  // ist, sonst eine, und die Angaben stehen in beiden Fällen untereinander
+  // ausgerichtet statt in einer Reihe, die irgendwo umbricht. Wie viele es
+  // sind, hängt daran, ob der Keyserver Statistik und Ablaufdatum mitliefert
+  // — `auto-fit` kommt mit zwei genauso zurecht wie mit vier.
   .campaigns-item__facts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 0.2rem 1.25rem;
     font-size: 0.85rem;
     color: @text-color-alpha-70;
     font-variant-numeric: tabular-nums;
@@ -782,10 +800,32 @@
     color: @text-color-alpha-70;
   }
 
+  // „Karten drucken", „Deaktivieren", „Jetzt löschen" — drei nebengeordnete
+  // Handlungen, die auch so aussehen sollen.
+  //
+  // `align-items: center` statt des voreingestellten `stretch`, weil zwei von
+  // ihnen in einem <form> stecken (POST, damit sie ohne Skript funktionieren)
+  // und eine nicht: gedehnt wurde das <form> auf die Zeilenhöhe, der Knopf
+  // darin blieb inhaltshoch und stand oben in einem zu hohen Kasten — der
+  // freistehende Link daneben war sichtbar höher als seine zwei Nachbarn.
   .campaigns-item__actions {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.5rem;
+  }
+
+  // parts/account.less gibt jedem .account-btn `flex: 1 1 0`, damit sich zwei
+  // Knöpfe in .account-balance__actions eine Zeile gleichmäßig teilen. Hier
+  // ist das falsch, und zwar doppelt: in der Knopfzeile wuchs nur „Karten
+  // drucken (PDF)" auf die halbe Karte, weil die beiden anderen als <form>
+  // und nicht als Knopf im Raster stehen — die nebengeordnete Handlung sah
+  // damit aus wie die Hauptsache. Und neben dem öffentlichen Link nahm der
+  // Kopierknopf dem Feld die Breite weg, in dem der Link ganz zu sehen sein
+  // soll.
+  .campaigns-item__actions .account-btn,
+  .campaigns-item__link-row .account-btn {
+    flex: 0 0 auto;
   }
 }
 
@@ -810,20 +850,49 @@
   }
 }
 
+// Das Anlegeformular. Vier Felder, von denen zwei nebeneinander stehen, weil
+// sie zusammen einen Satz ergeben („so viele pro Schlüssel, so viele
+// insgesamt"). Beides — das Nebeneinander und dass es trotzdem ausgerichtet
+// ist — steht unten in .campaigns-create__row.
 .campaigns-create {
   display: grid;
   gap: 1rem;
-  max-width: 28rem;
+  // 28rem waren zu schmal für zwei Spalten: „Token pro verschenktem Schlüssel"
+  // bekam darin knapp 13rem und brach dreizeilig um. 34rem geben jeder Spalte
+  // rund 16rem, und mehr als das braucht keines dieser Felder — .account-section
+  // ist 39rem breit, ein Formular über die volle Breite wäre eine Zeile, der
+  // das Auge nicht folgt.
+  max-width: 34rem;
 
+  // Die eigentliche Ausrichtung. Beide Felder haben Beschriftung, Feld und
+  // (nur das rechte) einen Hinweis; als je eigenes Raster stimmten ihre
+  // Zeilenhöhen an keiner Stelle überein, und die zwei Eingabefelder saßen
+  // sichtbar versetzt zueinander. Zwei Ursachen, beide hier behoben:
+  //
+  //   * Die Beschriftungen sind unterschiedlich lang und brechen deshalb bei
+  //     unterschiedlichen Breiten um — eine einzeilige links, eine zweizeilige
+  //     rechts, und das Feld darunter rutscht mit.
+  //   * `align-content` ist im Raster von Haus aus `stretch`: das linke Feld
+  //     ohne Hinweis wurde so hoch wie das rechte mit, indem seine beiden
+  //     Zeilen den Überschuss unter sich aufteilten — die Beschriftung stand
+  //     dann tiefer und das Eingabefeld war höher als sein Gegenüber.
+  //
+  // `subgrid` löst beides in einem: die Felder rechnen ihre Zeilen nicht mehr
+  // selbst, sondern übernehmen die drei Zeilen der Reihe, und die sind für
+  // beide Spalten dieselben. Ohne Unterstützung dafür (siehe @supports unten)
+  // bleibt es beim eigenen Raster, dann aber mit `align-content: start` — die
+  // zweite Ursache ist damit auch dort weg, die erste bleibt.
   .campaigns-create__row {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    grid-template-rows: auto auto auto;
+    gap: 0.3rem 1rem;
   }
 
   .campaigns-create__field {
     display: grid;
     gap: 0.3rem;
+    align-content: start;
 
     label {
       font-size: 0.9rem;
@@ -844,10 +913,29 @@
     font-size: 0.8rem;
     color: @text-color-alpha-70;
   }
+
+  // Ein Knopf in einem Raster wird so breit wie die Spalte — hier also so
+  // breit wie das ganze Formular. Dieselbe Falle, die auf der Nachschlagseite
+  // den Ausstieg zum größten Bedienelement gemacht hat.
+  .campaigns-create__submit {
+    justify-self: start;
+  }
 }
 
-.campaigns-create__intro {
-  margin: 0 0 1rem;
-  font-size: 0.85rem;
-  color: @text-color-alpha-70;
+@supports (grid-template-rows: subgrid) {
+  // Nur die Felder *in* der Reihe — die beiden einspaltigen Felder darüber und
+  // darunter hängen direkt in .campaigns-create und haben keine Reihe, deren
+  // Zeilen sie übernehmen könnten.
+  //
+  // Der Zeilenabstand kommt dann aus der Reihe (0.3rem) und nicht mehr aus dem
+  // Feld selbst; die Angabe hier bleibt trotzdem stehen, weil sie im
+  // Nicht-subgrid-Fall gilt und beide Werte dieselben sind.
+  .campaigns-create__row > .campaigns-create__field {
+    // Ein Feld belegt alle drei Zeilen der Reihe und gibt sie an Beschriftung,
+    // Eingabefeld und Hinweis weiter. Das linke hat keinen Hinweis und lässt
+    // die dritte Zeile schlicht leer.
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
 }
+

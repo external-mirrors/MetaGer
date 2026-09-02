@@ -80,6 +80,30 @@ class AppHostsTest extends TestCase
     }
 
     /**
+     * The origin a link that leaves this browser is built from — the campaign
+     * page's public redemption link ({@see \App\Http\Controllers\CampaignController}).
+     *
+     * Only the branch that answers with the request's own origin is asserted
+     * here. The two fallbacks read `config("app.url")` and therefore need a
+     * booted application; they are covered where they matter, in
+     * {@see \Tests\Feature\CampaignsTest}.
+     */
+    public function testShareableOriginIsTheOriginTheVisitorIsOn(): void
+    {
+        $this->assertSame(
+            "https://metager.org",
+            AppHosts::shareableOrigin(Request::create("https://metager.org/de-DE/konto/gutscheinaktionen"))
+        );
+
+        // The compose stack, where this used to hand out http://nginx:8080 for
+        // everyone regardless of the address they had actually typed.
+        $this->assertSame(
+            "http://localhost:8080",
+            AppHosts::shareableOrigin(Request::create("http://localhost:8080/de-DE/konto/gutscheinaktionen"))
+        );
+    }
+
+    /**
      * Every pattern is an anchored regex Symfony can hand to
      * `Request::setTrustedHosts()`. A stray unescaped metacharacter there
      * widens what the app answers to — the `.` in a hostname must match a

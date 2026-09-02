@@ -36,6 +36,12 @@ use Illuminate\Support\Facades\Vite;
  * es und nimmt es entgegen, {@see invoiceDownload()} liefert das fertige PDF.
  * Auch hier prüft der JSON-Endpunkt die Zugehörigkeit zuerst — der Keyserver
  * kennt hier keinen Schlüssel, den wir vergleichen könnten.
+ *
+ * **Die Erstattung** ist wortgleich zur Rechnung aufgebaut ({@see refund()},
+ * {@see refundRequest()}), bewegt aber kein Geld: der Keyserver öffnet nur
+ * ein Zammad-Ticket und bucht das ungenutzte Guthaben vom Schlüssel ab; die
+ * eigentliche Rückzahlung ist ein manueller Schritt des Supports über
+ * dieses Ticket, außerhalb dieser App.
  */
 final class OrderController extends Controller
 {
@@ -226,6 +232,73 @@ final class OrderController extends Controller
             "invoicePdfUrl" => route("account.orders.invoice.pdf", ["reference" => $order["public_id"]]),
             "fields" => $fields,
             "errors" => $result["errors"],
+        ]);
+    }
+
+    /** Formular für die Erstattung (Zammad-Ticket + Guthaben-Rückbuchung). */
+    public function refund(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
+    {
+        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!preg_match(self::REFERENCE, $reference)) {
+            abort(404);
+        }
+
+        $order = $issuer->find($reference);
+        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
+            abort(404);
+        }
+
+        return $this->render("orders.refund", $key, [
+            "order" => $order,
+            "refundAvailable" => $order["payments"][0]["refund_available"],
+            "refundTokenCount" => $order["payments"][0]["refund_token_count"],
+            "refundAmount" => $order["payments"][0]["refund_amount"],
+            "message" => "",
+            "error" => null,
+        ]);
+    }
+
+    /** Nimmt das Erstattungsformular entgegen. */
+    public function refundRequest(Request $request, string $reference, OrderHistoryIssuer $issuer): Response|RedirectResponse
+    {
+        if (!$this->sameOrigin($request)) {
+            abort(403);
+        }
+
+        [, $key, $redirect] = $this->resolveKey($request, route("account.orders.show", ["reference" => $reference]));
+        if ($redirect !== null) {
+            return $redirect;
+        }
+
+        if (!preg_match(self::REFERENCE, $reference)) {
+            abort(404);
+        }
+
+        $order = $issuer->find($reference);
+        if ($order === null || $order["key"] !== $key || count($order["payments"]) === 0) {
+            abort(404);
+        }
+
+        $message = trim((string) $request->input("message", ""));
+        $result = $issuer->requestRefund($order["public_id"], $message);
+
+        if ($result["ok"]) {
+            return redirect()
+                ->to(route("account.orders.refund", ["reference" => $order["public_id"]]))
+                ->header("Cache-Control", "no-store, private");
+        }
+
+        return $this->render("orders.refund", $key, [
+            "order" => $order,
+            "refundAvailable" => $order["payments"][0]["refund_available"],
+            "refundTokenCount" => $order["payments"][0]["refund_token_count"],
+            "refundAmount" => $order["payments"][0]["refund_amount"],
+            "message" => $message,
+            "error" => $result["error"],
         ]);
     }
 

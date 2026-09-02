@@ -50,7 +50,9 @@ class KeyPagesTranslationsTest extends TestCase
         // Bestellungen — App\Http\Controllers\OrderController. lookup/* und die
         // Zeilenbeschriftungen stammen aus order.json des Keymanagers (dessen
         // beschädigtes „Load orders" ausgenommen); show.heading/lookup_hint
-        // sind neu, pt ist wie immer neu übersetzt.
+        // sind neu, refund.* ist wortgleich order.json's refund.* (unavailable
+        // und error.not_allowed ausgenommen — neu, weil es dafür im Keymanager
+        // keine eigene Fehlermeldung gab), pt ist wie immer neu übersetzt.
         "orders.php",
         // Gutscheinaktionen — App\Http\Controllers\CampaignController. Der
         // Wortlaut ist der von campaign.json's manage.* (der Keymanager hatte

@@ -338,13 +338,20 @@
       color: @form-error-color;
     }
 
-    input {
+    input,
+    textarea {
       padding: 0.5rem 0.6rem;
       border: 1px solid @border-color;
       border-radius: 6px;
       background-color: @input-background;
       color: @input-text;
       font-size: 1rem;
+      font-family: inherit;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 6rem;
     }
   }
 }
@@ -352,6 +359,13 @@
 .orders-invoice__storage {
   margin: 0 0 1rem;
   font-size: 0.8rem;
+  color: @text-color-alpha-70;
+}
+
+// Das Erstattungsformular — App\Http\Controllers\OrderController::
+// refund()/refundRequest(). Ein Feld, dieselbe Optik wie .orders-invoice__field.
+.orders-refund__note {
+  font-size: 0.9rem;
   color: @text-color-alpha-70;
 }
 

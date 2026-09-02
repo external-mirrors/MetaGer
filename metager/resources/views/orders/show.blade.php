@@ -9,8 +9,11 @@
 	$order kommt validiert aus OrderHistoryIssuer; wem sie gehört, hat der
 	Controller schon gegen den Cookie-Schlüssel geprüft. Pro Zahlung eine
 	Zeilengruppe (netto / MwSt. / gesamt, plus Wechselkurs bei Fremdwährung),
-	darunter die Auftragsbestätigung als PDF und der Link zur Rechnung
-	(InvoiceNinja, App\Http\Controllers\OrderController::invoice()).
+	darunter die Auftragsbestätigung als PDF, der Link zur Rechnung
+	(InvoiceNinja, App\Http\Controllers\OrderController::invoice()) und,
+	sofern refund_available zutrifft, der Link zur Erstattung
+	(App\Http\Controllers\OrderController::refund()) — payments[0], dieselbe
+	"die eine" Zahlung, die invoice_available schon voraussetzt.
 --}}
 <div id="account-page">
 	<header class="account-head">
@@ -70,6 +73,9 @@
 			<div class="checkout-returned__actions">
 				<a class="account-btn account-btn--primary" href="{{ $confirmationUrl }}" target="_blank" rel="noopener">@lang('orders.show.download_confirmation')</a>
 				<a class="account-btn account-btn--quiet" href="{{ route('account.orders.invoice', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_invoice')</a>
+				@if($order['payments'][0]['refund_available'])
+					<a class="account-btn account-btn--quiet" href="{{ route('account.orders.refund', ['reference' => $order['public_id']]) }}">@lang('orders.show.request_refund')</a>
+				@endif
 			</div>
 		@endif
 

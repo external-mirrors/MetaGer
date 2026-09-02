@@ -7,8 +7,9 @@
  * Aus dem `/key/<uuid>/orders`-Bereich des Keymanagers übernommen: `lookup.*`
  * und die Zeilenbeschriftungen sind der Wortlaut von dessen `order.json`
  * (`orders.*`, `details.*`, `summary.*`), dieselbe Seite, jetzt hier
- * gerendert. `show.heading`, `show.lookup_hint` und `show.request_invoice`
- * sind neu; `invoice.*` ist der Wortlaut von dessen `invoice.json` (`form.*`).
+ * gerendert. `show.heading`, `show.lookup_hint`, `show.request_invoice` und
+ * `show.request_refund` sind neu; `invoice.*` ist der Wortlaut von dessen
+ * `invoice.json` (`form.*`), `refund.*` von dessen `order.json` (`refund.*`).
  */
 
 return [
@@ -38,6 +39,7 @@ return [
         'exchange_rate' => 'Wechselkurs',
         'download_confirmation' => 'Auftragsbestätigung herunterladen',
         'request_invoice' => 'Rechnung erstellen',
+        'request_refund' => 'Erstattung anfragen',
     ],
 
     'invoice' => [
@@ -60,6 +62,22 @@ return [
             'zip' => 'Postleitzahl',
             'city' => 'Stadt',
             'state' => 'Staat (optional)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Erstattung',
+        'breadcrumb' => 'Auftrag :reference',
+        'unavailable' => 'Für diese Bestellung gibt es kein erstattungsfähiges Guthaben mehr — entweder wurde bereits eine Erstattung angefragt, oder die verwendete Zahlungsart unterstützt keine Erstattungsanfrage über dieses Formular.',
+        'description' => 'Sind Sie unzufrieden mit Ihrem Schlüssel? Das bedauern wir sehr! Selbstverständlich erstatten wir Ihnen in diesem Fall den Rechnungsbetrag. Eine Erstattung erfolgt stets auf das gleiche Konto, welches bei der ursprünglichen Zahlung verwendet wurde. Gerne nehmen wir auch Ihre Kritik entgegen.',
+        'partial_note' => 'Ein Teil Ihres gekauften Guthabens wurde bereits verbraucht. Wir können Ihnen deshalb lediglich <span class="bold">:count</span> von <span class="bold">:total</span> Suchanfragen erstatten.',
+        'message' => [
+            'label' => 'Ihre Nachricht (optional)',
+        ],
+        'submit' => ':amount € Erstattung anfragen',
+        'error' => [
+            'not_allowed' => 'Für diese Bestellung ist keine Erstattung mehr möglich.',
+            'unreachable' => 'Fehler beim Senden Ihrer Nachricht. Bitte versuchen Sie es später erneut.',
         ],
     ],
 ];

@@ -6,13 +6,18 @@ use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 /**
- * Bestellungen und Rechnungen — /konto/bestellungen,
+ * Bestellungen, Rechnungen und Erstattungen — /konto/bestellungen,
  * App\Http\Controllers\OrderController.
  *
  * Aus dem `/key/<uuid>/orders`-Bereich des Keymanagers hierher gezogen. Wie
  * {@see ChargeReturnedTest} steht und fällt jede Seite mit der
  * Zugehörigkeitsprüfung: die öffentliche Nummer ist klein und fortlaufend,
  * eine fremde Bestellung zeigt hier nichts.
+ *
+ * Die Erstattung bewegt kein Geld — der Keyserver öffnet nur ein
+ * Zammad-Ticket und bucht das ungenutzte Guthaben zurück; ein 409 vom
+ * Keyserver (schon angefragt) ist deshalb kein Fehler für den Aufrufer, ein
+ * 403 (Zahlungsart unterstützt keine Erstattung) schon.
  */
 class OrdersTest extends TestCase
 {
@@ -63,6 +68,9 @@ class OrdersTest extends TestCase
                 "payment_processor" => "Paypal",
                 "created_at" => "2026-05-14T09:30:00.000Z",
                 "invoice_available" => false,
+                "refund_available" => true,
+                "refund_token_count" => 1000,
+                "refund_amount" => "10.00",
             ]],
         ], $overrides);
     }
@@ -168,7 +176,22 @@ class OrdersTest extends TestCase
             ->assertSee("10.00 €")
             ->assertSee(trans("orders.show.thanks"))
             ->assertSee(route("account.orders.confirmation", ["reference" => "Z1"]), false)
+            ->assertSee(route("account.orders.refund", ["reference" => "Z1"]), false)
             ->assertHeader("Cache-Control", "no-store, private");
+    }
+
+    public function testTheDetailPageHidesTheRefundLinkWhenNoneIsAvailable(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order([
+                "payments" => [array_merge($this->order()["payments"][0], ["refund_available" => false])],
+            ])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1")
+            ->assertOk()
+            ->assertDontSee(route("account.orders.refund", ["reference" => "Z1"]), false);
     }
 
     public function testTheDetailPageShowsPendingWhenNothingIsBookedYet(): void
@@ -405,5 +428,156 @@ class OrdersTest extends TestCase
         $this->signedIn()
             ->get("/de-DE/konto/bestellungen/Z1/rechnung.pdf")
             ->assertNotFound();
+    }
+
+    public function testTheRefundFormRenders(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/erstattung")
+            ->assertOk()
+            ->assertSee(trans("orders.refund.heading"))
+            ->assertSee('name="message"', false);
+    }
+
+    public function testTheRefundFormShowsAPartialNoteWhenSomeBalanceIsAlreadySpent(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order([
+                "payments" => [array_merge($this->order()["payments"][0], ["refund_token_count" => 400])],
+            ])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/erstattung")
+            ->assertOk()
+            ->assertSee(trans("orders.refund.partial_note", ["count" => 400, "total" => 1000]), false);
+    }
+
+    public function testTheRefundFormIsUnavailableOnceNothingIsLeftToRefund(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order([
+                "payments" => [array_merge($this->order()["payments"][0], ["refund_available" => false])],
+            ])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/erstattung")
+            ->assertOk()
+            ->assertSee(trans("orders.refund.unavailable"))
+            ->assertDontSee('name="message"', false);
+    }
+
+    public function testTheRefundFormIsGoneOnceAnOrderHasNoPayments(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["paid" => false, "payments" => []])),
+        ]);
+
+        $this->signedIn()
+            ->get("/de-DE/konto/bestellungen/Z1/erstattung")
+            ->assertNotFound();
+    }
+
+    public function testARefundFormForAnotherKeysOrderIs404(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["key" => self::OTHER_KEY])),
+        ]);
+
+        $this->signedIn()->get("/de-DE/konto/bestellungen/Z1/erstattung")->assertNotFound();
+    }
+
+    public function testSubmittingTheRefundFormForwardsItAndRedirectsOnSuccess(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/refund" => Http::response(["refunded_token_count" => 1000, "refund_amount" => "10.00"], 200),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $response = $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", [
+                "message" => "Bitte erstatten, danke.",
+            ]);
+
+        $response->assertRedirect(route("account.orders.refund", ["reference" => "Z1"]));
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), "/refund")
+            && $request["message"] === "Bitte erstatten, danke.");
+    }
+
+    /**
+     * The keymanager re-derives the refundable count itself (payment_reference
+     * .key.get_charge(…)) rather than trusting the caller — 409 is what a
+     * resubmit gets back, and the form must not treat that as an error.
+     */
+    public function testSubmittingTheRefundFormTwiceIsTreatedAsSuccessBothTimes(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/refund" => Http::response(["code" => 409, "error" => "refund_already_requested"], 409),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
+            ->assertRedirect(route("account.orders.refund", ["reference" => "Z1"]));
+    }
+
+    public function testSubmittingTheRefundFormShowsAKeyserverRefusal(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/refund" => Http::response(["code" => 403, "error" => "refund_not_allowed"], 403),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
+            ->assertOk()
+            ->assertSee(trans("orders.refund.error.not_allowed"));
+    }
+
+    public function testSubmittingTheRefundFormShowsAnUnreachableError(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*/refund" => Http::response(["code" => 502, "error" => "zammad_unreachable"], 502),
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
+            ->assertOk()
+            ->assertSee(trans("orders.refund.error.unreachable"));
+    }
+
+    public function testSubmittingTheRefundFormForAnotherKeysOrderIs404(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order(["key" => self::OTHER_KEY])),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", config("app.url"))
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
+            ->assertNotFound();
+    }
+
+    public function testSubmittingTheRefundFormWithAForeignOriginIsRejected(): void
+    {
+        $this->keyserver([
+            "*/api/json/checkout/*" => Http::response($this->order()),
+        ]);
+
+        $this->signedIn()
+            ->withHeader("Origin", "https://evil.example")
+            ->post("/de-DE/konto/bestellungen/Z1/erstattung", ["message" => ""])
+            ->assertForbidden();
     }
 }

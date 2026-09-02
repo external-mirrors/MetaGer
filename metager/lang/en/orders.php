@@ -7,8 +7,9 @@
  * Taken from the keymanager's `/key/<uuid>/orders` area: `lookup.*` and the
  * line-item labels are the wording of its `order.json` (`orders.*`,
  * `details.*`, `summary.*`), the same page rendered here now. `show.heading`,
- * `show.lookup_hint` and `show.request_invoice` are new; `invoice.*` is the
- * wording of its `invoice.json` (`form.*`).
+ * `show.lookup_hint`, `show.request_invoice` and `show.request_refund` are
+ * new; `invoice.*` is the wording of its `invoice.json` (`form.*`),
+ * `refund.*` of its `order.json` (`refund.*`).
  */
 
 return [
@@ -38,6 +39,7 @@ return [
         'exchange_rate' => 'Exchange rate',
         'download_confirmation' => 'Download order confirmation',
         'request_invoice' => 'Create invoice',
+        'request_refund' => 'Request refund',
     ],
 
     'invoice' => [
@@ -60,6 +62,22 @@ return [
             'zip' => 'Postal code',
             'city' => 'City',
             'state' => 'State (optional)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Refund',
+        'breadcrumb' => 'Order :reference',
+        'unavailable' => 'There is no refundable balance left for this order — either a refund has already been requested, or the payment method used does not support a refund request through this form.',
+        'description' => 'Are you dissatisfied with your key? We are very sorry to hear that! Of course, we will refund the invoice amount in this case. A refund is always made to the same account that was used for the original payment. We are also happy to receive your feedback.',
+        'partial_note' => 'Part of your purchased credit has already been used. We can therefore only refund you <span class="bold">:count</span> of <span class="bold">:total</span> searches.',
+        'message' => [
+            'label' => 'Your message (optional)',
+        ],
+        'submit' => 'Request refund of :amount €',
+        'error' => [
+            'not_allowed' => 'A refund is no longer possible for this order.',
+            'unreachable' => 'Error sending your message. Please try again later.',
         ],
     ],
 ];

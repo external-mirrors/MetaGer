@@ -32,6 +32,7 @@ return [
         'exchange_rate' => 'Taxa de câmbio',
         'download_confirmation' => 'Descarregar confirmação de encomenda',
         'request_invoice' => 'Criar fatura',
+        'request_refund' => 'Pedir reembolso',
     ],
 
     'invoice' => [
@@ -54,6 +55,22 @@ return [
             'zip' => 'Código postal',
             'city' => 'Cidade',
             'state' => 'Estado (opcional)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Reembolso',
+        'breadcrumb' => 'Encomenda :reference',
+        'unavailable' => 'Já não existe saldo reembolsável para esta encomenda — ou já foi pedido um reembolso, ou o método de pagamento utilizado não suporta um pedido de reembolso através deste formulário.',
+        'description' => 'Não está satisfeito com a sua chave? Lamentamos muito! Nesse caso, reembolsaremos naturalmente o valor da fatura. Um reembolso é sempre feito para a mesma conta utilizada no pagamento original. Também agradecemos a sua crítica.',
+        'partial_note' => 'Parte do seu saldo adquirido já foi utilizada. Por isso, só podemos reembolsar-lhe <span class="bold">:count</span> de <span class="bold">:total</span> pesquisas.',
+        'message' => [
+            'label' => 'A sua mensagem (opcional)',
+        ],
+        'submit' => 'Pedir reembolso de :amount €',
+        'error' => [
+            'not_allowed' => 'Já não é possível um reembolso para esta encomenda.',
+            'unreachable' => 'Erro ao enviar a sua mensagem. Tente novamente mais tarde.',
         ],
     ],
 ];

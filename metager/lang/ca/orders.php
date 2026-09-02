@@ -27,6 +27,7 @@ return [
         'exchange_rate' => 'Tipus de canvi',
         'download_confirmation' => 'Baixa la confirmació de la comanda',
         'request_invoice' => 'Crea la factura',
+        'request_refund' => 'Sol·licita una devolució',
     ],
 
     'invoice' => [
@@ -49,6 +50,22 @@ return [
             'zip' => 'Codi postal',
             'city' => 'Població',
             'state' => 'Província (opcional)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Devolució',
+        'breadcrumb' => 'Comanda :reference',
+        'unavailable' => 'No queda saldo reemborsable per a aquesta comanda — o bé ja s\'ha sol·licitat una devolució, o bé el mètode de pagament utilitzat no admet una sol·licitud de devolució mitjançant aquest formulari.',
+        'description' => 'Esteu insatisfets amb la vostra clau? Ho lamentem molt! Per descomptat, en aquest cas us retornarem l\'import de la factura. Una devolució es fa sempre al mateix compte que es va utilitzar en el pagament original. També acceptem de bon grat les vostres crítiques.',
+        'partial_note' => 'Part del vostre saldo comprat ja s\'ha utilitzat. Per tant, només podem retornar-vos <span class="bold">:count</span> de <span class="bold">:total</span> cerques.',
+        'message' => [
+            'label' => 'El vostre missatge (opcional)',
+        ],
+        'submit' => 'Sol·licitar devolució de :amount €',
+        'error' => [
+            'not_allowed' => 'Ja no és possible una devolució per a aquesta comanda.',
+            'unreachable' => 'Error en enviar el vostre missatge. Torneu-ho a provar més tard.',
         ],
     ],
 ];

@@ -27,6 +27,7 @@ return [
         'exchange_rate' => 'Wisselkoers',
         'download_confirmation' => 'Orderbevestiging downloaden',
         'request_invoice' => 'Factuur maken',
+        'request_refund' => 'Terugbetaling aanvragen',
     ],
 
     'invoice' => [
@@ -49,6 +50,22 @@ return [
             'zip' => 'Postcode',
             'city' => 'Stad',
             'state' => 'Staat (optioneel)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Terugbetaling',
+        'breadcrumb' => 'Bestelling :reference',
+        'unavailable' => 'Er is geen terugbetaalbaar tegoed meer voor deze bestelling — er is al een terugbetaling aangevraagd, of de gebruikte betaalmethode ondersteunt geen terugbetalingsverzoek via dit formulier.',
+        'description' => 'Bent u niet tevreden met uw sleutel? Dat vinden we heel erg jammer! Uiteraard betalen we in dat geval het factuurbedrag terug. Een terugbetaling gebeurt altijd naar dezelfde rekening die bij de oorspronkelijke betaling is gebruikt. We horen ook graag uw kritiek.',
+        'partial_note' => 'Een deel van uw gekochte tegoed is al gebruikt. Daarom kunnen we u slechts <span class="bold">:count</span> van <span class="bold">:total</span> zoekopdrachten terugbetalen.',
+        'message' => [
+            'label' => 'Uw bericht (optioneel)',
+        ],
+        'submit' => 'Terugbetaling van :amount € aanvragen',
+        'error' => [
+            'not_allowed' => 'Een terugbetaling is niet meer mogelijk voor deze bestelling.',
+            'unreachable' => 'Fout bij het verzenden van uw bericht. Probeer het later opnieuw.',
         ],
     ],
 ];

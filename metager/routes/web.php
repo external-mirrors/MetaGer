@@ -471,6 +471,10 @@ Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\PreventRequestF
         ->name('account.orders.invoice.request');
     Route::get('konto/bestellungen/{reference}/rechnung.pdf', [OrderController::class, 'invoiceDownload'])
         ->name('account.orders.invoice.pdf');
+    Route::get('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refund'])
+        ->name('account.orders.refund');
+    Route::post('konto/bestellungen/{reference}/erstattung', [OrderController::class, 'refundRequest'])
+        ->name('account.orders.refund.request');
 
     /**
      * Gutscheinaktionen, aus dem Keymanager (`/keys/key/<uuid>/campaigns`)

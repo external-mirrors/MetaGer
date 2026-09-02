@@ -27,6 +27,7 @@ return [
         'exchange_rate' => 'Växelkurs',
         'download_confirmation' => 'Ladda ner orderbekräftelse',
         'request_invoice' => 'Skapa faktura',
+        'request_refund' => 'Begär återbetalning',
     ],
 
     'invoice' => [
@@ -49,6 +50,22 @@ return [
             'zip' => 'Postnummer',
             'city' => 'Stad',
             'state' => 'Stat (frivillig uppgift)',
+        ],
+    ],
+
+    'refund' => [
+        'heading' => 'Återbetalning',
+        'breadcrumb' => 'Beställning :reference',
+        'unavailable' => 'Det finns inget återbetalningsbart saldo kvar för denna beställning — antingen har en återbetalning redan begärts, eller så stöder den använda betalningsmetoden inte en återbetalningsbegäran via detta formulär.',
+        'description' => 'Är du missnöjd med din nyckel? Det beklagar vi verkligen! Naturligtvis återbetalar vi fakturabeloppet i detta fall. En återbetalning görs alltid till samma konto som användes vid den ursprungliga betalningen. Vi tar också gärna emot din kritik.',
+        'partial_note' => 'En del av ditt köpta saldo har redan använts. Vi kan därför bara återbetala dig <span class="bold">:count</span> av <span class="bold">:total</span> sökningar.',
+        'message' => [
+            'label' => 'Ditt meddelande (valfritt)',
+        ],
+        'submit' => 'Begär återbetalning av :amount €',
+        'error' => [
+            'not_allowed' => 'En återbetalning är inte längre möjlig för denna beställning.',
+            'unreachable' => 'Fel vid sändning av ditt meddelande. Försök igen senare.',
         ],
     ],
 ];
